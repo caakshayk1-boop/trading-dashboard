@@ -33,6 +33,19 @@ def init_db():
             symbol TEXT PRIMARY KEY,
             muted_at TEXT
         )""")
+        # Auto-migrate: add missing columns to existing DB
+        existing = [r[1] for r in c.execute("PRAGMA table_info(signals)").fetchall()]
+        migrations = [
+            ("setup_type",  "ALTER TABLE signals ADD COLUMN setup_type TEXT"),
+            ("action",      "ALTER TABLE signals ADD COLUMN action TEXT DEFAULT 'BUY'"),
+            ("sl1",         "ALTER TABLE signals ADD COLUMN sl1 REAL"),
+            ("sl2",         "ALTER TABLE signals ADD COLUMN sl2 REAL"),
+            ("r_multiple",  "ALTER TABLE signals ADD COLUMN r_multiple REAL"),
+            ("metadata",    "ALTER TABLE signals ADD COLUMN metadata TEXT"),
+        ]
+        for col, sql in migrations:
+            if col not in existing:
+                c.execute(sql)
         c.commit()
 
 def log_signals(signals):
