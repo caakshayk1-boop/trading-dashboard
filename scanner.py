@@ -374,6 +374,15 @@ def check_weekly_trend(symbol):
 
 @with_retry(max_retries=3)
 def fetch_data(symbol):
+    try:
+        from upstox_provider import fetch_ohlcv, is_authenticated
+        if is_authenticated():
+            df = fetch_ohlcv(symbol, period="1y", interval="1d")
+            if df is not None and not df.empty:
+                return df
+    except Exception:
+        pass
+    # fallback
     return yf.download(symbol, period="1y", interval="1d",
                        progress=False, auto_adjust=True)
 

@@ -12,10 +12,21 @@ from scanner import scan_all, load_nifty500
 from telegram_bot import send_alert, send_summary, send_top_picks, test_connection, start_command_polling
 from tracker import log_signals, update_outcomes, get_performance, get_history, init_db, mute_asset, unmute_asset
 from config import MIN_SIGNAL_SCORE, CAPITAL
+from upstox_provider import is_authenticated, get_auth_url, exchange_code_for_token
 
 st.set_page_config(page_title="Nifty 500 Swing Scanner", layout="wide", page_icon="📈")
 IST = pytz.timezone("Asia/Kolkata")
 init_db()
+
+# ── Upstox OAuth login (one-time per day) ──────────────────────────────────────
+query_params = st.query_params
+if "code" in query_params and not is_authenticated():
+    try:
+        exchange_code_for_token(query_params["code"])
+        st.success("✅ Upstox connected! Refresh the page.")
+        st.stop()
+    except Exception as e:
+        st.error(f"Upstox login failed: {e}")
 
 # Start command polling (handles /start /active /performance /mute /stats)
 if "polling_started" not in st.session_state:
@@ -95,6 +106,15 @@ with st.sidebar:
     st.subheader("Chart")
     chart_sym  = st.text_input("Symbol", placeholder="e.g. RELIANCE")
     show_chart = st.button("📊 Show Chart")
+
+    st.divider()
+    st.subheader("Data Source")
+    if is_authenticated():
+        st.success("✅ Upstox connected")
+    else:
+        st.warning("⚠️ Using yfinance (fallback)")
+        auth_url = get_auth_url()
+        st.markdown(f"[🔗 Connect Upstox]({auth_url})")
 
     st.divider()
     if st.button("🔔 Test Telegram"):
