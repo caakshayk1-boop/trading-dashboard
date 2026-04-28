@@ -20,3 +20,27 @@
 2026-04-28 08:52:29,534 INFO Added job "_auto_scan" to job store "default"
 2026-04-28 08:52:29,534 INFO Added job "_auto_scan" to job store "default"
 2026-04-28 08:52:29,534 INFO Scheduler started
+2026-04-28 09:13:30,028 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 09:13:30,029 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 09:13:30,029 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 09:13:30,029 INFO Added job "_auto_scan" to job store "default"
+2026-04-28 09:13:30,029 INFO Added job "_auto_scan" to job store "default"
+2026-04-28 09:13:30,029 INFO Added job "_auto_scan" to job store "default"
+2026-04-28 09:13:30,029 INFO Scheduler started
+2026-04-28 09:13:37,242 WARNING Matplotlib is building the font cache; this may take a moment.
+2026-04-28 09:13:45,825 INFO Failed to extract font properties from /System/Library/Fonts/SFIndia.ttc: In FT2Font: Can not load face (SFNT font table missing; error code 0x8e)
+2026-04-28 09:13:45,831 INFO Failed to extract font properties from /System/Library/Fonts/Supplemental/NISC18030.ttf: In FT2Font: Could not set the fontsize (invalid pixel size; error code 0x17)
+2026-04-28 09:13:45,856 INFO Failed to extract font properties from /System/Library/PrivateFrameworks/FontServices.framework/Resources/Reserved/PingFangUI.ttc: In FT2Font: Can not load face (locations (loca) table missing; error code 0x90)
+2026-04-28 09:13:45,864 INFO Failed to extract font properties from /System/Library/Fonts/LastResort.otf: tuple indices must be integers or slices, not str
+2026-04-28 09:13:45,932 INFO Failed to extract font properties from /System/Library/Fonts/Apple Color Emoji.ttc: In FT2Font: Could not set the fontsize (invalid pixel size; error code 0x17)
+2026-04-28 09:13:45,991 INFO generated new fontManager
+2026-04-28 09:15:04,117 ERROR HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: PRISMJOHNSON.NS"}}}
+2026-04-28 09:15:04,457 ERROR $PRISMJOHNSON.NS: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 09:15:04,457 ERROR 
+1 Failed download:
+2026-04-28 09:15:04,458 ERROR ['PRISMJOHNSON.NS']: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 09:15:04,912 ERROR HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: PRISMJOHNSON.NS"}}}
+2026-04-28 09:15:05,564 ERROR $PRISMJOHNSON.NS: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 09:15:05,570 ERROR 
+1 Failed download:
+2026-04-28 09:15:05,571 ERROR ['PRISMJOHNSON.NS']: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")

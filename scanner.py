@@ -561,3 +561,200 @@ def scan_all(min_score=None):
 
     logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks")
     return results
+
+
+# ── Privacy: obfuscate indicator names for display ────────────────────────────
+_REASON_MAP = [
+    ("RSI",       "Momentum Confirmed"),
+    ("EMA",       "Trend Aligned"),
+    ("ADX",       "Trend Strength"),
+    ("volume",    "Volume Surge"),
+    ("breakout",  "Resistance Break"),
+    ("pullback",  "Pullback Entry"),
+    ("divergen",  "Reversal Signal"),
+    ("HH/HL",     "Bullish Structure"),
+    ("weekly",    "Multi-TF Confirm"),
+    ("ATR",       "Volatility Signal"),
+]
+
+def obfuscate_reasons(reasons_str):
+    """Convert technical indicator names to generic labels."""
+    out = set()
+    for part in reasons_str.split(","):
+        part = part.strip()
+        matched = False
+        for key, label in _REASON_MAP:
+            if key.lower() in part.lower():
+                out.add(label)
+                matched = True
+                break
+        if not matched and part:
+            out.add("Signal Confirmed")
+    return ", ".join(sorted(out))
+
+
+# ── Breakout Scanner ──────────────────────────────────────────────────────────
+def _check_breakouts(df_d, df_w, df_m):
+    """Detect confirmed breakout patterns across timeframes."""
+    found = []
+
+    if df_d is not None and len(df_d) >= 60:
+        close  = df_d["Close"].squeeze()
+        high   = df_d["High"].squeeze()
+        low    = df_d["Low"].squeeze()
+        volume = df_d["Volume"].squeeze()
+        avg_vol = volume.rolling(20).mean().iloc[-1]
+
+        # 52-week high breakout (daily close, not intraday)
+        high_252 = high.rolling(min(252, len(high)-1)).max().iloc[-2]
+        if close.iloc[-1] > high_252 and volume.iloc[-1] > 1.5 * avg_vol:
+            found.append(("Daily", "52W Breakout"))
+
+        # Ascending triangle: flat top ±1.5%, rising lows over 20 days
+        if len(close) >= 20:
+            r_high = high.tail(20)
+            r_low  = low.tail(20)
+            top    = r_high.max()
+            if top > 0 and (r_high.max() - r_high.min()) / top < 0.015:
+                slope = np.polyfit(range(20), r_low.values, 1)[0]
+                if slope > 0 and close.iloc[-1] >= top * 0.99:
+                    found.append(("Daily", "Ascending Triangle"))
+
+        # Bull flag: prior strong move + tight consolidation + breakout
+        if len(close) >= 22:
+            prior_move = (close.iloc[-11] - close.iloc[-21]) / close.iloc[-21] * 100
+            flag_hi    = close.tail(10).max()
+            flag_range = (flag_hi - close.tail(10).min()) / close.iloc[-11] * 100
+            if prior_move > 8 and flag_range < 5 and close.iloc[-1] >= flag_hi * 0.99:
+                found.append(("Daily", "Bull Flag"))
+
+    if df_w is not None and len(df_w) >= 22:
+        wclose = df_w["Close"].squeeze()
+        whigh  = df_w["High"].squeeze()
+        wvol   = df_w["Volume"].squeeze()
+        wavg   = wvol.rolling(10).mean().iloc[-1]
+        w20hi  = whigh.rolling(20).max().iloc[-2]
+        if wclose.iloc[-1] > w20hi and wvol.iloc[-1] > 1.3 * wavg:
+            found.append(("Weekly", "20W Breakout"))
+
+        # Cup & handle (weekly): U-shape recovery + consolidation
+        if len(wclose) >= 30:
+            cup_low  = wclose.iloc[-30:-10].min()
+            cup_left = wclose.iloc[-30]
+            cup_right = wclose.iloc[-10]
+            handle_low = wclose.iloc[-10:].min()
+            if (cup_right > cup_low * 1.05 and cup_left > cup_low * 1.05
+                    and handle_low > cup_low * 0.95
+                    and wclose.iloc[-1] >= cup_right * 0.99):
+                found.append(("Weekly", "Cup & Handle"))
+
+    if df_m is not None and len(df_m) >= 8:
+        mclose = df_m["Close"].squeeze()
+        mhigh  = df_m["High"].squeeze()
+        m6hi   = mhigh.rolling(6).max().iloc[-2]
+        if mclose.iloc[-1] > m6hi:
+            found.append(("Monthly", "6M Breakout"))
+
+    return found
+
+
+def analyze_breakout(symbol):
+    """Full breakout analysis: daily + weekly + monthly."""
+    try:
+        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        df_d = yf.download(sym_yf, period="2y",  interval="1d",  progress=False, auto_adjust=True)
+        df_w = yf.download(sym_yf, period="2y",  interval="1wk", progress=False, auto_adjust=True)
+        df_m = yf.download(sym_yf, period="3y",  interval="1mo", progress=False, auto_adjust=True)
+
+        if df_d.empty or len(df_d) < 60:
+            return None
+
+        patterns = _check_breakouts(df_d, df_w, df_m)
+        if not patterns:
+            return None
+
+        close = float(df_d["Close"].squeeze().iloc[-1])
+        atr_s = ta_lib.volatility.AverageTrueRange(
+            df_d["High"].squeeze(), df_d["Low"].squeeze(),
+            df_d["Close"].squeeze(), window=14
+        ).average_true_range()
+        atr = float(atr_s.iloc[-1]) if not atr_s.empty else close * 0.02
+
+        vol    = df_d["Volume"].squeeze()
+        avg_v  = float(vol.rolling(20).mean().iloc[-1]) or 1
+        vol_r  = round(float(vol.iloc[-1]) / avg_v, 1)
+
+        sym_clean  = symbol.replace(".NS", "")
+        best_tf, best_pat = max(patterns, key=lambda x: {"Monthly":3,"Weekly":2,"Daily":1}.get(x[0],0))
+        sl = round(close - 1.5 * atr, 1)
+        t1 = round(close + 2.0 * atr, 1)
+        t2 = round(close + 3.5 * atr, 1)
+        t3 = round(close + 5.5 * atr, 1)
+        rr = round((t1 - close) / max(close - sl, 0.01), 1)
+
+        return {
+            "symbol":      sym_clean,
+            "price":       round(close, 1),
+            "timeframe":   best_tf,
+            "pattern":     best_pat,
+            "patterns":    [f"{tf}: {pt}" for tf, pt in patterns],
+            "vol_ratio":   vol_r,
+            "sl":          sl,
+            "target1":     t1,
+            "target2":     t2,
+            "target3":     t3,
+            "rr":          rr,
+            "fno":         sym_clean in FNO_ELIGIBLE,
+            "tv_link":     f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+        }
+    except Exception as e:
+        logging.warning(f"Breakout {symbol}: {e}")
+        return None
+
+
+def scan_breakouts(universe=None):
+    """Scan confirmed breakouts: daily, weekly, monthly timeframes."""
+    if universe is None:
+        raw_uni = load_nifty500()
+        universe = [s for s in raw_uni if s.replace(".NS","") in FNO_ELIGIBLE]
+
+    results = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_breakout, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    tf_rank = {"Monthly": 3, "Weekly": 2, "Daily": 1}
+    results.sort(key=lambda x: (tf_rank.get(x["timeframe"], 0), x["rr"]), reverse=True)
+    logging.info(f"Breakout scan: {len(results)} confirmed breakouts")
+    return results
+
+
+# ── Forex & Commodities scan ──────────────────────────────────────────────────
+FOREX_COMM = {
+    "USD/INR":   "INR=X",
+    "EUR/INR":   "EURINR=X",
+    "GBP/INR":   "GBPINR=X",
+    "Gold":      "GC=F",
+    "Silver":    "SI=F",
+    "Crude Oil": "CL=F",
+    "Nat Gas":   "NG=F",
+}
+
+def fetch_forex_comm():
+    """Fetch live prices + 1-day change for forex & commodities."""
+    rows = []
+    for name, ticker in FOREX_COMM.items():
+        try:
+            h = yf.Ticker(ticker).history(period="3d")
+            if len(h) >= 2:
+                prev = float(h["Close"].iloc[-2])
+                last = float(h["Close"].iloc[-1])
+                chg  = round((last - prev) / prev * 100, 2)
+                rows.append({"Asset": name, "Last": round(last, 2), "Chg%": chg,
+                             "Trend": "▲" if chg >= 0 else "▼"})
+        except Exception:
+            pass
+    return rows
