@@ -44,3 +44,20 @@
 2026-04-28 09:15:05,570 ERROR 
 1 Failed download:
 2026-04-28 09:15:05,571 ERROR ['PRISMJOHNSON.NS']: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 20:10:58,794 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 20:10:58,794 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 20:10:58,794 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-28 20:10:58,795 INFO Added job "_auto_scan" to job store "default"
+2026-04-28 20:10:58,795 INFO Added job "_auto_scan" to job store "default"
+2026-04-28 20:10:58,795 INFO Added job "_auto_scan" to job store "default"
+2026-04-28 20:10:58,795 INFO Scheduler started
+2026-04-28 20:13:43,543 ERROR HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ADANITOTALGAS.NS"}}}
+2026-04-28 20:13:43,880 ERROR $ADANITOTALGAS.NS: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 20:13:43,883 ERROR 
+1 Failed download:
+2026-04-28 20:13:43,883 ERROR ['ADANITOTALGAS.NS']: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 20:13:51,477 ERROR HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: ATOLL.NS"}}}
+2026-04-28 20:13:51,978 ERROR $ATOLL.NS: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
+2026-04-28 20:13:51,978 ERROR 
+1 Failed download:
+2026-04-28 20:13:51,979 ERROR ['ATOLL.NS']: possibly delisted; no price data found  (period=6mo) (Yahoo error = "No data found, symbol may be delisted")
