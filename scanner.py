@@ -21,6 +21,55 @@ logging.basicConfig(
 NIFTY500_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
 NIFTY500_CACHE   = "cache/nifty500.csv"
 
+# NSE F&O eligible stocks (Nifty 200 + major midcap with liquid options)
+FNO_ELIGIBLE = {
+    "RELIANCE","TCS","HDFCBANK","INFY","ICICIBANK","HINDUNILVR","SBIN","BAJFINANCE",
+    "BHARTIARTL","KOTAKBANK","LT","AXISBANK","ASIANPAINT","MARUTI","TITAN","SUNPHARMA",
+    "WIPRO","ULTRACEMCO","NESTLEIND","POWERGRID","NTPC","HCLTECH","TECHM","ONGC",
+    "JSWSTEEL","TATAMOTORS","TATASTEEL","ADANIPORTS","COALINDIA","BPCL","DIVISLAB",
+    "DRREDDY","CIPLA","EICHERMOT","BAJAJFINSV","BAJAJ-AUTO","HEROMOTOCO","M&M",
+    "BRITANNIA","GRASIM","HINDALCO","INDUSINDBK","IOC","SHREECEM","SBILIFE","HDFCLIFE",
+    "APOLLOHOSP","ADANIENT","LTIM","TATACONSUM","AMBUJACEM","AUROPHARMA","BALKRISIND",
+    "BANDHANBNK","BERGEPAINT","BIOCON","BOSCHLTD","CANBK","CHOLAFIN","COLPAL","CONCOR",
+    "DABUR","DALBHARAT","DLF","GAIL","GODREJCP","GODREJPROP","HAL","HAVELLS","HDFCAMC",
+    "IDFCFIRSTB","IGL","INDHOTEL","INDIGO","INDUSTOWER","IRCTC","JUBLFOOD","LUPIN",
+    "MARICO","MPHASIS","MRF","MUTHOOTFIN","NAUKRI","NMDC","OFSS","PAGEIND","PERSISTENT",
+    "PETRONET","PIDILITIND","PNB","POLYCAB","SAIL","SBICARD","SRF","TATACOMM",
+    "TATAELXSI","TATAPOWER","TRENT","UPL","FEDERALBNK","COFORGE","DEEPAKNTR",
+    "ESCORTS","EXIDEIND","FORTIS","GLENMARK","GRANULES","HINDCOPPER","HINDPETRO",
+    "LICHSGFIN","MANAPPURAM","MOTHERSON","MFSL","NYKAA","OBEROIRLTY","PEL","PGHH",
+    "PIIND","PVRINOX","RBLBANK","RECLTD","STARHEALTH","SUPREMEIND","TORNTPHARM",
+    "TORNTPOWER","TRIDENT","VEDL","VOLTAS","ZOMATO","ADANIGREEN","ADANIPOWER",
+    "ADANITRANS","AWL","DMART","JKCEMENT","LALPATHLAB","METROPOLIS","NUVOCO",
+    "POLICYBZR","CAMPUS","PATANJALI","AARTIIND","ABCAPITAL","ABB","ABFRL","ACC",
+    "ALKEM","APLLTD","ASTRAL","ATUL","AUBANK","BSOFT","CANFINHOME","CESC","CROMPTON",
+    "DELHIVERY","EMAMILTD","GNFC","GRINDWELL","GSPL","GUJGASLTD","IDEA","IPCALAB",
+    "JBCHEPHARM","JSWENERGY","KANSAINER","KARURVYSYA","KEI","LAURUSLABS","LTTS",
+    "MAXHEALTH","MCX","NATIONALUM","NBCC","NCC","NHPC","NLCINDIA","NTPCGREEN",
+    "NYKAA","ONGC","PATANJALI","PHOENIXLTD","RAJESHEXPO","RAMCOCEM","RATNAMANI",
+    "RITES","SJVN","SONACOMS","SYNGENE","TANLA","TATACHEMICALS","TATAINVEST",
+    "TATACOMM","TCNSBRANDS","TIINDIA","TIMKEN","TNPL","TRITURBINE","UJJIVANSFB",
+    "UNIONBANK","UCOBANK","USHAMART","VGUARD","WHIRLPOOL","WOCKPHARMA","ZEEL",
+}
+
+
+def _fno_suggest(symbol, price, bias, atr):
+    """Generate F&O trade suggestion: strike, direction, expiry note."""
+    direction = "CALL" if bias == "bullish" else "PUT"
+    # Round to nearest 50 for index-heavy stocks, 5 otherwise
+    step = 50 if price > 5000 else (20 if price > 1000 else 5)
+    atm = round(price / step) * step
+    otm_strike = atm + step if direction == "CALL" else atm - step
+    risk_pts = round(atr * 1.5, 1)
+    return {
+        "direction":  direction,
+        "atm_strike": atm,
+        "otm_strike": otm_strike,
+        "risk_pts":   risk_pts,
+        "expiry":     "Nearest weekly (Thu) or monthly",
+        "note":       f"Buy {symbol} {otm_strike} {direction} | Risk ~{risk_pts} pts | verify premium on NSE",
+    }
+
 FALLBACK_NIFTY500 = [
     "RELIANCE.NS","TCS.NS","HDFCBANK.NS","INFY.NS","ICICIBANK.NS",
     "HINDUNILVR.NS","SBIN.NS","BAJFINANCE.NS","BHARTIARTL.NS","KOTAKBANK.NS",
@@ -446,30 +495,35 @@ def analyze_stock(symbol, nifty_ret=0.0):
             except Exception:
                 pass
 
+        sym_clean = symbol.replace(".NS", "")
+        fno = sym_clean in FNO_ELIGIBLE
+        fno_suggestion = _fno_suggest(sym_clean, data["price"], regime["bias"], data["atr_val"]) if fno else None
         return {
-            "symbol":     symbol.replace(".NS", ""),
-            "action":     "BUY" if regime["bias"] == "bullish" else "SELL",
-            "setup_type": best_setup,
-            "price":      data["price"],
-            "score":      data["score"],
-            "rsi":        data["rsi_val"],
-            "adx":        data["adx_val"],
-            "vol_ratio":  data["vol_ratio"],
-            "atr":        data["atr_val"],
-            "sl1":        data["sl1"],
-            "sl2":        data["sl2"],
-            "target1":    data["t1"],
-            "target2":    data["t2"],
-            "target3":    data["t3"],
-            "rr1":        data["rr1"],
-            "rr2":        data["rr2"],
-            "qty":        data["qty"],
-            "pe":         round(pe, 1) if pe else "N/A",
-            "regime":     regime["tradeable"],
-            "bias":       regime["bias"],
-            "hh_hl":      hh_hl_count,
-            "reasons":    ", ".join(data["reasons"]),
-            "tv_link":    f"https://in.tradingview.com/chart/?symbol=NSE:{symbol.replace('.NS','')}",
+            "symbol":         sym_clean,
+            "action":         "BUY" if regime["bias"] == "bullish" else "SELL",
+            "setup_type":     best_setup,
+            "price":          data["price"],
+            "score":          data["score"],
+            "rsi":            data["rsi_val"],
+            "adx":            data["adx_val"],
+            "vol_ratio":      data["vol_ratio"],
+            "atr":            data["atr_val"],
+            "sl1":            data["sl1"],
+            "sl2":            data["sl2"],
+            "target1":        data["t1"],
+            "target2":        data["t2"],
+            "target3":        data["t3"],
+            "rr1":            data["rr1"],
+            "rr2":            data["rr2"],
+            "qty":            data["qty"],
+            "pe":             round(pe, 1) if pe else "N/A",
+            "regime":         regime["tradeable"],
+            "bias":           regime["bias"],
+            "hh_hl":          hh_hl_count,
+            "reasons":        ", ".join(data["reasons"]),
+            "tv_link":        f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+            "fno_eligible":   fno,
+            "fno_suggestion": fno_suggestion,
         }
     except Exception as e:
         logging.warning(f"{symbol}: {e}")
@@ -492,18 +546,17 @@ def scan_all(min_score=None):
 
     raw.sort(key=lambda x: x["score"], reverse=True)
 
-    # 5f. Deduplication rules (PDF spec)
-    results       = []
-    sectors_used  = set()
+    # 5f. Deduplication: skip active duplicates, allow multiple setup types, max 10
+    results      = []
+    seen_symbols = set()
     for sig in raw:
+        if sig["symbol"] in seen_symbols:
+            continue
         if is_duplicate(sig["symbol"]):
             continue
-        sector = sig.get("setup_type", "misc")   # using setup_type as proxy
-        if sector in sectors_used:
-            continue
         results.append(sig)
-        sectors_used.add(sector)
-        if len(results) >= 5:   # max 5 signals per session
+        seen_symbols.add(sig["symbol"])
+        if len(results) >= 10:
             break
 
     logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks")
