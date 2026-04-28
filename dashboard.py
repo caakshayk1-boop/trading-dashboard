@@ -13,7 +13,8 @@ from tracker import log_signals, update_outcomes, get_performance, get_history, 
 from config import MIN_SIGNAL_SCORE, CAPITAL
 from upstox_provider import is_authenticated, get_auth_url, exchange_code_for_token
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
-                         load_portfolio, save_portfolio, get_portfolio_summary)
+                         load_portfolio, save_portfolio, get_portfolio_summary,
+                         get_index_quotes, get_top_funds_data, get_stock_news, get_corporate_actions)
 
 st.set_page_config(page_title="SwingDesk Pro", layout="wide", page_icon="⚡",
                    initial_sidebar_state="expanded")
@@ -113,6 +114,14 @@ if IS_LOCAL and "scheduler_started" not in st.session_state:
 @st.cache_data(ttl=300)
 def _forex():
     return fetch_forex_comm()
+
+@st.cache_data(ttl=60)
+def _index_quotes():
+    return get_index_quotes()
+
+@st.cache_data(ttl=3600)
+def _top_funds():
+    return get_top_funds_data()
 
 @st.cache_data(ttl=600)
 def _mf_summary(portfolio_json):
@@ -219,7 +228,32 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Signals", "Breakouts", "F&O", "Mutual Funds", "Performance", "History"])
+# ── Bloomberg Ticker Bar ─────────────────────────────────────────────────────
+_iq = _index_quotes()
+if _iq:
+    def _ticker_item(r):
+        c = "#4ade80" if r["chg"] >= 0 else "#f87171"
+        s = "+" if r["chg"] >= 0 else ""
+        return (f'<span style="margin:0 28px;white-space:nowrap">'
+                f'<span style="color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:.04em">{r["name"]}</span>'
+                f'&nbsp;&nbsp;<span style="color:#f1f5f9;font-size:12px;font-weight:800;font-family:\'JetBrains Mono\',monospace">{r["last"]:,.2f}</span>'
+                f'&nbsp;<span style="color:{c};font-size:11px;font-weight:700">{s}{r["chg"]}%</span>'
+                f'</span>')
+    ticker_html = "".join(_ticker_item(r) for r in _iq)
+    st.markdown(f"""
+<div style="background:#070f1e;border:1px solid #0f2035;border-radius:8px;padding:8px 0;margin-bottom:14px;overflow:hidden;position:relative">
+  <div style="display:flex;align-items:center">
+    <div style="background:#070f1e;padding:0 12px;border-right:1px solid #0f2035;margin-right:8px;flex-shrink:0">
+      <span class="live"></span><span style="font-size:10px;font-weight:700;color:#22c55e;letter-spacing:.08em">LIVE</span>
+    </div>
+    <div style="overflow:hidden;flex:1">
+      <marquee behavior="scroll" direction="left" scrollamount="4" style="display:block">{ticker_html * 3}</marquee>
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Signals", "Breakouts", "F&O", "Mutual Funds", "Market News", "Performance", "History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -443,7 +477,65 @@ with tab3:
 # TAB 4 — MUTUAL FUNDS
 # ══════════════════════════════════════════════════════════════════════════════
 with tab4:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">Mutual Fund Portfolio Intelligence</div><div style="font-size:11px;color:#334155;margin-bottom:16px">NAV tracking · Returns · News · Alerts — powered by AMFI</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">Mutual Fund Intelligence</div><div style="font-size:11px;color:#334155;margin-bottom:16px">Top Funds Discovery · Portfolio Tracker · NAV · Returns — powered by AMFI</div>', unsafe_allow_html=True)
+
+    # ── Top Funds per Category ─────────────────────────────────────────────
+    st.markdown('<div style="font-size:12px;font-weight:700;color:#f1f5f9;margin-bottom:10px">Top Funds by Category</div>', unsafe_allow_html=True)
+    with st.spinner("Loading top funds data…"):
+        top_data = _top_funds()
+
+    if top_data:
+        cat_tabs = st.tabs(list(top_data.keys()))
+        for ct, (cat, funds) in zip(cat_tabs, top_data.items()):
+            with ct:
+                if not funds:
+                    st.info("No data available.")
+                    continue
+                rows = []
+                for f in funds:
+                    r = f["returns"]
+                    rows.append({
+                        "Fund": f["short"],
+                        "NAV": f"₹{f['nav']:.2f}",
+                        "1Y %": f['1Y'] if f['1Y'] is not None else "—",
+                        "3Y %": f['3Y'] if f['3Y'] is not None else "—",
+                        "5Y %": f['5Y'] if f['5Y'] is not None else "—",
+                    })
+                df_top = pd.DataFrame(rows)
+
+                def _style_ret(val):
+                    if isinstance(val, float):
+                        return f"color: {'#4ade80' if val >= 0 else '#f87171'}"
+                    return "color: #94a3b8"
+
+                st.dataframe(
+                    df_top.style.map(_style_ret, subset=["1Y %", "3Y %", "5Y %"]),
+                    use_container_width=True, hide_index=True
+                )
+                st.markdown("")
+                for f in funds:
+                    ret = f["returns"]
+                    ret_bits = " · ".join(
+                        f'<span style="color:{"#4ade80" if v>=0 else "#f87171"}">{k}: {v:+.1f}%</span>'
+                        for k, v in ret.items() if v is not None
+                    )
+                    st.markdown(f"""
+<div class="mf-card" style="padding:12px 16px;margin-bottom:8px">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div style="max-width:65%">
+      <div style="font-size:13px;font-weight:700;color:#f1f5f9;line-height:1.3">{f['name']}</div>
+      <div style="font-size:10px;color:#334155;margin-top:2px">{f['fund_house']}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:15px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#38bdf8">₹{f['nav']:.4f}</div>
+      <div style="font-size:10px;color:#475569;margin-top:2px">NAV</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;font-size:11px">{ret_bits if ret_bits else '<span style="color:#334155">Insufficient history</span>'}</div>
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("---")
 
     # Portfolio manager
     portfolio = load_portfolio()
@@ -589,9 +681,68 @@ with tab4:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB 5 — PERFORMANCE
+# TAB 5 — MARKET NEWS
 # ══════════════════════════════════════════════════════════════════════════════
 with tab5:
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">Market News & Corporate Actions</div><div style="font-size:11px;color:#334155;margin-bottom:16px">Nifty 500 stocks · Results declarations · Dividends · Earnings</div>', unsafe_allow_html=True)
+
+    col_ns, col_nb = st.columns([3, 1])
+    with col_ns:
+        news_sym = st.text_input("Stock symbol", placeholder="e.g. RELIANCE, INFY, HDFC", label_visibility="visible")
+    with col_nb:
+        st.markdown("<div style='margin-top:28px'></div>", unsafe_allow_html=True)
+        news_go = st.button("Fetch News", use_container_width=True)
+
+    if news_sym and news_go:
+        sym_clean = news_sym.upper().strip()
+        col_a, col_b = st.columns([3, 2])
+
+        with col_a:
+            st.markdown(f'<div style="font-size:12px;font-weight:700;color:#f1f5f9;margin-bottom:10px">{sym_clean} — Latest News</div>', unsafe_allow_html=True)
+            with st.spinner("Fetching news…"):
+                news_items = get_stock_news(sym_clean, n=8)
+            if news_items:
+                for n in news_items:
+                    st.markdown(f"""
+<div class="news-item">
+  <a href="{n['link']}" target="_blank" style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none;line-height:1.45">{n['title']}</a>
+  <div style="font-size:10px;color:#334155;margin-top:3px">{n['published']}</div>
+</div>
+""", unsafe_allow_html=True)
+            else:
+                st.info("No recent news found.")
+
+        with col_b:
+            st.markdown(f'<div style="font-size:12px;font-weight:700;color:#fbbf24;margin-bottom:10px">Corporate Actions</div>', unsafe_allow_html=True)
+            with st.spinner("Loading…"):
+                actions = get_corporate_actions(sym_clean)
+            if actions:
+                for a in actions:
+                    st.markdown(f'<div style="background:#1a1200;border:1px solid #422006;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#fbbf24">📋 {a}</div>', unsafe_allow_html=True)
+            else:
+                st.info("No corporate actions found.")
+
+            st.markdown("---")
+            st.markdown(f'<div style="font-size:11px;color:#334155">Links</div>', unsafe_allow_html=True)
+            st.markdown(f'<a href="https://www.nseindia.com/get-quotes/equity?symbol={sym_clean}" target="_blank" style="color:#38bdf8;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">NSE Quote →</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="https://www.bseindia.com/stockinfo/AnnSubCategorywise.html" target="_blank" style="color:#38bdf8;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">BSE Announcements →</a>', unsafe_allow_html=True)
+    else:
+        st.markdown('<div style="text-align:center;padding:50px 0;color:#1e3a5f"><div style="font-size:36px">📰</div><div style="margin-top:8px;font-size:14px;color:#334155">Enter a NSE symbol above (e.g. RELIANCE, INFY) to fetch news &amp; corporate actions</div></div>', unsafe_allow_html=True)
+
+        # Quick picks - popular stocks
+        st.markdown('<div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Quick Search</div>', unsafe_allow_html=True)
+        quick = ["RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK", "WIPRO", "BAJFINANCE", "LT", "SBIN", "MARUTI"]
+        cols_q = st.columns(5)
+        for i, sym in enumerate(quick):
+            if cols_q[i % 5].button(sym, key=f"qs_{sym}"):
+                st.session_state["_news_sym"] = sym
+                st.rerun()
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAB 6 — PERFORMANCE
+# ══════════════════════════════════════════════════════════════════════════════
+with tab6:
     perf = get_performance()
     if perf:
         p = st.columns(5)
@@ -616,9 +767,9 @@ with tab5:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB 6 — HISTORY
+# TAB 7 — HISTORY
 # ══════════════════════════════════════════════════════════════════════════════
-with tab6:
+with tab7:
     hist = get_history()
     if not hist.empty:
         st.dataframe(hist, use_container_width=True, hide_index=True)
