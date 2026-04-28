@@ -494,7 +494,7 @@ with tab2:
         def color_chg(v):
             return "color: #4ade80" if v >= 0 else "color: #f87171"
         st.dataframe(
-            wdf.style.applymap(color_chg, subset=["Chg%"]),
+            wdf.style.map(color_chg, subset=["Chg%"]),
             use_container_width=True, hide_index=True
         )
 
