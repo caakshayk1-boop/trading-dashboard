@@ -26,19 +26,31 @@ INTERVAL_MAP = {
 
 
 # ── Token management ───────────────────────────────────────────────────────────
+def _token_expired(access_token):
+    """Decode JWT exp claim without verifying signature."""
+    try:
+        import base64
+        payload = access_token.split(".")[1]
+        payload += "=" * (4 - len(payload) % 4)
+        data = json.loads(base64.b64decode(payload))
+        return time.time() > data.get("exp", 0) - 300  # 5 min buffer
+    except Exception:
+        return False  # assume valid if can't decode
+
+
 def _load_token():
     if os.path.exists(UPSTOX_TOKEN_FILE):
         with open(UPSTOX_TOKEN_FILE) as f:
             data = json.load(f)
-        # Token valid if saved today
-        if data.get("date") == str(date.today()):
-            return data.get("access_token")
+        token = data.get("access_token")
+        if token and not _token_expired(token):
+            return token
     return None
 
 
 def _save_token(access_token):
     with open(UPSTOX_TOKEN_FILE, "w") as f:
-        json.dump({"access_token": access_token, "date": str(date.today())}, f)
+        json.dump({"access_token": access_token}, f)
 
 
 def get_auth_url():
