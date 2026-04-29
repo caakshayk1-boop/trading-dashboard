@@ -68,132 +68,241 @@ st.markdown(f"""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 {_THEME_VARS}
 
-/* --Base -- */
-html,body,[class*="css"]{{font-family:'Inter',sans-serif!important;background:var(--bg)!important;color:var(--txt)!important}}
-.stApp{{background:var(--bg)}}
-header[data-testid="stHeader"]{{background:var(--bg);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}}
-section[data-testid="stSidebar"]{{background:var(--bg2)!important;border-right:1px solid var(--border)}}
-section[data-testid="stSidebar"] *{{color:var(--txt3)!important}}
+/* ---- Rotating border property (Chrome 85+ / Safari 15.4+) ---- */
+@property --rot {{
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}}
+@keyframes rotateBorder {{ to {{ --rot: 360deg; }} }}
+@keyframes fadeUp {{ from {{ opacity:0; transform:translateY(18px); }} to {{ opacity:1; transform:translateY(0); }} }}
+@keyframes fadeIn  {{ from {{ opacity:0; }} to {{ opacity:1; }} }}
+@keyframes slideRight {{ from {{ transform:translateX(-100%); }} to {{ transform:translateX(0); }} }}
+@keyframes shimmer  {{ 0% {{ left:-120%; }} 100% {{ left:120%; }} }}
+@keyframes pulse    {{ 0%,100% {{ opacity:1; box-shadow:0 0 6px var(--green); }} 50% {{ opacity:.5; box-shadow:0 0 14px var(--green); }} }}
+@keyframes confFill {{ from {{ width:0%; }} to {{ width:100%; }} }}
+@keyframes scanLine {{ 0% {{ transform:translateX(-100%); }} 100% {{ transform:translateX(200%); }} }}
+@keyframes breathe  {{ 0%,100% {{ opacity:.6; }} 50% {{ opacity:1; }} }}
 
-/* --Buttons -- */
-section[data-testid="stSidebar"] .stButton>button{{
-  background:linear-gradient(135deg,#0369a1,#0ea5e9)!important;color:#fff!important;
-  border:none!important;border-radius:8px!important;font-weight:700!important;font-size:12px!important;
-  box-shadow:0 0 16px rgba(14,165,233,.3)!important;transition:all .2s!important}}
-section[data-testid="stSidebar"] .stButton>button:hover{{box-shadow:0 0 28px rgba(14,165,233,.6)!important;transform:translateY(-1px)!important}}
-.stButton>button{{
-  background:linear-gradient(135deg,#0369a1,#0ea5e9)!important;color:#fff!important;
-  border:none!important;border-radius:8px!important;font-weight:800!important;font-size:13px!important;
-  box-shadow:0 0 20px rgba(56,189,248,.3)!important;transition:all .2s!important;letter-spacing:.02em}}
-.stButton>button:hover{{box-shadow:0 0 36px rgba(56,189,248,.6)!important;transform:translateY(-1px)!important}}
+/* ---- Base ---- */
+html,body,[class*="css"] {{ font-family:'Inter',sans-serif!important; background:var(--bg)!important; color:var(--txt)!important; -webkit-font-smoothing:antialiased; }}
+.stApp {{ background:var(--bg); }}
+.stApp::before {{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 35%, rgba(56,189,248,.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(34,197,94,.04) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 55% 85%, rgba(167,139,250,.03) 0%, transparent 45%);
+}}
+header[data-testid="stHeader"] {{ background:var(--bg2); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid var(--border); box-shadow:0 1px 20px rgba(0,0,0,.15); }}
+section[data-testid="stSidebar"] {{ background:var(--bg2)!important; border-right:1px solid var(--border); }}
+section[data-testid="stSidebar"] *{{ color:var(--txt3)!important; }}
+section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[data-testid="stSidebar"] h3 {{ color:var(--txt2)!important; }}
 
-/* --Tabs -- */
-.stTabs [data-baseweb="tab-list"]{{
-  background:var(--bg2);border-bottom:1px solid var(--border);padding:0 12px}}
-.stTabs [data-baseweb="tab"]{{
-  background:transparent;color:var(--txt3)!important;font-size:10px;font-weight:700;
-  padding:13px 20px;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.08em;transition:all .2s}}
-.stTabs [data-baseweb="tab"]:hover{{color:var(--txt2)!important}}
-.stTabs [aria-selected="true"]{{color:var(--accent)!important;border-bottom:2px solid var(--accent)!important}}
+/* ---- Buttons ---- */
+.stButton>button {{
+  background:linear-gradient(135deg,#0369a1 0%,#0ea5e9 60%,#38bdf8 100%)!important;
+  color:#fff!important; border:none!important; border-radius:9px!important;
+  font-weight:800!important; font-size:12px!important; letter-spacing:.04em!important;
+  box-shadow:0 4px 20px rgba(14,165,233,.35),0 0 0 1px rgba(56,189,248,.15)!important;
+  transition:all .25s cubic-bezier(.4,0,.2,1)!important; position:relative!important; overflow:hidden!important; }}
+.stButton>button::after {{
+  content:''; position:absolute; top:0; left:-120%; width:60%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+  transition:left .45s ease; }}
+.stButton>button:hover {{ box-shadow:0 6px 32px rgba(14,165,233,.55),0 0 0 1px rgba(56,189,248,.3)!important; transform:translateY(-2px)!important; }}
+.stButton>button:hover::after {{ left:160%; }}
+.stButton>button:active {{ transform:translateY(0)!important; }}
 
-/* --Metrics -- */
-[data-testid="metric-container"]{{
-  background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 20px;
-  transition:all .25s;position:relative;overflow:hidden}}
-[data-testid="metric-container"]::before{{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.3}}
-[data-testid="metric-container"]:hover{{border-color:var(--accent);box-shadow:0 0 20px rgba(56,189,248,.08)}}
-[data-testid="metric-container"] label{{color:var(--txt3)!important;font-size:9px!important;text-transform:uppercase;letter-spacing:.12em;font-weight:700}}
-[data-testid="metric-container"] [data-testid="stMetricValue"]{{color:var(--txt)!important;font-size:24px!important;font-weight:800!important;font-family:'JetBrains Mono',monospace!important;letter-spacing:-.02em}}
-[data-testid="stMetricDelta"]{{font-size:11px!important;font-weight:700!important}}
+/* ---- Tabs ---- */
+.stTabs [data-baseweb="tab-list"] {{
+  background:var(--bg2); border-bottom:1px solid var(--border); padding:0 16px;
+  backdrop-filter:blur(12px); gap:4px; }}
+.stTabs [data-baseweb="tab"] {{
+  background:transparent; color:var(--txt3)!important; font-size:10px; font-weight:700;
+  padding:13px 18px; border-bottom:2px solid transparent; border-radius:0;
+  text-transform:uppercase; letter-spacing:.09em; transition:all .22s ease; }}
+.stTabs [data-baseweb="tab"]:hover {{ color:var(--txt2)!important; }}
+.stTabs [aria-selected="true"] {{
+  color:var(--accent)!important; border-bottom:2px solid var(--accent)!important;
+  text-shadow:0 0 16px color-mix(in srgb, var(--accent) 60%, transparent); }}
 
-/* --DataFrames -- */
-.stDataFrame{{border:1px solid var(--border)!important;border-radius:10px;overflow:hidden}}
-.stDataFrame thead th{{background:var(--bg2)!important;color:var(--accent)!important;font-size:9px!important;text-transform:uppercase;letter-spacing:.1em;font-weight:800;border-color:var(--border2)!important}}
-.stDataFrame tbody tr{{background:var(--bg)!important}}
-.stDataFrame tbody tr:hover{{background:var(--bg3)!important}}
-.stDataFrame tbody td{{color:var(--txt2)!important;font-family:'JetBrains Mono',monospace;font-size:12px!important;border-color:var(--border2)!important}}
+/* ---- Metrics ---- */
+[data-testid="metric-container"] {{
+  background:var(--bg3); border:1px solid var(--border); border-radius:14px;
+  padding:18px 22px; transition:all .3s ease; position:relative; overflow:hidden; }}
+[data-testid="metric-container"]::before {{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(56,189,248,.04) 0%, transparent 60%);
+  pointer-events:none; }}
+[data-testid="metric-container"]::after {{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  opacity:.35; }}
+[data-testid="metric-container"]:hover {{
+  border-color:var(--accent); transform:translateY(-1px);
+  box-shadow:0 8px 28px rgba(0,0,0,.12), 0 0 24px rgba(56,189,248,.06); }}
+[data-testid="metric-container"] label {{
+  color:var(--txt3)!important; font-size:9px!important;
+  text-transform:uppercase; letter-spacing:.14em; font-weight:700; }}
+[data-testid="metric-container"] [data-testid="stMetricValue"] {{
+  color:var(--txt)!important; font-size:26px!important; font-weight:800!important;
+  font-family:'JetBrains Mono',monospace!important; letter-spacing:-.03em; }}
+[data-testid="stMetricDelta"] {{ font-size:11px!important; font-weight:700!important; }}
 
-/* --Inputs -- */
-.stTextInput input,.stSelectbox [data-baseweb="select"]{{
-  background:var(--bg3)!important;border:1px solid var(--border)!important;
-  color:var(--txt)!important;border-radius:8px!important}}
-.stTextInput input:focus{{border-color:var(--accent)!important}}
+/* ---- DataFrames ---- */
+.stDataFrame {{ border:1px solid var(--border)!important; border-radius:12px; overflow:hidden; }}
+.stDataFrame thead th {{
+  background:var(--bg2)!important; color:var(--accent)!important;
+  font-size:9px!important; text-transform:uppercase; letter-spacing:.12em;
+  font-weight:800; border-color:var(--border2)!important; padding:10px 14px!important; }}
+.stDataFrame tbody tr {{ background:var(--bg)!important; transition:background .15s; }}
+.stDataFrame tbody tr:hover {{ background:var(--bg3)!important; }}
+.stDataFrame tbody td {{
+  color:var(--txt2)!important; font-family:'JetBrains Mono',monospace;
+  font-size:12px!important; border-color:var(--border2)!important;
+  padding:9px 14px!important; }}
 
-/* --Expander -- */
-.streamlit-expanderHeader{{background:var(--bg3)!important;border:1px solid var(--border)!important;border-radius:8px!important;color:var(--txt2)!important;font-size:12px!important;font-weight:600!important}}
-.streamlit-expanderContent{{background:var(--bg2)!important;border:1px solid var(--border2)!important;border-top:none!important;border-radius:0 0 8px 8px!important}}
+/* ---- Inputs ---- */
+.stTextInput input, .stSelectbox [data-baseweb="select"] {{
+  background:var(--bg3)!important; border:1px solid var(--border)!important;
+  color:var(--txt)!important; border-radius:9px!important;
+  transition:border-color .2s, box-shadow .2s; }}
+.stTextInput input:focus {{
+  border-color:var(--accent)!important;
+  box-shadow:0 0 0 3px rgba(56,189,248,.1)!important; }}
+.stSelectbox [data-baseweb="select"]:focus-within {{
+  border-color:var(--accent)!important; }}
 
-/* --Keyframes -- */
-@keyframes fadeUp{{from{{opacity:0;transform:translateY(14px)}}to{{opacity:1;transform:translateY(0)}}}}
-@keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:.35}}}}
-@keyframes glowCyan{{0%,100%{{box-shadow:0 0 12px rgba(56,189,248,.15)}}50%{{box-shadow:0 0 28px rgba(56,189,248,.4)}}}}
-@keyframes confFill{{from{{width:0%}}to{{width:100%}}}}
-@keyframes scanLine{{0%{{top:-100%}}100%{{top:100%}}}}
+/* ---- Expanders ---- */
+.streamlit-expanderHeader {{
+  background:var(--bg3)!important; border:1px solid var(--border)!important;
+  border-radius:10px!important; color:var(--txt2)!important;
+  font-size:12px!important; font-weight:600!important; transition:all .2s; }}
+.streamlit-expanderHeader:hover {{ border-color:var(--accent)!important; color:var(--txt)!important; }}
+.streamlit-expanderContent {{
+  background:var(--bg2)!important; border:1px solid var(--border2)!important;
+  border-top:none!important; border-radius:0 0 10px 10px!important; }}
 
-/* --Signal Cards -- */
-.card{{
-  background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--green);
-  border-radius:12px;padding:18px 20px;margin-bottom:12px;
-  animation:fadeUp .4s ease;transition:all .25s;position:relative;overflow:hidden}}
-.card:hover{{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.15)}}
-.card.sell{{border-left-color:var(--red)}}
-.card.top{{animation:glowCyan 2.8s ease-in-out infinite}}
-.card.top::before{{
-  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(56,189,248,.04),transparent);
-  animation:scanLine 3s linear infinite}}
+/* ---- Signal Cards ---- */
+.card {{
+  background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--green);
+  border-radius:14px; padding:20px 22px; margin-bottom:14px;
+  animation:fadeUp .45s cubic-bezier(.4,0,.2,1);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  position:relative; overflow:hidden; }}
+.card::before {{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--green), transparent); opacity:.4; }}
+.card::after {{
+  content:''; position:absolute; top:0; left:-120%; width:55%; height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.025), transparent);
+  transition:left .55s ease; }}
+.card:hover {{ transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.18); border-color:rgba(56,189,248,.25); }}
+.card:hover::after {{ left:130%; }}
+.card.sell {{ border-left-color:var(--red); }}
+.card.sell::before {{ background:linear-gradient(90deg, transparent, var(--red), transparent); }}
+.card.top {{
+  border-color:transparent;
+  background:linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+    conic-gradient(from var(--rot), #22c55e 0%, #38bdf8 33%, #a78bfa 66%, #22c55e 100%) border-box;
+  animation:rotateBorder 4s linear infinite; }}
 
-/* --Breakout Cards -- */
-.bo-card{{
-  background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--green);
-  border-radius:12px;padding:16px 18px;margin-bottom:10px;animation:fadeUp .4s ease;transition:all .25s}}
-.bo-card:hover{{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.12)}}
-.bo-card.weekly{{border-left-color:#f59e0b}}
-.bo-card.monthly{{border-left-color:#a78bfa}}
+/* ---- Breakout Cards ---- */
+.bo-card {{
+  background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--green);
+  border-radius:14px; padding:18px 20px; margin-bottom:12px;
+  animation:fadeUp .4s ease; transition:all .25s; position:relative; overflow:hidden; }}
+.bo-card::before {{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--green), transparent); opacity:.3; }}
+.bo-card:hover {{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.12); border-color:rgba(34,197,94,.3); }}
+.bo-card.weekly {{ border-left-color:#f59e0b; }}
+.bo-card.weekly::before {{ background:linear-gradient(90deg, transparent, #f59e0b, transparent); }}
+.bo-card.monthly {{ border-left-color:#a78bfa; }}
+.bo-card.monthly::before {{ background:linear-gradient(90deg, transparent, #a78bfa, transparent); }}
 
-/* --F&O Cards -- */
-.fno-card{{
-  background:var(--card-bg);border:1px solid var(--border);border-left:3px solid var(--accent);
-  border-radius:12px;padding:16px 18px;margin-bottom:10px;animation:fadeUp .4s ease;transition:all .25s}}
-.fno-card:hover{{transform:translateY(-1px)}}
+/* ---- F&O Cards ---- */
+.fno-card {{
+  background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--accent);
+  border-radius:14px; padding:18px 20px; margin-bottom:12px;
+  animation:fadeUp .4s ease; transition:all .25s; position:relative; overflow:hidden; }}
+.fno-card::before {{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--accent), transparent); opacity:.4; }}
+.fno-card:hover {{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(56,189,248,.1); }}
 
-/* --MF Cards -- */
-.mf-card{{
-  background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;
-  margin-bottom:12px;animation:fadeUp .4s ease;transition:all .25s}}
-.mf-card:hover{{transform:translateY(-1px);border-color:var(--accent)}}
+/* ---- MF Cards ---- */
+.mf-card {{
+  background:var(--card-bg); border:1px solid var(--border);
+  border-radius:14px; padding:20px 22px; margin-bottom:14px;
+  animation:fadeUp .4s ease; transition:all .25s; }}
+.mf-card:hover {{ transform:translateY(-2px); border-color:var(--accent); box-shadow:0 8px 24px rgba(0,0,0,.1); }}
 
-/* --Badges -- */
-.badge{{display:inline-block;padding:4px 12px;border-radius:99px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}}
-.badge.sb{{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.35)}}
-.badge.b{{background:rgba(56,189,248,.1);color:#0ea5e9;border:1px solid rgba(56,189,248,.3)}}
-.badge.w{{background:rgba(251,191,36,.1);color:#d97706;border:1px solid rgba(251,191,36,.3)}}
-.badge.fno{{background:rgba(56,189,248,.08);color:#0284c7;border:1px solid rgba(56,189,248,.2);font-size:9px}}
+/* ---- Badges ---- */
+.badge {{
+  display:inline-flex; align-items:center;
+  padding:4px 12px; border-radius:99px; font-size:9px; font-weight:800;
+  letter-spacing:.09em; text-transform:uppercase; }}
+.badge.sb {{
+  background:rgba(34,197,94,.1); color:#22c55e; border:1px solid rgba(34,197,94,.3);
+  box-shadow:0 0 10px rgba(34,197,94,.2), inset 0 0 8px rgba(34,197,94,.05); }}
+.badge.b {{
+  background:rgba(56,189,248,.1); color:#0ea5e9; border:1px solid rgba(56,189,248,.3);
+  box-shadow:0 0 10px rgba(56,189,248,.15); }}
+.badge.w {{
+  background:rgba(251,191,36,.08); color:#d97706; border:1px solid rgba(251,191,36,.25); }}
+.badge.fno {{
+  background:rgba(56,189,248,.07); color:#0284c7; border:1px solid rgba(56,189,248,.2);
+  font-size:9px; }}
 
-/* --Confidence Bar -- */
-.conf{{height:4px;background:var(--border);border-radius:3px;margin:10px 0 12px;overflow:hidden}}
-.conf-fill{{height:100%;border-radius:3px;animation:confFill .6s cubic-bezier(.4,0,.2,1) forwards}}
+/* ---- Confidence Bar ---- */
+.conf {{ height:4px; background:var(--border2); border-radius:3px; margin:10px 0 12px; overflow:hidden; position:relative; }}
+.conf-fill {{ height:100%; border-radius:3px; animation:confFill .7s cubic-bezier(.4,0,.2,1) forwards; position:relative; }}
+.conf-fill::after {{
+  content:''; position:absolute; right:0; top:-2px; width:6px; height:8px;
+  background:inherit; border-radius:50%; box-shadow:0 0 8px currentColor; }}
 
-/* --KV rows -- */
-.row{{display:flex;gap:18px;flex-wrap:wrap;margin:8px 0}}
-.kv{{display:flex;flex-direction:column;min-width:58px}}
-.kv span:first-child{{font-size:9px;color:var(--txt3);text-transform:uppercase;letter-spacing:.09em;font-weight:700}}
-.kv span:last-child{{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--txt);margin-top:2px}}
+/* ---- KV Rows ---- */
+.row {{ display:flex; gap:20px; flex-wrap:wrap; margin:10px 0; }}
+.kv {{ display:flex; flex-direction:column; min-width:60px; }}
+.kv span:first-child {{
+  font-size:8px; color:var(--txt3); text-transform:uppercase;
+  letter-spacing:.1em; font-weight:700; margin-bottom:3px; }}
+.kv span:last-child {{
+  font-size:13px; font-weight:700; font-family:'JetBrains Mono',monospace;
+  color:var(--txt); line-height:1; }}
 
-/* --Utility -- */
-.green{{color:var(--green)!important}}.red{{color:var(--red)!important}}.blue{{color:var(--accent)!important}}
-.tag{{display:inline-block;padding:3px 9px;border-radius:99px;font-size:9px;font-weight:700;margin:2px;
-  background:rgba(34,197,94,.08);color:var(--green);border:1px solid rgba(34,197,94,.2)}}
-.news-item{{padding:10px 0;border-bottom:1px solid var(--border2)}}
-.news-item:last-child{{border-bottom:none}}
-.live{{display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:5px;
-  animation:pulse 1.5s ease-in-out infinite;vertical-align:middle;box-shadow:0 0 6px #22c55e}}
-hr{{border-color:var(--border2)!important;margin:16px 0!important}}
-::-webkit-scrollbar{{width:3px;height:3px}}
-::-webkit-scrollbar-track{{background:var(--bg)}}
-::-webkit-scrollbar-thumb{{background:var(--border);border-radius:2px}}
+/* ---- Tags ---- */
+.tag {{
+  display:inline-block; padding:3px 10px; border-radius:99px;
+  font-size:9px; font-weight:700; margin:2px 3px;
+  background:rgba(34,197,94,.07); color:var(--green);
+  border:1px solid rgba(34,197,94,.2);
+  transition:all .18s; }}
+.tag:hover {{ background:rgba(34,197,94,.14); border-color:rgba(34,197,94,.35); }}
+
+/* ---- News ---- */
+.news-item {{ padding:11px 0; border-bottom:1px solid var(--border2); transition:all .18s; }}
+.news-item:hover {{ padding-left:4px; }}
+.news-item:last-child {{ border-bottom:none; }}
+
+/* ---- Live dot ---- */
+.live {{
+  display:inline-block; width:7px; height:7px; background:var(--green); border-radius:50%;
+  margin-right:6px; animation:pulse 2s ease-in-out infinite; vertical-align:middle; }}
+
+/* ---- Utility ---- */
+.green {{ color:var(--green)!important; }}
+.red   {{ color:var(--red)!important; }}
+.blue  {{ color:var(--accent)!important; }}
+hr {{ border-color:var(--border2)!important; margin:18px 0!important; }}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {{ width:4px; height:4px; }}
+::-webkit-scrollbar-track {{ background:var(--bg); }}
+::-webkit-scrollbar-thumb {{ background:var(--border); border-radius:4px; }}
+::-webkit-scrollbar-thumb:hover {{ background:var(--accent); }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -679,23 +788,24 @@ with tab4:
                     continue
                 rows = []
                 for f in funds:
-                    r = f["returns"]
+                    def _fmt(v):
+                        return f"{v:+.2f}%" if v is not None else "—"
                     rows.append({
                         "Fund": f["short"],
                         "NAV": f"₹{f['nav']:.2f}",
-                        "1Y %": f['1Y'] if f['1Y'] is not None else "—",
-                        "3Y %": f['3Y'] if f['3Y'] is not None else "—",
-                        "5Y %": f['5Y'] if f['5Y'] is not None else "—",
+                        "1Y": _fmt(f['1Y']),
+                        "3Y": _fmt(f['3Y']),
+                        "5Y": _fmt(f['5Y']),
                     })
                 df_top = pd.DataFrame(rows)
 
                 def _style_ret(val):
-                    if isinstance(val, float):
-                        return f"color: {'#4ade80' if val >= 0 else '#f87171'}"
-                    return "color: #94a3b8"
+                    if isinstance(val, str) and val != "—":
+                        return "color:#4ade80;font-weight:700" if val.startswith("+") else "color:#f87171;font-weight:700"
+                    return "color:#475569"
 
                 st.dataframe(
-                    df_top.style.map(_style_ret, subset=["1Y %", "3Y %", "5Y %"]),
+                    df_top.style.map(_style_ret, subset=["1Y", "3Y", "5Y"]),
                     use_container_width=True, hide_index=True
                 )
                 # Selectbox to pick which fund to drill into
@@ -727,7 +837,7 @@ with tab4:
                             font=dict(color=_pfg, size=10),
                             showlegend=False, margin=dict(l=4,r=4,t=36,b=4)
                         )
-                        st.plotly_chart(fig_s, use_container_width=True, key=f"pie_s_{cat}_{_sf['scheme_code']}")
+                        st.plotly_chart(fig_s, use_container_width=True, key=f"pie_s_{cat}_{_sel_idx}")
                     with pc2:
                         scripts = hd["top_scripts"]
                         s_labels = [s[0] for s in scripts]
@@ -748,7 +858,7 @@ with tab4:
                             font=dict(color=_pfg, size=10),
                             showlegend=False, margin=dict(l=4,r=4,t=36,b=4)
                         )
-                        st.plotly_chart(fig_h, use_container_width=True, key=f"pie_h_{cat}_{_sf['scheme_code']}")
+                        st.plotly_chart(fig_h, use_container_width=True, key=f"pie_h_{cat}_{_sel_idx}")
                     st.caption(f"{_sf['fund_house']}  ·  Holdings approximate as of last monthly AMC disclosure")
                 else:
                     st.info("Holdings data not available for this fund.")
