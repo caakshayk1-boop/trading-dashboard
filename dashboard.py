@@ -7,11 +7,11 @@ import ta as ta_lib
 from datetime import datetime
 import pytz, os
 
-from scanner import scan_all, scan_breakouts, scan_4h, fetch_forex_comm, obfuscate_reasons
-from telegram_bot import send_alert, send_summary, send_top_picks, test_connection, start_command_polling
-from tracker import log_signals, update_outcomes, get_performance, get_history, init_db
+from scanner import fetch_forex_comm, obfuscate_reasons
+from tracker import (get_performance, get_history, get_active_signals, init_db,
+                     get_breakouts, get_4h_signals, get_commodity_signals,
+                     get_last_scan, get_signals_display)
 from config import MIN_SIGNAL_SCORE, CAPITAL
-from upstox_provider import is_authenticated, get_auth_url, exchange_code_for_token
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
                          load_portfolio, save_portfolio, get_portfolio_summary,
                          get_index_quotes, get_top_funds_data, get_stock_news,
@@ -352,33 +352,12 @@ hr {{ border-color:var(--border2)!important; margin:18px 0!important; }}
 """, unsafe_allow_html=True)
 
 
-# ── Upstox OAuth ──────────────────────────────────────────────────────────────
-if "code" in st.query_params and not is_authenticated():
-    try:
-        exchange_code_for_token(st.query_params["code"])
-        st.success("Upstox connected! Refresh.")
-        st.stop()
-    except Exception as e:
-        st.error(f"Upstox login failed: {e}")
-
-if IS_LOCAL and "polling_started" not in st.session_state:
-    start_command_polling()
-    st.session_state["polling_started"] = True
-
-if IS_LOCAL and "scheduler_started" not in st.session_state:
-    from apscheduler.schedulers.background import BackgroundScheduler
-    def _auto_scan():
-        sigs = scan_all(min_score=st.session_state.get("min_score", MIN_SIGNAL_SCORE))
-        st.session_state.update(signals=sigs, last_scan=datetime.now(IST).strftime("%d %b %Y %I:%M %p IST"))
-        log_signals(sigs); update_outcomes()
-        for s in sigs: send_alert(s)
-        send_summary(sigs)
-    _sch = BackgroundScheduler(timezone=IST)
-    _sch.add_job(_auto_scan, "cron", hour=9,  minute=25)
-    _sch.add_job(_auto_scan, "cron", hour=14, minute=0)
-    _sch.add_job(_auto_scan, "cron", hour=17, minute=0)
-    _sch.start()
-    st.session_state["scheduler_started"] = True
+# ── Auto-refresh every 60s (view-only mode) ──────────────────────────────────
+try:
+    from streamlit_autorefresh import st_autorefresh
+    st_autorefresh(interval=60_000, key="live_refresh")
+except ImportError:
+    pass  # graceful — manual refresh if package missing
 
 
 # ── Cached fetchers ───────────────────────────────────────────────────────────
@@ -450,7 +429,7 @@ def plot_chart(symbol, signal=None):
     st.plotly_chart(fig, use_container_width=True)
 
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
+# ── Sidebar (view-only — filters + info) ─────────────────────────────────────
 with st.sidebar:
     _th_icon = "☀️" if _DARK else "🌙"
     _th_lbl  = f"{_th_icon} {'Light' if _DARK else 'Dark'} Mode"
@@ -462,38 +441,41 @@ with st.sidebar:
         if st.button(_th_lbl, use_container_width=True):
             st.session_state["theme"] = "light" if _DARK else "dark"
             st.rerun()
-    run_scan = st.button("Run Swing Scan", use_container_width=True)
-    run_bo   = st.button("Run Breakout Scan", use_container_width=True)
-    run_4h   = st.button("Run 4H Early Scan", use_container_width=True)
-    send_tg  = st.checkbox("Telegram alerts", value=True)
-    st.markdown("**Min Score**")
-    min_score = st.slider("", 50, 100, MIN_SIGNAL_SCORE, label_visibility="collapsed")
-    st.session_state["min_score"] = min_score
-    st.markdown("**Chart Symbol**")
-    chart_sym  = st.text_input("", placeholder="RELIANCE", label_visibility="collapsed")
-    show_chart = st.button("Show Chart", use_container_width=True)
+
+    # Last scan info
+    _last_ts, _last_slot, _last_counts = get_last_scan()
+    if _last_ts:
+        st.markdown(f'<div style="font-size:10px;color:#22c55e;font-weight:700;margin:6px 0 2px"><span class="live"></span>Last scan</div>', unsafe_allow_html=True)
+        st.caption(f"{_last_ts}")
+        st.caption(f"Slot: {_last_slot.upper() if _last_slot else '—'}")
+
     st.markdown("---")
-    if is_authenticated():
-        st.markdown('<span class="live"></span>Upstox Live', unsafe_allow_html=True)
-    else:
-        st.markdown(f"[Connect Upstox]({get_auth_url()})")
-        st.caption("Using yfinance")
+    st.markdown('<div style="font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Filters</div>', unsafe_allow_html=True)
+    min_score  = st.slider("Min Score", 50, 100, MIN_SIGNAL_SCORE)
+    days_back  = st.selectbox("Show last", ["1 day", "3 days", "7 days"], index=1)
+    _days      = int(days_back.split()[0])
+
     st.markdown("---")
-    if st.button("Test Telegram", use_container_width=True):
-        test_connection(); st.success("Sent!")
-    if st.button("Update Outcomes", use_container_width=True):
-        update_outcomes(); st.success("Done!")
+    # Schedule info
+    st.markdown("""
+<div style="font-size:10px;color:var(--txt4);line-height:1.8">
+  <div style="font-weight:700;color:var(--txt3);margin-bottom:4px">Auto Schedule (IST)</div>
+  <div>⚡ 9:20 AM — 4H + Commodities</div>
+  <div>📊 11:45 AM — Swing + F&O</div>
+  <div>📋 4:30 PM — Breakouts + EOD</div>
+  <div style="margin-top:6px;color:#334155">Signals via Telegram + site updates live</div>
+</div>
+""", unsafe_allow_html=True)
     st.markdown("---")
-    st.caption("Auto: 9:25 · 14:00 · 17:00 IST")
-    if "last_scan" in st.session_state:
-        st.caption(f"Last: {st.session_state['last_scan']}")
-    st.caption(f"₹{CAPITAL:,} capital")
+    st.caption("Data: yfinance · Not SEBI advice")
 
 
 # ── Header ────────────────────────────────────────────────────────────────────
 now_str   = datetime.now(IST).strftime("%d %b · %I:%M %p IST")
-sig_count = len(st.session_state.get("signals", []))
-bo_count  = len(st.session_state.get("breakouts", []))
+_active   = get_active_signals()
+_bos_df   = get_breakouts(days=_days)
+sig_count = len(_active)
+bo_count  = len(_bos_df)
 
 st.markdown(f"""
 <div style="background:linear-gradient(135deg,rgba(7,15,30,.97),rgba(3,9,18,.97));
@@ -571,7 +553,11 @@ def _ti_signal(sig):
 
 _iq  = _index_quotes()
 _fxc = _forex()
-_sigs_ticker = st.session_state.get("signals", [])[:6]
+# Ticker signals from DB (active signals)
+_sigs_ticker = []
+if not _active.empty:
+    for _, _row in _active.head(6).iterrows():
+        _sigs_ticker.append({"symbol": _row["symbol"], "action": _row.get("action","BUY"), "price": _row["entry"]})
 
 ticker_parts = []
 if _iq:
@@ -608,40 +594,26 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Signals", "Breakouts", "F&O
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB 1 — SIGNALS
+# TAB 1 — SIGNALS (read-only from DB)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab1:
-    if show_chart and chart_sym:
-        sig_map = {s["symbol"]: s for s in st.session_state.get("signals", [])}
-        plot_chart(chart_sym.upper().strip(), sig_map.get(chart_sym.upper().strip()))
+    signals = get_signals_display(days=_days, min_score=min_score)
 
-    if run_scan:
-        with st.spinner("Scanning Nifty 500… 2-4 min"):
-            sigs = scan_all(min_score=min_score)
-            st.session_state.update(signals=sigs,
-                last_scan=datetime.now(IST).strftime("%d %b %Y %I:%M %p IST"))
-            log_signals(sigs)
-        if send_tg:
-            for s in sigs: send_alert(s)
-            send_summary(sigs)
-        st.success(f"{len(sigs)} signals found!")
-        st.rerun()
-
-    signals = st.session_state.get("signals", [])
     if not signals:
-        st.markdown('<div style="text-align:center;padding:50px 0;color:#1e3a5f"><div style="font-size:36px">⚡</div><div style="margin-top:8px;font-size:14px;color:#334155">Click <b>Run Swing Scan</b> · Auto: 9:25 AM · 2 PM · 5 PM IST</div></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="text-align:center;padding:50px 0"><div style="font-size:36px">📡</div><div style="margin-top:8px;font-size:13px;color:#334155">No signals in last {_days} day(s) above score {min_score}.<br>Auto-scans: 9:20 AM · 11:45 AM · 4:30 PM IST</div></div>', unsafe_allow_html=True)
     else:
         # KPI
         c = st.columns(5)
-        c[0].metric("Signals",   len(signals))
-        c[1].metric("Top Score", f"{signals[0]['score']}/100")
-        c[2].metric("Avg Score", f"{round(sum(s['score'] for s in signals)/len(signals),1)}")
-        c[3].metric("F&O Ready", sum(1 for s in signals if s.get("fno_eligible")))
-        c[4].metric("Avg RR",    f"1:{round(sum(s['rr1'] for s in signals)/len(signals),1)}")
+        c[0].metric("Active Signals", len(signals))
+        c[1].metric("Top Score",  f"{signals[0]['score']}/100")
+        c[2].metric("Avg Score",  f"{round(sum(s['score'] for s in signals)/len(signals),1)}")
+        c[3].metric("F&O Ready",  sum(1 for s in signals if s.get("fno_eligible")))
+        rr_vals = [s['rr1'] for s in signals if s['rr1'] > 0]
+        c[4].metric("Avg RR", f"1:{round(sum(rr_vals)/len(rr_vals),1)}" if rr_vals else "—")
 
         st.markdown("---")
         sort_by = st.selectbox("Sort by", ["score","rr1","vol_ratio"], index=0)
-        sigs_s  = sorted(signals, key=lambda x: x.get(sort_by,0), reverse=True)
+        sigs_s  = sorted(signals, key=lambda x: x.get(sort_by, 0) or 0, reverse=True)
 
         for i, s in enumerate(sigs_s):
             # --- derived display values ---
@@ -761,75 +733,50 @@ with tab1:
 """, unsafe_allow_html=True)
 
         st.markdown("---")
-        ca, cb = st.columns([3,1])
-        with ca:
-            df_s = pd.DataFrame(sigs_s)
-            fig  = px.bar(df_s, x="symbol", y="score", color="score",
-                          color_continuous_scale=["#0ea5e9","#22c55e"], range_color=[60,100])
-            fig.update_layout(height=180, paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
-                font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
-                yaxis=dict(gridcolor="#0f2035",range=[50,100]),
-                margin=dict(l=8,r=8,t=8,b=8), showlegend=False, coloraxis_showscale=False)
-            st.plotly_chart(fig, use_container_width=True)
-        with cb:
-            pk = st.selectbox("Chart", [s["symbol"] for s in sigs_s])
-            sm = {s["symbol"]:s for s in sigs_s}
-            if st.button("View", key="v1"): plot_chart(pk, sm.get(pk))
-            if pk in sm: st.markdown(f"[TradingView]({sm[pk]['tv_link']})")
-
+        df_s = pd.DataFrame(sigs_s)
+        fig  = px.bar(df_s, x="symbol", y="score", color="score",
+                      color_continuous_scale=["#0ea5e9","#22c55e"], range_color=[60,100])
+        fig.update_layout(height=180, paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
+            font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
+            yaxis=dict(gridcolor="#0f2035",range=[50,100]),
+            margin=dict(l=8,r=8,t=8,b=8), showlegend=False, coloraxis_showscale=False)
+        st.plotly_chart(fig, use_container_width=True)
         st.download_button("Export CSV", df_s.to_csv(index=False), "signals.csv", "text/csv")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB 2 — BREAKOUTS
+# TAB 2 — BREAKOUTS (read from DB)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab2:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">Confirmed Breakouts</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Daily · Weekly · Monthly — closed above key level with volume</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">Confirmed Breakouts</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Daily · Weekly · Monthly — auto-updated 4:30 PM IST</div>', unsafe_allow_html=True)
 
-    if run_bo:
-        with st.spinner("Scanning F&O universe… 3-5 min"):
-            bos = scan_breakouts()
-            st.session_state["breakouts"] = bos
-        st.success(f"{len(bos)} breakouts confirmed!")
-        st.rerun()
-
-    if run_4h:
-        with st.spinner("4H RSI-55 scan… 2-3 min"):
-            sigs_4h = scan_4h()
-            st.session_state["signals_4h"] = sigs_4h
-        if send_tg:
-            from datetime import datetime
-            ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
-            if sigs_4h:
-                from telegram_bot import _post
-                lines = [f"⚡ *4H Early-Entry Signals* — {ts}\n_(RSI crossing 55 + Volume surge)_\n"]
-                for b in sigs_4h[:8]:
-                    fno_tag = " `F&O`" if b["fno"] else ""
-                    lines.append(f"• *{b['symbol']}*{fno_tag} | ₹{b['price']} | RSI {b['rsi']} | Vol {b['vol_ratio']}x | T1 ₹{b['target1']} | SL ₹{b['sl']}")
-                _post("\n".join(lines))
-        st.success(f"{len(sigs_4h)} 4H early signals!")
-        st.rerun()
-
-    breakouts = st.session_state.get("breakouts", [])
-    if not breakouts:
-        st.info("Click **Run Breakout Scan** in sidebar.")
+    breakouts_df = _bos_df  # already fetched above
+    if breakouts_df.empty:
+        st.markdown('<div style="text-align:center;padding:40px 0"><div style="font-size:32px">📋</div><div style="font-size:13px;color:#334155;margin-top:8px">No breakouts in DB yet.<br>Auto-scan runs 4:30 PM IST on trading days.</div></div>', unsafe_allow_html=True)
     else:
+        bos_list = breakouts_df.to_dict("records")
         tfc = {}
-        for b in breakouts: tfc[b["timeframe"]] = tfc.get(b["timeframe"],0)+1
+        for b in bos_list: tfc[b.get("timeframe","Daily")] = tfc.get(b.get("timeframe","Daily"),0)+1
         c1,c2,c3,c4 = st.columns(4)
-        c1.metric("Total", len(breakouts))
+        c1.metric("Total",   len(bos_list))
         c2.metric("Monthly", tfc.get("Monthly",0))
         c3.metric("Weekly",  tfc.get("Weekly",0))
         c4.metric("Daily",   tfc.get("Daily",0))
         st.markdown("---")
         tf_f = st.selectbox("Filter", ["All","Monthly","Weekly","Daily"])
-        fil  = [b for b in breakouts if tf_f=="All" or b["timeframe"]==tf_f]
+        fil  = [b for b in bos_list if tf_f=="All" or b.get("timeframe")==tf_f]
         for b in fil:
-            tf   = b["timeframe"]
+            tf   = b.get("timeframe","Daily")
             cls  = {"Monthly":"monthly","Weekly":"weekly","Daily":""}.get(tf,"")
             tfc2 = {"Monthly":"#a78bfa","Weekly":"#f59e0b","Daily":"#22c55e"}.get(tf,"#22c55e")
             fno_b = '<span class="badge fno">F&amp;O</span>' if b.get("fno") else ""
-            pats  = " · ".join(b.get("patterns",[b["pattern"]]))
+            raw_pats = b.get("patterns", [])
+            if isinstance(raw_pats, str):
+                import json as _json
+                try: raw_pats = _json.loads(raw_pats)
+                except: raw_pats = []
+            pats = " · ".join(raw_pats) if raw_pats else b.get("pattern","")
+            tv_link = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{b['symbol']}"
             st.markdown(f"""
 <div class="bo-card {cls}">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -848,22 +795,24 @@ with tab2:
     <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
     <div class="kv"><span>Vol</span><span>{b['vol_ratio']}x</span></div>
   </div>
-  <div style="margin-top:8px"><a href="{b['tv_link']}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+  <div style="margin-top:8px"><a href="{tv_link}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
 </div>
 """, unsafe_allow_html=True)
 
-    # 4H Early-Entry Signals Section
-    sigs_4h = st.session_state.get("signals_4h", [])
+    # 4H section — from DB
     st.markdown("---")
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:4px">⚡ 4H Early-Entry Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">RSI crossing 55 + Volume surge — fires before daily candle closes</div>', unsafe_allow_html=True)
-    if not sigs_4h:
-        st.info("Click **Run 4H Early Scan** in sidebar.")
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:4px">⚡ 4H Early-Entry Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">RSI crossing 55 + Volume surge — auto-updated 9:20 AM & 11:45 AM IST</div>', unsafe_allow_html=True)
+    df_4h = get_4h_signals(days=_days)
+    if df_4h.empty:
+        st.info("No 4H signals today. Next auto-scan: 9:20 AM IST.")
     else:
+        sigs_4h = df_4h.to_dict("records")
         cc1, cc2 = st.columns(2)
         cc1.metric("4H Signals", len(sigs_4h))
-        cc2.metric("Avg Vol Ratio", f"{round(sum(s['vol_ratio'] for s in sigs_4h)/len(sigs_4h),1)}x")
+        cc2.metric("Avg Vol", f"{round(sum(float(s.get('vol_ratio',1)) for s in sigs_4h)/len(sigs_4h),1)}x")
         for b in sigs_4h:
             fno_b = '<span class="badge fno">F&amp;O</span>' if b.get("fno") else ""
+            tv4 = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{b['symbol']}"
             st.markdown(f"""
 <div class="bo-card" style="border-color:#f59e0b40">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -872,16 +821,50 @@ with tab2:
     </div>
     <span style="font-size:10px;font-weight:700;color:#f59e0b;padding:2px 8px;border-radius:99px;border:1px solid #f59e0b40">4H · EARLY</span>
   </div>
-  <div style="font-size:10px;color:#94a3b8;margin-bottom:8px">{b['reason']}</div>
+  <div style="font-size:10px;color:#94a3b8;margin-bottom:8px">{b.get('reason','RSI 55 cross + Volume surge')}</div>
   <div class="row">
-    <div class="kv"><span>Price</span><span>₹{b['price']:,.2f}</span></div>
-    <div class="kv"><span>Stop</span><span class="red">₹{b['sl']:,.2f}</span></div>
-    <div class="kv"><span>T1</span><span class="green">₹{b['target1']:,.2f}</span></div>
-    <div class="kv"><span>T2</span><span class="green">₹{b['target2']:,.2f}</span></div>
+    <div class="kv"><span>Price</span><span>₹{float(b['price']):,.2f}</span></div>
+    <div class="kv"><span>Stop</span><span class="red">₹{float(b['sl']):,.2f}</span></div>
+    <div class="kv"><span>T1</span><span class="green">₹{float(b['target1']):,.2f}</span></div>
+    <div class="kv"><span>T2</span><span class="green">₹{float(b['target2']):,.2f}</span></div>
     <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
-    <div class="kv"><span>Vol</span><span>{b['vol_ratio']}x</span></div>
+    <div class="kv"><span>Vol</span><span>{b.get('vol_ratio',0)}x</span></div>
   </div>
-  <div style="margin-top:8px"><a href="{b['tv_link']}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+  <div style="margin-top:8px"><a href="{tv4}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+</div>
+""", unsafe_allow_html=True)
+
+    # Commodity signals — from DB
+    st.markdown("---")
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:4px">🥇 Commodity Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Gold · Silver · Crude Oil · Nat Gas — Global futures</div>', unsafe_allow_html=True)
+    df_comm = get_commodity_signals(days=_days)
+    if df_comm.empty:
+        st.info("No commodity signals today. Next auto-scan: 9:20 AM IST.")
+    else:
+        for b in df_comm.to_dict("records"):
+            action = b.get("action","BUY")
+            ac  = "#22c55e" if action == "BUY" else "#ef4444"
+            arr = "▲ BUY" if action == "BUY" else "▼ SELL"
+            st.markdown(f"""
+<div class="bo-card" style="border-left-color:{ac}">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <div>
+      <span style="font-size:16px;font-weight:800;color:#f1f5f9">{b['symbol']}</span>
+      <span style="font-size:10px;color:#475569;margin-left:8px">{b.get('label','')}</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="font-size:11px;font-weight:800;color:{ac}">{arr}</span>
+      <span style="font-size:9px;color:#475569;padding:2px 7px;border:1px solid #0f2035;border-radius:4px">{b.get('timeframe','Daily')}</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="kv"><span>Price</span><span>₹{float(b['price']):,.2f}</span></div>
+    <div class="kv"><span>Stop</span><span class="red">{float(b['sl']):,.2f}</span></div>
+    <div class="kv"><span>T1</span><span class="green">{float(b['target1']):,.2f}</span></div>
+    <div class="kv"><span>T2</span><span class="green">{float(b['target2']):,.2f}</span></div>
+    <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
+    <div class="kv"><span>RSI</span><span>{b.get('rsi',0)}</span></div>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -892,15 +875,12 @@ with tab2:
 with tab3:
     st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">F&O Trade Suggestions</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Nifty 200 stocks · Verify premium &amp; IV on NSE before trading</div>', unsafe_allow_html=True)
 
-    signals  = st.session_state.get("signals", [])
     fno_sigs = [s for s in signals if s.get("fno_eligible") and s.get("fno_suggestion")]
 
     if not signals:
-        st.info("Run **Swing Scan** first → F&O suggestions auto-appear for Nifty 200 stocks.")
+        st.info("No swing signals in DB yet. Auto-scan: 11:45 AM IST.")
     elif not fno_sigs:
-        st.warning(f"Scan found {len(signals)} signals but none are from F&O eligible stocks today. Try lowering Min Score or run again at next session.")
-        # Show all signals as reference
-        st.markdown("**All current signals (for reference):**")
+        st.warning(f"Scan found {len(signals)} signals but none are F&O eligible today.")
         for s in signals[:5]:
             st.markdown(f"• **{s['symbol']}** — {s['setup_type']} — score {s['score']}")
     else:

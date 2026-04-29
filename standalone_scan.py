@@ -5,10 +5,10 @@ Mac can be OFF — GitHub Actions handles all automation.
 
 Schedule (IST):
   09:20 — 4H early signals + Commodity signals + market open preview
-  11:45 — Swing signals (Nifty 500) + F&O breakouts + 4H update
-  16:30 — EOD: Breakouts (daily confirmed) + Weekly/Monthly + Commodities EOD
+  11:45 — Swing signals (Nifty 500) + F&O + 4H update + commodities
+  16:30 — EOD: Breakouts (daily candle closed) + Weekly/Monthly + commodities
 
-All 3 slots: Forex/Commodities price update sent each time.
+All results are logged to signals.db so the dashboard reads live data.
 """
 import sys, logging, os
 from datetime import datetime
@@ -36,42 +36,39 @@ def _send(msg):
 
 
 def _slot(now_ist):
-    """Return scan slot name based on current IST time."""
     h, m = now_ist.hour, now_ist.minute
-    # 09:00–10:30 → morning
     if 9 <= h < 10 or (h == 10 and m <= 30):
         return "morning"
-    # 11:00–13:30 → midday
-    if 11 <= h < 13 or (h == 13 and m <= 30):
+    if 11 <= h < 14:
         return "midday"
-    # 15:30–17:30 → eod
     if 15 <= h < 18:
         return "eod"
-    # fallback: run everything
     return "full"
 
 
+# ── Individual scan runners ───────────────────────────────────────────────────
+
 def run_markets(time_str):
-    """Send Forex + Commodity prices update."""
     from scanner import fetch_forex_comm
     fc = fetch_forex_comm()
     if not fc:
         return
     lines = [f"🌐 *Markets* — {time_str}\n"]
     for r in fc:
-        sign = "+" if r["Chg%"] >= 0 else ""
+        sign  = "+" if r["Chg%"] >= 0 else ""
         arrow = "▲" if r["Chg%"] >= 0 else "▼"
         lines.append(f"{arrow} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%)")
     _send("\n".join(lines))
 
 
 def run_4h_scan(time_str):
-    """4H early-entry equity scan (RSI cross 55 + volume)."""
     from scanner import scan_4h
+    from tracker import log_4h_signals
     logging.info("Running 4H RSI-55 scan...")
     sigs = scan_4h()
     logging.info(f"4H scan: {len(sigs)} signals")
     if sigs:
+        log_4h_signals(sigs)
         lines = [f"⚡ *4H Early-Entry Signals* — {time_str}\n_(RSI crossing 55 + Volume surge)_\n"]
         for b in sigs[:8]:
             fno_tag = " `F&O`" if b.get("fno") else ""
@@ -85,20 +82,21 @@ def run_4h_scan(time_str):
 
 
 def run_commodity_scan(time_str):
-    """Commodity signals: Gold, Silver, Crude Oil, Nat Gas."""
     from scanner import scan_commodities
+    from tracker import log_commodity_signals
     logging.info("Running commodity scan...")
     sigs = scan_commodities()
     logging.info(f"Commodity scan: {len(sigs)} signals")
     if sigs:
+        log_commodity_signals(sigs)
         lines = [f"🥇 *Commodity Signals* — {time_str}\n"]
         for s in sigs:
-            action = s["action"]
-            arrow  = "▲ BUY" if action == "BUY" else "▼ SELL"
-            col    = "📈" if action == "BUY" else "📉"
+            arrow = "▲ BUY" if s["action"] == "BUY" else "▼ SELL"
+            col   = "📈" if s["action"] == "BUY" else "📉"
             lines.append(
                 f"{col} *{s['symbol']}* `{s['timeframe']}` | {arrow} @ {s['price']} | "
-                f"SL {s['sl']} | T1 {s['target1']} | T2 {s['target2']} | RR {s['rr']} | RSI {s['rsi']}"
+                f"SL {s['sl']} | T1 {s['target1']} | T2 {s['target2']} | "
+                f"RR {s['rr']} | RSI {s['rsi']}"
             )
             lines.append(f"  _{s['label']}_")
         _send("\n".join(lines))
@@ -106,7 +104,6 @@ def run_commodity_scan(time_str):
 
 
 def run_swing_scan(time_str):
-    """Full Nifty 500 swing scan + Telegram alerts."""
     from scanner import scan_all
     from telegram_bot import send_alert, send_summary, send_top_picks
     from tracker import log_signals, update_outcomes, init_db
@@ -127,21 +124,22 @@ def run_swing_scan(time_str):
         else:
             for s in signals:
                 ok = send_alert(s)
-                logging.info(f"Alert sent: {s['symbol']} score={s['score']} ok={ok}")
+                logging.info(f"Alert: {s['symbol']} score={s['score']} ok={ok}")
     send_summary(signals)
     return signals
 
 
 def run_breakout_scan(time_str):
-    """Confirmed breakouts (Daily/Weekly/Monthly)."""
     from scanner import scan_breakouts
+    from tracker import log_breakouts
     logging.info("Running breakout scan (F&O universe)...")
     breakouts = scan_breakouts()
     logging.info(f"Breakouts: {len(breakouts)} found")
     if breakouts:
+        log_breakouts(breakouts)
         lines = [f"📊 *Confirmed Breakouts* — {time_str}\n"]
         for b in breakouts[:10]:
-            fno_tag = " `F&O`" if b.get("fno") else ""
+            fno_tag  = " `F&O`" if b.get("fno") else ""
             tf_emoji = {"Monthly": "📅", "Weekly": "📆", "Daily": "📋"}.get(b["timeframe"], "📋")
             lines.append(
                 f"{tf_emoji} *{b['symbol']}*{fno_tag} | ₹{b['price']} | "
@@ -152,8 +150,7 @@ def run_breakout_scan(time_str):
     return breakouts
 
 
-def run_fno_scan(time_str, signals):
-    """Send F&O suggestions from swing signals that are F&O eligible."""
+def run_fno_alerts(time_str, signals):
     fno_sigs = [s for s in signals if s.get("fno_eligible") and s.get("fno_suggestion")]
     if not fno_sigs:
         return
@@ -168,37 +165,46 @@ def run_fno_scan(time_str, signals):
     _send("\n".join(lines))
 
 
-def main():
-    now     = datetime.now(IST)
-    time_str = now.strftime("%d %b %Y %I:%M %p IST")
-    slot    = _slot(now)
-    logging.info(f"=== Scan started: {time_str} | Slot: {slot} ===")
+# ── Main ─────────────────────────────────────────────────────────────────────
 
-    _send(f"🔄 *SwingDesk Pro* scan started — {time_str}\n_Slot: {slot.upper()}_")
+def main():
+    from tracker import log_scan_meta, init_db
+    init_db()
+
+    now      = datetime.now(IST)
+    time_str = now.strftime("%d %b %Y %I:%M %p IST")
+    slot     = _slot(now)
+    counts   = {}
+
+    logging.info(f"=== Scan started: {time_str} | Slot: {slot} ===")
+    _send(f"🔄 *SwingDesk Pro* — {time_str}\n_Slot: {slot.upper()} starting..._")
 
     try:
-        # ── Always send markets update ─────────────────────────────────────────
         run_markets(time_str)
 
         if slot == "morning":
-            # 09:20 — Pre-market: 4H early signals + commodity signals
-            run_4h_scan(time_str)
-            run_commodity_scan(time_str)
+            # 09:20 — 4H early + commodities
+            sigs_4h  = run_4h_scan(time_str)
+            comms    = run_commodity_scan(time_str)
+            counts   = {"4h": len(sigs_4h), "commodities": len(comms)}
 
         elif slot == "midday":
-            # 11:45 — Mid-session: swing + F&O + 4H update
-            signals = run_swing_scan(time_str)
-            run_fno_scan(time_str, signals)
-            run_4h_scan(time_str)
-            run_commodity_scan(time_str)
+            # 11:45 — Full swing + F&O + 4H update + commodities
+            signals  = run_swing_scan(time_str)
+            run_fno_alerts(time_str, signals)
+            sigs_4h  = run_4h_scan(time_str)
+            comms    = run_commodity_scan(time_str)
+            counts   = {"swing": len(signals), "4h": len(sigs_4h), "commodities": len(comms)}
 
-        elif slot in ("eod", "full"):
-            # 16:30 — EOD: confirmed breakouts (candle closed) + commodities + swing recap
-            run_breakout_scan(time_str)
-            run_swing_scan(time_str)
-            run_commodity_scan(time_str)
+        else:  # eod / full
+            # 16:30 — Confirmed breakouts + swing recap + commodities
+            breakouts = run_breakout_scan(time_str)
+            signals   = run_swing_scan(time_str)
+            comms     = run_commodity_scan(time_str)
+            counts    = {"breakouts": len(breakouts), "swing": len(signals), "commodities": len(comms)}
 
-        logging.info(f"=== Scan finished: {slot} ===")
+        log_scan_meta(slot, counts)
+        logging.info(f"=== Scan finished: {slot} | {counts} ===")
         return 0
 
     except Exception as e:
