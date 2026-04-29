@@ -26,58 +26,157 @@ init_db()
 # ── CSS ───────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-html,body,[class*="css"]{font-family:'Inter',sans-serif!important;background:#050c18!important;color:#e2e8f0!important}
-.stApp{background:#050c18}
-header[data-testid="stHeader"]{background:#050c18;border-bottom:1px solid #0f2035}
-section[data-testid="stSidebar"]{background:#070f1e!important;border-right:1px solid #0f2035}
-section[data-testid="stSidebar"] *{color:#94a3b8!important}
-section[data-testid="stSidebar"] .stButton>button{background:linear-gradient(135deg,#0284c7,#0ea5e9)!important;color:#fff!important;border:none!important;border-radius:8px!important;font-weight:600!important;font-size:12px!important}
-.stButton>button{background:linear-gradient(135deg,#0ea5e9,#38bdf8)!important;color:#fff!important;border:none!important;border-radius:8px!important;font-weight:700!important;font-size:13px!important;transition:all .2s;box-shadow:0 0 16px rgba(56,189,248,.2)}
-.stTabs [data-baseweb="tab-list"]{background:#070f1e;border-bottom:1px solid #0f2035;padding:0 8px}
-.stTabs [data-baseweb="tab"]{background:transparent;color:#475569!important;font-size:11px;font-weight:700;padding:12px 18px;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.05em}
-.stTabs [aria-selected="true"]{color:#38bdf8!important;border-bottom:2px solid #38bdf8!important}
-[data-testid="metric-container"]{background:#0a1929;border:1px solid #0f2d4a;border-radius:10px;padding:14px 18px}
-[data-testid="metric-container"] label{color:#475569!important;font-size:10px!important;text-transform:uppercase;letter-spacing:.1em}
-[data-testid="metric-container"] [data-testid="stMetricValue"]{color:#f1f5f9!important;font-size:22px!important;font-weight:800!important;font-family:'JetBrains Mono',monospace!important}
-.stDataFrame{border:1px solid #0f2035!important;border-radius:8px;overflow:hidden}
-.stDataFrame thead th{background:#070f1e!important;color:#38bdf8!important;font-size:10px!important;text-transform:uppercase;letter-spacing:.07em;font-weight:700}
-.stDataFrame tbody tr{background:#050c18!important}
-.stDataFrame tbody tr:hover{background:#0a1929!important}
-.stDataFrame tbody td{color:#94a3b8!important;font-family:'JetBrains Mono',monospace;font-size:12px!important;border-color:#0f2035!important}
-.stTextInput input,.stSelectbox [data-baseweb="select"]{background:#0a1929!important;border:1px solid #0f2d4a!important;color:#e2e8f0!important;border-radius:8px!important}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(56,189,248,.15)}50%{box-shadow:0 0 24px rgba(56,189,248,.4)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.card{background:#0a1929;border:1px solid #0f2d4a;border-left:3px solid #22c55e;border-radius:10px;padding:16px 18px;margin-bottom:12px;animation:fadeUp .35s ease}
-.card:hover{border-color:#1e4a6e;transform:translateY(-1px);transition:all .2s}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ── Base ── */
+html,body,[class*="css"]{font-family:'Inter',sans-serif!important;background:#030912!important;color:#e2e8f0!important}
+.stApp{background:#030912}
+header[data-testid="stHeader"]{background:rgba(3,9,18,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(56,189,248,.08)}
+section[data-testid="stSidebar"]{background:rgba(5,10,20,.95)!important;backdrop-filter:blur(20px);border-right:1px solid rgba(56,189,248,.07)}
+section[data-testid="stSidebar"] *{color:#64748b!important}
+
+/* ── Buttons ── */
+section[data-testid="stSidebar"] .stButton>button{
+  background:linear-gradient(135deg,#0369a1,#0ea5e9)!important;color:#fff!important;
+  border:none!important;border-radius:8px!important;font-weight:700!important;font-size:12px!important;
+  box-shadow:0 0 20px rgba(14,165,233,.25)!important;transition:all .2s!important}
+section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba(14,165,233,.5)!important;transform:translateY(-1px)!important}
+.stButton>button{
+  background:linear-gradient(135deg,#0ea5e9,#38bdf8)!important;color:#030912!important;
+  border:none!important;border-radius:8px!important;font-weight:800!important;font-size:13px!important;
+  box-shadow:0 0 20px rgba(56,189,248,.3)!important;transition:all .2s!important;letter-spacing:.02em}
+.stButton>button:hover{box-shadow:0 0 40px rgba(56,189,248,.6)!important;transform:translateY(-1px)!important}
+
+/* ── Tabs ── */
+.stTabs [data-baseweb="tab-list"]{
+  background:rgba(5,10,20,.8);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(56,189,248,.08);padding:0 12px}
+.stTabs [data-baseweb="tab"]{
+  background:transparent;color:#334155!important;font-size:10px;font-weight:700;
+  padding:13px 20px;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.08em;
+  transition:all .2s}
+.stTabs [data-baseweb="tab"]:hover{color:#64748b!important}
+.stTabs [aria-selected="true"]{color:#38bdf8!important;border-bottom:2px solid #38bdf8!important;text-shadow:0 0 12px rgba(56,189,248,.6)}
+
+/* ── Metrics ── */
+[data-testid="metric-container"]{
+  background:linear-gradient(135deg,rgba(10,25,41,.9),rgba(7,18,33,.9));
+  border:1px solid rgba(56,189,248,.1);border-radius:12px;padding:16px 20px;
+  backdrop-filter:blur(8px);transition:all .25s;position:relative;overflow:hidden}
+[data-testid="metric-container"]::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(56,189,248,.3),transparent)}
+[data-testid="metric-container"]:hover{border-color:rgba(56,189,248,.25);box-shadow:0 0 24px rgba(56,189,248,.08)}
+[data-testid="metric-container"] label{color:#334155!important;font-size:9px!important;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+[data-testid="metric-container"] [data-testid="stMetricValue"]{color:#f1f5f9!important;font-size:24px!important;font-weight:800!important;font-family:'JetBrains Mono',monospace!important;letter-spacing:-.02em}
+[data-testid="stMetricDelta"]{font-size:11px!important;font-weight:700!important}
+
+/* ── DataFrames ── */
+.stDataFrame{border:1px solid rgba(56,189,248,.1)!important;border-radius:10px;overflow:hidden;backdrop-filter:blur(8px)}
+.stDataFrame thead th{background:rgba(7,15,30,.95)!important;color:#38bdf8!important;font-size:9px!important;text-transform:uppercase;letter-spacing:.1em;font-weight:800;border-color:rgba(56,189,248,.1)!important}
+.stDataFrame tbody tr{background:rgba(3,9,18,.6)!important}
+.stDataFrame tbody tr:hover{background:rgba(10,25,41,.8)!important}
+.stDataFrame tbody td{color:#94a3b8!important;font-family:'JetBrains Mono',monospace;font-size:12px!important;border-color:rgba(56,189,248,.06)!important}
+
+/* ── Inputs ── */
+.stTextInput input,.stSelectbox [data-baseweb="select"],.stSlider{
+  background:rgba(10,25,41,.8)!important;border:1px solid rgba(56,189,248,.12)!important;
+  color:#e2e8f0!important;border-radius:8px!important;backdrop-filter:blur(8px)}
+.stTextInput input:focus{border-color:rgba(56,189,248,.4)!important;box-shadow:0 0 0 2px rgba(56,189,248,.08)!important}
+
+/* ── Expander ── */
+.streamlit-expanderHeader{background:rgba(10,25,41,.6)!important;border:1px solid rgba(56,189,248,.1)!important;border-radius:8px!important;color:#94a3b8!important;font-size:12px!important;font-weight:600!important}
+.streamlit-expanderContent{background:rgba(5,12,24,.8)!important;border:1px solid rgba(56,189,248,.08)!important;border-top:none!important;border-radius:0 0 8px 8px!important}
+
+/* ── Keyframes ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes glowCyan{0%,100%{box-shadow:0 0 12px rgba(56,189,248,.15),inset 0 0 12px rgba(56,189,248,.03)}50%{box-shadow:0 0 32px rgba(56,189,248,.4),inset 0 0 16px rgba(56,189,248,.06)}}
+@keyframes glowGreen{0%,100%{box-shadow:0 0 12px rgba(34,197,94,.15)}50%{box-shadow:0 0 28px rgba(34,197,94,.45)}}
+@keyframes borderSpin{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes flashGreen{0%{background:rgba(34,197,94,.18)}100%{background:transparent}}
+@keyframes flashRed{0%{background:rgba(239,68,68,.18)}100%{background:transparent}}
+@keyframes confFill{from{width:0}to{width:var(--w)}}
+@keyframes scanLine{0%{top:-100%}100%{top:100%}}
+
+/* ── Signal Cards ── */
+.card{
+  background:linear-gradient(135deg,rgba(10,25,41,.85),rgba(7,15,30,.85));
+  border:1px solid rgba(56,189,248,.1);border-left:3px solid #22c55e;
+  border-radius:12px;padding:18px 20px;margin-bottom:12px;
+  backdrop-filter:blur(10px);animation:fadeUp .4s ease;
+  transition:all .25s;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,197,94,.25),transparent)}
+.card:hover{transform:translateY(-2px);border-color:rgba(56,189,248,.2);
+  box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(56,189,248,.05)}
 .card.sell{border-left-color:#ef4444}
-.card.top{animation:glow 2.5s ease-in-out infinite}
-.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:800;letter-spacing:.06em}
-.badge.sb{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
-.badge.b{background:rgba(56,189,248,.12);color:#38bdf8;border:1px solid rgba(56,189,248,.25)}
-.badge.w{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25)}
-.badge.fno{background:rgba(56,189,248,.1);color:#7dd3fc;border:1px solid rgba(56,189,248,.2);font-size:9px}
-.conf{height:3px;background:#0f2035;border-radius:2px;margin:8px 0 10px;overflow:hidden}
-.conf-fill{height:100%;border-radius:2px}
-.row{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0}
-.kv{display:flex;flex-direction:column;min-width:55px}
-.kv span:first-child{font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em}
-.kv span:last-child{font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;color:#e2e8f0}
+.card.sell::after{background:linear-gradient(90deg,transparent,rgba(239,68,68,.25),transparent)}
+.card.top{animation:glowCyan 2.8s ease-in-out infinite}
+.card.top::before{
+  content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(56,189,248,.03),transparent);
+  animation:scanLine 3s linear infinite}
+
+/* ── Breakout Cards ── */
+.bo-card{
+  background:linear-gradient(135deg,rgba(10,25,41,.8),rgba(5,15,25,.8));
+  border:1px solid rgba(34,197,94,.12);border-left:3px solid #22c55e;
+  border-radius:12px;padding:16px 18px;margin-bottom:10px;
+  backdrop-filter:blur(10px);animation:fadeUp .4s ease;transition:all .25s}
+.bo-card:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.bo-card.weekly{border-left-color:#f59e0b;border-color:rgba(245,158,11,.12)}
+.bo-card.weekly::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,.3),transparent)}
+.bo-card.monthly{border-left-color:#a78bfa;border-color:rgba(167,139,250,.15);background:linear-gradient(135deg,rgba(14,10,31,.85),rgba(8,6,24,.85))}
+
+/* ── F&O Cards ── */
+.fno-card{
+  background:linear-gradient(135deg,rgba(7,20,40,.9),rgba(5,14,30,.9));
+  border:1px solid rgba(56,189,248,.15);border-left:3px solid #38bdf8;
+  border-radius:12px;padding:16px 18px;margin-bottom:10px;
+  backdrop-filter:blur(10px);animation:fadeUp .4s ease;transition:all .25s}
+.fno-card:hover{transform:translateY(-1px);box-shadow:0 0 24px rgba(56,189,248,.1)}
+
+/* ── MF Cards ── */
+.mf-card{
+  background:linear-gradient(135deg,rgba(10,25,41,.85),rgba(7,18,33,.85));
+  border:1px solid rgba(56,189,248,.1);border-radius:12px;padding:18px 20px;
+  margin-bottom:12px;backdrop-filter:blur(10px);animation:fadeUp .4s ease;transition:all .25s}
+.mf-card:hover{transform:translateY(-1px);border-color:rgba(56,189,248,.2)}
+
+/* ── Badges ── */
+.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.badge.sb{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.3);box-shadow:0 0 12px rgba(34,197,94,.2),inset 0 0 8px rgba(34,197,94,.05)}
+.badge.b{background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.25);box-shadow:0 0 12px rgba(56,189,248,.15)}
+.badge.w{background:rgba(251,191,36,.08);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
+.badge.fno{background:rgba(56,189,248,.08);color:#7dd3fc;border:1px solid rgba(56,189,248,.18);font-size:9px}
+
+/* ── Confidence Bar ── */
+.conf{height:4px;background:rgba(15,32,53,.8);border-radius:3px;margin:10px 0 12px;overflow:hidden}
+.conf-fill{height:100%;border-radius:3px;animation:confFill .6s cubic-bezier(.4,0,.2,1) forwards}
+
+/* ── KV rows ── */
+.row{display:flex;gap:18px;flex-wrap:wrap;margin:8px 0}
+.kv{display:flex;flex-direction:column;min-width:58px}
+.kv span:first-child{font-size:9px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.09em;font-weight:700}
+.kv span:last-child{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#cbd5e1;margin-top:2px}
+
+/* ── Utility ── */
 .green{color:#4ade80!important}.red{color:#f87171!important}.blue{color:#38bdf8!important}
-.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:9px;font-weight:700;margin:2px;background:#052e16;color:#86efac;border:1px solid #166534}
-.bo-card{background:#0a1929;border:1px solid #1a3a1a;border-left:3px solid #22c55e;border-radius:10px;padding:14px 16px;margin-bottom:10px;animation:fadeUp .35s ease}
-.bo-card.weekly{border-left-color:#f59e0b;border-color:#3a2a0a}
-.bo-card.monthly{border-left-color:#a78bfa;border-color:#1e1040;background:#0e0a1f}
-.fno-card{background:#071e35;border:1px solid #0e3a5e;border-left:3px solid #38bdf8;border-radius:10px;padding:14px 16px;margin-bottom:10px;animation:fadeUp .35s ease}
-.mf-card{background:#0a1929;border:1px solid #0f2d4a;border-radius:10px;padding:16px 18px;margin-bottom:12px;animation:fadeUp .35s ease}
-.news-item{padding:10px 0;border-bottom:1px solid #0f2035}
+.tag{display:inline-block;padding:3px 9px;border-radius:99px;font-size:9px;font-weight:700;margin:2px;
+  background:rgba(5,46,22,.6);color:#86efac;border:1px solid rgba(22,101,52,.5);
+  backdrop-filter:blur(4px)}
+.news-item{padding:10px 0;border-bottom:1px solid rgba(15,32,53,.8)}
 .news-item:last-child{border-bottom:none}
-.live{display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:5px;animation:pulse 1.5s ease-in-out infinite;vertical-align:middle}
-hr{border-color:#0f2035!important;margin:14px 0!important}
+.live{display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:5px;
+  animation:pulse 1.5s ease-in-out infinite;vertical-align:middle;
+  box-shadow:0 0 6px #22c55e}
+hr{border-color:rgba(15,32,53,.8)!important;margin:16px 0!important}
 ::-webkit-scrollbar{width:3px;height:3px}
-::-webkit-scrollbar-track{background:#050c18}
-::-webkit-scrollbar-thumb{background:#0f2d4a;border-radius:2px}
+::-webkit-scrollbar-track{background:#030912}
+::-webkit-scrollbar-thumb{background:rgba(56,189,248,.15);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:rgba(56,189,248,.3)}
 </style>
 """, unsafe_allow_html=True)
 
@@ -182,7 +281,7 @@ def plot_chart(symbol, signal=None):
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown('<div style="font-size:18px;font-weight:800;color:#f1f5f9;padding:8px 0 14px">SwingDesk <span style="color:#38bdf8">Pro</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:17px;font-weight:900;color:#f1f5f9;padding:10px 0 16px;letter-spacing:-.02em">SwingDesk&nbsp;<span style="color:#38bdf8;text-shadow:0 0 14px rgba(56,189,248,.7)">Pro</span></div>', unsafe_allow_html=True)
     run_scan = st.button("Run Swing Scan", use_container_width=True)
     run_bo   = st.button("Run Breakout Scan", use_container_width=True)
     send_tg  = st.checkbox("Telegram alerts", value=True)
@@ -216,15 +315,33 @@ sig_count = len(st.session_state.get("signals", []))
 bo_count  = len(st.session_state.get("breakouts", []))
 
 st.markdown(f"""
-<div style="background:#070f1e;border:1px solid #0f2035;border-radius:12px;padding:18px 22px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+<div style="background:linear-gradient(135deg,rgba(10,25,41,.9),rgba(5,14,30,.9));
+  border:1px solid rgba(56,189,248,.12);border-radius:14px;padding:20px 26px;margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
+  backdrop-filter:blur(16px);position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.4),transparent)"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.1),transparent)"></div>
   <div>
-    <div style="font-size:24px;font-weight:800;color:#f1f5f9;letter-spacing:-.02em">SwingDesk <span style="color:#38bdf8">Pro</span></div>
-    <div style="font-size:11px;color:#334155;margin-top:2px">Nifty 500 · Breakouts · F&O · Mutual Funds · Forex</div>
+    <div style="font-size:26px;font-weight:900;color:#f1f5f9;letter-spacing:-.03em;line-height:1">
+      SwingDesk&nbsp;<span style="color:#38bdf8;text-shadow:0 0 20px rgba(56,189,248,.6)">Pro</span>
+    </div>
+    <div style="font-size:10px;color:#1e3a5f;margin-top:4px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">
+      Nifty 500 &nbsp;·&nbsp; Breakouts &nbsp;·&nbsp; F&amp;O &nbsp;·&nbsp; Mutual Funds &nbsp;·&nbsp; Global Markets
+    </div>
   </div>
-  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
-    <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:#38bdf8;font-family:'JetBrains Mono',monospace">{sig_count}</div><div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.08em">Signals</div></div>
-    <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:#22c55e;font-family:'JetBrains Mono',monospace">{bo_count}</div><div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.08em">Breakouts</div></div>
-    <div style="font-size:11px;color:#334155;font-family:'JetBrains Mono',monospace">{now_str}</div>
+  <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center;padding:8px 16px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.12);border-radius:8px">
+      <div style="font-size:22px;font-weight:800;color:#38bdf8;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 16px rgba(56,189,248,.5)">{sig_count}</div>
+      <div style="font-size:8px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-top:2px">Signals</div>
+    </div>
+    <div style="text-align:center;padding:8px 16px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.12);border-radius:8px">
+      <div style="font-size:22px;font-weight:800;color:#22c55e;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 16px rgba(34,197,94,.5)">{bo_count}</div>
+      <div style="font-size:8px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-top:2px">Breakouts</div>
+    </div>
+    <div style="font-size:11px;color:#1e3a5f;font-family:'JetBrains Mono',monospace;text-align:right">
+      <div style="color:#334155;font-size:10px">{now_str}</div>
+      <div style="color:#0f2035;font-size:9px;margin-top:2px;letter-spacing:.04em">PERSONAL RESEARCH · NOT SEBI ADVICE</div>
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -278,13 +395,19 @@ if _sigs_ticker:
 if ticker_parts:
     ticker_html = "".join(ticker_parts)
     st.markdown(f"""
-<div style="background:#070f1e;border:1px solid #0f2035;border-radius:8px;padding:8px 0;margin-bottom:14px;overflow:hidden">
-  <div style="display:flex;align-items:center">
-    <div style="background:#070f1e;padding:0 12px;border-right:1px solid #0f2035;margin-right:8px;flex-shrink:0">
-      <span class="live"></span><span style="font-size:10px;font-weight:700;color:#22c55e;letter-spacing:.08em">LIVE</span>
+<div style="background:linear-gradient(90deg,rgba(5,12,24,.95),rgba(7,18,36,.95));
+  border:1px solid rgba(56,189,248,.1);border-radius:10px;padding:0;margin-bottom:14px;
+  overflow:hidden;backdrop-filter:blur(12px);position:relative">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(56,189,248,.3),transparent)"></div>
+  <div style="display:flex;align-items:stretch">
+    <div style="padding:0 14px;border-right:1px solid rgba(56,189,248,.1);
+      display:flex;align-items:center;gap:6px;flex-shrink:0;background:rgba(56,189,248,.04)">
+      <span class="live"></span>
+      <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.12em;text-transform:uppercase">Live</span>
     </div>
-    <div style="overflow:hidden;flex:1">
-      <marquee behavior="scroll" direction="left" scrollamount="4" style="display:block">{ticker_html}</marquee>
+    <div style="overflow:hidden;flex:1;padding:9px 0">
+      <marquee behavior="scroll" direction="left" scrollamount="5" style="display:block">{ticker_html}</marquee>
     </div>
   </div>
 </div>
