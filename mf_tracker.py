@@ -133,7 +133,7 @@ def get_index_quotes():
     out = []
     for name, ticker in INDICES.items():
         try:
-            h = yf.Ticker(ticker).history(period="2d", interval="1d", auto_adjust=True)
+            h = yf.Ticker(ticker).history(period="5d", interval="1d", auto_adjust=True)
             if len(h) >= 2:
                 prev = float(h["Close"].iloc[-2])
                 last = float(h["Close"].iloc[-1])
