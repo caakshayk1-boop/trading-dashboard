@@ -458,6 +458,11 @@ def analyze_stock(symbol, nifty_ret=0.0):
         if regime is None:
             return None  # ADX < 20, skip
 
+        # All 3 setups are bullish by design — only generate BUY signals.
+        # Bearish/short scanner is a separate module.
+        if regime["bias"] != "bullish":
+            return None
+
         # 5b. Structure
         hh_hl_count, _, _ = count_hh_hl(high, low)
 
@@ -742,6 +747,91 @@ FOREX_COMM = {
     "Crude Oil": "CL=F",
     "Nat Gas":   "NG=F",
 }
+
+# ── 4H Early-Entry Scanner (RSI cross 55 + volume) ───────────────────────────
+def analyze_4h(symbol):
+    """4H chart: RSI crossing above 55 + volume > 1.5x avg + price above EMA20."""
+    try:
+        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        df = yf.download(sym_yf, period="60d", interval="4h",
+                         progress=False, auto_adjust=True)
+        if df is None or df.empty or len(df) < 30:
+            return None
+
+        close  = df["Close"].squeeze()
+        high   = df["High"].squeeze()
+        low    = df["Low"].squeeze()
+        volume = df["Volume"].squeeze()
+
+        price   = float(close.iloc[-1])
+        avg_v   = float(volume.rolling(20).mean().iloc[-1])
+        cur_v   = float(volume.iloc[-1])
+        vol_r   = round(cur_v / avg_v, 2) if avg_v > 0 else 1.0
+
+        if vol_r < 1.5:
+            return None
+
+        rsi_s   = rsi(close)
+        cur_rsi = float(rsi_s.iloc[-1])
+        prv_rsi = float(rsi_s.iloc[-2])
+
+        # RSI crossing above 55 (was below, now above)
+        if not (prv_rsi < 55 and cur_rsi >= 55):
+            return None
+
+        # Price above EMA20 (trend confirmation)
+        e20 = float(ema(close, 20).iloc[-1])
+        if price < e20:
+            return None
+
+        # SL below recent 10-bar low, T1/T2 using ATR
+        cur_atr = float(atr(high, low, close).iloc[-1])
+        sl      = round(float(low.rolling(10).min().iloc[-1]) - 0.5 * cur_atr, 2)
+        t1      = round(price + 1.5 * cur_atr, 2)
+        t2      = round(price + 2.5 * cur_atr, 2)
+        risk    = round(price - sl, 2)
+        rr      = round((t2 - price) / risk, 1) if risk > 0 else 0
+
+        sym_clean = symbol.replace(".NS", "")
+        return {
+            "symbol":    sym_clean,
+            "action":    "BUY",
+            "timeframe": "4H",
+            "price":     round(price, 2),
+            "rsi":       round(cur_rsi, 1),
+            "vol_ratio": vol_r,
+            "sl":        sl,
+            "target1":   t1,
+            "target2":   t2,
+            "rr":        rr,
+            "fno":       sym_clean in FNO_ELIGIBLE,
+            "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+            "reason":    f"RSI {round(cur_rsi,1)} crossed 55 | Vol {vol_r}x | EMA20 aligned",
+        }
+    except Exception as e:
+        logging.warning(f"4H {symbol}: {e}")
+        return None
+
+
+def scan_4h(universe=None):
+    """Scan 4H setups: RSI cross 55 + volume surge — fires BEFORE daily signal."""
+    if universe is None:
+        raw_uni = load_nifty500()
+        # Limit to F&O stocks for quality + liquidity
+        universe = [s for s in raw_uni if s.replace(".NS", "") in FNO_ELIGIBLE]
+
+    results = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_4h, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    results.sort(key=lambda x: x["vol_ratio"], reverse=True)
+    logging.info(f"4H scan: {len(results)} early signals")
+    return results[:15]
+
 
 def fetch_forex_comm():
     """Fetch live prices + 1-day change for forex & commodities."""

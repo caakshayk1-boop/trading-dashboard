@@ -123,17 +123,33 @@ def update_outcomes():
             entry = row["entry"]
 
             status, exit_p = "OPEN", None
-            if lo <= row["sl2"]:
-                status, exit_p = "SL_HIT", row["sl2"]
-            elif hi >= row["target2"]:
-                status, exit_p = "T2_HIT", row["target2"]
-            elif hi >= row["target1"]:
-                status, exit_p = "T1_HIT", row["target1"]
+            action = str(row.get("action", "BUY")).upper()
+
+            if action == "SELL":
+                # Short: SL above entry, targets below entry
+                if hi >= row["sl2"]:
+                    status, exit_p = "SL_HIT", row["sl2"]
+                elif lo <= row["target2"]:
+                    status, exit_p = "T2_HIT", row["target2"]
+                elif lo <= row["target1"]:
+                    status, exit_p = "T1_HIT", row["target1"]
+            else:  # BUY
+                if lo <= row["sl2"]:
+                    status, exit_p = "SL_HIT", row["sl2"]
+                elif hi >= row["target2"]:
+                    status, exit_p = "T2_HIT", row["target2"]
+                elif hi >= row["target1"]:
+                    status, exit_p = "T1_HIT", row["target1"]
 
             if status != "OPEN":
-                pnl = round((exit_p - entry) / entry * 100, 2)
-                risk = entry - row["sl2"]
-                r_mult = round((exit_p - entry) / risk, 2) if risk > 0 else 0
+                if action == "SELL":
+                    pnl  = round((entry - exit_p) / entry * 100, 2)
+                    risk = row["sl2"] - entry
+                    r_mult = round((entry - exit_p) / risk, 2) if risk > 0 else 0
+                else:
+                    pnl = round((exit_p - entry) / entry * 100, 2)
+                    risk = entry - row["sl2"]
+                    r_mult = round((exit_p - entry) / risk, 2) if risk > 0 else 0
                 with _conn() as c:
                     c.execute(
                         "UPDATE signals SET status=?,exit_price=?,pnl_pct=?,r_multiple=? WHERE id=?",

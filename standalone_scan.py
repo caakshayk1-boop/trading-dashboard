@@ -34,7 +34,7 @@ def main():
     logging.info(f"=== Scan started: {time_str} ===")
 
     try:
-        from scanner import scan_all, scan_breakouts, fetch_forex_comm
+        from scanner import scan_all, scan_breakouts, scan_4h, fetch_forex_comm
         from telegram_bot import send_alert, send_summary, send_top_picks
         from tracker import log_signals, update_outcomes, init_db
         from config import SEND_TOP_PICKS_ONLY
@@ -71,6 +71,22 @@ def main():
                 lines.append(
                     f"• *{b['symbol']}*{fno_tag} | ₹{b['price']} | "
                     f"{b['timeframe']}: {b['pattern']} | "
+                    f"T1 ₹{b['target1']} | SL ₹{b['sl']} | RR {b['rr']}"
+                )
+            _send("\n".join(lines))
+
+        # ── 4H Early-Entry Scan ────────────────────────────────────────────────
+        logging.info("Running 4H RSI-55 scan...")
+        signals_4h = scan_4h()
+        logging.info(f"4H scan: {len(signals_4h)} early signals")
+
+        if signals_4h:
+            lines = [f"⚡ *4H Early-Entry Signals* — {time_str}\n_(RSI crossing 55 + Volume surge)_\n"]
+            for b in signals_4h[:8]:
+                fno_tag = " `F&O`" if b["fno"] else ""
+                lines.append(
+                    f"• *{b['symbol']}*{fno_tag} | ₹{b['price']} | "
+                    f"RSI {b['rsi']} | Vol {b['vol_ratio']}x | "
                     f"T1 ₹{b['target1']} | SL ₹{b['sl']} | RR {b['rr']}"
                 )
             _send("\n".join(lines))

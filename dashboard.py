@@ -7,7 +7,7 @@ import ta as ta_lib
 from datetime import datetime
 import pytz, os
 
-from scanner import scan_all, scan_breakouts, fetch_forex_comm, obfuscate_reasons
+from scanner import scan_all, scan_breakouts, scan_4h, fetch_forex_comm, obfuscate_reasons
 from telegram_bot import send_alert, send_summary, send_top_picks, test_connection, start_command_polling
 from tracker import log_signals, update_outcomes, get_performance, get_history, init_db
 from config import MIN_SIGNAL_SCORE, CAPITAL
@@ -419,6 +419,7 @@ with st.sidebar:
             st.rerun()
     run_scan = st.button("Run Swing Scan", use_container_width=True)
     run_bo   = st.button("Run Breakout Scan", use_container_width=True)
+    run_4h   = st.button("Run 4H Early Scan", use_container_width=True)
     send_tg  = st.checkbox("Telegram alerts", value=True)
     st.markdown("**Min Score**")
     min_score = st.slider("", 50, 100, MIN_SIGNAL_SCORE, label_visibility="collapsed")
@@ -657,6 +658,23 @@ with tab2:
         st.success(f"{len(bos)} breakouts confirmed!")
         st.rerun()
 
+    if run_4h:
+        with st.spinner("4H RSI-55 scan… 2-3 min"):
+            sigs_4h = scan_4h()
+            st.session_state["signals_4h"] = sigs_4h
+        if send_tg:
+            from datetime import datetime
+            ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+            if sigs_4h:
+                from telegram_bot import _post
+                lines = [f"⚡ *4H Early-Entry Signals* — {ts}\n_(RSI crossing 55 + Volume surge)_\n"]
+                for b in sigs_4h[:8]:
+                    fno_tag = " `F&O`" if b["fno"] else ""
+                    lines.append(f"• *{b['symbol']}*{fno_tag} | ₹{b['price']} | RSI {b['rsi']} | Vol {b['vol_ratio']}x | T1 ₹{b['target1']} | SL ₹{b['sl']}")
+                _post("\n".join(lines))
+        st.success(f"{len(sigs_4h)} 4H early signals!")
+        st.rerun()
+
     breakouts = st.session_state.get("breakouts", [])
     if not breakouts:
         st.info("Click **Run Breakout Scan** in sidebar.")
@@ -699,6 +717,39 @@ with tab2:
 </div>
 """, unsafe_allow_html=True)
 
+    # 4H Early-Entry Signals Section
+    sigs_4h = st.session_state.get("signals_4h", [])
+    st.markdown("---")
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:4px">⚡ 4H Early-Entry Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">RSI crossing 55 + Volume surge — fires before daily candle closes</div>', unsafe_allow_html=True)
+    if not sigs_4h:
+        st.info("Click **Run 4H Early Scan** in sidebar.")
+    else:
+        cc1, cc2 = st.columns(2)
+        cc1.metric("4H Signals", len(sigs_4h))
+        cc2.metric("Avg Vol Ratio", f"{round(sum(s['vol_ratio'] for s in sigs_4h)/len(sigs_4h),1)}x")
+        for b in sigs_4h:
+            fno_b = '<span class="badge fno">F&amp;O</span>' if b.get("fno") else ""
+            st.markdown(f"""
+<div class="bo-card" style="border-color:#f59e0b40">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:16px;font-weight:800;color:#f1f5f9">{b['symbol']}</span>{fno_b}
+    </div>
+    <span style="font-size:10px;font-weight:700;color:#f59e0b;padding:2px 8px;border-radius:99px;border:1px solid #f59e0b40">4H · EARLY</span>
+  </div>
+  <div style="font-size:10px;color:#94a3b8;margin-bottom:8px">{b['reason']}</div>
+  <div class="row">
+    <div class="kv"><span>Price</span><span>₹{b['price']:,.2f}</span></div>
+    <div class="kv"><span>Stop</span><span class="red">₹{b['sl']:,.2f}</span></div>
+    <div class="kv"><span>T1</span><span class="green">₹{b['target1']:,.2f}</span></div>
+    <div class="kv"><span>T2</span><span class="green">₹{b['target2']:,.2f}</span></div>
+    <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
+    <div class="kv"><span>Vol</span><span>{b['vol_ratio']}x</span></div>
+  </div>
+  <div style="margin-top:8px"><a href="{b['tv_link']}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+</div>
+""", unsafe_allow_html=True)
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TAB 3 — F&O
@@ -718,12 +769,14 @@ with tab3:
         for s in signals[:5]:
             st.markdown(f"• **{s['symbol']}** — {s['setup_type']} — score {s['score']}")
     else:
+        _tf_map = {"pullback": "Swing · 5–12 days", "breakout": "Swing · 8–15 days", "divergence": "Reversal · 3–8 days"}
         for s in sorted(fno_sigs, key=lambda x: x["score"], reverse=True):
             f     = s["fno_suggestion"]
             is_c  = f["direction"] == "CALL"
             dc    = "#4ade80" if is_c else "#f87171"
             di    = "▲ CALL" if is_c else "▼ PUT"
             rl,rc = _rating(s["score"])
+            tf_label = _tf_map.get(s.get("setup_type",""), "Swing · 5–15 days")
             st.markdown(f"""
 <div class="fno-card">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -732,6 +785,10 @@ with tab3:
       <span style="font-size:14px;font-weight:800;color:{dc}">{di}</span>
       <span class="badge {rc}">{rl}</span>
     </div>
+  </div>
+  <div style="margin-bottom:8px;display:flex;gap:12px;align-items:center">
+    <span style="font-size:10px;font-weight:600;color:#38bdf8;background:#0a1929;border:1px solid #0f2d4a;border-radius:4px;padding:2px 7px">⏱ {tf_label}</span>
+    <span style="font-size:10px;color:#475569">{f['expiry']}</span>
   </div>
   <div class="row">
     <div class="kv"><span>Spot</span><span>₹{s['price']:,.1f}</span></div>
