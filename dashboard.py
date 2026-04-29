@@ -698,64 +698,60 @@ with tab4:
                     df_top.style.map(_style_ret, subset=["1Y %", "3Y %", "5Y %"]),
                     use_container_width=True, hide_index=True
                 )
-                st.markdown("")
-                for f in funds:
-                    ret = f["returns"]
-                    ret_label = " · ".join(
-                        f'{k}: {v:+.1f}%' for k, v in ret.items() if v is not None
-                    ) or "Insufficient history"
-                    exp_label = f"{f['short']}  |  NAV ₹{f['nav']:.2f}  |  1Y: {f['1Y']:+.1f}%" if f['1Y'] else f"{f['short']}  |  NAV ₹{f['nav']:.2f}"
-                    with st.expander(exp_label):
-                        hd = get_fund_holdings(f['scheme_code'])
-                        if hd:
-                            pc1, pc2 = st.columns(2)
-                            _pie_colors = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8"]
-                            _pbg = "#0a1929" if _DARK else "#f8fafc"
-                            _pfg = "#94a3b8" if _DARK else "#475569"
-                            with pc1:
-                                st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Sector Allocation</div>', unsafe_allow_html=True)
-                                sec = hd["sectors"]
-                                fig_s = go.Figure(go.Pie(
-                                    labels=list(sec.keys()), values=list(sec.values()),
-                                    hole=0.45, textinfo="label+percent",
-                                    textfont=dict(size=10, color="#e2e8f0" if _DARK else "#1a2332"),
-                                    marker=dict(colors=_pie_colors[:len(sec)], line=dict(color="#050c18" if _DARK else "#fff", width=2)),
-                                    hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
-                                ))
-                                fig_s.update_layout(
-                                    height=240, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
-                                    font=dict(color=_pfg, size=10),
-                                    showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
-                                )
-                                st.plotly_chart(fig_s, use_container_width=True,
-                                               key=f"pie_s_{cat}_{f['scheme_code']}")
-                            with pc2:
-                                st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Top Holdings</div>', unsafe_allow_html=True)
-                                scripts = hd["top_scripts"]
-                                s_labels = [s[0] for s in scripts]
-                                s_vals   = [s[1] for s in scripts]
-                                others   = max(0, 100 - sum(s_vals))
-                                if others > 0.5:
-                                    s_labels.append("Others")
-                                    s_vals.append(round(others, 1))
-                                _pbg = "#0a1929" if _DARK else "#f8fafc"
-                                _pfg = "#94a3b8" if _DARK else "#475569"
-                                fig_h = go.Figure(go.Pie(
-                                    labels=s_labels, values=s_vals,
-                                    hole=0.45, textinfo="label+percent",
-                                    textfont=dict(size=10, color="#e2e8f0" if _DARK else "#1a2332"),
-                                    marker=dict(colors=_pie_colors[:len(s_labels)], line=dict(color="#050c18" if _DARK else "#fff", width=2)),
-                                    hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
-                                ))
-                                fig_h.update_layout(
-                                    height=240, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
-                                    font=dict(color=_pfg, size=10),
-                                    showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
-                                )
-                                st.plotly_chart(fig_h, use_container_width=True,
-                                               key=f"pie_h_{cat}_{f['scheme_code']}")
-                        st.markdown(f'<div style="font-size:11px;color:#475569;margin-top:4px">{f["fund_house"]} &nbsp;·&nbsp; {ret_label}</div>', unsafe_allow_html=True)
-                        st.markdown(f'<div style="font-size:10px;color:#334155;margin-top:4px">Holdings as of last monthly disclosure (approximate)</div>', unsafe_allow_html=True)
+                # Selectbox to pick which fund to drill into
+                _fund_names = [f["short"] for f in funds]
+                _sel_idx = st.selectbox("View fund breakdown", range(len(_fund_names)),
+                                        format_func=lambda i: _fund_names[i],
+                                        key=f"sel_{cat}", label_visibility="collapsed")
+                _sf = funds[_sel_idx]
+                hd  = get_fund_holdings(_sf['scheme_code'])
+                if hd:
+                    _pie_colors = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8"]
+                    _pbg = "#0a1929" if _DARK else "#ffffff"
+                    _pfg = "#94a3b8" if _DARK else "#475569"
+                    _ptxt = "#e2e8f0" if _DARK else "#1a2332"
+                    _pline = "#050c18" if _DARK else "#f0f4f8"
+                    pc1, pc2 = st.columns(2)
+                    with pc1:
+                        sec = hd["sectors"]
+                        fig_s = go.Figure(go.Pie(
+                            labels=list(sec.keys()), values=list(sec.values()),
+                            hole=0.5, textinfo="label+percent",
+                            textfont=dict(size=10, color=_ptxt),
+                            marker=dict(colors=_pie_colors[:len(sec)], line=dict(color=_pline, width=2)),
+                            hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
+                        ))
+                        fig_s.update_layout(
+                            title=dict(text="Sector Allocation", font=dict(size=11, color=_pfg), x=0.5),
+                            height=280, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                            font=dict(color=_pfg, size=10),
+                            showlegend=False, margin=dict(l=4,r=4,t=36,b=4)
+                        )
+                        st.plotly_chart(fig_s, use_container_width=True, key=f"pie_s_{cat}_{_sf['scheme_code']}")
+                    with pc2:
+                        scripts = hd["top_scripts"]
+                        s_labels = [s[0] for s in scripts]
+                        s_vals   = [s[1] for s in scripts]
+                        others   = max(0, 100 - sum(s_vals))
+                        if others > 0.5:
+                            s_labels.append("Others"); s_vals.append(round(others, 1))
+                        fig_h = go.Figure(go.Pie(
+                            labels=s_labels, values=s_vals,
+                            hole=0.5, textinfo="label+percent",
+                            textfont=dict(size=10, color=_ptxt),
+                            marker=dict(colors=_pie_colors[:len(s_labels)], line=dict(color=_pline, width=2)),
+                            hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
+                        ))
+                        fig_h.update_layout(
+                            title=dict(text="Top Holdings", font=dict(size=11, color=_pfg), x=0.5),
+                            height=280, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                            font=dict(color=_pfg, size=10),
+                            showlegend=False, margin=dict(l=4,r=4,t=36,b=4)
+                        )
+                        st.plotly_chart(fig_h, use_container_width=True, key=f"pie_h_{cat}_{_sf['scheme_code']}")
+                    st.caption(f"{_sf['fund_house']}  ·  Holdings approximate as of last monthly AMC disclosure")
+                else:
+                    st.info("Holdings data not available for this fund.")
 
     st.markdown("---")
 
