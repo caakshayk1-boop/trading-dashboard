@@ -848,3 +848,139 @@ def fetch_forex_comm():
         except Exception:
             pass
     return rows
+
+
+# ── Commodity Signal Scanner (Gold/Silver/Oil/Gas — 4H + Daily) ───────────────
+COMMODITY_TICKERS = {
+    "XAUUSD": ("GC=F",  "Gold Futures (USD/oz)",     "GLD"),
+    "XAGUSD": ("SI=F",  "Silver Futures (USD/oz)",   "SLV"),
+    "WTIUSD": ("CL=F",  "WTI Crude Oil (USD/bbl)",   "OIL"),
+    "BRNUSD": ("BZ=F",  "Brent Crude (USD/bbl)",     "OIL"),
+    "NGAS":   ("NG=F",  "Natural Gas (USD/MMBtu)",   "NRG"),
+}
+
+def _comm_signal(name, ticker, label, interval="1d", period="90d"):
+    """
+    Generate BUY/SELL signal for a commodity ticker.
+    Uses: EMA20/50 trend + RSI zone + ATR-based SL/targets.
+    Returns dict or None.
+    """
+    try:
+        df = yf.download(ticker, period=period, interval=interval,
+                         progress=False, auto_adjust=True)
+        if df is None or df.empty or len(df) < 30:
+            return None
+
+        close = df["Close"].squeeze()
+        high  = df["High"].squeeze()
+        low   = df["Low"].squeeze()
+
+        price   = float(close.iloc[-1])
+        e20     = float(ema(close, 20).iloc[-1])
+        e50     = float(ema(close, 50).iloc[-1])
+        cur_rsi = float(rsi(close).iloc[-1])
+        cur_atr = float(atr(high, low, close).iloc[-1])
+        cur_adx = float(adx(high, low, close).iloc[-1])
+
+        if cur_adx < 20:
+            return None  # no trend, skip
+
+        # Bias
+        if price > e20 > e50 and cur_rsi > 52:
+            bias = "BUY"
+            sl   = round(price - 1.5 * cur_atr, 2)
+            t1   = round(price + 1.0 * cur_atr, 2)
+            t2   = round(price + 2.0 * cur_atr, 2)
+            t3   = round(price + 3.5 * cur_atr, 2)
+        elif price < e20 < e50 and cur_rsi < 48:
+            bias = "SELL"
+            sl   = round(price + 1.5 * cur_atr, 2)
+            t1   = round(price - 1.0 * cur_atr, 2)
+            t2   = round(price - 2.0 * cur_atr, 2)
+            t3   = round(price - 3.5 * cur_atr, 2)
+        else:
+            return None  # no clear bias
+
+        risk = abs(price - sl)
+        rr   = round(abs(t2 - price) / risk, 1) if risk > 0 else 0
+
+        return {
+            "symbol":    name,
+            "ticker":    ticker,
+            "label":     label,
+            "action":    bias,
+            "interval":  interval,
+            "price":     round(price, 2),
+            "sl":        sl,
+            "target1":   t1,
+            "target2":   t2,
+            "target3":   t3,
+            "rr":        rr,
+            "rsi":       round(cur_rsi, 1),
+            "adx":       round(cur_adx, 1),
+            "atr":       round(cur_atr, 2),
+        }
+    except Exception as e:
+        logging.warning(f"Commodity {name}: {e}")
+        return None
+
+
+def scan_commodities():
+    """
+    Scan Gold/Silver/Oil/Gas for swing signals (daily) + 4H momentum.
+    Returns list of signals sorted by ADX strength.
+    """
+    results = []
+    for name, (ticker, label, _) in COMMODITY_TICKERS.items():
+        # Daily swing signal
+        sig = _comm_signal(name, ticker, label, interval="1d", period="180d")
+        if sig:
+            sig["timeframe"] = "Daily"
+            results.append(sig)
+
+        # 4H momentum (RSI > 55 or < 45)
+        try:
+            df4 = yf.download(ticker, period="60d", interval="4h",
+                              progress=False, auto_adjust=True)
+            if df4 is not None and not df4.empty and len(df4) >= 20:
+                c4 = df4["Close"].squeeze()
+                h4 = df4["High"].squeeze()
+                l4 = df4["Low"].squeeze()
+                r4 = float(rsi(c4).iloc[-1])
+                r4_prev = float(rsi(c4).iloc[-2])
+                a4 = float(atr(h4, l4, c4).iloc[-1])
+                p4 = float(c4.iloc[-1])
+                e4 = float(ema(c4, 20).iloc[-1])
+
+                if r4_prev < 55 <= r4 and p4 > e4:
+                    results.append({
+                        "symbol": name, "ticker": ticker, "label": label,
+                        "action": "BUY", "interval": "4H", "timeframe": "4H",
+                        "price": round(p4, 2),
+                        "sl":      round(p4 - 1.5 * a4, 2),
+                        "target1": round(p4 + 1.0 * a4, 2),
+                        "target2": round(p4 + 2.0 * a4, 2),
+                        "target3": round(p4 + 3.5 * a4, 2),
+                        "rr":      2.0,
+                        "rsi":     round(r4, 1),
+                        "adx":     0, "atr": round(a4, 2),
+                    })
+                elif r4_prev > 45 >= r4 and p4 < e4:
+                    results.append({
+                        "symbol": name, "ticker": ticker, "label": label,
+                        "action": "SELL", "interval": "4H", "timeframe": "4H",
+                        "price": round(p4, 2),
+                        "sl":      round(p4 + 1.5 * a4, 2),
+                        "target1": round(p4 - 1.0 * a4, 2),
+                        "target2": round(p4 - 2.0 * a4, 2),
+                        "target3": round(p4 - 3.5 * a4, 2),
+                        "rr":      2.0,
+                        "rsi":     round(r4, 1),
+                        "adx":     0, "atr": round(a4, 2),
+                    })
+        except Exception as e:
+            logging.warning(f"Commodity 4H {name}: {e}")
+
+    results.sort(key=lambda x: x.get("adx", 0), reverse=True)
+    logging.info(f"Commodity scan: {len(results)} signals")
+    return results
