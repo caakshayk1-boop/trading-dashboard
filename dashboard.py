@@ -184,29 +184,77 @@ section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[
   background:var(--bg2)!important; border:1px solid var(--border2)!important;
   border-top:none!important; border-radius:0 0 10px 10px!important; }}
 
-/* ---- Signal Cards ---- */
+/* ---- Signal Cards (Terminal Style) ---- */
 .card {{
-  background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--green);
-  border-radius:14px; padding:20px 22px; margin-bottom:14px;
+  background:var(--card-bg); border:1px solid var(--border);
+  border-radius:16px; padding:22px 24px; margin-bottom:16px;
   animation:fadeUp .45s cubic-bezier(.4,0,.2,1);
-  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  transition:transform .28s ease, box-shadow .28s ease;
   position:relative; overflow:hidden; }}
 .card::before {{
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent, var(--green), transparent); opacity:.4; }}
+  content:''; position:absolute; top:0; left:0; right:0; height:1px; pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(34,197,94,.55), transparent); }}
 .card::after {{
-  content:''; position:absolute; top:0; left:-120%; width:55%; height:100%;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.025), transparent);
-  transition:left .55s ease; }}
-.card:hover {{ transform:translateY(-3px); box-shadow:0 12px 36px rgba(0,0,0,.18); border-color:rgba(56,189,248,.25); }}
-.card:hover::after {{ left:130%; }}
-.card.sell {{ border-left-color:var(--red); }}
-.card.sell::before {{ background:linear-gradient(90deg, transparent, var(--red), transparent); }}
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(34,197,94,.05) 0%, transparent 65%); }}
+.card:hover {{ transform:translateY(-3px); box-shadow:0 16px 48px rgba(0,0,0,.28), 0 0 0 1px rgba(34,197,94,.18); }}
+.card.sell::before {{ background:linear-gradient(90deg, transparent, rgba(239,68,68,.55), transparent); }}
+.card.sell::after {{ background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(239,68,68,.05) 0%, transparent 65%); }}
+.card.sell:hover {{ box-shadow:0 16px 48px rgba(0,0,0,.28), 0 0 0 1px rgba(239,68,68,.18); }}
 .card.top {{
   border-color:transparent;
   background:linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
     conic-gradient(from var(--rot), #22c55e 0%, #38bdf8 33%, #a78bfa 66%, #22c55e 100%) border-box;
   animation:rotateBorder 4s linear infinite; }}
+/* ---- Action Badge ---- */
+.action-badge {{
+  display:inline-flex; align-items:center; padding:3px 13px; border-radius:99px;
+  font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }}
+.action-badge.buy {{
+  background:rgba(34,197,94,.15); color:#22c55e; border:1px solid rgba(34,197,94,.4);
+  box-shadow:0 0 12px rgba(34,197,94,.2); }}
+.action-badge.sell {{
+  background:rgba(239,68,68,.12); color:#ef4444; border:1px solid rgba(239,68,68,.35);
+  box-shadow:0 0 12px rgba(239,68,68,.18); }}
+/* ---- Strength Bars ---- */
+.sbar-row {{ display:flex; align-items:center; gap:8px; margin:5px 0; }}
+.sbar-lbl {{ font-size:10px; font-weight:700; min-width:100px; }}
+.sbar-lbl.bull {{ color:#22c55e; }} .sbar-lbl.bear {{ color:#ef4444; }}
+.sbar-track {{ flex:1; height:5px; border-radius:3px; overflow:hidden; }}
+.sbar-track.bull {{ background:rgba(34,197,94,.12); }}
+.sbar-track.bear {{ background:rgba(239,68,68,.08); }}
+.sbar-fill.bull {{ height:100%;border-radius:3px;background:linear-gradient(90deg,#22c55e,#4ade80); }}
+.sbar-fill.bear {{ height:100%;border-radius:3px;background:linear-gradient(90deg,#ef4444,#f87171); }}
+.sbar-pct {{ font-size:10px; font-weight:800; min-width:28px; text-align:right;
+  font-family:'JetBrains Mono',monospace; }}
+.sbar-pct.bull {{ color:#22c55e; }} .sbar-pct.bear {{ color:#475569; }}
+/* ---- Trigger Box ---- */
+.trigger-box {{
+  background:rgba(239,68,68,.04); border:1px solid rgba(239,68,68,.18);
+  border-radius:10px; padding:11px 14px; margin:12px 0; }}
+.trig-label {{ font-size:8px; font-weight:800; color:#ef4444; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:5px; }}
+.trig-text {{ font-size:12px; font-weight:600; color:#f1f5f9; line-height:1.4; }}
+.trig-meta {{ font-size:10px; color:#475569; margin-top:4px; }}
+/* ---- Trade Grid ---- */
+.tgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0; }}
+.tgcell {{
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:10px; padding:11px 13px; position:relative; overflow:hidden; }}
+.tgcell::before {{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--border), transparent); }}
+.tc-label {{ font-size:8px; color:var(--txt4); text-transform:uppercase;
+  letter-spacing:.12em; font-weight:700; margin-bottom:5px; }}
+.tc-val {{ font-size:19px; font-weight:800; font-family:'JetBrains Mono',monospace;
+  color:var(--txt); line-height:1; letter-spacing:-.02em; }}
+.tgcell.sl {{ border-color:rgba(239,68,68,.22); }}
+.tgcell.sl::before {{ background:linear-gradient(90deg,transparent,rgba(239,68,68,.35),transparent); }}
+.tgcell.t1 {{ border-color:rgba(34,197,94,.22); }}
+.tgcell.t1::before {{ background:linear-gradient(90deg,transparent,rgba(34,197,94,.35),transparent); }}
+/* vol tag variants */
+.tag.hi-vol {{ background:rgba(239,68,68,.1); color:#f87171; border-color:rgba(239,68,68,.3); }}
+.tag.md-vol {{ background:rgba(245,158,11,.08); color:#f59e0b; border-color:rgba(245,158,11,.25); }}
 
 /* ---- Breakout Cards ---- */
 .bo-card {{
@@ -256,12 +304,9 @@ section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[
   background:rgba(56,189,248,.07); color:#0284c7; border:1px solid rgba(56,189,248,.2);
   font-size:9px; }}
 
-/* ---- Confidence Bar ---- */
+/* ---- Confidence Bar (legacy, kept for breakout cards) ---- */
 .conf {{ height:4px; background:var(--border2); border-radius:3px; margin:10px 0 12px; overflow:hidden; position:relative; }}
-.conf-fill {{ height:100%; border-radius:3px; animation:confFill .7s cubic-bezier(.4,0,.2,1) forwards; position:relative; }}
-.conf-fill::after {{
-  content:''; position:absolute; right:0; top:-2px; width:6px; height:8px;
-  background:inherit; border-radius:50%; box-shadow:0 0 8px currentColor; }}
+.conf-fill {{ height:100%; border-radius:3px; animation:confFill .7s cubic-bezier(.4,0,.2,1) forwards; }}
 
 /* ---- KV Rows ---- */
 .row {{ display:flex; gap:20px; flex-wrap:wrap; margin:10px 0; }}
@@ -451,32 +496,42 @@ sig_count = len(st.session_state.get("signals", []))
 bo_count  = len(st.session_state.get("breakouts", []))
 
 st.markdown(f"""
-<div style="background:linear-gradient(135deg,rgba(10,25,41,.9),rgba(5,14,30,.9));
-  border:1px solid rgba(56,189,248,.12);border-radius:14px;padding:20px 26px;margin-bottom:14px;
+<div style="background:linear-gradient(135deg,rgba(7,15,30,.97),rgba(3,9,18,.97));
+  border:1px solid rgba(56,189,248,.14);border-radius:16px;padding:18px 24px;margin-bottom:14px;
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
-  backdrop-filter:blur(16px);position:relative;overflow:hidden">
-  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.4),transparent)"></div>
-  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.1),transparent)"></div>
+  backdrop-filter:blur(20px);position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.5),transparent)"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 50% 60% at 10% 50%,rgba(56,189,248,.04),transparent 60%)"></div>
   <div>
-    <div style="font-size:26px;font-weight:900;color:#f1f5f9;letter-spacing:-.03em;line-height:1">
-      SwingDesk&nbsp;<span style="color:#38bdf8;text-shadow:0 0 20px rgba(56,189,248,.6)">Pro</span>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+      <div style="font-size:24px;font-weight:900;color:#f1f5f9;letter-spacing:-.03em;line-height:1">
+        SwingDesk&nbsp;<span style="color:#38bdf8;text-shadow:0 0 18px rgba(56,189,248,.55)">Pro</span>
+      </div>
+      <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
+        background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);
+        letter-spacing:.1em;text-transform:uppercase">
+        <span class="live" style="margin-right:4px"></span>LIVE
+      </span>
+      <span style="font-size:8px;color:#334155;font-weight:600;letter-spacing:.06em">TRADER v2.0</span>
     </div>
-    <div style="font-size:10px;color:#1e3a5f;margin-top:4px;letter-spacing:.08em;text-transform:uppercase;font-weight:600">
-      Nifty 500 &nbsp;·&nbsp; Breakouts &nbsp;·&nbsp; F&amp;O &nbsp;·&nbsp; Mutual Funds &nbsp;·&nbsp; Global Markets
+    <div style="font-size:9px;color:#1e3a5f;letter-spacing:.09em;text-transform:uppercase;font-weight:600">
+      Nifty 500 &nbsp;·&nbsp; Breakouts &nbsp;·&nbsp; 4H Early &nbsp;·&nbsp; F&amp;O &nbsp;·&nbsp; MF &nbsp;·&nbsp; Global Markets
     </div>
   </div>
-  <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
-    <div style="text-align:center;padding:8px 16px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.12);border-radius:8px">
-      <div style="font-size:22px;font-weight:800;color:#38bdf8;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 16px rgba(56,189,248,.5)">{sig_count}</div>
-      <div style="font-size:8px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-top:2px">Signals</div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center;padding:10px 18px;background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.12);border-radius:10px">
+      <div style="font-size:26px;font-weight:900;color:#38bdf8;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 14px rgba(56,189,248,.4);line-height:1">{sig_count}</div>
+      <div style="font-size:7px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-top:3px">SIGNALS</div>
     </div>
-    <div style="text-align:center;padding:8px 16px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.12);border-radius:8px">
-      <div style="font-size:22px;font-weight:800;color:#22c55e;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 16px rgba(34,197,94,.5)">{bo_count}</div>
-      <div style="font-size:8px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-top:2px">Breakouts</div>
+    <div style="text-align:center;padding:10px 18px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.12);border-radius:10px">
+      <div style="font-size:26px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 14px rgba(34,197,94,.4);line-height:1">{bo_count}</div>
+      <div style="font-size:7px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-top:3px">BREAKOUTS</div>
     </div>
-    <div style="font-size:11px;color:#1e3a5f;font-family:'JetBrains Mono',monospace;text-align:right">
-      <div style="color:#334155;font-size:10px">{now_str}</div>
-      <div style="color:#0f2035;font-size:9px;margin-top:2px;letter-spacing:.04em">PERSONAL RESEARCH · NOT SEBI ADVICE</div>
+    <div style="text-align:right">
+      <div style="font-size:11px;color:#475569;font-family:'JetBrains Mono',monospace">{now_str}</div>
+      <div style="font-size:8px;color:#1e3a5f;margin-top:3px;letter-spacing:.05em;text-transform:uppercase">Auto-refresh 60s</div>
+      <div style="font-size:8px;color:#0f2035;margin-top:2px;letter-spacing:.04em">NOT SEBI ADVICE · EDUCATIONAL</div>
     </div>
   </div>
 </div>
@@ -589,39 +644,119 @@ with tab1:
         sigs_s  = sorted(signals, key=lambda x: x.get(sort_by,0), reverse=True)
 
         for i, s in enumerate(sigs_s):
-            rl, rc = _rating(s["score"])
-            cc     = _conf_col(s["score"])
-            fno_b  = '<span class="badge fno">F&amp;O</span>' if s.get("fno_eligible") else ""
-            tags   = "".join(f'<span class="tag">{t.strip()}</span>'
-                             for t in obfuscate_reasons(s["reasons"]).split(",") if t.strip())
-            cls    = f"card {'top' if i==0 else ''} {'sell' if s['action']=='SELL' else ''}"
+            # --- derived display values ---
+            score       = s['score']
+            uncertainty = 100 - score
+            bull_pct    = min(score, 100)
+            fno_b       = '<span class="badge fno">F&amp;O</span>' if s.get("fno_eligible") else ""
+            cls         = f"card {'top' if i==0 else ''} {'sell' if s['action']=='SELL' else ''}"
+            act_cls     = "buy" if s['action'] == "BUY" else "sell"
+
+            # vol tag
+            vr = s.get('vol_ratio', 1.0)
+            if vr >= 2.2:
+                vol_tag, vol_cls = "HIGH VOLATILITY", "hi-vol"
+            elif vr >= 1.6:
+                vol_tag, vol_cls = "ELEVATED VOL", "md-vol"
+            else:
+                vol_tag, vol_cls = "NORMAL VOL", ""
+
+            # reason tags (obfuscated)
+            reason_tags = "".join(
+                f'<span class="tag">{t.strip()}</span>'
+                for t in obfuscate_reasons(s["reasons"]).split(",") if t.strip()
+            )
+
+            # trigger text from setup
+            _trig_map = {
+                "breakout":   "Price broke above key resistance zone with strong volume surge",
+                "pullback":   "Pullback to EMA support zone — trend continuation setup",
+                "divergence": "Bullish RSI divergence detected at structural support",
+            }
+            trigger_text = _trig_map.get(s.get("setup_type", ""), "Multi-factor setup triggered across trend, structure, volume")
 
             st.markdown(f"""
 <div class="{cls}">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-    <div style="display:flex;align-items:center;gap:8px">
-      <span style="font-size:18px;font-weight:800;color:#f1f5f9">{s['symbol']}</span>
-      {fno_b}
-      <span style="font-size:10px;color:#334155">{s.get('setup_type','').replace('_',' ').title()}</span>
+  <!-- Header: Symbol + Action + Confidence -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
+        <span style="font-size:22px;font-weight:900;color:#f1f5f9;letter-spacing:-.02em;line-height:1">{s['symbol']}</span>
+        <span class="action-badge {act_cls}">{s['action']}</span>
+        {fno_b}
+      </div>
+      <div style="font-size:10px;color:var(--txt4)">{s.get('setup_type','').replace('_',' ').title()} &nbsp;·&nbsp; NSE Equity &nbsp;·&nbsp; Swing</div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px;color:#475569">{_stars(s['score'])}</span>
-      <span class="badge {rc}">{rl}</span>
+    <div style="text-align:right;flex-shrink:0;margin-left:16px">
+      <div style="font-size:36px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;line-height:1;text-shadow:0 0 22px rgba(34,197,94,.35)">{score}%</div>
+      <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">confidence</div>
+      <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-top:5px">{uncertainty}%</div>
+      <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em">uncertainty</div>
     </div>
   </div>
-  <div class="conf"><div class="conf-fill" style="width:{s['score']}%;background:{cc}"></div></div>
-  <div class="row">
-    <div class="kv"><span>Entry</span><span>₹{s['price']:,.1f}</span></div>
-    <div class="kv"><span>Stop</span><span class="red">₹{s['sl2']:,.1f}</span></div>
-    <div class="kv"><span>T1</span><span class="green">₹{s['target1']:,.1f}</span></div>
-    <div class="kv"><span>T2</span><span class="green">₹{s['target2']:,.1f}</span></div>
-    <div class="kv"><span>T3</span><span class="green">₹{s['target3']:,.1f}</span></div>
-    <div class="kv"><span>RR</span><span class="blue">1:{s['rr1']}</span></div>
-    <div class="kv"><span>Qty</span><span>{s['qty']}</span></div>
-    <div class="kv"><span>Vol</span><span>{s['vol_ratio']:.1f}x</span></div>
+
+  <!-- Strength bars -->
+  <div style="margin:14px 0 10px">
+    <div class="sbar-row">
+      <span class="sbar-lbl bull">Bullish Strength</span>
+      <div class="sbar-track bull"><div class="sbar-fill bull" style="width:{bull_pct}%"></div></div>
+      <span class="sbar-pct bull">{bull_pct}%</span>
+    </div>
+    <div class="sbar-row">
+      <span class="sbar-lbl bear">Bearish Strength</span>
+      <div class="sbar-track bear"><div class="sbar-fill bear" style="width:0%"></div></div>
+      <span class="sbar-pct bear">0%</span>
+    </div>
   </div>
-  <div style="margin-top:8px">{tags}</div>
-  <div style="margin-top:8px"><a href="{s['tv_link']}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+
+  <!-- Tags -->
+  <div style="margin-bottom:10px">
+    <span class="tag {vol_cls}">{vol_tag}</span>
+    {reason_tags}
+  </div>
+
+  <!-- Trigger box -->
+  <div class="trigger-box">
+    <div class="trig-label">SIGNAL TRIGGER</div>
+    <div class="trig-text">{trigger_text}</div>
+    <div class="trig-meta">ADX {s.get('adx',0)} &nbsp;·&nbsp; Vol {vr:.1f}x avg &nbsp;·&nbsp; {s.get('regime','').title()} Regime &nbsp;·&nbsp; RSI {s.get('rsi',0)}</div>
+  </div>
+
+  <!-- Trade Structure -->
+  <div style="font-size:8px;font-weight:800;color:var(--txt4);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px">TRADE STRUCTURE</div>
+  <div class="tgrid">
+    <div class="tgcell">
+      <div class="tc-label">CURRENT PRICE</div>
+      <div class="tc-val">₹{s['price']:,.2f}</div>
+    </div>
+    <div class="tgcell">
+      <div class="tc-label">ENTRY ZONE</div>
+      <div class="tc-val">₹{s['price']:,.2f}</div>
+    </div>
+    <div class="tgcell sl">
+      <div class="tc-label">STOP LOSS</div>
+      <div class="tc-val" style="color:#ef4444">₹{s['sl2']:,.2f}</div>
+    </div>
+    <div class="tgcell t1">
+      <div class="tc-label">TARGET 1</div>
+      <div class="tc-val" style="color:#22c55e">₹{s['target1']:,.2f}</div>
+    </div>
+  </div>
+
+  <!-- Extra targets + stats -->
+  <div class="row" style="margin-top:4px">
+    <div class="kv"><span>Risk/Reward</span><span class="blue">1:{s['rr1']}</span></div>
+    <div class="kv"><span>Target 2</span><span class="green">₹{s['target2']:,.1f}</span></div>
+    <div class="kv"><span>Target 3</span><span class="green">₹{s['target3']:,.1f}</span></div>
+    <div class="kv"><span>Max Pos.</span><span>{s['qty']} shares</span></div>
+    <div class="kv"><span>ATR (Daily)</span><span>₹{s.get('atr',0):.2f}</span></div>
+  </div>
+
+  <!-- Footer -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--border2)">
+    <span style="font-size:9px;color:var(--txt4)">Educational purposes only &nbsp;·&nbsp; Not SEBI advice &nbsp;·&nbsp; Model v2.0</span>
+    <a href="{s['tv_link']}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
