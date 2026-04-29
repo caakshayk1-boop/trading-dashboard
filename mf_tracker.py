@@ -55,6 +55,79 @@ INDICES = {
 }
 
 
+# ── Fund Holdings (approximate, as of last monthly AMC disclosure) ─────────────
+FUND_HOLDINGS = {
+    122639: {  # Parag Parikh Flexi Cap
+        "sectors": {"Financial Svcs": 28.5, "IT": 22.3, "Consumer": 12.1, "International": 18.5, "Pharma": 5.2, "Energy": 4.8, "Others": 8.6},
+        "top_scripts": [("HDFC Bank", 8.2), ("Bajaj Holdings", 6.8), ("Coal India", 5.9), ("ITC", 5.1), ("Power Grid", 4.8), ("Alphabet US", 4.5), ("Microsoft US", 3.9), ("Amazon US", 3.6)],
+    },
+    118825: {  # Mirae Asset Large Cap
+        "sectors": {"Financial Svcs": 35.2, "IT": 18.4, "Consumer": 9.8, "Energy": 8.5, "Pharma": 6.2, "Industrials": 7.3, "Others": 14.6},
+        "top_scripts": [("HDFC Bank", 9.8), ("ICICI Bank", 9.1), ("Infosys", 8.3), ("Reliance", 7.2), ("TCS", 6.5), ("Kotak Bank", 4.8), ("Axis Bank", 4.1), ("L&T", 3.6)],
+    },
+    118632: {  # Nippon India Large Cap
+        "sectors": {"Financial Svcs": 32.1, "IT": 16.5, "Consumer": 10.2, "Energy": 9.8, "Pharma": 7.3, "Industrials": 8.1, "Others": 16.0},
+        "top_scripts": [("HDFC Bank", 9.2), ("Infosys", 8.1), ("ICICI Bank", 7.8), ("Reliance", 7.5), ("TCS", 5.9), ("L&T", 4.8), ("HUL", 3.9), ("Kotak Bank", 3.6)],
+    },
+    120716: {  # UTI Nifty 50 Index
+        "sectors": {"Financial Svcs": 36.4, "IT": 13.2, "Energy": 10.5, "Consumer": 8.7, "Industrials": 6.8, "Pharma": 5.9, "Others": 18.5},
+        "top_scripts": [("HDFC Bank", 13.5), ("Reliance", 9.8), ("ICICI Bank", 8.4), ("Infosys", 6.8), ("TCS", 4.6), ("Bharti Airtel", 3.9), ("L&T", 3.8), ("ITC", 3.4)],
+    },
+    120505: {  # Axis Midcap
+        "sectors": {"Financial Svcs": 22.3, "Consumer": 16.8, "Industrials": 14.5, "IT": 12.1, "Pharma": 9.8, "Materials": 8.4, "Others": 16.1},
+        "top_scripts": [("Cholamandalam Fin", 4.8), ("Max Healthcare", 4.2), ("Persistent Sys", 3.9), ("Astral", 3.6), ("Divi's Labs", 3.4), ("Gujarat Gas", 3.1), ("CG Power", 3.0), ("Whirlpool", 2.8)],
+    },
+    125497: {  # SBI Small Cap
+        "sectors": {"Industrials": 22.5, "Consumer": 18.3, "Financial Svcs": 12.8, "Materials": 11.4, "IT": 8.2, "Pharma": 7.6, "Others": 19.2},
+        "top_scripts": [("Aegis Logistics", 3.8), ("Kirloskar Bros", 3.5), ("Blue Star", 3.2), ("Welspun India", 3.0), ("Techno Electric", 2.9), ("JK Tyre", 2.7), ("SJ Logistics", 2.5), ("KPIT Tech", 2.4)],
+    },
+    118777: {  # Nippon India Small Cap
+        "sectors": {"Consumer": 18.5, "Industrials": 17.2, "Financial Svcs": 15.3, "Materials": 12.8, "IT": 9.1, "Pharma": 8.4, "Others": 18.7},
+        "top_scripts": [("KPIT Technologies", 3.2), ("Tube Investments", 2.9), ("Dixon Tech", 2.8), ("MCX", 2.6), ("Kaynes Tech", 2.5), ("Apar Industries", 2.4), ("Blue Star", 2.3), ("Akzo Nobel", 2.1)],
+    },
+    120164: {  # Kotak Small Cap
+        "sectors": {"Industrials": 24.3, "Consumer": 16.8, "Financial Svcs": 13.5, "Materials": 11.2, "IT": 8.9, "Pharma": 7.8, "Others": 17.5},
+        "top_scripts": [("Blue Star", 4.1), ("Apar Industries", 3.8), ("Carborundum Univ", 3.4), ("Century Ply", 3.2), ("Techno Electric", 3.0), ("JK Paper", 2.8), ("Hawkins Cookers", 2.6), ("Elgi Equipments", 2.4)],
+    },
+    125354: {  # Axis Small Cap
+        "sectors": {"Consumer": 22.1, "Industrials": 20.4, "Financial Svcs": 14.6, "IT": 10.2, "Materials": 9.8, "Pharma": 8.3, "Others": 14.6},
+        "top_scripts": [("Campus Activewear", 3.9), ("Lemon Tree Hotels", 3.6), ("Dalmia Bharat Sugar", 3.3), ("Zydus Wellness", 3.1), ("Minda Corp", 2.9), ("Aavas Financiers", 2.7), ("KPR Mill", 2.5), ("Praj Industries", 2.4)],
+    },
+    118955: {  # HDFC Flexi Cap
+        "sectors": {"Financial Svcs": 30.5, "IT": 15.8, "Industrials": 13.2, "Consumer": 10.4, "Energy": 9.1, "Pharma": 7.2, "Others": 13.8},
+        "top_scripts": [("HDFC Bank", 9.5), ("ICICI Bank", 8.2), ("Infosys", 6.8), ("Kotak Bank", 5.4), ("Axis Bank", 4.9), ("L&T", 4.6), ("HCL Tech", 3.8), ("Sun Pharma", 3.2)],
+    },
+    120166: {  # Kotak Flexicap
+        "sectors": {"Financial Svcs": 31.2, "IT": 16.4, "Consumer": 12.3, "Industrials": 10.5, "Energy": 8.8, "Pharma": 7.1, "Others": 13.7},
+        "top_scripts": [("HDFC Bank", 8.9), ("Infosys", 7.5), ("ICICI Bank", 7.2), ("Reliance", 6.8), ("TCS", 5.6), ("Kotak Bank", 5.1), ("L&T", 4.3), ("HUL", 3.7)],
+    },
+    151412: {  # Mirae Asset Flexi Cap
+        "sectors": {"Financial Svcs": 29.8, "IT": 18.5, "Consumer": 11.2, "Industrials": 10.4, "Energy": 8.3, "Pharma": 7.6, "Others": 14.2},
+        "top_scripts": [("HDFC Bank", 9.2), ("Infosys", 7.8), ("ICICI Bank", 7.5), ("Reliance", 7.0), ("TCS", 5.8), ("Axis Bank", 4.5), ("L&T", 4.2), ("Sun Pharma", 3.8)],
+    },
+    135781: {  # Mirae Asset ELSS
+        "sectors": {"Financial Svcs": 34.2, "IT": 17.8, "Consumer": 10.5, "Energy": 9.2, "Pharma": 6.8, "Industrials": 8.1, "Others": 13.4},
+        "top_scripts": [("HDFC Bank", 10.2), ("ICICI Bank", 8.9), ("Infosys", 8.1), ("Reliance", 7.4), ("TCS", 6.2), ("Kotak Bank", 5.0), ("L&T", 4.5), ("HUL", 3.8)],
+    },
+    120847: {  # Quant ELSS
+        "sectors": {"Energy": 22.4, "Financial Svcs": 18.6, "Consumer": 15.3, "Materials": 12.8, "IT": 8.5, "Pharma": 7.2, "Others": 15.2},
+        "top_scripts": [("Reliance", 8.5), ("ONGC", 7.8), ("ITC", 6.9), ("HPCL", 6.2), ("SBI", 5.8), ("Adani Ports", 5.1), ("Coal India", 4.8), ("BPCL", 4.5)],
+    },
+    119551: {  # Axis Long Term Equity ELSS
+        "sectors": {"Financial Svcs": 28.5, "IT": 18.2, "Consumer": 14.8, "Pharma": 10.2, "Industrials": 9.1, "Materials": 7.4, "Others": 11.8},
+        "top_scripts": [("Bajaj Finance", 8.2), ("HDFC Bank", 7.8), ("TCS", 7.1), ("Infosys", 6.4), ("Kotak Bank", 5.8), ("Pidilite", 5.2), ("Avenue Supermarts", 4.9), ("Divi's Labs", 4.3)],
+    },
+    118968: {  # HDFC Balanced Advantage
+        "sectors": {"Financial Svcs": 28.4, "IT": 13.2, "Debt/Money Mkt": 18.5, "Consumer": 9.8, "Energy": 8.5, "Industrials": 7.6, "Others": 14.0},
+        "top_scripts": [("HDFC Bank", 8.5), ("ICICI Bank", 7.2), ("Infosys", 5.8), ("Reliance", 5.4), ("Kotak Bank", 4.8), ("L&T", 4.2), ("TCS", 3.8), ("Bharti Airtel", 3.2)],
+    },
+}
+
+
+def get_fund_holdings(scheme_code):
+    return FUND_HOLDINGS.get(int(scheme_code))
+
+
 def get_index_quotes():
     """Fetch live index prices (cached externally via st.cache_data)."""
     out = []

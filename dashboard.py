@@ -14,7 +14,8 @@ from config import MIN_SIGNAL_SCORE, CAPITAL
 from upstox_provider import is_authenticated, get_auth_url, exchange_code_for_token
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
                          load_portfolio, save_portfolio, get_portfolio_summary,
-                         get_index_quotes, get_top_funds_data, get_stock_news, get_corporate_actions)
+                         get_index_quotes, get_top_funds_data, get_stock_news,
+                         get_corporate_actions, get_fund_holdings)
 
 st.set_page_config(page_title="SwingDesk Pro", layout="wide", page_icon="⚡",
                    initial_sidebar_state="expanded")
@@ -229,25 +230,61 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ── Bloomberg Ticker Bar ─────────────────────────────────────────────────────
-_iq = _index_quotes()
+def _ti_idx(r):
+    c = "#4ade80" if r["chg"] >= 0 else "#f87171"
+    s = "+" if r["chg"] >= 0 else ""
+    return (f'<span style="margin:0 24px;white-space:nowrap">'
+            f'<span style="color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:.04em">{r["name"]}</span>'
+            f'&nbsp;&nbsp;<span style="color:#f1f5f9;font-size:12px;font-weight:800;'
+            f'font-family:\'JetBrains Mono\',monospace">{r["last"]:,.2f}</span>'
+            f'&nbsp;<span style="color:{c};font-size:11px;font-weight:700">{s}{r["chg"]}%</span>'
+            f'</span>')
+
+def _ti_forex(r):
+    c = "#4ade80" if r["Chg%"] >= 0 else "#f87171"
+    s = "+" if r["Chg%"] >= 0 else ""
+    return (f'<span style="margin:0 24px;white-space:nowrap">'
+            f'<span style="color:#a78bfa;font-size:11px;font-weight:700;letter-spacing:.04em">{r["Asset"]}</span>'
+            f'&nbsp;&nbsp;<span style="color:#f1f5f9;font-size:12px;font-weight:800;'
+            f'font-family:\'JetBrains Mono\',monospace">{r["Last"]}</span>'
+            f'&nbsp;<span style="color:{c};font-size:11px;font-weight:700">{s}{r["Chg%"]}%</span>'
+            f'</span>')
+
+def _ti_signal(sig):
+    action = sig.get("action", "BUY")
+    c = "#4ade80" if action == "BUY" else "#f87171"
+    arrow = "▲" if action == "BUY" else "▼"
+    return (f'<span style="margin:0 24px;white-space:nowrap;background:rgba(34,197,94,.07);'
+            f'border:1px solid rgba(34,197,94,.2);border-radius:4px;padding:2px 8px">'
+            f'<span style="color:#fbbf24;font-size:10px;font-weight:700">SIGNAL</span>'
+            f'&nbsp;<span style="color:{c};font-size:11px;font-weight:800">{arrow} {sig["symbol"]}</span>'
+            f'&nbsp;<span style="color:#94a3b8;font-size:11px">₹{sig["price"]:,.1f}</span>'
+            f'</span>')
+
+_iq  = _index_quotes()
+_fxc = _forex()
+_sigs_ticker = st.session_state.get("signals", [])[:6]
+
+ticker_parts = []
 if _iq:
-    def _ticker_item(r):
-        c = "#4ade80" if r["chg"] >= 0 else "#f87171"
-        s = "+" if r["chg"] >= 0 else ""
-        return (f'<span style="margin:0 28px;white-space:nowrap">'
-                f'<span style="color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:.04em">{r["name"]}</span>'
-                f'&nbsp;&nbsp;<span style="color:#f1f5f9;font-size:12px;font-weight:800;font-family:\'JetBrains Mono\',monospace">{r["last"]:,.2f}</span>'
-                f'&nbsp;<span style="color:{c};font-size:11px;font-weight:700">{s}{r["chg"]}%</span>'
-                f'</span>')
-    ticker_html = "".join(_ticker_item(r) for r in _iq)
+    ticker_parts += [_ti_idx(r) for r in _iq]
+    ticker_parts.append('<span style="margin:0 16px;color:#0f2035">│</span>')
+if _fxc:
+    ticker_parts += [_ti_forex(r) for r in _fxc]
+if _sigs_ticker:
+    ticker_parts.append('<span style="margin:0 16px;color:#0f2035">│</span>')
+    ticker_parts += [_ti_signal(s) for s in _sigs_ticker]
+
+if ticker_parts:
+    ticker_html = "".join(ticker_parts)
     st.markdown(f"""
-<div style="background:#070f1e;border:1px solid #0f2035;border-radius:8px;padding:8px 0;margin-bottom:14px;overflow:hidden;position:relative">
+<div style="background:#070f1e;border:1px solid #0f2035;border-radius:8px;padding:8px 0;margin-bottom:14px;overflow:hidden">
   <div style="display:flex;align-items:center">
     <div style="background:#070f1e;padding:0 12px;border-right:1px solid #0f2035;margin-right:8px;flex-shrink:0">
       <span class="live"></span><span style="font-size:10px;font-weight:700;color:#22c55e;letter-spacing:.08em">LIVE</span>
     </div>
     <div style="overflow:hidden;flex:1">
-      <marquee behavior="scroll" direction="left" scrollamount="4" style="display:block">{ticker_html * 3}</marquee>
+      <marquee behavior="scroll" direction="left" scrollamount="4" style="display:block">{ticker_html}</marquee>
     </div>
   </div>
 </div>
@@ -515,25 +552,55 @@ with tab4:
                 st.markdown("")
                 for f in funds:
                     ret = f["returns"]
-                    ret_bits = " · ".join(
-                        f'<span style="color:{"#4ade80" if v>=0 else "#f87171"}">{k}: {v:+.1f}%</span>'
-                        for k, v in ret.items() if v is not None
-                    )
-                    st.markdown(f"""
-<div class="mf-card" style="padding:12px 16px;margin-bottom:8px">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div style="max-width:65%">
-      <div style="font-size:13px;font-weight:700;color:#f1f5f9;line-height:1.3">{f['name']}</div>
-      <div style="font-size:10px;color:#334155;margin-top:2px">{f['fund_house']}</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:15px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#38bdf8">₹{f['nav']:.4f}</div>
-      <div style="font-size:10px;color:#475569;margin-top:2px">NAV</div>
-    </div>
-  </div>
-  <div style="margin-top:8px;font-size:11px">{ret_bits if ret_bits else '<span style="color:#334155">Insufficient history</span>'}</div>
-</div>
-""", unsafe_allow_html=True)
+                    ret_label = " · ".join(
+                        f'{k}: {v:+.1f}%' for k, v in ret.items() if v is not None
+                    ) or "Insufficient history"
+                    exp_label = f"{f['short']}  |  NAV ₹{f['nav']:.2f}  |  1Y: {f['1Y']:+.1f}%" if f['1Y'] else f"{f['short']}  |  NAV ₹{f['nav']:.2f}"
+                    with st.expander(exp_label):
+                        hd = get_fund_holdings(f['scheme_code'])
+                        if hd:
+                            pc1, pc2 = st.columns(2)
+                            _pie_colors = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8"]
+                            with pc1:
+                                st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Sector Allocation</div>', unsafe_allow_html=True)
+                                sec = hd["sectors"]
+                                fig_s = go.Figure(go.Pie(
+                                    labels=list(sec.keys()), values=list(sec.values()),
+                                    hole=0.45, textinfo="label+percent",
+                                    textfont=dict(size=10, color="#e2e8f0"),
+                                    marker=dict(colors=_pie_colors[:len(sec)], line=dict(color="#050c18", width=2)),
+                                    hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
+                                ))
+                                fig_s.update_layout(
+                                    height=240, paper_bgcolor="#0a1929", plot_bgcolor="#0a1929",
+                                    font=dict(color="#94a3b8", size=10),
+                                    showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
+                                )
+                                st.plotly_chart(fig_s, use_container_width=True)
+                            with pc2:
+                                st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Top Holdings</div>', unsafe_allow_html=True)
+                                scripts = hd["top_scripts"]
+                                s_labels = [s[0] for s in scripts]
+                                s_vals   = [s[1] for s in scripts]
+                                others   = max(0, 100 - sum(s_vals))
+                                if others > 0.5:
+                                    s_labels.append("Others")
+                                    s_vals.append(round(others, 1))
+                                fig_h = go.Figure(go.Pie(
+                                    labels=s_labels, values=s_vals,
+                                    hole=0.45, textinfo="label+percent",
+                                    textfont=dict(size=10, color="#e2e8f0"),
+                                    marker=dict(colors=_pie_colors[:len(s_labels)], line=dict(color="#050c18", width=2)),
+                                    hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
+                                ))
+                                fig_h.update_layout(
+                                    height=240, paper_bgcolor="#0a1929", plot_bgcolor="#0a1929",
+                                    font=dict(color="#94a3b8", size=10),
+                                    showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
+                                )
+                                st.plotly_chart(fig_h, use_container_width=True)
+                        st.markdown(f'<div style="font-size:11px;color:#475569;margin-top:4px">{f["fund_house"]} &nbsp;·&nbsp; {ret_label}</div>', unsafe_allow_html=True)
+                        st.markdown(f'<div style="font-size:10px;color:#334155;margin-top:4px">Holdings as of last monthly disclosure (approximate)</div>', unsafe_allow_html=True)
 
     st.markdown("---")
 
