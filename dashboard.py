@@ -28,14 +28,14 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* ── Base ── */
+/* --Base -- */
 html,body,[class*="css"]{font-family:'Inter',sans-serif!important;background:#030912!important;color:#e2e8f0!important}
 .stApp{background:#030912}
 header[data-testid="stHeader"]{background:rgba(3,9,18,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(56,189,248,.08)}
 section[data-testid="stSidebar"]{background:rgba(5,10,20,.95)!important;backdrop-filter:blur(20px);border-right:1px solid rgba(56,189,248,.07)}
 section[data-testid="stSidebar"] *{color:#64748b!important}
 
-/* ── Buttons ── */
+/* --Buttons -- */
 section[data-testid="stSidebar"] .stButton>button{
   background:linear-gradient(135deg,#0369a1,#0ea5e9)!important;color:#fff!important;
   border:none!important;border-radius:8px!important;font-weight:700!important;font-size:12px!important;
@@ -47,7 +47,7 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
   box-shadow:0 0 20px rgba(56,189,248,.3)!important;transition:all .2s!important;letter-spacing:.02em}
 .stButton>button:hover{box-shadow:0 0 40px rgba(56,189,248,.6)!important;transform:translateY(-1px)!important}
 
-/* ── Tabs ── */
+/* --Tabs -- */
 .stTabs [data-baseweb="tab-list"]{
   background:rgba(5,10,20,.8);backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(56,189,248,.08);padding:0 12px}
@@ -58,7 +58,7 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
 .stTabs [data-baseweb="tab"]:hover{color:#64748b!important}
 .stTabs [aria-selected="true"]{color:#38bdf8!important;border-bottom:2px solid #38bdf8!important;text-shadow:0 0 12px rgba(56,189,248,.6)}
 
-/* ── Metrics ── */
+/* --Metrics -- */
 [data-testid="metric-container"]{
   background:linear-gradient(135deg,rgba(10,25,41,.9),rgba(7,18,33,.9));
   border:1px solid rgba(56,189,248,.1);border-radius:12px;padding:16px 20px;
@@ -71,24 +71,24 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
 [data-testid="metric-container"] [data-testid="stMetricValue"]{color:#f1f5f9!important;font-size:24px!important;font-weight:800!important;font-family:'JetBrains Mono',monospace!important;letter-spacing:-.02em}
 [data-testid="stMetricDelta"]{font-size:11px!important;font-weight:700!important}
 
-/* ── DataFrames ── */
+/* --DataFrames -- */
 .stDataFrame{border:1px solid rgba(56,189,248,.1)!important;border-radius:10px;overflow:hidden;backdrop-filter:blur(8px)}
 .stDataFrame thead th{background:rgba(7,15,30,.95)!important;color:#38bdf8!important;font-size:9px!important;text-transform:uppercase;letter-spacing:.1em;font-weight:800;border-color:rgba(56,189,248,.1)!important}
 .stDataFrame tbody tr{background:rgba(3,9,18,.6)!important}
 .stDataFrame tbody tr:hover{background:rgba(10,25,41,.8)!important}
 .stDataFrame tbody td{color:#94a3b8!important;font-family:'JetBrains Mono',monospace;font-size:12px!important;border-color:rgba(56,189,248,.06)!important}
 
-/* ── Inputs ── */
+/* --Inputs -- */
 .stTextInput input,.stSelectbox [data-baseweb="select"],.stSlider{
   background:rgba(10,25,41,.8)!important;border:1px solid rgba(56,189,248,.12)!important;
   color:#e2e8f0!important;border-radius:8px!important;backdrop-filter:blur(8px)}
 .stTextInput input:focus{border-color:rgba(56,189,248,.4)!important;box-shadow:0 0 0 2px rgba(56,189,248,.08)!important}
 
-/* ── Expander ── */
+/* --Expander -- */
 .streamlit-expanderHeader{background:rgba(10,25,41,.6)!important;border:1px solid rgba(56,189,248,.1)!important;border-radius:8px!important;color:#94a3b8!important;font-size:12px!important;font-weight:600!important}
 .streamlit-expanderContent{background:rgba(5,12,24,.8)!important;border:1px solid rgba(56,189,248,.08)!important;border-top:none!important;border-radius:0 0 8px 8px!important}
 
-/* ── Keyframes ── */
+/* --Keyframes -- */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
@@ -97,10 +97,10 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
 @keyframes borderSpin{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @keyframes flashGreen{0%{background:rgba(34,197,94,.18)}100%{background:transparent}}
 @keyframes flashRed{0%{background:rgba(239,68,68,.18)}100%{background:transparent}}
-@keyframes confFill{from{width:0}to{width:var(--w)}}
+@keyframes confFill{from{width:0%}to{width:100%}}
 @keyframes scanLine{0%{top:-100%}100%{top:100%}}
 
-/* ── Signal Cards ── */
+/* --Signal Cards -- */
 .card{
   background:linear-gradient(135deg,rgba(10,25,41,.85),rgba(7,15,30,.85));
   border:1px solid rgba(56,189,248,.1);border-left:3px solid #22c55e;
@@ -119,7 +119,7 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
   background:linear-gradient(90deg,transparent,rgba(56,189,248,.03),transparent);
   animation:scanLine 3s linear infinite}
 
-/* ── Breakout Cards ── */
+/* --Breakout Cards -- */
 .bo-card{
   background:linear-gradient(135deg,rgba(10,25,41,.8),rgba(5,15,25,.8));
   border:1px solid rgba(34,197,94,.12);border-left:3px solid #22c55e;
@@ -130,7 +130,7 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
 .bo-card.weekly::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(245,158,11,.3),transparent)}
 .bo-card.monthly{border-left-color:#a78bfa;border-color:rgba(167,139,250,.15);background:linear-gradient(135deg,rgba(14,10,31,.85),rgba(8,6,24,.85))}
 
-/* ── F&O Cards ── */
+/* --F&O Cards -- */
 .fno-card{
   background:linear-gradient(135deg,rgba(7,20,40,.9),rgba(5,14,30,.9));
   border:1px solid rgba(56,189,248,.15);border-left:3px solid #38bdf8;
@@ -138,31 +138,31 @@ section[data-testid="stSidebar"] .stButton>button:hover{box-shadow:0 0 32px rgba
   backdrop-filter:blur(10px);animation:fadeUp .4s ease;transition:all .25s}
 .fno-card:hover{transform:translateY(-1px);box-shadow:0 0 24px rgba(56,189,248,.1)}
 
-/* ── MF Cards ── */
+/* --MF Cards -- */
 .mf-card{
   background:linear-gradient(135deg,rgba(10,25,41,.85),rgba(7,18,33,.85));
   border:1px solid rgba(56,189,248,.1);border-radius:12px;padding:18px 20px;
   margin-bottom:12px;backdrop-filter:blur(10px);animation:fadeUp .4s ease;transition:all .25s}
 .mf-card:hover{transform:translateY(-1px);border-color:rgba(56,189,248,.2)}
 
-/* ── Badges ── */
+/* --Badges -- */
 .badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .badge.sb{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.3);box-shadow:0 0 12px rgba(34,197,94,.2),inset 0 0 8px rgba(34,197,94,.05)}
 .badge.b{background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid rgba(56,189,248,.25);box-shadow:0 0 12px rgba(56,189,248,.15)}
 .badge.w{background:rgba(251,191,36,.08);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
 .badge.fno{background:rgba(56,189,248,.08);color:#7dd3fc;border:1px solid rgba(56,189,248,.18);font-size:9px}
 
-/* ── Confidence Bar ── */
+/* --Confidence Bar -- */
 .conf{height:4px;background:rgba(15,32,53,.8);border-radius:3px;margin:10px 0 12px;overflow:hidden}
 .conf-fill{height:100%;border-radius:3px;animation:confFill .6s cubic-bezier(.4,0,.2,1) forwards}
 
-/* ── KV rows ── */
+/* --KV rows -- */
 .row{display:flex;gap:18px;flex-wrap:wrap;margin:8px 0}
 .kv{display:flex;flex-direction:column;min-width:58px}
 .kv span:first-child{font-size:9px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.09em;font-weight:700}
 .kv span:last-child{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#cbd5e1;margin-top:2px}
 
-/* ── Utility ── */
+/* --Utility -- */
 .green{color:#4ade80!important}.red{color:#f87171!important}.blue{color:#38bdf8!important}
 .tag{display:inline-block;padding:3px 9px;border-radius:99px;font-size:9px;font-weight:700;margin:2px;
   background:rgba(5,46,22,.6);color:#86efac;border:1px solid rgba(22,101,52,.5);
