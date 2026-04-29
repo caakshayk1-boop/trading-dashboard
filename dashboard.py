@@ -65,8 +65,8 @@ _THEME_VARS = """
 
 st.markdown(f"""
 <style>
-{_THEME_VARS}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+{_THEME_VARS}
 
 /* --Base -- */
 html,body,[class*="css"]{{font-family:'Inter',sans-serif!important;background:var(--bg)!important;color:var(--txt)!important}}
@@ -710,23 +710,25 @@ with tab4:
                         if hd:
                             pc1, pc2 = st.columns(2)
                             _pie_colors = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8"]
+                            _pbg = "#0a1929" if _DARK else "#f8fafc"
+                            _pfg = "#94a3b8" if _DARK else "#475569"
                             with pc1:
                                 st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Sector Allocation</div>', unsafe_allow_html=True)
                                 sec = hd["sectors"]
                                 fig_s = go.Figure(go.Pie(
                                     labels=list(sec.keys()), values=list(sec.values()),
                                     hole=0.45, textinfo="label+percent",
-                                    textfont=dict(size=10, color="#e2e8f0"),
-                                    marker=dict(colors=_pie_colors[:len(sec)], line=dict(color="#050c18", width=2)),
+                                    textfont=dict(size=10, color="#e2e8f0" if _DARK else "#1a2332"),
+                                    marker=dict(colors=_pie_colors[:len(sec)], line=dict(color="#050c18" if _DARK else "#fff", width=2)),
                                     hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
                                 ))
                                 fig_s.update_layout(
-                                    height=240, paper_bgcolor="#0a1929", plot_bgcolor="#0a1929",
-                                    font=dict(color="#94a3b8", size=10),
+                                    height=240, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                                    font=dict(color=_pfg, size=10),
                                     showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
                                 )
                                 st.plotly_chart(fig_s, use_container_width=True,
-                                               key=f"pie_s_{f['scheme_code']}")
+                                               key=f"pie_s_{cat}_{f['scheme_code']}")
                             with pc2:
                                 st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Top Holdings</div>', unsafe_allow_html=True)
                                 scripts = hd["top_scripts"]
@@ -736,20 +738,22 @@ with tab4:
                                 if others > 0.5:
                                     s_labels.append("Others")
                                     s_vals.append(round(others, 1))
+                                _pbg = "#0a1929" if _DARK else "#f8fafc"
+                                _pfg = "#94a3b8" if _DARK else "#475569"
                                 fig_h = go.Figure(go.Pie(
                                     labels=s_labels, values=s_vals,
                                     hole=0.45, textinfo="label+percent",
-                                    textfont=dict(size=10, color="#e2e8f0"),
-                                    marker=dict(colors=_pie_colors[:len(s_labels)], line=dict(color="#050c18", width=2)),
+                                    textfont=dict(size=10, color="#e2e8f0" if _DARK else "#1a2332"),
+                                    marker=dict(colors=_pie_colors[:len(s_labels)], line=dict(color="#050c18" if _DARK else "#fff", width=2)),
                                     hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
                                 ))
                                 fig_h.update_layout(
-                                    height=240, paper_bgcolor="#0a1929", plot_bgcolor="#0a1929",
-                                    font=dict(color="#94a3b8", size=10),
+                                    height=240, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                                    font=dict(color=_pfg, size=10),
                                     showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
                                 )
                                 st.plotly_chart(fig_h, use_container_width=True,
-                                               key=f"pie_h_{f['scheme_code']}")
+                                               key=f"pie_h_{cat}_{f['scheme_code']}")
                         st.markdown(f'<div style="font-size:11px;color:#475569;margin-top:4px">{f["fund_house"]} &nbsp;·&nbsp; {ret_label}</div>', unsafe_allow_html=True)
                         st.markdown(f'<div style="font-size:10px;color:#334155;margin-top:4px">Holdings as of last monthly disclosure (approximate)</div>', unsafe_allow_html=True)
 
