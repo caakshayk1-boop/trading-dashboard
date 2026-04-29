@@ -699,7 +699,8 @@ with tab4:
                                     font=dict(color="#94a3b8", size=10),
                                     showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
                                 )
-                                st.plotly_chart(fig_s, use_container_width=True)
+                                st.plotly_chart(fig_s, use_container_width=True,
+                                               key=f"pie_s_{f['scheme_code']}")
                             with pc2:
                                 st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Top Holdings</div>', unsafe_allow_html=True)
                                 scripts = hd["top_scripts"]
@@ -721,7 +722,8 @@ with tab4:
                                     font=dict(color="#94a3b8", size=10),
                                     showlegend=False, margin=dict(l=4,r=4,t=4,b=4)
                                 )
-                                st.plotly_chart(fig_h, use_container_width=True)
+                                st.plotly_chart(fig_h, use_container_width=True,
+                                               key=f"pie_h_{f['scheme_code']}")
                         st.markdown(f'<div style="font-size:11px;color:#475569;margin-top:4px">{f["fund_house"]} &nbsp;·&nbsp; {ret_label}</div>', unsafe_allow_html=True)
                         st.markdown(f'<div style="font-size:10px;color:#334155;margin-top:4px">Holdings as of last monthly disclosure (approximate)</div>', unsafe_allow_html=True)
 
