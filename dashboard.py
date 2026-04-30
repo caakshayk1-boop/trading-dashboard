@@ -114,6 +114,25 @@ def _gh_last_scan():
     if data:
         return data.get("ts"), data.get("slot"), data.get("counts",{})
     return None, None, {}
+
+def _get_ai_signals(days=3):
+    """Read TLM channel breakout signals (branded as AI Signals) from breakouts table."""
+    from datetime import timedelta
+    cutoff = str(date.today() - timedelta(days=days))
+    if IS_LOCAL:
+        df = get_breakouts(days=days)
+        if df.empty:
+            return []
+        rows = df.to_dict("records")
+    else:
+        data = _fetch_json("breakouts")
+        if not data:
+            return []
+        rows = [r for r in data if r.get("date","") >= cutoff]
+    # Filter: AI signals have pattern = "AI Channel Breakout"
+    ai = [r for r in rows if "AI Channel" in str(r.get("pattern","")) or "Channel Breakout" in str(r.get("pattern",""))]
+    return ai
+
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
                          load_portfolio, save_portfolio, get_portfolio_summary,
                          get_index_quotes, get_top_funds_data, get_stock_news,
@@ -185,6 +204,12 @@ st.markdown(f"""
 @keyframes confFill {{ from {{ width:0%; }} to {{ width:100%; }} }}
 @keyframes scanLine {{ 0% {{ transform:translateX(-100%); }} 100% {{ transform:translateX(200%); }} }}
 @keyframes breathe  {{ 0%,100% {{ opacity:.6; }} 50% {{ opacity:1; }} }}
+@keyframes tickerScroll {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
+@keyframes aiGlow {{ 0%,100% {{ box-shadow:0 0 18px rgba(167,139,250,.25),0 0 0 1px rgba(167,139,250,.2); }} 50% {{ box-shadow:0 0 32px rgba(167,139,250,.45),0 0 0 1px rgba(167,139,250,.4); }} }}
+@keyframes neuralPulse {{ 0%,100% {{ opacity:.3; transform:scale(1); }} 50% {{ opacity:.7; transform:scale(1.3); }} }}
+@keyframes scanDiag {{ 0% {{ transform:translateX(-100%) translateY(-100%); }} 100% {{ transform:translateX(200%) translateY(200%); }} }}
+@keyframes numberFlip {{ 0% {{ opacity:0; transform:translateY(-8px); }} 100% {{ opacity:1; transform:translateY(0); }} }}
+@keyframes borderRun {{ 0% {{ background-position:0% 50%; }} 100% {{ background-position:200% 50%; }} }}
 
 /* ---- Base ---- */
 html,body,[class*="css"] {{ font-family:'Inter',sans-serif!important; background:var(--bg)!important; color:var(--txt)!important; -webkit-font-smoothing:antialiased; }}
@@ -381,6 +406,55 @@ section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[
   content:''; position:absolute; top:0; left:0; right:0; height:1px;
   background:linear-gradient(90deg, transparent, var(--accent), transparent); opacity:.4; }}
 .fno-card:hover {{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(56,189,248,.1); }}
+
+/* ---- AI Signal Cards ---- */
+.ai-card {{
+  background:linear-gradient(135deg,rgba(10,7,24,.97),rgba(17,9,36,.97));
+  border:1px solid rgba(167,139,250,.2);
+  border-left:3px solid #a78bfa;
+  border-radius:16px; padding:22px 24px; margin-bottom:16px;
+  animation:fadeUp .45s cubic-bezier(.4,0,.2,1), aiGlow 4s ease-in-out infinite;
+  transition:transform .28s ease, box-shadow .28s ease;
+  position:relative; overflow:hidden; }}
+.ai-card::before {{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px; pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(167,139,250,.7), rgba(236,72,153,.5), transparent); }}
+.ai-card::after {{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(167,139,250,.07) 0%, transparent 65%); }}
+.ai-card:hover {{ transform:translateY(-3px); box-shadow:0 20px 56px rgba(167,139,250,.15), 0 0 0 1px rgba(167,139,250,.3); }}
+/* AI scan line */
+.ai-card .ai-scan {{
+  position:absolute; top:0; left:0; bottom:0; width:2px;
+  background:linear-gradient(180deg,transparent,rgba(167,139,250,.8),rgba(236,72,153,.6),transparent);
+  animation:scanDiag 3s ease-in-out infinite; pointer-events:none; }}
+/* AI badge */
+.ai-badge {{
+  display:inline-flex; align-items:center; gap:5px; padding:3px 12px; border-radius:99px;
+  font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(236,72,153,.1));
+  color:#c4b5fd; border:1px solid rgba(167,139,250,.4);
+  box-shadow:0 0 12px rgba(167,139,250,.2); }}
+/* Neural dots */
+.neural-dot {{
+  display:inline-block; width:5px; height:5px; border-radius:50%;
+  background:#a78bfa; animation:neuralPulse 2s ease-in-out infinite; }}
+/* AI channel viz */
+.ai-channel {{
+  background:rgba(167,139,250,.04); border:1px solid rgba(167,139,250,.12);
+  border-radius:10px; padding:10px 14px; margin:10px 0; }}
+.ai-channel-label {{ font-size:8px; font-weight:800; color:#a78bfa; letter-spacing:.14em; text-transform:uppercase; margin-bottom:6px; }}
+.ai-channel-band {{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'JetBrains Mono',monospace; font-size:11px; }}
+.ai-channel-upper {{ color:#c4b5fd; font-weight:700; }}
+.ai-channel-lower {{ color:#7c3aed; font-weight:600; }}
+.ai-channel-width {{ color:#475569; font-size:10px; }}
+/* Performance AI section */
+.perf-ai-card {{
+  background:linear-gradient(135deg,rgba(10,7,24,.97),rgba(17,9,36,.97));
+  border:1px solid rgba(167,139,250,.15); border-radius:14px; padding:18px 20px; margin-bottom:12px;
+  animation:fadeUp .4s ease; }}
 
 /* ---- MF Cards ---- */
 .mf-card {{
@@ -661,8 +735,21 @@ _fxc = _forex()
 # Ticker signals from DB (active signals)
 _sigs_ticker = []
 if not _active.empty:
-    for _, _row in _active.head(6).iterrows():
-        _sigs_ticker.append({"symbol": _row["symbol"], "action": _row.get("action","BUY"), "price": _row["entry"]})
+    for _, _row in _active.head(5).iterrows():
+        _sigs_ticker.append({"symbol": _row["symbol"], "action": _row.get("action","BUY"), "price": _row["entry"], "is_ai": False})
+
+# AI signals in ticker
+_ai_ticker = _get_ai_signals(days=1)[:3]
+
+def _ti_ai(sig):
+    return (f'<span style="margin:0 22px;white-space:nowrap;'
+            f'background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(236,72,153,.07));'
+            f'border:1px solid rgba(167,139,250,.3);border-radius:5px;padding:2px 10px">'
+            f'<span style="font-size:9px;font-weight:800;color:#a78bfa;letter-spacing:.06em">🤖 AI</span>'
+            f'&nbsp;<span style="color:#c4b5fd;font-size:11px;font-weight:800">{sig.get("symbol","")}</span>'
+            f'&nbsp;<span style="color:#475569;font-size:10px">₹{float(sig.get("price",0)):,.1f}</span>'
+            f'&nbsp;<span style="font-size:9px;color:#7c3aed">▲</span>'
+            f'</span>')
 
 ticker_parts = []
 if _iq:
@@ -670,32 +757,53 @@ if _iq:
     ticker_parts.append('<span style="margin:0 16px;color:#0f2035">│</span>')
 if _fxc:
     ticker_parts += [_ti_forex(r) for r in _fxc]
+if _ai_ticker:
+    ticker_parts.append('<span style="margin:0 16px;color:#1a0a3a">│</span>')
+    ticker_parts += [_ti_ai(s) for s in _ai_ticker]
 if _sigs_ticker:
     ticker_parts.append('<span style="margin:0 16px;color:#0f2035">│</span>')
     ticker_parts += [_ti_signal(s) for s in _sigs_ticker]
 
 if ticker_parts:
-    ticker_html = "".join(ticker_parts)
+    # Duplicate items for seamless CSS loop
+    ticker_inner = "".join(ticker_parts)
+    ticker_html  = ticker_inner + ticker_inner  # duplicate for seamless loop
+    n_items = len(ticker_parts)
+    anim_dur = max(18, n_items * 3)  # scale speed to content length
     st.markdown(f"""
-<div style="background:linear-gradient(90deg,rgba(5,12,24,.95),rgba(7,18,36,.95));
+<style>
+.ticker-wrap {{ overflow:hidden; flex:1; }}
+.ticker-track {{
+  display:inline-flex; align-items:center; white-space:nowrap;
+  animation:tickerScroll {anim_dur}s linear infinite; }}
+.ticker-track:hover {{ animation-play-state:paused; }}
+</style>
+<div style="background:linear-gradient(90deg,rgba(3,6,14,.97),rgba(5,12,24,.97));
   border:1px solid rgba(56,189,248,.1);border-radius:10px;padding:0;margin-bottom:14px;
-  overflow:hidden;backdrop-filter:blur(12px);position:relative">
+  overflow:hidden;backdrop-filter:blur(16px);position:relative">
   <div style="position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(56,189,248,.3),transparent)"></div>
+    background:linear-gradient(90deg,transparent,rgba(56,189,248,.4),rgba(167,139,250,.3),transparent)"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(56,189,248,.15),transparent)"></div>
   <div style="display:flex;align-items:stretch">
-    <div style="padding:0 14px;border-right:1px solid rgba(56,189,248,.1);
-      display:flex;align-items:center;gap:6px;flex-shrink:0;background:rgba(56,189,248,.04)">
+    <div style="padding:0 14px;border-right:1px solid rgba(56,189,248,.08);
+      display:flex;align-items:center;gap:6px;flex-shrink:0;
+      background:linear-gradient(135deg,rgba(56,189,248,.06),rgba(167,139,250,.04))">
       <span class="live"></span>
-      <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.12em;text-transform:uppercase">Live</span>
+      <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.12em;text-transform:uppercase;line-height:1">Live</span>
     </div>
-    <div style="overflow:hidden;flex:1;padding:9px 0">
-      <marquee behavior="scroll" direction="left" scrollamount="5" style="display:block">{ticker_html}</marquee>
+    <div class="ticker-wrap" style="padding:9px 0">
+      <div class="ticker-track">{ticker_html}</div>
+    </div>
+    <div style="padding:0 12px;border-left:1px solid rgba(56,189,248,.08);
+      display:flex;align-items:center;flex-shrink:0;background:rgba(0,0,0,.2)">
+      <span style="font-size:8px;color:#1e3a5f;font-weight:600;letter-spacing:.06em">AUTO-REFRESH 60s</span>
     </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Signals", "Breakouts", "F&O", "Mutual Funds", "Market News", "Performance", "History"])
+tab1, tab_ai, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Signals", "🤖 AI Signals", "Breakouts", "F&O", "Mutual Funds", "Market News", "Performance", "History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -847,6 +955,160 @@ with tab1:
             margin=dict(l=8,r=8,t=8,b=8), showlegend=False, coloraxis_showscale=False)
         st.plotly_chart(fig, use_container_width=True)
         st.download_button("Export CSV", df_s.to_csv(index=False), "signals.csv", "text/csv")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAB AI — AI SIGNALS (TLM Trendline Channel Breakouts)
+# ══════════════════════════════════════════════════════════════════════════════
+with tab_ai:
+    ai_sigs = _get_ai_signals(days=_days)
+
+    # Header
+    st.markdown("""
+<div style="background:linear-gradient(135deg,rgba(10,7,24,.98),rgba(20,9,42,.98));
+  border:1px solid rgba(167,139,250,.2);border-radius:16px;padding:18px 22px;margin-bottom:18px;
+  position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(167,139,250,.6),rgba(236,72,153,.4),transparent)"></div>
+  <div style="position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(ellipse 45% 60% at 5% 50%,rgba(167,139,250,.06),transparent 60%)"></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+    <span style="font-size:20px;font-weight:900;color:#c4b5fd;letter-spacing:-.02em">AI Signal Detection</span>
+    <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
+      background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);
+      letter-spacing:.1em;text-transform:uppercase">TRENDLINE · CHANNEL · ML PATTERN</span>
+  </div>
+  <div style="font-size:11px;color:#4b3a7a;line-height:1.5">
+    OLS regression trendline channel · Pivot high/low detection · Breakout above upper band + volume confirmation
+    <br>Auto-scans: 9:20 AM (4H) · 11:45 AM (4H) · 4:30 PM (Daily EOD)
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+    if not ai_sigs:
+        st.markdown("""
+<div style="text-align:center;padding:60px 0">
+  <div style="font-size:40px;margin-bottom:12px">🤖</div>
+  <div style="font-size:14px;color:#4b3a7a;font-weight:600">No AI channel breakouts detected</div>
+  <div style="font-size:11px;color:#2d1a55;margin-top:6px">Next scan: 9:20 AM IST (4H) · 4:30 PM IST (Daily EOD)</div>
+  <div style="font-size:10px;color:#1a0a2e;margin-top:4px">Signals fire when price breaks OLS regression upper band with vol surge</div>
+</div>
+""", unsafe_allow_html=True)
+    else:
+        # KPI row
+        kc = st.columns(4)
+        kc[0].metric("AI Signals", len(ai_sigs))
+        rr_ai = [float(s.get("rr",0)) for s in ai_sigs if s.get("rr",0)]
+        kc[1].metric("Avg RR", f"1:{round(sum(rr_ai)/len(rr_ai),1)}" if rr_ai else "—")
+        fno_ai = sum(1 for s in ai_sigs if s.get("fno"))
+        kc[2].metric("F&O Ready", fno_ai)
+        vol_ai = [float(s.get("vol_ratio",1)) for s in ai_sigs]
+        kc[3].metric("Avg Vol Surge", f"{round(sum(vol_ai)/len(vol_ai),1)}x" if vol_ai else "—")
+
+        st.markdown("---")
+
+        for b in ai_sigs:
+            sym      = b.get("symbol","")
+            price    = float(b.get("price", 0))
+            sl       = float(b.get("sl", 0))
+            t1       = float(b.get("target1", 0))
+            t2       = float(b.get("target2", 0))
+            t3       = float(b.get("target3", t2))
+            rr       = b.get("rr", 0)
+            vol_r    = float(b.get("vol_ratio", 1))
+            tf       = b.get("timeframe", "4H")
+            upper_b  = float(b.get("upper_band", price))
+            lower_b  = float(b.get("lower_band", sl))
+            ch_w     = float(b.get("channel_width", upper_b - lower_b))
+            fno_b    = '<span class="ai-badge" style="font-size:8px;padding:2px 7px;margin-left:4px">F&amp;O</span>' if b.get("fno") else ""
+            tv_link  = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+            pats     = b.get("pattern","TL Channel Breakout")
+            risk     = max(price - sl, 0.01)
+            # Channel fill % (where is price relative to channel)
+            ch_pos_pct = min(100, max(0, round((price - lower_b) / max(ch_w, 0.01) * 100, 0))) if ch_w > 0 else 80
+
+            # Breakout % above upper band
+            bo_pct = round((price - upper_b) / upper_b * 100, 2) if upper_b > 0 else 0
+
+            st.markdown(f"""
+<div class="ai-card">
+  <div class="ai-scan"></div>
+
+  <!-- Header -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+    <div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:22px;font-weight:900;color:#f1f5f9;letter-spacing:-.02em">{sym}</span>
+        <span class="ai-badge"><span class="neural-dot"></span>AI DETECTED</span>
+        {fno_b}
+      </div>
+      <div style="font-size:10px;color:#4b3a7a">{pats} &nbsp;·&nbsp; {tf} &nbsp;·&nbsp; NSE Equity</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:28px;font-weight:900;color:#a78bfa;font-family:'JetBrains Mono',monospace;line-height:1;
+        text-shadow:0 0 20px rgba(167,139,250,.4);animation:numberFlip .4s ease">{'+' if bo_pct>=0 else ''}{bo_pct}%</div>
+      <div style="font-size:8px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.1em;margin-top:2px">above upper band</div>
+      <div style="font-size:10px;font-weight:700;color:#c4b5fd;margin-top:4px">Vol {vol_r:.1f}× avg</div>
+    </div>
+  </div>
+
+  <!-- Channel visualisation -->
+  <div class="ai-channel">
+    <div class="ai-channel-label">🔮 OLS REGRESSION CHANNEL</div>
+    <div class="ai-channel-band">
+      <span class="ai-channel-upper">▲ Upper: ₹{upper_b:,.2f}</span>
+      <span class="ai-channel-width">Width: {ch_w:.1f} pts</span>
+      <span class="ai-channel-lower">▼ Lower: ₹{lower_b:,.2f}</span>
+    </div>
+    <!-- channel position bar -->
+    <div style="margin-top:8px;height:6px;background:linear-gradient(90deg,rgba(124,58,237,.2),rgba(167,139,250,.15),rgba(236,72,153,.1));
+      border-radius:3px;position:relative;overflow:visible">
+      <div style="position:absolute;height:12px;width:3px;top:-3px;background:#a78bfa;border-radius:2px;
+        left:calc({min(95,ch_pos_pct)}% - 1px);box-shadow:0 0 8px rgba(167,139,250,.8)"></div>
+      <div style="position:absolute;right:-2px;top:-3px;height:12px;width:3px;background:rgba(167,139,250,.3);border-radius:2px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:8px;color:#2d1a55">
+      <span>Lower Band</span><span style="color:#a78bfa;font-weight:700">▲ BREAKOUT (CURRENT ₹{price:,.2f})</span><span>Upper Band</span>
+    </div>
+  </div>
+
+  <!-- Trade structure -->
+  <div style="font-size:8px;font-weight:800;color:#4b3a7a;text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px">TRADE STRUCTURE</div>
+  <div class="tgrid">
+    <div class="tgcell" style="border-color:rgba(167,139,250,.2)">
+      <div class="tc-label">ENTRY (CURRENT)</div>
+      <div class="tc-val" style="color:#c4b5fd">₹{price:,.2f}</div>
+    </div>
+    <div class="tgcell" style="border-color:rgba(167,139,250,.2)">
+      <div class="tc-label">TIMEFRAME</div>
+      <div class="tc-val" style="color:#a78bfa">{tf}</div>
+    </div>
+    <div class="tgcell sl">
+      <div class="tc-label">STOP LOSS</div>
+      <div class="tc-val" style="color:#ef4444">₹{sl:,.2f}</div>
+    </div>
+    <div class="tgcell t1">
+      <div class="tc-label">TARGET 1</div>
+      <div class="tc-val" style="color:#22c55e">₹{t1:,.2f}</div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:4px">
+    <div class="kv"><span>Risk/Reward</span><span class="blue">1:{rr}</span></div>
+    <div class="kv"><span>Target 2</span><span class="green">₹{t2:,.1f}</span></div>
+    <div class="kv"><span>Target 3</span><span class="green">₹{t3:,.1f}</span></div>
+    <div class="kv"><span>Risk pts</span><span class="red">₹{risk:,.1f}</span></div>
+  </div>
+
+  <!-- Footer -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;
+    padding-top:10px;border-top:1px solid rgba(167,139,250,.1)">
+    <span style="font-size:9px;color:#2d1a55">AI pattern detection · OLS regression · Not SEBI advice</span>
+    <a href="{tv_link}" target="_blank"
+      style="color:#a78bfa;font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1349,26 +1611,122 @@ with tab5:
 # ══════════════════════════════════════════════════════════════════════════════
 with tab6:
     perf = get_performance()
+
+    # ── Swing Signal Performance ──────────────────────────────────────────────
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:12px">Swing Signal Performance</div>', unsafe_allow_html=True)
     if perf:
         p = st.columns(5)
-        p[0].metric("Total Signals", perf["total"])
-        p[1].metric("Win Rate",  f"{perf['win_rate']}%")
-        p[2].metric("Avg P&L",  f"{perf['avg_pnl']}%")
-        p[3].metric("Best",     f"+{perf['best']}%")
-        p[4].metric("Worst",    f"{perf['worst']}%")
+        p[0].metric("Total Signals",   perf["total"])
+        p[1].metric("Win Rate",        f"{perf['win_rate']}%")
+        p[2].metric("Avg P&L",         f"{perf['avg_pnl']}%")
+        p[3].metric("Best",            f"+{perf['best']}%")
+        p[4].metric("Worst",           f"{perf['worst']}%")
         hist   = get_history()
         closed = hist[hist["status"] != "OPEN"]
         if not closed.empty:
             fig = px.bar(closed, x="symbol", y="pnl_pct", color="pnl_pct",
                          color_continuous_scale=["#ef4444","#0f2035","#22c55e"],
-                         range_color=[-20,20])
+                         range_color=[-20,20], title="Closed Trade P&L (%)")
             fig.update_layout(paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
                 font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
-                yaxis=dict(gridcolor="#0f2035"), height=360,
-                margin=dict(l=8,r=8,t=8,b=8), coloraxis_showscale=False, showlegend=False)
+                yaxis=dict(gridcolor="#0f2035"), height=320,
+                margin=dict(l=8,r=8,t=32,b=8), coloraxis_showscale=False, showlegend=False,
+                title_font=dict(color="#475569",size=11))
             st.plotly_chart(fig, use_container_width=True)
+        # Setup breakdown
+        if perf.get("by_setup"):
+            st.markdown('<div style="font-size:11px;font-weight:700;color:#334155;margin:8px 0 6px">P&L by Setup Type</div>', unsafe_allow_html=True)
+            sd_cols = st.columns(len(perf["by_setup"]))
+            for i, (k, v) in enumerate(perf["by_setup"].items()):
+                c = "#4ade80" if v >= 0 else "#f87171"
+                sd_cols[i].markdown(f'<div style="background:#0a1929;border:1px solid #0f2d4a;border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">{k}</div><div style="font-size:15px;font-weight:800;color:{c};font-family:JetBrains Mono,monospace">{v:+.2f}%</div></div>', unsafe_allow_html=True)
     else:
-        st.info("No closed trades yet.")
+        st.info("No closed swing trades yet. Outcomes tracked automatically each day.")
+
+    st.markdown("---")
+
+    # ── AI Signal Performance ─────────────────────────────────────────────────
+    st.markdown("""
+<div style="background:linear-gradient(135deg,rgba(10,7,24,.97),rgba(20,9,42,.97));
+  border:1px solid rgba(167,139,250,.15);border-radius:14px;padding:16px 20px;margin-bottom:16px;position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(167,139,250,.5),transparent)"></div>
+  <div style="font-size:13px;font-weight:700;color:#c4b5fd;margin-bottom:4px">🤖 AI Signal Performance</div>
+  <div style="font-size:11px;color:#4b3a7a">Trendline channel breakout signals — tracked from breakouts table</div>
+</div>
+""", unsafe_allow_html=True)
+
+    ai_all = _get_ai_signals(days=30)  # last 30 days
+    if not ai_all:
+        st.markdown('<div style="background:rgba(10,7,24,.9);border:1px solid rgba(167,139,250,.1);border-radius:10px;padding:20px;text-align:center;color:#4b3a7a;font-size:12px">No AI signals in last 30 days. Signals appear here once auto-scan detects trendline breakouts.</div>', unsafe_allow_html=True)
+    else:
+        ai_pc = st.columns(4)
+        ai_rr_vals = [float(s.get("rr",0)) for s in ai_all if s.get("rr",0)]
+        ai_vol_vals = [float(s.get("vol_ratio",1)) for s in ai_all]
+        ai_fno_ct   = sum(1 for s in ai_all if s.get("fno"))
+        ai_tf_4h    = sum(1 for s in ai_all if str(s.get("timeframe","")) == "4H")
+        ai_tf_d     = sum(1 for s in ai_all if str(s.get("timeframe","")) == "Daily")
+        ai_pc[0].metric("Total AI Signals", len(ai_all))
+        ai_pc[1].metric("Avg RR", f"1:{round(sum(ai_rr_vals)/len(ai_rr_vals),2)}" if ai_rr_vals else "—")
+        ai_pc[2].metric("F&O Eligible", ai_fno_ct)
+        ai_pc[3].metric("Avg Vol Surge", f"{round(sum(ai_vol_vals)/len(ai_vol_vals),1)}x" if ai_vol_vals else "—")
+
+        # Timeframe split
+        st.markdown(f"""
+<div style="display:flex;gap:12px;margin:12px 0">
+  <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px;padding:10px 16px;flex:1;text-align:center">
+    <div style="font-size:9px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">4H Signals</div>
+    <div style="font-size:22px;font-weight:800;color:#a78bfa;font-family:JetBrains Mono,monospace">{ai_tf_4h}</div>
+  </div>
+  <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px;padding:10px 16px;flex:1;text-align:center">
+    <div style="font-size:9px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Daily EOD</div>
+    <div style="font-size:22px;font-weight:800;color:#c4b5fd;font-family:JetBrains Mono,monospace">{ai_tf_d}</div>
+  </div>
+  <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px;padding:10px 16px;flex:1;text-align:center">
+    <div style="font-size:9px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">F&O Ready</div>
+    <div style="font-size:22px;font-weight:800;color:#e879f9;font-family:JetBrains Mono,monospace">{ai_fno_ct}</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+        # Signal history table
+        if ai_all:
+            ai_df = pd.DataFrame([{
+                "Date":      s.get("date",""),
+                "Symbol":    s.get("symbol",""),
+                "TF":        s.get("timeframe",""),
+                "Entry":     f"₹{float(s.get('price',0)):,.2f}",
+                "Upper Band":f"₹{float(s.get('upper_band', s.get('price',0))):,.2f}",
+                "SL":        f"₹{float(s.get('sl',0)):,.2f}",
+                "T1":        f"₹{float(s.get('target1',0)):,.2f}",
+                "RR":        f"1:{s.get('rr',0)}",
+                "Vol":       f"{float(s.get('vol_ratio',1)):.1f}x",
+                "F&O":       "✓" if s.get("fno") else "—",
+            } for s in ai_all[:20]])
+            st.dataframe(ai_df, use_container_width=True, hide_index=True)
+            st.download_button("Export AI Signals CSV",
+                               ai_df.to_csv(index=False), "ai_signals.csv", "text/csv",
+                               key="dl_ai")
+
+        # RR distribution chart
+        if len(ai_rr_vals) >= 3:
+            fig_ai = go.Figure()
+            fig_ai.add_trace(go.Bar(
+                x=list(range(len(ai_rr_vals))), y=ai_rr_vals,
+                marker_color="#a78bfa", name="RR Ratio",
+                hovertemplate="RR: 1:%{y}<extra></extra>"
+            ))
+            fig_ai.add_hline(y=2.0, line_color="#22c55e", line_dash="dash",
+                             annotation_text="Min 2:1", annotation_font_color="#22c55e")
+            fig_ai.update_layout(
+                paper_bgcolor="#07030e", plot_bgcolor="#0a0514",
+                font=dict(color="#64748b",size=10),
+                xaxis=dict(gridcolor="#1a0a2e",showticklabels=False),
+                yaxis=dict(gridcolor="#1a0a2e",title="R:R Ratio"),
+                height=200, margin=dict(l=8,r=8,t=8,b=8),
+                showlegend=False, title_text=""
+            )
+            st.plotly_chart(fig_ai, use_container_width=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

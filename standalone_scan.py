@@ -164,8 +164,8 @@ def run_tlm_scan(time_str, interval="4h"):
             s.setdefault("patterns", [s.get("pattern", "TL Channel Breakout")])
             s.setdefault("target3", s.get("target2", 0))
         log_breakouts(tlm_sigs)
-        lines = [f"📐 *TL Channel Breakouts* ({tf_label}) — {time_str}\n"
-                 f"_(Price broke upper trendline + volume surge)_\n"]
+        lines = [f"🤖 *AI Signals* ({tf_label}) — {time_str}\n"
+                 f"_(Price broke upper regression channel + volume surge)_\n"]
         for b in tlm_sigs[:8]:
             fno_tag = " `F&O`" if b.get("fno") else ""
             lines.append(
