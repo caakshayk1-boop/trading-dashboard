@@ -35,6 +35,14 @@ jobs:
       - name: Run scanner
         run: python standalone_scan.py
 
+      - name: Commit signal data to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git diff --staged --quiet || git commit -m "data: update signals $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+          git push
+
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4

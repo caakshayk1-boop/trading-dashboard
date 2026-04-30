@@ -403,6 +403,49 @@ def log_scan_meta(slot, counts: dict):
                   (str(datetime.utcnow()), slot, json.dumps(counts)))
         c.commit()
 
+def export_signals_json():
+    """Export all signal tables to data/*.json for GitHub raw URL access."""
+    import os
+    os.makedirs("data", exist_ok=True)
+    init_db()
+
+    def _df_to_json(df, path):
+        if df is None or df.empty:
+            with open(path, "w") as f:
+                json.dump([], f)
+            return
+        # Convert to records, handle NaN
+        records = df.where(pd.notnull(df), None).to_dict(orient="records")
+        with open(path, "w") as f:
+            json.dump(records, f, default=str)
+
+    # Export each table
+    with _conn() as c:
+        sigs = pd.read_sql(
+            "SELECT * FROM signals WHERE status='OPEN' ORDER BY score DESC LIMIT 50", c)
+        _df_to_json(sigs, "data/signals.json")
+
+        bos = pd.read_sql(
+            "SELECT * FROM breakouts ORDER BY date DESC LIMIT 50", c)
+        _df_to_json(bos, "data/breakouts.json")
+
+        s4h = pd.read_sql(
+            "SELECT * FROM signals_4h ORDER BY date DESC LIMIT 50", c)
+        _df_to_json(s4h, "data/signals_4h.json")
+
+        comm = pd.read_sql(
+            "SELECT * FROM commodity_signals ORDER BY date DESC LIMIT 30", c)
+        _df_to_json(comm, "data/commodity_signals.json")
+
+    # Scan meta
+    ts, slot, counts = get_last_scan()
+    with open("data/scan_meta.json", "w") as f:
+        json.dump({"ts": ts, "slot": slot, "counts": counts}, f)
+
+    import logging
+    logging.info("data/*.json exported successfully")
+
+
 def get_last_scan():
     """Returns (ts_str, slot, counts_dict) of most recent scan."""
     try:

@@ -4,14 +4,116 @@ import plotly.express as px
 import pandas as pd
 import yfinance as yf
 import ta as ta_lib
-from datetime import datetime
-import pytz, os
+from datetime import datetime, date
+import pytz, os, json, requests
 
 from scanner import fetch_forex_comm, obfuscate_reasons
 from tracker import (get_performance, get_history, get_active_signals, init_db,
                      get_breakouts, get_4h_signals, get_commodity_signals,
                      get_last_scan, get_signals_display)
 from config import MIN_SIGNAL_SCORE, CAPITAL
+
+# ── GitHub raw data source (Streamlit Cloud reads scans from here) ────────────
+_GH_RAW = "https://raw.githubusercontent.com/caakshayk1-boop/trading-dashboard/main/data"
+
+@st.cache_data(ttl=60)
+def _fetch_json(name: str):
+    """Fetch data/name.json from GitHub raw URL."""
+    try:
+        r = requests.get(f"{_GH_RAW}/{name}.json", timeout=10)
+        if r.status_code == 200:
+            return r.json()
+    except Exception:
+        pass
+    return None
+
+def _gh_signals_display(days=3, min_score=0):
+    """Read signals from GitHub JSON (cloud fallback)."""
+    from datetime import timedelta
+    data = _fetch_json("signals")
+    if not data:
+        return []
+    cutoff = str(date.today() - timedelta(days=days))
+    result = []
+    for row in data:
+        if row.get("date","") < cutoff:
+            continue
+        if int(row.get("score",0)) < min_score:
+            continue
+        try:
+            meta = json.loads(row.get("metadata") or "{}")
+        except Exception:
+            meta = {}
+        entry = float(row.get("entry", 0))
+        sl2   = float(row.get("sl2") or entry * 0.96)
+        t1    = float(row.get("target1", 0))
+        t2    = float(row.get("target2", 0))
+        t3    = float(row.get("target3", 0))
+        risk  = max(entry - sl2, 0.01)
+        result.append({
+            "symbol":      row.get("symbol",""),
+            "action":      row.get("action","BUY"),
+            "setup_type":  row.get("setup_type",""),
+            "price":       entry,
+            "sl1":         float(row.get("sl1") or sl2),
+            "sl2":         sl2,
+            "target1":     t1, "target2": t2, "target3": t3,
+            "score":       int(row.get("score",0)),
+            "status":      row.get("status","OPEN"),
+            "date":        row.get("date",""),
+            "rsi":         meta.get("rsi", 0),
+            "adx":         meta.get("adx", 0),
+            "vol_ratio":   meta.get("vol_ratio", 1.0),
+            "regime":      meta.get("regime",""),
+            "reasons":     meta.get("reasons",""),
+            "fno_eligible":meta.get("fno", False),
+            "rr1":         meta.get("rr1") or round((t1-entry)/risk,2),
+            "rr2":         meta.get("rr2") or round((t2-entry)/risk,2),
+            "qty":         meta.get("qty",0),
+            "atr":         meta.get("atr",0),
+            "tv_link":     meta.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{row.get('symbol','')}",
+            "bias":        meta.get("bias","bullish"),
+            "fno_suggestion": meta.get("fno_suggestion"),
+        })
+    result.sort(key=lambda x: x["score"], reverse=True)
+    return result
+
+def _gh_breakouts(days=3):
+    from datetime import timedelta
+    data = _fetch_json("breakouts")
+    if not data:
+        return pd.DataFrame()
+    cutoff = str(date.today() - timedelta(days=days))
+    rows = [r for r in data if r.get("date","") >= cutoff]
+    df = pd.DataFrame(rows)
+    if not df.empty and "patterns" in df.columns:
+        df["patterns"] = df["patterns"].apply(
+            lambda x: json.loads(x) if isinstance(x, str) and x else [])
+    return df
+
+def _gh_4h_signals(days=1):
+    from datetime import timedelta
+    data = _fetch_json("signals_4h")
+    if not data:
+        return pd.DataFrame()
+    cutoff = str(date.today() - timedelta(days=days))
+    rows = [r for r in data if r.get("date","") >= cutoff]
+    return pd.DataFrame(rows)
+
+def _gh_commodity_signals(days=1):
+    from datetime import timedelta
+    data = _fetch_json("commodity_signals")
+    if not data:
+        return pd.DataFrame()
+    cutoff = str(date.today() - timedelta(days=days))
+    rows = [r for r in data if r.get("date","") >= cutoff]
+    return pd.DataFrame(rows)
+
+def _gh_last_scan():
+    data = _fetch_json("scan_meta")
+    if data:
+        return data.get("ts"), data.get("slot"), data.get("counts",{})
+    return None, None, {}
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
                          load_portfolio, save_portfolio, get_portfolio_summary,
                          get_index_quotes, get_top_funds_data, get_stock_news,
@@ -442,8 +544,11 @@ with st.sidebar:
             st.session_state["theme"] = "light" if _DARK else "dark"
             st.rerun()
 
-    # Last scan info
-    _last_ts, _last_slot, _last_counts = get_last_scan()
+    # Last scan info — use GitHub JSON on cloud, local DB on dev
+    if IS_LOCAL:
+        _last_ts, _last_slot, _last_counts = get_last_scan()
+    else:
+        _last_ts, _last_slot, _last_counts = _gh_last_scan()
     if _last_ts:
         st.markdown(f'<div style="font-size:10px;color:#22c55e;font-weight:700;margin:6px 0 2px"><span class="live"></span>Last scan</div>', unsafe_allow_html=True)
         st.caption(f"{_last_ts}")
@@ -472,8 +577,8 @@ with st.sidebar:
 
 # ── Header ────────────────────────────────────────────────────────────────────
 now_str   = datetime.now(IST).strftime("%d %b · %I:%M %p IST")
-_active   = get_active_signals()
-_bos_df   = get_breakouts(days=_days)
+_active   = get_active_signals() if IS_LOCAL else pd.DataFrame()
+_bos_df   = get_breakouts(days=_days) if IS_LOCAL else _gh_breakouts(days=_days)
 sig_count = len(_active)
 bo_count  = len(_bos_df)
 
@@ -597,7 +702,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Signals", "Breakouts", "F&O
 # TAB 1 — SIGNALS (read-only from DB)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab1:
-    signals = get_signals_display(days=_days, min_score=min_score)
+    signals = get_signals_display(days=_days, min_score=min_score) if IS_LOCAL else _gh_signals_display(days=_days, min_score=min_score)
 
     if not signals:
         st.markdown(f'<div style="text-align:center;padding:50px 0"><div style="font-size:36px">📡</div><div style="margin-top:8px;font-size:13px;color:#334155">No signals in last {_days} day(s) above score {min_score}.<br>Auto-scans: 9:20 AM · 11:45 AM · 4:30 PM IST</div></div>', unsafe_allow_html=True)
@@ -802,7 +907,7 @@ with tab2:
     # 4H section — from DB
     st.markdown("---")
     st.markdown('<div style="font-size:13px;font-weight:700;color:#f59e0b;margin-bottom:4px">⚡ 4H Early-Entry Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">RSI crossing 55 + Volume surge — auto-updated 9:20 AM & 11:45 AM IST</div>', unsafe_allow_html=True)
-    df_4h = get_4h_signals(days=_days)
+    df_4h = get_4h_signals(days=_days) if IS_LOCAL else _gh_4h_signals(days=_days)
     if df_4h.empty:
         st.info("No 4H signals today. Next auto-scan: 9:20 AM IST.")
     else:
@@ -837,7 +942,7 @@ with tab2:
     # Commodity signals — from DB
     st.markdown("---")
     st.markdown('<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:4px">🥇 Commodity Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Gold · Silver · Crude Oil · Nat Gas — Global futures</div>', unsafe_allow_html=True)
-    df_comm = get_commodity_signals(days=_days)
+    df_comm = get_commodity_signals(days=_days) if IS_LOCAL else _gh_commodity_signals(days=_days)
     if df_comm.empty:
         st.info("No commodity signals today. Next auto-scan: 9:20 AM IST.")
     else:

@@ -784,11 +784,11 @@ def analyze_4h(symbol):
         if price < e20:
             return None
 
-        # SL below recent 10-bar low, T1/T2 using ATR
+        # ATR-based tight SL (1.5×ATR below entry), proper 2:1+ RR
         cur_atr = float(atr(high, low, close).iloc[-1])
-        sl      = round(float(low.rolling(10).min().iloc[-1]) - 0.5 * cur_atr, 2)
-        t1      = round(price + 1.5 * cur_atr, 2)
-        t2      = round(price + 2.5 * cur_atr, 2)
+        sl      = round(price - 1.5 * cur_atr, 2)
+        t1      = round(price + 2.0 * cur_atr, 2)
+        t2      = round(price + 3.5 * cur_atr, 2)
         risk    = round(price - sl, 2)
         rr      = round((t2 - price) / risk, 1) if risk > 0 else 0
 
@@ -984,3 +984,173 @@ def scan_commodities():
     results.sort(key=lambda x: x.get("adx", 0), reverse=True)
     logging.info(f"Commodity scan: {len(results)} signals")
     return results
+
+
+# ── Trendline Channel Breakout (TLM) Scanner ─────────────────────────────────
+# Python equivalent of Pine Script TLM indicator:
+#   - Pivot span trendline: upper (pivot highs) + lower (pivot lows)
+#   - 5-point OLS regression channel
+#   - Signal fires when price breaks the upper channel band (bullish breakout)
+#   - 4H: immediate signal | Daily EOD: confirmation
+
+def _find_pivots(series: pd.Series, span: int = 5) -> tuple:
+    """Find pivot highs and lows within a rolling window of `span` bars each side."""
+    highs, lows = [], []
+    arr = series.values
+    for i in range(span, len(arr) - span):
+        window_h = arr[i - span:i + span + 1]
+        window_l = arr[i - span:i + span + 1]
+        if arr[i] == window_h.max():
+            highs.append((i, arr[i]))
+        if arr[i] == window_l.min():
+            lows.append((i, arr[i]))
+    return highs, lows
+
+
+def _ols_trendline(points: list) -> tuple:
+    """Fit OLS line through (index, price) points. Returns (slope, intercept)."""
+    if len(points) < 2:
+        return None, None
+    xs = np.array([p[0] for p in points], dtype=float)
+    ys = np.array([p[1] for p in points], dtype=float)
+    slope, intercept = np.polyfit(xs, ys, 1)
+    return float(slope), float(intercept)
+
+
+def _channel_value(slope, intercept, idx: int) -> float:
+    return slope * idx + intercept
+
+
+def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
+                pivot_span: int = 5, n_pivots: int = 5) -> dict | None:
+    """
+    TLM: Trendline Channel Breakout detection.
+    1. Find recent pivot highs (upper TL) and pivot lows (lower TL)
+    2. Fit OLS regression through last n_pivots of each
+    3. Compute channel bandwidth (ATR-normalised)
+    4. Signal: close > upper channel + channel bandwidth > min_width
+    Returns signal dict or None.
+    """
+    try:
+        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        df = yf.download(sym_yf, period=period, interval=interval,
+                         progress=False, auto_adjust=True)
+        if df is None or df.empty or len(df) < 40:
+            return None
+
+        close  = df["Close"].squeeze()
+        high   = df["High"].squeeze()
+        low    = df["Low"].squeeze()
+        volume = df["Volume"].squeeze()
+        n      = len(close)
+
+        cur_atr   = float(atr(high, low, close).iloc[-1])
+        price     = float(close.iloc[-1])
+        prev_close= float(close.iloc[-2])
+
+        # Pivot detection on last 50 bars
+        h_series = high.iloc[-50:]
+        l_series = low.iloc[-50:]
+        ph, pl   = _find_pivots(h_series, span=pivot_span)
+        if len(ph) < 2 or len(pl) < 2:
+            return None
+
+        # Last n_pivots for regression
+        ph = ph[-n_pivots:]
+        pl = pl[-n_pivots:]
+
+        h_slope, h_int = _ols_trendline(ph)
+        l_slope, l_int = _ols_trendline(pl)
+        if h_slope is None or l_slope is None:
+            return None
+
+        # Project to current bar (bar index = last index in h_series)
+        last_idx = len(h_series) - 1
+        upper_band = _channel_value(h_slope, h_int, last_idx)
+        lower_band = _channel_value(l_slope, l_int, last_idx)
+        prev_upper = _channel_value(h_slope, h_int, last_idx - 1)
+
+        channel_width = upper_band - lower_band
+        # Channel must have meaningful width (at least 1.5× ATR)
+        if channel_width < 1.5 * cur_atr:
+            return None
+
+        # Upward trendline: upper band must be declining or flat (compression)
+        # or price must be coiling inside channel before breakout
+        # Breakout condition: prev close was inside/below upper, current close above
+        if not (prev_close <= prev_upper and price > upper_band):
+            return None
+
+        # Volume confirmation: current bar > 1.3x avg
+        avg_v   = float(volume.rolling(20).mean().iloc[-1])
+        cur_v   = float(volume.iloc[-1])
+        vol_r   = round(cur_v / avg_v, 2) if avg_v > 0 else 1.0
+        if vol_r < 1.3:
+            return None
+
+        # Trend context: price above EMA20
+        e20 = float(ema(close, 20).iloc[-1])
+        if price < e20 * 0.99:
+            return None
+
+        cur_rsi = float(rsi(close).iloc[-1])
+        if cur_rsi < 45:
+            return None  # RSI too weak for breakout
+
+        # Targets & SL
+        sl   = round(lower_band - 0.3 * cur_atr, 2)  # below lower channel
+        t1   = round(price + (price - sl) * 1.5, 2)
+        t2   = round(price + (price - sl) * 2.5, 2)
+        risk = round(price - sl, 2)
+        rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
+
+        sym_clean = symbol.replace(".NS", "")
+        return {
+            "symbol":        sym_clean,
+            "action":        "BUY",
+            "timeframe":     "4H" if interval == "4h" else "Daily",
+            "pattern":       "TL Channel Breakout",
+            "price":         round(price, 2),
+            "upper_band":    round(upper_band, 2),
+            "lower_band":    round(lower_band, 2),
+            "channel_width": round(channel_width, 2),
+            "rsi":           round(cur_rsi, 1),
+            "vol_ratio":     vol_r,
+            "sl":            sl,
+            "target1":       t1,
+            "target2":       t2,
+            "rr":            rr,
+            "atr":           round(cur_atr, 2),
+            "fno":           sym_clean in FNO_ELIGIBLE,
+            "tv_link":       f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+            "reason":        (f"TL Channel Breakout | Upper: ₹{round(upper_band,1)} broken | "
+                              f"Vol {vol_r}x | RSI {round(cur_rsi,1)} | Width: {round(channel_width,1)}"),
+        }
+    except Exception as e:
+        logging.warning(f"TLM {symbol}: {e}")
+        return None
+
+
+def scan_tlm_breakouts(universe=None, interval: str = "4h") -> list:
+    """
+    Scan F&O universe for TLM channel breakouts.
+    interval: "4h" (intraday signals) or "1d" (EOD confirmation)
+    Returns top 15 sorted by channel_width/ATR ratio.
+    """
+    if universe is None:
+        raw_uni = load_nifty500()
+        universe = [s for s in raw_uni if s.replace(".NS", "") in FNO_ELIGIBLE]
+
+    period = "60d" if interval == "4h" else "180d"
+    results = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_tlm, sym, interval, period): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    # Sort: vol * rr as quality score
+    results.sort(key=lambda x: x["vol_ratio"] * x["rr"], reverse=True)
+    logging.info(f"TLM scan ({interval}): {len(results)} breakouts")
+    return results[:15]

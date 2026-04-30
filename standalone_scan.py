@@ -150,6 +150,33 @@ def run_breakout_scan(time_str):
     return breakouts
 
 
+def run_tlm_scan(time_str, interval="4h"):
+    """TLM Trendline Channel Breakout scanner — 4H intraday or Daily EOD."""
+    from scanner import scan_tlm_breakouts
+    from tracker import log_breakouts  # reuse breakouts table
+    tf_label = "4H" if interval == "4h" else "Daily"
+    logging.info(f"Running TLM channel breakout scan ({tf_label})...")
+    tlm_sigs = scan_tlm_breakouts(interval=interval)
+    logging.info(f"TLM scan ({tf_label}): {len(tlm_sigs)} breakouts")
+    if tlm_sigs:
+        # Adapt to breakouts table schema (add missing fields)
+        for s in tlm_sigs:
+            s.setdefault("patterns", [s.get("pattern", "TL Channel Breakout")])
+            s.setdefault("target3", s.get("target2", 0))
+        log_breakouts(tlm_sigs)
+        lines = [f"📐 *TL Channel Breakouts* ({tf_label}) — {time_str}\n"
+                 f"_(Price broke upper trendline + volume surge)_\n"]
+        for b in tlm_sigs[:8]:
+            fno_tag = " `F&O`" if b.get("fno") else ""
+            lines.append(
+                f"• *{b['symbol']}*{fno_tag} | ₹{b['price']} | "
+                f"Upper: ₹{b.get('upper_band', '?')} | "
+                f"T1 ₹{b['target1']} | SL ₹{b['sl']} | RR {b['rr']} | Vol {b['vol_ratio']}x"
+            )
+        _send("\n".join(lines))
+    return tlm_sigs
+
+
 def run_fno_alerts(time_str, signals):
     fno_sigs = [s for s in signals if s.get("fno_eligible") and s.get("fno_suggestion")]
     if not fno_sigs:
@@ -183,28 +210,38 @@ def main():
         run_markets(time_str)
 
         if slot == "morning":
-            # 09:20 — 4H early + commodities
+            # 09:20 — 4H early + TLM 4H channel breakouts + commodities
             sigs_4h  = run_4h_scan(time_str)
+            tlm_4h   = run_tlm_scan(time_str, interval="4h")
             comms    = run_commodity_scan(time_str)
-            counts   = {"4h": len(sigs_4h), "commodities": len(comms)}
+            counts   = {"4h": len(sigs_4h), "tlm_4h": len(tlm_4h), "commodities": len(comms)}
 
         elif slot == "midday":
-            # 11:45 — Full swing + F&O + 4H update + commodities
+            # 11:45 — Full swing + F&O + 4H update + TLM 4H + commodities
             signals  = run_swing_scan(time_str)
             run_fno_alerts(time_str, signals)
             sigs_4h  = run_4h_scan(time_str)
+            tlm_4h   = run_tlm_scan(time_str, interval="4h")
             comms    = run_commodity_scan(time_str)
-            counts   = {"swing": len(signals), "4h": len(sigs_4h), "commodities": len(comms)}
+            counts   = {"swing": len(signals), "4h": len(sigs_4h), "tlm_4h": len(tlm_4h), "commodities": len(comms)}
 
         else:  # eod / full
-            # 16:30 — Confirmed breakouts + swing recap + commodities
+            # 16:30 — Confirmed breakouts + TLM Daily EOD + swing recap + commodities
             breakouts = run_breakout_scan(time_str)
+            tlm_daily = run_tlm_scan(time_str, interval="1d")
             signals   = run_swing_scan(time_str)
             comms     = run_commodity_scan(time_str)
-            counts    = {"breakouts": len(breakouts), "swing": len(signals), "commodities": len(comms)}
+            counts    = {"breakouts": len(breakouts), "tlm_daily": len(tlm_daily),
+                         "swing": len(signals), "commodities": len(comms)}
 
         log_scan_meta(slot, counts)
         logging.info(f"=== Scan finished: {slot} | {counts} ===")
+
+        # Export to data/*.json so Streamlit Cloud can read via GitHub raw URL
+        from tracker import export_signals_json
+        export_signals_json()
+        logging.info("Signal data exported to data/")
+
         return 0
 
     except Exception as e:
