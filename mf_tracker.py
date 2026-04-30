@@ -275,6 +275,50 @@ def get_fund_news(fund_name, n=6):
         return []
 
 
+def get_indian_market_news(n=12):
+    """
+    Fetch top Indian stock market news from Google News RSS.
+    Uses multiple queries to get broad market coverage.
+    Returns list of {title, link, published, source, category}.
+    """
+    import feedparser, re
+    from datetime import datetime
+    QUERIES = [
+        ("NSE+Nifty+BSE+Sensex+stock+market",     "Market"),
+        ("India+earnings+results+quarterly",        "Earnings"),
+        ("SEBI+RBI+India+market+regulation",        "Regulation"),
+        ("Nifty+500+stock+breakout+technical",      "Technical"),
+    ]
+    seen, results = set(), []
+    for q, cat in QUERIES:
+        try:
+            url  = f"https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en"
+            feed = feedparser.parse(url)
+            for e in feed.entries[:5]:
+                title = e.title[:130].strip()
+                key   = re.sub(r'\W+', '', title.lower())[:60]
+                if key in seen:
+                    continue
+                seen.add(key)
+                # extract source from title (Google News format: "Title - Source")
+                parts  = title.rsplit(" - ", 1)
+                source = parts[-1] if len(parts) > 1 else "News"
+                clean  = parts[0] if len(parts) > 1 else title
+                pub    = e.get("published", "")[:16]
+                results.append({
+                    "title":     clean[:120],
+                    "source":    source[:30],
+                    "link":      e.link,
+                    "published": pub,
+                    "category":  cat,
+                })
+        except Exception as ex:
+            log.warning(f"Market news {cat}: {ex}")
+    # Sort by published desc (best effort)
+    results.sort(key=lambda x: x.get("published",""), reverse=True)
+    return results[:n]
+
+
 def load_portfolio():
     if os.path.exists(PORTFOLIO_FILE):
         try:

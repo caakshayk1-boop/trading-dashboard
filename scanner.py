@@ -53,21 +53,108 @@ FNO_ELIGIBLE = {
 }
 
 
-def _fno_suggest(symbol, price, bias, atr):
-    """Generate F&O trade suggestion: strike, direction, expiry note."""
-    direction = "CALL" if bias == "bullish" else "PUT"
-    # Round to nearest 50 for index-heavy stocks, 5 otherwise
-    step = 50 if price > 5000 else (20 if price > 1000 else 5)
-    atm = round(price / step) * step
+def _next_thursday(weeks_ahead=0):
+    """Return date of the Nth upcoming Thursday (NSE weekly expiry)."""
+    from datetime import date, timedelta
+    today = date.today()
+    days_to_thu = (3 - today.weekday()) % 7  # 0=Mon … 6=Sun, Thu=3
+    if days_to_thu == 0:
+        days_to_thu = 7  # if today IS Thursday, use next one
+    first_thu = today + timedelta(days=days_to_thu + weeks_ahead * 7)
+    return first_thu
+
+def _last_thursday_of_month():
+    """Last Thursday of current month — NSE monthly expiry."""
+    from datetime import date, timedelta
+    import calendar
+    today = date.today()
+    # last day of month
+    last_day = date(today.year, today.month, calendar.monthrange(today.year, today.month)[1])
+    # walk backward to Thursday (weekday 3)
+    delta = (last_day.weekday() - 3) % 7
+    return last_day - timedelta(days=delta)
+
+def _smart_expiry(score: int, adx: float, setup_type: str, atr_pct: float) -> tuple:
+    """
+    Returns (expiry_label, hold_days, strategy_note) based on signal quality.
+    atr_pct = ATR / price * 100  (volatility proxy)
+    """
+    from datetime import date
+    # Determine expiry tier
+    if score >= 85 and adx > 28:
+        # Strong momentum — weekly, fast move expected
+        exp_date = _next_thursday(weeks_ahead=0)
+        days_left = (exp_date - date.today()).days
+        if days_left < 2:  # < 2 days left on expiry — use next week
+            exp_date = _next_thursday(weeks_ahead=1)
+            days_left = (exp_date - date.today()).days
+        label    = f"Weekly · Thu {exp_date.strftime('%d %b')}"
+        hold_str = f"{days_left} days"
+        tier     = "weekly"
+    elif score >= 75 or (adx > 22 and setup_type == "breakout"):
+        # Good strength — bi-weekly
+        exp_date = _next_thursday(weeks_ahead=1)
+        days_left = (exp_date - date.today()).days
+        label    = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
+        hold_str = f"{days_left} days"
+        tier     = "biweekly"
+    elif setup_type == "divergence":
+        # Slower reversal — monthly
+        exp_date = _last_thursday_of_month()
+        days_left = (exp_date - date.today()).days
+        if days_left < 5:  # too close to monthly expiry
+            import calendar as _cal
+            d = date.today()
+            nm = 1 if d.month == 12 else d.month + 1
+            ny = d.year + 1 if d.month == 12 else d.year
+            last = date(ny, nm, _cal.monthrange(ny, nm)[1])
+            delta = (last.weekday() - 3) % 7
+            from datetime import timedelta
+            exp_date = last - timedelta(days=delta)
+            days_left = (exp_date - date.today()).days
+        label    = f"Monthly · Thu {exp_date.strftime('%d %b')}"
+        hold_str = f"{days_left} days"
+        tier     = "monthly"
+    else:
+        # Moderate — bi-weekly default
+        exp_date = _next_thursday(weeks_ahead=1)
+        days_left = (exp_date - date.today()).days
+        label    = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
+        hold_str = f"{days_left} days"
+        tier     = "biweekly"
+
+    # High ATR (volatile stock) → buy ATM, else OTM
+    opt_type = "ATM" if atr_pct > 3.0 else "OTM"
+    return label, hold_str, tier, opt_type
+
+
+def _fno_suggest(symbol, price, bias, atr, score=75, adx=25.0, setup_type="breakout"):
+    """Generate F&O trade suggestion with smart per-signal expiry."""
+    direction  = "CALL" if bias == "bullish" else "PUT"
+    step       = 50 if price > 5000 else (20 if price > 1000 else 5)
+    atm        = round(price / step) * step
     otm_strike = atm + step if direction == "CALL" else atm - step
-    risk_pts = round(atr * 1.5, 1)
+    risk_pts   = round(atr * 1.5, 1)
+    atr_pct    = (atr / price * 100) if price > 0 else 2.0
+
+    exp_label, hold_str, tier, opt_type = _smart_expiry(score, adx, setup_type, atr_pct)
+    use_strike = atm if opt_type == "ATM" else otm_strike
+
+    tier_emoji = {"weekly": "⚡", "biweekly": "📅", "monthly": "📆"}.get(tier, "📅")
+
     return {
-        "direction":  direction,
-        "atm_strike": atm,
-        "otm_strike": otm_strike,
-        "risk_pts":   risk_pts,
-        "expiry":     "Nearest weekly (Thu) or monthly",
-        "note":       f"Buy {symbol} {otm_strike} {direction} | Risk ~{risk_pts} pts | verify premium on NSE",
+        "direction":   direction,
+        "atm_strike":  atm,
+        "otm_strike":  otm_strike,
+        "use_strike":  use_strike,
+        "opt_type":    opt_type,
+        "risk_pts":    risk_pts,
+        "expiry":      exp_label,
+        "hold_days":   hold_str,
+        "tier":        tier,
+        "tier_emoji":  tier_emoji,
+        "note":        (f"Buy {symbol} {use_strike} {direction} ({opt_type}) | "
+                        f"Expiry: {exp_label} | Hold ~{hold_str} | Risk ~{risk_pts} pts"),
     }
 
 FALLBACK_NIFTY500 = [
@@ -502,7 +589,10 @@ def analyze_stock(symbol, nifty_ret=0.0):
 
         sym_clean = symbol.replace(".NS", "")
         fno = sym_clean in FNO_ELIGIBLE
-        fno_suggestion = _fno_suggest(sym_clean, data["price"], regime["bias"], data["atr_val"]) if fno else None
+        fno_suggestion = _fno_suggest(
+            sym_clean, data["price"], regime["bias"], data["atr_val"],
+            score=data["score"], adx=data["adx_val"], setup_type=best_setup
+        ) if fno else None
         return {
             "symbol":         sym_clean,
             "action":         "BUY" if regime["bias"] == "bullish" else "SELL",

@@ -136,7 +136,8 @@ def _get_ai_signals(days=3):
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
                          load_portfolio, save_portfolio, get_portfolio_summary,
                          get_index_quotes, get_top_funds_data, get_stock_news,
-                         get_corporate_actions, get_fund_holdings)
+                         get_corporate_actions, get_fund_holdings,
+                         get_indian_market_news)
 
 st.set_page_config(page_title="SwingDesk Pro", layout="wide", page_icon="⚡",
                    initial_sidebar_state="expanded")
@@ -553,6 +554,22 @@ def _top_funds():
 def _mf_summary(portfolio_json):
     import json
     return get_portfolio_summary(json.loads(portfolio_json))
+
+def _market_news_ttl():
+    """Seconds until next 11am or 3pm IST window — cap at 2h."""
+    now = datetime.now(IST)
+    h, m = now.hour, now.minute
+    slots = [(11, 0), (15, 0)]
+    for sh, sm in slots:
+        secs = (sh - h) * 3600 + (sm - m) * 60
+        if secs > 0:
+            return min(secs, 7200)
+    # past 3pm — cache until next 11am next day (cap 7200)
+    return 7200
+
+@st.cache_data(ttl=7200)   # refreshed up to every 2h; actual logic uses IST window
+def _indian_news():
+    return get_indian_market_news(n=12)
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -1251,37 +1268,70 @@ with tab3:
         for s in signals[:5]:
             st.markdown(f"• **{s['symbol']}** — {s['setup_type']} — score {s['score']}")
     else:
-        _tf_map = {"pullback": "Swing · 5–12 days", "breakout": "Swing · 8–15 days", "divergence": "Reversal · 3–8 days"}
         for s in sorted(fno_sigs, key=lambda x: x["score"], reverse=True):
-            f     = s["fno_suggestion"]
-            is_c  = f["direction"] == "CALL"
-            dc    = "#4ade80" if is_c else "#f87171"
-            di    = "▲ CALL" if is_c else "▼ PUT"
-            rl,rc = _rating(s["score"])
-            tf_label = _tf_map.get(s.get("setup_type",""), "Swing · 5–15 days")
+            f      = s["fno_suggestion"]
+            is_c   = f["direction"] == "CALL"
+            dc     = "#4ade80" if is_c else "#f87171"
+            di     = "▲ CALL" if is_c else "▼ PUT"
+            rl, rc = _rating(s["score"])
+            tier   = f.get("tier", "biweekly")
+            t_em   = f.get("tier_emoji", "📅")
+            t_col  = {"weekly": "#f87171", "biweekly": "#38bdf8", "monthly": "#a78bfa"}.get(tier, "#38bdf8")
+            opt_tp = f.get("opt_type", "OTM")
+            use_st = f.get("use_strike", f["otm_strike"])
+            hold_d = f.get("hold_days", "—")
+            setup  = s.get("setup_type","").replace("_"," ").title()
             st.markdown(f"""
 <div class="fno-card">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span style="font-size:17px;font-weight:800;color:#f1f5f9">{s['symbol']}</span>
-    <div style="display:flex;gap:10px;align-items:center">
-      <span style="font-size:14px;font-weight:800;color:{dc}">{di}</span>
-      <span class="badge {rc}">{rl}</span>
+  <!-- Header -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+    <div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <span style="font-size:18px;font-weight:900;color:#f1f5f9">{s['symbol']}</span>
+        <span style="font-size:14px;font-weight:800;color:{dc}">{di}</span>
+        <span class="badge {rc}">{rl}</span>
+      </div>
+      <div style="font-size:10px;color:#334155">{setup} &nbsp;·&nbsp; Score {s['score']}/100 &nbsp;·&nbsp; ADX {s.get('adx',0)}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:11px;font-weight:800;color:{t_col};font-family:'JetBrains Mono',monospace">{t_em} {f['expiry']}</div>
+      <div style="font-size:9px;color:#334155;margin-top:2px">Hold ~{hold_d}</div>
+      <div style="font-size:9px;color:#475569;margin-top:2px">{opt_tp} preferred</div>
     </div>
   </div>
-  <div style="margin-bottom:8px;display:flex;gap:12px;align-items:center">
-    <span style="font-size:10px;font-weight:600;color:#38bdf8;background:#0a1929;border:1px solid #0f2d4a;border-radius:4px;padding:2px 7px">⏱ {tf_label}</span>
-    <span style="font-size:10px;color:#475569">{f['expiry']}</span>
+
+  <!-- Strike viz -->
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+    <div style="flex:1;background:#050c18;border:1px solid #0f2d4a;border-radius:8px;padding:10px 12px;text-align:center">
+      <div style="font-size:8px;color:#334155;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">ATM Strike</div>
+      <div style="font-size:16px;font-weight:800;color:#38bdf8;font-family:'JetBrains Mono',monospace">₹{f['atm_strike']:,}</div>
+    </div>
+    <div style="flex:1;background:#050c18;border:2px solid {t_col}40;border-radius:8px;padding:10px 12px;text-align:center;position:relative">
+      <div style="font-size:8px;color:{t_col};text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Suggested ({opt_tp})</div>
+      <div style="font-size:16px;font-weight:800;color:{t_col};font-family:'JetBrains Mono',monospace">₹{use_st:,}</div>
+      <div style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;
+        color:#050c18;background:{t_col};padding:1px 6px;border-radius:3px;letter-spacing:.06em">USE THIS</div>
+    </div>
+    <div style="flex:1;background:#050c18;border:1px solid #0f2035;border-radius:8px;padding:10px 12px;text-align:center">
+      <div style="font-size:8px;color:#334155;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Risk pts</div>
+      <div style="font-size:16px;font-weight:800;color:#ef4444;font-family:'JetBrains Mono',monospace">{f['risk_pts']}</div>
+    </div>
   </div>
+
+  <!-- Stock levels -->
   <div class="row">
     <div class="kv"><span>Spot</span><span>₹{s['price']:,.1f}</span></div>
-    <div class="kv"><span>ATM Strike</span><span class="blue">₹{f['atm_strike']:,}</span></div>
-    <div class="kv"><span>OTM Strike</span><span class="blue">₹{f['otm_strike']:,}</span></div>
-    <div class="kv"><span>Risk pts</span><span class="red">{f['risk_pts']}</span></div>
     <div class="kv"><span>Stock SL</span><span class="red">₹{s['sl2']:,.1f}</span></div>
     <div class="kv"><span>Stock T1</span><span class="green">₹{s['target1']:,.1f}</span></div>
+    <div class="kv"><span>Stock T2</span><span class="green">₹{s['target2']:,.1f}</span></div>
+    <div class="kv"><span>RR</span><span class="blue">1:{s['rr1']}</span></div>
   </div>
-  <div style="margin-top:10px;background:#050c18;border:1px solid #0f2035;border-radius:6px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#475569">{f['note']}</div>
-  <div style="margin-top:8px;font-size:11px;display:flex;gap:14px">
+
+  <!-- Trade note -->
+  <div style="margin-top:10px;background:#050c18;border:1px solid #0f2035;border-radius:6px;
+    padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#475569">{f['note']}</div>
+
+  <div style="margin-top:10px;font-size:11px;display:flex;gap:14px">
     <a href="{s['tv_link']}" target="_blank" style="color:#38bdf8;font-weight:600;text-decoration:none">Chart →</a>
     <a href="https://www.nseindia.com/get-quotes/derivatives?symbol={s['symbol']}" target="_blank" style="color:#475569;text-decoration:none">NSE Chain →</a>
   </div>
@@ -1355,50 +1405,83 @@ with tab4:
                 _sf = funds[_sel_idx]
                 hd  = get_fund_holdings(_sf['scheme_code'])
                 if hd:
-                    _pie_colors = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8"]
-                    _pbg = "#0a1929" if _DARK else "#ffffff"
-                    _pfg = "#94a3b8" if _DARK else "#475569"
-                    _ptxt = "#e2e8f0" if _DARK else "#1a2332"
-                    _pline = "#050c18" if _DARK else "#f0f4f8"
-                    pc1, pc2 = st.columns(2)
-                    with pc1:
-                        sec = hd["sectors"]
-                        fig_s = go.Figure(go.Pie(
-                            labels=list(sec.keys()), values=list(sec.values()),
-                            hole=0.5, textinfo="label+percent",
-                            textfont=dict(size=10, color=_ptxt),
-                            marker=dict(colors=_pie_colors[:len(sec)], line=dict(color=_pline, width=2)),
-                            hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
+                    _pc = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8","#64748b"]
+                    _pbg  = "#070f1e" if _DARK else "#ffffff"
+                    _pfg  = "#94a3b8" if _DARK else "#475569"
+                    _pgrd = "#0f2035" if _DARK else "#e2eaf3"
+
+                    # ── Sector allocation — horizontal bar ─────────────────────
+                    sec      = hd["sectors"]
+                    sec_keys = list(sec.keys())[:9]
+                    sec_vals = [sec[k] for k in sec_keys]
+                    fig_s = go.Figure()
+                    for i, (k, v) in enumerate(zip(sec_keys, sec_vals)):
+                        fig_s.add_trace(go.Bar(
+                            x=[v], y=["Sector"], orientation="h",
+                            name=k, marker_color=_pc[i % len(_pc)],
+                            hovertemplate=f"{k}: {v:.1f}%<extra></extra>",
+                            text=f"{k[:12]} {v:.1f}%" if v > 4 else "",
+                            textposition="inside",
+                            textfont=dict(size=9, color="#050c18"),
                         ))
-                        fig_s.update_layout(
-                            title=dict(text="Sector Allocation", font=dict(size=11, color=_pfg), x=0.5),
-                            height=280, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
-                            font=dict(color=_pfg, size=10),
-                            showlegend=False, margin=dict(l=4,r=4,t=36,b=4)
-                        )
-                        st.plotly_chart(fig_s, use_container_width=True, key=f"pie_s_{cat}_{_sel_idx}")
-                    with pc2:
-                        scripts = hd["top_scripts"]
-                        s_labels = [s[0] for s in scripts]
-                        s_vals   = [s[1] for s in scripts]
-                        others   = max(0, 100 - sum(s_vals))
-                        if others > 0.5:
-                            s_labels.append("Others"); s_vals.append(round(others, 1))
-                        fig_h = go.Figure(go.Pie(
-                            labels=s_labels, values=s_vals,
-                            hole=0.5, textinfo="label+percent",
-                            textfont=dict(size=10, color=_ptxt),
-                            marker=dict(colors=_pie_colors[:len(s_labels)], line=dict(color=_pline, width=2)),
-                            hovertemplate="%{label}: %{value:.1f}%<extra></extra>"
-                        ))
-                        fig_h.update_layout(
-                            title=dict(text="Top Holdings", font=dict(size=11, color=_pfg), x=0.5),
-                            height=280, paper_bgcolor=_pbg, plot_bgcolor=_pbg,
-                            font=dict(color=_pfg, size=10),
-                            showlegend=False, margin=dict(l=4,r=4,t=36,b=4)
-                        )
-                        st.plotly_chart(fig_h, use_container_width=True, key=f"pie_h_{cat}_{_sel_idx}")
-                    st.caption(f"{_sf['fund_house']}  ·  Holdings approximate as of last monthly AMC disclosure")
+                    fig_s.update_layout(
+                        barmode="stack", height=100,
+                        paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                        font=dict(color=_pfg, size=10),
+                        margin=dict(l=0,r=0,t=0,b=0),
+                        showlegend=False,
+                        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[0,100]),
+                        yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
+                    )
+                    # Sector legend as HTML pills
+                    sec_pills = "".join(
+                        f'<span style="display:inline-flex;align-items:center;gap:4px;margin:3px 6px 3px 0;'
+                        f'font-size:10px;color:{_pc[i%len(_pc)]}">'
+                        f'<span style="width:8px;height:8px;border-radius:50%;background:{_pc[i%len(_pc)]};display:inline-block"></span>'
+                        f'{k} <span style="color:#475569">{v:.1f}%</span></span>'
+                        for i, (k, v) in enumerate(zip(sec_keys, sec_vals))
+                    )
+                    st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Sector Allocation</div>', unsafe_allow_html=True)
+                    st.plotly_chart(fig_s, use_container_width=True, key=f"pie_s_{cat}_{_sel_idx}")
+                    st.markdown(f'<div style="line-height:1.8">{sec_pills}</div>', unsafe_allow_html=True)
+
+                    st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
+
+                    # ── Top holdings — horizontal bars sorted by weight ─────────
+                    scripts  = hd["top_scripts"]
+                    h_labels = [s[0] for s in scripts[:10]]
+                    h_vals   = [s[1] for s in scripts[:10]]
+                    others   = max(0, 100 - sum(h_vals))
+                    if others > 0.5:
+                        h_labels.append("Others"); h_vals.append(round(others,1))
+                    # Sort descending
+                    paired = sorted(zip(h_vals, h_labels), reverse=True)
+                    h_vals, h_labels = [p[0] for p in paired], [p[1] for p in paired]
+                    fig_h = go.Figure()
+                    fig_h.add_trace(go.Bar(
+                        x=h_vals, y=h_labels, orientation="h",
+                        marker=dict(
+                            color=h_vals,
+                            colorscale=[[0,"#0f2d4a"],[0.5,"#0ea5e9"],[1.0,"#38bdf8"]],
+                            line=dict(color=_pgrd, width=0),
+                        ),
+                        text=[f"{v:.1f}%" for v in h_vals],
+                        textposition="outside",
+                        textfont=dict(size=10, color=_pfg),
+                        hovertemplate="%{y}: %{x:.1f}%<extra></extra>",
+                    ))
+                    fig_h.update_layout(
+                        height=max(200, len(h_labels) * 26),
+                        paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                        font=dict(color=_pfg, size=10),
+                        margin=dict(l=4, r=60, t=4, b=4),
+                        showlegend=False,
+                        xaxis=dict(showgrid=True, gridcolor=_pgrd, showticklabels=False, zeroline=False),
+                        yaxis=dict(showgrid=False, zeroline=False, tickfont=dict(size=10, color=_pfg)),
+                    )
+                    st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Top Holdings (% weight)</div>', unsafe_allow_html=True)
+                    st.plotly_chart(fig_h, use_container_width=True, key=f"pie_h_{cat}_{_sel_idx}")
+                    st.caption(f"{_sf['fund_house']}  ·  Holdings approx — last AMC monthly disclosure")
                 else:
                     st.info("Holdings data not available for this fund.")
 
@@ -1551,59 +1634,103 @@ with tab4:
 # TAB 5 — MARKET NEWS
 # ══════════════════════════════════════════════════════════════════════════════
 with tab5:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">Market News & Corporate Actions</div><div style="font-size:11px;color:#334155;margin-bottom:16px">Nifty 500 stocks · Results declarations · Dividends · Earnings</div>', unsafe_allow_html=True)
+    # ── Top 10 Indian Market News (auto-updated 11am / 3pm IST) ──────────────
+    _now_ist   = datetime.now(IST)
+    _news_hr   = _now_ist.strftime("%I:%M %p IST")
+    _next_slot = "3:00 PM IST" if _now_ist.hour < 15 else "11:00 AM IST (tomorrow)"
+
+    st.markdown(f"""
+<div style="background:linear-gradient(135deg,rgba(7,15,30,.97),rgba(3,9,18,.97));
+  border:1px solid rgba(56,189,248,.12);border-radius:14px;padding:14px 18px;margin-bottom:16px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+  <div>
+    <span style="font-size:13px;font-weight:800;color:#f1f5f9">📰 Indian Market News</span>
+    <span style="font-size:9px;color:#334155;margin-left:10px">NSE · BSE · SEBI · RBI · Earnings</span>
+  </div>
+  <div style="text-align:right;font-size:9px;color:#1e3a5f">
+    <span class="live"></span> Updated 11 AM &amp; 3 PM IST &nbsp;·&nbsp; Next: {_next_slot}
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+    _cat_colors = {
+        "Market":     "#38bdf8",
+        "Earnings":   "#22c55e",
+        "Regulation": "#f59e0b",
+        "Technical":  "#a78bfa",
+    }
+
+    with st.spinner("Loading market news…"):
+        mkt_news = _indian_news()
+
+    if mkt_news:
+        for idx, _n in enumerate(mkt_news[:10]):
+            cat   = _n.get("category", "Market")
+            catc  = _cat_colors.get(cat, "#38bdf8")
+            src   = _n.get("source","")
+            pub   = _n.get("published","")
+            st.markdown(f"""
+<div class="news-item" style="padding:13px 0;display:flex;gap:12px;align-items:flex-start">
+  <div style="flex-shrink:0;margin-top:3px">
+    <span style="font-size:8px;font-weight:800;padding:2px 7px;border-radius:3px;
+      background:rgba(56,189,248,.07);color:{catc};border:1px solid {catc}30;
+      text-transform:uppercase;letter-spacing:.06em">{cat}</span>
+  </div>
+  <div style="flex:1;min-width:0">
+    <a href="{_n['link']}" target="_blank"
+       style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none;
+              line-height:1.5;display:block">{idx+1}. {_n['title']}</a>
+    <div style="font-size:10px;color:#334155;margin-top:3px;display:flex;gap:12px">
+      <span>{src}</span>
+      <span>{pub}</span>
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+    else:
+        st.info("Market news loading… Try refreshing.")
+
+    st.markdown("---")
+
+    # ── Stock-specific news + Corporate Actions ──────────────────────────────
+    st.markdown('<div style="font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:10px">Stock-Specific News &amp; Corporate Actions</div>', unsafe_allow_html=True)
 
     col_ns, col_nb = st.columns([3, 1])
     with col_ns:
-        news_sym = st.text_input("Stock symbol", placeholder="e.g. RELIANCE, INFY, HDFC", label_visibility="visible")
+        news_sym = st.text_input("Enter NSE symbol", placeholder="e.g. RELIANCE, INFY, HDFC", label_visibility="visible")
     with col_nb:
         st.markdown("<div style='margin-top:28px'></div>", unsafe_allow_html=True)
-        news_go = st.button("Fetch News", use_container_width=True)
+        news_go = st.button("Fetch", use_container_width=True)
 
     if news_sym and news_go:
         sym_clean = news_sym.upper().strip()
         col_a, col_b = st.columns([3, 2])
-
         with col_a:
-            st.markdown(f'<div style="font-size:12px;font-weight:700;color:#f1f5f9;margin-bottom:10px">{sym_clean} — Latest News</div>', unsafe_allow_html=True)
-            with st.spinner("Fetching news…"):
+            st.markdown(f'<div style="font-size:11px;font-weight:700;color:#f1f5f9;margin-bottom:8px">{sym_clean} — Latest News</div>', unsafe_allow_html=True)
+            with st.spinner("Fetching…"):
                 news_items = get_stock_news(sym_clean, n=8)
             if news_items:
-                for n in news_items:
+                for _n in news_items:
                     st.markdown(f"""
 <div class="news-item">
-  <a href="{n['link']}" target="_blank" style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none;line-height:1.45">{n['title']}</a>
-  <div style="font-size:10px;color:#334155;margin-top:3px">{n['published']}</div>
+  <a href="{_n['link']}" target="_blank" style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none;line-height:1.45">{_n['title']}</a>
+  <div style="font-size:10px;color:#334155;margin-top:3px">{_n['published']}</div>
 </div>
 """, unsafe_allow_html=True)
             else:
                 st.info("No recent news found.")
-
         with col_b:
-            st.markdown(f'<div style="font-size:12px;font-weight:700;color:#fbbf24;margin-bottom:10px">Corporate Actions</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="font-size:11px;font-weight:700;color:#fbbf24;margin-bottom:8px">Corporate Actions</div>', unsafe_allow_html=True)
             with st.spinner("Loading…"):
                 actions = get_corporate_actions(sym_clean)
             if actions:
-                for a in actions:
-                    st.markdown(f'<div style="background:#1a1200;border:1px solid #422006;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#fbbf24">📋 {a}</div>', unsafe_allow_html=True)
+                for _a in actions:
+                    st.markdown(f'<div style="background:#1a1200;border:1px solid #422006;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#fbbf24">📋 {_a}</div>', unsafe_allow_html=True)
             else:
                 st.info("No corporate actions found.")
-
             st.markdown("---")
-            st.markdown(f'<div style="font-size:11px;color:#334155">Links</div>', unsafe_allow_html=True)
             st.markdown(f'<a href="https://www.nseindia.com/get-quotes/equity?symbol={sym_clean}" target="_blank" style="color:#38bdf8;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">NSE Quote →</a>', unsafe_allow_html=True)
             st.markdown(f'<a href="https://www.bseindia.com/stockinfo/AnnSubCategorywise.html" target="_blank" style="color:#38bdf8;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">BSE Announcements →</a>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div style="text-align:center;padding:50px 0;color:#1e3a5f"><div style="font-size:36px">📰</div><div style="margin-top:8px;font-size:14px;color:#334155">Enter a NSE symbol above (e.g. RELIANCE, INFY) to fetch news &amp; corporate actions</div></div>', unsafe_allow_html=True)
-
-        # Quick picks - popular stocks
-        st.markdown('<div style="font-size:11px;font-weight:700;color:#334155;margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">Quick Search</div>', unsafe_allow_html=True)
-        quick = ["RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK", "WIPRO", "BAJFINANCE", "LT", "SBIN", "MARUTI"]
-        cols_q = st.columns(5)
-        for i, sym in enumerate(quick):
-            if cols_q[i % 5].button(sym, key=f"qs_{sym}"):
-                st.session_state["_news_sym"] = sym
-                st.rerun()
 
 
 # ══════════════════════════════════════════════════════════════════════════════
