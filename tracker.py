@@ -97,6 +97,7 @@ def init_db():
         for col, sql in migrations:
             if col not in existing:
                 c.execute(sql)
+        _ensure_multibagger_table(c)
         c.commit()
 
 def log_signals(signals):
@@ -437,6 +438,14 @@ def export_signals_json():
             "SELECT * FROM commodity_signals ORDER BY date DESC LIMIT 30", c)
         _df_to_json(comm, "data/commodity_signals.json")
 
+        try:
+            mbs = pd.read_sql(
+                "SELECT * FROM multibaggers ORDER BY date DESC LIMIT 30", c)
+            _df_to_json(mbs, "data/multibaggers.json")
+        except Exception:
+            with open("data/multibaggers.json", "w") as f:
+                json.dump([], f)
+
     # Scan meta
     ts, slot, counts = get_last_scan()
     with open("data/scan_meta.json", "w") as f:
@@ -444,6 +453,66 @@ def export_signals_json():
 
     import logging
     logging.info("data/*.json exported successfully")
+
+
+# ── Multibagger Signals (Weekly — Saturday) ───────────────────────────────────
+def _ensure_multibagger_table(c):
+    c.execute("""CREATE TABLE IF NOT EXISTS multibaggers (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        date      TEXT,
+        symbol    TEXT,
+        price     REAL,
+        high_52w  REAL,
+        low_52w   REAL,
+        range_pos REAL,
+        wk_rsi    REAL,
+        wk_adx    REAL,
+        vol_ratio REAL,
+        sl        REAL,
+        support1  REAL,
+        support2  REAL,
+        target1   REAL,
+        target2   REAL,
+        target3   REAL,
+        rr        REAL,
+        score     REAL,
+        pe        REAL,
+        fno       INTEGER DEFAULT 0,
+        reason    TEXT,
+        tv_link   TEXT
+    )""")
+
+def log_multibaggers(signals):
+    init_db()
+    today = str(date.today())
+    with _conn() as c:
+        _ensure_multibagger_table(c)
+        c.execute("DELETE FROM multibaggers WHERE date=?", (today,))
+        for s in signals:
+            c.execute("""INSERT INTO multibaggers
+                (date,symbol,price,high_52w,low_52w,range_pos,wk_rsi,wk_adx,
+                 vol_ratio,sl,support1,support2,target1,target2,target3,
+                 rr,score,pe,fno,reason,tv_link)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (today, s["symbol"], s["price"], s["high_52w"], s["low_52w"],
+                 s["range_pos"], s["wk_rsi"], s["wk_adx"], s["vol_ratio"],
+                 s["sl"], s["support1"], s["support2"],
+                 s["target1"], s["target2"], s["target3"],
+                 s["rr"], s["score"], s.get("pe"),
+                 int(s.get("fno", False)), s.get("reason",""), s.get("tv_link","")))
+        c.commit()
+
+def get_multibaggers(days=7):
+    init_db()
+    try:
+        cutoff = str(date.today() - timedelta(days=days))
+        with _conn() as c:
+            _ensure_multibagger_table(c)
+            return pd.read_sql(
+                "SELECT * FROM multibaggers WHERE date>=? ORDER BY score DESC",
+                c, params=(cutoff,))
+    except Exception:
+        return pd.DataFrame()
 
 
 def get_last_scan():

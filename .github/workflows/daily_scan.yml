@@ -4,11 +4,13 @@ name: SwingDesk Pro — Auto Scan
 # 09:20 IST = 03:50 UTC  → pre-market: 4H early + commodities
 # 11:45 IST = 06:15 UTC  → mid-session: swing + F&O + 4H
 # 16:30 IST = 11:00 UTC  → EOD: breakouts (daily closed) + commodities
+# 09:30 IST SAT = 04:00 UTC  → full routine + multibaggers
 on:
   schedule:
-    - cron: '50 3 * * 1-5'    # 09:20 IST — morning pre-market
-    - cron: '15 6 * * 1-5'    # 11:45 IST — mid-session
-    - cron: '0 11 * * 1-5'    # 16:30 IST — EOD (market closed, candles confirmed)
+    - cron: '50 3 * * 1-5'    # 09:20 IST — morning pre-market (Mon-Fri)
+    - cron: '15 6 * * 1-5'    # 11:45 IST — mid-session (Mon-Fri)
+    - cron: '0 11 * * 1-5'    # 16:30 IST — EOD (Mon-Fri, candles confirmed)
+    - cron: '0 4 * * 6'       # 09:30 IST — Saturday full scan + multibaggers
   workflow_dispatch:           # manual trigger from GitHub UI
 
 env:

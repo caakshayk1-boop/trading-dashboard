@@ -1244,3 +1244,137 @@ def scan_tlm_breakouts(universe=None, interval: str = "4h") -> list:
     results.sort(key=lambda x: x["vol_ratio"] * x["rr"], reverse=True)
     logging.info(f"TLM scan ({interval}): {len(results)} breakouts")
     return results[:15]
+
+
+# ── Potential Multibaggers Scanner (Weekly — Saturday only) ──────────────────
+def _analyze_multibagger(symbol: str) -> dict | None:
+    """
+    Weekly chart scan for potential multibagger candidates.
+    Criteria: Weekly uptrend + RSI momentum zone + volume expansion + 52W position.
+    Targets based on 52W breakout range. 6-12 month horizon.
+    """
+    try:
+        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        wk = yf.download(sym_yf, period="2y", interval="1wk",
+                         progress=False, auto_adjust=True)
+        if wk is None or wk.empty or len(wk) < 52:
+            return None
+
+        wk_c = wk["Close"].squeeze()
+        wk_h = wk["High"].squeeze()
+        wk_l = wk["Low"].squeeze()
+        wk_v = wk["Volume"].squeeze()
+
+        price    = float(wk_c.iloc[-1])
+        h52      = float(wk_h.rolling(52).max().iloc[-1])
+        l52      = float(wk_l.rolling(52).min().iloc[-1])
+        range_52 = max(h52 - l52, 1)
+
+        # Must be in upper 50% of 52W range
+        pos_52 = (price - l52) / range_52
+        if pos_52 < 0.50:
+            return None
+
+        # Weekly EMA alignment: price > EMA20 > EMA50
+        we20 = float(ema(wk_c, 20).iloc[-1])
+        we50 = float(ema(wk_c, 50).iloc[-1])
+        if not (price > we20 > we50):
+            return None
+
+        # Weekly RSI in momentum zone 50-78
+        wr = float(rsi(wk_c).iloc[-1])
+        if not (50 <= wr <= 78):
+            return None
+
+        # Weekly ADX > 18 (trending)
+        wa = float(adx(wk_h, wk_l, wk_c).iloc[-1])
+        if wa < 18:
+            return None
+
+        # Volume expansion: last 4wk avg > 20wk avg × 1.1
+        avg20v = float(wk_v.rolling(20).mean().iloc[-1])
+        rec4v  = float(wk_v.iloc[-4:].mean())
+        vol_r  = round(rec4v / avg20v, 2) if avg20v > 0 else 1.0
+        if vol_r < 1.1:
+            return None
+
+        # Levels
+        wk_atr   = float(atr(wk_h, wk_l, wk_c).iloc[-1])
+        support1 = round(we50, 2)
+        support2 = round(float(wk_l.rolling(8).min().iloc[-1]), 2)
+        sl       = max(support1, support2)
+
+        # Targets: fibonacci on 52W range
+        t1 = round(price + range_52 * 0.30, 2)
+        t2 = round(price + range_52 * 0.60, 2)
+        t3 = round(price + range_52 * 1.00, 2)
+
+        risk = round(price - sl, 2)
+        rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
+
+        # Score (0-100): 52W position + RSI momentum + ADX + vol
+        score = round(
+            pos_52 * 40 +
+            min(wr / 75, 1.0) * 30 +
+            min(wa / 40, 1.0) * 20 +
+            min(vol_r / 3.0, 1.0) * 10, 1
+        )
+
+        # PE (best effort)
+        pe = None
+        try:
+            info = yf.Ticker(sym_yf).info
+            pe_v = float(info.get("trailingPE", 0) or 0)
+            pe   = round(pe_v, 1) if pe_v > 0 else None
+        except Exception:
+            pass
+
+        sym_clean = symbol.replace(".NS", "")
+        return {
+            "symbol":    sym_clean,
+            "price":     round(price, 2),
+            "high_52w":  round(h52, 2),
+            "low_52w":   round(l52, 2),
+            "range_pos": round(pos_52 * 100, 1),
+            "wk_rsi":    round(wr, 1),
+            "wk_adx":    round(wa, 1),
+            "vol_ratio": vol_r,
+            "sl":        round(sl, 2),
+            "support1":  support1,
+            "support2":  support2,
+            "target1":   t1,
+            "target2":   t2,
+            "target3":   t3,
+            "rr":        rr,
+            "score":     score,
+            "pe":        pe,
+            "fno":       sym_clean in FNO_ELIGIBLE,
+            "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+            "reason":    (f"Weekly RSI {round(wr,1)} | ADX {round(wa,1)} | "
+                          f"Vol {vol_r}x | 52W pos {round(pos_52*100,1)}%"),
+        }
+    except Exception as e:
+        logging.warning(f"Multibagger {symbol}: {e}")
+        return None
+
+
+def scan_multibaggers(universe=None, top_n=15) -> list:
+    """
+    Scan Nifty 500 for potential multibagger candidates (weekly timeframe).
+    Runs Saturday only — results valid for the week.
+    Returns top_n sorted by composite score.
+    """
+    if universe is None:
+        universe = load_nifty500()
+
+    results = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(_analyze_multibagger, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    results.sort(key=lambda x: x["score"], reverse=True)
+    logging.info(f"Multibagger scan: {len(results)} candidates → top {top_n}")
+    return results[:top_n]

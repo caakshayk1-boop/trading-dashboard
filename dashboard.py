@@ -115,6 +115,15 @@ def _gh_last_scan():
         return data.get("ts"), data.get("slot"), data.get("counts",{})
     return None, None, {}
 
+def _gh_multibaggers(days=7):
+    from datetime import timedelta
+    data = _fetch_json("multibaggers")
+    if not data:
+        return pd.DataFrame()
+    cutoff = str(date.today() - timedelta(days=days))
+    rows = [r for r in data if r.get("date","") >= cutoff]
+    return pd.DataFrame(rows)
+
 def _get_ai_signals(days=3):
     """Read TLM channel breakout signals (branded as AI Signals) from breakouts table."""
     from datetime import timedelta
@@ -820,7 +829,7 @@ if ticker_parts:
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab_ai, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Signals", "🤖 AI Signals", "Breakouts", "F&O", "Mutual Funds", "Market News", "Performance", "History"])
+tab1, tab_ai, tab2, tab3, tab4, tab5, tab6, tab_mb, tab7 = st.tabs(["Signals", "🤖 AI Signals", "Breakouts", "F&O", "Mutual Funds", "Market News", "Performance", "🚀 Multibaggers", "History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1857,6 +1866,71 @@ with tab6:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# TAB MB — POTENTIAL MULTIBAGGERS (weekly, Saturday scan)
+# ══════════════════════════════════════════════════════════════════════════════
+with tab_mb:
+    st.markdown("""
+    <div style="margin-bottom:18px">
+      <span style="font-size:20px;font-weight:900;color:#f59e0b;letter-spacing:-.02em">🚀 Potential Multibaggers</span>
+      <div style="font-size:11px;color:#64748b;margin-top:4px">Weekly scan · Nifty 500 · Updated every Saturday 9:30 AM IST · Horizon 6–12 months</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if IS_LOCAL:
+        from tracker import get_multibaggers
+        mb_df = get_multibaggers(days=7)
+    else:
+        mb_df = _gh_multibaggers(days=7)
+
+    if mb_df.empty:
+        st.info("No multibagger data yet. Next scan: Saturday 9:30 AM IST.")
+    else:
+        mbs = mb_df.to_dict("records")
+        mk1, mk2, mk3, mk4 = st.columns(4)
+        mk1.metric("Candidates", len(mbs))
+        fno_cnt = sum(1 for m in mbs if m.get("fno"))
+        mk2.metric("F&O Eligible", fno_cnt)
+        avg_rr = round(sum(m.get("rr",0) for m in mbs) / len(mbs), 1) if mbs else 0
+        mk3.metric("Avg RR", avg_rr)
+        top_score = round(max(m.get("score",0) for m in mbs), 1) if mbs else 0
+        mk4.metric("Top Score", top_score)
+
+        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+
+        for i, m in enumerate(mbs, 1):
+            fno_tag = ' <span style="background:#1e40af;color:#93c5fd;font-size:9px;font-weight:700;padding:2px 6px;border-radius:99px;margin-left:6px">F&O</span>' if m.get("fno") else ""
+            pe_str  = f'<span style="color:#94a3b8;font-size:11px"> · PE {m["pe"]:.0f}x</span>' if m.get("pe") else ""
+            score   = m.get("score", 0)
+            score_color = "#22c55e" if score >= 70 else "#f59e0b" if score >= 55 else "#64748b"
+            tv_link = m.get("tv_link", f"https://in.tradingview.com/chart/?symbol=NSE:{m['symbol']}")
+            st.markdown(f"""
+            <div style="background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:14px 18px;margin-bottom:10px">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <span style="font-size:16px;font-weight:900;color:#f1f5f9">{i}. {m['symbol']}</span>{fno_tag}
+                  <span style="font-size:13px;color:#94a3b8;margin-left:10px">₹{m['price']}</span>{pe_str}
+                </div>
+                <span style="font-size:13px;font-weight:700;color:{score_color}">Score {score:.0f}</span>
+              </div>
+              <div style="display:flex;gap:24px;margin-top:8px;flex-wrap:wrap">
+                <span style="font-size:11px;color:#64748b">T1 <span style="color:#22c55e;font-weight:700">₹{m['target1']}</span></span>
+                <span style="font-size:11px;color:#64748b">T2 <span style="color:#22c55e;font-weight:700">₹{m['target2']}</span></span>
+                <span style="font-size:11px;color:#64748b">T3 <span style="color:#22c55e;font-weight:700">₹{m.get('target3', m['target2'])}</span></span>
+                <span style="font-size:11px;color:#64748b">SL <span style="color:#f87171;font-weight:700">₹{m['sl']}</span></span>
+                <span style="font-size:11px;color:#64748b">RR <span style="color:#38bdf8;font-weight:700">{m['rr']}</span></span>
+                <span style="font-size:11px;color:#64748b">Wk RSI <span style="color:#c4b5fd;font-weight:700">{m.get('wk_rsi','')}</span></span>
+                <span style="font-size:11px;color:#64748b">ADX <span style="color:#fbbf24;font-weight:700">{m.get('wk_adx','')}</span></span>
+                <span style="font-size:11px;color:#64748b">Vol <span style="color:#fb923c;font-weight:700">{m.get('vol_ratio','')}x</span></span>
+                <span style="font-size:11px;color:#64748b">52W pos <span style="color:#94a3b8;font-weight:700">{m.get('range_pos','')}%</span></span>
+              </div>
+              <div style="margin-top:6px;font-size:10px;color:#475569">{m.get('reason','')} · <a href="{tv_link}" target="_blank" style="color:#38bdf8;text-decoration:none">TradingView ↗</a></div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.download_button("Export CSV", mb_df.to_csv(index=False), "multibaggers.csv", "text/csv")
+        st.markdown('<div style="font-size:10px;color:#334155;margin-top:8px">Weekly breakout + momentum + volume expansion · Not SEBI advice · Horizon 6–12 months</div>', unsafe_allow_html=True)
+
+
 # TAB 7 — HISTORY
 # ══════════════════════════════════════════════════════════════════════════════
 with tab7:
