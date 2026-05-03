@@ -124,6 +124,15 @@ def _gh_multibaggers(days=7):
     rows = [r for r in data if r.get("date","") >= cutoff]
     return pd.DataFrame(rows)
 
+def _gh_all_signals(days=60):
+    from datetime import timedelta
+    data = _fetch_json("all_signals")
+    if not data:
+        return pd.DataFrame()
+    cutoff = str(date.today() - timedelta(days=days))
+    rows = [r for r in data if r.get("date","") >= cutoff]
+    return pd.DataFrame(rows)
+
 def _get_ai_signals(days=3):
     """Read TLM channel breakout signals (branded as AI Signals) from breakouts table."""
     from datetime import timedelta
@@ -220,10 +229,23 @@ st.markdown(f"""
 @keyframes scanDiag {{ 0% {{ transform:translateX(-100%) translateY(-100%); }} 100% {{ transform:translateX(200%) translateY(200%); }} }}
 @keyframes numberFlip {{ 0% {{ opacity:0; transform:translateY(-8px); }} 100% {{ opacity:1; transform:translateY(0); }} }}
 @keyframes borderRun {{ 0% {{ background-position:0% 50%; }} 100% {{ background-position:200% 50%; }} }}
+/* ---- From zip: terminal-grid bg + Bloomberg entry animations ---- */
+@keyframes cardEnter {{ 0% {{ opacity:0; transform:translateY(32px) scale(.97); }} 100% {{ opacity:1; transform:translateY(0) scale(1); }} }}
+@keyframes pulseGlow {{ 0%,100% {{ opacity:1; }} 50% {{ opacity:.55; }} }}
+@keyframes marqueeFlow {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
+@keyframes borderScan {{ 0%,100% {{ box-shadow:0 0 0 1px rgba(34,197,94,.15); }} 50% {{ box-shadow:0 0 0 1px rgba(34,197,94,.5),0 0 18px rgba(34,197,94,.12); }} }}
+@keyframes statusBlink {{ 0%,100% {{ background:rgba(34,197,94,.9); }} 50% {{ background:rgba(34,197,94,.3); }} }}
 
 /* ---- Base ---- */
 html,body,[class*="css"] {{ font-family:'Inter',sans-serif!important; background:var(--bg)!important; color:var(--txt)!important; -webkit-font-smoothing:antialiased; }}
 .stApp {{ background:var(--bg); }}
+/* Bloomberg terminal grid overlay */
+.main .block-container {{
+  background-image:
+    linear-gradient(rgba(34,197,94,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,197,94,.018) 1px, transparent 1px);
+  background-size:20px 20px;
+}}
 .stApp::before {{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
@@ -321,23 +343,38 @@ section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[
   background:var(--bg2)!important; border:1px solid var(--border2)!important;
   border-top:none!important; border-radius:0 0 10px 10px!important; }}
 
-/* ---- Signal Cards (Terminal Style) ---- */
+/* ---- Signal Cards (Bloomberg Terminal Style from zip) ---- */
 .card {{
   background:var(--card-bg); border:1px solid var(--border);
   border-radius:16px; padding:22px 24px; margin-bottom:16px;
-  animation:fadeUp .45s cubic-bezier(.4,0,.2,1);
-  transition:transform .28s ease, box-shadow .28s ease;
-  position:relative; overflow:hidden; }}
+  animation:cardEnter .5s cubic-bezier(.22,1,.36,1) both;
+  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+  position:relative; overflow:hidden;
+  background-image:
+    linear-gradient(rgba(34,197,94,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,197,94,.025) 1px, transparent 1px);
+  background-size:24px 24px; }}
 .card::before {{
   content:''; position:absolute; top:0; left:0; right:0; height:1px; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(34,197,94,.55), transparent); }}
+  background:linear-gradient(90deg, transparent, rgba(34,197,94,.65), transparent); }}
 .card::after {{
   content:''; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(34,197,94,.05) 0%, transparent 65%); }}
-.card:hover {{ transform:translateY(-3px); box-shadow:0 16px 48px rgba(0,0,0,.28), 0 0 0 1px rgba(34,197,94,.18); }}
-.card.sell::before {{ background:linear-gradient(90deg, transparent, rgba(239,68,68,.55), transparent); }}
-.card.sell::after {{ background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(239,68,68,.05) 0%, transparent 65%); }}
-.card.sell:hover {{ box-shadow:0 16px 48px rgba(0,0,0,.28), 0 0 0 1px rgba(239,68,68,.18); }}
+  background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(34,197,94,.06) 0%, transparent 65%); }}
+.card:hover {{ transform:translateY(-4px) scale(1.005); box-shadow:0 20px 56px rgba(0,0,0,.32), 0 0 0 1px rgba(34,197,94,.25); }}
+.card.sell::before {{ background:linear-gradient(90deg, transparent, rgba(239,68,68,.65), transparent); }}
+.card.sell::after {{ background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(239,68,68,.06) 0%, transparent 65%); }}
+.card.sell:hover {{ box-shadow:0 20px 56px rgba(0,0,0,.32), 0 0 0 1px rgba(239,68,68,.25); }}
+/* stagger delay for sequential card reveal */
+.card:nth-child(1) {{ animation-delay:.05s; }}
+.card:nth-child(2) {{ animation-delay:.12s; }}
+.card:nth-child(3) {{ animation-delay:.19s; }}
+.card:nth-child(4) {{ animation-delay:.26s; }}
+.card:nth-child(5) {{ animation-delay:.33s; }}
+/* Live indicator dot */
+.live-dot {{
+  width:7px; height:7px; border-radius:50%;
+  background:#22c55e; display:inline-block; margin-right:6px;
+  animation:statusBlink 2s ease-in-out infinite; }}
 .card.top {{
   border-color:transparent;
   background:linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
@@ -1005,7 +1042,7 @@ with tab_ai:
       letter-spacing:.1em;text-transform:uppercase">TRENDLINE · CHANNEL · ML PATTERN</span>
   </div>
   <div style="font-size:11px;color:#4b3a7a;line-height:1.5">
-    OLS regression trendline channel · Pivot high/low detection · Breakout above upper band + volume confirmation
+    Channel breakout signals · Volume confirmation required
     <br>Auto-scans: 9:20 AM (4H) · 11:45 AM (4H) · 4:30 PM (Daily EOD)
   </div>
 </div>
@@ -1016,8 +1053,7 @@ with tab_ai:
 <div style="text-align:center;padding:60px 0">
   <div style="font-size:40px;margin-bottom:12px">🤖</div>
   <div style="font-size:14px;color:#4b3a7a;font-weight:600">No AI channel breakouts detected</div>
-  <div style="font-size:11px;color:#2d1a55;margin-top:6px">Next scan: 9:20 AM IST (4H) · 4:30 PM IST (Daily EOD)</div>
-  <div style="font-size:10px;color:#1a0a2e;margin-top:4px">Signals fire when price breaks OLS regression upper band with vol surge</div>
+  <div style="font-size:11px;color:#2d1a55;margin-top:6px">Next auto-scan: 9:20 AM IST (4H) · 4:30 PM IST (Daily EOD)</div>
 </div>
 """, unsafe_allow_html=True)
     else:
@@ -1129,7 +1165,7 @@ with tab_ai:
   <!-- Footer -->
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;
     padding-top:10px;border-top:1px solid rgba(167,139,250,.1)">
-    <span style="font-size:9px;color:#2d1a55">AI pattern detection · OLS regression · Not SEBI advice</span>
+    <span style="font-size:9px;color:#2d1a55">AI channel breakout signals · Not SEBI advice</span>
     <a href="{tv_link}" target="_blank"
       style="color:#a78bfa;font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
   </div>
@@ -1743,41 +1779,78 @@ with tab5:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB 6 — PERFORMANCE
+# TAB 6 — PERFORMANCE (all signal types from unified all_signals table)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab6:
     perf = get_performance()
 
-    # ── Swing Signal Performance ──────────────────────────────────────────────
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:12px">Swing Signal Performance</div>', unsafe_allow_html=True)
-    if perf:
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:12px">📊 All Signals Performance <span style="font-size:10px;color:#334155;font-weight:400">(Swing · 4H · Breakout · AI · Commodity)</span></div>', unsafe_allow_html=True)
+    if perf and perf.get("total", 0) > 0:
         p = st.columns(5)
-        p[0].metric("Total Signals",   perf["total"])
-        p[1].metric("Win Rate",        f"{perf['win_rate']}%")
-        p[2].metric("Avg P&L",         f"{perf['avg_pnl']}%")
-        p[3].metric("Best",            f"+{perf['best']}%")
-        p[4].metric("Worst",           f"{perf['worst']}%")
-        hist   = get_history()
-        closed = hist[hist["status"] != "OPEN"]
-        if not closed.empty:
-            fig = px.bar(closed, x="symbol", y="pnl_pct", color="pnl_pct",
-                         color_continuous_scale=["#ef4444","#0f2035","#22c55e"],
-                         range_color=[-20,20], title="Closed Trade P&L (%)")
-            fig.update_layout(paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
-                font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
-                yaxis=dict(gridcolor="#0f2035"), height=320,
-                margin=dict(l=8,r=8,t=32,b=8), coloraxis_showscale=False, showlegend=False,
-                title_font=dict(color="#475569",size=11))
-            st.plotly_chart(fig, use_container_width=True)
-        # Setup breakdown
-        if perf.get("by_setup"):
-            st.markdown('<div style="font-size:11px;font-weight:700;color:#334155;margin:8px 0 6px">P&L by Setup Type</div>', unsafe_allow_html=True)
-            sd_cols = st.columns(len(perf["by_setup"]))
-            for i, (k, v) in enumerate(perf["by_setup"].items()):
-                c = "#4ade80" if v >= 0 else "#f87171"
-                sd_cols[i].markdown(f'<div style="background:#0a1929;border:1px solid #0f2d4a;border-radius:8px;padding:10px;text-align:center"><div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">{k}</div><div style="font-size:15px;font-weight:800;color:{c};font-family:JetBrains Mono,monospace">{v:+.2f}%</div></div>', unsafe_allow_html=True)
+        p[0].metric("Total Tracked",  perf["total"])
+        p[1].metric("Win Rate",       f"{perf['win_rate']}%")
+        p[2].metric("Avg P&L",        f"{perf['avg_pnl']}%")
+        p[3].metric("Best",           f"+{perf['best']}%")
+        p[4].metric("Worst",          f"{perf['worst']}%")
+
+        # Load unified all_signals for charts
+        if IS_LOCAL:
+            try:
+                from tracker import _conn
+                import sqlite3
+                with _conn() as _c:
+                    all_df = pd.read_sql("SELECT * FROM all_signals ORDER BY date DESC LIMIT 200", _c)
+            except Exception:
+                all_df = pd.DataFrame()
+        else:
+            all_df = _gh_all_signals(days=60)
+
+        if not all_df.empty:
+            closed_all = all_df[all_df["status"] != "OPEN"].copy()
+            if not closed_all.empty:
+                closed_all["pnl_pct"] = pd.to_numeric(closed_all.get("pnl_pct", 0), errors="coerce").fillna(0)
+                fig = px.bar(closed_all, x="symbol", y="pnl_pct",
+                             color="pnl_pct", color_continuous_scale=["#ef4444","#0f2035","#22c55e"],
+                             range_color=[-20,20], title="Closed Trade P&L (%)")
+                fig.update_layout(paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
+                    font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
+                    yaxis=dict(gridcolor="#0f2035"), height=320,
+                    margin=dict(l=8,r=8,t=32,b=8), coloraxis_showscale=False, showlegend=False,
+                    title_font=dict(color="#475569",size=11))
+                st.plotly_chart(fig, use_container_width=True)
+
+            # By signal type breakdown
+            if "signal_type" in all_df.columns:
+                st.markdown('<div style="font-size:11px;font-weight:700;color:#334155;margin:8px 0 6px">P&L by Signal Type</div>', unsafe_allow_html=True)
+                types = all_df["signal_type"].unique()
+                sd_cols = st.columns(max(1, len(types)))
+                for i, t in enumerate(types):
+                    sub = all_df[all_df["signal_type"]==t]
+                    closed_sub = sub[sub["status"] != "OPEN"]
+                    wins = len(closed_sub[pd.to_numeric(closed_sub.get("pnl_pct",0), errors="coerce").fillna(0) > 0])
+                    total_c = len(closed_sub)
+                    wr = round(wins/total_c*100,0) if total_c > 0 else 0
+                    c = "#4ade80" if wr >= 50 else "#f87171"
+                    sd_cols[i].markdown(
+                        f'<div style="background:#0a1929;border:1px solid #0f2d4a;border-radius:8px;padding:10px;text-align:center">'
+                        f'<div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">{t.upper()}</div>'
+                        f'<div style="font-size:15px;font-weight:800;color:{c};font-family:JetBrains Mono,monospace">{wr:.0f}%</div>'
+                        f'<div style="font-size:9px;color:#334155;margin-top:2px">{total_c} closed</div>'
+                        f'</div>', unsafe_allow_html=True)
+
+            # Open signals tracker
+            open_all = all_df[all_df["status"] == "OPEN"]
+            if not open_all.empty:
+                st.markdown(f'<div style="font-size:11px;font-weight:700;color:#f59e0b;margin:14px 0 6px">⏳ Open Trades ({len(open_all)})</div>', unsafe_allow_html=True)
+                disp_cols = ["date","signal_type","symbol","action","timeframe","entry","sl","target1","target2","rr"]
+                disp = open_all[[c for c in disp_cols if c in open_all.columns]].copy()
+                st.dataframe(disp, use_container_width=True, hide_index=True)
+
+            st.download_button("Export All Signals CSV",
+                               all_df.to_csv(index=False), "all_signals.csv", "text/csv",
+                               key="dl_all_sig")
     else:
-        st.info("No closed swing trades yet. Outcomes tracked automatically each day.")
+        st.info("No signal history yet. Signals sent to Telegram are automatically tracked here.")
 
     st.markdown("---")
 

@@ -47,24 +47,20 @@ def _setup_emoji(setup_type):
 def send_alert(signal):
     global _last_scan_count
     _last_scan_count += 1
-    e  = _setup_emoji(signal.get("setup_type", ""))
-    ts = datetime.now(IST).strftime("%d %b, %H:%M IST")
+    e    = _setup_emoji(signal.get("setup_type", ""))
+    ts   = datetime.now(IST).strftime("%d %b, %H:%M IST")
+    actn = signal.get("action", "BUY")
+    dir_arrow = "📈" if actn == "BUY" else "📉"
+    # Clean alert — no methodology, just trade plan
     msg = (
-        f"📊 *SWING SIGNAL* | Score: *{signal['score']}/100* {_stars(signal['score'])}\n\n"
-        f"{e} *{signal['symbol']}* — *{signal['action']}*\n"
-        f"Setup: _{signal.get('setup_type','').replace('_',' ').title()}_\n\n"
-        f"Entry Zone: ₹{signal['price']}\n"
-        f"SL1 (tight): ₹{signal.get('sl1', signal['price'])}\n"
-        f"SL2 (max):   ₹{signal['sl2']}\n\n"
-        f"*Targets:*\n"
-        f"T1: ₹{signal['target1']}  ({signal['rr1']}R)\n"
-        f"T2: ₹{signal['target2']}  ({signal['rr2']}R)\n"
-        f"T3: ₹{signal['target3']}\n\n"
-        f"Position: *{signal['qty']} shares* (1% risk)\n"
-        f"RSI: {signal['rsi']} | ADX: {signal['adx']} | Vol: {signal['vol_ratio']}x\n\n"
-        f"*Why:*\n"
-        + "\n".join(f"• {r}" for r in signal.get("reasons", "").split(", "))
-        + f"\n\n📈 [Chart]({signal.get('tv_link','')})\n"
+        f"{dir_arrow} *{signal['symbol']}* | SWING {actn} {_stars(signal['score'])}\n\n"
+        f"*Entry:* ₹{signal['price']}\n"
+        f"*SL:*    ₹{signal['sl2']}\n\n"
+        f"*T1:* ₹{signal['target1']}  `({signal.get('rr1',0)}R)`\n"
+        f"*T2:* ₹{signal['target2']}  `({signal.get('rr2',0)}R)`\n"
+        f"*T3:* ₹{signal['target3']}\n\n"
+        f"Qty: *{signal.get('qty',0)} shares* | TF: Swing\n"
+        f"📈 [View Chart]({signal.get('tv_link','')})\n"
         f"_{ts}_"
     )
     return _post(msg)

@@ -18,8 +18,10 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s"
 )
 
-NIFTY500_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
-NIFTY500_CACHE   = "cache/nifty500.csv"
+NIFTY500_CSV_URL  = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
+NIFTY1000_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty1000list.csv"
+NIFTY500_CACHE    = "cache/nifty500.csv"
+NIFTY1000_CACHE   = "cache/nifty1000.csv"
 
 # NSE F&O eligible stocks (Nifty 200 + major midcap with liquid options)
 FNO_ELIGIBLE = {
@@ -216,28 +218,45 @@ def with_retry(max_retries=3):
     return decorator
 
 
-def load_nifty500():
+def _load_nse_csv(url, cache_path):
+    """Download NSE index CSV, cache 24h, return list of symbol.NS strings."""
     try:
-        if os.path.exists(NIFTY500_CACHE):
-            age = time.time() - os.path.getmtime(NIFTY500_CACHE)
+        if os.path.exists(cache_path):
+            age = time.time() - os.path.getmtime(cache_path)
             if age < 86400:
-                df = pd.read_csv(NIFTY500_CACHE)
+                df = pd.read_csv(cache_path)
                 syms = [s.strip() + ".NS" for s in df["Symbol"].tolist()]
-                logging.info(f"Cache: {len(syms)} symbols")
                 return syms
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(NIFTY500_CSV_URL, headers=headers, timeout=15)
+        headers = {"User-Agent": "Mozilla/5.0 (compatible)"}
+        r = requests.get(url, headers=headers, timeout=20)
         r.raise_for_status()
-        with open(NIFTY500_CACHE, "wb") as f:
+        with open(cache_path, "wb") as f:
             f.write(r.content)
-        df = pd.read_csv(NIFTY500_CACHE)
+        df = pd.read_csv(cache_path)
         syms = [s.strip() + ".NS" for s in df["Symbol"].tolist()]
-        logging.info(f"NSE download: {len(syms)} symbols")
+        logging.info(f"NSE download {url}: {len(syms)} symbols")
         return syms
     except Exception as e:
-        logging.warning(f"NSE download failed ({e}), using fallback")
-        seen = set()
-        return [s for s in FALLBACK_NIFTY500 if not (s in seen or seen.add(s))]
+        logging.warning(f"NSE download failed ({url}): {e}")
+        return []
+
+
+def load_nifty500():
+    """Load Nifty 1000 universe (try 1000 first, fallback to 500, then static list)."""
+    # Try Nifty 1000 first
+    syms = _load_nse_csv(NIFTY1000_CSV_URL, NIFTY1000_CACHE)
+    if len(syms) >= 800:
+        logging.info(f"Universe: Nifty 1000 ({len(syms)} stocks)")
+        return syms
+    # Fallback: Nifty 500
+    syms = _load_nse_csv(NIFTY500_CSV_URL, NIFTY500_CACHE)
+    if len(syms) >= 400:
+        logging.info(f"Universe: Nifty 500 ({len(syms)} stocks)")
+        return syms
+    # Static fallback
+    logging.warning("Using static fallback universe")
+    seen = set()
+    return [s for s in FALLBACK_NIFTY500 if not (s in seen or seen.add(s))]
 
 
 def get_nifty50_return():
@@ -627,6 +646,7 @@ def analyze_stock(symbol, nifty_ret=0.0):
 
 def scan_all(min_score=None):
     from tracker import is_duplicate
+    from config import MIN_RR
     universe   = load_nifty500()
     min_score  = min_score or MIN_SIGNAL_SCORE
     nifty_ret  = get_nifty50_return()
@@ -637,24 +657,30 @@ def scan_all(min_score=None):
         for f in as_completed(futures):
             r = f.result()
             if r and r["score"] >= min_score:
+                # Quality gate: minimum RR filter
+                rr = r.get("rr2") or r.get("rr1") or 0
+                if rr < MIN_RR:
+                    continue
                 raw.append(r)
 
     raw.sort(key=lambda x: x["score"], reverse=True)
 
-    # 5f. Deduplication: skip active duplicates, allow multiple setup types, max 10
+    # Deduplication: skip active trades, keep best signal per symbol, max 5 (quality)
     results      = []
     seen_symbols = set()
     for sig in raw:
-        if sig["symbol"] in seen_symbols:
+        sym_clean = sig["symbol"].replace(".NS", "")
+        if sym_clean in seen_symbols:
             continue
-        if is_duplicate(sig["symbol"]):
+        if is_duplicate(sym_clean, "swing"):
             continue
         results.append(sig)
-        seen_symbols.add(sig["symbol"])
-        if len(results) >= 10:
+        seen_symbols.add(sym_clean)
+        if len(results) >= 5:   # max 5 top-quality signals
             break
 
-    logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks")
+    logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks "
+                 f"(score≥{min_score}, RR≥{MIN_RR})")
     return results
 
 

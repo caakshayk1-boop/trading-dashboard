@@ -1,12 +1,15 @@
-import sqlite3, os, json
+import sqlite3, os, json, logging
 import pandas as pd
 import yfinance as yf
 from datetime import date, datetime, timedelta
 
 DB = "signals.db"
+log = logging.getLogger(__name__)
 
 def _conn():
-    return sqlite3.connect(DB)
+    conn = sqlite3.connect(DB)
+    conn.execute("PRAGMA journal_mode=WAL")
+    return conn
 
 def init_db():
     with _conn() as c:
@@ -84,6 +87,39 @@ def init_db():
             adx       REAL,
             atr       REAL
         )""")
+        # Unified performance-tracking table for ALL signal types sent to Telegram
+        c.execute("""CREATE TABLE IF NOT EXISTS all_signals (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            date        TEXT NOT NULL,
+            signal_type TEXT NOT NULL,
+            symbol      TEXT NOT NULL,
+            action      TEXT DEFAULT 'BUY',
+            timeframe   TEXT,
+            entry       REAL,
+            sl          REAL,
+            target1     REAL,
+            target2     REAL,
+            target3     REAL,
+            rr          REAL,
+            score       INTEGER DEFAULT 0,
+            status      TEXT DEFAULT 'OPEN',
+            exit_price  REAL,
+            pnl_pct     REAL,
+            r_multiple  REAL,
+            sent_at     TEXT,
+            metadata    TEXT
+        )""")
+        # Scan activity log
+        c.execute("""CREATE TABLE IF NOT EXISTS scan_log (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts         TEXT NOT NULL,
+            slot       TEXT NOT NULL,
+            symbol     TEXT,
+            signal_type TEXT,
+            action     TEXT,
+            result     TEXT,
+            note       TEXT
+        )""")
         # Auto-migrate: add missing columns to existing DB
         existing = [r[1] for r in c.execute("PRAGMA table_info(signals)").fetchall()]
         migrations = [
@@ -99,6 +135,7 @@ def init_db():
                 c.execute(sql)
         _ensure_multibagger_table(c)
         c.commit()
+        log.info("DB init OK")
 
 def log_signals(signals):
     init_db()
@@ -181,27 +218,61 @@ def get_signals_display(days=3, min_score=0):
         })
     return result
 
-def is_duplicate(symbol):
-    """PDF 5f: no signal if active < 3 days or SL hit in last 5 days."""
+def is_duplicate(symbol, signal_type="swing"):
+    """
+    True if:
+    - Active open signal for same symbol+type in last 5 days, OR
+    - SL hit for same symbol+type in last 7 days.
+    Sticks to existing trade plan — no new entry until trade closes.
+    """
     init_db()
-    cutoff_3d = str(date.today() - timedelta(days=3))
     cutoff_5d = str(date.today() - timedelta(days=5))
+    cutoff_7d = str(date.today() - timedelta(days=7))
+    sym_clean = symbol.replace(".NS", "")
     with _conn() as c:
-        # Active signal < 3 days old
+        # Check unified all_signals first (covers all signal types)
         row = c.execute(
-            "SELECT id FROM signals WHERE symbol=? AND status='OPEN' AND date>=?",
-            (symbol, cutoff_3d)
+            "SELECT id FROM all_signals WHERE symbol=? AND signal_type=? "
+            "AND status='OPEN' AND date>=?",
+            (sym_clean, signal_type, cutoff_5d)
         ).fetchone()
         if row:
+            log.debug(f"Duplicate skip: {sym_clean} ({signal_type}) already OPEN")
             return True
-        # SL hit in last 5 days
+        # SL hit recently — avoid re-entry
         row = c.execute(
-            "SELECT id FROM signals WHERE symbol=? AND status='SL_HIT' AND date>=?",
-            (symbol, cutoff_5d)
+            "SELECT id FROM all_signals WHERE symbol=? AND signal_type=? "
+            "AND status='SL_HIT' AND date>=?",
+            (sym_clean, signal_type, cutoff_7d)
+        ).fetchone()
+        if row:
+            log.debug(f"Duplicate skip: {sym_clean} ({signal_type}) SL hit recently")
+            return True
+        # Legacy: check old signals table too
+        row = c.execute(
+            "SELECT id FROM signals WHERE symbol=? AND status='OPEN' AND date>=?",
+            (sym_clean, cutoff_5d)
         ).fetchone()
         if row:
             return True
     return False
+
+
+def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
+                        timeframe="SWING", score=0, metadata=None):
+    """Unified logger — called after every Telegram alert for performance tracking."""
+    init_db()
+    today = str(date.today())
+    sent_at = datetime.utcnow().isoformat()
+    with _conn() as c:
+        c.execute("""INSERT INTO all_signals
+            (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
+             rr,score,status,sent_at,metadata)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',?,?)""",
+            (today, signal_type, symbol, action, timeframe, entry, sl, t1, t2, t3,
+             rr, score, sent_at, json.dumps(metadata or {})))
+        c.commit()
+    log.info(f"all_signals logged: {symbol} {signal_type} {action} entry={entry}")
 
 def is_muted(symbol):
     init_db()
@@ -274,28 +345,103 @@ def update_outcomes():
         except Exception:
             continue
 
-def get_performance():
+def update_all_outcomes():
+    """Update outcome status for ALL open signals in all_signals table."""
     init_db()
     with _conn() as c:
-        df = pd.read_sql("SELECT * FROM signals", c)
+        try:
+            open_trades = pd.read_sql(
+                "SELECT * FROM all_signals WHERE status='OPEN'", c)
+        except Exception:
+            return
+
+    for _, row in open_trades.iterrows():
+        try:
+            sym = row["symbol"].replace(".NS", "") + ".NS"
+            df  = yf.download(sym, period="5d", interval="1d",
+                              progress=False, auto_adjust=True)
+            if df is None or df.empty:
+                continue
+            lo     = float(df["Low"].squeeze().min())
+            hi     = float(df["High"].squeeze().max())
+            entry  = float(row["entry"])
+            sl     = float(row["sl"] or entry * 0.96)
+            t1     = float(row["target1"])
+            t2     = float(row["target2"] or t1 * 1.03)
+            action = str(row.get("action", "BUY")).upper()
+
+            status, exit_p = "OPEN", None
+            if action == "SELL":
+                if hi >= sl:                status, exit_p = "SL_HIT", sl
+                elif lo <= t2:              status, exit_p = "T2_HIT", t2
+                elif lo <= t1:              status, exit_p = "T1_HIT", t1
+            else:
+                if lo <= sl:                status, exit_p = "SL_HIT", sl
+                elif hi >= t2:              status, exit_p = "T2_HIT", t2
+                elif hi >= t1:             status, exit_p = "T1_HIT", t1
+
+            if status != "OPEN":
+                risk = abs(entry - sl) or 1
+                pnl  = round((exit_p - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                r_m  = round((exit_p - entry) / risk * (1 if action == "BUY" else -1), 2)
+                with _conn() as c:
+                    c.execute(
+                        "UPDATE all_signals SET status=?,exit_price=?,pnl_pct=?,r_multiple=? WHERE id=?",
+                        (status, exit_p, pnl, r_m, int(row["id"]))
+                    )
+                    c.commit()
+                log.info(f"Outcome updated: {row['symbol']} {status} pnl={pnl}%")
+        except Exception as e:
+            log.warning(f"update_all_outcomes {row.get('symbol','?')}: {e}")
+            continue
+
+
+def get_performance():
+    """Performance from ALL signal types (unified all_signals table)."""
+    init_db()
+    try:
+        with _conn() as c:
+            df = pd.read_sql("SELECT * FROM all_signals", c)
+    except Exception:
+        df = pd.DataFrame()
+    # Fallback: also pull from legacy signals table
+    try:
+        with _conn() as c:
+            df_leg = pd.read_sql("SELECT *, 'swing' AS signal_type FROM signals", c)
+        if not df_leg.empty:
+            # align columns
+            df_leg = df_leg.rename(columns={"sl2": "sl", "r_multiple": "r_multiple"})
+            common = [c for c in df_leg.columns if c in df.columns or df.empty]
+            if df.empty:
+                df = df_leg[common] if common else df_leg
+            else:
+                df = pd.concat([df, df_leg[[c for c in df_leg.columns if c in df.columns]]], ignore_index=True)
+    except Exception:
+        pass
     if df.empty:
         return {}
-    closed = df[df["status"] != "OPEN"]
+    closed = df[df["status"] != "OPEN"].copy()
+    if "pnl_pct" not in closed.columns:
+        return {}
+    closed["pnl_pct"] = pd.to_numeric(closed["pnl_pct"], errors="coerce").fillna(0)
     wins   = closed[closed["pnl_pct"] > 0]
     losses = closed[closed["pnl_pct"] <= 0]
     gross_profit = wins["pnl_pct"].sum() if len(wins) > 0 else 0
     gross_loss   = abs(losses["pnl_pct"].sum()) if len(losses) > 0 else 1
+    by_type = {}
+    if "signal_type" in closed.columns and len(closed) > 0:
+        by_type = closed.groupby("signal_type")["pnl_pct"].mean().round(2).to_dict()
     return {
         "total":         len(df),
         "closed":        len(closed),
         "open":          len(df[df["status"] == "OPEN"]),
         "win_rate":      round(len(wins) / len(closed) * 100, 1) if len(closed) > 0 else 0,
-        "avg_pnl":       round(closed["pnl_pct"].mean(), 2) if len(closed) > 0 else 0,
+        "avg_pnl":       round(float(closed["pnl_pct"].mean()), 2) if len(closed) > 0 else 0,
         "profit_factor": round(gross_profit / gross_loss, 2) if gross_loss > 0 else 0,
-        "avg_r":         round(closed["r_multiple"].mean(), 2) if len(closed) > 0 else 0,
-        "best":          round(closed["pnl_pct"].max(), 2) if len(closed) > 0 else 0,
-        "worst":         round(closed["pnl_pct"].min(), 2) if len(closed) > 0 else 0,
-        "by_setup":      closed.groupby("setup_type")["pnl_pct"].mean().round(2).to_dict() if len(closed) > 0 else {},
+        "avg_r":         round(float(closed["r_multiple"].mean()), 2) if "r_multiple" in closed.columns and len(closed) > 0 else 0,
+        "best":          round(float(closed["pnl_pct"].max()), 2) if len(closed) > 0 else 0,
+        "worst":         round(float(closed["pnl_pct"].min()), 2) if len(closed) > 0 else 0,
+        "by_type":       by_type,
     }
 
 def get_active_signals():
@@ -446,13 +592,21 @@ def export_signals_json():
             with open("data/multibaggers.json", "w") as f:
                 json.dump([], f)
 
+        # Unified performance table — all signal types
+        try:
+            all_s = pd.read_sql(
+                "SELECT * FROM all_signals ORDER BY date DESC LIMIT 200", c)
+            _df_to_json(all_s, "data/all_signals.json")
+        except Exception:
+            with open("data/all_signals.json", "w") as f:
+                json.dump([], f)
+
     # Scan meta
     ts, slot, counts = get_last_scan()
     with open("data/scan_meta.json", "w") as f:
         json.dump({"ts": ts, "slot": slot, "counts": counts}, f)
 
-    import logging
-    logging.info("data/*.json exported successfully")
+    log.info("data/*.json exported successfully")
 
 
 # ── Multibagger Signals (Weekly — Saturday) ───────────────────────────────────
