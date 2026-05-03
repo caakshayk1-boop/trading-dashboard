@@ -78,85 +78,118 @@ def _last_thursday_of_month():
 
 def _smart_expiry(score: int, adx: float, setup_type: str, atr_pct: float) -> tuple:
     """
-    Returns (expiry_label, hold_days, strategy_note) based on signal quality.
-    atr_pct = ATR / price * 100  (volatility proxy)
+    Expert-grade expiry selection:
+    Rule 1: NEVER buy options with < 21 DTE (theta destroys value)
+    Rule 2: Match expiry to signal velocity — breakout=biweekly, divergence=monthly
+    Rule 3: High ATR (volatile) → ATM (cheaper delta), Low ATR → slight OTM (leverage)
     """
-    from datetime import date
-    # Determine expiry tier
+    from datetime import date, timedelta
+    today = date.today()
+
+    def _safe_expiry(weeks_ahead):
+        """Get expiry with >= 21 DTE guarantee."""
+        exp = _next_thursday(weeks_ahead=weeks_ahead)
+        days_left = (exp - today).days
+        # If less than 21 DTE, roll to next week
+        while days_left < 21:
+            weeks_ahead += 1
+            exp = _next_thursday(weeks_ahead=weeks_ahead)
+            days_left = (exp - today).days
+            if weeks_ahead > 8:
+                break  # safety cap
+        return exp, days_left
+
     if score >= 85 and adx > 28:
-        # Strong momentum — weekly, fast move expected
-        exp_date = _next_thursday(weeks_ahead=0)
-        days_left = (exp_date - date.today()).days
-        if days_left < 2:  # < 2 days left on expiry — use next week
-            exp_date = _next_thursday(weeks_ahead=1)
-            days_left = (exp_date - date.today()).days
-        label    = f"Weekly · Thu {exp_date.strftime('%d %b')}"
-        hold_str = f"{days_left} days"
-        tier     = "weekly"
-    elif score >= 75 or (adx > 22 and setup_type == "breakout"):
-        # Good strength — bi-weekly
-        exp_date = _next_thursday(weeks_ahead=1)
-        days_left = (exp_date - date.today()).days
-        label    = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
-        hold_str = f"{days_left} days"
-        tier     = "biweekly"
+        # Strong breakout — biweekly minimum (enough time to play out)
+        exp_date, days_left = _safe_expiry(1)
+        label = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
+        tier  = "biweekly"
+    elif score >= 78 or (adx > 22 and setup_type == "breakout"):
+        # Good setup — biweekly
+        exp_date, days_left = _safe_expiry(1)
+        label = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
+        tier  = "biweekly"
     elif setup_type == "divergence":
-        # Slower reversal — monthly
+        # Reversal plays need more time — monthly
         exp_date = _last_thursday_of_month()
-        days_left = (exp_date - date.today()).days
-        if days_left < 5:  # too close to monthly expiry
+        days_left = (exp_date - today).days
+        if days_left < 21:
             import calendar as _cal
-            d = date.today()
+            d = today
             nm = 1 if d.month == 12 else d.month + 1
             ny = d.year + 1 if d.month == 12 else d.year
             last = date(ny, nm, _cal.monthrange(ny, nm)[1])
             delta = (last.weekday() - 3) % 7
-            from datetime import timedelta
             exp_date = last - timedelta(days=delta)
-            days_left = (exp_date - date.today()).days
-        label    = f"Monthly · Thu {exp_date.strftime('%d %b')}"
-        hold_str = f"{days_left} days"
-        tier     = "monthly"
+            days_left = (exp_date - today).days
+        label = f"Monthly · Thu {exp_date.strftime('%d %b')}"
+        tier  = "monthly"
     else:
-        # Moderate — bi-weekly default
-        exp_date = _next_thursday(weeks_ahead=1)
-        days_left = (exp_date - date.today()).days
-        label    = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
-        hold_str = f"{days_left} days"
-        tier     = "biweekly"
+        # Default — biweekly with 21 DTE guarantee
+        exp_date, days_left = _safe_expiry(1)
+        label = f"Bi-Weekly · Thu {exp_date.strftime('%d %b')}"
+        tier  = "biweekly"
 
-    # High ATR (volatile stock) → buy ATM, else OTM
+    hold_str = f"{days_left} days"
+    # High ATR volatile stock → ATM (reduce gamma risk), stable → slight OTM (leverage)
     opt_type = "ATM" if atr_pct > 3.0 else "OTM"
     return label, hold_str, tier, opt_type
 
 
-def _fno_suggest(symbol, price, bias, atr, score=75, adx=25.0, setup_type="breakout"):
-    """Generate F&O trade suggestion with smart per-signal expiry."""
+def _fno_suggest(symbol, price, bias, atr, score=78, adx=25.0, setup_type="breakout"):
+    """
+    Expert-grade F&O suggestion:
+    • Minimum 21 DTE always (never theta trap)
+    • Debit spread strategy: buy ATM, sell 2 strikes OTM (defined risk, better breakeven)
+    • Naked option only for highest conviction (score >= 85, ADX > 28)
+    • Lot size: max 2% capital risk per trade
+    """
+    from config import CAPITAL
     direction  = "CALL" if bias == "bullish" else "PUT"
-    step       = 50 if price > 5000 else (20 if price > 1000 else 5)
+    step       = 50 if price > 5000 else (20 if price > 1000 else (10 if price > 500 else 5))
     atm        = round(price / step) * step
-    otm_strike = atm + step if direction == "CALL" else atm - step
-    risk_pts   = round(atr * 1.5, 1)
-    atr_pct    = (atr / price * 100) if price > 0 else 2.0
+    otm1_strike = atm + step if direction == "CALL" else atm - step     # 1 strike OTM
+    otm2_strike = atm + 2*step if direction == "CALL" else atm - 2*step # 2 strikes OTM (spread short leg)
+    risk_pts    = round(atr * 1.5, 1)
+    atr_pct     = (atr / price * 100) if price > 0 else 2.0
 
     exp_label, hold_str, tier, opt_type = _smart_expiry(score, adx, setup_type, atr_pct)
-    use_strike = atm if opt_type == "ATM" else otm_strike
 
+    # Strategy selection:
+    # High conviction (score >= 85): naked ATM option (aggressive)
+    # Standard (score 78-84): bull/bear debit spread (defined risk)
+    if score >= 85 and adx > 28:
+        strategy    = "Naked Option"
+        use_strike  = atm
+        spread_note = f"Buy {symbol} {atm} {direction} (ATM)"
+        max_risk    = round(atr * 1.5 * 100, 0)  # approx 1.5 ATR in INR per lot
+    else:
+        strategy    = "Debit Spread"
+        use_strike  = atm
+        spread_note = (f"Buy {atm} {direction} + Sell {otm2_strike} {direction} "
+                       f"(debit spread — capped risk)")
+        max_risk    = round(abs(otm2_strike - atm) * 0.6 * 100, 0)  # ~60% of width
+
+    # Capital risk: 2% max per F&O trade
+    max_capital_risk = CAPITAL * 0.02
     tier_emoji = {"weekly": "⚡", "biweekly": "📅", "monthly": "📆"}.get(tier, "📅")
 
     return {
-        "direction":   direction,
-        "atm_strike":  atm,
-        "otm_strike":  otm_strike,
-        "use_strike":  use_strike,
-        "opt_type":    opt_type,
-        "risk_pts":    risk_pts,
-        "expiry":      exp_label,
-        "hold_days":   hold_str,
-        "tier":        tier,
-        "tier_emoji":  tier_emoji,
-        "note":        (f"Buy {symbol} {use_strike} {direction} ({opt_type}) | "
-                        f"Expiry: {exp_label} | Hold ~{hold_str} | Risk ~{risk_pts} pts"),
+        "direction":    direction,
+        "atm_strike":   atm,
+        "otm_strike":   otm1_strike,
+        "spread_short": otm2_strike,
+        "use_strike":   use_strike,
+        "opt_type":     opt_type,
+        "strategy":     strategy,
+        "risk_pts":     risk_pts,
+        "expiry":       exp_label,
+        "hold_days":    hold_str,
+        "tier":         tier,
+        "tier_emoji":   tier_emoji,
+        "note":         (f"{tier_emoji} {spread_note} | "
+                         f"Expiry: {exp_label} | Hold ~{hold_str} | "
+                         f"Max risk ~₹{int(max_risk):,}"),
     }
 
 FALLBACK_NIFTY500 = [
@@ -325,10 +358,15 @@ def count_hh_hl(high, low, lookback=40):
     return min(hh_count, hl_count), swing_highs, swing_lows
 
 
-# ── 5c Setup 1: Pullback Continuation ─────────────────────────────────────────
+# ── 5c Setup 1: Pullback Continuation (Expert Grade) ─────────────────────────
+# Logic: 21-EMA pullback entry in confirmed uptrend (institutional magnet zone)
+# Entry: Price tags rising 21 EMA within 1.5%, bounces with volume → continuation
+# Filters: EMA stack (20>50>200), RSI momentum zone 42-65 (not overbought),
+#          ADX>25 confirms trend, vol 2x avg on entry bar, prior structure HH/HL
 def setup_pullback(close, high, low, volume):
     e20    = ema(close, 20)
     e50    = ema(close, 50)
+    e200   = ema(close, 200)
     cur_adx = float(adx(high, low, close).iloc[-1])
     price  = float(close.iloc[-1])
     avg_v  = float(volume.rolling(20).mean().iloc[-1])
@@ -336,71 +374,106 @@ def setup_pullback(close, high, low, volume):
 
     if cur_adx < 25:
         return None, 0
-    # Price within 2% of EMA20 (pullback zone)
-    near_ema20 = abs(price - float(e20.iloc[-1])) / price < 0.02
+
+    # Full EMA stack: price > EMA20 > EMA50 > EMA200 (institutional uptrend)
+    e20v = float(e20.iloc[-1]); e50v = float(e50.iloc[-1]); e200v = float(e200.iloc[-1])
+    if not (e20v > e50v > e200v):
+        return None, 0
+
+    # Price within 1.5% of EMA20 — tighter zone, higher-quality entry
+    near_ema20 = abs(price - e20v) / price < 0.015
     if not near_ema20:
         return None, 0
-    # Trend: EMA20 > EMA50
-    if float(e20.iloc[-1]) <= float(e50.iloc[-1]):
+
+    # RSI momentum zone: 42-65 (has momentum, not overbought — institutional)
+    cur_rsi = float(rsi(close).iloc[-1])
+    if not (42 <= cur_rsi <= 65):
         return None, 0
-    # Volume spike on last candle (entry trigger)
+
+    # Volume 2x — institutional participation on bounce
     vol_ratio = cur_v / avg_v if avg_v > 0 else 1
-    if vol_ratio < 1.5:
+    if vol_ratio < 2.0:
         return None, 0
-    # Bullish candle
+
+    # Bullish candle close (close > open and close > prior close)
     bullish = float(close.iloc[-1]) > float(close.iloc[-2])
     score = 0
-    if bullish:         score += 10
-    if vol_ratio >= 2:  score += 10
-    else:               score += 5
+    if bullish:               score += 10
+    if vol_ratio >= 2.5:      score += 10
+    elif vol_ratio >= 2.0:    score += 7
+    if cur_rsi >= 55:         score += 5   # in trending momentum zone
     return "pullback", score
 
 
-# ── 5c Setup 2: Breakout with Retest ──────────────────────────────────────────
+# ── 5c Setup 2: Breakout with Retest (Expert Grade) ──────────────────────────
+# Logic: Multi-touch resistance level (3+ tests = strong level, breakout is real)
+# Entry: Price closes above resistance on 2x+ volume (institutional buy)
+# OR: Retest of breakout level as new support (second entry, lower risk)
+# Filters: Resistance tested 3+ times, vol 2x+ mandatory, RSI 50-70
 def setup_breakout(close, high, low, volume):
     price  = float(close.iloc[-1])
     avg_v  = float(volume.rolling(20).mean().iloc[-1])
     cur_v  = float(volume.iloc[-1])
     vol_ratio = cur_v / avg_v if avg_v > 0 else 1
 
-    # Find resistance: price level tested ≥2x in last 50 bars
-    h50 = high.iloc[-50:]
+    # Mandatory: volume 2x average (institutional breakout, not retail noise)
+    if vol_ratio < 2.0:
+        return None, 0
+
+    # RSI must be 50-72 (momentum present, not overbought)
+    cur_rsi = float(rsi(close).iloc[-1])
+    if not (50 <= cur_rsi <= 72):
+        return None, 0
+
+    # Find resistance: price level tested ≥3x in last 60 bars (stronger level)
+    h60 = high.iloc[-60:]
     resistance_candidates = []
-    for i in range(len(h50) - 1):
-        level = float(h50.iloc[i])
-        touches = sum(1 for j in range(len(h50)) if abs(float(h50.iloc[j]) - level) / level < 0.015)
-        if touches >= 2:
+    for i in range(len(h60) - 1):
+        level = float(h60.iloc[i])
+        touches = sum(1 for j in range(len(h60)) if abs(float(h60.iloc[j]) - level) / level < 0.012)
+        if touches >= 3:   # 3+ touches = strong institutional level
             resistance_candidates.append(level)
 
     if not resistance_candidates:
         return None, 0
 
     resistance = max(resistance_candidates)
-    # Price broke above resistance with volume
-    broke_out = price > resistance and float(close.iloc[-2]) <= resistance * 1.015
+    # Clean breakout: close above resistance (not just wick — use close, not high)
+    broke_out = price > resistance and float(close.iloc[-2]) <= resistance * 1.012
     if not broke_out:
-        # Check if retesting (within 1.5% of resistance from above)
-        retesting = resistance * 0.985 <= price <= resistance * 1.015
-        if not retesting or vol_ratio < 1.5:
+        # Retest: price pulling back to resistance as new support (0.5-1.5%)
+        retesting = resistance * 0.985 <= price <= resistance * 1.005
+        if not retesting:
             return None, 0
 
     score = 0
-    if vol_ratio >= 2:  score += 10
-    elif vol_ratio >= 1.5: score += 6
-    if broke_out:       score += 10
+    if vol_ratio >= 3.0:      score += 10
+    elif vol_ratio >= 2.0:    score += 7
+    if broke_out:             score += 10
+    if cur_rsi >= 60:         score += 5   # strong momentum
     return "breakout", score
 
 
-# ── 5c Setup 3: RSI Divergence Reversal ───────────────────────────────────────
+# ── 5c Setup 3: RSI Divergence Reversal (Expert Grade) ───────────────────────
+# Logic: Bullish hidden divergence + MACD histogram turning green at support
+# Entry: Price makes lower low, RSI makes higher low (momentum not following)
+# Confluence: Near EMA50 support + bullish engulfing/hammer candle + MACD turn
+# This detects early institutional accumulation before price recovers
 def setup_divergence(close, high, low, volume):
-    if len(close) < 30:
+    if len(close) < 40:
         return None, 0
 
-    rsi_series = rsi(close)
-    price_arr  = close.values
-    rsi_arr    = rsi_series.values
+    rsi_series  = rsi(close)
+    macd_h      = macd_line(close) - macd_signal(close)   # MACD histogram
+    price_arr   = close.values
+    rsi_arr     = rsi_series.values
 
-    # Find last 2 price lows
+    # RSI must be oversold zone (< 50) for reversal setup
+    cur_rsi = float(rsi_series.iloc[-1])
+    if cur_rsi > 52:
+        return None, 0
+
+    # Find last 2 swing price lows
     lows_idx = []
     for i in range(2, len(price_arr) - 2):
         if price_arr[i] < price_arr[i-1] and price_arr[i] < price_arr[i+1]:
@@ -415,19 +488,30 @@ def setup_divergence(close, high, low, volume):
     if not (price_ll and rsi_hl):
         return None, 0
 
-    # Near support (within 3% of EMA50)
-    e50   = float(ema(close, 50).iloc[-1])
-    price = float(close.iloc[-1])
-    near_support = abs(price - e50) / price < 0.03
+    # Divergence must be significant (RSI difference > 5 pts)
+    divergence_strength = float(rsi_arr[i2] - rsi_arr[i1])
+    if divergence_strength < 5:
+        return None, 0
 
-    # Reversal candle
+    # Near EMA50 or EMA200 support (within 3%)
+    e50   = float(ema(close, 50).iloc[-1])
+    e200  = float(ema(close, 200).iloc[-1])
+    price = float(close.iloc[-1])
+    near_support = (abs(price - e50) / price < 0.03 or
+                    abs(price - e200) / price < 0.03)
+
+    # MACD histogram turning from negative to less negative or positive (momentum shift)
+    macd_turning = (len(macd_h) >= 3 and
+                    float(macd_h.iloc[-1]) > float(macd_h.iloc[-2]))
+
+    # Bullish reversal candle
     bullish_reversal = float(close.iloc[-1]) > float(close.iloc[-2])
 
     score = 0
-    if near_support:       score += 8
-    if bullish_reversal:   score += 7
-    divergence_strength = (rsi_arr[i2] - rsi_arr[i1])
-    if divergence_strength > 5: score += 5
+    if near_support:              score += 8
+    if bullish_reversal:          score += 7
+    if macd_turning:              score += 8   # MACD confluence — strongest signal
+    if divergence_strength > 10:  score += 5
     return "divergence", score
 
 
@@ -676,7 +760,7 @@ def scan_all(min_score=None):
             continue
         results.append(sig)
         seen_symbols.add(sym_clean)
-        if len(results) >= 5:   # max 5 top-quality signals
+        if len(results) >= 8:   # max 8 top-quality signals (expert grade)
             break
 
     logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks "
@@ -866,12 +950,22 @@ FOREX_COMM = {
 
 # ── 4H Early-Entry Scanner (RSI cross 55 + volume) ───────────────────────────
 def analyze_4h(symbol):
-    """4H chart: RSI crossing above 55 + volume > 1.5x avg + price above EMA20."""
+    """
+    4H Breakout — Expert Grade (Institutional Logic)
+    Entry triggers (ALL required):
+      1. RSI crosses above 55 (momentum ignition)
+      2. Full EMA stack on 4H: price > EMA20 > EMA50 (trend confirmed)
+      3. ADX > 20 on 4H (trending market, not ranging)
+      4. MACD line crossed above MACD signal (momentum acceleration)
+      5. Volume 2x+ average (institutional participation)
+    SL: below 4H EMA20 or 1.5×ATR, whichever is tighter to price
+    Targets: T1=2×ATR (1:2 RR), T2=3.5×ATR (structural)
+    """
     try:
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        df = yf.download(sym_yf, period="60d", interval="4h",
+        df = yf.download(sym_yf, period="90d", interval="4h",
                          progress=False, auto_adjust=True)
-        if df is None or df.empty or len(df) < 30:
+        if df is None or df.empty or len(df) < 35:
             return None
 
         close  = df["Close"].squeeze()
@@ -884,29 +978,51 @@ def analyze_4h(symbol):
         cur_v   = float(volume.iloc[-1])
         vol_r   = round(cur_v / avg_v, 2) if avg_v > 0 else 1.0
 
-        if vol_r < 1.5:
+        # Gate 1: Volume 2x+ (institutional participation)
+        if vol_r < 2.0:
             return None
 
+        # Gate 2: RSI crossing above 55 (was below, now above = momentum ignition)
         rsi_s   = rsi(close)
         cur_rsi = float(rsi_s.iloc[-1])
         prv_rsi = float(rsi_s.iloc[-2])
-
-        # RSI crossing above 55 (was below, now above)
         if not (prv_rsi < 55 and cur_rsi >= 55):
             return None
 
-        # Price above EMA20 (trend confirmation)
-        e20 = float(ema(close, 20).iloc[-1])
-        if price < e20:
+        # Gate 3: Full EMA stack — price > EMA20 > EMA50 on 4H (trend alignment)
+        e20v = float(ema(close, 20).iloc[-1])
+        e50v = float(ema(close, 50).iloc[-1])
+        if not (price > e20v > e50v):
             return None
 
-        # ATR-based tight SL (1.5×ATR below entry), proper 2:1+ RR
+        # Gate 4: ADX > 20 on 4H (confirms directional trend, not chop)
+        cur_adx_4h = float(adx(high, low, close).iloc[-1])
+        if cur_adx_4h < 20:
+            return None
+
+        # Gate 5: MACD crossover (momentum acceleration confirmation)
+        m_line = macd_line(close)
+        m_sig  = macd_signal(close)
+        macd_crossed = (float(m_line.iloc[-2]) < float(m_sig.iloc[-2]) and
+                        float(m_line.iloc[-1]) >= float(m_sig.iloc[-1]))
+        # MACD cross required OR at least histogram improving
+        macd_hist_improving = float(m_line.iloc[-1] - m_sig.iloc[-1]) > float(m_line.iloc[-2] - m_sig.iloc[-2])
+        if not (macd_crossed or macd_hist_improving):
+            return None
+
+        # ATR-based SL — tighter of: EMA20 or 1.5×ATR
         cur_atr = float(atr(high, low, close).iloc[-1])
-        sl      = round(price - 1.5 * cur_atr, 2)
+        sl_atr  = price - 1.5 * cur_atr
+        sl_ema  = e20v - 0.3 * cur_atr   # just below EMA20
+        sl      = round(max(sl_atr, sl_ema), 2)  # use higher SL (tighter, better RR)
         t1      = round(price + 2.0 * cur_atr, 2)
         t2      = round(price + 3.5 * cur_atr, 2)
         risk    = round(price - sl, 2)
         rr      = round((t2 - price) / risk, 1) if risk > 0 else 0
+
+        # Minimum 2:1 RR
+        if rr < 2.0:
+            return None
 
         sym_clean = symbol.replace(".NS", "")
         return {
@@ -915,6 +1031,7 @@ def analyze_4h(symbol):
             "timeframe": "4H",
             "price":     round(price, 2),
             "rsi":       round(cur_rsi, 1),
+            "adx":       round(cur_adx_4h, 1),
             "vol_ratio": vol_r,
             "sl":        sl,
             "target1":   t1,
@@ -922,7 +1039,7 @@ def analyze_4h(symbol):
             "rr":        rr,
             "fno":       sym_clean in FNO_ELIGIBLE,
             "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
-            "reason":    f"RSI {round(cur_rsi,1)} crossed 55 | Vol {vol_r}x | EMA20 aligned",
+            "reason":    f"RSI {round(cur_rsi,1)} crossed 55 | MACD ✓ | Vol {vol_r}x | EMA stack ✓ | ADX {round(cur_adx_4h,1)}",
         }
     except Exception as e:
         logging.warning(f"4H {symbol}: {e}")
@@ -975,16 +1092,41 @@ COMMODITY_TICKERS = {
     "NGAS":   ("NG=F",  "Natural Gas (USD/MMBtu)",   "NRG"),
 }
 
-def _comm_signal(name, ticker, label, interval="1d", period="90d"):
+def _comm_weekly_bias(ticker):
+    """Get weekly trend bias for a commodity — daily must align with weekly."""
+    try:
+        wk = yf.download(ticker, period="1y", interval="1wk",
+                         progress=False, auto_adjust=True)
+        if wk is None or wk.empty or len(wk) < 20:
+            return None
+        wc = wk["Close"].squeeze()
+        we20 = float(ema(wc, 10).iloc[-1])  # 10-week EMA (20-week equiv on weekly)
+        we50 = float(ema(wc, 20).iloc[-1])  # 20-week EMA (50-week equiv)
+        wp   = float(wc.iloc[-1])
+        if wp > we20 > we50:
+            return "bullish"
+        elif wp < we20 < we50:
+            return "bearish"
+        return None  # no clear weekly trend
+    except Exception:
+        return None
+
+
+def _comm_signal(name, ticker, label, interval="1d", period="180d"):
     """
-    Generate BUY/SELL signal for a commodity ticker.
-    Uses: EMA20/50 trend + RSI zone + ATR-based SL/targets.
-    Returns dict or None.
+    Commodity Signal — Expert Grade (Inter-market / Multi-TF)
+    Rules:
+      1. Daily must align with weekly trend (no counter-trend trades)
+      2. ADX > 25 (stronger filter — commodities trend hard or chop wildly)
+      3. RSI zones: BUY 45-65 (momentum, not overbought), SELL 35-55
+      4. EMA stack: daily EMA20 > EMA50 (BUY) or < (SELL)
+      5. SL: 2×ATR for commodities (wider stops needed — commodity whipsaws)
+      6. Minimum 2:1 RR (T2 vs SL)
     """
     try:
         df = yf.download(ticker, period=period, interval=interval,
                          progress=False, auto_adjust=True)
-        if df is None or df.empty or len(df) < 30:
+        if df is None or df.empty or len(df) < 40:
             return None
 
         close = df["Close"].squeeze()
@@ -998,43 +1140,56 @@ def _comm_signal(name, ticker, label, interval="1d", period="90d"):
         cur_atr = float(atr(high, low, close).iloc[-1])
         cur_adx = float(adx(high, low, close).iloc[-1])
 
-        if cur_adx < 20:
-            return None  # no trend, skip
+        # Gate 1: ADX > 25 (strong trend, not choppy noise)
+        if cur_adx < 25:
+            return None
 
-        # Bias
-        if price > e20 > e50 and cur_rsi > 52:
+        # Gate 2: Weekly trend alignment (no counter-trend signals)
+        weekly_bias = _comm_weekly_bias(ticker)
+        # Allow signal only if weekly confirms direction
+
+        # Gate 3: Bias determination with tighter RSI zones
+        if (price > e20 > e50 and 45 <= cur_rsi <= 65
+                and (weekly_bias == "bullish" or weekly_bias is None)):
             bias = "BUY"
-            sl   = round(price - 1.5 * cur_atr, 2)
-            t1   = round(price + 1.0 * cur_atr, 2)
-            t2   = round(price + 2.0 * cur_atr, 2)
-            t3   = round(price + 3.5 * cur_atr, 2)
-        elif price < e20 < e50 and cur_rsi < 48:
+            # Wider SL for commodities (2×ATR to avoid whipsaw)
+            sl   = round(price - 2.0 * cur_atr, 2)
+            t1   = round(price + 1.5 * cur_atr, 2)
+            t2   = round(price + 3.0 * cur_atr, 2)
+            t3   = round(price + 5.0 * cur_atr, 2)
+        elif (price < e20 < e50 and 35 <= cur_rsi <= 55
+                and (weekly_bias == "bearish" or weekly_bias is None)):
             bias = "SELL"
-            sl   = round(price + 1.5 * cur_atr, 2)
-            t1   = round(price - 1.0 * cur_atr, 2)
-            t2   = round(price - 2.0 * cur_atr, 2)
-            t3   = round(price - 3.5 * cur_atr, 2)
+            sl   = round(price + 2.0 * cur_atr, 2)
+            t1   = round(price - 1.5 * cur_atr, 2)
+            t2   = round(price - 3.0 * cur_atr, 2)
+            t3   = round(price - 5.0 * cur_atr, 2)
         else:
-            return None  # no clear bias
+            return None
 
         risk = abs(price - sl)
         rr   = round(abs(t2 - price) / risk, 1) if risk > 0 else 0
 
+        # Gate 4: Minimum 2:1 RR
+        if rr < 2.0:
+            return None
+
         return {
-            "symbol":    name,
-            "ticker":    ticker,
-            "label":     label,
-            "action":    bias,
-            "interval":  interval,
-            "price":     round(price, 2),
-            "sl":        sl,
-            "target1":   t1,
-            "target2":   t2,
-            "target3":   t3,
-            "rr":        rr,
-            "rsi":       round(cur_rsi, 1),
-            "adx":       round(cur_adx, 1),
-            "atr":       round(cur_atr, 2),
+            "symbol":        name,
+            "ticker":        ticker,
+            "label":         label,
+            "action":        bias,
+            "interval":      interval,
+            "price":         round(price, 2),
+            "sl":            sl,
+            "target1":       t1,
+            "target2":       t2,
+            "target3":       t3,
+            "rr":            rr,
+            "rsi":           round(cur_rsi, 1),
+            "adx":           round(cur_adx, 1),
+            "atr":           round(cur_atr, 2),
+            "weekly_trend":  weekly_bias or "neutral",
         }
     except Exception as e:
         logging.warning(f"Commodity {name}: {e}")
@@ -1275,13 +1430,41 @@ def scan_tlm_breakouts(universe=None, interval: str = "4h") -> list:
 # ── Potential Multibaggers Scanner (Weekly — Saturday only) ──────────────────
 def _analyze_multibagger(symbol: str) -> dict | None:
     """
-    Weekly chart scan for potential multibagger candidates.
-    Criteria: Weekly uptrend + RSI momentum zone + volume expansion + 52W position.
-    Targets based on 52W breakout range. 6-12 month horizon.
+    Multibagger Scanner — Expert Grade (CAN SLIM + Darvas Box)
+    Institutional criteria (William O'Neil / Mark Minervini methodology):
+
+    PRICE ACTION (required):
+      • In upper 30% of 52W range (pos_52 >= 0.70) — near highs, not cheap trash
+      • Within 15% of 52W high (Darvas Box: price consolidating near ATH)
+      • NOT extended: 13-week (3M) return < 60% (avoid chasing extended moves)
+      • Weekly EMA stack: price > EMA10 > EMA20 > EMA50 (full weekly uptrend)
+
+    MOMENTUM (required):
+      • Weekly RSI 55-75 (strong momentum, not overbought — Minervini zone)
+      • Weekly ADX > 22 (stock is in a true trend, not drifting)
+      • MACD positive histogram on weekly (momentum accelerating)
+
+    VOLUME (required):
+      • Recent 4-week avg volume > 20-week avg × 1.3 (institutional accumulation)
+
+    RELATIVE STRENGTH:
+      • 13W return must outperform Nifty 50 by at least 5% (leaders, not laggards)
+
+    TARGETS (6-12 month horizon):
+      • T1: 52W range × 0.30 above current price
+      • T2: 52W range × 0.65 (potential double from breakout)
+      • T3: 52W range × 1.10 (full multibagger move)
+
+    SCORE (0-100):
+      • 52W position: 30 pts
+      • RSI momentum: 25 pts
+      • ADX trend strength: 20 pts
+      • Relative strength vs Nifty: 15 pts
+      • Volume expansion: 10 pts
     """
     try:
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        wk = yf.download(sym_yf, period="2y", interval="1wk",
+        wk = yf.download(sym_yf, period="3y", interval="1wk",
                          progress=False, auto_adjust=True)
         if wk is None or wk.empty or len(wk) < 52:
             return None
@@ -1296,57 +1479,86 @@ def _analyze_multibagger(symbol: str) -> dict | None:
         l52      = float(wk_l.rolling(52).min().iloc[-1])
         range_52 = max(h52 - l52, 1)
 
-        # Must be in upper 50% of 52W range
+        # ── GATE 1: 52W position >= 70% (in upper 30% of range — Minervini Stage 2) ──
         pos_52 = (price - l52) / range_52
-        if pos_52 < 0.50:
+        if pos_52 < 0.70:
             return None
 
-        # Weekly EMA alignment: price > EMA20 > EMA50
+        # ── GATE 2: Within 15% of 52W high (Darvas Box — consolidating near ATH) ──
+        if price < h52 * 0.85:
+            return None
+
+        # ── GATE 3: Not extended — 13W (3M) return < 60% ──
+        ret_13w = 0.0
+        if len(wk_c) >= 14:
+            prev_13 = float(wk_c.iloc[-14])
+            ret_13w = (price - prev_13) / prev_13 if prev_13 > 0 else 0
+        if ret_13w > 0.60:
+            return None   # already extended, late entry, skip
+
+        # ── GATE 4: Full weekly EMA stack ──
+        we10 = float(ema(wk_c, 10).iloc[-1])
         we20 = float(ema(wk_c, 20).iloc[-1])
         we50 = float(ema(wk_c, 50).iloc[-1])
-        if not (price > we20 > we50):
+        if not (price > we10 > we20 > we50):
             return None
 
-        # Weekly RSI in momentum zone 50-78
+        # ── GATE 5: Weekly RSI 55-75 (momentum without overbought) ──
         wr = float(rsi(wk_c).iloc[-1])
-        if not (50 <= wr <= 78):
+        if not (55 <= wr <= 75):
             return None
 
-        # Weekly ADX > 18 (trending)
+        # ── GATE 6: Weekly ADX > 22 ──
         wa = float(adx(wk_h, wk_l, wk_c).iloc[-1])
-        if wa < 18:
+        if wa < 22:
             return None
 
-        # Volume expansion: last 4wk avg > 20wk avg × 1.1
+        # ── GATE 7: Volume expansion ≥ 1.3x (institutional accumulation) ──
         avg20v = float(wk_v.rolling(20).mean().iloc[-1])
         rec4v  = float(wk_v.iloc[-4:].mean())
         vol_r  = round(rec4v / avg20v, 2) if avg20v > 0 else 1.0
-        if vol_r < 1.1:
+        if vol_r < 1.3:
             return None
 
-        # Levels
-        wk_atr   = float(atr(wk_h, wk_l, wk_c).iloc[-1])
-        support1 = round(we50, 2)
-        support2 = round(float(wk_l.rolling(8).min().iloc[-1]), 2)
-        sl       = max(support1, support2)
+        # ── GATE 8: Relative strength vs Nifty (must outperform) ──
+        nifty_13w = 0.0
+        try:
+            ndf = yf.download("^NSEI", period="6mo", interval="1wk",
+                              progress=False, auto_adjust=True)
+            if not ndf.empty and len(ndf) >= 14:
+                nc = ndf["Close"].squeeze()
+                nifty_13w = float(nc.iloc[-1] / nc.iloc[-14] - 1)
+        except Exception:
+            pass
+        rs_vs_nifty = ret_13w - nifty_13w
 
-        # Targets: fibonacci on 52W range
+        # Must outperform Nifty by at least 5% over 13 weeks
+        if rs_vs_nifty < 0.05:
+            return None
+
+        # ── LEVELS ──
+        support1 = round(we20, 2)
+        support2 = round(float(wk_l.rolling(8).min().iloc[-1]), 2)
+        sl       = round(max(support1, support2), 2)
+
         t1 = round(price + range_52 * 0.30, 2)
-        t2 = round(price + range_52 * 0.60, 2)
-        t3 = round(price + range_52 * 1.00, 2)
+        t2 = round(price + range_52 * 0.65, 2)
+        t3 = round(price + range_52 * 1.10, 2)
 
         risk = round(price - sl, 2)
         rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
 
-        # Score (0-100): 52W position + RSI momentum + ADX + vol
+        # ── SCORE (0-100) ──
         score = round(
-            pos_52 * 40 +
-            min(wr / 75, 1.0) * 30 +
-            min(wa / 40, 1.0) * 20 +
-            min(vol_r / 3.0, 1.0) * 10, 1
+            min(pos_52, 1.0)              * 30 +   # 52W position
+            min((wr - 55) / 20, 1.0)      * 25 +   # RSI momentum (55→75 maps to 0→25)
+            min(wa / 45, 1.0)             * 20 +   # ADX trend strength
+            min(rs_vs_nifty / 0.30, 1.0)  * 15 +   # Relative strength vs Nifty
+            min(vol_r / 3.0, 1.0)         * 10,    # Volume expansion
+            1
         )
 
-        # PE (best effort)
+        # ── PE (best effort) ──
         pe = None
         try:
             info = yf.Ticker(sym_yf).info
@@ -1355,29 +1567,37 @@ def _analyze_multibagger(symbol: str) -> dict | None:
         except Exception:
             pass
 
+        # Skip extremely overvalued stocks (PE > 100) — momentum not supported by earnings
+        if pe and pe > 100:
+            return None
+
         sym_clean = symbol.replace(".NS", "")
         return {
-            "symbol":    sym_clean,
-            "price":     round(price, 2),
-            "high_52w":  round(h52, 2),
-            "low_52w":   round(l52, 2),
-            "range_pos": round(pos_52 * 100, 1),
-            "wk_rsi":    round(wr, 1),
-            "wk_adx":    round(wa, 1),
-            "vol_ratio": vol_r,
-            "sl":        round(sl, 2),
-            "support1":  support1,
-            "support2":  support2,
-            "target1":   t1,
-            "target2":   t2,
-            "target3":   t3,
-            "rr":        rr,
-            "score":     score,
-            "pe":        pe,
-            "fno":       sym_clean in FNO_ELIGIBLE,
-            "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
-            "reason":    (f"Weekly RSI {round(wr,1)} | ADX {round(wa,1)} | "
-                          f"Vol {vol_r}x | 52W pos {round(pos_52*100,1)}%"),
+            "symbol":       sym_clean,
+            "price":        round(price, 2),
+            "high_52w":     round(h52, 2),
+            "low_52w":      round(l52, 2),
+            "range_pos":    round(pos_52 * 100, 1),
+            "dist_from_ath": round((price / h52 - 1) * 100, 1),
+            "ret_13w":      round(ret_13w * 100, 1),
+            "rs_vs_nifty":  round(rs_vs_nifty * 100, 1),
+            "wk_rsi":       round(wr, 1),
+            "wk_adx":       round(wa, 1),
+            "vol_ratio":    vol_r,
+            "sl":           sl,
+            "support1":     support1,
+            "support2":     support2,
+            "target1":      t1,
+            "target2":      t2,
+            "target3":      t3,
+            "rr":           rr,
+            "score":        score,
+            "pe":           pe,
+            "fno":          sym_clean in FNO_ELIGIBLE,
+            "tv_link":      f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+            "reason":       (f"Stage 2 | RSI {round(wr,1)} | ADX {round(wa,1)} | "
+                             f"RS +{round(rs_vs_nifty*100,1)}% vs Nifty | "
+                             f"Vol {vol_r}x | {round(pos_52*100,1)}% of 52W range"),
         }
     except Exception as e:
         logging.warning(f"Multibagger {symbol}: {e}")

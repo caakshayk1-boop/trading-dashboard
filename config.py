@@ -9,10 +9,10 @@ UPSTOX_TOKEN_FILE   = "cache/upstox_token.json"
 
 CAPITAL             = 500000   # Your trading capital in INR
 RISK_PER_TRADE      = 0.01     # 1% risk per trade
-MIN_SIGNAL_SCORE    = 75       # Raised: min score for signal (0-100). 75+ = quality filter
+MIN_SIGNAL_SCORE    = 78       # Expert grade: 78+ only (was 75)
 MIN_PRICE           = 50       # Skip penny stocks below this price
-MIN_AVG_VOLUME      = 100000   # Raised: min 20-day avg volume (liquidity filter)
-MIN_RR              = 1.5      # Minimum risk:reward ratio to fire signal
+MIN_AVG_VOLUME      = 150000   # Expert grade: min 20-day avg volume (was 100k)
+MIN_RR              = 2.0      # Expert grade: minimum 2:1 risk:reward (was 1.5)
 SCAN_TIMES          = ["09:20", "11:45", "16:30"]  # IST auto-scan times
 SEND_TOP_PICKS_ONLY = True     # Telegram gets only top 5 signals (quality)
 ENABLE_WEEKLY_CONFIRM = True   # Require weekly EMA alignment
