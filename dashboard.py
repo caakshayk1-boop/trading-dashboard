@@ -157,319 +157,336 @@ from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_ne
                          get_corporate_actions, get_fund_holdings,
                          get_indian_market_news)
 
-st.set_page_config(page_title="SwingDesk Pro", layout="wide", page_icon="⚡",
+st.set_page_config(page_title="TradeFlow AI Pro", layout="wide", page_icon="⚡",
                    initial_sidebar_state="expanded")
 IST      = pytz.timezone("Asia/Kolkata")
 IS_LOCAL = os.path.exists("config.py")
 init_db()
 
-# ── Theme ─────────────────────────────────────────────────────────────────────
-if "theme" not in st.session_state:
-    st.session_state["theme"] = "dark"
-_DARK = st.session_state["theme"] == "dark"
-
-# ── CSS ───────────────────────────────────────────────────────────────────────
+# ── Theme (dark only — matches zip design system) ─────────────────────────────
 _THEME_VARS = """
 :root {
-  --bg:       #030912;
-  --bg2:      #070f1e;
-  --bg3:      #0a1929;
-  --border:   rgba(56,189,248,.1);
-  --border2:  rgba(56,189,248,.06);
-  --txt:      #e2e8f0;
-  --txt2:     #94a3b8;
-  --txt3:     #475569;
-  --txt4:     #334155;
-  --accent:   #38bdf8;
-  --green:    #22c55e;
-  --red:      #ef4444;
-  --card-bg:  linear-gradient(135deg,rgba(10,25,41,.9),rgba(7,15,30,.9));
-}
-""" if _DARK else """
-:root {
-  --bg:       #f0f4f8;
-  --bg2:      #e2eaf3;
-  --bg3:      #ffffff;
-  --border:   rgba(2,132,199,.15);
-  --border2:  rgba(2,132,199,.08);
-  --txt:      #0f172a;
-  --txt2:     #334155;
-  --txt3:     #64748b;
-  --txt4:     #94a3b8;
-  --accent:   #0284c7;
-  --green:    #16a34a;
-  --red:      #dc2626;
-  --card-bg:  linear-gradient(135deg,#ffffff,#f8fafc);
+  --bg:      #0d1117;
+  --bg2:     #111827;
+  --bg3:     #1d2432;
+  --border:  #252d3d;
+  --border2: #1a2030;
+  --txt:     #f2f2f2;
+  --txt2:    #8b93a7;
+  --txt3:    #64748b;
+  --txt4:    #3d4a5c;
+  --accent:  #22c55e;
+  --green:   #22c55e;
+  --red:     #ef4444;
+  --amber:   #f59e0b;
+  --card-bg: rgba(17,24,39,0.6);
 }
 """
 
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 {_THEME_VARS}
 
-/* ---- Rotating border property (Chrome 85+ / Safari 15.4+) ---- */
-@property --rot {{
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}}
-@keyframes rotateBorder {{ to {{ --rot: 360deg; }} }}
+/* === KEYFRAMES (from zip) === */
 @keyframes fadeUp {{ from {{ opacity:0; transform:translateY(18px); }} to {{ opacity:1; transform:translateY(0); }} }}
-@keyframes fadeIn  {{ from {{ opacity:0; }} to {{ opacity:1; }} }}
-@keyframes slideRight {{ from {{ transform:translateX(-100%); }} to {{ transform:translateX(0); }} }}
-@keyframes shimmer  {{ 0% {{ left:-120%; }} 100% {{ left:120%; }} }}
-@keyframes pulse    {{ 0%,100% {{ opacity:1; box-shadow:0 0 6px var(--green); }} 50% {{ opacity:.5; box-shadow:0 0 14px var(--green); }} }}
-@keyframes confFill {{ from {{ width:0%; }} to {{ width:100%; }} }}
-@keyframes scanLine {{ 0% {{ transform:translateX(-100%); }} 100% {{ transform:translateX(200%); }} }}
-@keyframes breathe  {{ 0%,100% {{ opacity:.6; }} 50% {{ opacity:1; }} }}
-@keyframes tickerScroll {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
-@keyframes aiGlow {{ 0%,100% {{ box-shadow:0 0 18px rgba(167,139,250,.25),0 0 0 1px rgba(167,139,250,.2); }} 50% {{ box-shadow:0 0 32px rgba(167,139,250,.45),0 0 0 1px rgba(167,139,250,.4); }} }}
-@keyframes neuralPulse {{ 0%,100% {{ opacity:.3; transform:scale(1); }} 50% {{ opacity:.7; transform:scale(1.3); }} }}
-@keyframes scanDiag {{ 0% {{ transform:translateX(-100%) translateY(-100%); }} 100% {{ transform:translateX(200%) translateY(200%); }} }}
-@keyframes numberFlip {{ 0% {{ opacity:0; transform:translateY(-8px); }} 100% {{ opacity:1; transform:translateY(0); }} }}
-@keyframes borderRun {{ 0% {{ background-position:0% 50%; }} 100% {{ background-position:200% 50%; }} }}
-/* ---- From zip: terminal-grid bg + Bloomberg entry animations ---- */
-@keyframes cardEnter {{ 0% {{ opacity:0; transform:translateY(32px) scale(.97); }} 100% {{ opacity:1; transform:translateY(0) scale(1); }} }}
+@keyframes cardEnter {{ 0% {{ opacity:0; transform:translateY(30px) scale(.95); }} 100% {{ opacity:1; transform:translateY(0) scale(1); }} }}
+@keyframes marquee {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
 @keyframes pulseGlow {{ 0%,100% {{ opacity:1; }} 50% {{ opacity:.55; }} }}
-@keyframes marqueeFlow {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
-@keyframes borderScan {{ 0%,100% {{ box-shadow:0 0 0 1px rgba(34,197,94,.15); }} 50% {{ box-shadow:0 0 0 1px rgba(34,197,94,.5),0 0 18px rgba(34,197,94,.12); }} }}
-@keyframes statusBlink {{ 0%,100% {{ background:rgba(34,197,94,.9); }} 50% {{ background:rgba(34,197,94,.3); }} }}
+@keyframes statusBlink {{ 0%,100% {{ background:rgba(34,197,94,.9); }} 50% {{ background:rgba(34,197,94,.25); }} }}
+@keyframes shimmer {{ 0% {{ left:-120%; }} 100% {{ left:120%; }} }}
+@property --rot {{ syntax:'<angle>'; inherits:false; initial-value:0deg; }}
+@keyframes rotateBorder {{ to {{ --rot:360deg; }} }}
+@keyframes numberFlip {{ 0% {{ opacity:0; transform:translateY(-8px); }} 100% {{ opacity:1; transform:translateY(0); }} }}
+@keyframes aiGlow {{ 0%,100% {{ box-shadow:0 0 18px rgba(167,139,250,.2); }} 50% {{ box-shadow:0 0 32px rgba(167,139,250,.4); }} }}
+@keyframes scanLine {{ 0% {{ transform:translateX(-100%); }} 100% {{ transform:translateX(200%); }} }}
+@keyframes scanDiag {{ 0% {{ transform:translateX(-100%) translateY(-100%); }} 100% {{ transform:translateX(200%) translateY(200%); }} }}
+@keyframes neuralPulse {{ 0%,100% {{ opacity:.3; transform:scale(1); }} 50% {{ opacity:.7; transform:scale(1.3); }} }}
+@keyframes confFill {{ from {{ width:0%; }} to {{ width:100%; }} }}
+@keyframes tickerScroll {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
 
-/* ---- Base ---- */
-html,body,[class*="css"] {{ font-family:'Inter',sans-serif!important; background:var(--bg)!important; color:var(--txt)!important; -webkit-font-smoothing:antialiased; }}
-.stApp {{ background:var(--bg); }}
-/* Bloomberg terminal grid overlay */
+/* === BASE (zip's terminal style) === */
+html, body, [class*="css"] {{
+  font-family: 'JetBrains Mono', 'Inter', monospace !important;
+  background: var(--bg) !important;
+  color: var(--txt) !important;
+  -webkit-font-smoothing: antialiased;
+}}
+.stApp {{ background: var(--bg); }}
+
+/* Terminal grid background — from zip's .terminal-grid */
 .main .block-container {{
   background-image:
-    linear-gradient(rgba(34,197,94,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34,197,94,.018) 1px, transparent 1px);
-  background-size:20px 20px;
+    linear-gradient(rgba(34,197,94,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,197,94,.03) 1px, transparent 1px);
+  background-size: 20px 20px;
 }}
+
+/* Radial ambient glows */
 .stApp::before {{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(ellipse 70% 50% at 15% 35%, rgba(56,189,248,.05) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 10%, rgba(34,197,94,.04) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 35% at 55% 85%, rgba(167,139,250,.03) 0%, transparent 45%);
+    radial-gradient(ellipse 60% 40% at 15% 35%, rgba(34,197,94,.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 10%, rgba(34,197,94,.03) 0%, transparent 50%);
 }}
-header[data-testid="stHeader"] {{ background:var(--bg2); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid var(--border); box-shadow:0 1px 20px rgba(0,0,0,.15); }}
-section[data-testid="stSidebar"] {{ background:var(--bg2)!important; border-right:1px solid var(--border); }}
-section[data-testid="stSidebar"] *{{ color:var(--txt3)!important; }}
-section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[data-testid="stSidebar"] h3 {{ color:var(--txt2)!important; }}
 
-/* ---- Buttons ---- */
-.stButton>button {{
-  background:linear-gradient(135deg,#0369a1 0%,#0ea5e9 60%,#38bdf8 100%)!important;
-  color:#fff!important; border:none!important; border-radius:9px!important;
-  font-weight:800!important; font-size:12px!important; letter-spacing:.04em!important;
-  box-shadow:0 4px 20px rgba(14,165,233,.35),0 0 0 1px rgba(56,189,248,.15)!important;
-  transition:all .25s cubic-bezier(.4,0,.2,1)!important; position:relative!important; overflow:hidden!important; }}
-.stButton>button::after {{
+/* Streamlit header bar */
+header[data-testid="stHeader"] {{
+  background: rgba(17,24,39,.95) !important;
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border) !important;
+}}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {{
+  background: var(--bg2) !important;
+  border-right: 1px solid var(--border) !important;
+}}
+section[data-testid="stSidebar"] * {{ color: var(--txt3) !important; }}
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
+
+/* === BUTTONS (emerald — from zip) === */
+.stButton > button {{
+  background: rgba(34,197,94,.15) !important;
+  color: #22c55e !important;
+  border: 1px solid rgba(34,197,94,.3) !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: .03em !important;
+  transition: all .25s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}}
+.stButton > button:hover {{
+  background: rgba(34,197,94,.25) !important;
+  border-color: rgba(34,197,94,.5) !important;
+  box-shadow: 0 0 20px rgba(34,197,94,.2) !important;
+  transform: translateY(-1px) !important;
+}}
+.stButton > button::after {{
   content:''; position:absolute; top:0; left:-120%; width:60%; height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
-  transition:left .45s ease; }}
-.stButton>button:hover {{ box-shadow:0 6px 32px rgba(14,165,233,.55),0 0 0 1px rgba(56,189,248,.3)!important; transform:translateY(-2px)!important; }}
-.stButton>button:hover::after {{ left:160%; }}
-.stButton>button:active {{ transform:translateY(0)!important; }}
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  transition:left .4s ease;
+}}
+.stButton > button:hover::after {{ left: 160%; }}
 
-/* ---- Tabs ---- */
+/* === TABS (zip's emerald tab style) === */
 .stTabs [data-baseweb="tab-list"] {{
-  background:var(--bg2); border-bottom:1px solid var(--border); padding:0 16px;
-  backdrop-filter:blur(12px); gap:4px; }}
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+  gap: 2px;
+}}
 .stTabs [data-baseweb="tab"] {{
-  background:transparent; color:var(--txt3)!important; font-size:10px; font-weight:700;
-  padding:13px 18px; border-bottom:2px solid transparent; border-radius:0;
-  text-transform:uppercase; letter-spacing:.09em; transition:all .22s ease; }}
-.stTabs [data-baseweb="tab"]:hover {{ color:var(--txt2)!important; }}
+  background: transparent;
+  color: var(--txt3) !important;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace !important;
+  padding: 12px 16px;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  transition: all .2s ease;
+}}
+.stTabs [data-baseweb="tab"]:hover {{ color: var(--txt2) !important; }}
 .stTabs [aria-selected="true"] {{
-  color:var(--accent)!important; border-bottom:2px solid var(--accent)!important;
-  text-shadow:0 0 16px color-mix(in srgb, var(--accent) 60%, transparent); }}
+  color: #22c55e !important;
+  border-bottom-color: #22c55e !important;
+  text-shadow: 0 0 12px rgba(34,197,94,.5);
+}}
 
-/* ---- Metrics ---- */
+/* === METRICS (emerald accent from zip) === */
 [data-testid="metric-container"] {{
-  background:var(--bg3); border:1px solid var(--border); border-radius:14px;
-  padding:18px 22px; transition:all .3s ease; position:relative; overflow:hidden; }}
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  transition: all .3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: cardEnter .5s ease both;
+}}
 [data-testid="metric-container"]::before {{
   content:''; position:absolute; inset:0;
-  background:linear-gradient(135deg, rgba(56,189,248,.04) 0%, transparent 60%);
-  pointer-events:none; }}
+  background: linear-gradient(135deg, rgba(34,197,94,.04) 0%, transparent 60%);
+  pointer-events: none;
+}}
 [data-testid="metric-container"]::after {{
   content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
-  opacity:.35; }}
+  background: linear-gradient(90deg, transparent, rgba(34,197,94,.5), transparent);
+}}
 [data-testid="metric-container"]:hover {{
-  border-color:var(--accent); transform:translateY(-1px);
-  box-shadow:0 8px 28px rgba(0,0,0,.12), 0 0 24px rgba(56,189,248,.06); }}
+  border-color: rgba(34,197,94,.3);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(0,0,0,.2), 0 0 20px rgba(34,197,94,.06);
+}}
 [data-testid="metric-container"] label {{
-  color:var(--txt3)!important; font-size:9px!important;
-  text-transform:uppercase; letter-spacing:.14em; font-weight:700; }}
+  color: var(--txt3) !important;
+  font-size: 9px !important;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-weight: 700;
+}}
 [data-testid="metric-container"] [data-testid="stMetricValue"] {{
-  color:var(--txt)!important; font-size:26px!important; font-weight:800!important;
-  font-family:'JetBrains Mono',monospace!important; letter-spacing:-.03em; }}
-[data-testid="stMetricDelta"] {{ font-size:11px!important; font-weight:700!important; }}
+  color: var(--txt) !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: -.03em;
+  animation: numberFlip .5s ease both;
+}}
+[data-testid="stMetricDelta"] {{ font-size: 11px !important; font-weight: 700 !important; }}
 
-/* ---- DataFrames ---- */
-.stDataFrame {{ border:1px solid var(--border)!important; border-radius:12px; overflow:hidden; }}
+/* === DATAFRAMES === */
+.stDataFrame {{ border: 1px solid var(--border) !important; border-radius: 10px; overflow: hidden; }}
 .stDataFrame thead th {{
-  background:var(--bg2)!important; color:var(--accent)!important;
-  font-size:9px!important; text-transform:uppercase; letter-spacing:.12em;
-  font-weight:800; border-color:var(--border2)!important; padding:10px 14px!important; }}
-.stDataFrame tbody tr {{ background:var(--bg)!important; transition:background .15s; }}
-.stDataFrame tbody tr:hover {{ background:var(--bg3)!important; }}
+  background: var(--bg2) !important;
+  color: #22c55e !important;
+  font-size: 9px !important;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-weight: 800;
+  border-color: var(--border2) !important;
+  padding: 10px 14px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}}
+.stDataFrame tbody tr {{ background: var(--bg) !important; transition: background .15s; }}
+.stDataFrame tbody tr:hover {{ background: var(--bg3) !important; }}
 .stDataFrame tbody td {{
-  color:var(--txt2)!important; font-family:'JetBrains Mono',monospace;
-  font-size:12px!important; border-color:var(--border2)!important;
-  padding:9px 14px!important; }}
+  color: var(--txt2) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  border-color: var(--border2) !important;
+  padding: 9px 14px !important;
+}}
 
-/* ---- Inputs ---- */
+/* === INPUTS === */
 .stTextInput input, .stSelectbox [data-baseweb="select"] {{
-  background:var(--bg3)!important; border:1px solid var(--border)!important;
-  color:var(--txt)!important; border-radius:9px!important;
-  transition:border-color .2s, box-shadow .2s; }}
+  background: var(--bg3) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--txt) !important;
+  border-radius: 8px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  transition: border-color .2s, box-shadow .2s;
+}}
 .stTextInput input:focus {{
-  border-color:var(--accent)!important;
-  box-shadow:0 0 0 3px rgba(56,189,248,.1)!important; }}
-.stSelectbox [data-baseweb="select"]:focus-within {{
-  border-color:var(--accent)!important; }}
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34,197,94,.1) !important;
+}}
 
-/* ---- Expanders ---- */
+/* === EXPANDERS === */
 .streamlit-expanderHeader {{
-  background:var(--bg3)!important; border:1px solid var(--border)!important;
-  border-radius:10px!important; color:var(--txt2)!important;
-  font-size:12px!important; font-weight:600!important; transition:all .2s; }}
-.streamlit-expanderHeader:hover {{ border-color:var(--accent)!important; color:var(--txt)!important; }}
+  background: var(--bg3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--txt2) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  transition: all .2s;
+}}
+.streamlit-expanderHeader:hover {{ border-color: #22c55e !important; }}
 .streamlit-expanderContent {{
-  background:var(--bg2)!important; border:1px solid var(--border2)!important;
-  border-top:none!important; border-radius:0 0 10px 10px!important; }}
+  background: var(--bg2) !important;
+  border: 1px solid var(--border2) !important;
+  border-top: none !important;
+  border-radius: 0 0 8px 8px !important;
+}}
 
-/* ---- Signal Cards (Bloomberg Terminal Style from zip) ---- */
+/* ==========================================
+   SIGNAL CARDS — exact match to zip's SignalCard.tsx
+   ========================================== */
 .card {{
-  background:var(--card-bg); border:1px solid var(--border);
-  border-radius:16px; padding:22px 24px; margin-bottom:16px;
-  animation:cardEnter .5s cubic-bezier(.22,1,.36,1) both;
-  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
-  position:relative; overflow:hidden;
-  background-image:
-    linear-gradient(rgba(34,197,94,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34,197,94,.025) 1px, transparent 1px);
-  background-size:24px 24px; }}
+  background: rgba(17,24,39,.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(34,197,94,.35);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+  animation: cardEnter .5s cubic-bezier(.22,1,.36,1) both;
+  transition: transform .3s ease, box-shadow .3s ease;
+  box-shadow: 0 4px 24px rgba(34,197,94,.08);
+}}
+.card:hover {{
+  transform: scale(1.02);
+  box-shadow: 0 8px 40px rgba(34,197,94,.15);
+}}
+/* Left colored strip — key design element from zip */
 .card::before {{
-  content:''; position:absolute; top:0; left:0; right:0; height:1px; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(34,197,94,.65), transparent); }}
-.card::after {{
-  content:''; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(34,197,94,.06) 0%, transparent 65%); }}
-.card:hover {{ transform:translateY(-4px) scale(1.005); box-shadow:0 20px 56px rgba(0,0,0,.32), 0 0 0 1px rgba(34,197,94,.25); }}
-.card.sell::before {{ background:linear-gradient(90deg, transparent, rgba(239,68,68,.65), transparent); }}
-.card.sell::after {{ background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(239,68,68,.06) 0%, transparent 65%); }}
-.card.sell:hover {{ box-shadow:0 20px 56px rgba(0,0,0,.32), 0 0 0 1px rgba(239,68,68,.25); }}
-/* stagger delay for sequential card reveal */
-.card:nth-child(1) {{ animation-delay:.05s; }}
-.card:nth-child(2) {{ animation-delay:.12s; }}
-.card:nth-child(3) {{ animation-delay:.19s; }}
-.card:nth-child(4) {{ animation-delay:.26s; }}
-.card:nth-child(5) {{ animation-delay:.33s; }}
-/* Live indicator dot */
-.live-dot {{
-  width:7px; height:7px; border-radius:50%;
-  background:#22c55e; display:inline-block; margin-right:6px;
-  animation:statusBlink 2s ease-in-out infinite; }}
+  content:'';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  background: #22c55e;
+  border-radius: 10px 0 0 10px;
+}}
+.card.sell {{
+  border-color: rgba(239,68,68,.35);
+  box-shadow: 0 4px 24px rgba(239,68,68,.08);
+}}
+.card.sell:hover {{ box-shadow: 0 8px 40px rgba(239,68,68,.15); }}
+.card.sell::before {{ background: #ef4444; }}
+
+/* Stagger delays */
+.card:nth-child(1) {{ animation-delay:.04s; }}
+.card:nth-child(2) {{ animation-delay:.10s; }}
+.card:nth-child(3) {{ animation-delay:.16s; }}
+.card:nth-child(4) {{ animation-delay:.22s; }}
+.card:nth-child(5) {{ animation-delay:.28s; }}
+
+/* ZIP card inner padding for strip */
+.card-inner {{ padding-left: 12px; }}
+
+/* Top card — rotating border variant */
 .card.top {{
   border-color:transparent;
-  background:linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-    conic-gradient(from var(--rot), #22c55e 0%, #38bdf8 33%, #a78bfa 66%, #22c55e 100%) border-box;
+  background:linear-gradient(rgba(17,24,39,.6), rgba(17,24,39,.6)) padding-box,
+    conic-gradient(from var(--rot), #22c55e 0%, #4ade80 33%, #a78bfa 66%, #22c55e 100%) border-box;
   animation:rotateBorder 4s linear infinite; }}
-/* ---- Action Badge ---- */
-.action-badge {{
-  display:inline-flex; align-items:center; padding:3px 13px; border-radius:99px;
-  font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }}
-.action-badge.buy {{
-  background:rgba(34,197,94,.15); color:#22c55e; border:1px solid rgba(34,197,94,.4);
-  box-shadow:0 0 12px rgba(34,197,94,.2); }}
-.action-badge.sell {{
-  background:rgba(239,68,68,.12); color:#ef4444; border:1px solid rgba(239,68,68,.35);
-  box-shadow:0 0 12px rgba(239,68,68,.18); }}
-/* ---- Strength Bars ---- */
-.sbar-row {{ display:flex; align-items:center; gap:8px; margin:5px 0; }}
-.sbar-lbl {{ font-size:10px; font-weight:700; min-width:100px; }}
-.sbar-lbl.bull {{ color:#22c55e; }} .sbar-lbl.bear {{ color:#ef4444; }}
-.sbar-track {{ flex:1; height:5px; border-radius:3px; overflow:hidden; }}
-.sbar-track.bull {{ background:rgba(34,197,94,.12); }}
-.sbar-track.bear {{ background:rgba(239,68,68,.08); }}
-.sbar-fill.bull {{ height:100%;border-radius:3px;background:linear-gradient(90deg,#22c55e,#4ade80); }}
-.sbar-fill.bear {{ height:100%;border-radius:3px;background:linear-gradient(90deg,#ef4444,#f87171); }}
-.sbar-pct {{ font-size:10px; font-weight:800; min-width:28px; text-align:right;
-  font-family:'JetBrains Mono',monospace; }}
-.sbar-pct.bull {{ color:#22c55e; }} .sbar-pct.bear {{ color:#475569; }}
-/* ---- Trigger Box ---- */
-.trigger-box {{
-  background:rgba(239,68,68,.04); border:1px solid rgba(239,68,68,.18);
-  border-radius:10px; padding:11px 14px; margin:12px 0; }}
-.trig-label {{ font-size:8px; font-weight:800; color:#ef4444; letter-spacing:.14em;
-  text-transform:uppercase; margin-bottom:5px; }}
-.trig-text {{ font-size:12px; font-weight:600; color:#f1f5f9; line-height:1.4; }}
-.trig-meta {{ font-size:10px; color:#475569; margin-top:4px; }}
-/* ---- Trade Grid ---- */
-.tgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0; }}
-.tgcell {{
-  background:var(--bg2); border:1px solid var(--border2);
-  border-radius:10px; padding:11px 13px; position:relative; overflow:hidden; }}
-.tgcell::before {{
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent, var(--border), transparent); }}
-.tc-label {{ font-size:8px; color:var(--txt4); text-transform:uppercase;
-  letter-spacing:.12em; font-weight:700; margin-bottom:5px; }}
-.tc-val {{ font-size:19px; font-weight:800; font-family:'JetBrains Mono',monospace;
-  color:var(--txt); line-height:1; letter-spacing:-.02em; }}
-.tgcell.sl {{ border-color:rgba(239,68,68,.22); }}
-.tgcell.sl::before {{ background:linear-gradient(90deg,transparent,rgba(239,68,68,.35),transparent); }}
-.tgcell.t1 {{ border-color:rgba(34,197,94,.22); }}
-.tgcell.t1::before {{ background:linear-gradient(90deg,transparent,rgba(34,197,94,.35),transparent); }}
-/* vol tag variants */
-.tag.hi-vol {{ background:rgba(239,68,68,.1); color:#f87171; border-color:rgba(239,68,68,.3); }}
-.tag.md-vol {{ background:rgba(245,158,11,.08); color:#f59e0b; border-color:rgba(245,158,11,.25); }}
 
-/* ---- Breakout Cards ---- */
+/* === BREAKOUT CARDS === */
 .bo-card {{
-  background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--green);
-  border-radius:14px; padding:18px 20px; margin-bottom:12px;
-  animation:fadeUp .4s ease; transition:all .25s; position:relative; overflow:hidden; }}
-.bo-card::before {{
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent, var(--green), transparent); opacity:.3; }}
-.bo-card:hover {{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.12); border-color:rgba(34,197,94,.3); }}
-.bo-card.weekly {{ border-left-color:#f59e0b; }}
-.bo-card.weekly::before {{ background:linear-gradient(90deg, transparent, #f59e0b, transparent); }}
-.bo-card.monthly {{ border-left-color:#a78bfa; }}
-.bo-card.monthly::before {{ background:linear-gradient(90deg, transparent, #a78bfa, transparent); }}
+  background: rgba(17,24,39,.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(34,197,94,.2);
+  border-left: 4px solid #22c55e;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  animation: cardEnter .45s ease both;
+  transition: all .25s ease;
+}}
+.bo-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,.1); }}
+.bo-card.weekly {{ border-left-color: #f59e0b; border-color: rgba(245,158,11,.2); }}
+.bo-card.monthly {{ border-left-color: #a78bfa; border-color: rgba(167,139,250,.2); }}
 
-/* ---- F&O Cards ---- */
-.fno-card {{
-  background:var(--card-bg); border:1px solid var(--border); border-left:3px solid var(--accent);
-  border-radius:14px; padding:18px 20px; margin-bottom:12px;
-  animation:fadeUp .4s ease; transition:all .25s; position:relative; overflow:hidden; }}
-.fno-card::before {{
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg, transparent, var(--accent), transparent); opacity:.4; }}
-.fno-card:hover {{ transform:translateY(-2px); box-shadow:0 8px 28px rgba(56,189,248,.1); }}
-
-/* ---- AI Signal Cards ---- */
+/* === AI SIGNAL CARDS === */
 .ai-card {{
-  background:linear-gradient(135deg,rgba(10,7,24,.97),rgba(17,9,36,.97));
-  border:1px solid rgba(167,139,250,.2);
-  border-left:3px solid #a78bfa;
-  border-radius:16px; padding:22px 24px; margin-bottom:16px;
-  animation:fadeUp .45s cubic-bezier(.4,0,.2,1), aiGlow 4s ease-in-out infinite;
-  transition:transform .28s ease, box-shadow .28s ease;
-  position:relative; overflow:hidden; }}
+  background: rgba(10,7,24,.9);
+  border: 1px solid rgba(167,139,250,.25);
+  border-left: 4px solid #a78bfa;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  animation: cardEnter .45s ease both, aiGlow 4s ease-in-out infinite;
+  transition: transform .3s ease, box-shadow .3s ease;
+  position: relative;
+  overflow: hidden;
+}}
 .ai-card::before {{
-  content:''; position:absolute; top:0; left:0; right:0; height:1px; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(167,139,250,.7), rgba(236,72,153,.5), transparent); }}
-.ai-card::after {{
-  content:''; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(ellipse 55% 40% at 92% 8%, rgba(167,139,250,.07) 0%, transparent 65%); }}
-.ai-card:hover {{ transform:translateY(-3px); box-shadow:0 20px 56px rgba(167,139,250,.15), 0 0 0 1px rgba(167,139,250,.3); }}
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(167,139,250,.6),transparent);
+}}
+.ai-card:hover {{ transform: translateY(-3px); box-shadow: 0 16px 48px rgba(167,139,250,.12); }}
 /* AI scan line */
 .ai-card .ai-scan {{
   position:absolute; top:0; left:0; bottom:0; width:2px;
@@ -477,11 +494,11 @@ section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[
   animation:scanDiag 3s ease-in-out infinite; pointer-events:none; }}
 /* AI badge */
 .ai-badge {{
-  display:inline-flex; align-items:center; gap:5px; padding:3px 12px; border-radius:99px;
-  font-size:10px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
-  background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(236,72,153,.1));
-  color:#c4b5fd; border:1px solid rgba(167,139,250,.4);
-  box-shadow:0 0 12px rgba(167,139,250,.2); }}
+  display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px;
+  border-radius: 99px; font-size: 9px; font-weight: 800; letter-spacing: .07em;
+  text-transform: uppercase; background: rgba(167,139,250,.12); color: #c4b5fd;
+  border: 1px solid rgba(167,139,250,.35);
+}}
 /* Neural dots */
 .neural-dot {{
   display:inline-block; width:5px; height:5px; border-radius:50%;
@@ -503,74 +520,163 @@ section[data-testid="stSidebar"] h1,section[data-testid="stSidebar"] h2,section[
   border:1px solid rgba(167,139,250,.15); border-radius:14px; padding:18px 20px; margin-bottom:12px;
   animation:fadeUp .4s ease; }}
 
-/* ---- MF Cards ---- */
+/* === F&O CARDS === */
+.fno-card {{
+  background: rgba(17,24,39,.6);
+  border: 1px solid rgba(34,197,94,.15);
+  border-left: 4px solid #22c55e;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  animation: cardEnter .45s ease both;
+  transition: all .25s ease;
+}}
+.fno-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,.08); }}
+
+/* === MF CARDS === */
 .mf-card {{
-  background:var(--card-bg); border:1px solid var(--border);
-  border-radius:14px; padding:20px 22px; margin-bottom:14px;
-  animation:fadeUp .4s ease; transition:all .25s; }}
-.mf-card:hover {{ transform:translateY(-2px); border-color:var(--accent); box-shadow:0 8px 24px rgba(0,0,0,.1); }}
+  background: rgba(17,24,39,.6);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  animation: cardEnter .4s ease both;
+  transition: all .25s ease;
+}}
+.mf-card:hover {{ transform: translateY(-2px); border-color: rgba(34,197,94,.3); }}
 
-/* ---- Badges ---- */
-.badge {{
-  display:inline-flex; align-items:center;
-  padding:4px 12px; border-radius:99px; font-size:9px; font-weight:800;
-  letter-spacing:.09em; text-transform:uppercase; }}
-.badge.sb {{
-  background:rgba(34,197,94,.1); color:#22c55e; border:1px solid rgba(34,197,94,.3);
-  box-shadow:0 0 10px rgba(34,197,94,.2), inset 0 0 8px rgba(34,197,94,.05); }}
-.badge.b {{
-  background:rgba(56,189,248,.1); color:#0ea5e9; border:1px solid rgba(56,189,248,.3);
-  box-shadow:0 0 10px rgba(56,189,248,.15); }}
-.badge.w {{
-  background:rgba(251,191,36,.08); color:#d97706; border:1px solid rgba(251,191,36,.25); }}
-.badge.fno {{
-  background:rgba(56,189,248,.07); color:#0284c7; border:1px solid rgba(56,189,248,.2);
-  font-size:9px; }}
+/* === ACTION BADGES (zip style) === */
+.action-badge {{
+  display: inline-flex; align-items: center; padding: 2px 12px; border-radius: 99px;
+  font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}}
+.action-badge.buy {{
+  background: rgba(34,197,94,.15); color: #22c55e;
+  border: 1px solid rgba(34,197,94,.4); box-shadow: 0 0 10px rgba(34,197,94,.2);
+}}
+.action-badge.sell {{
+  background: rgba(239,68,68,.12); color: #ef4444;
+  border: 1px solid rgba(239,68,68,.35); box-shadow: 0 0 10px rgba(239,68,68,.15);
+}}
 
-/* ---- Confidence Bar (legacy, kept for breakout cards) ---- */
-.conf {{ height:4px; background:var(--border2); border-radius:3px; margin:10px 0 12px; overflow:hidden; position:relative; }}
-.conf-fill {{ height:100%; border-radius:3px; animation:confFill .7s cubic-bezier(.4,0,.2,1) forwards; }}
+/* === TRADE GRID (entry/SL/targets - matches zip's grid) === */
+.tgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0 10px 12px; }}
+.tgcell {{
+  background: rgba(30,41,59,.4);
+  border: 1px solid rgba(51,65,85,.3);
+  border-radius: 8px; padding: 10px 12px;
+  position: relative; overflow: hidden;
+}}
+.tc-label {{
+  font-size: 8px; color: var(--txt4); text-transform: uppercase;
+  letter-spacing: .12em; font-weight: 700; margin-bottom: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}}
+.tc-val {{
+  font-size: 17px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+  color: var(--txt); line-height: 1; letter-spacing: -.02em;
+}}
+.tgcell.sl .tc-val {{ color: #f87171; }}
+.tgcell.entry .tc-val {{ color: var(--txt); }}
 
-/* ---- KV Rows ---- */
-.row {{ display:flex; gap:20px; flex-wrap:wrap; margin:10px 0; }}
-.kv {{ display:flex; flex-direction:column; min-width:60px; }}
+/* Target cells */
+.tgt-row {{ display:flex; gap:8px; margin: 10px 0 10px 12px; flex-wrap:wrap; }}
+.tgt-cell {{
+  flex:1; min-width:60px;
+  background: rgba(6,78,59,.2);
+  border: 1px solid rgba(34,197,94,.2);
+  border-radius: 8px; padding: 8px 10px; text-align:center;
+}}
+.tgt-label {{ font-size: 9px; color: rgba(34,197,94,.6); margin-bottom: 3px; font-family:'JetBrains Mono',monospace; }}
+.tgt-val {{ font-size: 14px; font-weight: 800; color: #22c55e; font-family:'JetBrains Mono',monospace; }}
+
+/* === KV ROWS === */
+.row {{ display:flex; gap:18px; flex-wrap:wrap; margin:10px 0; }}
+.kv {{ display:flex; flex-direction:column; min-width:55px; }}
 .kv span:first-child {{
-  font-size:8px; color:var(--txt3); text-transform:uppercase;
-  letter-spacing:.1em; font-weight:700; margin-bottom:3px; }}
+  font-size: 8px; color: var(--txt4); text-transform: uppercase;
+  letter-spacing: .1em; font-weight: 700; margin-bottom: 3px;
+}}
 .kv span:last-child {{
-  font-size:13px; font-weight:700; font-family:'JetBrains Mono',monospace;
-  color:var(--txt); line-height:1; }}
+  font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+  color: var(--txt); line-height: 1;
+}}
 
-/* ---- Tags ---- */
+/* === BADGES === */
+.badge {{
+  display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 99px;
+  font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+}}
+.badge.sb {{ background:rgba(34,197,94,.1); color:#22c55e; border:1px solid rgba(34,197,94,.3); }}
+.badge.b  {{ background:rgba(34,197,94,.07); color:#4ade80; border:1px solid rgba(34,197,94,.2); }}
+.badge.w  {{ background:rgba(245,158,11,.08); color:#d97706; border:1px solid rgba(245,158,11,.25); }}
+.badge.fno {{ background:rgba(34,197,94,.06); color:#22c55e; border:1px solid rgba(34,197,94,.15); font-size:8px; }}
+
+/* === TAGS === */
 .tag {{
-  display:inline-block; padding:3px 10px; border-radius:99px;
-  font-size:9px; font-weight:700; margin:2px 3px;
-  background:rgba(34,197,94,.07); color:var(--green);
-  border:1px solid rgba(34,197,94,.2);
-  transition:all .18s; }}
+  display: inline-block; padding: 2px 8px; border-radius: 99px;
+  font-size: 9px; font-weight: 700; margin: 2px 3px;
+  background: rgba(34,197,94,.07); color: #22c55e;
+  border: 1px solid rgba(34,197,94,.2);
+  transition: all .18s;
+  font-family: 'JetBrains Mono', monospace;
+}}
 .tag:hover {{ background:rgba(34,197,94,.14); border-color:rgba(34,197,94,.35); }}
+.tag.hi-vol {{ background:rgba(239,68,68,.1); color:#f87171; border-color:rgba(239,68,68,.3); }}
+.tag.md-vol {{ background:rgba(245,158,11,.08); color:#f59e0b; border-color:rgba(245,158,11,.25); }}
 
-/* ---- News ---- */
-.news-item {{ padding:11px 0; border-bottom:1px solid var(--border2); transition:all .18s; }}
+/* === STRENGTH BARS === */
+.sbar-row {{ display:flex; align-items:center; gap:8px; margin:5px 0; }}
+.sbar-lbl {{ font-size:10px; font-weight:700; min-width:100px; }}
+.sbar-lbl.bull {{ color:#22c55e; }} .sbar-lbl.bear {{ color:#ef4444; }}
+.sbar-track {{ flex:1; height:4px; border-radius:3px; overflow:hidden; }}
+.sbar-track.bull {{ background:rgba(34,197,94,.12); }}
+.sbar-track.bear {{ background:rgba(239,68,68,.08); }}
+.sbar-fill.bull {{ height:100%; border-radius:3px; background:linear-gradient(90deg,#22c55e,#4ade80); }}
+.sbar-fill.bear {{ height:100%; border-radius:3px; background:linear-gradient(90deg,#ef4444,#f87171); }}
+.sbar-pct {{ font-size:10px; font-weight:800; min-width:28px; text-align:right; font-family:'JetBrains Mono',monospace; }}
+.sbar-pct.bull {{ color:#22c55e; }} .sbar-pct.bear {{ color:#475569; }}
+
+/* Trigger box */
+.trigger-box {{
+  background:rgba(239,68,68,.04); border:1px solid rgba(239,68,68,.18);
+  border-radius:10px; padding:11px 14px; margin:12px 0; }}
+.trig-label {{ font-size:8px; font-weight:800; color:#ef4444; letter-spacing:.14em;
+  text-transform:uppercase; margin-bottom:5px; }}
+.trig-text {{ font-size:12px; font-weight:600; color:#f1f5f9; line-height:1.4; }}
+.trig-meta {{ font-size:10px; color:#475569; margin-top:4px; }}
+
+/* Confidence fill */
+.conf {{ height:3px; background:rgba(34,197,94,.1); border-radius:2px; margin:8px 0 10px; overflow:hidden; }}
+.conf-fill {{ height:100%; border-radius:2px; background:linear-gradient(90deg,#22c55e,#4ade80); animation:confFill .7s cubic-bezier(.4,0,.2,1) forwards; }}
+
+/* === NEWS === */
+.news-item {{ padding:10px 0; border-bottom:1px solid var(--border2); transition:all .18s; }}
 .news-item:hover {{ padding-left:4px; }}
 .news-item:last-child {{ border-bottom:none; }}
 
-/* ---- Live dot ---- */
+/* === LIVE DOT (from zip) === */
 .live {{
-  display:inline-block; width:7px; height:7px; background:var(--green); border-radius:50%;
-  margin-right:6px; animation:pulse 2s ease-in-out infinite; vertical-align:middle; }}
+  display: inline-block; width: 7px; height: 7px; background: #22c55e; border-radius: 50%;
+  margin-right: 6px; animation: statusBlink 2s ease-in-out infinite; vertical-align: middle;
+}}
+.live-dot {{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#22c55e; margin-right:6px; animation:statusBlink 2s ease-in-out infinite; }}
 
-/* ---- Utility ---- */
-.green {{ color:var(--green)!important; }}
-.red   {{ color:var(--red)!important; }}
-.blue  {{ color:var(--accent)!important; }}
-hr {{ border-color:var(--border2)!important; margin:18px 0!important; }}
+/* === SCROLLBAR === */
+::-webkit-scrollbar {{ width: 4px; height: 4px; }}
+::-webkit-scrollbar-track {{ background: var(--bg); }}
+::-webkit-scrollbar-thumb {{ background: var(--border); border-radius: 4px; }}
+::-webkit-scrollbar-thumb:hover {{ background: #22c55e; }}
 
-/* ---- Scrollbar ---- */
-::-webkit-scrollbar {{ width:4px; height:4px; }}
-::-webkit-scrollbar-track {{ background:var(--bg); }}
-::-webkit-scrollbar-thumb {{ background:var(--border); border-radius:4px; }}
-::-webkit-scrollbar-thumb:hover {{ background:var(--accent); }}
+/* === UTILITY === */
+.green {{ color: #22c55e !important; }}
+.red   {{ color: #ef4444 !important; }}
+.amber {{ color: #f59e0b !important; }}
+.purple {{ color: #a78bfa !important; }}
+.blue  {{ color: #22c55e !important; }}
+hr {{ border-color: var(--border2) !important; margin: 16px 0 !important; }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -626,7 +732,7 @@ def _rating(score):
 
 def _conf_col(score):
     if score >= 85: return "#22c55e"
-    if score >= 70: return "#38bdf8"
+    if score >= 70: return "#22c55e"
     return "#f59e0b"
 
 def _stars(s):
@@ -652,7 +758,7 @@ def plot_chart(symbol, signal=None):
         name="Price", increasing_line_color="#22c55e", decreasing_line_color="#ef4444",
         increasing_fillcolor="#052e16", decreasing_fillcolor="#450a0a"))
     fig.add_trace(go.Scatter(x=df.index, y=e20,  name="S", line=dict(color="#facc15", width=1.5)))
-    fig.add_trace(go.Scatter(x=df.index, y=e50,  name="M", line=dict(color="#38bdf8", width=1.5)))
+    fig.add_trace(go.Scatter(x=df.index, y=e50,  name="M", line=dict(color="#22c55e", width=1.5)))
     fig.add_trace(go.Scatter(x=df.index, y=e200, name="L", line=dict(color="#f87171", width=1.5)))
     if signal:
         fig.add_hline(y=signal["sl2"],     line_color="#ef4444", line_dash="dash", annotation_text="STOP")
@@ -660,26 +766,17 @@ def plot_chart(symbol, signal=None):
         fig.add_hline(y=signal["target2"], line_color="#4ade80", line_dash="dot",  annotation_text="T2")
         fig.add_hline(y=signal["target3"], line_color="#22c55e", line_dash="dot",  annotation_text="T3")
     fig.update_layout(xaxis_rangeslider_visible=False, height=440,
-        paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
+        paper_bgcolor="#0d1117", plot_bgcolor="#111827",
         font=dict(color="#64748b", size=10, family="JetBrains Mono"),
-        xaxis=dict(gridcolor="#0f2035"), yaxis=dict(gridcolor="#0f2035"),
-        legend=dict(bgcolor="#070f1e", bordercolor="#0f2035", borderwidth=1, font=dict(size=10)),
+        xaxis=dict(gridcolor="#1a2030"), yaxis=dict(gridcolor="#1a2030"),
+        legend=dict(bgcolor="#111827", bordercolor="#1a2030", borderwidth=1, font=dict(size=10)),
         margin=dict(l=8,r=8,t=8,b=8))
     st.plotly_chart(fig, use_container_width=True)
 
 
 # ── Sidebar (view-only — filters + info) ─────────────────────────────────────
 with st.sidebar:
-    _th_icon = "☀️" if _DARK else "🌙"
-    _th_lbl  = f"{_th_icon} {'Light' if _DARK else 'Dark'} Mode"
-    col_logo, col_th = st.columns([3, 2])
-    with col_logo:
-        st.markdown('<div style="font-size:17px;font-weight:900;padding:10px 0 16px;letter-spacing:-.02em">SwingDesk <span style="color:#0ea5e9">Pro</span></div>', unsafe_allow_html=True)
-    with col_th:
-        st.markdown("<div style='margin-top:10px'></div>", unsafe_allow_html=True)
-        if st.button(_th_lbl, use_container_width=True):
-            st.session_state["theme"] = "light" if _DARK else "dark"
-            st.rerun()
+    st.markdown('<div style="font-size:17px;font-weight:900;padding:10px 0 16px;letter-spacing:-.02em;font-family:\'JetBrains Mono\',monospace;color:#f2f2f2">TRADEFLOW AI <span style="color:#22c55e">PRO</span></div>', unsafe_allow_html=True)
 
     # Last scan info — use GitHub JSON on cloud, local DB on dev
     if IS_LOCAL:
@@ -720,42 +817,50 @@ sig_count = len(_active)
 bo_count  = len(_bos_df)
 
 st.markdown(f"""
-<div style="background:linear-gradient(135deg,rgba(7,15,30,.97),rgba(3,9,18,.97));
-  border:1px solid rgba(56,189,248,.14);border-radius:16px;padding:18px 24px;margin-bottom:14px;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;
-  backdrop-filter:blur(20px);position:relative;overflow:hidden">
-  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(56,189,248,.5),transparent)"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;
-    background:radial-gradient(ellipse 50% 60% at 10% 50%,rgba(56,189,248,.04),transparent 60%)"></div>
-  <div>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
-      <div style="font-size:24px;font-weight:900;color:#f1f5f9;letter-spacing:-.03em;line-height:1">
-        SwingDesk&nbsp;<span style="color:#38bdf8;text-shadow:0 0 18px rgba(56,189,248,.55)">Pro</span>
+<div style="background:rgba(17,24,39,.95);border:1px solid #252d3d;border-radius:12px;
+  padding:16px 20px;margin-bottom:12px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px;backdrop-filter:blur(20px);position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(34,197,94,.5),transparent)"></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,.15);
+      border:1px solid rgba(34,197,94,.3);display:flex;align-items:center;justify-content:center;
+      font-size:16px">⚡</div>
+    <div>
+      <div style="font-size:13px;font-weight:900;color:#f2f2f2;letter-spacing:.05em;
+        font-family:'JetBrains Mono',monospace">
+        TRADEFLOW AI <span style="color:#22c55e">PRO</span>
       </div>
-      <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
-        background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);
-        letter-spacing:.1em;text-transform:uppercase">
-        <span class="live" style="margin-right:4px"></span>LIVE
-      </span>
-      <span style="font-size:8px;color:#334155;font-weight:600;letter-spacing:.06em">TRADER v2.0</span>
+      <div style="font-size:9px;color:#3d4a5c;letter-spacing:.12em;text-transform:uppercase;
+        font-family:'JetBrains Mono',monospace">
+        Bloomberg Level Terminal
+      </div>
     </div>
-    <div style="font-size:9px;color:#1e3a5f;letter-spacing:.09em;text-transform:uppercase;font-weight:600">
-      Nifty 500 &nbsp;·&nbsp; Breakouts &nbsp;·&nbsp; 4H Early &nbsp;·&nbsp; F&amp;O &nbsp;·&nbsp; MF &nbsp;·&nbsp; Global Markets
-    </div>
+    <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
+      background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);
+      letter-spacing:.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">
+      <span class="live" style="margin-right:4px"></span>LIVE
+    </span>
   </div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
-    <div style="text-align:center;padding:10px 18px;background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.12);border-radius:10px">
-      <div style="font-size:26px;font-weight:900;color:#38bdf8;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 14px rgba(56,189,248,.4);line-height:1">{sig_count}</div>
-      <div style="font-size:7px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-top:3px">SIGNALS</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center;padding:8px 14px;background:rgba(34,197,94,.05);
+      border:1px solid rgba(34,197,94,.15);border-radius:8px">
+      <div style="font-size:22px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;
+        letter-spacing:-.02em;line-height:1">{sig_count}</div>
+      <div style="font-size:7px;color:#3d4a5c;text-transform:uppercase;letter-spacing:.12em;
+        font-weight:800;margin-top:2px;font-family:'JetBrains Mono',monospace">SIGNALS</div>
     </div>
-    <div style="text-align:center;padding:10px 18px;background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.12);border-radius:10px">
-      <div style="font-size:26px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;text-shadow:0 0 14px rgba(34,197,94,.4);line-height:1">{bo_count}</div>
-      <div style="font-size:7px;color:#1e3a5f;text-transform:uppercase;letter-spacing:.12em;font-weight:800;margin-top:3px">BREAKOUTS</div>
+    <div style="text-align:center;padding:8px 14px;background:rgba(34,197,94,.05);
+      border:1px solid rgba(34,197,94,.15);border-radius:8px">
+      <div style="font-size:22px;font-weight:900;color:#4ade80;font-family:'JetBrains Mono',monospace;
+        letter-spacing:-.02em;line-height:1">{bo_count}</div>
+      <div style="font-size:7px;color:#3d4a5c;text-transform:uppercase;letter-spacing:.12em;
+        font-weight:800;margin-top:2px;font-family:'JetBrains Mono',monospace">BREAKOUTS</div>
     </div>
     <div style="text-align:right">
-      <div style="font-size:11px;color:#475569;font-family:'JetBrains Mono',monospace">{now_str}</div>
-      <div style="font-size:8px;color:#1e3a5f;margin-top:3px;letter-spacing:.05em;text-transform:uppercase">Auto-refresh 60s</div>
-      <div style="font-size:8px;color:#0f2035;margin-top:2px;letter-spacing:.04em">NOT SEBI ADVICE · EDUCATIONAL</div>
+      <div style="font-size:11px;color:#64748b;font-family:'JetBrains Mono',monospace">{now_str}</div>
+      <div style="font-size:8px;color:#3d4a5c;margin-top:2px;letter-spacing:.05em;
+        text-transform:uppercase;font-family:'JetBrains Mono',monospace">Nifty 1000 · Not SEBI Advice</div>
     </div>
   </div>
 </div>
@@ -817,14 +922,14 @@ def _ti_ai(sig):
 ticker_parts = []
 if _iq:
     ticker_parts += [_ti_idx(r) for r in _iq]
-    ticker_parts.append('<span style="margin:0 16px;color:#0f2035">│</span>')
+    ticker_parts.append('<span style="margin:0 16px;color:#1a2030">│</span>')
 if _fxc:
     ticker_parts += [_ti_forex(r) for r in _fxc]
 if _ai_ticker:
     ticker_parts.append('<span style="margin:0 16px;color:#1a0a3a">│</span>')
     ticker_parts += [_ti_ai(s) for s in _ai_ticker]
 if _sigs_ticker:
-    ticker_parts.append('<span style="margin:0 16px;color:#0f2035">│</span>')
+    ticker_parts.append('<span style="margin:0 16px;color:#1a2030">│</span>')
     ticker_parts += [_ti_signal(s) for s in _sigs_ticker]
 
 if ticker_parts:
@@ -841,26 +946,21 @@ if ticker_parts:
   animation:tickerScroll {anim_dur}s linear infinite; }}
 .ticker-track:hover {{ animation-play-state:paused; }}
 </style>
-<div style="background:linear-gradient(90deg,rgba(3,6,14,.97),rgba(5,12,24,.97));
-  border:1px solid rgba(56,189,248,.1);border-radius:10px;padding:0;margin-bottom:14px;
-  overflow:hidden;backdrop-filter:blur(16px);position:relative">
-  <div style="position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(56,189,248,.4),rgba(167,139,250,.3),transparent)"></div>
-  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(56,189,248,.15),transparent)"></div>
+<div style="width:100%;background:rgba(13,17,23,.9);border-bottom:1px solid rgba(34,197,94,.2);
+  overflow:hidden;backdrop-filter:blur(8px);margin-bottom:12px;border-radius:8px">
   <div style="display:flex;align-items:stretch">
-    <div style="padding:0 14px;border-right:1px solid rgba(56,189,248,.08);
+    <div style="padding:0 14px;border-right:1px solid rgba(34,197,94,.15);
       display:flex;align-items:center;gap:6px;flex-shrink:0;
-      background:linear-gradient(135deg,rgba(56,189,248,.06),rgba(167,139,250,.04))">
+      background:rgba(34,197,94,.05)">
       <span class="live"></span>
-      <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.12em;text-transform:uppercase;line-height:1">Live</span>
+      <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.12em;text-transform:uppercase;line-height:1;font-family:'JetBrains Mono',monospace">Live</span>
     </div>
     <div class="ticker-wrap" style="padding:9px 0">
       <div class="ticker-track">{ticker_html}</div>
     </div>
-    <div style="padding:0 12px;border-left:1px solid rgba(56,189,248,.08);
+    <div style="padding:0 12px;border-left:1px solid rgba(34,197,94,.1);
       display:flex;align-items:center;flex-shrink:0;background:rgba(0,0,0,.2)">
-      <span style="font-size:8px;color:#1e3a5f;font-weight:600;letter-spacing:.06em">AUTO-REFRESH 60s</span>
+      <span style="font-size:8px;color:#3d4a5c;font-weight:600;letter-spacing:.06em;font-family:'JetBrains Mono',monospace">AUTO-REFRESH 60s</span>
     </div>
   </div>
 </div>
@@ -1011,10 +1111,10 @@ with tab1:
         st.markdown("---")
         df_s = pd.DataFrame(sigs_s)
         fig  = px.bar(df_s, x="symbol", y="score", color="score",
-                      color_continuous_scale=["#0ea5e9","#22c55e"], range_color=[60,100])
-        fig.update_layout(height=180, paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
-            font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
-            yaxis=dict(gridcolor="#0f2035",range=[50,100]),
+                      color_continuous_scale=["#22c55e","#22c55e"], range_color=[60,100])
+        fig.update_layout(height=180, paper_bgcolor="#0d1117", plot_bgcolor="#111827",
+            font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#1a2030"),
+            yaxis=dict(gridcolor="#1a2030",range=[50,100]),
             margin=dict(l=8,r=8,t=8,b=8), showlegend=False, coloraxis_showscale=False)
         st.plotly_chart(fig, use_container_width=True)
         st.download_button("Export CSV", df_s.to_csv(index=False), "signals.csv", "text/csv")
@@ -1224,7 +1324,7 @@ with tab2:
     <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
     <div class="kv"><span>Vol</span><span>{b['vol_ratio']}x</span></div>
   </div>
-  <div style="margin-top:8px"><a href="{tv_link}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+  <div style="margin-top:8px"><a href="{tv_link}" target="_blank" style="color:#22c55e;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1259,7 +1359,7 @@ with tab2:
     <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
     <div class="kv"><span>Vol</span><span>{b.get('vol_ratio',0)}x</span></div>
   </div>
-  <div style="margin-top:8px"><a href="{tv4}" target="_blank" style="color:#38bdf8;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+  <div style="margin-top:8px"><a href="{tv4}" target="_blank" style="color:#22c55e;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -1283,7 +1383,7 @@ with tab2:
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <span style="font-size:11px;font-weight:800;color:{ac}">{arr}</span>
-      <span style="font-size:9px;color:#475569;padding:2px 7px;border:1px solid #0f2035;border-radius:4px">{b.get('timeframe','Daily')}</span>
+      <span style="font-size:9px;color:#475569;padding:2px 7px;border:1px solid #1a2030;border-radius:4px">{b.get('timeframe','Daily')}</span>
     </div>
   </div>
   <div class="row">
@@ -1302,7 +1402,7 @@ with tab2:
 # TAB 3 — F&O
 # ══════════════════════════════════════════════════════════════════════════════
 with tab3:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">F&O Trade Suggestions</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Nifty 200 stocks · Verify premium &amp; IV on NSE before trading</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">F&O Trade Suggestions</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Nifty 200 stocks · Verify premium &amp; IV on NSE before trading</div>', unsafe_allow_html=True)
 
     fno_sigs = [s for s in signals if s.get("fno_eligible") and s.get("fno_suggestion")]
 
@@ -1321,7 +1421,7 @@ with tab3:
             rl, rc = _rating(s["score"])
             tier   = f.get("tier", "biweekly")
             t_em   = f.get("tier_emoji", "📅")
-            t_col  = {"weekly": "#f87171", "biweekly": "#38bdf8", "monthly": "#a78bfa"}.get(tier, "#38bdf8")
+            t_col  = {"weekly": "#f87171", "biweekly": "#22c55e", "monthly": "#a78bfa"}.get(tier, "#22c55e")
             opt_tp = f.get("opt_type", "OTM")
             use_st = f.get("use_strike", f["otm_strike"])
             hold_d = f.get("hold_days", "—")
@@ -1347,17 +1447,17 @@ with tab3:
 
   <!-- Strike viz -->
   <div style="display:flex;gap:8px;margin-bottom:10px">
-    <div style="flex:1;background:#050c18;border:1px solid #0f2d4a;border-radius:8px;padding:10px 12px;text-align:center">
+    <div style="flex:1;background:#111827;border:1px solid #052e16;border-radius:8px;padding:10px 12px;text-align:center">
       <div style="font-size:8px;color:#334155;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">ATM Strike</div>
-      <div style="font-size:16px;font-weight:800;color:#38bdf8;font-family:'JetBrains Mono',monospace">₹{f['atm_strike']:,}</div>
+      <div style="font-size:16px;font-weight:800;color:#22c55e;font-family:'JetBrains Mono',monospace">₹{f['atm_strike']:,}</div>
     </div>
-    <div style="flex:1;background:#050c18;border:2px solid {t_col}40;border-radius:8px;padding:10px 12px;text-align:center;position:relative">
+    <div style="flex:1;background:#111827;border:2px solid {t_col}40;border-radius:8px;padding:10px 12px;text-align:center;position:relative">
       <div style="font-size:8px;color:{t_col};text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Suggested ({opt_tp})</div>
       <div style="font-size:16px;font-weight:800;color:{t_col};font-family:'JetBrains Mono',monospace">₹{use_st:,}</div>
       <div style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;
-        color:#050c18;background:{t_col};padding:1px 6px;border-radius:3px;letter-spacing:.06em">USE THIS</div>
+        color:#111827;background:{t_col};padding:1px 6px;border-radius:3px;letter-spacing:.06em">USE THIS</div>
     </div>
-    <div style="flex:1;background:#050c18;border:1px solid #0f2035;border-radius:8px;padding:10px 12px;text-align:center">
+    <div style="flex:1;background:#111827;border:1px solid #1a2030;border-radius:8px;padding:10px 12px;text-align:center">
       <div style="font-size:8px;color:#334155;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Risk pts</div>
       <div style="font-size:16px;font-weight:800;color:#ef4444;font-family:'JetBrains Mono',monospace">{f['risk_pts']}</div>
     </div>
@@ -1373,20 +1473,20 @@ with tab3:
   </div>
 
   <!-- Trade note -->
-  <div style="margin-top:10px;background:#050c18;border:1px solid #0f2035;border-radius:6px;
+  <div style="margin-top:10px;background:#111827;border:1px solid #1a2030;border-radius:6px;
     padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#475569">{f['note']}</div>
 
   <div style="margin-top:10px;font-size:11px;display:flex;gap:14px">
-    <a href="{s['tv_link']}" target="_blank" style="color:#38bdf8;font-weight:600;text-decoration:none">Chart →</a>
+    <a href="{s['tv_link']}" target="_blank" style="color:#22c55e;font-weight:600;text-decoration:none">Chart →</a>
     <a href="https://www.nseindia.com/get-quotes/derivatives?symbol={s['symbol']}" target="_blank" style="color:#475569;text-decoration:none">NSE Chain →</a>
   </div>
 </div>
 """, unsafe_allow_html=True)
-        st.markdown('<div style="font-size:10px;color:#334155;padding:8px;background:#050c18;border:1px solid #0f2035;border-radius:6px">⚠️ Strike &amp; direction from swing signal + ATR. Verify premium, IV, OI independently. Not SEBI advice.</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:10px;color:#334155;padding:8px;background:#111827;border:1px solid #1a2030;border-radius:6px">⚠️ Strike &amp; direction from swing signal + ATR. Verify premium, IV, OI independently. Not SEBI advice.</div>', unsafe_allow_html=True)
 
     # Forex watchlist
     st.markdown("---")
-    st.markdown('<div style="font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:10px">Global Markets</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:10px">Global Markets</div>', unsafe_allow_html=True)
     fc = _forex()
     if fc:
         cols = st.columns(len(fc))
@@ -1394,7 +1494,7 @@ with tab3:
             c = "#4ade80" if r["Chg%"] >= 0 else "#f87171"
             s = "+" if r["Chg%"] >= 0 else ""
             cols[i].markdown(f"""
-<div style="background:#0a1929;border:1px solid #0f2d4a;border-radius:8px;padding:10px;text-align:center">
+<div style="background:#0a1929;border:1px solid #052e16;border-radius:8px;padding:10px;text-align:center">
   <div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">{r['Asset']}</div>
   <div style="font-size:15px;font-weight:700;color:#f1f5f9;font-family:'JetBrains Mono',monospace">{r['Last']}</div>
   <div style="font-size:11px;font-weight:600;color:{c}">{s}{r['Chg%']}%</div>
@@ -1406,7 +1506,7 @@ with tab3:
 # TAB 4 — MUTUAL FUNDS
 # ══════════════════════════════════════════════════════════════════════════════
 with tab4:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:4px">Mutual Fund Intelligence</div><div style="font-size:11px;color:#334155;margin-bottom:16px">Top Funds Discovery · Portfolio Tracker · NAV · Returns — powered by AMFI</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">Mutual Fund Intelligence</div><div style="font-size:11px;color:#334155;margin-bottom:16px">Top Funds Discovery · Portfolio Tracker · NAV · Returns — powered by AMFI</div>', unsafe_allow_html=True)
 
     # ── Top Funds per Category ─────────────────────────────────────────────
     st.markdown('<div style="font-size:12px;font-weight:700;color:#f1f5f9;margin-bottom:10px">Top Funds by Category</div>', unsafe_allow_html=True)
@@ -1450,10 +1550,10 @@ with tab4:
                 _sf = funds[_sel_idx]
                 hd  = get_fund_holdings(_sf['scheme_code'])
                 if hd:
-                    _pc = ["#38bdf8","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8","#64748b"]
-                    _pbg  = "#070f1e" if _DARK else "#ffffff"
-                    _pfg  = "#94a3b8" if _DARK else "#475569"
-                    _pgrd = "#0f2035" if _DARK else "#e2eaf3"
+                    _pc = ["#22c55e","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8","#64748b"]
+                    _pbg  = "#0d1117"
+                    _pfg  = "#94a3b8"
+                    _pgrd = "#1a2030"
 
                     # ── Sector allocation — horizontal bar ─────────────────────
                     sec      = hd["sectors"]
@@ -1467,7 +1567,7 @@ with tab4:
                             hovertemplate=f"{k}: {v:.1f}%<extra></extra>",
                             text=f"{k[:12]} {v:.1f}%" if v > 4 else "",
                             textposition="inside",
-                            textfont=dict(size=9, color="#050c18"),
+                            textfont=dict(size=9, color="#111827"),
                         ))
                     fig_s.update_layout(
                         barmode="stack", height=100,
@@ -1507,7 +1607,7 @@ with tab4:
                         x=h_vals, y=h_labels, orientation="h",
                         marker=dict(
                             color=h_vals,
-                            colorscale=[[0,"#0f2d4a"],[0.5,"#0ea5e9"],[1.0,"#38bdf8"]],
+                            colorscale=[[0,"#052e16"],[0.5,"#22c55e"],[1.0,"#22c55e"]],
                             line=dict(color=_pgrd, width=0),
                         ),
                         text=[f"{v:.1f}%" for v in h_vals],
@@ -1626,7 +1726,7 @@ with tab4:
     <div class="kv"><span>Units</span><span>{s['units']:.3f}</span></div>
     <div class="kv"><span>Buy NAV</span><span>₹{s['purchase_nav']:.2f}</span></div>
   </div>
-  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #0f2035">
+  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1a2030">
     <div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">CAGR Returns</div>
     <div class="row">{ret_html}</div>
   </div>
@@ -1635,7 +1735,7 @@ with tab4:
 
             # News section
             st.markdown("---")
-            st.markdown('<div style="font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:12px">Fund News</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:12px">Fund News</div>', unsafe_allow_html=True)
             selected_fund = st.selectbox("News for", [s["name"] for s in summary])
             sel_s = next((s for s in summary if s["name"] == selected_fund), None)
             if sel_s:
@@ -1686,20 +1786,20 @@ with tab5:
 
     st.markdown(f"""
 <div style="background:linear-gradient(135deg,rgba(7,15,30,.97),rgba(3,9,18,.97));
-  border:1px solid rgba(56,189,248,.12);border-radius:14px;padding:14px 18px;margin-bottom:16px;
+  border:1px solid rgba(34,197,94,.12);border-radius:14px;padding:14px 18px;margin-bottom:16px;
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
   <div>
     <span style="font-size:13px;font-weight:800;color:#f1f5f9">📰 Indian Market News</span>
     <span style="font-size:9px;color:#334155;margin-left:10px">NSE · BSE · SEBI · RBI · Earnings</span>
   </div>
-  <div style="text-align:right;font-size:9px;color:#1e3a5f">
+  <div style="text-align:right;font-size:9px;color:#3d4a5c">
     <span class="live"></span> Updated 11 AM &amp; 3 PM IST &nbsp;·&nbsp; Next: {_next_slot}
   </div>
 </div>
 """, unsafe_allow_html=True)
 
     _cat_colors = {
-        "Market":     "#38bdf8",
+        "Market":     "#22c55e",
         "Earnings":   "#22c55e",
         "Regulation": "#f59e0b",
         "Technical":  "#a78bfa",
@@ -1711,14 +1811,14 @@ with tab5:
     if mkt_news:
         for idx, _n in enumerate(mkt_news[:10]):
             cat   = _n.get("category", "Market")
-            catc  = _cat_colors.get(cat, "#38bdf8")
+            catc  = _cat_colors.get(cat, "#22c55e")
             src   = _n.get("source","")
             pub   = _n.get("published","")
             st.markdown(f"""
 <div class="news-item" style="padding:13px 0;display:flex;gap:12px;align-items:flex-start">
   <div style="flex-shrink:0;margin-top:3px">
     <span style="font-size:8px;font-weight:800;padding:2px 7px;border-radius:3px;
-      background:rgba(56,189,248,.07);color:{catc};border:1px solid {catc}30;
+      background:rgba(34,197,94,.07);color:{catc};border:1px solid {catc}30;
       text-transform:uppercase;letter-spacing:.06em">{cat}</span>
   </div>
   <div style="flex:1;min-width:0">
@@ -1738,7 +1838,7 @@ with tab5:
     st.markdown("---")
 
     # ── Stock-specific news + Corporate Actions ──────────────────────────────
-    st.markdown('<div style="font-size:12px;font-weight:700;color:#38bdf8;margin-bottom:10px">Stock-Specific News &amp; Corporate Actions</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:10px">Stock-Specific News &amp; Corporate Actions</div>', unsafe_allow_html=True)
 
     col_ns, col_nb = st.columns([3, 1])
     with col_ns:
@@ -1774,8 +1874,8 @@ with tab5:
             else:
                 st.info("No corporate actions found.")
             st.markdown("---")
-            st.markdown(f'<a href="https://www.nseindia.com/get-quotes/equity?symbol={sym_clean}" target="_blank" style="color:#38bdf8;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">NSE Quote →</a>', unsafe_allow_html=True)
-            st.markdown(f'<a href="https://www.bseindia.com/stockinfo/AnnSubCategorywise.html" target="_blank" style="color:#38bdf8;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">BSE Announcements →</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="https://www.nseindia.com/get-quotes/equity?symbol={sym_clean}" target="_blank" style="color:#22c55e;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">NSE Quote →</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="https://www.bseindia.com/stockinfo/AnnSubCategorywise.html" target="_blank" style="color:#22c55e;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">BSE Announcements →</a>', unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1784,7 +1884,7 @@ with tab5:
 with tab6:
     perf = get_performance()
 
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:12px">📊 All Signals Performance <span style="font-size:10px;color:#334155;font-weight:400">(Swing · 4H · Breakout · AI · Commodity)</span></div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:12px">📊 All Signals Performance <span style="font-size:10px;color:#334155;font-weight:400">(Swing · 4H · Breakout · AI · Commodity)</span></div>', unsafe_allow_html=True)
     if perf and perf.get("total", 0) > 0:
         p = st.columns(5)
         p[0].metric("Total Tracked",  perf["total"])
@@ -1810,11 +1910,11 @@ with tab6:
             if not closed_all.empty:
                 closed_all["pnl_pct"] = pd.to_numeric(closed_all.get("pnl_pct", 0), errors="coerce").fillna(0)
                 fig = px.bar(closed_all, x="symbol", y="pnl_pct",
-                             color="pnl_pct", color_continuous_scale=["#ef4444","#0f2035","#22c55e"],
+                             color="pnl_pct", color_continuous_scale=["#ef4444","#1a2030","#22c55e"],
                              range_color=[-20,20], title="Closed Trade P&L (%)")
-                fig.update_layout(paper_bgcolor="#070f1e", plot_bgcolor="#050c18",
-                    font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#0f2035"),
-                    yaxis=dict(gridcolor="#0f2035"), height=320,
+                fig.update_layout(paper_bgcolor="#0d1117", plot_bgcolor="#111827",
+                    font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#1a2030"),
+                    yaxis=dict(gridcolor="#1a2030"), height=320,
                     margin=dict(l=8,r=8,t=32,b=8), coloraxis_showscale=False, showlegend=False,
                     title_font=dict(color="#475569",size=11))
                 st.plotly_chart(fig, use_container_width=True)
@@ -1832,7 +1932,7 @@ with tab6:
                     wr = round(wins/total_c*100,0) if total_c > 0 else 0
                     c = "#4ade80" if wr >= 50 else "#f87171"
                     sd_cols[i].markdown(
-                        f'<div style="background:#0a1929;border:1px solid #0f2d4a;border-radius:8px;padding:10px;text-align:center">'
+                        f'<div style="background:#0a1929;border:1px solid #052e16;border-radius:8px;padding:10px;text-align:center">'
                         f'<div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">{t.upper()}</div>'
                         f'<div style="font-size:15px;font-weight:800;color:{c};font-family:JetBrains Mono,monospace">{wr:.0f}%</div>'
                         f'<div style="font-size:9px;color:#334155;margin-top:2px">{total_c} closed</div>'
@@ -1928,10 +2028,10 @@ with tab6:
             fig_ai.add_hline(y=2.0, line_color="#22c55e", line_dash="dash",
                              annotation_text="Min 2:1", annotation_font_color="#22c55e")
             fig_ai.update_layout(
-                paper_bgcolor="#07030e", plot_bgcolor="#0a0514",
+                paper_bgcolor="#0d1117", plot_bgcolor="#111827",
                 font=dict(color="#64748b",size=10),
-                xaxis=dict(gridcolor="#1a0a2e",showticklabels=False),
-                yaxis=dict(gridcolor="#1a0a2e",title="R:R Ratio"),
+                xaxis=dict(gridcolor="#1a2030",showticklabels=False),
+                yaxis=dict(gridcolor="#1a2030",title="R:R Ratio"),
                 height=200, margin=dict(l=8,r=8,t=8,b=8),
                 showlegend=False, title_text=""
             )
@@ -1990,13 +2090,13 @@ with tab_mb:
                 <span style="font-size:11px;color:#64748b">T2 <span style="color:#22c55e;font-weight:700">₹{m['target2']}</span></span>
                 <span style="font-size:11px;color:#64748b">T3 <span style="color:#22c55e;font-weight:700">₹{m.get('target3', m['target2'])}</span></span>
                 <span style="font-size:11px;color:#64748b">SL <span style="color:#f87171;font-weight:700">₹{m['sl']}</span></span>
-                <span style="font-size:11px;color:#64748b">RR <span style="color:#38bdf8;font-weight:700">{m['rr']}</span></span>
+                <span style="font-size:11px;color:#64748b">RR <span style="color:#22c55e;font-weight:700">{m['rr']}</span></span>
                 <span style="font-size:11px;color:#64748b">Wk RSI <span style="color:#c4b5fd;font-weight:700">{m.get('wk_rsi','')}</span></span>
                 <span style="font-size:11px;color:#64748b">ADX <span style="color:#fbbf24;font-weight:700">{m.get('wk_adx','')}</span></span>
                 <span style="font-size:11px;color:#64748b">Vol <span style="color:#fb923c;font-weight:700">{m.get('vol_ratio','')}x</span></span>
                 <span style="font-size:11px;color:#64748b">52W pos <span style="color:#94a3b8;font-weight:700">{m.get('range_pos','')}%</span></span>
               </div>
-              <div style="margin-top:6px;font-size:10px;color:#475569">{m.get('reason','')} · <a href="{tv_link}" target="_blank" style="color:#38bdf8;text-decoration:none">TradingView ↗</a></div>
+              <div style="margin-top:6px;font-size:10px;color:#475569">{m.get('reason','')} · <a href="{tv_link}" target="_blank" style="color:#22c55e;text-decoration:none">TradingView ↗</a></div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -2014,4 +2114,4 @@ with tab7:
     else:
         st.info("No history yet.")
 
-st.markdown('<div style="text-align:center;padding:16px 0 4px;font-size:10px;color:#0f2035">SwingDesk Pro · Personal Research · Not SEBI Advice</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align:center;padding:16px 0 4px;font-size:10px;color:#1a2030">TradeFlow AI Pro · Personal Research · Not SEBI Advice</div>', unsafe_allow_html=True)
