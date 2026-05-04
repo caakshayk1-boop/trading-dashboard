@@ -157,11 +157,47 @@ from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_ne
                          get_corporate_actions, get_fund_holdings,
                          get_indian_market_news)
 
-st.set_page_config(page_title="TradeFlow AI Pro", layout="wide", page_icon="⚡",
-                   initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="TradeFlow AI Pro — NSE Nifty 1000 Swing Scanner",
+    layout="wide", page_icon="⚡",
+    initial_sidebar_state="expanded",
+)
 IST      = pytz.timezone("Asia/Kolkata")
 IS_LOCAL = os.path.exists("config.py")
 init_db()
+
+# ── Semantic color palette (audit fix — consistent across all charts) ─────────
+CLR_UP      = "#26A69A"   # profit / bullish
+CLR_DOWN    = "#EF5350"   # loss / bearish
+CLR_NEUTRAL = "#607D8B"   # neutral
+CLR_ACCENT  = "#22c55e"   # emerald brand accent
+CLR_BG      = "#0d1117"
+CLR_BG2     = "#111827"
+
+# ── Mobile warning (audit fix §5) ────────────────────────────────────────────
+st.markdown("""
+<div id="mobile-warn" style="display:none;background:#1e1208;border:1px solid #92400e;
+  border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:#fbbf24">
+  📱 <b>Best on desktop.</b> Charts and signal cards are optimised for wide screens.
+</div>
+<script>
+if(window.innerWidth < 768){document.getElementById('mobile-warn').style.display='block';}
+</script>
+""", unsafe_allow_html=True)
+
+# ── Disclaimer banner (audit fix §5 — legal credibility) ─────────────────────
+st.markdown("""
+<div style="background:rgba(17,24,39,.7);border:1px solid rgba(245,158,11,.2);border-radius:8px;
+  padding:8px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+  <span style="font-size:9px;font-weight:800;color:#f59e0b;letter-spacing:.1em;
+    text-transform:uppercase;white-space:nowrap">⚠ Disclaimer</span>
+  <span style="font-size:10px;color:#64748b;line-height:1.5">
+    Signals are generated algorithmically for <b style="color:#94a3b8">educational &amp; research purposes only</b>.
+    Not SEBI-registered. Not financial advice. Data via Yahoo Finance (15-min delay during market hours).
+    Past performance does not guarantee future results. Trade at your own risk.
+  </span>
+</div>
+""", unsafe_allow_html=True)
 
 # ── Theme (dark only — matches zip design system) ─────────────────────────────
 _THEME_VARS = """
@@ -755,8 +791,9 @@ def plot_chart(symbol, signal=None):
     fig  = go.Figure()
     fig.add_trace(go.Candlestick(x=df.index, open=df["Open"].squeeze(),
         high=df["High"].squeeze(), low=df["Low"].squeeze(), close=close,
-        name="Price", increasing_line_color="#22c55e", decreasing_line_color="#ef4444",
-        increasing_fillcolor="#052e16", decreasing_fillcolor="#450a0a"))
+        name="Price",
+        increasing_line_color=CLR_UP,   decreasing_line_color=CLR_DOWN,
+        increasing_fillcolor="#052e1a", decreasing_fillcolor="#450a0a"))
     fig.add_trace(go.Scatter(x=df.index, y=e20,  name="S", line=dict(color="#facc15", width=1.5)))
     fig.add_trace(go.Scatter(x=df.index, y=e50,  name="M", line=dict(color="#22c55e", width=1.5)))
     fig.add_trace(go.Scatter(x=df.index, y=e200, name="L", line=dict(color="#f87171", width=1.5)))
@@ -806,7 +843,46 @@ with st.sidebar:
 </div>
 """, unsafe_allow_html=True)
     st.markdown("---")
-    st.caption("Data: yfinance · Not SEBI advice")
+    # Telegram CTA (audit fix §6 — conversion hook)
+    st.markdown("""
+<div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;
+  padding:10px 12px;margin-bottom:10px">
+  <div style="font-size:10px;font-weight:800;color:#22c55e;margin-bottom:4px;letter-spacing:.06em">
+    📲 GET FREE SIGNALS
+  </div>
+  <div style="font-size:10px;color:#64748b;margin-bottom:8px;line-height:1.5">
+    Join Telegram — receive alerts the moment a signal fires.
+  </div>
+  <a href="https://t.me/your_channel" target="_blank"
+    style="display:block;text-align:center;padding:6px;background:rgba(34,197,94,.15);
+    border:1px solid rgba(34,197,94,.3);border-radius:6px;color:#22c55e;
+    font-size:10px;font-weight:800;text-decoration:none;letter-spacing:.06em">
+    JOIN TELEGRAM →
+  </a>
+</div>
+""", unsafe_allow_html=True)
+
+    # About + data source (audit fix §5)
+    with st.expander("ℹ About · Data Sources"):
+        st.markdown("""
+**TradeFlow AI Pro** — Nifty 1000 Swing Scanner
+
+Built by **Akshay K** (CA, FP&A)
+[@askakshayfinance](https://www.instagram.com/askakshayfinance)
+
+**Data Sources:**
+- Price data: Yahoo Finance (yfinance)
+- Universe: NSE Nifty 1000 CSV (official NSE archives)
+- Delay: ~15 min during market hours
+
+**Signal logic:**
+- Expert-grade: EMA stack + RSI zones + ADX + Volume
+- Minimum Score 78/100 · RR ≥ 2:1
+- No SEBI registration. Educational use only.
+
+**Version:** 2.1 · Scans: Mon–Fri auto
+        """)
+    st.caption("Data: Yahoo Finance · NSE Nifty 1000 · Not SEBI Advice")
 
 
 # ── Header ────────────────────────────────────────────────────────────────────
@@ -831,9 +907,9 @@ st.markdown(f"""
         font-family:'JetBrains Mono',monospace">
         TRADEFLOW AI <span style="color:#22c55e">PRO</span>
       </div>
-      <div style="font-size:9px;color:#3d4a5c;letter-spacing:.12em;text-transform:uppercase;
+      <div style="font-size:9px;color:#3d4a5c;letter-spacing:.08em;text-transform:uppercase;
         font-family:'JetBrains Mono',monospace">
-        Bloomberg Level Terminal
+        NSE Nifty 1000 · Swing + F&amp;O + Multi-TF Signals
       </div>
     </div>
     <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
@@ -860,7 +936,9 @@ st.markdown(f"""
     <div style="text-align:right">
       <div style="font-size:11px;color:#64748b;font-family:'JetBrains Mono',monospace">{now_str}</div>
       <div style="font-size:8px;color:#3d4a5c;margin-top:2px;letter-spacing:.05em;
-        text-transform:uppercase;font-family:'JetBrains Mono',monospace">Nifty 1000 · Not SEBI Advice</div>
+        text-transform:uppercase;font-family:'JetBrains Mono',monospace">Data: Yahoo Finance · 15min delay</div>
+      <div style="font-size:8px;color:#22c55e;margin-top:1px;letter-spacing:.04em;
+        font-family:'JetBrains Mono',monospace;opacity:.7">✓ Not SEBI Advice</div>
     </div>
   </div>
 </div>
@@ -1910,7 +1988,8 @@ with tab6:
             if not closed_all.empty:
                 closed_all["pnl_pct"] = pd.to_numeric(closed_all.get("pnl_pct", 0), errors="coerce").fillna(0)
                 fig = px.bar(closed_all, x="symbol", y="pnl_pct",
-                             color="pnl_pct", color_continuous_scale=["#ef4444","#1a2030","#22c55e"],
+                             color="pnl_pct",
+                             color_continuous_scale=[CLR_DOWN, "#1a2030", CLR_UP],
                              range_color=[-20,20], title="Closed Trade P&L (%)")
                 fig.update_layout(paper_bgcolor="#0d1117", plot_bgcolor="#111827",
                     font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#1a2030"),
@@ -2113,5 +2192,62 @@ with tab7:
         st.download_button("Export", hist.to_csv(index=False), "history.csv", "text/csv")
     else:
         st.info("No history yet.")
+
+
+# ── Footer (audit fixes §5 + §6 — trust + attribution) ───────────────────────
+_footer_ts = datetime.now(IST).strftime("%d %b %Y · %I:%M %p IST")
+st.markdown(f"""
+<div style="margin-top:40px;border-top:1px solid #1a2030;padding:20px 0 10px;
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-start">
+
+  <div style="flex:1;min-width:220px">
+    <div style="font-size:12px;font-weight:900;color:#f2f2f2;font-family:'JetBrains Mono',monospace;
+      letter-spacing:.05em;margin-bottom:6px">TRADEFLOW AI <span style="color:#22c55e">PRO</span></div>
+    <div style="font-size:10px;color:#334155;line-height:1.7">
+      NSE Nifty 1000 Swing Scanner<br>
+      Signals updated: Mon–Fri · 9:20 AM · 11:45 AM · 4:30 PM IST<br>
+      Weekly multibaggers: Every Saturday 9:30 AM IST
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:200px">
+    <div style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;
+      letter-spacing:.1em;margin-bottom:6px">Data Sources</div>
+    <div style="font-size:10px;color:#334155;line-height:1.7">
+      Price data: <span style="color:#64748b">Yahoo Finance (yfinance)</span><br>
+      Universe: <span style="color:#64748b">NSE India — Nifty 1000 official list</span><br>
+      Delay: <span style="color:#64748b">~15 min during market hours</span><br>
+      Last page load: <span style="color:#22c55e">{_footer_ts}</span>
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:200px">
+    <div style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;
+      letter-spacing:.1em;margin-bottom:6px">Legal</div>
+    <div style="font-size:10px;color:#334155;line-height:1.7">
+      ⚠ <b style="color:#475569">Not SEBI-registered.</b> Not financial advice.<br>
+      Signals are for <b style="color:#475569">educational &amp; research</b> purposes only.<br>
+      Past performance does not guarantee future results.<br>
+      Trade at your own risk. Read all disclaimers.
+    </div>
+  </div>
+
+  <div style="flex:1;min-width:180px">
+    <div style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;
+      letter-spacing:.1em;margin-bottom:6px">Built By</div>
+    <div style="font-size:10px;color:#334155;line-height:1.7">
+      <b style="color:#64748b">Akshay K</b> · CA, FP&amp;A<br>
+      📸 <a href="https://www.instagram.com/askakshayfinance" target="_blank"
+        style="color:#22c55e;text-decoration:none">@askakshayfinance</a><br>
+      Version 2.1 · May 2026<br>
+      <span style="color:#1a2030">Signal engine: Python + yfinance</span>
+    </div>
+  </div>
+
+</div>
+<div style="text-align:center;padding:10px 0 4px;font-size:9px;color:#1e293b;letter-spacing:.04em">
+  TradeFlow AI Pro · Not affiliated with NSE, BSE, SEBI or any broker · All rights reserved
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown('<div style="text-align:center;padding:16px 0 4px;font-size:10px;color:#1a2030">TradeFlow AI Pro · Personal Research · Not SEBI Advice</div>', unsafe_allow_html=True)
