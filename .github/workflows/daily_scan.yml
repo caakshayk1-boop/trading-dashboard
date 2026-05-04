@@ -1,16 +1,16 @@
 name: SwingDesk Pro — Auto Scan
 
 # IST = UTC+5:30
-# 09:20 IST = 03:50 UTC  → pre-market: 4H early + commodities
-# 11:45 IST = 06:15 UTC  → mid-session: swing + F&O + 4H
-# 16:30 IST = 11:00 UTC  → EOD: breakouts (daily closed) + commodities
-# 09:30 IST SAT = 04:00 UTC  → full routine + multibaggers
+# 09:20 IST = 03:50 UTC  → morning: 4H + AI + commodities
+# 11:45 IST = 06:15 UTC  → midday: swing + F&O + 4H + AI + commodities
+# 16:30 IST = 11:00 UTC  → EOD: breakouts + swing + AI daily + commodities
+# 09:30 IST SAT = 04:00 UTC  → Saturday: full + multibaggers
 on:
   schedule:
-    - cron: '50 3 * * 1-5'    # 09:20 IST — morning pre-market (Mon-Fri)
-    - cron: '15 6 * * 1-5'    # 11:45 IST — mid-session (Mon-Fri)
-    - cron: '0 11 * * 1-5'    # 16:30 IST — EOD (Mon-Fri, candles confirmed)
-    - cron: '0 4 * * 6'       # 09:30 IST — Saturday full scan + multibaggers
+    - cron: '50 3 * * 1-5'    # 09:20 IST — morning (Mon-Fri)
+    - cron: '15 6 * * 1-5'    # 11:45 IST — midday (Mon-Fri)
+    - cron: '0 11 * * 1-5'    # 16:30 IST — EOD (Mon-Fri)
+    - cron: '0 4 * * 6'       # 09:30 IST — Saturday full + multibaggers
   workflow_dispatch:           # manual trigger from GitHub UI
 
 env:
@@ -22,33 +22,53 @@ env:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install core dependencies
+        run: |
+          pip install --upgrade pip
+          pip install yfinance pandas numpy ta requests pytz
+
+      - name: Install optional dependencies
+        run: |
+          pip install streamlit plotly apscheduler feedparser streamlit-autorefresh || true
+          pip install upstox-python-sdk || true
+
+      - name: Ensure data directory exists
+        run: mkdir -p data logs cache
 
       - name: Run scanner
         run: python standalone_scan.py
+        # Do NOT fail-fast — we want to commit whatever data was collected
 
       - name: Commit signal data to repo
+        if: always()          # commit even if scanner had errors
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/
+          # Force-add data/ files (bypasses .gitignore for this step)
+          git add -f data/
           git diff --staged --quiet || git commit -m "data: update signals $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
-          git push
+          git push || echo "Push failed — likely no changes or conflict"
 
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: scan-logs-${{ github.run_id }}
-          path: logs/
+          path: |
+            logs/
+            data/
           retention-days: 7

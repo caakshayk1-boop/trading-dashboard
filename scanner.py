@@ -1428,7 +1428,7 @@ def scan_tlm_breakouts(universe=None, interval: str = "4h") -> list:
 
 
 # ── Potential Multibaggers Scanner (Weekly — Saturday only) ──────────────────
-def _analyze_multibagger(symbol: str) -> dict | None:
+def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0) -> dict | None:
     """
     Multibagger Scanner — Expert Grade (CAN SLIM + Darvas Box)
     Institutional criteria (William O'Neil / Mark Minervini methodology):
@@ -1520,16 +1520,7 @@ def _analyze_multibagger(symbol: str) -> dict | None:
         if vol_r < 1.3:
             return None
 
-        # ── GATE 8: Relative strength vs Nifty (must outperform) ──
-        nifty_13w = 0.0
-        try:
-            ndf = yf.download("^NSEI", period="6mo", interval="1wk",
-                              progress=False, auto_adjust=True)
-            if not ndf.empty and len(ndf) >= 14:
-                nc = ndf["Close"].squeeze()
-                nifty_13w = float(nc.iloc[-1] / nc.iloc[-14] - 1)
-        except Exception:
-            pass
+        # ── GATE 8: Relative strength vs Nifty (pre-fetched, passed in) ──
         rs_vs_nifty = ret_13w - nifty_13w
 
         # Must outperform Nifty by at least 5% over 13 weeks
@@ -1606,16 +1597,28 @@ def _analyze_multibagger(symbol: str) -> dict | None:
 
 def scan_multibaggers(universe=None, top_n=15) -> list:
     """
-    Scan Nifty 500 for potential multibagger candidates (weekly timeframe).
+    Scan Nifty 1000 for potential multibagger candidates (weekly timeframe).
     Runs Saturday only — results valid for the week.
     Returns top_n sorted by composite score.
     """
     if universe is None:
         universe = load_nifty500()
 
+    # Pre-fetch Nifty 13W return ONCE (not inside parallel threads)
+    nifty_13w = 0.0
+    try:
+        ndf = yf.download("^NSEI", period="6mo", interval="1wk",
+                          progress=False, auto_adjust=True)
+        if not ndf.empty and len(ndf) >= 14:
+            nc = ndf["Close"].squeeze()
+            nifty_13w = float(nc.iloc[-1] / nc.iloc[-14] - 1)
+        logging.info(f"Nifty 13W return: {nifty_13w:.2%}")
+    except Exception as e:
+        logging.warning(f"Nifty 13W fetch failed: {e}")
+
     results = []
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
-        futures = {ex.submit(_analyze_multibagger, sym): sym for sym in universe}
+        futures = {ex.submit(_analyze_multibagger, sym, nifty_13w): sym for sym in universe}
         for f in as_completed(futures):
             r = f.result()
             if r:

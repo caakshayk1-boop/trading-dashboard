@@ -825,11 +825,9 @@ with st.sidebar:
         st.caption(f"{_last_ts}")
         st.caption(f"Slot: {_last_slot.upper() if _last_slot else '—'}")
 
-    st.markdown("---")
-    st.markdown('<div style="font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Filters</div>', unsafe_allow_html=True)
-    min_score  = st.slider("Min Score", 50, 100, MIN_SIGNAL_SCORE)
-    days_back  = st.selectbox("Show last", ["1 day", "3 days", "7 days"], index=1)
-    _days      = int(days_back.split()[0])
+    # Filters locked to expert-grade defaults (no UI clutter)
+    min_score = MIN_SIGNAL_SCORE   # 78 — expert grade
+    _days     = 3                  # show last 3 days
 
     st.markdown("---")
     # Schedule info

@@ -1,13 +1,17 @@
-streamlit
-streamlit-autorefresh
-yfinance
-ta
-plotly
-apscheduler
-pytz
-requests
-pandas
-numpy
-sqlalchemy
-upstox-python-sdk
-feedparser
+# Core scanner (GitHub Actions + Streamlit Cloud)
+yfinance>=0.2.40
+pandas>=2.0
+numpy>=1.24
+ta>=0.11
+requests>=2.31
+pytz>=2024.1
+
+# Dashboard UI (Streamlit Cloud)
+streamlit>=1.32
+streamlit-autorefresh>=1.0
+plotly>=5.18
+feedparser>=6.0
+apscheduler>=3.10
+
+# Optional — broker integration (best-effort install, failures won't break scanner)
+upstox-python-sdk; python_version>="3.9"

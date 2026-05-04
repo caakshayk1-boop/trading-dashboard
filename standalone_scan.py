@@ -402,15 +402,39 @@ def main():
         log_scan_meta(slot, counts)
         logging.info(f"=== Scan finished: {slot} | {counts} ===")
 
+        # ── Export all JSON for dashboard (always runs, even if no signals) ──
         from tracker import export_signals_json
         export_signals_json()
         logging.info("Signal data exported to data/")
+
+        # ── Slot completion summary (always sends so you know scan ran) ──
+        total = sum(counts.values())
+        parts = [f"{k.upper()}: {v}" for k, v in counts.items() if v > 0]
+        if total == 0:
+            _send(
+                f"✅ *{slot.upper()} scan complete* — {time_str}\n"
+                f"_No qualifying signals. Regime/score/RR filters not met._"
+            )
+        else:
+            _send(
+                f"✅ *{slot.upper()} scan done* — {time_str}\n"
+                + "\n".join(f"  • {p}" for p in parts)
+            )
 
         return 0
 
     except Exception as e:
         logging.error(f"SCAN FAILED: {e}", exc_info=True)
-        _send(f"⚠️ *Scanner Error* ({slot})\n`{str(e)[:200]}`\nCheck logs.")
+        _send(
+            f"⚠️ *Scanner Error* ({slot}) — {time_str}\n"
+            f"`{str(e)[:300]}`\n_Check GitHub Actions logs._"
+        )
+        # Still try to export whatever was collected
+        try:
+            from tracker import export_signals_json
+            export_signals_json()
+        except Exception:
+            pass
         return 1
 
 
