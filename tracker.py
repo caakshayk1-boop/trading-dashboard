@@ -462,7 +462,7 @@ def get_active_signals():
 def get_history():
     init_db()
     with _conn() as c:
-        return pd.read_sql("SELECT * FROM signals ORDER BY date DESC LIMIT 200", c)
+        return pd.read_sql("SELECT * FROM signals ORDER BY date DESC", c)  # full history
 
 
 # ── Breakouts ─────────────────────────────────────────────────────────────────
@@ -576,36 +576,36 @@ def export_signals_json():
         with open(path, "w") as f:
             json.dump(records, f, default=str)
 
-    # Export each table
+    # Export each table — no LIMIT, full permanent history
     with _conn() as c:
         sigs = pd.read_sql(
-            "SELECT * FROM signals WHERE status='OPEN' ORDER BY score DESC LIMIT 50", c)
+            "SELECT * FROM signals ORDER BY date DESC, score DESC", c)
         _df_to_json(sigs, "data/signals.json")
 
         bos = pd.read_sql(
-            "SELECT * FROM breakouts ORDER BY date DESC LIMIT 50", c)
+            "SELECT * FROM breakouts ORDER BY date DESC", c)
         _df_to_json(bos, "data/breakouts.json")
 
         s4h = pd.read_sql(
-            "SELECT * FROM signals_4h ORDER BY date DESC LIMIT 50", c)
+            "SELECT * FROM signals_4h ORDER BY date DESC", c)
         _df_to_json(s4h, "data/signals_4h.json")
 
         comm = pd.read_sql(
-            "SELECT * FROM commodity_signals ORDER BY date DESC LIMIT 30", c)
+            "SELECT * FROM commodity_signals ORDER BY date DESC", c)
         _df_to_json(comm, "data/commodity_signals.json")
 
         try:
             mbs = pd.read_sql(
-                "SELECT * FROM multibaggers ORDER BY date DESC LIMIT 30", c)
+                "SELECT * FROM multibaggers ORDER BY date DESC", c)
             _df_to_json(mbs, "data/multibaggers.json")
         except Exception:
             with open("data/multibaggers.json", "w") as f:
                 json.dump([], f)
 
-        # Unified performance table — all signal types
+        # Unified all_signals — complete history, all signal types
         try:
             all_s = pd.read_sql(
-                "SELECT * FROM all_signals ORDER BY date DESC LIMIT 200", c)
+                "SELECT * FROM all_signals ORDER BY date DESC", c)
             _df_to_json(all_s, "data/all_signals.json")
         except Exception:
             with open("data/all_signals.json", "w") as f:

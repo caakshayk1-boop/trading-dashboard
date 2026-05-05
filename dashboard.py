@@ -124,11 +124,13 @@ def _gh_multibaggers(days=7):
     rows = [r for r in data if r.get("date","") >= cutoff]
     return pd.DataFrame(rows)
 
-def _gh_all_signals(days=60):
+def _gh_all_signals(days=9999):
     from datetime import timedelta
     data = _fetch_json("all_signals")
     if not data:
         return pd.DataFrame()
+    if days >= 9999:
+        return pd.DataFrame(data)  # return everything, no filter
     cutoff = str(date.today() - timedelta(days=days))
     rows = [r for r in data if r.get("date","") >= cutoff]
     return pd.DataFrame(rows)
@@ -838,7 +840,7 @@ with st.sidebar:
 
     # Filters locked to expert-grade defaults (no UI clutter)
     min_score = MIN_SIGNAL_SCORE   # 78 — expert grade
-    _days     = 3                  # show last 3 days
+    _days     = 365               # show full history (all signals, no day limit)
 
     st.markdown("---")
     # Schedule info
@@ -1063,7 +1065,7 @@ with tab1:
     signals = get_signals_display(days=_days, min_score=min_score) if IS_LOCAL else _gh_signals_display(days=_days, min_score=min_score)
 
     if not signals:
-        st.markdown(f'<div style="text-align:center;padding:50px 0"><div style="font-size:36px">📡</div><div style="margin-top:8px;font-size:13px;color:#334155">No signals in last {_days} day(s) above score {min_score}.<br>Auto-scans: 9:20 AM · 11:45 AM · 4:30 PM IST</div></div>', unsafe_allow_html=True)
+        st.markdown('<div style="text-align:center;padding:50px 0"><div style="font-size:36px">📡</div><div style="margin-top:8px;font-size:13px;color:#334155">No qualifying signals yet.<br>Auto-scans: 9:20 AM · 11:45 AM · 4:30 PM IST</div></div>', unsafe_allow_html=True)
     else:
         # KPI
         c = st.columns(5)
@@ -1075,8 +1077,7 @@ with tab1:
         c[4].metric("Avg RR", f"1:{round(sum(rr_vals)/len(rr_vals),1)}" if rr_vals else "—")
 
         st.markdown("---")
-        sort_by = st.selectbox("Sort by", ["score","rr1","vol_ratio"], index=0)
-        sigs_s  = sorted(signals, key=lambda x: x.get(sort_by, 0) or 0, reverse=True)
+        sigs_s = sorted(signals, key=lambda x: (x.get("date",""), x.get("score", 0)), reverse=True)
 
         for i, s in enumerate(sigs_s):
             # --- derived display values ---
@@ -1993,7 +1994,7 @@ with tab6:
             except Exception:
                 all_df = pd.DataFrame()
         else:
-            all_df = _gh_all_signals(days=60)
+            all_df = _gh_all_signals(days=9999)
 
         if not all_df.empty:
             closed_all = all_df[all_df["status"] != "OPEN"].copy()
@@ -2195,15 +2196,55 @@ with tab_mb:
         st.markdown('<div style="font-size:10px;color:#334155;margin-top:8px">Weekly breakout + momentum + volume expansion · Not SEBI advice · Horizon 6–12 months</div>', unsafe_allow_html=True)
 
 
-# TAB 7 — HISTORY
+# TAB 7 — HISTORY (all signals ever sent — permanent record)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab7:
-    hist = get_history()
-    if not hist.empty:
-        st.dataframe(hist, use_container_width=True, hide_index=True)
-        st.download_button("Export", hist.to_csv(index=False), "history.csv", "text/csv")
+    if IS_LOCAL:
+        try:
+            hist = get_history()   # legacy signals table (local dev)
+        except Exception:
+            hist = pd.DataFrame()
+        # Also try unified all_signals table (richer data)
+        try:
+            from tracker import _conn
+            with _conn() as _hc:
+                hist_all = pd.read_sql(
+                    "SELECT * FROM all_signals ORDER BY date DESC", _hc)
+        except Exception:
+            hist_all = pd.DataFrame()
+        # Prefer unified all_signals if available, fall back to legacy
+        display_hist = hist_all if not hist_all.empty else hist
     else:
-        st.info("No history yet.")
+        # Cloud: read full all_signals JSON from GitHub (no day limit)
+        display_hist = _gh_all_signals(days=9999)
+
+    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:12px">📋 Complete Signal History — All Trades Logged</div>', unsafe_allow_html=True)
+
+    if not display_hist.empty:
+        # Pretty column order
+        priority_cols = ["date","signal_type","symbol","action","timeframe",
+                         "entry","sl","target1","target2","rr","score","status","pnl_pct","r_multiple"]
+        avail = [c for c in priority_cols if c in display_hist.columns]
+        rest  = [c for c in display_hist.columns if c not in priority_cols and c != "id"]
+        display_hist = display_hist[avail + rest]
+
+        # Color-code status
+        def _style_status(val):
+            colors = {"SL_HIT": "#ef4444", "T1_HIT": "#22c55e",
+                      "T2_HIT": "#10b981",  "OPEN": "#f59e0b"}
+            return f"color: {colors.get(str(val), '#64748b')}"
+
+        st.dataframe(
+            display_hist.style.applymap(_style_status, subset=["status"])
+            if "status" in display_hist.columns else display_hist,
+            use_container_width=True, hide_index=True,
+            height=min(600, 40 + len(display_hist) * 35)
+        )
+        st.caption(f"Total: {len(display_hist)} signals logged")
+        st.download_button("⬇ Export CSV", display_hist.to_csv(index=False),
+                           "signal_history.csv", "text/csv")
+    else:
+        st.info("No signal history yet. All Telegram alerts are auto-logged here after the next scan.")
 
 
 # ── Footer (audit fixes §5 + §6 — trust + attribution) ───────────────────────
