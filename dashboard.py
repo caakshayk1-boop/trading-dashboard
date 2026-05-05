@@ -162,9 +162,20 @@ st.set_page_config(
     layout="wide", page_icon="⚡",
     initial_sidebar_state="expanded",
 )
-IST      = pytz.timezone("Asia/Kolkata")
-IS_LOCAL = os.path.exists("config.py")
-init_db()
+IST = pytz.timezone("Asia/Kolkata")
+# True only when running on developer's own machine — NOT on Streamlit Cloud or CI.
+# Streamlit Cloud always mounts repo at /mount/src/; GitHub Actions sets GITHUB_ACTIONS=true.
+IS_LOCAL = (
+    not os.path.exists("/mount/src") and
+    os.getenv("GITHUB_ACTIONS") != "true" and
+    os.getenv("STREAMLIT_SHARING_MODE") != "true"
+)
+try:
+    init_db()
+except Exception as _db_err:
+    # Non-fatal on cloud — dashboard reads from GitHub JSON, not local DB
+    import logging as _log
+    _log.getLogger(__name__).warning(f"init_db skipped: {_db_err}")
 
 # ── Semantic color palette (audit fix — consistent across all charts) ─────────
 CLR_UP      = "#26A69A"   # profit / bullish
@@ -1958,7 +1969,10 @@ with tab5:
 # TAB 6 — PERFORMANCE (all signal types from unified all_signals table)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab6:
-    perf = get_performance()
+    try:
+        perf = get_performance() if IS_LOCAL else {}
+    except Exception:
+        perf = {}
 
     st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:12px">📊 All Signals Performance <span style="font-size:10px;color:#334155;font-weight:400">(Swing · 4H · Breakout · AI · Commodity)</span></div>', unsafe_allow_html=True)
     if perf and perf.get("total", 0) > 0:

@@ -3,12 +3,22 @@ import pandas as pd
 import yfinance as yf
 from datetime import date, datetime, timedelta
 
-DB = "signals.db"
+# Streamlit Cloud mounts repo read-only at /mount/src/ — SQLite WAL needs writable dir.
+# GitHub Actions: writable cwd. Local dev: writable cwd.
+_IS_CLOUD = os.path.exists("/mount/src") or os.getenv("STREAMLIT_SHARING_MODE") == "true"
+DB = "/tmp/signals.db" if _IS_CLOUD else os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "signals.db")
+
 log = logging.getLogger(__name__)
 
 def _conn():
-    conn = sqlite3.connect(DB)
-    conn.execute("PRAGMA journal_mode=WAL")
+    conn = sqlite3.connect(DB, timeout=30, check_same_thread=False)
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+    except Exception:
+        pass  # WAL unavailable on some filesystems — DELETE mode is fine
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA cache_size=10000")
     return conn
 
 def init_db():
