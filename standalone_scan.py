@@ -60,6 +60,154 @@ def _send(msg):
         logging.warning(f"Telegram send failed: {e}")
 
 
+# ── Price Alert Monitor (checks open signals against live prices) ─────────────
+def run_price_alerts(time_str: str):
+    """
+    Runs every scan cycle. Checks all open signals in all_signals table.
+    Sends Telegram alert when SL1 / Final SL / T1 / T2 is hit.
+    Updates signal status in DB.
+
+    Alert hierarchy (per signal, in priority order):
+      SL_HIT  → red stop-loss alert + status updated (no more checks)
+      T2_HIT  → green target 2 alert + close signal
+      T1_HIT  → green target 1 alert + move SL to entry (signal stays open for T2)
+      SL1_WARN → amber warning when price drops below SL1 (first SL level)
+    """
+    import yfinance as yf
+    import pandas as pd
+    try:
+        from tracker import _conn, init_db
+        init_db()
+        with _conn() as c:
+            open_df = pd.read_sql(
+                "SELECT * FROM all_signals WHERE status='OPEN' ORDER BY date DESC",
+                c)
+    except Exception as e:
+        logging.warning(f"price_alerts: DB read failed: {e}")
+        return
+
+    if open_df.empty:
+        logging.info("price_alerts: no open signals to check")
+        return
+
+    logging.info(f"price_alerts: checking {len(open_df)} open signals")
+    updates = []   # (new_status, exit_price, pnl_pct, r_mult, sig_id)
+    alerts_sent = 0
+
+    for _, row in open_df.iterrows():
+        try:
+            sym_yf  = row["symbol"].replace(".NS", "") + ".NS"
+            # Fetch 5-min candles for the day — most recent price
+            tick = yf.download(sym_yf, period="1d", interval="5m",
+                               progress=False, auto_adjust=True, timeout=8)
+            if tick is None or tick.empty:
+                # Fallback: 1-day daily
+                tick = yf.download(sym_yf, period="2d", interval="1d",
+                                   progress=False, auto_adjust=True, timeout=8)
+            if tick is None or tick.empty:
+                continue
+
+            cur_price = float(tick["Close"].squeeze().iloc[-1])
+            cur_hi    = float(tick["High"].squeeze().max())
+            cur_lo    = float(tick["Low"].squeeze().min())
+
+            entry  = float(row["entry"])
+            sl     = float(row["sl"]  or entry * 0.95)   # final SL
+            sl1_v  = float(row.get("metadata") and
+                           __import__("json").loads(row.get("metadata") or "{}").get("sl1", 0)
+                           or entry * 0.97)              # warning SL
+            t1     = float(row["target1"])
+            t2     = float(row.get("target2") or t1 * 1.04)
+            sig_id = int(row["id"])
+            action = str(row.get("action", "BUY")).upper()
+            sym    = row["symbol"]
+            tf     = row.get("timeframe", "SWING")
+
+            risk = abs(entry - sl) or 1
+
+            # Check levels using day's H/L (intraday accuracy)
+            if action == "SELL":
+                sl_hit  = cur_hi >= sl
+                sl1_hit = cur_hi >= sl1_v and cur_hi < sl
+                t1_hit  = cur_lo <= t1 and not sl_hit
+                t2_hit  = cur_lo <= t2 and not sl_hit
+            else:
+                sl_hit  = cur_lo <= sl
+                sl1_hit = cur_lo <= sl1_v and cur_lo > sl
+                t1_hit  = cur_hi >= t1 and not sl_hit
+                t2_hit  = cur_hi >= t2 and not sl_hit
+
+            if sl_hit:
+                pnl   = round((sl - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                r_m   = round((sl - entry) / (risk if action == "BUY" else -risk), 2)
+                updates.append(("SL_HIT", sl, pnl, r_m, sig_id))
+                _send(
+                    f"🛑 *SL HIT — {sym}* | {tf}\n"
+                    f"Entry ₹{entry:.1f} → SL ₹{sl:.1f} touched\n"
+                    f"Loss: `{pnl}%` | R: `{r_m}`\n"
+                    f"_Exit trade. Review thesis before re-entry._"
+                )
+                alerts_sent += 1
+                logging.info(f"SL HIT: {sym} entry={entry} sl={sl} cur_lo={cur_lo}")
+
+            elif t2_hit:
+                pnl  = round((t2 - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                r_m  = round(abs(t2 - entry) / risk, 2)
+                updates.append(("T2_HIT", t2, pnl, r_m, sig_id))
+                _send(
+                    f"🎯🎯 *TARGET 2 HIT — {sym}* | {tf}\n"
+                    f"Entry ₹{entry:.1f} → T2 ₹{t2:.1f}\n"
+                    f"Gain: `+{pnl}%` | `{r_m}R` ✅\n"
+                    f"_Full exit. Exceptional trade._"
+                )
+                alerts_sent += 1
+                logging.info(f"T2 HIT: {sym} t2={t2} gain={pnl}%")
+
+            elif t1_hit:
+                pnl  = round((t1 - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                # Mark as T1_HIT but keep open (still tracking for T2)
+                updates.append(("T1_HIT", t1, pnl, round(abs(t1 - entry) / risk, 2), sig_id))
+                _send(
+                    f"✅ *TARGET 1 HIT — {sym}* | {tf}\n"
+                    f"Entry ₹{entry:.1f} → T1 ₹{t1:.1f}\n"
+                    f"Gain: `+{pnl}%` ✓\n"
+                    f"_Book 50% · Move SL to entry · Trail remaining for T2 ₹{t2:.1f}_"
+                )
+                alerts_sent += 1
+
+            elif sl1_hit:
+                # Warning only — don't update DB status yet
+                drop = round((cur_price - entry) / entry * 100, 2)
+                _send(
+                    f"⚠️ *SL1 WARNING — {sym}* | {tf}\n"
+                    f"Price ₹{cur_price:.1f} breached warning SL ₹{sl1_v:.1f}\n"
+                    f"Change: `{drop}%` | Final SL: ₹{sl:.1f}\n"
+                    f"_Tighten or exit half position. Watch closely._"
+                )
+                alerts_sent += 1
+
+        except Exception as e:
+            logging.warning(f"price_alerts {row.get('symbol','?')}: {e}")
+            continue
+
+    # Write status updates to DB
+    if updates:
+        try:
+            from tracker import _conn
+            with _conn() as c:
+                for new_status, exit_p, pnl, r_m, sig_id in updates:
+                    c.execute(
+                        "UPDATE all_signals SET status=?, exit_price=?, pnl_pct=?, r_multiple=? "
+                        "WHERE id=? AND status='OPEN'",
+                        (new_status, exit_p, pnl, r_m, sig_id))
+                c.commit()
+            logging.info(f"price_alerts: {len(updates)} signal statuses updated")
+        except Exception as e:
+            logging.warning(f"price_alerts: DB update failed: {e}")
+
+    logging.info(f"price_alerts: done | {alerts_sent} alerts sent | {len(updates)} updated")
+
+
 def _slot(now_ist, is_holiday=False):
     """Return scan slot based on IST time, weekday, holiday."""
     wd = now_ist.weekday()  # 0=Mon … 5=Sat … 6=Sun
@@ -343,6 +491,12 @@ def main():
     _send(f"🔄 *SwingDesk Pro* — {time_str}\n_Slot: {slot.upper()} starting..._")
 
     try:
+        # ── Price alerts FIRST — check all open signals before new scan ─────────
+        try:
+            run_price_alerts(time_str)
+        except Exception as _ae:
+            logging.warning(f"price_alerts skipped: {_ae}")
+
         run_markets(time_str)
 
         if slot == "morning":

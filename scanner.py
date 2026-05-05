@@ -315,6 +315,50 @@ def adx(high, low, close, n=14):
 def atr(high, low, close, n=14):
     return ta_lib.volatility.AverageTrueRange(high, low, close, window=n).average_true_range()
 
+def _tight_sl(price: float, low_series, cur_atr: float,
+              max_pct: float = 0.06, min_pct: float = 0.015) -> float:
+    """
+    Return tightest logical SL respecting structure.
+    - Structure: recent 5-bar swing low minus 0.25×ATR buffer
+    - ATR: 1.0×ATR below entry (never 1.5× — too wide for volatile stocks)
+    - Hard cap: max_pct% below entry (6% default — no 20-30% stops ever)
+    - Hard floor: min_pct% below entry (1.5% — avoid noise-stop)
+    Returns: SL price (always price * (1 - min_pct) ≤ sl ≤ price * (1 - max_pct) away)
+    """
+    swing_low   = float(low_series.rolling(5).min().iloc[-1])
+    sl_struct   = swing_low - 0.25 * cur_atr          # just below swing low
+    sl_atr      = price - 1.0 * cur_atr               # 1×ATR baseline
+    sl_raw      = max(sl_struct, sl_atr)               # tighter of the two
+    # Hard cap: never more than max_pct% away from entry
+    sl_capped   = max(sl_raw, price * (1 - max_pct))
+    # Hard floor: must be at least min_pct% away (avoids noise-stops)
+    sl_floored  = min(sl_capped, price * (1 - min_pct))
+    return round(sl_floored, 2)
+
+def _structure_targets(price: float, cur_atr: float, high_series,
+                       r1_mult: float = 1.5, r2_mult: float = 2.5, r3_mult: float = 4.0):
+    """
+    Targets anchored to price structure + R-multiple of tight risk.
+    Checks recent 20-bar resistance levels and snaps targets to them where logical.
+    """
+    # Resistance levels from recent price action
+    res20 = float(high_series.rolling(20).max().iloc[-1])
+    res10 = float(high_series.rolling(10).max().iloc[-2]) if len(high_series) > 11 else price * 1.05
+
+    t1_raw = round(price + r1_mult * cur_atr, 2)
+    t2_raw = round(price + r2_mult * cur_atr, 2)
+    t3_raw = round(price + r3_mult * cur_atr, 2)
+
+    # Snap T1 to nearest resistance if within 1.5% (makes targets meaningful)
+    for res in sorted([res10, res20]):
+        if t1_raw * 0.985 <= res <= t1_raw * 1.02:
+            t1_raw = round(res * 0.995, 2)   # just below resistance
+            break
+    if t2_raw * 0.985 <= res20 <= t2_raw * 1.03:
+        t2_raw = round(res20 * 0.995, 2)
+
+    return t1_raw, t2_raw, t3_raw
+
 def macd_line(series):
     return ta_lib.trend.MACD(series).macd()
 
@@ -549,13 +593,12 @@ def compute_full_score(close, high, low, volume, setup_type, setup_score,
     score += min(setup_score, 20)
     reasons.append(f"Setup: {setup_type}")
 
-    # 5. Risk/Reward Ratio (15 pts)
+    # 5. Risk/Reward Ratio (15 pts) — tight SL capped at 6%
     price   = float(close.iloc[-1])
     cur_atr = float(atr(high, low, close).iloc[-1])
-    sl2     = price - 1.5 * cur_atr
-    t1      = price + cur_atr           # 1R
-    t2      = price + 2 * cur_atr       # 2R
-    t3      = price + 3.5 * cur_atr     # structural
+    sl2     = _tight_sl(price, low, cur_atr, max_pct=0.06)  # max 6% stop
+    t1, t2, t3 = _structure_targets(price, cur_atr, high,
+                                     r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
     risk    = price - sl2
     rr      = (t2 - price) / risk if risk > 0 else 0
     if rr >= 2.5:   score += 15; reasons.append(f"RR {rr:.1f}:1")
@@ -576,7 +619,7 @@ def compute_full_score(close, high, low, volume, setup_type, setup_score,
     rr1  = round((t1 - price) / risk, 2) if risk > 0 else 0
     rr2  = round((t2 - price) / risk, 2) if risk > 0 else 0
 
-    # Structural SL: just below recent swing low
+    # Structural SL (warning level): just below recent 10-bar swing low
     sl1 = float(low.rolling(10).min().iloc[-1])
 
     return {
@@ -891,10 +934,11 @@ def analyze_breakout(symbol):
 
         sym_clean  = symbol.replace(".NS", "")
         best_tf, best_pat = max(patterns, key=lambda x: {"Monthly":3,"Weekly":2,"Daily":1}.get(x[0],0))
-        sl = round(close - 1.5 * atr, 1)
-        t1 = round(close + 2.0 * atr, 1)
-        t2 = round(close + 3.5 * atr, 1)
-        t3 = round(close + 5.5 * atr, 1)
+        _d_low  = df_d["Low"].squeeze()
+        _d_high = df_d["High"].squeeze()
+        sl = _tight_sl(close, _d_low, atr, max_pct=0.06)   # max 6% stop
+        t1, t2, t3 = _structure_targets(close, atr, _d_high,
+                                         r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
         rr = round((t1 - close) / max(close - sl, 0.01), 1)
 
         return {
@@ -948,6 +992,64 @@ FOREX_COMM = {
     "Nat Gas":   "NG=F",
 }
 
+# ── Channel Breakout from Bottom (4H / Daily) ────────────────────────────────
+def _channel_breakout_bottom(close, high, low, volume, rsi_s, n=15):
+    """
+    Detect a channel breakout from a compressed bottom zone.
+
+    Pattern rules (all required):
+      1. Price was rangebound/falling: lower highs in last n bars (excluding last 3)
+      2. Price now breaks ABOVE the channel resistance (recent n-bar high)
+      3. RSI crosses above 45 or is 45-65 (recovery momentum, not overbought)
+      4. Volume expansion (breakout bar volume > 1.3× avg)
+      5. Breakout bar closes ABOVE resistance (not just wick)
+
+    Returns: (is_valid: bool, channel_top: float, channel_width: float, signal_reason: str)
+    """
+    if len(close) < n + 5:
+        return False, 0.0, 0.0, ""
+
+    # Channel resistance = highest high in look-back window (excluding last 3 bars)
+    lookback_high = high.iloc[-(n+3):-3]
+    channel_top   = float(lookback_high.max())
+    channel_bot   = float(low.iloc[-(n+3):-3].min())
+    channel_width = round(channel_top - channel_bot, 2)
+
+    cur_price = float(close.iloc[-1])
+    prev_close = float(close.iloc[-2])
+
+    # Rule 1: breakout — close above channel top (not just wick)
+    if cur_price <= channel_top * 1.001:
+        return False, 0.0, 0.0, ""
+    # Breakout bar: previous close was below or at channel top
+    if prev_close > channel_top * 1.015:
+        return False, 0.0, 0.0, ""  # already broken out long ago
+
+    # Rule 2: RSI in recovery zone (45–68 = momentum turning, not extended)
+    cur_rsi = float(rsi_s.iloc[-1])
+    prv_rsi = float(rsi_s.iloc[-2])
+    if not (45 <= cur_rsi <= 68):
+        return False, 0.0, 0.0, ""
+    # RSI should be rising (momentum improving)
+    if cur_rsi <= prv_rsi:
+        return False, 0.0, 0.0, ""
+
+    # Rule 3: Volume expansion on breakout bar
+    avg_v = float(volume.rolling(20).mean().iloc[-1])
+    cur_v = float(volume.iloc[-1])
+    vol_r = round(cur_v / avg_v, 2) if avg_v > 0 else 1.0
+    if vol_r < 1.3:
+        return False, 0.0, 0.0, ""
+
+    # Rule 4: Channel must be at least 3% wide (not a false micro-range)
+    if channel_width < channel_top * 0.03:
+        return False, 0.0, 0.0, ""
+
+    reason = (f"Channel BO from bottom | Res breakout ₹{round(channel_top,1)} | "
+              f"RSI {round(cur_rsi,1)} ↑ (was {round(prv_rsi,1)}) | Vol {vol_r}x")
+    return True, channel_top, channel_width, reason
+
+
 # ── 4H Early-Entry Scanner (RSI cross 55 + volume) ───────────────────────────
 def analyze_4h(symbol):
     """
@@ -978,53 +1080,73 @@ def analyze_4h(symbol):
         cur_v   = float(volume.iloc[-1])
         vol_r   = round(cur_v / avg_v, 2) if avg_v > 0 else 1.0
 
-        # Gate 1: Volume 2x+ (institutional participation)
-        if vol_r < 2.0:
-            return None
-
-        # Gate 2: RSI crossing above 55 (was below, now above = momentum ignition)
-        rsi_s   = rsi(close)
-        cur_rsi = float(rsi_s.iloc[-1])
-        prv_rsi = float(rsi_s.iloc[-2])
-        if not (prv_rsi < 55 and cur_rsi >= 55):
-            return None
-
-        # Gate 3: Full EMA stack — price > EMA20 > EMA50 on 4H (trend alignment)
-        e20v = float(ema(close, 20).iloc[-1])
-        e50v = float(ema(close, 50).iloc[-1])
-        if not (price > e20v > e50v):
-            return None
-
-        # Gate 4: ADX > 20 on 4H (confirms directional trend, not chop)
+        rsi_s      = rsi(close)
+        cur_rsi    = float(rsi_s.iloc[-1])
+        prv_rsi    = float(rsi_s.iloc[-2])
+        e20v       = float(ema(close, 20).iloc[-1])
+        e50v       = float(ema(close, 50).iloc[-1])
         cur_adx_4h = float(adx(high, low, close).iloc[-1])
-        if cur_adx_4h < 20:
+        m_line     = macd_line(close)
+        m_sig      = macd_signal(close)
+        cur_atr    = float(atr(high, low, close).iloc[-1])
+
+        macd_crossed       = (float(m_line.iloc[-2]) < float(m_sig.iloc[-2]) and
+                              float(m_line.iloc[-1]) >= float(m_sig.iloc[-1]))
+        macd_hist_improving = (float(m_line.iloc[-1] - m_sig.iloc[-1]) >
+                               float(m_line.iloc[-2] - m_sig.iloc[-2]))
+
+        # ── PATH A: Classic RSI-55 crossover (original gates) ──────────────────
+        path_a_valid = (
+            vol_r >= 2.0 and
+            prv_rsi < 55 and cur_rsi >= 55 and
+            price > e20v > e50v and
+            cur_adx_4h >= 20 and
+            (macd_crossed or macd_hist_improving)
+        )
+
+        # ── PATH B: Channel breakout from bottom (RSI 45+) ─────────────────────
+        # Lower bar for RSI (45 vs 55), requires channel resistance break + volume
+        cbo_valid, channel_top, channel_width, cbo_reason = _channel_breakout_bottom(
+            close, high, low, volume, rsi_s, n=15)
+        path_b_valid = (
+            cbo_valid and
+            vol_r >= 1.5 and          # less strict volume (channel BO = early entry)
+            cur_adx_4h >= 15 and      # lighter ADX (trend just starting)
+            (macd_crossed or macd_hist_improving or cur_rsi > prv_rsi)
+        )
+
+        if not path_a_valid and not path_b_valid:
             return None
 
-        # Gate 5: MACD crossover (momentum acceleration confirmation)
-        m_line = macd_line(close)
-        m_sig  = macd_signal(close)
-        macd_crossed = (float(m_line.iloc[-2]) < float(m_sig.iloc[-2]) and
-                        float(m_line.iloc[-1]) >= float(m_sig.iloc[-1]))
-        # MACD cross required OR at least histogram improving
-        macd_hist_improving = float(m_line.iloc[-1] - m_sig.iloc[-1]) > float(m_line.iloc[-2] - m_sig.iloc[-2])
-        if not (macd_crossed or macd_hist_improving):
-            return None
+        # ── SL + Targets (both paths) ───────────────────────────────────────────
+        # Tight SL: structure + ATR capped at 5% — no 20%+ stops ever
+        sl_ema  = e20v - 0.2 * cur_atr
+        sl_str  = _tight_sl(price, low, cur_atr, max_pct=0.05)
+        sl      = round(max(sl_ema, sl_str), 2)
 
-        # ATR-based SL — tighter of: EMA20 or 1.5×ATR
-        cur_atr = float(atr(high, low, close).iloc[-1])
-        sl_atr  = price - 1.5 * cur_atr
-        sl_ema  = e20v - 0.3 * cur_atr   # just below EMA20
-        sl      = round(max(sl_atr, sl_ema), 2)  # use higher SL (tighter, better RR)
-        t1      = round(price + 2.0 * cur_atr, 2)
-        t2      = round(price + 3.5 * cur_atr, 2)
-        risk    = round(price - sl, 2)
-        rr      = round((t2 - price) / risk, 1) if risk > 0 else 0
+        # Channel BO: also place SL below channel top (becomes support after break)
+        if path_b_valid and not path_a_valid:
+            sl_channel = round(channel_top * 0.985, 2)  # just below breakout level
+            sl = round(max(sl, sl_channel), 2)
 
-        # Minimum 2:1 RR
+        t1, t2, _ = _structure_targets(price, cur_atr, high,
+                                        r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+
+        # For channel BO: T1 = measured move (channel width projected up)
+        if path_b_valid and not path_a_valid and channel_width > 0:
+            t1 = round(channel_top + channel_width * 0.6, 2)
+            t2 = round(channel_top + channel_width * 1.2, 2)
+
+        risk = round(price - sl, 2)
+        rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
         if rr < 2.0:
             return None
 
-        sym_clean = symbol.replace(".NS", "")
+        sym_clean  = symbol.replace(".NS", "")
+        setup_label = "ChannelBO↑" if (path_b_valid and not path_a_valid) else "RSI55✓"
+        reason      = (cbo_reason if (path_b_valid and not path_a_valid) else
+                       f"RSI {round(cur_rsi,1)} crossed 55 | MACD ✓ | Vol {vol_r}x | EMA stack ✓ | ADX {round(cur_adx_4h,1)}")
+
         return {
             "symbol":    sym_clean,
             "action":    "BUY",
@@ -1039,7 +1161,7 @@ def analyze_4h(symbol):
             "rr":        rr,
             "fno":       sym_clean in FNO_ELIGIBLE,
             "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
-            "reason":    f"RSI {round(cur_rsi,1)} crossed 55 | MACD ✓ | Vol {vol_r}x | EMA stack ✓ | ADX {round(cur_adx_4h,1)}",
+            "reason":    f"[{setup_label}] {reason}",
         }
     except Exception as e:
         logging.warning(f"4H {symbol}: {e}")
@@ -1152,18 +1274,18 @@ def _comm_signal(name, ticker, label, interval="1d", period="180d"):
         if (price > e20 > e50 and 45 <= cur_rsi <= 65
                 and (weekly_bias == "bullish" or weekly_bias is None)):
             bias = "BUY"
-            # Wider SL for commodities (2×ATR to avoid whipsaw)
-            sl   = round(price - 2.0 * cur_atr, 2)
+            # Commodities: 1.2×ATR stop (tighter than before, still enough room for volatility)
+            sl   = round(price - 1.2 * cur_atr, 2)
             t1   = round(price + 1.5 * cur_atr, 2)
-            t2   = round(price + 3.0 * cur_atr, 2)
-            t3   = round(price + 5.0 * cur_atr, 2)
+            t2   = round(price + 2.5 * cur_atr, 2)
+            t3   = round(price + 4.0 * cur_atr, 2)
         elif (price < e20 < e50 and 35 <= cur_rsi <= 55
                 and (weekly_bias == "bearish" or weekly_bias is None)):
             bias = "SELL"
-            sl   = round(price + 2.0 * cur_atr, 2)
+            sl   = round(price + 1.2 * cur_atr, 2)
             t1   = round(price - 1.5 * cur_atr, 2)
-            t2   = round(price - 3.0 * cur_atr, 2)
-            t3   = round(price - 5.0 * cur_atr, 2)
+            t2   = round(price - 2.5 * cur_atr, 2)
+            t3   = round(price - 4.0 * cur_atr, 2)
         else:
             return None
 
