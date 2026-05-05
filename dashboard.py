@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as _stc   # for TradingView widget embed
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
@@ -824,6 +825,67 @@ def plot_chart(symbol, signal=None):
     st.plotly_chart(fig, use_container_width=True)
 
 
+# ── NiftyPulse-derived features ───────────────────────────────────────────────
+
+def _tv_chart(symbol: str, interval: str = "D", height: int = 460):
+    """Embed a live TradingView advanced chart (dark, IST timezone, RSI+MACD+Vol)."""
+    html = (
+        '<div class="tradingview-widget-container" style="height:' + str(height) + 'px;background:#0d1117">'
+        + '<div id="tv_' + symbol + '" style="height:' + str(height - 5) + 'px"></div>'
+        + '<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>'
+        + '<script type="text/javascript">'
+        + 'new TradingView.widget({'
+        + '"autosize":true,'
+        + '"symbol":"NSE:' + symbol + '",'
+        + '"interval":"' + interval + '",'
+        + '"timezone":"Asia/Kolkata",'
+        + '"theme":"dark",'
+        + '"style":"1",'
+        + '"locale":"in",'
+        + '"toolbar_bg":"#0d1117",'
+        + '"enable_publishing":false,'
+        + '"hide_side_toolbar":false,'
+        + '"allow_symbol_change":false,'
+        + '"save_image":false,'
+        + '"studies":["RSI@tv-basicstudies","MACD@tv-basicstudies","Volume@tv-basicstudies"],'
+        + '"container_id":"tv_' + symbol + '"'
+        + '});'
+        + '</script></div>'
+    )
+    _stc.html(html, height=height)
+
+
+@st.cache_data(ttl=1800)
+def _quick_news(symbol: str, name: str = ""):
+    """Fetch 3 latest news items for a stock. Cached 30 min."""
+    try:
+        items = get_stock_news(symbol, name)
+        return items[:3] if items else []
+    except Exception:
+        return []
+
+
+def _opportunity_digest(all_sigs: list) -> dict:
+    """
+    Group existing signals into opportunity categories (NiftyPulse style).
+    No extra API calls — uses already-loaded signal data.
+    Returns dict of category → top signal.
+    """
+    if not all_sigs:
+        return {}
+    result = {}
+    by_rr   = sorted(all_sigs, key=lambda x: x.get("rr1", 0), reverse=True)
+    by_vol  = sorted(all_sigs, key=lambda x: x.get("vol_ratio", 0), reverse=True)
+    by_score = sorted(all_sigs, key=lambda x: x.get("score", 0), reverse=True)
+    fno_sigs = [s for s in all_sigs if s.get("fno_eligible")]
+
+    if by_rr:      result["🎯 Best R:R Setup"]       = by_rr[0]
+    if by_vol:     result["⚡ Volume Surge Leader"]   = by_vol[0]
+    if by_score:   result["🏆 Highest Conviction"]    = by_score[0]
+    if fno_sigs:   result["📊 F&O Ready Pick"]        = sorted(fno_sigs, key=lambda x: x.get("score",0), reverse=True)[0]
+    return result
+
+
 # ── Sidebar (view-only — filters + info) ─────────────────────────────────────
 with st.sidebar:
     st.markdown('<div style="font-size:17px;font-weight:900;padding:10px 0 16px;letter-spacing:-.02em;font-family:\'JetBrains Mono\',monospace;color:#f2f2f2">TRADEFLOW AI <span style="color:#22c55e">PRO</span></div>', unsafe_allow_html=True)
@@ -1079,6 +1141,30 @@ with tab1:
         st.markdown("---")
         sigs_s = sorted(signals, key=lambda x: (x.get("date",""), x.get("score", 0)), reverse=True)
 
+        # ── OPPORTUNITY DIGEST (NiftyPulse feature) ───────────────────────────
+        opps = _opportunity_digest(sigs_s)
+        if opps:
+            st.markdown('<div style="font-size:11px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px">⚡ Today\'s Best Setups</div>', unsafe_allow_html=True)
+            opp_cols = st.columns(len(opps))
+            for col, (label, sig) in zip(opp_cols, opps.items()):
+                pct_color = "#22c55e" if sig["action"] == "BUY" else "#ef4444"
+                rr_val    = sig.get("rr1", 0)
+                col.markdown(
+                    '<div style="background:#111827;border:1px solid #1a2030;border-radius:8px;'
+                    'padding:10px 12px;height:100%">'
+                    + '<div style="font-size:9px;color:#334155;font-weight:700;text-transform:uppercase;'
+                    'letter-spacing:.1em;margin-bottom:6px">' + label + '</div>'
+                    + '<div style="font-size:18px;font-weight:900;color:#f1f5f9;line-height:1">'
+                    + sig["symbol"] + '</div>'
+                    + '<div style="font-size:10px;color:' + pct_color + ';margin-top:3px;font-weight:700">'
+                    + sig["action"] + ' · Score ' + str(sig["score"]) + '</div>'
+                    + '<div style="font-size:10px;color:#475569;margin-top:4px">'
+                    + 'RR 1:' + str(rr_val) + ' · Vol ' + str(sig.get("vol_ratio",1.0)) + 'x</div>'
+                    + '</div>',
+                    unsafe_allow_html=True
+                )
+            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+
         for i, s in enumerate(sigs_s):
             # --- derived display values ---
             score       = s['score']
@@ -1195,6 +1281,37 @@ with tab1:
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+            # ── Per-signal: TradingView chart + News (NiftyPulse features) ───
+            _exp_c, _exp_n = st.columns(2)
+            with _exp_c:
+                with st.expander(f"📊 Live Chart — {s['symbol']}", expanded=False):
+                    tf_choice = st.radio(
+                        "Timeframe", ["D", "W", "240"],
+                        format_func=lambda x: {"D":"Daily","W":"Weekly","240":"4H"}[x],
+                        horizontal=True,
+                        key=f"tf_{s['symbol']}_{i}"
+                    )
+                    _tv_chart(s["symbol"], interval=tf_choice, height=460)
+            with _exp_n:
+                with st.expander(f"📰 Latest News — {s['symbol']}", expanded=False):
+                    _news = _quick_news(s["symbol"])
+                    if _news:
+                        for _n in _news:
+                            _sent_clr = {"positive":"#22c55e","negative":"#ef4444"}.get(
+                                str(_n.get("sentiment","")).lower(), "#64748b")
+                            st.markdown(
+                                '<div style="border-left:3px solid ' + _sent_clr + ';'
+                                'padding:6px 10px;margin-bottom:8px;background:#111827;border-radius:0 4px 4px 0">'
+                                + '<div style="font-size:11px;color:#cbd5e1;line-height:1.4">'
+                                + str(_n.get("title",""))[:140] + '</div>'
+                                + '<div style="font-size:9px;color:#334155;margin-top:4px">'
+                                + str(_n.get("source","")) + ' · ' + str(_n.get("published","")) + '</div>'
+                                + '</div>',
+                                unsafe_allow_html=True
+                            )
+                    else:
+                        st.caption("No recent news found.")
 
         st.markdown("---")
         df_s = pd.DataFrame(sigs_s)
