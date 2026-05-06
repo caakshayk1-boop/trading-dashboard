@@ -1703,87 +1703,99 @@ with tab2:
 # TAB 3 — F&O
 # ══════════════════════════════════════════════════════════════════════════════
 with tab3:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">F&O Trade Suggestions</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Nifty 200 stocks · Verify premium &amp; IV on NSE before trading</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sec-hdr">📊 F&amp;O WATCHLIST — breakout + 4H signals on F&amp;O-eligible stocks</div>', unsafe_allow_html=True)
 
-    fno_sigs = [s for s in signals if s.get("fno_eligible") and s.get("fno_suggestion")]
+    # ── Pull F&O-eligible signals from ALL sources ─────────────────────────────
+    # Source 1: breakout signals with fno=True
+    _fno_from_bo = [b for b in (_bos_df.to_dict("records") if not _bos_df.empty else [])
+                    if b.get("fno")]
+    # Source 2: 4H signals with fno=True
+    _df_4h_fno = get_4h_signals(days=_days) if IS_LOCAL else _gh_4h_signals(days=_days)
+    _fno_from_4h = [b for b in (_df_4h_fno.to_dict("records") if not _df_4h_fno.empty else [])
+                    if b.get("fno")]
+    # Source 3: swing signals with fno_eligible flag (legacy)
+    _fno_from_sw = [s for s in signals if s.get("fno_eligible")]
 
-    if not signals:
-        st.info("No swing signals in DB yet. Auto-scan: 11:45 AM IST.")
-    elif not fno_sigs:
-        st.warning(f"Scan found {len(signals)} signals but none are F&O eligible today.")
-        for s in signals[:5]:
-            st.markdown(f"• **{s['symbol']}** — {s['setup_type']} — score {s['score']}")
+    # Merge — breakouts first (higher quality for F&O), then 4H, then swing
+    all_fno = _fno_from_bo + _fno_from_4h + _fno_from_sw
+
+    # Deduplicate by symbol (keep first occurrence = highest priority)
+    _seen_fno = set()
+    fno_dedup = []
+    for b in all_fno:
+        sym = b.get("symbol","")
+        if sym not in _seen_fno:
+            _seen_fno.add(sym)
+            fno_dedup.append(b)
+
+    if not fno_dedup:
+        st.info("No F&O-eligible signals today. Auto-scan runs 9:20 AM · 11:45 AM · 4:30 PM IST.\nF&O stocks appear here when they show up in Breakout, 4H or Swing scans.")
     else:
-        for s in sorted(fno_sigs, key=lambda x: x["score"], reverse=True):
-            f      = s["fno_suggestion"]
-            is_c   = f["direction"] == "CALL"
-            dc     = "#4ade80" if is_c else "#f87171"
-            di     = "▲ CALL" if is_c else "▼ PUT"
-            rl, rc = _rating(s["score"])
-            tier   = f.get("tier", "biweekly")
-            t_em   = f.get("tier_emoji", "📅")
-            t_col  = {"weekly": "#f87171", "biweekly": "#22c55e", "monthly": "#a78bfa"}.get(tier, "#22c55e")
-            opt_tp = f.get("opt_type", "OTM")
-            use_st = f.get("use_strike", f["otm_strike"])
-            hold_d = f.get("hold_days", "—")
-            setup  = s.get("setup_type","").replace("_"," ").title()
+        fa, fb, fc_col = st.columns(3)
+        fa.metric("F&O Signals", len(fno_dedup))
+        fb.metric("From Breakouts", len(_fno_from_bo))
+        fc_col.metric("From 4H", len(_fno_from_4h))
+        st.markdown("---")
+        for b in fno_dedup:
+            sym   = b.get("symbol","")
+            price = float(b.get("price", b.get("entry", 0)) or 0)
+            sl    = float(b.get("sl", b.get("sl2", price*0.95)) or price*0.95)
+            t1    = float(b.get("target1", 0) or price*1.05)
+            t2    = float(b.get("target2", 0) or t1*1.03)
+            rr    = b.get("rr", b.get("rr1", "—"))
+            vol   = b.get("vol_ratio", "—")
+            tf    = b.get("timeframe","Daily")
+            src   = "BO" if b in _fno_from_bo else ("4H" if b in _fno_from_4h else "SW")
+            src_c = {"BO":"#00ff88","4H":"#ffaa00","SW":"#4da6ff"}.get(src,"#888")
+            tf_c  = {"Monthly":"#b48aff","Weekly":"#ffaa00","Daily":"#00ff88","4H":"#4da6ff"}.get(tf,"#888")
+            nse_link = f"https://www.nseindia.com/get-quotes/derivatives?symbol={sym}"
+            tv_link  = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+            pct_move = round((t2 - price) / price * 100, 1) if price > 0 else 0
             st.markdown(f"""
 <div class="fno-card">
-  <!-- Header -->
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-    <div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-        <span style="font-size:18px;font-weight:900;color:#f1f5f9">{s['symbol']}</span>
-        <span style="font-size:14px;font-weight:800;color:{dc}">{di}</span>
-        <span class="badge {rc}">{rl}</span>
-      </div>
-      <div style="font-size:10px;color:#334155">{setup} &nbsp;·&nbsp; Score {s['score']}/100 &nbsp;·&nbsp; ADX {s.get('adx',0)}</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:var(--font-mono);font-size:20px;font-weight:900;color:var(--txt)">{sym}</span>
+      <span style="font-size:9px;font-weight:800;padding:2px 8px;border-radius:2px;border:1px solid {src_c};color:{src_c}">{src}</span>
+      <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;border:1px solid {tf_c}40;color:{tf_c}">{tf}</span>
     </div>
     <div style="text-align:right">
-      <div style="font-size:11px;font-weight:800;color:{t_col};font-family:'JetBrains Mono',monospace">{t_em} {f['expiry']}</div>
-      <div style="font-size:9px;color:#334155;margin-top:2px">Hold ~{hold_d}</div>
-      <div style="font-size:9px;color:#475569;margin-top:2px">{opt_tp} preferred</div>
+      <div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono)">T2 upside</div>
+      <div style="font-size:16px;font-weight:800;color:var(--green);font-family:var(--font-mono)">+{pct_move}%</div>
     </div>
   </div>
-
-  <!-- Strike viz -->
-  <div style="display:flex;gap:8px;margin-bottom:10px">
-    <div style="flex:1;background:#111827;border:1px solid #052e16;border-radius:8px;padding:10px 12px;text-align:center">
-      <div style="font-size:8px;color:#334155;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">ATM Strike</div>
-      <div style="font-size:16px;font-weight:800;color:#22c55e;font-family:'JetBrains Mono',monospace">₹{f['atm_strike']:,}</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:8px;text-align:center">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">ENTRY</div>
+      <div style="font-size:15px;font-weight:800;color:var(--txt);font-family:var(--font-mono)">₹{price:,.1f}</div>
     </div>
-    <div style="flex:1;background:#111827;border:2px solid {t_col}40;border-radius:8px;padding:10px 12px;text-align:center;position:relative">
-      <div style="font-size:8px;color:{t_col};text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Suggested ({opt_tp})</div>
-      <div style="font-size:16px;font-weight:800;color:{t_col};font-family:'JetBrains Mono',monospace">₹{use_st:,}</div>
-      <div style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;
-        color:#111827;background:{t_col};padding:1px 6px;border-radius:3px;letter-spacing:.06em">USE THIS</div>
+    <div style="background:var(--bg2);border:1px solid rgba(255,59,59,.3);border-radius:2px;padding:8px;text-align:center">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">STOP</div>
+      <div style="font-size:15px;font-weight:800;color:var(--red);font-family:var(--font-mono)">₹{sl:,.1f}</div>
     </div>
-    <div style="flex:1;background:#111827;border:1px solid #1a2030;border-radius:8px;padding:10px 12px;text-align:center">
-      <div style="font-size:8px;color:#334155;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px">Risk pts</div>
-      <div style="font-size:16px;font-weight:800;color:#ef4444;font-family:'JetBrains Mono',monospace">{f['risk_pts']}</div>
+    <div style="background:var(--bg2);border:1px solid rgba(0,255,136,.2);border-radius:2px;padding:8px;text-align:center">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">T1</div>
+      <div style="font-size:15px;font-weight:800;color:var(--green);font-family:var(--font-mono)">₹{t1:,.1f}</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid rgba(0,255,136,.3);border-radius:2px;padding:8px;text-align:center">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">T2</div>
+      <div style="font-size:15px;font-weight:800;color:var(--green);font-family:var(--font-mono)">₹{t2:,.1f}</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:2px;padding:8px;text-align:center">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px">R:R</div>
+      <div style="font-size:15px;font-weight:800;color:var(--blue);font-family:var(--font-mono)">1:{rr}</div>
     </div>
   </div>
-
-  <!-- Stock levels -->
-  <div class="row">
-    <div class="kv"><span>Spot</span><span>₹{s['price']:,.1f}</span></div>
-    <div class="kv"><span>Stock SL</span><span class="red">₹{s['sl2']:,.1f}</span></div>
-    <div class="kv"><span>Stock T1</span><span class="green">₹{s['target1']:,.1f}</span></div>
-    <div class="kv"><span>Stock T2</span><span class="green">₹{s['target2']:,.1f}</span></div>
-    <div class="kv"><span>RR</span><span class="blue">1:{s['rr1']}</span></div>
-  </div>
-
-  <!-- Trade note -->
-  <div style="margin-top:10px;background:#111827;border:1px solid #1a2030;border-radius:6px;
-    padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#475569">{f['note']}</div>
-
-  <div style="margin-top:10px;font-size:11px;display:flex;gap:14px">
-    <a href="{s['tv_link']}" target="_blank" style="color:#22c55e;font-weight:600;text-decoration:none">Chart →</a>
-    <a href="https://www.nseindia.com/get-quotes/derivatives?symbol={s['symbol']}" target="_blank" style="color:#475569;text-decoration:none">NSE Chain →</a>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono)">VOL {vol}× surge</div>
+    <div style="display:flex;gap:12px">
+      <a href="{tv_link}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;font-family:var(--font-mono)">CHART →</a>
+      <a href="{nse_link}" target="_blank" style="color:var(--txt3);font-size:11px;font-weight:600;text-decoration:none;font-family:var(--font-mono)">NSE CHAIN →</a>
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
-        st.markdown('<div style="font-size:10px;color:#334155;padding:8px;background:#111827;border:1px solid #1a2030;border-radius:6px">⚠️ Strike &amp; direction from swing signal + ATR. Verify premium, IV, OI independently. Not SEBI advice.</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:10px;color:var(--txt3);padding:8px;border:1px solid var(--border);border-radius:2px;font-family:var(--font-mono)">⚠ Verify premium, IV, OI on NSE independently. Not SEBI advice.</div>', unsafe_allow_html=True)
 
     # Forex watchlist
     st.markdown("---")
@@ -2270,29 +2282,65 @@ with tab7:
     st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:12px">📋 Complete Signal History — All Trades Logged</div>', unsafe_allow_html=True)
 
     if not display_hist.empty:
-        # Pretty column order
+        # ── Column order ──────────────────────────────────────────────────────
         priority_cols = ["date","signal_type","symbol","action","timeframe",
                          "entry","sl","target1","target2","rr","score","status","pnl_pct","r_multiple"]
         avail = [c for c in priority_cols if c in display_hist.columns]
-        rest  = [c for c in display_hist.columns if c not in priority_cols and c != "id"]
-        display_hist = display_hist[avail + rest]
+        rest  = [c for c in display_hist.columns if c not in priority_cols
+                 and c not in ("id","sent_at","metadata","exit_price","target3")]
+        display_hist = display_hist[avail + rest].copy()
 
-        # Color-code status
+        # ── Fix .000000 — round all price/ratio columns to 2 dp ──────────────
+        price_cols = ["entry","sl","target1","target2","target3","exit_price"]
+        ratio_cols = ["rr","pnl_pct","r_multiple"]
+        for col in price_cols:
+            if col in display_hist.columns:
+                display_hist[col] = pd.to_numeric(display_hist[col], errors="coerce").round(2)
+        for col in ratio_cols:
+            if col in display_hist.columns:
+                display_hist[col] = pd.to_numeric(display_hist[col], errors="coerce").round(2)
+
+        # ── Rename for readability ────────────────────────────────────────────
+        display_hist = display_hist.rename(columns={
+            "signal_type":"type","pnl_pct":"P&L%","r_multiple":"R×",
+            "target1":"T1","target2":"T2","timeframe":"TF"
+        })
+
+        # ── Status badge colour ────────────────────────────────────────────────
         def _style_status(val):
-            colors = {"SL_HIT": "#ef4444", "T1_HIT": "#22c55e",
-                      "T2_HIT": "#10b981",  "OPEN": "#f59e0b"}
-            return f"color: {colors.get(str(val), '#64748b')}"
+            colors = {"SL_HIT":"color:#ff3b3b;font-weight:700",
+                      "T1_HIT":"color:#00ff88;font-weight:700",
+                      "T2_HIT":"color:#4da6ff;font-weight:700",
+                      "OPEN":  "color:#ffaa00;font-weight:700"}
+            return colors.get(str(val), "color:#555")
 
         try:
-            styled = display_hist.style.map(_style_status, subset=["status"]) if "status" in display_hist.columns else display_hist
-        except AttributeError:
-            styled = display_hist  # pandas version fallback
+            styled = (display_hist.style.map(_style_status, subset=["status"])
+                      if "status" in display_hist.columns else display_hist)
+        except Exception:
+            styled = display_hist
+
+        # Filter controls
+        hf1, hf2 = st.columns([2,1])
+        with hf1:
+            status_filter = st.selectbox("Status", ["All","OPEN","SL_HIT","T1_HIT","T2_HIT"], key="hist_sf")
+        with hf2:
+            type_filter = st.selectbox("Type", ["All"] + sorted(display_hist["type"].dropna().unique().tolist()) if "type" in display_hist.columns else ["All"], key="hist_tf")
+        filt_hist = display_hist.copy()
+        if status_filter != "All" and "status" in filt_hist.columns:
+            filt_hist = filt_hist[filt_hist["status"] == status_filter]
+        if type_filter != "All" and "type" in filt_hist.columns:
+            filt_hist = filt_hist[filt_hist["type"] == type_filter]
+
         st.dataframe(
-            styled,
+            filt_hist.style.map(_style_status, subset=["status"]) if "status" in filt_hist.columns else filt_hist,
             use_container_width=True, hide_index=True,
-            height=min(600, 40 + len(display_hist) * 35)
+            height=min(650, 44 + len(filt_hist) * 36)
         )
-        st.caption(f"Total: {len(display_hist)} signals logged")
+        open_c = len(display_hist[display_hist["status"]=="OPEN"]) if "status" in display_hist.columns else 0
+        sl_c   = len(display_hist[display_hist["status"]=="SL_HIT"]) if "status" in display_hist.columns else 0
+        win_c  = len(display_hist[display_hist["status"].isin(["T1_HIT","T2_HIT"])]) if "status" in display_hist.columns else 0
+        st.caption(f"Total: {len(display_hist)} · Open: {open_c} · Win: {win_c} · SL: {sl_c}")
         st.download_button("⬇ Export CSV", display_hist.to_csv(index=False),
                            "signal_history.csv", "text/csv")
     else:

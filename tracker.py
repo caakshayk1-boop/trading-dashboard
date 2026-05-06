@@ -368,12 +368,32 @@ def update_all_outcomes():
     for _, row in open_trades.iterrows():
         try:
             sym = row["symbol"].replace(".NS", "") + ".NS"
-            df  = yf.download(sym, period="5d", interval="1d",
-                              progress=False, auto_adjust=True)
+            # ── Critical fix: only look at candles AFTER the signal date ─────
+            sig_date_str = str(row.get("date", "")).strip()
+            try:
+                from datetime import timedelta as _td
+                sig_dt  = datetime.strptime(sig_date_str, "%Y-%m-%d").date()
+                # Start from the NEXT trading day so entry candle doesn't trip SL
+                start_dt = (sig_dt + _td(days=1)).isoformat()
+            except Exception:
+                start_dt = None
+
+            if start_dt:
+                df = yf.download(sym, start=start_dt, interval="1d",
+                                 progress=False, auto_adjust=True)
+            else:
+                df = yf.download(sym, period="5d", interval="1d",
+                                 progress=False, auto_adjust=True)
+
             if df is None or df.empty:
                 continue
-            lo     = float(df["Low"].squeeze().min())
-            hi     = float(df["High"].squeeze().max())
+
+            # Squeeze in case of MultiIndex (yfinance ≥0.2.38 behaviour)
+            low_s  = df["Low"].squeeze()
+            high_s = df["High"].squeeze()
+            lo     = float(low_s.min())  if hasattr(low_s,  "min")  else float(low_s)
+            hi     = float(high_s.max()) if hasattr(high_s, "max") else float(high_s)
+
             entry  = float(row["entry"])
             sl     = float(row["sl"] or entry * 0.96)
             t1     = float(row["target1"])
@@ -388,7 +408,7 @@ def update_all_outcomes():
             else:
                 if lo <= sl:                status, exit_p = "SL_HIT", sl
                 elif hi >= t2:              status, exit_p = "T2_HIT", t2
-                elif hi >= t1:             status, exit_p = "T1_HIT", t1
+                elif hi >= t1:              status, exit_p = "T1_HIT", t1
 
             if status != "OPEN":
                 risk = abs(entry - sl) or 1
