@@ -569,14 +569,64 @@ section[data-testid="stSidebar"] h1,h2,h3 {{ color: var(--txt2) !important; }}
 }}
 .fno-card:hover {{ border-color: var(--accent); }}
 
-/* === MF CARDS === */
+/* === MF CARDS (grow.in style) === */
 .mf-card {{
   background: var(--card-bg);
-  border: 1px solid var(--border); border-radius: 2px;
-  padding: 14px 18px; margin-bottom: 8px;
-  animation: cardEnter .35s ease both; transition: border-color .15s;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px; margin-bottom: 10px;
+  animation: cardEnter .35s ease both;
+  transition: transform .18s, box-shadow .18s, border-color .18s;
+  position:relative; overflow:hidden;
 }}
-.mf-card:hover {{ border-color: var(--accent); }}
+.mf-card::before {{
+  content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  background:var(--mf-accent,var(--accent));
+  border-radius:12px 0 0 12px;
+}}
+.mf-card:hover {{ transform:translateY(-2px); box-shadow:0 10px 36px rgba(0,0,0,.3); border-color:rgba(0,255,136,.25); }}
+.mf-fund-header {{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }}
+.mf-fund-name {{ font-size:14px; font-weight:700; color:var(--txt); line-height:1.35; max-width:380px; font-family:var(--font-sans); }}
+.mf-fund-house {{ font-size:10px; color:var(--txt3); margin-top:3px; font-family:var(--font-mono); }}
+.mf-nav-block {{ text-align:right; flex-shrink:0; }}
+.mf-nav-val {{ font-size:17px; font-weight:800; font-family:var(--font-mono); color:var(--txt); }}
+.mf-day-chg {{ font-size:11px; font-weight:700; margin-top:2px; }}
+.mf-cat-chip {{
+  display:inline-block; padding:2px 9px; border-radius:99px;
+  font-size:9px; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; font-family:var(--font-mono);
+  background:rgba(0,255,136,.07); color:var(--accent);
+  border:1px solid rgba(0,255,136,.2); margin-top:4px;
+}}
+.mf-stats-row {{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 0; }}
+.mf-stat {{
+  background:var(--bg3); border:1px solid var(--border); border-radius:8px;
+  padding:8px 10px; text-align:center;
+}}
+.mf-stat-label {{ font-size:8px; font-weight:700; color:var(--txt3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; font-family:var(--font-mono); }}
+.mf-stat-val {{ font-size:14px; font-weight:800; font-family:var(--font-mono); color:var(--txt); }}
+.mf-returns-section {{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }}
+.mf-returns-label {{ font-size:8px; font-weight:800; color:var(--txt3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; font-family:var(--font-mono); }}
+.mf-return-row {{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }}
+.mf-return-period {{ font-size:9px; font-weight:700; color:var(--txt3); min-width:24px; font-family:var(--font-mono); }}
+.mf-return-bar-track {{ flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }}
+.mf-return-bar-fill {{ height:100%; border-radius:3px; }}
+.mf-return-val {{ font-size:11px; font-weight:800; min-width:52px; text-align:right; font-family:var(--font-mono); }}
+
+/* MF portfolio summary row */
+.mf-summary-row {{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px;
+}}
+.mf-summary-card {{
+  background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; position:relative; overflow:hidden;
+}}
+.mf-summary-card::after {{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--mf-top-color,var(--accent)), transparent);
+}}
+.mf-summary-card .s-label {{ font-size:8px; font-weight:700; color:var(--txt3); letter-spacing:.12em; text-transform:uppercase; margin-bottom:6px; font-family:var(--font-mono); }}
+.mf-summary-card .s-val {{ font-size:22px; font-weight:800; font-family:var(--font-mono); color:var(--txt); letter-spacing:-.03em; }}
 
 /* === ACTION BADGES (zip style) === */
 .action-badge {{
@@ -689,6 +739,56 @@ section[data-testid="stSidebar"] h1,h2,h3 {{ color: var(--txt2) !important; }}
 .news-item {{ padding:10px 0; border-bottom:1px solid var(--border2); transition:all .18s; }}
 .news-item:hover {{ padding-left:4px; }}
 .news-item:last-child {{ border-bottom:none; }}
+
+/* === NEWS GRID (tickertape-style 2-col card layout) === */
+.news-grid {{
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; margin-top:4px;
+}}
+@media(max-width:900px) {{ .news-grid {{ grid-template-columns:1fr; }} }}
+.news-card {{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  display:flex; flex-direction:column; gap:8px;
+  transition:transform .18s, box-shadow .18s, border-color .18s;
+  cursor:pointer; text-decoration:none;
+  animation: cardEnter .35s ease both;
+  position:relative; overflow:hidden;
+}}
+.news-card:hover {{
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,0,0,.35);
+  border-color:rgba(var(--accent-rgb,0,255,136),.35);
+}}
+.news-card-top {{ display:flex; justify-content:space-between; align-items:center; gap:8px; }}
+.news-cat {{
+  display:inline-block; padding:2px 8px; border-radius:99px;
+  font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+  font-family:var(--font-mono);
+}}
+.news-sentiment {{
+  font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px;
+  letter-spacing:.05em; text-transform:uppercase; font-family:var(--font-mono);
+}}
+.news-sentiment.pos {{ background:rgba(0,255,136,.08); color:var(--green); border:1px solid rgba(0,255,136,.2); }}
+.news-sentiment.neg {{ background:rgba(255,59,59,.07); color:var(--red); border:1px solid rgba(255,59,59,.2); }}
+.news-sentiment.neu {{ background:rgba(255,255,255,.04); color:var(--txt3); border:1px solid var(--border); }}
+.news-headline {{
+  font-size:13px; font-weight:600; color:var(--txt); line-height:1.5;
+  font-family:var(--font-sans); text-decoration:none;
+  display:block;
+}}
+.news-headline:hover {{ color:var(--accent); }}
+.news-meta {{
+  display:flex; align-items:center; gap:10px;
+  font-size:10px; color:var(--txt3); font-family:var(--font-mono);
+}}
+.news-source {{
+  font-weight:700; color:var(--txt2);
+}}
+.news-time {{ color:var(--txt3); }}
 
 /* === LIVE DOT === */
 .live, .live-dot {{
@@ -1819,10 +1919,19 @@ with tab3:
 # TAB 4 — MUTUAL FUNDS
 # ══════════════════════════════════════════════════════════════════════════════
 with tab4:
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:4px">Mutual Fund Intelligence</div><div style="font-size:11px;color:#334155;margin-bottom:16px">Top Funds Discovery · Portfolio Tracker · NAV · Returns — powered by AMFI</div>', unsafe_allow_html=True)
+    st.markdown("""
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+  <div>
+    <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">Mutual Funds</div>
+    <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
+      <span class="live"></span> Top Funds · Portfolio Tracker · NAV · CAGR Returns &nbsp;·&nbsp; AMFI data
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
     # ── Top Funds per Category ─────────────────────────────────────────────
-    st.markdown('<div style="font-size:12px;font-weight:700;color:#f1f5f9;margin-bottom:10px">Top Funds by Category</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;font-family:var(--font-mono);border-left:2px solid var(--accent);padding-left:8px">Top Funds by Category</div>', unsafe_allow_html=True)
     with st.spinner("Loading top funds data…"):
         top_data = _top_funds()
 
@@ -2002,66 +2111,114 @@ with tab4:
             total_pnl = total_cur - total_inv
             total_pct = (total_pnl / total_inv * 100) if total_inv > 0 else 0
 
-            kc = st.columns(4)
-            kc[0].metric("Total Invested", f"₹{total_inv:,.0f}")
-            kc[1].metric("Current Value",  f"₹{total_cur:,.0f}")
-            kc[2].metric("P&L",            f"₹{total_pnl:+,.0f}")
-            kc[3].metric("Overall Return", f"{total_pct:+.2f}%")
-
-            st.markdown("---")
+            pnl_color = "#00ff88" if total_pnl >= 0 else "#ff3b3b"
+            pct_color = "#00ff88" if total_pct >= 0 else "#ff3b3b"
+            st.markdown(f"""
+<div class="mf-summary-row">
+  <div class="mf-summary-card" style="--mf-top-color:#4da6ff">
+    <div class="s-label">Total Invested</div>
+    <div class="s-val">₹{total_inv:,.0f}</div>
+  </div>
+  <div class="mf-summary-card" style="--mf-top-color:#00ff88">
+    <div class="s-label">Current Value</div>
+    <div class="s-val">₹{total_cur:,.0f}</div>
+  </div>
+  <div class="mf-summary-card" style="--mf-top-color:{pnl_color}">
+    <div class="s-label">Total P&amp;L</div>
+    <div class="s-val" style="color:{pnl_color}">₹{total_pnl:+,.0f}</div>
+  </div>
+  <div class="mf-summary-card" style="--mf-top-color:{pct_color}">
+    <div class="s-label">Overall Return</div>
+    <div class="s-val" style="color:{pct_color}">{total_pct:+.2f}%</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
             # Fund cards
             for s in summary:
-                pnl_col  = "#4ade80" if s["pnl_pct"] >= 0 else "#f87171"
-                day_col  = "#4ade80" if s["day_chg"] >= 0 else "#f87171"
-                ret      = s["returns"]
-                ret_html = "".join(
-                    f'<div class="kv"><span>{k}</span><span class="{_ret_col(v)}">{v:+.1f}%</span></div>'
-                    for k, v in ret.items()
-                )
+                pnl_col   = "#00ff88" if s["pnl_pct"] >= 0 else "#ff3b3b"
+                day_col   = "#00ff88" if s["day_chg"] >= 0 else "#ff3b3b"
+                mf_accent = "#00ff88" if s["pnl_pct"] >= 0 else "#ff3b3b"
+                ret       = s["returns"]
+                # Build return bars: scale to max abs return for bar width
+                _ret_vals  = [v for v in ret.values() if v is not None]
+                _max_abs   = max(abs(v) for v in _ret_vals) if _ret_vals else 20
+                _max_abs   = max(_max_abs, 1)
+
+                def _ret_bar_row(period, val):
+                    if val is None: return ""
+                    bar_w   = min(100, abs(val) / _max_abs * 100)
+                    bar_col = "#00ff88" if val >= 0 else "#ff3b3b"
+                    return (
+                        f'<div class="mf-return-row">'
+                        f'<span class="mf-return-period">{period}</span>'
+                        f'<div class="mf-return-bar-track">'
+                        f'<div class="mf-return-bar-fill" style="width:{bar_w:.0f}%;background:{bar_col}"></div>'
+                        f'</div>'
+                        f'<span class="mf-return-val" style="color:{bar_col}">{val:+.1f}%</span>'
+                        f'</div>'
+                    )
+
+                ret_bars_html = "".join(_ret_bar_row(k, v) for k, v in ret.items())
+                cat_label = s.get('category','') or ''
+                fhouse    = s.get('fund_house','') or ''
+
                 st.markdown(f"""
-<div class="mf-card">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+<div class="mf-card" style="--mf-accent:{mf_accent}">
+  <div class="mf-fund-header">
     <div>
-      <div style="font-size:15px;font-weight:700;color:#f1f5f9;max-width:420px;line-height:1.3">{s['name']}</div>
-      <div style="font-size:10px;color:#334155;margin-top:2px">{s.get('fund_house','')} · {s.get('category','')}</div>
+      <div class="mf-fund-name">{s['name']}</div>
+      <div class="mf-fund-house">{fhouse}</div>
+      {f'<span class="mf-cat-chip">{cat_label}</span>' if cat_label else ''}
     </div>
-    <div style="text-align:right">
-      <div style="font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace;color:#f1f5f9">₹{s['nav']:.4f}</div>
-      <div style="font-size:11px;font-weight:600;color:{day_col}">{s['day_chg']:+.2f}% today</div>
+    <div class="mf-nav-block">
+      <div class="mf-nav-val">₹{s['nav']:.4f}</div>
+      <div class="mf-day-chg" style="color:{day_col}">{s['day_chg']:+.2f}% today</div>
     </div>
   </div>
-  <div class="row">
-    <div class="kv"><span>Invested</span><span>₹{s['invested']:,.0f}</span></div>
-    <div class="kv"><span>Current</span><span>₹{s['current']:,.0f}</span></div>
-    <div class="kv"><span>P&L</span><span style="color:{pnl_col}">₹{s['pnl']:+,.0f}</span></div>
-    <div class="kv"><span>Return</span><span style="color:{pnl_col}">{s['pnl_pct']:+.2f}%</span></div>
-    <div class="kv"><span>Units</span><span>{s['units']:.3f}</span></div>
-    <div class="kv"><span>Buy NAV</span><span>₹{s['purchase_nav']:.2f}</span></div>
+  <div class="mf-stats-row">
+    <div class="mf-stat">
+      <div class="mf-stat-label">Invested</div>
+      <div class="mf-stat-val">₹{s['invested']:,.0f}</div>
+    </div>
+    <div class="mf-stat">
+      <div class="mf-stat-label">Current</div>
+      <div class="mf-stat-val">₹{s['current']:,.0f}</div>
+    </div>
+    <div class="mf-stat">
+      <div class="mf-stat-label">P&amp;L</div>
+      <div class="mf-stat-val" style="color:{pnl_col}">₹{s['pnl']:+,.0f} <span style="font-size:11px">({s['pnl_pct']:+.1f}%)</span></div>
+    </div>
   </div>
-  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #1a2030">
-    <div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">CAGR Returns</div>
-    <div class="row">{ret_html}</div>
+  <div style="display:flex;gap:18px;font-size:10px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:12px">
+    <span>Units <b style="color:var(--txt)">{s['units']:.3f}</b></span>
+    <span>Buy NAV <b style="color:var(--txt)">₹{s['purchase_nav']:.2f}</b></span>
+  </div>
+  <div class="mf-returns-section">
+    <div class="mf-returns-label">CAGR Returns</div>
+    {ret_bars_html}
   </div>
 </div>
 """, unsafe_allow_html=True)
 
             # News section
-            st.markdown("---")
-            st.markdown('<div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:12px">Fund News</div>', unsafe_allow_html=True)
+            st.markdown('<div style="margin-top:18px"></div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-mono)">📰 Fund News</div>', unsafe_allow_html=True)
             selected_fund = st.selectbox("News for", [s["name"] for s in summary])
             sel_s = next((s for s in summary if s["name"] == selected_fund), None)
             if sel_s:
                 with st.spinner("Loading news…"):
                     news = get_fund_news(selected_fund[:40])
                 if news:
+                    fn_html = '<div class="news-grid">'
                     for n in news:
-                        st.markdown(f"""
-<div class="news-item">
-  <a href="{n['link']}" target="_blank" style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none">{n['title']}</a>
-  <div style="font-size:10px;color:#334155;margin-top:3px">{n['published']}</div>
-</div>
-""", unsafe_allow_html=True)
+                        fn_html += f"""
+<a href="{n['link']}" target="_blank" class="news-card" style="text-decoration:none">
+  <span class="news-headline">{n['title']}</span>
+  <div class="news-meta"><span class="news-time">{n['published']}</span></div>
+</a>"""
+                    fn_html += '</div>'
+                    st.markdown(fn_html, unsafe_allow_html=True)
                 else:
                     st.info("No recent news found for this fund.")
 
@@ -2098,16 +2255,14 @@ with tab5:
     _next_slot = "3:00 PM IST" if _now_ist.hour < 15 else "11:00 AM IST (tomorrow)"
 
     st.markdown(f"""
-<div style="background:linear-gradient(135deg,rgba(7,15,30,.97),rgba(3,9,18,.97));
-  border:1px solid rgba(34,197,94,.12);border-radius:14px;padding:14px 18px;margin-bottom:16px;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
   <div>
-    <span style="font-size:13px;font-weight:800;color:#f1f5f9">📰 Indian Market News</span>
-    <span style="font-size:9px;color:#334155;margin-left:10px">NSE · BSE · SEBI · RBI · Earnings</span>
+    <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">Market News</div>
+    <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
+      <span class="live"></span> NSE &nbsp;·&nbsp; BSE &nbsp;·&nbsp; SEBI &nbsp;·&nbsp; RBI &nbsp;·&nbsp; Earnings &nbsp;·&nbsp; Updated 11 AM &amp; 3 PM IST
+    </div>
   </div>
-  <div style="text-align:right;font-size:9px;color:#3d4a5c">
-    <span class="live"></span> Updated 11 AM &amp; 3 PM IST &nbsp;·&nbsp; Next: {_next_slot}
-  </div>
+  <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">Next refresh: {_next_slot}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -2121,37 +2276,47 @@ with tab5:
     with st.spinner("Loading market news…"):
         mkt_news = _indian_news()
 
+    _POS_WORDS = {"surge","rally","gain","rise","record","high","jump","boost","soar","climb","profit","growth","bull","positive","strong","upgrade","buy","recovery"}
+    _NEG_WORDS = {"fall","drop","crash","loss","decline","slump","sell","weak","down","cut","risk","bearish","caution","concern","miss","disappoint","plunge","selloff"}
+
+    def _news_sentiment(title):
+        words = set(title.lower().split())
+        if words & _POS_WORDS: return "pos", "▲ Bullish"
+        if words & _NEG_WORDS: return "neg", "▼ Bearish"
+        return "neu", "— Neutral"
+
     if mkt_news:
-        for idx, _n in enumerate(mkt_news[:10]):
+        cards_html = '<div class="news-grid">'
+        for _n in mkt_news[:12]:
             cat   = _n.get("category", "Market")
             catc  = _cat_colors.get(cat, "#22c55e")
-            src   = _n.get("source","")
+            src   = _n.get("source","") or "Market"
             pub   = _n.get("published","")
-            st.markdown(f"""
-<div class="news-item" style="padding:13px 0;display:flex;gap:12px;align-items:flex-start">
-  <div style="flex-shrink:0;margin-top:3px">
-    <span style="font-size:8px;font-weight:800;padding:2px 7px;border-radius:3px;
-      background:rgba(34,197,94,.07);color:{catc};border:1px solid {catc}30;
-      text-transform:uppercase;letter-spacing:.06em">{cat}</span>
+            title = _n.get("title","")
+            link  = _n.get("link","#")
+            sent_cls, sent_label = _news_sentiment(title)
+            cards_html += f"""
+<a href="{link}" target="_blank" class="news-card" style="text-decoration:none">
+  <div class="news-card-top">
+    <span class="news-cat" style="background:rgba(0,0,0,.3);color:{catc};border:1px solid {catc}44">{cat}</span>
+    <span class="news-sentiment {sent_cls}">{sent_label}</span>
   </div>
-  <div style="flex:1;min-width:0">
-    <a href="{_n['link']}" target="_blank"
-       style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none;
-              line-height:1.5;display:block">{idx+1}. {_n['title']}</a>
-    <div style="font-size:10px;color:#334155;margin-top:3px;display:flex;gap:12px">
-      <span>{src}</span>
-      <span>{pub}</span>
-    </div>
+  <span class="news-headline">{title}</span>
+  <div class="news-meta">
+    <span class="news-source">{src}</span>
+    <span>·</span>
+    <span class="news-time">{pub}</span>
   </div>
-</div>
-""", unsafe_allow_html=True)
+</a>"""
+        cards_html += '</div>'
+        st.markdown(cards_html, unsafe_allow_html=True)
     else:
         st.info("Market news loading… Try refreshing.")
 
     st.markdown("---")
 
     # ── Stock-specific news + Corporate Actions ──────────────────────────────
-    st.markdown('<div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:10px">Stock-Specific News &amp; Corporate Actions</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;font-family:var(--font-mono);border-left:2px solid var(--accent);padding-left:8px">Stock News &amp; Corporate Actions</div>', unsafe_allow_html=True)
 
     col_ns, col_nb = st.columns([3, 1])
     with col_ns:
@@ -2168,13 +2333,14 @@ with tab5:
             with st.spinner("Fetching…"):
                 news_items = get_stock_news(sym_clean, n=8)
             if news_items:
+                sn_html = '<div style="display:flex;flex-direction:column;gap:8px">'
                 for _n in news_items:
-                    st.markdown(f"""
-<div class="news-item">
-  <a href="{_n['link']}" target="_blank" style="color:#e2e8f0;font-size:13px;font-weight:500;text-decoration:none;line-height:1.45">{_n['title']}</a>
-  <div style="font-size:10px;color:#334155;margin-top:3px">{_n['published']}</div>
-</div>
-""", unsafe_allow_html=True)
+                    sn_html += f"""<a href="{_n['link']}" target="_blank" class="news-card" style="text-decoration:none">
+  <span class="news-headline">{_n['title']}</span>
+  <div class="news-meta"><span class="news-time">{_n['published']}</span></div>
+</a>"""
+                sn_html += '</div>'
+                st.markdown(sn_html, unsafe_allow_html=True)
             else:
                 st.info("No recent news found.")
         with col_b:
