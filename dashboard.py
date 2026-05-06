@@ -2158,19 +2158,26 @@ with tab3:
 # ══════════════════════════════════════════════════════════════════════════════
 with tab4:
     st.markdown("""
-<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
-  <div>
-    <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">Mutual Funds</div>
-    <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
-      <span class="live"></span> Top Funds · Portfolio Tracker · NAV · CAGR Returns &nbsp;·&nbsp; AMFI data
-    </div>
+<div style="margin-bottom:24px">
+  <div style="font-size:26px;font-weight:900;color:var(--txt);letter-spacing:-.04em;
+    font-family:var(--font-sans);line-height:1.2">Mutual Funds</div>
+  <div style="font-size:11px;color:var(--txt3);margin-top:5px;font-family:var(--font-mono);
+    display:flex;align-items:center;gap:10px">
+    <span class="live"></span>
+    <span>Top Funds &nbsp;·&nbsp; Portfolio Tracker &nbsp;·&nbsp; Live NAV &nbsp;·&nbsp; CAGR Returns &nbsp;·&nbsp; AMFI data</span>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
     # ── Top Funds per Category ─────────────────────────────────────────────
-    st.markdown('<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;font-family:var(--font-mono);border-left:2px solid var(--accent);padding-left:8px">Top Funds by Category</div>', unsafe_allow_html=True)
-    with st.spinner("Loading top funds data…"):
+    st.markdown("""
+<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;
+  letter-spacing:.14em;margin-bottom:14px;font-family:var(--font-mono);
+  display:flex;align-items:center;gap:8px">
+  <span style="display:inline-block;width:3px;height:14px;background:var(--accent);border-radius:2px"></span>
+  Top Funds by Category
+</div>""", unsafe_allow_html=True)
+    with st.spinner("Loading top funds…"):
         top_data = _top_funds()
 
     if top_data:
@@ -2180,117 +2187,145 @@ with tab4:
                 if not funds:
                     st.info("No data available.")
                     continue
-                rows = []
-                for f in funds:
-                    def _fmt(v):
-                        return f"{v:+.2f}%" if v is not None else "—"
-                    rows.append({
-                        "Fund": f["short"],
-                        "NAV": f"₹{f['nav']:.2f}",
-                        "1Y": _fmt(f['1Y']),
-                        "3Y": _fmt(f['3Y']),
-                        "5Y": _fmt(f['5Y']),
-                    })
-                df_top = pd.DataFrame(rows)
 
-                def _style_ret(val):
-                    if isinstance(val, str) and val != "—":
-                        return "color:#4ade80;font-weight:700" if val.startswith("+") else "color:#f87171;font-weight:700"
-                    return "color:#475569"
+                # ── Groww-style fund list rows ─────────────────────────────
+                # Header row
+                st.markdown("""
+<div style="display:grid;grid-template-columns:1fr 90px 90px 90px 90px;
+  padding:8px 16px;border-bottom:1px solid var(--border);
+  font-size:9px;font-weight:800;color:var(--txt3);text-transform:uppercase;
+  letter-spacing:.1em;font-family:var(--font-mono)">
+  <div>Fund</div>
+  <div style="text-align:right">NAV</div>
+  <div style="text-align:right">1Y</div>
+  <div style="text-align:right">3Y</div>
+  <div style="text-align:right">5Y</div>
+</div>""", unsafe_allow_html=True)
 
-                st.dataframe(
-                    df_top.style.map(_style_ret, subset=["1Y", "3Y", "5Y"]),
-                    use_container_width=True, hide_index=True
-                )
-                # Selectbox to pick which fund to drill into
+                cards_html = ""
+                for fi, f in enumerate(funds):
+                    def _rc(v):
+                        if v is None: return "var(--txt3)", "—"
+                        return ("#00d09c" if v >= 0 else "#eb5757"), f"{v:+.2f}%"
+                    c1y, v1y = _rc(f.get("1Y"))
+                    c3y, v3y = _rc(f.get("3Y"))
+                    c5y, v5y = _rc(f.get("5Y"))
+                    bg = "var(--bg2)" if fi % 2 == 0 else "transparent"
+                    cards_html += f"""
+<div style="display:grid;grid-template-columns:1fr 90px 90px 90px 90px;
+  padding:12px 16px;border-bottom:1px solid var(--border);background:{bg};
+  transition:background .15s" onmouseover="this.style.background='rgba(0,208,156,.03)'"
+  onmouseout="this.style.background='{bg}'">
+  <div>
+    <div style="font-size:13px;font-weight:700;color:var(--txt);font-family:var(--font-sans);
+      line-height:1.3">{f['short']}</div>
+    <div style="font-size:10px;color:var(--txt3);margin-top:2px;font-family:var(--font-mono)">{f.get('fund_house','')}</div>
+  </div>
+  <div style="text-align:right;font-size:13px;font-weight:700;font-family:var(--font-mono);
+    color:var(--txt);align-self:center">₹{f['nav']:.2f}</div>
+  <div style="text-align:right;font-size:13px;font-weight:800;font-family:var(--font-mono);
+    color:{c1y};align-self:center">{v1y}</div>
+  <div style="text-align:right;font-size:13px;font-weight:800;font-family:var(--font-mono);
+    color:{c3y};align-self:center">{v3y}</div>
+  <div style="text-align:right;font-size:13px;font-weight:800;font-family:var(--font-mono);
+    color:{c5y};align-self:center">{v5y}</div>
+</div>"""
+                st.markdown(f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px">{cards_html}</div>', unsafe_allow_html=True)
+
+                # Holdings drill-down
                 _fund_names = [f["short"] for f in funds]
-                _sel_idx = st.selectbox("View fund breakdown", range(len(_fund_names)),
+                _sel_idx = st.selectbox("Holdings breakdown →", range(len(_fund_names)),
                                         format_func=lambda i: _fund_names[i],
-                                        key=f"sel_{cat}", label_visibility="collapsed")
+                                        key=f"sel_{cat}", label_visibility="visible")
                 _sf = funds[_sel_idx]
                 hd  = get_fund_holdings(_sf['scheme_code'])
                 if hd:
-                    _pc = ["#22c55e","#22c55e","#a78bfa","#f59e0b","#f87171","#34d399","#fb923c","#e879f9","#94a3b8","#64748b"]
-                    _pbg  = "#0d1117"
-                    _pfg  = "#94a3b8"
-                    _pgrd = "#1a2030"
+                    _pc   = ["#00d09c","#4da6ff","#a78bfa","#f59e0b","#f87171",
+                             "#34d399","#fb923c","#e879f9","#94a3b8","#64748b"]
+                    _pbg  = "#080808"
+                    _pfg  = "#888"
+                    _pgrd = "#181818"
 
-                    # ── Sector allocation — horizontal bar ─────────────────────
                     sec      = hd["sectors"]
                     sec_keys = list(sec.keys())[:9]
                     sec_vals = [sec[k] for k in sec_keys]
-                    fig_s = go.Figure()
-                    for i, (k, v) in enumerate(zip(sec_keys, sec_vals)):
-                        fig_s.add_trace(go.Bar(
-                            x=[v], y=["Sector"], orientation="h",
-                            name=k, marker_color=_pc[i % len(_pc)],
-                            hovertemplate=f"{k}: {v:.1f}%<extra></extra>",
-                            text=f"{k[:12]} {v:.1f}%" if v > 4 else "",
-                            textposition="inside",
-                            textfont=dict(size=9, color="#111827"),
+
+                    hd_col1, hd_col2 = st.columns([3, 2])
+
+                    with hd_col1:
+                        # Sector stacked bar
+                        fig_s = go.Figure()
+                        for i, (k, v) in enumerate(zip(sec_keys, sec_vals)):
+                            fig_s.add_trace(go.Bar(
+                                x=[v], y=[""], orientation="h",
+                                name=k, marker_color=_pc[i % len(_pc)],
+                                hovertemplate=f"{k}: {v:.1f}%<extra></extra>",
+                                text=f"{k[:10]} {v:.1f}%" if v > 5 else "",
+                                textposition="inside",
+                                textfont=dict(size=9, color="#000"),
+                            ))
+                        fig_s.update_layout(
+                            barmode="stack", height=56,
+                            paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                            font=dict(color=_pfg, size=10),
+                            margin=dict(l=0,r=0,t=0,b=0),
+                            showlegend=False,
+                            xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[0,100]),
+                            yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
+                        )
+                        sec_pills = "".join(
+                            f'<span style="display:inline-flex;align-items:center;gap:4px;'
+                            f'margin:3px 8px 3px 0;font-size:10px;color:{_pc[i%len(_pc)]};">'
+                            f'<span style="width:7px;height:7px;border-radius:50%;'
+                            f'background:{_pc[i%len(_pc)]};display:inline-block;flex-shrink:0"></span>'
+                            f'{k}&nbsp;<span style="color:var(--txt3)">{v:.1f}%</span></span>'
+                            for i, (k, v) in enumerate(zip(sec_keys, sec_vals))
+                        )
+                        st.markdown('<div style="font-size:9px;font-weight:800;color:var(--txt3);'
+                                    'text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;'
+                                    'font-family:var(--font-mono)">Sector Allocation</div>',
+                                    unsafe_allow_html=True)
+                        st.plotly_chart(fig_s, use_container_width=True, key=f"sec_{cat}_{_sel_idx}")
+                        st.markdown(f'<div style="line-height:2;margin-top:2px">{sec_pills}</div>',
+                                    unsafe_allow_html=True)
+
+                    with hd_col2:
+                        scripts  = hd["top_scripts"]
+                        h_labels = [s[0] for s in scripts[:8]]
+                        h_vals   = [s[1] for s in scripts[:8]]
+                        others   = max(0, 100 - sum(h_vals))
+                        if others > 1:
+                            h_labels.append("Others"); h_vals.append(round(others, 1))
+                        paired = sorted(zip(h_vals, h_labels), reverse=True)
+                        h_vals, h_labels = [p[0] for p in paired], [p[1] for p in paired]
+                        fig_h = go.Figure()
+                        fig_h.add_trace(go.Bar(
+                            x=h_vals, y=h_labels, orientation="h",
+                            marker=dict(color="#00d09c", opacity=0.75),
+                            text=[f"{v:.1f}%" for v in h_vals],
+                            textposition="outside",
+                            textfont=dict(size=9, color=_pfg),
+                            hovertemplate="%{y}: %{x:.1f}%<extra></extra>",
                         ))
-                    fig_s.update_layout(
-                        barmode="stack", height=100,
-                        paper_bgcolor=_pbg, plot_bgcolor=_pbg,
-                        font=dict(color=_pfg, size=10),
-                        margin=dict(l=0,r=0,t=0,b=0),
-                        showlegend=False,
-                        xaxis=dict(showticklabels=False, showgrid=False, zeroline=False, range=[0,100]),
-                        yaxis=dict(showticklabels=False, showgrid=False, zeroline=False),
-                    )
-                    # Sector legend as HTML pills
-                    sec_pills = "".join(
-                        f'<span style="display:inline-flex;align-items:center;gap:4px;margin:3px 6px 3px 0;'
-                        f'font-size:10px;color:{_pc[i%len(_pc)]}">'
-                        f'<span style="width:8px;height:8px;border-radius:50%;background:{_pc[i%len(_pc)]};display:inline-block"></span>'
-                        f'{k} <span style="color:#475569">{v:.1f}%</span></span>'
-                        for i, (k, v) in enumerate(zip(sec_keys, sec_vals))
-                    )
-                    st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Sector Allocation</div>', unsafe_allow_html=True)
-                    st.plotly_chart(fig_s, use_container_width=True, key=f"pie_s_{cat}_{_sel_idx}")
-                    st.markdown(f'<div style="line-height:1.8">{sec_pills}</div>', unsafe_allow_html=True)
-
-                    st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
-
-                    # ── Top holdings — horizontal bars sorted by weight ─────────
-                    scripts  = hd["top_scripts"]
-                    h_labels = [s[0] for s in scripts[:10]]
-                    h_vals   = [s[1] for s in scripts[:10]]
-                    others   = max(0, 100 - sum(h_vals))
-                    if others > 0.5:
-                        h_labels.append("Others"); h_vals.append(round(others,1))
-                    # Sort descending
-                    paired = sorted(zip(h_vals, h_labels), reverse=True)
-                    h_vals, h_labels = [p[0] for p in paired], [p[1] for p in paired]
-                    fig_h = go.Figure()
-                    fig_h.add_trace(go.Bar(
-                        x=h_vals, y=h_labels, orientation="h",
-                        marker=dict(
-                            color=h_vals,
-                            colorscale=[[0,"#052e16"],[0.5,"#22c55e"],[1.0,"#22c55e"]],
-                            line=dict(color=_pgrd, width=0),
-                        ),
-                        text=[f"{v:.1f}%" for v in h_vals],
-                        textposition="outside",
-                        textfont=dict(size=10, color=_pfg),
-                        hovertemplate="%{y}: %{x:.1f}%<extra></extra>",
-                    ))
-                    fig_h.update_layout(
-                        height=max(200, len(h_labels) * 26),
-                        paper_bgcolor=_pbg, plot_bgcolor=_pbg,
-                        font=dict(color=_pfg, size=10),
-                        margin=dict(l=4, r=60, t=4, b=4),
-                        showlegend=False,
-                        xaxis=dict(showgrid=True, gridcolor=_pgrd, showticklabels=False, zeroline=False),
-                        yaxis=dict(showgrid=False, zeroline=False, tickfont=dict(size=10, color=_pfg)),
-                    )
-                    st.markdown('<div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em">Top Holdings (% weight)</div>', unsafe_allow_html=True)
-                    st.plotly_chart(fig_h, use_container_width=True, key=f"pie_h_{cat}_{_sel_idx}")
-                    st.caption(f"{_sf['fund_house']}  ·  Holdings approx — last AMC monthly disclosure")
+                        fig_h.update_layout(
+                            height=max(180, len(h_labels) * 24),
+                            paper_bgcolor=_pbg, plot_bgcolor=_pbg,
+                            font=dict(color=_pfg, size=10),
+                            margin=dict(l=4, r=50, t=4, b=4),
+                            showlegend=False,
+                            xaxis=dict(showgrid=False, showticklabels=False, zeroline=False),
+                            yaxis=dict(showgrid=False, zeroline=False,
+                                      tickfont=dict(size=10, color=_pfg)),
+                        )
+                        st.markdown('<div style="font-size:9px;font-weight:800;color:var(--txt3);'
+                                    'text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;'
+                                    'font-family:var(--font-mono)">Top Holdings</div>',
+                                    unsafe_allow_html=True)
+                        st.plotly_chart(fig_h, use_container_width=True, key=f"hld_{cat}_{_sel_idx}")
                 else:
-                    st.info("Holdings data not available for this fund.")
+                    st.info("Holdings data not available.")
 
-    st.markdown("---")
+    st.markdown('<div style="height:8px"></div>', unsafe_allow_html=True)
 
     # Portfolio manager
     portfolio = load_portfolio()
