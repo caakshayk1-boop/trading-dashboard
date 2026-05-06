@@ -18,10 +18,8 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s"
 )
 
-NIFTY500_CSV_URL  = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
-NIFTY1000_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty1000list.csv"
-NIFTY500_CACHE    = "cache/nifty500.csv"
-NIFTY1000_CACHE   = "cache/nifty1000.csv"
+NIFTY500_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
+NIFTY500_CACHE   = "cache/nifty500.csv"
 
 # NSE F&O eligible stocks (Nifty 200 + major midcap with liquid options)
 FNO_ELIGIBLE = {
@@ -275,18 +273,11 @@ def _load_nse_csv(url, cache_path):
 
 
 def load_nifty500():
-    """Load Nifty 1000 universe (try 1000 first, fallback to 500, then static list)."""
-    # Try Nifty 1000 first
-    syms = _load_nse_csv(NIFTY1000_CSV_URL, NIFTY1000_CACHE)
-    if len(syms) >= 800:
-        logging.info(f"Universe: Nifty 1000 ({len(syms)} stocks)")
-        return syms
-    # Fallback: Nifty 500
+    """Load Nifty 500 universe (live NSE CSV, fallback to static list)."""
     syms = _load_nse_csv(NIFTY500_CSV_URL, NIFTY500_CACHE)
     if len(syms) >= 400:
         logging.info(f"Universe: Nifty 500 ({len(syms)} stocks)")
         return syms
-    # Static fallback
     logging.warning("Using static fallback universe")
     seen = set()
     return [s for s in FALLBACK_NIFTY500 if not (s in seen or seen.add(s))]
@@ -1719,7 +1710,7 @@ def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
 
 def scan_multibaggers(universe=None, top_n=15) -> list:
     """
-    Scan Nifty 1000 for potential multibagger candidates (weekly timeframe).
+    Scan Nifty 500 for potential multibagger candidates (weekly timeframe).
     Runs Saturday only — results valid for the week.
     Returns top_n sorted by composite score.
     """

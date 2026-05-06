@@ -161,7 +161,7 @@ from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_ne
                          get_indian_market_news)
 
 st.set_page_config(
-    page_title="TradeFlow AI Pro — NSE Nifty 1000 Swing Scanner",
+    page_title="TradeFlow AI Pro — NSE Nifty 500 Swing Scanner",
     layout="wide", page_icon="⚡",
     initial_sidebar_state="expanded",
 )
@@ -1101,14 +1101,14 @@ with st.sidebar:
     # About + data source (audit fix §5)
     with st.expander("ℹ About · Data Sources"):
         st.markdown("""
-**TradeFlow AI Pro** — Nifty 1000 Swing Scanner
+**TradeFlow AI Pro** — Nifty 500 Swing Scanner
 
 Built by **Akshay K** (CA, FP&A)
 [@askakshayfinance](https://www.instagram.com/askakshayfinance)
 
 **Data Sources:**
 - Price data: Yahoo Finance (yfinance)
-- Universe: NSE Nifty 1000 CSV (official NSE archives)
+- Universe: NSE Nifty 500 CSV (official NSE archives)
 - Delay: ~15 min during market hours
 
 **Signal logic:**
@@ -1118,7 +1118,7 @@ Built by **Akshay K** (CA, FP&A)
 
 **Version:** 2.1 · Scans: Mon–Fri auto
         """)
-    st.caption("Data: Yahoo Finance · NSE Nifty 1000 · Not SEBI Advice")
+    st.caption("Data: Yahoo Finance · NSE Nifty 500 · Not SEBI Advice")
 
 
 # ── Header ────────────────────────────────────────────────────────────────────
@@ -1145,7 +1145,7 @@ st.markdown(f"""
       </div>
       <div style="font-size:9px;color:#3d4a5c;letter-spacing:.08em;text-transform:uppercase;
         font-family:'JetBrains Mono',monospace">
-        NSE Nifty 1000 · Swing + F&amp;O + Multi-TF Signals
+        NSE Nifty 500 · Swing + F&amp;O + Multi-TF Signals
       </div>
     </div>
     <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
@@ -2528,7 +2528,7 @@ st.markdown(f"""
     <div style="font-size:12px;font-weight:900;color:#f2f2f2;font-family:'JetBrains Mono',monospace;
       letter-spacing:.05em;margin-bottom:6px">TRADEFLOW AI <span style="color:#22c55e">PRO</span></div>
     <div style="font-size:10px;color:#334155;line-height:1.7">
-      NSE Nifty 1000 Swing Scanner<br>
+      NSE Nifty 500 Swing Scanner<br>
       Signals updated: Mon–Fri · 9:20 AM · 11:45 AM · 4:30 PM IST<br>
       Weekly multibaggers: Every Saturday 9:30 AM IST
     </div>
@@ -2539,7 +2539,7 @@ st.markdown(f"""
       letter-spacing:.1em;margin-bottom:6px">Data Sources</div>
     <div style="font-size:10px;color:#334155;line-height:1.7">
       Price data: <span style="color:#64748b">Yahoo Finance (yfinance)</span><br>
-      Universe: <span style="color:#64748b">NSE India — Nifty 1000 official list</span><br>
+      Universe: <span style="color:#64748b">NSE India — Nifty 500 official list</span><br>
       Delay: <span style="color:#64748b">~15 min during market hours</span><br>
       Last page load: <span style="color:#22c55e">{_footer_ts}</span>
     </div>

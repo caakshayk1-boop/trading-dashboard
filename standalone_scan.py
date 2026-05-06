@@ -344,7 +344,7 @@ def run_swing_scan(time_str):
     update_outcomes()
     update_all_outcomes()
 
-    logging.info("Running swing scan (Nifty 1000)...")
+    logging.info("Running swing scan (Nifty 500)...")
     signals = scan_all()
     logging.info(f"Swing scan: {len(signals)} signals")
 
