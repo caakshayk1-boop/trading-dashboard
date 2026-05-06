@@ -1193,9 +1193,16 @@ st.markdown(f"""
 }}
 .sh-stat b {{ color:var(--txt); font-size:11px; }}
 .sh-clock {{
+  display:flex; flex-direction:column; align-items:flex-end; gap:1px;
+}}
+.sh-clock-ist {{
   font-size:14px; font-weight:800; font-family:var(--font-mono);
   color:var(--accent); letter-spacing:.1em;
   animation:clockTick 1s step-end infinite;
+}}
+.sh-clock-gmt {{
+  font-size:9px; font-weight:600; font-family:var(--font-mono);
+  color:var(--txt3); letter-spacing:.08em;
 }}
 /* Big metric blocks */
 .sh-metrics {{
@@ -1284,9 +1291,11 @@ st.markdown(f"""
       <div class="sh-stat">OHL SCAN&nbsp;<b>NIFTY 200</b></div>
       <div class="sh-stat">SLOT&nbsp;<b>{_scan_slot_hdr or "—"}</b></div>
     </div>
-    <div style="display:flex;align-items:center;gap:16px">
-      <div class="sh-stat">LAST SCAN&nbsp;<b>{str(_scan_ts_hdr or "—")[:16]}</b></div>
-      <div class="sh-clock" id="sh-clock">{_clock_hh}</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="sh-clock" id="sh-clock">
+        <span class="sh-clock-ist" id="sh-clock-ist">--:--:--</span>
+        <span class="sh-clock-gmt" id="sh-clock-gmt">-- GMT</span>
+      </div>
       <span style="font-size:8px;font-weight:800;padding:2px 8px;background:rgba(0,255,136,.1);
         color:var(--accent);border:1px solid rgba(0,255,136,.3);font-family:var(--font-mono);
         letter-spacing:.1em">LIVE</span>
@@ -1346,16 +1355,22 @@ st.markdown(f"""
 
 <script>
 (function liveClock() {{
-  var el = document.getElementById('sh-clock');
-  if (!el) {{ setTimeout(liveClock, 500); return; }}
-  setInterval(function() {{
+  var istEl = document.getElementById('sh-clock-ist');
+  var gmtEl = document.getElementById('sh-clock-gmt');
+  if (!istEl || !gmtEl) {{ setTimeout(liveClock, 500); return; }}
+  function tick() {{
     var now = new Date();
-    var ist = new Date(now.getTime() + (5.5*3600000));
-    var hh = String(ist.getUTCHours()).padStart(2,'0');
-    var mm = String(ist.getUTCMinutes()).padStart(2,'0');
-    var ss = String(ist.getUTCSeconds()).padStart(2,'0');
-    el.textContent = hh+':'+mm+':'+ss;
-  }}, 1000);
+    var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    var ist = new Date(utcMs + 19800000);
+    var gmt = new Date(utcMs);
+    istEl.textContent = String(ist.getHours()).padStart(2,'0')+':'+
+                        String(ist.getMinutes()).padStart(2,'0')+':'+
+                        String(ist.getSeconds()).padStart(2,'0')+' IST';
+    gmtEl.textContent = String(gmt.getHours()).padStart(2,'0')+':'+
+                        String(gmt.getMinutes()).padStart(2,'0')+' GMT';
+  }}
+  tick();
+  setInterval(tick, 1000);
 }})();
 </script>
 """, unsafe_allow_html=True)
