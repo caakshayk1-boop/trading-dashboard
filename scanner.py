@@ -294,25 +294,27 @@ def load_nifty200():
     return load_nifty500()[:200]
 
 
-def scan_ohl_oll(tolerance_pct: float = 0.05) -> list:
+def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
     """
     Open=High (OHL, bearish) / Open=Low (OLL, bullish) screener on Nifty 200.
-    Uses first 15-min candle of the day (9:15 AM IST close).
+    Uses first 15-min candle (9:15 AM IST). Tolerance: 0.02% (~1-2 ticks).
     RSI filter on 1h: OLL requires RSI >= 46, OHL requires RSI <= 54.
-    Returns [] before 9:30 AM IST (first candle not yet closed).
+    Broken status:
+      OLL broken if any intraday candle's low < first_candle_open
+      OHL broken if any intraday candle's high > first_candle_open
+    Returns [] before 9:30 AM IST.
     """
     import pytz
     from datetime import datetime as _dt
     IST = pytz.timezone("Asia/Kolkata")
     now = _dt.now(IST)
-    # First candle closes at 9:30 AM
     if now.hour < 9 or (now.hour == 9 and now.minute < 30):
         return []
 
-    symbols = load_nifty200()                        # list of "SYM.NS"
+    symbols = load_nifty200()
     tol = tolerance_pct / 100
 
-    # ── Batch download 15m (much faster than individual calls) ──────────────
+    # ── Batch download 15m ──────────────────────────────────────────────────
     try:
         df_all = yf.download(
             symbols, period="1d", interval="15m",
@@ -329,26 +331,52 @@ def scan_ohl_oll(tolerance_pct: float = 0.05) -> list:
             df15 = df_all[sym] if len(symbols) > 1 else df_all
             if df15 is None or df15.empty:
                 continue
+
             row = df15.iloc[0]
             o = float(row["Open"]); h = float(row["High"])
             l = float(row["Low"]);  c = float(row["Close"])
             if o <= 0:
                 continue
+
+            # Strict 0.02% tolerance — ~1-2 ticks only
             is_oll = (abs(o - l) / o) <= tol   # Open = Low  → bullish
             is_ohl = (abs(o - h) / o) <= tol   # Open = High → bearish
             if not (is_oll or is_ohl):
                 continue
-            curr = float(df15["Close"].iloc[-1])
+
+            # ── Broken check: scan ALL today's candles vs first open ───────
+            # Use a tiny 0.05% buffer for tick rounding noise in yfinance data
+            buf   = o * 0.0005
+            is_broken = False
+            if len(df15) > 1:
+                all_lows  = df15["Low"].astype(float)
+                all_highs = df15["High"].astype(float)
+                if is_oll:
+                    # OLL broken if any candle low dips below open
+                    is_broken = bool(all_lows.min() < (o - buf))
+                else:
+                    # OHL broken if any candle high pokes above open
+                    is_broken = bool(all_highs.max() > (o + buf))
+
+            curr      = float(df15["Close"].iloc[-1])
+            day_low   = float(df15["Low"].astype(float).min())
+            day_high  = float(df15["High"].astype(float).max())
             candidates.append({
-                "sym": sym, "type": "OLL" if is_oll else "OHL",
-                "open": round(o, 2), "high": round(h, 2),
-                "low": round(l, 2), "close_1c": round(c, 2),
-                "price": round(curr, 2),
+                "sym":       sym,
+                "type":      "OLL" if is_oll else "OHL",
+                "open":      round(o, 2),
+                "high":      round(h, 2),
+                "low":       round(l, 2),
+                "close_1c":  round(c, 2),
+                "price":     round(curr, 2),
+                "day_low":   round(day_low, 2),
+                "day_high":  round(day_high, 2),
+                "broken":    is_broken,
             })
         except Exception:
             continue
 
-    # ── Fetch 1h RSI only for candidates (small set) ────────────────────────
+    # ── 1h RSI only for candidates ──────────────────────────────────────────
     results = []
     for cand in candidates:
         sym = cand["sym"]
@@ -363,18 +391,19 @@ def scan_ohl_oll(tolerance_pct: float = 0.05) -> list:
             )
             if pd.isna(rsi_val):
                 continue
-            # Apply RSI filter
-            if cand["type"] == "OLL" and rsi_val < 46:
-                continue
-            if cand["type"] == "OHL" and rsi_val > 54:
-                continue
+            # RSI filter only for ACTIVE setups; still include broken (for info)
+            if not cand["broken"]:
+                if cand["type"] == "OLL" and rsi_val < 46:
+                    continue
+                if cand["type"] == "OHL" and rsi_val > 54:
+                    continue
             results.append({**cand, "rsi_1h": round(rsi_val, 1),
                             "symbol": sym.replace(".NS", "")})
         except Exception:
             continue
 
-    results.sort(key=lambda x: x["rsi_1h"],
-                 reverse=True)   # OLL: highest RSI first; OHL: already ≤54
+    # Active first (sorted by RSI desc), broken last
+    results.sort(key=lambda x: (x["broken"], -x["rsi_1h"]))
     return results
 
 

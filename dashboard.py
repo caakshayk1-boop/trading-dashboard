@@ -2492,61 +2492,109 @@ with tab_ohl:
             _oll = [r for r in _ohl_results if r["type"] == "OLL"]
             _ohl_list = [r for r in _ohl_results if r["type"] == "OHL"]
 
+            _oll_active    = [r for r in _oll      if not r["broken"]]
+            _oll_broken    = [r for r in _oll      if r["broken"]]
+            _ohl_active    = [r for r in _ohl_list if not r["broken"]]
+            _ohl_broken    = [r for r in _ohl_list if r["broken"]]
+            _total_active  = len(_oll_active) + len(_ohl_active)
+            _total_broken  = len(_oll_broken) + len(_ohl_broken)
+
             # Summary metrics
             st.markdown(f"""
 <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
   <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--green);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OLL Bullish</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--green)">{len(_oll)}</div>
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OLL Active</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--green)">{len(_oll_active)}</div>
   </div>
   <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OHL Bearish</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--red)">{len(_ohl_list)}</div>
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OHL Active</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--red)">{len(_ohl_active)}</div>
   </div>
   <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">Total Setups</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--accent)">{len(_ohl_results)}</div>
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">Active Total</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--accent)">{_total_active}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid rgba(255,170,0,.3);border-top:2px solid var(--amber);border-radius:8px;padding:12px 18px;min-width:130px">
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">⚡ Broken</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--amber)">{_total_broken}</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-            def _render_ohl_cards(items, sig_type):
-                border_col = "var(--green)" if sig_type == "OLL" else "var(--red)"
-                badge_bg   = "rgba(0,255,136,.08)" if sig_type == "OLL" else "rgba(255,59,59,.07)"
-                badge_col  = "var(--green)" if sig_type == "OLL" else "var(--red)"
-                label      = "BULLISH · LONG BIAS" if sig_type == "OLL" else "BEARISH · SHORT BIAS"
-                desc       = "Open = Low — price held above open all candle" if sig_type == "OLL" else "Open = High — price only fell from open"
+            def _render_ohl_cards(items, sig_type, broken=False):
+                if broken:
+                    border_col = "var(--amber)"
+                    badge_bg   = "rgba(255,170,0,.08)"
+                    badge_col  = "var(--amber)"
+                    section_label = f"{sig_type} — ⚡ BROKEN ({len(items)} stocks)"
+                    section_desc  = "Pattern violated intraday — open level breached"
+                elif sig_type == "OLL":
+                    border_col = "var(--green)"
+                    badge_bg   = "rgba(0,255,136,.08)"
+                    badge_col  = "var(--green)"
+                    section_label = f"OLL — BULLISH · LONG BIAS ({len(items)} stocks)"
+                    section_desc  = "Open = Low · 1H RSI ≥ 46 · price held above open"
+                else:
+                    border_col = "var(--red)"
+                    badge_bg   = "rgba(255,59,59,.07)"
+                    badge_col  = "var(--red)"
+                    section_label = f"OHL — BEARISH · SHORT BIAS ({len(items)} stocks)"
+                    section_desc  = "Open = High · 1H RSI ≤ 54 · price only fell from open"
 
                 st.markdown(
                     f'<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;'
-                    f'letter-spacing:.14em;margin:16px 0 10px;font-family:var(--font-mono);'
+                    f'letter-spacing:.14em;margin:20px 0 10px;font-family:var(--font-mono);'
                     f'border-left:3px solid {border_col};padding-left:8px">'
-                    f'{sig_type} — {label} <span style="font-weight:400;color:var(--txt3)">({len(items)} stocks)</span></div>',
+                    f'{section_label}</div>'
+                    f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:10px">{section_desc}</div>',
                     unsafe_allow_html=True
                 )
                 if not items:
-                    st.markdown(f'<div style="font-size:11px;color:var(--txt3);padding:8px 0;font-family:var(--font-mono)">None found today</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="font-size:11px;color:var(--txt3);padding:4px 0 12px;font-family:var(--font-mono)">None</div>', unsafe_allow_html=True)
                     return
 
                 for r in items:
-                    sym     = r["symbol"]
-                    rsi     = r["rsi_1h"]
-                    o       = r["open"]; h = r["high"]; l = r["low"]
-                    c1      = r["close_1c"]; price = r["price"]
-                    chg_pct = ((price - o) / o * 100) if o > 0 else 0
-                    chg_col = "var(--green)" if chg_pct >= 0 else "var(--red)"
-                    rsi_bar = min(100, rsi)
-                    rsi_col = "#00ff88" if rsi >= 55 else "#ffaa00" if rsi >= 46 else "#ff3b3b"
-                    tv_link = f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+                    sym      = r["symbol"]
+                    rsi      = r["rsi_1h"]
+                    o        = r["open"]; h = r["high"]; l = r["low"]
+                    c1       = r["close_1c"]; price = r["price"]
+                    day_low  = r.get("day_low", l)
+                    day_high = r.get("day_high", h)
+                    chg_pct  = ((price - o) / o * 100) if o > 0 else 0
+                    chg_col  = "var(--green)" if chg_pct >= 0 else "var(--red)"
+                    rsi_bar  = min(100, rsi)
+                    rsi_col  = "#00ff88" if rsi >= 55 else "#ffaa00" if rsi >= 46 else "#ff3b3b"
+                    tv_link  = f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+
+                    # Broken: show how far open was violated
+                    broken_detail = ""
+                    if broken:
+                        if sig_type == "OLL":
+                            breach = round(o - day_low, 2)
+                            breach_pct = round(breach / o * 100, 2)
+                            broken_detail = f'<div style="background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.2);border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:11px;font-family:var(--font-mono);color:var(--amber)">⚡ BROKEN — Day low ₹{day_low} went <b>{breach_pct}% below open ₹{o}</b></div>'
+                        else:
+                            breach = round(day_high - o, 2)
+                            breach_pct = round(breach / o * 100, 2)
+                            broken_detail = f'<div style="background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.2);border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:11px;font-family:var(--font-mono);color:var(--amber)">⚡ BROKEN — Day high ₹{day_high} went <b>{breach_pct}% above open ₹{o}</b></div>'
+
+                    card_opacity = "opacity:.65;" if broken else ""
+                    status_badge = (
+                        f'<span style="display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;'
+                        f'font-size:9px;font-weight:800;background:rgba(255,170,0,.1);color:var(--amber);'
+                        f'border:1px solid rgba(255,170,0,.3);letter-spacing:.06em">⚡ BROKEN</span>'
+                        if broken else
+                        f'<span style="display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;'
+                        f'font-size:9px;font-weight:800;background:{badge_bg};color:{badge_col};'
+                        f'border:1px solid {badge_col}44;letter-spacing:.06em">{sig_type} ✓ ACTIVE</span>'
+                    )
 
                     st.markdown(f"""
-<div class="card" style="border-left-color:{border_col};margin-bottom:10px">
+<div class="card" style="border-left-color:{border_col};margin-bottom:10px;{card_opacity}">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
     <div>
       <span style="font-size:18px;font-weight:900;color:var(--txt);font-family:var(--font-mono)">{sym}</span>
-      <span style="display:inline-block;margin-left:10px;padding:2px 9px;border-radius:99px;
-        font-size:9px;font-weight:800;background:{badge_bg};color:{badge_col};
-        border:1px solid {badge_col}44;letter-spacing:.06em;text-transform:uppercase">{sig_type}</span>
+      {status_badge}
     </div>
     <div style="text-align:right">
       <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{price}</div>
@@ -2554,22 +2602,28 @@ with tab_ohl:
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
-      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Open</div>
-      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{o}</div>
+  {broken_detail}
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px">
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Open</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{o}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
-      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">High</div>
-      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--green)">₹{h}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">1st High</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--green)">₹{h}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
-      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Low</div>
-      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--red)">₹{l}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">1st Low</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--red)">₹{l}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
-      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">1st Close</div>
-      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{c1}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Day Low</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{'var(--amber)' if broken and sig_type=='OLL' else 'var(--txt)'}">₹{day_low}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Day High</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{'var(--amber)' if broken and sig_type=='OHL' else 'var(--txt)'}">₹{day_high}</div>
     </div>
   </div>
 
@@ -2588,10 +2642,14 @@ with tab_ohl:
 </div>
 """, unsafe_allow_html=True)
 
-            _render_ohl_cards(_oll, "OLL")
-            _render_ohl_cards(_ohl_list, "OHL")
+            _render_ohl_cards(_oll_active,  "OLL", broken=False)
+            _render_ohl_cards(_ohl_active,  "OHL", broken=False)
+            if _oll_broken or _ohl_broken:
+                st.markdown('<hr style="border-color:rgba(255,170,0,.2);margin:8px 0">', unsafe_allow_html=True)
+                _render_ohl_cards(_oll_broken, "OLL", broken=True)
+                _render_ohl_cards(_ohl_broken, "OHL", broken=True)
 
-            st.markdown('<div style="font-size:9px;color:var(--txt3);margin-top:16px;font-family:var(--font-mono)">Tolerance: 0.05% · Universe: Nifty 200 · Data: Yahoo Finance (15-min delay) · Not SEBI advice</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:9px;color:var(--txt3);margin-top:16px;font-family:var(--font-mono)">Tolerance: 0.02% (~1-2 ticks) · Universe: Nifty 200 · Broken = day low/high violated open · Data: Yahoo Finance · Not SEBI advice</div>', unsafe_allow_html=True)
 
 
 # TAB 7 — HISTORY (all signals ever sent — permanent record)
