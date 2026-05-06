@@ -213,352 +213,306 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Theme vars — light default, dark via .dark-app on stApp ───────────────────
+# ── MiroFish terminal theme vars ──────────────────────────────────────────────
+# Daily accent rotation (7 day cycle — Mon→Sun)
 _THEME_VARS = """
-/* LIGHT (default) */
 :root {
-  --bg:      #f8fafc;
-  --bg2:     #ffffff;
-  --bg3:     #f1f5f9;
-  --border:  #e2e8f0;
-  --border2: #cbd5e1;
-  --txt:     #0f172a;
-  --txt2:    #334155;
-  --txt3:    #64748b;
-  --txt4:    #94a3b8;
-  --accent:  #16a34a;
-  --green:   #16a34a;
-  --red:     #dc2626;
-  --amber:   #d97706;
-  --card-bg: rgba(255,255,255,0.95);
-  --card-border: rgba(22,163,74,0.25);
-  --card-shadow: rgba(22,163,74,0.08);
-  --header-bg: rgba(248,250,252,0.95);
+  --bg:        #050505;
+  --bg2:       #0d0d0d;
+  --bg3:       #111111;
+  --border:    #1c1c1c;
+  --border2:   #141414;
+  --txt:       #e8e8e8;
+  --txt2:      #999999;
+  --txt3:      #555555;
+  --txt4:      #333333;
+  --accent:    #00ff88;
+  --green:     #00ff88;
+  --red:       #ff3b3b;
+  --amber:     #ffaa00;
+  --purple:    #b48aff;
+  --blue:      #4da6ff;
+  --card-bg:       #0a0a0a;
+  --card-border:   rgba(0,255,136,0.18);
+  --card-shadow:   rgba(0,255,136,0.06);
+  --header-bg:     rgba(5,5,5,0.97);
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  /* Daily accent rotates via JS */
+  --daily-accent: #00ff88;
 }
-/* DARK — applied when stApp gets class dark-app */
-[data-testid="stApp"].dark-app {
-  --bg:      #0d1117;
-  --bg2:     #111827;
-  --bg3:     #1d2432;
-  --border:  #252d3d;
-  --border2: #1a2030;
-  --txt:     #f2f2f2;
-  --txt2:    #8b93a7;
-  --txt3:    #64748b;
-  --txt4:    #3d4a5c;
-  --accent:  #22c55e;
-  --green:   #22c55e;
-  --red:     #ef4444;
-  --amber:   #f59e0b;
-  --card-bg: rgba(17,24,39,0.7);
-  --card-border: rgba(34,197,94,0.30);
-  --card-shadow: rgba(34,197,94,0.08);
-  --header-bg: rgba(17,24,39,0.95);
+/* LIGHT mode — toggled via .light-app class */
+[data-testid="stApp"].light-app {
+  --bg:        #f8fafc;
+  --bg2:       #ffffff;
+  --bg3:       #f1f5f9;
+  --border:    #e2e8f0;
+  --border2:   #cbd5e1;
+  --txt:       #0f172a;
+  --txt2:      #334155;
+  --txt3:      #64748b;
+  --txt4:      #94a3b8;
+  --accent:    #16a34a;
+  --green:     #16a34a;
+  --red:       #dc2626;
+  --amber:     #d97706;
+  --card-bg:       #ffffff;
+  --card-border:   rgba(22,163,74,0.22);
+  --card-shadow:   rgba(22,163,74,0.07);
+  --header-bg:     rgba(248,250,252,0.97);
 }
 """
 
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 {_THEME_VARS}
 
-/* === KEYFRAMES (from zip) === */
-@keyframes fadeUp {{ from {{ opacity:0; transform:translateY(18px); }} to {{ opacity:1; transform:translateY(0); }} }}
-@keyframes cardEnter {{ 0% {{ opacity:0; transform:translateY(30px) scale(.95); }} 100% {{ opacity:1; transform:translateY(0) scale(1); }} }}
-@keyframes marquee {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
-@keyframes pulseGlow {{ 0%,100% {{ opacity:1; }} 50% {{ opacity:.55; }} }}
-@keyframes statusBlink {{ 0%,100% {{ background:rgba(34,197,94,.9); }} 50% {{ background:rgba(34,197,94,.25); }} }}
-@keyframes shimmer {{ 0% {{ left:-120%; }} 100% {{ left:120%; }} }}
-@property --rot {{ syntax:'<angle>'; inherits:false; initial-value:0deg; }}
-@keyframes rotateBorder {{ to {{ --rot:360deg; }} }}
-@keyframes numberFlip {{ 0% {{ opacity:0; transform:translateY(-8px); }} 100% {{ opacity:1; transform:translateY(0); }} }}
-@keyframes aiGlow {{ 0%,100% {{ box-shadow:0 0 18px rgba(167,139,250,.2); }} 50% {{ box-shadow:0 0 32px rgba(167,139,250,.4); }} }}
-@keyframes scanLine {{ 0% {{ transform:translateX(-100%); }} 100% {{ transform:translateX(200%); }} }}
-@keyframes scanDiag {{ 0% {{ transform:translateX(-100%) translateY(-100%); }} 100% {{ transform:translateX(200%) translateY(200%); }} }}
-@keyframes neuralPulse {{ 0%,100% {{ opacity:.3; transform:scale(1); }} 50% {{ opacity:.7; transform:scale(1.3); }} }}
-@keyframes confFill {{ from {{ width:0%; }} to {{ width:100%; }} }}
+/* === KEYFRAMES === */
+@keyframes fadeUp   {{ from {{ opacity:0; transform:translateY(20px); }} to {{ opacity:1; transform:translateY(0); }} }}
+@keyframes fadeIn   {{ from {{ opacity:0; }} to {{ opacity:1; }} }}
+@keyframes cardEnter {{ 0% {{ opacity:0; transform:translateY(24px) scale(.97); }} 100% {{ opacity:1; transform:translateY(0) scale(1); }} }}
+@keyframes rowSlide {{ from {{ opacity:0; transform:translateX(-12px); }} to {{ opacity:1; transform:translateX(0); }} }}
+@keyframes marquee  {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
+@keyframes pulseGlow {{ 0%,100% {{ opacity:1; }} 50% {{ opacity:.5; }} }}
+@keyframes statusBlink {{ 0%,100% {{ opacity:1; }} 50% {{ opacity:.2; }} }}
+@keyframes numberFlip {{ 0% {{ opacity:0; transform:translateY(-10px); }} 100% {{ opacity:1; transform:translateY(0); }} }}
+@keyframes scanLine  {{ 0% {{ transform:translateX(-100%); }} 100% {{ transform:translateX(300%); }} }}
+@keyframes scanDiag  {{ 0% {{ transform:translateX(-100%) translateY(-100%); }} 100% {{ transform:translateX(200%) translateY(200%); }} }}
+@keyframes neuralPulse {{ 0%,100% {{ opacity:.3; transform:scale(1); }} 50% {{ opacity:.8; transform:scale(1.4); }} }}
+@keyframes confFill  {{ from {{ width:0%; }} to {{ width:100%; }} }}
 @keyframes tickerScroll {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
+@keyframes shimmer   {{ 0% {{ left:-120%; }} 100% {{ left:140%; }} }}
+@keyframes glowPulse {{ 0%,100% {{ box-shadow:0 0 8px var(--accent); }} 50% {{ box-shadow:0 0 24px var(--accent), 0 0 48px rgba(0,255,136,.1); }} }}
+@keyframes scanH     {{ 0% {{ top:-2px; }} 100% {{ top:102%; }} }}
+@property --rot      {{ syntax:'<angle>'; inherits:false; initial-value:0deg; }}
+@keyframes rotateBorder {{ to {{ --rot:360deg; }} }}
 
 /* === BASE === */
-[data-testid="stApp"] {{
+html, body, [data-testid="stApp"] {{
   background: var(--bg) !important;
   color: var(--txt) !important;
-  transition: background .35s ease, color .35s ease;
+  font-family: var(--font-mono) !important;
+  -webkit-font-smoothing: antialiased;
 }}
-html, body {{ -webkit-font-smoothing: antialiased; }}
-.stApp {{ background: var(--bg) !important; }}
-* {{ transition: background-color .25s ease, border-color .25s ease, color .2s ease; }}
+.stApp, [data-testid="stAppViewContainer"] {{ background: var(--bg) !important; }}
 
-/* Subtle dot grid */
-.main .block-container {{
-  background-image: radial-gradient(var(--border) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: 0 0;
+/* Subtle scanline texture */
+[data-testid="stApp"]::after {{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px);
 }}
 
-/* Ambient glow */
+/* Corner glow */
 [data-testid="stApp"]::before {{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(ellipse 55% 35% at 10% 30%, rgba(22,163,74,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 90% 15%, rgba(99,102,241,.05) 0%, transparent 50%);
+    radial-gradient(ellipse 40% 30% at 0% 0%, rgba(0,255,136,.04) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 25% at 100% 100%, rgba(77,166,255,.03) 0%, transparent 60%);
 }}
+
+/* Block container */
+.main .block-container {{ padding-top: 1rem !important; max-width: 1400px !important; }}
 
 /* Theme toggle */
 #theme-toggle {{
-  position: fixed; top: 14px; right: 76px; z-index: 9999;
+  position: fixed; top: 12px; right: 72px; z-index: 9999;
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 20px; padding: 5px 14px; cursor: pointer;
-  font-size: 12px; font-weight: 700; color: var(--txt2);
-  transition: all .2s ease; box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  user-select: none; font-family: Inter, sans-serif; letter-spacing:.02em;
+  border-radius: 4px; padding: 4px 12px; cursor: pointer;
+  font-size: 11px; font-weight: 700; color: var(--txt3);
+  font-family: var(--font-mono); letter-spacing:.05em; text-transform:uppercase;
+  transition: all .15s ease; user-select: none;
 }}
-#theme-toggle:hover {{ border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px rgba(22,163,74,.2); }}
+#theme-toggle:hover {{ border-color: var(--accent); color: var(--accent); }}
 
 /* Header */
 header[data-testid="stHeader"] {{
   background: var(--header-bg) !important;
-  backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border) !important;
 }}
 
-/* Sidebar */
+/* Sidebar — terminal column */
 section[data-testid="stSidebar"] {{
   background: var(--bg2) !important;
   border-right: 1px solid var(--border) !important;
 }}
-section[data-testid="stSidebar"] * {{ color: var(--txt3) !important; }}
-section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2,
-section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
+section[data-testid="stSidebar"] > div {{ padding-top: 1rem; }}
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span {{ color: var(--txt3) !important; font-size: 11px !important; }}
+section[data-testid="stSidebar"] h1,h2,h3 {{ color: var(--txt2) !important; }}
 
-/* === BUTTONS (emerald — from zip) === */
+/* === BUTTONS === */
 .stButton > button {{
-  background: rgba(34,197,94,.15) !important;
-  color: #22c55e !important;
-  border: 1px solid rgba(34,197,94,.3) !important;
-  border-radius: 8px !important;
+  background: transparent !important;
+  color: var(--accent) !important;
+  border: 1px solid var(--accent) !important;
+  border-radius: 2px !important;
   font-weight: 700 !important;
-  font-size: 12px !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  letter-spacing: .03em !important;
-  transition: all .25s ease !important;
-  position: relative !important;
-  overflow: hidden !important;
+  font-size: 11px !important;
+  font-family: var(--font-mono) !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  transition: all .15s ease !important;
+  padding: 6px 16px !important;
 }}
 .stButton > button:hover {{
-  background: rgba(34,197,94,.25) !important;
-  border-color: rgba(34,197,94,.5) !important;
-  box-shadow: 0 0 20px rgba(34,197,94,.2) !important;
-  transform: translateY(-1px) !important;
+  background: rgba(0,255,136,.08) !important;
+  box-shadow: 0 0 16px rgba(0,255,136,.2) !important;
 }}
-.stButton > button::after {{
-  content:''; position:absolute; top:0; left:-120%; width:60%; height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
-  transition:left .4s ease;
-}}
-.stButton > button:hover::after {{ left: 160%; }}
 
-/* === TABS (zip's emerald tab style) === */
+/* === TABS — terminal row === */
 .stTabs [data-baseweb="tab-list"] {{
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
-  padding: 0 8px;
-  gap: 2px;
+  padding: 0 4px;
+  gap: 0;
 }}
 .stTabs [data-baseweb="tab"] {{
   background: transparent;
   color: var(--txt3) !important;
-  font-size: 10px;
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace !important;
-  padding: 12px 16px;
+  font-size: 10px; font-weight: 700;
+  font-family: var(--font-mono) !important;
+  padding: 10px 14px;
   border-bottom: 2px solid transparent;
   border-radius: 0;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  transition: all .2s ease;
+  letter-spacing: .1em; text-transform: uppercase;
+  transition: color .15s;
 }}
 .stTabs [data-baseweb="tab"]:hover {{ color: var(--txt2) !important; }}
 .stTabs [aria-selected="true"] {{
   color: var(--accent) !important;
-  border-bottom-color: var(--accent) !important;
-  text-shadow: none;
+  border-bottom: 2px solid var(--accent) !important;
   font-weight: 900 !important;
 }}
 
-/* === METRICS (emerald accent from zip) === */
+/* === METRICS — terminal stat blocks === */
 [data-testid="metric-container"] {{
   background: var(--bg2);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px 20px;
-  transition: all .3s ease;
-  position: relative;
-  overflow: hidden;
-  animation: cardEnter .5s ease both;
-}}
-[data-testid="metric-container"]::before {{
-  content:''; position:absolute; inset:0;
-  background: linear-gradient(135deg, rgba(34,197,94,.04) 0%, transparent 60%);
-  pointer-events: none;
+  border-top: 2px solid var(--accent);
+  border-radius: 2px;
+  padding: 14px 18px;
+  animation: cardEnter .4s ease both;
+  position: relative; overflow: hidden;
 }}
 [data-testid="metric-container"]::after {{
   content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background: linear-gradient(90deg, transparent, rgba(34,197,94,.5), transparent);
+  background: linear-gradient(90deg, var(--accent), transparent);
 }}
-[data-testid="metric-container"]:hover {{
-  border-color: rgba(34,197,94,.3);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 28px rgba(0,0,0,.2), 0 0 20px rgba(34,197,94,.06);
-}}
+[data-testid="metric-container"]:hover {{ border-color: var(--accent); }}
 [data-testid="metric-container"] label {{
-  color: var(--txt3) !important;
-  font-size: 9px !important;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  font-weight: 700;
+  color: var(--txt3) !important; font-size: 9px !important;
+  text-transform: uppercase; letter-spacing: .14em; font-weight: 600;
+  font-family: var(--font-mono) !important;
 }}
 [data-testid="metric-container"] [data-testid="stMetricValue"] {{
-  color: var(--txt) !important;
-  font-size: 26px !important;
-  font-weight: 800 !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  letter-spacing: -.03em;
-  animation: numberFlip .5s ease both;
+  color: var(--txt) !important; font-size: 28px !important;
+  font-weight: 800 !important; font-family: var(--font-mono) !important;
+  letter-spacing: -.04em; animation: numberFlip .4s ease both;
 }}
-[data-testid="stMetricDelta"] {{ font-size: 11px !important; font-weight: 700 !important; }}
+[data-testid="stMetricDelta"] {{ font-size: 11px !important; font-weight: 700 !important; font-family: var(--font-mono) !important; }}
 
-/* === DATAFRAMES === */
-.stDataFrame {{ border: 1px solid var(--border) !important; border-radius: 10px; overflow: hidden; }}
+/* === DATAFRAMES — terminal table === */
+.stDataFrame {{ border: 1px solid var(--border) !important; border-radius: 2px; overflow: hidden; }}
 .stDataFrame thead th {{
-  background: var(--bg2) !important;
-  color: #22c55e !important;
-  font-size: 9px !important;
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  font-weight: 800;
-  border-color: var(--border2) !important;
-  padding: 10px 14px !important;
-  font-family: 'JetBrains Mono', monospace !important;
+  background: var(--bg2) !important; color: var(--accent) !important;
+  font-size: 9px !important; text-transform: uppercase; letter-spacing: .12em;
+  font-weight: 800; font-family: var(--font-mono) !important;
+  border-color: var(--border2) !important; padding: 10px 14px !important;
 }}
-.stDataFrame tbody tr {{ background: var(--bg) !important; transition: background .15s; }}
-.stDataFrame tbody tr:hover {{ background: var(--bg3) !important; }}
+.stDataFrame tbody tr {{ background: var(--bg) !important; border-color: var(--border2) !important; animation: rowSlide .3s ease both; }}
+.stDataFrame tbody tr:hover {{ background: var(--bg2) !important; }}
 .stDataFrame tbody td {{
-  color: var(--txt2) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 12px !important;
-  border-color: var(--border2) !important;
-  padding: 9px 14px !important;
+  color: var(--txt2) !important; font-family: var(--font-mono) !important;
+  font-size: 12px !important; border-color: var(--border2) !important; padding: 8px 14px !important;
 }}
 
 /* === INPUTS === */
 .stTextInput input, .stSelectbox [data-baseweb="select"] {{
-  background: var(--bg3) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--txt) !important;
-  border-radius: 8px !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  transition: border-color .2s, box-shadow .2s;
+  background: var(--bg2) !important; border: 1px solid var(--border) !important;
+  color: var(--txt) !important; border-radius: 2px !important;
+  font-family: var(--font-mono) !important; font-size: 12px !important;
 }}
-.stTextInput input:focus {{
-  border-color: #22c55e !important;
-  box-shadow: 0 0 0 3px rgba(34,197,94,.1) !important;
-}}
+.stTextInput input:focus {{ border-color: var(--accent) !important; box-shadow: 0 0 0 2px rgba(0,255,136,.1) !important; }}
 
 /* === EXPANDERS === */
 .streamlit-expanderHeader {{
-  background: var(--bg3) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 8px !important;
-  color: var(--txt2) !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  transition: all .2s;
+  background: var(--bg2) !important; border: 1px solid var(--border) !important;
+  border-radius: 2px !important; color: var(--txt3) !important;
+  font-size: 11px !important; font-weight: 700 !important; font-family: var(--font-mono) !important;
 }}
-.streamlit-expanderHeader:hover {{ border-color: #22c55e !important; }}
-.streamlit-expanderContent {{
-  background: var(--bg2) !important;
-  border: 1px solid var(--border2) !important;
-  border-top: none !important;
-  border-radius: 0 0 8px 8px !important;
-}}
+.streamlit-expanderHeader:hover {{ border-color: var(--accent) !important; color: var(--txt2) !important; }}
+.streamlit-expanderContent {{ background: var(--bg2) !important; border: 1px solid var(--border) !important; border-top: none !important; }}
 
 /* ==========================================
-   SIGNAL CARDS
+   SIGNAL CARDS — terminal style
    ========================================== */
 .card {{
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--card-border);
-  border-radius: 10px;
-  padding: 16px;
-  margin-bottom: 14px;
-  position: relative;
-  overflow: hidden;
-  animation: cardEnter .5s cubic-bezier(.22,1,.36,1) both;
-  transition: transform .3s ease, box-shadow .3s ease;
-  box-shadow: 0 4px 24px var(--card-shadow);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  position: relative; overflow: hidden;
+  animation: cardEnter .35s cubic-bezier(.22,1,.36,1) both;
+  transition: border-color .2s, box-shadow .2s;
 }}
-.card:hover {{
-  transform: scale(1.02);
-  box-shadow: 0 8px 40px rgba(34,197,94,.15);
-}}
-/* Left colored strip — key design element from zip */
 .card::before {{
-  content:'';
-  position: absolute;
-  top: 0; left: 0; bottom: 0;
-  width: 4px;
-  background: #22c55e;
-  border-radius: 10px 0 0 10px;
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, var(--accent), transparent 40%);
+  opacity: .5;
 }}
-.card.sell {{
-  border-color: rgba(239,68,68,.35);
-  box-shadow: 0 4px 24px rgba(239,68,68,.08);
+/* scan line sweep on hover */
+.card::after {{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: scanLine 2.5s ease-in-out infinite; opacity:.4; pointer-events:none;
 }}
-.card.sell:hover {{ box-shadow: 0 8px 40px rgba(239,68,68,.15); }}
-.card.sell::before {{ background: #ef4444; }}
-
-/* Stagger delays */
-.card:nth-child(1) {{ animation-delay:.04s; }}
-.card:nth-child(2) {{ animation-delay:.10s; }}
-.card:nth-child(3) {{ animation-delay:.16s; }}
-.card:nth-child(4) {{ animation-delay:.22s; }}
-.card:nth-child(5) {{ animation-delay:.28s; }}
-
-/* ZIP card inner padding for strip */
-.card-inner {{ padding-left: 12px; }}
-
-/* Top card — rotating border variant */
+.card:hover {{ border-color: var(--accent); box-shadow: 0 0 20px rgba(0,255,136,.07); }}
+.card.sell {{ border-left-color: var(--red); }}
+.card.sell::before {{ background: linear-gradient(90deg, var(--red), transparent 40%); }}
+.card-inner {{ padding-left: 4px; }}
 .card.top {{
-  border-color:transparent;
-  background:linear-gradient(rgba(17,24,39,.6), rgba(17,24,39,.6)) padding-box,
-    conic-gradient(from var(--rot), #22c55e 0%, #4ade80 33%, #a78bfa 66%, #22c55e 100%) border-box;
-  animation:rotateBorder 4s linear infinite; }}
+  border-color: transparent;
+  background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+    conic-gradient(from var(--rot), var(--accent) 0%, #4ade80 33%, var(--purple) 66%, var(--accent) 100%) border-box;
+  animation: rotateBorder 4s linear infinite;
+}}
+/* stagger */
+.card:nth-child(1) {{ animation-delay:.02s; }}
+.card:nth-child(2) {{ animation-delay:.07s; }}
+.card:nth-child(3) {{ animation-delay:.12s; }}
+.card:nth-child(4) {{ animation-delay:.17s; }}
+.card:nth-child(5) {{ animation-delay:.22s; }}
 
 /* === BREAKOUT CARDS === */
 .bo-card {{
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(22,163,74,.2);
-  border-left: 4px solid var(--accent);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
-  animation: cardEnter .45s ease both;
-  transition: all .25s ease;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 2px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  animation: cardEnter .35s ease both;
+  transition: border-color .15s, box-shadow .15s;
+  position: relative;
 }}
-.bo-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,.1); }}
-.bo-card.weekly {{ border-left-color: #f59e0b; border-color: rgba(245,158,11,.2); }}
-.bo-card.monthly {{ border-left-color: #a78bfa; border-color: rgba(167,139,250,.2); }}
+.bo-card:hover {{ border-color: var(--accent); box-shadow: 0 0 16px rgba(0,255,136,.07); }}
+.bo-card.weekly {{ border-left-color: var(--amber); }}
+.bo-card.monthly {{ border-left-color: var(--purple); }}
+
+/* Grade badge colors */
+.grade-s {{ color:#00ff88; border-color:rgba(0,255,136,.4); background:rgba(0,255,136,.08); }}
+.grade-a {{ color:#4da6ff; border-color:rgba(77,166,255,.4); background:rgba(77,166,255,.06); }}
+.grade-b {{ color:#ffaa00; border-color:rgba(255,170,0,.4); background:rgba(255,170,0,.06); }}
+.grade-c {{ color:#888; border-color:#333; background:rgba(255,255,255,.03); }}
 
 /* === AI SIGNAL CARDS === */
 .ai-card {{
   background: var(--card-bg);
-  border: 1px solid rgba(167,139,250,.25);
+  border: 1px solid rgba(180,138,255,.2);
   border-left: 4px solid #a78bfa;
   border-radius: 10px;
   padding: 16px 18px;
@@ -609,27 +563,20 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 /* === F&O CARDS === */
 .fno-card {{
   background: var(--card-bg);
-  border: 1px solid rgba(22,163,74,.15);
-  border-left: 4px solid var(--accent);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
-  animation: cardEnter .45s ease both;
-  transition: all .25s ease;
+  border: 1px solid var(--border); border-left: 3px solid var(--accent);
+  border-radius: 2px; padding: 12px 16px; margin-bottom: 8px;
+  animation: cardEnter .35s ease both; transition: border-color .15s;
 }}
-.fno-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,.08); }}
+.fno-card:hover {{ border-color: var(--accent); }}
 
 /* === MF CARDS === */
 .mf-card {{
   background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px 20px;
-  margin-bottom: 12px;
-  animation: cardEnter .4s ease both;
-  transition: all .25s ease;
+  border: 1px solid var(--border); border-radius: 2px;
+  padding: 14px 18px; margin-bottom: 8px;
+  animation: cardEnter .35s ease both; transition: border-color .15s;
 }}
-.mf-card:hover {{ transform: translateY(-2px); border-color: rgba(34,197,94,.3); }}
+.mf-card:hover {{ border-color: var(--accent); }}
 
 /* === ACTION BADGES (zip style) === */
 .action-badge {{
@@ -743,12 +690,13 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 .news-item:hover {{ padding-left:4px; }}
 .news-item:last-child {{ border-bottom:none; }}
 
-/* === LIVE DOT (from zip) === */
-.live {{
-  display: inline-block; width: 7px; height: 7px; background: #22c55e; border-radius: 50%;
-  margin-right: 6px; animation: statusBlink 2s ease-in-out infinite; vertical-align: middle;
+/* === LIVE DOT === */
+.live, .live-dot {{
+  display: inline-block; width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%; margin-right: 6px; vertical-align: middle;
+  animation: statusBlink 1.8s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--accent);
 }}
-.live-dot {{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#22c55e; margin-right:6px; animation:statusBlink 2s ease-in-out infinite; }}
 
 /* === SCROLLBAR === */
 ::-webkit-scrollbar {{ width: 4px; height: 4px; }}
@@ -757,41 +705,89 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 ::-webkit-scrollbar-thumb:hover {{ background: #22c55e; }}
 
 /* === UTILITY === */
-.green {{ color: #22c55e !important; }}
-.red   {{ color: #ef4444 !important; }}
-.amber {{ color: #f59e0b !important; }}
-.purple {{ color: #a78bfa !important; }}
-.blue  {{ color: #22c55e !important; }}
-hr {{ border-color: var(--border2) !important; margin: 16px 0 !important; }}
+.green  {{ color: var(--green)  !important; }}
+.red    {{ color: var(--red)    !important; }}
+.amber  {{ color: var(--amber)  !important; }}
+.purple {{ color: var(--purple) !important; }}
+.blue   {{ color: var(--blue)   !important; }}
+.mono   {{ font-family: var(--font-mono) !important; }}
+hr {{ border:none; border-top: 1px solid var(--border) !important; margin: 14px 0 !important; }}
+
+/* === SECTION HEADER (terminal style) === */
+.sec-hdr {{
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  color: var(--txt3); letter-spacing: .18em; text-transform: uppercase;
+  border-left: 2px solid var(--accent); padding-left: 8px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}}
+.sec-hdr .num {{ color: var(--accent); font-size: 13px; }}
+
+/* === NUMBER DISPLAY === */
+.big-num {{
+  font-family: var(--font-mono); font-size: 48px; font-weight: 800;
+  color: var(--txt); letter-spacing: -.04em; line-height: 1;
+  animation: numberFlip .4s ease both;
+}}
+.big-num.green {{ color: var(--green) !important; }}
+.big-num.red   {{ color: var(--red)   !important; }}
+
+/* scrollbar */
+::-webkit-scrollbar {{ width: 3px; height: 3px; }}
+::-webkit-scrollbar-track {{ background: var(--bg); }}
+::-webkit-scrollbar-thumb {{ background: var(--border); border-radius: 2px; }}
+::-webkit-scrollbar-thumb:hover {{ background: var(--accent); }}
 </style>
 """, unsafe_allow_html=True)
 
-# ── Theme toggle: targets stApp directly (works inside Streamlit's DOM) ───────
+# ── Theme toggle + daily accent rotation ──────────────────────────────────────
 st.markdown("""
-<button id="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+<button id="theme-toggle" onclick="toggleTheme()">☀ LIGHT</button>
 <script>
-(function applyTheme() {
-  var saved = localStorage.getItem('tdTheme') || 'light';
+// Daily accent: rotates through 7 colours Mon→Sun
+var DAILY_ACCENTS = ['#00ff88','#4da6ff','#ff3b3b','#ffaa00','#b48aff','#00e5ff','#ff6b35'];
+var DAY_FONTS = [
+  "'JetBrains Mono', monospace",
+  "'Fira Code', monospace",
+  "'JetBrains Mono', monospace",
+  "'Courier New', monospace",
+  "'JetBrains Mono', monospace",
+  "'Fira Code', monospace",
+  "'JetBrains Mono', monospace"
+];
+
+(function init() {
   var app = document.querySelector('[data-testid="stApp"]');
+  if (!app) { setTimeout(init, 100); return; }
+
+  // Daily accent
+  var day = new Date().getDay(); // 0=Sun
+  var accent = DAILY_ACCENTS[day];
+  app.style.setProperty('--accent', accent);
+  app.style.setProperty('--green', accent);
+  app.style.setProperty('--daily-accent', accent);
+  app.style.setProperty('--font-mono', DAY_FONTS[day]);
+
+  // Light toggle
+  var saved = localStorage.getItem('tradeflowTheme') || 'dark';
   var btn = document.getElementById('theme-toggle');
-  if (!app) { setTimeout(applyTheme, 120); return; }
-  if (saved === 'dark') {
-    app.classList.add('dark-app');
-    if (btn) btn.innerHTML = '☀️ Light';
+  if (saved === 'light') {
+    app.classList.add('light-app');
+    if (btn) btn.textContent = '◐ DARK';
   }
 })();
+
 function toggleTheme() {
   var app = document.querySelector('[data-testid="stApp"]');
   var btn = document.getElementById('theme-toggle');
   if (!app) return;
-  if (app.classList.contains('dark-app')) {
-    app.classList.remove('dark-app');
-    if (btn) btn.innerHTML = '🌙 Dark';
-    localStorage.setItem('tdTheme', 'light');
+  if (app.classList.contains('light-app')) {
+    app.classList.remove('light-app');
+    if (btn) btn.textContent = '☀ LIGHT';
+    localStorage.setItem('tradeflowTheme', 'dark');
   } else {
-    app.classList.add('dark-app');
-    if (btn) btn.innerHTML = '☀️ Light';
-    localStorage.setItem('tdTheme', 'dark');
+    app.classList.add('light-app');
+    if (btn) btn.textContent = '◐ DARK';
+    localStorage.setItem('tradeflowTheme', 'light');
   }
 }
 </script>
@@ -1556,16 +1552,43 @@ with tab2:
         st.markdown('<div style="text-align:center;padding:40px 0"><div style="font-size:32px">📋</div><div style="font-size:13px;color:#334155;margin-top:8px">No breakouts in DB yet.<br>Auto-scan runs 4:30 PM IST on trading days.</div></div>', unsafe_allow_html=True)
     else:
         bos_list = breakouts_df.to_dict("records")
+        # ── Grade + sort — kill the 68-dump problem ───────────────────────────
+        def _grade(b):
+            vol = float(b.get("vol_ratio",1)); rr = float(b.get("rr",1))
+            tf  = b.get("timeframe","Daily")
+            pts = 0
+            if vol >= 5:  pts += 3
+            elif vol >= 3: pts += 2
+            elif vol >= 2: pts += 1
+            if rr >= 2.5: pts += 2
+            elif rr >= 1.8: pts += 1
+            if tf == "Monthly": pts += 3
+            elif tf == "Weekly": pts += 2
+            return {5:"S",4:"S",3:"A",2:"A",1:"B",0:"B"}.get(pts, "C")
+        for b in bos_list: b["_grade"] = _grade(b)
+        # Sort: Monthly first, then Weekly, then Daily; within each by vol_ratio
+        tf_order = {"Monthly":0,"Weekly":1,"Daily":2}
+        bos_list.sort(key=lambda b: (tf_order.get(b.get("timeframe","Daily"),3), -float(b.get("vol_ratio",1))))
+        # Hard cap: top 5 Monthly + top 5 Weekly + top 10 Daily = max 20
+        _by_tf = {"Monthly":[],"Weekly":[],"Daily":[]}
+        for b in bos_list:
+            tf = b.get("timeframe","Daily")
+            if tf in _by_tf: _by_tf[tf].append(b)
+        bos_list = _by_tf["Monthly"][:5] + _by_tf["Weekly"][:5] + _by_tf["Daily"][:10]
+
         tfc = {}
         for b in bos_list: tfc[b.get("timeframe","Daily")] = tfc.get(b.get("timeframe","Daily"),0)+1
         c1,c2,c3,c4 = st.columns(4)
-        c1.metric("Total",   len(bos_list))
-        c2.metric("Monthly", tfc.get("Monthly",0))
-        c3.metric("Weekly",  tfc.get("Weekly",0))
-        c4.metric("Daily",   tfc.get("Daily",0))
-        st.markdown("---")
-        tf_f = st.selectbox("Filter", ["All","Monthly","Weekly","Daily"])
-        fil  = [b for b in bos_list if tf_f=="All" or b.get("timeframe")==tf_f]
+        c1.metric("Curated",  len(bos_list))
+        c2.metric("Monthly",  tfc.get("Monthly",0))
+        c3.metric("Weekly",   tfc.get("Weekly",0))
+        c4.metric("Daily",    tfc.get("Daily",0))
+        st.markdown('<div class="sec-hdr">🏆 GRADE S/A — highest conviction only · max 20 shown · sorted by timeframe + vol surge</div>', unsafe_allow_html=True)
+        tf_f = st.selectbox("Filter timeframe", ["All","Monthly","Weekly","Daily"])
+        grade_f = st.selectbox("Filter grade", ["All","S","A","B"], index=0)
+        fil = [b for b in bos_list if
+               (tf_f=="All" or b.get("timeframe")==tf_f) and
+               (grade_f=="All" or b.get("_grade")==grade_f)]
         for b in fil:
             tf   = b.get("timeframe","Daily")
             cls  = {"Monthly":"monthly","Weekly":"weekly","Daily":""}.get(tf,"")
@@ -1578,25 +1601,31 @@ with tab2:
                 except: raw_pats = []
             pats = " · ".join(raw_pats) if raw_pats else b.get("pattern","")
             tv_link = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{b['symbol']}"
+            grade   = b.get("_grade","B")
+            grade_cls = {"S":"grade-s","A":"grade-a","B":"grade-b","C":"grade-c"}.get(grade,"grade-c")
             st.markdown(f"""
 <div class="bo-card {cls}">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <div style="display:flex;align-items:center;gap:8px">
-      <span style="font-size:16px;font-weight:800;color:#f1f5f9">{b['symbol']}</span>{fno_b}
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:var(--font-mono);font-size:18px;font-weight:800;color:var(--txt)">{b['symbol']}</span>
+      {fno_b}
     </div>
-    <span style="font-size:10px;font-weight:700;color:{tfc2};padding:2px 8px;border-radius:99px;border:1px solid {tfc2}40">{tf.upper()}</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span class="badge {grade_cls}" style="font-size:10px;font-weight:900;padding:2px 8px;border-radius:2px;border:1px solid">GRADE {grade}</span>
+      <span style="font-size:9px;font-weight:700;color:{tfc2};padding:2px 8px;border-radius:2px;border:1px solid {tfc2}40;font-family:var(--font-mono)">{tf.upper()}</span>
+    </div>
   </div>
-  <div style="font-size:10px;color:#475569;margin-bottom:8px">{pats}</div>
+  <div style="font-size:10px;color:var(--txt3);margin-bottom:8px;font-family:var(--font-mono)">{pats}</div>
   <div class="row">
-    <div class="kv"><span>Price</span><span>₹{b['price']:,.1f}</span></div>
-    <div class="kv"><span>Stop</span><span class="red">₹{b['sl']:,.1f}</span></div>
+    <div class="kv"><span>ENTRY</span><span>₹{b['price']:,.1f}</span></div>
+    <div class="kv"><span>STOP</span><span class="red">₹{b['sl']:,.1f}</span></div>
     <div class="kv"><span>T1</span><span class="green">₹{b['target1']:,.1f}</span></div>
     <div class="kv"><span>T2</span><span class="green">₹{b['target2']:,.1f}</span></div>
-    <div class="kv"><span>T3</span><span class="green">₹{b['target3']:,.1f}</span></div>
-    <div class="kv"><span>RR</span><span class="blue">1:{b['rr']}</span></div>
-    <div class="kv"><span>Vol</span><span>{b['vol_ratio']}x</span></div>
+    <div class="kv"><span>T3</span><span class="green">₹{b.get('target3',b['target2']):,.1f}</span></div>
+    <div class="kv"><span>R:R</span><span class="blue">1:{b['rr']}</span></div>
+    <div class="kv"><span>VOL</span><span class="amber">{b['vol_ratio']}×</span></div>
   </div>
-  <div style="margin-top:8px"><a href="{tv_link}" target="_blank" style="color:#22c55e;font-size:11px;font-weight:600;text-decoration:none">Chart →</a></div>
+  <div style="margin-top:8px"><a href="{tv_link}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;font-family:var(--font-mono)">CHART →</a></div>
 </div>
 """, unsafe_allow_html=True)
 
