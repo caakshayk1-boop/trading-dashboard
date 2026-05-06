@@ -5,6 +5,7 @@ import os
 
 TELEGRAM_TOKEN      = os.environ.get("TELEGRAM_TOKEN", "paste_your_token_here")
 TELEGRAM_CHAT_ID    = os.environ.get("TELEGRAM_CHAT_ID", "paste_your_chat_id_here")
+ANTHROPIC_API_KEY   = os.environ.get("ANTHROPIC_API_KEY", "paste_your_key_here")
 
 CAPITAL             = 500000
 RISK_PER_TRADE      = 0.01

@@ -213,9 +213,27 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Theme (dark only — matches zip design system) ─────────────────────────────
+# ── Theme: Light default + Dark toggle ────────────────────────────────────────
 _THEME_VARS = """
+/* LIGHT MODE (default) */
 :root {
+  --bg:      #f8fafc;
+  --bg2:     #ffffff;
+  --bg3:     #f1f5f9;
+  --border:  #e2e8f0;
+  --border2: #cbd5e1;
+  --txt:     #0f172a;
+  --txt2:    #334155;
+  --txt3:    #64748b;
+  --txt4:    #94a3b8;
+  --accent:  #16a34a;
+  --green:   #16a34a;
+  --red:     #dc2626;
+  --amber:   #d97706;
+  --card-bg: rgba(255,255,255,0.9);
+}
+/* DARK MODE */
+body.dark-mode {
   --bg:      #0d1117;
   --bg2:     #111827;
   --bg3:     #1d2432;
@@ -255,30 +273,62 @@ st.markdown(f"""
 @keyframes confFill {{ from {{ width:0%; }} to {{ width:100%; }} }}
 @keyframes tickerScroll {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
 
-/* === BASE (zip's terminal style) === */
+/* === BASE === */
 html, body, [class*="css"] {{
-  font-family: 'JetBrains Mono', 'Inter', monospace !important;
+  font-family: 'Inter', 'JetBrains Mono', sans-serif !important;
   background: var(--bg) !important;
   color: var(--txt) !important;
   -webkit-font-smoothing: antialiased;
+  transition: background .3s ease, color .3s ease;
 }}
-.stApp {{ background: var(--bg); }}
+.stApp {{ background: var(--bg); transition: background .3s ease; }}
 
-/* Terminal grid background — from zip's .terminal-grid */
+/* Light mode: subtle grid */
 .main .block-container {{
+  background-image:
+    linear-gradient(rgba(22,163,74,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,163,74,.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}}
+body.dark-mode .main .block-container {{
   background-image:
     linear-gradient(rgba(34,197,94,.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34,197,94,.03) 1px, transparent 1px);
   background-size: 20px 20px;
 }}
 
-/* Radial ambient glows */
+/* Ambient glow — light mode softer */
 .stApp::before {{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 35%, rgba(22,163,74,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 85% 10%, rgba(99,102,241,.04) 0%, transparent 50%);
+}}
+body.dark-mode .stApp::before {{
   background:
     radial-gradient(ellipse 60% 40% at 15% 35%, rgba(34,197,94,.04) 0%, transparent 60%),
     radial-gradient(ellipse 40% 30% at 85% 10%, rgba(34,197,94,.03) 0%, transparent 50%);
 }}
+
+/* Theme toggle button */
+#theme-toggle {{
+  position: fixed;
+  top: 14px;
+  right: 80px;
+  z-index: 9999;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--txt2);
+  font-weight: 600;
+  transition: all .2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  user-select: none;
+}}
+#theme-toggle:hover {{ border-color: var(--accent); color: var(--accent); transform: scale(1.05); }}
 
 /* Streamlit header bar */
 header[data-testid="stHeader"] {{
@@ -727,7 +777,43 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 .purple {{ color: #a78bfa !important; }}
 .blue  {{ color: #22c55e !important; }}
 hr {{ border-color: var(--border2) !important; margin: 16px 0 !important; }}
+/* Light mode sidebar */
+body:not(.dark-mode) section[data-testid="stSidebar"] {{
+  background: #f8fafc !important;
+  border-right: 1px solid #e2e8f0 !important;
+}}
+body:not(.dark-mode) section[data-testid="stSidebar"] * {{ color: #334155 !important; }}
+body:not(.dark-mode) .stDataFrame tbody tr {{ background: #ffffff !important; }}
+body:not(.dark-mode) .stDataFrame tbody tr:hover {{ background: #f1f5f9 !important; }}
+body:not(.dark-mode) [data-testid="metric-container"] {{ background: #ffffff; border-color: #e2e8f0; }}
+body:not(.dark-mode) .stTabs [data-baseweb="tab-list"] {{ background: #ffffff; border-bottom: 1px solid #e2e8f0; }}
 </style>
+""", unsafe_allow_html=True)
+
+# ── Theme toggle button + JS ──────────────────────────────────────────────────
+st.markdown("""
+<button id="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+<script>
+(function() {
+  var saved = localStorage.getItem('tdTheme') || 'light';
+  if (saved === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('theme-toggle').innerHTML = '☀️ Light';
+  }
+})();
+function toggleTheme() {
+  var btn = document.getElementById('theme-toggle');
+  if (document.body.classList.contains('dark-mode')) {
+    document.body.classList.remove('dark-mode');
+    btn.innerHTML = '🌙 Dark';
+    localStorage.setItem('tdTheme', 'light');
+  } else {
+    document.body.classList.add('dark-mode');
+    btn.innerHTML = '☀️ Light';
+    localStorage.setItem('tdTheme', 'dark');
+  }
+}
+</script>
 """, unsafe_allow_html=True)
 
 
@@ -1117,7 +1203,7 @@ if ticker_parts:
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab_ai, tab2, tab3, tab4, tab5, tab6, tab_mb, tab7 = st.tabs(["Signals", "🤖 AI Signals", "Breakouts", "F&O", "Mutual Funds", "Market News", "Performance", "🚀 Multibaggers", "History"])
+tab1, tab_ai, tab2, tab3, tab4, tab5, tab_mb, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "📰 Market News", "💎 Multibaggers", "📋 History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2081,170 +2167,6 @@ with tab5:
             st.markdown("---")
             st.markdown(f'<a href="https://www.nseindia.com/get-quotes/equity?symbol={sym_clean}" target="_blank" style="color:#22c55e;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">NSE Quote →</a>', unsafe_allow_html=True)
             st.markdown(f'<a href="https://www.bseindia.com/stockinfo/AnnSubCategorywise.html" target="_blank" style="color:#22c55e;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">BSE Announcements →</a>', unsafe_allow_html=True)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# TAB 6 — PERFORMANCE (all signal types from unified all_signals table)
-# ══════════════════════════════════════════════════════════════════════════════
-with tab6:
-    try:
-        perf = get_performance() if IS_LOCAL else {}
-    except Exception:
-        perf = {}
-
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:12px">📊 All Signals Performance <span style="font-size:10px;color:#334155;font-weight:400">(Swing · 4H · Breakout · AI · Commodity)</span></div>', unsafe_allow_html=True)
-    if perf and perf.get("total", 0) > 0:
-        p = st.columns(5)
-        p[0].metric("Total Tracked",  perf["total"])
-        p[1].metric("Win Rate",       f"{perf['win_rate']}%")
-        p[2].metric("Avg P&L",        f"{perf['avg_pnl']}%")
-        p[3].metric("Best",           f"+{perf['best']}%")
-        p[4].metric("Worst",          f"{perf['worst']}%")
-
-        # Load unified all_signals for charts
-        if IS_LOCAL:
-            try:
-                from tracker import _conn
-                import sqlite3
-                with _conn() as _c:
-                    all_df = pd.read_sql("SELECT * FROM all_signals ORDER BY date DESC LIMIT 200", _c)
-            except Exception:
-                all_df = pd.DataFrame()
-        else:
-            all_df = _gh_all_signals(days=9999)
-
-        if not all_df.empty:
-            closed_all = all_df[all_df["status"] != "OPEN"].copy()
-            if not closed_all.empty:
-                closed_all["pnl_pct"] = pd.to_numeric(closed_all.get("pnl_pct", 0), errors="coerce").fillna(0)
-                fig = px.bar(closed_all, x="symbol", y="pnl_pct",
-                             color="pnl_pct",
-                             color_continuous_scale=[CLR_DOWN, "#1a2030", CLR_UP],
-                             range_color=[-20,20], title="Closed Trade P&L (%)")
-                fig.update_layout(paper_bgcolor="#0d1117", plot_bgcolor="#111827",
-                    font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#1a2030"),
-                    yaxis=dict(gridcolor="#1a2030"), height=320,
-                    margin=dict(l=8,r=8,t=32,b=8), coloraxis_showscale=False, showlegend=False,
-                    title_font=dict(color="#475569",size=11))
-                st.plotly_chart(fig, use_container_width=True)
-
-            # By signal type breakdown
-            if "signal_type" in all_df.columns:
-                st.markdown('<div style="font-size:11px;font-weight:700;color:#334155;margin:8px 0 6px">P&L by Signal Type</div>', unsafe_allow_html=True)
-                types = all_df["signal_type"].unique()
-                sd_cols = st.columns(max(1, len(types)))
-                for i, t in enumerate(types):
-                    sub = all_df[all_df["signal_type"]==t]
-                    closed_sub = sub[sub["status"] != "OPEN"]
-                    wins = len(closed_sub[pd.to_numeric(closed_sub.get("pnl_pct",0), errors="coerce").fillna(0) > 0])
-                    total_c = len(closed_sub)
-                    wr = round(wins/total_c*100,0) if total_c > 0 else 0
-                    c = "#4ade80" if wr >= 50 else "#f87171"
-                    sd_cols[i].markdown(
-                        f'<div style="background:#0a1929;border:1px solid #052e16;border-radius:8px;padding:10px;text-align:center">'
-                        f'<div style="font-size:9px;color:#334155;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px">{t.upper()}</div>'
-                        f'<div style="font-size:15px;font-weight:800;color:{c};font-family:JetBrains Mono,monospace">{wr:.0f}%</div>'
-                        f'<div style="font-size:9px;color:#334155;margin-top:2px">{total_c} closed</div>'
-                        f'</div>', unsafe_allow_html=True)
-
-            # Open signals tracker
-            open_all = all_df[all_df["status"] == "OPEN"]
-            if not open_all.empty:
-                st.markdown(f'<div style="font-size:11px;font-weight:700;color:#f59e0b;margin:14px 0 6px">⏳ Open Trades ({len(open_all)})</div>', unsafe_allow_html=True)
-                disp_cols = ["date","signal_type","symbol","action","timeframe","entry","sl","target1","target2","rr"]
-                disp = open_all[[c for c in disp_cols if c in open_all.columns]].copy()
-                st.dataframe(disp, use_container_width=True, hide_index=True)
-
-            st.download_button("Export All Signals CSV",
-                               all_df.to_csv(index=False), "all_signals.csv", "text/csv",
-                               key="dl_all_sig")
-    else:
-        st.info("No signal history yet. Signals sent to Telegram are automatically tracked here.")
-
-    st.markdown("---")
-
-    # ── AI Signal Performance ─────────────────────────────────────────────────
-    st.markdown("""
-<div style="background:linear-gradient(135deg,rgba(10,7,24,.97),rgba(20,9,42,.97));
-  border:1px solid rgba(167,139,250,.15);border-radius:14px;padding:16px 20px;margin-bottom:16px;position:relative;overflow:hidden">
-  <div style="position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(167,139,250,.5),transparent)"></div>
-  <div style="font-size:13px;font-weight:700;color:#c4b5fd;margin-bottom:4px">🤖 AI Signal Performance</div>
-  <div style="font-size:11px;color:#4b3a7a">Trendline channel breakout signals — tracked from breakouts table</div>
-</div>
-""", unsafe_allow_html=True)
-
-    ai_all = _get_ai_signals(days=30)  # last 30 days
-    if not ai_all:
-        st.markdown('<div style="background:rgba(10,7,24,.9);border:1px solid rgba(167,139,250,.1);border-radius:10px;padding:20px;text-align:center;color:#4b3a7a;font-size:12px">No AI signals in last 30 days. Signals appear here once auto-scan detects trendline breakouts.</div>', unsafe_allow_html=True)
-    else:
-        ai_pc = st.columns(4)
-        ai_rr_vals = [float(s.get("rr",0)) for s in ai_all if s.get("rr",0)]
-        ai_vol_vals = [float(s.get("vol_ratio",1)) for s in ai_all]
-        ai_fno_ct   = sum(1 for s in ai_all if s.get("fno"))
-        ai_tf_4h    = sum(1 for s in ai_all if str(s.get("timeframe","")) == "4H")
-        ai_tf_d     = sum(1 for s in ai_all if str(s.get("timeframe","")) == "Daily")
-        ai_pc[0].metric("Total AI Signals", len(ai_all))
-        ai_pc[1].metric("Avg RR", f"1:{round(sum(ai_rr_vals)/len(ai_rr_vals),2)}" if ai_rr_vals else "—")
-        ai_pc[2].metric("F&O Eligible", ai_fno_ct)
-        ai_pc[3].metric("Avg Vol Surge", f"{round(sum(ai_vol_vals)/len(ai_vol_vals),1)}x" if ai_vol_vals else "—")
-
-        # Timeframe split
-        st.markdown(f"""
-<div style="display:flex;gap:12px;margin:12px 0">
-  <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px;padding:10px 16px;flex:1;text-align:center">
-    <div style="font-size:9px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">4H Signals</div>
-    <div style="font-size:22px;font-weight:800;color:#a78bfa;font-family:JetBrains Mono,monospace">{ai_tf_4h}</div>
-  </div>
-  <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px;padding:10px 16px;flex:1;text-align:center">
-    <div style="font-size:9px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Daily EOD</div>
-    <div style="font-size:22px;font-weight:800;color:#c4b5fd;font-family:JetBrains Mono,monospace">{ai_tf_d}</div>
-  </div>
-  <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px;padding:10px 16px;flex:1;text-align:center">
-    <div style="font-size:9px;color:#4b3a7a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">F&O Ready</div>
-    <div style="font-size:22px;font-weight:800;color:#e879f9;font-family:JetBrains Mono,monospace">{ai_fno_ct}</div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-        # Signal history table
-        if ai_all:
-            ai_df = pd.DataFrame([{
-                "Date":      s.get("date",""),
-                "Symbol":    s.get("symbol",""),
-                "TF":        s.get("timeframe",""),
-                "Entry":     f"₹{float(s.get('price',0)):,.2f}",
-                "Upper Band":f"₹{float(s.get('upper_band', s.get('price',0))):,.2f}",
-                "SL":        f"₹{float(s.get('sl',0)):,.2f}",
-                "T1":        f"₹{float(s.get('target1',0)):,.2f}",
-                "RR":        f"1:{s.get('rr',0)}",
-                "Vol":       f"{float(s.get('vol_ratio',1)):.1f}x",
-                "F&O":       "✓" if s.get("fno") else "—",
-            } for s in ai_all[:20]])
-            st.dataframe(ai_df, use_container_width=True, hide_index=True)
-            st.download_button("Export AI Signals CSV",
-                               ai_df.to_csv(index=False), "ai_signals.csv", "text/csv",
-                               key="dl_ai")
-
-        # RR distribution chart
-        if len(ai_rr_vals) >= 3:
-            fig_ai = go.Figure()
-            fig_ai.add_trace(go.Bar(
-                x=list(range(len(ai_rr_vals))), y=ai_rr_vals,
-                marker_color="#a78bfa", name="RR Ratio",
-                hovertemplate="RR: 1:%{y}<extra></extra>"
-            ))
-            fig_ai.add_hline(y=2.0, line_color="#22c55e", line_dash="dash",
-                             annotation_text="Min 2:1", annotation_font_color="#22c55e")
-            fig_ai.update_layout(
-                paper_bgcolor="#0d1117", plot_bgcolor="#111827",
-                font=dict(color="#64748b",size=10),
-                xaxis=dict(gridcolor="#1a2030",showticklabels=False),
-                yaxis=dict(gridcolor="#1a2030",title="R:R Ratio"),
-                height=200, margin=dict(l=8,r=8,t=8,b=8),
-                showlegend=False, title_text=""
-            )
-            st.plotly_chart(fig_ai, use_container_width=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

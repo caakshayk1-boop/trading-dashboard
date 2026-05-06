@@ -1819,14 +1819,14 @@ def analyze_tg_momentum(symbol):
         avg_v = float(volume.rolling(20).mean().iloc[-2])
         cur_v = float(volume.iloc[-2])
         vol_r = round(cur_v / avg_v, 2) if avg_v > 0 else 0.0
-        if vol_r < 3.0:
+        if vol_r < 2.0:          # relaxed from 3.0 → 2.0 to catch more signals
             return None
 
-        # ── RSI: recent bottom <45, now rising above 48 ──────────────────────
+        # ── RSI: recent bottom <50, now rising above 48 ──────────────────────
         rsi_s          = rsi(close)
         cur_rsi        = float(rsi_s.iloc[-2])
         rsi_recent_low = float(rsi_s.iloc[-7:-2].min())
-        if not (rsi_recent_low < 45 and cur_rsi > 48):
+        if not (rsi_recent_low < 50 and cur_rsi > 48):
             return None
 
         # ── Candle pattern ────────────────────────────────────────────────────

@@ -1,52 +1,85 @@
 """
-claude_bot.py — AI-powered Telegram bot
-Type anything in your Telegram chat:
-  Brief: NSE:COALINDIA    → 1-page stock brief
-  Trade: NSE:RELIANCE     → swing trade setup
-  Scan                    → run stock scanner
-  Help                    → show all commands
-  /active /performance /stats etc still work
+claude_bot.py — AI-powered Telegram bot + auto-scheduler
+Commands: Brief: NSE:TICKER | Trade: NSE:TICKER | Scan | Carousel: topic | Help
+Auto-scans: 9:20 AM | 11:45 AM | 4:30 PM IST (Mon–Fri)
 """
 import os, sys, time, logging, threading
+from datetime import datetime
 import requests
 import yfinance as yf
+import pytz
 
 sys.path.insert(0, os.path.dirname(__file__))
-from telegram_bot import _post, TELEGRAM_TOKEN, handle_command
+from telegram_bot import _post, TELEGRAM_TOKEN
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+IST = pytz.timezone("Asia/Kolkata")
 
+# ── Config ────────────────────────────────────────────────────────────────────
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 if not GROQ_API_KEY:
     try:
         from config import GROQ_API_KEY
     except (ImportError, AttributeError):
         pass
-
 if not GROQ_API_KEY:
-    logging.error("GROQ_API_KEY not set. Get free key at console.groq.com → add to config.py")
+    logging.error("GROQ_API_KEY not set.")
     sys.exit(1)
+
+# ── In-memory signal store (survives restart via /tmp cache) ──────────────────
+_active_signals = []
+_last_scan_ts   = None
+_last_scan_slot = None
+_last_scan_count = 0
+_CACHE_FILE = "/tmp/bot_signals_cache.json"
+
+def _save_cache():
+    import json
+    try:
+        import json
+        with open(_CACHE_FILE, "w") as f:
+            json.dump({
+                "signals": _active_signals,
+                "ts": _last_scan_ts,
+                "slot": _last_scan_slot,
+                "count": _last_scan_count,
+            }, f, default=str)
+    except Exception:
+        pass
+
+def _load_cache():
+    global _active_signals, _last_scan_ts, _last_scan_slot, _last_scan_count
+    import json
+    try:
+        if os.path.exists(_CACHE_FILE):
+            with open(_CACHE_FILE) as f:
+                d = json.load(f)
+            _active_signals  = d.get("signals", [])
+            _last_scan_ts    = d.get("ts")
+            _last_scan_slot  = d.get("slot")
+            _last_scan_count = d.get("count", 0)
+    except Exception:
+        pass
 
 
 # ── Stock data ────────────────────────────────────────────────────────────────
-
 def _fetch(ticker: str):
     sym = ticker.upper().replace("NSE:", "").strip() + ".NS"
     try:
-        s = yf.Ticker(sym)
+        s    = yf.Ticker(sym)
         info = s.info
         hist = s.history(period="1y")
         if hist.empty:
             return None
-        close     = hist["Close"].dropna()
+        close    = hist["Close"].dropna()
         if close.empty:
             return None
-        cmp       = round(float(close.iloc[-1]), 2)
-        high_52w  = round(float(hist["High"].max()), 2)
-        low_52w   = round(float(hist["Low"].min()), 2)
-        ret_1y    = round((close.iloc[-1] / close.iloc[0] - 1) * 100, 1)
-        vs_high   = round((cmp / high_52w - 1) * 100, 1)
-        mcap      = (info.get("marketCap") or 0) / 1e7
+        cmp      = round(float(close.iloc[-1]), 2)
+        high_52w = round(float(hist["High"].max()), 2)
+        low_52w  = round(float(hist["Low"].min()), 2)
+        ret_1y   = round((close.iloc[-1] / close.iloc[0] - 1) * 100, 1)
+        vs_high  = round((cmp / high_52w - 1) * 100, 1)
+        mcap     = (info.get("marketCap") or 0) / 1e7
         return {
             "symbol":    ticker.upper().replace("NSE:", "").strip(),
             "name":      info.get("longName", ""),
@@ -64,12 +97,11 @@ def _fetch(ticker: str):
             "sector":    info.get("sector", ""),
         }
     except Exception as e:
-        logging.warning(f"yfinance error for {sym}: {e}")
+        logging.warning(f"yfinance {sym}: {e}")
         return None
 
 
-# ── Claude calls ──────────────────────────────────────────────────────────────
-
+# ── Groq AI ───────────────────────────────────────────────────────────────────
 def _ask(prompt: str, max_tokens=900) -> str:
     r = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
@@ -86,106 +118,85 @@ def _ask(prompt: str, max_tokens=900) -> str:
     return r.json()["choices"][0]["message"]["content"].strip()
 
 
+# ── Commands ──────────────────────────────────────────────────────────────────
 def do_brief(ticker: str) -> str:
-    d = _fetch(ticker)
+    d   = _fetch(ticker)
     sym = ticker.upper().replace("NSE:", "").strip()
-
     live = (
-        f"CMP: ₹{d['cmp']}\n"
-        f"52W High: ₹{d['high_52w']} | 52W Low: ₹{d['low_52w']}\n"
+        f"CMP: ₹{d['cmp']}\n52W High: ₹{d['high_52w']} | Low: ₹{d['low_52w']}\n"
         f"vs 52W High: {d['vs_high']}% | 1Y Return: {d['ret_1y']}%\n"
-        f"Mkt Cap: ₹{d['mcap_cr']:.0f} Cr\n"
-        f"P/E: {d['pe']}x | P/B: {d['pb']}x | Div Yield: {d['div_yield']}%\n"
-        f"Revenue (TTM): ₹{d['revenue']:.0f} Cr | PAT (TTM): ₹{d['pat']:.0f} Cr\n"
-        f"Sector: {d['sector']}"
-    ) if d else f"Symbol: {sym} — use your knowledge for financials"
+        f"Mkt Cap: ₹{d['mcap_cr']:.0f} Cr | P/E: {d['pe']}x | P/B: {d['pb']}x | Div: {d['div_yield']}%\n"
+        f"Revenue: ₹{d['revenue']:.0f} Cr | PAT: ₹{d['pat']:.0f} Cr | Sector: {d['sector']}"
+    ) if d else f"Symbol: {sym}"
+    return _ask(f"""CA and equity analyst @askakshayfinance. 1-page stock brief for *{sym}* (NSE) for Telegram.
 
-    return _ask(f"""You are a CA and equity analyst (@askakshayfinance).
-Write a 1-page stock brief for *{sym}* (NSE) formatted for Telegram.
+Live data: {live}
 
-Live data:
-{live}
-
-Use EXACTLY this format (Telegram Markdown — *bold*, _italic_, no headers with #):
+Format (Telegram Markdown *bold* _italic_):
 
 📊 *{sym} — NSE Tear Sheet*
 _{d['name'] if d else sym}_
 
 ━━━━━━━━━━━━━━━━
 💰 *PRICE*
-CMP: ₹[x]
-52W H/L: ₹[high] / ₹[low]
+CMP: ₹[x] | 52W H/L: ₹[h] / ₹[l]
 vs 52W High: [x%]  |  1Y Return: [x%]
 
 ━━━━━━━━━━━━━━━━
 🏦 *VALUATION*
-Mkt Cap: ₹[x] Cr  ([Large/Mid/Small] Cap)
-P/E: [x]x  |  P/B: [x]x  |  Div: [x]%
+Mkt Cap: ₹[x] Cr ([Cap size])
+P/E: [x]x | P/B: [x]x | Div: [x]%
 
 ━━━━━━━━━━━━━━━━
 📈 *FINANCIALS*
-Revenue: ₹[x] Cr
-PAT: ₹[x] Cr  |  Margin: [x]%
+Revenue: ₹[x] Cr | PAT: ₹[x] Cr | Margin: [x]%
 Revenue CAGR 3Y: ~[x]%
 
 ━━━━━━━━━━━━━━━━
-🔑 *BUSINESS / MOAT*
-• [point 1]
-• [point 2]
-• [point 3]
+🔑 *MOAT*
+• [point]
+• [point]
 
 ━━━━━━━━━━━━━━━━
-⚠️ *KEY RISKS*
-• [risk 1]
-• [risk 2]
+⚠️ *RISKS*
+• [risk]
+• [risk]
 
 ━━━━━━━━━━━━━━━━
 🎯 *VERDICT*
-[1-2 line view — specific, no fluff]
+[1-2 lines, specific]
 
-_Brief by @askakshayfinance_
+_@askakshayfinance_
 
-Rules: specific numbers always, no vague statements, max 450 words.""")
+Rules: specific numbers, no fluff, max 400 words.""")
 
 
 def do_trade(ticker: str) -> str:
-    d = _fetch(ticker)
+    d   = _fetch(ticker)
     sym = ticker.upper().replace("NSE:", "").strip()
-
-    live = (
-        f"CMP: ₹{d['cmp']}\n"
-        f"52W High: ₹{d['high_52w']} | 52W Low: ₹{d['low_52w']}\n"
-        f"1Y Return: {d['ret_1y']}%"
-    ) if d else f"Symbol: {sym}"
-
-    return _ask(f"""You are a technical analyst. Generate a swing trade setup for {sym} (NSE).
-
-Live data:
+    live = (f"CMP: ₹{d['cmp']}\n52W High: ₹{d['high_52w']} | Low: ₹{d['low_52w']}\n1Y: {d['ret_1y']}%"
+            ) if d else f"Symbol: {sym}"
+    return _ask(f"""Technical analyst. Swing trade setup for {sym} NSE.
 {live}
-
-Format exactly (Telegram Markdown):
+Format (Telegram Markdown):
 
 📊 *{sym} — Swing Trade Setup*
 
 *Action:* BUY / SELL / AVOID
 *Entry Zone:* ₹[x] – ₹[y]
-*Stop Loss:* ₹[x]  _(tight)_  |  ₹[y]  _(wide)_
+*Stop Loss:* ₹[x] _(tight)_ | ₹[y] _(wide)_
 *Target 1:* ₹[x]  `(1.5R)`
 *Target 2:* ₹[x]  `(2.5R)`
 *Target 3:* ₹[x]  `(4R)`
 
-*Setup:* [Breakout / Pullback / Base breakout / Reversal]
-*Timeframe:* Swing (2–6 weeks)
-*Risk/Reward:* [x]:1
+*Setup:* [type] | *Timeframe:* Swing 2–6 weeks | *RR:* [x]:1
 
 *Thesis:*
-[3 lines — TA rationale, key levels, momentum]
+[3 lines TA rationale]
 
-⚠️ *Invalidation:* [specific level + reason]
+⚠️ *Invalidation:* [level + reason]
 
-_@askakshayfinance | Not SEBI registered advice_
-
-Use real levels based on the CMP. Specific numbers only.""", max_tokens=600)
+_@askakshayfinance | Not SEBI advice_""", max_tokens=600)
 
 
 def _send_document(chat_id: str, filename: str, content: str, caption: str = ""):
@@ -194,89 +205,174 @@ def _send_document(chat_id: str, filename: str, content: str, caption: str = "")
         requests.post(url, data={"chat_id": chat_id, "caption": caption},
                       files={"document": (filename, content.encode(), "text/html")}, timeout=30)
     except Exception as e:
-        _post(f"❌ File send error: {e}", chat_id)
+        _post(f"❌ File error: {e}", chat_id)
 
 
 def do_carousel(topic: str, chat_id: str):
-    _post(f"🎨 Generating carousel: *{topic}*... ~30 seconds.", chat_id)
-    html = _ask(f"""You are a brutalist dark Instagram carousel designer for @askakshayfinance (CA/FP&A professional).
+    _post(f"🎨 Generating carousel: *{topic}*...", chat_id)
+    html = _ask(f"""Brutalist dark Instagram carousel for @askakshayfinance (CA/FP&A).
+Topic: "{topic}"
 
-Generate a complete, self-contained HTML file for an 8-slide carousel on: "{topic}"
+SPEC: Canvas 1080×1350px | bg #0A0A0A | accent #FF5F1F | text #FFFFFF #6E6E6E
+Fonts (Google): Oswald 700 (numbers) | Playfair Display 900 italic (insight) | Space Grotesk (body) | Caveat (annotations)
+8 slides: Hook → Audit → Finding 1 → Finding 2 → Finding 3 → Hard Truth → System → CTA
+Rules: ONE insight/slide. Specific numbers (₹16,309 not ₹16K). Orange = alarm only.
 
-EXACT SPEC:
-- Canvas: 1080×1350px per slide
-- Background: #0A0A0A (near black)
-- Accent: #FF5F1F (orange) — use sparingly, only for key numbers/alerts
-- Text: #FFFFFF (white), #6E6E6E (gray for secondary)
-- Fonts (Google Fonts): Oswald 700 (numbers/stats), Playfair Display 900 italic (key insight), Space Grotesk (body), Caveat (handwritten annotations)
-- 8 slides formula: Hook (CA confession/shocking stat) → Audit (problem) → Finding 1 → Finding 2 → Finding 3 → Hard Truth → System/Fix → CTA (@askakshayfinance)
-- Each slide: ONE insight only. Specific numbers always (₹16,309 not ₹16K).
-- Orange = alarm only. Never use for decorative purposes.
+HTML: single file, all CSS inline, slides as 1080×1350 divs stacked vertically.
+Slide number bottom-right gray. @askakshayfinance bottom-left small gray.
 
-HTML structure:
-- Single HTML file, all CSS inline
-- Slides as divs, each 1080×1350px, displayed vertically (scroll to see all)
-- Import Google Fonts in <head>
-- Add slide number (1/8, 2/8 etc) bottom right in gray
-- Bottom left: @askakshayfinance in small gray text
-
-Return ONLY the complete HTML. No explanation.""", max_tokens=4000)
-
+Return ONLY complete HTML.""", max_tokens=4000)
     slug = topic.lower().replace(" ", "_")[:30]
-    filename = f"carousel_{slug}.html"
-    _send_document(chat_id, filename, html, f"🎨 Carousel: {topic}")
-    _post("✅ Open the HTML file in your browser to view all 8 slides.", chat_id)
+    _send_document(chat_id, f"carousel_{slug}.html", html, f"🎨 {topic}")
+    _post("✅ Open HTML in browser — all 8 slides.", chat_id)
 
 
-def do_scan() -> str:
+def _format_scan_msg(signals, slot="Manual"):
+    lines = [f"📡 *4H Momentum — {len(signals)} signal(s)* | _{slot}_\n"
+             f"_RSI bottom↑ · Vol 3x+ · Bullish candle_\n"]
+    for s in signals:
+        lines.append(
+            f"━━━━━━━━━━━━\n"
+            f"📈 *{s['symbol']}* | _{s['pattern']}_\n"
+            f"₹{s['price']} | Vol *{s['vol_ratio']}x* | RSI {s['rsi']} ↑\n"
+            f"SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']} | RR {s['rr']}:1\n"
+            f"[Chart]({s['tv_link']})"
+        )
+    lines.append("\n_@askakshayfinance | Not SEBI advice_")
+    return "\n".join(lines)
+
+
+def _run_scan(slot="Manual", notify=True, chat_id=None):
+    """Core scan runner — used by both manual Scan command and scheduler."""
+    global _active_signals, _last_scan_ts, _last_scan_slot, _last_scan_count
     try:
         from scanner import scan_tg_momentum
-        _post("🔍 Scanning Nifty 500 on 4H... ~90 seconds.")
         signals = scan_tg_momentum()
-        if not signals:
-            return "✅ Scan done — no signals matching criteria right now."
+        _last_scan_ts    = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+        _last_scan_slot  = slot
+        _last_scan_count = len(signals)
+        _active_signals  = signals
+        _save_cache()
 
-        lines = [f"📡 *4H Momentum Scan — {len(signals)} signal(s)*\n"
-                 f"_RSI bottom↑ + Vol 3x+ + Bullish candle_\n"]
-        for s in signals:
-            lines.append(
-                f"━━━━━━━━━━━━━━━━\n"
-                f"📈 *{s['symbol']}* | _{s['pattern']}_\n"
-                f"CMP ₹{s['price']} | Vol *{s['vol_ratio']}x* | RSI {s['rsi']} ↑ (low {s['rsi_low']})\n"
-                f"SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']} | RR {s['rr']}:1\n"
-                f"[Chart]({s['tv_link']})"
-            )
-        lines.append("\n_@askakshayfinance | Not SEBI advice_")
-        _post("\n".join(lines))
-        return f"✅ {len(signals)} signal(s) sent."
+        # Log to DB
+        try:
+            from tracker import log_to_all_signals
+            for s in signals:
+                log_to_all_signals(
+                    symbol=s["symbol"], signal_type="4h_momentum", action="BUY",
+                    entry=s["price"], sl=s["sl"], t1=s["target1"], t2=s["target2"],
+                    t3=s["target2"], rr=s["rr"], timeframe="4H", score=0,
+                    metadata={"pattern": s["pattern"], "vol_ratio": s["vol_ratio"],
+                              "rsi": s["rsi"], "tv_link": s["tv_link"]}
+                )
+        except Exception as e:
+            logging.warning(f"DB log error: {e}")
+
+        if signals and notify:
+            msg = _format_scan_msg(signals, slot)
+            _post(msg, chat_id)
+        elif notify:
+            _post(f"✅ Scan done ({slot}) — no signals right now.", chat_id)
+
+        return signals
     except Exception as e:
-        return f"❌ Scan error: {e}"
+        err = f"❌ Scan error: {e}"
+        logging.error(err)
+        if notify:
+            _post(err, chat_id)
+        return []
 
 
+def do_scan(chat_id=None) -> str:
+    _post("🔍 Scanning Nifty 500 on 4H... ~90 sec.", chat_id)
+    signals = _run_scan(slot="Manual", notify=False)
+    if not signals:
+        return "✅ Scan done — no signals matching criteria right now."
+    _post(_format_scan_msg(signals, "Manual"), chat_id)
+    return f"✅ {len(signals)} signal(s) sent."
+
+
+# ── Scheduler ─────────────────────────────────────────────────────────────────
+def _start_scheduler():
+    try:
+        from apscheduler.schedulers.background import BackgroundScheduler
+        from apscheduler.triggers.cron import CronTrigger
+
+        sched = BackgroundScheduler(timezone=IST)
+        scan_times = [("09:20", "Morning"), ("11:45", "Midday"), ("16:30", "EOD")]
+        for t, label in scan_times:
+            h, m = t.split(":")
+            sched.add_job(
+                lambda lbl=label: _run_scan(slot=lbl, notify=True),
+                CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
+            )
+            logging.info(f"Scheduled scan: {t} IST ({label})")
+        sched.start()
+        logging.info("Scheduler started.")
+    except Exception as e:
+        logging.warning(f"Scheduler not started: {e}")
+
+
+# ── Command router ────────────────────────────────────────────────────────────
 HELP_TEXT = """🤖 *Claude AI Trading Bot*
 
 *Commands:*
 `Brief: NSE:TICKER` — 1-page stock report
 `Trade: NSE:TICKER` — swing trade setup
-`Scan` — Nifty 500 4H momentum scan
+`Scan` — 4H momentum scan now
 `Carousel: [topic]` — 8-slide HTML carousel
+`/active` — today's signals
+`/stats` — bot status
 `Help` — this message
 
-*Legacy:*
-/active /performance /stats
-
+_Auto-scans: 9:20 | 11:45 | 4:30 PM IST_
 _@askakshayfinance_"""
 
 
-# ── Command router ────────────────────────────────────────────────────────────
-
 def route(text: str, chat_id: str):
-    t = text.strip()
+    t  = text.strip()
     tl = t.lower()
 
-    # Legacy slash commands
+    # /active — override with in-memory store
+    if tl == "/active":
+        if not _active_signals:
+            _post("No signals from today's scans yet.\nSend `Scan` to run now.", chat_id)
+        else:
+            lines = [f"📋 *Active Signals ({len(_active_signals)})*\n_Last scan: {_last_scan_ts}_\n"]
+            for s in _active_signals:
+                lines.append(
+                    f"• *{s['symbol']}* _{s['pattern']}_ | ₹{s['price']}\n"
+                    f"  SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']}"
+                )
+            _post("\n".join(lines), chat_id)
+        return
+
+    # /stats — override with real bot stats
+    if tl == "/stats":
+        _post(
+            f"⚙️ *Bot Status*\n\n"
+            f"Last scan: {_last_scan_ts or 'Not run yet'}\n"
+            f"Slot: {_last_scan_slot or '—'}\n"
+            f"Signals found: {_last_scan_count}\n"
+            f"Active signals: {len(_active_signals)}\n\n"
+            f"Auto-scans: 9:20 | 11:45 | 16:30 IST (Mon–Fri)\n"
+            f"Data: yfinance 4H | Criteria: RSI↑ + Vol 3x+ + Candle",
+            chat_id
+        )
+        return
+
+    # /start
+    if tl == "/start":
+        _post(HELP_TEXT, chat_id)
+        return
+
+    # All other /commands — pass to telegram_bot handler
     if t.startswith("/"):
-        handle_command(t, chat_id)
+        try:
+            from telegram_bot import handle_command
+            handle_command(t, chat_id)
+        except Exception as e:
+            _post(f"❌ {e}", chat_id)
         return
 
     # Help
@@ -288,13 +384,11 @@ def route(text: str, chat_id: str):
     if tl.startswith("brief"):
         raw = t[5:].strip().lstrip(":").strip()
         if not raw:
-            _post("Usage: `Brief: NSE:RELIANCE`", chat_id)
-            return
-        ticker = raw.upper().replace("NSE:", "").strip()
-        _post(f"📊 Fetching brief for *{ticker}*...", chat_id)
+            _post("Usage: `Brief: NSE:RELIANCE`", chat_id); return
+        sym = raw.upper().replace("NSE:", "").strip()
+        _post(f"📊 Fetching brief for *{sym}*...", chat_id)
         try:
-            reply = do_brief(raw)
-            _post(reply, chat_id)
+            _post(do_brief(raw), chat_id)
         except Exception as e:
             _post(f"❌ Error: {e}", chat_id)
         return
@@ -303,20 +397,18 @@ def route(text: str, chat_id: str):
     if tl.startswith("trade"):
         raw = t[5:].strip().lstrip(":").strip()
         if not raw:
-            _post("Usage: `Trade: NSE:RELIANCE`", chat_id)
-            return
-        ticker = raw.upper().replace("NSE:", "").strip()
-        _post(f"📊 Building trade setup for *{ticker}*...", chat_id)
+            _post("Usage: `Trade: NSE:RELIANCE`", chat_id); return
+        sym = raw.upper().replace("NSE:", "").strip()
+        _post(f"📊 Building trade setup for *{sym}*...", chat_id)
         try:
-            reply = do_trade(raw)
-            _post(reply, chat_id)
+            _post(do_trade(raw), chat_id)
         except Exception as e:
             _post(f"❌ Error: {e}", chat_id)
         return
 
     # Scan
     if tl.startswith("scan"):
-        result = do_scan()
+        result = do_scan(chat_id)
         _post(result, chat_id)
         return
 
@@ -324,34 +416,33 @@ def route(text: str, chat_id: str):
     if tl.startswith("carousel"):
         topic = t[8:].strip().lstrip(":").strip()
         if not topic:
-            _post("Usage: `Carousel: 5 tax mistakes salaried people make`", chat_id)
-            return
+            _post("Usage: `Carousel: 5 tax mistakes salaried employees make`", chat_id); return
         try:
             do_carousel(topic, chat_id)
         except Exception as e:
             _post(f"❌ Error: {e}", chat_id)
         return
 
-    # Unknown — send help nudge
     _post("Type `Help` to see commands.", chat_id)
 
 
 # ── Polling loop ──────────────────────────────────────────────────────────────
-
 def run():
+    _load_cache()
+    _start_scheduler()
     logging.info("Claude Bot started. Polling Telegram...")
-    _post("🤖 *Claude AI Bot online*\nType `Help` to see commands.")
+    _post("🤖 *Claude AI Bot online*\nAuto-scans: 9:20 | 11:45 | 4:30 PM IST\nType `Help` for commands.")
     offset = 0
     while True:
         try:
             url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
-            r = requests.get(url, params={"offset": offset, "timeout": 30}, timeout=35)
+            r   = requests.get(url, params={"offset": offset, "timeout": 30}, timeout=35)
             if r.ok:
                 for upd in r.json().get("result", []):
                     offset = upd["update_id"] + 1
-                    msg = upd.get("message", {})
-                    txt = msg.get("text", "").strip()
-                    cid = str(msg.get("chat", {}).get("id", ""))
+                    msg    = upd.get("message", {})
+                    txt    = msg.get("text", "").strip()
+                    cid    = str(msg.get("chat", {}).get("id", ""))
                     if txt and cid:
                         threading.Thread(target=route, args=(txt, cid), daemon=True).start()
         except Exception as e:
