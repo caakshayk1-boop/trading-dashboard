@@ -188,6 +188,46 @@ _@askakshayfinance | Not SEBI registered advice_
 Use real levels based on the CMP. Specific numbers only.""", max_tokens=600)
 
 
+def _send_document(chat_id: str, filename: str, content: str, caption: str = ""):
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendDocument"
+    try:
+        requests.post(url, data={"chat_id": chat_id, "caption": caption},
+                      files={"document": (filename, content.encode(), "text/html")}, timeout=30)
+    except Exception as e:
+        _post(f"❌ File send error: {e}", chat_id)
+
+
+def do_carousel(topic: str, chat_id: str):
+    _post(f"🎨 Generating carousel: *{topic}*... ~30 seconds.", chat_id)
+    html = _ask(f"""You are a brutalist dark Instagram carousel designer for @askakshayfinance (CA/FP&A professional).
+
+Generate a complete, self-contained HTML file for an 8-slide carousel on: "{topic}"
+
+EXACT SPEC:
+- Canvas: 1080×1350px per slide
+- Background: #0A0A0A (near black)
+- Accent: #FF5F1F (orange) — use sparingly, only for key numbers/alerts
+- Text: #FFFFFF (white), #6E6E6E (gray for secondary)
+- Fonts (Google Fonts): Oswald 700 (numbers/stats), Playfair Display 900 italic (key insight), Space Grotesk (body), Caveat (handwritten annotations)
+- 8 slides formula: Hook (CA confession/shocking stat) → Audit (problem) → Finding 1 → Finding 2 → Finding 3 → Hard Truth → System/Fix → CTA (@askakshayfinance)
+- Each slide: ONE insight only. Specific numbers always (₹16,309 not ₹16K).
+- Orange = alarm only. Never use for decorative purposes.
+
+HTML structure:
+- Single HTML file, all CSS inline
+- Slides as divs, each 1080×1350px, displayed vertically (scroll to see all)
+- Import Google Fonts in <head>
+- Add slide number (1/8, 2/8 etc) bottom right in gray
+- Bottom left: @askakshayfinance in small gray text
+
+Return ONLY the complete HTML. No explanation.""", max_tokens=4000)
+
+    slug = topic.lower().replace(" ", "_")[:30]
+    filename = f"carousel_{slug}.html"
+    _send_document(chat_id, filename, html, f"🎨 Carousel: {topic}")
+    _post("✅ Open the HTML file in your browser to view all 8 slides.", chat_id)
+
+
 def do_scan() -> str:
     try:
         from scanner import scan_tg_momentum
@@ -218,15 +258,14 @@ HELP_TEXT = """🤖 *Claude AI Trading Bot*
 *Commands:*
 `Brief: NSE:TICKER` — 1-page stock report
 `Trade: NSE:TICKER` — swing trade setup
-`Scan` — run Nifty 500 scanner now
+`Scan` — Nifty 500 4H momentum scan
+`Carousel: [topic]` — 8-slide HTML carousel
 `Help` — this message
 
-*Legacy commands:*
-/active — open signals
-/performance — win rate & stats
-/stats — scanner health
+*Legacy:*
+/active /performance /stats
 
-_Powered by Claude Sonnet · @askakshayfinance_"""
+_@askakshayfinance_"""
 
 
 # ── Command router ────────────────────────────────────────────────────────────
@@ -281,8 +320,20 @@ def route(text: str, chat_id: str):
         _post(result, chat_id)
         return
 
+    # Carousel
+    if tl.startswith("carousel"):
+        topic = t[8:].strip().lstrip(":").strip()
+        if not topic:
+            _post("Usage: `Carousel: 5 tax mistakes salaried people make`", chat_id)
+            return
+        try:
+            do_carousel(topic, chat_id)
+        except Exception as e:
+            _post(f"❌ Error: {e}", chat_id)
+        return
+
     # Unknown — send help nudge
-    _post(f"Type `Help` to see commands.", chat_id)
+    _post("Type `Help` to see commands.", chat_id)
 
 
 # ── Polling loop ──────────────────────────────────────────────────────────────
