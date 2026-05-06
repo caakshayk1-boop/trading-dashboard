@@ -157,8 +157,7 @@ def _get_ai_signals(days=3):
 from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_news,
                          load_portfolio, save_portfolio, get_portfolio_summary,
                          get_index_quotes, get_top_funds_data, get_stock_news,
-                         get_corporate_actions, get_fund_holdings,
-                         )
+                         get_corporate_actions, get_fund_holdings, get_fund_meta)
 
 st.set_page_config(
     page_title="TradeFlow AI Pro — NSE Nifty 500 Swing Scanner",
@@ -1141,10 +1140,15 @@ try:
 except Exception:
     _wr_hdr = 0; _trades_hdr = 0
 
-# Pipeline step — derive from current time + scan slot
-_pipe_step = 1
-if _scan_slot_hdr:
-    _pipe_step = 5 if "EOD" in str(_scan_slot_hdr) else 4 if "PM" in str(_scan_slot_hdr) else 3
+# Scan schedule slots (IST)
+_SCAN_SLOTS = [("9:00 AM", "4H+Commodity"), ("11:42 AM", "Swing+F&O"), ("4:30 PM", "Breakouts+EOD")]
+_now_h, _now_m = _now_hdr.hour, _now_hdr.minute
+def _slot_status(h, m):
+    slot_mins = h * 60 + m
+    now_mins  = _now_h * 60 + _now_m
+    if now_mins > slot_mins + 10:  return "done"
+    if abs(now_mins - slot_mins) <= 10: return "active"
+    return "pending"
 
 st.markdown(f"""
 <style>
@@ -1313,38 +1317,28 @@ st.markdown(f"""
     </div>
   </div>
 
-  <!-- Execution pipeline -->
+  <!-- Auto-scan schedule -->
   <div class="sh-pipeline">
-    <div class="sh-pipe-label">■ SCAN PIPELINE</div>
+    <div class="sh-pipe-label">■ AUTO-SCAN SCHEDULE (IST)</div>
     <div class="sh-step">
-      <div class="sh-step-block {'done' if _pipe_step > 1 else 'active' if _pipe_step == 1 else 'pending'}">
-        <span class="sh-step-num">01</span>
-        <span class="sh-step-name">UNIVERSE</span>
+      <div class="sh-step-block {_slot_status(9,0)}">
+        <span class="sh-step-num">9:00 AM</span>
+        <span class="sh-step-name">4H · Commodity</span>
       </div>
       <div class="sh-arrow">›</div>
-      <div class="sh-step-block {'done' if _pipe_step > 2 else 'active' if _pipe_step == 2 else 'pending'}">
-        <span class="sh-step-num">02</span>
-        <span class="sh-step-name">REGIME</span>
+      <div class="sh-step-block {_slot_status(11,42)}">
+        <span class="sh-step-num">11:42 AM</span>
+        <span class="sh-step-name">Swing · F&amp;O</span>
       </div>
       <div class="sh-arrow">›</div>
-      <div class="sh-step-block {'done' if _pipe_step > 3 else 'active' if _pipe_step == 3 else 'pending'}">
-        <span class="sh-step-num">03</span>
-        <span class="sh-step-name">SETUP</span>
+      <div class="sh-step-block {_slot_status(16,30)}">
+        <span class="sh-step-num">4:30 PM</span>
+        <span class="sh-step-name">Breakouts · EOD</span>
       </div>
       <div class="sh-arrow">›</div>
-      <div class="sh-step-block {'done' if _pipe_step > 4 else 'active' if _pipe_step == 4 else 'pending'}">
-        <span class="sh-step-num">04</span>
-        <span class="sh-step-name">SCORE</span>
-      </div>
-      <div class="sh-arrow">›</div>
-      <div class="sh-step-block {'done' if _pipe_step > 5 else 'active' if _pipe_step == 5 else 'pending'}">
-        <span class="sh-step-num">05</span>
-        <span class="sh-step-name">ALERT</span>
-      </div>
-      <div class="sh-arrow">›</div>
-      <div class="sh-step-block {'done' if _pipe_step > 5 else 'pending'}">
-        <span class="sh-step-num">06</span>
-        <span class="sh-step-name">TRACK</span>
+      <div class="sh-step-block {_slot_status(20,0)}">
+        <span class="sh-step-num">8:00 PM</span>
+        <span class="sh-step-name">Multibagger</span>
       </div>
     </div>
   </div>
@@ -2291,144 +2285,289 @@ with tab4:
             summary = _mf_summary(json.dumps(portfolio))
 
         if summary:
-            # Portfolio totals
             total_inv = sum(s["invested"] for s in summary)
             total_cur = sum(s["current"]  for s in summary)
             total_pnl = total_cur - total_inv
             total_pct = (total_pnl / total_inv * 100) if total_inv > 0 else 0
+            pnl_color = "#00d09c" if total_pnl >= 0 else "#eb5757"
+            pct_color = "#00d09c" if total_pct >= 0 else "#eb5757"
 
-            pnl_color = "#00ff88" if total_pnl >= 0 else "#ff3b3b"
-            pct_color = "#00ff88" if total_pct >= 0 else "#ff3b3b"
+            # ── Groww-style portfolio header ────────────────────────────────
             st.markdown(f"""
-<div class="mf-summary-row">
-  <div class="mf-summary-card" style="--mf-top-color:#4da6ff">
-    <div class="s-label">Total Invested</div>
-    <div class="s-val">₹{total_inv:,.0f}</div>
+<div style="background:linear-gradient(135deg,#0d1f12,#081a10);border:1px solid rgba(0,208,156,.2);
+  border-radius:16px;padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,#00d09c,transparent)"></div>
+  <div style="font-size:11px;color:#5a8a74;font-family:var(--font-mono);text-transform:uppercase;
+    letter-spacing:.1em;margin-bottom:8px">Current Portfolio Value</div>
+  <div style="font-size:38px;font-weight:900;color:#fff;font-family:var(--font-mono);
+    letter-spacing:-.03em;margin-bottom:4px">₹{total_cur:,.0f}</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+    <span style="font-size:14px;font-weight:700;color:{pnl_color}">
+      {'▲' if total_pnl >= 0 else '▼'} ₹{abs(total_pnl):,.0f} ({total_pct:+.2f}%)
+    </span>
+    <span style="font-size:11px;color:#5a8a74">vs invested ₹{total_inv:,.0f}</span>
   </div>
-  <div class="mf-summary-card" style="--mf-top-color:#00ff88">
-    <div class="s-label">Current Value</div>
-    <div class="s-val">₹{total_cur:,.0f}</div>
-  </div>
-  <div class="mf-summary-card" style="--mf-top-color:{pnl_color}">
-    <div class="s-label">Total P&amp;L</div>
-    <div class="s-val" style="color:{pnl_color}">₹{total_pnl:+,.0f}</div>
-  </div>
-  <div class="mf-summary-card" style="--mf-top-color:{pct_color}">
-    <div class="s-label">Overall Return</div>
-    <div class="s-val" style="color:{pct_color}">{total_pct:+.2f}%</div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-            # Fund cards
-            for s in summary:
-                pnl_col   = "#00ff88" if s["pnl_pct"] >= 0 else "#ff3b3b"
-                day_col   = "#00ff88" if s["day_chg"] >= 0 else "#ff3b3b"
-                mf_accent = "#00ff88" if s["pnl_pct"] >= 0 else "#ff3b3b"
-                ret       = s["returns"]
-                # Build return bars: scale to max abs return for bar width
-                _ret_vals  = [v for v in ret.values() if v is not None]
-                _max_abs   = max(abs(v) for v in _ret_vals) if _ret_vals else 20
-                _max_abs   = max(_max_abs, 1)
-
-                def _ret_bar_row(period, val):
-                    if val is None: return ""
-                    bar_w   = min(100, abs(val) / _max_abs * 100)
-                    bar_col = "#00ff88" if val >= 0 else "#ff3b3b"
-                    return (
-                        f'<div class="mf-return-row">'
-                        f'<span class="mf-return-period">{period}</span>'
-                        f'<div class="mf-return-bar-track">'
-                        f'<div class="mf-return-bar-fill" style="width:{bar_w:.0f}%;background:{bar_col}"></div>'
-                        f'</div>'
-                        f'<span class="mf-return-val" style="color:{bar_col}">{val:+.1f}%</span>'
-                        f'</div>'
-                    )
-
-                ret_bars_html = "".join(_ret_bar_row(k, v) for k, v in ret.items())
-                cat_label = s.get('category','') or ''
-                fhouse    = s.get('fund_house','') or ''
-
-                st.markdown(f"""
-<div class="mf-card" style="--mf-accent:{mf_accent}">
-  <div class="mf-fund-header">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
     <div>
-      <div class="mf-fund-name">{s['name']}</div>
-      <div class="mf-fund-house">{fhouse}</div>
-      {f'<span class="mf-cat-chip">{cat_label}</span>' if cat_label else ''}
+      <div style="font-size:9px;color:#5a8a74;text-transform:uppercase;letter-spacing:.1em;
+        font-family:var(--font-mono);margin-bottom:4px">Invested</div>
+      <div style="font-size:18px;font-weight:800;color:#fff;font-family:var(--font-mono)">₹{total_inv:,.0f}</div>
     </div>
-    <div class="mf-nav-block">
-      <div class="mf-nav-val">₹{s['nav']:.4f}</div>
-      <div class="mf-day-chg" style="color:{day_col}">{s['day_chg']:+.2f}% today</div>
+    <div>
+      <div style="font-size:9px;color:#5a8a74;text-transform:uppercase;letter-spacing:.1em;
+        font-family:var(--font-mono);margin-bottom:4px">Total Gain</div>
+      <div style="font-size:18px;font-weight:800;font-family:var(--font-mono);color:{pnl_color}">
+        ₹{total_pnl:+,.0f}</div>
     </div>
-  </div>
-  <div class="mf-stats-row">
-    <div class="mf-stat">
-      <div class="mf-stat-label">Invested</div>
-      <div class="mf-stat-val">₹{s['invested']:,.0f}</div>
+    <div>
+      <div style="font-size:9px;color:#5a8a74;text-transform:uppercase;letter-spacing:.1em;
+        font-family:var(--font-mono);margin-bottom:4px">Returns</div>
+      <div style="font-size:18px;font-weight:800;font-family:var(--font-mono);color:{pct_color}">
+        {total_pct:+.2f}%</div>
     </div>
-    <div class="mf-stat">
-      <div class="mf-stat-label">Current</div>
-      <div class="mf-stat-val">₹{s['current']:,.0f}</div>
-    </div>
-    <div class="mf-stat">
-      <div class="mf-stat-label">P&amp;L</div>
-      <div class="mf-stat-val" style="color:{pnl_col}">₹{s['pnl']:+,.0f} <span style="font-size:11px">({s['pnl_pct']:+.1f}%)</span></div>
-    </div>
-  </div>
-  <div style="display:flex;gap:18px;font-size:10px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:12px">
-    <span>Units <b style="color:var(--txt)">{s['units']:.3f}</b></span>
-    <span>Buy NAV <b style="color:var(--txt)">₹{s['purchase_nav']:.2f}</b></span>
-  </div>
-  <div class="mf-returns-section">
-    <div class="mf-returns-label">CAGR Returns</div>
-    {ret_bars_html}
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-            # News section
-            st.markdown('<div style="margin-top:18px"></div>', unsafe_allow_html=True)
-            st.markdown('<div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-mono)">📰 Fund News</div>', unsafe_allow_html=True)
-            selected_fund = st.selectbox("News for", [s["name"] for s in summary])
-            sel_s = next((s for s in summary if s["name"] == selected_fund), None)
-            if sel_s:
-                with st.spinner("Loading news…"):
-                    news = get_fund_news(selected_fund[:40])
-                if news:
-                    fn_html = '<div class="news-grid">'
-                    for n in news:
-                        fn_html += f"""
-<a href="{n['link']}" target="_blank" class="news-card" style="text-decoration:none">
-  <span class="news-headline">{n['title']}</span>
-  <div class="news-meta"><span class="news-time">{n['published']}</span></div>
-</a>"""
-                    fn_html += '</div>'
-                    st.markdown(fn_html, unsafe_allow_html=True)
-                else:
-                    st.info("No recent news found for this fund.")
+            # ── SIP Calculator ──────────────────────────────────────────────
+            with st.expander("🔢 SIP Calculator"):
+                sip_c1, sip_c2, sip_c3 = st.columns(3)
+                monthly_sip = sip_c1.number_input("Monthly SIP (₹)", min_value=500, max_value=500000, value=5000, step=500)
+                sip_years   = sip_c2.slider("Duration (years)", 1, 30, 10)
+                sip_rate    = sip_c3.slider("Expected return (%/yr)", 5.0, 25.0, 12.0, 0.5)
+                n = sip_years * 12
+                r = sip_rate / 100 / 12
+                corpus    = monthly_sip * (((1 + r)**n - 1) / r) * (1 + r)
+                invested  = monthly_sip * n
+                gained    = corpus - invested
+                g_color   = "#00d09c"
+                sip_mc1, sip_mc2, sip_mc3 = st.columns(3)
+                sip_mc1.markdown(f"""<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+  <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:6px">Invested</div>
+  <div style="font-size:22px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{invested:,.0f}</div>
+</div>""", unsafe_allow_html=True)
+                sip_mc2.markdown(f"""<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+  <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:6px">Est. Returns</div>
+  <div style="font-size:22px;font-weight:800;font-family:var(--font-mono);color:{g_color}">₹{gained:,.0f}</div>
+</div>""", unsafe_allow_html=True)
+                sip_mc3.markdown(f"""<div style="background:linear-gradient(135deg,#0d1f12,#081a10);border:1px solid rgba(0,208,156,.25);border-radius:10px;padding:14px 16px">
+  <div style="font-size:8px;color:#5a8a74;text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:6px">Total Corpus</div>
+  <div style="font-size:22px;font-weight:800;font-family:var(--font-mono);color:#00d09c">₹{corpus:,.0f}</div>
+</div>""", unsafe_allow_html=True)
+                # Visual bar
+                inv_pct = invested / corpus * 100
+                st.markdown(f"""
+<div style="margin-top:12px">
+  <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;display:flex">
+    <div style="width:{inv_pct:.0f}%;background:#4da6ff;border-radius:4px 0 0 4px"></div>
+    <div style="flex:1;background:#00d09c;border-radius:0 4px 4px 0"></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:9px;color:var(--txt3);font-family:var(--font-mono)">
+    <span style="color:#4da6ff">■ Invested {inv_pct:.0f}%</span>
+    <span style="color:#00d09c">■ Returns {100-inv_pct:.0f}%</span>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
-            # Alerts section
-            st.markdown("---")
-            st.markdown('<div style="font-size:12px;font-weight:700;color:#fbbf24;margin-bottom:8px">⚠️ Smart Alerts</div>', unsafe_allow_html=True)
+            st.markdown('<div style="height:4px"></div>', unsafe_allow_html=True)
+
+            # ── Fund cards (Groww-style with NAV chart + risk-o-meter) ──────
+            def _risk_color(risk):
+                return {"Low":"#00d09c","Moderate":"#4da6ff","Moderately High":"#ffaa00",
+                        "High":"#ff7043","Very High":"#eb5757"}.get(risk,"#eb5757")
+
+            def _risk_needle_deg(risk):
+                return {"Low":0,"Moderate":45,"Moderately High":90,"High":135,"Very High":175}.get(risk,175)
+
+            def _risk_o_meter(risk):
+                col   = _risk_color(risk)
+                deg   = _risk_needle_deg(risk)
+                rad   = (180 - deg) * 3.14159 / 180
+                nx    = 50 + 38 * __import__('math').cos(rad)
+                ny    = 50 - 38 * __import__('math').sin(rad)
+                return f"""<div style="text-align:center">
+  <svg width="100" height="58" viewBox="0 0 100 58">
+    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#1a2a20" stroke-width="10" stroke-linecap="round"/>
+    <path d="M 10 50 A 40 40 0 0 1 50 10" fill="none" stroke="#00d09c44" stroke-width="3"/>
+    <path d="M 50 10 A 40 40 0 0 1 90 50" fill="none" stroke="#eb575744" stroke-width="3"/>
+    <line x1="50" y1="50" x2="{nx:.1f}" y2="{ny:.1f}" stroke="{col}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="4" fill="{col}"/>
+  </svg>
+  <div style="font-size:9px;font-weight:800;color:{col};font-family:var(--font-mono);
+    text-transform:uppercase;letter-spacing:.06em;margin-top:-4px">{risk}</div>
+</div>"""
+
             for s in summary:
-                alerts = []
+                pnl_col  = "#00d09c" if s["pnl_pct"] >= 0 else "#eb5757"
+                day_col  = "#00d09c" if s["day_chg"] >= 0 else "#eb5757"
+                ret      = s["returns"]
+                risk     = s.get("risk","Very High")
+                risk_col = _risk_color(risk)
+                fhouse   = s.get("fund_house","") or ""
+                cat      = s.get("category","") or ""
+                manager  = s.get("manager","") or "—"
+                exp      = s.get("exp_ratio")
+                min_sip  = s.get("min_sip")
+                bench    = s.get("benchmark","") or ""
+
+                card_col, chart_col = st.columns([3, 2])
+
+                with card_col:
+                    # Returns grid (Groww table style)
+                    _ret_periods = ["1M","3M","6M","1Y","3Y","5Y"]
+                    ret_cells = ""
+                    for p in _ret_periods:
+                        v = ret.get(p)
+                        if v is None:
+                            ret_cells += f'<div style="text-align:center;padding:8px 4px"><div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono)">{p}</div><div style="font-size:12px;color:var(--txt3)">—</div></div>'
+                        else:
+                            vc = "#00d09c" if v >= 0 else "#eb5757"
+                            ret_cells += f'<div style="text-align:center;padding:8px 4px;background:{"rgba(0,208,156,.06)" if v >= 0 else "rgba(235,87,87,.06)"};border-radius:6px"><div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:2px">{p}</div><div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{vc}">{v:+.1f}%</div></div>'
+
+                    meta_items = ""
+                    if exp:    meta_items += f'<span>Exp Ratio <b style="color:var(--txt)">{exp:.2f}%</b></span>'
+                    if min_sip: meta_items += f'<span>Min SIP <b style="color:var(--txt)">₹{min_sip:,}</b></span>'
+                    if manager: meta_items += f'<span>Manager <b style="color:var(--txt)">{manager}</b></span>'
+                    if bench:   meta_items += f'<span>Benchmark <b style="color:var(--txt)">{bench}</b></span>'
+
+                    st.markdown(f"""
+<div class="mf-card" style="--mf-accent:{pnl_col}">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:14px;font-weight:800;color:var(--txt);line-height:1.35;font-family:var(--font-sans)">{s['name']}</div>
+      <div style="font-size:10px;color:var(--txt3);margin-top:3px;font-family:var(--font-mono)">{fhouse}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+        {f'<span style="font-size:8px;padding:2px 8px;border-radius:99px;background:rgba(77,166,255,.08);color:#4da6ff;border:1px solid rgba(77,166,255,.2);font-family:var(--font-mono);font-weight:700">{cat}</span>' if cat else ''}
+        <span style="font-size:8px;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.3);color:{risk_col};border:1px solid {risk_col}44;font-family:var(--font-mono);font-weight:700">{risk} Risk</span>
+      </div>
+    </div>
+    <div style="text-align:right;flex-shrink:0;padding-left:12px">
+      <div style="font-size:18px;font-weight:900;font-family:var(--font-mono);color:var(--txt)">₹{s['nav']:.4f}</div>
+      <div style="font-size:11px;font-weight:700;color:{day_col}">{s['day_chg']:+.2f}% today</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Invested</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{s['invested']:,.0f}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Current</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{s['current']:,.0f}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid {"rgba(0,208,156,.1)" if s['pnl_pct']>=0 else "rgba(235,87,87,.1)"};border:1px solid {pnl_col}33;border-radius:8px;padding:8px 10px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">P&amp;L</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{pnl_col}">₹{s['pnl']:+,.0f}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid {pnl_col}33;border-radius:8px;padding:8px 10px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Return</div>
+      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{pnl_col}">{s['pnl_pct']:+.2f}%</div>
+    </div>
+  </div>
+
+  <div style="font-size:8px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:8px">CAGR Returns</div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
+    {ret_cells}
+  </div>
+
+  <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:9px;color:var(--txt3);font-family:var(--font-mono);padding-top:10px;border-top:1px solid var(--border)">
+    <span>Units <b style="color:var(--txt)">{s['units']:.3f}</b></span>
+    <span>Buy NAV <b style="color:var(--txt)">₹{s['purchase_nav']:.4f}</b></span>
+    {meta_items}
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+                with chart_col:
+                    # Risk-O-Meter
+                    st.markdown(_risk_o_meter(risk), unsafe_allow_html=True)
+
+                    # NAV history chart (1Y)
+                    nav_df = s.get("nav_df")
+                    if nav_df is not None and not nav_df.empty:
+                        cutoff = nav_df["date"].max() - pd.Timedelta(days=365)
+                        nav_1y = nav_df[nav_df["date"] >= cutoff].copy()
+                        if not nav_1y.empty:
+                            _nav_color = "#00d09c" if nav_1y["nav"].iloc[-1] >= nav_1y["nav"].iloc[0] else "#eb5757"
+                            fig_nav = go.Figure()
+                            fig_nav.add_trace(go.Scatter(
+                                x=nav_1y["date"], y=nav_1y["nav"],
+                                mode="lines", line=dict(color=_nav_color, width=1.5),
+                                fill="tozeroy",
+                                fillcolor=f"rgba({','.join(str(int(c*255)) for c in [0,.82,.61,.06] if True)}"
+                                    .replace("True","") + ")",
+                                hovertemplate="₹%{y:.2f}<br>%{x|%d %b %Y}<extra></extra>",
+                            ))
+                            fig_nav.update_layout(
+                                height=140, margin=dict(l=0,r=0,t=0,b=0),
+                                paper_bgcolor="transparent", plot_bgcolor="transparent",
+                                xaxis=dict(showgrid=False,showticklabels=False,zeroline=False),
+                                yaxis=dict(showgrid=False,showticklabels=True,zeroline=False,
+                                          tickfont=dict(size=9,color="#5a8a74"),
+                                          tickformat=",.0f"),
+                                showlegend=False,
+                            )
+                            nav_chg = ((nav_1y["nav"].iloc[-1] - nav_1y["nav"].iloc[0]) /
+                                       nav_1y["nav"].iloc[0] * 100)
+                            st.markdown(f'<div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:2px">1Y NAV &nbsp;<span style="color:{_nav_color};font-weight:800">{nav_chg:+.1f}%</span></div>', unsafe_allow_html=True)
+                            st.plotly_chart(fig_nav, use_container_width=True,
+                                           key=f"nav_chart_{s['scheme_code']}")
+
+            # ── Fund comparison ─────────────────────────────────────────────
+            if len(summary) >= 2:
+                st.markdown('<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em;margin:20px 0 12px;font-family:var(--font-mono);border-left:2px solid var(--accent);padding-left:8px">Compare Funds</div>', unsafe_allow_html=True)
+                names = [s["name"][:60] for s in summary]
+                cmp_c1, cmp_c2 = st.columns(2)
+                f1 = cmp_c1.selectbox("Fund A", names, key="cmp_f1")
+                f2 = cmp_c2.selectbox("Fund B", names, index=min(1, len(names)-1), key="cmp_f2")
+                s1 = next(s for s in summary if s["name"][:60] == f1)
+                s2 = next(s for s in summary if s["name"][:60] == f2)
+                _periods = ["1M","3M","6M","1Y","3Y","5Y"]
+                hdr = '<div style="display:grid;grid-template-columns:120px repeat(6,1fr);gap:6px;margin-bottom:6px">'
+                hdr += '<div></div>'
+                for p in _periods:
+                    hdr += f'<div style="text-align:center;font-size:9px;font-weight:800;color:var(--txt3);font-family:var(--font-mono)">{p}</div>'
+                hdr += '</div>'
+                rows = ""
+                for s_x, lbl_col in [(s1, "#4da6ff"), (s2, "#a78bfa")]:
+                    rows += f'<div style="display:grid;grid-template-columns:120px repeat(6,1fr);gap:6px;margin-bottom:6px">'
+                    rows += f'<div style="font-size:9px;font-weight:700;color:{lbl_col};font-family:var(--font-mono);align-self:center;word-break:break-word">{s_x["name"][:25]}</div>'
+                    for p in _periods:
+                        v = s_x["returns"].get(p)
+                        if v is None:
+                            rows += '<div style="text-align:center;padding:6px;font-size:11px;color:var(--txt3)">—</div>'
+                        else:
+                            vc = "#00d09c" if v >= 0 else "#eb5757"
+                            rows += f'<div style="text-align:center;padding:6px;background:{"rgba(0,208,156,.06)" if v>=0 else "rgba(235,87,87,.06)"};border-radius:6px;font-size:12px;font-weight:800;font-family:var(--font-mono);color:{vc}">{v:+.1f}%</div>'
+                    rows += '</div>'
+                st.markdown(f'<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px">{hdr}{rows}</div>', unsafe_allow_html=True)
+
+            # ── Smart alerts ────────────────────────────────────────────────
+            _alerts_all = []
+            for s in summary:
                 if abs(s["day_chg"]) > 2:
-                    alerts.append(f"NAV moved {s['day_chg']:+.2f}% today — unusual move")
-                ret1y = s["returns"].get("1Y", 0)
-                if ret1y < 0:
-                    alerts.append(f"1Y return is negative ({ret1y:.1f}%) — review")
+                    _alerts_all.append(f"<b>{s['name'][:40]}</b> — NAV moved {s['day_chg']:+.2f}% today")
+                if s["returns"].get("1Y", 0) < 0:
+                    _alerts_all.append(f"<b>{s['name'][:40]}</b> — 1Y return negative ({s['returns'].get('1Y',0):.1f}%)")
                 if s["pnl_pct"] < -10:
-                    alerts.append(f"Portfolio down {s['pnl_pct']:.1f}% from cost — consider reviewing")
-                if alerts:
-                    for a in alerts:
-                        st.markdown(f'<div style="background:#1a1200;border:1px solid #422006;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#fbbf24">⚠️ <b>{s["name"][:40]}</b> — {a}</div>', unsafe_allow_html=True)
-            st.markdown('<div style="font-size:10px;color:#334155;margin-top:8px">Fund manager / category / objective changes require AMC website monitoring — coming soon</div>', unsafe_allow_html=True)
+                    _alerts_all.append(f"<b>{s['name'][:40]}</b> — Portfolio loss {s['pnl_pct']:.1f}% from cost")
+            if _alerts_all:
+                st.markdown('<div style="font-size:10px;font-weight:800;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin:18px 0 8px;font-family:var(--font-mono);border-left:2px solid var(--amber);padding-left:8px">⚠ Smart Alerts</div>', unsafe_allow_html=True)
+                for a in _alerts_all:
+                    st.markdown(f'<div style="background:rgba(255,170,0,.05);border:1px solid rgba(255,170,0,.2);border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:var(--amber);font-family:var(--font-sans)">{a}</div>', unsafe_allow_html=True)
 
         else:
-            st.error("Could not load portfolio data. Check scheme codes.")
+            st.error("Could not load portfolio data.")
     else:
-        st.markdown('<div style="text-align:center;padding:40px 0;color:#334155"><div style="font-size:32px">📊</div><div style="margin-top:8px;font-size:13px">Add your mutual funds above to start tracking</div></div>', unsafe_allow_html=True)
+        st.markdown("""
+<div style="text-align:center;padding:60px 0">
+  <div style="font-size:40px;margin-bottom:12px">📊</div>
+  <div style="font-size:15px;font-weight:700;color:var(--txt);font-family:var(--font-sans)">No funds tracked yet</div>
+  <div style="font-size:12px;color:var(--txt3);margin-top:6px;font-family:var(--font-mono)">Use the search above to add mutual funds to your portfolio</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════

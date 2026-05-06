@@ -124,6 +124,31 @@ FUND_HOLDINGS = {
 }
 
 
+# ── Fund metadata (risk, expense ratio, min SIP, manager) ────────────────────
+FUND_META = {
+    122639: {"risk": "Very High", "exp_ratio": 0.63, "min_sip": 1000, "manager": "Rajeev Thakkar", "benchmark": "Nifty 500 TRI"},
+    118825: {"risk": "Very High", "exp_ratio": 0.52, "min_sip": 1000, "manager": "Gaurav Misra",   "benchmark": "Nifty 100 TRI"},
+    118632: {"risk": "Very High", "exp_ratio": 0.80, "min_sip": 100,  "manager": "Sailesh Bhan",   "benchmark": "Nifty LargeMidcap 250 TRI"},
+    120716: {"risk": "Very High", "exp_ratio": 0.20, "min_sip": 500,  "manager": "Sharwan Goyal",  "benchmark": "Nifty 50 TRI"},
+    120505: {"risk": "Very High", "exp_ratio": 0.54, "min_sip": 1000, "manager": "Shreyash Devalkar","benchmark": "Nifty Midcap 150 TRI"},
+    125497: {"risk": "Very High", "exp_ratio": 0.64, "min_sip": 500,  "manager": "R Srinivasan",   "benchmark": "Nifty Smallcap 250 TRI"},
+    118777: {"risk": "Very High", "exp_ratio": 0.67, "min_sip": 100,  "manager": "Samir Rachh",    "benchmark": "Nifty Smallcap 250 TRI"},
+    120164: {"risk": "Very High", "exp_ratio": 0.49, "min_sip": 1000, "manager": "Pankaj Tibrewal","benchmark": "Nifty Smallcap 250 TRI"},
+    125354: {"risk": "Very High", "exp_ratio": 0.57, "min_sip": 500,  "manager": "Anupam Tiwari",  "benchmark": "Nifty Smallcap 250 TRI"},
+    118955: {"risk": "Very High", "exp_ratio": 0.83, "min_sip": 100,  "manager": "Roshi Jain",     "benchmark": "Nifty 500 TRI"},
+    120166: {"risk": "Very High", "exp_ratio": 0.55, "min_sip": 100,  "manager": "Harsha Upadhyaya","benchmark": "Nifty 500 TRI"},
+    151412: {"risk": "Very High", "exp_ratio": 0.52, "min_sip": 1000, "manager": "Gaurav Misra",   "benchmark": "Nifty 500 TRI"},
+    135781: {"risk": "Very High", "exp_ratio": 0.56, "min_sip": 500,  "manager": "Gaurav Misra",   "benchmark": "Nifty 500 TRI"},
+    120847: {"risk": "Very High", "exp_ratio": 0.50, "min_sip": 500,  "manager": "Vasav Sahgal",   "benchmark": "Nifty 500 TRI"},
+    119551: {"risk": "Very High", "exp_ratio": 0.75, "min_sip": 500,  "manager": "Shreyash Devalkar","benchmark": "Nifty 500 TRI"},
+    118968: {"risk": "High",      "exp_ratio": 0.78, "min_sip": 100,  "manager": "Gopal Agrawal",  "benchmark": "Nifty 50 Hybrid Composite Debt 65:35"},
+}
+
+RISK_ORDER = {"Low": 1, "Moderate": 2, "Moderately High": 3, "High": 4, "Very High": 5}
+
+def get_fund_meta(scheme_code):
+    return FUND_META.get(int(scheme_code), {})
+
 def get_fund_holdings(scheme_code):
     return FUND_HOLDINGS.get(int(scheme_code))
 
@@ -351,6 +376,7 @@ def get_portfolio_summary(portfolio):
         if len(df) >= 2:
             prev    = float(df["nav"].iloc[-2])
             day_chg = round((latest - prev) / prev * 100, 2)
+        fm = get_fund_meta(fund["scheme_code"])
         results.append({
             "name":         fund.get("name", meta.get("scheme_name", str(fund["scheme_code"]))),
             "scheme_code":  fund["scheme_code"],
@@ -363,7 +389,13 @@ def get_portfolio_summary(portfolio):
             "pnl":          round(pnl),
             "pnl_pct":      round(pnl_pct, 2),
             "returns":      calc_returns(df),
+            "nav_df":       df,
             "fund_house":   meta.get("fund_house", ""),
             "category":     meta.get("scheme_category", ""),
+            "risk":         fm.get("risk", "Very High"),
+            "exp_ratio":    fm.get("exp_ratio", None),
+            "min_sip":      fm.get("min_sip", None),
+            "manager":      fm.get("manager", ""),
+            "benchmark":    fm.get("benchmark", ""),
         })
     return results
