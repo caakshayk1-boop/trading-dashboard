@@ -1415,7 +1415,7 @@ def _channel_value(slope, intercept, idx: int) -> float:
 
 
 def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
-                pivot_span: int = 5, n_pivots: int = 5) -> dict | None:
+                pivot_span: int = 5, n_pivots: int = 5):
     """
     TLM: Trendline Channel Breakout detection.
     1. Find recent pivot highs (upper TL) and pivot lows (lower TL)
@@ -1550,7 +1550,7 @@ def scan_tlm_breakouts(universe=None, interval: str = "4h") -> list:
 
 
 # ── Potential Multibaggers Scanner (Weekly — Saturday only) ──────────────────
-def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0) -> dict | None:
+def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
     """
     Multibagger Scanner — Expert Grade (CAN SLIM + Darvas Box)
     Institutional criteria (William O'Neil / Mark Minervini methodology):
@@ -1749,3 +1749,136 @@ def scan_multibaggers(universe=None, top_n=15) -> list:
     results.sort(key=lambda x: x["score"], reverse=True)
     logging.info(f"Multibagger scan: {len(results)} candidates → top {top_n}")
     return results[:top_n]
+
+
+# ── Telegram Bot Scan — 4H Momentum ──────────────────────────────────────────
+# Criteria: RSI rising from bottom (recent low <45, now >48) + volume 3x+
+#           + powerful candle (engulfing / hammer / doji breakout / marubozu)
+
+def _candle_pattern(o0, c0, h0, l0, o1, c1, h1, l1):
+    """Identify bullish candle pattern. Returns pattern name or None."""
+    body0  = abs(c0 - o0)
+    range0 = h0 - l0
+    if range0 == 0:
+        return None
+
+    lower_wick = min(c0, o0) - l0
+    upper_wick = h0 - max(c0, o0)
+    bull = c0 > o0
+
+    # Bullish Engulfing
+    if bull and c1 < o1 and c0 >= o1 and o0 <= c1:
+        return "Bullish Engulfing"
+
+    # Hammer (bullish): tiny body at top, long lower wick, close > open
+    if bull and body0 < range0 * 0.35 and lower_wick > body0 * 2.0 and upper_wick < body0 * 0.6:
+        return "Hammer"
+
+    # Marubozu: near-full body, tiny wicks
+    if bull and body0 > range0 * 0.80 and lower_wick < range0 * 0.08 and upper_wick < range0 * 0.08:
+        return "Marubozu"
+
+    # Doji breakout: very small body + close above previous high
+    if body0 < range0 * 0.12 and c0 > h1:
+        return "Doji Breakout"
+
+    # Strong range breakout: bull candle closing above prev high, body > 50% of range
+    if bull and c0 > h1 and body0 > range0 * 0.50:
+        return "Range Breakout"
+
+    return None
+
+
+def analyze_tg_momentum(symbol):
+    """
+    4H momentum scan for Telegram bot.
+    Pass: RSI rose from <45 to >48 in last 5 candles + volume 3x avg + bullish candle pattern.
+    """
+    try:
+        import requests as _req
+        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        with _req.Session() as sess:
+            df = yf.Ticker(sym_yf, session=sess).history(
+                period="90d", interval="4h", auto_adjust=True)
+        if df is None or df.empty or len(df) < 30:
+            return None
+
+        close  = df["Close"].copy()
+        high   = df["High"].copy()
+        low    = df["Low"].copy()
+        open_  = df["Open"].copy()
+        volume = df["Volume"].copy()
+
+        # Use iloc[-2] as current COMPLETED candle — iloc[-1] is still forming
+        c0 = float(close.iloc[-2]);  c1 = float(close.iloc[-3])
+        o0 = float(open_.iloc[-2]);  o1 = float(open_.iloc[-3])
+        h0 = float(high.iloc[-2]);   h1 = float(high.iloc[-3])
+        l0 = float(low.iloc[-2]);    l1 = float(low.iloc[-3])
+
+        # ── Volume: 3x+ 20-bar average (on completed candle) ─────────────────
+        avg_v = float(volume.rolling(20).mean().iloc[-2])
+        cur_v = float(volume.iloc[-2])
+        vol_r = round(cur_v / avg_v, 2) if avg_v > 0 else 0.0
+        if vol_r < 3.0:
+            return None
+
+        # ── RSI: recent bottom <45, now rising above 48 ──────────────────────
+        rsi_s          = rsi(close)
+        cur_rsi        = float(rsi_s.iloc[-2])
+        rsi_recent_low = float(rsi_s.iloc[-7:-2].min())
+        if not (rsi_recent_low < 45 and cur_rsi > 48):
+            return None
+
+        # ── Candle pattern ────────────────────────────────────────────────────
+        pattern = _candle_pattern(o0, c0, h0, l0, o1, c1, h1, l1)
+        if not pattern:
+            return None
+
+        # ── SL + Targets ──────────────────────────────────────────────────────
+        cur_atr = float(atr(high, low, close).iloc[-2])
+        sl      = round(max(l0 - 0.3 * cur_atr, c0 * 0.95), 2)
+        risk    = round(c0 - sl, 2)
+        if risk <= 0:
+            return None
+
+        t1 = round(c0 + 1.5 * risk, 2)
+        t2 = round(c0 + 2.5 * risk, 2)
+        rr = round((t2 - c0) / risk, 1)
+        if rr < 1.5:
+            return None
+
+        sym_clean = symbol.replace(".NS", "")
+        return {
+            "symbol":    sym_clean,
+            "price":     round(c0, 2),
+            "sl":        sl,
+            "target1":   t1,
+            "target2":   t2,
+            "rr":        rr,
+            "rsi":       round(cur_rsi, 1),
+            "rsi_low":   round(rsi_recent_low, 1),
+            "vol_ratio": vol_r,
+            "pattern":   pattern,
+            "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}&interval=240",
+        }
+    except Exception as e:
+        logging.warning(f"TG 4H {symbol}: {e}")
+        return None
+
+
+def scan_tg_momentum(universe=None):
+    """Scan Nifty 500 for 4H momentum signals (Telegram bot scan)."""
+    if universe is None:
+        universe = load_nifty500()
+
+    results = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_tg_momentum, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    results.sort(key=lambda x: x["vol_ratio"], reverse=True)
+    logging.info(f"TG momentum scan: {len(results)} signals")
+    return results[:12]
