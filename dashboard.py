@@ -158,7 +158,7 @@ from mf_tracker import (search_funds, get_nav_history, calc_returns, get_fund_ne
                          load_portfolio, save_portfolio, get_portfolio_summary,
                          get_index_quotes, get_top_funds_data, get_stock_news,
                          get_corporate_actions, get_fund_holdings,
-                         get_indian_market_news)
+                         )
 
 st.set_page_config(
     page_title="TradeFlow AI Pro — NSE Nifty 500 Swing Scanner",
@@ -217,11 +217,11 @@ st.markdown("""
 # Daily accent rotation (7 day cycle — Mon→Sun)
 _THEME_VARS = """
 :root {
-  --bg:        #050505;
-  --bg2:       #0d0d0d;
-  --bg3:       #111111;
-  --border:    #1c1c1c;
-  --border2:   #141414;
+  --bg:        #000000;
+  --bg2:       #080808;
+  --bg3:       #0e0e0e;
+  --border:    #181818;
+  --border2:   #111111;
   --txt:       #e8e8e8;
   --txt2:      #999999;
   --txt3:      #555555;
@@ -932,10 +932,6 @@ def _market_news_ttl():
     # past 3pm — cache until next 11am next day (cap 7200)
     return 7200
 
-@st.cache_data(ttl=7200)   # refreshed up to every 2h; actual logic uses IST window
-def _indian_news():
-    return get_indian_market_news(n=12)
-
 @st.cache_data(ttl=900)    # 15-min cache — first candle is fixed after 9:30 AM IST
 def _ohl_oll_scan():
     return scan_ohl_oll()
@@ -1125,63 +1121,249 @@ Built by **Akshay K** (CA, FP&A)
     st.caption("Data: Yahoo Finance · NSE Nifty 500 · Not SEBI Advice")
 
 
-# ── Header ────────────────────────────────────────────────────────────────────
-now_str   = datetime.now(IST).strftime("%d %b · %I:%M %p IST")
+# ── Session Header (MiroFish-style terminal) ──────────────────────────────────
+_now_hdr  = datetime.now(IST)
+now_str   = _now_hdr.strftime("%d %b · %I:%M %p IST")
+_clock_hh = _now_hdr.strftime("%H:%M:%S")
 _active   = get_active_signals() if IS_LOCAL else pd.DataFrame()
 _bos_df   = get_breakouts(days=_days) if IS_LOCAL else _gh_breakouts(days=_days)
 sig_count = len(_active)
 bo_count  = len(_bos_df)
+_scan_ts_hdr, _scan_slot_hdr, _scan_counts_hdr = (
+    get_last_scan() if IS_LOCAL else _gh_last_scan()
+)
+
+# Win rate from performance
+try:
+    _perf_hdr = get_performance() if IS_LOCAL else {}
+    _wr_hdr   = _perf_hdr.get("win_rate", 0) if isinstance(_perf_hdr, dict) else 0
+    _trades_hdr = _perf_hdr.get("total_trades", 0) if isinstance(_perf_hdr, dict) else 0
+except Exception:
+    _wr_hdr = 0; _trades_hdr = 0
+
+# Pipeline step — derive from current time + scan slot
+_pipe_step = 1
+if _scan_slot_hdr:
+    _pipe_step = 5 if "EOD" in str(_scan_slot_hdr) else 4 if "PM" in str(_scan_slot_hdr) else 3
 
 st.markdown(f"""
-<div style="background:rgba(17,24,39,.95);border:1px solid #252d3d;border-radius:12px;
-  padding:16px 20px;margin-bottom:12px;display:flex;justify-content:space-between;
-  align-items:center;flex-wrap:wrap;gap:12px;backdrop-filter:blur(20px);position:relative;overflow:hidden">
-  <div style="position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(34,197,94,.5),transparent)"></div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,.15);
-      border:1px solid rgba(34,197,94,.3);display:flex;align-items:center;justify-content:center;
-      font-size:16px">⚡</div>
-    <div>
-      <div style="font-size:13px;font-weight:900;color:#f2f2f2;letter-spacing:.05em;
-        font-family:'JetBrains Mono',monospace">
-        TRADEFLOW AI <span style="color:#22c55e">PRO</span>
-      </div>
-      <div style="font-size:9px;color:#3d4a5c;letter-spacing:.08em;text-transform:uppercase;
-        font-family:'JetBrains Mono',monospace">
-        NSE Nifty 500 · Swing + F&amp;O + Multi-TF Signals
-      </div>
+<style>
+/* ── MiroFish terminal header components ── */
+@keyframes clockTick  {{ 0%,49% {{ opacity:1; }} 50%,100% {{ opacity:.4; }} }}
+@keyframes sessionGlow {{ 0%,100% {{ box-shadow:0 0 20px rgba(0,255,136,.04); }} 50% {{ box-shadow:0 0 40px rgba(0,255,136,.10); }} }}
+@keyframes pipeActive  {{ 0%,100% {{ background:rgba(0,255,136,.18); }} 50% {{ background:rgba(0,255,136,.30); }} }}
+@keyframes bigNumIn    {{ from {{ opacity:0; transform:translateY(-16px) scale(.9); }} to {{ opacity:1; transform:translateY(0) scale(1); }} }}
+@keyframes scanH2      {{ 0% {{ left:-10%; }} 100% {{ left:110%; }} }}
+
+.session-header {{
+  background:#000;
+  border:1px solid rgba(0,255,136,.18);
+  border-radius:0;
+  position:relative; overflow:hidden;
+  margin-bottom:0;
+  animation: sessionGlow 4s ease-in-out infinite;
+}}
+/* Top scan line sweep */
+.session-header::after {{
+  content:''; position:absolute; top:0; left:-10%; width:30%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,255,136,.6),transparent);
+  animation:scanH2 3s ease-in-out infinite;
+}}
+/* Status bar row */
+.sh-statusbar {{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 16px; background:rgba(0,255,136,.04);
+  border-bottom:1px solid rgba(0,255,136,.1);
+  flex-wrap:wrap; gap:6px;
+}}
+.sh-logo {{
+  font-size:11px; font-weight:900; color:var(--txt);
+  font-family:var(--font-mono); letter-spacing:.08em;
+}}
+.sh-logo span {{ color:var(--accent); }}
+.sh-stat {{
+  display:flex; align-items:center; gap:6px;
+  font-size:9px; font-weight:700; color:var(--txt3);
+  font-family:var(--font-mono); letter-spacing:.06em;
+  text-transform:uppercase;
+}}
+.sh-stat b {{ color:var(--txt); font-size:11px; }}
+.sh-clock {{
+  font-size:14px; font-weight:800; font-family:var(--font-mono);
+  color:var(--accent); letter-spacing:.1em;
+  animation:clockTick 1s step-end infinite;
+}}
+/* Big metric blocks */
+.sh-metrics {{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:0; border-bottom:1px solid rgba(0,255,136,.08);
+}}
+.sh-metric {{
+  padding:16px 20px; border-right:1px solid rgba(0,255,136,.07);
+  position:relative; overflow:hidden;
+}}
+.sh-metric:last-child {{ border-right:none; }}
+.sh-metric-label {{
+  font-size:8px; font-weight:700; color:var(--txt3);
+  text-transform:uppercase; letter-spacing:.14em;
+  font-family:var(--font-mono); margin-bottom:6px;
+}}
+.sh-metric-val {{
+  font-size:40px; font-weight:900; font-family:var(--font-mono);
+  color:var(--accent); line-height:1; letter-spacing:-.04em;
+  animation:bigNumIn .5s ease both;
+}}
+.sh-metric-val.dim {{ color:var(--txt2); font-size:32px; }}
+.sh-metric-sub {{
+  font-size:9px; color:var(--txt3); font-family:var(--font-mono);
+  margin-top:4px; letter-spacing:.04em;
+}}
+/* Pipeline row */
+.sh-pipeline {{
+  display:flex; align-items:center;
+  padding:10px 16px; gap:0;
+  background:rgba(0,0,0,.4);
+}}
+.sh-pipe-label {{
+  font-size:8px; font-weight:800; color:var(--txt3);
+  text-transform:uppercase; letter-spacing:.14em;
+  font-family:var(--font-mono); margin-right:14px;
+  white-space:nowrap;
+}}
+.sh-step {{
+  display:flex; align-items:center; gap:0; flex:1;
+}}
+.sh-step-block {{
+  flex:1; padding:6px 10px; text-align:center;
+  border:1px solid rgba(0,255,136,.1);
+  font-family:var(--font-mono); cursor:default;
+  transition:all .3s;
+  position:relative;
+}}
+.sh-step-block.done {{
+  background:rgba(0,255,136,.06);
+  border-color:rgba(0,255,136,.2);
+}}
+.sh-step-block.active {{
+  background:rgba(0,255,136,.15);
+  border-color:rgba(0,255,136,.5);
+  animation:pipeActive 2s ease-in-out infinite;
+}}
+.sh-step-block.pending {{
+  background:transparent;
+  border-color:rgba(255,255,255,.05);
+}}
+.sh-step-num {{
+  font-size:7px; font-weight:800; color:var(--txt3);
+  letter-spacing:.1em; display:block;
+}}
+.sh-step-name {{
+  font-size:9px; font-weight:700;
+  letter-spacing:.04em; display:block; margin-top:1px;
+}}
+.sh-step-block.done  .sh-step-name {{ color:var(--accent); }}
+.sh-step-block.active .sh-step-name {{ color:var(--txt); }}
+.sh-step-block.pending .sh-step-name {{ color:var(--txt3); }}
+.sh-arrow {{
+  font-size:8px; color:rgba(0,255,136,.3); padding:0 2px;
+  flex-shrink:0;
+}}
+</style>
+
+<div class="session-header">
+  <!-- Status bar -->
+  <div class="sh-statusbar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="sh-logo">TRADEFLOW AI&nbsp;<span>PRO</span></div>
+      <div class="sh-stat"><span class="live"></span> LIVE ENGINE</div>
+      <div class="sh-stat">UNIVERSE&nbsp;<b>NSE 500</b></div>
+      <div class="sh-stat">OHL SCAN&nbsp;<b>NIFTY 200</b></div>
+      <div class="sh-stat">SLOT&nbsp;<b>{_scan_slot_hdr or "—"}</b></div>
     </div>
-    <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
-      background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);
-      letter-spacing:.1em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">
-      <span class="live" style="margin-right:4px"></span>LIVE
-    </span>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="sh-stat">LAST SCAN&nbsp;<b>{str(_scan_ts_hdr or "—")[:16]}</b></div>
+      <div class="sh-clock" id="sh-clock">{_clock_hh}</div>
+      <span style="font-size:8px;font-weight:800;padding:2px 8px;background:rgba(0,255,136,.1);
+        color:var(--accent);border:1px solid rgba(0,255,136,.3);font-family:var(--font-mono);
+        letter-spacing:.1em">LIVE</span>
+    </div>
   </div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-    <div style="text-align:center;padding:8px 14px;background:rgba(34,197,94,.05);
-      border:1px solid rgba(34,197,94,.15);border-radius:8px">
-      <div style="font-size:22px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;
-        letter-spacing:-.02em;line-height:1">{sig_count}</div>
-      <div style="font-size:7px;color:#3d4a5c;text-transform:uppercase;letter-spacing:.12em;
-        font-weight:800;margin-top:2px;font-family:'JetBrains Mono',monospace">SIGNALS</div>
+
+  <!-- Big metrics -->
+  <div class="sh-metrics">
+    <div class="sh-metric">
+      <div class="sh-metric-label">Active Signals</div>
+      <div class="sh-metric-val">{sig_count}</div>
+      <div class="sh-metric-sub">Swing · Nifty 500</div>
     </div>
-    <div style="text-align:center;padding:8px 14px;background:rgba(34,197,94,.05);
-      border:1px solid rgba(34,197,94,.15);border-radius:8px">
-      <div style="font-size:22px;font-weight:900;color:#4ade80;font-family:'JetBrains Mono',monospace;
-        letter-spacing:-.02em;line-height:1">{bo_count}</div>
-      <div style="font-size:7px;color:#3d4a5c;text-transform:uppercase;letter-spacing:.12em;
-        font-weight:800;margin-top:2px;font-family:'JetBrains Mono',monospace">BREAKOUTS</div>
+    <div class="sh-metric">
+      <div class="sh-metric-label">Breakouts</div>
+      <div class="sh-metric-val">{bo_count}</div>
+      <div class="sh-metric-sub">Today · Multi-TF</div>
     </div>
-    <div style="text-align:right">
-      <div style="font-size:11px;color:#64748b;font-family:'JetBrains Mono',monospace">{now_str}</div>
-      <div style="font-size:8px;color:#3d4a5c;margin-top:2px;letter-spacing:.05em;
-        text-transform:uppercase;font-family:'JetBrains Mono',monospace">Data: Yahoo Finance · 15min delay</div>
-      <div style="font-size:8px;color:#22c55e;margin-top:1px;letter-spacing:.04em;
-        font-family:'JetBrains Mono',monospace;opacity:.7">✓ Not SEBI Advice</div>
+    <div class="sh-metric">
+      <div class="sh-metric-label">Win Rate</div>
+      <div class="sh-metric-val {'dim' if _wr_hdr == 0 else ''}">{_wr_hdr:.0f}<span style="font-size:18px;color:var(--txt3)">%</span></div>
+      <div class="sh-metric-sub">{_trades_hdr} closed trades</div>
+    </div>
+    <div class="sh-metric">
+      <div class="sh-metric-label">Scan Counts</div>
+      <div class="sh-metric-val dim">{_scan_counts_hdr.get('swing',0) if _scan_counts_hdr else 0}</div>
+      <div class="sh-metric-sub">Swing · {_scan_counts_hdr.get('breakout',0) if _scan_counts_hdr else 0} breakouts</div>
+    </div>
+  </div>
+
+  <!-- Execution pipeline -->
+  <div class="sh-pipeline">
+    <div class="sh-pipe-label">■ SCAN PIPELINE</div>
+    <div class="sh-step">
+      <div class="sh-step-block {'done' if _pipe_step > 1 else 'active' if _pipe_step == 1 else 'pending'}">
+        <span class="sh-step-num">01</span>
+        <span class="sh-step-name">UNIVERSE</span>
+      </div>
+      <div class="sh-arrow">›</div>
+      <div class="sh-step-block {'done' if _pipe_step > 2 else 'active' if _pipe_step == 2 else 'pending'}">
+        <span class="sh-step-num">02</span>
+        <span class="sh-step-name">REGIME</span>
+      </div>
+      <div class="sh-arrow">›</div>
+      <div class="sh-step-block {'done' if _pipe_step > 3 else 'active' if _pipe_step == 3 else 'pending'}">
+        <span class="sh-step-num">03</span>
+        <span class="sh-step-name">SETUP</span>
+      </div>
+      <div class="sh-arrow">›</div>
+      <div class="sh-step-block {'done' if _pipe_step > 4 else 'active' if _pipe_step == 4 else 'pending'}">
+        <span class="sh-step-num">04</span>
+        <span class="sh-step-name">SCORE</span>
+      </div>
+      <div class="sh-arrow">›</div>
+      <div class="sh-step-block {'done' if _pipe_step > 5 else 'active' if _pipe_step == 5 else 'pending'}">
+        <span class="sh-step-num">05</span>
+        <span class="sh-step-name">ALERT</span>
+      </div>
+      <div class="sh-arrow">›</div>
+      <div class="sh-step-block {'done' if _pipe_step > 5 else 'pending'}">
+        <span class="sh-step-num">06</span>
+        <span class="sh-step-name">TRACK</span>
+      </div>
     </div>
   </div>
 </div>
+
+<script>
+(function liveClock() {{
+  var el = document.getElementById('sh-clock');
+  if (!el) {{ setTimeout(liveClock, 500); return; }}
+  setInterval(function() {{
+    var now = new Date();
+    var ist = new Date(now.getTime() + (5.5*3600000));
+    var hh = String(ist.getUTCHours()).padStart(2,'0');
+    var mm = String(ist.getUTCMinutes()).padStart(2,'0');
+    var ss = String(ist.getUTCSeconds()).padStart(2,'0');
+    el.textContent = hh+':'+mm+':'+ss;
+  }}, 1000);
+}})();
+</script>
 """, unsafe_allow_html=True)
 
 # ── Bloomberg Ticker Bar ─────────────────────────────────────────────────────
@@ -1284,7 +1466,7 @@ if ticker_parts:
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab_ai, tab2, tab3, tab4, tab5, tab_mb, tab_ohl, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "📰 Market News", "💎 Multibaggers", "🕯️ OHL/OLL", "📋 History"])
+tab1, tab_ai, tab2, tab3, tab4, tab_mb, tab_ohl, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "💎 Multibaggers", "🕯️ OHL/OLL", "📋 History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2247,118 +2429,6 @@ with tab4:
             st.error("Could not load portfolio data. Check scheme codes.")
     else:
         st.markdown('<div style="text-align:center;padding:40px 0;color:#334155"><div style="font-size:32px">📊</div><div style="margin-top:8px;font-size:13px">Add your mutual funds above to start tracking</div></div>', unsafe_allow_html=True)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# TAB 5 — MARKET NEWS
-# ══════════════════════════════════════════════════════════════════════════════
-with tab5:
-    # ── Top 10 Indian Market News (auto-updated 11am / 3pm IST) ──────────────
-    _now_ist   = datetime.now(IST)
-    _news_hr   = _now_ist.strftime("%I:%M %p IST")
-    _next_slot = "3:00 PM IST" if _now_ist.hour < 15 else "11:00 AM IST (tomorrow)"
-
-    st.markdown(f"""
-<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
-  <div>
-    <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">Market News</div>
-    <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
-      <span class="live"></span> NSE &nbsp;·&nbsp; BSE &nbsp;·&nbsp; SEBI &nbsp;·&nbsp; RBI &nbsp;·&nbsp; Earnings &nbsp;·&nbsp; Updated 11 AM &amp; 3 PM IST
-    </div>
-  </div>
-  <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">Next refresh: {_next_slot}</div>
-</div>
-""", unsafe_allow_html=True)
-
-    _cat_colors = {
-        "Market":     "#22c55e",
-        "Earnings":   "#22c55e",
-        "Regulation": "#f59e0b",
-        "Technical":  "#a78bfa",
-    }
-
-    with st.spinner("Loading market news…"):
-        mkt_news = _indian_news()
-
-    _POS_WORDS = {"surge","rally","gain","rise","record","high","jump","boost","soar","climb","profit","growth","bull","positive","strong","upgrade","buy","recovery"}
-    _NEG_WORDS = {"fall","drop","crash","loss","decline","slump","sell","weak","down","cut","risk","bearish","caution","concern","miss","disappoint","plunge","selloff"}
-
-    def _news_sentiment(title):
-        words = set(title.lower().split())
-        if words & _POS_WORDS: return "pos", "▲ Bullish"
-        if words & _NEG_WORDS: return "neg", "▼ Bearish"
-        return "neu", "— Neutral"
-
-    if mkt_news:
-        cards_html = '<div class="news-grid">'
-        for _n in mkt_news[:12]:
-            cat   = _n.get("category", "Market")
-            catc  = _cat_colors.get(cat, "#22c55e")
-            src   = _n.get("source","") or "Market"
-            pub   = _n.get("published","")
-            title = _n.get("title","")
-            link  = _n.get("link","#")
-            sent_cls, sent_label = _news_sentiment(title)
-            cards_html += f"""
-<a href="{link}" target="_blank" class="news-card" style="text-decoration:none">
-  <div class="news-card-top">
-    <span class="news-cat" style="background:rgba(0,0,0,.3);color:{catc};border:1px solid {catc}44">{cat}</span>
-    <span class="news-sentiment {sent_cls}">{sent_label}</span>
-  </div>
-  <span class="news-headline">{title}</span>
-  <div class="news-meta">
-    <span class="news-source">{src}</span>
-    <span>·</span>
-    <span class="news-time">{pub}</span>
-  </div>
-</a>"""
-        cards_html += '</div>'
-        st.markdown(cards_html, unsafe_allow_html=True)
-    else:
-        st.info("Market news loading… Try refreshing.")
-
-    st.markdown("---")
-
-    # ── Stock-specific news + Corporate Actions ──────────────────────────────
-    st.markdown('<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;font-family:var(--font-mono);border-left:2px solid var(--accent);padding-left:8px">Stock News &amp; Corporate Actions</div>', unsafe_allow_html=True)
-
-    col_ns, col_nb = st.columns([3, 1])
-    with col_ns:
-        news_sym = st.text_input("Enter NSE symbol", placeholder="e.g. RELIANCE, INFY, HDFC", label_visibility="visible")
-    with col_nb:
-        st.markdown("<div style='margin-top:28px'></div>", unsafe_allow_html=True)
-        news_go = st.button("Fetch", use_container_width=True)
-
-    if news_sym and news_go:
-        sym_clean = news_sym.upper().strip()
-        col_a, col_b = st.columns([3, 2])
-        with col_a:
-            st.markdown(f'<div style="font-size:11px;font-weight:700;color:#f1f5f9;margin-bottom:8px">{sym_clean} — Latest News</div>', unsafe_allow_html=True)
-            with st.spinner("Fetching…"):
-                news_items = get_stock_news(sym_clean, n=8)
-            if news_items:
-                sn_html = '<div style="display:flex;flex-direction:column;gap:8px">'
-                for _n in news_items:
-                    sn_html += f"""<a href="{_n['link']}" target="_blank" class="news-card" style="text-decoration:none">
-  <span class="news-headline">{_n['title']}</span>
-  <div class="news-meta"><span class="news-time">{_n['published']}</span></div>
-</a>"""
-                sn_html += '</div>'
-                st.markdown(sn_html, unsafe_allow_html=True)
-            else:
-                st.info("No recent news found.")
-        with col_b:
-            st.markdown(f'<div style="font-size:11px;font-weight:700;color:#fbbf24;margin-bottom:8px">Corporate Actions</div>', unsafe_allow_html=True)
-            with st.spinner("Loading…"):
-                actions = get_corporate_actions(sym_clean)
-            if actions:
-                for _a in actions:
-                    st.markdown(f'<div style="background:#1a1200;border:1px solid #422006;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#fbbf24">📋 {_a}</div>', unsafe_allow_html=True)
-            else:
-                st.info("No corporate actions found.")
-            st.markdown("---")
-            st.markdown(f'<a href="https://www.nseindia.com/get-quotes/equity?symbol={sym_clean}" target="_blank" style="color:#22c55e;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">NSE Quote →</a>', unsafe_allow_html=True)
-            st.markdown(f'<a href="https://www.bseindia.com/stockinfo/AnnSubCategorywise.html" target="_blank" style="color:#22c55e;font-size:12px;font-weight:600;text-decoration:none;display:block;margin:4px 0">BSE Announcements →</a>', unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
