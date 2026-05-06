@@ -20,6 +20,8 @@ logging.basicConfig(
 
 NIFTY500_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
 NIFTY500_CACHE   = "cache/nifty500.csv"
+NIFTY200_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty200list.csv"
+NIFTY200_CACHE   = "cache/nifty200.csv"
 
 # NSE F&O eligible stocks (Nifty 200 + major midcap with liquid options)
 FNO_ELIGIBLE = {
@@ -281,6 +283,99 @@ def load_nifty500():
     logging.warning("Using static fallback universe")
     seen = set()
     return [s for s in FALLBACK_NIFTY500 if not (s in seen or seen.add(s))]
+
+
+def load_nifty200():
+    """Load Nifty 200 universe (live NSE CSV, fallback: first 200 of Nifty 500)."""
+    syms = _load_nse_csv(NIFTY200_CSV_URL, NIFTY200_CACHE)
+    if len(syms) >= 150:
+        logging.info(f"Universe: Nifty 200 ({len(syms)} stocks)")
+        return syms
+    return load_nifty500()[:200]
+
+
+def scan_ohl_oll(tolerance_pct: float = 0.05) -> list:
+    """
+    Open=High (OHL, bearish) / Open=Low (OLL, bullish) screener on Nifty 200.
+    Uses first 15-min candle of the day (9:15 AM IST close).
+    RSI filter on 1h: OLL requires RSI >= 46, OHL requires RSI <= 54.
+    Returns [] before 9:30 AM IST (first candle not yet closed).
+    """
+    import pytz
+    from datetime import datetime as _dt
+    IST = pytz.timezone("Asia/Kolkata")
+    now = _dt.now(IST)
+    # First candle closes at 9:30 AM
+    if now.hour < 9 or (now.hour == 9 and now.minute < 30):
+        return []
+
+    symbols = load_nifty200()                        # list of "SYM.NS"
+    tol = tolerance_pct / 100
+
+    # ── Batch download 15m (much faster than individual calls) ──────────────
+    try:
+        df_all = yf.download(
+            symbols, period="1d", interval="15m",
+            group_by="ticker", progress=False, auto_adjust=True,
+            threads=True
+        )
+    except Exception as e:
+        logging.warning(f"OHL batch 15m download failed: {e}")
+        return []
+
+    candidates = []
+    for sym in symbols:
+        try:
+            df15 = df_all[sym] if len(symbols) > 1 else df_all
+            if df15 is None or df15.empty:
+                continue
+            row = df15.iloc[0]
+            o = float(row["Open"]); h = float(row["High"])
+            l = float(row["Low"]);  c = float(row["Close"])
+            if o <= 0:
+                continue
+            is_oll = (abs(o - l) / o) <= tol   # Open = Low  → bullish
+            is_ohl = (abs(o - h) / o) <= tol   # Open = High → bearish
+            if not (is_oll or is_ohl):
+                continue
+            curr = float(df15["Close"].iloc[-1])
+            candidates.append({
+                "sym": sym, "type": "OLL" if is_oll else "OHL",
+                "open": round(o, 2), "high": round(h, 2),
+                "low": round(l, 2), "close_1c": round(c, 2),
+                "price": round(curr, 2),
+            })
+        except Exception:
+            continue
+
+    # ── Fetch 1h RSI only for candidates (small set) ────────────────────────
+    results = []
+    for cand in candidates:
+        sym = cand["sym"]
+        try:
+            df1h = yf.download(sym, period="5d", interval="1h",
+                               progress=False, auto_adjust=True)
+            if df1h.empty or len(df1h) < 15:
+                continue
+            close_1h = df1h["Close"].squeeze()
+            rsi_val  = float(
+                ta_lib.momentum.RSIIndicator(close_1h, window=14).rsi().iloc[-1]
+            )
+            if pd.isna(rsi_val):
+                continue
+            # Apply RSI filter
+            if cand["type"] == "OLL" and rsi_val < 46:
+                continue
+            if cand["type"] == "OHL" and rsi_val > 54:
+                continue
+            results.append({**cand, "rsi_1h": round(rsi_val, 1),
+                            "symbol": sym.replace(".NS", "")})
+        except Exception:
+            continue
+
+    results.sort(key=lambda x: x["rsi_1h"],
+                 reverse=True)   # OLL: highest RSI first; OHL: already ≤54
+    return results
 
 
 def get_nifty50_return():

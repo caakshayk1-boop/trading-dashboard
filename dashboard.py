@@ -8,7 +8,7 @@ import ta as ta_lib
 from datetime import datetime, date
 import pytz, os, json, requests
 
-from scanner import fetch_forex_comm, obfuscate_reasons
+from scanner import fetch_forex_comm, obfuscate_reasons, scan_ohl_oll
 from tracker import (get_performance, get_history, get_active_signals, init_db,
                      get_breakouts, get_4h_signals, get_commodity_signals,
                      get_last_scan, get_signals_display)
@@ -936,6 +936,10 @@ def _market_news_ttl():
 def _indian_news():
     return get_indian_market_news(n=12)
 
+@st.cache_data(ttl=900)    # 15-min cache — first candle is fixed after 9:30 AM IST
+def _ohl_oll_scan():
+    return scan_ohl_oll()
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 def _rating(score):
@@ -1280,7 +1284,7 @@ if ticker_parts:
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab_ai, tab2, tab3, tab4, tab5, tab_mb, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "📰 Market News", "💎 Multibaggers", "📋 History"])
+tab1, tab_ai, tab2, tab3, tab4, tab5, tab_mb, tab_ohl, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "📰 Market News", "💎 Multibaggers", "🕯️ OHL/OLL", "📋 History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2421,6 +2425,173 @@ with tab_mb:
 
         st.download_button("Export CSV", mb_df.to_csv(index=False), "multibaggers.csv", "text/csv")
         st.markdown('<div style="font-size:10px;color:#334155;margin-top:8px">Weekly breakout + momentum + volume expansion · Not SEBI advice · Horizon 6–12 months</div>', unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAB OHL — OPEN=HIGH / OPEN=LOW INTRADAY SCREENER (Nifty 200 · 15m first candle)
+# ══════════════════════════════════════════════════════════════════════════════
+with tab_ohl:
+    _now_ist_ohl = datetime.now(IST)
+    _before_open = _now_ist_ohl.hour < 9 or (_now_ist_ohl.hour == 9 and _now_ist_ohl.minute < 30)
+
+    st.markdown("""
+<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px">
+  <div>
+    <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">OHL / OLL Screener</div>
+    <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
+      Nifty 200 &nbsp;·&nbsp; First 15-min candle (9:15 AM IST) &nbsp;·&nbsp; 1H RSI filter
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <div style="background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:8px 14px;font-size:11px;font-family:var(--font-mono)">
+      <span style="color:var(--txt3)">OLL (Bullish)</span> &nbsp;
+      <span style="color:var(--green);font-weight:800">Open = Low &nbsp;·&nbsp; 1H RSI ≥ 46</span>
+    </div>
+    <div style="background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.2);border-radius:8px;padding:8px 14px;font-size:11px;font-family:var(--font-mono)">
+      <span style="color:var(--txt3)">OHL (Bearish)</span> &nbsp;
+      <span style="color:var(--red);font-weight:800">Open = High &nbsp;·&nbsp; 1H RSI ≤ 54</span>
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+    if _before_open:
+        st.markdown("""
+<div style="text-align:center;padding:48px 0">
+  <div style="font-size:32px">🕐</div>
+  <div style="font-size:14px;color:var(--txt2);margin-top:10px;font-family:var(--font-mono)">
+    Market opens at 9:15 AM IST
+  </div>
+  <div style="font-size:11px;color:var(--txt3);margin-top:6px">
+    First 15-min candle closes at 9:30 AM — screener activates then
+  </div>
+</div>
+""", unsafe_allow_html=True)
+    else:
+        _scan_ts = _now_ist_ohl.strftime("%I:%M %p IST")
+        col_ref, col_btn = st.columns([5, 1])
+        with col_ref:
+            st.markdown(f'<div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono);padding-top:8px"><span class="live"></span> Scanning Nifty 200 · First candle 9:15 AM · Cached 15 min · As of {_scan_ts}</div>', unsafe_allow_html=True)
+        with col_btn:
+            if st.button("↺ Rescan", use_container_width=True):
+                st.cache_data.clear()
+                st.rerun()
+
+        with st.spinner("Scanning Nifty 200 for OHL / OLL setups… (first run ~30s)"):
+            _ohl_results = _ohl_oll_scan()
+
+        if not _ohl_results:
+            st.markdown("""
+<div style="text-align:center;padding:48px 0">
+  <div style="font-size:28px">🔍</div>
+  <div style="font-size:13px;color:var(--txt2);margin-top:10px;font-family:var(--font-mono)">No OHL / OLL setups found today</div>
+  <div style="font-size:10px;color:var(--txt3);margin-top:6px">All 200 stocks checked · RSI filter applied</div>
+</div>
+""", unsafe_allow_html=True)
+        else:
+            _oll = [r for r in _ohl_results if r["type"] == "OLL"]
+            _ohl_list = [r for r in _ohl_results if r["type"] == "OHL"]
+
+            # Summary metrics
+            st.markdown(f"""
+<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--green);border-radius:8px;padding:12px 18px;min-width:130px">
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OLL Bullish</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--green)">{len(_oll)}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);border-radius:8px;padding:12px 18px;min-width:130px">
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OHL Bearish</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--red)">{len(_ohl_list)}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:8px;padding:12px 18px;min-width:130px">
+    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">Total Setups</div>
+    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--accent)">{len(_ohl_results)}</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+            def _render_ohl_cards(items, sig_type):
+                border_col = "var(--green)" if sig_type == "OLL" else "var(--red)"
+                badge_bg   = "rgba(0,255,136,.08)" if sig_type == "OLL" else "rgba(255,59,59,.07)"
+                badge_col  = "var(--green)" if sig_type == "OLL" else "var(--red)"
+                label      = "BULLISH · LONG BIAS" if sig_type == "OLL" else "BEARISH · SHORT BIAS"
+                desc       = "Open = Low — price held above open all candle" if sig_type == "OLL" else "Open = High — price only fell from open"
+
+                st.markdown(
+                    f'<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;'
+                    f'letter-spacing:.14em;margin:16px 0 10px;font-family:var(--font-mono);'
+                    f'border-left:3px solid {border_col};padding-left:8px">'
+                    f'{sig_type} — {label} <span style="font-weight:400;color:var(--txt3)">({len(items)} stocks)</span></div>',
+                    unsafe_allow_html=True
+                )
+                if not items:
+                    st.markdown(f'<div style="font-size:11px;color:var(--txt3);padding:8px 0;font-family:var(--font-mono)">None found today</div>', unsafe_allow_html=True)
+                    return
+
+                for r in items:
+                    sym     = r["symbol"]
+                    rsi     = r["rsi_1h"]
+                    o       = r["open"]; h = r["high"]; l = r["low"]
+                    c1      = r["close_1c"]; price = r["price"]
+                    chg_pct = ((price - o) / o * 100) if o > 0 else 0
+                    chg_col = "var(--green)" if chg_pct >= 0 else "var(--red)"
+                    rsi_bar = min(100, rsi)
+                    rsi_col = "#00ff88" if rsi >= 55 else "#ffaa00" if rsi >= 46 else "#ff3b3b"
+                    tv_link = f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+
+                    st.markdown(f"""
+<div class="card" style="border-left-color:{border_col};margin-bottom:10px">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+    <div>
+      <span style="font-size:18px;font-weight:900;color:var(--txt);font-family:var(--font-mono)">{sym}</span>
+      <span style="display:inline-block;margin-left:10px;padding:2px 9px;border-radius:99px;
+        font-size:9px;font-weight:800;background:{badge_bg};color:{badge_col};
+        border:1px solid {badge_col}44;letter-spacing:.06em;text-transform:uppercase">{sig_type}</span>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{price}</div>
+      <div style="font-size:11px;font-weight:700;color:{chg_col}">{chg_pct:+.2f}% from open</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Open</div>
+      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{o}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">High</div>
+      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--green)">₹{h}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Low</div>
+      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--red)">₹{l}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
+      <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">1st Close</div>
+      <div style="font-size:14px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{c1}</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="font-size:9px;font-weight:700;color:var(--txt3);font-family:var(--font-mono);min-width:50px">1H RSI</div>
+    <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+      <div style="width:{rsi_bar:.0f}%;height:100%;background:{rsi_col};border-radius:3px"></div>
+    </div>
+    <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{rsi_col};min-width:36px;text-align:right">{rsi}</div>
+    <a href="{tv_link}" target="_blank"
+       style="font-size:10px;font-weight:700;color:var(--accent);text-decoration:none;
+              padding:3px 10px;border:1px solid rgba(0,255,136,.25);border-radius:4px;white-space:nowrap">
+      TV ↗
+    </a>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+            _render_ohl_cards(_oll, "OLL")
+            _render_ohl_cards(_ohl_list, "OHL")
+
+            st.markdown('<div style="font-size:9px;color:var(--txt3);margin-top:16px;font-family:var(--font-mono)">Tolerance: 0.05% · Universe: Nifty 200 · Data: Yahoo Finance (15-min delay) · Not SEBI advice</div>', unsafe_allow_html=True)
 
 
 # TAB 7 — HISTORY (all signals ever sent — permanent record)
