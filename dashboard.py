@@ -2290,15 +2290,20 @@ with tab7:
                  and c not in ("id","sent_at","metadata","exit_price","target3")]
         display_hist = display_hist[avail + rest].copy()
 
-        # ── Fix .000000 — round all price/ratio columns to 2 dp ──────────────
-        price_cols = ["entry","sl","target1","target2","target3","exit_price"]
-        ratio_cols = ["rr","pnl_pct","r_multiple"]
-        for col in price_cols:
+        # ── Format price/ratio columns as strings (kills .000000 problem) ──────
+        def _fmt_price(v):
+            try: return f"₹{float(v):,.2f}" if v not in (None,"") else "—"
+            except: return str(v)
+        def _fmt_ratio(v):
+            try: return f"{float(v):.2f}" if v not in (None,"") else "—"
+            except: return str(v)
+
+        for col in ["entry","sl","target1","target2","exit_price"]:
             if col in display_hist.columns:
-                display_hist[col] = pd.to_numeric(display_hist[col], errors="coerce").round(2)
-        for col in ratio_cols:
+                display_hist[col] = display_hist[col].apply(_fmt_price)
+        for col in ["rr","pnl_pct","r_multiple"]:
             if col in display_hist.columns:
-                display_hist[col] = pd.to_numeric(display_hist[col], errors="coerce").round(2)
+                display_hist[col] = display_hist[col].apply(_fmt_ratio)
 
         # ── Rename for readability ────────────────────────────────────────────
         display_hist = display_hist.rename(columns={
