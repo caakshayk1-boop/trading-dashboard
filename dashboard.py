@@ -213,9 +213,9 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ── Theme: Light default + Dark toggle ────────────────────────────────────────
+# ── Theme vars — light default, dark via .dark-app on stApp ───────────────────
 _THEME_VARS = """
-/* LIGHT MODE (default) */
+/* LIGHT (default) */
 :root {
   --bg:      #f8fafc;
   --bg2:     #ffffff;
@@ -230,10 +230,13 @@ _THEME_VARS = """
   --green:   #16a34a;
   --red:     #dc2626;
   --amber:   #d97706;
-  --card-bg: rgba(255,255,255,0.9);
+  --card-bg: rgba(255,255,255,0.95);
+  --card-border: rgba(22,163,74,0.25);
+  --card-shadow: rgba(22,163,74,0.08);
+  --header-bg: rgba(248,250,252,0.95);
 }
-/* DARK MODE */
-body.dark-mode {
+/* DARK — applied when stApp gets class dark-app */
+[data-testid="stApp"].dark-app {
   --bg:      #0d1117;
   --bg2:     #111827;
   --bg3:     #1d2432;
@@ -247,7 +250,10 @@ body.dark-mode {
   --green:   #22c55e;
   --red:     #ef4444;
   --amber:   #f59e0b;
-  --card-bg: rgba(17,24,39,0.6);
+  --card-bg: rgba(17,24,39,0.7);
+  --card-border: rgba(34,197,94,0.30);
+  --card-shadow: rgba(34,197,94,0.08);
+  --header-bg: rgba(17,24,39,0.95);
 }
 """
 
@@ -274,65 +280,44 @@ st.markdown(f"""
 @keyframes tickerScroll {{ 0% {{ transform:translateX(0); }} 100% {{ transform:translateX(-50%); }} }}
 
 /* === BASE === */
-html, body, [class*="css"] {{
-  font-family: 'Inter', 'JetBrains Mono', sans-serif !important;
+[data-testid="stApp"] {{
   background: var(--bg) !important;
   color: var(--txt) !important;
-  -webkit-font-smoothing: antialiased;
-  transition: background .3s ease, color .3s ease;
+  transition: background .35s ease, color .35s ease;
 }}
-.stApp {{ background: var(--bg); transition: background .3s ease; }}
+html, body {{ -webkit-font-smoothing: antialiased; }}
+.stApp {{ background: var(--bg) !important; }}
+* {{ transition: background-color .25s ease, border-color .25s ease, color .2s ease; }}
 
-/* Light mode: subtle grid */
+/* Subtle dot grid */
 .main .block-container {{
-  background-image:
-    linear-gradient(rgba(22,163,74,.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(22,163,74,.04) 1px, transparent 1px);
-  background-size: 28px 28px;
-}}
-body.dark-mode .main .block-container {{
-  background-image:
-    linear-gradient(rgba(34,197,94,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34,197,94,.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
 }}
 
-/* Ambient glow — light mode softer */
-.stApp::before {{
+/* Ambient glow */
+[data-testid="stApp"]::before {{
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(ellipse 60% 40% at 15% 35%, rgba(22,163,74,.06) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 85% 10%, rgba(99,102,241,.04) 0%, transparent 50%);
-}}
-body.dark-mode .stApp::before {{
-  background:
-    radial-gradient(ellipse 60% 40% at 15% 35%, rgba(34,197,94,.04) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 85% 10%, rgba(34,197,94,.03) 0%, transparent 50%);
+    radial-gradient(ellipse 55% 35% at 10% 30%, rgba(22,163,74,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 15%, rgba(99,102,241,.05) 0%, transparent 50%);
 }}
 
-/* Theme toggle button */
+/* Theme toggle */
 #theme-toggle {{
-  position: fixed;
-  top: 14px;
-  right: 80px;
-  z-index: 9999;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 5px 12px;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--txt2);
-  font-weight: 600;
-  transition: all .2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
-  user-select: none;
+  position: fixed; top: 14px; right: 76px; z-index: 9999;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; cursor: pointer;
+  font-size: 12px; font-weight: 700; color: var(--txt2);
+  transition: all .2s ease; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  user-select: none; font-family: Inter, sans-serif; letter-spacing:.02em;
 }}
-#theme-toggle:hover {{ border-color: var(--accent); color: var(--accent); transform: scale(1.05); }}
+#theme-toggle:hover {{ border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px rgba(22,163,74,.2); }}
 
-/* Streamlit header bar */
+/* Header */
 header[data-testid="stHeader"] {{
-  background: rgba(17,24,39,.95) !important;
+  background: var(--header-bg) !important;
   backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border) !important;
 }}
@@ -396,9 +381,10 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 }}
 .stTabs [data-baseweb="tab"]:hover {{ color: var(--txt2) !important; }}
 .stTabs [aria-selected="true"] {{
-  color: #22c55e !important;
-  border-bottom-color: #22c55e !important;
-  text-shadow: 0 0 12px rgba(34,197,94,.5);
+  color: var(--accent) !important;
+  border-bottom-color: var(--accent) !important;
+  text-shadow: none;
+  font-weight: 900 !important;
 }}
 
 /* === METRICS (emerald accent from zip) === */
@@ -500,13 +486,13 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 }}
 
 /* ==========================================
-   SIGNAL CARDS — exact match to zip's SignalCard.tsx
+   SIGNAL CARDS
    ========================================== */
 .card {{
-  background: rgba(17,24,39,.6);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(34,197,94,.35);
+  border: 1px solid var(--card-border);
   border-radius: 10px;
   padding: 16px;
   margin-bottom: 14px;
@@ -514,7 +500,7 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
   overflow: hidden;
   animation: cardEnter .5s cubic-bezier(.22,1,.36,1) both;
   transition: transform .3s ease, box-shadow .3s ease;
-  box-shadow: 0 4px 24px rgba(34,197,94,.08);
+  box-shadow: 0 4px 24px var(--card-shadow);
 }}
 .card:hover {{
   transform: scale(1.02);
@@ -555,10 +541,10 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 
 /* === BREAKOUT CARDS === */
 .bo-card {{
-  background: rgba(17,24,39,.6);
+  background: var(--card-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(34,197,94,.2);
-  border-left: 4px solid #22c55e;
+  border: 1px solid rgba(22,163,74,.2);
+  border-left: 4px solid var(--accent);
   border-radius: 10px;
   padding: 16px 18px;
   margin-bottom: 12px;
@@ -571,7 +557,7 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 
 /* === AI SIGNAL CARDS === */
 .ai-card {{
-  background: rgba(10,7,24,.9);
+  background: var(--card-bg);
   border: 1px solid rgba(167,139,250,.25);
   border-left: 4px solid #a78bfa;
   border-radius: 10px;
@@ -622,9 +608,9 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 
 /* === F&O CARDS === */
 .fno-card {{
-  background: rgba(17,24,39,.6);
-  border: 1px solid rgba(34,197,94,.15);
-  border-left: 4px solid #22c55e;
+  background: var(--card-bg);
+  border: 1px solid rgba(22,163,74,.15);
+  border-left: 4px solid var(--accent);
   border-radius: 10px;
   padding: 16px 18px;
   margin-bottom: 12px;
@@ -635,7 +621,7 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 
 /* === MF CARDS === */
 .mf-card {{
-  background: rgba(17,24,39,.6);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 18px 20px;
@@ -663,8 +649,8 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 /* === TRADE GRID (entry/SL/targets - matches zip's grid) === */
 .tgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0 10px 12px; }}
 .tgcell {{
-  background: rgba(30,41,59,.4);
-  border: 1px solid rgba(51,65,85,.3);
+  background: var(--bg3);
+  border: 1px solid var(--border);
   border-radius: 8px; padding: 10px 12px;
   position: relative; overflow: hidden;
 }}
@@ -777,39 +763,34 @@ section[data-testid="stSidebar"] h3 {{ color: var(--txt2) !important; }}
 .purple {{ color: #a78bfa !important; }}
 .blue  {{ color: #22c55e !important; }}
 hr {{ border-color: var(--border2) !important; margin: 16px 0 !important; }}
-/* Light mode sidebar */
-body:not(.dark-mode) section[data-testid="stSidebar"] {{
-  background: #f8fafc !important;
-  border-right: 1px solid #e2e8f0 !important;
-}}
-body:not(.dark-mode) section[data-testid="stSidebar"] * {{ color: #334155 !important; }}
-body:not(.dark-mode) .stDataFrame tbody tr {{ background: #ffffff !important; }}
-body:not(.dark-mode) .stDataFrame tbody tr:hover {{ background: #f1f5f9 !important; }}
-body:not(.dark-mode) [data-testid="metric-container"] {{ background: #ffffff; border-color: #e2e8f0; }}
-body:not(.dark-mode) .stTabs [data-baseweb="tab-list"] {{ background: #ffffff; border-bottom: 1px solid #e2e8f0; }}
 </style>
 """, unsafe_allow_html=True)
 
-# ── Theme toggle button + JS ──────────────────────────────────────────────────
+# ── Theme toggle: targets stApp directly (works inside Streamlit's DOM) ───────
 st.markdown("""
 <button id="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
 <script>
-(function() {
+(function applyTheme() {
   var saved = localStorage.getItem('tdTheme') || 'light';
+  var app = document.querySelector('[data-testid="stApp"]');
+  var btn = document.getElementById('theme-toggle');
+  if (!app) { setTimeout(applyTheme, 120); return; }
   if (saved === 'dark') {
-    document.body.classList.add('dark-mode');
-    document.getElementById('theme-toggle').innerHTML = '☀️ Light';
+    app.classList.add('dark-app');
+    if (btn) btn.innerHTML = '☀️ Light';
   }
 })();
 function toggleTheme() {
+  var app = document.querySelector('[data-testid="stApp"]');
   var btn = document.getElementById('theme-toggle');
-  if (document.body.classList.contains('dark-mode')) {
-    document.body.classList.remove('dark-mode');
-    btn.innerHTML = '🌙 Dark';
+  if (!app) return;
+  if (app.classList.contains('dark-app')) {
+    app.classList.remove('dark-app');
+    if (btn) btn.innerHTML = '🌙 Dark';
     localStorage.setItem('tdTheme', 'light');
   } else {
-    document.body.classList.add('dark-mode');
-    btn.innerHTML = '☀️ Light';
+    app.classList.add('dark-app');
+    if (btn) btn.innerHTML = '☀️ Light';
     localStorage.setItem('tdTheme', 'dark');
   }
 }
@@ -2273,9 +2254,12 @@ with tab7:
                       "T2_HIT": "#10b981",  "OPEN": "#f59e0b"}
             return f"color: {colors.get(str(val), '#64748b')}"
 
+        try:
+            styled = display_hist.style.map(_style_status, subset=["status"]) if "status" in display_hist.columns else display_hist
+        except AttributeError:
+            styled = display_hist  # pandas version fallback
         st.dataframe(
-            display_hist.style.applymap(_style_status, subset=["status"])
-            if "status" in display_hist.columns else display_hist,
+            styled,
             use_container_width=True, hide_index=True,
             height=min(600, 40 + len(display_hist) * 35)
         )
