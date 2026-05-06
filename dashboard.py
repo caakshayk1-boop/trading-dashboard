@@ -569,48 +569,91 @@ section[data-testid="stSidebar"] h1,h2,h3 {{ color: var(--txt2) !important; }}
 .fno-card:hover {{ border-color: var(--accent); }}
 
 /* === MF CARDS (grow.in style) === */
-.mf-card {{
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px 20px; margin-bottom: 10px;
-  animation: cardEnter .35s ease both;
-  transition: transform .18s, box-shadow .18s, border-color .18s;
-  position:relative; overflow:hidden;
+/* ── Groww-style MF card ──────────────────────────────────── */
+.gw-fund-card {{
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:16px; padding:0; margin-bottom:20px;
+  overflow:hidden; animation:cardEnter .35s ease both;
+  transition:box-shadow .2s, border-color .2s;
 }}
-.mf-card::before {{
-  content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
-  background:var(--mf-accent,var(--accent));
-  border-radius:12px 0 0 12px;
+.gw-fund-card:hover {{ box-shadow:0 8px 32px rgba(0,208,156,.08); border-color:#1e3a2e; }}
+
+/* Header band */
+.gw-card-head {{
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
 }}
-.mf-card:hover {{ transform:translateY(-2px); box-shadow:0 10px 36px rgba(0,0,0,.3); border-color:rgba(0,255,136,.25); }}
-.mf-fund-header {{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }}
-.mf-fund-name {{ font-size:14px; font-weight:700; color:var(--txt); line-height:1.35; max-width:380px; font-family:var(--font-sans); }}
-.mf-fund-house {{ font-size:10px; color:var(--txt3); margin-top:3px; font-family:var(--font-mono); }}
-.mf-nav-block {{ text-align:right; flex-shrink:0; }}
-.mf-nav-val {{ font-size:17px; font-weight:800; font-family:var(--font-mono); color:var(--txt); }}
-.mf-day-chg {{ font-size:11px; font-weight:700; margin-top:2px; }}
-.mf-cat-chip {{
-  display:inline-block; padding:2px 9px; border-radius:99px;
-  font-size:9px; font-weight:800; letter-spacing:.06em;
-  text-transform:uppercase; font-family:var(--font-mono);
-  background:rgba(0,255,136,.07); color:var(--accent);
-  border:1px solid rgba(0,255,136,.2); margin-top:4px;
+.gw-fund-name {{ font-size:16px; font-weight:800; color:var(--txt); line-height:1.35; font-family:var(--font-sans); }}
+.gw-fund-amc  {{ font-size:11px; color:var(--txt3); margin-top:4px; font-family:var(--font-mono); }}
+.gw-chips     {{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; align-items:center; }}
+.gw-chip      {{ font-size:9px; font-weight:800; padding:2px 9px; border-radius:99px;
+                 font-family:var(--font-mono); letter-spacing:.05em; text-transform:uppercase; }}
+.gw-chip.cat  {{ background:rgba(77,166,255,.08); color:#4da6ff; border:1px solid rgba(77,166,255,.2); }}
+.gw-chip.risk-low  {{ background:rgba(0,208,156,.08); color:#00d09c; border:1px solid rgba(0,208,156,.25); }}
+.gw-chip.risk-mod  {{ background:rgba(77,166,255,.08); color:#4da6ff; border:1px solid rgba(77,166,255,.25); }}
+.gw-chip.risk-mh   {{ background:rgba(255,170,0,.08);  color:#ffaa00; border:1px solid rgba(255,170,0,.25); }}
+.gw-chip.risk-high {{ background:rgba(255,112,67,.08); color:#ff7043; border:1px solid rgba(255,112,67,.25); }}
+.gw-chip.risk-vh   {{ background:rgba(235,87,87,.08);  color:#eb5757; border:1px solid rgba(235,87,87,.25); }}
+.gw-nav-block {{ text-align:right; flex-shrink:0; padding-left:12px; }}
+.gw-nav-price {{ font-size:22px; font-weight:900; font-family:var(--font-mono); color:var(--txt); letter-spacing:-.03em; }}
+.gw-nav-chg   {{ font-size:12px; font-weight:700; margin-top:3px; }}
+
+/* Returns bar */
+.gw-returns-bar {{
+  display:grid; grid-template-columns:repeat(6,1fr);
+  padding:0; border-bottom:1px solid var(--border);
 }}
-.mf-stats-row {{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 0; }}
-.mf-stat {{
-  background:var(--bg3); border:1px solid var(--border); border-radius:8px;
-  padding:8px 10px; text-align:center;
+.gw-ret-cell {{
+  text-align:center; padding:12px 6px;
+  border-right:1px solid var(--border);
+  transition:background .15s;
 }}
-.mf-stat-label {{ font-size:8px; font-weight:700; color:var(--txt3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:4px; font-family:var(--font-mono); }}
-.mf-stat-val {{ font-size:14px; font-weight:800; font-family:var(--font-mono); color:var(--txt); }}
-.mf-returns-section {{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }}
-.mf-returns-label {{ font-size:8px; font-weight:800; color:var(--txt3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; font-family:var(--font-mono); }}
-.mf-return-row {{ display:flex; align-items:center; gap:10px; margin-bottom:6px; }}
-.mf-return-period {{ font-size:9px; font-weight:700; color:var(--txt3); min-width:24px; font-family:var(--font-mono); }}
-.mf-return-bar-track {{ flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }}
-.mf-return-bar-fill {{ height:100%; border-radius:3px; }}
-.mf-return-val {{ font-size:11px; font-weight:800; min-width:52px; text-align:right; font-family:var(--font-mono); }}
+.gw-ret-cell:last-child {{ border-right:none; }}
+.gw-ret-cell:hover {{ background:rgba(255,255,255,.02); }}
+.gw-ret-period {{ font-size:9px; font-weight:700; color:var(--txt3); font-family:var(--font-mono); letter-spacing:.05em; margin-bottom:5px; }}
+.gw-ret-val    {{ font-size:15px; font-weight:900; font-family:var(--font-mono); }}
+
+/* Investment stats band */
+.gw-inv-band {{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-bottom:1px solid var(--border);
+}}
+.gw-inv-cell {{
+  padding:12px 16px;
+  border-right:1px solid var(--border);
+}}
+.gw-inv-cell:last-child {{ border-right:none; }}
+.gw-inv-label {{ font-size:8px; font-weight:700; color:var(--txt3); text-transform:uppercase;
+                 letter-spacing:.1em; font-family:var(--font-mono); margin-bottom:5px; }}
+.gw-inv-val   {{ font-size:16px; font-weight:900; font-family:var(--font-mono); color:var(--txt); }}
+
+/* Chart area */
+.gw-chart-area {{ padding:16px 20px 8px; }}
+
+/* Fund details footer */
+.gw-fund-details {{
+  display:grid; grid-template-columns:repeat(5,1fr) 110px;
+  border-top:1px solid var(--border);
+  padding:0;
+}}
+.gw-detail-cell {{
+  padding:12px 16px;
+  border-right:1px solid var(--border);
+}}
+.gw-detail-cell:last-child {{ border-right:none; text-align:center; }}
+.gw-detail-label {{ font-size:8px; font-weight:700; color:var(--txt3); text-transform:uppercase;
+                    letter-spacing:.1em; font-family:var(--font-mono); margin-bottom:5px; }}
+.gw-detail-val   {{ font-size:13px; font-weight:800; color:var(--txt); font-family:var(--font-mono); }}
+
+/* Risk-o-meter */
+.gw-rom {{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; }}
+
+/* mf-card legacy compat */
+.mf-card {{ background:var(--bg2); border:1px solid var(--border); border-radius:12px;
+             padding:16px 20px; margin-bottom:10px; position:relative; overflow:hidden; }}
+.mf-card::before {{ content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+                     background:var(--mf-accent,var(--accent)); border-radius:12px 0 0 12px; }}
 
 /* MF portfolio summary row */
 .mf-summary-row {{
@@ -2387,148 +2430,185 @@ with tab4:
 
             st.markdown('<div style="height:4px"></div>', unsafe_allow_html=True)
 
-            # ── Fund cards (Groww-style with NAV chart + risk-o-meter) ──────
-            def _risk_color(risk):
-                return {"Low":"#00d09c","Moderate":"#4da6ff","Moderately High":"#ffaa00",
-                        "High":"#ff7043","Very High":"#eb5757"}.get(risk,"#eb5757")
+            # ── Groww-style fund cards ──────────────────────────────────────
+            import math as _math
 
-            def _risk_needle_deg(risk):
-                return {"Low":0,"Moderate":45,"Moderately High":90,"High":135,"Very High":175}.get(risk,175)
+            _RISK_CLASS = {"Low":"risk-low","Moderate":"risk-mod","Moderately High":"risk-mh",
+                           "High":"risk-high","Very High":"risk-vh"}
+            _RISK_COL   = {"Low":"#00d09c","Moderate":"#4da6ff","Moderately High":"#ffaa00",
+                           "High":"#ff7043","Very High":"#eb5757"}
 
-            def _risk_o_meter(risk):
-                col   = _risk_color(risk)
-                deg   = _risk_needle_deg(risk)
-                rad   = (180 - deg) * 3.14159 / 180
-                nx    = 50 + 38 * __import__('math').cos(rad)
-                ny    = 50 - 38 * __import__('math').sin(rad)
-                return f"""<div style="text-align:center">
-  <svg width="100" height="58" viewBox="0 0 100 58">
-    <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#1a2a20" stroke-width="10" stroke-linecap="round"/>
-    <path d="M 10 50 A 40 40 0 0 1 50 10" fill="none" stroke="#00d09c44" stroke-width="3"/>
-    <path d="M 50 10 A 40 40 0 0 1 90 50" fill="none" stroke="#eb575744" stroke-width="3"/>
-    <line x1="50" y1="50" x2="{nx:.1f}" y2="{ny:.1f}" stroke="{col}" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="50" cy="50" r="4" fill="{col}"/>
+            def _risk_o_meter_svg(risk):
+                col  = _RISK_COL.get(risk, "#eb5757")
+                segs = [
+                    ("M10,60 A40,40,0,0,1,26,26", "#00d09c"),
+                    ("M26,26 A40,40,0,0,1,60,10",  "#4da6ff"),
+                    ("M60,10 A40,40,0,0,1,94,26",  "#ffaa00"),
+                    ("M94,26 A40,40,0,0,1,110,60", "#eb5757"),
+                ]
+                deg = {"Low":20,"Moderate":65,"Moderately High":110,"High":148,"Very High":172}.get(risk,172)
+                rad = (180 - deg) * _math.pi / 180
+                nx  = 60 + 42 * _math.cos(rad)
+                ny  = 60 - 42 * _math.sin(rad)
+                paths = "".join(
+                    f'<path d="{d}" fill="none" stroke="{c}" stroke-width="7" stroke-linecap="round"/>'
+                    for d, c in segs
+                )
+                return f"""<div class="gw-rom">
+  <svg width="120" height="68" viewBox="0 0 120 68">
+    <path d="M10,60 A50,50,0,0,1,110,60" fill="none" stroke="#151515" stroke-width="8"/>
+    {paths}
+    <line x1="60" y1="60" x2="{nx:.1f}" y2="{ny:.1f}" stroke="{col}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="60" cy="60" r="5" fill="{col}"/>
+    <circle cx="60" cy="60" r="2.5" fill="#000"/>
   </svg>
   <div style="font-size:9px;font-weight:800;color:{col};font-family:var(--font-mono);
-    text-transform:uppercase;letter-spacing:.06em;margin-top:-4px">{risk}</div>
+    text-transform:uppercase;letter-spacing:.07em;margin-top:-4px">{risk}</div>
+  <div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);margin-top:2px">Risk</div>
 </div>"""
+
+            _PERIOD_DAYS = {"1M":30,"3M":91,"6M":182,"1Y":365,"3Y":1095,"5Y":1825}
 
             for s in summary:
                 pnl_col  = "#00d09c" if s["pnl_pct"] >= 0 else "#eb5757"
                 day_col  = "#00d09c" if s["day_chg"] >= 0 else "#eb5757"
                 ret      = s["returns"]
                 risk     = s.get("risk","Very High")
-                risk_col = _risk_color(risk)
+                risk_cls = _RISK_CLASS.get(risk, "risk-vh")
                 fhouse   = s.get("fund_house","") or ""
                 cat      = s.get("category","") or ""
                 manager  = s.get("manager","") or "—"
                 exp      = s.get("exp_ratio")
                 min_sip  = s.get("min_sip")
-                bench    = s.get("benchmark","") or ""
+                bench    = s.get("benchmark","") or "—"
 
-                card_col, chart_col = st.columns([3, 2])
+                # Returns bar cells
+                ret_cells = ""
+                for p in ["1M","3M","6M","1Y","3Y","5Y"]:
+                    v = ret.get(p)
+                    if v is None:
+                        ret_cells += f'<div class="gw-ret-cell"><div class="gw-ret-period">{p}</div><div class="gw-ret-val" style="color:var(--txt3)">—</div></div>'
+                    else:
+                        vc = "#00d09c" if v >= 0 else "#eb5757"
+                        ret_cells += f'<div class="gw-ret-cell"><div class="gw-ret-period">{p}</div><div class="gw-ret-val" style="color:{vc}">{v:+.1f}%</div></div>'
 
-                with card_col:
-                    # Returns grid (Groww table style)
-                    _ret_periods = ["1M","3M","6M","1Y","3Y","5Y"]
-                    ret_cells = ""
-                    for p in _ret_periods:
-                        v = ret.get(p)
-                        if v is None:
-                            ret_cells += f'<div style="text-align:center;padding:8px 4px"><div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono)">{p}</div><div style="font-size:12px;color:var(--txt3)">—</div></div>'
-                        else:
-                            vc = "#00d09c" if v >= 0 else "#eb5757"
-                            ret_cells += f'<div style="text-align:center;padding:8px 4px;background:{"rgba(0,208,156,.06)" if v >= 0 else "rgba(235,87,87,.06)"};border-radius:6px"><div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:2px">{p}</div><div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{vc}">{v:+.1f}%</div></div>'
+                # Fund details cells
+                det_exp   = f'{exp:.2f}%' if exp else '—'
+                det_sip   = f'₹{min_sip:,}' if min_sip else '—'
+                det_bench = bench[:22] if bench else '—'
 
-                    meta_items = ""
-                    if exp:    meta_items += f'<span>Exp Ratio <b style="color:var(--txt)">{exp:.2f}%</b></span>'
-                    if min_sip: meta_items += f'<span>Min SIP <b style="color:var(--txt)">₹{min_sip:,}</b></span>'
-                    if manager: meta_items += f'<span>Manager <b style="color:var(--txt)">{manager}</b></span>'
-                    if bench:   meta_items += f'<span>Benchmark <b style="color:var(--txt)">{bench}</b></span>'
-
-                    st.markdown(f"""
-<div class="mf-card" style="--mf-accent:{pnl_col}">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+                st.markdown(f"""
+<div class="gw-fund-card">
+  <!-- Header -->
+  <div class="gw-card-head">
     <div style="flex:1;min-width:0">
-      <div style="font-size:14px;font-weight:800;color:var(--txt);line-height:1.35;font-family:var(--font-sans)">{s['name']}</div>
-      <div style="font-size:10px;color:var(--txt3);margin-top:3px;font-family:var(--font-mono)">{fhouse}</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-        {f'<span style="font-size:8px;padding:2px 8px;border-radius:99px;background:rgba(77,166,255,.08);color:#4da6ff;border:1px solid rgba(77,166,255,.2);font-family:var(--font-mono);font-weight:700">{cat}</span>' if cat else ''}
-        <span style="font-size:8px;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.3);color:{risk_col};border:1px solid {risk_col}44;font-family:var(--font-mono);font-weight:700">{risk} Risk</span>
+      <div class="gw-fund-name">{s['name']}</div>
+      <div class="gw-fund-amc">{fhouse}</div>
+      <div class="gw-chips">
+        {f'<span class="gw-chip cat">{cat}</span>' if cat else ''}
+        <span class="gw-chip {risk_cls}">{risk} Risk</span>
       </div>
     </div>
-    <div style="text-align:right;flex-shrink:0;padding-left:12px">
-      <div style="font-size:18px;font-weight:900;font-family:var(--font-mono);color:var(--txt)">₹{s['nav']:.4f}</div>
-      <div style="font-size:11px;font-weight:700;color:{day_col}">{s['day_chg']:+.2f}% today</div>
+    <div class="gw-nav-block">
+      <div class="gw-nav-price">₹{s['nav']:.4f}</div>
+      <div class="gw-nav-chg" style="color:{day_col}">{'+' if s['day_chg']>=0 else ''}{s['day_chg']:.2f}% today</div>
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Invested</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{s['invested']:,.0f}</div>
-    </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Current</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{s['current']:,.0f}</div>
-    </div>
-    <div style="background:var(--bg3);border:1px solid {"rgba(0,208,156,.1)" if s['pnl_pct']>=0 else "rgba(235,87,87,.1)"};border:1px solid {pnl_col}33;border-radius:8px;padding:8px 10px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">P&amp;L</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{pnl_col}">₹{s['pnl']:+,.0f}</div>
-    </div>
-    <div style="background:var(--bg3);border:1px solid {pnl_col}33;border-radius:8px;padding:8px 10px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Return</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{pnl_col}">{s['pnl_pct']:+.2f}%</div>
-    </div>
-  </div>
+  <!-- Returns bar -->
+  <div class="gw-returns-bar">{ret_cells}</div>
 
-  <div style="font-size:8px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:8px">CAGR Returns</div>
-  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
-    {ret_cells}
-  </div>
-
-  <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:9px;color:var(--txt3);font-family:var(--font-mono);padding-top:10px;border-top:1px solid var(--border)">
-    <span>Units <b style="color:var(--txt)">{s['units']:.3f}</b></span>
-    <span>Buy NAV <b style="color:var(--txt)">₹{s['purchase_nav']:.4f}</b></span>
-    {meta_items}
+  <!-- Investment stats -->
+  <div class="gw-inv-band">
+    <div class="gw-inv-cell">
+      <div class="gw-inv-label">Invested</div>
+      <div class="gw-inv-val">₹{s['invested']:,.0f}</div>
+    </div>
+    <div class="gw-inv-cell">
+      <div class="gw-inv-label">Current Value</div>
+      <div class="gw-inv-val">₹{s['current']:,.0f}</div>
+    </div>
+    <div class="gw-inv-cell">
+      <div class="gw-inv-label">Total P&amp;L</div>
+      <div class="gw-inv-val" style="color:{pnl_col}">₹{s['pnl']:+,.0f}</div>
+    </div>
+    <div class="gw-inv-cell">
+      <div class="gw-inv-label">Returns</div>
+      <div class="gw-inv-val" style="color:{pnl_col}">{s['pnl_pct']:+.2f}%</div>
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-                with chart_col:
-                    # Risk-O-Meter
-                    st.markdown(_risk_o_meter(risk), unsafe_allow_html=True)
+                # NAV Chart (full width, period selector via radio)
+                nav_df = s.get("nav_df")
+                if nav_df is not None and not nav_df.empty:
+                    _psel = st.radio("Period", ["1M","3M","6M","1Y","3Y","5Y"],
+                                     index=3, horizontal=True,
+                                     key=f"prd_{s['scheme_code']}",
+                                     label_visibility="collapsed")
+                    _days  = _PERIOD_DAYS.get(_psel, 365)
+                    cutoff = nav_df["date"].max() - pd.Timedelta(days=_days)
+                    nav_p  = nav_df[nav_df["date"] >= cutoff].copy()
+                    if not nav_p.empty:
+                        _nc = "#00d09c" if nav_p["nav"].iloc[-1] >= nav_p["nav"].iloc[0] else "#eb5757"
+                        _nfill = "rgba(0,208,156,0.06)" if _nc == "#00d09c" else "rgba(235,87,87,0.06)"
+                        nav_chg = (nav_p["nav"].iloc[-1] - nav_p["nav"].iloc[0]) / nav_p["nav"].iloc[0] * 100
+                        fig_nav = go.Figure()
+                        fig_nav.add_trace(go.Scatter(
+                            x=nav_p["date"], y=nav_p["nav"],
+                            mode="lines", line=dict(color=_nc, width=2),
+                            fill="tozeroy", fillcolor=_nfill,
+                            hovertemplate="₹%{y:.4f}<br>%{x|%d %b %Y}<extra></extra>",
+                        ))
+                        fig_nav.update_layout(
+                            height=180, margin=dict(l=0,r=0,t=8,b=0),
+                            paper_bgcolor="transparent", plot_bgcolor="transparent",
+                            xaxis=dict(showgrid=False, showticklabels=True, zeroline=False,
+                                      tickfont=dict(size=9, color="#5a8a74"), tickformat="%b '%y"),
+                            yaxis=dict(showgrid=True, gridcolor="#111", showticklabels=True,
+                                      zeroline=False, tickfont=dict(size=9, color="#5a8a74"),
+                                      tickformat=",.2f"),
+                            showlegend=False,
+                        )
+                        st.markdown(
+                            f'<div style="padding:0 20px 0;font-size:10px;color:var(--txt3);'
+                            f'font-family:var(--font-mono)">NAV History &nbsp;'
+                            f'<span style="color:{_nc};font-weight:800">{nav_chg:+.2f}% ({_psel})</span></div>',
+                            unsafe_allow_html=True
+                        )
+                        st.plotly_chart(fig_nav, use_container_width=True, key=f"nav_{s['scheme_code']}_{_psel}")
 
-                    # NAV history chart (1Y)
-                    nav_df = s.get("nav_df")
-                    if nav_df is not None and not nav_df.empty:
-                        cutoff = nav_df["date"].max() - pd.Timedelta(days=365)
-                        nav_1y = nav_df[nav_df["date"] >= cutoff].copy()
-                        if not nav_1y.empty:
-                            _nav_color = "#00d09c" if nav_1y["nav"].iloc[-1] >= nav_1y["nav"].iloc[0] else "#eb5757"
-                            fig_nav = go.Figure()
-                            fig_nav.add_trace(go.Scatter(
-                                x=nav_1y["date"], y=nav_1y["nav"],
-                                mode="lines", line=dict(color=_nav_color, width=1.5),
-                                fill="tozeroy",
-                                fillcolor=f"rgba({','.join(str(int(c*255)) for c in [0,.82,.61,.06] if True)}"
-                                    .replace("True","") + ")",
-                                hovertemplate="₹%{y:.2f}<br>%{x|%d %b %Y}<extra></extra>",
-                            ))
-                            fig_nav.update_layout(
-                                height=140, margin=dict(l=0,r=0,t=0,b=0),
-                                paper_bgcolor="transparent", plot_bgcolor="transparent",
-                                xaxis=dict(showgrid=False,showticklabels=False,zeroline=False),
-                                yaxis=dict(showgrid=False,showticklabels=True,zeroline=False,
-                                          tickfont=dict(size=9,color="#5a8a74"),
-                                          tickformat=",.0f"),
-                                showlegend=False,
-                            )
-                            nav_chg = ((nav_1y["nav"].iloc[-1] - nav_1y["nav"].iloc[0]) /
-                                       nav_1y["nav"].iloc[0] * 100)
-                            st.markdown(f'<div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:2px">1Y NAV &nbsp;<span style="color:{_nav_color};font-weight:800">{nav_chg:+.1f}%</span></div>', unsafe_allow_html=True)
-                            st.plotly_chart(fig_nav, use_container_width=True,
-                                           key=f"nav_chart_{s['scheme_code']}")
+                # Fund details footer + risk-o-meter
+                st.markdown(f"""
+<div class="gw-fund-card" style="margin-top:-16px;border-radius:0 0 16px 16px;border-top:none">
+  <div class="gw-fund-details">
+    <div class="gw-detail-cell">
+      <div class="gw-detail-label">Expense Ratio</div>
+      <div class="gw-detail-val">{det_exp}</div>
+    </div>
+    <div class="gw-detail-cell">
+      <div class="gw-detail-label">Min SIP</div>
+      <div class="gw-detail-val">{det_sip}</div>
+    </div>
+    <div class="gw-detail-cell">
+      <div class="gw-detail-label">Fund Manager</div>
+      <div class="gw-detail-val" style="font-size:11px">{manager}</div>
+    </div>
+    <div class="gw-detail-cell">
+      <div class="gw-detail-label">Benchmark</div>
+      <div class="gw-detail-val" style="font-size:10px">{det_bench}</div>
+    </div>
+    <div class="gw-detail-cell">
+      <div class="gw-detail-label">Units · Buy NAV</div>
+      <div class="gw-detail-val" style="font-size:11px">{s['units']:.3f} &nbsp;·&nbsp; ₹{s['purchase_nav']:.2f}</div>
+    </div>
+    <div class="gw-detail-cell">
+      {_risk_o_meter_svg(risk)}
+    </div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
             # ── Fund comparison ─────────────────────────────────────────────
             if len(summary) >= 2:
