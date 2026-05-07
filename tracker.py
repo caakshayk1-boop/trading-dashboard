@@ -99,25 +99,34 @@ def init_db():
         )""")
         # Unified performance-tracking table for ALL signal types sent to Telegram
         c.execute("""CREATE TABLE IF NOT EXISTS all_signals (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            date        TEXT NOT NULL,
-            signal_type TEXT NOT NULL,
-            symbol      TEXT NOT NULL,
-            action      TEXT DEFAULT 'BUY',
-            timeframe   TEXT,
-            entry       REAL,
-            sl          REAL,
-            target1     REAL,
-            target2     REAL,
-            target3     REAL,
-            rr          REAL,
-            score       INTEGER DEFAULT 0,
-            status      TEXT DEFAULT 'OPEN',
-            exit_price  REAL,
-            pnl_pct     REAL,
-            r_multiple  REAL,
-            sent_at     TEXT,
-            metadata    TEXT
+            id               INTEGER PRIMARY KEY AUTOINCREMENT,
+            date             TEXT NOT NULL,
+            signal_type      TEXT NOT NULL,
+            symbol           TEXT NOT NULL,
+            action           TEXT DEFAULT 'BUY',
+            timeframe        TEXT,
+            entry            REAL,
+            sl               REAL,
+            target1          REAL,
+            target2          REAL,
+            target3          REAL,
+            rr               REAL,
+            score            INTEGER DEFAULT 0,
+            status           TEXT DEFAULT 'OPEN',
+            lifecycle_status TEXT DEFAULT 'Generated',
+            exit_price       REAL,
+            pnl_pct          REAL,
+            r_multiple       REAL,
+            max_profit_pct   REAL,
+            max_drawdown_pct REAL,
+            generated_at     TEXT,
+            entry_triggered_at TEXT,
+            closed_at        TEXT,
+            why_triggered    TEXT,
+            market           TEXT DEFAULT 'NSE',
+            asset_type       TEXT DEFAULT 'Equity',
+            sent_at          TEXT,
+            metadata         TEXT
         )""")
         # Scan activity log
         c.execute("""CREATE TABLE IF NOT EXISTS scan_log (
@@ -142,6 +151,22 @@ def init_db():
         ]
         for col, sql in migrations:
             if col not in existing:
+                c.execute(sql)
+        # Auto-migrate all_signals table for new columns
+        as_existing = [r[1] for r in c.execute("PRAGMA table_info(all_signals)").fetchall()]
+        as_migrations = [
+            ("lifecycle_status",    "ALTER TABLE all_signals ADD COLUMN lifecycle_status TEXT DEFAULT 'Generated'"),
+            ("max_profit_pct",      "ALTER TABLE all_signals ADD COLUMN max_profit_pct REAL"),
+            ("max_drawdown_pct",    "ALTER TABLE all_signals ADD COLUMN max_drawdown_pct REAL"),
+            ("generated_at",        "ALTER TABLE all_signals ADD COLUMN generated_at TEXT"),
+            ("entry_triggered_at",  "ALTER TABLE all_signals ADD COLUMN entry_triggered_at TEXT"),
+            ("closed_at",           "ALTER TABLE all_signals ADD COLUMN closed_at TEXT"),
+            ("why_triggered",       "ALTER TABLE all_signals ADD COLUMN why_triggered TEXT"),
+            ("market",              "ALTER TABLE all_signals ADD COLUMN market TEXT DEFAULT 'NSE'"),
+            ("asset_type",          "ALTER TABLE all_signals ADD COLUMN asset_type TEXT DEFAULT 'Equity'"),
+        ]
+        for col, sql in as_migrations:
+            if col not in as_existing:
                 c.execute(sql)
         _ensure_multibagger_table(c)
         c.commit()

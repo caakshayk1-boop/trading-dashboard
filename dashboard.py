@@ -949,6 +949,15 @@ except ImportError:
 def _forex():
     return fetch_forex_comm()
 
+@st.cache_data(ttl=1800)
+def _market_regime():
+    try:
+        from scanner import fetch_market_regime
+        return fetch_market_regime()
+    except Exception:
+        return {"regime":"UNKNOWN","vix":None,"nifty":None,"nifty_change":None,
+                "trend":"NEUTRAL","adx":None,"regime_detail":"—"}
+
 @st.cache_data(ttl=60)
 def _index_quotes():
     return get_index_quotes()
@@ -1183,6 +1192,48 @@ try:
 except Exception:
     _wr_hdr = 0; _trades_hdr = 0
 
+# Market Regime strip
+_regime_data = _market_regime()
+_REGIME_COLORS = {
+    "TRENDING_UP":   ("#00d09c", "rgba(0,208,156,.08)"),
+    "TRENDING_DOWN": ("#eb5757", "rgba(235,87,87,.08)"),
+    "HIGH_VOL":      ("#f59e0b", "rgba(245,158,11,.08)"),
+    "CHOPPY":        ("#a78bfa", "rgba(167,139,250,.08)"),
+    "NEUTRAL":       ("#888",    "rgba(100,100,100,.06)"),
+    "UNKNOWN":       ("#555",    "rgba(80,80,80,.04)"),
+}
+def _render_regime_strip():
+    rd  = _regime_data
+    col, bg = _REGIME_COLORS.get(rd.get("regime","UNKNOWN"), ("#555","rgba(80,80,80,.04)"))
+    vix     = rd.get("vix")
+    vc      = rd.get("vix_change", 0) or 0
+    nifty   = rd.get("nifty")
+    nc      = rd.get("nifty_change", 0) or 0
+    adx     = rd.get("adx")
+    trend   = rd.get("trend","—")
+    regime  = rd.get("regime","—").replace("_"," ")
+    detail  = rd.get("regime_detail","—")
+    vix_col = "#eb5757" if vc > 0 else "#00d09c"
+    nf_col  = "#00d09c" if nc >= 0 else "#eb5757"
+    vix_str = f"{vix:.1f} <span style='color:{vix_col};font-size:10px'>({vc:+.1f})</span>" if vix else "—"
+    nf_str  = f"{nifty:,.0f} <span style='color:{nf_col};font-size:10px'>({nc:+.2f}%)</span>" if nifty else "—"
+    adx_str = f"{adx:.0f}" if adx else "—"
+    return f"""<div style="background:{bg};border-top:1px solid {col}22;border-bottom:1px solid {col}22;
+  padding:8px 20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:6px">
+    <span style="font-size:8px;font-weight:800;padding:2px 8px;background:{bg};color:{col};
+      border:1px solid {col}55;border-radius:4px;font-family:var(--font-mono);letter-spacing:.08em;
+      text-transform:uppercase">{regime}</span>
+    <span style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">{detail}</span>
+  </div>
+  <div style="display:flex;gap:20px;margin-left:auto;flex-wrap:wrap">
+    <span style="font-size:10px;font-family:var(--font-mono);color:var(--txt3)">VIX &nbsp;<b style="color:var(--txt)">{vix_str}</b></span>
+    <span style="font-size:10px;font-family:var(--font-mono);color:var(--txt3)">NIFTY &nbsp;<b style="color:var(--txt)">{nf_str}</b></span>
+    <span style="font-size:10px;font-family:var(--font-mono);color:var(--txt3)">ADX &nbsp;<b style="color:var(--txt)">{adx_str}</b></span>
+    <span style="font-size:10px;font-family:var(--font-mono);color:var(--txt3)">TREND &nbsp;<b style="color:{col}">{trend}</b></span>
+  </div>
+</div>"""
+
 # Scan schedule slots (IST)
 _SCAN_SLOTS = [("9:20 AM","4H·Commodity"), ("11:42 AM","Swing·F&O"),
                ("4:30 PM","Breakouts·EOD"), ("8:00 PM","Multibagger")]
@@ -1377,6 +1428,9 @@ st.markdown(f"""
       <div class="sh-metric-sub">Swing · {_scan_counts_hdr.get('breakout',0) if _scan_counts_hdr else 0} breakouts</div>
     </div>
   </div>
+
+  <!-- Market Regime + VIX strip -->
+  {_render_regime_strip()}
 
   <!-- Auto-scan schedule -->
   <div class="sh-pipeline">
@@ -1600,11 +1654,72 @@ with tab1:
                 )
             st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
 
+        # ── Trade Planner ───────────────────────────────────────────────────
+        with st.expander("🧮 Trade Planner — Position Sizing Calculator", expanded=False):
+            tp_c1, tp_c2, tp_c3 = st.columns(3)
+            tp_capital  = tp_c1.number_input("Capital (₹)", min_value=10000, max_value=50000000, value=100000, step=5000, key="tp_cap")
+            tp_risk_pct = tp_c2.slider("Risk per trade (%)", 0.5, 5.0, 1.0, 0.25, key="tp_rsk")
+            tp_entry    = tp_c3.number_input("Entry price (₹)", min_value=1.0, value=500.0, step=1.0, key="tp_ent")
+            tp_sl       = tp_c1.number_input("Stop loss (₹)",   min_value=1.0, value=480.0, step=1.0, key="tp_sl")
+            tp_t1       = tp_c2.number_input("Target 1 (₹)",    min_value=1.0, value=540.0, step=1.0, key="tp_t1")
+            tp_t2       = tp_c3.number_input("Target 2 (₹)",    min_value=1.0, value=570.0, step=1.0, key="tp_t2")
+
+            tp_risk_amt = tp_capital * tp_risk_pct / 100
+            tp_per_sh   = abs(tp_entry - tp_sl)
+            tp_qty      = int(tp_risk_amt / tp_per_sh) if tp_per_sh > 0 else 0
+            tp_invest   = tp_qty * tp_entry
+            tp_gain1    = tp_qty * (tp_t1 - tp_entry)
+            tp_gain2    = tp_qty * (tp_t2 - tp_entry)
+            tp_loss     = tp_qty * tp_per_sh
+            tp_rr1      = round(tp_gain1 / tp_loss, 2) if tp_loss > 0 else 0
+            tp_rr2      = round(tp_gain2 / tp_loss, 2) if tp_loss > 0 else 0
+
+            st.markdown(f"""
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">Qty / Shares</div>
+    <div style="font-size:22px;font-weight:900;font-family:var(--font-mono);color:var(--txt)">{tp_qty}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">Capital at Risk</div>
+    <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:#eb5757">₹{tp_loss:,.0f}</div>
+    <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">{tp_risk_pct:.1f}% of capital</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">T1 Reward</div>
+    <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:#00d09c">₹{tp_gain1:,.0f}</div>
+    <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">RR 1:{tp_rr1}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">T2 Reward</div>
+    <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:#4da6ff">₹{tp_gain2:,.0f}</div>
+    <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">RR 1:{tp_rr2}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px">Total Invested</div>
+    <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{tp_invest:,.0f}</div>
+    <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">{tp_invest/tp_capital*100:.1f}% of capital</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+
         for i, s in enumerate(sigs_s):
             # --- derived display values ---
             score       = s['score']
             uncertainty = 100 - score
             bull_pct    = min(score, 100)
+
+            # Confidence decay
+            _gen_at  = s.get("scanned_at","")
+            try:
+                from scanner import confidence_decay as _cdecay
+                _score_now = _cdecay(score, _gen_at) if _gen_at else score
+            except Exception:
+                _score_now = score
+            _decay_drop = round(score - _score_now, 1)
+            _decay_str  = (f'<span style="font-size:9px;color:#f59e0b;font-family:var(--font-mono);'
+                           f'margin-left:6px">↓{_decay_drop:.0f}% since gen</span>') if _decay_drop > 2 else ""
             fno_b       = '<span class="badge fno">F&amp;O</span>' if s.get("fno_eligible") else ""
             cls         = f"card {'top' if i==0 else ''} {'sell' if s['action']=='SELL' else ''}"
             act_cls     = "buy" if s['action'] == "BUY" else "sell"
@@ -1645,9 +1760,10 @@ with tab1:
       <div style="font-size:10px;color:var(--txt4)">{s.get('setup_type','').replace('_',' ').title()} &nbsp;·&nbsp; NSE Equity &nbsp;·&nbsp; Swing</div>
     </div>
     <div style="text-align:right;flex-shrink:0;margin-left:16px">
-      <div style="font-size:36px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;line-height:1;text-shadow:0 0 22px rgba(34,197,94,.35)">{score}%</div>
-      <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">confidence</div>
-      <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-top:5px">{uncertainty}%</div>
+      <div style="font-size:36px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;line-height:1;text-shadow:0 0 22px rgba(34,197,94,.35)">{_score_now:.0f}%</div>
+      <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">confidence{_decay_str}</div>
+      {f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">gen: {score}%</div>' if _decay_drop > 2 else ""}
+      <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-top:4px">{uncertainty}%</div>
       <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em">uncertainty</div>
     </div>
   </div>
@@ -3069,99 +3185,291 @@ with tab_ohl:
             st.markdown('<div style="font-size:9px;color:var(--txt3);margin-top:16px;font-family:var(--font-mono)">Tolerance 0.02% · Universe Nifty 500 · Range≤1% = coil breakout watch · Data Yahoo Finance · Not SEBI advice</div>', unsafe_allow_html=True)
 
 
-# TAB 7 — HISTORY (all signals ever sent — permanent record)
+# TAB 7 — HISTORY (signal accountability + lifecycle tracking)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab7:
     if IS_LOCAL:
         try:
-            hist = get_history()   # legacy signals table (local dev)
-        except Exception:
-            hist = pd.DataFrame()
-        # Also try unified all_signals table (richer data)
-        try:
             from tracker import _conn
             with _conn() as _hc:
-                hist_all = pd.read_sql(
-                    "SELECT * FROM all_signals ORDER BY date DESC", _hc)
+                hist_all = pd.read_sql("SELECT * FROM all_signals ORDER BY date DESC LIMIT 500", _hc)
         except Exception:
             hist_all = pd.DataFrame()
-        # Prefer unified all_signals if available, fall back to legacy
-        display_hist = hist_all if not hist_all.empty else hist
+        display_hist = hist_all
     else:
-        # Cloud: read full all_signals JSON from GitHub (no day limit)
         display_hist = _gh_all_signals(days=9999)
 
-    st.markdown('<div style="font-size:13px;font-weight:700;color:#22c55e;margin-bottom:12px">📋 Complete Signal History — All Trades Logged</div>', unsafe_allow_html=True)
+    # ── Header ────────────────────────────────────────────────────────────────
+    st.markdown("""
+<div style="margin-bottom:20px">
+  <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">Signal History</div>
+  <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
+    Complete audit trail · Lifecycle tracking · Accountability · All signals ever generated
+  </div>
+</div>
+""", unsafe_allow_html=True)
 
-    if not display_hist.empty:
-        # ── Column order ──────────────────────────────────────────────────────
-        priority_cols = ["date","signal_type","symbol","action","timeframe",
-                         "entry","sl","target1","target2","rr","score","status","pnl_pct","r_multiple"]
-        avail = [c for c in priority_cols if c in display_hist.columns]
-        rest  = [c for c in display_hist.columns if c not in priority_cols
-                 and c not in ("id","sent_at","metadata","exit_price","target3")]
-        display_hist = display_hist[avail + rest].copy()
-
-        # ── Format price/ratio columns as strings (kills .000000 problem) ──────
-        def _fmt_price(v):
-            try: return f"₹{float(v):,.2f}" if v not in (None,"") else "—"
-            except: return str(v)
-        def _fmt_ratio(v):
-            try: return f"{float(v):.2f}" if v not in (None,"") else "—"
-            except: return str(v)
-
-        for col in ["entry","sl","target1","target2","exit_price"]:
-            if col in display_hist.columns:
-                display_hist[col] = display_hist[col].apply(_fmt_price)
-        for col in ["rr","pnl_pct","r_multiple"]:
-            if col in display_hist.columns:
-                display_hist[col] = display_hist[col].apply(_fmt_ratio)
-
-        # ── Rename for readability ────────────────────────────────────────────
-        display_hist = display_hist.rename(columns={
-            "signal_type":"type","pnl_pct":"P&L%","r_multiple":"R×",
-            "target1":"T1","target2":"T2","timeframe":"TF"
-        })
-
-        # ── Status badge colour ────────────────────────────────────────────────
-        def _style_status(val):
-            colors = {"SL_HIT":"color:#ff3b3b;font-weight:700",
-                      "T1_HIT":"color:#00ff88;font-weight:700",
-                      "T2_HIT":"color:#4da6ff;font-weight:700",
-                      "OPEN":  "color:#ffaa00;font-weight:700"}
-            return colors.get(str(val), "color:#555")
-
-        try:
-            styled = (display_hist.style.map(_style_status, subset=["status"])
-                      if "status" in display_hist.columns else display_hist)
-        except Exception:
-            styled = display_hist
-
-        # Filter controls
-        hf1, hf2 = st.columns([2,1])
-        with hf1:
-            status_filter = st.selectbox("Status", ["All","OPEN","SL_HIT","T1_HIT","T2_HIT"], key="hist_sf")
-        with hf2:
-            type_filter = st.selectbox("Type", ["All"] + sorted(display_hist["type"].dropna().unique().tolist()) if "type" in display_hist.columns else ["All"], key="hist_tf")
-        filt_hist = display_hist.copy()
-        if status_filter != "All" and "status" in filt_hist.columns:
-            filt_hist = filt_hist[filt_hist["status"] == status_filter]
-        if type_filter != "All" and "type" in filt_hist.columns:
-            filt_hist = filt_hist[filt_hist["type"] == type_filter]
-
-        st.dataframe(
-            filt_hist.style.map(_style_status, subset=["status"]) if "status" in filt_hist.columns else filt_hist,
-            use_container_width=True, hide_index=True,
-            height=min(650, 44 + len(filt_hist) * 36)
-        )
-        open_c = len(display_hist[display_hist["status"]=="OPEN"]) if "status" in display_hist.columns else 0
-        sl_c   = len(display_hist[display_hist["status"]=="SL_HIT"]) if "status" in display_hist.columns else 0
-        win_c  = len(display_hist[display_hist["status"].isin(["T1_HIT","T2_HIT"])]) if "status" in display_hist.columns else 0
-        st.caption(f"Total: {len(display_hist)} · Open: {open_c} · Win: {win_c} · SL: {sl_c}")
-        st.download_button("⬇ Export CSV", display_hist.to_csv(index=False),
-                           "signal_history.csv", "text/csv")
+    if display_hist.empty:
+        st.markdown("""
+<div style="text-align:center;padding:60px 20px">
+  <div style="font-size:36px;margin-bottom:14px">📋</div>
+  <div style="font-size:15px;font-weight:700;color:var(--txt);margin-bottom:8px">No Signal History Yet</div>
+  <div style="font-size:12px;color:var(--txt3);font-family:var(--font-mono);line-height:1.8">
+    Every Telegram alert is auto-logged here after each scan.<br>
+    Run a scan to start building your history.
+  </div>
+</div>""", unsafe_allow_html=True)
     else:
-        st.info("No signal history yet. All Telegram alerts are auto-logged here after the next scan.")
+        # ── Lifecycle status colors ───────────────────────────────────────────
+        _LC_META = {
+            "Generated":       ("#888",    "rgba(128,128,128,.08)"),
+            "Active":          ("#f59e0b", "rgba(245,158,11,.08)"),
+            "Entry_Triggered": ("#4da6ff", "rgba(77,166,255,.08)"),
+            "Partial_T1":      ("#00d09c", "rgba(0,208,156,.08)"),
+            "T1_Hit":          ("#00d09c", "rgba(0,208,156,.1)"),
+            "T2_Hit":          ("#22ff88", "rgba(34,255,136,.1)"),
+            "SL_Hit":          ("#eb5757", "rgba(235,87,87,.08)"),
+            "Closed":          ("#64748b", "rgba(100,116,139,.06)"),
+            "Expired":         ("#334155", "rgba(51,65,85,.06)"),
+            # legacy DB values
+            "OPEN":    ("#f59e0b", "rgba(245,158,11,.08)"),
+            "SL_HIT":  ("#eb5757", "rgba(235,87,87,.08)"),
+            "T1_HIT":  ("#00d09c", "rgba(0,208,156,.1)"),
+            "T2_HIT":  ("#22ff88", "rgba(34,255,136,.1)"),
+        }
+
+        # ── Performance summary bar ───────────────────────────────────────────
+        _lc_col  = "lifecycle_status" if "lifecycle_status" in display_hist.columns else "status"
+        _st_col  = "status" if "status" in display_hist.columns else ""
+
+        def _is_win(row):
+            s = str(row.get(_st_col,"")) + str(row.get(_lc_col,""))
+            return any(x in s for x in ["T1_HIT","T2_HIT","T1_Hit","T2_Hit","Partial_T1"])
+        def _is_sl(row):
+            s = str(row.get(_st_col,"")) + str(row.get(_lc_col,""))
+            return "SL" in s
+        def _is_open(row):
+            s = str(row.get(_st_col,"")) + str(row.get(_lc_col,""))
+            return any(x in s for x in ["OPEN","Active","Generated","Entry_Triggered"])
+
+        _recs   = display_hist.to_dict("records")
+        _total  = len(_recs)
+        _wins   = sum(1 for r in _recs if _is_win(r))
+        _sls    = sum(1 for r in _recs if _is_sl(r))
+        _opens  = sum(1 for r in _recs if _is_open(r))
+        _wr     = round(_wins / (_wins + _sls) * 100, 1) if (_wins + _sls) > 0 else 0
+
+        # Average R-multiple on closed trades
+        _rmults = [float(r["r_multiple"]) for r in _recs
+                   if r.get("r_multiple") not in (None,"") and str(r.get("r_multiple","")) != "nan"]
+        _avg_r  = round(sum(_rmults) / len(_rmults), 2) if _rmults else 0
+
+        st.markdown(f"""
+<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--accent);
+    border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:4px">Total Signals</div>
+    <div style="font-size:24px;font-weight:900;font-family:var(--font-mono);color:var(--txt)">{_total}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #f59e0b;
+    border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:4px">Open</div>
+    <div style="font-size:24px;font-weight:900;font-family:var(--font-mono);color:#f59e0b">{_opens}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #00d09c;
+    border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:4px">Wins (T1/T2)</div>
+    <div style="font-size:24px;font-weight:900;font-family:var(--font-mono);color:#00d09c">{_wins}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #eb5757;
+    border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:4px">SL Hit</div>
+    <div style="font-size:24px;font-weight:900;font-family:var(--font-mono);color:#eb5757">{_sls}</div>
+  </div>
+  <div style="background:{"rgba(0,208,156,.06)" if _wr>=55 else "rgba(235,87,87,.06)"};border:1px solid var(--border);
+    border-top:2px solid {"#00d09c" if _wr>=55 else "#eb5757"};border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:4px">Win Rate</div>
+    <div style="font-size:24px;font-weight:900;font-family:var(--font-mono);color:{"#00d09c" if _wr>=55 else "#eb5757"}">{_wr}%</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid #4da6ff;
+    border-radius:8px;padding:12px 14px;text-align:center">
+    <div style="font-size:8px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:4px">Avg R-Multiple</div>
+    <div style="font-size:24px;font-weight:900;font-family:var(--font-mono);color:#4da6ff">{_avg_r if _avg_r else "—"}</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+        # ── 7-filter bar ─────────────────────────────────────────────────────
+        st.markdown('<div style="font-size:9px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;font-family:var(--font-mono);border-left:2px solid var(--accent);padding-left:8px">Filters</div>', unsafe_allow_html=True)
+        fc1, fc2, fc3, fc4 = st.columns(4)
+        fc5, fc6, fc7 = st.columns(3)
+
+        _uniq = lambda col, default: (["All"] + sorted(display_hist[col].dropna().astype(str).unique().tolist())) if col in display_hist.columns else ["All"]
+
+        _f_status   = fc1.selectbox("Status / Lifecycle", ["All","OPEN","Active","Entry_Triggered","Partial_T1","T1_HIT","T2_HIT","SL_HIT","Closed","Expired"], key="hf_st")
+        _f_type     = fc2.selectbox("Strategy Type",   _uniq("signal_type", []), key="hf_ty")
+        _f_action   = fc3.selectbox("Direction",       ["All","BUY","SELL"], key="hf_ac")
+        _f_asset    = fc4.selectbox("Asset Type",      _uniq("asset_type", []), key="hf_at")
+        _f_market   = fc5.selectbox("Market",          _uniq("market", []), key="hf_mk")
+        _f_days     = fc6.selectbox("Date Range",      ["All time","Today","Last 7 days","Last 30 days","Last 90 days"], key="hf_dr")
+        _f_minscore = fc7.slider("Min Confidence", 0, 100, 0, 5, key="hf_sc")
+
+        # Apply filters
+        _fh = display_hist.copy()
+        if _f_status != "All":
+            _fh = _fh[(_fh.get("status","") == _f_status) | (_fh.get("lifecycle_status","") == _f_status)] \
+                if "status" in _fh.columns else _fh
+        if _f_type != "All" and "signal_type" in _fh.columns:
+            _fh = _fh[_fh["signal_type"] == _f_type]
+        if _f_action != "All" and "action" in _fh.columns:
+            _fh = _fh[_fh["action"] == _f_action]
+        if _f_asset != "All" and "asset_type" in _fh.columns:
+            _fh = _fh[_fh["asset_type"] == _f_asset]
+        if _f_market != "All" and "market" in _fh.columns:
+            _fh = _fh[_fh["market"] == _f_market]
+        if _f_minscore > 0 and "score" in _fh.columns:
+            _fh = _fh[_fh["score"].fillna(0).astype(float) >= _f_minscore]
+        if _f_days != "All time" and "date" in _fh.columns:
+            _days_map = {"Today":1,"Last 7 days":7,"Last 30 days":30,"Last 90 days":90}
+            _cutoff   = (datetime.now(IST) - pd.Timedelta(days=_days_map[_f_days])).strftime("%Y-%m-%d")
+            _fh = _fh[_fh["date"] >= _cutoff]
+
+        st.markdown(f'<div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:12px">Showing <b style="color:var(--txt)">{len(_fh)}</b> of {_total} signals</div>', unsafe_allow_html=True)
+
+        # ── Signal history cards ──────────────────────────────────────────────
+        _view = st.radio("View", ["Cards", "Table"], horizontal=True, key="hist_view", label_visibility="collapsed")
+
+        if _view == "Cards":
+            for _, row in _fh.head(50).iterrows():
+                _r      = row.to_dict()
+                _lc     = _r.get("lifecycle_status") or _r.get("status","OPEN")
+                _lc_c, _lc_bg = _LC_META.get(str(_lc), ("#888","rgba(128,128,128,.08)"))
+                _sym    = _r.get("symbol","—")
+                _act    = _r.get("action","BUY")
+                _ac     = "#00d09c" if _act == "BUY" else "#eb5757"
+                _sc     = _r.get("score",0) or 0
+                _dt     = str(_r.get("date",""))
+                _stype  = str(_r.get("signal_type","swing")).upper()
+                _tf     = _r.get("timeframe","") or ""
+                _entry  = _r.get("entry")
+                _sl     = _r.get("sl")
+                _t1     = _r.get("target1")
+                _t2     = _r.get("target2")
+                _rr     = _r.get("rr")
+                _pnl    = _r.get("pnl_pct")
+                _rm     = _r.get("r_multiple")
+                _why    = _r.get("why_triggered") or _r.get("metadata") or ""
+                _gen_at = _r.get("generated_at") or _r.get("sent_at") or ""
+
+                def _fp(v):
+                    try: return f"₹{float(v):,.2f}" if v not in (None,"nan","") else "—"
+                    except: return "—"
+                def _fr(v):
+                    try: return f"{float(v):.2f}×" if v not in (None,"nan","") else "—"
+                    except: return "—"
+
+                # Lifecycle stage bar
+                _STAGES = ["Generated","Active","Entry_Triggered","Partial_T1","T1_Hit","Closed"]
+                _lc_norm = {"OPEN":"Active","SL_HIT":"SL_Hit","T1_HIT":"T1_Hit",
+                            "T2_HIT":"T2_Hit","T2_Hit":"T2_Hit"}.get(str(_lc), str(_lc))
+                _stage_idx = next((i for i, s in enumerate(_STAGES) if s == _lc_norm), 0)
+
+                stage_pills = "".join(
+                    f'<span style="font-size:8px;padding:2px 8px;border-radius:99px;margin-right:4px;'
+                    f'font-family:var(--font-mono);font-weight:700;'
+                    f'background:{"rgba(0,208,156,.15)" if j<=_stage_idx else "rgba(255,255,255,.03)"};'
+                    f'color:{"#00d09c" if j<=_stage_idx else "#334155"};'
+                    f'border:1px solid {"rgba(0,208,156,.3)" if j<=_stage_idx else "#1a2030"}">{s}</span>'
+                    for j, s in enumerate(_STAGES)
+                )
+
+                pnl_block = ""
+                if _pnl not in (None,"nan",""):
+                    try:
+                        _pf = float(_pnl)
+                        _pc = "#00d09c" if _pf >= 0 else "#eb5757"
+                        pnl_block = f'<span style="font-size:11px;font-weight:800;color:{_pc};font-family:var(--font-mono)">{_pf:+.2f}% P&L</span>'
+                    except: pass
+
+                st.markdown(f"""
+<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid {_lc_c};
+  border-radius:10px;padding:14px 18px;margin-bottom:10px">
+  <!-- Row 1: symbol + status + date -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span style="font-size:17px;font-weight:900;color:var(--txt);font-family:var(--font-mono)">{_sym}</span>
+      <span style="font-size:9px;padding:2px 8px;border-radius:4px;background:{_ac}22;color:{_ac};
+        border:1px solid {_ac}44;font-family:var(--font-mono);font-weight:800">{_act}</span>
+      <span style="font-size:8px;padding:2px 8px;border-radius:4px;background:{_lc_bg};color:{_lc_c};
+        border:1px solid {_lc_c}44;font-family:var(--font-mono);font-weight:800">{_lc}</span>
+      <span style="font-size:8px;color:var(--txt3);font-family:var(--font-mono)">{_stype} · {_tf}</span>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:11px;color:var(--txt3);font-family:var(--font-mono)">{_dt}</div>
+      <div style="font-size:18px;font-weight:900;font-family:var(--font-mono);
+        color:{"#22c55e" if int(_sc)>=75 else "#f59e0b" if int(_sc)>=60 else "#ef4444"}">{_sc}%</div>
+    </div>
+  </div>
+  <!-- Lifecycle bar -->
+  <div style="margin-bottom:10px;overflow-x:auto;white-space:nowrap">{stage_pills}</div>
+  <!-- Trade structure -->
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;text-align:center">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">Entry</div>
+      <div style="font-size:11px;font-weight:800;font-family:var(--font-mono)">{_fp(_entry)}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(235,87,87,.2);border-radius:6px;padding:6px 8px;text-align:center">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">SL</div>
+      <div style="font-size:11px;font-weight:800;font-family:var(--font-mono);color:#eb5757">{_fp(_sl)}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(0,208,156,.2);border-radius:6px;padding:6px 8px;text-align:center">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">T1</div>
+      <div style="font-size:11px;font-weight:800;font-family:var(--font-mono);color:#00d09c">{_fp(_t1)}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid rgba(77,166,255,.2);border-radius:6px;padding:6px 8px;text-align:center">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">T2</div>
+      <div style="font-size:11px;font-weight:800;font-family:var(--font-mono);color:#4da6ff">{_fp(_t2)}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;text-align:center">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">RR</div>
+      <div style="font-size:11px;font-weight:800;font-family:var(--font-mono)">{f"1:{float(_rr):.1f}" if _rr not in (None,"nan","") else "—"}</div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;text-align:center">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">R×</div>
+      <div style="font-size:11px;font-weight:800;font-family:var(--font-mono);color:#4da6ff">{_fr(_rm)}</div>
+    </div>
+  </div>
+  <!-- P&L + Why -->
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+    <div>{pnl_block}</div>
+    {f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono);max-width:60%;text-align:right;line-height:1.5">💡 {str(_why)[:120]}</div>' if _why else ""}
+  </div>
+</div>
+""", unsafe_allow_html=True)
+        else:
+            # Table view
+            _tcols = ["date","symbol","action","signal_type","score","status","entry","sl",
+                      "target1","target2","rr","pnl_pct","r_multiple"]
+            _tc = [c for c in _tcols if c in _fh.columns]
+            _td = _fh[_tc].copy()
+            for _pc in ["entry","sl","target1","target2"]:
+                if _pc in _td.columns:
+                    _td[_pc] = _td[_pc].apply(lambda v: f"₹{float(v):,.2f}" if pd.notna(v) else "—")
+            def _style_st(v):
+                _cm = {"OPEN":"color:#f59e0b;font-weight:700","SL_HIT":"color:#eb5757;font-weight:700",
+                       "T1_HIT":"color:#00d09c;font-weight:700","T2_HIT":"color:#4da6ff;font-weight:700"}
+                return _cm.get(str(v),"color:#555")
+            try:
+                styled_td = _td.style.map(_style_st, subset=["status"]) if "status" in _td.columns else _td
+            except Exception:
+                styled_td = _td
+            st.dataframe(styled_td, use_container_width=True, hide_index=True,
+                         height=min(600, 44 + len(_td)*36))
+
+        # Export
+        col_dl1, col_dl2 = st.columns([1,4])
+        col_dl1.download_button("⬇ Export CSV", _fh.to_csv(index=False),
+                                "signal_history.csv", "text/csv")
 
 
 # ── Footer (audit fixes §5 + §6 — trust + attribution) ───────────────────────

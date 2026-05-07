@@ -2037,3 +2037,88 @@ def scan_tg_momentum(universe=None):
     results.sort(key=lambda x: x["vol_ratio"], reverse=True)
     logging.info(f"TG momentum scan: {len(results)} signals")
     return results[:12]
+
+
+# ── Market Regime + India VIX ─────────────────────────────────────────────────
+def fetch_market_regime():
+    """
+    Returns dict with India VIX, Nifty trend, regime label.
+    Regime: TRENDING_UP / TRENDING_DOWN / CHOPPY / HIGH_VOL / LOW_VOL
+    """
+    import math as _math
+    result = {
+        "vix": None, "vix_change": None,
+        "nifty": None, "nifty_change": None,
+        "regime": "UNKNOWN", "regime_detail": "",
+        "adx": None, "trend": "NEUTRAL",
+    }
+    try:
+        # India VIX
+        vix_df = yf.download("^INDIAVIX", period="5d", interval="1d",
+                             progress=False, auto_adjust=False)
+        if vix_df is not None and not vix_df.empty:
+            vc = vix_df["Close"].squeeze()
+            result["vix"]        = round(float(vc.iloc[-1]), 2)
+            result["vix_change"] = round(float(vc.iloc[-1] - vc.iloc[-2]), 2) if len(vc) >= 2 else 0
+    except Exception:
+        pass
+
+    try:
+        # Nifty 50 trend + ADX
+        nf = yf.download("^NSEI", period="60d", interval="1d",
+                         progress=False, auto_adjust=True)
+        if nf is not None and not nf.empty:
+            nc    = nf["Close"].squeeze()
+            nh    = nf["High"].squeeze()
+            nl    = nf["Low"].squeeze()
+            result["nifty"]        = round(float(nc.iloc[-1]), 2)
+            result["nifty_change"] = round(float(nc.iloc[-1] / nc.iloc[-2] - 1) * 100, 2)
+            adx_v = float(ta_lib.trend.ADXIndicator(nh, nl, nc, window=14).adx().iloc[-1])
+            ema20 = float(ta_lib.trend.EMAIndicator(nc, window=20).ema_indicator().iloc[-1])
+            ema50 = float(ta_lib.trend.EMAIndicator(nc, window=50).ema_indicator().iloc[-1])
+            result["adx"] = round(adx_v, 1)
+            result["trend"] = "BULLISH" if nc.iloc[-1] > ema20 > ema50 else \
+                              "BEARISH" if nc.iloc[-1] < ema20 < ema50 else "NEUTRAL"
+    except Exception:
+        pass
+
+    # Regime classification
+    vix  = result.get("vix") or 15
+    adx  = result.get("adx") or 20
+    if vix > 22:
+        result["regime"]        = "HIGH_VOL"
+        result["regime_detail"] = "High volatility — reduce size, widen stops"
+    elif adx > 25 and result["trend"] == "BULLISH":
+        result["regime"]        = "TRENDING_UP"
+        result["regime_detail"] = "Strong uptrend — favour breakouts & pullback longs"
+    elif adx > 25 and result["trend"] == "BEARISH":
+        result["regime"]        = "TRENDING_DOWN"
+        result["regime_detail"] = "Strong downtrend — favour shorts, avoid longs"
+    elif adx < 18:
+        result["regime"]        = "CHOPPY"
+        result["regime_detail"] = "Low ADX — mean-reversion, avoid breakouts"
+    else:
+        result["regime"]        = "NEUTRAL"
+        result["regime_detail"] = "Moderate trend — selective entries, tight filters"
+
+    return result
+
+
+def confidence_decay(score: float, generated_at_ist: str) -> float:
+    """
+    Decay confidence score over time since signal was generated.
+    Half-life: ~18 hours. Score never falls below 40% of original.
+    """
+    import math as _math
+    from datetime import datetime as _dt
+    import pytz
+    try:
+        _IST = pytz.timezone("Asia/Kolkata")
+        gen  = _IST.localize(_dt.strptime(generated_at_ist, "%d %b %Y %I:%M %p IST"))
+        now  = _dt.now(_IST)
+        hours = max(0, (now - gen).total_seconds() / 3600)
+        # Exponential decay: half-life 18h
+        decay = _math.exp(-0.693 / 18 * hours)
+        return round(max(score * 0.40, score * decay), 1)
+    except Exception:
+        return score
