@@ -1385,7 +1385,6 @@ st.markdown(f"""
 </style>
 
 <div class="session-header">
-  <!-- Status bar -->
   <div class="sh-statusbar">
     <div style="display:flex;align-items:center;gap:16px">
       <div class="sh-logo">TRADEFLOW AI&nbsp;<span>PRO</span></div>
@@ -1404,8 +1403,6 @@ st.markdown(f"""
         letter-spacing:.1em">LIVE</span>
     </div>
   </div>
-
-  <!-- Big metrics -->
   <div class="sh-metrics">
     <div class="sh-metric">
       <div class="sh-metric-label">Active Signals</div>
@@ -1428,11 +1425,7 @@ st.markdown(f"""
       <div class="sh-metric-sub">Swing · {_scan_counts_hdr.get('breakout',0) if _scan_counts_hdr else 0} breakouts</div>
     </div>
   </div>
-
-  <!-- Market Regime + VIX strip -->
   {_render_regime_strip()}
-
-  <!-- Auto-scan schedule -->
   <div class="sh-pipeline">
     <div class="sh-pipe-label">■ AUTO-SCAN SCHEDULE (IST)</div>
     <div class="sh-step">
@@ -1628,7 +1621,39 @@ with tab1:
         c[4].metric("Avg RR", f"1:{round(sum(rr_vals)/len(rr_vals),1)}" if rr_vals else "—")
 
         st.markdown("---")
+
+        # ── SIGNAL FILTERS ────────────────────────────────────────────────────
+        _fc1, _fc2, _fc3, _fc4, _fc5 = st.columns(5)
+        _flt_action  = _fc1.selectbox("Action",    ["All","BUY","SELL"],                     key="sig_faction")
+        _flt_score   = _fc2.selectbox("Min Score", ["Any","70+","80+","85+","90+"],           key="sig_fscore")
+        _flt_setup   = _fc3.selectbox("Setup",     ["All","Breakout","Pullback","Divergence"],key="sig_fsetup")
+        _flt_fno     = _fc4.selectbox("F&O",       ["All","F&O Only"],                        key="sig_ffno")
+        _flt_vol     = _fc5.selectbox("Volume",    ["All","High 1.5x+","Very High 2.5x+"],    key="sig_fvol")
+
+        _score_gate  = {"Any":0,"70+":70,"80+":80,"85+":85,"90+":90}.get(_flt_score, 0)
+        _vol_gate    = {"All":0,"High 1.5x+":1.5,"Very High 2.5x+":2.5}.get(_flt_vol, 0)
+
+        def _apply_sig_filters(sigs):
+            out = []
+            for _s in sigs:
+                if _flt_action != "All" and _s.get("action","BUY") != _flt_action:
+                    continue
+                if _s.get("score",0) < _score_gate:
+                    continue
+                if _flt_setup != "All" and _s.get("setup_type","").lower() not in _flt_setup.lower():
+                    continue
+                if _flt_fno == "F&O Only" and not _s.get("fno_eligible"):
+                    continue
+                if _s.get("vol_ratio",1.0) < _vol_gate:
+                    continue
+                out.append(_s)
+            return out
+
         sigs_s = sorted(signals, key=lambda x: (x.get("date",""), x.get("score", 0)), reverse=True)
+        sigs_s = _apply_sig_filters(sigs_s)
+        if not sigs_s:
+            st.info("No signals match current filters. Adjust filters above.")
+            sigs_s = []
 
         # ── OPPORTUNITY DIGEST (NiftyPulse feature) ───────────────────────────
         opps = _opportunity_digest(sigs_s)
@@ -1638,9 +1663,9 @@ with tab1:
             for col, (label, sig) in zip(opp_cols, opps.items()):
                 pct_color = "#22c55e" if sig["action"] == "BUY" else "#ef4444"
                 rr_val    = sig.get("rr1", 0)
-                _t1v      = sig.get("target1", 0)
-                _slv      = sig.get("sl2") or sig.get("sl", 0)
-                _entry    = sig.get("price", 0)
+                _t1v      = float(sig.get("target1") or 0)
+                _slv      = float(sig.get("sl2") or sig.get("sl") or 0)
+                _entry    = float(sig.get("price") or sig.get("entry") or 0)
                 col.markdown(
                     '<div style="background:#111827;border:1px solid #1a2030;border-radius:8px;'
                     'padding:10px 12px;height:100%">'
@@ -1761,102 +1786,71 @@ with tab1:
             }
             trigger_text = _trig_map.get(s.get("setup_type", ""), "Multi-factor setup triggered across trend, structure, volume")
 
-            st.markdown(f"""
-<div class="{cls}">
-  <!-- Header: Symbol + Action + Confidence -->
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">
-    <div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">
-        <span style="font-size:22px;font-weight:900;color:#f1f5f9;letter-spacing:-.02em;line-height:1">{s['symbol']}</span>
-        <span class="action-badge {act_cls}">{s['action']}</span>
-        {fno_b}
-      </div>
-      <div style="font-size:10px;color:var(--txt4)">{s.get('setup_type','').replace('_',' ').title()} &nbsp;·&nbsp; NSE Equity &nbsp;·&nbsp; Swing</div>
-    </div>
-    <div style="text-align:right;flex-shrink:0;margin-left:16px">
-      <div style="font-size:36px;font-weight:900;color:#22c55e;font-family:'JetBrains Mono',monospace;line-height:1;text-shadow:0 0 22px rgba(34,197,94,.35)">{_score_now:.0f}%</div>
-      <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">confidence{_decay_str}</div>
-      {f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">gen: {score}%</div>' if _decay_drop > 2 else ""}
-      <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-top:4px">{uncertainty}%</div>
-      <div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em">uncertainty</div>
-    </div>
-  </div>
-
-  <!-- Strength bars -->
-  <div style="margin:14px 0 10px">
-    <div class="sbar-row">
-      <span class="sbar-lbl bull">Bullish Strength</span>
-      <div class="sbar-track bull"><div class="sbar-fill bull" style="width:{bull_pct}%"></div></div>
-      <span class="sbar-pct bull">{bull_pct}%</span>
-    </div>
-    <div class="sbar-row">
-      <span class="sbar-lbl bear">Bearish Strength</span>
-      <div class="sbar-track bear"><div class="sbar-fill bear" style="width:0%"></div></div>
-      <span class="sbar-pct bear">0%</span>
-    </div>
-  </div>
-
-  <!-- Tags -->
-  <div style="margin-bottom:10px">
-    <span class="tag {vol_cls}">{vol_tag}</span>
-    {reason_tags}
-  </div>
-
-  <!-- Trigger box -->
-  <div class="trigger-box">
-    <div class="trig-label">SIGNAL TRIGGER</div>
-    <div class="trig-text">{trigger_text}</div>
-    <div class="trig-meta">ADX {s.get('adx',0)} &nbsp;·&nbsp; Vol {vr:.1f}x avg &nbsp;·&nbsp; {s.get('regime','').title()} Regime &nbsp;·&nbsp; RSI {s.get('rsi',0)}</div>
-  </div>
-
-  <!-- Trade Structure -->
-  <div style="font-size:8px;font-weight:800;color:var(--txt4);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px">TRADE STRUCTURE</div>
-  <div class="tgrid">
-    <div class="tgcell">
-      <div class="tc-label">CURRENT PRICE</div>
-      <div class="tc-val">₹{s['price']:,.2f}</div>
-    </div>
-    <div class="tgcell">
-      <div class="tc-label">ENTRY ZONE</div>
-      <div class="tc-val">₹{s['price']:,.2f}</div>
-    </div>
-    <div class="tgcell sl">
-      <div class="tc-label">STOP LOSS</div>
-      <div class="tc-val" style="color:#ef4444">₹{s['sl2']:,.2f}</div>
-    </div>
-    <div class="tgcell t1">
-      <div class="tc-label">TARGET 1</div>
-      <div class="tc-val" style="color:#22c55e">₹{s['target1']:,.2f}</div>
-    </div>
-  </div>
-
-  <!-- Extra targets + stats -->
-  <div class="row" style="margin-top:4px">
-    <div class="kv"><span>Risk/Reward</span><span class="blue">1:{s['rr1']}</span></div>
-    <div class="kv"><span>Target 2</span><span class="green">₹{s['target2']:,.1f}</span></div>
-    <div class="kv"><span>Target 3</span><span class="green">₹{s['target3']:,.1f}</span></div>
-    <div class="kv"><span>Max Pos.</span><span>{s['qty']} shares</span></div>
-    <div class="kv"><span>ATR (Daily)</span><span>₹{s.get('atr',0):.2f}</span></div>
-  </div>
-
-  <!-- Footer -->
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;
-    padding-top:10px;border-top:1px solid var(--border2);flex-wrap:wrap;gap:6px">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <span style="font-size:9px;color:var(--txt4)">Educational purposes only · Not SEBI advice · Model v2.0</span>
-      {('<span style="font-size:8px;padding:2px 8px;background:rgba(245,158,11,.1);color:#f59e0b;'
-        'border:1px solid rgba(245,158,11,.3);border-radius:4px;font-family:var(--font-mono);'
-        'font-weight:700">WATCH GRADE</span>') if s.get("fallback") else ""}
-    </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      {(f'<span style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">'
-         f'Scanned {s["scanned_at"]}</span>') if s.get("scanned_at") else ""}
-      <a href="{s['tv_link']}" target="_blank"
-        style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
-    </div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
+            _tv_safe   = s.get('tv_link','').replace('&','%26')
+            _scan_span = (f'<span style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">Scanned {s["scanned_at"]}</span>'
+                          if s.get("scanned_at") else "")
+            _watch_badge = ('<span style="font-size:8px;padding:2px 8px;background:rgba(245,158,11,.1);color:#f59e0b;'
+                            'border:1px solid rgba(245,158,11,.3);border-radius:4px;font-family:var(--font-mono);'
+                            'font-weight:700">WATCH GRADE</span>') if s.get("fallback") else ""
+            _gen_span  = f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">gen: {score}%</div>' if _decay_drop > 2 else ""
+            st.markdown(
+                f'<div class="{cls}">'
+                f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px">'
+                f'<div>'
+                f'<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">'
+                f'<span style="font-size:22px;font-weight:900;color:#f1f5f9;letter-spacing:-.02em;line-height:1">{s["symbol"]}</span>'
+                f'<span class="action-badge {act_cls}">{s["action"]}</span>'
+                f'{fno_b}'
+                f'</div>'
+                f'<div style="font-size:10px;color:var(--txt4)">{s.get("setup_type","").replace("_"," ").title()} &nbsp;·&nbsp; NSE Equity &nbsp;·&nbsp; Swing</div>'
+                f'</div>'
+                f'<div style="text-align:right;flex-shrink:0;margin-left:16px">'
+                f'<div style="font-size:36px;font-weight:900;color:#22c55e;font-family:JetBrains Mono,monospace;line-height:1">{_score_now:.0f}%</div>'
+                f'<div style="font-size:8px;color:var(--txt4);text-transform:uppercase;letter-spacing:.1em;margin-top:2px">confidence{_decay_str}</div>'
+                f'{_gen_span}'
+                f'<div style="font-size:13px;font-weight:700;color:#f59e0b;margin-top:4px">{uncertainty}% uncertainty</div>'
+                f'</div>'
+                f'</div>'
+                f'<div style="margin:12px 0 10px">'
+                f'<div class="sbar-row"><span class="sbar-lbl bull">Bullish Strength</span>'
+                f'<div class="sbar-track bull"><div class="sbar-fill bull" style="width:{bull_pct}%"></div></div>'
+                f'<span class="sbar-pct bull">{bull_pct}%</span></div>'
+                f'<div class="sbar-row"><span class="sbar-lbl bear">Bearish Strength</span>'
+                f'<div class="sbar-track bear"><div class="sbar-fill bear" style="width:0%"></div></div>'
+                f'<span class="sbar-pct bear">0%</span></div>'
+                f'</div>'
+                f'<div style="margin-bottom:10px"><span class="tag {vol_cls}">{vol_tag}</span>{reason_tags}</div>'
+                f'<div class="trigger-box">'
+                f'<div class="trig-label">SIGNAL TRIGGER</div>'
+                f'<div class="trig-text">{trigger_text}</div>'
+                f'<div class="trig-meta">ADX {s.get("adx",0)} &nbsp;·&nbsp; Vol {vr:.1f}x &nbsp;·&nbsp; RSI {s.get("rsi",0)} &nbsp;·&nbsp; {s.get("regime","").title()} Regime</div>'
+                f'</div>'
+                f'<div style="font-size:8px;font-weight:800;color:var(--txt4);text-transform:uppercase;letter-spacing:.14em;margin:12px 0 8px">TRADE STRUCTURE</div>'
+                f'<div class="tgrid">'
+                f'<div class="tgcell"><div class="tc-label">PRICE</div><div class="tc-val">₹{s["price"]:,.2f}</div></div>'
+                f'<div class="tgcell sl"><div class="tc-label">STOP LOSS</div><div class="tc-val" style="color:#ef4444">₹{s["sl2"]:,.2f}</div></div>'
+                f'<div class="tgcell t1"><div class="tc-label">TARGET 1</div><div class="tc-val" style="color:#22c55e">₹{s["target1"]:,.2f}</div></div>'
+                f'<div class="tgcell"><div class="tc-label">TARGET 2</div><div class="tc-val" style="color:#4da6ff">₹{s["target2"]:,.2f}</div></div>'
+                f'</div>'
+                f'<div class="row" style="margin-top:6px">'
+                f'<div class="kv"><span>RR</span><span class="blue">1:{s["rr1"]}</span></div>'
+                f'<div class="kv"><span>T3</span><span class="green">₹{s["target3"]:,.1f}</span></div>'
+                f'<div class="kv"><span>Qty</span><span>{s["qty"]} sh</span></div>'
+                f'<div class="kv"><span>ATR</span><span>₹{s.get("atr",0):.2f}</span></div>'
+                f'<div class="kv"><span>Date</span><span style="color:var(--txt3)">{s.get("date","")}</span></div>'
+                f'</div>'
+                f'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;'
+                f'padding-top:10px;border-top:1px solid var(--border2);flex-wrap:wrap;gap:6px">'
+                f'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+                f'<span style="font-size:9px;color:var(--txt4)">Educational only · Not SEBI advice</span>'
+                f'{_watch_badge}</div>'
+                f'<div style="display:flex;align-items:center;gap:10px">'
+                f'{_scan_span}'
+                f'<a href="{_tv_safe}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none">Chart &#8594;</a>'
+                f'</div></div>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
 
             # ── Per-signal: TradingView chart + News (NiftyPulse features) ───
             _exp_c, _exp_n = st.columns(2)
@@ -1889,16 +1883,28 @@ with tab1:
                     else:
                         st.caption("No recent news found.")
 
-        st.markdown("---")
-        df_s = pd.DataFrame(sigs_s)
-        fig  = px.bar(df_s, x="symbol", y="score", color="score",
-                      color_continuous_scale=["#22c55e","#22c55e"], range_color=[60,100])
-        fig.update_layout(height=180, paper_bgcolor="#0d1117", plot_bgcolor="#111827",
-            font=dict(color="#64748b",size=10), xaxis=dict(gridcolor="#1a2030"),
-            yaxis=dict(gridcolor="#1a2030",range=[50,100]),
-            margin=dict(l=8,r=8,t=8,b=8), showlegend=False, coloraxis_showscale=False)
-        st.plotly_chart(fig, use_container_width=True)
-        st.download_button("Export CSV", df_s.to_csv(index=False), "signals.csv", "text/csv")
+        if sigs_s:
+            st.markdown("---")
+            df_s = pd.DataFrame(sigs_s)
+            _bar_colors = ["#22c55e" if r>=85 else "#f59e0b" if r>=75 else "#64748b"
+                           for r in df_s["score"]]
+            fig = go.Figure(go.Bar(
+                x=df_s["symbol"], y=df_s["score"],
+                marker_color=_bar_colors,
+                text=df_s["score"].astype(str),
+                textposition="outside",
+                textfont=dict(size=10, color="#94a3b8"),
+            ))
+            fig.update_layout(
+                height=160, paper_bgcolor="#0d1117", plot_bgcolor="#111827",
+                font=dict(color="#64748b", size=10, family="JetBrains Mono"),
+                xaxis=dict(gridcolor="#1a2030", tickfont=dict(size=10, color="#94a3b8")),
+                yaxis=dict(gridcolor="#1a2030", range=[50,102], tickfont=dict(size=9)),
+                margin=dict(l=8,r=8,t=4,b=8), showlegend=False,
+                bargap=0.35,
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            st.download_button("⬇ Export CSV", df_s.to_csv(index=False), "signals.csv", "text/csv")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1976,8 +1982,6 @@ with tab_ai:
             st.markdown(f"""
 <div class="ai-card">
   <div class="ai-scan"></div>
-
-  <!-- Header -->
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
     <div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
@@ -1994,8 +1998,6 @@ with tab_ai:
       <div style="font-size:10px;font-weight:700;color:#c4b5fd;margin-top:4px">Vol {vol_r:.1f}× avg</div>
     </div>
   </div>
-
-  <!-- Channel visualisation -->
   <div class="ai-channel">
     <div class="ai-channel-label">🔮 OLS REGRESSION CHANNEL</div>
     <div class="ai-channel-band">
@@ -2003,7 +2005,6 @@ with tab_ai:
       <span class="ai-channel-width">Width: {ch_w:.1f} pts</span>
       <span class="ai-channel-lower">▼ Lower: ₹{lower_b:,.2f}</span>
     </div>
-    <!-- channel position bar -->
     <div style="margin-top:8px;height:6px;background:linear-gradient(90deg,rgba(124,58,237,.2),rgba(167,139,250,.15),rgba(236,72,153,.1));
       border-radius:3px;position:relative;overflow:visible">
       <div style="position:absolute;height:12px;width:3px;top:-3px;background:#a78bfa;border-radius:2px;
@@ -2014,8 +2015,6 @@ with tab_ai:
       <span>Lower Band</span><span style="color:#a78bfa;font-weight:700">▲ BREAKOUT (CURRENT ₹{price:,.2f})</span><span>Upper Band</span>
     </div>
   </div>
-
-  <!-- Trade structure -->
   <div style="font-size:8px;font-weight:800;color:#4b3a7a;text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px">TRADE STRUCTURE</div>
   <div class="tgrid">
     <div class="tgcell" style="border-color:rgba(167,139,250,.2)">
@@ -2042,12 +2041,10 @@ with tab_ai:
     <div class="kv"><span>Target 3</span><span class="green">₹{t3:,.1f}</span></div>
     <div class="kv"><span>Risk pts</span><span class="red">₹{risk:,.1f}</span></div>
   </div>
-
-  <!-- Footer -->
   <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;
     padding-top:10px;border-top:1px solid rgba(167,139,250,.1)">
     <span style="font-size:9px;color:#2d1a55">AI channel breakout signals · Not SEBI advice</span>
-    <a href="{tv_link}" target="_blank"
+    <a href="{tv_link.replace('&', '%26')}" target="_blank"
       style="color:#a78bfa;font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
   </div>
 </div>
@@ -2231,7 +2228,7 @@ with tab2:
     <div class="kv"><span>R:R</span><span class="blue">1:{b['rr']}</span></div>
     <div class="kv"><span>VOL</span><span class="amber">{b['vol_ratio']}×</span></div>
   </div>
-  <div style="margin-top:8px"><a href="{tv_link}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;font-family:var(--font-mono)">CHART →</a></div>
+  <div style="margin-top:8px"><a href="{tv_link.replace('&', '%26')}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;font-family:var(--font-mono)">CHART →</a></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -2432,7 +2429,7 @@ with tab3:
   <div style="display:flex;justify-content:space-between;align-items:center">
     <div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono)">VOL {vol}× surge</div>
     <div style="display:flex;gap:12px">
-      <a href="{tv_link}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;font-family:var(--font-mono)">CHART →</a>
+      <a href="{tv_link.replace('&', '%26')}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;font-family:var(--font-mono)">CHART →</a>
       <a href="{nse_link}" target="_blank" style="color:var(--txt3);font-size:11px;font-weight:600;text-decoration:none;font-family:var(--font-mono)">NSE CHAIN →</a>
     </div>
   </div>
@@ -2839,7 +2836,6 @@ with tab4:
 
                 st.markdown(f"""
 <div class="gw-fund-card">
-  <!-- Header -->
   <div class="gw-card-head">
     <div style="flex:1;min-width:0">
       <div class="gw-fund-name">{s['name']}</div>
@@ -2854,11 +2850,7 @@ with tab4:
       <div class="gw-nav-chg" style="color:{day_col}">{'+' if s['day_chg']>=0 else ''}{s['day_chg']:.2f}% today</div>
     </div>
   </div>
-
-  <!-- Returns bar -->
   <div class="gw-returns-bar">{ret_cells}</div>
-
-  <!-- Investment stats -->
   <div class="gw-inv-band">
     <div class="gw-inv-cell">
       <div class="gw-inv-label">Invested</div>
@@ -3063,7 +3055,7 @@ with tab_mb:
                 <span style="font-size:11px;color:#64748b">Vol <span style="color:#fb923c;font-weight:700">{m.get('vol_ratio','')}x</span></span>
                 <span style="font-size:11px;color:#64748b">52W pos <span style="color:#94a3b8;font-weight:700">{m.get('range_pos','')}%</span></span>
               </div>
-              <div style="margin-top:6px;font-size:10px;color:#475569">{m.get('reason','')} · <a href="{tv_link}" target="_blank" style="color:#22c55e;text-decoration:none">TradingView ↗</a></div>
+              <div style="margin-top:6px;font-size:10px;color:#475569">{m.get('reason','')} · <a href="{tv_link.replace('&', '%26')}" target="_blank" style="color:#22c55e;text-decoration:none">TradingView ↗</a></div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -3307,7 +3299,7 @@ with tab_ohl:
       <div style="width:{min(100,rsi_v):.0f}%;height:100%;background:{rsi_col};border-radius:3px"></div>
     </div>
     <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{rsi_col};min-width:34px;text-align:right">{rsi_v}</div>
-    <a href="{tv_link}" target="_blank"
+    <a href="{tv_link.replace('&', '%26')}" target="_blank"
        style="font-size:10px;font-weight:700;color:var(--accent);text-decoration:none;
               padding:3px 9px;border:1px solid rgba(0,255,136,.25);border-radius:4px">TV ↗</a>
   </div>
@@ -3538,7 +3530,6 @@ with tab7:
                 st.markdown(f"""
 <div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid {_lc_c};
   border-radius:10px;padding:14px 18px;margin-bottom:10px">
-  <!-- Row 1: symbol + status + date -->
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span style="font-size:17px;font-weight:900;color:var(--txt);font-family:var(--font-mono)">{_sym}</span>
@@ -3554,9 +3545,7 @@ with tab7:
         color:{"#22c55e" if int(_sc)>=75 else "#f59e0b" if int(_sc)>=60 else "#ef4444"}">{_sc}%</div>
     </div>
   </div>
-  <!-- Lifecycle bar -->
   <div style="margin-bottom:10px;overflow-x:auto;white-space:nowrap">{stage_pills}</div>
-  <!-- Trade structure -->
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px">
     <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 8px;text-align:center">
       <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;font-family:var(--font-mono);margin-bottom:2px">Entry</div>
@@ -3583,7 +3572,6 @@ with tab7:
       <div style="font-size:11px;font-weight:800;font-family:var(--font-mono);color:#4da6ff">{_fr(_rm)}</div>
     </div>
   </div>
-  <!-- P&L + Why -->
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
     <div>{pnl_block}</div>
     {f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono);max-width:60%;text-align:right;line-height:1.5">💡 {str(_why)[:120]}</div>' if _why else ""}
