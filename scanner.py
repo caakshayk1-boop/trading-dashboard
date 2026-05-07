@@ -1417,24 +1417,22 @@ def _comm_signal(name, ticker, label, interval="1d", period="180d"):
         cur_atr = float(atr(high, low, close).iloc[-1])
         cur_adx = float(adx(high, low, close).iloc[-1])
 
-        # Gate 1: ADX > 25 (strong trend, not choppy noise)
-        if cur_adx < 25:
+        # Gate 1: ADX > 20 (trend present, not dead flat)
+        if cur_adx < 20:
             return None
 
         # Gate 2: Weekly trend alignment (no counter-trend signals)
         weekly_bias = _comm_weekly_bias(ticker)
-        # Allow signal only if weekly confirms direction
 
-        # Gate 3: Bias determination with tighter RSI zones
-        if (price > e20 > e50 and 45 <= cur_rsi <= 65
+        # Gate 3: Bias determination with broadened RSI zones
+        if (price > e20 > e50 and 40 <= cur_rsi <= 68
                 and (weekly_bias == "bullish" or weekly_bias is None)):
             bias = "BUY"
-            # Commodities: 1.2×ATR stop (tighter than before, still enough room for volatility)
             sl   = round(price - 1.2 * cur_atr, 2)
             t1   = round(price + 1.5 * cur_atr, 2)
             t2   = round(price + 2.5 * cur_atr, 2)
             t3   = round(price + 4.0 * cur_atr, 2)
-        elif (price < e20 < e50 and 35 <= cur_rsi <= 55
+        elif (price < e20 < e50 and 32 <= cur_rsi <= 58
                 and (weekly_bias == "bearish" or weekly_bias is None)):
             bias = "SELL"
             sl   = round(price + 1.2 * cur_atr, 2)
@@ -1447,8 +1445,8 @@ def _comm_signal(name, ticker, label, interval="1d", period="180d"):
         risk = abs(price - sl)
         rr   = round(abs(t2 - price) / risk, 1) if risk > 0 else 0
 
-        # Gate 4: Minimum 2:1 RR
-        if rr < 2.0:
+        # Gate 4: Minimum 1.5:1 RR
+        if rr < 1.5:
             return None
 
         return {
@@ -2122,3 +2120,115 @@ def confidence_decay(score: float, generated_at_ist: str) -> float:
         return round(max(score * 0.40, score * decay), 1)
     except Exception:
         return score
+
+
+# ── Intraday Momentum Scanner (30-min tier) ───────────────────────────────────
+
+_INTRADAY_UNIVERSE = [
+    # Nifty 50 high-liquidity stocks
+    "RELIANCE.NS","TCS.NS","HDFCBANK.NS","ICICIBANK.NS","INFOSYS.NS",
+    "HINDUNILVR.NS","BAJFINANCE.NS","SBIN.NS","KOTAKBANK.NS","LT.NS",
+    "AXISBANK.NS","BHARTIARTL.NS","ASIANPAINT.NS","MARUTI.NS","TITAN.NS",
+    "WIPRO.NS","NESTLEIND.NS","ULTRACEMCO.NS","TECHM.NS","POWERGRID.NS",
+    "NTPC.NS","ONGC.NS","JSWSTEEL.NS","TATAMOTORS.NS","TATASTEEL.NS",
+    "DRREDDY.NS","SUNPHARMA.NS","CIPLA.NS","INDUSINDBK.NS","DIVISLAB.NS",
+    # Mid-cap high-momentum
+    "ADANIPORTS.NS","ADANIENT.NS","BAJAJFINSV.NS","VEDL.NS","HINDALCO.NS",
+    "COALINDIA.NS","BPCL.NS","IOC.NS","GAIL.NS","M&M.NS",
+    "HEROMOTOCO.NS","EICHERMOT.NS","APOLLOHOSP.NS","HCLTECH.NS","MCDOWELL-N.NS",
+]
+
+def scan_intraday_momentum() -> list:
+    """
+    30-min intraday momentum: price > VWAP, 15m RSI crossing 55,
+    volume spike > 2.5x average, price > EMA9.
+    Runs during market hours only (9:15–14:30 IST).
+    Returns list of signals (entry = current price, SL = VWAP, T1/T2 = ATR extensions).
+    """
+    import pytz as _tz
+    _IST = _tz.timezone("Asia/Kolkata")
+    _now = datetime.now(_IST)
+    # Only run 9:30–14:30 IST
+    _h, _m = _now.hour, _now.minute
+    if not (9 <= _h < 14 or (_h == 14 and _m <= 30)):
+        logging.info("Intraday scan: outside market hours, skip")
+        return []
+
+    results = []
+    try:
+        raw = yf.download(
+            _INTRADAY_UNIVERSE, period="3d", interval="15m",
+            group_by="ticker", progress=False, auto_adjust=True, timeout=30
+        )
+    except Exception as e:
+        logging.warning(f"Intraday download failed: {e}")
+        return []
+
+    for sym in _INTRADAY_UNIVERSE:
+        try:
+            if len(_INTRADAY_UNIVERSE) == 1:
+                df = raw
+            else:
+                df = raw[sym] if sym in raw.columns.get_level_values(0) else None
+            if df is None or df.empty or len(df) < 20:
+                continue
+
+            c = df["Close"].squeeze()
+            h = df["High"].squeeze()
+            l = df["Low"].squeeze()
+            v = df["Volume"].squeeze()
+
+            price   = float(c.iloc[-1])
+            e9      = float(ema(c, 9).iloc[-1])
+            cur_rsi = float(rsi(c).iloc[-1])
+            prev_rsi= float(rsi(c).iloc[-2])
+            cur_atr = float(atr(h, l, c).iloc[-1])
+            cur_vol = float(v.iloc[-1])
+            avg_vol = float(v.iloc[-20:].mean())
+
+            # VWAP (typical price × volume cumulative today)
+            today_str = _now.strftime("%Y-%m-%d")
+            _today_mask = df.index.strftime("%Y-%m-%d") == today_str if hasattr(df.index, 'strftime') else slice(None)
+            df_today = df[_today_mask]
+            if df_today.empty:
+                continue
+            tp = ((df_today["High"] + df_today["Low"] + df_today["Close"]) / 3).squeeze()
+            _v_today = df_today["Volume"].squeeze()
+            vwap = float((tp * _v_today).cumsum().iloc[-1] / _v_today.cumsum().iloc[-1])
+
+            vol_spike = cur_vol / avg_vol if avg_vol > 0 else 0
+
+            # Signal criteria
+            if (prev_rsi < 55 <= cur_rsi            # RSI crossing up through 55
+                    and price > vwap                  # above VWAP
+                    and price > e9                    # above EMA9
+                    and vol_spike >= 2.5):            # volume surge
+                sl  = round(max(vwap, price - 1.0 * cur_atr), 2)
+                t1  = round(price + 1.0 * cur_atr, 2)
+                t2  = round(price + 2.0 * cur_atr, 2)
+                rr  = round((t2 - price) / (price - sl), 1) if price > sl else 0
+                if rr < 1.0:
+                    continue
+                results.append({
+                    "symbol":     sym.replace(".NS", ""),
+                    "action":     "BUY",
+                    "signal_type":"intraday",
+                    "timeframe":  "15m",
+                    "price":      round(price, 2),
+                    "sl":         sl,
+                    "target1":    t1,
+                    "target2":    t2,
+                    "rr":         rr,
+                    "rsi":        round(cur_rsi, 1),
+                    "vol_ratio":  round(vol_spike, 1),
+                    "vwap":       round(vwap, 2),
+                    "atr":        round(cur_atr, 2),
+                    "score":      min(90, int(50 + vol_spike * 5 + cur_rsi * 0.3)),
+                })
+        except Exception as e:
+            logging.debug(f"Intraday {sym}: {e}")
+            continue
+
+    results.sort(key=lambda x: x["vol_ratio"], reverse=True)
+    logging.info(f"Intraday momentum scan: {len(results)} signals")
+    return results

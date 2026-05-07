@@ -1582,7 +1582,7 @@ if ticker_parts:
 </div>
 """, unsafe_allow_html=True)
 
-tab1, tab_ai, tab2, tab3, tab4, tab_mb, tab_ohl, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "💎 Multibaggers", "🕯️ OHL/OLL", "📋 History"])
+tab1, tab_ai, tab_intra, tab2, tab3, tab4, tab_mb, tab_ohl, tab7 = st.tabs(["📈 Signals", "🤖 AI Signals", "⚡ Intraday", "🚀 Breakouts", "📊 F&O", "💰 Mutual Funds", "💎 Multibaggers", "🕯️ OHL/OLL", "📋 History"])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1638,6 +1638,9 @@ with tab1:
             for col, (label, sig) in zip(opp_cols, opps.items()):
                 pct_color = "#22c55e" if sig["action"] == "BUY" else "#ef4444"
                 rr_val    = sig.get("rr1", 0)
+                _t1v      = sig.get("target1", 0)
+                _slv      = sig.get("sl2") or sig.get("sl", 0)
+                _entry    = sig.get("price", 0)
                 col.markdown(
                     '<div style="background:#111827;border:1px solid #1a2030;border-radius:8px;'
                     'padding:10px 12px;height:100%">'
@@ -1647,7 +1650,18 @@ with tab1:
                     + sig["symbol"] + '</div>'
                     + '<div style="font-size:10px;color:' + pct_color + ';margin-top:3px;font-weight:700">'
                     + sig["action"] + ' · Score ' + str(sig["score"]) + '</div>'
-                    + '<div style="font-size:10px;color:#475569;margin-top:4px">'
+                    + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:8px">'
+                    + '<div style="background:rgba(255,255,255,.03);border-radius:4px;padding:4px 6px">'
+                    + '<div style="font-size:7px;color:#334155;text-transform:uppercase;letter-spacing:.08em">Entry</div>'
+                    + '<div style="font-size:11px;font-weight:700;color:#f1f5f9;font-family:var(--font-mono)">₹' + f'{_entry:,.1f}' + '</div></div>'
+                    + '<div style="background:rgba(239,68,68,.08);border-radius:4px;padding:4px 6px">'
+                    + '<div style="font-size:7px;color:#334155;text-transform:uppercase;letter-spacing:.08em">SL</div>'
+                    + '<div style="font-size:11px;font-weight:700;color:#ef4444;font-family:var(--font-mono)">₹' + f'{_slv:,.1f}' + '</div></div>'
+                    + '<div style="background:rgba(0,208,156,.08);border-radius:4px;padding:4px 6px">'
+                    + '<div style="font-size:7px;color:#334155;text-transform:uppercase;letter-spacing:.08em">T1</div>'
+                    + '<div style="font-size:11px;font-weight:700;color:#00d09c;font-family:var(--font-mono)">₹' + f'{_t1v:,.1f}' + '</div></div>'
+                    + '</div>'
+                    + '<div style="font-size:10px;color:#475569;margin-top:6px">'
                     + 'RR 1:' + str(rr_val) + ' · Vol ' + str(sig.get("vol_ratio",1.0)) + 'x</div>'
                     + '</div>',
                     unsafe_allow_html=True
@@ -2041,6 +2055,99 @@ with tab_ai:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# TAB INTRADAY — 30-min momentum signals
+# ══════════════════════════════════════════════════════════════════════════════
+def _gh_intraday_signals(days=1):
+    from datetime import timedelta
+    data = _fetch_json("all_signals")
+    if not data:
+        return []
+    cutoff = str(date.today() - timedelta(days=days))
+    return [r for r in data if r.get("signal_type") == "intraday" and r.get("date","") >= cutoff]
+
+with tab_intra:
+    st.markdown("""
+<div style="background:linear-gradient(135deg,rgba(7,13,24,.98),rgba(10,20,40,.98));
+  border:1px solid rgba(250,191,33,.18);border-radius:16px;padding:18px 22px;margin-bottom:18px;
+  position:relative;overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(250,191,33,.5),rgba(34,197,94,.3),transparent)"></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+    <span style="font-size:20px;font-weight:900;color:#fbbf24;letter-spacing:-.02em">⚡ Intraday Momentum</span>
+    <span style="font-size:8px;font-weight:800;padding:3px 9px;border-radius:4px;
+      background:rgba(250,191,33,.1);color:#fbbf24;border:1px solid rgba(250,191,33,.25);
+      letter-spacing:.1em;text-transform:uppercase">15m · VWAP + RSI55 + VOL</span>
+  </div>
+  <div style="font-size:11px;color:#475569;line-height:1.6">
+    15-min candle · RSI crossing 55 · Price above VWAP · Volume spike ≥ 2.5×
+    <br>Scans every 30 min · 10:00 AM–2:30 PM IST · Exit by 3:15 PM
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+    _intra_sigs = _gh_intraday_signals(days=1)
+    if not _intra_sigs:
+        st.markdown("""
+<div style="text-align:center;padding:60px 0">
+  <div style="font-size:40px;margin-bottom:12px">⚡</div>
+  <div style="font-size:14px;color:#475569;font-weight:600">No intraday signals yet today</div>
+  <div style="font-size:11px;color:#334155;margin-top:6px">
+    Scans fire every 30 min from 10:00 AM IST · Criteria: VWAP + RSI55 cross + 2.5× volume
+  </div>
+</div>
+""", unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div style="font-size:11px;color:#475569;margin-bottom:10px">{len(_intra_sigs)} signal(s) today · Auto-expires at market close</div>', unsafe_allow_html=True)
+        for _is in _intra_sigs:
+            _ia  = _is.get("action","BUY")
+            _iac = "#22c55e" if _ia == "BUY" else "#ef4444"
+            _ie  = float(_is.get("entry",0) or _is.get("price",0))
+            _isl = float(_is.get("sl",0) or _ie*0.98)
+            _it1 = float(_is.get("target1",0) or _ie*1.02)
+            _it2 = float(_is.get("target2",0) or _it1*1.01)
+            _irr = _is.get("rr",0) or _is.get("rr1",0)
+            _ivol= _is.get("vol_ratio",0) or _is.get("metadata") and __import__("json").loads(_is.get("metadata") or "{}").get("vol_ratio",0)
+            st.markdown(f"""
+<div style="background:#0d1117;border:1px solid rgba(250,191,33,.2);border-left:3px solid #fbbf24;
+  border-radius:10px;padding:14px 16px;margin-bottom:10px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div>
+      <span style="font-size:17px;font-weight:900;color:#f1f5f9">{_is['symbol']}</span>
+      <span style="font-size:9px;color:#475569;margin-left:8px;padding:2px 6px;border:1px solid #1a2030;border-radius:3px">15m</span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span style="font-size:11px;font-weight:800;color:{_iac}">{_ia}</span>
+      <span style="font-size:9px;color:#fbbf24;padding:2px 7px;background:rgba(250,191,33,.08);border-radius:4px">INTRADAY</span>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+    <div style="background:rgba(255,255,255,.03);border-radius:6px;padding:6px 8px">
+      <div style="font-size:7px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">Entry</div>
+      <div style="font-size:13px;font-weight:800;color:#f1f5f9;font-family:var(--font-mono)">₹{_ie:,.2f}</div>
+    </div>
+    <div style="background:rgba(239,68,68,.06);border-radius:6px;padding:6px 8px">
+      <div style="font-size:7px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">SL</div>
+      <div style="font-size:13px;font-weight:800;color:#ef4444;font-family:var(--font-mono)">₹{_isl:,.2f}</div>
+    </div>
+    <div style="background:rgba(0,208,156,.06);border-radius:6px;padding:6px 8px">
+      <div style="font-size:7px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">T1</div>
+      <div style="font-size:13px;font-weight:800;color:#00d09c;font-family:var(--font-mono)">₹{_it1:,.2f}</div>
+    </div>
+    <div style="background:rgba(77,166,255,.06);border-radius:6px;padding:6px 8px">
+      <div style="font-size:7px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">T2</div>
+      <div style="font-size:13px;font-weight:800;color:#4da6ff;font-family:var(--font-mono)">₹{_it2:,.2f}</div>
+    </div>
+    <div style="background:rgba(255,255,255,.03);border-radius:6px;padding:6px 8px">
+      <div style="font-size:7px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px">RR / Vol</div>
+      <div style="font-size:11px;font-weight:700;color:#a3e635;font-family:var(--font-mono)">1:{_irr} · {_ivol}x</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;font-size:9px;color:#334155">⚠ Exit before 3:15 PM IST · Not for positional holding</div>
+</div>
+""", unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # TAB 2 — BREAKOUTS (read from DB)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab2:
@@ -2168,7 +2275,44 @@ with tab2:
     st.markdown('<div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:4px">🥇 Commodity Signals</div><div style="font-size:11px;color:#334155;margin-bottom:14px">Gold · Silver · Crude Oil · Nat Gas — Global futures</div>', unsafe_allow_html=True)
     df_comm = get_commodity_signals(days=_days) if IS_LOCAL else _gh_commodity_signals(days=_days)
     if df_comm.empty:
-        st.info("No commodity signals today. Next auto-scan: 9:20 AM IST.")
+        # Show live commodity overview as fallback
+        _comm_overview = [
+            ("Gold",    "GC=F",  "🥇"), ("Silver",  "SI=F",  "🥈"),
+            ("Crude",   "CL=F",  "🛢️"), ("Nat Gas", "NG=F",  "🔥"),
+        ]
+        try:
+            import yfinance as _yf
+            _tickers = " ".join(t for _, t, _ in _comm_overview)
+            _cd = _yf.download(_tickers, period="2d", interval="1d",
+                               group_by="ticker", progress=False, auto_adjust=True, timeout=10)
+            _lines = []
+            for name, ticker, icon in _comm_overview:
+                try:
+                    _df = _cd[ticker] if len(_comm_overview) > 1 else _cd
+                    _p  = float(_df["Close"].iloc[-1])
+                    _p0 = float(_df["Close"].iloc[-2])
+                    _chg= round((_p - _p0) / _p0 * 100, 2)
+                    _col= "#22c55e" if _chg >= 0 else "#ef4444"
+                    _arrow = "▲" if _chg >= 0 else "▼"
+                    _lines.append(
+                        f'<div style="display:flex;justify-content:space-between;align-items:center;'
+                        f'padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.03)">'
+                        f'<span style="font-size:12px;color:#f1f5f9;font-weight:700">{icon} {name}</span>'
+                        f'<span style="font-size:12px;font-family:var(--font-mono);font-weight:700;color:#f1f5f9">${_p:,.2f}</span>'
+                        f'<span style="font-size:11px;font-weight:700;color:{_col}">{_arrow} {_chg:+.2f}%</span>'
+                        f'</div>'
+                    )
+                except Exception:
+                    pass
+            if _lines:
+                st.markdown(
+                    '<div style="background:#0d1117;border:1px solid #1a2030;border-radius:10px;overflow:hidden;margin-bottom:10px">'
+                    + "".join(_lines) + "</div>",
+                    unsafe_allow_html=True
+                )
+        except Exception:
+            pass
+        st.caption("No active signals. Criteria: ADX > 20 · EMA stack aligned · RSI zone match. Next scan: 9:20 AM IST.")
     else:
         for b in df_comm.to_dict("records"):
             action = b.get("action","BUY")

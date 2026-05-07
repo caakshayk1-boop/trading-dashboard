@@ -442,6 +442,32 @@ def run_fno_alerts(time_str, signals):
     _send("\n".join(lines))
 
 
+def run_intraday_scan(time_str):
+    """30-min intraday momentum: VWAP + RSI55 cross + vol surge on Nifty 50 universe."""
+    from scanner import scan_intraday_momentum
+    from tracker import log_to_all_signals, is_duplicate
+    logging.info("Running intraday momentum scan (15m)...")
+    sigs = scan_intraday_momentum()
+    sigs = [s for s in sigs if not is_duplicate(s["symbol"], "intraday")]
+    logging.info(f"Intraday: {len(sigs)} signals after dedup")
+    if sigs:
+        lines = [f"⚡ *Intraday Momentum* — {time_str}\n_(15m · VWAP + RSI55 + Vol surge)_\n"]
+        for s in sigs[:6]:
+            lines.append(
+                f"• *{s['symbol']}* | 15m | BUY ₹{s['price']}\n"
+                f"  SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']}"
+                f" | RR {s['rr']} | Vol {s['vol_ratio']}x | RSI {s['rsi']}"
+            )
+            log_to_all_signals(
+                s["symbol"], "intraday", "BUY", s["price"], s["sl"],
+                s["target1"], s["target2"], s["target2"],
+                s["rr"], timeframe="15m", score=s.get("score", 0)
+            )
+        lines.append("\n_Intraday only · Exit by 3:15 PM IST_")
+        _send("\n".join(lines))
+    return sigs
+
+
 def run_multibagger_scan(time_str):
     """Weekly multibagger scan — Saturday only."""
     from scanner import scan_multibaggers
