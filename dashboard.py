@@ -1184,12 +1184,21 @@ except Exception:
     _wr_hdr = 0; _trades_hdr = 0
 
 # Scan schedule slots (IST)
-_SCAN_SLOTS = [("9:00 AM", "4H+Commodity"), ("11:42 AM", "Swing+F&O"), ("4:30 PM", "Breakouts+EOD")]
+_SCAN_SLOTS = [("9:20 AM","4H·Commodity"), ("11:42 AM","Swing·F&O"),
+               ("4:30 PM","Breakouts·EOD"), ("8:00 PM","Multibagger")]
 _now_h, _now_m = _now_hdr.hour, _now_hdr.minute
+_now_weekday   = _now_hdr.weekday()   # 0=Mon … 5=Sat, 6=Sun
+try:
+    from scanner import is_trading_day as _is_trading_day
+    _is_trading = _is_trading_day(_now_hdr)
+except Exception:
+    _is_trading = _now_weekday < 5
+
 def _slot_status(h, m):
     slot_mins = h * 60 + m
     now_mins  = _now_h * 60 + _now_m
-    if now_mins > slot_mins + 10:  return "done"
+    if not _is_trading:        return "done"      # holiday — all slots dimmed
+    if now_mins > slot_mins + 10: return "done"
     if abs(now_mins - slot_mins) <= 10: return "active"
     return "pending"
 
@@ -1373,8 +1382,8 @@ st.markdown(f"""
   <div class="sh-pipeline">
     <div class="sh-pipe-label">■ AUTO-SCAN SCHEDULE (IST)</div>
     <div class="sh-step">
-      <div class="sh-step-block {_slot_status(9,0)}">
-        <span class="sh-step-num">9:00 AM</span>
+      <div class="sh-step-block {_slot_status(9,20)}">
+        <span class="sh-step-num">9:20 AM</span>
         <span class="sh-step-name">4H · Commodity</span>
       </div>
       <div class="sh-arrow">›</div>
@@ -1392,6 +1401,7 @@ st.markdown(f"""
         <span class="sh-step-num">8:00 PM</span>
         <span class="sh-step-name">Multibagger</span>
       </div>
+      {"<div style='margin-left:8px;font-size:9px;font-weight:800;color:#f59e0b;font-family:var(--font-mono);padding:2px 8px;border:1px solid #f59e0b44;border-radius:4px'>HOLIDAY · 9:30 AM ONLY</div>" if not _is_trading else ""}
     </div>
   </div>
 </div>
@@ -1528,7 +1538,31 @@ with tab1:
     signals = get_signals_display(days=_days, min_score=min_score) if IS_LOCAL else _gh_signals_display(days=_days, min_score=min_score)
 
     if not signals:
-        st.markdown('<div style="text-align:center;padding:50px 0"><div style="font-size:36px">📡</div><div style="margin-top:8px;font-size:13px;color:#334155">No qualifying signals yet.<br>Auto-scans: 9:20 AM · 11:45 AM · 4:30 PM IST</div></div>', unsafe_allow_html=True)
+        _next_scan = "9:20 AM" if _now_h < 9 or (_now_h == 9 and _now_m < 20) else \
+                     "11:42 AM" if _now_h < 11 or (_now_h == 11 and _now_m < 42) else \
+                     "4:30 PM"  if _now_h < 16 or (_now_h == 16 and _now_m < 30) else "9:20 AM tomorrow"
+        _holiday_note = " · Holiday — next scan 9:30 AM" if not _is_trading else ""
+        st.markdown(f"""
+<div style="text-align:center;padding:48px 20px;max-width:480px;margin:0 auto">
+  <div style="font-size:32px;margin-bottom:14px">🔍</div>
+  <div style="font-size:15px;font-weight:800;color:var(--txt);margin-bottom:8px;font-family:var(--font-sans)">
+    Scan Complete — No Setups Matching Criteria
+  </div>
+  <div style="font-size:12px;color:var(--txt3);line-height:1.7;font-family:var(--font-mono)">
+    Scanned <b style="color:var(--txt)">500 stocks</b> (Nifty 500) &nbsp;·&nbsp;
+    Min score <b style="color:var(--txt)">70/100</b> &nbsp;·&nbsp; Min RR <b style="color:var(--txt)">1:2</b><br>
+    No setup cleared all filters today. Market may be in low-momentum phase.<br>
+    <span style="color:var(--accent)">Next scan: {_next_scan} IST{_holiday_note}</span>
+  </div>
+  <div style="margin-top:16px;padding:10px 16px;background:rgba(0,255,136,.04);
+    border:1px solid rgba(0,255,136,.1);border-radius:8px;display:inline-block">
+    <div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono);
+      text-transform:uppercase;letter-spacing:.1em">Quality over quantity</div>
+    <div style="font-size:11px;color:var(--txt3);font-family:var(--font-mono);margin-top:4px">
+      0 alerts is better than 5 bad ones. Check OHL/OLL tab for intraday setups.
+    </div>
+  </div>
+</div>""", unsafe_allow_html=True)
     else:
         # KPI
         c = st.columns(5)
@@ -1676,9 +1710,20 @@ with tab1:
   </div>
 
   <!-- Footer -->
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--border2)">
-    <span style="font-size:9px;color:var(--txt4)">Educational purposes only &nbsp;·&nbsp; Not SEBI advice &nbsp;·&nbsp; Model v2.0</span>
-    <a href="{s['tv_link']}" target="_blank" style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;
+    padding-top:10px;border-top:1px solid var(--border2);flex-wrap:wrap;gap:6px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="font-size:9px;color:var(--txt4)">Educational purposes only · Not SEBI advice · Model v2.0</span>
+      {('<span style="font-size:8px;padding:2px 8px;background:rgba(245,158,11,.1);color:#f59e0b;'
+        'border:1px solid rgba(245,158,11,.3);border-radius:4px;font-family:var(--font-mono);'
+        'font-weight:700">WATCH GRADE</span>') if s.get("fallback") else ""}
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      {(f'<span style="font-size:9px;color:var(--txt3);font-family:var(--font-mono)">'
+         f'Scanned {s["scanned_at"]}</span>') if s.get("scanned_at") else ""}
+      <a href="{s['tv_link']}" target="_blank"
+        style="color:var(--accent);font-size:11px;font-weight:700;text-decoration:none">Chart →</a>
+    </div>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -2767,7 +2812,7 @@ with tab_mb:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB OHL — OPEN=HIGH / OPEN=LOW INTRADAY SCREENER (Nifty 200 · 15m first candle)
+# TAB OHL — OPEN=HIGH / OPEN=LOW INTRADAY SCREENER (Nifty 500 · 15m first candle)
 # ══════════════════════════════════════════════════════════════════════════════
 with tab_ohl:
     _now_ist_ohl = datetime.now(IST)
@@ -2778,17 +2823,21 @@ with tab_ohl:
   <div>
     <div style="font-size:22px;font-weight:900;color:var(--txt);letter-spacing:-.03em;font-family:var(--font-sans)">OHL / OLL Screener</div>
     <div style="font-size:11px;color:var(--txt3);margin-top:4px;font-family:var(--font-mono)">
-      Nifty 200 &nbsp;·&nbsp; First 15-min candle (9:15 AM IST) &nbsp;·&nbsp; 1H RSI filter
+      <span class="live"></span>&nbsp; Nifty 500 &nbsp;·&nbsp; First 15-min candle (9:15 AM IST) &nbsp;·&nbsp; 1H RSI filter &nbsp;·&nbsp; Range coil detection
     </div>
   </div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap">
-    <div style="background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:8px 14px;font-size:11px;font-family:var(--font-mono)">
-      <span style="color:var(--txt3)">OLL (Bullish)</span> &nbsp;
-      <span style="color:var(--green);font-weight:800">Open = Low &nbsp;·&nbsp; 1H RSI ≥ 46</span>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <div style="background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-family:var(--font-mono)">
+      <span style="color:var(--txt3)">OLL Bullish</span>&nbsp;
+      <span style="color:var(--green);font-weight:800">O=L · RSI≥46</span>
     </div>
-    <div style="background:rgba(255,59,59,.06);border:1px solid rgba(255,59,59,.2);border-radius:8px;padding:8px 14px;font-size:11px;font-family:var(--font-mono)">
-      <span style="color:var(--txt3)">OHL (Bearish)</span> &nbsp;
-      <span style="color:var(--red);font-weight:800">Open = High &nbsp;·&nbsp; 1H RSI ≤ 54</span>
+    <div style="background:rgba(255,59,59,.05);border:1px solid rgba(255,59,59,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-family:var(--font-mono)">
+      <span style="color:var(--txt3)">OHL Bearish</span>&nbsp;
+      <span style="color:var(--red);font-weight:800">O=H · RSI≤54</span>
+    </div>
+    <div style="background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.3);border-radius:8px;padding:7px 12px;font-size:10px;font-family:var(--font-mono)">
+      <span style="color:#a5b4fc;font-weight:800">⊡ RANGE ≤1%</span>&nbsp;
+      <span style="color:var(--txt3)">Coil → breakout</span>
     </div>
   </div>
 </div>
@@ -2798,25 +2847,22 @@ with tab_ohl:
         st.markdown("""
 <div style="text-align:center;padding:48px 0">
   <div style="font-size:32px">🕐</div>
-  <div style="font-size:14px;color:var(--txt2);margin-top:10px;font-family:var(--font-mono)">
-    Market opens at 9:15 AM IST
-  </div>
-  <div style="font-size:11px;color:var(--txt3);margin-top:6px">
-    First 15-min candle closes at 9:30 AM — screener activates then
-  </div>
+  <div style="font-size:14px;color:var(--txt2);margin-top:10px;font-family:var(--font-mono)">Market opens 9:15 AM IST</div>
+  <div style="font-size:11px;color:var(--txt3);margin-top:6px">First 15-min candle closes at 9:30 AM — screener activates then</div>
 </div>
 """, unsafe_allow_html=True)
     else:
-        _scan_ts = _now_ist_ohl.strftime("%I:%M %p IST")
+        _scan_ts = _now_ist_ohl.strftime("%d %b %I:%M %p IST")
+        _scan_gmt = (_now_ist_ohl.utctimetuple())
         col_ref, col_btn = st.columns([5, 1])
         with col_ref:
-            st.markdown(f'<div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono);padding-top:8px"><span class="live"></span> Scanning Nifty 200 · First candle 9:15 AM · Cached 15 min · As of {_scan_ts}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="font-size:10px;color:var(--txt3);font-family:var(--font-mono);padding-top:8px"><span class="live"></span> Nifty 500 · First candle 9:15 AM · Cached 15 min · {_scan_ts}</div>', unsafe_allow_html=True)
         with col_btn:
-            if st.button("↺ Rescan", use_container_width=True):
+            if st.button("↺ Rescan", use_container_width=True, key="ohl_rescan"):
                 st.cache_data.clear()
                 st.rerun()
 
-        with st.spinner("Scanning Nifty 200 for OHL / OLL setups… (first run ~30s)"):
+        with st.spinner("Scanning Nifty 500 for OHL / OLL setups… (~45s first run)"):
             _ohl_results = _ohl_oll_scan()
 
         if not _ohl_results:
@@ -2824,171 +2870,203 @@ with tab_ohl:
 <div style="text-align:center;padding:48px 0">
   <div style="font-size:28px">🔍</div>
   <div style="font-size:13px;color:var(--txt2);margin-top:10px;font-family:var(--font-mono)">No OHL / OLL setups found today</div>
-  <div style="font-size:10px;color:var(--txt3);margin-top:6px">All 200 stocks checked · RSI filter applied</div>
+  <div style="font-size:10px;color:var(--txt3);margin-top:6px">500 stocks scanned · 0.02% tolerance · RSI filter applied</div>
 </div>
 """, unsafe_allow_html=True)
         else:
-            _oll = [r for r in _ohl_results if r["type"] == "OLL"]
+            _oll      = [r for r in _ohl_results if r["type"] == "OLL"]
             _ohl_list = [r for r in _ohl_results if r["type"] == "OHL"]
 
-            _oll_active    = [r for r in _oll      if not r["broken"]]
-            _oll_broken    = [r for r in _oll      if r["broken"]]
-            _ohl_active    = [r for r in _ohl_list if not r["broken"]]
-            _ohl_broken    = [r for r in _ohl_list if r["broken"]]
-            _total_active  = len(_oll_active) + len(_ohl_active)
-            _total_broken  = len(_oll_broken) + len(_ohl_broken)
+            _oll_active  = [r for r in _oll      if not r["broken"]]
+            _oll_broken  = [r for r in _oll      if r["broken"]]
+            _ohl_active  = [r for r in _ohl_list if not r["broken"]]
+            _ohl_broken  = [r for r in _ohl_list if r["broken"]]
+            _range_oll   = [r for r in _oll_active  if r.get("range_alert")]
+            _range_ohl   = [r for r in _ohl_active  if r.get("range_alert")]
+            _total_range = len(_range_oll) + len(_range_ohl)
+            _total_active = len(_oll_active) + len(_ohl_active)
+            _total_broken = len(_oll_broken) + len(_ohl_broken)
 
             # Summary metrics
             st.markdown(f"""
-<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--green);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OLL Active</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--green)">{len(_oll_active)}</div>
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--green);border-radius:8px;padding:12px 14px">
+    <div style="font-size:7px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:5px">OLL Active</div>
+    <div style="font-size:26px;font-weight:900;font-family:var(--font-mono);color:var(--green)">{len(_oll_active)}</div>
   </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">OHL Active</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--red)">{len(_ohl_active)}</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--red);border-radius:8px;padding:12px 14px">
+    <div style="font-size:7px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:5px">OHL Active</div>
+    <div style="font-size:26px;font-weight:900;font-family:var(--font-mono);color:var(--red)">{len(_ohl_active)}</div>
   </div>
-  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">Active Total</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--accent)">{_total_active}</div>
+  <div style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.25);border-top:2px solid #6366f1;border-radius:8px;padding:12px 14px">
+    <div style="font-size:7px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:5px">⊡ Range Coil</div>
+    <div style="font-size:26px;font-weight:900;font-family:var(--font-mono);color:#a5b4fc">{_total_range}</div>
   </div>
-  <div style="background:var(--bg2);border:1px solid rgba(255,170,0,.3);border-top:2px solid var(--amber);border-radius:8px;padding:12px 18px;min-width:130px">
-    <div style="font-size:8px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:6px">⚡ Broken</div>
-    <div style="font-size:28px;font-weight:800;font-family:var(--font-mono);color:var(--amber)">{_total_broken}</div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--accent);border-radius:8px;padding:12px 14px">
+    <div style="font-size:7px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:5px">Total Active</div>
+    <div style="font-size:26px;font-weight:900;font-family:var(--font-mono);color:var(--accent)">{_total_active}</div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid rgba(255,170,0,.3);border-top:2px solid var(--amber);border-radius:8px;padding:12px 14px">
+    <div style="font-size:7px;font-weight:700;color:var(--txt3);letter-spacing:.12em;text-transform:uppercase;font-family:var(--font-mono);margin-bottom:5px">⚡ Broken</div>
+    <div style="font-size:26px;font-weight:900;font-family:var(--font-mono);color:var(--amber)">{_total_broken}</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-            def _render_ohl_cards(items, sig_type, broken=False):
-                if broken:
-                    border_col = "var(--amber)"
-                    badge_bg   = "rgba(255,170,0,.08)"
-                    badge_col  = "var(--amber)"
+            def _render_ohl_cards(items, sig_type, broken=False, range_only=False):
+                if range_only:
+                    border_col    = "#6366f1"
+                    badge_bg      = "rgba(99,102,241,.09)"
+                    badge_col     = "#a5b4fc"
+                    section_label = f"⊡ RANGE COIL — INTRADAY BREAKOUT WATCH ({len(items)} stocks)"
+                    section_desc  = "Pattern active · Day range ≤ 1% of open · Price coiling → high-probability intraday breakout"
+                elif broken:
+                    border_col    = "var(--amber)"
+                    badge_bg      = "rgba(255,170,0,.08)"
+                    badge_col     = "var(--amber)"
                     section_label = f"{sig_type} — ⚡ BROKEN ({len(items)} stocks)"
                     section_desc  = "Pattern violated intraday — open level breached"
                 elif sig_type == "OLL":
-                    border_col = "var(--green)"
-                    badge_bg   = "rgba(0,255,136,.08)"
-                    badge_col  = "var(--green)"
+                    border_col    = "var(--green)"
+                    badge_bg      = "rgba(0,255,136,.08)"
+                    badge_col     = "var(--green)"
                     section_label = f"OLL — BULLISH · LONG BIAS ({len(items)} stocks)"
-                    section_desc  = "Open = Low · 1H RSI ≥ 46 · price held above open"
+                    section_desc  = "Open = Low · 1H RSI ≥ 46 · price holding above open"
                 else:
-                    border_col = "var(--red)"
-                    badge_bg   = "rgba(255,59,59,.07)"
-                    badge_col  = "var(--red)"
+                    border_col    = "var(--red)"
+                    badge_bg      = "rgba(255,59,59,.07)"
+                    badge_col     = "var(--red)"
                     section_label = f"OHL — BEARISH · SHORT BIAS ({len(items)} stocks)"
                     section_desc  = "Open = High · 1H RSI ≤ 54 · price only fell from open"
 
                 st.markdown(
                     f'<div style="font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;'
-                    f'letter-spacing:.14em;margin:20px 0 10px;font-family:var(--font-mono);'
-                    f'border-left:3px solid {border_col};padding-left:8px">'
-                    f'{section_label}</div>'
+                    f'letter-spacing:.14em;margin:20px 0 6px;font-family:var(--font-mono);'
+                    f'border-left:3px solid {border_col};padding-left:8px">{section_label}</div>'
                     f'<div style="font-size:9px;color:var(--txt3);font-family:var(--font-mono);margin-bottom:10px">{section_desc}</div>',
                     unsafe_allow_html=True
                 )
                 if not items:
-                    st.markdown(f'<div style="font-size:11px;color:var(--txt3);padding:4px 0 12px;font-family:var(--font-mono)">None</div>', unsafe_allow_html=True)
+                    st.markdown('<div style="font-size:11px;color:var(--txt3);padding:4px 0 12px;font-family:var(--font-mono)">None</div>', unsafe_allow_html=True)
                     return
 
                 for r in items:
-                    sym      = r["symbol"]
-                    rsi      = r["rsi_1h"]
-                    o        = r["open"]; h = r["high"]; l = r["low"]
-                    c1       = r["close_1c"]; price = r["price"]
-                    day_low  = r.get("day_low", l)
-                    day_high = r.get("day_high", h)
-                    chg_pct  = ((price - o) / o * 100) if o > 0 else 0
-                    chg_col  = "var(--green)" if chg_pct >= 0 else "var(--red)"
-                    rsi_bar  = min(100, rsi)
-                    rsi_col  = "#00ff88" if rsi >= 55 else "#ffaa00" if rsi >= 46 else "#ff3b3b"
-                    tv_link  = f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+                    sym     = r["symbol"]
+                    rsi_v   = r["rsi_1h"]
+                    o       = r["open"]; h = r["high"]; l = r["low"]
+                    price   = r["price"]
+                    day_low = r.get("day_low", l)
+                    day_high= r.get("day_high", h)
+                    drng    = r.get("day_range_pct", 99)
+                    chg_pct = ((price - o) / o * 100) if o > 0 else 0
+                    chg_col = "var(--green)" if chg_pct >= 0 else "var(--red)"
+                    rsi_col = "#00ff88" if rsi_v >= 55 else "#ffaa00" if rsi_v >= 46 else "#ff3b3b"
+                    tv_link = f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
+                    ra      = r.get("range_alert", False)
 
-                    # Broken: show how far open was violated
+                    # Range coil badge
+                    range_badge = (
+                        '<span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;'
+                        'font-size:8px;font-weight:800;background:rgba(99,102,241,.12);color:#a5b4fc;'
+                        'border:1px solid rgba(99,102,241,.35);letter-spacing:.05em">⊡ RANGE ≤1%</span>'
+                    ) if ra else ""
+
+                    status_badge = (
+                        '<span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;'
+                        'font-size:8px;font-weight:800;background:rgba(255,170,0,.1);color:var(--amber);'
+                        'border:1px solid rgba(255,170,0,.3);letter-spacing:.05em">⚡ BROKEN</span>'
+                        if broken else
+                        f'<span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;'
+                        f'font-size:8px;font-weight:800;background:{badge_bg};color:{badge_col};'
+                        f'border:1px solid {badge_col}44;letter-spacing:.05em">{sig_type} ✓</span>'
+                    )
+
                     broken_detail = ""
                     if broken:
                         if sig_type == "OLL":
-                            breach = round(o - day_low, 2)
-                            breach_pct = round(breach / o * 100, 2)
-                            broken_detail = f'<div style="background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.2);border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:11px;font-family:var(--font-mono);color:var(--amber)">⚡ BROKEN — Day low ₹{day_low} went <b>{breach_pct}% below open ₹{o}</b></div>'
+                            bp = round((o - day_low) / o * 100, 2)
+                            broken_detail = f'<div style="background:rgba(255,170,0,.06);border:1px solid rgba(255,170,0,.2);border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:10px;font-family:var(--font-mono);color:var(--amber)">⚡ Day low ₹{day_low} = <b>{bp}% below open ₹{o}</b></div>'
                         else:
-                            breach = round(day_high - o, 2)
-                            breach_pct = round(breach / o * 100, 2)
-                            broken_detail = f'<div style="background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.2);border-radius:6px;padding:6px 12px;margin-bottom:10px;font-size:11px;font-family:var(--font-mono);color:var(--amber)">⚡ BROKEN — Day high ₹{day_high} went <b>{breach_pct}% above open ₹{o}</b></div>'
+                            bp = round((day_high - o) / o * 100, 2)
+                            broken_detail = f'<div style="background:rgba(255,170,0,.06);border:1px solid rgba(255,170,0,.2);border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:10px;font-family:var(--font-mono);color:var(--amber)">⚡ Day high ₹{day_high} = <b>{bp}% above open ₹{o}</b></div>'
 
-                    card_opacity = "opacity:.65;" if broken else ""
-                    status_badge = (
-                        f'<span style="display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;'
-                        f'font-size:9px;font-weight:800;background:rgba(255,170,0,.1);color:var(--amber);'
-                        f'border:1px solid rgba(255,170,0,.3);letter-spacing:.06em">⚡ BROKEN</span>'
-                        if broken else
-                        f'<span style="display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;'
-                        f'font-size:9px;font-weight:800;background:{badge_bg};color:{badge_col};'
-                        f'border:1px solid {badge_col}44;letter-spacing:.06em">{sig_type} ✓ ACTIVE</span>'
-                    )
+                    range_info = ""
+                    if ra and not broken:
+                        direction = "Long above" if sig_type == "OLL" else "Short below"
+                        range_info = (
+                            f'<div style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);'
+                            f'border-radius:6px;padding:8px 12px;margin-bottom:10px;font-family:var(--font-mono)">'
+                            f'<div style="font-size:9px;font-weight:800;color:#a5b4fc;margin-bottom:4px">⊡ INTRADAY RANGE TRADE</div>'
+                            f'<div style="font-size:10px;color:var(--txt3)">Day range: <b style="color:#a5b4fc">{drng:.2f}%</b> · Price coiling within open level</div>'
+                            f'<div style="font-size:10px;color:var(--txt3);margin-top:3px">{direction} ₹<b style="color:var(--txt)">{o}</b> · SL inside range · Target = range expansion</div>'
+                            f'</div>'
+                        )
 
                     st.markdown(f"""
-<div class="card" style="border-left-color:{border_col};margin-bottom:10px;{card_opacity}">
+<div class="card" style="border-left-color:{border_col};margin-bottom:10px;{"opacity:.65;" if broken else ""}">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
     <div>
       <span style="font-size:18px;font-weight:900;color:var(--txt);font-family:var(--font-mono)">{sym}</span>
-      {status_badge}
+      {status_badge}{range_badge}
     </div>
     <div style="text-align:right">
       <div style="font-size:16px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{price}</div>
       <div style="font-size:11px;font-weight:700;color:{chg_col}">{chg_pct:+.2f}% from open</div>
     </div>
   </div>
-
-  {broken_detail}
-
-  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px">
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Open</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--txt)">₹{o}</div>
+  {broken_detail}{range_info}
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:12px">
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 8px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:2px">Open</div>
+      <div style="font-size:12px;font-weight:800;font-family:var(--font-mono)">₹{o}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">1st High</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--green)">₹{h}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 8px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:2px">1st H</div>
+      <div style="font-size:12px;font-weight:800;font-family:var(--font-mono);color:var(--green)">₹{h}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">1st Low</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:var(--red)">₹{l}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 8px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:2px">1st L</div>
+      <div style="font-size:12px;font-weight:800;font-family:var(--font-mono);color:var(--red)">₹{l}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Day Low</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{'var(--amber)' if broken and sig_type=='OLL' else 'var(--txt)'}">₹{day_low}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 8px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:2px">Day L</div>
+      <div style="font-size:12px;font-weight:800;font-family:var(--font-mono);color:{'var(--amber)' if broken and sig_type=='OLL' else 'var(--txt)'}">₹{day_low}</div>
     </div>
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 9px">
-      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:3px">Day High</div>
-      <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{'var(--amber)' if broken and sig_type=='OHL' else 'var(--txt)'}">₹{day_high}</div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 8px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:2px">Day H</div>
+      <div style="font-size:12px;font-weight:800;font-family:var(--font-mono);color:{'var(--amber)' if broken and sig_type=='OHL' else 'var(--txt)'}">₹{day_high}</div>
+    </div>
+    <div style="background:{"rgba(99,102,241,.08)" if ra else "var(--bg3)"};border:1px solid {"rgba(99,102,241,.25)" if ra else "var(--border)"};border-radius:6px;padding:7px 8px">
+      <div style="font-size:7px;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-mono);margin-bottom:2px">Range</div>
+      <div style="font-size:12px;font-weight:800;font-family:var(--font-mono);color:{"#a5b4fc" if ra else "var(--txt)"}">{drng:.2f}%</div>
     </div>
   </div>
-
   <div style="display:flex;align-items:center;gap:12px">
-    <div style="font-size:9px;font-weight:700;color:var(--txt3);font-family:var(--font-mono);min-width:50px">1H RSI</div>
-    <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
-      <div style="width:{rsi_bar:.0f}%;height:100%;background:{rsi_col};border-radius:3px"></div>
+    <div style="font-size:9px;font-weight:700;color:var(--txt3);font-family:var(--font-mono);min-width:46px">1H RSI</div>
+    <div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden">
+      <div style="width:{min(100,rsi_v):.0f}%;height:100%;background:{rsi_col};border-radius:3px"></div>
     </div>
-    <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{rsi_col};min-width:36px;text-align:right">{rsi}</div>
+    <div style="font-size:13px;font-weight:800;font-family:var(--font-mono);color:{rsi_col};min-width:34px;text-align:right">{rsi_v}</div>
     <a href="{tv_link}" target="_blank"
        style="font-size:10px;font-weight:700;color:var(--accent);text-decoration:none;
-              padding:3px 10px;border:1px solid rgba(0,255,136,.25);border-radius:4px;white-space:nowrap">
-      TV ↗
-    </a>
+              padding:3px 9px;border:1px solid rgba(0,255,136,.25);border-radius:4px">TV ↗</a>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
+            # ── Range coil section first (highest priority for intraday) ────
+            if _range_oll or _range_ohl:
+                _render_ohl_cards(_range_oll + _range_ohl, "OLL", broken=False, range_only=True)
+                st.markdown('<hr style="border-color:var(--border);margin:4px 0 8px">', unsafe_allow_html=True)
+
             _render_ohl_cards(_oll_active,  "OLL", broken=False)
             _render_ohl_cards(_ohl_active,  "OHL", broken=False)
             if _oll_broken or _ohl_broken:
-                st.markdown('<hr style="border-color:rgba(255,170,0,.2);margin:8px 0">', unsafe_allow_html=True)
+                st.markdown('<hr style="border-color:rgba(255,170,0,.15);margin:8px 0">', unsafe_allow_html=True)
                 _render_ohl_cards(_oll_broken, "OLL", broken=True)
                 _render_ohl_cards(_ohl_broken, "OHL", broken=True)
 
-            st.markdown('<div style="font-size:9px;color:var(--txt3);margin-top:16px;font-family:var(--font-mono)">Tolerance: 0.02% (~1-2 ticks) · Universe: Nifty 200 · Broken = day low/high violated open · Data: Yahoo Finance · Not SEBI advice</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-size:9px;color:var(--txt3);margin-top:16px;font-family:var(--font-mono)">Tolerance 0.02% · Universe Nifty 500 · Range≤1% = coil breakout watch · Data Yahoo Finance · Not SEBI advice</div>', unsafe_allow_html=True)
 
 
 # TAB 7 — HISTORY (all signals ever sent — permanent record)

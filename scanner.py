@@ -18,6 +18,26 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(message)s"
 )
 
+# NSE trading holidays 2026 (dd-mm-yyyy)
+_NSE_HOLIDAYS_2026 = {
+    "26-01-2026","19-02-2026","06-03-2026","31-03-2026","02-04-2026",
+    "06-04-2026","10-04-2026","14-04-2026","01-05-2026","25-05-2026",
+    "15-08-2026","28-08-2026","02-10-2026","24-10-2026","14-11-2026",
+    "25-12-2026",
+}
+
+def is_trading_day(dt=None):
+    """Returns True if dt (default=today IST) is a valid NSE trading day."""
+    import pytz
+    from datetime import datetime as _dt
+    _IST = pytz.timezone("Asia/Kolkata")
+    if dt is None:
+        dt = _dt.now(_IST)
+    if dt.weekday() >= 5:        # Saturday=5, Sunday=6
+        return False
+    key = dt.strftime("%d-%m-%Y")
+    return key not in _NSE_HOLIDAYS_2026
+
 NIFTY500_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
 NIFTY500_CACHE   = "cache/nifty500.csv"
 NIFTY200_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty200list.csv"
@@ -296,12 +316,10 @@ def load_nifty200():
 
 def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
     """
-    Open=High (OHL, bearish) / Open=Low (OLL, bullish) screener on Nifty 200.
-    Uses first 15-min candle (9:15 AM IST). Tolerance: 0.02% (~1-2 ticks).
-    RSI filter on 1h: OLL requires RSI >= 46, OHL requires RSI <= 54.
-    Broken status:
-      OLL broken if any intraday candle's low < first_candle_open
-      OHL broken if any intraday candle's high > first_candle_open
+    Open=High (OHL, bearish) / Open=Low (OLL, bullish) screener on Nifty 500.
+    First 15-min candle (9:15 AM IST). Tolerance: 0.02%. RSI 1h filter.
+    Broken: price violates open level any candle after first.
+    Range Alert: active + intraday range ≤ 1% of open → coiling setup.
     Returns [] before 9:30 AM IST.
     """
     import pytz
@@ -311,7 +329,7 @@ def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
     if now.hour < 9 or (now.hour == 9 and now.minute < 30):
         return []
 
-    symbols = load_nifty200()
+    symbols = load_nifty500()
     tol = tolerance_pct / 100
 
     # ── Batch download 15m ──────────────────────────────────────────────────
@@ -397,8 +415,17 @@ def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
                     continue
                 if cand["type"] == "OHL" and rsi_val > 54:
                     continue
-            results.append({**cand, "rsi_1h": round(rsi_val, 1),
-                            "symbol": sym.replace(".NS", "")})
+            # Range alert: active + intraday range ≤ 1% of open → coiling
+            day_range_pct = ((cand["day_high"] - cand["day_low"]) / cand["open"] * 100
+                             if cand["open"] > 0 else 99)
+            range_alert = (not cand["broken"]) and day_range_pct <= 1.0
+            results.append({
+                **cand,
+                "rsi_1h":        round(rsi_val, 1),
+                "symbol":        sym.replace(".NS", ""),
+                "range_alert":   range_alert,
+                "day_range_pct": round(day_range_pct, 2),
+            })
         except Exception:
             continue
 
@@ -887,8 +914,13 @@ def analyze_stock(symbol, nifty_ret=0.0):
 
 
 def scan_all(min_score=None):
+    import pytz
+    from datetime import datetime as _dt
     from tracker import is_duplicate
     from config import MIN_RR
+    _IST = pytz.timezone("Asia/Kolkata")
+    scan_ts = _dt.now(_IST).strftime("%d %b %Y %I:%M %p IST")
+
     universe   = load_nifty500()
     min_score  = min_score or MIN_SIGNAL_SCORE
     nifty_ret  = get_nifty50_return()
@@ -899,7 +931,6 @@ def scan_all(min_score=None):
         for f in as_completed(futures):
             r = f.result()
             if r and r["score"] >= min_score:
-                # Quality gate: minimum RR filter
                 rr = r.get("rr2") or r.get("rr1") or 0
                 if rr < MIN_RR:
                     continue
@@ -907,7 +938,6 @@ def scan_all(min_score=None):
 
     raw.sort(key=lambda x: x["score"], reverse=True)
 
-    # Deduplication: skip active trades, keep best signal per symbol, max 5 (quality)
     results      = []
     seen_symbols = set()
     for sig in raw:
@@ -916,10 +946,20 @@ def scan_all(min_score=None):
             continue
         if is_duplicate(sym_clean, "swing"):
             continue
+        sig["scanned_at"] = scan_ts
         results.append(sig)
         seen_symbols.add(sym_clean)
-        if len(results) >= 8:   # max 8 top-quality signals (expert grade)
+        if len(results) >= 8:
             break
+
+    # Fallback: if strict criteria yielded 0, relax score by 15% and take top 2
+    if not results and raw:
+        raw.sort(key=lambda x: x["score"], reverse=True)
+        for sig in raw[:2]:
+            sym_clean = sig["symbol"].replace(".NS", "")
+            sig["scanned_at"]  = scan_ts
+            sig["fallback"]    = True   # flag for display
+            results.append(sig)
 
     logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks "
                  f"(score≥{min_score}, RR≥{MIN_RR})")
