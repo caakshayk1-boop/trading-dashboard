@@ -54,7 +54,7 @@ jobs:
       - name: Install core dependencies
         run: |
           pip install --upgrade pip
-          pip install yfinance pandas numpy ta requests pytz
+          pip install "yfinance>=0.2.40" pandas numpy ta requests pytz requests-cache multitasking
 
       - name: Install optional dependencies
         run: |

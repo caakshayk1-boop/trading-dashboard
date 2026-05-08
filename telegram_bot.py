@@ -100,6 +100,19 @@ def handle_command(text, chat_id):
     from tracker import get_active_signals, get_performance, mute_asset
     text = text.strip()
 
+    if text.startswith("/vercel"):
+        from vercel_signals import get_vercel_report
+        parts = text.split()
+        sub = parts[1].lower() if len(parts) > 1 else "incremental"
+        if sub == "all":
+            msg = get_vercel_report("all")
+        elif sub == "ohl":
+            msg = get_vercel_report("ohl")
+        else:
+            msg = get_vercel_report("incremental")
+        _post(msg, chat_id)
+        return
+
     if text.startswith("/start"):
         _post(
             "👋 *Nifty 500 Swing Scanner*\n\n"
@@ -108,6 +121,10 @@ def handle_command(text, chat_id):
             "/performance — win rate & stats\n"
             "/mute SYMBOL — stop alerts for a stock\n"
             "/stats — scanner health\n\n"
+            "*TradeFlow Pro (Vercel):*\n"
+            "/vercel — new signals since last check\n"
+            "/vercel all — everything generated today\n"
+            "/vercel ohl — OHL/OLL setups only\n\n"
             "Scans run: 9:30 AM | 2:00 PM | 5:30 PM IST (Mon–Fri)",
             chat_id
         )
@@ -190,3 +207,16 @@ def start_command_polling():
 
     t = threading.Thread(target=_poll, daemon=True)
     t.start()
+
+
+if __name__ == "__main__":
+    import time
+    print("🤖 Bot starting — polling for commands...")
+    test_connection()
+    start_command_polling()
+    print("✅ Polling active. Send /start in Telegram.")
+    try:
+        while True:
+            time.sleep(60)
+    except KeyboardInterrupt:
+        print("Bot stopped.")

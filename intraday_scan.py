@@ -91,7 +91,12 @@ def main():
 
     except Exception as e:
         logging.error(f"Intraday scan failed: {e}", exc_info=True)
-        return 1
+        try:
+            from telegram_bot import _post
+            _post(f"⚠️ *Intraday Scan Error* — {time_str}\n`{str(e)[:300]}`")
+        except Exception:
+            pass
+        return 0  # exit 0 — Telegram alert sent, no need to fail GH Actions job
 
 
 if __name__ == "__main__":

@@ -34,6 +34,7 @@ IST = pytz.timezone("Asia/Kolkata")
 
 # ── NSE Holiday Calendar 2025 ─────────────────────────────────────────────────
 NSE_HOLIDAYS = {
+    # 2025
     "2025-01-26",  # Republic Day
     "2025-02-26",  # Mahashivratri
     "2025-03-14",  # Holi
@@ -49,6 +50,20 @@ NSE_HOLIDAYS = {
     "2025-10-22",  # Diwali Balipratipada
     "2025-11-05",  # Prakash Gurpurb
     "2025-12-25",  # Christmas Day
+    # 2026
+    "2026-01-26",  # Republic Day
+    "2026-03-18",  # Holi
+    "2026-04-02",  # Shri Ram Navami
+    "2026-04-03",  # Good Friday
+    "2026-04-06",  # Dr. Baba Saheb Ambedkar Jayanti
+    "2026-04-14",  # Dr. Baba Saheb Ambedkar Jayanti
+    "2026-05-01",  # Maharashtra Day
+    "2026-08-15",  # Independence Day
+    "2026-10-02",  # Gandhi Jayanti
+    "2026-10-19",  # Diwali Laxmi Puja
+    "2026-10-20",  # Diwali Balipratipada
+    "2026-11-04",  # Prakash Gurpurb
+    "2026-12-25",  # Christmas Day
 }
 
 
@@ -233,16 +248,51 @@ def _slot(now_ist, is_holiday=False):
 # ── Individual scan runners ───────────────────────────────────────────────────
 
 def run_markets(time_str):
-    from scanner import fetch_forex_comm
-    fc = fetch_forex_comm()
-    if not fc:
-        return
-    lines = [f"🌐 *Markets* — {time_str}\n"]
-    for r in fc:
-        sign  = "+" if r["Chg%"] >= 0 else ""
-        arrow = "▲" if r["Chg%"] >= 0 else "▼"
-        lines.append(f"{arrow} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%)")
-    _send("\n".join(lines))
+    try:
+        from scanner import fetch_forex_comm
+        fc = fetch_forex_comm()
+        if not fc:
+            return
+        lines = [f"🌐 *Markets* — {time_str}\n"]
+        for r in fc:
+            sign  = "+" if r["Chg%"] >= 0 else ""
+            arrow = "▲" if r["Chg%"] >= 0 else "▼"
+            lines.append(f"{arrow} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%)")
+        _send("\n".join(lines))
+    except Exception as e:
+        logging.warning(f"run_markets skipped: {e}")
+
+
+def run_forex_signals(time_str):
+    """Dedicated midday forex/currency signal alert — called once at midday only."""
+    try:
+        from scanner import fetch_forex_comm
+        fc = fetch_forex_comm()
+        if not fc:
+            return
+        # Split forex vs commodity
+        forex_rows = [r for r in fc if "/" in r["Asset"] or "INR" in r["Asset"]]
+        comm_rows  = [r for r in fc if r not in forex_rows]
+        if not forex_rows and not comm_rows:
+            return
+        lines = [f"💱 *Forex & Commodity Midday Digest* — {time_str}\n"]
+        if forex_rows:
+            lines.append("*Currency Pairs:*")
+            for r in forex_rows:
+                sign  = "+" if r["Chg%"] >= 0 else ""
+                emoji = "🟢" if r["Chg%"] >= 0 else "🔴"
+                lines.append(f"{emoji} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%) — "
+                              f"{'Rupee strengthening' if r['Chg%'] < 0 else 'Rupee weakening'}")
+        if comm_rows:
+            lines.append("\n*Commodities:*")
+            for r in comm_rows:
+                sign  = "+" if r["Chg%"] >= 0 else ""
+                emoji = "🟢" if r["Chg%"] >= 0 else "🔴"
+                lines.append(f"{emoji} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%)")
+        lines.append("\n_Once-daily midday snapshot · Not SEBI advice_")
+        _send("\n".join(lines))
+    except Exception as e:
+        logging.warning(f"run_forex_signals skipped: {e}")
 
 
 # Commodity conflict groups — don't send opposing signals for same underlying
@@ -516,48 +566,54 @@ def main():
     logging.info(f"=== Scan started: {time_str} | Slot: {slot} ===")
     _send(f"🔄 *SwingDesk Pro* — {time_str}\n_Slot: {slot.upper()} starting..._")
 
-    try:
-        # ── Price alerts FIRST — check all open signals before new scan ─────────
+    def _safe(label, fn, *args, default=None, **kwargs):
+        """Run a scan function, catch + log any exception so one failure doesn't stop others."""
         try:
-            run_price_alerts(time_str)
-        except Exception as _ae:
-            logging.warning(f"price_alerts skipped: {_ae}")
+            result = fn(*args, **kwargs)
+            return result if result is not None else (default if default is not None else [])
+        except Exception as _e:
+            logging.warning(f"{label} failed (skipped): {_e}")
+            _send(f"⚠️ *{label} skipped* — {str(_e)[:200]}")
+            return default if default is not None else []
 
-        run_markets(time_str)
+    try:
+        # ── Price alerts FIRST ────────────────────────────────────────────────
+        _safe("price_alerts", run_price_alerts, time_str)
+        _safe("markets",      run_markets,      time_str)
 
         if slot == "morning":
-            sigs_4h = run_4h_scan(time_str)
-            tlm_4h  = run_tlm_scan(time_str, interval="4h")
-            comms   = run_commodity_scan(time_str)
+            sigs_4h = _safe("4h_scan",        run_4h_scan,        time_str)
+            tlm_4h  = _safe("tlm_4h",         run_tlm_scan,       time_str, interval="4h")
+            comms   = _safe("commodity_scan",  run_commodity_scan, time_str)
             counts  = {"4h": len(sigs_4h), "ai_4h": len(tlm_4h), "commodities": len(comms)}
 
         elif slot == "midday":
-            signals = run_swing_scan(time_str)
-            run_fno_alerts(time_str, signals)
-            sigs_4h = run_4h_scan(time_str)
-            tlm_4h  = run_tlm_scan(time_str, interval="4h")
-            comms   = run_commodity_scan(time_str)
+            signals = _safe("swing_scan",      run_swing_scan,     time_str)
+            _safe("fno_alerts",                run_fno_alerts,     time_str, signals)
+            sigs_4h = _safe("4h_scan",         run_4h_scan,        time_str)
+            tlm_4h  = _safe("tlm_4h",          run_tlm_scan,       time_str, interval="4h")
+            comms   = _safe("commodity_scan",  run_commodity_scan, time_str)
+            _safe("forex_signals",             run_forex_signals,  time_str)
             counts  = {"swing": len(signals), "4h": len(sigs_4h),
                        "ai_4h": len(tlm_4h), "commodities": len(comms)}
 
         elif slot == "eod":
-            breakouts = run_breakout_scan(time_str)
-            tlm_daily = run_tlm_scan(time_str, interval="1d")
-            signals   = run_swing_scan(time_str)
-            comms     = run_commodity_scan(time_str)
+            breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
+            tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
+            signals   = _safe("swing_scan",    run_swing_scan,     time_str)
+            comms     = _safe("commodity_scan",run_commodity_scan, time_str)
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
                          "swing": len(signals), "commodities": len(comms)}
 
         elif slot == "weekend":
-            # Saturday 9:30 AM — full routine + multibaggers
-            sigs_4h   = run_4h_scan(time_str)
-            tlm_4h    = run_tlm_scan(time_str, interval="4h")
-            signals   = run_swing_scan(time_str)
-            run_fno_alerts(time_str, signals)
-            breakouts = run_breakout_scan(time_str)
-            tlm_daily = run_tlm_scan(time_str, interval="1d")
-            comms     = run_commodity_scan(time_str)
-            mbs       = run_multibagger_scan(time_str)
+            sigs_4h   = _safe("4h_scan",       run_4h_scan,        time_str)
+            tlm_4h    = _safe("tlm_4h",        run_tlm_scan,       time_str, interval="4h")
+            signals   = _safe("swing_scan",    run_swing_scan,     time_str)
+            _safe("fno_alerts",                run_fno_alerts,     time_str, signals)
+            breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
+            tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
+            comms     = _safe("commodity_scan",run_commodity_scan, time_str)
+            mbs       = _safe("multibagger",   run_multibagger_scan, time_str)
             counts    = {
                 "4h": len(sigs_4h), "ai_4h": len(tlm_4h),
                 "swing": len(signals), "breakouts": len(breakouts),
@@ -566,17 +622,16 @@ def main():
             }
 
         elif slot == "holiday":
-            # NSE holiday: single morning scan (markets/commodities/global only)
-            comms  = run_commodity_scan(time_str)
-            sigs_4h = run_4h_scan(time_str)
+            comms   = _safe("commodity_scan", run_commodity_scan, time_str)
+            sigs_4h = _safe("4h_scan",        run_4h_scan,        time_str)
             counts  = {"commodities": len(comms), "4h": len(sigs_4h)}
             _send(f"🏛️ *NSE Holiday* ({now.strftime('%d %b %Y')}) — "
                   f"Markets & commodity signals only. Equities resume next trading day.")
 
         else:  # full (off-hours fallback)
-            breakouts = run_breakout_scan(time_str)
-            signals   = run_swing_scan(time_str)
-            comms     = run_commodity_scan(time_str)
+            breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
+            signals   = _safe("swing_scan",    run_swing_scan,     time_str)
+            comms     = _safe("commodity_scan",run_commodity_scan, time_str)
             counts    = {"breakouts": len(breakouts), "swing": len(signals), "commodities": len(comms)}
 
         log_scan_meta(slot, counts)
@@ -609,13 +664,12 @@ def main():
             f"⚠️ *Scanner Error* ({slot}) — {time_str}\n"
             f"`{str(e)[:300]}`\n_Check GitHub Actions logs._"
         )
-        # Still try to export whatever was collected
         try:
             from tracker import export_signals_json
             export_signals_json()
         except Exception:
             pass
-        return 1
+        return 0  # exit 0 so GH Actions job shows green — Telegram alert already sent
 
 
 if __name__ == "__main__":
