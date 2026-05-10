@@ -61,6 +61,13 @@ def run_scan(slot: str):
 
 
 if __name__ == "__main__":
+    from telegram_bot import start_command_polling, test_connection
+
+    # Start Telegram command polling in background thread
+    start_command_polling()
+    logging.info("Telegram command polling started")
+    test_connection()
+
     scheduler = BlockingScheduler(timezone=IST)
 
     all_slots = set(TRADING_DAY_SLOTS) | set(HOLIDAY_SLOTS)
