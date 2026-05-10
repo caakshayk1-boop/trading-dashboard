@@ -485,6 +485,10 @@ def _tv_btn(link):
     link = (link or "").replace("&", "%26")
     return f'<a href="{link}" target="_blank" style="font-size:11px;font-weight:600;color:#00d09c;text-decoration:none;padding:4px 10px;border:1px solid rgba(0,208,156,.25);border-radius:6px">Chart ↗</a>'
 
+def _md(html: str):
+    """Render HTML stripping blank lines — prevents Markdown treating indented lines as code blocks."""
+    st.markdown('\n'.join(l for l in html.splitlines() if l.strip()), unsafe_allow_html=True)
+
 def _grade(b):
     vol = float(b.get("vol_ratio",1)); rr = float(b.get("rr",1))
     tf  = b.get("timeframe","Daily")
@@ -509,7 +513,7 @@ with st.sidebar:
     _nc    = _rd.get("nifty_change", 0) or 0
     _vix   = _rd.get("vix")
     _nc_col = "#00a87e" if _nc >= 0 else "#e8192c"
-    st.markdown(f"""
+    _md(f"""
 <div style="background:#f7f8fa;border:1px solid #e8eaed;border-radius:12px;padding:14px 16px;margin-bottom:16px">
   <div style="font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Market</div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -525,7 +529,7 @@ with st.sidebar:
     <span style="font-size:11px;font-weight:700;color:#f59e0b">{_reg}</span>
   </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
     # Scan schedule
     _SLOTS = [("9:20 AM","4H + Commodity",9,20),("11:42 AM","Swing + F&O",11,42),("4:30 PM","Breakouts EOD",16,30),("8:00 PM","Multibagger",20,0)]
@@ -566,7 +570,7 @@ except Exception:
     _wr_hdr = 0; _trades_hdr = 0
 
 _mkt_open = 9 <= _now_h < 16
-st.markdown(f"""
+_md(f"""
 <div style="display:flex;align-items:center;justify-content:space-between;
   padding:14px 0 18px;border-bottom:2px solid #e8eaed;margin-bottom:20px;flex-wrap:wrap;gap:10px">
   <div>
@@ -592,7 +596,7 @@ st.markdown(f"""
     </div>
   </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # ─── Disclaimer ───────────────────────────────────────────────────────────────
 st.markdown('<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:8px 14px;font-size:11px;color:#6b7280;margin-bottom:20px">⚠ <b style="color:#9ca3af">Research only.</b> Not SEBI-registered. Not financial advice. Yahoo Finance data (15-min delay). Past performance ≠ future results.</div>', unsafe_allow_html=True)
@@ -672,7 +676,7 @@ with tab_sig:
                 act_cls= "" if action=="BUY" else "sell"
                 act_col= "#00d09c" if action=="BUY" else "#eb5757"
 
-                st.markdown(f"""
+                _md(f"""
 <div class="card {act_cls}">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -698,7 +702,7 @@ with tab_sig:
     <div style="font-size:11px;color:#6b7280">{s.get('reasons','')[:80]}</div>
     {_tv_btn(tv)}
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
         # Trade Planner
         with st.expander("🧮 Trade Planner — Position Sizing"):
@@ -780,7 +784,7 @@ with tab_bo:
             t1     = float(b.get("target1",0))
             t2     = float(b.get("target2",0))
             t3     = float(b.get("target3",t2))
-            st.markdown(f"""
+            _md(f"""
 <div class="card" style="border-left-color:{tfc}">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -806,7 +810,7 @@ with tab_bo:
     {_kv("RR",    f"1:{b.get('rr',0)}", "blue")}
   </div>
   <div style="margin-top:12px">{_tv_btn(tv)}</div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
     # ── 4H Early-Entry Signals ───────────────────────────────────────────────
     st.markdown('<div class="section-title">⚡ 4H Early-Entry · RSI 55 + Volume Surge</div>', unsafe_allow_html=True)
@@ -821,7 +825,7 @@ with tab_bo:
             t2  = float(b.get("target2",0))
             tv4 = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{b['symbol']}"
             fno_b = '<span class="badge fno" style="margin-left:6px">F&O</span>' if b.get("fno") else ""
-            st.markdown(f"""
+            _md(f"""
 <div class="card neutral">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -841,7 +845,7 @@ with tab_bo:
     {_kv("Vol",   f"{b.get('vol_ratio',0)}x", "amber")}
   </div>
   <div style="margin-top:12px">{_tv_btn(tv4)}</div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
     # ── AI Channel Breakouts ─────────────────────────────────────────────────
     st.markdown('<div class="section-title">🤖 AI Channel Breakouts · OLS Regression</div>', unsafe_allow_html=True)
@@ -867,7 +871,7 @@ with tab_bo:
             tf     = b.get("timeframe","4H")
             fno_b  = '<span class="badge fno" style="margin-left:6px">F&O</span>' if b.get("fno") else ""
             tv     = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
-            st.markdown(f"""
+            _md(f"""
 <div class="card" style="border-left-color:#a78bfa">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -888,7 +892,7 @@ with tab_bo:
     {_kv("RR",    f"1:{rr}", "blue")}
   </div>
   <div style="margin-top:12px">{_tv_btn(tv)}</div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
     # ── Commodity Signals ────────────────────────────────────────────────────
     st.markdown('<div class="section-title">🥇 Commodity Signals · Gold / Silver / Crude / Nat Gas</div>', unsafe_allow_html=True)
@@ -921,7 +925,7 @@ with tab_bo:
             sl     = float(b.get("sl",0))
             t1     = float(b.get("target1",0))
             t2     = float(b.get("target2",0))
-            st.markdown(f"""
+            _md(f"""
 <div class="card {'sell' if action=='SELL' else ''}">
   <div style="display:flex;justify-content:space-between;align-items:center">
     <div>
@@ -938,7 +942,7 @@ with tab_bo:
     {_kv("RR",    f"1:{b.get('rr',0)}", "blue")}
     {_kv("RSI",   str(b.get('rsi',0)))}
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -967,7 +971,7 @@ with tab_intra:
                 ivol = s.get("vol_ratio",0) or json.loads(s.get("metadata") or "{}").get("vol_ratio",0)
             except Exception:
                 ivol = 0
-            st.markdown(f"""
+            _md(f"""
 <div class="card" style="border-left-color:#fbbf24">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -986,7 +990,7 @@ with tab_intra:
     {_kv("Vol",   f"{ivol}x", "amber")}
   </div>
   <div style="margin-top:10px;font-size:11px;color:#6b7280">⚠ Exit before 3:15 PM IST · Intraday only</div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1045,7 +1049,7 @@ with tab_fno:
             tv_link  = b.get("tv_link") or f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
             pct_up   = round((t2-p)/p*100,1) if p>0 else 0
 
-            st.markdown(f"""
+            _md(f"""
 <div class="card">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -1071,7 +1075,7 @@ with tab_fno:
     {_tv_btn(tv_link)}
     <a href="{nse_link}" target="_blank" style="font-size:11px;font-weight:600;color:#9ca3af;text-decoration:none;padding:4px 10px;border:1px solid #e8eaed;border-radius:6px">NSE Chain ↗</a>
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
     # Global markets
     st.markdown('<div class="section-title">🌐 Global Markets</div>', unsafe_allow_html=True)
@@ -1256,7 +1260,7 @@ with tab_mf:
                         vc="#00d09c" if v>=0 else "#eb5757"
                         ret_cells+=f'<div class="gw-ret-cell"><div class="gw-ret-period">{p}</div><div class="gw-ret-val" style="color:{vc}">{v:+.1f}%</div></div>'
 
-                st.markdown(f"""
+                _md(f"""
 <div class="gw-fund-card">
   <div class="gw-card-head">
     <div style="flex:1;min-width:0">
@@ -1279,7 +1283,7 @@ with tab_mf:
     <div class="gw-inv-cell"><div class="gw-inv-label">P&L</div><div class="gw-inv-val" style="color:{pnl_col2}">₹{s['pnl']:+,.0f}</div></div>
     <div class="gw-inv-cell"><div class="gw-inv-label">Returns</div><div class="gw-inv-val" style="color:{pnl_col2}">{s['pnl_pct']:+.2f}%</div></div>
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
                 nav_df = s.get("nav_df")
                 if nav_df is not None and not nav_df.empty:
@@ -1308,7 +1312,7 @@ with tab_mf:
 
                 # Fund details
                 exp=s.get("exp_ratio"); min_sip=s.get("min_sip"); manager=s.get("manager","—"); bench=s.get("benchmark","—") or "—"
-                st.markdown(f"""
+                _md(f"""
 <div class="gw-fund-card" style="margin-top:-12px;border-top:none;border-radius:0 0 12px 12px">
   <div class="gw-fund-details">
     <div class="gw-detail-cell"><div class="gw-detail-label">Expense Ratio</div><div class="gw-detail-val">{f'{exp:.2f}%' if exp else '—'}</div></div>
@@ -1317,7 +1321,7 @@ with tab_mf:
     <div class="gw-detail-cell"><div class="gw-detail-label">Benchmark</div><div class="gw-detail-val" style="font-size:11px">{bench[:22]}</div></div>
     <div class="gw-detail-cell"><div class="gw-detail-label">Units · Buy NAV</div><div class="gw-detail-val" style="font-size:12px">{s['units']:.3f} · ₹{s['purchase_nav']:.2f}</div></div>
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
             # Smart alerts
             _alerts_all = []
@@ -1377,7 +1381,7 @@ with tab_watch:
                 score   = m.get("score",0)
                 sc_col  = "#00d09c" if score>=70 else "#f59e0b" if score>=55 else "#9ca3af"
                 tv_link = m.get("tv_link",f"https://in.tradingview.com/chart/?symbol=NSE:{m['symbol']}")
-                st.markdown(f"""
+                _md(f"""
 <div class="card neutral">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -1403,7 +1407,7 @@ with tab_watch:
     {_tv_btn(tv_link)}
     <span style="font-size:11px;color:#6b7280">Wk RSI {m.get('wk_rsi','')} · ADX {m.get('wk_adx','')} · 52W pos {m.get('range_pos','')}%</span>
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
             st.download_button("Export CSV", mb_df.to_csv(index=False), "multibaggers.csv","text/csv")
 
@@ -1455,7 +1459,7 @@ with tab_watch:
                         rsi_col="#00d09c" if rsi_v>=55 else "#f59e0b" if rsi_v>=46 else "#eb5757"
                         tv=f"https://in.tradingview.com/chart/?symbol=NSE:{sym}"
                         ra=r.get("range_alert",False)
-                        st.markdown(f"""
+                        _md(f"""
 <div class="card" style="border-left-color:{bc}">
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
     <div>
@@ -1482,7 +1486,7 @@ with tab_watch:
     </div>
     {_tv_btn(tv)}
   </div>
-</div>""", unsafe_allow_html=True)
+</div>""")
 
                 if of1=="All Active":
                     if _rng_all:
@@ -1600,7 +1604,7 @@ with tab_hist:
 
 # ─── Footer ──────────────────────────────────────────────────────────────────
 _footer_ts = datetime.now(IST).strftime("%d %b %Y · %I:%M %p IST")
-st.markdown(f"""
+_md(f"""
 <div style="margin-top:40px;padding-top:20px;border-top:1px solid #e8eaed;
   display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between">
   <div>
@@ -1620,4 +1624,4 @@ st.markdown(f"""
     </div>
   </div>
 </div>
-""", unsafe_allow_html=True)
+""")
