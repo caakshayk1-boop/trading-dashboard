@@ -184,121 +184,142 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* Base */
+/* ── Base — white Groww theme ── */
 html, body, [data-testid="stApp"] {
-  background: #0b0c0e !important;
-  color: #e8eaed !important;
+  background: #f7f8fa !important;
+  color: #1a1a1a !important;
   font-family: 'Inter', system-ui, sans-serif !important;
   -webkit-font-smoothing: antialiased;
 }
-[data-testid="stAppViewContainer"], .stApp { background: #0b0c0e !important; }
-[data-testid="stSidebar"] { background: #111214 !important; border-right: 1px solid #1e2025 !important; }
+[data-testid="stAppViewContainer"], .stApp { background: #f7f8fa !important; }
+[data-testid="stSidebar"] {
+  background: #ffffff !important;
+  border-right: 1px solid #e8eaed !important;
+  box-shadow: 2px 0 12px rgba(0,0,0,.05);
+}
 [data-testid="stSidebar"] * { font-family: 'Inter', sans-serif !important; }
 
-/* Hide Streamlit chrome */
+/* Hide chrome */
 #MainMenu, footer, [data-testid="stToolbar"], header { display: none !important; }
 .block-container { padding: 20px 28px 40px !important; max-width: 1400px !important; }
 [data-testid="stVerticalBlock"] > div { gap: 0 !important; }
 
 /* Tabs */
 [data-testid="stTabs"] [data-baseweb="tab-list"] {
-  background: transparent !important;
-  border-bottom: 1px solid #1e2025 !important;
-  gap: 0 !important;
-  padding: 0 !important;
+  background: #ffffff !important;
+  border-bottom: 2px solid #e8eaed !important;
+  border-radius: 12px 12px 0 0 !important;
+  gap: 0 !important; padding: 0 4px !important;
 }
 [data-testid="stTabs"] [data-baseweb="tab"] {
   background: transparent !important;
   border: none !important;
-  color: #6b7280 !important;
+  color: #9ca3af !important;
   font-size: 13px !important;
   font-weight: 600 !important;
-  padding: 10px 18px !important;
+  padding: 12px 20px !important;
   border-bottom: 2px solid transparent !important;
-  margin-bottom: -1px !important;
+  margin-bottom: -2px !important;
+  transition: color .2s;
 }
 [data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"] {
   color: #00d09c !important;
   border-bottom-color: #00d09c !important;
-  background: transparent !important;
+  text-shadow: 0 0 16px rgba(0,208,156,.5) !important;
 }
 [data-testid="stTabs"] [data-baseweb="tab-highlight"] { display: none !important; }
 
 /* Metrics */
 [data-testid="metric-container"] {
-  background: #161618 !important;
-  border: 1px solid #1e2025 !important;
-  border-radius: 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #e8eaed !important;
+  border-radius: 12px !important;
   padding: 14px 16px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
 }
-[data-testid="stMetricLabel"] { color: #6b7280 !important; font-size: 11px !important; font-weight: 600 !important; }
-[data-testid="stMetricValue"] { color: #e8eaed !important; font-size: 22px !important; font-weight: 800 !important; }
-[data-testid="stMetricDelta"] { font-size: 11px !important; }
+[data-testid="stMetricLabel"] { color: #9ca3af !important; font-size: 11px !important; font-weight: 600 !important; }
+[data-testid="stMetricValue"] { color: #1a1a1a !important; font-size: 22px !important; font-weight: 800 !important; }
 
 /* Selectbox / inputs */
-[data-testid="stSelectbox"] > div > div, [data-testid="stTextInput"] > div > div > input {
-  background: #161618 !important;
-  border: 1px solid #1e2025 !important;
+[data-testid="stSelectbox"] > div > div,
+[data-testid="stTextInput"] > div > div > input {
+  background: #ffffff !important;
+  border: 1px solid #e8eaed !important;
   border-radius: 8px !important;
-  color: #e8eaed !important;
+  color: #1a1a1a !important;
   font-size: 13px !important;
 }
 [data-testid="stSelectbox"] label, [data-testid="stTextInput"] label {
-  color: #6b7280 !important; font-size: 12px !important; font-weight: 600 !important;
+  color: #9ca3af !important; font-size: 12px !important; font-weight: 600 !important;
 }
-[data-baseweb="select"] [data-testid="stMarkdownContainer"] p { font-size: 13px !important; color: #e8eaed !important; }
+[data-baseweb="select"] [data-testid="stMarkdownContainer"] p { font-size: 13px !important; color: #1a1a1a !important; }
+[data-baseweb="popover"] { background: #ffffff !important; border: 1px solid #e8eaed !important; }
+[role="option"] { color: #1a1a1a !important; }
+[role="option"]:hover { background: #f0fdf9 !important; }
 
 /* Buttons */
 [data-testid="stButton"] > button {
-  background: #161618 !important;
-  border: 1px solid #1e2025 !important;
+  background: #ffffff !important;
+  border: 1px solid #e8eaed !important;
   border-radius: 8px !important;
-  color: #e8eaed !important;
+  color: #1a1a1a !important;
   font-size: 13px !important;
   font-weight: 600 !important;
   padding: 6px 14px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
 }
 [data-testid="stButton"] > button:hover {
   border-color: #00d09c !important;
   color: #00d09c !important;
+  box-shadow: 0 0 10px rgba(0,208,156,.2) !important;
 }
 
 /* Slider */
-[data-testid="stSlider"] label { color: #6b7280 !important; font-size: 12px !important; }
+[data-testid="stSlider"] label { color: #9ca3af !important; font-size: 12px !important; }
 [data-testid="stSlider"] [data-testid="stThumbValue"] { color: #00d09c !important; }
+[data-testid="stSlider"] [data-baseweb="slider"] div[role="slider"] {
+  background: #00d09c !important;
+  box-shadow: 0 0 8px rgba(0,208,156,.5) !important;
+}
 
 /* Expander */
 [data-testid="stExpander"] {
-  background: #161618 !important;
-  border: 1px solid #1e2025 !important;
-  border-radius: 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #e8eaed !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
 }
-[data-testid="stExpander"] summary { color: #9ca3af !important; font-size: 13px !important; font-weight: 600 !important; }
+[data-testid="stExpander"] summary { color: #6b7280 !important; font-size: 13px !important; font-weight: 600 !important; }
 
 /* Dataframe */
-[data-testid="stDataFrame"] { border-radius: 10px !important; overflow: hidden !important; }
-.dvn-scroller { background: #161618 !important; }
+[data-testid="stDataFrame"] { border-radius: 12px !important; overflow: hidden !important; border: 1px solid #e8eaed !important; }
+.dvn-scroller { background: #ffffff !important; }
 
 /* Divider */
-hr { border-color: #1e2025 !important; margin: 16px 0 !important; }
+hr { border-color: #e8eaed !important; margin: 16px 0 !important; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #0b0c0e; }
-::-webkit-scrollbar-thumb { background: #252528; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #f7f8fa; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
 
-/* ── Component styles ── */
+/* ── Cards ── */
 .card {
-  background: #161618;
-  border: 1px solid #1e2025;
+  background: #ffffff;
+  border: 1px solid #e8eaed;
   border-left: 3px solid #00d09c;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 16px 18px;
   margin-bottom: 10px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.05);
+  transition: box-shadow .2s;
 }
-.card.sell { border-left-color: #eb5757; }
+.card:hover { box-shadow: 0 4px 16px rgba(0,208,156,.12); }
+.card.sell  { border-left-color: #e8192c; }
+.card.sell:hover { box-shadow: 0 4px 16px rgba(232,25,44,.1); }
 .card.neutral { border-left-color: #f59e0b; }
 
+/* ── KV grid ── */
 .kv-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -306,37 +327,39 @@ hr { border-color: #1e2025 !important; margin: 16px 0 !important; }
   margin-top: 12px;
 }
 .kv-cell {
-  background: #0f1012;
-  border: 1px solid #1e2025;
+  background: #f7f8fa;
+  border: 1px solid #e8eaed;
   border-radius: 8px;
   padding: 8px 10px;
   text-align: center;
 }
 .kv-label {
   font-size: 10px;
-  color: #6b7280;
+  color: #9ca3af;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .06em;
   margin-bottom: 3px;
 }
-.kv-val { font-size: 14px; font-weight: 700; color: #e8eaed; }
-.kv-val.green { color: #00d09c; }
-.kv-val.red   { color: #eb5757; }
-.kv-val.blue  { color: #60a5fa; }
-.kv-val.amber { color: #f59e0b; }
+.kv-val { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+.kv-val.green { color: #00d09c; text-shadow: 0 0 10px rgba(0,208,156,.4); }
+.kv-val.red   { color: #e8192c; text-shadow: 0 0 10px rgba(232,25,44,.3); }
+.kv-val.blue  { color: #3b82f6; text-shadow: 0 0 10px rgba(59,130,246,.3); }
+.kv-val.amber { color: #f59e0b; text-shadow: 0 0 10px rgba(245,158,11,.3); }
 
+/* ── Section title ── */
 .section-title {
   font-size: 11px;
   font-weight: 700;
-  color: #6b7280;
+  color: #9ca3af;
   text-transform: uppercase;
   letter-spacing: .1em;
   padding: 16px 0 10px;
-  border-bottom: 1px solid #1e2025;
+  border-bottom: 1px solid #e8eaed;
   margin-bottom: 14px;
 }
 
+/* ── Badges ── */
 .badge {
   display: inline-block;
   padding: 2px 8px;
@@ -345,72 +368,58 @@ hr { border-color: #1e2025 !important; margin: 16px 0 !important; }
   font-weight: 700;
   letter-spacing: .04em;
 }
-.badge.buy    { background: rgba(0,208,156,.1); color: #00d09c; border: 1px solid rgba(0,208,156,.3); }
-.badge.sell   { background: rgba(235,87,87,.1);  color: #eb5757; border: 1px solid rgba(235,87,87,.3); }
-.badge.fno    { background: rgba(96,165,250,.1); color: #60a5fa; border: 1px solid rgba(96,165,250,.3); }
-.badge.weekly { background: rgba(245,158,11,.1); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
-.badge.monthly{ background: rgba(167,139,250,.1);color: #a78bfa; border: 1px solid rgba(167,139,250,.3); }
-.badge.daily  { background: rgba(0,208,156,.08); color: #00d09c; border: 1px solid rgba(0,208,156,.2); }
-.badge.intra  { background: rgba(251,191,36,.1); color: #fbbf24; border: 1px solid rgba(251,191,36,.3); }
+.badge.buy    { background: rgba(0,208,156,.1);  color: #00a87e; border: 1px solid rgba(0,208,156,.3); }
+.badge.sell   { background: rgba(232,25,44,.08); color: #e8192c; border: 1px solid rgba(232,25,44,.25); }
+.badge.fno    { background: rgba(59,130,246,.08);color: #3b82f6; border: 1px solid rgba(59,130,246,.25); }
+.badge.weekly { background: rgba(245,158,11,.08);color: #d97706; border: 1px solid rgba(245,158,11,.25); }
+.badge.monthly{ background: rgba(139,92,246,.08);color: #7c3aed; border: 1px solid rgba(139,92,246,.25); }
+.badge.daily  { background: rgba(0,208,156,.08); color: #00a87e; border: 1px solid rgba(0,208,156,.2); }
+.badge.intra  { background: rgba(251,191,36,.08);color: #d97706; border: 1px solid rgba(251,191,36,.25); }
 
-.live-dot {
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #00d09c;
-  margin-right: 6px;
-  animation: pulse 2s ease-in-out infinite;
-}
+/* ── Misc ── */
 @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+.muted { color: #9ca3af; font-size: 12px; }
+.sym { font-size: 18px; font-weight: 800; color: #1a1a1a; }
+.price-big { font-size: 20px; font-weight: 800; color: #1a1a1a; }
 
-.pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 3px 10px;
-  border-radius: 99px;
-  font-size: 11px; font-weight: 600;
-}
-.pill.bull { background: rgba(0,208,156,.1); color: #00d09c; }
-.pill.bear { background: rgba(235,87,87,.1);  color: #eb5757; }
-.pill.neut { background: rgba(107,114,128,.1);color: #9ca3af; }
+/* ── Neon glow on key numbers ── */
+.neon-green { color: #00d09c; text-shadow: 0 0 14px rgba(0,208,156,.6), 0 0 28px rgba(0,208,156,.2); font-weight: 800; }
+.neon-red   { color: #e8192c; text-shadow: 0 0 14px rgba(232,25,44,.5), 0 0 28px rgba(232,25,44,.15); font-weight: 800; }
 
-.filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-
-.muted { color: #6b7280; font-size: 12px; }
-.sym { font-size: 18px; font-weight: 800; color: #e8eaed; }
-.price-big { font-size: 20px; font-weight: 800; }
-
+/* ── Fund cards ── */
 .gw-fund-card {
-  background: #161618; border: 1px solid #1e2025;
-  border-radius: 12px; padding: 18px 20px; margin-bottom: 12px;
+  background: #ffffff; border: 1px solid #e8eaed;
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.05);
 }
 .gw-card-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
-.gw-fund-name { font-size: 14px; font-weight: 700; color: #e8eaed; line-height: 1.4; }
-.gw-fund-amc  { font-size: 11px; color: #6b7280; margin-top: 2px; }
+.gw-fund-name { font-size: 14px; font-weight: 700; color: #1a1a1a; line-height: 1.4; }
+.gw-fund-amc  { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 .gw-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .gw-chip { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
-.gw-chip.cat  { background: rgba(96,165,250,.1); color: #60a5fa; }
-.risk-low  { background: rgba(0,208,156,.1); color: #00d09c; }
-.risk-mod  { background: rgba(96,165,250,.1); color: #60a5fa; }
-.risk-mh   { background: rgba(245,158,11,.1); color: #f59e0b; }
-.risk-high { background: rgba(251,113,74,.1); color: #fb7340; }
-.risk-vh   { background: rgba(235,87,87,.1);  color: #eb5757; }
+.gw-chip.cat  { background: rgba(59,130,246,.08); color: #3b82f6; border: 1px solid rgba(59,130,246,.2); }
+.risk-low  { background: rgba(0,208,156,.08); color: #00a87e; border: 1px solid rgba(0,208,156,.2); }
+.risk-mod  { background: rgba(59,130,246,.08);color: #3b82f6; border: 1px solid rgba(59,130,246,.2); }
+.risk-mh   { background: rgba(245,158,11,.08);color: #d97706; border: 1px solid rgba(245,158,11,.2); }
+.risk-high { background: rgba(251,113,74,.08);color: #ea580c; border: 1px solid rgba(251,113,74,.2); }
+.risk-vh   { background: rgba(232,25,44,.08); color: #e8192c; border: 1px solid rgba(232,25,44,.2); }
 .gw-nav-block { text-align: right; flex-shrink: 0; }
-.gw-nav-price { font-size: 16px; font-weight: 800; color: #e8eaed; }
+.gw-nav-price { font-size: 16px; font-weight: 800; color: #1a1a1a; }
 .gw-nav-chg   { font-size: 11px; font-weight: 600; margin-top: 2px; }
 .gw-returns-bar { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
-.gw-ret-cell { flex: 1; min-width: 48px; background: #0f1012; border: 1px solid #1e2025; border-radius: 6px; padding: 6px 8px; text-align: center; }
-.gw-ret-period { font-size: 9px; color: #6b7280; font-weight: 600; margin-bottom: 3px; }
+.gw-ret-cell { flex: 1; min-width: 48px; background: #f7f8fa; border: 1px solid #e8eaed; border-radius: 6px; padding: 6px 8px; text-align: center; }
+.gw-ret-period { font-size: 9px; color: #9ca3af; font-weight: 600; margin-bottom: 3px; }
 .gw-ret-val    { font-size: 13px; font-weight: 800; }
-.gw-inv-band   { display: flex; gap: 0; border-top: 1px solid #1e2025; padding-top: 12px; }
-.gw-inv-cell   { flex: 1; text-align: center; border-right: 1px solid #1e2025; }
+.gw-inv-band   { display: flex; gap: 0; border-top: 1px solid #e8eaed; padding-top: 12px; }
+.gw-inv-cell   { flex: 1; text-align: center; border-right: 1px solid #e8eaed; }
 .gw-inv-cell:last-child { border-right: none; }
-.gw-inv-label  { font-size: 10px; color: #6b7280; font-weight: 600; margin-bottom: 4px; }
-.gw-inv-val    { font-size: 14px; font-weight: 700; color: #e8eaed; }
+.gw-inv-label  { font-size: 10px; color: #9ca3af; font-weight: 600; margin-bottom: 4px; }
+.gw-inv-val    { font-size: 14px; font-weight: 700; color: #1a1a1a; }
 .gw-fund-details { display: flex; gap: 0; flex-wrap: wrap; }
-.gw-detail-cell { flex: 1; min-width: 120px; padding: 10px 14px; border-right: 1px solid #1e2025; }
+.gw-detail-cell { flex: 1; min-width: 120px; padding: 10px 14px; border-right: 1px solid #e8eaed; }
 .gw-detail-cell:last-child { border-right: none; }
-.gw-detail-label { font-size: 10px; color: #6b7280; font-weight: 600; margin-bottom: 4px; }
-.gw-detail-val   { font-size: 13px; font-weight: 700; color: #e8eaed; }
+.gw-detail-label { font-size: 10px; color: #9ca3af; font-weight: 600; margin-bottom: 4px; }
+.gw-detail-val   { font-size: 13px; font-weight: 700; color: #1a1a1a; }
 .gw-rom { text-align: center; }
 </style>
 """, unsafe_allow_html=True)
@@ -491,7 +500,7 @@ def _grade(b):
 
 # ─── Sidebar ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown('<div style="font-size:16px;font-weight:800;color:#e8eaed;padding:4px 0 16px">📈 TradeFlow</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:16px;font-weight:800;color:#1a1a1a;padding:4px 0 16px">📈 TradeFlow</div>', unsafe_allow_html=True)
 
     # Market regime
     _rd = _market_regime()
@@ -499,20 +508,20 @@ with st.sidebar:
     _nifty = _rd.get("nifty")
     _nc    = _rd.get("nifty_change", 0) or 0
     _vix   = _rd.get("vix")
-    _nc_col = "#00d09c" if _nc >= 0 else "#eb5757"
+    _nc_col = "#00a87e" if _nc >= 0 else "#e8192c"
     st.markdown(f"""
-<div style="background:#161618;border:1px solid #1e2025;border-radius:10px;padding:14px 16px;margin-bottom:16px">
-  <div style="font-size:10px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Market</div>
+<div style="background:#f7f8fa;border:1px solid #e8eaed;border-radius:12px;padding:14px 16px;margin-bottom:16px">
+  <div style="font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Market</div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <span style="font-size:13px;font-weight:700;color:#e8eaed">NIFTY</span>
-    <span style="font-size:13px;font-weight:700;color:{_nc_col}">{f'{_nifty:,.0f}' if _nifty else '—'} <small>({_nc:+.2f}%)</small></span>
+    <span style="font-size:13px;font-weight:700;color:#1a1a1a">NIFTY</span>
+    <span style="font-size:13px;font-weight:700;color:{_nc_col};text-shadow:0 0 8px {'rgba(0,208,156,.4)' if _nc>=0 else 'rgba(232,25,44,.3)'}">{f'{_nifty:,.0f}' if _nifty else '—'} <small>({_nc:+.2f}%)</small></span>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <span style="font-size:12px;color:#6b7280">VIX</span>
-    <span style="font-size:12px;font-weight:600;color:#e8eaed">{f'{_vix:.1f}' if _vix else '—'}</span>
+    <span style="font-size:12px;color:#9ca3af">VIX</span>
+    <span style="font-size:12px;font-weight:600;color:#1a1a1a">{f'{_vix:.1f}' if _vix else '—'}</span>
   </div>
   <div style="display:flex;justify-content:space-between;align-items:center">
-    <span style="font-size:12px;color:#6b7280">Regime</span>
+    <span style="font-size:12px;color:#9ca3af">Regime</span>
     <span style="font-size:11px;font-weight:700;color:#f59e0b">{_reg}</span>
   </div>
 </div>
@@ -522,25 +531,21 @@ with st.sidebar:
     _SLOTS = [("9:20 AM","4H + Commodity",9,20),("11:42 AM","Swing + F&O",11,42),("4:30 PM","Breakouts EOD",16,30),("8:00 PM","Multibagger",20,0)]
     def _slot_st(h, m):
         nm = _now_h*60+_now_m; sm = h*60+m
-        if not _is_trading: return "#334155"
-        if nm > sm+10: return "#00d09c"
+        if not _is_trading: return "#d1d5db"
+        if nm > sm+10: return "#00a87e"
         if abs(nm-sm) <= 10: return "#f59e0b"
-        return "#6b7280"
+        return "#9ca3af"
 
-    st.markdown('<div style="font-size:10px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Auto-Scan (IST)</div>', unsafe_allow_html=True)
+    st.markdown('<div style="font-size:10px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Auto-Scan (IST)</div>', unsafe_allow_html=True)
     for t, label, h, m in _SLOTS:
         col = _slot_st(h, m)
-        st.markdown(f'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1e2025"><span style="font-size:12px;color:{col};font-weight:600">{t}</span><span style="font-size:11px;color:#6b7280">{label}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #e8eaed"><span style="font-size:12px;color:{col};font-weight:600">{t}</span><span style="font-size:11px;color:#9ca3af">{label}</span></div>', unsafe_allow_html=True)
 
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown('<div style="font-size:9px;color:#9ca3af;margin-top:20px;line-height:1.6">Not SEBI-registered. For research only. Trade at your own risk.</div>', unsafe_allow_html=True)
 
-    # Global filters (shared across signal tabs)
-    st.markdown('<div style="font-size:10px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Filters</div>', unsafe_allow_html=True)
-    _days = st.selectbox("Lookback", ["Today","3 days","7 days"], key="g_days")
-    _days_n = {"Today":1,"3 days":3,"7 days":7}.get(_days, 3)
-    _min_score = st.slider("Min Score", 0, 100, 70, 5, key="g_score")
-
-    st.markdown('<div style="font-size:9px;color:#374151;margin-top:20px;line-height:1.6">Not SEBI-registered. For research only. Trade at your own risk.</div>', unsafe_allow_html=True)
+# Default filter values (no sidebar filters — inline per tab)
+_days_n   = 3
+_min_score = 70
 
 # ─── Header bar ───────────────────────────────────────────────────────────────
 _scan_ts, _scan_slot, _scan_counts = _gh_last_scan()
@@ -560,29 +565,30 @@ try:
 except Exception:
     _wr_hdr = 0; _trades_hdr = 0
 
+_mkt_open = 9 <= _now_h < 16
 st.markdown(f"""
 <div style="display:flex;align-items:center;justify-content:space-between;
-  padding:14px 0 18px;border-bottom:1px solid #1e2025;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+  padding:14px 0 18px;border-bottom:2px solid #e8eaed;margin-bottom:20px;flex-wrap:wrap;gap:10px">
   <div>
-    <div style="font-size:22px;font-weight:800;color:#e8eaed;line-height:1">TradeFlow</div>
-    <div style="font-size:12px;color:#6b7280;margin-top:3px">NSE Nifty 500 · {_now_str}</div>
+    <div style="font-size:24px;font-weight:900;color:#1a1a1a;line-height:1;letter-spacing:-.5px">TradeFlow</div>
+    <div style="font-size:12px;color:#9ca3af;margin-top:3px">NSE Nifty 500 · {_now_str}</div>
   </div>
   <div style="display:flex;gap:10px;flex-wrap:wrap">
-    <div style="background:#161618;border:1px solid #1e2025;border-radius:8px;padding:8px 16px;text-align:center">
-      <div style="font-size:10px;color:#6b7280;font-weight:600">Signals</div>
-      <div style="font-size:20px;font-weight:800;color:#00d09c">{_sig_count}</div>
+    <div style="background:#ffffff;border:1px solid #e8eaed;border-radius:12px;padding:10px 18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:10px;color:#9ca3af;font-weight:600;margin-bottom:3px">Signals</div>
+      <div style="font-size:22px;font-weight:900;color:#00d09c;text-shadow:0 0 14px rgba(0,208,156,.5)">{_sig_count}</div>
     </div>
-    <div style="background:#161618;border:1px solid #1e2025;border-radius:8px;padding:8px 16px;text-align:center">
-      <div style="font-size:10px;color:#6b7280;font-weight:600">Breakouts</div>
-      <div style="font-size:20px;font-weight:800;color:#a78bfa">{_bo_count}</div>
+    <div style="background:#ffffff;border:1px solid #e8eaed;border-radius:12px;padding:10px 18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:10px;color:#9ca3af;font-weight:600;margin-bottom:3px">Breakouts</div>
+      <div style="font-size:22px;font-weight:900;color:#7c3aed;text-shadow:0 0 14px rgba(124,58,237,.4)">{_bo_count}</div>
     </div>
-    <div style="background:#161618;border:1px solid #1e2025;border-radius:8px;padding:8px 16px;text-align:center">
-      <div style="font-size:10px;color:#6b7280;font-weight:600">Win Rate</div>
-      <div style="font-size:20px;font-weight:800;color:{'#00d09c' if _wr_hdr>=55 else '#e8eaed'}">{_wr_hdr:.0f}%</div>
+    <div style="background:#ffffff;border:1px solid #e8eaed;border-radius:12px;padding:10px 18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:10px;color:#9ca3af;font-weight:600;margin-bottom:3px">Win Rate</div>
+      <div style="font-size:22px;font-weight:900;color:{'#00a87e' if _wr_hdr>=55 else '#1a1a1a'};{'text-shadow:0 0 14px rgba(0,208,156,.5)' if _wr_hdr>=55 else ''}">{_wr_hdr:.0f}%</div>
     </div>
-    <div style="background:#161618;border:1px solid #1e2025;border-radius:8px;padding:8px 16px;text-align:center">
-      <div style="font-size:10px;color:#6b7280;font-weight:600">Market</div>
-      <div style="font-size:12px;font-weight:700;color:#f59e0b;margin-top:4px">{'OPEN' if 9<=_now_h<16 else 'CLOSED'}</div>
+    <div style="background:{'#f0fdf9' if _mkt_open else '#fafafa'};border:1px solid {'#00d09c' if _mkt_open else '#e8eaed'};border-radius:12px;padding:10px 18px;text-align:center;{'box-shadow:0 0 12px rgba(0,208,156,.2)' if _mkt_open else ''}">
+      <div style="font-size:10px;color:#9ca3af;font-weight:600;margin-bottom:3px">Market</div>
+      <div style="font-size:13px;font-weight:800;color:{'#00a87e' if _mkt_open else '#9ca3af'};margin-top:2px">{'● OPEN' if _mkt_open else '○ CLOSED'}</div>
     </div>
   </div>
 </div>
@@ -1140,7 +1146,7 @@ with tab_mf:
                                 fig_s.add_trace(go.Bar(x=[v],y=[""],orientation="h",name=k,marker_color=_pc[i%len(_pc)],
                                     hovertemplate=f"{k}: {v:.1f}%<extra></extra>",
                                     text=f"{k[:10]} {v:.1f}%" if v>5 else "",textposition="inside",textfont=dict(size=9,color="#000")))
-                            fig_s.update_layout(barmode="stack",height=50,paper_bgcolor="transparent",plot_bgcolor="transparent",
+                            fig_s.update_layout(barmode="stack",height=50,paper_bgcolor="rgba(0,0,0,0)",plot_bgcolor="rgba(0,0,0,0)",
                                 margin=dict(l=0,r=0,t=0,b=0),showlegend=False,
                                 xaxis=dict(showticklabels=False,showgrid=False,zeroline=False,range=[0,100]),
                                 yaxis=dict(showticklabels=False,showgrid=False,zeroline=False))
@@ -1155,7 +1161,7 @@ with tab_mf:
                                 text=[f"{v:.1f}%" for v in h_v],textposition="outside",
                                 textfont=dict(size=9,color="#6b7280"),
                                 hovertemplate="%{y}: %{x:.1f}%<extra></extra>"))
-                            fig_h.update_layout(height=max(180,len(h_l)*24),paper_bgcolor="transparent",plot_bgcolor="transparent",
+                            fig_h.update_layout(height=max(180,len(h_l)*24),paper_bgcolor="rgba(0,0,0,0)",plot_bgcolor="rgba(0,0,0,0)",
                                 margin=dict(l=4,r=50,t=4,b=4),showlegend=False,
                                 xaxis=dict(showgrid=False,showticklabels=False,zeroline=False),
                                 yaxis=dict(showgrid=False,zeroline=False,tickfont=dict(size=10,color="#6b7280")))
@@ -1291,10 +1297,10 @@ with tab_mf:
                             fillcolor=f"{'rgba(0,208,156,0.06)' if _nc=='#00d09c' else 'rgba(235,87,87,0.06)'}",
                             hovertemplate="₹%{y:.4f}<br>%{x|%d %b %Y}<extra></extra>"))
                         fig_nav.update_layout(height=160,margin=dict(l=0,r=0,t=4,b=0),
-                            paper_bgcolor="transparent",plot_bgcolor="transparent",
+                            paper_bgcolor="rgba(0,0,0,0)",plot_bgcolor="rgba(0,0,0,0)",
                             xaxis=dict(showgrid=False,showticklabels=True,zeroline=False,
                                       tickfont=dict(size=9,color="#6b7280"),tickformat="%b '%y"),
-                            yaxis=dict(showgrid=True,gridcolor="#1e2025",showticklabels=True,
+                            yaxis=dict(showgrid=True,gridcolor="#e8eaed",showticklabels=True,
                                       zeroline=False,tickfont=dict(size=9,color="#6b7280"),tickformat=",.2f"),
                             showlegend=False)
                         st.markdown(f'<div style="font-size:11px;color:#6b7280;margin-bottom:4px">NAV ({_psel}): <span style="color:{_nc};font-weight:700">{nav_chg:+.2f}%</span></div>',unsafe_allow_html=True)
