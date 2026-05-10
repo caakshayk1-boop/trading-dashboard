@@ -1077,11 +1077,16 @@ def analyze_breakout(symbol):
             return None
 
         close = float(df_d["Close"].squeeze().iloc[-1])
+        if np.isnan(close) or close <= 0:
+            return None
+
         atr_s = ta_lib.volatility.AverageTrueRange(
             df_d["High"].squeeze(), df_d["Low"].squeeze(),
             df_d["Close"].squeeze(), window=14
         ).average_true_range()
         atr = float(atr_s.iloc[-1]) if not atr_s.empty else close * 0.02
+        if np.isnan(atr) or atr <= 0:
+            atr = close * 0.02
 
         vol    = df_d["Volume"].squeeze()
         avg_v  = float(vol.rolling(20).mean().iloc[-1]) or 1

@@ -16,7 +16,7 @@ NSE holidays: scan skipped automatically.
 
 All results logged to signals.db + exported to data/*.json for Streamlit Cloud.
 """
-import sys, logging, os
+import sys, logging, os, math
 from datetime import datetime, date
 import pytz
 
@@ -424,6 +424,17 @@ def run_breakout_scan(time_str):
     from tracker import log_breakouts, log_to_all_signals, is_duplicate
     logging.info("Running breakout scan (F&O universe)...")
     all_bos = scan_breakouts()
+    # Drop NaN signals (yfinance sometimes returns NaN for price/ATR)
+    def _valid(b):
+        for k in ("price", "sl", "target1", "target2", "rr"):
+            v = b.get(k)
+            try:
+                if v is None or math.isnan(float(v)):
+                    return False
+            except (TypeError, ValueError):
+                return False
+        return True
+    all_bos = [b for b in all_bos if _valid(b)]
     # Dedup
     breakouts = [b for b in all_bos if not is_duplicate(b["symbol"], "breakout")]
     logging.info(f"Breakouts: {len(breakouts)} (from {len(all_bos)} raw)")
