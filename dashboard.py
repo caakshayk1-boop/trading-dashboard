@@ -614,7 +614,7 @@ with tab_sig:
         st.markdown("""
 <div style="text-align:center;padding:60px 20px">
   <div style="font-size:36px;margin-bottom:12px">🔍</div>
-  <div style="font-size:15px;font-weight:700;color:#e8eaed;margin-bottom:6px">No setups matching filters</div>
+  <div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:6px">No setups matching filters</div>
   <div style="font-size:12px;color:#6b7280;line-height:1.7">Scanned 500 stocks · Adjust score filter or lookback in sidebar</div>
 </div>""", unsafe_allow_html=True)
     else:
@@ -682,7 +682,7 @@ with tab_sig:
       <div style="font-size:11px;color:#6b7280;margin-top:4px">{s.get('setup_type','').title()} · Score {score}/100 · {s.get('date','')}</div>
     </div>
     <div style="text-align:right">
-      <div class="price-big" style="color:#e8eaed">₹{price:,.2f}</div>
+      <div class="price-big" style="color:#1a1a1a">₹{price:,.2f}</div>
       <div style="font-size:11px;color:#6b7280;margin-top:2px">Vol {vol:.1f}x · RSI {rsi:.0f}</div>
     </div>
   </div>
@@ -786,14 +786,14 @@ with tab_bo:
     <div>
       <span class="sym">{b['symbol']}</span>
       <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;
-        background:rgba(0,0,0,.3);color:{tfc};border:1px solid {tfc}44;margin-left:8px">{tf.upper()}</span>
+        background:rgba(0,0,0,.06);color:{tfc};border:1px solid {tfc}44;margin-left:8px">{tf.upper()}</span>
       <span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;
-        background:rgba(0,0,0,.3);color:#9ca3af;border:1px solid #1e2025;margin-left:4px">GRADE {grade}</span>
+        background:rgba(0,208,156,.08);color:#00a87e;border:1px solid rgba(0,208,156,.25);margin-left:4px">GRADE {grade}</span>
       {fno_b}
       <div style="font-size:11px;color:#6b7280;margin-top:4px">{pats}</div>
     </div>
     <div style="text-align:right">
-      <div class="price-big" style="color:#e8eaed">₹{p:,.1f}</div>
+      <div class="price-big" style="color:#1a1a1a">₹{p:,.1f}</div>
       <div style="font-size:11px;color:#6b7280;margin-top:2px">Vol {b.get('vol_ratio',0)}x</div>
     </div>
   </div>
@@ -830,7 +830,7 @@ with tab_bo:
       {fno_b}
       <div style="font-size:11px;color:#6b7280;margin-top:4px">{b.get('reason','RSI 55 cross + Volume surge')}</div>
     </div>
-    <div class="price-big" style="color:#e8eaed">₹{p:,.2f}</div>
+    <div class="price-big" style="color:#1a1a1a">₹{p:,.2f}</div>
   </div>
   <div class="kv-grid">
     {_kv("Entry", f"₹{p:,.2f}")}
@@ -877,7 +877,7 @@ with tab_bo:
       {fno_b}
       <div style="font-size:11px;color:#6b7280;margin-top:4px">{b.get('pattern','TL Channel Breakout')} · Vol {vol_r:.1f}×</div>
     </div>
-    <div class="price-big" style="color:#e8eaed">₹{p:,.2f}</div>
+    <div class="price-big" style="color:#1a1a1a">₹{p:,.2f}</div>
   </div>
   <div class="kv-grid">
     {_kv("Entry", f"₹{p:,.2f}")}
@@ -907,10 +907,10 @@ with tab_bo:
                     _p0  = float(_df["Close"].iloc[-2])
                     _chg = round((_p-_p0)/_p0*100,2)
                     _col = "#00d09c" if _chg>=0 else "#eb5757"
-                    lines_html += f'<div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #1e2025"><span style="color:#e8eaed;font-weight:600">{icon} {name}</span><span style="color:#e8eaed;font-weight:700">${_p:,.2f}</span><span style="color:{_col};font-weight:700">{_chg:+.2f}%</span></div>'
+                    lines_html += f'<div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #e8eaed"><span style="color:#1a1a1a;font-weight:600">{icon} {name}</span><span style="color:#1a1a1a;font-weight:700">${_p:,.2f}</span><span style="color:{_col};font-weight:700">{_chg:+.2f}%</span></div>'
                 except Exception: pass
             if lines_html:
-                st.markdown(f'<div style="background:#161618;border:1px solid #1e2025;border-radius:10px;overflow:hidden">{lines_html}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="background:#f7f8fa;border:1px solid #e8eaed;border-radius:10px;overflow:hidden">{lines_html}</div>', unsafe_allow_html=True)
         except Exception: pass
         st.caption("No active commodity signals. Next scan: 9:20 AM IST.")
     else:
@@ -975,7 +975,7 @@ with tab_intra:
       <span class="badge intra" style="margin-left:8px">15m</span>
       <span class="badge {'buy' if ia=='BUY' else 'sell'}" style="margin-left:4px">{ia}</span>
     </div>
-    <div class="price-big" style="color:#e8eaed">₹{ie:,.2f}</div>
+    <div class="price-big" style="color:#1a1a1a">₹{ie:,.2f}</div>
   </div>
   <div class="kv-grid">
     {_kv("Entry", f"₹{ie:,.2f}")}
@@ -1051,12 +1051,12 @@ with tab_fno:
     <div>
       <span class="sym">{sym}</span>
       <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;color:{src_col};
-        background:rgba(0,0,0,.3);border:1px solid {src_col}44;margin-left:8px">{src}</span>
+        background:rgba(0,0,0,.06);border:1px solid {src_col}44;margin-left:8px">{src}</span>
       <span class="badge fno" style="margin-left:4px">F&O</span>
       <div style="font-size:11px;color:#6b7280;margin-top:4px">{tf} · Vol {vol}× surge</div>
     </div>
     <div style="text-align:right">
-      <div class="price-big" style="color:#e8eaed">₹{p:,.1f}</div>
+      <div class="price-big" style="color:#1a1a1a">₹{p:,.1f}</div>
       <div style="font-size:12px;font-weight:700;color:#00d09c;margin-top:2px">T2 +{pct_up}%</div>
     </div>
   </div>
@@ -1069,7 +1069,7 @@ with tab_fno:
   </div>
   <div style="margin-top:12px;display:flex;gap:10px">
     {_tv_btn(tv_link)}
-    <a href="{nse_link}" target="_blank" style="font-size:11px;font-weight:600;color:#9ca3af;text-decoration:none;padding:4px 10px;border:1px solid #1e2025;border-radius:6px">NSE Chain ↗</a>
+    <a href="{nse_link}" target="_blank" style="font-size:11px;font-weight:600;color:#9ca3af;text-decoration:none;padding:4px 10px;border:1px solid #e8eaed;border-radius:6px">NSE Chain ↗</a>
   </div>
 </div>""", unsafe_allow_html=True)
 
@@ -1082,9 +1082,9 @@ with tab_fno:
             c = "#00d09c" if r["Chg%"] >= 0 else "#eb5757"
             s = "+" if r["Chg%"] >= 0 else ""
             gcols[i].markdown(f"""
-<div style="background:#161618;border:1px solid #1e2025;border-radius:8px;padding:10px 12px;text-align:center">
+<div style="background:#f7f8fa;border:1px solid #e8eaed;border-radius:8px;padding:10px 12px;text-align:center">
   <div style="font-size:10px;color:#6b7280;font-weight:600;margin-bottom:4px">{r['Asset']}</div>
-  <div style="font-size:14px;font-weight:700;color:#e8eaed">{r['Last']}</div>
+  <div style="font-size:14px;font-weight:700;color:#1a1a1a">{r['Last']}</div>
   <div style="font-size:11px;font-weight:700;color:{c}">{s}{r['Chg%']}%</div>
 </div>""", unsafe_allow_html=True)
 
@@ -1107,7 +1107,7 @@ with tab_mf:
                         st.info("No data."); continue
                     st.markdown("""
 <div style="display:grid;grid-template-columns:1fr 80px 80px 80px 80px;padding:8px 14px;
-  border-bottom:1px solid #1e2025;font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;
+  border-bottom:1px solid #e8eaed;font-size:10px;font-weight:700;color:#6b7280;text-transform:uppercase;
   letter-spacing:.06em">
   <div>Fund</div><div style="text-align:right">NAV</div>
   <div style="text-align:right">1Y</div><div style="text-align:right">3Y</div><div style="text-align:right">5Y</div>
@@ -1120,17 +1120,17 @@ with tab_mf:
                         c1,v1 = _rc(f.get("1Y")); c3,v3 = _rc(f.get("3Y")); c5,v5 = _rc(f.get("5Y"))
                         rows_html += f"""
 <div style="display:grid;grid-template-columns:1fr 80px 80px 80px 80px;padding:10px 14px;
-  border-bottom:1px solid #1e2025">
+  border-bottom:1px solid #e8eaed">
   <div>
-    <div style="font-size:13px;font-weight:600;color:#e8eaed">{f['short']}</div>
+    <div style="font-size:13px;font-weight:600;color:#1a1a1a">{f['short']}</div>
     <div style="font-size:10px;color:#6b7280;margin-top:1px">{f.get('fund_house','')}</div>
   </div>
-  <div style="text-align:right;font-size:13px;font-weight:700;color:#e8eaed;align-self:center">₹{f['nav']:.2f}</div>
+  <div style="text-align:right;font-size:13px;font-weight:700;color:#1a1a1a;align-self:center">₹{f['nav']:.2f}</div>
   <div style="text-align:right;font-size:13px;font-weight:700;color:{c1};align-self:center">{v1}</div>
   <div style="text-align:right;font-size:13px;font-weight:700;color:{c3};align-self:center">{v3}</div>
   <div style="text-align:right;font-size:13px;font-weight:700;color:{c5};align-self:center">{v5}</div>
 </div>"""
-                    st.markdown(f'<div style="background:#161618;border:1px solid #1e2025;border-radius:10px;overflow:hidden;margin-bottom:14px">{rows_html}</div>', unsafe_allow_html=True)
+                    st.markdown(f'<div style="background:#f7f8fa;border:1px solid #e8eaed;border-radius:10px;overflow:hidden;margin-bottom:14px">{rows_html}</div>', unsafe_allow_html=True)
 
                     _fn  = [f["short"] for f in funds]
                     _si  = st.selectbox("Holdings breakdown", range(len(_fn)), format_func=lambda i: _fn[i], key=f"sel_{cat}")
@@ -1264,7 +1264,7 @@ with tab_mf:
       <div class="gw-fund-amc">{fhouse}</div>
       <div class="gw-chips">
         {f'<span class="gw-chip cat">{cat}</span>' if cat else ''}
-        <span class="gw-chip" style="background:rgba(0,0,0,.3);color:{rc};border:1px solid {rc}44">{risk} Risk</span>
+        <span class="gw-chip" style="background:rgba(0,0,0,.06);color:{rc};border:1px solid {rc}44">{risk} Risk</span>
       </div>
     </div>
     <div class="gw-nav-block">
@@ -1388,7 +1388,7 @@ with tab_watch:
     </div>
     <div style="text-align:right">
       <div style="font-size:14px;font-weight:800;color:{sc_col}">Score {score:.0f}</div>
-      <div style="font-size:12px;color:#e8eaed;margin-top:2px">₹{m['price']}</div>
+      <div style="font-size:12px;color:#1a1a1a;margin-top:2px">₹{m['price']}</div>
     </div>
   </div>
   <div class="kv-grid">
@@ -1465,7 +1465,7 @@ with tab_watch:
       {f'<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.3);margin-left:4px">⚡ BROKEN</span>' if broken else ''}
     </div>
     <div style="text-align:right">
-      <div style="font-size:16px;font-weight:800;color:#e8eaed">₹{price}</div>
+      <div style="font-size:16px;font-weight:800;color:#1a1a1a">₹{price}</div>
       <div style="font-size:11px;font-weight:700;color:{chg_col}">{chg:+.2f}% from open</div>
     </div>
   </div>
@@ -1477,7 +1477,7 @@ with tab_watch:
     {_kv("1H RSI",str(rsi_v))}
   </div>
   <div style="margin-top:10px;display:flex;align-items:center;gap:10px">
-    <div style="flex:1;height:4px;background:#1e2025;border-radius:2px;overflow:hidden">
+    <div style="flex:1;height:4px;background:#e8eaed;border-radius:2px;overflow:hidden">
       <div style="width:{min(100,rsi_v):.0f}%;height:100%;background:{rsi_col};border-radius:2px"></div>
     </div>
     {_tv_btn(tv)}
@@ -1524,7 +1524,7 @@ with tab_hist:
         display_hist = _gh_all_signals(days=9999)
 
     if display_hist.empty:
-        st.markdown('<div style="text-align:center;padding:60px 20px"><div style="font-size:36px;margin-bottom:12px">📋</div><div style="font-size:14px;font-weight:600;color:#e8eaed;margin-bottom:6px">No signal history yet</div><div style="font-size:12px;color:#6b7280">Every scan auto-logs here. Run a scan to start building history.</div></div>',unsafe_allow_html=True)
+        st.markdown('<div style="text-align:center;padding:60px 20px"><div style="font-size:36px;margin-bottom:12px">📋</div><div style="font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:6px">No signal history yet</div><div style="font-size:12px;color:#6b7280">Every scan auto-logs here. Run a scan to start building history.</div></div>',unsafe_allow_html=True)
     else:
         # Performance bar
         def _is_win(row):
@@ -1601,10 +1601,10 @@ with tab_hist:
 # ─── Footer ──────────────────────────────────────────────────────────────────
 _footer_ts = datetime.now(IST).strftime("%d %b %Y · %I:%M %p IST")
 st.markdown(f"""
-<div style="margin-top:40px;padding-top:20px;border-top:1px solid #1e2025;
+<div style="margin-top:40px;padding-top:20px;border-top:1px solid #e8eaed;
   display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between">
   <div>
-    <div style="font-size:13px;font-weight:800;color:#e8eaed;margin-bottom:6px">TradeFlow</div>
+    <div style="font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:6px">TradeFlow</div>
     <div style="font-size:11px;color:#6b7280;line-height:1.7">NSE Nifty 500 Swing Scanner<br>Mon–Fri · 9:20 AM · 11:45 AM · 4:30 PM IST</div>
   </div>
   <div>
