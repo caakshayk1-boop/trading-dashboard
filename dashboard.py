@@ -1599,7 +1599,8 @@ with tab_hist:
 
         _fh = display_hist.copy()
         if _f_st!="All" and "status" in _fh.columns:
-            _fh = _fh[(_fh["status"]==_f_st)|(_fh.get("lifecycle_status",pd.Series(dtype=str))==_f_st)]
+            _lcs = _fh["lifecycle_status"] if "lifecycle_status" in _fh.columns else pd.Series("", index=_fh.index)
+            _fh = _fh[(_fh["status"]==_f_st)|(_lcs==_f_st)]
         if _f_ty!="All" and "signal_type" in _fh.columns:
             _fh = _fh[_fh["signal_type"]==_f_ty]
         if _f_ac!="All" and "action" in _fh.columns:
@@ -1618,14 +1619,42 @@ with tab_hist:
         if _fh.empty:
             st.info("No records match current filters.")
         else:
-            _tcols=["date","symbol","action","signal_type","score","status","entry","sl","target1","target2","rr","pnl_pct","r_multiple"]
-            _tc=[c for c in _tcols if c in _fh.columns]
-            _td=_fh[_tc].copy()
-            for _pc2 in ["entry","sl","target1","target2"]:
-                if _pc2 in _td.columns:
-                    _td[_pc2]=_td[_pc2].apply(lambda v: f"₹{float(v):,.2f}" if pd.notna(v) else "—")
-            st.dataframe(_td, use_container_width=True, hide_index=True, height=min(600,44+len(_td)*36))
-            st.download_button("⬇ Export CSV", _fh.to_csv(index=False), "signal_history.csv","text/csv")
+            try:
+                _tcols = ["date","symbol","action","signal_type","score","status",
+                          "entry","sl","target1","target2","rr","pnl_pct","r_multiple"]
+                _tc = [c for c in _tcols if c in _fh.columns]
+                _td = _fh[_tc].copy()
+
+                def _fmt_p(v):
+                    try:
+                        f = float(v)
+                        return "—" if (f != f) else f"₹{f:,.2f}"  # nan check
+                    except (TypeError, ValueError):
+                        return "—"
+
+                for _pc2 in ["entry","sl","target1","target2"]:
+                    if _pc2 in _td.columns:
+                        _td[_pc2] = _td[_pc2].apply(_fmt_p)
+
+                # Rename columns for display
+                _td.columns = [c.replace("_"," ").title() for c in _td.columns]
+
+                st.dataframe(
+                    _td,
+                    use_container_width=True,
+                    hide_index=True,
+                    height=min(600, 56 + len(_td) * 40)
+                )
+                st.download_button(
+                    "⬇ Export CSV",
+                    _fh.to_csv(index=False),
+                    "signal_history.csv",
+                    "text/csv",
+                    key="hist_dl"
+                )
+            except Exception as _he:
+                st.error(f"Table error: {_he}")
+                st.dataframe(_fh.head(50), use_container_width=True, hide_index=True)
 
 
 # ─── Footer ──────────────────────────────────────────────────────────────────
