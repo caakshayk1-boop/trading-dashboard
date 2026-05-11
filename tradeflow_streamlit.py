@@ -508,85 +508,159 @@ elif page == "AI Review":
 
 # ─────────────────────────────────────────────────────────────────────────────
 elif page == "Signal Advisor":
-    st.title("Signal Advisor — Expert Setup Review")
-    st.caption("Paste your setup. Get a pro-level intraday opinion in 10 seconds.")
+    st.title("🎯 Signal Advisor")
+    st.caption("Rule-based expert setup review — no API key needed, instant results.")
 
-    if not os.environ.get("GROQ_API_KEY"):
-        st.error("Set GROQ_API_KEY in Streamlit secrets (Settings → Secrets) to enable Signal Advisor.")
-        st.stop()
+    TF_SL_PCT = {"1m": 0.003, "5m": 0.005, "15m": 0.008, "1H": 0.013, "4H": 0.020, "Daily": 0.030}
+    TF_HOLD   = {"1m": "5–15 min", "5m": "30–60 min", "15m": "2–4 hours",
+                 "1H": "intraday/overnight", "4H": "2–5 days", "Daily": "1–3 weeks"}
 
-    ADVISOR_SYSTEM = """You are a senior intraday trader and technical analyst with 15+ years on NSE/MCX/global markets.
-When given a trading setup, respond with a structured expert analysis. Be specific with numbers. No generic advice.
+    def rsi_strength(rsi, setup):
+        if "Oversold" in setup or "Support" in setup:
+            if rsi < 25: return "BUY", "Strong",  f"RSI {rsi:.0f} — extreme oversold, high reversal probability"
+            if rsi < 35: return "BUY", "Strong",  f"RSI {rsi:.0f} — oversold territory, bounce setup valid"
+            if rsi < 45: return "BUY", "Moderate", f"RSI {rsi:.0f} — recovering from oversold, early entry"
+            return "BUY", "Weak", f"RSI {rsi:.0f} — not oversold enough for this setup"
+        if "Breakout" in setup or "Momentum" in setup or "Opening" in setup:
+            if 70 <= rsi < 78: return "BUY", "Strong",  f"RSI {rsi:.0f} — breaking into momentum zone, not extended yet"
+            if 62 <= rsi < 70: return "BUY", "Moderate", f"RSI {rsi:.0f} — building momentum, pre-breakout phase"
+            if 55 <= rsi < 62: return "BUY", "Moderate", f"RSI {rsi:.0f} — mild bullish momentum"
+            if rsi >= 78:      return "BUY", "Weak",     f"RSI {rsi:.0f} — extended/overbought, late entry risk"
+            return "BUY", "Weak", f"RSI {rsi:.0f} — weak momentum for this setup"
+        if rsi >= 55: return "BUY",  "Moderate", f"RSI {rsi:.0f} — mild bullish bias"
+        if rsi <= 45: return "SELL", "Moderate", f"RSI {rsi:.0f} — mild bearish bias"
+        return "BUY", "Weak", f"RSI {rsi:.0f} — neutral, no clear edge"
 
-Format your response EXACTLY like this:
+    def get_confirmations(setup, tf, rsi):
+        if "RSI Breakout" in setup:
+            items = ["Volume above 1.5× average on breakout candle",
+                     f"Price above 20 EMA on {tf} chart",
+                     "RSI holding above 68 on next candle close (no immediate reversal)",
+                     "Higher timeframe trend aligned"]
+        elif "Oversold" in setup or "Support" in setup:
+            items = ["Bullish engulfing or pin bar at support level",
+                     "RSI forming higher lows (divergence preferred)",
+                     "Volume pickup on reversal candle",
+                     f"Wait for first candle close above support before entry ({tf})"]
+        elif "Resistance" in setup or "Opening" in setup:
+            items = ["Clean close above resistance (not just wick touch)",
+                     "Volume 2× average on breakout candle",
+                     "Retest of breakout level holds as support",
+                     "Broad market (NIFTY) not in sharp decline"]
+        elif "MACD" in setup:
+            items = ["MACD line crosses signal line from below",
+                     "Crossover near/above zero line for stronger signal",
+                     f"Price above 50 EMA on {tf} chart"]
+        elif "EMA" in setup:
+            items = ["Faster EMA fully crossed above slower EMA",
+                     "Price closes above both EMAs on candle close",
+                     "Volume confirmation on crossover candle"]
+        else:
+            items = ["Confirm with volume — no volume = no conviction",
+                     f"Higher timeframe trend aligned",
+                     "Risk:Reward at least 1.5:1 before entry"]
+        return items[:3]
 
-**SIGNAL STRENGTH:** [Strong / Moderate / Weak] — [one-line reason]
+    def get_risks(setup, tf, rsi):
+        items = []
+        if rsi >= 70: items.append(f"RSI {rsi:.0f} is overbought — exit immediately if RSI drops below 68")
+        if rsi <= 35: items.append(f"RSI {rsi:.0f} can go lower — averaging down is dangerous")
+        if tf in ["5m", "1m"]: items.append("Short timeframe = high noise, whipsaw risk above average")
+        items.append("Major economic data (US/India) in next 60 min can invalidate setup")
+        if "Resistance" in setup: items.append("Fake breakout risk — wait for candle CLOSE, never enter on wick")
+        items.append("Do not average down if SL approaches — one trade, one stop, no exceptions")
+        return items[:2]
 
-**ENTRY ZONE:** [price range or specific level]
-**STOP LOSS:** [price] — [why: below support / prev low / ATR etc]
-**TARGET 1:** [price] — [% gain]
-**TARGET 2:** [price] — [% gain]
-**RISK:REWARD:** [X:1]
+    VERDICTS = {
+        "RSI Breakout": lambda rsi, tf, sym: (
+            f"RSI crossing 70 on {tf} in {sym} is a momentum signal — not an overbought trap — if volume confirms. "
+            f"Buy at current price, hard stop {TF_SL_PCT.get(tf, 0.008)*100:.1f}% below. Trail to breakeven on T1."
+            if rsi >= 70 else
+            f"RSI at {rsi:.0f} building toward breakout. Wait for RSI to cross 68–70 before entry — premature entry adds noise risk."
+        ),
+        "RSI Oversold Bounce": lambda rsi, tf, sym: (
+            f"RSI at {rsi:.0f} creates a high-probability bounce on {tf}. Don't catch the exact bottom — "
+            f"wait for one green candle close above the low, then enter. Stop below the wick low."
+        ),
+        "MACD Crossover": lambda rsi, tf, sym: (
+            f"MACD crossover on {tf} signals momentum shift. Valid only if supported by volume. "
+            f"Enter on candle close after crossover, not during — false crosses are common on short timeframes."
+        ),
+        "EMA Crossover": lambda rsi, tf, sym: (
+            f"EMA crossover on {tf} confirms trend direction change. More reliable on 1H+. "
+            f"On 15m and below, combine with RSI for confirmation to reduce false signals."
+        ),
+        "Support Bounce": lambda rsi, tf, sym: (
+            f"Support bounce — risk is defined and tight. Enter after a clear rejection candle (hammer/engulfing). "
+            f"Stop below the wick. High R:R if support is genuine."
+        ),
+        "Resistance Breakout": lambda rsi, tf, sym: (
+            f"Breakout setups have 40–50% fake breakout rate. Never enter on the breakout candle itself — "
+            f"wait for a pullback retest that holds. Real breakouts retest."
+        ),
+        "Opening Range Breakout": lambda rsi, tf, sym: (
+            f"ORB on {sym} — valid only if NIFTY is not in sharp reversal at 9:30 IST. "
+            f"Size conservatively: max 0.5% capital risk. Quick exit if it fails in first 30 min."
+        ),
+        "Momentum Continuation": lambda rsi, tf, sym: (
+            f"Momentum continuation on {tf} — trend is your edge. Trail stops aggressively. "
+            f"Scale out 50% at T1, let rest ride. Don't reverse without a new setup forming."
+        ),
+    }
 
-**CONFIRM BEFORE ENTRY:**
-• [key confirmation 1]
-• [key confirmation 2]
-• [key confirmation 3]
-
-**WATCH OUT FOR:**
-• [risk factor 1]
-• [risk factor 2]
-
-**VERDICT:** [2-3 direct sentences. Specific. No hedging. Tell them what a pro would do.]"""
-
+    # ── Inputs ──────────────────────────────────────────────────────────────────
     col1, col2, col3 = st.columns(3)
     with col1:
-        symbol = st.text_input("Symbol", placeholder="GOLD / RELIANCE / BANKNIFTY", value="GOLD")
+        symbol = st.text_input("Symbol", value="GOLD", placeholder="GOLD / RELIANCE / BANKNIFTY")
     with col2:
-        timeframe = st.selectbox("Timeframe", ["5m", "15m", "1H", "Daily", "Weekly"], index=1)
+        timeframe = st.selectbox("Timeframe", ["1m", "5m", "15m", "1H", "4H", "Daily"], index=2)
     with col3:
-        setup_type = st.selectbox("Setup Type", [
-            "RSI Breakout", "RSI Oversold Bounce", "MACD Crossover",
-            "EMA Crossover", "Support Bounce", "Resistance Breakout",
-            "Momentum Continuation", "Opening Range Breakout", "Other"
-        ])
+        setup_type = st.selectbox("Setup Type", list(VERDICTS.keys()))
 
     col4, col5 = st.columns(2)
     with col4:
-        rsi_val = st.number_input("RSI Value", min_value=0.0, max_value=100.0, value=72.0, step=0.1)
+        rsi_val = st.slider("RSI", min_value=1, max_value=99, value=72)
     with col5:
-        current_price = st.number_input("Current Price", min_value=0.0, value=0.0, step=0.5,
-                                         help="Leave 0 if unknown")
+        price = st.number_input("Current Price (0 = skip)", min_value=0.0, value=0.0, step=1.0)
 
-    notes = st.text_area("Additional context", placeholder="Volume spike? Above key EMA? Previous resistance level? Any macro catalyst?", height=80)
+    if st.button("Analyze Setup", type="primary", use_container_width=True):
+        direction, strength, strength_reason = rsi_strength(rsi_val, setup_type)
+        sl_pct  = TF_SL_PCT.get(timeframe, 0.008)
+        sl_dist = price * sl_pct if price > 0 else None
+        sl_px   = (price - sl_dist) if sl_dist and direction == "BUY" else (price + sl_dist if sl_dist else None)
+        t1_px   = (price + sl_dist * 1.6) if sl_dist and direction == "BUY" else (price - sl_dist * 1.6 if sl_dist else None)
+        t2_px   = (price + sl_dist * 3.0) if sl_dist and direction == "BUY" else (price - sl_dist * 3.0 if sl_dist else None)
 
-    if st.button("Get Expert Analysis", type="primary"):
-        user_msg = f"""Symbol: {symbol}
-Timeframe: {timeframe}
-Setup: {setup_type}
-RSI: {rsi_val}
-{"Current Price: " + str(current_price) if current_price > 0 else ""}
-{"Additional context: " + notes if notes.strip() else ""}""".strip()
+        def fmt(n): return f"{n:,.1f}" if n > 100 else f"{n:.3f}"
+        def pct(f, t): return f"{((t-f)/f*100):+.1f}%"
 
-        with st.spinner("Analyzing setup..."):
-            try:
-                from groq import Groq as _Groq
-                _client = _Groq(api_key=os.environ["GROQ_API_KEY"])
-                _msg = _client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    max_tokens=700,
-                    messages=[
-                        {"role": "system", "content": ADVISOR_SYSTEM},
-                        {"role": "user", "content": user_msg},
-                    ],
-                )
-                analysis = _msg.choices[0].message.content
-                st.markdown("---")
-                st.markdown(analysis)
-                st.markdown("---")
-                st.caption("⚠ Not SEBI-registered · Educational only · Always manage your own risk.")
-            except Exception as e:
-                st.error(f"Analysis error: {e}")
+        strength_emoji = "🟢" if strength == "Strong" else "🟡" if strength == "Moderate" else "🔴"
+
+        st.markdown("---")
+        st.markdown(f"### {strength_emoji} {direction} · {strength} Signal")
+        st.caption(strength_reason)
+
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Entry Zone", f"₹{fmt(price)}" if price > 0 else "Market price", "On confirmation candle close")
+        c2.metric("Stop Loss", f"₹{fmt(sl_px)}" if sl_px else f"{sl_pct*100:.1f}% below", f"Below {timeframe} candle low")
+        c3.metric("Target 1", f"₹{fmt(t1_px)}" if t1_px else "1.6× risk", pct(price, t1_px) if t1_px and price else "")
+        c4.metric("Target 2", f"₹{fmt(t2_px)}" if t2_px else "3.0× risk", pct(price, t2_px) if t2_px and price else "")
+
+        st.markdown(f"**Risk:Reward** — 1:1.6 (T1) / 1:3 (T2) · Hold: {TF_HOLD.get(timeframe, '—')} · Trail stop to entry on T1 hit")
+
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.markdown("##### ✅ Confirm Before Entry")
+            for c in get_confirmations(setup_type, timeframe, rsi_val):
+                st.markdown(f"• {c}")
+        with col_b:
+            st.markdown("##### ⚠️ Watch Out For")
+            for r in get_risks(setup_type, timeframe, rsi_val):
+                st.markdown(f"• {r}")
+
+        verdict_fn = VERDICTS.get(setup_type, lambda rsi, tf, sym: "No verdict available.")
+        st.info(f"**Expert Verdict:** {verdict_fn(rsi_val, timeframe, symbol.upper())}")
+        st.caption("Rule-based analysis · Not SEBI-registered · Always manage your own risk")
 
 # ─────────────────────────────────────────────────────────────────────────────
 elif page == "Insights":
