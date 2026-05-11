@@ -552,8 +552,75 @@ def _run_swing_scan(slot="Auto"):
 
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
+_CF_SYMBOLS = {
+    "GOLD":    "GC=F",
+    "SILVER":  "SI=F",
+    "CRUDE":   "CL=F",
+    "NATGAS":  "NG=F",
+    "USDINR":  "USDINR=X",
+    "EURINR":  "EURINR=X",
+}
+
+def _scan_commodity_forex(ts: str):
+    """Check 15m momentum on Gold, Silver, Crude, USDINR. Push if RSI > 60 + move > 0.4%."""
+    try:
+        alerts = []
+        for name, ticker in _CF_SYMBOLS.items():
+            try:
+                df = yf.download(ticker, period="2d", interval="15m",
+                                 progress=False, auto_adjust=True, timeout=15)
+                if df is None or len(df) < 10:
+                    continue
+                c = df["Close"].squeeze()
+                v = df["Volume"].squeeze() if "Volume" in df.columns else None
+                price    = float(c.iloc[-1])
+                prev     = float(c.iloc[-2])
+                open_day = float(c.iloc[-8]) if len(c) >= 8 else prev  # ~2h ago as proxy
+                pct_move = ((price - open_day) / open_day) * 100 if open_day else 0
+
+                # RSI
+                delta = c.diff()
+                gain  = delta.clip(lower=0).rolling(14).mean()
+                loss  = (-delta.clip(upper=0)).rolling(14).mean()
+                rs    = gain / loss.replace(0, float("inf"))
+                rsi_v = float((100 - 100 / (1 + rs)).iloc[-1])
+
+                # Volume spike (skip if no volume data e.g. forex)
+                vol_str = ""
+                if v is not None and float(v.iloc[-20:].mean()) > 0:
+                    spike = float(v.iloc[-1]) / float(v.iloc[-20:].mean())
+                    vol_str = f" · Vol `{spike:.1f}x`"
+
+                # Only alert: RSI > 60 (momentum) + move > 0.4% from session open
+                if rsi_v > 60 and abs(pct_move) > 0.4:
+                    atr = float((df["High"] - df["Low"]).rolling(14).mean().iloc[-1])
+                    sl  = round(price - 1.0 * atr, 4) if pct_move > 0 else round(price + 1.0 * atr, 4)
+                    t1  = round(price + 1.5 * atr, 4) if pct_move > 0 else round(price - 1.5 * atr, 4)
+                    t2  = round(price + 2.5 * atr, 4) if pct_move > 0 else round(price - 2.5 * atr, 4)
+                    rr  = round(abs(t2 - price) / abs(price - sl), 1) if abs(price - sl) > 0 else 0
+                    if rr < 1.5:
+                        continue
+                    sign = "+" if pct_move > 0 else ""
+                    emoji = "📈" if pct_move > 0 else "📉"
+                    alerts.append(
+                        f"{emoji} *{name}* | {sign}{pct_move:.2f}% · RSI `{rsi_v:.0f}`{vol_str}\n"
+                        f"   Price `{price:.4f}` | SL `{sl:.4f}` | T1 `{t1:.4f}` | T2 `{t2:.4f}` | RR `{rr}x`"
+                    )
+            except Exception as e:
+                logging.debug(f"CF scan {name}: {e}")
+
+        if alerts:
+            msg = f"🌍 *Forex & Commodity Moves* — {ts}\n_(15m · RSI>60 · move>0.4% · R:R≥1.5)_\n\n"
+            msg += "\n\n".join(alerts)
+            msg += "\n\n_MCX/Global prices · Not SEBI advice_"
+            _post(msg)
+            logging.info(f"CF scan: {len(alerts)} alerts pushed")
+    except Exception as e:
+        logging.error(f"CF scan error: {e}")
+
+
 def _run_intraday_scan():
-    """Intraday scanner — 15m RSI crossover + VWAP + vol surge. Only R:R ≥ 1.5 pushed."""
+    """Intraday scanner — NSE 15m + Forex/Commodity moves. Only R:R ≥ 1.5 pushed."""
     from datetime import datetime as _dt
     _now = _dt.now(IST)
     _h, _m = _now.hour, _now.minute
@@ -579,23 +646,22 @@ def _run_intraday_scan():
             except Exception as e:
                 logging.warning(f"First-candle scan error: {e}")
 
-        # Main intraday momentum scan
+        # Forex & Commodity scan
+        _scan_commodity_forex(ts)
+
+        # NSE intraday momentum scan
         sigs = scan_intraday_momentum()
-        # Keep only R:R ≥ 1.5 — excellent setups only
         sigs = [s for s in sigs if float(s.get("rr", 0)) >= 1.5]
         if not sigs:
-            logging.info(f"Intraday scan {ts}: no R:R≥1.5 signals")
+            logging.info(f"Intraday scan {ts}: no NSE R:R≥1.5 signals")
             return
 
-        lines = [f"⚡ *{len(sigs)} Intraday Signal(s)* — {ts}\n_(15m · VWAP + RSI55 cross + Vol surge · R:R≥1.5)_\n"]
+        lines = [f"⚡ *{len(sigs)} NSE Intraday Signal(s)* — {ts}\n_(15m · VWAP + RSI55 cross + Vol surge · R:R≥1.5)_\n"]
         for s in sigs[:5]:
-            rr  = s.get("rr", 0)
-            vol = s.get("vol_ratio", 0)
-            rsi_v = s.get("rsi", 0)
             lines.append(
                 f"📈 *{s['symbol']}* | BUY ₹{s['price']}\n"
                 f"   SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']}\n"
-                f"   RR `{rr}x` · Vol `{vol}x` · RSI `{rsi_v}` · VWAP ₹{s.get('vwap', '—')}"
+                f"   RR `{s.get('rr',0)}x` · Vol `{s.get('vol_ratio',0)}x` · RSI `{s.get('rsi',0)}` · VWAP ₹{s.get('vwap','—')}"
             )
         lines.append("\n_Exit by 3:15 PM IST · Intraday only · Not SEBI advice_")
         _post("\n".join(lines))
@@ -613,7 +679,7 @@ def _run_intraday_scan():
         except Exception as e:
             logging.warning(f"Intraday DB log error: {e}")
 
-        logging.info(f"Intraday scan {ts}: {len(sigs)} signals pushed")
+        logging.info(f"Intraday scan {ts}: {len(sigs)} NSE signals pushed")
     except Exception as e:
         logging.error(f"Intraday scan error: {e}")
         _post(f"⚠️ Intraday scan error: {str(e)[:200]}")
