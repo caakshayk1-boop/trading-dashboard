@@ -2222,7 +2222,7 @@ def scan_intraday_momentum() -> list:
                 t1  = round(price + 1.0 * cur_atr, 2)
                 t2  = round(price + 2.0 * cur_atr, 2)
                 rr  = round((t2 - price) / (price - sl), 1) if price > sl else 0
-                if rr < 1.0:
+                if rr < 1.5:
                     continue
                 results.append({
                     "symbol":     sym.replace(".NS", ""),

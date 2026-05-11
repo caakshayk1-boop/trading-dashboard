@@ -552,14 +552,82 @@ def _run_swing_scan(slot="Auto"):
 
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
+def _run_intraday_scan():
+    """Intraday scanner — 15m RSI crossover + VWAP + vol surge. Only R:R ≥ 1.5 pushed."""
+    from datetime import datetime as _dt
+    _now = _dt.now(IST)
+    _h, _m = _now.hour, _now.minute
+    # Only run 9:30–14:30 IST on weekdays
+    if _now.weekday() >= 5:
+        return
+    if not (9 <= _h < 14 or (_h == 14 and _m <= 30)):
+        return
+    try:
+        from scanner import scan_intraday_momentum, scan_first_candle_breakout
+        ts = _now.strftime("%d %b %Y %I:%M %p IST")
+
+        # First-candle movers (9:30–9:44 only)
+        if _h == 9 and 30 <= _m <= 44:
+            try:
+                fc = scan_first_candle_breakout()
+                if fc:
+                    lines = [f"🕯 *First Candle Movers* — {ts}\n_(>1% ≤2% from open — watch for continuation)_\n"]
+                    for s in fc:
+                        lines.append(f"• *{s['symbol']}* | Open ₹{s['open']} → ₹{s['close']} (+{s['pct_from_open']}%) | H ₹{s['high']}")
+                    lines.append("\n_Monitor only · Entry only on confirmed breakout · Not SEBI advice_")
+                    _post("\n".join(lines))
+            except Exception as e:
+                logging.warning(f"First-candle scan error: {e}")
+
+        # Main intraday momentum scan
+        sigs = scan_intraday_momentum()
+        # Keep only R:R ≥ 1.5 — excellent setups only
+        sigs = [s for s in sigs if float(s.get("rr", 0)) >= 1.5]
+        if not sigs:
+            logging.info(f"Intraday scan {ts}: no R:R≥1.5 signals")
+            return
+
+        lines = [f"⚡ *{len(sigs)} Intraday Signal(s)* — {ts}\n_(15m · VWAP + RSI55 cross + Vol surge · R:R≥1.5)_\n"]
+        for s in sigs[:5]:
+            rr  = s.get("rr", 0)
+            vol = s.get("vol_ratio", 0)
+            rsi_v = s.get("rsi", 0)
+            lines.append(
+                f"📈 *{s['symbol']}* | BUY ₹{s['price']}\n"
+                f"   SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']}\n"
+                f"   RR `{rr}x` · Vol `{vol}x` · RSI `{rsi_v}` · VWAP ₹{s.get('vwap', '—')}"
+            )
+        lines.append("\n_Exit by 3:15 PM IST · Intraday only · Not SEBI advice_")
+        _post("\n".join(lines))
+
+        # Log to DB
+        try:
+            from tracker import log_to_all_signals, init_db
+            init_db()
+            for s in sigs:
+                log_to_all_signals(
+                    s["symbol"], "intraday", "BUY", s["price"], s["sl"],
+                    s["target1"], s["target2"], s["target2"],
+                    s["rr"], timeframe="15m", score=s.get("score", 0)
+                )
+        except Exception as e:
+            logging.warning(f"Intraday DB log error: {e}")
+
+        logging.info(f"Intraday scan {ts}: {len(sigs)} signals pushed")
+    except Exception as e:
+        logging.error(f"Intraday scan error: {e}")
+        _post(f"⚠️ Intraday scan error: {str(e)[:200]}")
+
+
 def _start_scheduler():
     try:
         from apscheduler.schedulers.background import BackgroundScheduler
-        from apscheduler.triggers.cron import CronTrigger, IntervalTrigger
+        from apscheduler.triggers.cron import CronTrigger
+        from apscheduler.triggers.interval import IntervalTrigger   # ← correct module
 
         sched = BackgroundScheduler(timezone=IST)
 
-        # 4H momentum scan (Telegram signals, existing logic)
+        # 4H momentum scan (Telegram signals)
         scan_times = [("09:20", "Morning"), ("11:45", "Midday"), ("16:30", "EOD")]
         for t, label in scan_times:
             h, m = t.split(":")
@@ -568,7 +636,7 @@ def _start_scheduler():
                 CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
             )
 
-        # Full swing scanner — A/A+ only → signals.db → served via Flask API
+        # Swing scanner — A/A+ only → signals.db → Flask API
         swing_slots = [("09:25", "Open"), ("11:42", "Midday"), ("16:32", "EOD"), ("20:00", "After")]
         for t, label in swing_slots:
             h, m = t.split(":")
@@ -577,14 +645,20 @@ def _start_scheduler():
                 CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
             )
 
-        # Position monitor — every 15 min during market hours
+        # Intraday scanner — every 30 min, 9:30–14:30 IST (self-guards time window)
+        sched.add_job(
+            _run_intraday_scan,
+            IntervalTrigger(minutes=30, timezone=IST)
+        )
+
+        # Position monitor — every 15 min
         sched.add_job(
             _monitor_positions,
             IntervalTrigger(minutes=15, timezone=IST)
         )
 
         sched.start()
-        logging.info("Scheduler started: 4H scan + swing scan + 15-min position monitor")
+        logging.info("Scheduler started: 4H + swing + intraday(30min) + position monitor(15min)")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 
