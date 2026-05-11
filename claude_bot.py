@@ -646,9 +646,6 @@ def _run_intraday_scan():
             except Exception as e:
                 logging.warning(f"First-candle scan error: {e}")
 
-        # Forex & Commodity scan
-        _scan_commodity_forex(ts)
-
         # NSE intraday momentum scan
         sigs = scan_intraday_momentum()
         sigs = [s for s in sigs if float(s.get("rr", 0)) >= 1.5]
@@ -716,6 +713,16 @@ def _start_scheduler():
             _run_intraday_scan,
             IntervalTrigger(minutes=30, timezone=IST)
         )
+
+        # Forex & Commodity scan — 4 fixed slots daily (mon-sun, markets never close)
+        for cf_time in ["10:00", "14:00", "18:00", "22:00"]:
+            h, m = cf_time.split(":")
+            sched.add_job(
+                lambda ts=cf_time: _scan_commodity_forex(
+                    datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+                ),
+                CronTrigger(hour=int(h), minute=int(m), timezone=IST)
+            )
 
         # Position monitor — every 15 min
         sched.add_job(
