@@ -922,7 +922,9 @@ def scan_all(min_score=None):
     scan_ts = _dt.now(_IST).strftime("%d %b %Y %I:%M %p IST")
 
     universe   = load_nifty500()
-    min_score  = min_score or MIN_SIGNAL_SCORE
+    # Hard floor: only A or A+ conviction (score ≥ 80 = A+, ≥ 65 = A)
+    # Never go below 65 regardless of config MIN_SIGNAL_SCORE
+    min_score  = max(min_score or MIN_SIGNAL_SCORE, 65)
     nifty_ret  = get_nifty50_return()
     raw        = []
 
@@ -930,11 +932,18 @@ def scan_all(min_score=None):
         futures = {ex.submit(analyze_stock, sym, nifty_ret): sym for sym in universe}
         for f in as_completed(futures):
             r = f.result()
-            if r and r["score"] >= min_score:
-                rr = r.get("rr2") or r.get("rr1") or 0
-                if rr < MIN_RR:
-                    continue
-                raw.append(r)
+            if not r:
+                continue
+            if r["score"] < min_score:
+                continue
+            rr = r.get("rr2") or r.get("rr1") or 0
+            if rr < 1.5:  # minimum R:R 1.5x for high-quality signals
+                continue
+            if r.get("adx_val", 0) < 20:  # trend must be confirmed (ADX ≥ 20)
+                continue
+            if r.get("vol_ratio", 0) < 2.5:  # volume surge required
+                continue
+            raw.append(r)
 
     raw.sort(key=lambda x: x["score"], reverse=True)
 
@@ -949,20 +958,12 @@ def scan_all(min_score=None):
         sig["scanned_at"] = scan_ts
         results.append(sig)
         seen_symbols.add(sym_clean)
-        if len(results) >= 8:
+        if len(results) >= 6:  # max 6 high-quality signals per scan
             break
 
-    # Fallback: if strict criteria yielded 0, relax score by 15% and take top 2
-    if not results and raw:
-        raw.sort(key=lambda x: x["score"], reverse=True)
-        for sig in raw[:2]:
-            sym_clean = sig["symbol"].replace(".NS", "")
-            sig["scanned_at"]  = scan_ts
-            sig["fallback"]    = True   # flag for display
-            results.append(sig)
-
-    logging.info(f"Scan done: {len(results)} signals from {len(universe)} stocks "
-                 f"(score≥{min_score}, RR≥{MIN_RR})")
+    # No fallback — if zero signals fire, that is correct. Do not relax criteria.
+    logging.info(f"Scan done: {len(results)} A/A+ signals from {len(universe)} stocks "
+                 f"(score≥{min_score}, RR≥1.5, ADX≥20, Vol≥2.5x)")
     return results
 
 
@@ -2151,8 +2152,9 @@ def scan_intraday_momentum() -> list:
     Returns list of signals (entry = current price, SL = VWAP, T1/T2 = ATR extensions).
     """
     import pytz as _tz
+    from datetime import datetime as _dt
     _IST = _tz.timezone("Asia/Kolkata")
-    _now = datetime.now(_IST)
+    _now = _dt.now(_IST)
     # Only run 9:30–14:30 IST
     _h, _m = _now.hour, _now.minute
     if not (9 <= _h < 14 or (_h == 14 and _m <= 30)):
@@ -2203,6 +2205,14 @@ def scan_intraday_momentum() -> list:
 
             vol_spike = cur_vol / avg_vol if avg_vol > 0 else 0
 
+            # OHL 0.2% filter: first 15-min candle must be a tight range (H-L ≤ 0.2% of open)
+            first_open  = float(df_today["Open"].squeeze().iloc[0])
+            first_high  = float(df_today["High"].squeeze().iloc[0])
+            first_low   = float(df_today["Low"].squeeze().iloc[0])
+            first_range = (first_high - first_low) / first_open if first_open > 0 else 1
+            if first_range > 0.002:
+                continue
+
             # Signal criteria
             if (prev_rsi < 55 <= cur_rsi            # RSI crossing up through 55
                     and price > vwap                  # above VWAP
@@ -2236,4 +2246,74 @@ def scan_intraday_momentum() -> list:
 
     results.sort(key=lambda x: x["vol_ratio"], reverse=True)
     logging.info(f"Intraday momentum scan: {len(results)} signals")
+    return results
+
+
+def scan_first_candle_breakout() -> list:
+    """
+    Runs once at 9:30 IST (after first 15-min candle closes).
+    Returns stocks where first candle close is >1% and ≤2% above open.
+    These are early momentum movers worth watching.
+    """
+    import pytz as _tz
+    from datetime import datetime as _dt
+    _IST = _tz.timezone("Asia/Kolkata")
+    _now = _dt.now(_IST)
+
+    # Only meaningful in the 9:30–9:45 window (first candle just closed)
+    _h, _m = _now.hour, _now.minute
+    if not (_h == 9 and 30 <= _m <= 44):
+        return []
+
+    results = []
+    try:
+        raw = yf.download(
+            _INTRADAY_UNIVERSE, period="2d", interval="15m",
+            group_by="ticker", progress=False, auto_adjust=True, timeout=30
+        )
+    except Exception as e:
+        logging.warning(f"First-candle download failed: {e}")
+        return []
+
+    today_str = _now.strftime("%Y-%m-%d")
+
+    for sym in _INTRADAY_UNIVERSE:
+        try:
+            if len(_INTRADAY_UNIVERSE) == 1:
+                df = raw
+            else:
+                df = raw[sym] if sym in raw.columns.get_level_values(0) else None
+            if df is None or df.empty:
+                continue
+
+            _today_mask = df.index.strftime("%Y-%m-%d") == today_str if hasattr(df.index, "strftime") else slice(None)
+            df_today = df[_today_mask]
+            if df_today.empty or len(df_today) < 1:
+                continue
+
+            first_open  = float(df_today["Open"].squeeze().iloc[0])
+            first_close = float(df_today["Close"].squeeze().iloc[0])
+            first_high  = float(df_today["High"].squeeze().iloc[0])
+            first_vol   = float(df_today["Volume"].squeeze().iloc[0])
+
+            if first_open <= 0:
+                continue
+
+            pct_from_open = (first_close - first_open) / first_open * 100
+
+            if 1.0 < pct_from_open <= 2.0:
+                results.append({
+                    "symbol":      sym.replace(".NS", ""),
+                    "open":        round(first_open, 2),
+                    "close":       round(first_close, 2),
+                    "high":        round(first_high, 2),
+                    "pct_from_open": round(pct_from_open, 2),
+                    "volume":      int(first_vol),
+                })
+        except Exception as e:
+            logging.debug(f"First-candle {sym}: {e}")
+            continue
+
+    results.sort(key=lambda x: x["pct_from_open"])
+    logging.info(f"First-candle breakout scan: {len(results)} stocks (1%–2% movers)")
     return results

@@ -16,5 +16,12 @@ apscheduler>=3.10
 # Optional — broker integration (best-effort install, failures won't break scanner)
 upstox-python-sdk; python_version>="3.9"
 
+# Flask API server (serves data to Dhruvedge on Vercel)
+flask>=3.0
+
 # Telegram AI bot
 groq>=0.4.0
+
+# TradeFlow AI (tradeflow_streamlit.py)
+anthropic>=0.25.0
+python-dotenv>=1.0

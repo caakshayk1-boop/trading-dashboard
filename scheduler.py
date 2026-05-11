@@ -8,6 +8,7 @@ from scanner import scan_all, scan_commodities, is_trading_day
 from telegram_bot import send_alert, send_summary, send_top_picks
 from tracker import log_signals, update_outcomes
 from config import SEND_TOP_PICKS_ONLY
+from deploy_dhruvedge import run as deploy_dhruvedge
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s %(levelname)s %(message)s")
@@ -58,6 +59,12 @@ def run_scan(slot: str):
             send_alert(s)
     send_summary(signals)
     logging.info(f"Scan done [{label}]: {len(signals)} signals")
+
+    # Auto-deploy Dhruvedge after every scan
+    try:
+        deploy_dhruvedge()
+    except Exception as e:
+        logging.warning(f"Dhruvedge deploy failed (non-fatal): {e}")
 
 
 if __name__ == "__main__":

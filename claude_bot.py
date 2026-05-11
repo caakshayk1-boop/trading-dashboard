@@ -1,10 +1,11 @@
 """
-claude_bot.py — AI-powered Telegram bot + auto-scheduler
+claude_bot.py — AI-powered Telegram bot + auto-scheduler + Flask API
 Commands: Brief: NSE:TICKER | Trade: NSE:TICKER | Scan | Carousel: topic | Help
 Auto-scans: 9:20 AM | 11:45 AM | 4:30 PM IST (Mon–Fri)
+Flask API: /api/signals  /api/portfolio  /api/health  (served on $PORT for Dhruvedge)
 """
-import os, sys, time, logging, threading
-from datetime import datetime
+import os, sys, time, logging, threading, json, sqlite3
+from datetime import datetime, timezone, timedelta
 import requests
 import yfinance as yf
 import pytz
@@ -13,6 +14,239 @@ sys.path.insert(0, os.path.dirname(__file__))
 from telegram_bot import _post, TELEGRAM_TOKEN
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+IST_TZ = timezone(timedelta(hours=5, minutes=30))
+CAPITAL = 500000
+DB_PATH = os.path.join(os.path.dirname(__file__), "signals.db")
+
+# In-memory position state: symbol → {"trailed_sl": float, "t1_hit": bool}
+_position_states: dict = {}
+_STATES_FILE = "/tmp/position_states.json"
+
+def _load_position_states():
+    global _position_states
+    try:
+        if os.path.exists(_STATES_FILE):
+            with open(_STATES_FILE) as f:
+                _position_states = json.load(f)
+    except Exception:
+        _position_states = {}
+
+def _save_position_states():
+    try:
+        with open(_STATES_FILE, "w") as f:
+            json.dump(_position_states, f)
+    except Exception:
+        pass
+
+def _score_to_conviction(score: int) -> str:
+    if score >= 80: return "A+"
+    if score >= 65: return "A"
+    if score >= 50: return "B"
+    return "C"
+
+def _nse_yahoo(sym: str) -> str:
+    overrides = {"M&M": "M%26M.NS", "MCDOWELL-N": "MCDOWELL-N.NS",
+                 "HDFC BANK": "HDFCBANK.NS", "ICICI BANK": "ICICIBANK.NS"}
+    s = sym.strip().upper()
+    return overrides.get(s, f"{s}.NS")
+
+def _db_open_signals(min_score: int = 65) -> list:
+    """Read OPEN A/A+ signals from signals.db."""
+    if not os.path.exists(DB_PATH):
+        return []
+    try:
+        con = sqlite3.connect(DB_PATH)
+        con.row_factory = sqlite3.Row
+        rows = con.execute(
+            "SELECT * FROM all_signals WHERE status='OPEN' AND score>=? ORDER BY score DESC, date DESC",
+            (min_score,)
+        ).fetchall()
+        con.close()
+        return [dict(r) for r in rows]
+    except Exception as e:
+        logging.warning(f"DB read error: {e}")
+        return []
+
+def _db_update_signal(signal_id: int, status: str, exit_price: float, pnl_pct: float):
+    try:
+        con = sqlite3.connect(DB_PATH)
+        con.execute(
+            "UPDATE all_signals SET status=?, exit_price=?, pnl_pct=? WHERE id=?",
+            (status, exit_price, pnl_pct, signal_id)
+        )
+        con.commit()
+        con.close()
+    except Exception as e:
+        logging.warning(f"DB update error: {e}")
+
+
+# ── Flask API (serves data to Dhruvedge on Vercel) ───────────────────────────
+
+def _start_api_server():
+    """Run Flask API in a background thread on $PORT."""
+    try:
+        from flask import Flask, jsonify
+        app = Flask(__name__)
+
+        @app.route("/api/health")
+        def health():
+            return jsonify({"status": "ok", "ts": datetime.now(IST_TZ).isoformat()})
+
+        @app.route("/api/signals")
+        def api_signals():
+            rows = _db_open_signals(min_score=0)  # all OPEN for display
+            now  = datetime.now(IST_TZ).strftime("%Y-%m-%d")
+            return jsonify({"all_signals": rows, "signals": [], "exported_at": now})
+
+        @app.route("/api/portfolio")
+        def api_portfolio():
+            rows = _db_open_signals(min_score=65)  # A/A+ only in portfolio
+            positions = []
+            for r in rows:
+                score  = int(r.get("score") or 0)
+                sym    = (r.get("symbol") or "").strip().upper()
+                entry  = float(r.get("entry") or 0)
+                sl     = float(r.get("sl") or r.get("sl2") or entry * 0.96)
+                t1     = float(r.get("target1") or entry * 1.05)
+                t2     = float(r.get("target2") or t1 * 1.02)
+                if entry <= 0 or not sym:
+                    continue
+                # Use trailed SL if T1 was hit
+                state  = _position_states.get(sym, {})
+                eff_sl = state.get("trailed_sl", sl)
+                try:
+                    meta = json.loads(r.get("metadata") or "{}")
+                    qty  = int(meta.get("qty") or 0)
+                except Exception:
+                    qty = 0
+                if qty <= 0:
+                    qty = max(1, int((CAPITAL * 0.01) / max(entry - sl, 0.01)))
+                qty = min(qty, int((CAPITAL * 0.20) / entry))
+                try:
+                    meta   = json.loads(r.get("metadata") or "{}")
+                    reas   = meta.get("reasons", "")
+                    thesis = ". ".join(reas[:3]) if isinstance(reas, list) else str(reas)[:200]
+                except Exception:
+                    thesis = f"{r.get('signal_type','Setup')} · Score {score}/100"
+                positions.append({
+                    "symbol":      sym,
+                    "yahooSymbol": _nse_yahoo(sym),
+                    "qty":         qty,
+                    "entryPrice":  round(entry, 2),
+                    "entryDate":   r.get("date", ""),
+                    "target":      round(t1, 2),
+                    "target2":     round(t2, 2),
+                    "sl":          round(eff_sl, 2),
+                    "conviction":  _score_to_conviction(score),
+                    "setup":       r.get("signal_type") or r.get("setup_type") or "Swing",
+                    "thesis":      thesis,
+                    "t1_hit":      state.get("t1_hit", False),
+                })
+            return jsonify({"capital": CAPITAL, "positions": positions,
+                            "updatedAt": datetime.now(IST_TZ).isoformat()})
+
+        port = int(os.environ.get("PORT", 8080))
+        logging.info(f"Flask API starting on port {port}")
+        app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+    except ImportError:
+        logging.warning("Flask not installed — API server not started")
+    except Exception as e:
+        logging.error(f"Flask API error: {e}")
+
+
+# ── Position monitor (every 15 min, market hours) ────────────────────────────
+
+def _monitor_positions():
+    """Check live prices for all OPEN A/A+ positions. Trail SL, detect exits."""
+    now_ist = datetime.now(IST_TZ)
+    h, m = now_ist.hour, now_ist.minute
+    # Only run 9:15–15:30 IST Mon-Fri
+    if now_ist.weekday() >= 5:
+        return
+    if not (9 * 60 + 15 <= h * 60 + m <= 15 * 60 + 30):
+        return
+
+    rows = _db_open_signals(min_score=65)
+    if not rows:
+        return
+
+    logging.info(f"Position monitor: checking {len(rows)} open positions")
+
+    for r in rows:
+        try:
+            sym     = (r.get("symbol") or "").strip().upper()
+            sig_id  = int(r.get("id", 0))
+            entry   = float(r.get("entry") or 0)
+            sl_orig = float(r.get("sl") or r.get("sl2") or entry * 0.96)
+            t1      = float(r.get("target1") or entry * 1.05)
+            t2      = float(r.get("target2") or t1 * 1.02)
+            action  = str(r.get("action", "BUY")).upper()
+
+            if entry <= 0 or not sym:
+                continue
+
+            state   = _position_states.setdefault(sym, {"trailed_sl": sl_orig, "t1_hit": False})
+            eff_sl  = state["trailed_sl"]
+
+            # Fetch live price
+            # eslint-disable-next-line
+            ticker  = yf.Ticker(_nse_yahoo(sym))
+            info    = ticker.fast_info
+            price   = float(getattr(info, "last_price", 0) or 0)
+            if price <= 0:
+                continue
+
+            ts = now_ist.strftime("%d %b %I:%M %p IST")
+
+            # SL hit check (always use effective trailing SL)
+            sl_hit = (price <= eff_sl) if action == "BUY" else (price >= eff_sl)
+            if sl_hit:
+                pnl = round((price - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                _db_update_signal(sig_id, "SL_HIT", price, pnl)
+                _position_states.pop(sym, None)
+                _save_position_states()
+                sign = "+" if pnl >= 0 else ""
+                _post(
+                    f"🔴 *SL HIT — {sym}*\n"
+                    f"Exit ₹{price:.2f} | Entry ₹{entry} | SL was ₹{eff_sl:.2f}\n"
+                    f"P&L: `{sign}{pnl}%`\n_{ts}_"
+                )
+                logging.info(f"SL hit: {sym} @ ₹{price} pnl={pnl}%")
+                continue
+
+            # T2 hit — full exit
+            t2_hit = (price >= t2) if action == "BUY" else (price <= t2)
+            if t2_hit:
+                pnl = round((price - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                _db_update_signal(sig_id, "T2_HIT", price, pnl)
+                _position_states.pop(sym, None)
+                _save_position_states()
+                _post(
+                    f"🟢 *T2 HIT — {sym}* · Full exit\n"
+                    f"Exit ₹{price:.2f} | T2 ₹{t2} | Entry ₹{entry}\n"
+                    f"P&L: `+{pnl}%`\n_{ts}_"
+                )
+                logging.info(f"T2 hit: {sym} @ ₹{price} pnl={pnl}%")
+                continue
+
+            # T1 hit — trail SL to entry (breakeven)
+            t1_hit = (price >= t1) if action == "BUY" else (price <= t1)
+            if t1_hit and not state.get("t1_hit"):
+                state["t1_hit"]      = True
+                state["trailed_sl"]  = entry  # trail SL to breakeven
+                _save_position_states()
+                _post(
+                    f"🟡 *T1 HIT — {sym}*\n"
+                    f"Price ₹{price:.2f} | T1 ₹{t1}\n"
+                    f"SL trailed to entry ₹{entry} (breakeven)\n"
+                    f"Riding to T2 ₹{t2}\n_{ts}_"
+                )
+                logging.info(f"T1 hit: {sym} @ ₹{price}, SL trailed to ₹{entry}")
+
+        except Exception as e:
+            logging.debug(f"Monitor {r.get('symbol')}: {e}")
+            continue
 IST = pytz.timezone("Asia/Kolkata")
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -292,13 +526,40 @@ def do_scan(chat_id=None) -> str:
     return f"✅ {len(signals)} signal(s) sent."
 
 
+# ── Full swing scanner (A/A+ only, wired to Dhruvedge) ───────────────────────
+
+def _run_swing_scan(slot="Auto"):
+    """Run scan_all (stricter A/A+ scanner) and log to signals.db."""
+    ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+    try:
+        from scanner import scan_all
+        from tracker import log_signals, update_all_outcomes, init_db
+        init_db()
+        update_all_outcomes()                    # close T1/T2/SL hits first
+        signals = scan_all()                     # A/A+ only (score≥65, RR≥1.5, ADX≥20)
+        if signals:
+            log_signals(signals)
+            from telegram_bot import send_alert, send_summary
+            for s in signals:
+                send_alert(s)
+            send_summary(signals)
+            logging.info(f"Swing scan [{slot}]: {len(signals)} A/A+ signals")
+        else:
+            logging.info(f"Swing scan [{slot}]: no signals")
+    except Exception as e:
+        logging.error(f"Swing scan error: {e}")
+        _post(f"⚠️ Swing scan error ({slot}): {str(e)[:200]}")
+
+
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 def _start_scheduler():
     try:
         from apscheduler.schedulers.background import BackgroundScheduler
-        from apscheduler.triggers.cron import CronTrigger
+        from apscheduler.triggers.cron import CronTrigger, IntervalTrigger
 
         sched = BackgroundScheduler(timezone=IST)
+
+        # 4H momentum scan (Telegram signals, existing logic)
         scan_times = [("09:20", "Morning"), ("11:45", "Midday"), ("16:30", "EOD")]
         for t, label in scan_times:
             h, m = t.split(":")
@@ -306,9 +567,24 @@ def _start_scheduler():
                 lambda lbl=label: _run_scan(slot=lbl, notify=True),
                 CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
             )
-            logging.info(f"Scheduled scan: {t} IST ({label})")
+
+        # Full swing scanner — A/A+ only → signals.db → served via Flask API
+        swing_slots = [("09:25", "Open"), ("11:42", "Midday"), ("16:32", "EOD"), ("20:00", "After")]
+        for t, label in swing_slots:
+            h, m = t.split(":")
+            sched.add_job(
+                lambda lbl=label: _run_swing_scan(slot=lbl),
+                CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
+            )
+
+        # Position monitor — every 15 min during market hours
+        sched.add_job(
+            _monitor_positions,
+            IntervalTrigger(minutes=15, timezone=IST)
+        )
+
         sched.start()
-        logging.info("Scheduler started.")
+        logging.info("Scheduler started: 4H scan + swing scan + 15-min position monitor")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 
@@ -429,9 +705,17 @@ def route(text: str, chat_id: str):
 # ── Polling loop ──────────────────────────────────────────────────────────────
 def run():
     _load_cache()
+    _load_position_states()
+    # Flask API in background thread (serves signals + portfolio to Dhruvedge)
+    threading.Thread(target=_start_api_server, daemon=True).start()
     _start_scheduler()
     logging.info("Claude Bot started. Polling Telegram...")
-    _post("🤖 *Claude AI Bot online*\nAuto-scans: 9:20 | 11:45 | 4:30 PM IST\nType `Help` for commands.")
+    _post(
+        "🤖 *Dhruvedge Bot online*\n"
+        "Swing scan: 9:25 | 11:42 | 4:32 PM IST (A/A+ only)\n"
+        "Position monitor: every 15 min · SL trail + exit alerts\n"
+        "Type `Help` for commands."
+    )
     offset = 0
     while True:
         try:

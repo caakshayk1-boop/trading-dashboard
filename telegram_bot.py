@@ -33,11 +33,11 @@ def _post(text, chat_id=None):
         return False
 
 
-def _stars(score):
-    if score >= 90: return "⭐⭐⭐⭐⭐"
-    if score >= 80: return "⭐⭐⭐⭐"
-    if score >= 70: return "⭐⭐⭐"
-    return "⭐⭐"
+def _conviction(score: int) -> str:
+    if score >= 80: return "A+"
+    if score >= 65: return "A"
+    if score >= 50: return "B"
+    return "C"
 
 
 def _setup_emoji(setup_type):
@@ -45,53 +45,73 @@ def _setup_emoji(setup_type):
 
 
 def send_alert(signal):
+    """Send individual signal alert — only fires for A/A+ (score ≥ 65)."""
     global _last_scan_count
+    score = int(signal.get("score", 0))
+    if score < 65:
+        return False  # silently skip B/C signals
     _last_scan_count += 1
-    e    = _setup_emoji(signal.get("setup_type", ""))
+    conv = _conviction(score)
     ts   = datetime.now(IST).strftime("%d %b, %H:%M IST")
     actn = signal.get("action", "BUY")
     dir_arrow = "📈" if actn == "BUY" else "📉"
-    # Clean alert — no methodology, just trade plan
+    rr2  = signal.get("rr2", 0)
+    adx  = signal.get("adx_val", 0)
+    vol  = signal.get("vol_ratio", 0)
     msg = (
-        f"{dir_arrow} *{signal['symbol']}* | SWING {actn} {_stars(signal['score'])}\n\n"
+        f"{dir_arrow} *{signal['symbol']}* | {conv} Conviction | SWING {actn}\n"
+        f"Score: `{score}/100` · ADX `{adx}` · Vol `{vol}x`\n\n"
         f"*Entry:* ₹{signal['price']}\n"
         f"*SL:*    ₹{signal['sl2']}\n\n"
-        f"*T1:* ₹{signal['target1']}  `({signal.get('rr1',0)}R)`\n"
-        f"*T2:* ₹{signal['target2']}  `({signal.get('rr2',0)}R)`\n"
-        f"*T3:* ₹{signal['target3']}\n\n"
+        f"*T1:* ₹{signal['t1']}  `({signal.get('rr1',0)}R)`\n"
+        f"*T2:* ₹{signal['t2']}  `({rr2}R)`\n"
+        f"*T3:* ₹{signal['t3']}\n\n"
         f"Qty: *{signal.get('qty',0)} shares* | TF: Swing\n"
-        f"📈 [View Chart]({signal.get('tv_link','')})\n"
-        f"_{ts}_"
+        f"_{ts}_\n"
+        f"_Dhruvedge scanner · Not SEBI advice_"
     )
     return _post(msg)
 
 
 def send_top_picks(signals, top_n=5):
-    top = signals[:top_n]
+    """Send ranked summary — only A/A+ signals included."""
+    top = [s for s in signals if int(s.get("score", 0)) >= 65][:top_n]
     if not top:
         return
-    lines = [f"🏆 *Top {len(top)} Swing Picks*\n"]
+    ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+    lines = [f"🏆 *Top {len(top)} Swing Picks — {ts}*\n"]
     for i, s in enumerate(top, 1):
+        conv = _conviction(int(s.get("score", 0)))
         e = _setup_emoji(s.get("setup_type", ""))
         lines.append(
-            f"{i}. {e} *{s['symbol']}* — Score {s['score']}/100\n"
-            f"   ₹{s['price']} | SL ₹{s['sl2']} | T2 ₹{s['target2']} | {_stars(s['score'])}"
+            f"{i}. {e} *{s['symbol']}* [{conv}] — Score {s['score']}/100\n"
+            f"   ₹{s['price']} | SL ₹{s['sl2']} | T2 ₹{s['t2']} | RR {s.get('rr2',0)}x"
         )
+    lines.append("\n_Dhruvedge · Entry only on A/A+ · Not SEBI advice_")
     _post("\n".join(lines))
 
 
 def send_summary(signals):
     global _last_scan_time, _last_scan_count
     _last_scan_time  = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
-    _last_scan_count = len(signals)
+    qualifying = [s for s in signals if int(s.get("score", 0)) >= 65]
+    _last_scan_count = len(qualifying)
 
-    if not signals:
-        _post("✅ Scan complete — no qualifying signals today.\n_(ADX regime filter or score threshold not met)_")
+    if not qualifying:
+        _post(
+            f"✅ *Scan complete — {_last_scan_time}*\n"
+            f"No A/A+ signals today. All cash held.\n"
+            f"_(Score < 65 or ADX < 20 or RR < 1.5 or Vol < 2.5x — filters not met)_"
+        )
         return
-    lines = [f"📊 *Scan Summary — {len(signals)} signal(s)*\n"]
-    for s in signals:
+    lines = [f"📊 *{len(qualifying)} A/A+ Signal(s) — {_last_scan_time}*\n"]
+    for s in qualifying:
+        conv = _conviction(int(s.get("score", 0)))
         e = _setup_emoji(s.get("setup_type", ""))
-        lines.append(f"{e} *{s['symbol']}* | Score {s['score']} | ₹{s['price']} | {s.get('setup_type','')}")
+        lines.append(
+            f"{e} *{s['symbol']}* [{conv}] | Score {s['score']} | ₹{s['price']} "
+            f"| RR {s.get('rr2',0)}x | ADX {s.get('adx_val',0)}"
+        )
     _post("\n".join(lines))
 
 

@@ -19,7 +19,7 @@ try:
 except ImportError:
     VERCEL_URL = os.environ.get(
         "VERCEL_URL",
-        "https://tradeflow-jj0g1i15o-caakshayk1-2392s-projects.vercel.app"
+        "https://tradeflow-pro-kappa.vercel.app"
     )
 
 CACHE_FILE = "cache/vercel_sent.json"

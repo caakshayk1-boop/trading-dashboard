@@ -38,7 +38,8 @@ def _send(msg):
 
 def main():
     from tracker import log_to_all_signals, is_duplicate, export_signals_json, init_db
-    from scanner import scan_intraday_momentum, is_trading_day
+    from scanner import scan_intraday_momentum, scan_first_candle_breakout, is_trading_day
+    from deploy_dhruvedge import run as deploy_dhruvedge
     init_db()
 
     now      = datetime.now(IST)
@@ -61,6 +62,21 @@ def main():
         return 0
 
     logging.info(f"=== Intraday scan: {time_str} ===")
+
+    # First-candle breakout feed (9:30–9:44 IST only)
+    try:
+        fc_stocks = scan_first_candle_breakout()
+        if fc_stocks:
+            lines = [f"🕯 *First Candle Movers* — {time_str}\n_(>1% ≤2% from open · worth watching)_\n"]
+            for s in fc_stocks:
+                lines.append(
+                    f"• *{s['symbol']}* | Open ₹{s['open']} → ₹{s['close']}"
+                    f" (+{s['pct_from_open']}%) | H ₹{s['high']}"
+                )
+            lines.append("\n_Monitor for breakout continuation · Not SEBI advice_")
+            _send("\n".join(lines))
+    except Exception as e:
+        logging.warning(f"First-candle scan error: {e}")
 
     try:
         sigs = scan_intraday_momentum()
@@ -87,6 +103,13 @@ def main():
 
         export_signals_json()
         logging.info("Intraday scan complete")
+
+        # Deploy Dhruvedge if new signals fired
+        if new_sigs:
+            try:
+                deploy_dhruvedge()
+            except Exception as e:
+                logging.warning(f"Dhruvedge deploy failed (non-fatal): {e}")
         return 0
 
     except Exception as e:
