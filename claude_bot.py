@@ -99,6 +99,21 @@ def _start_api_server():
             now  = datetime.now(IST_TZ).strftime("%Y-%m-%d")
             return jsonify({"all_signals": rows, "signals": [], "exported_at": now})
 
+        @app.route("/api/admin/reset-signals", methods=["POST", "GET"])
+        def admin_reset_signals():
+            try:
+                conn = sqlite3.connect(DB_PATH)
+                cur  = conn.cursor()
+                cur.execute("UPDATE all_signals SET status='CANCELLED' WHERE status='OPEN'")
+                affected = cur.rowcount
+                conn.commit()
+                conn.close()
+                logging.info(f"[ADMIN] Reset {affected} stale OPEN signals to CANCELLED")
+                return jsonify({"ok": True, "cancelled": affected,
+                                "ts": datetime.now(IST_TZ).isoformat()})
+            except Exception as e:
+                return jsonify({"ok": False, "error": str(e)}), 500
+
         @app.route("/api/portfolio")
         def api_portfolio():
             rows = _db_open_signals(min_score=65)  # A/A+ only in portfolio
