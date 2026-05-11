@@ -537,6 +537,19 @@ def _run_swing_scan(slot="Auto"):
         init_db()
         update_all_outcomes()                    # close T1/T2/SL hits first
         signals = scan_all()                     # A/A+ only (score≥65, RR≥1.5, ADX≥20)
+
+        # Staleness guard: drop any signal where live price < entry by >2%
+        # (means signal data is stale — stock already moved against setup)
+        fresh = []
+        for s in signals:
+            entry = float(s.get("price") or s.get("entry") or 0)
+            live  = entry  # scan_all already fetches live price as "price"
+            if entry <= 0 or live >= entry * 0.98:
+                fresh.append(s)
+            else:
+                logging.info(f"Stale signal dropped: {s.get('symbol')} entry={entry} live={live}")
+        signals = fresh
+
         if signals:
             log_signals(signals)
             from telegram_bot import send_alert, send_summary
@@ -690,16 +703,8 @@ def _start_scheduler():
 
         sched = BackgroundScheduler(timezone=IST)
 
-        # 4H momentum scan (Telegram signals)
-        scan_times = [("09:20", "Morning"), ("11:45", "Midday"), ("16:30", "EOD")]
-        for t, label in scan_times:
-            h, m = t.split(":")
-            sched.add_job(
-                lambda lbl=label: _run_scan(slot=lbl, notify=True),
-                CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
-            )
-
-        # Swing scanner — A/A+ only → signals.db → Flask API
+        # Swing scanner — A/A+ only (score≥65, RR≥1.5, ADX≥20, Vol≥2.5x)
+        # _run_scan (old 4H no-gate scanner) removed — was generating garbage signals
         swing_slots = [("09:25", "Open"), ("11:42", "Midday"), ("16:32", "EOD"), ("20:00", "After")]
         for t, label in swing_slots:
             h, m = t.split(":")
@@ -731,7 +736,7 @@ def _start_scheduler():
         )
 
         sched.start()
-        logging.info("Scheduler started: 4H + swing + intraday(30min) + position monitor(15min)")
+        logging.info("Scheduler started: swing(A/A+) + intraday(30min) + CF(4x/day) + position monitor(15min)")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 
