@@ -26,6 +26,9 @@ _NSE_HOLIDAYS_2026 = {
     "25-12-2026",
 }
 
+# Symbols permanently blacklisted from signal generation
+SIGNAL_BLACKLIST = {"OLECTRA", "JBMA", "NBCC", "MCX"}
+
 def is_trading_day(dt=None):
     """Returns True if dt (default=today IST) is a valid NSE trading day."""
     import pytz
@@ -953,6 +956,8 @@ def scan_all(min_score=None):
         sym_clean = sig["symbol"].replace(".NS", "")
         if sym_clean in seen_symbols:
             continue
+        if sym_clean in SIGNAL_BLACKLIST:
+            continue
         if is_duplicate(sym_clean, "swing"):
             continue
         sig["scanned_at"] = scan_ts
@@ -1133,7 +1138,7 @@ def scan_breakouts(universe=None):
         futures = {ex.submit(analyze_breakout, sym): sym for sym in universe}
         for f in as_completed(futures):
             r = f.result()
-            if r:
+            if r and r.get("symbol", "").replace(".NS", "") not in SIGNAL_BLACKLIST:
                 results.append(r)
 
     tf_rank = {"Monthly": 3, "Weekly": 2, "Daily": 1}
@@ -1341,7 +1346,7 @@ def scan_4h(universe=None):
         futures = {ex.submit(analyze_4h, sym): sym for sym in universe}
         for f in as_completed(futures):
             r = f.result()
-            if r:
+            if r and r.get("symbol", "").replace(".NS", "") not in SIGNAL_BLACKLIST:
                 results.append(r)
 
     results.sort(key=lambda x: x["vol_ratio"], reverse=True)
