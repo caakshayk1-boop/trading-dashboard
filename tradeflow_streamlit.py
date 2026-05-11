@@ -511,8 +511,8 @@ elif page == "Signal Advisor":
     st.title("Signal Advisor — Expert Setup Review")
     st.caption("Paste your setup. Get a pro-level intraday opinion in 10 seconds.")
 
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        st.error("Set ANTHROPIC_API_KEY in Streamlit secrets to enable Signal Advisor.")
+    if not os.environ.get("GROQ_API_KEY"):
+        st.error("Set GROQ_API_KEY in Streamlit secrets (Settings → Secrets) to enable Signal Advisor.")
         st.stop()
 
     ADVISOR_SYSTEM = """You are a senior intraday trader and technical analyst with 15+ years on NSE/MCX/global markets.
@@ -568,24 +568,25 @@ RSI: {rsi_val}
 {"Current Price: " + str(current_price) if current_price > 0 else ""}
 {"Additional context: " + notes if notes.strip() else ""}""".strip()
 
-        with st.spinner("Claude analyzing setup..."):
+        with st.spinner("Analyzing setup..."):
             try:
-                from anthropic import Anthropic as _Anthropic
-                _client = _Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-                _msg = _client.messages.create(
-                    model="claude-sonnet-4-6",
+                from groq import Groq as _Groq
+                _client = _Groq(api_key=os.environ["GROQ_API_KEY"])
+                _msg = _client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
                     max_tokens=700,
-                    system=[{"type": "text", "text": ADVISOR_SYSTEM,
-                              "cache_control": {"type": "ephemeral"}}],
-                    messages=[{"role": "user", "content": user_msg}],
+                    messages=[
+                        {"role": "system", "content": ADVISOR_SYSTEM},
+                        {"role": "user", "content": user_msg},
+                    ],
                 )
-                analysis = _msg.content[0].text
+                analysis = _msg.choices[0].message.content
                 st.markdown("---")
                 st.markdown(analysis)
                 st.markdown("---")
-                st.caption("⚠ Not SEBI-registered · Educational only · Always do your own risk assessment.")
+                st.caption("⚠ Not SEBI-registered · Educational only · Always manage your own risk.")
             except Exception as e:
-                st.error(f"Claude error: {e}")
+                st.error(f"Analysis error: {e}")
 
 # ─────────────────────────────────────────────────────────────────────────────
 elif page == "Insights":
