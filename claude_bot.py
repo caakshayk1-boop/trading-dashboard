@@ -913,12 +913,27 @@ def run():
     threading.Thread(target=_start_api_server, daemon=True).start()
     _start_scheduler()
     logging.info("Claude Bot started. Polling Telegram...")
-    _post(
-        "🤖 *Dhruvedge Bot online*\n"
-        "Scans: 9:25 | 11:42 | 4:32 PM IST (swing A/A+) · Intraday 30min · CF 4x/day\n"
-        "Monitor: every 15 min · SL trail + exit alerts\n"
-        "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/stats`"
-    )
+    # Remove any leftover custom keyboard (e.g. from Sherlock bot)
+    try:
+        import json as _json
+        requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            json={
+                "chat_id": __import__('os').environ.get("TELEGRAM_CHAT_ID") or
+                           __import__('importlib').import_module('telegram_bot').TELEGRAM_CHAT_ID,
+                "text": "🤖 *Dhruvedge Bot online*\n"
+                        "Scans: 9:25 | 11:42 | 4:32 PM IST (A/A+) · Intraday 30min · CF 4x/day\n"
+                        "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/stats`",
+                "parse_mode": "Markdown",
+                "reply_markup": {"remove_keyboard": True}
+            }, timeout=10
+        )
+    except Exception:
+        _post(
+            "🤖 *Dhruvedge Bot online*\n"
+            "Scans: 9:25 | 11:42 | 4:32 PM IST (A/A+) · Intraday 30min · CF 4x/day\n"
+            "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/stats`"
+        )
     offset = 0
     while True:
         try:
