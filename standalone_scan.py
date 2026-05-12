@@ -387,7 +387,10 @@ def run_swing_scan(time_str):
     from scanner import scan_all
     from telegram_bot import send_alert, send_summary, send_top_picks
     from tracker import log_signals, update_outcomes, update_all_outcomes, init_db, log_to_all_signals
-    from config import SEND_TOP_PICKS_ONLY
+    try:
+        from config import SEND_TOP_PICKS_ONLY
+    except (ImportError, ModuleNotFoundError):
+        SEND_TOP_PICKS_ONLY = os.environ.get("SEND_TOP_PICKS_ONLY", "false").lower() == "true"
 
     init_db()
     logging.info("Updating open trade outcomes (swing + all)...")

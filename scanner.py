@@ -8,8 +8,19 @@ import pandas as pd
 import numpy as np
 import requests, os, time, logging, functools
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from config import (MIN_SIGNAL_SCORE, MIN_PRICE, MIN_AVG_VOLUME,
-                    ENABLE_WEEKLY_CONFIRM, MAX_PE, MAX_WORKERS, CAPITAL, RISK_PER_TRADE)
+try:
+    from config import (MIN_SIGNAL_SCORE, MIN_PRICE, MIN_AVG_VOLUME,
+                        ENABLE_WEEKLY_CONFIRM, MAX_PE, MAX_WORKERS, CAPITAL, RISK_PER_TRADE)
+except (ImportError, ModuleNotFoundError):
+    # Railway / CI: config.py is gitignored — use env vars with sane defaults
+    MIN_SIGNAL_SCORE    = int(os.environ.get("MIN_SIGNAL_SCORE", 70))
+    MIN_PRICE           = float(os.environ.get("MIN_PRICE", 50))
+    MIN_AVG_VOLUME      = int(os.environ.get("MIN_AVG_VOLUME", 50000))
+    ENABLE_WEEKLY_CONFIRM = os.environ.get("ENABLE_WEEKLY_CONFIRM", "true").lower() == "true"
+    MAX_PE              = float(os.environ.get("MAX_PE", 60))
+    MAX_WORKERS         = int(os.environ.get("MAX_WORKERS", 10))
+    CAPITAL             = float(os.environ.get("CAPITAL", 500000))
+    RISK_PER_TRADE      = float(os.environ.get("RISK_PER_TRADE", 0.01))
 
 os.makedirs("logs", exist_ok=True)
 os.makedirs("cache", exist_ok=True)
