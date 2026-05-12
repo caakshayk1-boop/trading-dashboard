@@ -889,7 +889,24 @@ def route(text: str, chat_id: str):
 
 
 # ── Polling loop ──────────────────────────────────────────────────────────────
+def _delete_webhook():
+    """Delete any registered webhook so getUpdates polling works cleanly."""
+    try:
+        r = requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/deleteWebhook",
+            json={"drop_pending_updates": False}, timeout=10
+        )
+        result = r.json()
+        if result.get("ok"):
+            logging.info("Webhook deleted — polling mode active")
+        else:
+            logging.warning(f"deleteWebhook: {result}")
+    except Exception as e:
+        logging.warning(f"deleteWebhook error: {e}")
+
+
 def run():
+    _delete_webhook()   # ← MUST run before polling starts
     _load_cache()
     _load_position_states()
     # Flask API in background thread (serves signals + portfolio to Dhruvedge)
@@ -898,23 +915,26 @@ def run():
     logging.info("Claude Bot started. Polling Telegram...")
     _post(
         "🤖 *Dhruvedge Bot online*\n"
-        "Swing scan: 9:25 | 11:42 | 4:32 PM IST (A/A+ only)\n"
-        "Position monitor: every 15 min · SL trail + exit alerts\n"
-        "Type `Help` for commands."
+        "Scans: 9:25 | 11:42 | 4:32 PM IST (swing A/A+) · Intraday 30min · CF 4x/day\n"
+        "Monitor: every 15 min · SL trail + exit alerts\n"
+        "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/stats`"
     )
     offset = 0
     while True:
         try:
             url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
             r   = requests.get(url, params={"offset": offset, "timeout": 30}, timeout=35)
-            if r.ok:
-                for upd in r.json().get("result", []):
-                    offset = upd["update_id"] + 1
-                    msg    = upd.get("message", {})
-                    txt    = msg.get("text", "").strip()
-                    cid    = str(msg.get("chat", {}).get("id", ""))
-                    if txt and cid:
-                        threading.Thread(target=route, args=(txt, cid), daemon=True).start()
+            if not r.ok:
+                logging.warning(f"getUpdates HTTP {r.status_code}: {r.text[:200]}")
+                time.sleep(5)
+                continue
+            for upd in r.json().get("result", []):
+                offset = upd["update_id"] + 1
+                msg    = upd.get("message", {})
+                txt    = msg.get("text", "").strip()
+                cid    = str(msg.get("chat", {}).get("id", ""))
+                if txt and cid:
+                    threading.Thread(target=route, args=(txt, cid), daemon=True).start()
         except Exception as e:
             logging.warning(f"Poll error: {e}")
             time.sleep(5)
