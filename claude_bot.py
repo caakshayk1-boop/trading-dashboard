@@ -798,14 +798,18 @@ def route(text: str, chat_id: str):
 
     # /stats — override with real bot stats
     if tl == "/stats":
+        now_ist = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+        open_sigs = _db_open_signals(min_score=65)
         _post(
-            f"⚙️ *Bot Status*\n\n"
+            f"⚙️ *Bot Status* — {now_ist}\n\n"
             f"Last scan: {_last_scan_ts or 'Not run yet'}\n"
-            f"Slot: {_last_scan_slot or '—'}\n"
-            f"Signals found: {_last_scan_count}\n"
-            f"Active signals: {len(_active_signals)}\n\n"
-            f"Auto-scans: 9:20 | 11:45 | 16:30 IST (Mon–Fri)\n"
-            f"Data: yfinance 4H | Criteria: RSI↑ + Vol 3x+ + Candle",
+            f"Open signals in DB: {len(open_sigs)}\n\n"
+            f"*Schedule (IST):*\n"
+            f"Swing A/A+: 9:25 · 11:42 · 16:32 · 20:00\n"
+            f"Intraday: 9:30–14:30 every 30min\n"
+            f"CF (Forex/Commod): 10:00 · 14:00 · 18:00 · 22:00\n"
+            f"Position monitor: every 15min (market hours)\n\n"
+            f"Commands: `Scan` · `/cf` · `/intraday` · `Brief: NSE:X` · `Trade: NSE:X`",
             chat_id
         )
         return
