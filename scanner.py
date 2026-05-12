@@ -2221,19 +2221,11 @@ def scan_intraday_momentum() -> list:
 
             vol_spike = cur_vol / avg_vol if avg_vol > 0 else 0
 
-            # OHL 0.2% filter: first 15-min candle must be a tight range (H-L ≤ 0.2% of open)
-            first_open  = float(df_today["Open"].squeeze().iloc[0])
-            first_high  = float(df_today["High"].squeeze().iloc[0])
-            first_low   = float(df_today["Low"].squeeze().iloc[0])
-            first_range = (first_high - first_low) / first_open if first_open > 0 else 1
-            if first_range > 0.002:
-                continue
-
             # Signal criteria
-            if (prev_rsi < 55 <= cur_rsi            # RSI crossing up through 55
-                    and price > vwap                  # above VWAP
-                    and price > e9                    # above EMA9
-                    and vol_spike >= 2.5):            # volume surge
+            if (cur_rsi >= 52 and cur_rsi > prev_rsi  # RSI rising above 52 (not crossed, trending)
+                    and price > vwap                    # above VWAP
+                    and price > e9                      # above EMA9
+                    and vol_spike >= 2.0):              # volume surge ≥ 2x
                 sl  = round(max(vwap, price - 1.0 * cur_atr), 2)
                 t1  = round(price + 1.0 * cur_atr, 2)
                 t2  = round(price + 2.0 * cur_atr, 2)

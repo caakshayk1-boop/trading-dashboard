@@ -595,18 +595,24 @@ def _scan_commodity_forex(ts: str):
         alerts = []
         for name, ticker in _CF_SYMBOLS.items():
             try:
-                df = yf.download(ticker, period="2d", interval="15m",
-                                 progress=False, auto_adjust=True, timeout=15)
-                if df is None or len(df) < 10:
+                df = yf.download(ticker, period="5d", interval="15m",
+                                 progress=False, auto_adjust=True, timeout=20)
+                if df is None or len(df) < 14:
                     continue
                 c = df["Close"].squeeze()
                 v = df["Volume"].squeeze() if "Volume" in df.columns else None
                 price    = float(c.iloc[-1])
                 prev     = float(c.iloc[-2])
-                open_day = float(c.iloc[-8]) if len(c) >= 8 else prev  # ~2h ago as proxy
+                # Use actual daily open: fetch 1d bar and take the open price
+                try:
+                    d1 = yf.download(ticker, period="2d", interval="1d",
+                                     progress=False, auto_adjust=True, timeout=10)
+                    open_day = float(d1["Open"].squeeze().iloc[-1]) if len(d1) >= 1 else prev
+                except Exception:
+                    open_day = float(c.iloc[-32]) if len(c) >= 32 else prev  # ~8h ago fallback
                 pct_move = ((price - open_day) / open_day) * 100 if open_day else 0
 
-                # RSI
+                # RSI (14-period)
                 delta = c.diff()
                 gain  = delta.clip(lower=0).rolling(14).mean()
                 loss  = (-delta.clip(upper=0)).rolling(14).mean()
@@ -619,8 +625,8 @@ def _scan_commodity_forex(ts: str):
                     spike = float(v.iloc[-1]) / float(v.iloc[-20:].mean())
                     vol_str = f" · Vol `{spike:.1f}x`"
 
-                # Only alert: RSI > 60 (momentum) + move > 0.4% from session open
-                if rsi_v > 60 and abs(pct_move) > 0.4:
+                # Alert: RSI > 55 (lowered from 60) + move > 0.3% (lowered from 0.4%)
+                if rsi_v > 55 and abs(pct_move) > 0.3:
                     atr = float((df["High"] - df["Low"]).rolling(14).mean().iloc[-1])
                     sl  = round(price - 1.0 * atr, 4) if pct_move > 0 else round(price + 1.0 * atr, 4)
                     t1  = round(price + 1.5 * atr, 4) if pct_move > 0 else round(price - 1.5 * atr, 4)
@@ -807,6 +813,19 @@ def route(text: str, chat_id: str):
     # /start
     if tl == "/start":
         _post(HELP_TEXT, chat_id)
+        return
+
+    # /cf — manual CF scan trigger
+    if tl in ("/cf", "cf scan", "commodity"):
+        _post("🌍 Running Forex & Commodity scan...", chat_id)
+        ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+        _scan_commodity_forex(ts)
+        return
+
+    # /intraday — manual intraday trigger
+    if tl in ("/intraday", "intraday"):
+        _post("⚡ Running intraday scan...", chat_id)
+        _run_intraday_scan()
         return
 
     # All other /commands — pass to telegram_bot handler
