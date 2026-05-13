@@ -248,19 +248,38 @@ def _monitor_positions():
                 logging.info(f"T2 hit: {sym} @ ₹{price} pnl={pnl}%")
                 continue
 
-            # T1 hit — trail SL to entry (breakeven)
+            # T1 hit — trail SL to entry (breakeven), enable dynamic trail
             t1_hit = (price >= t1) if action == "BUY" else (price <= t1)
             if t1_hit and not state.get("t1_hit"):
-                state["t1_hit"]      = True
-                state["trailed_sl"]  = entry  # trail SL to breakeven
+                state["t1_hit"]     = True
+                state["trailed_sl"] = entry
+                state["peak_price"] = price   # track highest price seen after T1
                 _save_position_states()
                 _post(
                     f"🟡 *T1 HIT — {sym}*\n"
                     f"Price ₹{price:.2f} | T1 ₹{t1}\n"
                     f"SL trailed to entry ₹{entry} (breakeven)\n"
-                    f"Riding to T2 ₹{t2}\n_{ts}_"
+                    f"Riding to T2 ₹{t2} · Dynamic trail active\n_{ts}_"
                 )
                 logging.info(f"T1 hit: {sym} @ ₹{price}, SL trailed to ₹{entry}")
+
+            # Dynamic trail after T1 — trail SL to 60% of move from entry
+            if state.get("t1_hit") and action == "BUY":
+                peak = state.get("peak_price", price)
+                if price > peak:
+                    state["peak_price"] = price
+                    # Trail SL to 60% of move from entry to new peak
+                    new_sl = round(entry + (price - entry) * 0.60, 2)
+                    if new_sl > state["trailed_sl"]:
+                        old_sl = state["trailed_sl"]
+                        state["trailed_sl"] = new_sl
+                        _save_position_states()
+                        _post(
+                            f"📈 *SL TRAILED — {sym}*\n"
+                            f"Price ₹{price:.2f} (new high)\n"
+                            f"SL: ₹{old_sl} → ₹{new_sl}\n_{ts}_"
+                        )
+                        logging.info(f"Trail update: {sym} new peak={price}, SL trailed {old_sl}→{new_sl}")
 
         except Exception as e:
             logging.debug(f"Monitor {r.get('symbol')}: {e}")
