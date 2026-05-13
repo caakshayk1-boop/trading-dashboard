@@ -136,8 +136,11 @@ def _start_api_server():
                 except Exception:
                     qty = 0
                 if qty <= 0:
-                    qty = max(1, int((CAPITAL * 0.01) / max(entry - sl, 0.01)))
-                qty = min(qty, int((CAPITAL * 0.20) / entry))
+                    # 2% risk per trade on ₹5L capital
+                    risk_amt = CAPITAL * 0.02          # ₹10,000 risk per trade
+                    risk_per_share = max(entry - sl, 0.01)
+                    qty = max(1, int(risk_amt / risk_per_share))
+                qty = min(qty, int((CAPITAL * 0.25) / entry))  # max 25% per position
                 try:
                     meta   = json.loads(r.get("metadata") or "{}")
                     reas   = meta.get("reasons", "")
@@ -725,12 +728,14 @@ def _start_scheduler():
         sched = BackgroundScheduler(timezone=IST)
 
         # Swing scanner — A/A+ only (score≥65, RR≥1.5, ADX≥20, Vol≥2.5x)
-        # _run_scan (old 4H no-gate scanner) removed — was generating garbage signals
         swing_slots = [("09:25", "Open"), ("11:42", "Midday"), ("16:32", "EOD"), ("20:00", "After")]
         for t, label in swing_slots:
             h, m = t.split(":")
+            def _swing_job(lbl=label):
+                logging.info(f"[SCHED] Swing scan firing: {lbl}")
+                _run_swing_scan(slot=lbl)
             sched.add_job(
-                lambda lbl=label: _run_swing_scan(slot=lbl),
+                _swing_job,
                 CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
             )
 
@@ -817,6 +822,43 @@ def route(text: str, chat_id: str):
     # /start
     if tl == "/start":
         _post(HELP_TEXT, chat_id)
+        return
+
+    # /track SYM ENTRY SL T1 T2 — add manual trade to DB for monitoring
+    if tl.startswith("/track"):
+        parts = t.split()
+        if len(parts) < 5:
+            _post(
+                "Usage: `/track SYM ENTRY SL T1 T2`\n"
+                "Example: `/track DRREDDY 6200 6050 6380 6550`\n"
+                "Bot will monitor SL trail + T1/T2 exits automatically.",
+                chat_id
+            )
+            return
+        try:
+            sym    = parts[1].upper()
+            entry  = float(parts[2])
+            sl     = float(parts[3])
+            t1     = float(parts[4])
+            t2     = float(parts[5]) if len(parts) > 5 else round(entry + (t1 - entry) * 2, 2)
+            rr     = round((t2 - entry) / (entry - sl), 1) if entry > sl else 0
+            from tracker import log_to_all_signals, init_db
+            init_db()
+            log_to_all_signals(
+                symbol=sym, signal_type="manual", action="BUY",
+                entry=entry, sl=sl, t1=t1, t2=t2, t3=round(entry + (t2 - entry) * 1.5, 2),
+                rr=rr, timeframe="Swing", score=70,
+                metadata={"source": "manual_track", "added_by": "user"}
+            )
+            _post(
+                f"✅ *{sym} added to monitor*\n"
+                f"Entry ₹{entry} | SL ₹{sl} | T1 ₹{t1} | T2 ₹{t2}\n"
+                f"RR: `{rr}x` · Bot will trail SL at T1 hit & alert on exits.\n"
+                f"_Position monitor runs every 15min (market hours)_",
+                chat_id
+            )
+        except Exception as e:
+            _post(f"❌ Track error: {e}\nUsage: `/track SYM ENTRY SL T1 T2`", chat_id)
         return
 
     # /cf — manual CF scan trigger
@@ -910,34 +952,28 @@ def _delete_webhook():
 
 
 def run():
-    _delete_webhook()   # ← MUST run before polling starts
+    _delete_webhook()
     _load_cache()
     _load_position_states()
-    # Flask API in background thread (serves signals + portfolio to Dhruvedge)
     threading.Thread(target=_start_api_server, daemon=True).start()
     _start_scheduler()
     logging.info("Claude Bot started. Polling Telegram...")
-    # Remove any leftover custom keyboard (e.g. from Sherlock bot)
+    from telegram_bot import TELEGRAM_CHAT_ID as _CHAT_ID
+    _cid = os.environ.get("TELEGRAM_CHAT_ID") or _CHAT_ID
     try:
-        import json as _json
         requests.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
             json={
-                "chat_id": __import__('os').environ.get("TELEGRAM_CHAT_ID") or
-                           __import__('importlib').import_module('telegram_bot').TELEGRAM_CHAT_ID,
+                "chat_id": _cid,
                 "text": "🤖 *Dhruvedge Bot online*\n"
-                        "Scans: 9:25 | 11:42 | 4:32 PM IST (A/A+) · Intraday 30min · CF 4x/day\n"
-                        "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/stats`",
+                        "Swing: 9:25·11:42·16:32·20:00 | Intraday: 9:30–14:30 | CF: 10·14·18·22\n"
+                        "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/track` · `/stats`",
                 "parse_mode": "Markdown",
                 "reply_markup": {"remove_keyboard": True}
             }, timeout=10
         )
-    except Exception:
-        _post(
-            "🤖 *Dhruvedge Bot online*\n"
-            "Scans: 9:25 | 11:42 | 4:32 PM IST (A/A+) · Intraday 30min · CF 4x/day\n"
-            "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/stats`"
-        )
+    except Exception as e:
+        logging.warning(f"Startup message error: {e}")
     offset = 0
     while True:
         try:
