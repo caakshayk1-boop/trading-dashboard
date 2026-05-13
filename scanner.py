@@ -2503,7 +2503,7 @@ def scan_magic(universe=None, top_n=15) -> list:
 
     results = []
 
-    def _analyze_magic(ticker_sym: str) -> dict | None:
+    def _analyze_magic(ticker_sym: str):
         sym_clean = ticker_sym.replace(".NS", "")
         if sym_clean in SIGNAL_BLACKLIST:
             return None
@@ -2586,4 +2586,92 @@ def scan_magic(universe=None, top_n=15) -> list:
 
     results.sort(key=lambda x: x["score"], reverse=True)
     logging.info(f"Magic screener: {len(results)} qualified / {len(universe)} scanned")
+    return results[:top_n]
+
+
+def scan_magicmagic(universe=None, top_n=15) -> list:
+    """
+    MagicMagic Screener: same as scan_magic but ONLY stocks
+    20–40% below 52W High (deep dip, not a falling knife, not just a small dip).
+    """
+    if universe is None:
+        universe = load_nifty500()
+
+    results = []
+
+    def _analyze_magicmagic(ticker_sym: str):
+        sym_clean = ticker_sym.replace(".NS", "")
+        if sym_clean in SIGNAL_BLACKLIST:
+            return None
+        try:
+            df1y = yf.download(ticker_sym, period="1y", interval="1d",
+                               progress=False, auto_adjust=True)
+            if df1y is None or len(df1y) < 50:
+                return None
+
+            c     = df1y["Close"].squeeze()
+            h     = df1y["High"].squeeze()
+            price = float(c.iloc[-1])
+            hi52  = float(h.max())
+            dist_from_hi = (hi52 - price) / hi52 * 100
+
+            # MagicMagic filter: MUST be 20–40% below 52W high
+            if not (20.0 <= dist_from_hi <= 40.0):
+                return None
+
+            rsi_w = _weekly_rsi(ticker_sym)
+            if rsi_w < 46:
+                return None
+
+            cagr = _cagr_3yr(ticker_sym)
+            if cagr <= 0:
+                return None
+
+            lo52 = float(df1y["Low"].squeeze().min())
+            dist_from_lo = (price - lo52) / lo52 * 100
+            if dist_from_lo < 10.0:
+                return None
+
+            it = _investtech_signals(ticker_sym)
+
+            score = 0
+            if it["short"]  == "BUY":   score += 30
+            elif it["short"]  == "WATCH": score += 15
+            if it["swing"]  == "BUY":   score += 35
+            elif it["swing"]  == "WATCH": score += 20
+            if it["long"]   == "BUY":   score += 35
+            elif it["long"]   == "WATCH": score += 15
+            score += min(int((rsi_w - 46) * 1.5), 20)
+            score += min(int(dist_from_hi * 0.3), 12)   # slightly more bonus for deeper dip
+
+            return {
+                "symbol":        sym_clean,
+                "price":         round(price, 2),
+                "cagr_3yr":      cagr,
+                "weekly_rsi":    round(rsi_w, 1),
+                "dist_52wh":     round(dist_from_hi, 1),
+                "dist_52wl":     round(dist_from_lo, 1),
+                "hi52":          round(hi52, 2),
+                "score":         score,
+                "short":         it["short"],
+                "short_note":    it["short_note"],
+                "swing":         it["swing"],
+                "swing_note":    it["swing_note"],
+                "long":          it["long"],
+                "long_note":     it["long_note"],
+            }
+        except Exception as e:
+            logging.debug(f"MagicMagic scan {ticker_sym}: {e}")
+            return None
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(_analyze_magicmagic, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    results.sort(key=lambda x: x["score"], reverse=True)
+    logging.info(f"MagicMagic screener: {len(results)} qualified / {len(universe)} scanned")
     return results[:top_n]

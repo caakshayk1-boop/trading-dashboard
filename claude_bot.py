@@ -770,6 +770,70 @@ def _run_intraday_scan():
         _post(f"⚠️ Intraday scan error: {str(e)[:200]}")
 
 
+def _run_magic_scan():
+    """Runs both Magic + MagicMagic screeners, logs to DB, pushes to GitHub."""
+    ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+    logging.info(f"[MAGIC] Running Magic + MagicMagic screeners at {ts}")
+    try:
+        from scanner import scan_magic, scan_magicmagic
+        from tracker import log_to_all_signals, init_db
+        init_db()
+
+        magic_results    = scan_magic(top_n=12)
+        magicmagic_results = scan_magicmagic(top_n=12)
+
+        def _fmt_block(results, label, emoji):
+            if not results:
+                return f"{emoji} *{label}* — no stocks passed filters today.\n"
+            lines = [f"{emoji} *{label} — {len(results)} stocks* | _{ts}_\n"]
+            for r in results[:6]:
+                se = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","NEUTRAL":"⚪"}.get(r.get("short",""),"⚪")
+                we = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","NEUTRAL":"⚪"}.get(r.get("swing",""),"⚪")
+                le = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","NEUTRAL":"⚪"}.get(r.get("long",""),"⚪")
+                lines.append(
+                    f"━━━━━━━━━━\n"
+                    f"*{r['symbol']}* ₹{r['price']} · Score `{r['score']}`\n"
+                    f"CAGR `{r['cagr_3yr']}%` · RSI(W) `{r['weekly_rsi']}` · `{r['dist_52wh']}%` from 52WH\n"
+                    f"{se} Short: _{r.get('short_note','—')}_\n"
+                    f"{we} Swing: _{r.get('swing_note','—')}_\n"
+                    f"{le} Long:  _{r.get('long_note','—')}_"
+                )
+            return "\n".join(lines)
+
+        msg = _fmt_block(magic_results, "Magic Screener (>15% from 52WH)", "🔮")
+        msg += "\n\n"
+        msg += _fmt_block(magicmagic_results, "MagicMagic (20–40% from 52WH)", "✨")
+        msg += "\n_Investtech-style · Not SEBI advice · @askakshayfinance_"
+        _post(msg)
+
+        # Log to DB
+        today = datetime.now(IST).strftime("%Y-%m-%d")
+        for r in magic_results:
+            try:
+                log_to_all_signals(
+                    r["symbol"], "magic", "WATCH",
+                    r["price"], None, None, None, None,
+                    None, timeframe="Weekly", score=r["score"]
+                )
+            except Exception as e:
+                logging.debug(f"Magic DB log {r['symbol']}: {e}")
+        for r in magicmagic_results:
+            try:
+                log_to_all_signals(
+                    r["symbol"], "magicmagic", "WATCH",
+                    r["price"], None, None, None, None,
+                    None, timeframe="Weekly", score=r["score"]
+                )
+            except Exception as e:
+                logging.debug(f"MagicMagic DB log {r['symbol']}: {e}")
+
+        _push_signals_to_github()
+        logging.info(f"[MAGIC] Done — Magic:{len(magic_results)} MagicMagic:{len(magicmagic_results)}")
+    except Exception as e:
+        logging.error(f"[MAGIC] Error: {e}")
+        _post(f"⚠️ Magic scan error: {str(e)[:200]}")
+
+
 def _start_scheduler():
     try:
         from apscheduler.schedulers.background import BackgroundScheduler
@@ -806,6 +870,12 @@ def _start_scheduler():
                 CronTrigger(hour=int(h), minute=int(m), timezone=IST)
             )
 
+        # Magic + MagicMagic screeners — 14:00 IST daily (7 days)
+        sched.add_job(
+            _run_magic_scan,
+            CronTrigger(hour=14, minute=0, timezone=IST)
+        )
+
         # Position monitor — every 15 min
         sched.add_job(
             _monitor_positions,
@@ -813,7 +883,7 @@ def _start_scheduler():
         )
 
         sched.start()
-        logging.info("Scheduler started: swing(A/A+) + intraday(30min) + CF(4x/day) + position monitor(15min)")
+        logging.info("Scheduler started: swing + intraday + CF(4x) + magic(14:00) + position monitor(15min)")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 
@@ -864,8 +934,9 @@ def route(text: str, chat_id: str):
             f"Swing A/A+: 9:25 · 11:42 · 16:32 · 20:00\n"
             f"Intraday: 9:30–14:30 every 30min\n"
             f"CF (Forex/Commod): 10:00 · 14:00 · 18:00 · 22:00\n"
-            f"Position monitor: every 15min (market hours)\n\n"
-            f"Commands: `Scan` · `/cf` · `/intraday` · `Brief: NSE:X` · `Trade: NSE:X`",
+            f"🔮 Magic + MagicMagic: 14:00 daily\n"
+            f"Position monitor: every 15min\n\n"
+            f"Commands: `Scan` · `/cf` · `/intraday` · `/magic` · `/track` · `Brief: NSE:X`",
             chat_id
         )
         return
@@ -912,40 +983,15 @@ def route(text: str, chat_id: str):
             _post(f"❌ Track error: {e}\nUsage: `/track SYM ENTRY SL T1 T2`", chat_id)
         return
 
-    # /magic — Magic Screener: 3YR CAGR+ × Weekly RSI 46+ × 15%+ from 52WH
-    if tl in ("/magic", "magic", "magic scan"):
+    # /magic or /magicmagic — run both screeners on demand
+    if tl in ("/magic", "magic", "magic scan", "/magicmagic", "magicmagic"):
         _post(
-            "🔮 *Magic Screener running...*\n"
-            "3YR CAGR+ × Weekly RSI ≥46 × 15%+ from 52W High\n"
-            "Investtech logic: Short / Swing / Long signals\n"
+            "🔮 *Magic + MagicMagic running...*\n"
+            "3YR CAGR+ × Weekly RSI ≥46 × Dip filters\n"
             "_Takes 3–5 min — scanning Nifty 500_",
             chat_id
         )
-        try:
-            from scanner import scan_magic
-            ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
-            results = scan_magic(top_n=12)
-            if not results:
-                _post("🔮 Magic Screener — no stocks passed all 3 filters right now.", chat_id)
-                return
-            lines = [f"🔮 *Magic Screener — {len(results)} stocks* | _{ts}_\n"
-                     f"_3YR CAGR+ · Weekly RSI≥46 · 15%+ from 52WH_\n"]
-            for r in results[:8]:
-                short_e  = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","SELL":"🔴","NEUTRAL":"⚪"}.get(r.get("short",""), "⚪")
-                swing_e  = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","SELL":"🔴","NEUTRAL":"⚪"}.get(r.get("swing",""), "⚪")
-                long_e   = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","SELL":"🔴","NEUTRAL":"⚪"}.get(r.get("long",""), "⚪")
-                lines.append(
-                    f"━━━━━━━━━━\n"
-                    f"*{r['symbol']}* · ₹{r['price']} · Score `{r['score']}`\n"
-                    f"3YR CAGR `{r['cagr_3yr']}%` · RSI(W) `{r['weekly_rsi']}` · {r['dist_52wh']}% from 52WH\n"
-                    f"{short_e} Short: _{r.get('short_note','—')}_\n"
-                    f"{swing_e} Swing: _{r.get('swing_note','—')}_\n"
-                    f"{long_e} Long:  _{r.get('long_note','—')}_"
-                )
-            lines.append("\n_Investtech-style · Not SEBI advice · @askakshayfinance_")
-            _post("\n".join(lines), chat_id)
-        except Exception as e:
-            _post(f"❌ Magic scan error: {str(e)[:200]}", chat_id)
+        _run_magic_scan()
         return
 
     # /cf — manual CF scan trigger
