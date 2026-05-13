@@ -2325,3 +2325,265 @@ def scan_first_candle_breakout() -> list:
     results.sort(key=lambda x: x["pct_from_open"])
     logging.info(f"First-candle breakout scan: {len(results)} stocks (1%–2% movers)")
     return results
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# MAGIC SCREENER — 3YR CAGR+ × Weekly RSI 46+ × 15%+ from 52W High
+# Investtech-style logic: Short (1-4w) / Swing (1-3m) / Long (3-12m)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _weekly_rsi(ticker_sym: str, period: int = 14) -> float:
+    """Compute weekly RSI for a stock."""
+    try:
+        df = yf.download(ticker_sym, period="2y", interval="1wk",
+                         progress=False, auto_adjust=True)
+        if df is None or len(df) < period + 2:
+            return 50.0
+        c = df["Close"].squeeze()
+        delta = c.diff()
+        gain  = delta.clip(lower=0).rolling(period).mean()
+        loss  = (-delta.clip(upper=0)).rolling(period).mean()
+        rs    = gain / loss.replace(0, float("inf"))
+        return float((100 - 100 / (1 + rs)).iloc[-1])
+    except Exception:
+        return 50.0
+
+
+def _cagr_3yr(ticker_sym: str) -> float:
+    """3-year price CAGR as percentage. Positive = stock has grown."""
+    try:
+        df = yf.download(ticker_sym, period="4y", interval="1mo",
+                         progress=False, auto_adjust=True)
+        if df is None or len(df) < 36:
+            return 0.0
+        c   = df["Close"].squeeze()
+        now = float(c.iloc[-1])
+        ago = float(c.iloc[-37])   # ~3 years ago
+        if ago <= 0:
+            return 0.0
+        return round(((now / ago) ** (1 / 3) - 1) * 100, 1)
+    except Exception:
+        return 0.0
+
+
+def _investtech_signals(ticker_sym: str) -> dict:
+    """
+    Investtech-style multi-timeframe analysis.
+    Returns signals for: short (1-4w), swing (1-3m), long (3-12m).
+    Logic: trend channel + RSI zone + rectangle breakout + support/resistance.
+    """
+    result = {"short": None, "swing": None, "long": None,
+              "short_note": "", "swing_note": "", "long_note": ""}
+    try:
+        # --- LONG term: monthly bars, 3 years ---
+        dfm = yf.download(ticker_sym, period="4y", interval="1mo",
+                          progress=False, auto_adjust=True)
+        if dfm is not None and len(dfm) >= 24:
+            cm = dfm["Close"].squeeze()
+            # Trend: 10M vs 20M EMA
+            ema10 = cm.ewm(span=10).mean().iloc[-1]
+            ema20 = cm.ewm(span=20).mean().iloc[-1]
+            # RSI monthly
+            dm = cm.diff()
+            gm = dm.clip(lower=0).rolling(14).mean()
+            lm = (-dm.clip(upper=0)).rolling(14).mean()
+            rsi_m = float((100 - 100 / (1 + gm / lm.replace(0, float("inf")))).iloc[-1])
+            # 52W H/L
+            dfyr = yf.download(ticker_sym, period="1y", interval="1d",
+                               progress=False, auto_adjust=True)
+            hi52 = float(dfyr["High"].squeeze().max()) if dfyr is not None and len(dfyr) > 0 else 0
+            price_now = float(cm.iloc[-1])
+            dist_hi   = (hi52 - price_now) / hi52 * 100 if hi52 > 0 else 0
+
+            if ema10 > ema20 and rsi_m > 50:
+                result["long"] = "BUY"
+                result["long_note"] = f"Rising trend · 10M>20M EMA · RSI {rsi_m:.0f} · {dist_hi:.1f}% from 52WH"
+            elif ema10 < ema20 and rsi_m < 45:
+                result["long"] = "AVOID"
+                result["long_note"] = f"Downtrend · RSI {rsi_m:.0f}"
+            else:
+                result["long"] = "WATCH"
+                result["long_note"] = f"Neutral trend · RSI {rsi_m:.0f} · {dist_hi:.1f}% from 52WH"
+
+        # --- SWING: weekly bars, 1 year ---
+        dfw = yf.download(ticker_sym, period="1y", interval="1wk",
+                          progress=False, auto_adjust=True)
+        if dfw is not None and len(dfw) >= 20:
+            cw = dfw["Close"].squeeze()
+            hw = dfw["High"].squeeze()
+            lw = dfw["Low"].squeeze()
+            ema20w = cw.ewm(span=20).mean()
+            # Weekly RSI
+            dw2 = cw.diff()
+            gw  = dw2.clip(lower=0).rolling(14).mean()
+            lw2 = (-dw2.clip(upper=0)).rolling(14).mean()
+            rsi_w = float((100 - 100 / (1 + gw / lw2.replace(0, float("inf")))).iloc[-1])
+            rsi_w_prev = float((100 - 100 / (1 + gw / lw2.replace(0, float("inf")))).iloc[-2])
+            price_w = float(cw.iloc[-1])
+            ema20_w = float(ema20w.iloc[-1])
+            # Rectangle: 6W high/low range
+            rect_hi = float(hw.iloc[-7:-1].max())
+            rect_lo = float(lw.iloc[-7:-1].min())
+            range_pct = (rect_hi - rect_lo) / rect_lo * 100 if rect_lo > 0 else 99
+
+            if price_w > rect_hi and rsi_w > 50 and range_pct < 12:
+                result["swing"] = "BUY"
+                result["swing_note"] = f"Rectangle breakout ↑ · RSI {rsi_w:.0f} · Range {range_pct:.1f}%"
+            elif price_w < rect_lo and rsi_w < 50:
+                result["swing"] = "SELL"
+                result["swing_note"] = f"Rectangle breakdown ↓ · RSI {rsi_w:.0f}"
+            elif rsi_w >= 46 and rsi_w > rsi_w_prev and price_w > ema20_w:
+                result["swing"] = "BUY"
+                result["swing_note"] = f"RSI rising {rsi_w_prev:.0f}→{rsi_w:.0f} · Above 20W EMA · Watch breakout"
+            elif rsi_w < 40:
+                result["swing"] = "WATCH"
+                result["swing_note"] = f"Oversold RSI {rsi_w:.0f} · Wait for RSI turn"
+            else:
+                result["swing"] = "NEUTRAL"
+                result["swing_note"] = f"RSI {rsi_w:.0f} · No clear breakout"
+
+        # --- SHORT term: daily bars, 3 months ---
+        dfd = yf.download(ticker_sym, period="3mo", interval="1d",
+                          progress=False, auto_adjust=True)
+        if dfd is not None and len(dfd) >= 20:
+            cd = dfd["Close"].squeeze()
+            hd = dfd["High"].squeeze()
+            ld = dfd["Low"].squeeze()
+            vd = dfd["Volume"].squeeze()
+            ema9d  = cd.ewm(span=9).mean()
+            ema21d = cd.ewm(span=21).mean()
+            # Daily RSI
+            dd2 = cd.diff()
+            gd  = dd2.clip(lower=0).rolling(14).mean()
+            ld2 = (-dd2.clip(upper=0)).rolling(14).mean()
+            rsi_d = float((100 - 100 / (1 + gd / ld2.replace(0, float("inf")))).iloc[-1])
+            # ATR
+            atr_d = float((hd - ld).rolling(14).mean().iloc[-1])
+            price_d = float(cd.iloc[-1])
+            e9  = float(ema9d.iloc[-1])
+            e21 = float(ema21d.iloc[-1])
+            # Volume spike
+            avg_vol = float(vd.iloc[-20:].mean())
+            cur_vol = float(vd.iloc[-1])
+            vol_ratio = cur_vol / avg_vol if avg_vol > 0 else 1.0
+            # Pivot: higher low in last 5 days
+            recent_low = float(ld.iloc[-5:].min())
+            prev_low   = float(ld.iloc[-10:-5].min())
+            pivot_up   = recent_low > prev_low
+
+            if e9 > e21 and rsi_d > 55 and pivot_up and vol_ratio > 1.5:
+                result["short"] = "BUY"
+                result["short_note"] = f"EMA9>21 · RSI {rsi_d:.0f} · Higher low · Vol {vol_ratio:.1f}x"
+            elif rsi_d > 50 and pivot_up and price_d > e21:
+                result["short"] = "WATCH"
+                result["short_note"] = f"RSI {rsi_d:.0f} · Pivot up forming · Above EMA21"
+            elif rsi_d < 40 and not pivot_up:
+                result["short"] = "AVOID"
+                result["short_note"] = f"RSI {rsi_d:.0f} · Lower lows"
+            else:
+                result["short"] = "NEUTRAL"
+                result["short_note"] = f"RSI {rsi_d:.0f} · No clear short signal"
+
+    except Exception as e:
+        logging.debug(f"Investtech signals {ticker_sym}: {e}")
+
+    return result
+
+
+def scan_magic(universe=None, top_n=15) -> list:
+    """
+    Magic Screener: 3YR CAGR+ × Weekly RSI 46+ × 15%+ from 52W High
+    + Investtech multi-timeframe signals (Short / Swing / Long)
+
+    Returns best recovery candidates — quality stocks in a dip,
+    RSI recovering, room to run back to 52W highs.
+    """
+    if universe is None:
+        universe = load_nifty500()
+
+    results = []
+
+    def _analyze_magic(ticker_sym: str) -> dict | None:
+        sym_clean = ticker_sym.replace(".NS", "")
+        if sym_clean in SIGNAL_BLACKLIST:
+            return None
+        try:
+            # 1. Fetch 1yr daily for price, 52WH, RSI daily
+            df1y = yf.download(ticker_sym, period="1y", interval="1d",
+                               progress=False, auto_adjust=True)
+            if df1y is None or len(df1y) < 50:
+                return None
+
+            c    = df1y["Close"].squeeze()
+            h    = df1y["High"].squeeze()
+            price = float(c.iloc[-1])
+            hi52  = float(h.max())
+            dist_from_hi = (hi52 - price) / hi52 * 100  # % below 52W high
+
+            # 2. Weekly RSI — MUST be 46+
+            rsi_w = _weekly_rsi(ticker_sym)
+            if rsi_w < 46:
+                return None
+
+            # 3. Distance from 52W high MUST be >15%
+            if dist_from_hi < 15.0:
+                return None
+
+            # 4. 3YR CAGR MUST be positive
+            cagr = _cagr_3yr(ticker_sym)
+            if cagr <= 0:
+                return None
+
+            # 5. Not near 52W low (avoid falling knives — must be >10% from low)
+            lo52 = float(df1y["Low"].squeeze().min())
+            dist_from_lo = (price - lo52) / lo52 * 100
+            if dist_from_lo < 10.0:
+                return None
+
+            # 6. Investtech signals
+            it = _investtech_signals(ticker_sym)
+
+            # Score: weight toward BUY signals across timeframes
+            score = 0
+            if it["short"]  == "BUY":   score += 30
+            elif it["short"]  == "WATCH": score += 15
+            if it["swing"]  == "BUY":   score += 35
+            elif it["swing"]  == "WATCH": score += 20
+            if it["long"]   == "BUY":   score += 35
+            elif it["long"]   == "WATCH": score += 15
+            # Bonus: higher weekly RSI = more momentum
+            score += min(int((rsi_w - 46) * 1.5), 20)
+            # Bonus: bigger dip = more room to recover
+            score += min(int(dist_from_hi * 0.3), 10)
+
+            return {
+                "symbol":        sym_clean,
+                "price":         round(price, 2),
+                "cagr_3yr":      cagr,
+                "weekly_rsi":    round(rsi_w, 1),
+                "dist_52wh":     round(dist_from_hi, 1),
+                "dist_52wl":     round(dist_from_lo, 1),
+                "hi52":          round(hi52, 2),
+                "score":         score,
+                "short":         it["short"],
+                "short_note":    it["short_note"],
+                "swing":         it["swing"],
+                "swing_note":    it["swing_note"],
+                "long":          it["long"],
+                "long_note":     it["long_note"],
+            }
+        except Exception as e:
+            logging.debug(f"Magic scan {ticker_sym}: {e}")
+            return None
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(_analyze_magic, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r:
+                results.append(r)
+
+    results.sort(key=lambda x: x["score"], reverse=True)
+    logging.info(f"Magic screener: {len(results)} qualified / {len(universe)} scanned")
+    return results[:top_n]

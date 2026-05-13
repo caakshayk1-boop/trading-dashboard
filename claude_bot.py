@@ -880,6 +880,42 @@ def route(text: str, chat_id: str):
             _post(f"❌ Track error: {e}\nUsage: `/track SYM ENTRY SL T1 T2`", chat_id)
         return
 
+    # /magic — Magic Screener: 3YR CAGR+ × Weekly RSI 46+ × 15%+ from 52WH
+    if tl in ("/magic", "magic", "magic scan"):
+        _post(
+            "🔮 *Magic Screener running...*\n"
+            "3YR CAGR+ × Weekly RSI ≥46 × 15%+ from 52W High\n"
+            "Investtech logic: Short / Swing / Long signals\n"
+            "_Takes 3–5 min — scanning Nifty 500_",
+            chat_id
+        )
+        try:
+            from scanner import scan_magic
+            ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+            results = scan_magic(top_n=12)
+            if not results:
+                _post("🔮 Magic Screener — no stocks passed all 3 filters right now.", chat_id)
+                return
+            lines = [f"🔮 *Magic Screener — {len(results)} stocks* | _{ts}_\n"
+                     f"_3YR CAGR+ · Weekly RSI≥46 · 15%+ from 52WH_\n"]
+            for r in results[:8]:
+                short_e  = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","SELL":"🔴","NEUTRAL":"⚪"}.get(r.get("short",""), "⚪")
+                swing_e  = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","SELL":"🔴","NEUTRAL":"⚪"}.get(r.get("swing",""), "⚪")
+                long_e   = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","SELL":"🔴","NEUTRAL":"⚪"}.get(r.get("long",""), "⚪")
+                lines.append(
+                    f"━━━━━━━━━━\n"
+                    f"*{r['symbol']}* · ₹{r['price']} · Score `{r['score']}`\n"
+                    f"3YR CAGR `{r['cagr_3yr']}%` · RSI(W) `{r['weekly_rsi']}` · {r['dist_52wh']}% from 52WH\n"
+                    f"{short_e} Short: _{r.get('short_note','—')}_\n"
+                    f"{swing_e} Swing: _{r.get('swing_note','—')}_\n"
+                    f"{long_e} Long:  _{r.get('long_note','—')}_"
+                )
+            lines.append("\n_Investtech-style · Not SEBI advice · @askakshayfinance_")
+            _post("\n".join(lines), chat_id)
+        except Exception as e:
+            _post(f"❌ Magic scan error: {str(e)[:200]}", chat_id)
+        return
+
     # /cf — manual CF scan trigger
     if tl in ("/cf", "cf scan", "commodity"):
         _post("🌍 Running Forex & Commodity scan...", chat_id)
