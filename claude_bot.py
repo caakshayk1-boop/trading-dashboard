@@ -596,9 +596,41 @@ def _run_swing_scan(slot="Auto"):
             logging.info(f"Swing scan [{slot}]: {len(signals)} A/A+ signals")
         else:
             logging.info(f"Swing scan [{slot}]: no signals")
+
+        # Push all_signals.json to GitHub so Dhruvedge (Vercel) gets live data
+        _push_signals_to_github()
+
     except Exception as e:
         logging.error(f"Swing scan error: {e}")
         _post(f"⚠️ Swing scan error ({slot}): {str(e)[:200]}")
+
+
+def _push_signals_to_github():
+    """Export signals.db → data/all_signals.json → git push → Dhruvedge stays live."""
+    try:
+        con = sqlite3.connect(DB_PATH)
+        con.row_factory = sqlite3.Row
+        rows = con.execute(
+            "SELECT * FROM all_signals ORDER BY date DESC LIMIT 200"
+        ).fetchall()
+        con.close()
+        data = [dict(r) for r in rows]
+        out_path = os.path.join(os.path.dirname(__file__), "data", "all_signals.json")
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        with open(out_path, "w") as f:
+            json.dump(data, f, indent=2, default=str)
+        # Git push (Railway has git installed; will silently fail if not)
+        import subprocess
+        base = os.path.dirname(__file__)
+        dt   = datetime.now(IST).strftime("%Y-%m-%d %H:%M UTC")
+        subprocess.run(["git", "-C", base, "add", "data/all_signals.json"], timeout=10)
+        subprocess.run(["git", "-C", base, "commit", "-m",
+                        f"data: update all_signals {dt} [skip ci]",
+                        "--no-verify"], timeout=10)
+        subprocess.run(["git", "-C", base, "push"], timeout=20)
+        logging.info(f"GitHub push: {len(data)} signals exported")
+    except Exception as e:
+        logging.warning(f"GitHub push skipped: {e}")
 
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
