@@ -204,11 +204,23 @@ def _monitor_positions():
             if entry <= 0 or not sym:
                 continue
 
+            # Only monitor real directional signals — skip WATCH/NEUTRAL/magic results
+            if action not in ("BUY", "SELL"):
+                continue
+
             state   = _position_states.setdefault(sym, {"trailed_sl": sl_orig, "t1_hit": False})
             eff_sl  = state["trailed_sl"]
 
+            # Sanity check: SL must be on the correct side of entry
+            # BUY: SL below entry. SELL: SL above entry. Wrong-side = bad data, skip.
+            if action == "BUY" and eff_sl >= entry:
+                logging.warning(f"Monitor skip {sym}: BUY but SL ₹{eff_sl} >= entry ₹{entry} — bad data")
+                continue
+            if action == "SELL" and eff_sl <= entry:
+                logging.warning(f"Monitor skip {sym}: SELL but SL ₹{eff_sl} <= entry ₹{entry} — bad data")
+                continue
+
             # Fetch live price
-            # eslint-disable-next-line
             ticker  = yf.Ticker(_nse_yahoo(sym))
             info    = ticker.fast_info
             price   = float(getattr(info, "last_price", 0) or 0)
@@ -224,7 +236,7 @@ def _monitor_positions():
                 _db_update_signal(sig_id, "SL_HIT", price, pnl)
                 _position_states.pop(sym, None)
                 _save_position_states()
-                sign = "+" if pnl >= 0 else ""
+                sign = "+" if pnl > 0 else ""
                 _post(
                     f"🔴 *SL HIT — {sym}*\n"
                     f"Exit ₹{price:.2f} | Entry ₹{entry} | SL was ₹{eff_sl:.2f}\n"
@@ -240,10 +252,11 @@ def _monitor_positions():
                 _db_update_signal(sig_id, "T2_HIT", price, pnl)
                 _position_states.pop(sym, None)
                 _save_position_states()
+                sign = "+" if pnl > 0 else ""
                 _post(
                     f"🟢 *T2 HIT — {sym}* · Full exit\n"
                     f"Exit ₹{price:.2f} | T2 ₹{t2} | Entry ₹{entry}\n"
-                    f"P&L: `+{pnl}%`\n_{ts}_"
+                    f"P&L: `{sign}{pnl}%`\n_{ts}_"
                 )
                 logging.info(f"T2 hit: {sym} @ ₹{price} pnl={pnl}%")
                 continue
@@ -649,8 +662,9 @@ def _scan_commodity_forex(ts: str):
         alerts = []
         for name, ticker in _CF_SYMBOLS.items():
             try:
-                df = yf.download(ticker, period="5d", interval="15m",
-                                 progress=False, auto_adjust=True, timeout=20)
+                from scanner import _yf_download as _yfd
+                df = _yfd(ticker, period="5d", interval="15m",
+                          progress=False, auto_adjust=True)
                 if df is None or len(df) < 14:
                     continue
                 c = df["Close"].squeeze()
@@ -659,8 +673,8 @@ def _scan_commodity_forex(ts: str):
                 prev     = float(c.iloc[-2])
                 # Use actual daily open: fetch 1d bar and take the open price
                 try:
-                    d1 = yf.download(ticker, period="2d", interval="1d",
-                                     progress=False, auto_adjust=True, timeout=10)
+                    d1 = _yfd(ticker, period="2d", interval="1d",
+                              progress=False, auto_adjust=True)
                     open_day = float(d1["Open"].squeeze().iloc[-1]) if len(d1) >= 1 else prev
                 except Exception:
                     open_day = float(c.iloc[-32]) if len(c) >= 32 else prev  # ~8h ago fallback
@@ -694,6 +708,18 @@ def _scan_commodity_forex(ts: str):
                         f"{emoji} *{name}* | {sign}{pct_move:.2f}% · RSI `{rsi_v:.0f}`{vol_str}\n"
                         f"   Price `{price:.4f}` | SL `{sl:.4f}` | T1 `{t1:.4f}` | T2 `{t2:.4f}` | RR `{rr}x`"
                     )
+                    # Log CF signal to DB so it's traceable
+                    try:
+                        from tracker import log_to_all_signals, init_db
+                        init_db()
+                        log_to_all_signals(
+                            name, "cf_momentum", "BUY" if pct_move > 0 else "SELL",
+                            price, sl, t1, t2, t2, rr, timeframe="15m", score=0,
+                            metadata={"rsi": round(rsi_v, 1), "pct_move": round(pct_move, 2),
+                                      "ticker": ticker}
+                        )
+                    except Exception as _e:
+                        logging.debug(f"CF DB log {name}: {_e}")
             except Exception as e:
                 logging.debug(f"CF scan {name}: {e}")
 
