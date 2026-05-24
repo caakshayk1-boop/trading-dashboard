@@ -8,6 +8,7 @@ import os, sys, time, logging, threading, json, sqlite3
 from datetime import datetime, timezone, timedelta
 import requests
 import yfinance as yf
+import pandas as pd
 import pytz
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -656,88 +657,220 @@ _CF_SYMBOLS = {
     "EURINR":  "EURINR=X",
 }
 
+def _rsi14(series: pd.Series) -> pd.Series:
+    """14-period RSI on a price series."""
+    delta = series.diff()
+    gain  = delta.clip(lower=0).rolling(14).mean()
+    loss  = (-delta.clip(upper=0)).rolling(14).mean()
+    return 100 - 100 / (1 + gain / loss.replace(0, float("inf")))
+
+
+def _atr14(high: pd.Series, low: pd.Series, close: pd.Series) -> float:
+    """14-period ATR (True Range)."""
+    tr = pd.concat([
+        high - low,
+        (high - close.shift()).abs(),
+        (low  - close.shift()).abs(),
+    ], axis=1).max(axis=1)
+    return float(tr.rolling(14).mean().iloc[-1])
+
+
 def _scan_commodity_forex(ts: str, chat_id=None):
-    """Check 15m momentum on Gold, Silver, Crude, USDINR. Push if RSI > 60 + move > 0.4%."""
+    """
+    CF scan — 1H candle signals with 4H RSI filter + Day H/L levels + Volume surge.
+
+    Signal logic:
+      BUY  : 4H RSI > 55 OR crossed above 55  +  price in upper half of day range
+              +  1H RSI 45–75 (momentum, not overbought)
+      SELL : 4H RSI < 45 OR crossed below 45  +  price in lower half of day range
+              +  1H RSI 25–55
+
+    SL  : tighter of (day_low − buffer) vs (price − 1.5×ATR_1H) for BUY
+          tighter of (day_high + buffer) vs (price + 1.5×ATR_1H) for SELL
+    T1/T2/T3 : 1.5R / 2.5R / 4R
+    Volume  : 1H vol vs 20-bar avg — flagged if ≥ 1.5×
+    """
+    from scanner import _yf_download as _yfd
+
     try:
         alerts = []
+
         for name, ticker in _CF_SYMBOLS.items():
             try:
-                from scanner import _yf_download as _yfd
-                df = _yfd(ticker, period="5d", interval="15m",
-                          progress=False, auto_adjust=True)
-                if df is None or len(df) < 14:
+                # ── Fetch data ───────────────────────────────────────────────
+                df1h = _yfd(ticker, period="7d",  interval="1h",  progress=False, auto_adjust=True)
+                df4h = _yfd(ticker, period="60d", interval="4h",  progress=False, auto_adjust=True)
+                df1d = _yfd(ticker, period="5d",  interval="1d",  progress=False, auto_adjust=True)
+
+                if df1h is None or len(df1h) < 20: continue
+                if df4h is None or len(df4h) < 16: continue
+                if df1d is None or len(df1d) < 2:  continue
+
+                c1h = df1h["Close"].squeeze()
+                h1h = df1h["High"].squeeze()
+                l1h = df1h["Low"].squeeze()
+
+                price = float(c1h.iloc[-1])
+                if price <= 0:
                     continue
-                c = df["Close"].squeeze()
-                v = df["Volume"].squeeze() if "Volume" in df.columns else None
-                price    = float(c.iloc[-1])
-                prev     = float(c.iloc[-2])
-                # Use actual daily open: fetch 1d bar and take the open price
-                try:
-                    d1 = _yfd(ticker, period="2d", interval="1d",
-                              progress=False, auto_adjust=True)
-                    open_day = float(d1["Open"].squeeze().iloc[-1]) if len(d1) >= 1 else prev
-                except Exception:
-                    open_day = float(c.iloc[-32]) if len(c) >= 32 else prev  # ~8h ago fallback
-                pct_move = ((price - open_day) / open_day) * 100 if open_day else 0
 
-                # RSI (14-period)
-                delta = c.diff()
-                gain  = delta.clip(lower=0).rolling(14).mean()
-                loss  = (-delta.clip(upper=0)).rolling(14).mean()
-                rs    = gain / loss.replace(0, float("inf"))
-                rsi_v = float((100 - 100 / (1 + rs)).iloc[-1])
+                # ── Day High / Low ───────────────────────────────────────────
+                day_high  = float(df1d["High"].squeeze().iloc[-1])
+                day_low   = float(df1d["Low"].squeeze().iloc[-1])
+                day_open  = float(df1d["Open"].squeeze().iloc[-1])
+                prev_cls  = float(df1d["Close"].squeeze().iloc[-2])
+                day_mid   = (day_high + day_low) / 2
+                day_chg   = round((price - prev_cls) / prev_cls * 100, 2) if prev_cls > 0 else 0
 
-                # Volume spike (skip if no volume data e.g. forex)
-                vol_str = ""
-                if v is not None and float(v.iloc[-20:].mean()) > 0:
-                    spike = float(v.iloc[-1]) / float(v.iloc[-20:].mean())
-                    vol_str = f" · Vol `{spike:.1f}x`"
+                # ── 1H ATR & RSI ─────────────────────────────────────────────
+                atr_1h  = _atr14(h1h, l1h, c1h)
+                if atr_1h <= 0:
+                    continue
+                rsi_1h  = float(_rsi14(c1h).iloc[-1])
 
-                # Alert: RSI > 55 (lowered from 60) + move > 0.3% (lowered from 0.4%)
-                if rsi_v > 55 and abs(pct_move) > 0.3:
-                    atr = float((df["High"] - df["Low"]).rolling(14).mean().iloc[-1])
-                    sl  = round(price - 1.0 * atr, 4) if pct_move > 0 else round(price + 1.0 * atr, 4)
-                    t1  = round(price + 1.5 * atr, 4) if pct_move > 0 else round(price - 1.5 * atr, 4)
-                    t2  = round(price + 2.5 * atr, 4) if pct_move > 0 else round(price - 2.5 * atr, 4)
-                    rr  = round(abs(t2 - price) / abs(price - sl), 1) if abs(price - sl) > 0 else 0
-                    if rr < 1.5:
-                        continue
-                    sign = "+" if pct_move > 0 else ""
-                    emoji = "📈" if pct_move > 0 else "📉"
-                    alerts.append(
-                        f"{emoji} *{name}* | {sign}{pct_move:.2f}% · RSI `{rsi_v:.0f}`{vol_str}\n"
-                        f"   Price `{price:.4f}` | SL `{sl:.4f}` | T1 `{t1:.4f}` | T2 `{t2:.4f}` | RR `{rr}x`"
+                # ── 4H RSI (current + prev bar for crossover detection) ──────
+                c4h         = df4h["Close"].squeeze()
+                rsi_4h_s    = _rsi14(c4h)
+                rsi_4h_cur  = float(rsi_4h_s.iloc[-1])
+                rsi_4h_prev = float(rsi_4h_s.iloc[-2])
+
+                # ── Volume surge (1H) ────────────────────────────────────────
+                vol_tag = ""
+                vol_surge = False
+                if "Volume" in df1h.columns:
+                    v1h     = df1h["Volume"].squeeze().replace(0, float("nan"))
+                    avg_v   = float(v1h.iloc[-20:].mean())
+                    cur_v   = float(v1h.iloc[-1])
+                    if avg_v > 0 and cur_v > 0:
+                        vr = round(cur_v / avg_v, 1)
+                        vol_surge = vr >= 1.5
+                        vol_tag   = f" 🔥 Vol `{vr}x`" if vol_surge else f" Vol `{vr}x`"
+
+                # ── Signal conditions ────────────────────────────────────────
+                bullish_4h = rsi_4h_cur > 55 or (rsi_4h_prev < 55 and rsi_4h_cur >= 55)
+                bearish_4h = rsi_4h_cur < 45 or (rsi_4h_prev > 45 and rsi_4h_cur <= 45)
+
+                if   bullish_4h and price >= day_mid and 45 <= rsi_1h <= 75:
+                    bias = "BUY"
+                elif bearish_4h and price <= day_mid and 25 <= rsi_1h <= 55:
+                    bias = "SELL"
+                else:
+                    continue
+
+                # ── SL : tighter of day-level vs ATR-level ───────────────────
+                if bias == "BUY":
+                    sl = max(
+                        round(day_low  * 0.9985, 4),   # just below day low
+                        round(price - 1.5 * atr_1h, 4) # 1.5× ATR
                     )
-                    # Log CF signal to DB so it's traceable
-                    try:
-                        from tracker import log_to_all_signals, init_db
-                        init_db()
-                        log_to_all_signals(
-                            name, "cf_momentum", "BUY" if pct_move > 0 else "SELL",
-                            price, sl, t1, t2, t2, rr, timeframe="15m", score=0,
-                            metadata={"rsi": round(rsi_v, 1), "pct_move": round(pct_move, 2),
-                                      "ticker": ticker}
-                        )
-                    except Exception as _e:
-                        logging.debug(f"CF DB log {name}: {_e}")
-            except Exception as e:
-                logging.debug(f"CF scan {name}: {e}")
+                    if sl >= price: sl = round(price - 1.5 * atr_1h, 4)
+                else:
+                    sl = min(
+                        round(day_high * 1.0015, 4),    # just above day high
+                        round(price + 1.5 * atr_1h, 4)
+                    )
+                    if sl <= price: sl = round(price + 1.5 * atr_1h, 4)
 
+                risk = abs(price - sl)
+                if risk <= 0:
+                    continue
+
+                # ── Targets (R-multiples of risk) ────────────────────────────
+                d = 1 if bias == "BUY" else -1
+                t1 = round(price + d * 1.5 * risk, 4)
+                t2 = round(price + d * 2.5 * risk, 4)
+                t3 = round(price + d * 4.0 * risk, 4)
+                rr = round(abs(t2 - price) / risk, 1)
+                if rr < 1.5:
+                    continue
+
+                # ── Context labels ───────────────────────────────────────────
+                pct_from_high = round((day_high - price) / day_high * 100, 2) if day_high > 0 else 0
+                pct_from_low  = round((price - day_low)  / day_low  * 100, 2) if day_low  > 0 else 0
+                if   pct_from_high <= 0.3: level_lbl = "🔝 At Day High"
+                elif pct_from_low  <= 0.3: level_lbl = "🔻 At Day Low"
+                elif bias == "BUY":        level_lbl = f"Upper half · {pct_from_high:.1f}% below DH"
+                else:                      level_lbl = f"Lower half · {pct_from_low:.1f}% above DL"
+
+                if   rsi_4h_prev < 55 and rsi_4h_cur >= 55:
+                    rsi_lbl = f"4H RSI crossed ↑55 🚀 (`{rsi_4h_cur:.0f}`)"
+                elif rsi_4h_prev > 45 and rsi_4h_cur <= 45:
+                    rsi_lbl = f"4H RSI crossed ↓45 💧 (`{rsi_4h_cur:.0f}`)"
+                elif bias == "BUY":
+                    rsi_lbl = f"4H RSI `{rsi_4h_cur:.0f}` (bullish zone)"
+                else:
+                    rsi_lbl = f"4H RSI `{rsi_4h_cur:.0f}` (bearish zone)"
+
+                sign    = "+" if day_chg >= 0 else ""
+                emoji   = "📈" if bias == "BUY" else "📉"
+
+                alerts.append({
+                    "name": name, "ticker": ticker, "bias": bias,
+                    "price": price, "sl": sl, "t1": t1, "t2": t2, "t3": t3,
+                    "rr": rr, "risk": risk,
+                    "day_high": day_high, "day_low": day_low,
+                    "rsi_4h": rsi_4h_cur, "rsi_1h": rsi_1h,
+                    "vol_tag": vol_tag, "vol_surge": vol_surge,
+                    "level_lbl": level_lbl, "rsi_lbl": rsi_lbl,
+                    "day_chg": day_chg, "sign": sign, "emoji": emoji,
+                })
+
+            except Exception as e:
+                logging.warning(f"CF scan {name}: {e}")
+
+        # ── Format & send ────────────────────────────────────────────────────
         if alerts:
-            msg = f"🌍 *Forex & Commodity Moves* — {ts}\n_(15m · RSI>55 · move>0.3% · R:R≥1.5)_\n\n"
-            msg += "\n\n".join(alerts)
-            msg += "\n\n_MCX/Global prices · Not SEBI advice_"
-            _post(msg, chat_id)
-            logging.info(f"CF scan: {len(alerts)} alerts pushed")
+            lines = [
+                f"🌍 *Forex & Commodity Signals* — {ts}",
+                f"_1H candle · 4H RSI cross · Day H/L · Vol surge_\n",
+            ]
+            for a in alerts:
+                lines.append(
+                    f"━━━━━━━━━━━━━━\n"
+                    f"{a['emoji']} *{a['name']}* | *{a['bias']}*{a['vol_tag']}\n"
+                    f"Price `{a['price']:.4f}` ({a['sign']}{a['day_chg']:.2f}% day)\n"
+                    f"Day H/L: `{a['day_high']:.4f}` / `{a['day_low']:.4f}`\n"
+                    f"📍 {a['level_lbl']}\n"
+                    f"📊 {a['rsi_lbl']} · 1H RSI `{a['rsi_1h']:.0f}`\n\n"
+                    f"*Entry:* `{a['price']:.4f}`\n"
+                    f"*SL:*    `{a['sl']:.4f}`\n"
+                    f"*T1:* `{a['t1']:.4f}`  _(1.5R)_\n"
+                    f"*T2:* `{a['t2']:.4f}`  _(2.5R)_\n"
+                    f"*T3:* `{a['t3']:.4f}`  _(4R)_\n"
+                    f"R:R `{a['rr']}:1`"
+                )
+                # Log to DB
+                try:
+                    from tracker import log_to_all_signals, init_db
+                    init_db()
+                    log_to_all_signals(
+                        a["name"], "cf_1h", a["bias"],
+                        a["price"], a["sl"], a["t1"], a["t2"], a["t3"],
+                        a["rr"], timeframe="1H", score=0,
+                        metadata={"rsi_4h": round(a["rsi_4h"], 1),
+                                  "rsi_1h": round(a["rsi_1h"], 1),
+                                  "day_high": a["day_high"],
+                                  "day_low":  a["day_low"],
+                                  "vol_surge": a["vol_surge"],
+                                  "ticker": a["ticker"]}
+                    )
+                except Exception as _e:
+                    logging.debug(f"CF DB log {a['name']}: {_e}")
+
+            lines.append("\n_Not SEBI advice · @askakshayfinance_")
+            _post("\n".join(lines), chat_id)
+            logging.info(f"CF scan: {len(alerts)} signals pushed")
+
         elif chat_id:
-            # Only send "nothing found" when triggered manually — not on auto-schedule
             _post(
                 f"🌍 *CF Scan done — {ts}*\n"
-                f"No moves above threshold right now.\n"
-                f"_(RSI≤55 or move≤0.3% or RR<1.5 on Gold/Silver/Crude/USDINR/EURINR)_",
+                f"No setups right now.\n"
+                f"_4H RSI not in zone · or price not aligned with Day H/L_\n"
+                f"_(Gold · Silver · Crude · NatGas · USDINR · EURINR)_",
                 chat_id
             )
-            logging.info("CF scan: no alerts above threshold")
+            logging.info("CF scan: no signals found")
+
     except Exception as e:
         logging.error(f"CF scan error: {e}")
         if chat_id:
