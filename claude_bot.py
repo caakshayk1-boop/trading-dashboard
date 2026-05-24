@@ -115,6 +115,23 @@ def _start_api_server():
             except Exception as e:
                 return jsonify({"ok": False, "error": str(e)}), 500
 
+        @app.route("/api/brief")
+        def api_brief():
+            """Return last N daily briefs for mobile history view."""
+            try:
+                limit = int(request.args.get("limit", 30)) if "request" in dir() else 30
+                conn  = sqlite3.connect(DB_PATH)
+                rows  = conn.execute(
+                    "SELECT date, content, created_at FROM daily_briefs ORDER BY date DESC LIMIT ?",
+                    (limit,)
+                ).fetchall()
+                conn.close()
+                return jsonify({
+                    "briefs": [{"date": r[0], "content": r[1], "created_at": r[2]} for r in rows]
+                })
+            except Exception as e:
+                return jsonify({"briefs": [], "error": str(e)})
+
         @app.route("/api/portfolio")
         def api_portfolio():
             rows = _db_open_signals(min_score=65)  # A/A+ only in portfolio
