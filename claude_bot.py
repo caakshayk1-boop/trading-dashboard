@@ -619,32 +619,104 @@ def _run_swing_scan(slot="Auto"):
         _post(f"⚠️ Swing scan error ({slot}): {str(e)[:200]}")
 
 
+def _gh_put_file(token: str, path: str, content_bytes: bytes, msg: str) -> bool:
+    """
+    Push a single file to GitHub via REST API (no git binary needed).
+    Works on Railway where .git is not present.
+    GET current SHA → PUT new content (base64).
+    """
+    repo    = "caakshayk1-boop/trading-dashboard"
+    api_url = f"https://api.github.com/repos/{repo}/contents/{path}"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept":        "application/vnd.github.v3+json",
+    }
+    # Get current file SHA (required for update; None = new file)
+    sha = None
+    try:
+        r = requests.get(api_url, headers=headers, timeout=10)
+        if r.status_code == 200:
+            sha = r.json().get("sha")
+    except Exception:
+        pass
+
+    import base64
+    body = {
+        "message": msg,
+        "content": base64.b64encode(content_bytes).decode(),
+        "branch":  "main",
+    }
+    if sha:
+        body["sha"] = sha
+
+    try:
+        r = requests.put(api_url, headers=headers, json=body, timeout=20)
+        if r.status_code in (200, 201):
+            return True
+        logging.warning(f"GH PUT {path}: {r.status_code} {r.text[:120]}")
+        return False
+    except Exception as e:
+        logging.warning(f"GH PUT {path} exception: {e}")
+        return False
+
+
 def _push_signals_to_github():
-    """Export signals.db → data/all_signals.json → git push → Dhruvedge stays live."""
+    """
+    Export signals.db → 6 JSON files → GitHub REST API → TradeFlow Pro gets live data.
+    Replaces broken git subprocess (Railway has no .git directory).
+
+    Files pushed:
+      data/all_signals.json       — all signals (raw, for Streamlit)
+      data/signals.json           — swing A/A+ signals
+      data/signals_4h.json        — 4H momentum signals
+      data/breakouts.json         — breakout scanner
+      data/commodity_signals.json — commodity/forex CF signals
+      data/multibaggers.json      — multibagger watchlist
+    """
+    token = os.environ.get("GITHUB_TOKEN", "")
+    if not token:
+        logging.warning("GitHub push skipped: GITHUB_TOKEN not set")
+        return
+
     try:
         con = sqlite3.connect(DB_PATH)
         con.row_factory = sqlite3.Row
-        rows = con.execute(
-            "SELECT * FROM all_signals ORDER BY date DESC LIMIT 200"
+        all_rows = con.execute(
+            "SELECT * FROM all_signals ORDER BY date DESC LIMIT 500"
         ).fetchall()
         con.close()
-        data = [dict(r) for r in rows]
-        out_path = os.path.join(os.path.dirname(__file__), "data", "all_signals.json")
-        os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        with open(out_path, "w") as f:
-            json.dump(data, f, indent=2, default=str)
-        # Git push (Railway has git installed; will silently fail if not)
-        import subprocess
-        base = os.path.dirname(__file__)
-        dt   = datetime.now(IST).strftime("%Y-%m-%d %H:%M UTC")
-        subprocess.run(["git", "-C", base, "add", "data/all_signals.json"], timeout=10)
-        subprocess.run(["git", "-C", base, "commit", "-m",
-                        f"data: update all_signals {dt} [skip ci]",
-                        "--no-verify"], timeout=10)
-        subprocess.run(["git", "-C", base, "push"], timeout=20)
-        logging.info(f"GitHub push: {len(data)} signals exported")
     except Exception as e:
-        logging.warning(f"GitHub push skipped: {e}")
+        logging.warning(f"GitHub push: DB read failed — {e}")
+        return
+
+    all_data = [dict(r) for r in all_rows]
+    dt       = datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
+    commit   = f"data: auto-update {dt} [skip ci]"
+    pushed   = 0
+
+    # Slice by signal_type for each file TradeFlow Pro reads
+    def _filter(types):
+        return [r for r in all_data if r.get("signal_type", "") in types]
+
+    files = {
+        "data/all_signals.json":       all_data,
+        "data/signals.json":           _filter({"swing", "4h_momentum", "manual"}),
+        "data/signals_4h.json":        _filter({"4h_momentum", "4h"}),
+        "data/breakouts.json":         _filter({"breakout"}),
+        "data/commodity_signals.json": _filter({"cf_momentum", "cf_1h", "commodity"}),
+        "data/multibaggers.json":      _filter({"magic", "magicmagic", "multibagger"}),
+    }
+
+    for path, data in files.items():
+        content = json.dumps(data, indent=2, default=str).encode()
+        ok = _gh_put_file(token, path, content, commit)
+        if ok:
+            pushed += 1
+            logging.info(f"GH push ✓ {path} ({len(data)} rows)")
+        else:
+            logging.warning(f"GH push ✗ {path}")
+
+    logging.info(f"GitHub push complete: {pushed}/{len(files)} files updated")
 
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
@@ -860,6 +932,7 @@ def _scan_commodity_forex(ts: str, chat_id=None):
             lines.append("\n_Not SEBI advice · @askakshayfinance_")
             _post("\n".join(lines), chat_id)
             logging.info(f"CF scan: {len(alerts)} signals pushed")
+            _push_signals_to_github()   # keep TradeFlow Pro in sync
 
         elif chat_id:
             _post(
