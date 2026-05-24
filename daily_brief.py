@@ -300,6 +300,71 @@ def _save_to_db(content: str):
         log.warning(f"daily_brief DB save failed: {e}")
 
 
+def _push_to_gist(content: str, brief_date: str):
+    """Push brief history to GitHub Gist for mobile PWA access."""
+    token   = os.environ.get("GITHUB_TOKEN", "")
+    gist_id = os.environ.get("BRIEFS_GIST_ID", "")
+    if not token:
+        log.warning("daily_brief: GITHUB_TOKEN not set — skipping Gist push")
+        return
+
+    gh_headers = {
+        "Authorization": f"token {token}",
+        "Accept":        "application/vnd.github.v3+json",
+        "User-Agent":    "akk-daily-brief/1.0",
+    }
+
+    # Load existing briefs from Gist
+    briefs = []
+    if gist_id:
+        try:
+            r = requests.get(f"https://api.github.com/gists/{gist_id}", headers=gh_headers, timeout=10)
+            if r.status_code == 200:
+                raw = r.json().get("files", {}).get("briefs.json", {}).get("content", "[]")
+                existing = json.loads(raw)
+                if isinstance(existing, list):
+                    briefs = existing
+        except Exception as e:
+            log.warning(f"daily_brief: Gist read failed: {e}")
+
+    # Upsert today, keep last 30
+    briefs = [b for b in briefs if b.get("date") != brief_date]
+    briefs.insert(0, {
+        "date":       brief_date,
+        "text":       content,
+        "created_at": datetime.now(IST).isoformat(),
+    })
+    briefs = briefs[:30]
+    payload = json.dumps(briefs, ensure_ascii=False, indent=2)
+
+    if gist_id:
+        r = requests.patch(
+            f"https://api.github.com/gists/{gist_id}",
+            json={"files": {"briefs.json": {"content": payload}}},
+            headers=gh_headers, timeout=10,
+        )
+        if r.status_code == 200:
+            log.info("daily_brief: Gist updated ✓")
+        else:
+            log.warning(f"daily_brief: Gist update failed {r.status_code}")
+    else:
+        r = requests.post(
+            "https://api.github.com/gists",
+            json={
+                "description": "Akshay Daily Brief — Morning Update Log",
+                "public":      False,
+                "files":       {"briefs.json": {"content": payload}},
+            },
+            headers=gh_headers, timeout=10,
+        )
+        if r.status_code == 201:
+            new_id = r.json().get("id", "")
+            log.info(f"daily_brief: Gist created — set BRIEFS_GIST_ID={new_id} on Railway")
+            _post(f"📌 Set env var on Railway:\nBRIEFS\\_GIST\\_ID=`{new_id}`")
+        else:
+            log.warning(f"daily_brief: Gist create failed {r.status_code}")
+
+
 # ────────────────────────────────────────────────────────────────────────────
 # BUILD & SEND
 # ────────────────────────────────────────────────────────────────────────────
@@ -365,9 +430,14 @@ Weekly: 5 apps · 3 recruiter connects
 
 def send_brief():
     log.info("daily_brief: building...")
-    brief = build_brief()
+    brief    = build_brief()
+    today    = date.today().isoformat()
     _save_to_db(brief)
     _post(brief)
+    try:
+        _push_to_gist(brief, today)
+    except Exception as e:
+        log.warning(f"daily_brief: Gist push failed (non-fatal): {e}")
     log.info("daily_brief: sent ✓")
 
 

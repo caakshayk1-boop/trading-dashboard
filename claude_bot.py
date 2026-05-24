@@ -1244,6 +1244,18 @@ def _start_scheduler():
             IntervalTrigger(minutes=15, timezone=IST)
         )
 
+        # Personal daily brief — 6:00 AM IST every day (Dubai move + markets + habits)
+        try:
+            from daily_brief import send_brief as _send_daily_brief
+            sched.add_job(
+                _send_daily_brief,
+                CronTrigger(hour=6, minute=0, timezone=IST),
+                id="personal_daily_brief",
+            )
+            logging.info("Scheduled: personal daily brief at 06:00 IST daily")
+        except Exception as _e:
+            logging.warning(f"daily_brief import failed (non-fatal): {_e}")
+
         # Morning brief — 8:00 AM IST Mon–Fri
         sched.add_job(
             _run_morning_brief,
