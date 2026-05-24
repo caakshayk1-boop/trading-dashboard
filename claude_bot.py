@@ -1105,6 +1105,80 @@ def _run_magic_scan():
         _post(f"⚠️ Magic scan error: {str(e)[:200]}")
 
 
+def _run_morning_brief():
+    """
+    8:00 AM IST Mon–Fri — fetch live market data + open positions,
+    create today's daily note in Obsidian with a morning brief section.
+    """
+    ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
+    logging.info(f"[MORNING] Brief firing at {ts}")
+    try:
+        # ── Fetch market snapshot ────────────────────────────────────────
+        market = {}
+        tickers = {"nifty": "^NSEI", "gold": "GC=F", "crude": "CL=F", "usdinr": "USDINR=X"}
+        for key, sym in tickers.items():
+            try:
+                t  = yf.Ticker(sym)
+                fi = t.fast_info
+                price = round(float(getattr(fi, "last_price", 0) or 0), 2)
+                prev  = round(float(getattr(fi, "previous_close", price) or price), 2)
+                chg   = round((price - prev) / prev * 100, 2) if prev else 0
+                market[key]          = price
+                market[f"{key}_chg"] = chg
+            except Exception as e:
+                logging.debug(f"Morning brief {key}: {e}")
+                market[key] = "—"
+                market[f"{key}_chg"] = 0
+
+        # ── Get open signals ─────────────────────────────────────────────
+        open_sigs = _db_open_signals(min_score=65)
+
+        # ── Push to Obsidian ─────────────────────────────────────────────
+        from obsidian_sync import write_morning_brief
+        write_morning_brief(market, open_sigs)
+
+        # ── Telegram summary ─────────────────────────────────────────────
+        n = market.get("nifty", "—")
+        nc = market.get("nifty_chg", 0)
+        g = market.get("gold", "—")
+        u = market.get("usdinr", "—")
+        c = market.get("crude", "—")
+        sign = "+" if nc >= 0 else ""
+        _post(
+            f"☀️ *Morning Brief — {ts}*\n\n"
+            f"Nifty `{n}` ({sign}{nc}%) · Gold `{g}` · Crude `{c}` · USDINR `{u}`\n"
+            f"Open positions: *{len(open_sigs)}*\n\n"
+            f"_Daily note created in Obsidian Brain 2.0_ 📓"
+        )
+        logging.info(f"[MORNING] Brief pushed — {len(open_sigs)} open positions")
+    except Exception as e:
+        logging.error(f"[MORNING] Brief error: {e}")
+
+
+def _run_content_calendar():
+    """
+    Monday 7:00 AM IST — push weekly content calendar to Obsidian 04-CONTENT/.
+    Creates the week's 5-post schedule for @askakshayfinance.
+    Skips if calendar for this week already exists.
+    """
+    ts = datetime.now(IST).strftime("%d %b %Y")
+    logging.info(f"[CONTENT] Weekly calendar firing {ts}")
+    try:
+        from obsidian_sync import write_content_calendar
+        ok = write_content_calendar()
+        if ok:
+            _post(
+                f"📅 *Weekly content calendar ready — {ts}*\n\n"
+                f"5 posts drafted in Obsidian → `04-CONTENT/`\n"
+                f"Mon: Finance Tip · Tue: Trade Setup · Wed: Dubai\n"
+                f"Thu: Mindset · Fri: Market Read\n\n"
+                f"_Run score\\_caption.py before every post 🎯_"
+            )
+            logging.info("[CONTENT] Calendar pushed to Obsidian")
+    except Exception as e:
+        logging.error(f"[CONTENT] Calendar error: {e}")
+
+
 def _start_scheduler():
     try:
         from apscheduler.schedulers.background import BackgroundScheduler
@@ -1153,8 +1227,20 @@ def _start_scheduler():
             IntervalTrigger(minutes=15, timezone=IST)
         )
 
+        # Morning brief — 8:00 AM IST Mon–Fri
+        sched.add_job(
+            _run_morning_brief,
+            CronTrigger(hour=8, minute=0, day_of_week="mon-fri", timezone=IST)
+        )
+
+        # Content calendar — every Monday 7:00 AM IST
+        sched.add_job(
+            _run_content_calendar,
+            CronTrigger(hour=7, minute=0, day_of_week="mon", timezone=IST)
+        )
+
         sched.start()
-        logging.info("Scheduler started: swing + intraday + CF(4x) + magic(14:00) + position monitor(15min)")
+        logging.info("Scheduler started: swing + intraday + CF(4x) + magic(14:00) + monitor(15min) + morning(8AM) + content(Mon 7AM)")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 

@@ -302,3 +302,177 @@ def write_weekly_summary_to_obsidian(stats: dict) -> bool:
     if ok:
         logging.info(f"obsidian_sync: weekly summary → {path}")
     return ok
+
+
+# ── Morning Brief ──────────────────────────────────────────────────────────────
+
+def write_morning_brief(market: dict, open_signals: list) -> bool:
+    """
+    Create (or update) today's daily note with a morning brief section.
+    Fires at 8:00 AM IST Mon–Fri from the scheduler.
+
+    market keys: nifty, usdinr, gold, crude, nifty_chg, gold_chg, crude_chg
+    open_signals: list of OPEN signal dicts from DB
+    """
+    path         = _today_note_path()
+    content, sha = _gh_get_file(path)
+    ts           = _now_ts()
+
+    # If note doesn't exist yet, create from full morning template
+    if not content:
+        from datetime import date
+        dt  = date.fromisoformat(_today())
+        dow = dt.strftime("%A")
+        content = (
+            f"# {_today()} · {dow}\n\n"
+            f"**Today's single most important output:**\n\n"
+            f"---\n\n"
+        )
+
+    # Build brief block
+    n_chg   = market.get("nifty_chg", 0)
+    g_chg   = market.get("gold_chg",  0)
+    c_chg   = market.get("crude_chg", 0)
+    u_chg   = market.get("usdinr_chg", 0)
+    n_arrow = "▲" if n_chg >= 0 else "▼"
+    g_arrow = "▲" if g_chg >= 0 else "▼"
+    c_arrow = "▲" if c_chg >= 0 else "▼"
+
+    open_a  = [s for s in open_signals if int(s.get("score", 0)) >= 65]
+    sig_lines = ""
+    if open_a:
+        for s in open_a[:5]:
+            sym   = s.get("symbol", "")
+            entry = s.get("entry") or s.get("price") or 0
+            sl    = s.get("sl") or s.get("sl2") or 0
+            t2    = s.get("target2") or s.get("t2") or 0
+            sig_lines += f"- **{sym}** · Entry ₹{entry} · SL ₹{sl} · T2 ₹{t2}\n"
+    else:
+        sig_lines = "_No open A/A+ positions_\n"
+
+    brief = (
+        f"\n## ☀️ Morning Brief — {ts}\n\n"
+        f"### 📊 Markets\n"
+        f"| Index | Price | Change |\n"
+        f"|-------|-------|--------|\n"
+        f"| Nifty 50 | {market.get('nifty', '—')} | {n_arrow} {abs(n_chg):.2f}% |\n"
+        f"| USD/INR | {market.get('usdinr', '—')} | {'▲' if u_chg >= 0 else '▼'} {abs(u_chg):.2f}% |\n"
+        f"| Gold ($/oz) | {market.get('gold', '—')} | {g_arrow} {abs(g_chg):.2f}% |\n"
+        f"| Crude ($/bbl) | {market.get('crude', '—')} | {c_arrow} {abs(c_chg):.2f}% |\n\n"
+        f"### 🎯 Open Positions ({len(open_a)})\n"
+        f"{sig_lines}\n"
+        f"### 📅 Today's Scans\n"
+        f"- 09:25 AM — Swing A/A+ scan\n"
+        f"- 10:00 AM — CF scan (Gold/Crude/USDINR)\n"
+        f"- 11:42 AM — Swing midday scan\n"
+        f"- 14:00 PM — Magic screener + CF scan\n"
+        f"- 16:32 PM — EOD swing scan\n\n"
+        f"### 🇦🇪 Dubai Priority\n"
+        f"- [ ] Check for new FP&A roles (LinkedIn / Naukrigulf)\n"
+        f"- [ ] Follow up on applications > 7 days old\n\n"
+        f"---\n\n"
+        f"{_SIGNALS_SECTION}\n\n"
+        f"{_SIGNALS_ANCHOR}\n"
+    )
+
+    # If signals section already exists, inject brief BEFORE it
+    if _SIGNALS_SECTION in content:
+        content = content.replace(
+            f"\n{_SIGNALS_SECTION}",
+            f"{brief}"
+        )
+    else:
+        content = content.rstrip("\n") + "\n" + brief
+
+    ok = _gh_put_file(path, content, f"morning brief: {_today()} [skip ci]", sha)
+    if ok:
+        logging.info(f"obsidian_sync: morning brief → {path}")
+    return ok
+
+
+# ── Content Calendar ───────────────────────────────────────────────────────────
+
+# @askakshayfinance content pillars — rotate weekly
+_CONTENT_PILLARS = [
+    ("💰 Finance Tip",      "FP&A / CA insight — one number, one truth"),
+    ("📈 Trade Setup",      "Week's best swing setup — entry, SL, target"),
+    ("🇦🇪 Dubai Journey",  "Progress update — job hunt, target, timeline"),
+    ("🧠 Mindset",          "Discipline / consistency / brutalist truth"),
+    ("📊 Market Read",      "Weekly market bias — Nifty + sector view"),
+]
+
+_CAPTION_HOOKS = {
+    "Finance Tip":    "The number that changed how I think about {topic}.",
+    "Trade Setup":    "Setup I'm watching this week. Entry. SL. Target. Nothing else.",
+    "Dubai Journey":  "Week {n} of the Dubai plan. Here's where I stand.",
+    "Mindset":        "The one thing separating ₹1L/month from ₹10L/month.",
+    "Market Read":    "Nifty bias this week: {bias}. Here's why.",
+}
+
+
+def write_content_calendar(week_offset: int = 0) -> bool:
+    """
+    Write/update weekly content calendar to 04-CONTENT/YYYY-WXX-calendar.md
+    Posts Mon–Fri, one per day. Each slot has:
+      - Pillar + topic
+      - Caption hook
+      - Checklist: draft → score → post → engage
+    Fires every Monday 7:00 AM IST from scheduler.
+    """
+    from datetime import date, timedelta as td
+    today    = date.today() + td(weeks=week_offset)
+    year, wk, _ = today.isocalendar()
+    # Find Monday of this week
+    monday  = today - td(days=today.weekday())
+    path    = f"04-CONTENT/{year}-W{wk:02d}-calendar.md"
+    ts      = _now_ts()
+
+    content, sha = _gh_get_file(path)
+    if content:
+        return True   # already exists for this week — don't overwrite
+
+    days   = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    lines  = [
+        f"# Content Calendar — W{wk} · {year}\n",
+        f"_Generated {ts} · @askakshayfinance_\n\n",
+        f"**Goal:** 5 posts this week · Run score_caption.py before every post · Reply within 1hr of posting\n\n",
+        f"---\n",
+    ]
+
+    for i, day in enumerate(days):
+        post_date = monday + td(days=i)
+        pillar, desc = _CONTENT_PILLARS[i % len(_CONTENT_PILLARS)]
+        hook_key = pillar.split(" ", 1)[1].strip() if " " in pillar else pillar
+        hook = _CAPTION_HOOKS.get(hook_key, "One truth. No fluff.")
+
+        lines.append(
+            f"\n## {pillar} — {day} {post_date.strftime('%d %b')}\n\n"
+            f"**Theme:** {desc}\n\n"
+            f"**Caption hook:** _{hook}_\n\n"
+            f"**Topic:** \n\n"
+            f"**Key stat/number:** \n\n"
+            f"**CTA:** Save this. Share if it hit.\n\n"
+            f"- [ ] Draft caption\n"
+            f"- [ ] Run `score_caption.py` (target ≥ 75)\n"
+            f"- [ ] Create visual (Canva / carousel engine)\n"
+            f"- [ ] Post at 7:30 PM IST\n"
+            f"- [ ] Reply to comments within 1hr\n\n"
+            f"---\n"
+        )
+
+    lines.append(
+        f"\n## 📊 Week Stats (fill after Sunday)\n\n"
+        f"| Metric | Value |\n"
+        f"|--------|-------|\n"
+        f"| Posts published | |\n"
+        f"| Avg reach | |\n"
+        f"| Avg engagement | |\n"
+        f"| New followers | |\n"
+        f"| Best post | |\n"
+    )
+
+    full = "\n".join(lines)
+    ok   = _gh_put_file(path, full, f"content: W{wk} calendar [skip ci]", sha)
+    if ok:
+        logging.info(f"obsidian_sync: content calendar → {path}")
+    return ok
