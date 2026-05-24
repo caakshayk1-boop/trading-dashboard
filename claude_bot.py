@@ -656,7 +656,7 @@ _CF_SYMBOLS = {
     "EURINR":  "EURINR=X",
 }
 
-def _scan_commodity_forex(ts: str):
+def _scan_commodity_forex(ts: str, chat_id=None):
     """Check 15m momentum on Gold, Silver, Crude, USDINR. Push if RSI > 60 + move > 0.4%."""
     try:
         alerts = []
@@ -724,13 +724,24 @@ def _scan_commodity_forex(ts: str):
                 logging.debug(f"CF scan {name}: {e}")
 
         if alerts:
-            msg = f"🌍 *Forex & Commodity Moves* — {ts}\n_(15m · RSI>60 · move>0.4% · R:R≥1.5)_\n\n"
+            msg = f"🌍 *Forex & Commodity Moves* — {ts}\n_(15m · RSI>55 · move>0.3% · R:R≥1.5)_\n\n"
             msg += "\n\n".join(alerts)
             msg += "\n\n_MCX/Global prices · Not SEBI advice_"
-            _post(msg)
+            _post(msg, chat_id)
             logging.info(f"CF scan: {len(alerts)} alerts pushed")
+        elif chat_id:
+            # Only send "nothing found" when triggered manually — not on auto-schedule
+            _post(
+                f"🌍 *CF Scan done — {ts}*\n"
+                f"No moves above threshold right now.\n"
+                f"_(RSI≤55 or move≤0.3% or RR<1.5 on Gold/Silver/Crude/USDINR/EURINR)_",
+                chat_id
+            )
+            logging.info("CF scan: no alerts above threshold")
     except Exception as e:
         logging.error(f"CF scan error: {e}")
+        if chat_id:
+            _post(f"❌ CF scan error: {str(e)[:150]}", chat_id)
 
 
 def _run_intraday_scan():
@@ -1024,7 +1035,7 @@ def route(text: str, chat_id: str):
     if tl in ("/cf", "cf scan", "commodity"):
         _post("🌍 Running Forex & Commodity scan...", chat_id)
         ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
-        _scan_commodity_forex(ts)
+        _scan_commodity_forex(ts, chat_id=chat_id)
         return
 
     # /intraday — manual intraday trigger
