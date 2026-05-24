@@ -2,7 +2,7 @@
 Telegram bot — signal delivery + commands (/start /active /performance /mute /stats)
 PDF spec: Part 9
 """
-import requests, os
+import requests, os, logging
 from datetime import datetime
 import pytz
 
@@ -19,6 +19,9 @@ _last_scan_count = 0
 
 
 def _post(text, chat_id=None):
+    if not TELEGRAM_TOKEN:
+        logging.error("_post: TELEGRAM_TOKEN is not set — message not sent")
+        return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     try:
         r = requests.post(url, data={
@@ -27,9 +30,11 @@ def _post(text, chat_id=None):
             "parse_mode": "Markdown",
             "disable_web_page_preview": True,
         }, timeout=10)
+        if not r.ok:
+            logging.error(f"_post: Telegram API error {r.status_code} — {r.text[:200]}")
         return r.ok
     except Exception as e:
-        print(f"Telegram error: {e}")
+        logging.error(f"_post: Exception sending Telegram message — {e}")
         return False
 
 

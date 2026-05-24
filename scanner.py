@@ -285,6 +285,25 @@ def with_retry(max_retries=3):
     return decorator
 
 
+def _yf_download(symbols, **kwargs):
+    """
+    yf.download wrapper with crumb-refresh retry.
+    Yahoo Finance 401 "Invalid Crumb" → drop session cache and retry once.
+    """
+    try:
+        return yf.download(symbols, **kwargs)
+    except Exception as e:
+        if "401" in str(e) or "crumb" in str(e).lower() or "Unauthorized" in str(e):
+            logging.warning(f"yf crumb error — refreshing session and retrying: {e}")
+            try:
+                yf.utils._yfSession = None   # force session reset
+            except Exception:
+                pass
+            time.sleep(2)
+            return yf.download(symbols, **kwargs)
+        raise
+
+
 def _load_nse_csv(url, cache_path):
     """Download NSE index CSV, cache 24h, return list of symbol.NS strings."""
     try:
@@ -348,7 +367,7 @@ def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
 
     # ── Batch download 15m ──────────────────────────────────────────────────
     try:
-        df_all = yf.download(
+        df_all = _yf_download(
             symbols, period="1d", interval="15m",
             group_by="ticker", progress=False, auto_adjust=True,
             threads=True
@@ -413,7 +432,7 @@ def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
     for cand in candidates:
         sym = cand["sym"]
         try:
-            df1h = yf.download(sym, period="5d", interval="1h",
+            df1h = _yf_download(sym, period="5d", interval="1h",
                                progress=False, auto_adjust=True)
             if df1h.empty or len(df1h) < 15:
                 continue
@@ -450,7 +469,7 @@ def scan_ohl_oll(tolerance_pct: float = 0.02) -> list:
 
 def get_nifty50_return():
     try:
-        df = yf.download("^NSEI", period="6mo", interval="1d",
+        df = _yf_download("^NSEI", period="6mo", interval="1d",
                          progress=False, auto_adjust=True)
         c = df["Close"].squeeze()
         return float(c.iloc[-1] / c.iloc[-20] - 1)
@@ -800,7 +819,7 @@ def compute_full_score(close, high, low, volume, setup_type, setup_score,
 
 def check_weekly_trend(symbol):
     try:
-        wdf = yf.download(symbol, period="1y", interval="1wk",
+        wdf = _yf_download(symbol, period="1y", interval="1wk",
                           progress=False, auto_adjust=True)
         if wdf.empty or len(wdf) < 20:
             return True
@@ -821,7 +840,7 @@ def fetch_data(symbol):
     except Exception:
         pass
     # fallback
-    return yf.download(symbol, period="1y", interval="1d",
+    return _yf_download(symbol, period="1y", interval="1d",
                        progress=False, auto_adjust=True)
 
 
@@ -1082,9 +1101,9 @@ def analyze_breakout(symbol):
     """Full breakout analysis: daily + weekly + monthly."""
     try:
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        df_d = yf.download(sym_yf, period="2y",  interval="1d",  progress=False, auto_adjust=True)
-        df_w = yf.download(sym_yf, period="2y",  interval="1wk", progress=False, auto_adjust=True)
-        df_m = yf.download(sym_yf, period="3y",  interval="1mo", progress=False, auto_adjust=True)
+        df_d = _yf_download(sym_yf, period="2y",  interval="1d",  progress=False, auto_adjust=True)
+        df_w = _yf_download(sym_yf, period="2y",  interval="1wk", progress=False, auto_adjust=True)
+        df_m = _yf_download(sym_yf, period="3y",  interval="1mo", progress=False, auto_adjust=True)
 
         if df_d.empty or len(df_d) < 60:
             return None
@@ -1242,7 +1261,7 @@ def analyze_4h(symbol):
     """
     try:
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        df = yf.download(sym_yf, period="90d", interval="4h",
+        df = _yf_download(sym_yf, period="90d", interval="4h",
                          progress=False, auto_adjust=True)
         if df is None or df.empty or len(df) < 35:
             return None
@@ -1394,7 +1413,7 @@ COMMODITY_TICKERS = {
 def _comm_weekly_bias(ticker):
     """Get weekly trend bias for a commodity — daily must align with weekly."""
     try:
-        wk = yf.download(ticker, period="1y", interval="1wk",
+        wk = _yf_download(ticker, period="1y", interval="1wk",
                          progress=False, auto_adjust=True)
         if wk is None or wk.empty or len(wk) < 20:
             return None
@@ -1423,7 +1442,7 @@ def _comm_signal(name, ticker, label, interval="1d", period="180d"):
       6. Minimum 2:1 RR (T2 vs SL)
     """
     try:
-        df = yf.download(ticker, period=period, interval=interval,
+        df = _yf_download(ticker, period=period, interval=interval,
                          progress=False, auto_adjust=True)
         if df is None or df.empty or len(df) < 40:
             return None
@@ -1508,7 +1527,7 @@ def scan_commodities():
 
         # 4H momentum (RSI > 55 or < 45)
         try:
-            df4 = yf.download(ticker, period="60d", interval="4h",
+            df4 = _yf_download(ticker, period="60d", interval="4h",
                               progress=False, auto_adjust=True)
             if df4 is not None and not df4.empty and len(df4) >= 20:
                 c4 = df4["Close"].squeeze()
@@ -1601,7 +1620,7 @@ def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
     """
     try:
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        df = yf.download(sym_yf, period=period, interval=interval,
+        df = _yf_download(sym_yf, period=period, interval=interval,
                          progress=False, auto_adjust=True)
         if df is None or df.empty or len(df) < 40:
             return None
@@ -1761,7 +1780,7 @@ def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
     """
     try:
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        wk = yf.download(sym_yf, period="3y", interval="1wk",
+        wk = _yf_download(sym_yf, period="3y", interval="1wk",
                          progress=False, auto_adjust=True)
         if wk is None or wk.empty or len(wk) < 52:
             return None
@@ -1904,7 +1923,7 @@ def scan_multibaggers(universe=None, top_n=15) -> list:
     # Pre-fetch Nifty 13W return ONCE (not inside parallel threads)
     nifty_13w = 0.0
     try:
-        ndf = yf.download("^NSEI", period="6mo", interval="1wk",
+        ndf = _yf_download("^NSEI", period="6mo", interval="1wk",
                           progress=False, auto_adjust=True)
         if not ndf.empty and len(ndf) >= 14:
             nc = ndf["Close"].squeeze()
@@ -1970,10 +1989,8 @@ def analyze_tg_momentum(symbol):
     Pass: RSI rose from <45 to >48 in last 5 candles + volume 3x avg + bullish candle pattern.
     """
     try:
-        import requests as _req
         sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
-        with _req.Session() as sess:
-            df = yf.Ticker(sym_yf, session=sess).history(
+        df = yf.Ticker(sym_yf).history(
                 period="90d", interval="4h", auto_adjust=True)
         if df is None or df.empty or len(df) < 30:
             return None
@@ -2074,7 +2091,7 @@ def fetch_market_regime():
     }
     try:
         # India VIX
-        vix_df = yf.download("^INDIAVIX", period="5d", interval="1d",
+        vix_df = _yf_download("^INDIAVIX", period="5d", interval="1d",
                              progress=False, auto_adjust=False)
         if vix_df is not None and not vix_df.empty:
             vc = vix_df["Close"].squeeze()
@@ -2085,7 +2102,7 @@ def fetch_market_regime():
 
     try:
         # Nifty 50 trend + ADX
-        nf = yf.download("^NSEI", period="60d", interval="1d",
+        nf = _yf_download("^NSEI", period="60d", interval="1d",
                          progress=False, auto_adjust=True)
         if nf is not None and not nf.empty:
             nc    = nf["Close"].squeeze()
@@ -2179,7 +2196,7 @@ def scan_intraday_momentum() -> list:
 
     results = []
     try:
-        raw = yf.download(
+        raw = _yf_download(
             _INTRADAY_UNIVERSE, period="3d", interval="15m",
             group_by="ticker", progress=False, auto_adjust=True, timeout=30
         )
@@ -2275,7 +2292,7 @@ def scan_first_candle_breakout() -> list:
 
     results = []
     try:
-        raw = yf.download(
+        raw = _yf_download(
             _INTRADAY_UNIVERSE, period="2d", interval="15m",
             group_by="ticker", progress=False, auto_adjust=True, timeout=30
         )
@@ -2335,7 +2352,7 @@ def scan_first_candle_breakout() -> list:
 def _weekly_rsi(ticker_sym: str, period: int = 14) -> float:
     """Compute weekly RSI for a stock."""
     try:
-        df = yf.download(ticker_sym, period="2y", interval="1wk",
+        df = _yf_download(ticker_sym, period="2y", interval="1wk",
                          progress=False, auto_adjust=True)
         if df is None or len(df) < period + 2:
             return 50.0
@@ -2352,7 +2369,7 @@ def _weekly_rsi(ticker_sym: str, period: int = 14) -> float:
 def _cagr_3yr(ticker_sym: str) -> float:
     """3-year price CAGR as percentage. Positive = stock has grown."""
     try:
-        df = yf.download(ticker_sym, period="4y", interval="1mo",
+        df = _yf_download(ticker_sym, period="4y", interval="1mo",
                          progress=False, auto_adjust=True)
         if df is None or len(df) < 36:
             return 0.0
@@ -2376,7 +2393,7 @@ def _investtech_signals(ticker_sym: str) -> dict:
               "short_note": "", "swing_note": "", "long_note": ""}
     try:
         # --- LONG term: monthly bars, 3 years ---
-        dfm = yf.download(ticker_sym, period="4y", interval="1mo",
+        dfm = _yf_download(ticker_sym, period="4y", interval="1mo",
                           progress=False, auto_adjust=True)
         if dfm is not None and len(dfm) >= 24:
             cm = dfm["Close"].squeeze()
@@ -2389,7 +2406,7 @@ def _investtech_signals(ticker_sym: str) -> dict:
             lm = (-dm.clip(upper=0)).rolling(14).mean()
             rsi_m = float((100 - 100 / (1 + gm / lm.replace(0, float("inf")))).iloc[-1])
             # 52W H/L
-            dfyr = yf.download(ticker_sym, period="1y", interval="1d",
+            dfyr = _yf_download(ticker_sym, period="1y", interval="1d",
                                progress=False, auto_adjust=True)
             hi52 = float(dfyr["High"].squeeze().max()) if dfyr is not None and len(dfyr) > 0 else 0
             price_now = float(cm.iloc[-1])
@@ -2406,7 +2423,7 @@ def _investtech_signals(ticker_sym: str) -> dict:
                 result["long_note"] = f"Neutral trend · RSI {rsi_m:.0f} · {dist_hi:.1f}% from 52WH"
 
         # --- SWING: weekly bars, 1 year ---
-        dfw = yf.download(ticker_sym, period="1y", interval="1wk",
+        dfw = _yf_download(ticker_sym, period="1y", interval="1wk",
                           progress=False, auto_adjust=True)
         if dfw is not None and len(dfw) >= 20:
             cw = dfw["Close"].squeeze()
@@ -2443,7 +2460,7 @@ def _investtech_signals(ticker_sym: str) -> dict:
                 result["swing_note"] = f"RSI {rsi_w:.0f} · No clear breakout"
 
         # --- SHORT term: daily bars, 3 months ---
-        dfd = yf.download(ticker_sym, period="3mo", interval="1d",
+        dfd = _yf_download(ticker_sym, period="3mo", interval="1d",
                           progress=False, auto_adjust=True)
         if dfd is not None and len(dfd) >= 20:
             cd = dfd["Close"].squeeze()
@@ -2509,7 +2526,7 @@ def scan_magic(universe=None, top_n=15) -> list:
             return None
         try:
             # 1. Fetch 1yr daily for price, 52WH, RSI daily
-            df1y = yf.download(ticker_sym, period="1y", interval="1d",
+            df1y = _yf_download(ticker_sym, period="1y", interval="1d",
                                progress=False, auto_adjust=True)
             if df1y is None or len(df1y) < 50:
                 return None
@@ -2604,7 +2621,7 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
         if sym_clean in SIGNAL_BLACKLIST:
             return None
         try:
-            df1y = yf.download(ticker_sym, period="1y", interval="1d",
+            df1y = _yf_download(ticker_sym, period="1y", interval="1d",
                                progress=False, auto_adjust=True)
             if df1y is None or len(df1y) < 50:
                 return None
