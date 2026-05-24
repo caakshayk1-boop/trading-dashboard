@@ -244,6 +244,11 @@ def _monitor_positions():
                     f"P&L: `{sign}{pnl}%`\n_{ts}_"
                 )
                 logging.info(f"SL hit: {sym} @ ₹{price} pnl={pnl}%")
+                try:
+                    from obsidian_sync import write_exit_to_obsidian
+                    write_exit_to_obsidian(sym, "SL_HIT", entry, price, pnl)
+                except Exception as _oe:
+                    logging.debug(f"Obsidian exit sync: {_oe}")
                 continue
 
             # T2 hit — full exit
@@ -260,6 +265,11 @@ def _monitor_positions():
                     f"P&L: `{sign}{pnl}%`\n_{ts}_"
                 )
                 logging.info(f"T2 hit: {sym} @ ₹{price} pnl={pnl}%")
+                try:
+                    from obsidian_sync import write_exit_to_obsidian
+                    write_exit_to_obsidian(sym, "T2_HIT", entry, price, pnl)
+                except Exception as _oe:
+                    logging.debug(f"Obsidian exit sync: {_oe}")
                 continue
 
             # T1 hit — trail SL to entry (breakeven), enable dynamic trail
@@ -276,6 +286,12 @@ def _monitor_positions():
                     f"Riding to T2 ₹{t2} · Dynamic trail active\n_{ts}_"
                 )
                 logging.info(f"T1 hit: {sym} @ ₹{price}, SL trailed to ₹{entry}")
+                pnl_t1 = round((price - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
+                try:
+                    from obsidian_sync import write_exit_to_obsidian
+                    write_exit_to_obsidian(sym, "T1_HIT", entry, price, pnl_t1)
+                except Exception as _oe:
+                    logging.debug(f"Obsidian T1 sync: {_oe}")
 
             # Dynamic trail after T1 — trail SL to 60% of move from entry
             if state.get("t1_hit") and action == "BUY":
@@ -608,6 +624,12 @@ def _run_swing_scan(slot="Auto"):
                 send_alert(s)
             send_summary(signals)
             logging.info(f"Swing scan [{slot}]: {len(signals)} A/A+ signals")
+            # Sync A/A+ signals to Obsidian daily note
+            try:
+                from obsidian_sync import write_signals_to_obsidian
+                write_signals_to_obsidian(signals)
+            except Exception as _oe:
+                logging.debug(f"Obsidian sync skip: {_oe}")
         else:
             logging.info(f"Swing scan [{slot}]: no signals")
 
@@ -933,6 +955,12 @@ def _scan_commodity_forex(ts: str, chat_id=None):
             _post("\n".join(lines), chat_id)
             logging.info(f"CF scan: {len(alerts)} signals pushed")
             _push_signals_to_github()   # keep TradeFlow Pro in sync
+            # Sync CF signals to Obsidian daily note
+            try:
+                from obsidian_sync import write_cf_signals_to_obsidian
+                write_cf_signals_to_obsidian(alerts)
+            except Exception as _oe:
+                logging.debug(f"Obsidian CF sync: {_oe}")
 
         elif chat_id:
             _post(
