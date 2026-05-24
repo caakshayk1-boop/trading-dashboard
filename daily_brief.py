@@ -199,6 +199,120 @@ LEARNING = [
 
 
 # ────────────────────────────────────────────────────────────────────────────
+# CHESS — theme hints for advanced player
+# ────────────────────────────────────────────────────────────────────────────
+THEME_TIPS: dict = {
+    "fork":             "One piece, two threats. Find the square that attacks both simultaneously.",
+    "pin":              "Pin a piece to the king or queen — it can't move without material loss.",
+    "skewer":           "Attack the high-value piece; the one behind it falls when it moves.",
+    "discoveredAttack": "Move one piece to unleash the attack of another behind it.",
+    "mateIn1":          "One move ends it. Check every check and capture first.",
+    "mateIn2":          "Force mate in two. Find the move that limits all their responses.",
+    "mateIn3":          "Three-move combination. The first move must be forcing.",
+    "backRankMate":     "Their king is trapped. A rook or queen on the 8th rank closes the game.",
+    "sacrifice":        "Give material for a decisive positional or mating advantage. Calculate 3 moves deep.",
+    "deflection":       "Lure the key defender away from its post with a forcing move.",
+    "interference":     "Block a piece's line of defense with a sacrifice or interpose.",
+    "zugzwang":         "Any move they make worsens their position. Find the quiet, waiting move.",
+    "endgame":          "King activity and pawn structure dominate. Technique over tactics here.",
+    "quietMove":        "No captures, no checks — but the threat is overwhelming. Think prophylaxis.",
+    "attraction":       "Lure the king or a key piece onto a bad square with a sacrifice.",
+    "clearance":        "Clear a line or square for a more powerful piece to operate.",
+    "trappedPiece":     "A piece has no safe square. Exploit its lack of mobility.",
+    "advancedPawn":     "A passed pawn is a criminal that must be stopped or escorted home.",
+    "xRayAttack":       "A piece attacks through another piece. Calculate the hidden threat.",
+    "doubleCheck":      "Two simultaneous checks — the king must move. Forces unique defensive responses.",
+}
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# LIFE LESSONS — rotating case studies (40 entries)
+# ────────────────────────────────────────────────────────────────────────────
+LIFE_LESSONS = [
+    ("Buffett's cash patience",
+     "Buffett sat on $130B+ cash through 2020–22, refusing to overpay in a bull market. When others were FOMO-buying, he waited. In 2022–23 he deployed billions into Occidental and others at deep discounts. *Cash is a call option with no expiry.*"),
+    ("Bezos's regret minimization",
+     "In 1994, Bezos left a $1M/year Wall Street job to sell books online. His framework: imagine yourself at 80 looking back. Would you regret not trying? He said yes — and quit the same week. *Fear of failure often disguises itself as prudence.*"),
+    ("Steve Jobs — fired, then returned",
+     "In 1985, Apple's board fired the man who started it. Jobs used the freedom of a beginner's mind to build Pixar and NeXT. Apple bought NeXT for $429M, and Jobs came back to save the company. *Losing a title is not losing direction.*"),
+    ("Munger's inversion model",
+     "Charlie Munger doesn't ask 'How do I succeed?' He asks 'What would guarantee failure — and how do I avoid that?' Inverted thinking cuts through wishful analysis. Most people plan for success. The best also plan against the reasons they'd fail."),
+    ("Federer's 54% rule",
+     "Roger Federer won 80% of Grand Slam matches but only 54% of individual points played. The margin between elite and everyone else is tiny. What separates them: *forgetting the last point and focusing fully on the next.* Emotional reset compounds over time."),
+    ("The Berkshire float model",
+     "Buffett used insurance float — premiums paid before claims — as free leverage to invest. He found a legal way to use other people's money to buy assets. Lesson: *the best businesses collect cash before they deliver value.* Think: subscriptions, float, deposits."),
+    ("Howard Marks on cycles",
+     "Every investment boom follows the same script: good news → prices rise → 'this time is different' → crash. Marks reads the market's emotional temperature before reading valuations. *Where we stand in the cycle matters more than what we buy.*"),
+    ("Pabrai's cloning strategy",
+     "Mohnish Pabrai runs a $500M fund solo. His edge: wait for a great investor to buy, then clone the position. He admits he's not smarter than Buffett — he just pays attention. *You don't have to be original. You have to be disciplined.*"),
+    ("Nolan's no-phone rule",
+     "Christopher Nolan bans phones from all his film sets. Deep creative work requires full presence, and smartphones are distraction machines. His films are consistently among the most complex and profitable. *Environment shapes output. Control the environment.*"),
+    ("Marcus Aurelius's private standard",
+     "The most powerful man on earth wrote: 'You have power over your mind, not outside events.' He recorded this not for publication — it was a private journal. *Greatness often lives in what no one sees.* Build your private standard first."),
+    ("Dalio's radical transparency",
+     "At Bridgewater, every meeting is recorded, every decision logged. Honest feedback — even brutal — produces better outcomes than politeness. The fund returned 14%+ annually for 30 years. *Radical honesty is uncomfortable. It's also compounding.*"),
+    ("Soros breaks the Bank of England",
+     "In 1992, Soros shorted £10B of British pounds and made $1B in a day. He saw a structural imbalance the market ignored. Lesson: *When you're right, be confident enough to make it count. Sizing matters as much as being right.*"),
+    ("The pilot checklist",
+     "In 1935, a superior Boeing aircraft crashed because it was too complex to fly from memory. The solution: a simple checklist. Today checklists prevent 70% of surgical errors. *Systems beat memory. Build the checklist before you need it.*"),
+    ("Kodak invented digital, then ignored it",
+     "A Kodak engineer invented the digital camera in 1975. Leadership shelved it — fearing it would cannibalize film. Kodak filed for bankruptcy in 2012. *The threat that kills you is usually the one you already know about but choose not to act on.*"),
+    ("Jiro Ono's obsession",
+     "Jiro Ono is 98 and still perfecting sushi at his Tokyo restaurant. 3 Michelin stars. 3-month waitlist. His philosophy: *Fall in love with your work. Never think you've mastered it. The pursuit is the goal, not the arrival.*"),
+    ("Peter Lynch's edge",
+     "Peter Lynch turned $18M into $14B by investing in things he saw in daily life: Dunkin' Donuts, L'Eggs, Hanes. His rule: invest in businesses you understand before Wall Street discovers them. *Your personal experience is a legitimate edge.*"),
+    ("Michelangelo's apprenticeship",
+     "At 13, Michelangelo ground pigments and stretched canvases for years before painting a wall. The David came at 26. *The years that look like preparation are the years that build the master. Don't resent the apprenticeship.*"),
+    ("The Navy SEAL 40% rule",
+     "SEAL trainers teach that when your body says quit, you're at 40% of actual capacity. The other 60% is unlocked by mental decision. *The body achieves what the mind believes.* Elite performance is mostly a decision, not a physical limit."),
+    ("Feynman's explanation test",
+     "Richard Feynman explained everything as if teaching it to a child. When he couldn't, he knew he didn't understand it. He won a Nobel Prize this way. *Complexity is a hiding place for confusion. Simplicity is proof of mastery.*"),
+    ("Musk's first principles method",
+     "When battery costs seemed fixed at $600/kWh, Musk asked: what are batteries made of? Raw materials cost $80/kWh. Why is the assembly $600? *Strip every assumption and rebuild from physics, not convention. Most limits are inherited, not real.*"),
+    ("The Ritz-Carlton $2,000 rule",
+     "Every Ritz-Carlton employee can spend $2,000 per guest per incident — without manager approval — to resolve a problem. The result: legendary service. *Rules create bureaucracy. Principles create culture. Trust your people with authority.*"),
+    ("Taleb's barbell strategy",
+     "Taleb invests 90% in ultra-safe assets and 10% in extreme-risk asymmetric bets. He calls this the barbell. *Avoid the middle — moderate risk with moderate return. Go to the edges: safe + explosive. That's where asymmetry lives.*"),
+    ("Blue Ocean — Cirque du Soleil",
+     "Cirque eliminated animals (costly) and added theatre (storytelling), creating a market that merged circus + Broadway. Revenue exploded without competing with the traditional circus. *Instead of fighting harder in a crowded market, create one where the competition is irrelevant.*"),
+    ("Sam Walton's obsession",
+     "Sam Walton drove a beat-up pickup truck until he died worth $100B. He spent most days talking to shelf-stackers. His obsession: *lower the cost of living for ordinary people.* Mission clarity built a $600B empire. What's your one obsession?"),
+    ("Kahneman's two systems",
+     "System 1 (fast, instinctive) handles 95% of decisions. System 2 (slow, logical) handles the rest. Most financial mistakes are System 1 dressed as System 2 analysis. *The quality of your decisions improves when you slow down and recognize which system is running.*"),
+    ("The Toyota andon cord",
+     "Any Toyota assembly line worker can stop the entire production line if they spot a defect. Most companies fear this. Toyota sees it as quality compounding. *When frontline people can flag problems, problems stay small. Suppressed problems become disasters.*"),
+    ("Churchill's darkest hour",
+     "In May 1940, Churchill's war cabinet voted 3-2 for a peace deal with Hitler. Churchill delayed the vote, spoke to every MP personally, changed 25 minds in 3 hours. *Leadership isn't the loudest voice. It's the one that holds steady when everyone else panics.*"),
+    ("Paul Graham — do things that don't scale",
+     "Airbnb's founders flew to New York and personally photographed apartments. Completely unscalable — and exactly right. *The habits that don't scale teach you what to scale later. Start with zero distance from the customer.*"),
+    ("Skin in the game",
+     "Nassim Taleb's rule: never take advice from someone who doesn't carry the consequences. A doctor who recommends surgery should face the same odds as the patient. *Accountability is the single best filter for credible advice.*"),
+    ("The Medici effect",
+     "The Medici family funded artists, scientists, and philosophers in the same city. Ideas from different disciplines crashed into each other and produced the Renaissance. *Innovation rarely comes from within a field. It comes from the intersection.*"),
+    ("Rockefeller's ledger",
+     "Rockefeller tracked every cent he spent from age 16. Not because he was poor — because *what gets measured gets controlled.* He built Standard Oil the same way: measure every barrel, every pipeline, every cost. Numbers are the language of mastery."),
+    ("The compounding truth",
+     "Buffett made 99% of his net worth after age 52. The math: $1 at 20%/year for 30 years = $237. For 50 years = $9,100. The variable that matters most isn't return rate — it's *time in the game.* Start early. Stay long. Don't quit."),
+    ("Netflix — no rules",
+     "Netflix has no vacation policy, no expense policy, and no performance reviews. Their only rule: hire remarkable people and treat them like adults. *Rules are a substitute for judgment. Culture is what people do when no one is watching.*"),
+    ("Seneca's time audit",
+     "Seneca wrote: 'It's not that we have little time. It is that we waste so much of it.' He logged how he used every hour. 2,000 years later, the problem is identical. *Audit your time with the same rigor as your finances and you will always be ahead.*"),
+    ("The FP&A edge",
+     "The best FP&A professionals don't just report numbers — they translate them into decisions. When a CFO asks 'why did margins drop?' the answer isn't a formula. It's a story: which products, which geographies, what we do next. *Analysts report. Finance partners decide.*"),
+    ("Dhirubhai Ambani's rules",
+     "Ambani grew from a petrol station attendant in Yemen to building India's largest private company. His rule: *Think big. Think differently. Think fast.* He raised retail investor capital before institutions. Vision + speed beats capital every time."),
+    ("Hormozi's offer architecture",
+     "Alex Hormozi turned a failing gym into a $100M portfolio by changing one thing: the offer. Same service, same price — but he stacked guarantees, removed risk, and made saying no feel stupid. *Your product isn't the problem. Your offer architecture is.*"),
+    ("The marshmallow study (revised)",
+     "The original study said kids who waited were more successful. Later research found the real variable was *trust* — kids who'd been let down grabbed the first marshmallow because they couldn't trust the second would come. Environment shapes discipline more than willpower."),
+    ("Graham's intrinsic value",
+     "Benjamin Graham defined investing simply: buy a dollar for 50 cents. Everything else — macro, sentiment, cycles — is noise if you buy far below intrinsic value. *Margin of safety isn't a number. It's a mindset applied before every decision.*"),
+    ("Diogenes and Alexander",
+     "Alexander the Great visited Diogenes, the philosopher living in a barrel, and asked: 'Is there anything I can do for you?' Diogenes replied: 'Yes — stand out of my sunlight.' Alexander later said: 'If I were not Alexander, I would wish to be Diogenes.' *True freedom is needing nothing from the powerful.*"),
+]
+
+
+# ────────────────────────────────────────────────────────────────────────────
 # HELPERS
 # ────────────────────────────────────────────────────────────────────────────
 
@@ -276,6 +390,40 @@ def _get_quote() -> str:
     except Exception:
         pass
     return '"The secret of getting ahead is getting started."\n— Mark Twain'
+
+
+def _get_chess_puzzle() -> str:
+    """Fetch Lichess daily puzzle with theme hint for advanced player."""
+    import re
+    try:
+        r = requests.get(
+            "https://lichess.org/api/puzzle/daily",
+            headers={"Accept": "application/json"},
+            timeout=10,
+        )
+        if r.status_code != 200:
+            return ""
+        data   = r.json()
+        puzzle = data.get("puzzle", {})
+        pid    = puzzle.get("id", "")
+        rating = puzzle.get("rating", 0)
+        themes = [t for t in puzzle.get("themes", []) if t not in ("master", "masterVsMaster", "puzzleOfTheDay")]
+
+        def fmt_theme(t: str) -> str:
+            return re.sub(r'([A-Z])', r' \1', t).strip().title()
+
+        theme_str = " · ".join(fmt_theme(t) for t in themes[:3])
+        tip = next((THEME_TIPS[t] for t in themes if t in THEME_TIPS),
+                   "Calculate 3 moves deep before touching a piece.")
+
+        return (
+            f"Rating: *{rating:,}* · _{theme_str}_\n"
+            f"💡 _{tip}_\n"
+            f"[→ Open puzzle on Lichess](https://lichess.org/training/{pid})"
+        )
+    except Exception as e:
+        log.warning(f"chess puzzle fetch failed: {e}")
+        return ""
 
 
 def _save_to_db(content: str):
@@ -378,13 +526,16 @@ def build_brief() -> str:
     markets  = _get_markets()
     jobs     = _get_jobs()
     quote    = _get_quote()
+    chess    = _get_chess_puzzle()
 
     habit_name, habit_time, habit_why = _rotate(HABITS, today)
-    hack   = _rotate(PRODUCTIVITY, today)
-    topic, body = _rotate(LEARNING, today)
+    hack                              = _rotate(PRODUCTIVITY, today)
+    topic, body                       = _rotate(LEARNING, today)
+    lesson_title, lesson_body         = _rotate(LIFE_LESSONS, today)
 
-    headline = _get_global_headline()
+    headline    = _get_global_headline()
     global_note = f"\n🌍 _{headline}_" if headline else ""
+    chess_block = f"\n━━━━━━━━━━━━━━━━━━━\n♟️ *CHESS PUZZLE*\n━━━━━━━━━━━━━━━━━━━\n{chess}" if chess else ""
 
     brief = f"""🌅 *GOOD MORNING, AKSHAY*
 {weekday} · {datestr} · 6 AM IST
@@ -419,6 +570,12 @@ Weekly: 5 apps · 3 recruiter connects
 ━━━━━━━━━━━━━━━━━━━
 *{topic}*
 {body}
+
+━━━━━━━━━━━━━━━━━━━
+📖 *CASE STUDY*
+━━━━━━━━━━━━━━━━━━━
+*{lesson_title}*
+{lesson_body}{chess_block}
 
 ━━━━━━━━━━━━━━━━━━━
 💬 *QUOTE*
