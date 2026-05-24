@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": 5,
+    "date": "2026-05-09",
+    "signal_type": "commodity",
+    "symbol": "BRNUSD",
+    "action": "SELL",
+    "timeframe": "Daily",
+    "entry": 1266.3,
+    "sl": 1285.72,
+    "target1": 1242.03,
+    "target2": 1225.85,
+    "target3": 1201.57,
+    "rr": 2.1,
+    "score": 0,
+    "status": "CANCELLED",
+    "lifecycle_status": "Generated",
+    "exit_price": null,
+    "pnl_pct": null,
+    "r_multiple": null,
+    "max_profit_pct": null,
+    "max_drawdown_pct": null,
+    "generated_at": null,
+    "entry_triggered_at": null,
+    "closed_at": null,
+    "why_triggered": null,
+    "market": "NSE",
+    "asset_type": "Equity",
+    "sent_at": "2026-05-08T18:48:05.517244",
+    "metadata": "{}"
+  }
+]
