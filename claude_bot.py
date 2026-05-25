@@ -1470,6 +1470,33 @@ def _delete_webhook():
         logging.warning(f"deleteWebhook error: {e}")
 
 
+def _db_get_state(key: str) -> str | None:
+    """Read a value from bot_state table in signals.db."""
+    try:
+        con = sqlite3.connect(DB_PATH)
+        con.execute("""CREATE TABLE IF NOT EXISTS bot_state
+                       (key TEXT PRIMARY KEY, value TEXT, ts REAL)""")
+        row = con.execute("SELECT value FROM bot_state WHERE key=?", (key,)).fetchone()
+        con.close()
+        return row[0] if row else None
+    except Exception:
+        return None
+
+
+def _db_set_state(key: str, value: str):
+    """Write a value to bot_state table in signals.db."""
+    try:
+        con = sqlite3.connect(DB_PATH)
+        con.execute("""CREATE TABLE IF NOT EXISTS bot_state
+                       (key TEXT PRIMARY KEY, value TEXT, ts REAL)""")
+        con.execute("INSERT OR REPLACE INTO bot_state (key, value, ts) VALUES (?,?,?)",
+                    (key, value, time.time()))
+        con.commit()
+        con.close()
+    except Exception as e:
+        logging.warning(f"db_set_state error: {e}")
+
+
 def run():
     _delete_webhook()
     _load_cache()
@@ -1480,23 +1507,19 @@ def run():
     from telegram_bot import TELEGRAM_CHAT_ID as _CHAT_ID
     _cid = os.environ.get("TELEGRAM_CHAT_ID") or _CHAT_ID
 
-    # Only send "online" message if bot hasn't started in the last 30 minutes.
-    # Prevents spam when Railway restarts the process on repeated crashes.
-    _STARTUP_FLAG = "/tmp/bot_last_startup"
+    # ── Startup message: 1-hour cooldown stored in SQLite (persists across crashes)
+    # /tmp does NOT survive Railway restarts — SQLite on disk does.
     _send_startup = True
     try:
-        if os.path.exists(_STARTUP_FLAG):
-            with open(_STARTUP_FLAG) as _f:
-                _last = float(_f.read().strip())
-            if time.time() - _last < 1800:  # 30-min cooldown
-                _send_startup = False
-                logging.info("Startup message suppressed (restarted within 30 min)")
+        last_str = _db_get_state("last_startup_ts")
+        if last_str and time.time() - float(last_str) < 3600:
+            _send_startup = False
+            logging.info("Startup message suppressed — restarted within 1h")
     except Exception:
         pass
     if _send_startup:
+        _db_set_state("last_startup_ts", str(time.time()))
         try:
-            with open(_STARTUP_FLAG, "w") as _f:
-                _f.write(str(time.time()))
             requests.post(
                 f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
                 json={
@@ -1510,7 +1533,36 @@ def run():
             )
         except Exception as e:
             logging.warning(f"Startup message error: {e}")
+
+    # ── Offset: persist in SQLite so restarts don't reprocess old messages.
+    # Reprocessing queued messages spawns concurrent scan threads → OOM → crash loop.
     offset = 0
+    try:
+        saved = _db_get_state("poll_offset")
+        if saved:
+            offset = int(saved)
+            logging.info(f"Resuming from saved offset={offset}")
+    except Exception:
+        pass
+
+    # ── Skip any messages queued while bot was down (avoids scan thread storm)
+    try:
+        r = requests.get(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates",
+            params={"offset": -1, "limit": 1, "timeout": 5}, timeout=10
+        )
+        if r.ok:
+            results = r.json().get("result", [])
+            if results:
+                latest = results[-1]["update_id"] + 1
+                if latest > offset:
+                    skipped = latest - offset
+                    logging.info(f"Skipping {skipped} queued updates (offset {offset}→{latest})")
+                    offset = latest
+                    _db_set_state("poll_offset", str(offset))
+    except Exception as e:
+        logging.warning(f"Offset catchup error: {e}")
+
     while True:
         try:
             url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
@@ -1521,9 +1573,10 @@ def run():
                 continue
             for upd in r.json().get("result", []):
                 offset = upd["update_id"] + 1
-                msg    = upd.get("message", {})
-                txt    = msg.get("text", "").strip()
-                cid    = str(msg.get("chat", {}).get("id", ""))
+                _db_set_state("poll_offset", str(offset))   # persist after each message
+                msg = upd.get("message", {})
+                txt = msg.get("text", "").strip()
+                cid = str(msg.get("chat", {}).get("id", ""))
                 if txt and cid:
                     threading.Thread(target=route, args=(txt, cid), daemon=True).start()
         except Exception as e:
