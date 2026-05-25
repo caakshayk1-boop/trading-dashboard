@@ -1479,20 +1479,37 @@ def run():
     logging.info("Claude Bot started. Polling Telegram...")
     from telegram_bot import TELEGRAM_CHAT_ID as _CHAT_ID
     _cid = os.environ.get("TELEGRAM_CHAT_ID") or _CHAT_ID
+
+    # Only send "online" message if bot hasn't started in the last 30 minutes.
+    # Prevents spam when Railway restarts the process on repeated crashes.
+    _STARTUP_FLAG = "/tmp/bot_last_startup"
+    _send_startup = True
     try:
-        requests.post(
-            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            json={
-                "chat_id": _cid,
-                "text": "🤖 *Dhruvedge Bot online*\n"
-                        "Swing: 9:25·11:42·16:32·20:00 | Intraday: 9:30–14:30 | CF: 10·14·18·22\n"
-                        "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/track` · `/stats`",
-                "parse_mode": "Markdown",
-                "reply_markup": {"remove_keyboard": True}
-            }, timeout=10
-        )
-    except Exception as e:
-        logging.warning(f"Startup message error: {e}")
+        if os.path.exists(_STARTUP_FLAG):
+            with open(_STARTUP_FLAG) as _f:
+                _last = float(_f.read().strip())
+            if time.time() - _last < 1800:  # 30-min cooldown
+                _send_startup = False
+                logging.info("Startup message suppressed (restarted within 30 min)")
+    except Exception:
+        pass
+    if _send_startup:
+        try:
+            with open(_STARTUP_FLAG, "w") as _f:
+                _f.write(str(time.time()))
+            requests.post(
+                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                json={
+                    "chat_id": _cid,
+                    "text": "🤖 *Dhruvedge Bot online*\n"
+                            "Swing: 9:25·11:42·16:32·20:00 | Intraday: 9:30–14:30 | CF: 10·14·18·22\n"
+                            "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/track` · `/stats`",
+                    "parse_mode": "Markdown",
+                    "reply_markup": {"remove_keyboard": True}
+                }, timeout=10
+            )
+        except Exception as e:
+            logging.warning(f"Startup message error: {e}")
     offset = 0
     while True:
         try:

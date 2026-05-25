@@ -31,6 +31,7 @@ OBS_REPO = os.environ.get("OBSIDIAN_GITHUB_REPO", "caakshayk1-boop/obsidian-brai
 TICKERS = [
     ("Gold",     "GC=F",    "$",  ".0f"),
     ("Silver",   "SI=F",    "$",  ".2f"),
+    ("Crude",    "CL=F",    "$",  ".2f"),
     ("USD/INR",  "USDINR=X","₹",  ".2f"),
     ("S&P 500",  "^GSPC",   "",   ".0f"),
     ("Nifty 50", "^NSEI",   "",   ".0f"),
@@ -325,9 +326,12 @@ def _get_markets() -> str:
     lines = []
     for name, ticker, prefix, fmt in TICKERS:
         try:
-            info  = yf.Ticker(ticker).fast_info
-            price = info.last_price
-            prev  = info.previous_close
+            # history() gives fresh data; fast_info returns stale cached prices
+            hist  = yf.Ticker(ticker).history(period="5d", interval="1d", auto_adjust=True)
+            if hist.empty:
+                raise ValueError("no data")
+            price = float(hist["Close"].iloc[-1])
+            prev  = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else price
             pct   = ((price - prev) / prev * 100) if prev else 0
             arrow = "↑" if pct > 0.05 else ("↓" if pct < -0.05 else "→")
             val   = f"{prefix}{price:{fmt}}"
@@ -338,36 +342,89 @@ def _get_markets() -> str:
 
 
 def _get_jobs() -> str:
-    """Fetch Dubai FP&A/Finance jobs posted in last 24h via Indeed RSS."""
-    jobs = []
-    try:
-        url = (
-            "https://www.indeed.com/rss"
-            "?q=FP%26A+Finance+Manager+CFO+Controller"
-            "&l=Dubai"
-            "&sort=date&fromage=1&limit=6"
-        )
-        feed = feedparser.parse(url)
-        for entry in feed.entries[:5]:
-            title = entry.get("title", "").strip()
-            link  = entry.get("link", "").strip()
-            # Remove " - Company - Location" suffix if present
-            title = title.split(" - ")[0][:70]
-            if title and link:
-                jobs.append((title, link))
-    except Exception as e:
-        log.warning(f"jobs RSS fetch failed: {e}")
+    """
+    Fetch Senior FP&A / Senior Manager Finance jobs — Dubai + Malaysia.
+    Target: Dubai (any) · Malaysia 23–25K MYR+.
+    Sources: Adzuna API → RSS fallbacks → static links.
+    """
+    results: list[tuple[str, str, str]] = []  # (city, title, url)
 
-    if not jobs:
+    # ── Adzuna API (free tier, reliable) ──────────────────────────────────
+    adzuna_id  = os.environ.get("ADZUNA_APP_ID", "")
+    adzuna_key = os.environ.get("ADZUNA_APP_KEY", "")
+    targets = [
+        ("ae", "Dubai",   "Senior FP&A Finance Manager Controller"),
+        ("my", "Malaysia","Senior FP&A Finance Manager Regional"),
+    ]
+    if adzuna_id and adzuna_key:
+        for code, city, query in targets:
+            try:
+                r = requests.get(
+                    f"https://api.adzuna.com/v1/api/jobs/{code}/search/1",
+                    params={
+                        "app_id": adzuna_id, "app_key": adzuna_key,
+                        "results_per_page": 3, "what": query,
+                        "where": city, "sort_by": "date", "max_days_old": 1,
+                    }, timeout=8,
+                )
+                if r.status_code == 200:
+                    for job in r.json().get("results", [])[:3]:
+                        t = job.get("title", "")[:65]
+                        u = job.get("redirect_url", "")
+                        if t and u:
+                            results.append((city, t, u))
+            except Exception as e:
+                log.warning(f"Adzuna {city}: {e}")
+
+    # ── RSS fallbacks (Indeed + Bayt + JobStreet) ─────────────────────────
+    if not results:
+        rss_sources = [
+            ("Dubai",
+             "https://www.indeed.com/rss?q=Senior+FP%26A+Manager+Finance+Controller&l=Dubai&sort=date&fromage=1"),
+            ("Dubai",
+             "https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/?format=rss"),
+            ("Malaysia",
+             "https://www.indeed.com/rss?q=Senior+FP%26A+Finance+Manager+Regional&l=Malaysia&sort=date&fromage=1"),
+            ("Malaysia",
+             "https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/?format=rss"),
+        ]
+        for city, url in rss_sources:
+            try:
+                feed = feedparser.parse(url)
+                for entry in feed.entries[:2]:
+                    t = entry.get("title", "").split(" - ")[0][:65].strip()
+                    u = entry.get("link", "").strip()
+                    if t and u:
+                        results.append((city, t, u))
+            except Exception:
+                pass
+
+    # ── Format output ──────────────────────────────────────────────────────
+    if not results:
         return (
-            "• Could not fetch live listings\n"
-            "• [Search LinkedIn now](https://www.linkedin.com/jobs/search/?keywords=FP%26A&location=Dubai&f_TPR=r86400)\n"
-            "• [Search Indeed now](https://www.indeed.com/jobs?q=fp%26a+finance&l=Dubai&sort=date&fromage=1)"
+            "*🇦🇪 Dubai — Senior FP&A / Finance Manager:*\n"
+            "• [LinkedIn Dubai](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Dubai&f_TPR=r86400)\n"
+            "• [Bayt Dubai](https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/)\n\n"
+            "*🇲🇾 Malaysia — Senior FP&A / Regional (23–25K MYR):*\n"
+            "• [LinkedIn Malaysia](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Malaysia&f_TPR=r86400)\n"
+            "• [JobStreet Malaysia](https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/)"
         )
 
-    lines = [f"• [{t}]({l})" for t, l in jobs]
-    lines.append("[→ See all on Indeed](https://www.indeed.com/jobs?q=fp%26a+finance&l=Dubai&sort=date&fromage=1)")
-    return "\n".join(lines)
+    dubai_lines = [f"• {t} →[↗]({u})" for city, t, u in results if city == "Dubai"]
+    my_lines    = [f"• {t} →[↗]({u})" for city, t, u in results if city == "Malaysia"]
+
+    out = ""
+    if dubai_lines:
+        out += "*🇦🇪 Dubai:*\n" + "\n".join(dubai_lines)
+    if my_lines:
+        if out:
+            out += "\n\n"
+        out += "*🇲🇾 Malaysia (23–25K MYR):*\n" + "\n".join(my_lines)
+    out += (
+        "\n\n[→ LinkedIn Dubai](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Dubai) · "
+        "[→ LinkedIn MY](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Malaysia)"
+    )
+    return out
 
 
 def _get_global_headline() -> Optional[str]:
@@ -541,10 +598,9 @@ def build_brief() -> str:
 {weekday} · {datestr} · 6 AM IST
 
 ━━━━━━━━━━━━━━━━━━━
-🇦🇪 *DUBAI MOVE*
+💼 *OPPORTUNITIES*
 ━━━━━━━━━━━━━━━━━━━
-Target: *AED 30K/month* · Mid-2026
-Weekly: 5 apps · 3 recruiter connects
+Senior FP&A · Finance Manager · Regional · Controller
 
 *New jobs (last 24h):*
 {jobs}
