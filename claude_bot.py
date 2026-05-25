@@ -333,16 +333,18 @@ def _monitor_positions():
             continue
 IST = pytz.timezone("Asia/Kolkata")
 
-# ── Config ────────────────────────────────────────────────────────────────────
-GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
-if not GROQ_API_KEY:
+# ── AI config — Claude (Anthropic) primary, Groq fallback, graceful no-op ────
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+GROQ_API_KEY      = os.environ.get("GROQ_API_KEY", "")
+if not ANTHROPIC_API_KEY and not GROQ_API_KEY:
+    # Try local config (dev only)
     try:
-        from config import GROQ_API_KEY
+        from config import ANTHROPIC_API_KEY, GROQ_API_KEY  # type: ignore
     except (ImportError, AttributeError):
         pass
-if not GROQ_API_KEY:
-    logging.error("GROQ_API_KEY not set.")
-    sys.exit(1)
+if not ANTHROPIC_API_KEY and not GROQ_API_KEY:
+    logging.warning("No AI key set (ANTHROPIC_API_KEY / GROQ_API_KEY). AI commands disabled.")
+    # Do NOT exit — scanner, scheduler, daily brief all work without AI
 
 # ── In-memory signal store (survives restart via /tmp cache) ──────────────────
 _active_signals = []
@@ -419,21 +421,53 @@ def _fetch(ticker: str):
         return None
 
 
-# ── Groq AI ───────────────────────────────────────────────────────────────────
-def _ask(prompt: str, max_tokens=900) -> str:
-    r = requests.post(
-        "https://api.groq.com/openai/v1/chat/completions",
-        headers={"Authorization": f"Bearer {GROQ_API_KEY}", "Content-Type": "application/json"},
-        json={
-            "model": "llama-3.3-70b-versatile",
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens,
-            "temperature": 0.3,
-        },
-        timeout=30,
-    )
-    r.raise_for_status()
-    return r.json()["choices"][0]["message"]["content"].strip()
+# ── AI layer — Claude primary, Groq fallback ──────────────────────────────────
+def _ask(prompt: str, max_tokens: int = 900) -> str:
+    """Call Claude (Anthropic) if key exists, else Groq, else return error string."""
+
+    # ── Claude (Anthropic) ────────────────────────────────────────────────
+    if ANTHROPIC_API_KEY:
+        try:
+            r = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={
+                    "x-api-key": ANTHROPIC_API_KEY,
+                    "anthropic-version": "2023-06-01",
+                    "content-type": "application/json",
+                },
+                json={
+                    "model": "claude-haiku-4-5",
+                    "max_tokens": max_tokens,
+                    "messages": [{"role": "user", "content": prompt}],
+                },
+                timeout=30,
+            )
+            r.raise_for_status()
+            return r.json()["content"][0]["text"].strip()
+        except Exception as e:
+            logging.warning(f"Claude API error: {e}")
+
+    # ── Groq fallback ─────────────────────────────────────────────────────
+    if GROQ_API_KEY:
+        try:
+            r = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {GROQ_API_KEY}",
+                         "Content-Type": "application/json"},
+                json={
+                    "model": "llama-3.3-70b-versatile",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": max_tokens,
+                    "temperature": 0.3,
+                },
+                timeout=30,
+            )
+            r.raise_for_status()
+            return r.json()["choices"][0]["message"]["content"].strip()
+        except Exception as e:
+            logging.warning(f"Groq API error: {e}")
+
+    return "⚠️ AI unavailable — set ANTHROPIC_API_KEY or GROQ_API_KEY on Railway."
 
 
 # ── Commands ──────────────────────────────────────────────────────────────────
