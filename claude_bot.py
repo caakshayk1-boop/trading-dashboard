@@ -672,6 +672,36 @@ def _run_swing_scan(slot="Auto"):
 
         if signals:
             log_signals(signals)
+
+            # Also write to all_signals so _push_signals_to_github() picks them up
+            try:
+                from tracker import log_to_all_signals
+                for s in signals:
+                    log_to_all_signals(
+                        symbol=s["symbol"],
+                        signal_type=s.get("setup_type", "swing"),
+                        action=s.get("action", "BUY"),
+                        entry=float(s.get("price") or s.get("entry") or 0),
+                        sl=float(s.get("sl1") or s.get("sl") or 0),
+                        t1=float(s.get("target1") or 0),
+                        t2=float(s.get("target2") or 0),
+                        t3=float(s.get("target3") or s.get("target2") or 0),
+                        rr=float(s.get("rr2") or s.get("rr1") or s.get("rr") or 0),
+                        timeframe="SWING",
+                        score=int(s.get("score") or 0),
+                        metadata={
+                            "rsi":       s.get("rsi"),
+                            "adx":       s.get("adx"),
+                            "vol_ratio": s.get("vol_ratio"),
+                            "regime":    s.get("regime"),
+                            "reasons":   s.get("reasons", ""),
+                            "fno":       s.get("fno_eligible", False),
+                            "tv_link":   s.get("tv_link", ""),
+                        }
+                    )
+            except Exception as _dbe:
+                logging.warning(f"all_signals log error: {_dbe}")
+
             from telegram_bot import send_alert, send_summary
             for s in signals:
                 send_alert(s)
