@@ -28,6 +28,8 @@ OBS_REPO = os.environ.get("OBSIDIAN_GITHUB_REPO", "caakshayk1-boop/obsidian-brai
 # ────────────────────────────────────────────────────────────────────────────
 # MARKET TICKERS
 # ────────────────────────────────────────────────────────────────────────────
+LICHESS_USER = "AKK_010"   # public Lichess username — no token needed
+
 TICKERS = [
     ("Gold",     "GC=F",    "$",  ".0f"),
     ("Silver",   "SI=F",    "$",  ".2f"),
@@ -449,9 +451,169 @@ def _get_quote() -> str:
     return '"The secret of getting ahead is getting started."\n— Mark Twain'
 
 
+def _lichess_game_headers() -> dict:
+    """Headers for Lichess game export (NDJSON)."""
+    h = {"Accept": "application/x-ndjson"}
+    token = os.environ.get("LICHESS_TOKEN", "")
+    if token:
+        h["Authorization"] = f"Bearer {token}"
+    return h
+
+
+def _get_yesterday_games() -> list:
+    """Fetch all games played yesterday IST by LICHESS_USER."""
+    ist = timezone(timedelta(hours=5, minutes=30))
+    now = datetime.now(ist)
+    yest = now - timedelta(days=1)
+    day_start = datetime(yest.year, yest.month, yest.day, 0, 0, 0, tzinfo=ist)
+    day_end   = datetime(yest.year, yest.month, yest.day, 23, 59, 59, tzinfo=ist)
+    since_ms  = int(day_start.timestamp() * 1000)
+    until_ms  = int(day_end.timestamp() * 1000)
+    try:
+        r = requests.get(
+            f"https://lichess.org/api/games/user/{LICHESS_USER}",
+            params={"since": since_ms, "until": until_ms,
+                    "opening": "true", "pgnInJson": "true", "max": 50},
+            headers=_lichess_game_headers(),
+            timeout=15, stream=True,
+        )
+        games = []
+        for line in r.iter_lines():
+            if line:
+                try:
+                    games.append(json.loads(line))
+                except Exception:
+                    pass
+        return games
+    except Exception as e:
+        log.warning(f"Lichess games fetch: {e}")
+        return []
+
+
+def _analyze_games(games: list) -> str:
+    """
+    Summarise yesterday's games for AKK_010.
+    Shows W/L/D, time controls, openings played, a short verdict.
+    """
+    if not games:
+        return ""
+
+    total = len(games)
+    wins = draws = losses = 0
+    openings_w: list[str] = []
+    openings_b: list[str] = []
+    speeds: dict[str, int] = {}
+
+    for g in games:
+        players   = g.get("players", {})
+        white_id  = players.get("white", {}).get("user", {}).get("name", "").lower()
+        is_white  = white_id == LICHESS_USER.lower()
+        winner    = g.get("winner", "")
+        status    = g.get("status", "")
+
+        if not winner or status == "draw":
+            draws += 1
+        elif (winner == "white" and is_white) or (winner == "black" and not is_white):
+            wins += 1
+        else:
+            losses += 1
+
+        op = g.get("opening", {})
+        op_name = op.get("name", "")
+        eco     = op.get("eco", "")
+        if op_name:
+            label = f"{eco} {op_name.split(':')[0].strip()}" if eco else op_name.split(":")[0].strip()
+            (openings_w if is_white else openings_b).append(label)
+
+        speed = g.get("speed", "")
+        if speed:
+            speeds[speed] = speeds.get(speed, 0) + 1
+
+    pct = wins / total * 100
+    icon = "✅" if pct >= 55 else ("⚖️" if pct >= 45 else "❌")
+    lines = [
+        f"{icon} *{total} game{'s' if total > 1 else ''}* — {wins}W · {draws}D · {losses}L ({pct:.0f}% WR)"
+    ]
+
+    tc = " · ".join(f"{v}× {k}" for k, v in sorted(speeds.items(), key=lambda x: -x[1]))
+    if tc:
+        lines.append(f"⏱ {tc}")
+
+    seen_w = list(dict.fromkeys(openings_w))[:3]
+    seen_b = list(dict.fromkeys(openings_b))[:3]
+    if seen_w:
+        lines.append(f"♙ White: {' | '.join(seen_w)}")
+    if seen_b:
+        lines.append(f"♟ Black: {' | '.join(seen_b)}")
+
+    if losses > wins and total >= 3:
+        lines.append("_Rough session. Review the losses — find the pattern before playing again._")
+    elif wins > losses:
+        lines.append("_Good session. Openings holding._")
+    else:
+        lines.append("_Balanced._")
+
+    lines.append(f"[→ Review on Lichess](https://lichess.org/@/{LICHESS_USER})")
+    return "\n".join(lines)
+
+
+def _get_opening_study_focus() -> str:
+    """
+    Scan last 14 days of games for AKK_010's weakest opening (≥2 games, lowest WR).
+    Returns a one-liner study tip + Lichess link.
+    """
+    try:
+        ist = timezone(timedelta(hours=5, minutes=30))
+        since_ms = int((datetime.now(ist) - timedelta(days=14)).timestamp() * 1000)
+        r = requests.get(
+            f"https://lichess.org/api/games/user/{LICHESS_USER}",
+            params={"since": since_ms, "opening": "true", "max": 40},
+            headers=_lichess_game_headers(),
+            timeout=12, stream=True,
+        )
+        games = []
+        for line in r.iter_lines():
+            if line:
+                try:
+                    games.append(json.loads(line))
+                except Exception:
+                    pass
+
+        op_stats: dict[str, list[int]] = {}  # name → [wins, total]
+        for g in games:
+            white_id = g.get("players", {}).get("white", {}).get("user", {}).get("name", "").lower()
+            is_white = white_id == LICHESS_USER.lower()
+            winner   = g.get("winner", "")
+            won = (winner == "white" and is_white) or (winner == "black" and not is_white)
+            op_name = g.get("opening", {}).get("name", "Unknown").split(":")[0].strip()
+            if op_name not in op_stats:
+                op_stats[op_name] = [0, 0]
+            op_stats[op_name][1] += 1
+            if won:
+                op_stats[op_name][0] += 1
+
+        # weakest: ≥2 games, lowest win rate
+        weak = [(n, w, t) for n, (w, t) in op_stats.items() if t >= 2]
+        if not weak:
+            return ""
+        weak.sort(key=lambda x: x[1] / x[2])
+        name, w, t = weak[0]
+        wr = w / t * 100
+        slug = name.replace(" ", "_").replace("'", "")
+        return (
+            f"📚 *Study focus:* {name} — {w}/{t} = {wr:.0f}% WR\n"
+            f"[→ Opening explorer](https://lichess.org/opening/{slug}) · "
+            f"[→ Practice](https://lichess.org/study/search?q={name.replace(' ', '+')})"
+        )
+    except Exception as e:
+        log.warning(f"opening study focus: {e}")
+        return ""
+
+
 def _get_chess_puzzle() -> str:
-    """Fetch Lichess daily puzzle with theme hint for advanced player."""
+    """Daily puzzle from Lichess, rated relative to AKK_010's puzzle rating (1646)."""
     import re
+    MY_PUZZLE_RATING = 1646
     try:
         r = requests.get(
             "https://lichess.org/api/puzzle/daily",
@@ -464,7 +626,8 @@ def _get_chess_puzzle() -> str:
         puzzle = data.get("puzzle", {})
         pid    = puzzle.get("id", "")
         rating = puzzle.get("rating", 0)
-        themes = [t for t in puzzle.get("themes", []) if t not in ("master", "masterVsMaster", "puzzleOfTheDay")]
+        themes = [t for t in puzzle.get("themes", [])
+                  if t not in ("master", "masterVsMaster", "puzzleOfTheDay")]
 
         def fmt_theme(t: str) -> str:
             return re.sub(r'([A-Z])', r' \1', t).strip().title()
@@ -473,10 +636,13 @@ def _get_chess_puzzle() -> str:
         tip = next((THEME_TIPS[t] for t in themes if t in THEME_TIPS),
                    "Calculate 3 moves deep before touching a piece.")
 
+        diff = rating - MY_PUZZLE_RATING
+        level = "🔴 stretch" if diff > 150 else ("🟡 at level" if diff > -150 else "🟢 comfort zone")
+
         return (
-            f"Rating: *{rating:,}* · _{theme_str}_\n"
+            f"Rating: *{rating:,}* ({level}) · _{theme_str}_\n"
             f"💡 _{tip}_\n"
-            f"[→ Open puzzle on Lichess](https://lichess.org/training/{pid})"
+            f"[→ Solve on Lichess](https://lichess.org/training/{pid})"
         )
     except Exception as e:
         log.warning(f"chess puzzle fetch failed: {e}")
@@ -580,10 +746,13 @@ def build_brief() -> str:
     weekday  = now.strftime("%A")
     datestr  = now.strftime("%d %B %Y")
 
-    markets  = _get_markets()
-    jobs     = _get_jobs()
-    quote    = _get_quote()
-    chess    = _get_chess_puzzle()
+    markets        = _get_markets()
+    jobs           = _get_jobs()
+    quote          = _get_quote()
+    chess          = _get_chess_puzzle()
+    study_focus    = _get_opening_study_focus()
+    yesterday_games = _get_yesterday_games()
+    game_analysis  = _analyze_games(yesterday_games)
 
     habit_name, habit_time, habit_why = _rotate(HABITS, today)
     hack                              = _rotate(PRODUCTIVITY, today)
@@ -592,7 +761,18 @@ def build_brief() -> str:
 
     headline    = _get_global_headline()
     global_note = f"\n🌍 _{headline}_" if headline else ""
-    chess_block = f"\n━━━━━━━━━━━━━━━━━━━\n♟️ *CHESS PUZZLE*\n━━━━━━━━━━━━━━━━━━━\n{chess}" if chess else ""
+    # Chess — yesterday's games + today's puzzle + study focus
+    games_block = (
+        f"\n━━━━━━━━━━━━━━━━━━━\n♟️ *YESTERDAY'S GAMES*\n━━━━━━━━━━━━━━━━━━━\n{game_analysis}"
+    ) if game_analysis else ""
+
+    puzzle_parts = [chess]
+    if study_focus:
+        puzzle_parts.append(study_focus)
+    chess_block = (
+        f"\n━━━━━━━━━━━━━━━━━━━\n♟️ *CHESS*\n━━━━━━━━━━━━━━━━━━━\n" +
+        "\n\n".join(p for p in puzzle_parts if p)
+    ) if any(puzzle_parts) else ""
 
     brief = f"""🌅 *GOOD MORNING, AKSHAY*
 {weekday} · {datestr} · 6 AM IST
@@ -631,7 +811,7 @@ Senior FP&A · Finance Manager · Regional · Controller
 📖 *CASE STUDY*
 ━━━━━━━━━━━━━━━━━━━
 *{lesson_title}*
-{lesson_body}{chess_block}
+{lesson_body}{games_block}{chess_block}
 
 ━━━━━━━━━━━━━━━━━━━
 💬 *QUOTE*
