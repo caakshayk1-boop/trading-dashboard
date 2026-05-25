@@ -1,9 +1,19 @@
 import os
-TELEGRAM_TOKEN      = os.environ.get("TELEGRAM_TOKEN", "8716634372:AAFuRGXIZORqyG-EUZOeVhJ2a4i85IqDmbM")
-TELEGRAM_CHAT_ID    = os.environ.get("TELEGRAM_CHAT_ID", "1101865515")
+from dotenv import load_dotenv
 
-UPSTOX_API_KEY      = os.environ.get("UPSTOX_API_KEY", "33270875-6e63-47dc-afa5-0e61e2962e05")
-UPSTOX_API_SECRET   = os.environ.get("UPSTOX_API_SECRET", "za7r9e06g4")
+load_dotenv()
+
+def _require(name: str) -> str:
+    val = os.environ.get(name)
+    if not val:
+        raise EnvironmentError(f"Required environment variable '{name}' is not set. Check your .env file.")
+    return val
+
+TELEGRAM_TOKEN      = _require("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID    = _require("TELEGRAM_CHAT_ID")
+
+UPSTOX_API_KEY      = os.environ.get("UPSTOX_API_KEY", "")   # optional — not used in scan flow
+UPSTOX_API_SECRET   = os.environ.get("UPSTOX_API_SECRET", "")
 UPSTOX_REDIRECT_URL = "http://localhost:8501"
 UPSTOX_TOKEN_FILE   = "cache/upstox_token.json"
 
@@ -18,3 +28,7 @@ SEND_TOP_PICKS_ONLY = True     # Telegram gets only top 5 signals (quality)
 ENABLE_WEEKLY_CONFIRM = True   # Require weekly EMA alignment
 MAX_PE              = 80       # Max trailing P/E (0 = disabled)
 MAX_WORKERS         = 12       # Parallel threads for scanning
+
+GROQ_API_KEY        = _require("GROQ_API_KEY")
+
+VERCEL_URL          = "https://tradeflow-pro-kappa.vercel.app"
