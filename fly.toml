@@ -1,0 +1,42 @@
+app = "dhruvedge-bot"
+primary_region = "sin"   # Singapore — lowest latency to India/NSE
+
+[build]
+
+[env]
+  PORT = "8080"
+
+# Flask API for Dhruvedge (Vercel) — signals + portfolio + health
+[[services]]
+  internal_port = 8080
+  protocol      = "tcp"
+  auto_stop_machines  = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[services.ports]]
+    port     = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port     = 443
+    handlers = ["tls", "http"]
+
+  [[services.http_checks]]
+    interval      = 30000
+    timeout       = 10000
+    grace_period  = "30s"
+    method        = "GET"
+    path          = "/api/health"
+
+# 512MB RAM — covered by Fly.io $5/month free credit
+[[vm]]
+  memory   = "512mb"
+  cpu_kind = "shared"
+  cpus     = 1
+
+# Persistent volume — signals.db + cache survive redeploys
+[mounts]
+  source      = "bot_data"
+  destination = "/app/data"
+  initial_size = "1gb"

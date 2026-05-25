@@ -21,7 +21,8 @@ from telegram_bot import _post
 log = logging.getLogger(__name__)
 
 IST      = timezone(timedelta(hours=5, minutes=30))
-DB_PATH  = os.path.join(os.path.dirname(__file__), "signals.db")
+_DATA_DIR = "/app/data" if os.path.isdir("/app/data") else os.path.dirname(__file__)
+DB_PATH   = os.path.join(_DATA_DIR, "signals.db")
 OBS_REPO = os.environ.get("OBSIDIAN_GITHUB_REPO", "caakshayk1-boop/obsidian-brain")
 
 

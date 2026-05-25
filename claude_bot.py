@@ -18,7 +18,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 
 IST_TZ = timezone(timedelta(hours=5, minutes=30))
 CAPITAL = 500000
-DB_PATH = os.path.join(os.path.dirname(__file__), "signals.db")
+# Use persistent volume on Fly.io (/app/data), fallback to local for Railway/dev
+_DATA_DIR = "/app/data" if os.path.isdir("/app/data") else os.path.dirname(__file__)
+DB_PATH   = os.path.join(_DATA_DIR, "signals.db")
 
 # In-memory position state: symbol → {"trailed_sl": float, "t1_hit": bool}
 _position_states: dict = {}
