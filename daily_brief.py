@@ -776,7 +776,7 @@ def build_brief() -> str:
     ) if any(puzzle_parts) else ""
 
     brief = f"""🌅 *GOOD MORNING, AKSHAY*
-{weekday} · {datestr} · 6 AM IST
+{weekday} · {datestr} · 8 AM IST
 
 ━━━━━━━━━━━━━━━━━━━
 💼 *OPPORTUNITIES*
@@ -828,6 +828,11 @@ def send_brief():
     today    = date.today().isoformat()
     _save_to_db(brief)
     _post(brief)
+    # Send newspaper link
+    newspaper_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
+    if newspaper_domain:
+        newspaper_url = f"https://{newspaper_domain}"
+        _post(f"📰 *AKK Times is live* — {today}\n{newspaper_url}\n\n_World news · Markets · FP&A · Top 5 picks · OTT · Money hacks_")
     try:
         _push_to_gist(brief, today)
     except Exception as e:

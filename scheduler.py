@@ -78,12 +78,12 @@ if __name__ == "__main__":
 
     scheduler = BlockingScheduler(timezone=IST)
 
-    # Daily morning brief — 6:00 AM IST every day
+    # Daily morning brief — 8:00 AM IST every day
     scheduler.add_job(
-        send_brief, CronTrigger(hour=6, minute=0, timezone=IST),
+        send_brief, CronTrigger(hour=8, minute=0, timezone=IST),
         id="daily_brief"
     )
-    logging.info("Scheduled daily brief at 06:00 IST")
+    logging.info("Scheduled daily brief at 08:00 IST")
 
     all_slots = set(TRADING_DAY_SLOTS) | set(HOLIDAY_SLOTS)
     for t in all_slots:

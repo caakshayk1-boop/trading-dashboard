@@ -17,6 +17,31 @@ IST = pytz.timezone("Asia/Kolkata")
 _last_scan_time = None
 _last_scan_count = 0
 
+# Direction lock: symbol → {"action": "BUY"/"SELL", "date": "YYYY-MM-DD"}
+# Once a BUY is sent for symbol X, block any SELL on X until next trading day.
+_direction_lock: dict = {}
+
+
+def _check_direction_lock(symbol: str, action: str) -> bool:
+    """
+    Returns True (block) if we already sent the opposite direction today.
+    Clears stale locks from previous trading days automatically.
+    """
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    lock = _direction_lock.get(symbol)
+    if lock:
+        if lock["date"] != today:
+            del _direction_lock[symbol]  # stale — new day, clear it
+            return False
+        if lock["action"] != action:
+            return True  # opposite signal today → block
+    return False
+
+
+def _set_direction_lock(symbol: str, action: str) -> None:
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    _direction_lock[symbol] = {"action": action, "date": today}
+
 
 def _post(text, chat_id=None):
     if not TELEGRAM_TOKEN:
@@ -55,10 +80,19 @@ def send_alert(signal):
     score = int(signal.get("score", 0))
     if score < 65:
         return False  # silently skip B/C signals
+
+    sym  = signal["symbol"]
+    actn = signal.get("action", "BUY")
+
+    # Direction lock: if we already sent the opposite direction today, skip.
+    if _check_direction_lock(sym, actn):
+        logging.info(f"send_alert: {sym} {actn} blocked — opposite direction already sent today")
+        return False
+    _set_direction_lock(sym, actn)
+
     _last_scan_count += 1
     conv = _conviction(score)
     ts   = datetime.now(IST).strftime("%d %b, %H:%M IST")
-    actn = signal.get("action", "BUY")
     dir_arrow = "📈" if actn == "BUY" else "📉"
     rr2  = signal.get("rr2", 0)
     adx  = signal.get("adx_val", 0)
