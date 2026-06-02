@@ -97,9 +97,15 @@ def send_alert(signal):
     rr2  = signal.get("rr2", 0)
     adx  = signal.get("adx_val", 0)
     vol  = signal.get("vol_ratio", 0)
+    # Volume quality label
+    vol_label = (
+        "🔥 SURGING" if vol >= 2.5 else
+        "✅ NORMAL"  if vol >= 0.6 else
+        "⚠️ THIN"
+    )
     msg = (
         f"{dir_arrow} *{signal['symbol']}* | {conv} Conviction | SWING {actn}\n"
-        f"Score: `{score}/100` · ADX `{adx}` · Vol `{vol}x`\n\n"
+        f"Score: `{score}/100` · ADX `{adx}` · Vol `{vol}x` {vol_label}\n\n"
         f"*Entry:* ₹{signal['price']}\n"
         f"*SL:*    ₹{signal['sl2']}\n\n"
         f"*T1:* ₹{signal['t1']}  `({signal.get('rr1',0)}R)`\n"

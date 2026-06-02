@@ -894,6 +894,46 @@ def analyze_stock(symbol, nifty_ret=0.0):
         if data["score"] < data["min_required"]:
             return None
 
+        # ── Audit fix: quality gates before emitting any signal ────────────
+        # Gate 1: Volume confirmation — must have institutional participation
+        vol_ratio = data.get("vol_ratio", 1.0)
+        if vol_ratio < 0.6:
+            logging.info(f"{symbol}: vol {vol_ratio:.2f}× — below 0.6× threshold, skip")
+            return None
+
+        # Gate 2: RSI neutral zone — 42-58 with no momentum = no edge
+        rsi_val = data.get("rsi_val", 50)
+        action  = "BUY" if regime["bias"] == "bullish" else "SELL"
+        if 42 <= rsi_val <= 58:
+            # Allow if MACD confirms direction
+            try:
+                macd_v  = float(macd_line(close).iloc[-1])
+                sig_v   = float(macd_signal(close).iloc[-1])
+                if action == "BUY"  and not (macd_v > sig_v):
+                    logging.info(f"{symbol}: RSI neutral {rsi_val:.0f}, no MACD confirm — skip")
+                    return None
+                if action == "SELL" and not (macd_v < sig_v):
+                    logging.info(f"{symbol}: RSI neutral {rsi_val:.0f}, no MACD confirm — skip")
+                    return None
+            except Exception:
+                pass  # if MACD fails, don't block
+
+        # Gate 3: Entry context — don't SELL at day low, don't BUY at day high
+        # without volume surge (vol_ratio >= 1.5)
+        day_high = float(high.iloc[-20:].max()) if len(high) >= 20 else float(high.max())
+        day_low  = float(low.iloc[-20:].min())  if len(low)  >= 20 else float(low.min())
+        price    = data.get("price", float(close.iloc[-1]))
+        day_range = day_high - day_low
+        buf       = day_range * 0.03
+        at_day_low  = price <= day_low  + buf
+        at_day_high = price >= day_high - buf
+        if action == "SELL" and at_day_low  and vol_ratio < 1.5:
+            logging.info(f"{symbol}: SELL at day low ({price:.2f}) vol {vol_ratio:.2f}× — liquidity trap, skip")
+            return None
+        if action == "BUY"  and at_day_high and vol_ratio < 1.5:
+            logging.info(f"{symbol}: BUY at day high ({price:.2f}) vol {vol_ratio:.2f}× — chasing, skip")
+            return None
+
         # Weekly trend confirmation
         if ENABLE_WEEKLY_CONFIRM and not check_weekly_trend(symbol):
             return None
