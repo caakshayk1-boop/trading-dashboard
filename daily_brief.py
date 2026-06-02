@@ -593,11 +593,15 @@ def _save_to_db(content: str):
 
 
 def _push_to_gist(content: str, brief_date: str):
-    """Push brief history to GitHub Gist for mobile PWA access."""
-    token   = os.environ.get("GITHUB_TOKEN", "")
-    gist_id = os.environ.get("BRIEFS_GIST_ID", "")
+    """Push brief to data/daily_brief.json in the trading-dashboard GitHub repo.
+
+    Replaces the old Gist approach — reads from GitHub raw URL which is public
+    and doesn't require BRIEFS_GIST_ID. Dhruvedge terminal reads from this file.
+    """
+    token = os.environ.get("GITHUB_TOKEN", "")
+    repo  = os.environ.get("TRADING_REPO", "caakshayk1-boop/trading-dashboard")
     if not token:
-        log.warning("daily_brief: GITHUB_TOKEN not set — skipping Gist push")
+        log.warning("daily_brief: GITHUB_TOKEN not set — skipping GitHub push")
         return
 
     gh_headers = {
@@ -605,19 +609,21 @@ def _push_to_gist(content: str, brief_date: str):
         "Accept":        "application/vnd.github.v3+json",
         "User-Agent":    "akk-daily-brief/1.0",
     }
+    api_base = f"https://api.github.com/repos/{repo}/contents/data/daily_brief.json"
 
-    # Load existing briefs from Gist
-    briefs = []
-    if gist_id:
-        try:
-            r = requests.get(f"https://api.github.com/gists/{gist_id}", headers=gh_headers, timeout=10)
-            if r.status_code == 200:
-                raw = r.json().get("files", {}).get("briefs.json", {}).get("content", "[]")
-                existing = json.loads(raw)
-                if isinstance(existing, list):
-                    briefs = existing
-        except Exception as e:
-            log.warning(f"daily_brief: Gist read failed: {e}")
+    # Load existing briefs from repo file
+    briefs, sha = [], None
+    try:
+        r = requests.get(api_base, headers=gh_headers, timeout=10)
+        if r.status_code == 200:
+            import base64 as _b64
+            data = r.json()
+            sha  = data.get("sha")
+            existing = json.loads(_b64.b64decode(data["content"]).decode())
+            if isinstance(existing, list):
+                briefs = existing
+    except Exception as e:
+        log.warning(f"daily_brief: repo read failed: {e}")
 
     # Upsert today, keep last 30
     briefs = [b for b in briefs if b.get("date") != brief_date]
@@ -635,26 +641,19 @@ def _push_to_gist(content: str, brief_date: str):
             json={"files": {"briefs.json": {"content": payload}}},
             headers=gh_headers, timeout=10,
         )
-        if r.status_code == 200:
-            log.info("daily_brief: Gist updated ✓")
-        else:
-            log.warning(f"daily_brief: Gist update failed {r.status_code}")
+    import base64 as _b64
+    body: dict = {
+        "message": f"data: daily brief {brief_date} [skip ci]",
+        "content": _b64.b64encode(payload.encode()).decode(),
+        "branch":  "main",
+    }
+    if sha:
+        body["sha"] = sha
+    r = requests.put(api_base, json=body, headers=gh_headers, timeout=15)
+    if r.status_code in (200, 201):
+        log.info("daily_brief: pushed to GitHub repo ✓")
     else:
-        r = requests.post(
-            "https://api.github.com/gists",
-            json={
-                "description": "Akshay Daily Brief — Morning Update Log",
-                "public":      False,
-                "files":       {"briefs.json": {"content": payload}},
-            },
-            headers=gh_headers, timeout=10,
-        )
-        if r.status_code == 201:
-            new_id = r.json().get("id", "")
-            log.info(f"daily_brief: Gist created — set BRIEFS_GIST_ID={new_id} on Railway")
-            _post(f"📌 Set env var on Railway:\nBRIEFS\\_GIST\\_ID=`{new_id}`")
-        else:
-            log.warning(f"daily_brief: Gist create failed {r.status_code}")
+        log.warning(f"daily_brief: GitHub push failed {r.status_code} {r.text[:100]}")
 
 
 # ────────────────────────────────────────────────────────────────────────────
