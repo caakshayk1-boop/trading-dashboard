@@ -14,15 +14,15 @@ from typing import Optional
 import requests
 import yfinance as yf
 import feedparser
+from content_cache import get_cached_markets, get_cached_jobs, get_cached_quote
 
 sys.path.insert(0, os.path.dirname(__file__))
 from telegram_bot import _post
+import db
 
 log = logging.getLogger(__name__)
 
-IST      = timezone(timedelta(hours=5, minutes=30))
-_DATA_DIR = "/app/data" if os.path.isdir("/app/data") else os.path.dirname(__file__)
-DB_PATH   = os.path.join(_DATA_DIR, "signals.db")
+IST = timezone(timedelta(hours=5, minutes=30))
 OBS_REPO = os.environ.get("OBSIDIAN_GITHUB_REPO", "caakshayk1-boop/obsidian-brain")
 
 
@@ -326,30 +326,50 @@ def _rotate(items: list, seed: date = None):
 
 
 def _get_markets() -> str:
+    # Use shared cache — avoids duplicate yfinance calls with newspaper.py
+    markets = get_cached_markets()
     lines = []
-    for name, ticker, prefix, fmt in TICKERS:
-        try:
-            # history() gives fresh data; fast_info returns stale cached prices
-            hist  = yf.Ticker(ticker).history(period="5d", interval="1d", auto_adjust=True)
-            if hist.empty:
-                raise ValueError("no data")
-            price = float(hist["Close"].iloc[-1])
-            prev  = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else price
-            pct   = ((price - prev) / prev * 100) if prev else 0
-            arrow = "↑" if pct > 0.05 else ("↓" if pct < -0.05 else "→")
-            val   = f"{prefix}{price:{fmt}}"
-            lines.append(f"`{name:<10}` {val:<12} {arrow} {pct:+.1f}%")
-        except Exception:
-            lines.append(f"`{name:<10}` —")
-    return "\n".join(lines)
+    for m in markets:
+        arrow = "↑" if m["change_pct"] > 0.05 else ("↓" if m["change_pct"] < -0.05 else "→")
+        lines.append(f"`{m['name']:<10}` {m['price']:<12} {arrow} {m['change_pct']:+.1f}%")
+    return "\n".join(lines) if lines else "—"
 
 
 def _get_jobs() -> str:
     """
     Fetch Senior FP&A / Senior Manager Finance jobs — Dubai + Malaysia.
-    Target: Dubai (any) · Malaysia 23–25K MYR+.
-    Sources: Adzuna API → RSS fallbacks → static links.
+    Uses shared content_cache to avoid duplicate API calls with newspaper.py.
     """
+    jobs = get_cached_jobs()
+    results = [(j["city"], j["title"], j["link"]) for j in jobs]
+
+    if not results:
+        return (
+            "*🇦🇪 Dubai — Senior FP&A / Finance Manager:*\n"
+            "• [LinkedIn Dubai](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Dubai&f_TPR=r86400)\n"
+            "• [Bayt Dubai](https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/)\n\n"
+            "*🇲🇾 Malaysia — Senior FP&A / Regional (23–25K MYR):*\n"
+            "• [LinkedIn Malaysia](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Malaysia&f_TPR=r86400)\n"
+            "• [JobStreet Malaysia](https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/)"
+        )
+
+    dubai_lines = [f"• {t} →[↗]({u})" for city, t, u in results if city == "Dubai"]
+    my_lines    = [f"• {t} →[↗]({u})" for city, t, u in results if city == "Malaysia"]
+    out = ""
+    if dubai_lines:
+        out += "*🇦🇪 Dubai:*\n" + "\n".join(dubai_lines)
+    if my_lines:
+        if out:
+            out += "\n\n"
+        out += "*🇲🇾 Malaysia (23–25K MYR):*\n" + "\n".join(my_lines)
+    out += (
+        "\n\n[→ LinkedIn Dubai](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Dubai) · "
+        "[→ LinkedIn MY](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Malaysia)"
+    )
+    return out
+
+def _get_jobs_UNUSED() -> str:
+    """Original direct-fetch kept for reference — now replaced by content_cache."""
     results: list[tuple[str, str, str]] = []  # (city, title, url)
 
     # ── Adzuna API (free tier, reliable) ──────────────────────────────────
@@ -442,14 +462,7 @@ def _get_global_headline() -> Optional[str]:
 
 
 def _get_quote() -> str:
-    try:
-        r = requests.get("https://zenquotes.io/api/random", timeout=8)
-        if r.status_code == 200:
-            d = r.json()[0]
-            return f'"{d["q"]}"\n— {d["a"]}'
-    except Exception:
-        pass
-    return '"The secret of getting ahead is getting started."\n— Mark Twain'
+    return get_cached_quote()
 
 
 def _lichess_game_headers() -> dict:
@@ -652,7 +665,7 @@ def _get_chess_puzzle() -> str:
 
 def _save_to_db(content: str):
     try:
-        con = sqlite3.connect(DB_PATH)
+        con = db.connect()
         con.execute("""
             CREATE TABLE IF NOT EXISTS daily_briefs (
                 id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -667,6 +680,7 @@ def _save_to_db(content: str):
             (today, content)
         )
         con.commit()
+        db.sync(con)
         con.close()
     except Exception as e:
         log.warning(f"daily_brief DB save failed: {e}")

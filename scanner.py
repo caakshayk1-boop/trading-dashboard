@@ -1,6 +1,16 @@
 """
 Signal engine: Regime Filter → Structure → 3 Setups → Score → Dedup
 PDF spec: Part 5–7 of SwingTrading_BuildGuide
+
+Refactor status: signals/ package created as thin re-export shims.
+Next step: migrate function implementations into signals/submodules and
+           make scanner.py a backward-compat facade only.
+Grouped by destination module:
+  → signals/indicators.py  : ema, rsi, adx, atr, macd_line, macd_signal, obv, _tight_sl, _structure_targets
+  → signals/regime.py      : regime_filter, count_hh_hl
+  → signals/setups.py      : setup_pullback, setup_breakout, setup_divergence, compute_full_score
+  → signals/universe.py    : is_trading_day, FNO_ELIGIBLE, load_nifty500/200, _next_thursday, _smart_expiry
+  → signals/commodities.py : fetch_forex_comm, _comm_weekly_bias, scan_4h
 """
 import yfinance as yf
 import ta as ta_lib

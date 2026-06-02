@@ -1,7 +1,8 @@
 """
-claude_bot.py — AI-powered Telegram bot + auto-scheduler + Flask API
+claude_bot.py — AI-powered Telegram bot + Flask API
 Commands: Brief: NSE:TICKER | Trade: NSE:TICKER | Scan | Carousel: topic | Help
-Auto-scans: 9:20 AM | 11:45 AM | 4:30 PM IST (Mon–Fri)
+Scheduled scans (NSE swing + intraday) are handled by GitHub Actions (daily_scan.yml).
+This bot handles: on-demand commands, CF scans, position monitor, daily brief, content calendar.
 Flask API: /api/signals  /api/portfolio  /api/health  (served on $PORT for Dhruvedge)
 """
 import os, sys, time, logging, threading, json, sqlite3
@@ -13,14 +14,12 @@ import pytz
 
 sys.path.insert(0, os.path.dirname(__file__))
 from telegram_bot import _post, TELEGRAM_TOKEN
+import db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 IST_TZ = timezone(timedelta(hours=5, minutes=30))
 CAPITAL = 500000
-# Use persistent volume on Fly.io (/app/data), fallback to local for Railway/dev
-_DATA_DIR = "/app/data" if os.path.isdir("/app/data") else os.path.dirname(__file__)
-DB_PATH   = os.path.join(_DATA_DIR, "signals.db")
 
 # In-memory position state: symbol → {"trailed_sl": float, "t1_hit": bool}
 _position_states: dict = {}
@@ -56,11 +55,9 @@ def _nse_yahoo(sym: str) -> str:
 
 def _db_open_signals(min_score: int = 65) -> list:
     """Read OPEN A/A+ signals from signals.db."""
-    if not os.path.exists(DB_PATH):
-        return []
     try:
-        con = sqlite3.connect(DB_PATH)
-        con.row_factory = sqlite3.Row
+        con = db.connect()
+        con.row_factory = db.Row
         rows = con.execute(
             "SELECT * FROM all_signals WHERE status='OPEN' AND score>=? ORDER BY score DESC, date DESC",
             (min_score,)
@@ -73,12 +70,13 @@ def _db_open_signals(min_score: int = 65) -> list:
 
 def _db_update_signal(signal_id: int, status: str, exit_price: float, pnl_pct: float):
     try:
-        con = sqlite3.connect(DB_PATH)
+        con = db.connect()
         con.execute(
             "UPDATE all_signals SET status=?, exit_price=?, pnl_pct=? WHERE id=?",
             (status, exit_price, pnl_pct, signal_id)
         )
         con.commit()
+        db.sync(con)
         con.close()
     except Exception as e:
         logging.warning(f"DB update error: {e}")
@@ -105,11 +103,12 @@ def _start_api_server():
         @app.route("/api/admin/reset-signals", methods=["POST", "GET"])
         def admin_reset_signals():
             try:
-                conn = sqlite3.connect(DB_PATH)
+                conn = db.connect()
                 cur  = conn.cursor()
                 cur.execute("UPDATE all_signals SET status='CANCELLED' WHERE status='OPEN'")
                 affected = cur.rowcount
                 conn.commit()
+                db.sync(conn)
                 conn.close()
                 logging.info(f"[ADMIN] Reset {affected} stale OPEN signals to CANCELLED")
                 return jsonify({"ok": True, "cancelled": affected,
@@ -122,7 +121,7 @@ def _start_api_server():
             """Return last N daily briefs for mobile history view."""
             try:
                 limit = int(request.args.get("limit", 30)) if "request" in dir() else 30
-                conn  = sqlite3.connect(DB_PATH)
+                conn  = db.connect()
                 rows  = conn.execute(
                     "SELECT date, content, created_at FROM daily_briefs ORDER BY date DESC LIMIT ?",
                     (limit,)
@@ -784,8 +783,8 @@ def _push_signals_to_github():
         return
 
     try:
-        con = sqlite3.connect(DB_PATH)
-        con.row_factory = sqlite3.Row
+        con = db.connect()
+        con.row_factory = db.Row
         all_rows = con.execute(
             "SELECT * FROM all_signals ORDER BY date DESC LIMIT 500"
         ).fetchall()
@@ -1216,11 +1215,7 @@ def _run_morning_brief():
         # ── Get open signals ─────────────────────────────────────────────
         open_sigs = _db_open_signals(min_score=65)
 
-        # ── Push to Obsidian ─────────────────────────────────────────────
-        from obsidian_sync import write_morning_brief
-        write_morning_brief(market, open_sigs)
-
-        # ── Telegram summary ─────────────────────────────────────────────
+        # ── Telegram summary (always fires, don't block on Obsidian) ────
         n = market.get("nifty", "—")
         nc = market.get("nifty_chg", 0)
         g = market.get("gold", "—")
@@ -1230,10 +1225,17 @@ def _run_morning_brief():
         _post(
             f"☀️ *Morning Brief — {ts}*\n\n"
             f"Nifty `{n}` ({sign}{nc}%) · Gold `{g}` · Crude `{c}` · USDINR `{u}`\n"
-            f"Open positions: *{len(open_sigs)}*\n\n"
-            f"_Daily note created in Obsidian Brain 2.0_ 📓"
+            f"Open positions: *{len(open_sigs)}*"
         )
-        logging.info(f"[MORNING] Brief pushed — {len(open_sigs)} open positions")
+        logging.info(f"[MORNING] Telegram sent — {len(open_sigs)} open positions")
+
+        # ── Push to Obsidian (non-fatal — needs GITHUB_TOKEN on server) ──
+        try:
+            from obsidian_sync import write_morning_brief
+            write_morning_brief(market, open_sigs)
+            logging.info("[MORNING] Obsidian note written ✓")
+        except Exception as obs_err:
+            logging.warning(f"[MORNING] Obsidian sync skipped: {obs_err}")
     except Exception as e:
         logging.error(f"[MORNING] Brief error: {e}")
 
@@ -1270,23 +1272,9 @@ def _start_scheduler():
 
         sched = BackgroundScheduler(timezone=IST)
 
-        # Swing scanner — A/A+ only (score≥65, RR≥1.5, ADX≥20, Vol≥2.5x)
-        swing_slots = [("09:25", "Open"), ("11:42", "Midday"), ("16:32", "EOD"), ("20:00", "After")]
-        for t, label in swing_slots:
-            h, m = t.split(":")
-            def _swing_job(lbl=label):
-                logging.info(f"[SCHED] Swing scan firing: {lbl}")
-                _run_swing_scan(slot=lbl)
-            sched.add_job(
-                _swing_job,
-                CronTrigger(hour=int(h), minute=int(m), day_of_week="mon-fri", timezone=IST)
-            )
-
-        # Intraday scanner — every 30 min, 9:30–14:30 IST (self-guards time window)
-        sched.add_job(
-            _run_intraday_scan,
-            IntervalTrigger(minutes=30, timezone=IST)
-        )
+        # NSE swing + intraday scans are handled by GitHub Actions (daily_scan.yml).
+        # Removing them here eliminates duplicate Telegram signals. CF scans stay here
+        # because they run 24/7 on global markets — not tied to NSE trading hours.
 
         # Forex & Commodity scan — 4 fixed slots daily (mon-sun, markets never close)
         for cf_time in ["10:00", "14:00", "18:00", "22:00"]:
@@ -1335,7 +1323,7 @@ def _start_scheduler():
         )
 
         sched.start()
-        logging.info("Scheduler started: swing + intraday + CF(4x) + magic(14:00) + monitor(15min) + morning(8AM) + content(Mon 7AM)")
+        logging.info("Scheduler started: CF(4x) + magic(14:00) + monitor(15min) + brief(6AM) + morning(8AM) + content(Mon 7AM) — NSE swing/intraday handled by GitHub Actions")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 
@@ -1539,7 +1527,7 @@ def _delete_webhook():
 def _db_get_state(key: str) -> str | None:
     """Read a value from bot_state table in signals.db."""
     try:
-        con = sqlite3.connect(DB_PATH)
+        con = db.connect()
         con.execute("""CREATE TABLE IF NOT EXISTS bot_state
                        (key TEXT PRIMARY KEY, value TEXT, ts REAL)""")
         row = con.execute("SELECT value FROM bot_state WHERE key=?", (key,)).fetchone()
@@ -1552,12 +1540,13 @@ def _db_get_state(key: str) -> str | None:
 def _db_set_state(key: str, value: str):
     """Write a value to bot_state table in signals.db."""
     try:
-        con = sqlite3.connect(DB_PATH)
+        con = db.connect()
         con.execute("""CREATE TABLE IF NOT EXISTS bot_state
                        (key TEXT PRIMARY KEY, value TEXT, ts REAL)""")
         con.execute("INSERT OR REPLACE INTO bot_state (key, value, ts) VALUES (?,?,?)",
                     (key, value, time.time()))
         con.commit()
+        db.sync(con)
         con.close()
     except Exception as e:
         logging.warning(f"db_set_state error: {e}")
@@ -1590,9 +1579,9 @@ def run():
                 f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
                 json={
                     "chat_id": _cid,
-                    "text": "🤖 *Dhruvedge Bot online*\n"
-                            "Swing: 9:25·11:42·16:32·20:00 | Intraday: 9:30–14:30 | CF: 10·14·18·22\n"
-                            "Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/track` · `/stats`",
+                    "text": f"🤖 *Dhruvedge Bot online*\n"
+                            f"DB: {'Turso ☁️' if db.is_turso() else 'Local SQLite ⚠️'} | CF: 10·14·18·22\n"
+                            f"Commands: `Help` · `Scan` · `/cf` · `/intraday` · `/track` · `/stats`",
                     "parse_mode": "Markdown",
                     "reply_markup": {"remove_keyboard": True}
                 }, timeout=10
@@ -1629,6 +1618,9 @@ def run():
     except Exception as e:
         logging.warning(f"Offset catchup error: {e}")
 
+    _poll_errors = 0
+    _CRASH_ALERT_THRESHOLD = 10
+
     while True:
         try:
             url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
@@ -1637,6 +1629,7 @@ def run():
                 logging.warning(f"getUpdates HTTP {r.status_code}: {r.text[:200]}")
                 time.sleep(5)
                 continue
+            _poll_errors = 0  # reset on success
             for upd in r.json().get("result", []):
                 offset = upd["update_id"] + 1
                 _db_set_state("poll_offset", str(offset))   # persist after each message
@@ -1646,7 +1639,20 @@ def run():
                 if txt and cid:
                     threading.Thread(target=route, args=(txt, cid), daemon=True).start()
         except Exception as e:
-            logging.warning(f"Poll error: {e}")
+            _poll_errors += 1
+            logging.warning(f"Poll error #{_poll_errors}: {e}")
+            if _poll_errors == _CRASH_ALERT_THRESHOLD:
+                try:
+                    requests.post(
+                        f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                        json={
+                            "chat_id": _cid,
+                            "text": f"🚨 *Bot poll loop failing*\n{_CRASH_ALERT_THRESHOLD} consecutive errors. Last: `{e}`\nRailway will restart — check logs.",
+                            "parse_mode": "Markdown",
+                        }, timeout=10
+                    )
+                except Exception:
+                    pass
             time.sleep(5)
 
 

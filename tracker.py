@@ -2,24 +2,12 @@ import sqlite3, os, json, logging
 import pandas as pd
 import yfinance as yf
 from datetime import date, datetime, timedelta
-
-# Streamlit Cloud mounts repo read-only at /mount/src/ — SQLite WAL needs writable dir.
-# GitHub Actions: writable cwd. Local dev: writable cwd.
-_IS_CLOUD = os.path.exists("/mount/src") or os.getenv("STREAMLIT_SHARING_MODE") == "true"
-DB = "/tmp/signals.db" if _IS_CLOUD else os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "signals.db")
+import db as _db
 
 log = logging.getLogger(__name__)
 
 def _conn():
-    conn = sqlite3.connect(DB, timeout=30, check_same_thread=False)
-    try:
-        conn.execute("PRAGMA journal_mode=WAL")
-    except Exception:
-        pass  # WAL unavailable on some filesystems — DELETE mode is fine
-    conn.execute("PRAGMA synchronous=NORMAL")
-    conn.execute("PRAGMA cache_size=10000")
-    return conn
+    return _db.connect()
 
 def init_db():
     with _conn() as c:
@@ -170,6 +158,7 @@ def init_db():
                 c.execute(sql)
         _ensure_multibagger_table(c)
         c.commit()
+        _db.sync(c)
         log.info("DB init OK")
 
 def log_signals(signals):
@@ -200,6 +189,7 @@ def log_signals(signals):
                  s["price"], s.get("sl1", s["price"]*0.96), s.get("sl2", s["price"]*0.96),
                  s["target1"], s["target2"], s["target3"], s["score"], meta))
         c.commit()
+        _db.sync(c)
 
 
 def get_signals_display(days=3, min_score=0):
@@ -307,6 +297,7 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
             (today, signal_type, symbol, action, timeframe, entry, sl, t1, t2, t3,
              rr, score, sent_at, json.dumps(metadata or {})))
         c.commit()
+        _db.sync(c)
     log.info(f"all_signals logged: {symbol} {signal_type} {action} entry={entry}")
 
 def is_muted(symbol):
@@ -320,12 +311,14 @@ def mute_asset(symbol):
         c.execute("INSERT OR REPLACE INTO muted_assets VALUES (?,?)",
                   (symbol, str(datetime.utcnow())))
         c.commit()
+        _db.sync(c)
 
 def unmute_asset(symbol):
     init_db()
     with _conn() as c:
         c.execute("DELETE FROM muted_assets WHERE symbol=?", (symbol,))
         c.commit()
+        _db.sync(c)
 
 def update_outcomes():
     init_db()
@@ -377,6 +370,7 @@ def update_outcomes():
                         (status, exit_p, pnl, r_mult, row["id"])
                     )
                     c.commit()
+                    _db.sync(c)
         except Exception:
             continue
 
@@ -445,6 +439,7 @@ def update_all_outcomes():
                         (status, exit_p, pnl, r_m, int(row["id"]))
                     )
                     c.commit()
+                    _db.sync(c)
                 log.info(f"Outcome updated: {row['symbol']} {status} pnl={pnl}%")
         except Exception as e:
             log.warning(f"update_all_outcomes {row.get('symbol','?')}: {e}")
@@ -526,6 +521,7 @@ def log_breakouts(breakouts):
                  b["price"], b["sl"], b["target1"], b["target2"], b["target3"],
                  b["rr"], b["vol_ratio"], int(b.get("fno", False)), b.get("tv_link", "")))
         c.commit()
+        _db.sync(c)
 
 def get_breakouts(days=3):
     init_db()
@@ -555,6 +551,7 @@ def log_4h_signals(signals):
                  s["rsi"], s["vol_ratio"], int(s.get("fno", False)),
                  s.get("reason", ""), s.get("tv_link", "")))
         c.commit()
+        _db.sync(c)
 
 def get_4h_signals(days=1):
     init_db()
@@ -580,6 +577,7 @@ def log_commodity_signals(signals):
                  s["price"], s["sl"], s["target1"], s["target2"], s.get("target3", s["target2"]),
                  s["rr"], s.get("rsi",0), s.get("adx",0), s.get("atr",0)))
         c.commit()
+        _db.sync(c)
 
 def get_commodity_signals(days=1):
     init_db()
@@ -604,6 +602,7 @@ def log_scan_meta(slot, counts: dict):
         c.execute("INSERT INTO scan_meta (ts,slot,data) VALUES (?,?,?)",
                   (str(datetime.utcnow()), slot, json.dumps(counts)))
         c.commit()
+        _db.sync(c)
 
 def export_signals_json():
     """Export all signal tables to data/*.json for GitHub raw URL access."""
@@ -710,6 +709,7 @@ def log_multibaggers(signals):
                  s["rr"], s["score"], s.get("pe"),
                  int(s.get("fno", False)), s.get("reason",""), s.get("tv_link","")))
         c.commit()
+        _db.sync(c)
 
 def get_multibaggers(days=7):
     init_db()

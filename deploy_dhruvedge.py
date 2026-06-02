@@ -14,11 +14,10 @@ import os
 import subprocess
 import sqlite3
 from datetime import datetime, timezone, timedelta
+import db
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
-# Paths — both repos are on the same machine
-SIGNALS_DB    = os.path.join(os.path.dirname(__file__), "signals.db")
 DHRUVEDGE_DIR = os.path.expanduser("~/akk-terminal")
 PUBLIC_DIR    = os.path.join(DHRUVEDGE_DIR, "public")
 
@@ -45,13 +44,10 @@ def _nse_to_yahoo(symbol: str) -> str:
 
 
 def _read_open_signals(min_score: int = 65) -> list:
-    """Read OPEN A/A+ signals from signals.db (all_signals table)."""
-    if not os.path.exists(SIGNALS_DB):
-        logging.warning(f"signals.db not found at {SIGNALS_DB}")
-        return []
+    """Read OPEN A/A+ signals from Turso/signals.db (all_signals table)."""
     try:
-        con = sqlite3.connect(SIGNALS_DB)
-        con.row_factory = sqlite3.Row
+        con = db.connect()
+        con.row_factory = db.Row
         cur = con.execute(
             """SELECT * FROM all_signals
                WHERE status='OPEN' AND score >= ?
@@ -62,7 +58,7 @@ def _read_open_signals(min_score: int = 65) -> list:
         con.close()
         return rows
     except Exception as e:
-        logging.error(f"signals.db read error: {e}")
+        logging.error(f"DB read error: {e}")
         return []
 
 

@@ -1,3 +1,6 @@
+# Database — Turso persistent SQLite (replaces Railway Volume)
+libsql-experimental>=0.0.1
+
 # Core scanner (GitHub Actions + Streamlit Cloud)
 yfinance>=0.2.40
 pandas>=2.0
@@ -18,6 +21,7 @@ upstox-python-sdk; python_version>="3.9"
 
 # Flask API server (serves data to Dhruvedge on Vercel)
 flask>=3.0
+gunicorn>=21.0
 
 # Telegram AI bot
 groq>=0.4.0

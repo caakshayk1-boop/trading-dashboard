@@ -26,6 +26,32 @@ _SIGNALS_SECTION = "## 📈 Trading Signals"
 _SIGNALS_ANCHOR  = "<!-- nifty200-bot-signals -->"
 
 
+def _alert_telegram(msg: str) -> None:
+    """Send a failure alert to Telegram. Non-fatal — swallows all errors."""
+    token   = os.environ.get("TELEGRAM_TOKEN", "")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not token or not chat_id:
+        return
+    try:
+        requests.post(
+            f"https://api.telegram.org/bot{token}/sendMessage",
+            json={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown"},
+            timeout=8,
+        )
+    except Exception:
+        pass
+
+
+def _verify_write(path: str) -> bool:
+    """Confirm the file actually exists in GitHub after a PUT. Returns True if confirmed."""
+    url = f"{_GH_API_BASE}/{path}"
+    try:
+        r = requests.get(url, headers=_gh_headers(), timeout=10)
+        return r.status_code == 200
+    except Exception:
+        return False
+
+
 def _gh_headers() -> dict:
     token = os.environ.get("GITHUB_TOKEN", "")
     if not token:
@@ -60,7 +86,7 @@ def _gh_get_file(path: str) -> tuple[str, str | None]:
 
 
 def _gh_put_file(path: str, content: str, message: str, sha: str | None = None) -> bool:
-    """Write file to GitHub. Creates or updates depending on sha."""
+    """Write file to GitHub, then verify it exists. Alerts Telegram on failure."""
     url  = f"{_GH_API_BASE}/{path}"
     body = {
         "message": message,
@@ -71,13 +97,22 @@ def _gh_put_file(path: str, content: str, message: str, sha: str | None = None) 
         body["sha"] = sha
     try:
         r = requests.put(url, headers=_gh_headers(), json=body, timeout=20)
-        if r.status_code in (200, 201):
-            return True
-        logging.warning(f"obsidian_sync PUT {path}: {r.status_code} {r.text[:200]}")
-        return False
+        if r.status_code not in (200, 201):
+            logging.warning(f"obsidian_sync PUT {path}: {r.status_code} {r.text[:200]}")
+            _alert_telegram(f"⚠️ *Obsidian sync failed* (PUT)\n`{path}`\nHTTP {r.status_code} — signals NOT written to Obsidian.")
+            return False
     except Exception as e:
         logging.warning(f"obsidian_sync PUT {path}: {e}")
+        _alert_telegram(f"⚠️ *Obsidian sync error*\n`{path}`\n`{e}`")
         return False
+
+    # Verify file actually landed in the repo
+    if not _verify_write(path):
+        logging.warning(f"obsidian_sync VERIFY failed for {path}")
+        _alert_telegram(f"⚠️ *Obsidian sync verify failed*\n`{path}` — PUT succeeded (HTTP 200) but file not found on GET. Check GitHub API rate limits.")
+        return False
+
+    return True
 
 
 # ── Daily note helpers ─────────────────────────────────────────────────────────
