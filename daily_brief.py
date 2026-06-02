@@ -635,12 +635,6 @@ def _push_to_gist(content: str, brief_date: str):
     briefs = briefs[:30]
     payload = json.dumps(briefs, ensure_ascii=False, indent=2)
 
-    if gist_id:
-        r = requests.patch(
-            f"https://api.github.com/gists/{gist_id}",
-            json={"files": {"briefs.json": {"content": payload}}},
-            headers=gh_headers, timeout=10,
-        )
     import base64 as _b64
     body: dict = {
         "message": f"data: daily brief {brief_date} [skip ci]",
