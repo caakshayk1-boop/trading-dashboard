@@ -108,37 +108,6 @@ def fetch_global_news(max_per_feed: int = 4) -> list[dict]:
     # Delegate to shared cache — avoids duplicate RSS fetches with daily_brief.py
     return get_cached_news()[:max_per_feed * len(NEWS_FEEDS)]
 
-def _fetch_global_news_direct(max_per_feed: int = 4) -> list[dict]:
-    """Original direct-fetch version — used internally by content_cache.py only."""
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
-    articles = []
-    for source, url in NEWS_FEEDS:
-        try:
-            feed = feedparser.parse(url)
-            for entry in feed.entries[:max_per_feed]:
-                published = None
-                if hasattr(entry, "published_parsed") and entry.published_parsed:
-                    try:
-                        published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
-                    except Exception:
-                        pass
-                summary = getattr(entry, "summary", "")
-                # Strip HTML tags crudely
-                import re
-                summary = re.sub(r"<[^>]+>", "", summary)[:300]
-                articles.append({
-                    "source": source,
-                    "title": entry.get("title", "")[:120],
-                    "link": entry.get("link", ""),
-                    "summary": summary,
-                    "published": published.strftime("%b %d %H:%M") if published else "",
-                    "recent": published >= cutoff if published else True,
-                })
-        except Exception as e:
-            log.warning(f"News feed {source}: {e}")
-    articles.sort(key=lambda x: x["recent"], reverse=True)
-    return articles[:18]
-
 # ─────────────────────────────────────────────────────────────
 # CONTENT: DUBAI JOBS
 # ─────────────────────────────────────────────────────────────
@@ -155,72 +124,12 @@ DUBAI_JOB_KEYWORDS = ["fp&a", "financial planning", "financial analyst", "financ
 def fetch_dubai_jobs() -> list[dict]:
     return get_cached_jobs()
 
-def _fetch_dubai_jobs_direct() -> list[dict]:
-    """Original direct-fetch version — used internally by content_cache.py only."""
-    jobs = []
-    # Try RSS feeds first
-    for source, url in DUBAI_JOB_FEEDS[:2]:
-        try:
-            feed = feedparser.parse(url)
-            for entry in feed.entries[:6]:
-                title = entry.get("title", "").lower()
-                if any(k in title for k in DUBAI_JOB_KEYWORDS):
-                    jobs.append({
-                        "source": source,
-                        "title": entry.get("title", "")[:100],
-                        "link": entry.get("link", ""),
-                        "summary": getattr(entry, "summary", "")[:200],
-                    })
-        except Exception as e:
-            log.warning(f"Dubai jobs feed {source}: {e}")
-
-    # Fallback: curated high-value targets
-    if len(jobs) < 3:
-        jobs += [
-            {"source": "Target Company", "title": "FP&A Manager — ADNOC Group",
-             "link": "https://careers.adnoc.ae", "summary": "AED 28–40K/month. CA/ACCA required. SAP, Power BI. Abu Dhabi."},
-            {"source": "Target Company", "title": "Senior Financial Analyst — Emirates Group",
-             "link": "https://www.emiratesgroupcareers.com", "summary": "AED 22–32K/month. ACCA/CFA. Excel + Hyperion. Dubai."},
-            {"source": "Target Company", "title": "Finance Business Partner — Majid Al Futtaim",
-             "link": "https://careers.majidalfuttaim.com", "summary": "AED 25–38K/month. CA preferred. Oracle Fusion. Dubai."},
-            {"source": "Target Company", "title": "Group FP&A Analyst — DP World",
-             "link": "https://careers.dpworld.com", "summary": "AED 20–30K/month. Big 4 background preferred. Dubai."},
-            {"source": "Target Company", "title": "FP&A Lead — First Abu Dhabi Bank",
-             "link": "https://jobs.bankfab.com", "summary": "AED 30–45K/month. CFA/CA + banking exp. Abu Dhabi/Dubai."},
-        ]
-    return jobs[:8]
-
 # ─────────────────────────────────────────────────────────────
 # CONTENT: MARKETS
 # ─────────────────────────────────────────────────────────────
 
-MARKET_TICKERS = [
-    ("Nifty 50",  "^NSEI",    "₹", ".0f"),
-    ("S&P 500",   "^GSPC",    "",  ".0f"),
-    ("Nasdaq",    "^IXIC",    "",  ".0f"),
-    ("Gold",      "GC=F",     "$", ".1f"),
-    ("Crude",     "CL=F",     "$", ".2f"),
-    ("USD/INR",   "USDINR=X", "₹", ".2f"),
-    ("BTC",       "BTC-USD",  "$", ".0f"),
-    ("Sensex",    "^BSESN",   "₹", ".0f"),
-]
-
 def fetch_markets() -> list[dict]:
     return get_cached_markets()
-
-def _fetch_markets_direct() -> list[dict]:
-    """Original direct-fetch version — used internally by content_cache.py only."""
-    out = []
-    for name, ticker, prefix, fmt in MARKET_TICKERS:
-        try:
-            info = yf.Ticker(ticker).fast_info
-            price = info.last_price
-            prev  = info.previous_close
-            chg   = ((price - prev) / prev * 100) if prev else 0
-            out.append({"name": name, "price": f"{prefix}{price:{fmt}}", "change": f"{chg:+.2f}%", "up": chg >= 0})
-        except Exception as e:
-            log.warning(f"Market {ticker}: {e}")
-    return out
 
 # ─────────────────────────────────────────────────────────────
 # CONTENT: FP&A DAILY LEARN

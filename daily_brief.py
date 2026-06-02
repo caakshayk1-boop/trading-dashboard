@@ -26,19 +26,7 @@ IST = timezone(timedelta(hours=5, minutes=30))
 OBS_REPO = os.environ.get("OBSIDIAN_GITHUB_REPO", "caakshayk1-boop/obsidian-brain")
 
 
-# ────────────────────────────────────────────────────────────────────────────
-# MARKET TICKERS
-# ────────────────────────────────────────────────────────────────────────────
 LICHESS_USER = "AKK_010"   # public Lichess username — no token needed
-
-TICKERS = [
-    ("Gold",     "GC=F",    "$",  ".0f"),
-    ("Silver",   "SI=F",    "$",  ".2f"),
-    ("Crude",    "CL=F",    "$",  ".2f"),
-    ("USD/INR",  "USDINR=X","₹",  ".2f"),
-    ("S&P 500",  "^GSPC",   "",   ".0f"),
-    ("Nifty 50", "^NSEI",   "",   ".0f"),
-]
 
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -367,88 +355,6 @@ def _get_jobs() -> str:
         "[→ LinkedIn MY](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Malaysia)"
     )
     return out
-
-def _get_jobs_UNUSED() -> str:
-    """Original direct-fetch kept for reference — now replaced by content_cache."""
-    results: list[tuple[str, str, str]] = []  # (city, title, url)
-
-    # ── Adzuna API (free tier, reliable) ──────────────────────────────────
-    adzuna_id  = os.environ.get("ADZUNA_APP_ID", "")
-    adzuna_key = os.environ.get("ADZUNA_APP_KEY", "")
-    targets = [
-        ("ae", "Dubai",   "Senior FP&A Finance Manager Controller"),
-        ("my", "Malaysia","Senior FP&A Finance Manager Regional"),
-    ]
-    if adzuna_id and adzuna_key:
-        for code, city, query in targets:
-            try:
-                r = requests.get(
-                    f"https://api.adzuna.com/v1/api/jobs/{code}/search/1",
-                    params={
-                        "app_id": adzuna_id, "app_key": adzuna_key,
-                        "results_per_page": 3, "what": query,
-                        "where": city, "sort_by": "date", "max_days_old": 1,
-                    }, timeout=8,
-                )
-                if r.status_code == 200:
-                    for job in r.json().get("results", [])[:3]:
-                        t = job.get("title", "")[:65]
-                        u = job.get("redirect_url", "")
-                        if t and u:
-                            results.append((city, t, u))
-            except Exception as e:
-                log.warning(f"Adzuna {city}: {e}")
-
-    # ── RSS fallbacks (Indeed + Bayt + JobStreet) ─────────────────────────
-    if not results:
-        rss_sources = [
-            ("Dubai",
-             "https://www.indeed.com/rss?q=Senior+FP%26A+Manager+Finance+Controller&l=Dubai&sort=date&fromage=1"),
-            ("Dubai",
-             "https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/?format=rss"),
-            ("Malaysia",
-             "https://www.indeed.com/rss?q=Senior+FP%26A+Finance+Manager+Regional&l=Malaysia&sort=date&fromage=1"),
-            ("Malaysia",
-             "https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/?format=rss"),
-        ]
-        for city, url in rss_sources:
-            try:
-                feed = feedparser.parse(url)
-                for entry in feed.entries[:2]:
-                    t = entry.get("title", "").split(" - ")[0][:65].strip()
-                    u = entry.get("link", "").strip()
-                    if t and u:
-                        results.append((city, t, u))
-            except Exception:
-                pass
-
-    # ── Format output ──────────────────────────────────────────────────────
-    if not results:
-        return (
-            "*🇦🇪 Dubai — Senior FP&A / Finance Manager:*\n"
-            "• [LinkedIn Dubai](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Dubai&f_TPR=r86400)\n"
-            "• [Bayt Dubai](https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/)\n\n"
-            "*🇲🇾 Malaysia — Senior FP&A / Regional (23–25K MYR):*\n"
-            "• [LinkedIn Malaysia](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Malaysia&f_TPR=r86400)\n"
-            "• [JobStreet Malaysia](https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/)"
-        )
-
-    dubai_lines = [f"• {t} →[↗]({u})" for city, t, u in results if city == "Dubai"]
-    my_lines    = [f"• {t} →[↗]({u})" for city, t, u in results if city == "Malaysia"]
-
-    out = ""
-    if dubai_lines:
-        out += "*🇦🇪 Dubai:*\n" + "\n".join(dubai_lines)
-    if my_lines:
-        if out:
-            out += "\n\n"
-        out += "*🇲🇾 Malaysia (23–25K MYR):*\n" + "\n".join(my_lines)
-    out += (
-        "\n\n[→ LinkedIn Dubai](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Dubai) · "
-        "[→ LinkedIn MY](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Malaysia)"
-    )
-    return out
-
 
 def _get_global_headline() -> Optional[str]:
     """One Reuters business headline."""
