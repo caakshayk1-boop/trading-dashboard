@@ -18,6 +18,18 @@ import pandas as pd
 import numpy as np
 import requests, os, time, logging, functools
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# signals/ submodules own these implementations — imported here so
+# any code in this file uses the canonical versions from the start.
+from signals.indicators import (
+    ema, rsi, adx, atr, macd_line, macd_signal, obv,
+    _tight_sl, _structure_targets,
+)
+from signals.regime   import regime_filter, count_hh_hl
+from signals.universe import (
+    is_trading_day, FNO_ELIGIBLE, load_nifty500, load_nifty200,
+    _next_thursday, _last_thursday_of_month, _smart_expiry, _fno_suggest,
+)
 try:
     from config import (MIN_SIGNAL_SCORE, MIN_PRICE, MIN_AVG_VOLUME,
                         ENABLE_WEEKLY_CONFIRM, MAX_PE, MAX_WORKERS, CAPITAL, RISK_PER_TRADE)
@@ -488,103 +500,7 @@ def get_nifty50_return():
 
 
 # ── Indicator helpers (PDF Part 6 — swappable wrappers) ──────────────────────
-def ema(series, n):
-    return ta_lib.trend.EMAIndicator(series, window=n).ema_indicator()
-
-def rsi(series, n=14):
-    return ta_lib.momentum.RSIIndicator(series, window=n).rsi()
-
-def adx(high, low, close, n=14):
-    return ta_lib.trend.ADXIndicator(high, low, close, window=n).adx()
-
-def atr(high, low, close, n=14):
-    return ta_lib.volatility.AverageTrueRange(high, low, close, window=n).average_true_range()
-
-def _tight_sl(price: float, low_series, cur_atr: float,
-              max_pct: float = 0.06, min_pct: float = 0.015) -> float:
-    """
-    Return tightest logical SL respecting structure.
-    - Structure: recent 5-bar swing low minus 0.25×ATR buffer
-    - ATR: 1.0×ATR below entry (never 1.5× — too wide for volatile stocks)
-    - Hard cap: max_pct% below entry (6% default — no 20-30% stops ever)
-    - Hard floor: min_pct% below entry (1.5% — avoid noise-stop)
-    Returns: SL price (always price * (1 - min_pct) ≤ sl ≤ price * (1 - max_pct) away)
-    """
-    swing_low   = float(low_series.rolling(5).min().iloc[-1])
-    sl_struct   = swing_low - 0.25 * cur_atr          # just below swing low
-    sl_atr      = price - 1.0 * cur_atr               # 1×ATR baseline
-    sl_raw      = max(sl_struct, sl_atr)               # tighter of the two
-    # Hard cap: never more than max_pct% away from entry
-    sl_capped   = max(sl_raw, price * (1 - max_pct))
-    # Hard floor: must be at least min_pct% away (avoids noise-stops)
-    sl_floored  = min(sl_capped, price * (1 - min_pct))
-    return round(sl_floored, 2)
-
-def _structure_targets(price: float, cur_atr: float, high_series,
-                       r1_mult: float = 1.5, r2_mult: float = 2.5, r3_mult: float = 4.0):
-    """
-    Targets anchored to price structure + R-multiple of tight risk.
-    Checks recent 20-bar resistance levels and snaps targets to them where logical.
-    """
-    # Resistance levels from recent price action
-    res20 = float(high_series.rolling(20).max().iloc[-1])
-    res10 = float(high_series.rolling(10).max().iloc[-2]) if len(high_series) > 11 else price * 1.05
-
-    t1_raw = round(price + r1_mult * cur_atr, 2)
-    t2_raw = round(price + r2_mult * cur_atr, 2)
-    t3_raw = round(price + r3_mult * cur_atr, 2)
-
-    # Snap T1 to nearest resistance if within 1.5% (makes targets meaningful)
-    for res in sorted([res10, res20]):
-        if t1_raw * 0.985 <= res <= t1_raw * 1.02:
-            t1_raw = round(res * 0.995, 2)   # just below resistance
-            break
-    if t2_raw * 0.985 <= res20 <= t2_raw * 1.03:
-        t2_raw = round(res20 * 0.995, 2)
-
-    return t1_raw, t2_raw, t3_raw
-
-def macd_line(series):
-    return ta_lib.trend.MACD(series).macd()
-
-def macd_signal(series):
-    return ta_lib.trend.MACD(series).macd_signal()
-
-def obv(close, volume):
-    return ta_lib.volume.OnBalanceVolumeIndicator(close, volume).on_balance_volume()
-
-
-# ── 5a. Regime Filter (PDF Part 7) ────────────────────────────────────────────
-def regime_filter(close, high, low):
-    cur_adx   = float(adx(high, low, close).iloc[-1])
-    cur_ema200 = float(ema(close, 200).iloc[-1])
-    cur_price  = float(close.iloc[-1])
-
-    if cur_adx < 20:
-        return None, cur_adx          # flat/choppy — skip entirely
-    if cur_adx < 30:
-        tradeable = "selective"       # only highest-score setups
-    else:
-        tradeable = "strong"
-
-    bias = "bullish" if cur_price > cur_ema200 else "bearish"
-    return {"tradeable": tradeable, "bias": bias, "adx": round(cur_adx, 1)}, cur_adx
-
-
-# ── 5b. Structure Detection (fractal swing highs/lows) ────────────────────────
-def count_hh_hl(high, low, lookback=40):
-    h = high.iloc[-lookback:].values
-    l = low.iloc[-lookback:].values
-    swing_highs, swing_lows = [], []
-    for i in range(2, len(h) - 2):
-        if h[i] > h[i-1] and h[i] > h[i-2] and h[i] > h[i+1] and h[i] > h[i+2]:
-            swing_highs.append(h[i])
-        if l[i] < l[i-1] and l[i] < l[i-2] and l[i] < l[i+1] and l[i] < l[i+2]:
-            swing_lows.append(l[i])
-
-    hh_count = sum(1 for i in range(1, len(swing_highs)) if swing_highs[i] > swing_highs[i-1])
-    hl_count  = sum(1 for i in range(1, len(swing_lows))  if swing_lows[i]  > swing_lows[i-1])
-    return min(hh_count, hl_count), swing_highs, swing_lows
+# ── Setup functions (5a-5d) ───────────────────────────────────────────────────
 
 
 # ── 5c Setup 1: Pullback Continuation (Expert Grade) ─────────────────────────

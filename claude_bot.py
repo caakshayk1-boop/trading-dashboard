@@ -825,12 +825,20 @@ def _push_signals_to_github():
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 _CF_SYMBOLS = {
+    # Commodities
     "GOLD":    "GC=F",
     "SILVER":  "SI=F",
     "CRUDE":   "CL=F",
     "NATGAS":  "NG=F",
+    # INR pairs (primary — Dubai / India FX exposure)
     "USDINR":  "USDINR=X",
     "EURINR":  "EURINR=X",
+    "GBPINR":  "GBPINR=X",
+    # Major forex pairs (100-pip potential, liquid)
+    "EURUSD":  "EURUSD=X",
+    "GBPUSD":  "GBPUSD=X",
+    "USDJPY":  "JPY=X",
+    "AUDUSD":  "AUDUSD=X",
 }
 
 def _rsi14(series: pd.Series) -> pd.Series:
@@ -980,6 +988,10 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                 sign    = "+" if day_chg >= 0 else ""
                 emoji   = "📈" if bias == "BUY" else "📉"
 
+                # TradingView link — strip =X / =F suffix for cleaner symbol
+                tv_sym = ticker.replace("=X", "").replace("=F", "").replace("^", "")
+                tv_link = f"https://in.tradingview.com/chart/?symbol={tv_sym}"
+
                 alerts.append({
                     "name": name, "ticker": ticker, "bias": bias,
                     "price": price, "sl": sl, "t1": t1, "t2": t2, "t3": t3,
@@ -989,6 +1001,7 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                     "vol_tag": vol_tag, "vol_surge": vol_surge,
                     "level_lbl": level_lbl, "rsi_lbl": rsi_lbl,
                     "day_chg": day_chg, "sign": sign, "emoji": emoji,
+                    "tv_link": tv_link,
                 })
 
             except Exception as e:
@@ -1013,7 +1026,8 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                     f"*T1:* `{a['t1']:.4f}`  _(1.5R)_\n"
                     f"*T2:* `{a['t2']:.4f}`  _(2.5R)_\n"
                     f"*T3:* `{a['t3']:.4f}`  _(4R)_\n"
-                    f"R:R `{a['rr']}:1`"
+                    f"R:R `{a['rr']}:1`\n"
+                    f"[📊 Chart]({a['tv_link']})"
                 )
                 # Log to DB
                 try:

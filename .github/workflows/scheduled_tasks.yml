@@ -1,0 +1,81 @@
+name: Scheduled Tasks — CF Scans + Daily Brief
+
+# Replaces Railway bot scheduler (Railway being shut down)
+# IST = UTC+5:30
+on:
+  schedule:
+    - cron: '30 0 * * *'    # 6:00 AM  IST — daily brief
+    - cron: '30 4 * * *'    # 10:00 AM IST — CF scan
+    - cron: '30 8 * * *'    # 2:00 PM  IST — CF scan
+    - cron: '30 12 * * *'   # 6:00 PM  IST — CF scan
+    - cron: '30 16 * * *'   # 10:00 PM IST — CF scan
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task to run'
+        required: false
+        default: 'auto'
+        type: choice
+        options: [auto, daily_brief, cf_scan]
+
+concurrency:
+  group: scheduled-tasks
+  cancel-in-progress: false
+
+env:
+  TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
+  TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
+  TURSO_URL:         ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN:       ${{ secrets.TURSO_TOKEN }}
+  GROQ_API_KEY:      ${{ secrets.GROQ_API_KEY }}
+  GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+  ADZUNA_APP_ID:     ${{ secrets.ADZUNA_APP_ID }}
+  ADZUNA_APP_KEY:    ${{ secrets.ADZUNA_APP_KEY }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install "yfinance>=0.2.40" pandas numpy ta requests pytz \
+                      feedparser groq libsql-experimental
+
+      - name: Detect task
+        id: task
+        run: |
+          INPUT="${{ github.event.inputs.task }}"
+          HOUR_UTC=$(date -u +%H)
+          MIN_UTC=$(date -u +%M)
+
+          if [ "$INPUT" = "daily_brief" ]; then
+            echo "task=daily_brief" >> $GITHUB_OUTPUT
+          elif [ "$INPUT" = "cf_scan" ]; then
+            echo "task=cf_scan" >> $GITHUB_OUTPUT
+          elif [ "$HOUR_UTC" = "00" ] && [ "$MIN_UTC" -le 40 ]; then
+            echo "task=daily_brief" >> $GITHUB_OUTPUT
+          else
+            echo "task=cf_scan" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run daily brief
+        if: steps.task.outputs.task == 'daily_brief'
+        run: |
+          python -c "
+          from daily_brief import send_brief
+          send_brief()
+          print('Daily brief sent.')
+          "
+
+      - name: Run CF scan
+        if: steps.task.outputs.task == 'cf_scan'
+        run: python scheduled_tasks_runner.py cf_scan

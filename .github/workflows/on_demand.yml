@@ -1,0 +1,73 @@
+name: On-Demand Bot Commands
+
+# Triggered by Vercel webhook when a slow command is received from Telegram.
+# Runs the command and sends result back to the originating chat_id.
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Command: scan | brief | trade | cf | magic | intraday | carousel | track'
+        required: true
+      chat_id:
+        description: 'Telegram chat_id to reply to'
+        required: true
+      args:
+        description: 'Command arguments (e.g. NSE:TCS for brief/trade)'
+        required: false
+        default: ''
+
+concurrency:
+  group: on-demand-${{ github.event.inputs.command }}-${{ github.event.inputs.chat_id }}
+  cancel-in-progress: false
+
+env:
+  TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
+  TELEGRAM_CHAT_ID:  ${{ github.event.inputs.chat_id }}
+  TURSO_URL:         ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN:       ${{ secrets.TURSO_TOKEN }}
+  GROQ_API_KEY:      ${{ secrets.GROQ_API_KEY }}
+  GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+  UPSTOX_API_KEY:    ${{ secrets.UPSTOX_API_KEY }}
+  UPSTOX_API_SECRET: ${{ secrets.UPSTOX_API_SECRET }}
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install core dependencies
+        run: |
+          pip install --upgrade pip
+          pip install "yfinance>=0.2.40" pandas numpy ta requests pytz \
+                      feedparser groq libsql-experimental anthropic
+
+      - name: Install optional dependencies
+        run: |
+          pip install apscheduler upstox-python-sdk || true
+
+      - name: Ensure dirs
+        run: mkdir -p data logs cache
+
+      - name: Run command
+        run: |
+          python on_demand_runner.py \
+            "${{ github.event.inputs.command }}" \
+            "${{ github.event.inputs.chat_id }}" \
+            "${{ github.event.inputs.args }}"
+
+      - name: Commit signal data (if scan)
+        if: contains('scan cf magic intraday', github.event.inputs.command)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f data/ || true
+          git diff --staged --quiet || git commit -m "data: on-demand ${{ github.event.inputs.command }} [skip ci]"
+          git push || true
