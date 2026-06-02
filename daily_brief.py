@@ -649,6 +649,20 @@ def _push_to_gist(content: str, brief_date: str):
     else:
         log.warning(f"daily_brief: GitHub push failed {r.status_code} {r.text[:100]}")
 
+    # Also update Gist if BRIEFS_GIST_ID is set (legacy Dhruvedge terminal support)
+    gist_id = os.environ.get("BRIEFS_GIST_ID", "")
+    if gist_id:
+        try:
+            gr = requests.patch(
+                f"https://api.github.com/gists/{gist_id}",
+                json={"files": {"briefs.json": {"content": payload}}},
+                headers=gh_headers, timeout=10,
+            )
+            if gr.status_code == 200:
+                log.info("daily_brief: Gist updated ✓")
+        except Exception as ge:
+            log.warning(f"daily_brief: Gist update failed: {ge}")
+
 
 # ────────────────────────────────────────────────────────────────────────────
 # BUILD & SEND
