@@ -41,13 +41,42 @@ def _use_turso() -> bool:
     return bool(TURSO_URL and TURSO_TOKEN)
 
 
-def connect(timeout: int = 30):
+class _ConnWrapper:
     """
-    Returns a database connection.
+    Wraps a libsql connection to add context manager support.
+    libsql_experimental.Connection doesn't implement __enter__/__exit__,
+    but tracker.py uses `with _conn() as c:` extensively.
+    """
+    def __init__(self, conn, turso: bool = False):
+        self._conn  = conn
+        self._turso = turso
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, *_):
+        if exc_type is None:
+            try:
+                self._conn.commit()
+            except Exception:
+                pass
+            if self._turso:
+                try:
+                    self._conn.sync()
+                except Exception:
+                    pass
+        return False  # don't suppress exceptions
+
+    # Proxy all other attribute access to the real connection
+    def __getattr__(self, name: str):
+        return getattr(self._conn, name)
+
+
+def connect(timeout: int = 30) -> _ConnWrapper:
+    """
+    Returns a database connection wrapped for context manager support.
     - Turso (libsql embedded replica) when TURSO_URL is set.
     - Local sqlite3 otherwise.
-
-    The returned connection is sqlite3-API compatible in both cases.
     Call db.sync(conn) after writes to flush to Turso.
     """
     if _use_turso():
@@ -55,22 +84,21 @@ def connect(timeout: int = 30):
             import libsql_experimental as libsql
             conn = libsql.connect(REPLICA_DB, sync_url=TURSO_URL, auth_token=TURSO_TOKEN)
             conn.sync()   # pull latest from Turso before any operation
-            return conn
+            return _ConnWrapper(conn, turso=True)
         except ImportError:
-            log.warning("libsql_experimental not installed — falling back to local SQLite. "
-                        "Run: pip install libsql-experimental")
+            log.warning("libsql_experimental not installed — falling back to local SQLite.")
         except Exception as e:
             log.warning(f"Turso connect failed ({e}) — falling back to local SQLite")
 
     # Local SQLite fallback
-    conn = sqlite3.connect(LOCAL_DB, timeout=timeout, check_same_thread=False)
+    raw = sqlite3.connect(LOCAL_DB, timeout=timeout, check_same_thread=False)
     try:
-        conn.execute("PRAGMA journal_mode=WAL")
+        raw.execute("PRAGMA journal_mode=WAL")
     except Exception:
         pass
-    conn.execute("PRAGMA synchronous=NORMAL")
-    conn.execute("PRAGMA cache_size=10000")
-    return conn
+    raw.execute("PRAGMA synchronous=NORMAL")
+    raw.execute("PRAGMA cache_size=10000")
+    return _ConnWrapper(raw, turso=False)
 
 
 def sync(conn) -> None:
