@@ -2210,10 +2210,10 @@ def scan_intraday_momentum() -> list:
                     and price > e9                      # above EMA9
                     and vol_spike >= 2.0):              # volume surge ≥ 2x
                 sl  = round(max(vwap, price - 1.0 * cur_atr), 2)
-                t1  = round(price + 1.0 * cur_atr, 2)
-                t2  = round(price + 2.0 * cur_atr, 2)
-                rr  = round((t2 - price) / (price - sl), 1) if price > sl else 0
-                if rr < 1.5:
+                t1  = round(price + 1.5 * cur_atr, 2)   # min 1.5:1 R:R vs T1
+                t2  = round(price + 2.5 * cur_atr, 2)   # 2.5:1 R:R vs T2
+                rr  = round((t2 - price) / max(price - sl, 0.01), 1)
+                if rr < 2.0:                             # minimum 2:1 R:R (was 1.5)
                     continue
                 results.append({
                     "symbol":     sym.replace(".NS", ""),

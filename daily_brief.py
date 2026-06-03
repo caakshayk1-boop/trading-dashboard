@@ -580,7 +580,7 @@ def _save_to_db(content: str):
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
         """)
-        today = date.today().isoformat()
+        today = datetime.now(IST).date().isoformat()  # IST date
         con.execute(
             "INSERT OR REPLACE INTO daily_briefs (date, content) VALUES (?, ?)",
             (today, content)
@@ -669,8 +669,8 @@ def _push_to_gist(content: str, brief_date: str):
 # ────────────────────────────────────────────────────────────────────────────
 
 def build_brief() -> str:
-    today    = date.today()
     now      = datetime.now(IST)
+    today    = now.date()          # IST date — not UTC date
     weekday  = now.strftime("%A")
     datestr  = now.strftime("%d %B %Y")
 
@@ -752,7 +752,7 @@ Senior FP&A · Finance Manager · Regional · Controller
 def send_brief():
     log.info("daily_brief: building...")
     brief    = build_brief()
-    today    = date.today().isoformat()
+    today    = datetime.now(IST).date().isoformat()   # IST date
     _save_to_db(brief)
     _post(brief)
     # Send newspaper link
