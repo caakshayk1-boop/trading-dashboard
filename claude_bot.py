@@ -875,6 +875,13 @@ def _scan_commodity_forex(ts: str, chat_id=None):
     Volume  : 1H vol vs 20-bar avg — flagged if ≥ 1.5×
     """
     from scanner import _yf_download as _yfd
+    import yfinance as _yf
+
+    # ── Per-session dedup: skip if same symbol+direction sent within 4h ────────
+    _cf_sent: dict = getattr(_scan_commodity_forex, "_sent_cache", {})
+    _scan_commodity_forex._sent_cache = _cf_sent
+    _now_ts = time.time()
+    CF_COOLDOWN = 4 * 3600   # 4 hours between same-direction signals
 
     try:
         alerts = []
@@ -894,7 +901,12 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                 h1h = df1h["High"].squeeze()
                 l1h = df1h["Low"].squeeze()
 
-                price = float(c1h.iloc[-1])
+                # ── Live price: use fast_info for accuracy, fallback to last 1H bar
+                try:
+                    live = float(_yf.Ticker(ticker).fast_info.last_price or 0)
+                    price = live if live > 0 else float(c1h.iloc[-1])
+                except Exception:
+                    price = float(c1h.iloc[-1])
                 if price <= 0:
                     continue
 
@@ -939,6 +951,13 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                 elif bearish_4h and price <= day_mid and 25 <= rsi_1h <= 55:
                     bias = "SELL"
                 else:
+                    continue
+
+                # ── Dedup: skip if same symbol+direction sent within 4 hours ──
+                cache_key = f"{name}_{bias}"
+                last_sent = _cf_sent.get(cache_key, 0)
+                if _now_ts - last_sent < CF_COOLDOWN:
+                    logging.info(f"CF dedup: {name} {bias} already sent {(_now_ts-last_sent)/3600:.1f}h ago — skip")
                     continue
 
                 # ── SL : tighter of day-level vs ATR-level ───────────────────
@@ -1046,6 +1065,10 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                     )
                 except Exception as _e:
                     logging.debug(f"CF DB log {a['name']}: {_e}")
+
+            # Mark all fired signals as sent (dedup cache)
+            for a in alerts:
+                _cf_sent[f"{a['name']}_{a['bias']}"] = _now_ts
 
             lines.append("\n_Not SEBI advice · @askakshayfinance_")
             _post("\n".join(lines), chat_id)

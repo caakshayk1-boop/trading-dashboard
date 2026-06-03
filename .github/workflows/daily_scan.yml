@@ -33,6 +33,8 @@ env:
   TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
   UPSTOX_API_KEY:    ${{ secrets.UPSTOX_API_KEY }}
   UPSTOX_API_SECRET: ${{ secrets.UPSTOX_API_SECRET }}
+  TURSO_URL:         ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN:       ${{ secrets.TURSO_TOKEN }}
 
 jobs:
   scan:
@@ -56,9 +58,10 @@ jobs:
           pip install --upgrade pip
           pip install "yfinance>=0.2.40" pandas numpy ta requests pytz requests-cache multitasking
 
-      - name: Install optional dependencies
+      - name: Install DB + optional dependencies
         run: |
-          pip install streamlit plotly apscheduler feedparser streamlit-autorefresh || true
+          pip install libsql-experimental || true   # required by tracker.py → db.py
+          pip install groq feedparser apscheduler || true
           pip install upstox-python-sdk || true
 
       - name: Ensure data directory exists
