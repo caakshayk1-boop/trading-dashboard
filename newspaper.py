@@ -945,6 +945,14 @@ def health():
 
 def _startup():
     init_newspaper_db()
+    # Invalidate content cache on startup — Railway redeploys wipe the container
+    # so the old cache file is gone. Force fresh fetch immediately.
+    try:
+        from content_cache import invalidate
+        invalidate()
+        log.info("Content cache invalidated on startup — fresh fetch on next request")
+    except Exception as e:
+        log.warning(f"Cache invalidate error: {e}")
     threading.Thread(target=_warm_picks_cache, daemon=True).start()
 
 if __name__ == "__main__":

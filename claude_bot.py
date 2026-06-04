@@ -901,12 +901,14 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                 h1h = df1h["High"].squeeze()
                 l1h = df1h["Low"].squeeze()
 
-                # ── Live price: use fast_info for accuracy, fallback to last 1H bar
+                # ── Live price: 5m bar close — avoids GC=F contract-roll artifacts
                 try:
-                    live = float(_yf.Ticker(ticker).fast_info.last_price or 0)
-                    price = live if live > 0 else float(c1h.iloc[-1])
+                    df5m  = _yfd(ticker, period="1d", interval="5m", progress=False, auto_adjust=True)
+                    price = float(df5m["Close"].squeeze().iloc[-1]) if df5m is not None and len(df5m) > 0 else 0
                 except Exception:
-                    price = float(c1h.iloc[-1])
+                    price = 0
+                if price <= 0:
+                    price = float(c1h.iloc[-1])   # hourly fallback
                 if price <= 0:
                     continue
 

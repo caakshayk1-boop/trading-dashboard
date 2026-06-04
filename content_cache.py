@@ -63,9 +63,20 @@ DUBAI_JOB_KEYWORDS = ["fp&a", "financial planning", "financial analyst", "financ
                        "budget", "forecasting", "controller", "treasury"]
 
 
-# ── Cache I/O ────────────────────────────────────────────────────────────────
+# ── Cache I/O — dual-write: JSON file + Turso (survives Railway restarts) ─────
 
 def _load_cache() -> dict:
+    # Try Turso first (persists across redeploys), fallback to JSON file
+    try:
+        import db as _db
+        con = _db.connect()
+        con.execute("CREATE TABLE IF NOT EXISTS content_cache (key TEXT PRIMARY KEY, data TEXT, ts REAL)")
+        row = con.execute("SELECT data, ts FROM content_cache WHERE key='main'").fetchone()
+        con.close()
+        if row and (time.time() - float(row[1])) < max(TTL_MARKETS, TTL_NEWS):
+            return json.loads(row[0])
+    except Exception:
+        pass
     try:
         with open(_CACHE_FILE, "r") as f:
             return json.load(f)
@@ -74,11 +85,23 @@ def _load_cache() -> dict:
 
 
 def _save_cache(data: dict) -> None:
+    # Save to both JSON file and Turso
     try:
         with open(_CACHE_FILE, "w") as f:
             json.dump(data, f)
     except Exception as e:
-        log.warning(f"content_cache write error: {e}")
+        log.warning(f"content_cache JSON write error: {e}")
+    try:
+        import db as _db
+        con = _db.connect()
+        con.execute("CREATE TABLE IF NOT EXISTS content_cache (key TEXT PRIMARY KEY, data TEXT, ts REAL)")
+        con.execute("INSERT OR REPLACE INTO content_cache VALUES ('main',?,?)",
+                    (json.dumps(data), time.time()))
+        con.commit()
+        _db.sync(con)
+        con.close()
+    except Exception as e:
+        log.debug(f"content_cache Turso write: {e}")
 
 
 def _is_fresh(cache: dict, key: str, ttl: int) -> bool:

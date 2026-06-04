@@ -301,6 +301,20 @@ LIFE_LESSONS = [
      "Benjamin Graham defined investing simply: buy a dollar for 50 cents. Everything else — macro, sentiment, cycles — is noise if you buy far below intrinsic value. *Margin of safety isn't a number. It's a mindset applied before every decision.*"),
     ("Diogenes and Alexander",
      "Alexander the Great visited Diogenes, the philosopher living in a barrel, and asked: 'Is there anything I can do for you?' Diogenes replied: 'Yes — stand out of my sunlight.' Alexander later said: 'If I were not Alexander, I would wish to be Diogenes.' *True freedom is needing nothing from the powerful.*"),
+
+    # ── Jainism ──────────────────────────────────────────────────────────────
+    ("Jainism · Ahimsa (Non-violence)",
+     "The first and highest principle of Jainism. Not just physical — ahimsa includes thoughts, words, and economic choices. Mahavira taught that every living being has a soul deserving protection. In finance: don't extract value from others through exploitation. Build something that genuinely helps. *Wealth earned without harm compounds differently.*"),
+    ("Jainism · Aparigraha (Non-possession)",
+     "Possess only what you need. Jain monks own nothing. Lay practitioners limit possessions deliberately. This isn't poverty — it's clarity. When you're not protecting excess, you're free to focus. *Attachment to accumulation creates anxiety. Enough, clearly defined, creates peace.*"),
+    ("Jainism · Anekantavada (Many-sidedness)",
+     "No single perspective holds the complete truth. Jains believe reality is experienced differently depending on standpoint. In finance: the bear and bull can both be right at different time horizons. *Intellectual humility — hearing multiple truths — is an edge. Certainty is usually a blind spot.*"),
+    ("Jainism · Asteya (Non-stealing)",
+     "Don't take what isn't freely given — including credit, time, attention, or opportunity. Mahavira extended this beyond objects: taking more than your fair share of resources or recognition is theft. In business: credit your team, pay fairly, don't over-promise. *Reputation built without taking is the most durable kind.*"),
+    ("Jainism · Satya (Truthfulness)",
+     "Speak truth — but only when it doesn't cause harm. Jains combine truth with ahimsa: harmful truths should be withheld, but silence is never the cover for deception. *In financial reporting, in client conversations, in self-assessment: honest but never cruel. This is the FP&A standard.*"),
+    ("Jainism · Brahmacharya (Right conduct)",
+     "Channel energy toward purpose. For lay Jains, this means intentionality — not squandering attention on distraction, conflict, or excess. Every hour is a resource. *The Jain who lives with discipline at age 25 has compounded that energy into something permanent by 40.*"),
 ]
 
 
@@ -569,6 +583,79 @@ def _get_chess_puzzle() -> str:
         return ""
 
 
+def _build_signal_recap() -> str:
+    """
+    Pulls yesterday's signals from Turso and formats a one-line-per-signal recap.
+    Shows: symbol · action · type · entry · current status · outcome/lesson.
+    Sent once at 6 AM IST — never repeated.
+    """
+    try:
+        yesterday = (datetime.now(IST) - timedelta(days=1)).date().isoformat()
+        today     = datetime.now(IST).date().isoformat()
+
+        con = db.connect()
+        rows = con.execute("""
+            SELECT symbol, signal_type, action, entry, sl, target1, target2,
+                   status, pnl_pct, date, market
+            FROM all_signals
+            WHERE date >= ? AND date <= ?
+            ORDER BY date DESC, id DESC
+        """, (yesterday, today)).fetchall()
+        con.close()
+
+        if not rows:
+            return ""
+
+        # Group by outcome
+        open_sigs, winners, losers, cancelled = [], [], [], []
+        for r in rows:
+            sym, stype, action, entry, sl, t1, t2, status, pnl, date, market = r
+            sym    = str(sym or "")
+            status = str(status or "OPEN")
+            pnl    = float(pnl) if pnl else 0
+            entry  = float(entry) if entry else 0
+            t1     = float(t1) if t1 else 0
+            sl     = float(sl) if sl else 0
+
+            if status == "OPEN":
+                open_sigs.append(f"• *{sym}* {action} @ `{entry:.4f if entry < 100 else entry:.1f}` — still open")
+            elif "T1" in status or "T2" in status:
+                emoji = "✅"
+                target = t1 if "T1" in status else t2
+                winners.append(f"{emoji} *{sym}* {action} → Target hit `{target:.4f if target < 100 else target:.1f}` (+{pnl:.1f}%)")
+            elif "SL" in status:
+                sl_val = float(sl) if sl else 0
+                losers.append(f"❌ *{sym}* {action} → SL hit `{sl_val:.4f if sl_val < 100 else sl_val:.1f}` ({pnl:.1f}%)")
+            elif status == "CANCELLED":
+                cancelled.append(f"⚪ *{sym}* {action} — cancelled")
+
+        lines = [f"📊 *SIGNAL RECAP* — {yesterday} → {today}\n"]
+
+        if winners:
+            lines.append("*✅ Closed — Target Hit:*")
+            lines.extend(winners)
+        if losers:
+            lines.append("\n*❌ Closed — SL Hit:*")
+            lines.extend(losers)
+        if open_sigs:
+            lines.append(f"\n*🔵 Still Open ({len(open_sigs)}):*")
+            lines.extend(open_sigs[:6])   # cap at 6 to avoid spam
+            if len(open_sigs) > 6:
+                lines.append(f"  _...and {len(open_sigs)-6} more_")
+        if cancelled:
+            lines.append(f"\n*⚪ Cancelled: {len(cancelled)}*")
+
+        total  = len(rows)
+        w, l   = len(winners), len(losers)
+        wr_str = f"{round(w/(w+l)*100)}% WR" if (w + l) > 0 else "no closed trades"
+        lines.append(f"\n_Total: {total} signals · {wr_str} · Not SEBI advice_")
+
+        return "\n".join(lines)
+    except Exception as e:
+        log.warning(f"signal recap error: {e}")
+        return ""
+
+
 def _save_to_db(content: str):
     try:
         con = db.connect()
@@ -756,6 +843,12 @@ def send_brief():
     today    = datetime.now(IST).date().isoformat()   # IST date
     _save_to_db(brief)
     _post(brief)
+
+    # Signal recap — sent once at 6 AM as a separate message (no duplicates)
+    recap = _build_signal_recap()
+    if recap:
+        _post(recap)
+        log.info("Signal recap sent")
     # Send newspaper link
     newspaper_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
     if newspaper_domain:
