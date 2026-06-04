@@ -29,12 +29,14 @@ concurrency:
   cancel-in-progress: false       # never cancel — queue next run
 
 env:
-  TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
-  TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
-  UPSTOX_API_KEY:    ${{ secrets.UPSTOX_API_KEY }}
-  UPSTOX_API_SECRET: ${{ secrets.UPSTOX_API_SECRET }}
-  TURSO_URL:         ${{ secrets.TURSO_URL }}
-  TURSO_TOKEN:       ${{ secrets.TURSO_TOKEN }}
+  TELEGRAM_TOKEN:      ${{ secrets.TELEGRAM_TOKEN }}
+  TELEGRAM_CHAT_ID:    ${{ secrets.TELEGRAM_CHAT_ID }}
+  UPSTOX_API_KEY:      ${{ secrets.UPSTOX_API_KEY }}
+  UPSTOX_API_SECRET:   ${{ secrets.UPSTOX_API_SECRET }}
+  TURSO_URL:           ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN:         ${{ secrets.TURSO_TOKEN }}
+  GH_PAT:              ${{ secrets.GH_PAT }}
+  OBSIDIAN_GITHUB_REPO: ${{ secrets.OBSIDIAN_GITHUB_REPO }}
 
 jobs:
   scan:

@@ -1398,15 +1398,14 @@ def route(text: str, chat_id: str):
         open_sigs = _db_open_signals(min_score=65)
         _post(
             f"⚙️ *Bot Status* — {now_ist}\n\n"
-            f"Last scan: {_last_scan_ts or 'Not run yet'}\n"
-            f"Open signals in DB: {len(open_sigs)}\n\n"
-            f"*Schedule (IST):*\n"
-            f"Swing A/A+: 9:25 · 11:42 · 16:32 · 20:00\n"
-            f"Intraday: 9:30–14:30 every 30min\n"
-            f"CF (Forex/Commod): 10:00 · 14:00 · 18:00 · 22:00\n"
-            f"🔮 Magic + MagicMagic: 14:00 daily\n"
-            f"Position monitor: every 15min\n\n"
-            f"Commands: `Scan` · `/cf` · `/intraday` · `/magic` · `/track` · `Brief: NSE:X`",
+            f"DB: Turso ☁️ · Webhook: Vercel ✅\n"
+            f"Open signals: {len(open_sigs)}\n\n"
+            f"*Schedule (GitHub Actions):*\n"
+            f"NSE swing: 9:20 · 11:45 · 16:30 IST\n"
+            f"Intraday: 10:00–14:30 IST (30min)\n"
+            f"CF (Forex/Commod): 10:00 · 14:00 · 18:00 · 22:00 IST\n"
+            f"Daily brief: 6:00 AM IST\n\n"
+            f"Commands: `Scan` · `/cf` · `/magic` · `/track` · `Brief: NSE:X`",
             chat_id
         )
         return

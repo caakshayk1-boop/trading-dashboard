@@ -703,7 +703,7 @@ def build_brief() -> str:
     ) if any(puzzle_parts) else ""
 
     brief = f"""🌅 *GOOD MORNING, AKSHAY*
-{weekday} · {datestr} · 8 AM IST
+{weekday} · {datestr} · 6 AM IST
 
 ━━━━━━━━━━━━━━━━━━━
 💼 *OPPORTUNITIES*
@@ -763,7 +763,26 @@ def send_brief():
     try:
         _push_to_gist(brief, today)
     except Exception as e:
-        log.warning(f"daily_brief: Gist push failed (non-fatal): {e}")
+        log.warning(f"daily_brief: GitHub push failed (non-fatal): {e}")
+
+    # Sync to Obsidian daily note
+    try:
+        from obsidian_sync import write_morning_brief
+        open_sigs: list = []
+        try:
+            import db as _db
+            con = _db.connect()
+            rows = con.execute(
+                "SELECT * FROM all_signals WHERE status='OPEN' AND score>=65 ORDER BY score DESC LIMIT 5"
+            ).fetchall()
+            open_sigs = [dict(zip([d[0] for d in con.execute("PRAGMA table_info(all_signals)").fetchall()], r)) for r in rows]
+            con.close()
+        except Exception:
+            pass
+        write_morning_brief({"brief": brief[:200]}, open_sigs)
+    except Exception as e:
+        log.debug(f"daily_brief: Obsidian sync failed (non-fatal): {e}")
+
     log.info("daily_brief: sent ✓")
 
 

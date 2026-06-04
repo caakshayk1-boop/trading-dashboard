@@ -53,9 +53,11 @@ def _verify_write(path: str) -> bool:
 
 
 def _gh_headers() -> dict:
-    token = os.environ.get("GITHUB_TOKEN", "")
+    # GITHUB_TOKEN = Railway env var (has obsidian-brain repo access)
+    # GH_PAT       = GitHub Actions secret (same PAT, different name due to GH naming rules)
+    token = os.environ.get("GITHUB_TOKEN", "") or os.environ.get("GH_PAT", "")
     if not token:
-        raise RuntimeError("GITHUB_TOKEN not set — cannot sync to Obsidian")
+        raise RuntimeError("GITHUB_TOKEN / GH_PAT not set — cannot sync to Obsidian")
     return {
         "Authorization": f"token {token}",
         "Accept":        "application/vnd.github.v3+json",
