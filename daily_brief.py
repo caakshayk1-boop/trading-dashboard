@@ -598,10 +598,11 @@ def _push_to_gist(content: str, brief_date: str):
     Replaces the old Gist approach — reads from GitHub raw URL which is public
     and doesn't require BRIEFS_GIST_ID. Dhruvedge terminal reads from this file.
     """
-    token = os.environ.get("GITHUB_TOKEN", "")
+    # GH Actions uses GH_PAT (can't name secrets GITHUB_*), Railway uses GITHUB_TOKEN
+    token = os.environ.get("GITHUB_TOKEN", "") or os.environ.get("GH_PAT", "")
     repo  = os.environ.get("TRADING_REPO", "caakshayk1-boop/trading-dashboard")
     if not token:
-        log.warning("daily_brief: GITHUB_TOKEN not set — skipping GitHub push")
+        log.warning("daily_brief: No GitHub token (GITHUB_TOKEN / GH_PAT) — skipping push")
         return
 
     gh_headers = {
