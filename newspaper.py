@@ -862,30 +862,36 @@ setTimeout(() => window.location.reload(), 5 * 60 * 1000);
 
 @app.route("/")
 def index():
-    now = datetime.now(IST)
-    markets = fetch_markets()
-    news    = fetch_global_news()
-    fpna    = get_fpna_tip()
-    top5    = get_top5_picks()
-    tracker = get_tracker_stocks()
-    ott     = fetch_ott_bollywood()
-    money   = get_money_hack()
-    prod    = get_productivity_tip()
-    jobs    = fetch_dubai_jobs()
+    try:
+        now = datetime.now(IST)
+        markets = fetch_markets()
+        news    = fetch_global_news()
+        fpna    = get_fpna_tip()
+        top5    = get_top5_picks()
+        tracker = get_tracker_stocks()
+        ott     = fetch_ott_bollywood()
+        money   = get_money_hack()
+        prod    = get_productivity_tip()
+        jobs    = fetch_dubai_jobs()
 
-    return render_template_string(TEMPLATE,
-        date_str=now.strftime("%A, %B %d %Y"),
-        updated_at=now.strftime("%H:%M IST"),
-        markets=markets,
-        news=news,
-        fpna=fpna,
-        top5=top5,
-        tracker=tracker,
-        ott=ott,
-        money_hack=money,
-        productivity_tip=prod,
-        dubai_jobs=jobs,
-    )
+        return render_template_string(TEMPLATE,
+            date_str=now.strftime("%A, %B %d %Y"),
+            updated_at=now.strftime("%H:%M IST"),
+            markets=markets, news=news, fpna=fpna,
+            top5=top5, tracker=tracker, ott=ott,
+            money_hack=money, productivity_tip=prod, dubai_jobs=jobs,
+        )
+    except Exception as e:
+        log.error(f"index route error: {e}")
+        import traceback; traceback.print_exc()
+        now = datetime.now(IST)
+        return render_template_string(TEMPLATE,
+            date_str=now.strftime("%A, %B %d %Y"),
+            updated_at=f"{now.strftime('%H:%M IST')} (partial load)",
+            markets=[], news=[], fpna={"title": "Loading...", "body": "", "index": 0, "total": 1},
+            top5=[], tracker=[], ott=[], money_hack={"hack": "Loading..."}, productivity_tip="Loading...",
+            dubai_jobs=[],
+        ), 200
 
 @app.route("/tracker/add", methods=["POST"])
 def tracker_add():

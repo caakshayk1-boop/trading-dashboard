@@ -1313,15 +1313,8 @@ def _start_scheduler():
         # Removing them here eliminates duplicate Telegram signals. CF scans stay here
         # because they run 24/7 on global markets — not tied to NSE trading hours.
 
-        # Forex & Commodity scan — 4 fixed slots daily (mon-sun, markets never close)
-        for cf_time in ["10:00", "14:00", "18:00", "22:00"]:
-            h, m = cf_time.split(":")
-            sched.add_job(
-                lambda ts=cf_time: _scan_commodity_forex(
-                    datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
-                ),
-                CronTrigger(hour=int(h), minute=int(m), timezone=IST)
-            )
+        # CF scans moved to GitHub Actions (scheduled_tasks.yml) to avoid double-firing.
+        # Railway bot handles on-demand /cf command only.
 
         # Magic + MagicMagic screeners — 14:00 IST daily (7 days)
         sched.add_job(
@@ -1360,7 +1353,7 @@ def _start_scheduler():
         )
 
         sched.start()
-        logging.info("Scheduler started: CF(4x) + magic(14:00) + monitor(15min) + brief(6AM) + morning(8AM) + content(Mon 7AM) — NSE swing/intraday handled by GitHub Actions")
+        logging.info("Scheduler started: magic(14:00) + monitor(15min) + brief(6AM) + morning(8AM) + content(Mon 7AM) — NSE scans + CF scans handled by GitHub Actions")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 
