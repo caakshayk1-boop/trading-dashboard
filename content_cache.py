@@ -147,11 +147,14 @@ _LI_HEADERS = {
 }
 
 _GULF_SEARCHES = [
-    ("UAE",          "FP%26A+Manager+Finance+Controller",   "Dubai"),
-    ("Saudi Arabia", "FP%26A+Finance+Manager+Controller",   "Saudi+Arabia"),
-    ("Kuwait",       "Finance+Manager+FP%26A+Controller",   "Kuwait"),
-    ("India",        "FP%26A+Manager+Finance+Controller",   "India"),
-    ("Malaysia",     "FP%26A+Finance+Manager+Controller",   "Malaysia"),
+    # Gulf — primary targets
+    ("🇦🇪 UAE",           "FP%26A+Manager+Finance+Controller",      "Dubai"),
+    ("🇸🇦 Saudi Arabia",  "FP%26A+Finance+Manager+Controller",      "Saudi+Arabia"),
+    ("🇧🇭 Bahrain",       "Finance+Manager+FP%26A+Controller",      "Bahrain"),
+    ("🇰🇼 Kuwait",        "Finance+Manager+FP%26A+Controller",      "Kuwait"),
+    # Asia — strong markets for Indian CA/FP&A
+    ("🇲🇾 Malaysia",      "FP%26A+Finance+Manager+Controller",      "Malaysia"),
+    ("🇮🇳 India",         "FP%26A+Manager+Financial+Planning",      "India"),
 ]
 
 
@@ -190,7 +193,7 @@ def _fetch_jobs() -> list[dict]:
     jobs: list[dict] = []
 
     for country, keywords, location in _GULF_SEARCHES:
-        results = _fetch_linkedin_jobs(keywords, location, country, max_items=3)
+        results = _fetch_linkedin_jobs(keywords, location, country, max_items=2)
         jobs.extend(results)
         if results:
             log.info(f"LinkedIn jobs {country}: {len(results)} fetched")
