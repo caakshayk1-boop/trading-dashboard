@@ -85,18 +85,25 @@ def _db_update_signal(signal_id: int, status: str, exit_price: float, pnl_pct: f
 # ── Flask API (serves data to Dhruvedge on Vercel) ───────────────────────────
 
 def _start_api_server():
-    """Run Flask API in a background thread on $PORT."""
+    """Run Flask API in a background thread on $PORT.
+    Uses newspaper.app as the base so The Daily Signal is served at /,
+    and bot API routes (/api/signals, /api/portfolio etc) are added on top.
+    """
     try:
-        from flask import Flask, jsonify
-        app = Flask(__name__)
+        from flask import jsonify
+        import newspaper as _news
+
+        # newspaper.app already has: /, /health, /tracker/*, /api/refresh
+        # We add bot-specific API routes on top — no conflicts
+        app = _news.app
 
         @app.route("/api/health")
-        def health():
+        def bot_health():
             return jsonify({"status": "ok", "ts": datetime.now(IST_TZ).isoformat()})
 
         @app.route("/api/signals")
         def api_signals():
-            rows = _db_open_signals(min_score=0)  # all OPEN for display
+            rows = _db_open_signals(min_score=0)
             now  = datetime.now(IST_TZ).strftime("%Y-%m-%d")
             return jsonify({"all_signals": rows, "signals": [], "exported_at": now})
 
@@ -120,7 +127,8 @@ def _start_api_server():
         def api_brief():
             """Return last N daily briefs for mobile history view."""
             try:
-                limit = int(request.args.get("limit", 30)) if "request" in dir() else 30
+                from flask import request as freq
+                limit = int(freq.args.get("limit", 30))
                 conn  = db.connect()
                 rows  = conn.execute(
                     "SELECT date, content, created_at FROM daily_briefs ORDER BY date DESC LIMIT ?",
@@ -135,7 +143,7 @@ def _start_api_server():
 
         @app.route("/api/portfolio")
         def api_portfolio():
-            rows = _db_open_signals(min_score=65)  # A/A+ only in portfolio
+            rows = _db_open_signals(min_score=65)
             positions = []
             for r in rows:
                 score  = int(r.get("score") or 0)
@@ -146,7 +154,6 @@ def _start_api_server():
                 t2     = float(r.get("target2") or t1 * 1.02)
                 if entry <= 0 or not sym:
                     continue
-                # Use trailed SL if T1 was hit
                 state  = _position_states.get(sym, {})
                 eff_sl = state.get("trailed_sl", sl)
                 try:
@@ -155,11 +162,10 @@ def _start_api_server():
                 except Exception:
                     qty = 0
                 if qty <= 0:
-                    # 2% risk per trade on ₹5L capital
-                    risk_amt = CAPITAL * 0.02          # ₹10,000 risk per trade
+                    risk_amt = CAPITAL * 0.02
                     risk_per_share = max(entry - sl, 0.01)
                     qty = max(1, int(risk_amt / risk_per_share))
-                qty = min(qty, int((CAPITAL * 0.25) / entry))  # max 25% per position
+                qty = min(qty, int((CAPITAL * 0.25) / entry))
                 try:
                     meta   = json.loads(r.get("metadata") or "{}")
                     reas   = meta.get("reasons", "")
@@ -184,10 +190,10 @@ def _start_api_server():
                             "updatedAt": datetime.now(IST_TZ).isoformat()})
 
         port = int(os.environ.get("PORT", 8080))
-        logging.info(f"Flask API starting on port {port}")
+        logging.info(f"Flask API + The Daily Signal starting on port {port}")
         app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
-    except ImportError:
-        logging.warning("Flask not installed — API server not started")
+    except ImportError as e:
+        logging.warning(f"Flask/newspaper not installed — API server not started: {e}")
     except Exception as e:
         logging.error(f"Flask API error: {e}")
 
@@ -1342,11 +1348,7 @@ def _start_scheduler():
         except Exception as _e:
             logging.warning(f"daily_brief import failed (non-fatal): {_e}")
 
-        # Morning brief — 8:00 AM IST Mon–Fri
-        sched.add_job(
-            _run_morning_brief,
-            CronTrigger(hour=8, minute=0, day_of_week="mon-fri", timezone=IST)
-        )
+        # Morning brief — disabled (manual only via /morning command)
 
         # Content calendar — every Monday 7:00 AM IST
         sched.add_job(
@@ -1355,7 +1357,7 @@ def _start_scheduler():
         )
 
         sched.start()
-        logging.info("Scheduler started: magic(14:00) + monitor(15min) + brief(6AM) + morning(8AM) + content(Mon 7AM) — NSE scans + CF scans handled by GitHub Actions")
+        logging.info("Scheduler started: magic(14:00) + monitor(15min) + brief(6AM) + content(Mon 7AM) — NSE scans + CF scans handled by GitHub Actions")
     except Exception as e:
         logging.warning(f"Scheduler not started: {e}")
 

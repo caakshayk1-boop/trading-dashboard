@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://worker-production-d45d.up.railway.app/$1",
+      "permanent": false
+    }
+  ]
+}
