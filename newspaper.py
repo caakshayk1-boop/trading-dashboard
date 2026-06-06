@@ -481,23 +481,49 @@ def get_fpna_tip() -> dict:
 # ─────────────────────────────────────────────────────────────
 
 WATCHLIST = [
-    # NSE — Large Cap
+    # ── India NSE — Large Cap (Nifty 50 core) ────────────────────────────────
     "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
     "KOTAKBANK.NS", "HINDUNILVR.NS", "SBIN.NS", "BAJFINANCE.NS", "BHARTIARTL.NS",
-    # NSE — Mid/Small Cap momentum
+    "WIPRO.NS", "HCLTECH.NS", "AXISBANK.NS", "MARUTI.NS", "ULTRACEMCO.NS",
+    "TITAN.NS", "ASIANPAINT.NS", "LT.NS", "NESTLEIND.NS", "TECHM.NS",
+    # ── India NSE — Mid/Small Cap momentum ───────────────────────────────────
     "ADANIENT.NS", "TATAMOTORS.NS", "SUNPHARMA.NS", "IRCTC.NS", "TATAPOWER.NS",
     "ZOMATO.NS", "DIXON.NS", "POWERGRID.NS", "PIDILITIND.NS", "DMART.NS",
     "PERSISTENT.NS", "LTIM.NS", "COFORGE.NS", "MPHASIS.NS", "KPITTECH.NS",
     "TATAELXSI.NS", "POLYCAB.NS", "ASTRAL.NS", "CAMS.NS", "ANGELONE.NS",
-    "LALPATHLAB.NS", "METROPOLIS.NS", "NUVAMA.NS", "360ONE.NS", "BIKAJI.NS",
-    # NSE — infra/energy
+    "LALPATHLAB.NS", "NUVAMA.NS", "360ONE.NS", "BIKAJI.NS", "PAYTM.NS",
+    "NYKAA.NS", "POLICYBZR.NS", "MAPMYINDIA.NS", "CAMPUS.NS", "KAYNES.NS",
+    # ── India NSE — Infra / Energy / PSU ─────────────────────────────────────
     "NTPC.NS", "NHPC.NS", "SJVN.NS", "COALINDIA.NS", "BPCL.NS",
     "IOC.NS", "GAIL.NS", "ONGC.NS", "TORNTPOWER.NS", "CESC.NS",
-    # US — Large Cap
-    "NVDA", "META", "AMD", "TSLA", "MSFT", "GOOGL", "TSM", "NVO",
-    # US — Mid Cap growth
-    "CRWD", "SNOW", "DDOG", "NET", "MDB", "PANW",
-    "AXON", "PODD", "CELH", "DUOL",
+    "ADANIGREEN.NS", "ADANIPORTS.NS", "ADANITRANS.NS", "PGCIL.NS", "RECLTD.NS",
+    # ── US — Mega Cap (S&P top 30) ────────────────────────────────────────────
+    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AVGO",
+    "BRK-B", "JPM", "LLY", "V", "UNH", "XOM", "MA", "JNJ",
+    "HD", "PG", "MRK", "ABBV", "COST", "WMT", "KO", "PEP",
+    "BAC", "ORCL", "CRM", "ACN", "AMD", "NFLX",
+    # ── US — High Growth / Tech ───────────────────────────────────────────────
+    "CRWD", "SNOW", "DDOG", "NET", "MDB", "PANW", "ZS", "FTNT",
+    "AXON", "CELH", "DUOL", "APP", "APLD", "HOOD", "COIN",
+    "SMCI", "ARM", "TSM", "ASML", "NVO", "NOVO-B.CO",
+    # ── Global ADRs & International ───────────────────────────────────────────
+    # Europe
+    "NESN.SW", "NOVN.SW", "ROG.SW",       # Switzerland
+    "SAP", "SIEGY", "BAYRY",              # Germany
+    "LVMUY", "IDEXY", "BNPQY",           # France
+    "SHEL", "AZN", "ULVR.L",             # UK
+    # Asia-Pacific
+    "9988.HK", "0700.HK", "1810.HK",     # China (Alibaba, Tencent, Xiaomi)
+    "005930.KS", "000660.KS",            # Korea (Samsung, SK Hynix)
+    "7203.T", "6758.T", "9432.T",        # Japan (Toyota, Sony, NTT)
+    "BABA", "JD", "PDD", "BIDU",         # China ADRs (US-listed)
+    "SE", "GRAB", "GOTO.JK",             # SEA
+    # Commodities / Energy / Mining
+    "XOM", "CVX", "COP", "SLB", "EOG",
+    "GOLD", "NEM", "FCX", "RIO", "BHP",
+    # Global Finance / Banks
+    "GS", "MS", "C", "WFC", "HSBA.L",
+    "8306.T", "1288.HK",                 # Mitsubishi UFJ, AgBank HK
 ]
 
 _picks_cache: dict = {}
@@ -1054,7 +1080,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 <!-- TOP 5 PICKS -->
 <section class="section" id="picks">
-  <div class="label">🔥 Top 5 Trade Ideas · 60-Stock Universe · Refreshes Weekly (Mon) · 20–30% Target</div>
+  <div class="label">🔥 Top 5 Trade Ideas · Global 200 Universe (India + US + Global) · Refreshes Weekly · 20–30% Target</div>
   {% if top5 %}
   <div class="pick-grid">
     {% for s in top5 %}
@@ -1087,7 +1113,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
   {% else %}
   <div style="padding:20px;color:var(--muted);font-size:13px;font-style:italic;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    ⏳ Scanning 60 stocks for best momentum setups... first load ~90s
+    ⏳ Scanning 200 global stocks for best momentum setups... first load ~3 min
   </div>
   {% endif %}
 </section>
