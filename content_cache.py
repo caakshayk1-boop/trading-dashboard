@@ -50,14 +50,16 @@ MARKET_TICKERS = [
 ]
 
 NEWS_FEEDS = [
-    ("Reuters Business", "https://feeds.reuters.com/reuters/businessNews"),
-    ("ET Markets",       "https://economictimes.indiatimes.com/markets/rss.cms"),
-    ("MoneyControl",     "https://www.moneycontrol.com/rss/business.xml"),
+    ("BBC Business",     "http://feeds.bbci.co.uk/news/business/rss.xml"),
+    ("CNBC",             "https://www.cnbc.com/id/10001147/device/rss/rss.html"),
+    ("Yahoo Finance",    "https://finance.yahoo.com/news/rssindex"),
+    ("MarketWatch",      "https://feeds.content.dowjones.io/public/rss/mw_topstories"),
+    ("Investing.com",    "https://www.investing.com/rss/news.rss"),
+    ("Google Finance",   "https://news.google.com/rss/search?q=stock+market+finance+business&hl=en&gl=US&ceid=US:en"),
 ]
 
 DUBAI_JOB_FEEDS = [
-    ("GulfTalent",   "https://www.gulftalent.com/rss/jobs/finance.xml"),
-    ("Bayt Finance", "https://www.bayt.com/en/uae/jobs/financial-analyst-jobs/rss/"),
+    ("Google Jobs", "https://news.google.com/rss/search?q=FP%26A+Finance+Manager+jobs+Dubai+hiring&hl=en&gl=AE&ceid=AE:en"),
 ]
 DUBAI_JOB_KEYWORDS = ["fp&a", "financial planning", "financial analyst", "finance manager",
                        "budget", "forecasting", "controller", "treasury"]
@@ -187,14 +189,17 @@ def _fetch_jobs() -> list[dict]:
             except Exception:
                 pass
 
-    # Static curated fallback
+    # Static curated fallback — top target companies with direct career pages
     if len(jobs) < 3:
         jobs += [
-            {"source": "Target", "title": "FP&A Manager — ADNOC Group",          "link": "https://careers.adnoc.ae",            "city": "Dubai"},
-            {"source": "Target", "title": "Senior Financial Analyst — Emirates",  "link": "https://www.emiratesgroupcareers.com", "city": "Dubai"},
-            {"source": "Target", "title": "Finance Business Partner — MAF",       "link": "https://careers.majidalfuttaim.com",   "city": "Dubai"},
-            {"source": "Target", "title": "Group FP&A Analyst — DP World",        "link": "https://careers.dpworld.com",          "city": "Dubai"},
-            {"source": "Target", "title": "FP&A Lead — First Abu Dhabi Bank",     "link": "https://jobs.bankfab.com",             "city": "Dubai"},
+            {"source": "Apply Now", "title": "FP&A Manager — ADNOC Group",          "link": "https://careers.adnoc.ae",            "city": "Dubai"},
+            {"source": "Apply Now", "title": "Senior Financial Analyst — Emirates",  "link": "https://www.emiratesgroupcareers.com", "city": "Dubai"},
+            {"source": "Apply Now", "title": "Finance Business Partner — MAF",       "link": "https://careers.majidalfuttaim.com",   "city": "Dubai"},
+            {"source": "Apply Now", "title": "Group FP&A Analyst — DP World",        "link": "https://careers.dpworld.com",          "city": "Dubai"},
+            {"source": "Apply Now", "title": "FP&A Lead — First Abu Dhabi Bank",     "link": "https://jobs.bankfab.com",             "city": "Dubai"},
+            {"source": "Apply Now", "title": "Senior Finance Manager — DEWA",        "link": "https://www.dewa.gov.ae/en/about-dewa/careers", "city": "Dubai"},
+            {"source": "Apply Now", "title": "FP&A Manager — Dubai Airports",        "link": "https://www.dubaiairports.ae/corporate/careers", "city": "Dubai"},
+            {"source": "Apply Now", "title": "Financial Controller — Emaar",         "link": "https://careers.emaar.com",           "city": "Dubai"},
         ]
     return jobs[:8]
 
