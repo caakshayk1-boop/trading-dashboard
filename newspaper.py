@@ -945,24 +945,27 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 </section>
 
-<!-- DUBAI JOBS -->
+<!-- GULF JOBS -->
 <section class="section" id="jobs">
-  <div class="label">🇦🇪 Dubai FP&A Jobs · AED 30K+ Target</div>
+  <div class="label">🌍 Gulf + India FP&A Jobs · Live from LinkedIn · AED 30K+ Target</div>
   <div class="jobs-grid">
     {% for j in dubai_jobs %}
     <div class="jcard">
-      <div class="src">{{ j.source }}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <div class="src">{{ j.source }}</div>
+        <div style="font-size:10px;color:var(--muted)">{{ j.city[:30] }}</div>
+      </div>
       <h4>{% if j.link %}<a href="{{ j.link }}" target="_blank" style="color:var(--text)">{{ j.title }}</a>{% else %}{{ j.title }}{% endif %}</h4>
-      {% if j.summary %}<p>{{ j.summary[:160] }}</p>{% endif %}
     </div>
     {% endfor %}
-    {% if not dubai_jobs %}<p style="color:var(--muted)">Loading job feeds...</p>{% endif %}
+    {% if not dubai_jobs %}<p style="color:var(--muted)">Fetching live jobs...</p>{% endif %}
   </div>
   <div style="margin-top:10px;font-size:11px;color:var(--muted);padding:10px;background:var(--surface);border:1px solid var(--border)">
-    <strong style="color:var(--purple)">Daily Action:</strong> Apply to 2 roles:
-    <a href="https://www.bayt.com/en/uae/jobs/financial-planning-analysis-manager-jobs/" target="_blank">Bayt</a> ·
-    <a href="https://www.gulftalent.com/jobs/finance" target="_blank">GulfTalent</a> ·
-    <a href="https://www.linkedin.com/jobs/search/?keywords=FP%26A+Manager&location=Dubai" target="_blank">LinkedIn</a>
+    <strong style="color:var(--purple)">Search More:</strong>
+    <a href="https://www.linkedin.com/jobs/search/?keywords=FP%26A+Manager&location=Dubai" target="_blank">LinkedIn UAE</a> ·
+    <a href="https://www.linkedin.com/jobs/search/?keywords=FP%26A+Finance+Manager&location=Saudi+Arabia" target="_blank">LinkedIn KSA</a> ·
+    <a href="https://www.naukrigulf.com/fp-a-jobs-in-uae" target="_blank">NaukriGulf</a> ·
+    <a href="https://www.bayt.com/en/uae/jobs/financial-planning-analysis-manager-jobs/" target="_blank">Bayt</a>
   </div>
 </section>
 

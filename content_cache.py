@@ -141,67 +141,71 @@ def _fetch_markets() -> list[dict]:
     return out
 
 
+_LI_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+}
+
+_GULF_SEARCHES = [
+    ("UAE",          "FP%26A+Manager+Finance+Controller",   "Dubai"),
+    ("Saudi Arabia", "FP%26A+Finance+Manager+Controller",   "Saudi+Arabia"),
+    ("Kuwait",       "Finance+Manager+FP%26A+Controller",   "Kuwait"),
+    ("India",        "FP%26A+Manager+Finance+Controller",   "India"),
+    ("Malaysia",     "FP%26A+Finance+Manager+Controller",   "Malaysia"),
+]
+
+
+def _fetch_linkedin_jobs(keywords: str, location: str, country: str, max_items: int = 3) -> list[dict]:
+    """Scrape LinkedIn public job search (no login required)."""
+    import re as _re
+    url = (
+        f"https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
+        f"?keywords={keywords}&location={location}&start=0&count=10&f_TPR=r604800"
+    )
+    try:
+        r = requests.get(url, headers=_LI_HEADERS, timeout=12)
+        if r.status_code != 200:
+            return []
+        html = r.text
+        titles    = _re.findall(r'class="base-search-card__title"[^>]*>\s*([^<]+?)\s*<', html)
+        companies = _re.findall(r'class="base-search-card__subtitle">\s*<[^>]+>\s*([^<]+?)\s*<', html)
+        locations = _re.findall(r'class="job-search-card__location"[^>]*>\s*([^<]+?)\s*<', html)
+        links     = _re.findall(r'href="(https://www\.linkedin\.com/jobs/view/[^"?]+)', html)
+        out = []
+        for i in range(min(max_items, len(titles))):
+            title   = titles[i].strip().replace("&amp;", "&")
+            company = companies[i].strip().replace("&amp;", "&") if i < len(companies) else ""
+            loc     = locations[i].strip() if i < len(locations) else country
+            link    = links[i] if i < len(links) else ""
+            display = f"{title} — {company}" if company else title
+            out.append({"source": "LinkedIn", "title": display[:90], "link": link, "city": loc})
+        return out
+    except Exception as e:
+        log.warning(f"LinkedIn jobs {country}: {e}")
+        return []
+
+
 def _fetch_jobs() -> list[dict]:
-    """Returns list of {source, title, link, city}. Falls back to curated targets."""
+    """Live Gulf + India FP&A jobs scraped from LinkedIn public search."""
     jobs: list[dict] = []
 
-    # Adzuna API (best quality)
-    adzuna_id  = os.environ.get("ADZUNA_APP_ID", "")
-    adzuna_key = os.environ.get("ADZUNA_APP_KEY", "")
-    if adzuna_id and adzuna_key:
-        for code, city, query in [
-            ("ae", "Dubai",    "Senior FP&A Finance Manager Controller"),
-            ("my", "Malaysia", "Senior FP&A Finance Manager Regional"),
-        ]:
-            try:
-                r = requests.get(
-                    f"https://api.adzuna.com/v1/api/jobs/{code}/search/1",
-                    params={"app_id": adzuna_id, "app_key": adzuna_key,
-                            "results_per_page": 3, "what": query,
-                            "where": city, "sort_by": "date", "max_days_old": 1},
-                    timeout=8,
-                )
-                if r.status_code == 200:
-                    for job in r.json().get("results", [])[:3]:
-                        t = job.get("title", "")[:80]
-                        u = job.get("redirect_url", "")
-                        if t and u:
-                            jobs.append({"source": "Adzuna", "title": t, "link": u, "city": city})
-            except Exception as e:
-                log.warning(f"Adzuna {city}: {e}")
+    for country, keywords, location in _GULF_SEARCHES:
+        results = _fetch_linkedin_jobs(keywords, location, country, max_items=3)
+        jobs.extend(results)
+        if results:
+            log.info(f"LinkedIn jobs {country}: {len(results)} fetched")
 
-    # RSS fallback
-    if not jobs:
-        rss = [
-            ("Dubai",    "https://www.indeed.com/rss?q=Senior+FP%26A+Manager+Finance+Controller&l=Dubai&sort=date&fromage=1"),
-            ("Dubai",    "https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/?format=rss"),
-            ("Malaysia", "https://www.indeed.com/rss?q=Senior+FP%26A+Finance+Manager+Regional&l=Malaysia&sort=date&fromage=1"),
-            ("Malaysia", "https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/?format=rss"),
-        ]
-        for city, url in rss:
-            try:
-                feed = feedparser.parse(url)
-                for entry in feed.entries[:2]:
-                    t = entry.get("title", "").split(" - ")[0][:80].strip()
-                    u = entry.get("link", "").strip()
-                    if t and u:
-                        jobs.append({"source": "RSS", "title": t, "link": u, "city": city})
-            except Exception:
-                pass
-
-    # Static curated fallback — top target companies with direct career pages
+    # Static curated fallback — only if scraping fully fails
     if len(jobs) < 3:
+        log.warning("LinkedIn job scraping returned <3 results, using curated fallback")
         jobs += [
-            {"source": "Apply Now", "title": "FP&A Manager — ADNOC Group",          "link": "https://careers.adnoc.ae",            "city": "Dubai"},
-            {"source": "Apply Now", "title": "Senior Financial Analyst — Emirates",  "link": "https://www.emiratesgroupcareers.com", "city": "Dubai"},
-            {"source": "Apply Now", "title": "Finance Business Partner — MAF",       "link": "https://careers.majidalfuttaim.com",   "city": "Dubai"},
-            {"source": "Apply Now", "title": "Group FP&A Analyst — DP World",        "link": "https://careers.dpworld.com",          "city": "Dubai"},
-            {"source": "Apply Now", "title": "FP&A Lead — First Abu Dhabi Bank",     "link": "https://jobs.bankfab.com",             "city": "Dubai"},
-            {"source": "Apply Now", "title": "Senior Finance Manager — DEWA",        "link": "https://www.dewa.gov.ae/en/about-dewa/careers", "city": "Dubai"},
-            {"source": "Apply Now", "title": "FP&A Manager — Dubai Airports",        "link": "https://www.dubaiairports.ae/corporate/careers", "city": "Dubai"},
-            {"source": "Apply Now", "title": "Financial Controller — Emaar",         "link": "https://careers.emaar.com",           "city": "Dubai"},
+            {"source": "Apply", "title": "FP&A Manager — ADNOC Group",         "link": "https://careers.adnoc.ae",            "city": "Dubai"},
+            {"source": "Apply", "title": "Senior Financial Analyst — Emirates", "link": "https://www.emiratesgroupcareers.com", "city": "Dubai"},
+            {"source": "Apply", "title": "Finance Business Partner — MAF",      "link": "https://careers.majidalfuttaim.com",   "city": "Dubai"},
+            {"source": "Apply", "title": "Group FP&A Analyst — DP World",       "link": "https://careers.dpworld.com",          "city": "Dubai"},
+            {"source": "Apply", "title": "FP&A Lead — First Abu Dhabi Bank",    "link": "https://jobs.bankfab.com",             "city": "Dubai"},
         ]
-    return jobs[:8]
+    return jobs[:12]
 
 
 def _fetch_news() -> list[dict]:
