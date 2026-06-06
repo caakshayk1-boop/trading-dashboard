@@ -481,9 +481,23 @@ def get_fpna_tip() -> dict:
 # ─────────────────────────────────────────────────────────────
 
 WATCHLIST = [
-    "RELIANCE.NS", "TATAMOTORS.NS", "BAJFINANCE.NS", "ADANIENT.NS", "SUNPHARMA.NS",
-    "IRCTC.NS", "TATAPOWER.NS", "ZOMATO.NS", "DIXON.NS", "POWERGRID.NS",
+    # NSE — Large Cap
+    "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
+    "KOTAKBANK.NS", "HINDUNILVR.NS", "SBIN.NS", "BAJFINANCE.NS", "BHARTIARTL.NS",
+    # NSE — Mid/Small Cap momentum
+    "ADANIENT.NS", "TATAMOTORS.NS", "SUNPHARMA.NS", "IRCTC.NS", "TATAPOWER.NS",
+    "ZOMATO.NS", "DIXON.NS", "POWERGRID.NS", "PIDILITIND.NS", "DMART.NS",
+    "PERSISTENT.NS", "LTIM.NS", "COFORGE.NS", "MPHASIS.NS", "KPITTECH.NS",
+    "TATAELXSI.NS", "POLYCAB.NS", "ASTRAL.NS", "CAMS.NS", "ANGELONE.NS",
+    "LALPATHLAB.NS", "METROPOLIS.NS", "NUVAMA.NS", "360ONE.NS", "BIKAJI.NS",
+    # NSE — infra/energy
+    "NTPC.NS", "NHPC.NS", "SJVN.NS", "COALINDIA.NS", "BPCL.NS",
+    "IOC.NS", "GAIL.NS", "ONGC.NS", "TORNTPOWER.NS", "CESC.NS",
+    # US — Large Cap
     "NVDA", "META", "AMD", "TSLA", "MSFT", "GOOGL", "TSM", "NVO",
+    # US — Mid Cap growth
+    "CRWD", "SNOW", "DDOG", "NET", "MDB", "PANW",
+    "AXON", "PODD", "CELH", "DUOL",
 ]
 
 _picks_cache: dict = {}
@@ -520,6 +534,9 @@ def score_stock(sym: str) -> Optional[dict]:
         return None
 
 def _build_picks() -> list[dict]:
+    """Score all 60 stocks, return top 5 by momentum score.
+    Runs weekly — same week's picks stay consistent for journal tracking.
+    """
     scored = []
     for sym in WATCHLIST:
         s = score_stock(sym)
@@ -532,32 +549,37 @@ def _build_picks() -> list[dict]:
         time.sleep(0.1)
     return top5
 
+def _week_key() -> str:
+    """ISO week key e.g. '2026-W23' — picks refresh every Monday."""
+    d = date.today()
+    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
+
 def _warm_picks_cache():
-    today = date.today().isoformat()
+    week = _week_key()
     with _db() as con:
-        row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (today,)).fetchone()
+        row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (week,)).fetchone()
         if row:
             with _picks_lock:
-                _picks_cache[today] = json.loads(row["picks"])
-            log.info("picks: loaded from DB cache")
+                _picks_cache[week] = json.loads(row["picks"])
+            log.info(f"picks: loaded from DB cache ({week})")
             return
-    log.info("picks: warming cache in background...")
+    log.info(f"picks: warming cache for {week} — scanning {len(WATCHLIST)} stocks...")
     picks = _build_picks()
     with _db() as con:
-        con.execute("INSERT OR REPLACE INTO newspaper_stocks_picked VALUES (?,?)", (today, json.dumps(picks)))
+        con.execute("INSERT OR REPLACE INTO newspaper_stocks_picked VALUES (?,?)", (week, json.dumps(picks)))
     with _picks_lock:
-        _picks_cache[today] = picks
-    log.info(f"picks: cache warmed {len(picks)} stocks")
+        _picks_cache[week] = picks
+    log.info(f"picks: cached {len(picks)} top picks for {week}")
 
 def get_top5_picks() -> list[dict]:
-    today = date.today().isoformat()
+    week = _week_key()
     with _picks_lock:
-        if today in _picks_cache: return _picks_cache[today]
+        if week in _picks_cache: return _picks_cache[week]
     with _db() as con:
-        row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (today,)).fetchone()
+        row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (week,)).fetchone()
         if row:
             picks = json.loads(row["picks"])
-            with _picks_lock: _picks_cache[today] = picks
+            with _picks_lock: _picks_cache[week] = picks
             return picks
     return []
 
@@ -1032,7 +1054,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 <!-- TOP 5 PICKS -->
 <section class="section" id="picks">
-  <div class="label">🔥 Top 5 Trade Ideas · 20–30% Target · 1–3 Months</div>
+  <div class="label">🔥 Top 5 Trade Ideas · 60-Stock Universe · Refreshes Weekly (Mon) · 20–30% Target</div>
   {% if top5 %}
   <div class="pick-grid">
     {% for s in top5 %}
@@ -1065,7 +1087,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
   {% else %}
   <div style="padding:20px;color:var(--muted);font-size:13px;font-style:italic;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    ⏳ Scanning 18 stocks... refresh in ~60s
+    ⏳ Scanning 60 stocks for best momentum setups... first load ~90s
   </div>
   {% endif %}
 </section>
