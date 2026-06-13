@@ -35,6 +35,7 @@ env:
   UPSTOX_API_SECRET:   ${{ secrets.UPSTOX_API_SECRET }}
   TURSO_URL:           ${{ secrets.TURSO_URL }}
   TURSO_TOKEN:         ${{ secrets.TURSO_TOKEN }}
+  GROQ_API_KEY:        ${{ secrets.GROQ_API_KEY }}
   GH_PAT:              ${{ secrets.GH_PAT }}
   OBSIDIAN_GITHUB_REPO: ${{ secrets.OBSIDIAN_GITHUB_REPO }}
 
