@@ -47,7 +47,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install "yfinance>=0.2.40" pandas numpy ta requests pytz \
-                      feedparser groq libsql-experimental anthropic
+                      feedparser groq libsql-experimental anthropic python-dotenv
 
       - name: Install optional dependencies
         run: |

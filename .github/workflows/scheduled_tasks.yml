@@ -52,7 +52,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install "yfinance>=0.2.40" pandas numpy ta requests pytz \
-                      feedparser groq libsql-experimental
+                      feedparser groq libsql-experimental python-dotenv
 
       - name: Detect task
         id: task
