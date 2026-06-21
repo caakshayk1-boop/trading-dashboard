@@ -837,12 +837,50 @@ Senior FP&A · Finance Manager · Regional · Controller
     return brief
 
 
+def _build_apex_digest() -> str:
+    """Fetch APEX bot P&L from Render and build a Telegram digest."""
+    try:
+        r = requests.get("https://apex-bot-jnuc.onrender.com/health", timeout=15)
+        if r.status_code != 200:
+            return ""
+        d = r.json()
+        bal   = d.get("balance", 0)
+        btc   = d.get("btc", 0)
+        mkts  = d.get("markets", 0)
+        paper = "📝 PAPER" if d.get("paper") else "🔴 LIVE"
+
+        # Fetch more detail from state endpoint if available
+        pnl = bal - 2000.0
+        pnl_str = f"+${pnl:.2f}" if pnl >= 0 else f"-${abs(pnl):.2f}"
+        pnl_emoji = "🟢" if pnl >= 0 else "🔴"
+
+        return (
+            f"\n━━━━━━━━━━━━━━━━━━━\n"
+            f"⚡ *APEX BOT — DAILY P&L*\n"
+            f"━━━━━━━━━━━━━━━━━━━\n"
+            f"{paper} | BTC ${btc:,.0f}\n\n"
+            f"💰 Balance: *${bal:,.2f}*\n"
+            f"{pnl_emoji} P&L vs start: *{pnl_str}*\n"
+            f"🌐 Markets tracked: {mkts}\n"
+            f"📊 Dashboard: terminal.askakshay.com/apex"
+        )
+    except Exception as e:
+        log.warning(f"APEX digest failed: {e}")
+        return ""
+
+
 def send_brief():
     log.info("daily_brief: building...")
     brief    = build_brief()
     today    = datetime.now(IST).date().isoformat()   # IST date
     _save_to_db(brief)
     _post(brief)
+
+    # APEX Bot P&L digest
+    apex_digest = _build_apex_digest()
+    if apex_digest:
+        _post(apex_digest)
+        log.info("APEX P&L digest sent")
 
     # Signal recap — sent once at 6 AM as a separate message (no duplicates)
     recap = _build_signal_recap()

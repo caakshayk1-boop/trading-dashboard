@@ -831,20 +831,11 @@ def _push_signals_to_github():
 
 # ── Scheduler ─────────────────────────────────────────────────────────────────
 _CF_SYMBOLS = {
-    # Commodities
+    # Commodities only — ALL forex pairs permanently removed per user request
     "GOLD":    "GC=F",
     "SILVER":  "SI=F",
     "CRUDE":   "CL=F",
     "NATGAS":  "NG=F",
-    # INR pairs (primary — Dubai / India FX exposure)
-    "USDINR":  "USDINR=X",
-    "EURINR":  "EURINR=X",
-    "GBPINR":  "GBPINR=X",
-    # Major forex pairs (100-pip potential, liquid)
-    "EURUSD":  "EURUSD=X",
-    "GBPUSD":  "GBPUSD=X",
-    "USDJPY":  "JPY=X",
-    "AUDUSD":  "AUDUSD=X",
 }
 
 def _rsi14(series: pd.Series) -> pd.Series:
@@ -926,6 +917,15 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                 day_mid   = (day_high + day_low) / 2
                 day_chg   = round((price - prev_cls) / prev_cls * 100, 2) if prev_cls > 0 else 0
 
+                # ── Filter: no range = bad data (day just opened or missing) ──
+                if day_high <= 0 or day_high == day_low:
+                    continue
+
+                # ── Filter: already moved >4% today = chasing, skip ──────────
+                if abs(day_chg) > 4:
+                    logging.info(f"CF skip {name}: day move {day_chg:.1f}% > 4% threshold")
+                    continue
+
                 # ── 1H ATR & RSI ─────────────────────────────────────────────
                 atr_1h  = _atr14(h1h, l1h, c1h)
                 if atr_1h <= 0:
@@ -986,13 +986,13 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                 if risk <= 0:
                     continue
 
-                # ── Targets (R-multiples of risk) ────────────────────────────
+                # ── Targets (R-multiples of risk) — min 3:1 at T2 ───────────
                 d = 1 if bias == "BUY" else -1
                 t1 = round(price + d * 1.5 * risk, 4)
-                t2 = round(price + d * 2.5 * risk, 4)
-                t3 = round(price + d * 4.0 * risk, 4)
+                t2 = round(price + d * 3.0 * risk, 4)
+                t3 = round(price + d * 5.0 * risk, 4)
                 rr = round(abs(t2 - price) / risk, 1)
-                if rr < 1.5:
+                if rr < 2.5:
                     continue
 
                 # ── Context labels ───────────────────────────────────────────
@@ -1051,8 +1051,8 @@ def _scan_commodity_forex(ts: str, chat_id=None):
                     f"*Entry:* `{a['price']:.4f}`\n"
                     f"*SL:*    `{a['sl']:.4f}`\n"
                     f"*T1:* `{a['t1']:.4f}`  _(1.5R)_\n"
-                    f"*T2:* `{a['t2']:.4f}`  _(2.5R)_\n"
-                    f"*T3:* `{a['t3']:.4f}`  _(4R)_\n"
+                    f"*T2:* `{a['t2']:.4f}`  _(3R)_\n"
+                    f"*T3:* `{a['t3']:.4f}`  _(5R)_\n"
                     f"R:R `{a['rr']}:1`\n"
                     f"[📊 Chart]({a['tv_link']})"
                 )
