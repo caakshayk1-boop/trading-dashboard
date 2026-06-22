@@ -355,8 +355,8 @@ def _get_jobs() -> str:
             "• [JobStreet Malaysia](https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/)"
         )
 
-    dubai_lines = [f"• [{t}]({u})" for city, t, u in results if city == "Dubai"]
-    my_lines    = [f"• [{t}]({u})" for city, t, u in results if city == "Malaysia"]
+    dubai_lines = [f"• {t} [↗]({u})" for city, t, u in results if city == "Dubai"]
+    my_lines    = [f"• {t} [↗]({u})" for city, t, u in results if city == "Malaysia"]
     out = ""
     if dubai_lines:
         out += "*🇦🇪 Dubai:*\n" + "\n".join(dubai_lines)
