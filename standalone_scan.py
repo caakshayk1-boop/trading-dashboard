@@ -263,38 +263,6 @@ def run_markets(time_str):
         logging.warning(f"run_markets skipped: {e}")
 
 
-def run_forex_signals(time_str):
-    """Dedicated midday forex/currency signal alert — called once at midday only."""
-    try:
-        from scanner import fetch_forex_comm
-        fc = fetch_forex_comm()
-        if not fc:
-            return
-        # Split forex vs commodity
-        forex_rows = [r for r in fc if "/" in r["Asset"] or "INR" in r["Asset"]]
-        comm_rows  = [r for r in fc if r not in forex_rows]
-        if not forex_rows and not comm_rows:
-            return
-        lines = [f"💱 *Forex & Commodity Midday Digest* — {time_str}\n"]
-        if forex_rows:
-            lines.append("*Currency Pairs:*")
-            for r in forex_rows:
-                sign  = "+" if r["Chg%"] >= 0 else ""
-                emoji = "🟢" if r["Chg%"] >= 0 else "🔴"
-                lines.append(f"{emoji} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%) — "
-                              f"{'Rupee strengthening' if r['Chg%'] < 0 else 'Rupee weakening'}")
-        if comm_rows:
-            lines.append("\n*Commodities:*")
-            for r in comm_rows:
-                sign  = "+" if r["Chg%"] >= 0 else ""
-                emoji = "🟢" if r["Chg%"] >= 0 else "🔴"
-                lines.append(f"{emoji} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%)")
-        lines.append("\n_Once-daily midday snapshot · Not SEBI advice_")
-        _send("\n".join(lines))
-    except Exception as e:
-        logging.warning(f"run_forex_signals skipped: {e}")
-
-
 # Commodity conflict groups — don't send opposing signals for same underlying
 _COMM_CONFLICT_GROUPS = [
     {"CL=F", "BZ=F"},       # WTI Crude + Brent Crude (same underlying)
@@ -607,7 +575,6 @@ def main():
             sigs_4h = _safe("4h_scan",         run_4h_scan,        time_str)
             tlm_4h  = _safe("tlm_4h",          run_tlm_scan,       time_str, interval="4h")
             comms   = _safe("commodity_scan",  run_commodity_scan, time_str)
-            _safe("forex_signals",             run_forex_signals,  time_str)
             counts  = {"swing": len(signals), "4h": len(sigs_4h),
                        "ai_4h": len(tlm_4h), "commodities": len(comms)}
 
