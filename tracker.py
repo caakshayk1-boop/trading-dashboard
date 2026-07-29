@@ -1,8 +1,13 @@
 import sqlite3, os, json, logging
 import pandas as pd
 import yfinance as yf
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 import db as _db
+from symbols import to_yahoo
+
+# Signals are dated in IST; runners execute in UTC. Compare against IST or a
+# signal filed this evening IST looks like it belongs to "tomorrow".
+_IST = timezone(timedelta(hours=5, minutes=30))
 
 log = logging.getLogger(__name__)
 
@@ -327,7 +332,7 @@ def update_outcomes():
 
     for _, row in open_trades.iterrows():
         try:
-            sym = row["symbol"] + ".NS"
+            sym = to_yahoo(row["symbol"])
             df  = yf.download(sym, period="5d", interval="1d",
                               progress=False, auto_adjust=True)
             if df.empty:
@@ -386,14 +391,19 @@ def update_all_outcomes():
 
     for _, row in open_trades.iterrows():
         try:
-            sym = row["symbol"].replace(".NS", "") + ".NS"
+            sym = to_yahoo(row["symbol"])
             # ── Critical fix: only look at candles AFTER the signal date ─────
             sig_date_str = str(row.get("date", "")).strip()
             try:
-                from datetime import timedelta as _td
                 sig_dt  = datetime.strptime(sig_date_str, "%Y-%m-%d").date()
                 # Start from the NEXT trading day so entry candle doesn't trip SL
-                start_dt = (sig_dt + _td(days=1)).isoformat()
+                start_d = sig_dt + timedelta(days=1)
+                # A signal filed today has no post-entry candles yet. Asking
+                # Yahoo for start=tomorrow returns "start date cannot be after
+                # end date" — 24 doomed fetches per run. Skip until it exists.
+                if start_d > datetime.now(_IST).date():
+                    continue
+                start_dt = start_d.isoformat()
             except Exception:
                 start_dt = None
 
@@ -604,6 +614,26 @@ def log_scan_meta(slot, counts: dict):
         c.commit()
         _db.sync(c)
 
+def _json_safe(obj):
+    """Recursively replace NaN/Inf with None so the output is spec-valid JSON.
+
+    Python's json.dump emits bare NaN/Infinity by default, which every
+    JS JSON.parse() rejects. Anything written for the web must pass through
+    this first, then be dumped with allow_nan=False so a regression fails
+    loudly in CI instead of silently shipping a broken API response.
+    """
+    if isinstance(obj, float):          # np.float64 subclasses float
+        return None if (obj != obj or obj in (_INF, -_INF)) else obj
+    if isinstance(obj, dict):
+        return {k: _json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_json_safe(v) for v in obj]
+    return obj
+
+
+_INF = float("inf")
+
+
 def export_signals_json():
     """Export all signal tables to data/*.json for GitHub raw URL access."""
     import os
@@ -615,10 +645,13 @@ def export_signals_json():
             with open(path, "w") as f:
                 json.dump([], f)
             return
-        # Convert to records, handle NaN
-        records = df.where(pd.notnull(df), None).to_dict(orient="records")
+        # NaN → None. df.where(pd.notnull(df), None) is NOT enough: pandas
+        # coerces None back to NaN in float columns, so bare NaN reached the
+        # file. NaN is invalid JSON — JS JSON.parse() rejects it and
+        # terminal.askakshay.com/api/signals returned {"source":"error"}.
+        records = _json_safe(df.to_dict(orient="records"))
         with open(path, "w") as f:
-            json.dump(records, f, default=str)
+            json.dump(records, f, default=str, allow_nan=False)
 
     # Export each table — no LIMIT, full permanent history
     with _conn() as c:
@@ -658,7 +691,8 @@ def export_signals_json():
     # Scan meta
     ts, slot, counts = get_last_scan()
     with open("data/scan_meta.json", "w") as f:
-        json.dump({"ts": ts, "slot": slot, "counts": counts}, f)
+        json.dump(_json_safe({"ts": ts, "slot": slot, "counts": counts}), f,
+                  default=str, allow_nan=False)
 
     log.info("data/*.json exported successfully")
 
@@ -744,3 +778,52 @@ def get_last_scan():
     except Exception:
         pass
     return None, None, {}
+
+
+# ── Realized performance (live counterpart to backtest.py) ───────────────────
+
+def signal_stats(days: int = 90, signal_type: str = None) -> dict:
+    """Measured performance of closed signals, grouped by signal type.
+
+    Reports the same metrics as backtest.py (win rate, expectancy in R, total
+    R) so the backtested expectation and what actually happened are directly
+    comparable. If live diverges hard from backtest, the engine config is
+    overfit and should be re-swept.
+    """
+    init_db()
+    since  = (datetime.now(_IST).date() - timedelta(days=days)).isoformat()
+    q = ("SELECT signal_type, r_multiple FROM all_signals "
+         "WHERE status NOT IN ('OPEN','CANCELLED') "
+         "AND r_multiple IS NOT NULL AND date >= ?")
+    params = [since]
+    if signal_type:
+        q += " AND signal_type = ?"
+        params.append(signal_type)
+
+    with _conn() as c:
+        df = pd.read_sql(q, c, params=params)
+    if df.empty:
+        return {}
+
+    def _agg(r):
+        r = r.astype(float)
+        return {"n": int(len(r)), "win_rate": round(float((r > 0).mean()) * 100, 1),
+                "expectancy": round(float(r.mean()), 3),
+                "total_r": round(float(r.sum()), 1)}
+
+    out = {st: _agg(g["r_multiple"]) for st, g in df.groupby("signal_type")}
+    out["ALL"] = _agg(df["r_multiple"])
+    return out
+
+
+def format_stats(days: int = 90) -> str:
+    """Telegram-ready performance block."""
+    s = signal_stats(days)
+    if not s:
+        return f"\U0001F4CA *Signal Performance* — no closed signals in {days}d"
+    lines = [f"\U0001F4CA *Signal Performance* — last {days}d", ""]
+    for k in sorted(s, key=lambda x: (x == "ALL", x)):
+        v = s[k]
+        lines.append(f"`{k:10}` n=`{v['n']}` · win `{v['win_rate']}%` · "
+                     f"exp `{v['expectancy']:+.2f}R` · tot `{v['total_r']:+.1f}R`")
+    return "\n".join(lines)
