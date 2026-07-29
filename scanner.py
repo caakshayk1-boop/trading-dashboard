@@ -1657,10 +1657,19 @@ def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
 
         # Targets & SL
         sl   = round(lower_band - 0.3 * cur_atr, 2)  # below lower channel
-        t1   = round(price + (price - sl) * 1.5, 2)
-        t2   = round(price + (price - sl) * 2.5, 2)
+        # Targets come from structure (ATR projection snapped to 10/20-bar
+        # resistance), independent of the stop. The old
+        #     t1 = price + (price - sl) * 1.5
+        #     t2 = price + (price - sl) * 2.5
+        # made rr identically 2.5 on every signal, so the printed "RR 2.5"
+        # carried no information and no gate could ever act on it. This is
+        # the same helper analyze_breakout and the swing scan already use.
+        t1, t2, t3 = _structure_targets(price, cur_atr, high,
+                                        r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
         risk = round(price - sl, 2)
         rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
+        if rr < 1.5:
+            return None      # now a real gate — rr varies per setup
 
         sym_clean = symbol.replace(".NS", "")
         return {
@@ -1677,6 +1686,7 @@ def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
             "sl":            sl,
             "target1":       t1,
             "target2":       t2,
+            "target3":       t3,
             "rr":            rr,
             "atr":           round(cur_atr, 2),
             "fno":           sym_clean in FNO_ELIGIBLE,
