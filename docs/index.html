@@ -82,6 +82,15 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .ls-stat{text-align:center}
 .ls-num{font-size:28px;font-weight:900;font-family:monospace}
 .ls-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:sans-serif}
+.chess-game-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.game-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #555;padding:14px}
+.game-card.win{border-left-color:var(--green)}
+.game-card.loss{border-left-color:var(--red)}
+.game-card.draw{border-left-color:var(--muted)}
+.game-opening{font-size:12px;color:#ddd;margin-bottom:4px}
+.game-meta{font-size:11px;color:var(--muted)}
+.game-moves{font-size:10px;color:#aaa;overflow-x:auto;white-space:nowrap}
+.game-analysis{margin-top:8px;padding:8px 10px;background:#0d1117;border-left:3px solid var(--accent);font-size:11px;color:#ccc;line-height:1.6}
 
 /* WISDOM / CHESS / CFO */
 .wisdom-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px}
@@ -193,7 +202,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-name">THE DAILY SIGNAL</div>
   <div class="paper-meta">
     <span>Wednesday, July 29 2026</span>
-    <span>22:50 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻</a></span>
+    <span>23:04 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻</a></span>
   </div>
 </div>
 
@@ -227,25 +236,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">S&P 500</span>
-    <span>7392</span>
+    <span>7383</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24759</span>
+    <span>24716</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4099.3</span>
+    <span>$4105.4</span>
     <span class="up"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Crude</span>
-    <span>$84.59</span>
+    <span>$84.65</span>
     <span class="up"></span>
   </div>
   
@@ -257,7 +266,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63723</span>
+    <span>$63795</span>
     <span class="dn"></span>
   </div>
   
@@ -280,13 +289,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Bikaner</div>
       <div class="wx-emoji">🌤️</div>
-      <div class="wx-temp">31.1°C</div>
+      <div class="wx-temp">31.0°C</div>
       <div class="wx-cond">Mainly Clear</div>
       <div class="wx-range">↑ 37.3° · ↓ 29.3°</div>
       <div class="wx-meta">
-        <span>💧 75%</span>
-        <span>💨 8.2 km/h</span>
-        <span>🌡 Feels 37.4°C</span>
+        <span>💧 74%</span>
+        <span>💨 8.8 km/h</span>
+        <span>🌡 Feels 37.0°C</span>
       </div>
       <div class="wx-rain lo">
         🌧 Rain chance: 22%
@@ -297,13 +306,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Kolkata</div>
       <div class="wx-emoji">⛈️</div>
-      <div class="wx-temp">26.8°C</div>
+      <div class="wx-temp">26.4°C</div>
       <div class="wx-cond">Thunderstorm</div>
       <div class="wx-range">↑ 30.9° · ↓ 25.7°</div>
       <div class="wx-meta">
-        <span>💧 91%</span>
-        <span>💨 11.0 km/h</span>
-        <span>🌡 Feels 32.0°C</span>
+        <span>💧 92%</span>
+        <span>💨 11.8 km/h</span>
+        <span>🌡 Feels 31.4°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 100% — carry umbrella
@@ -314,13 +323,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">MY</div>
       <div class="wx-city">Kuala Lumpur</div>
       <div class="wx-emoji">☁️</div>
-      <div class="wx-temp">25.3°C</div>
+      <div class="wx-temp">25.2°C</div>
       <div class="wx-cond">Overcast</div>
       <div class="wx-range">↑ 31.4° · ↓ 23.7°</div>
       <div class="wx-meta">
-        <span>💧 95%</span>
-        <span>💨 0.0 km/h</span>
-        <span>🌡 Feels 31.6°C</span>
+        <span>💧 96%</span>
+        <span>💨 0.4 km/h</span>
+        <span>🌡 Feels 31.5°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 84% — carry umbrella
@@ -406,9 +415,9 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/small-business/articles/giant-wine-spirits-brand-files-170700174.html" target="_blank" style="color:var(--text)">National beer and wine distributor files Chapter 11 bankruptcy</a></h3>
+        <h3><a href="https://finance.yahoo.com/economy/articles/56-old-fast-food-giant-162827239.html" target="_blank" style="color:var(--text)">56-year-old fast-food giant has closed over half its restaurants</a></h3>
         <p></p>
-        <div class="ts">Jul 29 00:09</div>
+        <div class="ts">Jul 29 16:28</div>
       </div>
       
       <div class="ncard">
@@ -441,9 +450,9 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">MarketWatch</div>
-        <h3><a href="https://www.marketwatch.com/story/the-dollars-rally-matters-but-it-still-wont-help-feds-warsh-win-the-inflation-fight-ce278d40?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">The dollar’s rally matters — but it still won’t help Fed’s Warsh win the inflation fight</a></h3>
-        <p>A strong dollar is doing far less for the fight against inflation than might be expected.</p>
-        <div class="ts">Jul 29 17:12</div>
+        <h3><a href="https://www.marketwatch.com/story/why-sofis-stock-is-dropping-even-after-its-earnings-beat-expectations-ecc442eb?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">Why SoFi’s stock is dropping, even after its earnings beat expectations</a></h3>
+        <p>Investors were disappointed by the neobank’s restrained guidance.</p>
+        <div class="ts">Jul 29 17:18</div>
       </div>
       
     
@@ -457,20 +466,31 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 
   
+  <!-- ── STATS ROW ── -->
   <div class="lichess-summary">
     <div class="ls-stat"><div class="ls-num" style="color:var(--green)">8</div><div class="ls-label">Wins</div></div>
     <div class="ls-stat"><div class="ls-num" style="color:var(--red)">4</div><div class="ls-label">Losses</div></div>
     <div class="ls-stat"><div class="ls-num" style="color:var(--muted)">0</div><div class="ls-label">Draws</div></div>
     <div class="ls-stat"><div class="ls-num" style="color:var(--gold)">67%</div><div class="ls-label">Win Rate</div></div>
     <div class="ls-stat"><div class="ls-num">12</div><div class="ls-label">Games</div></div>
+    
   </div>
 
+  <!-- ── AI SESSION VERDICT ── -->
+  
   <div style="font-size:13px;padding:10px 14px;margin-bottom:14px;background:var(--surface);border-left:3px solid var(--green)">
     ✅
      Good session — W8/12. Review wins to lock in the patterns.
     
   </div>
+  
 
+  <!-- ── OPENING INTEL (full mode) ── -->
+  
+
+  <!-- ── PER-GAME CARDS (full mode) ── -->
+  
+  <!-- ── ACTIVITY MODE — speed breakdown cards ── -->
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
     
     <div style="background:var(--surface);border:1px solid var(--border);padding:12px 18px;min-width:140px;flex:1">
@@ -485,10 +505,16 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     </div>
     
   </div>
+  <div style="padding:10px 14px;background:#0d0d0d;border:1px solid #2a2a2a;font-size:11px;color:var(--muted);margin-bottom:14px">
+    ⚡ Add <code style="color:var(--accent)">LICHESS_TOKEN</code> to GitHub secrets for full per-game analysis, openings, key moves & AI coaching.
+    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--accent);margin-left:4px">Create token →</a>
+  </div>
+  
 
+  <!-- ── 7-DAY TREND ── -->
   
   <div style="margin-bottom:14px">
-    <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">7-Day Win Rate Trend</div>
+    <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">📈 7-Day Win Rate</div>
     <div style="display:flex;gap:6px;align-items:flex-end;height:70px">
       
       <div style="flex:1;text-align:center;display:flex;flex-direction:column;justify-content:flex-end">
@@ -539,11 +565,12 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
   
 
+  <!-- ── DAILY PUZZLE ── -->
   
   <div style="margin-top:4px;padding:14px;background:#0d1117;border:1px solid var(--gold)">
     <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px">🧩 Today's Puzzle</div>
     <div style="font-size:12px;color:#ddd;margin-bottom:6px">
-      Rating: <strong style="color:var(--gold)">1859</strong>
+      Rating: <strong style="color:var(--gold)">1844</strong>
       🔴 stretch · <span style="color:var(--muted)">Middlegame · Crushing · Fork</span>
     </div>
     <div style="font-size:12px;font-style:italic;color:#aaa;margin-bottom:10px">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
@@ -589,25 +616,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">S&P 500</div>
-      <div class="mkt-price">7392</div>
+      <div class="mkt-price">7383</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24759</div>
+      <div class="mkt-price">24716</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4099.3</div>
+      <div class="mkt-price">$4105.4</div>
       <div class="mkt-chg up"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Crude</div>
-      <div class="mkt-price">$84.59</div>
+      <div class="mkt-price">$84.65</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -619,7 +646,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63723</div>
+      <div class="mkt-price">$63795</div>
       <div class="mkt-chg dn"></div>
     </div>
     
