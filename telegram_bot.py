@@ -48,16 +48,28 @@ def _post(text, chat_id=None):
         logging.error("_post: TELEGRAM_TOKEN is not set — message not sent")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": chat_id or TELEGRAM_CHAT_ID,
+        "text":    text,
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": True,
+    }
     try:
-        r = requests.post(url, data={
-            "chat_id": chat_id or TELEGRAM_CHAT_ID,
-            "text":    text,
-            "parse_mode": "Markdown",
-            "disable_web_page_preview": True,
-        }, timeout=10)
-        if not r.ok:
-            logging.error(f"_post: Telegram API error {r.status_code} — {r.text[:200]}")
-        return r.ok
+        r = requests.post(url, data=payload, timeout=10)
+        if r.ok:
+            return True
+        # An unbalanced * or _ anywhere in the message makes Telegram reject
+        # the WHOLE alert with 400 "can't parse entities" — the signal is lost
+        # silently. Resend unformatted rather than drop it.
+        if r.status_code == 400 and "parse" in r.text.lower():
+            logging.warning(
+                f"_post: Markdown rejected ({r.text[:120]}) — resending as plain text")
+            payload.pop("parse_mode", None)
+            r = requests.post(url, data=payload, timeout=10)
+            if r.ok:
+                return True
+        logging.error(f"_post: Telegram API error {r.status_code} — {r.text[:200]}")
+        return False
     except Exception as e:
         logging.error(f"_post: Exception sending Telegram message — {e}")
         return False
