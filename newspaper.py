@@ -50,9 +50,13 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
                 ORDER BY date DESC, id DESC
                 LIMIT ?
             """, (limit,)).fetchall()
+        cols = ["date","symbol","action","timeframe","signal_type",
+                "entry","sl","target1","target2","rr","score",
+                "status","lifecycle_status","exit_price","pnl_pct",
+                "closed_at","sent_at"]
         result = []
         for r in rows:
-            r = dict(r)
+            r = dict(zip(cols, r))
             # badge colour logic
             s = (r.get("status") or "").upper()
             lc = (r.get("lifecycle_status") or "").upper()
