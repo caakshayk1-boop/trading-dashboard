@@ -476,6 +476,168 @@ def get_fpna_tip() -> dict:
     return {"title": title, "body": body, "index": idx + 1, "total": len(FPNA_TIPS)}
 
 # ─────────────────────────────────────────────────────────────
+# LICHESS GAMES ANALYSIS
+# ─────────────────────────────────────────────────────────────
+
+LICHESS_USER = "AKK_010"
+
+def fetch_lichess_games() -> list[dict]:
+    """Fetch yesterday's Lichess games for AKK_010. Returns list of analysed game dicts."""
+    from datetime import datetime, timezone, timedelta
+    try:
+        yesterday = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+        today     = yesterday + timedelta(days=1)
+        token     = os.environ.get("LICHESS_TOKEN", "")
+        headers   = {"Accept": "application/x-ndjson"}
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        params = {
+            "since":   int(yesterday.timestamp() * 1000),
+            "until":   int(today.timestamp() * 1000),
+            "max":     30,
+            "moves":   "true",
+            "opening": "true",
+            "evals":   "false",
+            "clocks":  "false",
+        }
+        r = requests.get(
+            f"https://lichess.org/api/games/user/{LICHESS_USER}",
+            params=params, headers=headers, timeout=20
+        )
+        if r.status_code != 200:
+            return []
+        games = []
+        for line in r.text.strip().split("\n"):
+            line = line.strip()
+            if not line or not line.startswith("{"):
+                continue
+            try:
+                g = json.loads(line)
+            except Exception:
+                continue
+
+            # Who am I?
+            white = g.get("players", {}).get("white", {})
+            black = g.get("players", {}).get("black", {})
+            i_am_white = white.get("user", {}).get("id", "").lower() == LICHESS_USER.lower()
+            my_side    = "White" if i_am_white else "Black"
+            opponent   = black.get("user", {}).get("name", "?") if i_am_white else white.get("user", {}).get("name", "?")
+            opp_rating = black.get("rating", "?") if i_am_white else white.get("rating", "?")
+            my_rating  = white.get("rating", "?") if i_am_white else black.get("rating", "?")
+
+            # Result
+            winner = g.get("winner", "")
+            if not winner:
+                result = "Draw"
+                result_icon = "½"
+            elif (winner == "white" and i_am_white) or (winner == "black" and not i_am_white):
+                result = "Win"
+                result_icon = "✅"
+            else:
+                result = "Loss"
+                result_icon = "❌"
+
+            # Opening
+            opening = g.get("opening", {})
+            opening_name = opening.get("name", "Unknown Opening") if opening else "Unknown Opening"
+            opening_eco  = opening.get("eco", "")  if opening else ""
+
+            # Moves count
+            moves_str = g.get("moves", "")
+            num_moves = len(moves_str.split()) // 2 if moves_str else 0
+
+            # Time control
+            clock = g.get("clock", {})
+            tc    = g.get("speed", g.get("perf", "?"))
+
+            # Key moves — last 3 moves of the game (often the decisive moment)
+            all_moves = moves_str.split() if moves_str else []
+            key_moves = ""
+            if len(all_moves) >= 6:
+                last_pairs = []
+                for i in range(max(0, len(all_moves)-6), len(all_moves), 2):
+                    move_num = (i // 2) + 1
+                    w = all_moves[i] if i < len(all_moves) else ""
+                    b = all_moves[i+1] if i+1 < len(all_moves) else ""
+                    last_pairs.append(f"{move_num}.{w} {b}")
+                key_moves = " ".join(last_pairs).strip()
+
+            # Termination
+            status = g.get("status", "")
+            termination_map = {
+                "mate": "Checkmate",
+                "resign": "Resignation",
+                "timeout": "Time Out",
+                "draw": "Draw",
+                "stalemate": "Stalemate",
+                "outoftime": "Time Out",
+                "cheat": "Cheat detected",
+                "noStart": "No start",
+                "unknownFinish": "Aborted",
+                "variantEnd": "Variant end",
+            }
+            termination = termination_map.get(status, status.title())
+
+            game_url = f"https://lichess.org/{g.get('id', '')}"
+
+            # Groq analysis if key available
+            analysis = ""
+            if GROQ_KEY and opening_name and result:
+                prompt = (
+                    f"Chess game analysis. I played {my_side} ({my_rating}) vs {opponent} ({opp_rating}). "
+                    f"Opening: {opening_eco} {opening_name}. Result: {result} by {termination} in {num_moves} moves. "
+                    f"Last moves: {key_moves}. "
+                    f"Give 1 specific learning point in 20 words max. Numbers-first, brutally honest."
+                )
+                analysis = groq_complete(prompt, max_tokens=50)
+
+            games.append({
+                "id":           g.get("id", ""),
+                "url":          game_url,
+                "result":       result,
+                "result_icon":  result_icon,
+                "my_side":      my_side,
+                "my_rating":    my_rating,
+                "opponent":     opponent,
+                "opp_rating":   opp_rating,
+                "opening":      opening_name,
+                "eco":          opening_eco,
+                "moves":        num_moves,
+                "termination":  termination,
+                "tc":           tc.title() if tc else "?",
+                "key_moves":    key_moves,
+                "analysis":     analysis,
+            })
+        return games
+    except Exception as e:
+        log.warning(f"Lichess fetch error: {e}")
+        return []
+
+def get_lichess_summary(games: list[dict]) -> dict:
+    """Win/loss/draw summary + best and worst game."""
+    if not games:
+        return {}
+    wins   = sum(1 for g in games if g["result"] == "Win")
+    losses = sum(1 for g in games if g["result"] == "Loss")
+    draws  = sum(1 for g in games if g["result"] == "Draw")
+    total  = len(games)
+    openings = {}
+    for g in games:
+        op = g["opening"]
+        openings[op] = openings.get(op, {"w":0,"l":0,"d":0})
+        if g["result"] == "Win":    openings[op]["w"] += 1
+        elif g["result"] == "Loss": openings[op]["l"] += 1
+        else:                       openings[op]["d"] += 1
+    # Most played opening
+    top_opening = max(openings, key=lambda k: openings[k]["w"]+openings[k]["l"]+openings[k]["d"]) if openings else ""
+    return {
+        "total": total, "wins": wins, "losses": losses, "draws": draws,
+        "score": f"{wins}/{total}",
+        "top_opening": top_opening,
+        "openings": openings,
+    }
+
+# ─────────────────────────────────────────────────────────────
 # FP&A → CFO CAREER PATH
 # ─────────────────────────────────────────────────────────────
 
@@ -904,6 +1066,23 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .lead-side{padding:16px;border-left:1px solid var(--border)}
 .lead h2{font-size:20px;line-height:1.3;margin-bottom:10px}
 
+/* LICHESS */
+.chess-game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:12px}
+.game-card{background:var(--surface);border:1px solid var(--border);padding:14px;position:relative}
+.game-card.win{border-left:3px solid var(--green)}
+.game-card.loss{border-left:3px solid var(--red)}
+.game-card.draw{border-left:3px solid var(--muted)}
+.game-result{font-size:18px;font-weight:900;font-family:monospace}
+.game-result.win{color:var(--green)} .game-result.loss{color:var(--red)} .game-result.draw{color:var(--muted)}
+.game-meta{font-size:10px;color:var(--muted);font-family:monospace;margin:4px 0}
+.game-opening{font-size:11px;color:var(--gold);margin:5px 0;font-weight:700}
+.game-moves{font-size:10px;color:#555;font-family:monospace;margin-top:4px;line-height:1.5}
+.game-analysis{font-size:11px;color:#aaa;font-style:italic;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.lichess-summary{display:flex;gap:20px;padding:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.ls-stat{text-align:center}
+.ls-num{font-size:28px;font-weight:900;font-family:monospace}
+.ls-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:sans-serif}
+
 /* WISDOM / CHESS / CFO */
 .wisdom-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px}
 .wisdom-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
@@ -997,6 +1176,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#weather">🌤 Weather</a>
   <a href="#news">🌍 World</a>
   <a href="#markets">📊 Markets</a>
+  <a href="#lichess">♟ My Games</a>
   <a href="#quote">💬 Quote</a>
   <a href="#lesson">🌏 Lesson</a>
   <a href="#wisdom">🧘 Wisdom</a>
@@ -1084,6 +1264,51 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <p style="color:var(--muted)">Loading feeds...</p>
     {% endif %}
   </div>
+</section>
+
+<!-- LICHESS GAMES -->
+<section class="section" id="lichess">
+  <div class="label">♟ Yesterday's Chess — AKK_010 on Lichess
+    <a href="https://lichess.org/@/AKK_010" target="_blank" style="font-size:9px;color:var(--muted);margin-left:8px">profile →</a>
+  </div>
+  {% if lichess_games %}
+  <div class="lichess-summary">
+    <div class="ls-stat"><div class="ls-num" style="color:var(--green)">{{ lichess_summary.wins }}</div><div class="ls-label">Wins</div></div>
+    <div class="ls-stat"><div class="ls-num" style="color:var(--red)">{{ lichess_summary.losses }}</div><div class="ls-label">Losses</div></div>
+    <div class="ls-stat"><div class="ls-num" style="color:var(--muted)">{{ lichess_summary.draws }}</div><div class="ls-label">Draws</div></div>
+    <div class="ls-stat"><div class="ls-num" style="color:var(--accent)">{{ lichess_summary.score }}</div><div class="ls-label">Score</div></div>
+    <div style="margin-left:auto;font-size:11px;color:var(--muted)">
+      {% if lichess_summary.top_opening %}Most played: <strong style="color:var(--gold)">{{ lichess_summary.top_opening }}</strong>{% endif %}
+    </div>
+  </div>
+  <div class="chess-game-grid">
+    {% for g in lichess_games %}
+    <div class="game-card {{ g.result.lower() }}">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div>
+          <span class="game-result {{ g.result.lower() }}">{{ g.result_icon }} {{ g.result }}</span>
+          <span style="font-size:10px;color:var(--muted);margin-left:8px">as {{ g.my_side }}</span>
+        </div>
+        <a href="{{ g.url }}" target="_blank" style="font-size:9px;color:var(--muted)">review →</a>
+      </div>
+      <div class="game-opening">{{ g.eco }} {{ g.opening }}</div>
+      <div class="game-meta">
+        vs <strong style="color:var(--text)">{{ g.opponent }}</strong> ({{ g.opp_rating }}) · {{ g.tc }} · {{ g.moves }} moves · {{ g.termination }}
+      </div>
+      {% if g.key_moves %}
+      <div class="game-moves">Final moves: {{ g.key_moves }}</div>
+      {% endif %}
+      {% if g.analysis %}
+      <div class="game-analysis">💡 {{ g.analysis }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px">
+    No games played yesterday on Lichess · <a href="https://lichess.org/@/AKK_010" target="_blank">Play today →</a>
+  </div>
+  {% endif %}
 </section>
 
 <!-- WISDOM: BETTER PERSON · BETTER DAD -->
@@ -1311,20 +1536,22 @@ setTimeout(() => window.location.href = '/trading-dashboard/', 5 * 60 * 1000);
 def index():
     try:
         now     = datetime.now(IST)
-        markets = fetch_markets()
-        news    = fetch_global_news()
-        fpna    = get_fpna_tip()
-        cfo     = get_cfo_lesson()
-        chess   = get_chess_lesson()
-        wisdom  = get_wisdom_lesson()
-        top5    = get_top5_picks()
-        tracker = get_tracker_stocks()
-        money   = get_money_hack()
-        prod    = get_productivity_tip()
-        weather = fetch_weather()
-        quote   = get_entrepreneur_quote()
-        lesson  = get_world_lesson()
-        case    = get_case_study()
+        markets        = fetch_markets()
+        news           = fetch_global_news()
+        fpna           = get_fpna_tip()
+        cfo            = get_cfo_lesson()
+        chess          = get_chess_lesson()
+        wisdom         = get_wisdom_lesson()
+        top5           = get_top5_picks()
+        tracker        = get_tracker_stocks()
+        money          = get_money_hack()
+        prod           = get_productivity_tip()
+        weather        = fetch_weather()
+        quote          = get_entrepreneur_quote()
+        lesson         = get_world_lesson()
+        case           = get_case_study()
+        lichess_games  = fetch_lichess_games()
+        lichess_summary = get_lichess_summary(lichess_games)
 
         return render_template_string(TEMPLATE,
             date_str=now.strftime("%A, %B %d %Y"),
@@ -1334,6 +1561,7 @@ def index():
             top5=top5, tracker=tracker, money_hack=money,
             productivity_tip=prod, weather=weather,
             quote=quote, lesson=lesson, case=case,
+            lichess_games=lichess_games, lichess_summary=lichess_summary,
         )
     except Exception as e:
         log.error(f"index error: {e}")
@@ -1351,6 +1579,7 @@ def index():
             quote={"quote":"","name":"","index":0,"total":1},
             lesson={"tradition":"","lesson":"","source":""},
             case={"title":"","story":"","lesson":""},
+            lichess_games=[], lichess_summary={},
         ), 200
 
 @app.route("/tracker/add", methods=["POST"])

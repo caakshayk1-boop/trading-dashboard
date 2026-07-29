@@ -36,6 +36,8 @@ from newspaper import (
     get_tracker_stocks,
     get_money_hack,
     get_productivity_tip,
+    fetch_lichess_games,
+    get_lichess_summary,
     init_newspaper_db,
     TEMPLATE,
 )
@@ -77,6 +79,11 @@ def generate() -> None:
     top5    = get_top5_picks()
     tracker = get_tracker_stocks()
 
+    print("[generate] Fetching Lichess games...")
+    lichess_games   = fetch_lichess_games()
+    lichess_summary = get_lichess_summary(lichess_games)
+    print(f"[generate] Lichess: {len(lichess_games)} games yesterday")
+
     # Render template
     print("[generate] Rendering HTML...")
     html = Template(TEMPLATE).render(
@@ -96,6 +103,8 @@ def generate() -> None:
         productivity_tip=prod,
         top5=top5,
         tracker=tracker,
+        lichess_games=lichess_games,
+        lichess_summary=lichess_summary,
     )
 
     # Write output

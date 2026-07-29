@@ -65,6 +65,23 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .lead-side{padding:16px;border-left:1px solid var(--border)}
 .lead h2{font-size:20px;line-height:1.3;margin-bottom:10px}
 
+/* LICHESS */
+.chess-game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:12px}
+.game-card{background:var(--surface);border:1px solid var(--border);padding:14px;position:relative}
+.game-card.win{border-left:3px solid var(--green)}
+.game-card.loss{border-left:3px solid var(--red)}
+.game-card.draw{border-left:3px solid var(--muted)}
+.game-result{font-size:18px;font-weight:900;font-family:monospace}
+.game-result.win{color:var(--green)} .game-result.loss{color:var(--red)} .game-result.draw{color:var(--muted)}
+.game-meta{font-size:10px;color:var(--muted);font-family:monospace;margin:4px 0}
+.game-opening{font-size:11px;color:var(--gold);margin:5px 0;font-weight:700}
+.game-moves{font-size:10px;color:#555;font-family:monospace;margin-top:4px;line-height:1.5}
+.game-analysis{font-size:11px;color:#aaa;font-style:italic;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.lichess-summary{display:flex;gap:20px;padding:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.ls-stat{text-align:center}
+.ls-num{font-size:28px;font-weight:900;font-family:monospace}
+.ls-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:sans-serif}
+
 /* WISDOM / CHESS / CFO */
 .wisdom-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px}
 .wisdom-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
@@ -150,7 +167,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-meta">
     <span>news.askakshay.com · Personal Edition</span>
     <span>Wednesday, July 29 2026</span>
-    <span>21:37 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
+    <span>21:55 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
   </div>
 </div>
 
@@ -158,6 +175,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#weather">🌤 Weather</a>
   <a href="#news">🌍 World</a>
   <a href="#markets">📊 Markets</a>
+  <a href="#lichess">♟ My Games</a>
   <a href="#quote">💬 Quote</a>
   <a href="#lesson">🌏 Lesson</a>
   <a href="#wisdom">🧘 Wisdom</a>
@@ -180,25 +198,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">S&P 500</span>
-    <span>7349</span>
+    <span>7357</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24521</span>
+    <span>24584</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4068.6</span>
+    <span>$4068.0</span>
     <span class="up"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Crude</span>
-    <span>$84.79</span>
+    <span>$84.83</span>
     <span class="up"></span>
   </div>
   
@@ -210,7 +228,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63880</span>
+    <span>$63984</span>
     <span class="up"></span>
   </div>
   
@@ -232,14 +250,14 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     <div class="wx-card">
       <div class="wx-country">IN</div>
       <div class="wx-city">Bikaner</div>
-      <div class="wx-emoji">⛅</div>
-      <div class="wx-temp">31.6°C</div>
-      <div class="wx-cond">Partly Cloudy</div>
+      <div class="wx-emoji">🌦️</div>
+      <div class="wx-temp">31.4°C</div>
+      <div class="wx-cond">Light Drizzle</div>
       <div class="wx-range">↑ 37.3° · ↓ 29.3°</div>
       <div class="wx-meta">
         <span>💧 76%</span>
-        <span>💨 3.6 km/h</span>
-        <span>🌡 Feels 39.0°C</span>
+        <span>💨 4.2 km/h</span>
+        <span>🌡 Feels 38.7°C</span>
       </div>
       <div class="wx-rain lo">
         🌧 Rain chance: 22%
@@ -249,14 +267,14 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     <div class="wx-card">
       <div class="wx-country">IN</div>
       <div class="wx-city">Kolkata</div>
-      <div class="wx-emoji">☁️</div>
-      <div class="wx-temp">26.8°C</div>
-      <div class="wx-cond">Overcast</div>
+      <div class="wx-emoji">🌦️</div>
+      <div class="wx-temp">26.9°C</div>
+      <div class="wx-cond">Light Drizzle</div>
       <div class="wx-range">↑ 30.9° · ↓ 25.7°</div>
       <div class="wx-meta">
-        <span>💧 91%</span>
-        <span>💨 12.4 km/h</span>
-        <span>🌡 Feels 31.8°C</span>
+        <span>💧 90%</span>
+        <span>💨 12.0 km/h</span>
+        <span>🌡 Feels 31.9°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 100% — carry umbrella
@@ -267,13 +285,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">MY</div>
       <div class="wx-city">Kuala Lumpur</div>
       <div class="wx-emoji">☁️</div>
-      <div class="wx-temp">25.7°C</div>
+      <div class="wx-temp">25.6°C</div>
       <div class="wx-cond">Overcast</div>
       <div class="wx-range">↑ 31.4° · ↓ 23.7°</div>
       <div class="wx-meta">
-        <span>💧 93%</span>
-        <span>💨 0.0 km/h</span>
-        <span>🌡 Feels 32.1°C</span>
+        <span>💧 94%</span>
+        <span>💨 0.2 km/h</span>
+        <span>🌡 Feels 32.0°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 84% — carry umbrella
@@ -340,7 +358,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
         <div class="src">CNBC</div>
         <h3><a href="https://www.cnbc.com/2026/07/29/humana-hum-earnings-q2-2026.html" target="_blank" style="color:var(--text)">Humana tops quarterly estimates, maintains profit outlook as medical costs stay in line</a></h3>
         <p>Humana maintained its 2026 adjusted profit outlook of at least $9 per share, which some analysts called a "disappointment" amid high expecta</p>
-        <div class="ts">Jul 29 14:57</div>
+        <div class="ts">Jul 29 16:18</div>
       </div>
       
       <div class="ncard">
@@ -366,6 +384,20 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/technology/article/qualcomm-q3-earnings-to-highlight-ais-impact-on-smartphone-market-data-center-plans-160509349.html" target="_blank" style="color:var(--text)">Qualcomm Q3 earnings to highlight AI's impact on smartphone market, data center plans</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 16:05</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/healthcare/articles/explainer-j-j-finally-put-160252107.html" target="_blank" style="color:var(--text)">Explainer-Can J&J finally put the talc litigation behind it?</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 16:02</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
         <h3><a href="https://finance.yahoo.com/markets/live/stock-market-today-wednesday-july-29-dow-sp-500-nasdaq-082009165.html" target="_blank" style="color:var(--text)">Stock market today: Dow falls over 800 points, S&P 500 and Nasdaq slide in countdown to Fed decision, AI earnings test</a></h3>
         <p></p>
         <div class="ts">Jul 29 08:20</div>
@@ -379,28 +411,26 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       </div>
       
       <div class="ncard">
-        <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/markets/stocks/article/ram-jeep-parent-stellantis-needs-to-prove-turnaround-plan-is-working-h1-earnings-preview-154647532.html" target="_blank" style="color:var(--text)">Ram, Jeep parent Stellantis needs to prove turnaround plan is working: H1 earnings preview</a></h3>
-        <p></p>
-        <div class="ts">Jul 29 15:46</div>
-      </div>
-      
-      <div class="ncard">
         <div class="src">MarketWatch</div>
         <h3><a href="https://www.marketwatch.com/story/a-key-cryptocurrency-bill-could-flop-because-of-trumps-crypto-ventures-and-banks-objections-76b7445b?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">A key cryptocurrency bill could flop because of Trump’s crypto ventures and banks’ objections</a></h3>
         <p>The Clarity Act’s progress in May helped lift the price of bitcoin, but now the measure is facing obstacles in the full Senate.</p>
         <div class="ts">Jul 29 16:03</div>
       </div>
       
-      <div class="ncard">
-        <div class="src">MarketWatch</div>
-        <h3><a href="https://www.marketwatch.com/story/las-vegas-home-prices-post-largest-drop-in-the-nation-d39d6ecd?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">Las Vegas home prices post largest drop in the nation</a></h3>
-        <p>Among the largest U.S. cities, Las Vegas saw the biggest drop in home prices, while Chicago saw the biggest increase.</p>
-        <div class="ts">Jul 29 15:45</div>
-      </div>
-      
     
   </div>
+</section>
+
+<!-- LICHESS GAMES -->
+<section class="section" id="lichess">
+  <div class="label">♟ Yesterday's Chess — AKK_010 on Lichess
+    <a href="https://lichess.org/@/AKK_010" target="_blank" style="font-size:9px;color:var(--muted);margin-left:8px">profile →</a>
+  </div>
+  
+  <div style="padding:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px">
+    No games played yesterday on Lichess · <a href="https://lichess.org/@/AKK_010" target="_blank">Play today →</a>
+  </div>
+  
 </section>
 
 <!-- WISDOM: BETTER PERSON · BETTER DAD -->
@@ -437,25 +467,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">S&P 500</div>
-      <div class="mkt-price">7349</div>
+      <div class="mkt-price">7357</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24521</div>
+      <div class="mkt-price">24584</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4068.6</div>
+      <div class="mkt-price">$4068.0</div>
       <div class="mkt-chg up"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Crude</div>
-      <div class="mkt-price">$84.79</div>
+      <div class="mkt-price">$84.83</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -467,7 +497,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card u">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63880</div>
+      <div class="mkt-price">$63984</div>
       <div class="mkt-chg up"></div>
     </div>
     
