@@ -14,6 +14,7 @@ import pytz
 
 sys.path.insert(0, os.path.dirname(__file__))
 from telegram_bot import _post, TELEGRAM_TOKEN
+from symbols import to_yahoo
 import db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -391,7 +392,7 @@ def _load_cache():
 
 # ── Stock data ────────────────────────────────────────────────────────────────
 def _fetch(ticker: str):
-    sym = ticker.upper().replace("NSE:", "").strip() + ".NS"
+    sym = to_yahoo(ticker.upper().replace("NSE:", "").strip())
     try:
         s    = yf.Ticker(sym)
         info = s.info
@@ -857,252 +858,34 @@ def _atr14(high: pd.Series, low: pd.Series, close: pd.Series) -> float:
 
 
 def _scan_commodity_forex(ts: str, chat_id=None):
+    """CF scan — delegates to the shared cf_engine.
+
+    This was a 248-line near-duplicate of
+    scheduled_tasks_runner.run_cf_scan, with different R-multiples
+    (1.5/3.0/5.0 vs 1.5/2.5/4.0) and a different live-price source, so the
+    same instrument produced different alerts depending on which entry
+    point fired. Both now share one engine.
     """
-    CF scan — 1H candle signals with 4H RSI filter + Day H/L levels + Volume surge.
-
-    Signal logic:
-      BUY  : 4H RSI > 55 OR crossed above 55  +  price in upper half of day range
-              +  1H RSI 45–75 (momentum, not overbought)
-      SELL : 4H RSI < 45 OR crossed below 45  +  price in lower half of day range
-              +  1H RSI 25–55
-
-    SL  : tighter of (day_low − buffer) vs (price − 1.5×ATR_1H) for BUY
-          tighter of (day_high + buffer) vs (price + 1.5×ATR_1H) for SELL
-    T1/T2/T3 : 1.5R / 2.5R / 4R
-    Volume  : 1H vol vs 20-bar avg — flagged if ≥ 1.5×
-    """
-    from scanner import _yf_download as _yfd
-    import yfinance as _yf
-
-    # ── Per-session dedup: skip if same symbol+direction sent within 4h ────────
-    _cf_sent: dict = getattr(_scan_commodity_forex, "_sent_cache", {})
-    _scan_commodity_forex._sent_cache = _cf_sent
-    _now_ts = time.time()
-    CF_COOLDOWN = 4 * 3600   # 4 hours between same-direction signals
+    import cf_engine
 
     try:
-        alerts = []
-
-        for name, ticker in _CF_SYMBOLS.items():
-            try:
-                # ── Fetch data ───────────────────────────────────────────────
-                df1h = _yfd(ticker, period="7d",  interval="1h",  progress=False, auto_adjust=True)
-                df4h = _yfd(ticker, period="60d", interval="4h",  progress=False, auto_adjust=True)
-                df1d = _yfd(ticker, period="5d",  interval="1d",  progress=False, auto_adjust=True)
-
-                if df1h is None or len(df1h) < 20: continue
-                if df4h is None or len(df4h) < 16: continue
-                if df1d is None or len(df1d) < 2:  continue
-
-                c1h = df1h["Close"].squeeze()
-                h1h = df1h["High"].squeeze()
-                l1h = df1h["Low"].squeeze()
-
-                # ── Live price: 5m bar close — avoids GC=F contract-roll artifacts
-                try:
-                    df5m  = _yfd(ticker, period="1d", interval="5m", progress=False, auto_adjust=True)
-                    price = float(df5m["Close"].squeeze().iloc[-1]) if df5m is not None and len(df5m) > 0 else 0
-                except Exception:
-                    price = 0
-                if price <= 0:
-                    price = float(c1h.iloc[-1])   # hourly fallback
-                if price <= 0:
-                    continue
-
-                # ── Day High / Low ───────────────────────────────────────────
-                day_high  = float(df1d["High"].squeeze().iloc[-1])
-                day_low   = float(df1d["Low"].squeeze().iloc[-1])
-                day_open  = float(df1d["Open"].squeeze().iloc[-1])
-                prev_cls  = float(df1d["Close"].squeeze().iloc[-2])
-                day_mid   = (day_high + day_low) / 2
-                day_chg   = round((price - prev_cls) / prev_cls * 100, 2) if prev_cls > 0 else 0
-
-                # ── Filter: no range = bad data (day just opened or missing) ──
-                if day_high <= 0 or day_high == day_low:
-                    continue
-
-                # ── Filter: already moved >4% today = chasing, skip ──────────
-                if abs(day_chg) > 4:
-                    logging.info(f"CF skip {name}: day move {day_chg:.1f}% > 4% threshold")
-                    continue
-
-                # ── 1H ATR & RSI ─────────────────────────────────────────────
-                atr_1h  = _atr14(h1h, l1h, c1h)
-                if atr_1h <= 0:
-                    continue
-                rsi_1h  = float(_rsi14(c1h).iloc[-1])
-
-                # ── 4H RSI (current + prev bar for crossover detection) ──────
-                c4h         = df4h["Close"].squeeze()
-                rsi_4h_s    = _rsi14(c4h)
-                rsi_4h_cur  = float(rsi_4h_s.iloc[-1])
-                rsi_4h_prev = float(rsi_4h_s.iloc[-2])
-
-                # ── Volume surge (1H) ────────────────────────────────────────
-                vol_tag = ""
-                vol_surge = False
-                if "Volume" in df1h.columns:
-                    v1h     = df1h["Volume"].squeeze().replace(0, float("nan"))
-                    avg_v   = float(v1h.iloc[-20:].mean())
-                    cur_v   = float(v1h.iloc[-1])
-                    if avg_v > 0 and cur_v > 0:
-                        vr = round(cur_v / avg_v, 1)
-                        vol_surge = vr >= 1.5
-                        vol_tag   = f" 🔥 Vol `{vr}x`" if vol_surge else f" Vol `{vr}x`"
-
-                # ── Signal conditions ────────────────────────────────────────
-                bullish_4h = rsi_4h_cur > 55 or (rsi_4h_prev < 55 and rsi_4h_cur >= 55)
-                bearish_4h = rsi_4h_cur < 45 or (rsi_4h_prev > 45 and rsi_4h_cur <= 45)
-
-                if   bullish_4h and price >= day_mid and 45 <= rsi_1h <= 75:
-                    bias = "BUY"
-                elif bearish_4h and price <= day_mid and 25 <= rsi_1h <= 55:
-                    bias = "SELL"
-                else:
-                    continue
-
-                # ── Dedup: skip if same symbol+direction sent within 4 hours ──
-                cache_key = f"{name}_{bias}"
-                last_sent = _cf_sent.get(cache_key, 0)
-                if _now_ts - last_sent < CF_COOLDOWN:
-                    logging.info(f"CF dedup: {name} {bias} already sent {(_now_ts-last_sent)/3600:.1f}h ago — skip")
-                    continue
-
-                # ── SL : tighter of day-level vs ATR-level ───────────────────
-                if bias == "BUY":
-                    sl = max(
-                        round(day_low  * 0.9985, 4),   # just below day low
-                        round(price - 1.5 * atr_1h, 4) # 1.5× ATR
-                    )
-                    if sl >= price: sl = round(price - 1.5 * atr_1h, 4)
-                else:
-                    sl = min(
-                        round(day_high * 1.0015, 4),    # just above day high
-                        round(price + 1.5 * atr_1h, 4)
-                    )
-                    if sl <= price: sl = round(price + 1.5 * atr_1h, 4)
-
-                risk = abs(price - sl)
-                if risk <= 0:
-                    continue
-
-                # ── Targets (R-multiples of risk) — min 3:1 at T2 ───────────
-                d = 1 if bias == "BUY" else -1
-                t1 = round(price + d * 1.5 * risk, 4)
-                t2 = round(price + d * 3.0 * risk, 4)
-                t3 = round(price + d * 5.0 * risk, 4)
-                rr = round(abs(t2 - price) / risk, 1)
-                if rr < 2.5:
-                    continue
-
-                # ── Context labels ───────────────────────────────────────────
-                pct_from_high = round((day_high - price) / day_high * 100, 2) if day_high > 0 else 0
-                pct_from_low  = round((price - day_low)  / day_low  * 100, 2) if day_low  > 0 else 0
-                if   pct_from_high <= 0.3: level_lbl = "🔝 At Day High"
-                elif pct_from_low  <= 0.3: level_lbl = "🔻 At Day Low"
-                elif bias == "BUY":        level_lbl = f"Upper half · {pct_from_high:.1f}% below DH"
-                else:                      level_lbl = f"Lower half · {pct_from_low:.1f}% above DL"
-
-                if   rsi_4h_prev < 55 and rsi_4h_cur >= 55:
-                    rsi_lbl = f"4H RSI crossed ↑55 🚀 (`{rsi_4h_cur:.0f}`)"
-                elif rsi_4h_prev > 45 and rsi_4h_cur <= 45:
-                    rsi_lbl = f"4H RSI crossed ↓45 💧 (`{rsi_4h_cur:.0f}`)"
-                elif bias == "BUY":
-                    rsi_lbl = f"4H RSI `{rsi_4h_cur:.0f}` (bullish zone)"
-                else:
-                    rsi_lbl = f"4H RSI `{rsi_4h_cur:.0f}` (bearish zone)"
-
-                sign    = "+" if day_chg >= 0 else ""
-                emoji   = "📈" if bias == "BUY" else "📉"
-
-                # TradingView link — strip =X / =F suffix for cleaner symbol
-                tv_sym = ticker.replace("=X", "").replace("=F", "").replace("^", "")
-                tv_link = f"https://in.tradingview.com/chart/?symbol={tv_sym}"
-
-                alerts.append({
-                    "name": name, "ticker": ticker, "bias": bias,
-                    "price": price, "sl": sl, "t1": t1, "t2": t2, "t3": t3,
-                    "rr": rr, "risk": risk,
-                    "day_high": day_high, "day_low": day_low,
-                    "rsi_4h": rsi_4h_cur, "rsi_1h": rsi_1h,
-                    "vol_tag": vol_tag, "vol_surge": vol_surge,
-                    "level_lbl": level_lbl, "rsi_lbl": rsi_lbl,
-                    "day_chg": day_chg, "sign": sign, "emoji": emoji,
-                    "tv_link": tv_link,
-                })
-
-            except Exception as e:
-                logging.warning(f"CF scan {name}: {e}")
-
-        # ── Format & send ────────────────────────────────────────────────────
-        if alerts:
-            lines = [
-                f"🌍 *Forex & Commodity Signals* — {ts}",
-                f"_1H candle · 4H RSI cross · Day H/L · Vol surge_\n",
-            ]
-            for a in alerts:
-                lines.append(
-                    f"━━━━━━━━━━━━━━\n"
-                    f"{a['emoji']} *{a['name']}* | *{a['bias']}*{a['vol_tag']}\n"
-                    f"Price `{a['price']:.4f}` ({a['sign']}{a['day_chg']:.2f}% day)\n"
-                    f"Day H/L: `{a['day_high']:.4f}` / `{a['day_low']:.4f}`\n"
-                    f"📍 {a['level_lbl']}\n"
-                    f"📊 {a['rsi_lbl']} · 1H RSI `{a['rsi_1h']:.0f}`\n\n"
-                    f"*Entry:* `{a['price']:.4f}`\n"
-                    f"*SL:*    `{a['sl']:.4f}`\n"
-                    f"*T1:* `{a['t1']:.4f}`  _(1.5R)_\n"
-                    f"*T2:* `{a['t2']:.4f}`  _(3R)_\n"
-                    f"*T3:* `{a['t3']:.4f}`  _(5R)_\n"
-                    f"R:R `{a['rr']}:1`\n"
-                    f"[📊 Chart]({a['tv_link']})"
-                )
-                # Log to DB
-                try:
-                    from tracker import log_to_all_signals, init_db
-                    init_db()
-                    log_to_all_signals(
-                        a["name"], "cf_1h", a["bias"],
-                        a["price"], a["sl"], a["t1"], a["t2"], a["t3"],
-                        a["rr"], timeframe="1H", score=0,
-                        metadata={"rsi_4h": round(a["rsi_4h"], 1),
-                                  "rsi_1h": round(a["rsi_1h"], 1),
-                                  "day_high": a["day_high"],
-                                  "day_low":  a["day_low"],
-                                  "vol_surge": a["vol_surge"],
-                                  "ticker": a["ticker"]}
-                    )
-                except Exception as _e:
-                    logging.debug(f"CF DB log {a['name']}: {_e}")
-
-            # Mark all fired signals as sent (dedup cache)
-            for a in alerts:
-                _cf_sent[f"{a['name']}_{a['bias']}"] = _now_ts
-
-            lines.append("\n_Not SEBI advice · @askakshayfinance_")
-            _post("\n".join(lines), chat_id)
-            logging.info(f"CF scan: {len(alerts)} signals pushed")
-            _push_signals_to_github()   # keep TradeFlow Pro in sync
-            # Sync CF signals to Obsidian daily note
-            try:
-                from obsidian_sync import write_cf_signals_to_obsidian
-                write_cf_signals_to_obsidian(alerts)
-            except Exception as _oe:
-                logging.debug(f"Obsidian CF sync: {_oe}")
-
-        elif chat_id:
-            _post(
-                f"🌍 *CF Scan done — {ts}*\n"
-                f"No setups right now.\n"
-                f"_4H RSI not in zone · or price not aligned with Day H/L_\n"
-                f"_(Gold · Silver · Crude · NatGas · USDINR · EURINR)_",
-                chat_id
-            )
-            logging.info("CF scan: no signals found")
-
+        signals = cf_engine.scan()
     except Exception as e:
-        logging.error(f"CF scan error: {e}")
-        if chat_id:
-            _post(f"❌ CF scan error: {str(e)[:150]}", chat_id)
+        logging.error(f"CF scan failed: {e}")
+        return []
+
+    if not signals:
+        logging.info("CF scan: no setup passed the gates")
+        return []
+
+    body = ["\U0001F30D *Forex & Commodity Signals* \u2014 " + ts,
+            "_1H entry \u00b7 4H regime \u00b7 structural targets_\n"]
+    for s in signals:
+        body.append(cf_engine.format_alert(s))
+    body.append("\n_Not SEBI advice \u00b7 @askakshayfinance_")
+    _post("\n".join(body), chat_id=chat_id)
+    logging.info(f"CF scan: {len(signals)} signal(s) sent")
+    return signals
 
 
 def _run_intraday_scan():
