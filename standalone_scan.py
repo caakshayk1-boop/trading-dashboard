@@ -391,6 +391,50 @@ def run_swing_scan(time_str):
     return signals
 
 
+def run_measured_equity_scan(time_str):
+    """Equity signals from the backtested engine (equity_engine / cf_engine core).
+
+    Unlike run_swing_scan, these targets come from real swing structure and the
+    R:R is measured off them rather than being a fixed multiple of the stop.
+
+    EOD ONLY. The backtest evaluated on completed daily closes — 459 trades,
+    45.8% win, +0.171R expectancy over 5y on 30 liquid names. Running this on a
+    half-formed intraday bar would not be the same strategy and the measured
+    expectancy would not carry over.
+    """
+    import equity_engine
+    from cf_engine import format_alert
+    from tracker import log_to_all_signals, init_db
+
+    init_db()
+    logging.info("Running measured equity scan (EOD, daily close)...")
+    signals = equity_engine.scan(horizon="swing")
+    logging.info(f"Measured equity scan: {len(signals)} signal(s)")
+    if not signals:
+        return []
+
+    body = [f"\U0001F4CF *Measured Equity Signals* — {time_str}",
+            "_Daily close · weekly regime · structural targets_\n"]
+    for s in signals:
+        body.append(format_alert(s))
+    body.append("\n_Backtested +0.171R/trade · not SEBI advice_")
+    _send("\n".join(body))
+
+    for s in signals:
+        try:
+            log_to_all_signals(
+                s["name"], "equity_measured", s["bias"], s["price"], s["sl"],
+                s["t1"], s["t2"], s["t3"], s["rr"], timeframe="1D",
+                score=s["score"],
+                metadata={"rsi_4h": s["rsi_4h"], "vol_ratio": s["vol_ratio"],
+                          "target_source": s["target_source"],
+                          "sl_atr_mult": s["sl_atr_mult"]},
+            )
+        except Exception as e:
+            logging.debug(f"measured equity DB log: {e}")
+    return signals
+
+
 def run_breakout_scan(time_str):
     from scanner import scan_breakouts
     from tracker import log_breakouts, log_to_all_signals, is_duplicate
@@ -584,8 +628,11 @@ def main():
             tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
             signals   = _safe("swing_scan",    run_swing_scan,     time_str)
             comms     = _safe("commodity_scan",run_commodity_scan, time_str)
+            # Backtested engine — runs on the completed daily bar, as tested.
+            measured  = _safe("measured_equity", run_measured_equity_scan, time_str)
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
-                         "swing": len(signals), "commodities": len(comms)}
+                         "swing": len(signals), "commodities": len(comms),
+                         "measured": len(measured)}
 
         elif slot == "weekend":
             sigs_4h   = _safe("4h_scan",       run_4h_scan,        time_str)

@@ -30,21 +30,36 @@ from cf_engine import Config, CONFIG, evaluate, REJECTS
 from symbols import to_yahoo
 
 SYMBOLS = ["GOLD", "SILVER", "CRUDE", "NATGAS"]
-HORIZON = 48          # 1H bars allowed for a trade to resolve (~2 sessions)
-WARMUP  = 120         # bars before the first evaluation
+
+# Per asset class: bars allowed for a trade to resolve, warmup before the
+# first evaluation, and how long the regime frame must be.
+PROFILES = {
+    "cf":     {"horizon": 48, "warmup": 120, "regime_min": 60, "bar_hours": 1},
+    "equity": {"horizon": 20, "warmup": 260, "regime_min": 55, "bar_hours": 24},
+}
 
 
-def load(symbol: str):
+def load(symbol: str, asset: str = "cf"):
     """Fetch the three frames evaluate() needs. Returns None if data is short."""
-    t = to_yahoo(symbol)
-    d1h = yf.download(t, period="730d", interval="1h", progress=False, auto_adjust=True)
-    d4h = yf.download(t, period="730d", interval="4h", progress=False, auto_adjust=True)
-    d1d = yf.download(t, period="730d", interval="1d", progress=False, auto_adjust=True)
-    if any(d is None or len(d) < WARMUP for d in (d1h, d4h, d1d)):
+    warmup = PROFILES[asset]["warmup"]
+    if asset == "equity":
+        import equity_engine
+        got = equity_engine.fetch(symbol, horizon="swing")
+        if got is None:
+            return None
+        entry, regime, daily, _ = got
+        frames = (entry, regime, daily)
+    else:
+        t = to_yahoo(symbol)
+        frames = tuple(
+            yf.download(t, period="730d", interval=iv, progress=False, auto_adjust=True)
+            for iv in ("1h", "4h", "1d")
+        )
+    if any(d is None or len(d) < warmup for d in frames):
         return None
-    for d in (d1h, d4h, d1d):
+    for d in frames:
         d.index = pd.to_datetime(d.index, utc=True)
-    return d1h, d4h, d1d
+    return frames
 
 
 def resolve(sig, future: pd.DataFrame):
@@ -77,19 +92,23 @@ def resolve(sig, future: pd.DataFrame):
     return "flat", r
 
 
-def run_symbol(symbol, frames, cfg):
+def run_symbol(symbol, frames, cfg, asset="cf"):
+    p = PROFILES[asset]
+    horizon, warmup, regime_min = p["horizon"], p["warmup"], p["regime_min"]
+    cooldown = horizon * p["bar_hours"] * 3600
+
     d1h, d4h, d1d = frames
     trades, last_ts = [], None
 
-    for i in range(WARMUP, len(d1h) - 1):
+    for i in range(warmup, len(d1h) - 1):
         ts = d1h.index[i]
-        # 4h/1d frames sliced to information available at ts — no look-ahead.
+        # regime/daily frames sliced to what was knowable at ts — no look-ahead.
         s4 = d4h[d4h.index <= ts]
         s1 = d1d[d1d.index <= ts]
-        if len(s4) < 60 or len(s1) < 2:
+        if len(s4) < regime_min or len(s1) < 2:
             continue
         # One open trade per symbol at a time.
-        if last_ts is not None and (ts - last_ts).total_seconds() < HORIZON * 3600:
+        if last_ts is not None and (ts - last_ts).total_seconds() < cooldown:
             continue
 
         sig = evaluate(symbol, d1h.iloc[:i + 1], s4, s1,
@@ -97,7 +116,7 @@ def run_symbol(symbol, frames, cfg):
         if not sig:
             continue
 
-        window = d1h.iloc[i + 1:i + 1 + HORIZON]
+        window = d1h.iloc[i + 1:i + 1 + horizon]
         if len(window) < 2:
             continue                      # not enough future data to judge
         outcome, r = resolve(sig, window)
@@ -128,22 +147,34 @@ def report(trades, label=""):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--symbols", default=",".join(SYMBOLS))
+    ap.add_argument("--asset", default="cf", choices=["cf", "equity"])
+    ap.add_argument("--symbols", default=None)
     ap.add_argument("--sweep", action="append", default=[],
                     help="field=v1,v2,v3 — repeatable, cartesian product")
     args = ap.parse_args()
 
-    syms = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
+    if args.symbols:
+        syms = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
+    elif args.asset == "equity":
+        import equity_engine
+        syms = equity_engine.LIQUID
+    else:
+        syms = SYMBOLS
 
-    print(f"Loading {len(syms)} symbols (730d of 1h/4h/1d)...")
+    base = CONFIG
+    if args.asset == "equity":
+        import equity_engine
+        base = equity_engine.EQUITY_CONFIG
+
+    print(f"Loading {len(syms)} {args.asset} symbols...")
     data = {}
     for s in syms:
-        f = load(s)
+        f = load(s, args.asset)
         if f is None:
             print(f"  {s}: insufficient data — skipped")
             continue
         data[s] = f
-        print(f"  {s}: {len(f[0])} 1H bars")
+        print(f"  {s}: {len(f[0])} entry bars")
     if not data:
         sys.exit("No usable data.")
 
@@ -157,12 +188,12 @@ def main():
     print(f"\n{len(grid)} config(s) to evaluate\n" + "=" * 66)
     results = []
     for overrides in grid:
-        cfg = replace(CONFIG, **overrides) if overrides else CONFIG
+        cfg = replace(base, **overrides) if overrides else base
         label = ", ".join(f"{k}={v}" for k, v in overrides.items()) or "default"
         print(f"\n[{label}]")
         allt = []
         for s, frames in data.items():
-            t = run_symbol(s, frames, cfg)
+            t = run_symbol(s, frames, cfg, args.asset)
             report(t, f"{s:8} ")
             allt += t
         agg = report(allt, "ALL      ")
