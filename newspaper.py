@@ -60,11 +60,13 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
             # badge colour logic
             s = (r.get("status") or "").upper()
             lc = (r.get("lifecycle_status") or "").upper()
-            if s == "TARGET_HIT" or lc == "TARGET_HIT":
+            WIN_STATUSES  = {"TARGET_HIT", "T1_HIT", "T2_HIT", "TP1_HIT", "TP2_HIT", "PROFIT"}
+            LOSS_STATUSES = {"SL_HIT", "STOPPED", "STOP_HIT", "LOSS"}
+            if s in WIN_STATUSES or lc in WIN_STATUSES:
                 badge = "win"
-            elif s in ("SL_HIT", "STOPPED") or lc in ("SL_HIT", "STOPPED"):
+            elif s in LOSS_STATUSES or lc in LOSS_STATUSES:
                 badge = "loss"
-            elif s == "OPEN":
+            elif s == "OPEN" or lc == "OPEN":
                 badge = "open"
             else:
                 badge = "cancelled"
@@ -2324,7 +2326,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
           <td style="font-family:monospace">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
           <td style="font-family:monospace" class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else '') }}">{{ a.pnl_str }}</td>
           <td style="font-family:monospace;color:var(--muted)">{{ a.close_date }}</td>
-          <td><span class="badge badge-{{ a.badge }}">{{ a.status or 'OPEN' }}</span></td>
+          <td><span class="badge badge-{{ a.badge }}">{% if a.badge == 'win' %}✅ WIN{% elif a.badge == 'loss' %}❌ SL HIT{% elif a.badge == 'open' %}🔵 OPEN{% else %}{{ a.status or '—' }}{% endif %}</span></td>
         </tr>
       {% endfor %}
       </tbody>
