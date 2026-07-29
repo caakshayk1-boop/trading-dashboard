@@ -7,7 +7,12 @@ Fires a Telegram alert for every stock where the LATEST weekly candle
 closed ABOVE the 200-week MA for the first time (new crossover) OR
 is in a persistent weekly uptrend (price > 200WMA AND was below last week).
 
-Run via GitHub Actions weekly (Monday morning IST).
+Cadence: MONTHLY, on the LAST Saturday of the month (06:30 IST).
+The workflow cron fires every Saturday; is_last_saturday() below gates it
+down to one run per month. GitHub cron cannot express "last Saturday"
+directly — combining day-of-month with day-of-week ORs the two fields
+rather than ANDing them, so the gate has to live here.
+Override with FORCE_RUN=1 (set on manual workflow_dispatch).
 """
 
 import os, sys, json, logging, time
@@ -172,5 +177,23 @@ def run():
     log.info(f"Saved {len(results)} signals to data/global_200ma.json")
 
 
+def is_last_saturday(dt: datetime) -> bool:
+    """True if dt falls on the last Saturday of its month.
+
+    Saturday is weekday 5. It is the last one when the same weekday
+    seven days later has rolled into the following month.
+    """
+    return dt.weekday() == 5 and (dt + timedelta(days=7)).month != dt.month
+
+
 if __name__ == "__main__":
+    now = datetime.now(IST)
+    if os.environ.get("FORCE_RUN") == "1":
+        log.info("FORCE_RUN=1 — bypassing last-Saturday gate")
+    elif not is_last_saturday(now):
+        log.info(
+            f"{now:%a %d %b %Y} is not the last Saturday of the month — skipping. "
+            "Screener runs monthly."
+        )
+        sys.exit(0)
     run()

@@ -1,9 +1,12 @@
-name: Global 200WMA Weekly Screener
+name: Global 200WMA Monthly Screener
 
-# Every Monday 6:30 AM IST = Sunday 01:00 UTC
+# Fires every Saturday 06:30 AM IST = Saturday 01:00 UTC.
+# global_200ma_screener.py exits immediately unless it is the LAST Saturday
+# of the month, so this runs once a month. The gate lives in Python because
+# cron ORs day-of-month with day-of-week and so cannot express "last Saturday".
 on:
   schedule:
-    - cron: '0 1 * * 1'
+    - cron: '0 1 * * 6'
   workflow_dispatch:
 
 permissions:
@@ -31,6 +34,9 @@ jobs:
           pip install "yfinance>=0.2.40" pandas numpy requests
 
       - name: Run global 200WMA screener
+        env:
+          # Manual runs bypass the last-Saturday gate; scheduled runs respect it.
+          FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
         run: python global_200ma_screener.py
 
       - name: Commit results
