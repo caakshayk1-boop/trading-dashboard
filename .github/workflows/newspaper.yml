@@ -33,6 +33,7 @@ jobs:
           OBSIDIAN_GITHUB_REPO: caakshayk1-boop/obsidian-brain
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+          LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
         run: python generate.py
 
       - name: Commit & push docs/index.html
