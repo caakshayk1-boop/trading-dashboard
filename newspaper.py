@@ -2447,7 +2447,10 @@ def _start_scheduler():
 # ─────────────────────────────────────────────────────────────
 
 def _startup():
-    init_newspaper_db()
+    try:
+        init_newspaper_db()
+    except Exception as e:
+        logging.warning(f"DB init skipped (read-only token?): {e}")
     try:
         from content_cache import invalidate
         invalidate()
