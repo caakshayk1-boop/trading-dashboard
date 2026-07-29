@@ -183,6 +183,75 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:640px){.two{grid-template-columns:1fr}}
 
+/* ── MOBILE ─────────────────────────────────────────────── */
+@media(max-width:600px){
+  /* masthead */
+  .masthead{flex-direction:column;align-items:flex-start;padding:8px 12px;gap:6px}
+  .paper-name{font-size:17px;letter-spacing:2px}
+  .paper-meta{border-top:none;padding-top:0;font-size:9px;gap:8px}
+
+  /* nav: smaller text, hide less important items */
+  .nav a{padding:8px 10px;font-size:9px;letter-spacing:0.5px}
+
+  /* main padding */
+  .main{padding:0 8px}
+  .section{margin:16px 0;padding-top:12px}
+
+  /* markets: 2 columns on mobile */
+  .mkt-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .mkt-price{font-size:15px}
+
+  /* quote */
+  .quote-text{font-size:14px}
+  .quote-card{padding:16px}
+
+  /* lichess summary stats: 3 per row */
+  .lichess-summary{gap:10px;padding:10px}
+  .ls-num{font-size:20px}
+
+  /* chess game cards: full width */
+  .chess-game-grid{grid-template-columns:1fr}
+
+  /* alert table: scroll container + hide less critical columns */
+  .alert-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .alert-tbl{font-size:10px;min-width:520px}
+  .alert-stats{gap:10px;padding:10px;flex-wrap:wrap}
+  .ast-num{font-size:14px}
+
+  /* alert filters wrap */
+  .alert-filters{gap:6px}
+  .af-btn{padding:4px 8px;font-size:8px}
+
+  /* picks grid: 2 cols */
+  .pick-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .pick-price{font-size:18px}
+
+  /* tracker table scroll */
+  .overflow{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl{font-size:11px;min-width:480px}
+
+  /* book/wisdom/case cards */
+  .book-card,.wisdom-card,.chess-card,.cfo-card,.case-card,.lesson-card{padding:14px}
+  .quote-text{font-size:14px}
+  .book-body,.wisdom-body,.chess-body,.cfo-body,.case-story{font-size:12px}
+
+  /* weather: already 1-col at 700px */
+  .wx-card{padding:12px}
+  .wx-temp{font-size:22px}
+  .wx-emoji{font-size:28px}
+
+  /* tip cards */
+  .tip-card{padding:12px}
+  .tip-card p{font-size:12px}
+
+  /* ticker strip */
+  .ticker{padding:5px 0}
+  .t-item{padding:0 10px;font-size:10px}
+
+  /* section label smaller */
+  .label{font-size:8px;letter-spacing:2px}
+}
+
 /* FORMS */
 .form-box{background:var(--surface);border:1px solid var(--border);padding:15px;margin-top:14px}
 .form-box h4{color:var(--accent);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
@@ -202,7 +271,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-name">THE DAILY SIGNAL</div>
   <div class="paper-meta">
     <span>Wednesday, July 29 2026</span>
-    <span>23:14 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻</a></span>
+    <span>23:23 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻</a></span>
   </div>
 </div>
 
@@ -236,25 +305,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">S&P 500</span>
-    <span>7381</span>
+    <span>7385</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24716</span>
+    <span>24741</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4096.7</span>
+    <span>$4103.2</span>
     <span class="up"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Crude</span>
-    <span>$84.67</span>
+    <span>$84.38</span>
     <span class="up"></span>
   </div>
   
@@ -266,7 +335,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63883</span>
+    <span>$64021</span>
     <span class="up"></span>
   </div>
   
@@ -289,13 +358,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Bikaner</div>
       <div class="wx-emoji">🌤️</div>
-      <div class="wx-temp">31.0°C</div>
+      <div class="wx-temp">30.9°C</div>
       <div class="wx-cond">Mainly Clear</div>
       <div class="wx-range">↑ 37.3° · ↓ 29.3°</div>
       <div class="wx-meta">
-        <span>💧 74%</span>
-        <span>💨 8.8 km/h</span>
-        <span>🌡 Feels 37.0°C</span>
+        <span>💧 73%</span>
+        <span>💨 9.2 km/h</span>
+        <span>🌡 Feels 36.7°C</span>
       </div>
       <div class="wx-rain lo">
         🌧 Rain chance: 22%
@@ -306,13 +375,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Kolkata</div>
       <div class="wx-emoji">⛈️</div>
-      <div class="wx-temp">26.4°C</div>
+      <div class="wx-temp">26.0°C</div>
       <div class="wx-cond">Thunderstorm</div>
       <div class="wx-range">↑ 30.9° · ↓ 25.7°</div>
       <div class="wx-meta">
-        <span>💧 92%</span>
-        <span>💨 11.8 km/h</span>
-        <span>🌡 Feels 31.4°C</span>
+        <span>💧 94%</span>
+        <span>💨 12.8 km/h</span>
+        <span>🌡 Feels 30.8°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 100% — carry umbrella
@@ -328,7 +397,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-range">↑ 31.4° · ↓ 23.7°</div>
       <div class="wx-meta">
         <span>💧 96%</span>
-        <span>💨 0.4 km/h</span>
+        <span>💨 0.5 km/h</span>
         <span>🌡 Feels 31.5°C</span>
       </div>
       <div class="wx-rain hi">
@@ -422,6 +491,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/personal-finance/insurance/article/types-of-life-insurance-173512440.html" target="_blank" style="color:var(--text)">Types of life insurance: A complete guide</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 17:35</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
         <h3><a href="https://finance.yahoo.com/markets/live/stock-market-today-wednesday-july-29-dow-sp-500-nasdaq-082009165.html" target="_blank" style="color:var(--text)">Stock market today: Dow falls over 800 points, S&P 500 and Nasdaq slide in countdown to Fed decision, AI earnings test</a></h3>
         <p></p>
         <div class="ts">Jul 29 08:20</div>
@@ -429,16 +505,16 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/energy/articles/totalenergies-tte-posts-war-driven-165209577.html" target="_blank" style="color:var(--text)">TotalEnergies (TTE) Posts A War-Driven Earnings Surge, But The Real Test Is What Happens To LNG Once It Fades</a></h3>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/automatic-data-processing-inc-q4-172655237.html" target="_blank" style="color:var(--text)">Automatic Data Processing, Inc. Q4 2026 Earnings Call Summary</a></h3>
         <p></p>
-        <div class="ts">Jul 29 16:52</div>
+        <div class="ts">Jul 29 17:26</div>
       </div>
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://www.investors.com/research/ibd-stock-of-the-day/datadog-stock-earnings-high-expectations-artificial-intelligence/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Datadog, IBD Stock Of The Day, Rides AI Momentum Ahead Of Earnings Report</a></h3>
+        <h3><a href="https://www.investors.com/news/robinhood-earnings-q2-robinhood-stock-coinbase/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Robinhood Earnings Due. Here Is What To Watch And Expect.</a></h3>
         <p></p>
-        <div class="ts">Jul 29 16:45</div>
+        <div class="ts">Jul 29 17:24</div>
       </div>
       
       <div class="ncard">
@@ -446,13 +522,6 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
         <h3><a href="https://www.marketwatch.com/story/individual-investors-are-dumping-stocks-at-the-fastest-pace-since-the-covid-crash-42b46756?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">Individual investors are dumping stocks at the fastest pace since the COVID crash</a></h3>
         <p>Individual investors just recorded “their largest net selling of single stocks since the COVID crash,” according to Vanda Research.</p>
         <div class="ts">Jul 29 17:40</div>
-      </div>
-      
-      <div class="ncard">
-        <div class="src">MarketWatch</div>
-        <h3><a href="https://www.marketwatch.com/story/ive-seen-families-destroyed-by-this-common-estate-planning-mistake-heres-how-to-protect-yours-4f997564?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">I’ve seen families destroyed by this common estate-planning mistake. Here’s how to protect yours.</a></h3>
-        <p>It’s not enough to do everything “right” on paper.</p>
-        <div class="ts">Jul 29 17:18</div>
       </div>
       
     
@@ -474,9 +543,6 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     <div class="ls-stat"><div class="ls-num" style="color:var(--gold)">67%</div><div class="ls-label">Win Rate</div></div>
     <div class="ls-stat"><div class="ls-num">12</div><div class="ls-label">Games</div></div>
     
-    <div class="ls-stat"><div class="ls-num" style="color:var(--accent)">0</div><div class="ls-label">Upsets</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--red)">0</div><div class="ls-label">Collapses</div></div>
-    
   </div>
 
   <!-- ── AI SESSION VERDICT ── -->
@@ -490,628 +556,28 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
   <!-- ── OPENING INTEL (full mode) ── -->
   
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-    
-    <div style="flex:1;padding:10px 14px;background:#1a0a0a;border:1px solid var(--red)">
-      <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:4px">📚 Study This Opening</div>
-      <div style="font-size:12px;color:#f87171">C25 Vienna Game (0/2 = 0% WR)</div>
-    </div>
-    
-    
-    <div style="flex:1;padding:10px 14px;background:#0a1a0a;border:1px solid var(--green)">
-      <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:4px">💪 Strongest Opening</div>
-      <div style="font-size:12px;color:#86efac">C41 Philidor Defense (3/3 = 100% WR)</div>
-    </div>
-    
-  </div>
-  
 
   <!-- ── PER-GAME CARDS (full mode) ── -->
   
-  <div class="chess-game-grid">
+  <!-- ── ACTIVITY MODE — speed breakdown cards ── -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
     
-    <div class="game-card loss" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">❌</span>
-        <span style="font-weight:700;font-size:13px;color:var(--red)">Loss</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/MGJVRQ5X" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 18px;min-width:140px;flex:1">
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Blitz</div>
+      <div style="font-size:22px;font-weight:700;font-family:monospace;color:var(--green)">67%</div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">
+        <span style="color:var(--green)">W8</span> ·
+        <span style="color:var(--red)">L4</span> ·
+        <span style="color:var(--muted)">D0</span> · 12 games
       </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">C25</span>
-        Vienna Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">Rialvare</strong>
-        <span style="color:var(--muted)">(1554)</span>
-        · Me: 1555
-        · 27 moves · Checkmate
-        
-        · <span style="color:var(--red)">-6 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">e4 e5 Nc3 d6 f4 exf4 Nf3 Bg4 d4 a6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Ka8 Nxe8 Rxe8 Ra7+ Kb8 Qc7#</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/8K0wbana" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">C41</span>
-        Philidor Defense
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">Gfmnsk</strong>
-        <span style="color:var(--muted)">(1535)</span>
-        · Me: 1549
-        · 22 moves · Resignation
-        
-        · <span style="color:var(--green)">+6 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">e4 e5 Nf3 d6 c3 Bg4 d4 exd4 cxd4 a6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">hxg7 Nxh1 gxf8=Q+ Qxf8 Bxa6 Rxa6</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card loss" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">❌</span>
-        <span style="font-weight:700;font-size:13px;color:var(--red)">Loss</span>
-        <span style="font-size:10px;color:var(--muted)">as White</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/qwEBFscU" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">D00</span>
-        Queen's Pawn Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">grga1712</strong>
-        <span style="color:var(--muted)">(1628)</span>
-        · Me: 1554
-        · 33 moves · Checkmate
-        
-        · <span style="color:var(--red)">-5 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">d4 d5 e3 e6 c4 Nf6 cxd5 Nxd5 e4 Nf6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">f3 Rxg2+ Kh1 Rh8 Rab1 Rhxh2#</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card loss" style="position:relative">
-      <!-- badges -->
-      
-      
-      <div style="position:absolute;top:8px;right:8px;background:#1c1c1c;color:#aaa;font-size:8px;padding:2px 6px;letter-spacing:1px">44M EPIC</div>
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">❌</span>
-        <span style="font-weight:700;font-size:13px;color:var(--red)">Loss</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/YBgeFDKr" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">C25</span>
-        Vienna Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">Vanosk</strong>
-        <span style="color:var(--muted)">(1620)</span>
-        · Me: 1559
-        · 44 moves · Checkmate
-        
-        · <span style="color:var(--red)">-5 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">e4 e5 Nc3 d6 Bc4 Nf6 Nf3 Bg4 h3 Bh5</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Rxd7 Qh8+ Bh7 Qf6+ Bg6 Rh8#</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/P3wPOXMb" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">C41</span>
-        Philidor Defense
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">Unnar</strong>
-        <span style="color:var(--muted)">(1557)</span>
-        · Me: 1553
-        · 38 moves · Checkmate
-        
-        · <span style="color:var(--green)">+6 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">e4 e5 Nf3 d6 Bc4 Bg4 d3 h6 Nbd2 Nf6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Ka6 Qa4+ Kb7 Qd7+ Kb8 Rc8#</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      <div style="position:absolute;top:8px;right:8px;background:#1c1c1c;color:#aaa;font-size:8px;padding:2px 6px;letter-spacing:1px">50M EPIC</div>
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as White</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/HRRgNCY1" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">D00</span>
-        Queen's Pawn Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">cbke</strong>
-        <span style="color:var(--muted)">(1582)</span>
-        · Me: 1547
-        · 50 moves · Time Out
-        
-        · <span style="color:var(--green)">+6 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">d4 d5 e3 Bf5 c4 e6 c5 b6 b4 a5</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Kxh5 Qf7+ Kg5 Qxg7+ Kf5 Qh7+</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      <div style="position:absolute;top:8px;right:8px;background:#1c1c1c;color:#aaa;font-size:8px;padding:2px 6px;letter-spacing:1px">46M EPIC</div>
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/TPozpxHk" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">C41</span>
-        Philidor Defense
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">Tushar7827</strong>
-        <span style="color:var(--muted)">(1511)</span>
-        · Me: 1541
-        · 46 moves · Resignation
-        
-        · <span style="color:var(--green)">+6 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">e4 e5 Nf3 d6 Bc4 Bg4 h3 Bh5 g4 Bg6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">b5 Qf3+ Kg1 Qxh3 b6 Qxg4+</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as White</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/H40m8diT" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">D00</span>
-        Queen's Pawn Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">astro1011</strong>
-        <span style="color:var(--muted)">(1624)</span>
-        · Me: 1534
-        · 30 moves · Resignation
-        
-        · <span style="color:var(--green)">+7 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">d4 d5 e3 e6 c4 c5 dxc5 Bxc5 cxd5 Nf6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Ke6 Rxb7 a6 Rc7 g6 Rc6+</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card loss" style="position:relative">
-      <!-- badges -->
-      
-      
-      <div style="position:absolute;top:8px;right:8px;background:#1c1c1c;color:#aaa;font-size:8px;padding:2px 6px;letter-spacing:1px">50M EPIC</div>
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">❌</span>
-        <span style="font-weight:700;font-size:13px;color:var(--red)">Loss</span>
-        <span style="font-size:10px;color:var(--muted)">as White</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/WBXlbpEc" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">D00</span>
-        Queen's Pawn Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">malkauns</strong>
-        <span style="color:var(--muted)">(1575)</span>
-        · Me: 1540
-        · 50 moves · Checkmate
-        
-        · <span style="color:var(--red)">-6 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">d4 d5 e3 c6 c4 Bf5 cxd5 Qxd5 Nc3 Qa5</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">e7 Qxf2+ Kh1 Rc1+ Ng1 Rxg1#</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      <div style="position:absolute;top:8px;right:8px;background:#1c1c1c;color:#aaa;font-size:8px;padding:2px 6px;letter-spacing:1px">48M EPIC</div>
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/usiBjsXW" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">C34</span>
-        King's Gambit Accepted
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">ar9033244320</strong>
-        <span style="color:var(--muted)">(1544)</span>
-        · Me: 1533
-        · 48 moves · Time Out
-        
-        · <span style="color:var(--green)">+7 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">e4 e5 f4 d6 Nf3 exf4 d4 Bg4 Bxf4 a6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Ke5 Kxg4 Ke6 h5 Kd7 h4</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as Black</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/1OWhe264" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">D31</span>
-        Semi-Slav Defense
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">HypKanee</strong>
-        <span style="color:var(--muted)">(1483)</span>
-        · Me: 1528
-        · 28 moves · Checkmate
-        
-        · <span style="color:var(--green)">+5 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">d4 d5 c4 c6 Nc3 e6 a3 Nf6 Nf3 Bd6</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Bxd5 Qxd5 Qf4+ Kg8 Qc7 Qxg2#</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
-    </div>
-    
-    <div class="game-card win" style="position:relative">
-      <!-- badges -->
-      
-      
-      
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">✅</span>
-        <span style="font-weight:700;font-size:13px;color:var(--green)">Win</span>
-        <span style="font-size:10px;color:var(--muted)">as White</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">Blitz</span>
-        <a href="https://lichess.org/WO1azJd7" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        <span style="color:var(--gold);margin-right:5px;font-weight:700">D00</span>
-        Queen's Pawn Game
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">JacobJames1</strong>
-        <span style="color:var(--muted)">(1533)</span>
-        · Me: 1523
-        · 24 moves · Resignation
-        
-        · <span style="color:var(--green)">+5 pts</span>
-        
-      </div>
-
-      <!-- opening moves -->
-      
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">d4 d5 e3 Nf6 c4 c6 h3 Bf5 Bd3 Bxd3</code>
-      </div>
-      
-
-      <!-- final moves -->
-      
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">Bxc3 Rxc3 Rfc8 Ne7+ Kh8 Rxc8+</code>
-      </div>
-      
-
-      <!-- AI analysis -->
-      
+      <a href="https://lichess.org/@/AKK_010" target="_blank" style="font-size:9px;color:var(--muted);margin-top:6px;display:block">view on Lichess →</a>
     </div>
     
   </div>
-
+  <div style="padding:10px 14px;background:#0d0d0d;border:1px solid #2a2a2a;font-size:11px;color:var(--muted);margin-bottom:14px">
+    ⚡ Add <code style="color:var(--accent)">LICHESS_TOKEN</code> to GitHub secrets for full per-game analysis, openings, key moves & AI coaching.
+    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--accent);margin-left:4px">Create token →</a>
+  </div>
   
 
   <!-- ── 7-DAY TREND ── -->
@@ -1173,7 +639,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div style="margin-top:4px;padding:14px;background:#0d1117;border:1px solid var(--gold)">
     <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px">🧩 Today's Puzzle</div>
     <div style="font-size:12px;color:#ddd;margin-bottom:6px">
-      Rating: <strong style="color:var(--gold)">1829</strong>
+      Rating: <strong style="color:var(--gold)">1871</strong>
       🔴 stretch · <span style="color:var(--muted)">Middlegame · Crushing · Fork</span>
     </div>
     <div style="font-size:12px;font-style:italic;color:#aaa;margin-bottom:10px">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
@@ -1187,19 +653,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 <!-- WISDOM: BETTER PERSON · BETTER DAD -->
 <section class="section" id="wisdom">
-  <div class="label">🧘 Daily Wisdom — Better Person · Better Dad · Happy Life · 8/18</div>
+  <div class="label">🧘 Daily Wisdom — Better Person · Better Dad · Happy Life · 9/18</div>
   <div class="wisdom-card">
-    <div class="wisdom-title">On Anger</div>
-    <div class="wisdom-body">Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive.</div>
+    <div class="wisdom-title">Financial Peace = Emotional Peace</div>
+    <div class="wisdom-body">Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition — it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.</div>
   </div>
 </section>
 
 <!-- CHESS TUTOR -->
 <section class="section" id="chess">
-  <div class="label">♟ Chess Tutor — Daily Lesson · 20/20</div>
+  <div class="label">♟ Chess Tutor — Daily Lesson · 1/20</div>
   <div class="chess-card">
-    <div class="chess-title">Rating Progress Reality</div>
-    <div class="chess-body">800→1000: Learn not to blunder pieces for free. 1000→1200: Basic tactics (forks, pins). 1200→1500: Strategy (plans, pawn structure). 1500→1800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily — minimum. No shortcut.</div>
+    <div class="chess-title">Opening Principle #1: Control the Centre</div>
+    <div class="chess-body">Place pawns on e4/d4 (White) or e5/d5 (Black). Pieces control more squares from the centre. A pawn on e4 controls d5 and f5. A pawn on the edge controls only 1 square. Open with 1.e4 or 1.d4 and you immediately claim space. This is the foundation of all chess strategy.</div>
     <div style="margin-top:12px;font-size:10px;color:var(--muted);font-family:monospace">
       Practice on: <a href="https://lichess.org/study" target="_blank">Lichess Study</a> · <a href="https://chess.com/puzzles" target="_blank">Chess.com Puzzles</a>
     </div>
@@ -1219,25 +685,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">S&P 500</div>
-      <div class="mkt-price">7381</div>
+      <div class="mkt-price">7385</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24716</div>
+      <div class="mkt-price">24741</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4096.7</div>
+      <div class="mkt-price">$4103.2</div>
       <div class="mkt-chg up"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Crude</div>
-      <div class="mkt-price">$84.67</div>
+      <div class="mkt-price">$84.38</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -1249,7 +715,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card u">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63883</div>
+      <div class="mkt-price">$64021</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -1264,11 +730,11 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 <!-- ENTREPRENEUR QUOTE -->
 <section class="section" id="quote">
-  <div class="label">💬 Entrepreneur Quote · 51/96</div>
+  <div class="label">💬 Entrepreneur Quote · 52/96</div>
   <div class="quote-card">
-    <div class="quote-text">"Software is eating the world."</div>
+    <div class="quote-text">"The most important things are the hardest to see."</div>
     <div class="quote-name">— Marc Andreessen</div>
-    <div class="quote-num">Quote 51 of 96 · Rotates daily</div>
+    <div class="quote-num">Quote 52 of 96 · Rotates daily</div>
   </div>
 </section>
 
@@ -1277,8 +743,8 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="label">🌏 Daily Lesson from the World</div>
   <div class="lesson-card">
     <div class="lesson-tradition">Greek Philosophy</div>
-    <div class="lesson-text">"The unexamined life is not worth living."</div>
-    <div class="lesson-source">— Socrates</div>
+    <div class="lesson-text">"We are what we repeatedly do. Excellence, then, is not an act, but a habit."</div>
+    <div class="lesson-source">— Aristotle</div>
   </div>
 </section>
 
@@ -1286,19 +752,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 <section class="section" id="case">
   <div class="label">📚 Business Case Study</div>
   <div class="case-card">
-    <div class="case-title">Amazon: AWS — the accidental trillion-dollar business</div>
-    <div class="case-story">Amazon built AWS to solve internal infrastructure problems. They then sold the solution to the world. AWS now generates $90B+ revenue per year.</div>
-    <div class="case-lesson">Your internal problems are often external opportunities. The best products are built to scratch your own itch.</div>
+    <div class="case-title">Netflix: DVD to Streaming (2007)</div>
+    <div class="case-story">Netflix had a profitable DVD business. Reed Hastings cannibalized it by betting on streaming. Blockbuster laughed. Netflix is now worth $250B+.</div>
+    <div class="case-lesson">Disrupt yourself before someone else does. The most dangerous competitor is your own comfort.</div>
   </div>
 </section>
 
 <!-- FP&A LEARN -->
 <section class="section" id="fpna">
-  <div class="label">🎓 FP&A Learn · 7/20</div>
+  <div class="label">🎓 FP&A Learn · 8/20</div>
   <div class="two">
     <div class="tip-card">
-      <h3>Scenario Planning</h3>
-      <p>Always model 3: Base, Bull (+20%), Bear (–20%). Present the range. Executives hate surprises.</p>
+      <h3>Contribution Margin</h3>
+      <p>CM = Revenue – Variable Costs. Know your CM by product, by customer, by geography.</p>
     </div>
     <div class="tip-card" style="border-left-color:var(--purple)">
       <h3 style="color:var(--purple)">🇦🇪 Dubai Corner</h3>
@@ -1311,22 +777,22 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 <!-- FC → CFO PATH -->
 <section class="section" id="cfo">
-  <div class="label">🏆 Financial Controller → CFO Path · Practical Guidance · 8/15</div>
+  <div class="label">🏆 Financial Controller → CFO Path · Practical Guidance · 9/15</div>
   <div class="cfo-card">
-    <div class="cfo-title">CFO Step 3: M&A Fundamentals</div>
-    <div class="cfo-body">Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions.</div>
+    <div class="cfo-title">CFO Step 4: Board Communication</div>
+    <div class="cfo-body">CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings.</div>
   </div>
 </section>
 
 <!-- BOOK LESSONS -->
 <section class="section" id="book">
-  <div class="label">📚 Book Library · Daily Lesson · 26/48 · Top Business &amp; Productivity Books</div>
+  <div class="label">📚 Book Library · Daily Lesson · 27/48 · Top Business &amp; Productivity Books</div>
   <div class="book-card">
     <div class="book-meta">Essentialism · Greg McKeown</div>
-    <div class="book-title">The Disciplined Pursuit of Less</div>
-    <div class="book-body">Essentialism is not about doing less for the sake of it. It's about doing less so you can do the most important things better. McKeown's central question: 'Is this the most important thing I could be doing with my time right now?' Most non-essentialists say yes to almost everything — more responsibility, more projects, more commitments. They become diffuse, mediocre at many things. The essentialist says yes to almost nothing, then executes the few things with total focus and energy. The paradox: doing less produces more impact because the energy is concentrated.</div>
-    <div class="book-quote">"If you don't prioritise your life, someone else will."</div>
-    <div class="book-action"><strong>Today's Action</strong>List everything on your current plate. Identify the one thing that, if done brilliantly, would make the most difference. Protect that first.</div>
+    <div class="book-title">The 90% Rule: If It's Not a Hell Yes, It's a No</div>
+    <div class="book-body">McKeown's 90% rule for decisions: when evaluating an opportunity, give it a score from 0 to 100 on fit with your most important criteria. If it scores below 90, say no. This sounds extreme. In practice, it forces clarity: most things we say yes to are 60-70% fits — good enough, not great. The 60% fits crowd out the 90% opportunities that actually advance your most important goals. Every yes is an implicit no to everything else. The question is not 'is this a good opportunity?' but 'is this the best opportunity I have right now?'</div>
+    <div class="book-quote">"Every yes costs you a no somewhere else. Make sure the trade is worth it."</div>
+    <div class="book-action"><strong>Today's Action</strong>Apply the 90% rule to your next opportunity or request. Score it honestly. If it's below 90, practice saying a polite no.</div>
   </div>
 </section>
 
@@ -1377,25 +843,155 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="label">💰 Money Hack &amp; ⚡ Productivity</div>
   <div class="two">
     <div class="tip-card">
-      <h3>💰 ELSS Lock-in Trick</h3>
-      <p>ELSS 3-year lock-in: SIP each month → each instalment unlocks separately. Best 80C option.</p>
+      <h3>💰 Gold via SGB</h3>
+      <p>Sovereign Gold Bonds: 2.5% interest + gold price appreciation. No storage cost.</p>
     </div>
     <div class="tip-card" style="border-left-color:var(--green)">
       <h3 style="color:var(--green)">⚡ Today's Rule</h3>
-      <p>Define 'done' before starting. Vague tasks never finish.</p>
+      <p>Build systems, not goals. Goals are outcomes; systems produce them.</p>
     </div>
   </div>
 </section>
 
 <!-- TELEGRAM ALERTS LOG -->
 <section class="section" id="alerts">
-  <div class="label">🔔 Telegram Alert Log · All Signals Sent · 0 total
+  <div class="label">🔔 Telegram Alert Log · All Signals Sent · 5 total
     <a href="alerts.json" target="_blank" style="font-size:9px;color:var(--muted);margin-left:12px;font-family:monospace">↓ alerts.json</a>
   </div>
 
   
-  <div style="padding:20px;color:var(--muted);font-size:13px;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    No alerts logged yet · Alerts appear here after Telegram signals are sent
+  
+  
+  
+  
+  
+  <div class="alert-stats">
+    <div class="ast"><div class="ast-num" style="color:var(--green)">0</div><div class="ast-label">Targets Hit</div></div>
+    <div class="ast"><div class="ast-num" style="color:var(--red)">0</div><div class="ast-label">SL Hit</div></div>
+    <div class="ast"><div class="ast-num" style="color:#60a5fa">0</div><div class="ast-label">Open</div></div>
+    <div class="ast"><div class="ast-num" style="color:var(--gold)">0%</div><div class="ast-label">Win Rate</div></div>
+    <div class="ast"><div class="ast-num">5</div><div class="ast-label">Total Alerts</div></div>
+  </div>
+
+  <div class="alert-filters">
+    <button class="af-btn active" onclick="filterAlerts('all',this)">ALL</button>
+    <button class="af-btn" onclick="filterAlerts('open',this)">OPEN</button>
+    <button class="af-btn" onclick="filterAlerts('win',this)">TARGET HIT</button>
+    <button class="af-btn" onclick="filterAlerts('loss',this)">SL HIT</button>
+    <button class="af-btn" onclick="filterAlerts('cancelled',this)">CANCELLED</button>
+  </div>
+
+  <div class="overflow alert-tbl-wrap">
+    <table class="alert-tbl" id="alertTable">
+      <thead><tr>
+        <th>Alert Date</th>
+        <th>Symbol</th>
+        <th>Signal</th>
+        <th>Timeframe</th>
+        <th>Entry</th>
+        <th>SL</th>
+        <th>Target 1</th>
+        <th>Target 2</th>
+        <th>RR</th>
+        <th>Exit Price</th>
+        <th>P&L</th>
+        <th>Close Date</th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody>
+      
+        <tr data-badge="cancelled">
+          <td style="font-family:monospace;color:var(--muted)">2026-05-09</td>
+          <td>
+            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:BRNUSD" target="_blank">BRNUSD</a>
+          </td>
+          <td class="alert-sell">SELL <span style="color:var(--muted);font-size:9px">· commodity</span></td>
+          <td style="color:var(--muted)">Daily</td>
+          <td style="font-family:monospace">₹1266.30</td>
+          <td style="font-family:monospace;color:var(--red)">₹1285.72</td>
+          <td style="font-family:monospace;color:var(--green)">₹1242.03</td>
+          <td style="font-family:monospace;color:var(--green)">₹1225.85</td>
+          <td style="font-family:monospace;color:var(--gold)">2.1x</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace" class="">—</td>
+          <td style="font-family:monospace;color:var(--muted)">—</td>
+          <td><span class="badge badge-cancelled">CANCELLED</span></td>
+        </tr>
+      
+        <tr data-badge="cancelled">
+          <td style="font-family:monospace;color:var(--muted)">2026-05-09</td>
+          <td>
+            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:IPCALAB" target="_blank">IPCALAB</a>
+          </td>
+          <td class="alert-buy">BUY <span style="color:var(--muted);font-size:9px">· breakout</span></td>
+          <td style="color:var(--muted)">Weekly</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace;color:var(--red)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--gold)">—</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace" class="">—</td>
+          <td style="font-family:monospace;color:var(--muted)">—</td>
+          <td><span class="badge badge-cancelled">CANCELLED</span></td>
+        </tr>
+      
+        <tr data-badge="cancelled">
+          <td style="font-family:monospace;color:var(--muted)">2026-05-09</td>
+          <td>
+            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:ATUL" target="_blank">ATUL</a>
+          </td>
+          <td class="alert-buy">BUY <span style="color:var(--muted);font-size:9px">· breakout</span></td>
+          <td style="color:var(--muted)">Weekly</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace;color:var(--red)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--gold)">—</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace" class="">—</td>
+          <td style="font-family:monospace;color:var(--muted)">—</td>
+          <td><span class="badge badge-cancelled">CANCELLED</span></td>
+        </tr>
+      
+        <tr data-badge="cancelled">
+          <td style="font-family:monospace;color:var(--muted)">2026-05-09</td>
+          <td>
+            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:DMART" target="_blank">DMART</a>
+          </td>
+          <td class="alert-buy">BUY <span style="color:var(--muted);font-size:9px">· breakout</span></td>
+          <td style="color:var(--muted)">Weekly</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace;color:var(--red)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--gold)">—</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace" class="">—</td>
+          <td style="font-family:monospace;color:var(--muted)">—</td>
+          <td><span class="badge badge-cancelled">CANCELLED</span></td>
+        </tr>
+      
+        <tr data-badge="cancelled">
+          <td style="font-family:monospace;color:var(--muted)">2026-05-09</td>
+          <td>
+            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:AXISBANK" target="_blank">AXISBANK</a>
+          </td>
+          <td class="alert-buy">BUY <span style="color:var(--muted);font-size:9px">· breakout</span></td>
+          <td style="color:var(--muted)">Weekly</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace;color:var(--red)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--green)">—</td>
+          <td style="font-family:monospace;color:var(--gold)">—</td>
+          <td style="font-family:monospace">—</td>
+          <td style="font-family:monospace" class="">—</td>
+          <td style="font-family:monospace;color:var(--muted)">—</td>
+          <td><span class="badge badge-cancelled">CANCELLED</span></td>
+        </tr>
+      
+      </tbody>
+    </table>
   </div>
   
 </section>

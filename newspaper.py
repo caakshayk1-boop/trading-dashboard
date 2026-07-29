@@ -1686,6 +1686,75 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:640px){.two{grid-template-columns:1fr}}
 
+/* ── MOBILE ─────────────────────────────────────────────── */
+@media(max-width:600px){
+  /* masthead */
+  .masthead{flex-direction:column;align-items:flex-start;padding:8px 12px;gap:6px}
+  .paper-name{font-size:17px;letter-spacing:2px}
+  .paper-meta{border-top:none;padding-top:0;font-size:9px;gap:8px}
+
+  /* nav: smaller text, hide less important items */
+  .nav a{padding:8px 10px;font-size:9px;letter-spacing:0.5px}
+
+  /* main padding */
+  .main{padding:0 8px}
+  .section{margin:16px 0;padding-top:12px}
+
+  /* markets: 2 columns on mobile */
+  .mkt-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .mkt-price{font-size:15px}
+
+  /* quote */
+  .quote-text{font-size:14px}
+  .quote-card{padding:16px}
+
+  /* lichess summary stats: 3 per row */
+  .lichess-summary{gap:10px;padding:10px}
+  .ls-num{font-size:20px}
+
+  /* chess game cards: full width */
+  .chess-game-grid{grid-template-columns:1fr}
+
+  /* alert table: scroll container + hide less critical columns */
+  .alert-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .alert-tbl{font-size:10px;min-width:520px}
+  .alert-stats{gap:10px;padding:10px;flex-wrap:wrap}
+  .ast-num{font-size:14px}
+
+  /* alert filters wrap */
+  .alert-filters{gap:6px}
+  .af-btn{padding:4px 8px;font-size:8px}
+
+  /* picks grid: 2 cols */
+  .pick-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .pick-price{font-size:18px}
+
+  /* tracker table scroll */
+  .overflow{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl{font-size:11px;min-width:480px}
+
+  /* book/wisdom/case cards */
+  .book-card,.wisdom-card,.chess-card,.cfo-card,.case-card,.lesson-card{padding:14px}
+  .quote-text{font-size:14px}
+  .book-body,.wisdom-body,.chess-body,.cfo-body,.case-story{font-size:12px}
+
+  /* weather: already 1-col at 700px */
+  .wx-card{padding:12px}
+  .wx-temp{font-size:22px}
+  .wx-emoji{font-size:28px}
+
+  /* tip cards */
+  .tip-card{padding:12px}
+  .tip-card p{font-size:12px}
+
+  /* ticker strip */
+  .ticker{padding:5px 0}
+  .t-item{padding:0 10px;font-size:10px}
+
+  /* section label smaller */
+  .label{font-size:8px;letter-spacing:2px}
+}
+
 /* FORMS */
 .form-box{background:var(--surface);border:1px solid var(--border);padding:15px;margin-top:14px}
 .form-box h4{color:var(--accent);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
@@ -2221,7 +2290,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     <button class="af-btn" onclick="filterAlerts('cancelled',this)">CANCELLED</button>
   </div>
 
-  <div class="overflow">
+  <div class="overflow alert-tbl-wrap">
     <table class="alert-tbl" id="alertTable">
       <thead><tr>
         <th>Alert Date</th>
