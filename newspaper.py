@@ -1323,7 +1323,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .paper-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:var(--muted);
   border-top:1px solid var(--border);padding-top:8px;font-family:monospace}
 
-.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border)}
+.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
 .nav a{padding:9px 13px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;
   white-space:nowrap;border-right:1px solid var(--border)}
 .nav a:hover{color:var(--accent);background:var(--surface);text-decoration:none}

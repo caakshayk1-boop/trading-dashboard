@@ -18,7 +18,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .paper-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:var(--muted);
   border-top:1px solid var(--border);padding-top:8px;font-family:monospace}
 
-.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border)}
+.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
 .nav a{padding:9px 13px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;
   white-space:nowrap;border-right:1px solid var(--border)}
 .nav a:hover{color:var(--accent);background:var(--surface);text-decoration:none}
@@ -174,7 +174,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-meta">
     <span>news.askakshay.com · Personal Edition</span>
     <span>Wednesday, July 29 2026</span>
-    <span>22:05 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
+    <span>22:08 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
   </div>
 </div>
 
@@ -212,19 +212,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24579</span>
+    <span>24584</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4074.2</span>
+    <span>$4075.0</span>
     <span class="up"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Crude</span>
-    <span>$84.35</span>
+    <span>$84.26</span>
     <span class="up"></span>
   </div>
   
@@ -236,7 +236,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63813</span>
+    <span>$63768</span>
     <span class="dn"></span>
   </div>
   
@@ -399,6 +399,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
+        <h3><a href="https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-fed-decision-warsh-sk-hynix-stock/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Stock Market Today: Dow Sinks As Fed Rate Call Looms; Bloom Energy Reverses Lower After Crushing Earnings (Live Coverage</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 16:24</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
         <h3><a href="https://www.investors.com/news/dow-jones-stock-chevron-oil-price-surge-trump-venezuela-cvx-stock-price/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Dow Leader Rides Surging Oil Prices And Trump's Venezuela Spoils</a></h3>
         <p></p>
         <div class="ts">Jul 29 16:16</div>
@@ -409,13 +416,6 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
         <h3><a href="https://finance.yahoo.com/news/oil-rises-us-iran-tension-032028533.html" target="_blank" style="color:var(--text)">Oil jumps 7% on escalating Middle East airstrikes</a></h3>
         <p></p>
         <div class="ts">Jul 29 16:16</div>
-      </div>
-      
-      <div class="ncard">
-        <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/caterpillar-trades-3x-historical-multiple-161312284.html" target="_blank" style="color:var(--text)">Caterpillar Trades at 3x Its Historical Multiple — Michael Burry Is Betting Against It</a></h3>
-        <p></p>
-        <div class="ts">Jul 29 16:13</div>
       </div>
       
       <div class="ncard">
@@ -481,19 +481,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24579</div>
+      <div class="mkt-price">24584</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4074.2</div>
+      <div class="mkt-price">$4075.0</div>
       <div class="mkt-chg up"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Crude</div>
-      <div class="mkt-price">$84.35</div>
+      <div class="mkt-price">$84.26</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -505,7 +505,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63813</div>
+      <div class="mkt-price">$63768</div>
       <div class="mkt-chg dn"></div>
     </div>
     
