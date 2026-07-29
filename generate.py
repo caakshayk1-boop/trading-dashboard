@@ -124,6 +124,13 @@ def generate() -> None:
     out_dir = pathlib.Path("docs")
     out_dir.mkdir(exist_ok=True)
     out_file = out_dir / "index.html"
+    # Skip overwrite if running locally without token and existing file has full-mode chess
+    if not os.environ.get("LICHESS_TOKEN") and out_file.exists():
+        existing = out_file.read_text(encoding="utf-8")
+        if "game-card" in existing and "LICHESS_TOKEN" not in existing:
+            print("[generate] ⚠️  Skipping index.html overwrite — existing file has full chess data, no token locally")
+            (out_dir / "alerts.json").write_text(json.dumps(alerts, default=str, indent=2), encoding="utf-8")
+            return
     out_file.write_text(html, encoding="utf-8")
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
