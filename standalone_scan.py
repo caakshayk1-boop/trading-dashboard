@@ -435,6 +435,19 @@ def run_measured_equity_scan(time_str):
     return signals
 
 
+def run_signal_ledger(time_str, days: int = 30):
+    """Post the alert ledger to Telegram and mirror it into the Obsidian vault.
+
+    Everything the bot sent, with its measured outcome in R. This is the live
+    counterpart to backtest.py — if the two diverge, the config is overfit.
+    """
+    import signal_report
+    rep = signal_report.send(days=days, telegram=True, obsidian=True)
+    logging.info(f"Ledger: {rep['closed']} closed, {rep['open']} open, "
+                 f"expectancy {rep['overall']['expectancy']:+.3f}R")
+    return rep
+
+
 def run_breakout_scan(time_str):
     from scanner import scan_breakouts
     from tracker import log_breakouts, log_to_all_signals, is_duplicate
@@ -628,6 +641,9 @@ def main():
             comms     = _safe("commodity_scan",run_commodity_scan, time_str)
             # Backtested engine — runs on the completed daily bar, as tested.
             measured  = _safe("measured_equity", run_measured_equity_scan, time_str)
+            # Ledger last: every alert and its outcome, to Telegram + Obsidian.
+            # Runs after the scans so today's signals are already logged.
+            _safe("signal_ledger", run_signal_ledger, time_str)
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
                          "swing": len(signals), "commodities": len(comms),
                          "measured": len(measured)}

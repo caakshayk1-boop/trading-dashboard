@@ -1154,10 +1154,13 @@ HELP_TEXT = """🤖 *Claude AI Trading Bot*
 `Scan` — 4H momentum scan now
 `Carousel: [topic]` — 8-slide HTML carousel
 `/active` — today's signals
+`/ledger [days]` — every alert + its result in R
 `/stats` — bot status
 `Help` — this message
 
-_Auto-scans: 9:20 | 11:45 | 4:30 PM IST_
+_Position checks: 11:45 AM IST_
+_Signals + ledger: 4:30 PM IST_
+_Commodities: 10 AM · 2 · 6 · 10 PM_
 _@askakshayfinance_"""
 
 
@@ -1200,6 +1203,28 @@ def route(text: str, chat_id: str):
     # /start
     if tl == "/start":
         _post(HELP_TEXT, chat_id)
+        return
+
+    # /ledger [days] — every alert sent and how it resolved, measured in R
+    if tl.startswith("/ledger") or tl.startswith("/report"):
+        parts = t.split()
+        try:
+            days = int(parts[1]) if len(parts) > 1 else 30
+        except ValueError:
+            days = 30
+        try:
+            import signal_report
+            rep = signal_report.build(days)
+            _post(signal_report.to_telegram(rep), chat_id)
+            # Mirror to the vault only for the standard window, so ad-hoc
+            # lookbacks don't keep rewriting the weekly note.
+            if days == 30:
+                try:
+                    signal_report.to_obsidian(rep)
+                except Exception as e:
+                    logging.warning(f"ledger obsidian write failed: {e}")
+        except Exception as e:
+            _post(f"❌ Ledger error: `{e}`", chat_id)
         return
 
     # /track SYM ENTRY SL T1 T2 — add manual trade to DB for monitoring
