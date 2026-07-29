@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>THE DAILY SIGNAL — Wednesday, July 29 2026</title>
+<style>
+:root{--bg:#08090b;--surface:#0f1014;--border:#1c1e26;--accent:#f97316;--gold:#e8c547;
+  --red:#ef4444;--green:#22c55e;--blue:#3b82f6;--purple:#9b7fe8;--text:#e4e4e4;--muted:#666}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;font-size:14px;line-height:1.65}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+.up{color:var(--green)} .dn{color:var(--red)}
+
+.masthead{border-bottom:3px double var(--border);padding:20px 20px 14px;text-align:center;background:#060709}
+.paper-name{font-size:42px;font-weight:900;letter-spacing:8px;color:var(--accent);line-height:1;font-family:sans-serif}
+.paper-sub{font-style:italic;color:var(--muted);font-size:12px;margin-top:4px;letter-spacing:2px}
+.paper-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:var(--muted);
+  border-top:1px solid var(--border);padding-top:8px;font-family:monospace}
+
+.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border)}
+.nav a{padding:9px 13px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  white-space:nowrap;border-right:1px solid var(--border)}
+.nav a:hover{color:var(--accent);background:var(--surface);text-decoration:none}
+
+.ticker{display:flex;overflow-x:auto;background:#060709;border-bottom:1px solid var(--border);padding:7px 0}
+.t-item{display:flex;gap:6px;align-items:center;padding:0 14px;border-right:1px solid #111;
+  white-space:nowrap;font-size:11px;font-family:monospace}
+.t-name{color:var(--muted);font-size:9px}
+
+.main{max-width:1200px;margin:0 auto;padding:0 14px}
+.section{margin:24px 0;padding-top:16px;border-top:2px solid var(--border)}
+.label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);
+  font-family:sans-serif;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:700}
+.label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* WEATHER */
+.weather-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.weather-grid{grid-template-columns:1fr}}
+.wx-card{background:var(--surface);border:1px solid var(--border);padding:16px;position:relative}
+.wx-city{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text);font-family:sans-serif}
+.wx-country{font-size:9px;color:var(--muted);letter-spacing:1px}
+.wx-emoji{font-size:36px;margin:8px 0 4px}
+.wx-temp{font-size:28px;font-weight:700;font-family:monospace;color:var(--accent)}
+.wx-cond{font-size:11px;color:var(--muted);margin-bottom:8px}
+.wx-meta{display:flex;gap:12px;font-size:10px;font-family:monospace;color:#555;flex-wrap:wrap}
+.wx-rain{display:inline-block;padding:3px 8px;font-size:10px;font-weight:700;font-family:sans-serif;
+  margin-top:8px;border-radius:2px}
+.wx-rain.hi{background:#ef444422;color:var(--red);border:1px solid #ef444433}
+.wx-rain.lo{background:#22c55e22;color:var(--green);border:1px solid #22c55e33}
+.wx-range{font-size:10px;color:var(--muted);margin-top:4px;font-family:monospace}
+
+/* NEWS */
+.news-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:900px){.news-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.news-grid{grid-template-columns:1fr}}
+.ncard{border:1px solid var(--border);padding:14px;background:var(--surface)}
+.ncard .src{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;font-family:sans-serif}
+.ncard h3{font-size:13px;font-weight:700;line-height:1.4;margin-bottom:7px}
+.ncard p{font-size:11px;color:var(--muted);line-height:1.5}
+.ncard .ts{font-size:9px;color:#333;margin-top:7px;font-family:monospace}
+.lead{grid-column:1/-1;display:grid;grid-template-columns:3fr 2fr;gap:20px;border:1px solid #2a2214;background:#0b0a07}
+@media(max-width:640px){.lead{grid-template-columns:1fr}}
+.lead-main{padding:16px}
+.lead-side{padding:16px;border-left:1px solid var(--border)}
+.lead h2{font-size:20px;line-height:1.3;margin-bottom:10px}
+
+/* WISDOM / CHESS / CFO */
+.wisdom-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px}
+.wisdom-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
+.wisdom-body{font-size:13px;line-height:1.8;color:#ccc}
+.chess-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);padding:20px}
+.chess-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
+.chess-body{font-size:13px;line-height:1.8;color:#ccc}
+.cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
+.cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
+.cfo-body{font-size:13px;line-height:1.8;color:#ccc}
+
+/* MARKETS */
+.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.mkt-card{background:var(--surface);border:1px solid var(--border);padding:12px}
+.mkt-card.u{border-left:2px solid var(--green)} .mkt-card.d{border-left:2px solid var(--red)}
+.mkt-name{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:sans-serif}
+.mkt-price{font-size:18px;font-weight:700;font-family:monospace;margin:3px 0}
+.mkt-chg{font-size:13px;font-weight:700;font-family:monospace}
+
+/* QUOTE */
+.quote-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);
+  padding:24px;text-align:center}
+.quote-text{font-size:18px;font-style:italic;line-height:1.6;color:var(--text);margin-bottom:14px;max-width:800px;margin-left:auto;margin-right:auto}
+.quote-name{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-family:sans-serif;font-weight:700}
+.quote-num{font-size:9px;color:var(--muted);margin-top:4px;font-family:monospace}
+
+/* LESSON */
+.lesson-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);padding:20px}
+.lesson-tradition{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);font-family:sans-serif;font-weight:700;margin-bottom:8px}
+.lesson-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:8px;font-style:italic}
+.lesson-source{font-size:10px;color:var(--muted);font-family:monospace}
+
+/* CASE STUDY */
+.case-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--purple);padding:20px}
+.case-title{font-size:14px;font-weight:700;color:var(--purple);margin-bottom:10px;line-height:1.4}
+.case-story{font-size:13px;line-height:1.7;color:#ccc;margin-bottom:12px}
+.case-lesson{background:#0d0e12;border:1px solid var(--border);padding:12px;font-size:12px;color:var(--gold);line-height:1.6}
+.case-lesson::before{content:'💡 Lesson: ';font-weight:700}
+
+/* PICKS */
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.pick-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);padding:14px}
+.pick-sym{font-size:17px;font-weight:900;font-family:monospace;letter-spacing:1px}
+.pick-price{font-size:22px;font-weight:700;font-family:monospace;margin:4px 0}
+.pick-thesis{font-size:11px;color:#aaa;margin:8px 0;line-height:1.5;font-style:italic}
+.pick-tgt{font-size:11px;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
+.score-badge{display:inline-block;padding:2px 7px;font-size:9px;letter-spacing:1px;border-radius:2px;
+  background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25);font-family:sans-serif}
+
+/* TRACKER */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:#0a0b0e;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.tbl td{padding:9px 10px;border-bottom:1px solid #111;vertical-align:middle}
+.tbl tr:hover td{background:#0f1014}
+.pnl-u{color:var(--green);font-weight:700} .pnl-d{color:var(--red);font-weight:700}
+.overflow{overflow-x:auto}
+
+/* TIPS */
+.tip-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:16px}
+.tip-card h3{color:var(--accent);font-size:14px;margin-bottom:8px}
+.tip-card p{font-size:13px;line-height:1.7}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+
+/* FORMS */
+.form-box{background:var(--surface);border:1px solid var(--border);padding:15px;margin-top:14px}
+.form-box h4{color:var(--accent);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.frow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px}
+.frow input{background:#060709;border:1px solid var(--border);color:var(--text);padding:6px 10px;font-size:12px;flex:1;min-width:100px}
+.frow input:focus{outline:none;border-color:var(--accent)}
+.btn{background:var(--accent);color:#000;border:none;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px}
+.btn-exit{background:transparent;color:var(--red);border:1px solid var(--red);padding:3px 9px;font-size:10px;cursor:pointer}
+.btn-obs{background:transparent;color:var(--purple);border:1px solid var(--purple);padding:3px 9px;font-size:9px;cursor:pointer;letter-spacing:1px}
+.footer{border-top:2px double var(--border);padding:20px;text-align:center;color:var(--muted);font-size:11px;margin-top:40px}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="paper-name">THE DAILY SIGNAL</div>
+  <div class="paper-sub">Akshay's Personal Intelligence Brief · Numbers First · Always</div>
+  <div class="paper-meta">
+    <span>news.askakshay.com · Personal Edition</span>
+    <span>Wednesday, July 29 2026</span>
+    <span>21:30 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="#weather">🌤 Weather</a>
+  <a href="#news">🌍 World</a>
+  <a href="#markets">📊 Markets</a>
+  <a href="#quote">💬 Quote</a>
+  <a href="#lesson">🌏 Lesson</a>
+  <a href="#wisdom">🧘 Wisdom</a>
+  <a href="#chess">♟ Chess</a>
+  <a href="#case">📚 Case Study</a>
+  <a href="#fpna">🎓 FP&A</a>
+  <a href="#cfo">🏆 FC→CFO</a>
+  <a href="#picks">🔥 Top 5</a>
+  <a href="#tracker">📈 Tracker</a>
+  <a href="#hacks">💰 Money</a>
+</nav>
+
+<div class="ticker">
+  
+  <div class="t-item">
+    <span class="t-name">Nifty 50</span>
+    <span>₹24250</span>
+    <span class="up"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">S&P 500</span>
+    <span>7362</span>
+    <span class="dn"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">Nasdaq</span>
+    <span>24584</span>
+    <span class="dn"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">Gold</span>
+    <span>$4071.0</span>
+    <span class="up"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">Crude</span>
+    <span>$84.64</span>
+    <span class="up"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">USD/INR</span>
+    <span>₹95.64</span>
+    <span class="dn"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">BTC</span>
+    <span>$63879</span>
+    <span class="up"></span>
+  </div>
+  
+  <div class="t-item">
+    <span class="t-name">Sensex</span>
+    <span>₹77655</span>
+    <span class="up"></span>
+  </div>
+  
+</div>
+
+<div class="main">
+
+<!-- WEATHER -->
+<section class="section" id="weather">
+  <div class="label">🌤 Weather Today — Bikaner · Kolkata · Kuala Lumpur</div>
+  <div class="weather-grid">
+    
+    <div class="wx-card">
+      <div class="wx-country">IN</div>
+      <div class="wx-city">Bikaner</div>
+      <div class="wx-emoji">⛅</div>
+      <div class="wx-temp">31.6°C</div>
+      <div class="wx-cond">Partly Cloudy</div>
+      <div class="wx-range">↑ 37.3° · ↓ 29.3°</div>
+      <div class="wx-meta">
+        <span>💧 76%</span>
+        <span>💨 3.6 km/h</span>
+        <span>🌡 Feels 39.0°C</span>
+      </div>
+      <div class="wx-rain lo">
+        🌧 Rain chance: 22%
+      </div>
+    </div>
+    
+    <div class="wx-card">
+      <div class="wx-country">IN</div>
+      <div class="wx-city">Kolkata</div>
+      <div class="wx-emoji">☁️</div>
+      <div class="wx-temp">26.8°C</div>
+      <div class="wx-cond">Overcast</div>
+      <div class="wx-range">↑ 30.9° · ↓ 25.7°</div>
+      <div class="wx-meta">
+        <span>💧 91%</span>
+        <span>💨 12.4 km/h</span>
+        <span>🌡 Feels 31.8°C</span>
+      </div>
+      <div class="wx-rain hi">
+        🌧 Rain chance: 100% — carry umbrella
+      </div>
+    </div>
+    
+    <div class="wx-card">
+      <div class="wx-country">MY</div>
+      <div class="wx-city">Kuala Lumpur</div>
+      <div class="wx-emoji">☁️</div>
+      <div class="wx-temp">25.7°C</div>
+      <div class="wx-cond">Overcast</div>
+      <div class="wx-range">↑ 31.4° · ↓ 23.7°</div>
+      <div class="wx-meta">
+        <span>💧 93%</span>
+        <span>💨 0.0 km/h</span>
+        <span>🌡 Feels 32.1°C</span>
+      </div>
+      <div class="wx-rain hi">
+        🌧 Rain chance: 84% — carry umbrella
+      </div>
+    </div>
+    
+    
+  </div>
+</section>
+
+<!-- WORLD NEWS -->
+<section class="section" id="news">
+  <div class="label">🌍 World News — Last 24 Hours</div>
+  <div class="news-grid">
+    
+      
+      <div class="ncard lead">
+        <div class="lead-main">
+          <div class="src">BBC Business · LEAD</div>
+          <h2><a href="https://www.bbc.co.uk/news/articles/cevm09wkgz0o?at_medium=RSS&at_campaign=rss" target="_blank" style="color:var(--text)">Some tech shares are plunging - what does that mean for the AI revolution?</a></h2>
+          <p style="font-size:13px;line-height:1.7;color:#aaa">Sharp falls in the value of chip makers have stoked investor concerns that the euphoria around AI related companies is fading.</p>
+        </div>
+        <div class="lead-side">
+          
+          <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+            <div class="src">BBC Business</div>
+            <div style="font-size:12px;font-weight:700;line-height:1.4">
+              <a href="https://www.bbc.co.uk/news/articles/cdx8ke9gpnko?at_medium=RSS&at_campaign=rss" target="_blank" style="color:var(--text)">Ticket prices set to rise by 15p as Heathrow able to recover runway project money</a>
+            </div>
+          </div>
+          
+          <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+            <div class="src">BBC Business</div>
+            <div style="font-size:12px;font-weight:700;line-height:1.4">
+              <a href="https://www.bbc.co.uk/news/articles/cx2r0nyx99yo?at_medium=RSS&at_campaign=rss" target="_blank" style="color:var(--text)">Matcha and protein pivot pays off for Greggs as profits rise</a>
+            </div>
+          </div>
+          
+          <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+            <div class="src">BBC Business</div>
+            <div style="font-size:12px;font-weight:700;line-height:1.4">
+              <a href="https://www.bbc.co.uk/news/articles/cj4k54g0ldjo?at_medium=RSS&at_campaign=rss" target="_blank" style="color:var(--text)">Andy Burnham wants to fix social care - what are the options?</a>
+            </div>
+          </div>
+          
+          <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+            <div class="src">BBC Business</div>
+            <div style="font-size:12px;font-weight:700;line-height:1.4">
+              <a href="https://www.bbc.co.uk/news/articles/c9q90q9qnn2o?at_medium=RSS&at_campaign=rss" target="_blank" style="color:var(--text)">Data centres could pay hundreds of millions in deposits for power demands</a>
+            </div>
+          </div>
+          
+          <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
+            <div class="src">CNBC</div>
+            <div style="font-size:12px;font-weight:700;line-height:1.4">
+              <a href="https://www.cnbc.com/2026/07/29/nike-china-sales-decline.html" target="_blank" style="color:var(--text)">Nike was once China's sneaker king. Here's why its sales have fallen 30%</a>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">CNBC</div>
+        <h3><a href="https://www.cnbc.com/2026/07/29/humana-hum-earnings-q2-2026.html" target="_blank" style="color:var(--text)">Humana tops quarterly estimates, maintains profit outlook as medical costs stay in line</a></h3>
+        <p>Humana maintained its 2026 adjusted profit outlook of at least $9 per share, which some analysts called a "disappointment" amid high expecta</p>
+        <div class="ts">Jul 29 14:57</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">CNBC</div>
+        <h3><a href="https://www.cnbc.com/2026/07/29/yes-network-msg-networks-dazn-streaming.html" target="_blank" style="color:var(--text)">YES Network, MSG Networks to exit Gotham app for DAZN streaming service</a></h3>
+        <p>The regional sports networks that air games for local New York and New Jersey teams, including MLB's Yankees and NHL's Rangers, will have a </p>
+        <div class="ts">Jul 29 15:57</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">CNBC</div>
+        <h3><a href="https://www.cnbc.com/2026/07/29/procter-gamble-pg-q4-2026-earnings.html" target="_blank" style="color:var(--text)">Procter & Gamble revenue misses estimates as volume stays unchanged</a></h3>
+        <p>Procter & Gamble reported quarterly earnings per share that topped Wall Street's estimates, but its revenue fell short of expectations.</p>
+        <div class="ts">Jul 29 14:53</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">CNBC</div>
+        <h3><a href="https://www.cnbc.com/2026/07/29/cyclospora-outbreak-taco-bell-yum-brands-earnings.html" target="_blank" style="color:var(--text)">Cyclospora outbreak tied to Taco Bell will steal the spotlight from Yum Brands' earnings</a></h3>
+        <p>Wall Street is projecting a strong second quarter for Yum Brands, but investors' focus will be on updates related to the cyclospora outbreak</p>
+        <div class="ts">Jul 29 11:00</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/economy/policy/articles/secretary-bessent-cracks-down-non-160600716.html" target="_blank" style="color:var(--text)">Secretary Bessent cracks down on non-profit tax loopholes</a></h3>
+        <p></p>
+        <div class="ts">Jul 28 16:06</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/markets/live/stock-market-today-wednesday-july-29-dow-sp-500-nasdaq-082009165.html" target="_blank" style="color:var(--text)">Stock market today: Dow falls over 800 points, S&P 500 and Nasdaq slide in countdown to Fed decision, AI earnings test</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 08:20</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/technology/articles/apple-says-uk-app-store-155341930.html" target="_blank" style="color:var(--text)">Apple says UK App Store proposal amounts to price regulation</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 15:55</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/article/ram-jeep-parent-stellantis-needs-to-prove-turnaround-plan-is-working-h1-earnings-preview-154647532.html" target="_blank" style="color:var(--text)">Ram, Jeep parent Stellantis needs to prove turnaround plan is working: H1 earnings preview</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 15:46</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">MarketWatch</div>
+        <h3><a href="https://www.marketwatch.com/story/las-vegas-home-prices-post-largest-drop-in-the-nation-d39d6ecd?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">Las Vegas home prices post largest drop in the nation</a></h3>
+        <p>Among the largest U.S. cities, Las Vegas saw the biggest drop in home prices, while Chicago saw the biggest increase.</p>
+        <div class="ts">Jul 29 15:45</div>
+      </div>
+      
+    
+  </div>
+</section>
+
+<!-- WISDOM: BETTER PERSON · BETTER DAD -->
+<section class="section" id="wisdom">
+  <div class="label">🧘 Daily Wisdom — Better Person · Better Dad · Happy Life · 9/18</div>
+  <div class="wisdom-card">
+    <div class="wisdom-title">Financial Peace = Emotional Peace</div>
+    <div class="wisdom-body">Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition — it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.</div>
+  </div>
+</section>
+
+<!-- CHESS TUTOR -->
+<section class="section" id="chess">
+  <div class="label">♟ Chess Tutor — Daily Lesson · 1/20</div>
+  <div class="chess-card">
+    <div class="chess-title">Opening Principle #1: Control the Centre</div>
+    <div class="chess-body">Place pawns on e4/d4 (White) or e5/d5 (Black). Pieces control more squares from the centre. A pawn on e4 controls d5 and f5. A pawn on the edge controls only 1 square. Open with 1.e4 or 1.d4 and you immediately claim space. This is the foundation of all chess strategy.</div>
+    <div style="margin-top:12px;font-size:10px;color:var(--muted);font-family:monospace">
+      Practice on: <a href="https://lichess.org/study" target="_blank">Lichess Study</a> · <a href="https://chess.com/puzzles" target="_blank">Chess.com Puzzles</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section class="section" id="markets">
+  <div class="label">📊 Markets Now</div>
+  <div class="mkt-grid">
+    
+    <div class="mkt-card u">
+      <div class="mkt-name">Nifty 50</div>
+      <div class="mkt-price">₹24250</div>
+      <div class="mkt-chg up"></div>
+    </div>
+    
+    <div class="mkt-card d">
+      <div class="mkt-name">S&P 500</div>
+      <div class="mkt-price">7362</div>
+      <div class="mkt-chg dn"></div>
+    </div>
+    
+    <div class="mkt-card d">
+      <div class="mkt-name">Nasdaq</div>
+      <div class="mkt-price">24584</div>
+      <div class="mkt-chg dn"></div>
+    </div>
+    
+    <div class="mkt-card u">
+      <div class="mkt-name">Gold</div>
+      <div class="mkt-price">$4071.0</div>
+      <div class="mkt-chg up"></div>
+    </div>
+    
+    <div class="mkt-card u">
+      <div class="mkt-name">Crude</div>
+      <div class="mkt-price">$84.64</div>
+      <div class="mkt-chg up"></div>
+    </div>
+    
+    <div class="mkt-card d">
+      <div class="mkt-name">USD/INR</div>
+      <div class="mkt-price">₹95.64</div>
+      <div class="mkt-chg dn"></div>
+    </div>
+    
+    <div class="mkt-card u">
+      <div class="mkt-name">BTC</div>
+      <div class="mkt-price">$63879</div>
+      <div class="mkt-chg up"></div>
+    </div>
+    
+    <div class="mkt-card u">
+      <div class="mkt-name">Sensex</div>
+      <div class="mkt-price">₹77655</div>
+      <div class="mkt-chg up"></div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- ENTREPRENEUR QUOTE -->
+<section class="section" id="quote">
+  <div class="label">💬 Entrepreneur Quote · 52/96</div>
+  <div class="quote-card">
+    <div class="quote-text">"The most important things are the hardest to see."</div>
+    <div class="quote-name">— Marc Andreessen</div>
+    <div class="quote-num">Quote 52 of 96 · Rotates daily</div>
+  </div>
+</section>
+
+<!-- WORLD LESSON -->
+<section class="section" id="lesson">
+  <div class="label">🌏 Daily Lesson from the World</div>
+  <div class="lesson-card">
+    <div class="lesson-tradition">Greek Philosophy</div>
+    <div class="lesson-text">"We are what we repeatedly do. Excellence, then, is not an act, but a habit."</div>
+    <div class="lesson-source">— Aristotle</div>
+  </div>
+</section>
+
+<!-- BUSINESS CASE STUDY -->
+<section class="section" id="case">
+  <div class="label">📚 Business Case Study</div>
+  <div class="case-card">
+    <div class="case-title">Netflix: DVD to Streaming (2007)</div>
+    <div class="case-story">Netflix had a profitable DVD business. Reed Hastings cannibalized it by betting on streaming. Blockbuster laughed. Netflix is now worth $250B+.</div>
+    <div class="case-lesson">Disrupt yourself before someone else does. The most dangerous competitor is your own comfort.</div>
+  </div>
+</section>
+
+<!-- FP&A LEARN -->
+<section class="section" id="fpna">
+  <div class="label">🎓 FP&A Learn · 8/20</div>
+  <div class="two">
+    <div class="tip-card">
+      <h3>Contribution Margin</h3>
+      <p>CM = Revenue – Variable Costs. Know your CM by product, by customer, by geography.</p>
+    </div>
+    <div class="tip-card" style="border-left-color:var(--purple)">
+      <h3 style="color:var(--purple)">🇦🇪 Dubai Corner</h3>
+      <p>AED 30K+ stack: CA/ACCA + SAP or Oracle + Power BI + IFRS 9/16.<br><br>
+      Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.<br><br>
+      Keyword tip: Put "IFRS 16 implementation" and "rolling forecast" in your cover letter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FC → CFO PATH -->
+<section class="section" id="cfo">
+  <div class="label">🏆 Financial Controller → CFO Path · Practical Guidance · 9/15</div>
+  <div class="cfo-card">
+    <div class="cfo-title">CFO Step 4: Board Communication</div>
+    <div class="cfo-body">CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings.</div>
+  </div>
+</section>
+
+<!-- TOP 5 PICKS -->
+<section class="section" id="picks">
+  <div class="label">🔥 Top 5 Trade Ideas · Global 200 Universe (India + US + Global) · Refreshes Weekly · 20–30% Target</div>
+  
+  <div style="padding:20px;color:var(--muted);font-size:13px;font-style:italic;text-align:center;background:var(--surface);border:1px solid var(--border)">
+    ⏳ Scanning 200 global stocks for best momentum setups... first load ~3 min
+  </div>
+  
+</section>
+
+<!-- STOCK TRACKER -->
+<section class="section" id="tracker">
+  <div class="label">📈 My Stock Tracker
+    <form action="/tracker/obsidian" method="post" style="display:inline;margin-left:10px">
+      <button type="submit" class="btn-obs">SYNC OBSIDIAN</button>
+    </form>
+    <a href="/tracker/history" target="_blank" style="font-size:9px;margin-left:8px;color:var(--muted)">exit history →</a>
+  </div>
+  
+  <p style="color:var(--muted);font-size:12px;padding:14px;background:var(--surface);border:1px solid var(--border)">
+    No stocks tracked. Hit <strong>+ TRACK</strong> on any Top 5 pick or add manually below.
+  </p>
+  
+  <div class="form-box">
+    <h4>+ Add Stock Manually</h4>
+    <form action="/tracker/add" method="post">
+      <div class="frow">
+        <input type="text" name="symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
+        <input type="text" name="name" placeholder="Name">
+        <input type="number" step="0.01" name="entry_price" placeholder="Entry Price" required>
+        <input type="number" step="0.01" name="target_price" placeholder="Target Price" required>
+      </div>
+      <div class="frow">
+        <input type="number" step="0.01" name="stop_loss" placeholder="Stop Loss">
+        <input type="text" name="timeframe" placeholder="Timeframe" value="2-3 months">
+        <input type="text" name="thesis" placeholder="Why this stock?" style="flex:3">
+      </div>
+      <button type="submit" class="btn">ADD TO TRACKER</button>
+    </form>
+  </div>
+</section>
+
+<!-- MONEY + PRODUCTIVITY -->
+<section class="section" id="hacks">
+  <div class="label">💰 Money Hack &amp; ⚡ Productivity</div>
+  <div class="two">
+    <div class="tip-card">
+      <h3>💰 Gold via SGB</h3>
+      <p>Sovereign Gold Bonds: 2.5% interest + gold price appreciation. No storage cost.</p>
+    </div>
+    <div class="tip-card" style="border-left-color:var(--green)">
+      <h3 style="color:var(--green)">⚡ Today's Rule</h3>
+      <p>Build systems, not goals. Goals are outcomes; systems produce them.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  <strong style="color:var(--accent)">THE DAILY SIGNAL</strong> · Akshay Kothari · @askakshayfinance<br>
+  <span style="color:#333">news.askakshay.com · Refreshes 6 AM IST · Built with Claude Code</span>
+</div>
+
+<script>
+setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+</script>
+</body>
+</html>

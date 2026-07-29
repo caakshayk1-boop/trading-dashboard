@@ -1,0 +1,42 @@
+name: Daily Newspaper — Generate & Publish
+
+on:
+  schedule:
+    - cron: "30 0 * * *"   # 6:00 AM IST (00:30 UTC)
+  workflow_dispatch:         # manual trigger anytime
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate newspaper HTML
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OBSIDIAN_GITHUB_REPO: caakshayk1-boop/obsidian-brain
+        run: python generate.py
+
+      - name: Commit & push docs/index.html
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html
+          git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
