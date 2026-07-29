@@ -1298,7 +1298,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 </div>
 
 <script>
-// Static site — no auto-reload (page is regenerated daily at 6am IST)
+setTimeout(() => window.location.href = '/trading-dashboard/', 5 * 60 * 1000);
 </script>
 </body>
 </html>"""
