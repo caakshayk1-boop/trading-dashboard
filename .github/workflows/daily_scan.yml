@@ -8,9 +8,11 @@ name: SwingDesk Pro — Auto Scan
 # 10:00–14:30 IST (every 30 min) → intraday momentum tier
 on:
   schedule:
-    - cron: '50 3 * * 1-5'       # 09:20 IST — morning (Mon-Fri)
-    - cron: '15 6 * * 1-5'       # 11:45 IST — midday (Mon-Fri)
-    - cron: '0 11 * * 1-5'       # 16:30 IST — EOD + measured equity engine
+    # 09:20 IST removed 2026-07-30 — it fired five minutes after the open,
+    # before any position had moved enough for a price alert to mean anything,
+    # and its signal scans were already stripped as unmeasured.
+    - cron: '15 6 * * 1-5'       # 11:45 IST — midday position check (Mon-Fri)
+    - cron: '0 11 * * 1-5'       # 16:30 IST — EOD + measured equity + ledger
     - cron: '0 4 * * 6'          # 09:30 IST — Saturday full + multibaggers
     #
     # The 30-minute intraday tier (10:00–14:30 IST, 9 runs/day) was removed on
