@@ -1479,7 +1479,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-meta">
     <span>news.askakshay.com · Personal Edition</span>
     <span>{{ date_str }}</span>
-    <span>{{ updated_at }} IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
+    <span>{{ updated_at }} IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻ refresh</a></span>
   </div>
 </div>
 
@@ -1761,7 +1761,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
   {% else %}
   <div style="padding:20px;color:var(--muted);font-size:13px;font-style:italic;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    ⏳ Scanning 200 global stocks for best momentum setups... first load ~3 min
+    📅 Top 5 picks refresh every Monday morning via GitHub Actions · Check back after 6 AM IST Monday
   </div>
   {% endif %}
 </section>
@@ -1847,7 +1847,27 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 </div>
 
 <script>
-setTimeout(() => window.location.href = '/trading-dashboard/', 5 * 60 * 1000);
+// Auto-refresh every 5 min
+setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+
+// Block tracker form submissions on static GitHub Pages (routes don't exist)
+document.addEventListener('DOMContentLoaded', () => {
+  const staticHost = location.hostname.includes('github.io');
+  if (staticHost) {
+    document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(f => {
+      f.addEventListener('submit', e => {
+        e.preventDefault();
+        alert('Stock Tracker requires the live server. This static page auto-refreshes daily with market data — tracker features are not available here.');
+      });
+    });
+    document.querySelectorAll('a[href^="/tracker"], a[href^="/api"]').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); });
+      a.style.opacity = '0.3';
+      a.style.cursor = 'not-allowed';
+      a.style.pointerEvents = 'auto';
+    });
+  }
+});
 </script>
 </body>
 </html>"""

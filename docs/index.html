@@ -174,7 +174,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-meta">
     <span>news.askakshay.com · Personal Edition</span>
     <span>Wednesday, July 29 2026</span>
-    <span>22:08 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
+    <span>22:13 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻ refresh</a></span>
   </div>
 </div>
 
@@ -206,19 +206,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">S&P 500</span>
-    <span>7356</span>
+    <span>7354</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24584</span>
+    <span>24568</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4075.0</span>
+    <span>$4075.8</span>
     <span class="up"></span>
   </div>
   
@@ -236,7 +236,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63768</span>
+    <span>$63601</span>
     <span class="dn"></span>
   </div>
   
@@ -420,9 +420,9 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">MarketWatch</div>
-        <h3><a href="https://www.marketwatch.com/story/time-will-tell-whether-that-was-a-good-bet-my-adviser-got-me-a-full-spacex-ipo-allocation-was-i-lucky-7f319645?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">‘Time will tell whether that was a good bet’: My adviser got me a full SpaceX IPO allocation. Was I lucky?</a></h3>
-        <p>“Investors frequently receive only a small fraction of the shares they request — if they receive any at all.”</p>
-        <div class="ts">Jul 29 16:30</div>
+        <h3><a href="https://www.marketwatch.com/story/oil-prices-rise-after-u-s-and-saudi-arabia-attack-iran-backed-militias-in-iraq-f0f409ea?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">Global oil prices top $88 a barrel after Trump vows retaliation for surprise Iranian attack on U.S. troops</a></h3>
+        <p>Oil prices rose on Wednesday after President Donald Trump said the U.S. would order heavy strikes after Iran targeted American forces in the</p>
+        <div class="ts">Jul 29 16:36</div>
       </div>
       
     
@@ -475,19 +475,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">S&P 500</div>
-      <div class="mkt-price">7356</div>
+      <div class="mkt-price">7354</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24584</div>
+      <div class="mkt-price">24568</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4075.0</div>
+      <div class="mkt-price">$4075.8</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -505,7 +505,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63768</div>
+      <div class="mkt-price">$63601</div>
       <div class="mkt-chg dn"></div>
     </div>
     
@@ -591,7 +591,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="label">🔥 Top 5 Trade Ideas · Global 200 Universe (India + US + Global) · Refreshes Weekly · 20–30% Target</div>
   
   <div style="padding:20px;color:var(--muted);font-size:13px;font-style:italic;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    ⏳ Scanning 200 global stocks for best momentum setups... first load ~3 min
+    📅 Top 5 picks refresh every Monday morning via GitHub Actions · Check back after 6 AM IST Monday
   </div>
   
 </section>
@@ -651,7 +651,27 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 </div>
 
 <script>
-setTimeout(() => window.location.href = '/trading-dashboard/', 5 * 60 * 1000);
+// Auto-refresh every 5 min
+setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+
+// Block tracker form submissions on static GitHub Pages (routes don't exist)
+document.addEventListener('DOMContentLoaded', () => {
+  const staticHost = location.hostname.includes('github.io');
+  if (staticHost) {
+    document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(f => {
+      f.addEventListener('submit', e => {
+        e.preventDefault();
+        alert('Stock Tracker requires the live server. This static page auto-refreshes daily with market data — tracker features are not available here.');
+      });
+    });
+    document.querySelectorAll('a[href^="/tracker"], a[href^="/api"]').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); });
+      a.style.opacity = '0.3';
+      a.style.cursor = 'not-allowed';
+      a.style.pointerEvents = 'auto';
+    });
+  }
+});
 </script>
 </body>
 </html>
