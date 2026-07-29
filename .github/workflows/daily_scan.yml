@@ -10,18 +10,18 @@ on:
   schedule:
     - cron: '50 3 * * 1-5'       # 09:20 IST — morning (Mon-Fri)
     - cron: '15 6 * * 1-5'       # 11:45 IST — midday (Mon-Fri)
-    - cron: '0 11 * * 1-5'       # 16:30 IST — EOD (Mon-Fri)
+    - cron: '0 11 * * 1-5'       # 16:30 IST — EOD + measured equity engine
     - cron: '0 4 * * 6'          # 09:30 IST — Saturday full + multibaggers
-    # Intraday 30-min tier: 10:00–14:30 IST = 04:30–09:00 UTC (Mon-Fri)
-    - cron: '30 4 * * 1-5'       # 10:00 IST
-    - cron: '0 5 * * 1-5'        # 10:30 IST
-    - cron: '30 5 * * 1-5'       # 11:00 IST
-    - cron: '0 6 * * 1-5'        # 11:30 IST
-    - cron: '0 7 * * 1-5'        # 12:30 IST
-    - cron: '30 7 * * 1-5'       # 13:00 IST
-    - cron: '0 8 * * 1-5'        # 13:30 IST
-    - cron: '30 8 * * 1-5'       # 14:00 IST
-    - cron: '0 9 * * 1-5'        # 14:30 IST
+    #
+    # The 30-minute intraday tier (10:00–14:30 IST, 9 runs/day) was removed on
+    # 2026-07-30. It fired unmeasured signals and nothing ever established that
+    # it had an edge. The closest thing we can measure — the 1H commodity
+    # engine — backtested at -0.029R over 545 trades, while the daily-close
+    # equity engine came in at +0.171R over 459 trades. Short intraday
+    # horizons look like where the edge goes to die, so the burden of proof is
+    # on re-adding it with a backtest, not on keeping it.
+    #   python backtest.py --asset equity      # +0.171R
+    #   python backtest.py --asset cf          # -0.029R
   workflow_dispatch:              # manual trigger from GitHub UI
 
 concurrency:
@@ -70,32 +70,13 @@ jobs:
       - name: Ensure data directory exists
         run: mkdir -p data logs cache
 
-      - name: Detect scan slot
-        id: slot
-        run: |
-          HOUR_UTC=$(date -u +%H)
-          MIN_UTC=$(date -u +%M)
-          # Intraday window: 04:30–09:00 UTC (10:00–14:30 IST), but not 03:50 morning or 06:15 midday
-          # Morning: ~03:50 UTC | Midday: ~06:15 UTC | EOD: ~11:00 UTC
-          if [ "$HOUR_UTC" = "03" ] && [ "$MIN_UTC" -ge 45 ]; then
-            echo "type=standard" >> $GITHUB_OUTPUT
-          elif [ "$HOUR_UTC" = "06" ] && [ "$MIN_UTC" -ge 10 ] && [ "$MIN_UTC" -le 20 ]; then
-            echo "type=standard" >> $GITHUB_OUTPUT
-          elif [ "$HOUR_UTC" = "11" ] && [ "$MIN_UTC" -le 5 ]; then
-            echo "type=standard" >> $GITHUB_OUTPUT
-          elif [ "$HOUR_UTC" = "04" ] && [ "$MIN_UTC" = "00" ]; then
-            echo "type=standard" >> $GITHUB_OUTPUT  # Saturday
-          else
-            echo "type=intraday" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Run standard scanner
-        if: steps.slot.outputs.type == 'standard'
+      # Slot detection was removed with the intraday tier. It keyed off the
+      # UTC minute and fell through to "intraday" on anything unrecognised —
+      # so a cron delayed past its window (GitHub routinely runs several
+      # minutes late) would silently run the wrong scanner. standalone_scan.py
+      # derives its own slot from IST, which is the correct source anyway.
+      - name: Run scanner
         run: python standalone_scan.py
-
-      - name: Run intraday scanner
-        if: steps.slot.outputs.type == 'intraday'
-        run: python intraday_scan.py
 
       - name: Commit signal data to repo
         if: always()
