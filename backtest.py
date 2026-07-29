@@ -149,9 +149,17 @@ def report(trades, label=""):
     tot  = df.r.sum()
     eq   = df.r.cumsum()
     dd   = float((eq - eq.cummax()).min())
+    # t = mean / standard error. Expectancy alone is meaningless without it:
+    # a small positive mean over a noisy sample is indistinguishable from
+    # zero, and picking the best of N swept configs is biased upward by
+    # construction. |t| < 2 means "not shown to differ from no edge".
+    sd   = float(df.r.std(ddof=1)) if n > 1 else 0.0
+    t    = exp / (sd / (n ** 0.5)) if sd > 0 and n > 1 else 0.0
+    verdict = "edge" if t >= 2 else "noise" if abs(t) < 2 else "negative"
     print(f"  {label}trades {n:4d} | win {wr:5.1f}% | expectancy {exp:+.3f}R "
-          f"| total {tot:+.1f}R | maxDD {dd:.1f}R")
-    return {"n": n, "win_rate": wr, "expectancy": exp, "total_r": tot, "max_dd": dd}
+          f"| total {tot:+.1f}R | maxDD {dd:.1f}R | t={t:+.2f} ({verdict})")
+    return {"n": n, "win_rate": wr, "expectancy": exp, "total_r": tot,
+            "max_dd": dd, "t_stat": round(t, 2), "sd": round(sd, 3)}
 
 
 def main():
@@ -220,7 +228,13 @@ def main():
         print("\n" + "=" * 66 + "\nRanked by expectancy:")
         for label, r in sorted(results, key=lambda x: -x[1]["expectancy"]):
             print(f"  {r['expectancy']:+.3f}R  win {r['win_rate']:5.1f}%  "
-                  f"n={r['n']:4d}  {label}")
+                  f"n={r['n']:4d}  t={r['t_stat']:+.2f}  {label}")
+        best = max(results, key=lambda x: x[1]["expectancy"])[1]
+        if best["t_stat"] < 2:
+            print("\n  WARNING: the best config has |t| < 2, so it is not "
+                  "distinguishable\n  from zero edge. Selecting the top of a "
+                  "sweep is upward-biased —\n  treat this as 'no edge found', "
+                  "not as a tuned strategy.")
 
 
 if __name__ == "__main__":
