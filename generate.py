@@ -32,6 +32,7 @@ from newspaper import (
     get_cfo_lesson,
     get_chess_lesson,
     get_wisdom_lesson,
+    get_book_lesson,
     get_top5_picks,
     get_tracker_stocks,
     get_money_hack,
@@ -72,6 +73,7 @@ def generate() -> None:
     cfo     = get_cfo_lesson()
     chess   = get_chess_lesson()
     wisdom  = get_wisdom_lesson()
+    book    = get_book_lesson()
     money   = get_money_hack()
     prod    = get_productivity_tip()
 
@@ -99,6 +101,7 @@ def generate() -> None:
         cfo=cfo,
         chess=chess,
         wisdom=wisdom,
+        book=book,
         money_hack=money,
         productivity_tip=prod,
         top5=top5,

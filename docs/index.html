@@ -92,6 +92,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
 .cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
 .cfo-body{font-size:13px;line-height:1.8;color:#ccc}
+.book-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #c084fc;padding:20px}
+.book-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;font-family:sans-serif;margin-bottom:4px}
+.book-title{font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:12px;line-height:1.4}
+.book-body{font-size:13px;line-height:1.9;color:#ccc;margin-bottom:16px}
+.book-quote{font-size:13px;font-style:italic;color:#c084fc;border-left:3px solid #c084fc;padding-left:12px;margin-bottom:16px}
+.book-action{background:#1e1333;border:1px solid #6d28d9;border-radius:6px;padding:14px;font-size:12px;color:#ddd;line-height:1.7}
+.book-action strong{color:#c084fc;display:block;margin-bottom:4px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
 
 /* MARKETS */
 .mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -167,7 +174,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-meta">
     <span>news.askakshay.com · Personal Edition</span>
     <span>Wednesday, July 29 2026</span>
-    <span>21:55 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
+    <span>22:05 IST · <a href="/api/refresh" style="color:var(--muted)">↻ refresh</a></span>
   </div>
 </div>
 
@@ -183,6 +190,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#case">📚 Case Study</a>
   <a href="#fpna">🎓 FP&A</a>
   <a href="#cfo">🏆 FC→CFO</a>
+  <a href="#book">📚 Books</a>
   <a href="#picks">🔥 Top 5</a>
   <a href="#tracker">📈 Tracker</a>
   <a href="#hacks">💰 Money</a>
@@ -198,25 +206,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">S&P 500</span>
-    <span>7357</span>
+    <span>7356</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24584</span>
+    <span>24579</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4068.0</span>
+    <span>$4074.2</span>
     <span class="up"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Crude</span>
-    <span>$84.83</span>
+    <span>$84.35</span>
     <span class="up"></span>
   </div>
   
@@ -228,8 +236,8 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63984</span>
-    <span class="up"></span>
+    <span>$63813</span>
+    <span class="dn"></span>
   </div>
   
   <div class="t-item">
@@ -251,13 +259,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Bikaner</div>
       <div class="wx-emoji">🌦️</div>
-      <div class="wx-temp">31.4°C</div>
+      <div class="wx-temp">31.3°C</div>
       <div class="wx-cond">Light Drizzle</div>
       <div class="wx-range">↑ 37.3° · ↓ 29.3°</div>
       <div class="wx-meta">
         <span>💧 76%</span>
-        <span>💨 4.2 km/h</span>
-        <span>🌡 Feels 38.7°C</span>
+        <span>💨 5.2 km/h</span>
+        <span>🌡 Feels 38.4°C</span>
       </div>
       <div class="wx-rain lo">
         🌧 Rain chance: 22%
@@ -268,13 +276,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Kolkata</div>
       <div class="wx-emoji">🌦️</div>
-      <div class="wx-temp">26.9°C</div>
+      <div class="wx-temp">27.0°C</div>
       <div class="wx-cond">Light Drizzle</div>
       <div class="wx-range">↑ 30.9° · ↓ 25.7°</div>
       <div class="wx-meta">
         <span>💧 90%</span>
-        <span>💨 12.0 km/h</span>
-        <span>🌡 Feels 31.9°C</span>
+        <span>💨 11.3 km/h</span>
+        <span>🌡 Feels 32.2°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 100% — carry umbrella
@@ -285,13 +293,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">MY</div>
       <div class="wx-city">Kuala Lumpur</div>
       <div class="wx-emoji">☁️</div>
-      <div class="wx-temp">25.6°C</div>
+      <div class="wx-temp">25.5°C</div>
       <div class="wx-cond">Overcast</div>
       <div class="wx-range">↑ 31.4° · ↓ 23.7°</div>
       <div class="wx-meta">
         <span>💧 94%</span>
-        <span>💨 0.2 km/h</span>
-        <span>🌡 Feels 32.0°C</span>
+        <span>💨 0.3 km/h</span>
+        <span>🌡 Feels 31.9°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 84% — carry umbrella
@@ -384,37 +392,37 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/technology/article/qualcomm-q3-earnings-to-highlight-ais-impact-on-smartphone-market-data-center-plans-160509349.html" target="_blank" style="color:var(--text)">Qualcomm Q3 earnings to highlight AI's impact on smartphone market, data center plans</a></h3>
+        <h3><a href="https://finance.yahoo.com/small-business/articles/giant-wine-spirits-brand-files-170700174.html" target="_blank" style="color:var(--text)">National beer and wine distributor files Chapter 11 bankruptcy</a></h3>
         <p></p>
-        <div class="ts">Jul 29 16:05</div>
+        <div class="ts">Jul 29 00:09</div>
       </div>
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/healthcare/articles/explainer-j-j-finally-put-160252107.html" target="_blank" style="color:var(--text)">Explainer-Can J&J finally put the talc litigation behind it?</a></h3>
+        <h3><a href="https://www.investors.com/news/dow-jones-stock-chevron-oil-price-surge-trump-venezuela-cvx-stock-price/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Dow Leader Rides Surging Oil Prices And Trump's Venezuela Spoils</a></h3>
         <p></p>
-        <div class="ts">Jul 29 16:02</div>
+        <div class="ts">Jul 29 16:16</div>
       </div>
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/markets/live/stock-market-today-wednesday-july-29-dow-sp-500-nasdaq-082009165.html" target="_blank" style="color:var(--text)">Stock market today: Dow falls over 800 points, S&P 500 and Nasdaq slide in countdown to Fed decision, AI earnings test</a></h3>
+        <h3><a href="https://finance.yahoo.com/news/oil-rises-us-iran-tension-032028533.html" target="_blank" style="color:var(--text)">Oil jumps 7% on escalating Middle East airstrikes</a></h3>
         <p></p>
-        <div class="ts">Jul 29 08:20</div>
+        <div class="ts">Jul 29 16:16</div>
       </div>
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/technology/articles/apple-says-uk-app-store-155341930.html" target="_blank" style="color:var(--text)">Apple says UK App Store proposal amounts to price regulation</a></h3>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/caterpillar-trades-3x-historical-multiple-161312284.html" target="_blank" style="color:var(--text)">Caterpillar Trades at 3x Its Historical Multiple — Michael Burry Is Betting Against It</a></h3>
         <p></p>
-        <div class="ts">Jul 29 15:55</div>
+        <div class="ts">Jul 29 16:13</div>
       </div>
       
       <div class="ncard">
         <div class="src">MarketWatch</div>
-        <h3><a href="https://www.marketwatch.com/story/a-key-cryptocurrency-bill-could-flop-because-of-trumps-crypto-ventures-and-banks-objections-76b7445b?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">A key cryptocurrency bill could flop because of Trump’s crypto ventures and banks’ objections</a></h3>
-        <p>The Clarity Act’s progress in May helped lift the price of bitcoin, but now the measure is facing obstacles in the full Senate.</p>
-        <div class="ts">Jul 29 16:03</div>
+        <h3><a href="https://www.marketwatch.com/story/time-will-tell-whether-that-was-a-good-bet-my-adviser-got-me-a-full-spacex-ipo-allocation-was-i-lucky-7f319645?mod=mw_rss_topstories" target="_blank" style="color:var(--text)">‘Time will tell whether that was a good bet’: My adviser got me a full SpaceX IPO allocation. Was I lucky?</a></h3>
+        <p>“Investors frequently receive only a small fraction of the shares they request — if they receive any at all.”</p>
+        <div class="ts">Jul 29 16:30</div>
       </div>
       
     
@@ -467,25 +475,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">S&P 500</div>
-      <div class="mkt-price">7357</div>
+      <div class="mkt-price">7356</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24584</div>
+      <div class="mkt-price">24579</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4068.0</div>
+      <div class="mkt-price">$4074.2</div>
       <div class="mkt-chg up"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Crude</div>
-      <div class="mkt-price">$84.83</div>
+      <div class="mkt-price">$84.35</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -495,10 +503,10 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="mkt-chg dn"></div>
     </div>
     
-    <div class="mkt-card u">
+    <div class="mkt-card d">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63984</div>
-      <div class="mkt-chg up"></div>
+      <div class="mkt-price">$63813</div>
+      <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
@@ -563,6 +571,18 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="cfo-card">
     <div class="cfo-title">CFO Step 4: Board Communication</div>
     <div class="cfo-body">CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings.</div>
+  </div>
+</section>
+
+<!-- BOOK LESSONS -->
+<section class="section" id="book">
+  <div class="label">📚 Book Library · Daily Lesson · 27/48 · Top Business &amp; Productivity Books</div>
+  <div class="book-card">
+    <div class="book-meta">Essentialism · Greg McKeown</div>
+    <div class="book-title">The 90% Rule: If It's Not a Hell Yes, It's a No</div>
+    <div class="book-body">McKeown's 90% rule for decisions: when evaluating an opportunity, give it a score from 0 to 100 on fit with your most important criteria. If it scores below 90, say no. This sounds extreme. In practice, it forces clarity: most things we say yes to are 60-70% fits — good enough, not great. The 60% fits crowd out the 90% opportunities that actually advance your most important goals. Every yes is an implicit no to everything else. The question is not 'is this a good opportunity?' but 'is this the best opportunity I have right now?'</div>
+    <div class="book-quote">"Every yes costs you a no somewhere else. Make sure the trade is worth it."</div>
+    <div class="book-action"><strong>Today's Action</strong>Apply the 90% rule to your next opportunity or request. Score it honestly. If it's below 90, practice saying a polite no.</div>
   </div>
 </section>
 

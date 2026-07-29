@@ -727,6 +727,310 @@ def get_wisdom_lesson() -> dict:
     return {"title": title, "body": body, "index": idx + 1, "total": len(WISDOM_LESSONS)}
 
 # ─────────────────────────────────────────────────────────────
+# BOOK LESSONS — Daily rotating, detailed
+# ─────────────────────────────────────────────────────────────
+
+BOOK_LESSONS = [
+    (
+        "Atomic Habits", "James Clear", "The 1% Rule: Why Small Gains Compound Into Extraordinary Results",
+        "If you get 1% better every day for a year, you end up 37 times better. If you get 1% worse, you decay to nearly zero. Most people overestimate what they can do in a day and underestimate what they can do in a year of consistent 1% improvements. Clear's central insight: you don't rise to the level of your goals, you fall to the level of your systems. Goals are for direction. Systems are for progress.",
+        "Habits are the compound interest of self-improvement.",
+        "Identify one tiny habit you can improve by 1% today. Stack it onto an existing behaviour: after [CURRENT HABIT], I will [NEW HABIT]."
+    ),
+    (
+        "Atomic Habits", "James Clear", "Identity-Based Habits: Become the Person First",
+        "Most people start with outcomes (lose 10kg), then think about processes (exercise), and never examine identity (I am someone who moves their body daily). Clear argues you should flip it. Start with identity: who do you want to become? Every action you take is a vote for that identity. Cast enough votes and the identity solidifies. A smoker trying to quit says 'I'm trying to quit.' A non-smoker says 'I don't smoke.' Same external action, completely different internal frame — and the internal frame determines long-term behaviour.",
+        "The most practical way to change who you are is to change what you do.",
+        "Pick one identity statement: 'I am a daily learner.' 'I am someone who finishes what they start.' Then find one action today that votes for that identity."
+    ),
+    (
+        "Atomic Habits", "James Clear", "The Four Laws of Behaviour Change",
+        "Every habit is built on four components: Cue (make it obvious) → Craving (make it attractive) → Response (make it easy) → Reward (make it satisfying). To build a good habit, apply all four. To break a bad one, invert them: make it invisible, make it unattractive, make it difficult, make it unsatisfying. The two-minute rule: when starting a new habit, it should take less than two minutes. You're not running 5km yet — you're putting on your running shoes. The gateway habit becomes the habit.",
+        "Reduce friction for good habits. Increase friction for bad ones.",
+        "Apply the two-minute rule to one habit you've been failing to start. Make the first step so small it's impossible to say no."
+    ),
+    (
+        "Deep Work", "Cal Newport", "The Shallow Work Trap: Why Being Busy Is Not the Same as Being Productive",
+        "Shallow work is non-cognitively demanding tasks performed while distracted — email, meetings, admin. Deep work is professional activity performed in a state of distraction-free concentration that pushes your cognitive capabilities to their limit. These efforts create new value, improve your skill, and are hard to replicate. Newport's argument: the ability to do deep work is becoming increasingly rare at exactly the same time it is becoming increasingly valuable in the economy. The few who cultivate this skill will thrive.",
+        "Two to four hours of genuine deep work produces more output than eight hours of fragmented shallow work.",
+        "Schedule one 90-minute deep work block tomorrow. No phone, no email, one hard problem. Treat it like a meeting you cannot cancel."
+    ),
+    (
+        "Deep Work", "Cal Newport", "The Any-Benefit Mindset vs The Craftsman Mindset",
+        "Most people adopt the any-benefit mindset for tools: if a tool provides any benefit, use it. This is why everyone is on every social platform, attending every meeting, checking email all day. Newport argues for the craftsman mindset: identify the core factors that determine your success and happiness. Adopt a tool only if its positive impacts on these factors substantially outweigh its negative ones. Your attention is finite. Every tool that fragments it has a cost, even if it has some benefits. The question is never 'is there value here?' but 'is this the best use of my limited attention?'",
+        "Your attention is your most valuable professional asset. Spend it deliberately.",
+        "List your three most important professional skills. Then ask: does checking social media or attending this meeting help or hurt those skills?"
+    ),
+    (
+        "The Psychology of Money", "Morgan Housel", "Wealth Is What You Don't See",
+        "We judge wealth by what we see: cars, clothes, houses. But wealth is actually the money not spent — it's invisible. The person driving a ₹1 crore car might have zero savings. The person in the modest apartment might have ₹10 crore liquid. Housel's key insight: spending money to show people how much money you have is the fastest way to have less money. True wealth is options — the ability to wake up and say 'I can do what I want, when I want, with who I want.' That requires unspent money, not displayed money.",
+        "Rich is a current income. Wealthy is accumulated assets. They are not the same.",
+        "Track your net worth monthly, not your lifestyle. Net worth = financial freedom. Lifestyle = just looking free."
+    ),
+    (
+        "The Psychology of Money", "Morgan Housel", "You Are Not a Spreadsheet. You Are a Person with Emotions.",
+        "The financial advice that is mathematically optimal is often behaviourally impossible. A 100% equity portfolio maximises long-run returns — but if you panic and sell at the bottom of every crash, you'd have been better off in a balanced fund. Housel's argument: the best investment strategy is the one you can actually stick to. Reasonable > rational. A plan that accounts for human psychology beats a theoretically perfect plan that you'll abandon when the market drops 40%. Know your emotional tolerances. Build them into your plan.",
+        "The highest return is earned by the investor who can survive the worst years, not the one with the best spreadsheet.",
+        "Ask yourself: if my portfolio dropped 40% tomorrow, what would I do? Build a strategy you'd actually execute in that scenario."
+    ),
+    (
+        "The Psychology of Money", "Morgan Housel", "Tail Events Drive Everything",
+        "In investing and in life, a small number of events account for the majority of outcomes. Venture capital funds know that 1 investment out of 50 will return the entire fund. Amazon's success is almost entirely explained by AWS — which started as an internal experiment. Housel's lesson: you can be wrong most of the time and still be enormously successful if you're right on the few things that matter most. This means long tail bets matter. Staying in the game long enough to hit the tails matters. Avoiding ruin so you can be there for the rare extraordinary outcomes matters most.",
+        "You only need to be right a few times in your life, as long as you don't catastrophically lose the ability to keep playing.",
+        "Identify the two or three decisions in your career/portfolio that would be truly transformative. Optimise for those, not the daily noise."
+    ),
+    (
+        "Zero to One", "Peter Thiel", "Competition Is for Losers",
+        "Thiel's most contrarian idea: competition is not virtuous. Monopoly is. Competitive markets destroy profit margins as businesses race to the bottom on price. A monopoly earns outsized profits because it has no competition. Google has 90%+ search market share and 25%+ net margins. A restaurant in a crowded market has 5% margins. Thiel argues: don't compete. Create something so different that you have no competition. Ask not 'how do I beat my competitors?' but 'how do I build something where there are no competitors?'",
+        "If you are competing, you are not monopolising. If you are not monopolising, you are not building a truly great business.",
+        "Ask about your current work or business: who are my direct competitors? If you have many, that's a warning sign. Find the niche where you can be the only one."
+    ),
+    (
+        "Zero to One", "Peter Thiel", "Secrets: What Truth Do Very Few People Agree With You On?",
+        "Every great business is built on a secret — a truth that most people don't see or believe yet. PayPal's secret: people would use the internet for payments before the internet was trusted. Airbnb's secret: people would stay in strangers' homes. Tesla's secret: electric cars could be desirable, not just practical. Thiel's question for every entrepreneur: 'What important truth do very few people agree with you on?' This is the diagnostic for whether you're building something genuinely new or just another incremental improvement on an existing idea.",
+        "The best companies are built on secrets. Secrets require that you do the uncomfortable work of thinking differently from the crowd.",
+        "Write down one belief you hold about your industry or career that most people in your field would disagree with. Is there a business or career opportunity hidden in that belief?"
+    ),
+    (
+        "Good to Great", "Jim Collins", "The Hedgehog Concept: Do One Thing Brilliantly",
+        "The fox knows many things. The hedgehog knows one big thing. Collins studied 1,435 Fortune 500 companies over 40 years to find which ones went from good to great. The great ones were all hedgehogs: they found the intersection of three circles — what they are deeply passionate about, what they can be the best in the world at, and what drives their economic engine. They focused there relentlessly and ignored everything else. Good-to-great companies didn't diversify into new businesses. They went deeper into their hedgehog concept until they dominated it.",
+        "Greatness comes from doing one thing so well that the world cannot ignore you.",
+        "Draw your three circles: Passion / Best-in-world potential / Economic driver. Where they overlap is your hedgehog. Do you spend most of your time there?"
+    ),
+    (
+        "Good to Great", "Jim Collins", "Level 5 Leadership: Humility + Will",
+        "Collins expected great companies to be led by charismatic visionary CEOs. He found the opposite. Every good-to-great company had a Level 5 leader — someone who combined fierce professional will with personal humility. They were ambitious for the company, not themselves. When things went well, they looked out the window and gave credit to others. When things went wrong, they looked in the mirror and took responsibility. They were more like Lincoln than Patton — quietly determined rather than loudly inspiring.",
+        "The most effective leaders are often the least visible. Ego is the enemy of great leadership.",
+        "Next time something goes well on your team, actively give someone else the credit. Notice how it feels and what it does to team morale."
+    ),
+    (
+        "Good to Great", "Jim Collins", "The Flywheel: No Single Defining Action",
+        "No good-to-great company had a single defining moment, a killer strategy launch, or a magic programme. Instead, the transformation always followed a flywheel pattern: push the heavy flywheel, it barely moves, keep pushing consistently in one direction, it builds momentum, eventually it reaches a breakthrough — but there was no single push that did it. The mistake most organisations make is looking for the one big thing. The reality is thousands of consistent small things, all pointing the same direction, that eventually produce dramatic results.",
+        "Sustainable success is built through consistent, compounding effort — not single dramatic breakthroughs.",
+        "Identify your flywheel: what is the core loop in your career or business that, if pushed consistently, would build unstoppable momentum?"
+    ),
+    (
+        "Thinking, Fast and Slow", "Daniel Kahneman", "System 1 vs System 2: Two Ways Your Brain Decides",
+        "Kahneman's central framework: System 1 is fast, automatic, emotional, unconscious — it drives 95% of decisions. System 2 is slow, deliberate, logical, effortful — it's what we think we use but rarely do. The problem: System 1 is riddled with biases and heuristics that made sense in evolutionary environments but lead to poor decisions in modern ones. Loss aversion (losses feel 2× more painful than equivalent gains feel good), anchoring (first number heard influences all subsequent judgements), availability bias (things that come to mind easily feel more probable) — all System 1 errors. Recognition is the first step to override.",
+        "You are not as rational as you think. Your brain is a pattern-matching machine, not a logic processor.",
+        "Before your next important decision, write down your reasoning explicitly. Externalising it activates System 2 and reveals System 1 shortcuts."
+    ),
+    (
+        "Thinking, Fast and Slow", "Daniel Kahneman", "The Planning Fallacy: Why Every Project Takes Longer",
+        "Kahneman and Tversky proved that humans systematically underestimate how long tasks take and overestimate how much they'll accomplish. Why? We build plans based on the best-case scenario and ignore what happened on similar projects in the past (outside view). The fix: reference class forecasting. Before estimating a project's timeline, ask 'how long did similar projects actually take?' The answer from historical data is almost always longer than your optimistic internal estimate. The cure for the planning fallacy is disciplined use of the outside view.",
+        "Your intuitive project estimate is probably optimistic by 50-200%. Add a buffer based on historical data, not hope.",
+        "For your next project, find 3 similar past projects. Average their actual completion time. Use that as your baseline estimate."
+    ),
+    (
+        "Principles", "Ray Dalio", "Radical Transparency and Believability-Weighted Decision Making",
+        "Dalio built Bridgewater into the world's largest hedge fund on two principles: radical transparency (everyone says what they really think, no politics, no hidden agendas) and believability-weighted decisions (not all opinions are equal — weight each person's input by their track record and expertise in that specific area). The combination creates a meritocracy of ideas where the best idea wins regardless of who had it. Most organisations do the opposite: hide information, weight opinions by seniority, and let politics determine outcomes. The result is poor decisions made confidently.",
+        "An organisation where people say what they think and decisions are made on merit will outperform one run on hierarchy and politics.",
+        "In your next team discussion, explicitly state your confidence level and reasoning. Encourage others to challenge your view if they disagree."
+    ),
+    (
+        "Principles", "Ray Dalio", "Pain + Reflection = Progress",
+        "Dalio's formula for growth: Pain + Reflection = Progress. Every painful experience — a mistake, a failure, a loss — contains information that, if properly processed, makes you better. The mistake most people make is avoiding pain (denial, blame) or wallowing in it (self-pity, rumination) without converting it into learning. Dalio's habit after any significant setback: write down what happened, what you could have done differently, and what principle you need to update or add. He built Bridgewater's entire operating manual from 40 years of documented mistakes and learnings.",
+        "Your mistakes are your most valuable teachers. Only those who extract the lesson grow faster than those who don't make mistakes at all.",
+        "After your next significant failure or setback, write a post-mortem: what happened, why, what you'd do differently, what principle to add."
+    ),
+    (
+        "The Lean Startup", "Eric Ries", "Build-Measure-Learn: Stop Building What Nobody Wants",
+        "The biggest waste in startups — and in corporate innovation — is building products nobody wants. Ries's solution: the Build-Measure-Learn loop. Start with a hypothesis about what customers want. Build the minimum viable product (MVP) to test it — not a polished product, just enough to learn. Measure how real customers actually behave. Learn whether your hypothesis was right. Pivot or persevere based on evidence, not ego. The goal is to minimise the total time through the loop. Most teams optimise for building fast. They should optimise for learning fast.",
+        "Speed of learning, not speed of building, is the true competitive advantage of innovative teams.",
+        "Identify one assumption behind your current project. What is the cheapest, fastest test you could run to validate or invalidate it this week?"
+    ),
+    (
+        "The Lean Startup", "Eric Ries", "Validated Learning and Vanity Metrics",
+        "Ries distinguishes actionable metrics (data that changes decisions) from vanity metrics (numbers that make you feel good but don't drive decisions). Page views, social followers, downloads — these feel like traction but often obscure the real question: are people actually getting value? The metric that matters is whether customers are changing their behaviour because of your product. Cohort analysis (tracking a specific group over time) beats aggregate totals. Retention beats acquisition. Revenue per user beats total users. Always ask: if this metric goes up, do I know what to do differently?",
+        "If a metric doesn't change your decisions, it's a vanity metric. Build dashboards around actionable data only.",
+        "Audit your current metrics. For each one, ask: 'if this number doubles, what would I do differently?' If the answer is 'nothing,' drop the metric."
+    ),
+    (
+        "Shoe Dog", "Phil Knight", "Just Start. Ship the Prototype.",
+        "Phil Knight's memoir of building Nike is a masterclass in starting before you're ready. He started by importing Japanese running shoes from Onitsuka Tiger with no retail experience, no capital, no strategy. He sold them from the boot of his car at track meets. He kept the company alive for 12 years on the edge of bankruptcy, constantly one rejected bank loan away from collapse. His key lesson: don't wait until you have it figured out. Start with the version you can afford. Learn on real customers with real money at stake. Iterate from there. Nike's swoosh was designed by a student for $35.",
+        "The perfect plan never survives first contact with reality. Start imperfectly and iterate.",
+        "Identify one project you've been waiting to start until conditions are better. What is the smallest possible version you could execute this week?"
+    ),
+    (
+        "7 Habits of Highly Effective People", "Stephen Covey", "Begin With the End in Mind",
+        "Covey's second habit: all things are created twice — first in the mind, then in the physical world. Everything you build, achieve, or create begins as a mental blueprint. Most people let life happen to them rather than designing it deliberately. The exercise: write your own eulogy. What do you want people to say about you as a parent, partner, professional, community member? That vision becomes your personal mission statement. Every decision then gets filtered through it: does this action align with the person I'm trying to become? This is the difference between living by design and living by default.",
+        "If you don't define success for yourself, you'll spend your life achieving someone else's definition of it.",
+        "Write 3 sentences about the legacy you want to leave as a father and as a finance professional. Read them every morning this week."
+    ),
+    (
+        "7 Habits of Highly Effective People", "Stephen Covey", "Habit 1: Be Proactive — The 90/10 Principle",
+        "10% of life is what happens to you. 90% is how you respond. This is the core of proactivity: between stimulus and response, there is a gap. In that gap is your freedom to choose. Reactive people let their moods and circumstances determine their behaviour. Proactive people subordinate impulse to values. Covey's Circle of Influence vs Circle of Concern: proactive people focus on what they can control (Circle of Influence) and it expands. Reactive people focus on what they cannot control (Circle of Concern) — market conditions, other people's behaviour, the economy — and feel increasingly helpless.",
+        "Focus on what you can control. Your response is always within your Circle of Influence.",
+        "List 3 things worrying you. Categorise each: can I influence this or not? Only spend energy on the ones you can influence."
+    ),
+    (
+        "7 Habits of Highly Effective People", "Stephen Covey", "Habit 4: Think Win-Win or No Deal",
+        "Most people operate from scarcity — if you win, I lose. Win-win thinking comes from an abundance mentality: there is enough for everyone, and cooperation creates more value than competition. Covey's most important corollary: 'or No Deal.' If a genuine win-win solution cannot be found, the integrity move is to agree not to deal. Not every partnership, transaction, or negotiation should happen. The willingness to walk away from a bad deal is what makes you trustworthy in good ones. People who always find a way to close the deal always find a way to disadvantage one party.",
+        "Win-win is not compromise. It's a creative solution where both parties genuinely benefit.",
+        "In your next negotiation or conflict, explicitly ask: 'what does the other person actually need here?' Then find a solution that addresses both needs."
+    ),
+    (
+        "The Hard Thing About Hard Things", "Ben Horowitz", "The Struggle Is Not a Bug. It's a Feature.",
+        "Horowitz's book is the antidote to every startup fairytale. He describes 'the Struggle' — the period when everything is going wrong, you have no good options, you're alone, and nothing in your background prepared you for this moment. His message: the Struggle is not a sign you're doing it wrong. It's the nature of building something hard. The skills that get you through the Struggle — making decisions with incomplete information, maintaining team morale in crisis, managing your own psychology when the business is burning — cannot be learned in school. They are learned only by going through it.",
+        "There are no silver bullets in building a company. Only lead bullets — doing the hard, unglamorous work when everything is broken.",
+        "Identify the thing you're avoiding right now because it's uncomfortable. That avoidance is costing you more than the discomfort of doing it."
+    ),
+    (
+        "The Hard Thing About Hard Things", "Ben Horowitz", "Peacetime CEO vs Wartime CEO",
+        "Horowitz's most cited framework: peacetime CEOs follow rules, build consensus, develop people. Wartime CEOs break rules, make unilateral calls, prioritise survival. The same leadership style that builds a great culture in a period of growth will lose the company in a crisis. The mistake most leaders make: being a peacetime CEO in wartime. When the company is burning — cash running out, key customer leaving, competitor eating your lunch — you cannot run consensus meetings. You need to make fast, clear decisions, even imperfect ones, and demand execution. Know which mode you're in.",
+        "Leadership style must match the situation. A peacetime approach in wartime is as dangerous as a wartime approach in peacetime.",
+        "What mode is your current situation in — peacetime (optimise) or wartime (survive)? Is your leadership style calibrated to it?"
+    ),
+    (
+        "Essentialism", "Greg McKeown", "The Disciplined Pursuit of Less",
+        "Essentialism is not about doing less for the sake of it. It's about doing less so you can do the most important things better. McKeown's central question: 'Is this the most important thing I could be doing with my time right now?' Most non-essentialists say yes to almost everything — more responsibility, more projects, more commitments. They become diffuse, mediocre at many things. The essentialist says yes to almost nothing, then executes the few things with total focus and energy. The paradox: doing less produces more impact because the energy is concentrated.",
+        "If you don't prioritise your life, someone else will.",
+        "List everything on your current plate. Identify the one thing that, if done brilliantly, would make the most difference. Protect that first."
+    ),
+    (
+        "Essentialism", "Greg McKeown", "The 90% Rule: If It's Not a Hell Yes, It's a No",
+        "McKeown's 90% rule for decisions: when evaluating an opportunity, give it a score from 0 to 100 on fit with your most important criteria. If it scores below 90, say no. This sounds extreme. In practice, it forces clarity: most things we say yes to are 60-70% fits — good enough, not great. The 60% fits crowd out the 90% opportunities that actually advance your most important goals. Every yes is an implicit no to everything else. The question is not 'is this a good opportunity?' but 'is this the best opportunity I have right now?'",
+        "Every yes costs you a no somewhere else. Make sure the trade is worth it.",
+        "Apply the 90% rule to your next opportunity or request. Score it honestly. If it's below 90, practice saying a polite no."
+    ),
+    (
+        "The ONE Thing", "Gary Keller", "What's the ONE Thing That Makes Everything Else Easier?",
+        "Keller's focusing question: 'What is the ONE Thing I can do, such that by doing it, everything else becomes easier or unnecessary?' This question forces prioritisation at the deepest level. Most to-do lists are lists of tasks with no hierarchy. The focusing question demands you find the task that is the linchpin — the one that, if done, makes other tasks unnecessary or simpler. Applied to a business: the one customer that unlocks others. Applied to a career: the one skill that opens all doors. Applied to a day: the one call that makes the rest of the day productive.",
+        "Extraordinary results are directly determined by how narrow you can make your focus.",
+        "Every morning, before opening email, answer: 'What is the ONE Thing I can do today that would make everything else easier?' Do that first."
+    ),
+    (
+        "Start With Why", "Simon Sinek", "The Golden Circle: Why, How, What",
+        "Most companies communicate from the outside in: what they do, then how they do it, then why. Apple communicates from the inside out: why first (we believe in challenging the status quo), then how (by making beautifully designed, simple products), then what (we make computers and phones). The why speaks to the limbic brain — the emotional, decision-making centre. The what speaks to the neocortex — logical but not the driver of decisions. People don't buy what you do, they buy why you do it. This is why Apple users are more loyal than Dell users, even when specs are comparable.",
+        "People don't buy what you do. They buy why you do it. And they don't care about your what until they believe your why.",
+        "Write your personal WHY in one sentence: 'I exist to _____ so that _____.' Does your daily work reflect this?"
+    ),
+    (
+        "Thinking in Bets", "Annie Duke", "Resulting: Don't Judge Decisions by Outcomes",
+        "Professional poker player Annie Duke's core insight: we judge decisions by outcomes (resulting), but the quality of a decision is independent of its outcome. A bad decision can produce a good outcome (lucky). A good decision can produce a bad outcome (unlucky). If you judge your decisions by results, you'll reinforce bad thinking when it gets lucky and abandon good thinking when it gets unlucky. The fix: evaluate decisions by the quality of the reasoning and information available at the time, not by what happened. This is how professional investors, poker players, and military strategists think.",
+        "A great decision made with the information available can still produce a bad outcome. That doesn't make it a bad decision.",
+        "Review your last 3 major decisions. For each one, ask: was this a good decision given what I knew? Separate the quality of the process from the result."
+    ),
+    (
+        "Thinking in Bets", "Annie Duke", "Seek Disconfirming Evidence",
+        "Humans are wired for confirmation bias — we notice and remember information that confirms our existing beliefs and ignore or discount information that challenges them. Duke's remedy: actively seek people and information that disagree with you. Before committing to a position, ask 'what would have to be true for me to be wrong?' Find the strongest version of the opposing argument (steelmanning, not strawmanning). The goal is not to change your mind on everything — it's to update your beliefs proportionally to the evidence. Strong opinions, weakly held.",
+        "Your best thinking comes from actively testing your beliefs against the strongest opposing evidence.",
+        "Before your next important decision, write the strongest possible case for the opposite position. Does it change your thinking?"
+    ),
+    (
+        "Outliers", "Malcolm Gladwell", "The 10,000 Hour Rule and What It Actually Means",
+        "Gladwell popularised the 10,000 hour rule from Anders Ericsson's research: world-class expertise requires roughly 10,000 hours of deliberate practice. But the key word is deliberate — not just doing something for 10,000 hours, but practising with specific feedback, at the edge of your ability, working on weaknesses. The Beatles didn't just play 10,000 hours; they played 1,200 live shows in Hamburg, often 8 hours a night, which forced rapid skill development under pressure. Bill Gates didn't just use computers; he had access to one of the world's first terminals at 13 and coded obsessively for years before dropping out of Harvard.",
+        "Talent is overrated. Accumulated deliberate practice, often enabled by unusual early access, is underrated.",
+        "In your primary skill (FP&A), identify the one sub-skill you're weakest at. Design deliberate practice for it: feedback, difficulty, repetition."
+    ),
+    (
+        "Mindset", "Carol Dweck", "Fixed vs Growth Mindset: The Belief That Changes Everything",
+        "Dweck's 30 years of research found that children (and adults) hold one of two fundamental beliefs about their abilities. Fixed mindset: abilities are innate — you're either smart or you're not. This leads to avoiding challenges (to avoid looking dumb), giving up when things get hard, and feeling threatened by others' success. Growth mindset: abilities develop through dedication and hard work. This leads to embracing challenges, persisting through setbacks, and finding inspiration in others' success. The most important finding: the mindset is not fixed. It can be changed by learning about it.",
+        "The belief that your abilities are fixed is the only thing that makes them fixed.",
+        "Notice your self-talk after a failure today. Is it fixed ('I'm not good at this') or growth ('I haven't learned this yet')? The word 'yet' is the most powerful in the growth mindset."
+    ),
+    (
+        "Grit", "Angela Duckworth", "Passion and Perseverance: The Formula That Beats Talent",
+        "Duckworth's research across West Point cadets, Scripps spelling bee champions, and sales teams found that the most important predictor of success was not talent, IQ, or physical fitness. It was grit — the combination of passion for a long-term goal and the perseverance to pursue it despite obstacles and setbacks. Grit predicts success better than talent in almost every domain. The most talented people often lack grit because things have come too easily — they've never had to develop the capacity to push through failure. The grittier person with modest talent consistently outperforms the talented person who quits.",
+        "Talent × effort = skill. Skill × effort = achievement. Effort counts twice.",
+        "Identify one long-term goal you've been inconsistent about. What would it look like to commit to it with grit — showing up daily regardless of motivation?"
+    ),
+    (
+        "Built to Last", "Jim Collins & Jerry Porras", "Preserve the Core, Stimulate Progress",
+        "Collins and Porras studied 18 visionary companies (3M, P&G, Disney, HP) against comparison companies over 100 years. The visionary companies were not more focused on profit — they were more focused on a core ideology (core values + purpose) that never changed. But within that fixed core, they drove relentless change in strategy, tactics, products, and people. The paradox: the companies most resistant to changing their values were the most agile in changing everything else. The core ideology acted as an anchor, giving the freedom to experiment. Companies that change their values with market fashion have no anchor and drift.",
+        "Know what must never change (your values and purpose). Change everything else constantly.",
+        "Write your 3 non-negotiable core values. For each, ask: does my current work reflect this? Would I keep this value even if it cost me money?"
+    ),
+    (
+        "The E-Myth Revisited", "Michael Gerber", "Work ON Your Business, Not IN It",
+        "Gerber's central argument: most small businesses are started by technicians who love their craft — a baker who opens a bakery, an accountant who opens a firm. They are brilliant at the technical work but have no idea how to build a business. The fatal mistake: working in the business (doing the craft) instead of on it (building the systems). The goal is to build a business that can run without you. Every process should be documented. Every role should have a system. The business should be a franchise prototype — replicable, teachable, and not dependent on any one person's genius.",
+        "If your business can't run without you, you don't own a business — you own a job.",
+        "Identify one thing only you do in your work that, if systematised, could be done by someone else. Write the system this week."
+    ),
+    (
+        "Never Split the Difference", "Chris Voss", "Tactical Empathy: The Most Powerful Negotiation Tool",
+        "FBI hostage negotiator Chris Voss's core technique: tactical empathy. Not sympathy (feeling what they feel) but empathy (understanding what they feel and why). In any negotiation, the other party has emotional needs underneath their stated position. Label those emotions: 'It seems like you're frustrated by the timeline.' 'It sounds like you feel the value isn't there.' Labelling emotions defuses them and builds trust. When people feel understood, they are more open to creative solutions. The biggest mistake in negotiation is treating it as purely rational — it is almost always emotional first.",
+        "The fastest path to yes in any negotiation is to make the other person feel genuinely understood first.",
+        "In your next difficult conversation, try one label: 'It seems like...' or 'It sounds like...' and see what happens to the tone."
+    ),
+    (
+        "Never Split the Difference", "Chris Voss", "The Power of No and Calibrated Questions",
+        "Voss argues that 'no' is not the opposite of 'yes' in negotiation — it's the beginning. When someone says no, they feel safe. They feel in control. A fake yes (where they agree to get you off their back) is far worse than a genuine no. His technique: ask questions that invite 'no.' 'Is now a bad time to talk?' gets a more honest response than 'Is now a good time?' His other key tool: calibrated questions — open-ended questions starting with 'what' and 'how' that force the other person to problem-solve. 'How am I supposed to do that?' puts the problem back on them without being confrontational.",
+        "'No' means 'I'm not comfortable yet.' Your job is to find out what would make them comfortable.",
+        "In your next negotiation, replace 'Can you do X?' with 'How can we make X work?' Notice how differently people respond."
+    ),
+    (
+        "The Innovator's Dilemma", "Clayton Christensen", "Why Great Companies Fail at Exactly the Right Moment",
+        "Christensen's paradox: the best-managed companies, doing everything right — listening to customers, investing in quality, maximising margins — are the most vulnerable to disruption. Disruptive technologies start at the bottom of the market (cheaper, simpler, worse performance) serving customers who don't exist yet. They improve over time until they're good enough for mainstream customers. By then, it's too late for incumbents to respond. Nokia had better technology than Apple in 2007. Blockbuster had better retail locations than Netflix. They failed not despite their excellence but because of it — their success made them unable to cannibalise themselves.",
+        "Excellence in executing today's business model can blind you to the business model that will replace it.",
+        "Ask about your industry: what is the simpler, cheaper, 'worse' solution that currently serves the bottom of the market? Could it eventually serve everyone?"
+    ),
+    (
+        "Made in America", "Sam Walton", "The 10 Rules That Built Walmart",
+        "Sam Walton built the world's largest retailer from a small Arkansas five-and-dime store. His rules: commit to your business; share profits with employees; energise your associates; communicate everything; appreciate associates; celebrate successes; listen to everyone in your company; exceed customers' expectations; control expenses; swim upstream (do the opposite of what everyone else does). The most counterintuitive: Walmart succeeded by treating employees as partners and sharing information and profits broadly, while competitors treated labour as a cost to minimise. Also: Walton flew his own plane to personally visit stores until he was 70.",
+        "The best business intelligence comes from people closest to the customer. Go there yourself and listen.",
+        "Identify someone in your team or organisation who is closest to the customer/problem. Ask them what they're seeing that leadership doesn't know about."
+    ),
+    (
+        "High Output Management", "Andy Grove", "The Most Valuable Output of a Manager",
+        "Andy Grove, Intel CEO, wrote the definitive book on management. His central insight: the output of a manager is the output of their team and the teams they influence. You are not paid to do your own work well — you are paid to maximise the output of those around you. The most leveraged activity for a manager: training and coaching. One hour of coaching that makes 10 people 10% more effective is worth 10 times more than 10 hours of personal output. His concept of 'managerial leverage' — activities that multiply the output of many — is the framework for deciding how to spend every hour.",
+        "A manager's productivity is measured by the productivity they enable in others, not by their own output.",
+        "As a future financial controller: identify one skill you could teach someone on your team that would multiply your collective output."
+    ),
+    (
+        "High Output Management", "Andy Grove", "OKRs: Objectives and Key Results",
+        "Grove invented OKRs at Intel in the 1970s. John Doerr brought them to Google in 1999. The structure: Objective (qualitative, inspirational — where do we want to go?) + Key Results (quantitative, measurable — how will we know we got there?). Rules: 3-5 OKRs per quarter. Each with 3-5 key results. They should be set at 60-70% achievable — if you always hit 100%, your targets are too easy. OKRs should be public so every team member can see how their work connects to company goals. The discipline of writing OKRs forces clarity on what actually matters and exposes misalignment between teams.",
+        "What gets measured gets managed. What gets publicly committed to gets done.",
+        "Write one personal OKR for this quarter: Objective (where you want to be in your career by end of Q3) + 3 Key Results (how you'll know you got there)."
+    ),
+    (
+        "The 4-Hour Work Week", "Tim Ferriss", "The 80/20 of Everything: Most Effort Is Wasted",
+        "Ferriss's most useful contribution: ruthless application of Pareto's 80/20 principle to everything. 20% of customers generate 80% of revenue — and usually 120% of headaches. 20% of tasks generate 80% of results. 20% of foods cause 80% of health problems for a given person. The exercise: list every customer, task, and activity. Identify the 20% producing 80% of value. Do more of that. Then identify the 20% consuming 80% of your time and energy with minimal value. Eliminate, automate, or delegate it. Most knowledge workers are busy with the bottom 80% and neglect the top 20%.",
+        "Being busy is not the same as being productive. Most of what we do doesn't matter nearly as much as we think it does.",
+        "List your 10 most frequent work activities. Rank by impact. The bottom 3 — can any be eliminated, automated, or delegated?"
+    ),
+    (
+        "Poor Charlie's Almanack", "Charlie Munger", "Mental Models: Think in Multiple Frameworks",
+        "Charlie Munger's approach to decision-making: build a 'latticework of mental models' from multiple disciplines. The person who only knows accounting sees every problem through accounting. The person who knows psychology, economics, biology, physics, and history sees the problem in full. Munger's rule: you need 80-90 mental models to think well. The key ones: compound interest (mathematics), evolution (biology), supply and demand (economics), confirmation bias (psychology), systems thinking (engineering). His most important: 'I never allow myself to have an opinion I can't defend with the strongest arguments on the other side.'",
+        "The person with one framework is fragile. The person with many frameworks is antifragile — they see what others miss.",
+        "Pick one field outside finance to study this month: psychology, history, or biology. Look for one principle that applies directly to your FP&A work."
+    ),
+    (
+        "Poor Charlie's Almanack", "Charlie Munger", "Inversion: Solve Problems Backwards",
+        "Munger's most powerful thinking tool: inversion. Instead of asking 'how do I succeed?' ask 'what would guarantee failure, and how do I avoid that?' The great German mathematician Jacobi said: 'Invert, always invert.' Applied to business: instead of 'how do we grow revenue?' ask 'what is destroying our revenue and how do we eliminate it?' Applied to life: instead of 'how do I be happy?' ask 'what makes people miserable and how do I avoid those things?' Avoiding stupidity is often more important than pursuing brilliance.",
+        "The most reliable path to success is to identify and systematically avoid the most common causes of failure.",
+        "Think of your biggest current goal. List the top 5 things that would guarantee you fail at it. Now focus on eliminating those."
+    ),
+    (
+        "Antifragile", "Nassim Taleb", "Build Systems That Gain From Disorder",
+        "Taleb's central idea: the opposite of fragile is not robust (survives shocks unchanged) — it is antifragile (gets stronger from shocks). Your muscles are antifragile — stress them and they grow. Your immune system is antifragile. Most institutions are fragile — they optimise for efficiency and have no slack, so unexpected shocks destroy them. To build antifragility: have optionality (many small bets, not one big one), avoid debt (debt makes you fragile to cash flow shocks), benefit from volatility (career skills that are more valuable in crisis than in calm), and build redundancy (slack is not waste — it's the shock absorber).",
+        "Don't just plan to survive crises. Build a life and career that becomes stronger because of them.",
+        "Identify one area of your life (financial, professional, health) that is fragile — one shock away from breaking. What would make it antifragile?"
+    ),
+    (
+        "The Checklist Manifesto", "Atul Gawande", "Checklists Are Not for Dumb People. They're for Experts.",
+        "Surgeon Atul Gawande studied why brilliant surgeons and pilots make elementary errors. The answer: not incompetence but complexity. Modern tasks have too many steps for any brain to hold reliably under pressure. His solution, borrowed from aviation: checklists. A two-minute surgical checklist reduced surgical complications by 36% and deaths by 47% in a global study. The lesson for knowledge work: expertise does not eliminate the need for process discipline. The most error-prone moments are not the hard parts of a task — they're the routine parts where experts assume they can proceed from memory. They can't.",
+        "Checklists are not about distrust of expertise. They are about respecting the limits of human memory under pressure.",
+        "Identify your most error-prone recurring process (month-end close, financial review). Write a checklist for it this week. Use it next time."
+    ),
+    (
+        "Measure What Matters", "John Doerr", "Stretch Goals Change What's Possible",
+        "Doerr profiles how OKRs drove Google's 10× growth. The key principle: set 'stretch goals' that are uncomfortable — goals that you're not sure you can achieve. A goal you can definitely hit in normal circumstances is not ambitious enough. Google's rule: OKRs should score 0.6-0.7 (60-70% achieved) consistently. If you're hitting 1.0 every quarter, your targets are too conservative. This is counterintuitive for finance professionals trained to hit budgets. In innovation contexts, the right level of ambition makes success feel slightly out of reach — that tension drives breakthrough thinking, not incremental improvement.",
+        "If you never miss a target, your targets are too safe. Set goals that force you to change how you work, not just do more of what you already do.",
+        "Set one 10× goal for your career in the next 2 years. Not 10% better — 10× different. What would have to change for that to happen?"
+    ),
+]
+
+def get_book_lesson() -> dict:
+    idx = (date.today().toordinal() + 23) % len(BOOK_LESSONS)
+    book, author, chapter, lesson, key_quote, action = BOOK_LESSONS[idx]
+    return {
+        "book": book, "author": author, "chapter": chapter,
+        "lesson": lesson, "key_quote": key_quote, "action": action,
+        "index": idx + 1, "total": len(BOOK_LESSONS),
+    }
+
+# ─────────────────────────────────────────────────────────────
 # TOP 5 STOCK PICKS
 # ─────────────────────────────────────────────────────────────
 
@@ -1093,6 +1397,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
 .cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
 .cfo-body{font-size:13px;line-height:1.8;color:#ccc}
+.book-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #c084fc;padding:20px}
+.book-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;font-family:sans-serif;margin-bottom:4px}
+.book-title{font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:12px;line-height:1.4}
+.book-body{font-size:13px;line-height:1.9;color:#ccc;margin-bottom:16px}
+.book-quote{font-size:13px;font-style:italic;color:#c084fc;border-left:3px solid #c084fc;padding-left:12px;margin-bottom:16px}
+.book-action{background:#1e1333;border:1px solid #6d28d9;border-radius:6px;padding:14px;font-size:12px;color:#ddd;line-height:1.7}
+.book-action strong{color:#c084fc;display:block;margin-bottom:4px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
 
 /* MARKETS */
 .mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -1184,6 +1495,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#case">📚 Case Study</a>
   <a href="#fpna">🎓 FP&A</a>
   <a href="#cfo">🏆 FC→CFO</a>
+  <a href="#book">📚 Books</a>
   <a href="#picks">🔥 Top 5</a>
   <a href="#tracker">📈 Tracker</a>
   <a href="#hacks">💰 Money</a>
@@ -1402,6 +1714,18 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 </section>
 
+<!-- BOOK LESSONS -->
+<section class="section" id="book">
+  <div class="label">📚 Book Library · Daily Lesson · {{ book.index }}/{{ book.total }} · Top Business &amp; Productivity Books</div>
+  <div class="book-card">
+    <div class="book-meta">{{ book.book }} · {{ book.author }}</div>
+    <div class="book-title">{{ book.chapter }}</div>
+    <div class="book-body">{{ book.lesson }}</div>
+    <div class="book-quote">"{{ book.key_quote }}"</div>
+    <div class="book-action"><strong>Today's Action</strong>{{ book.action }}</div>
+  </div>
+</section>
+
 <!-- TOP 5 PICKS -->
 <section class="section" id="picks">
   <div class="label">🔥 Top 5 Trade Ideas · Global 200 Universe (India + US + Global) · Refreshes Weekly · 20–30% Target</div>
@@ -1542,6 +1866,7 @@ def index():
         cfo            = get_cfo_lesson()
         chess          = get_chess_lesson()
         wisdom         = get_wisdom_lesson()
+        book           = get_book_lesson()
         top5           = get_top5_picks()
         tracker        = get_tracker_stocks()
         money          = get_money_hack()
@@ -1557,7 +1882,7 @@ def index():
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=now.strftime("%H:%M"),
             markets=markets, news=news, fpna=fpna, cfo=cfo,
-            chess=chess, wisdom=wisdom,
+            chess=chess, wisdom=wisdom, book=book,
             top5=top5, tracker=tracker, money_hack=money,
             productivity_tip=prod, weather=weather,
             quote=quote, lesson=lesson, case=case,
@@ -1574,6 +1899,7 @@ def index():
             cfo={"title":"Loading","body":"","index":0,"total":1},
             chess={"title":"Loading","body":"","index":0,"total":1},
             wisdom={"title":"Loading","body":"","index":0,"total":1},
+            book={"book":"Loading","author":"","chapter":"Loading","lesson":"","key_quote":"","action":"","index":0,"total":1},
             top5=[], tracker=[], money_hack={"title":"Loading","body":""},
             productivity_tip="Loading...", weather=[],
             quote={"quote":"","name":"","index":0,"total":1},
