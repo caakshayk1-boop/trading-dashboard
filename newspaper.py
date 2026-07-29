@@ -1298,7 +1298,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 </div>
 
 <script>
-setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+// Static site — no auto-reload (page is regenerated daily at 6am IST)
 </script>
 </body>
 </html>"""
