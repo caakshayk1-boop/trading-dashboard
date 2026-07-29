@@ -547,137 +547,93 @@ TERMINATION_MAP = {
     "cheat": "Cheat detected", "unknownFinish": "Aborted",
 }
 
-def _lichess_headers() -> dict:
-    h = {"Accept": "application/x-ndjson"}
-    token = os.environ.get("LICHESS_TOKEN", "")
-    if token:
-        h["Authorization"] = f"Bearer {token}"
-    return h
-
-def _stream_lichess(url: str, params: dict) -> list:
-    try:
-        r = requests.get(url, params=params, headers=_lichess_headers(), timeout=20, stream=True)
-        if r.status_code != 200:
-            return []
-        games = []
-        for line in r.iter_lines():
-            if line:
-                try:
-                    games.append(json.loads(line))
-                except Exception:
-                    pass
-        return games
-    except Exception as e:
-        log.warning(f"Lichess stream error: {e}")
-        return []
-
 def fetch_lichess_games() -> list[dict]:
-    """Fetch yesterday's games (IST) for AKK_010 with full analysis."""
+    """
+    Uses /api/user/{user}/activity — public, no token needed.
+    Returns yesterday's per-speed W/L/D breakdown as a list of dicts.
+    Activity API gives counts only (no individual game links), but works without auth.
+    If LICHESS_TOKEN is set, also fetches individual games for deep analysis.
+    """
     ist = timezone(timedelta(hours=5, minutes=30))
     now = datetime.now(ist)
-    yest = now - timedelta(days=1)
-    day_start = datetime(yest.year, yest.month, yest.day, 0, 0, 0, tzinfo=ist)
-    day_end   = datetime(yest.year, yest.month, yest.day, 23, 59, 59, tzinfo=ist)
+    yest = (now - timedelta(days=1)).date()
 
-    raw = _stream_lichess(
-        f"https://lichess.org/api/games/user/{LICHESS_USER}",
-        {"since": int(day_start.timestamp()*1000), "until": int(day_end.timestamp()*1000),
-         "opening": "true", "pgnInJson": "true", "max": 50},
-    )
+    try:
+        r = requests.get(
+            f"https://lichess.org/api/user/{LICHESS_USER.lower()}/activity",
+            headers={"Accept": "application/json"}, timeout=15,
+        )
+        if r.status_code != 200:
+            return []
+        acts = r.json()
+    except Exception as e:
+        log.warning(f"Lichess activity: {e}")
+        return []
+
+    # Find yesterday's entry (timestamps are UTC midnight in ms)
+    yest_games: dict = {}
+    for entry in acts:
+        ts  = entry.get("interval", {}).get("start", 0) // 1000
+        day = datetime.fromtimestamp(ts, tz=timezone.utc).date()
+        if day == yest:
+            yest_games = entry.get("games", {})
+            break
+
+    if not yest_games:
+        return []
+
+    # Build synthetic game records from activity counts
     games = []
-    for g in raw:
-        players   = g.get("players", {})
-        white_id  = players.get("white", {}).get("user", {}).get("name", "").lower()
-        is_white  = white_id == LICHESS_USER.lower()
-        my_side   = "White" if is_white else "Black"
-        opp_dict  = players.get("black" if is_white else "white", {})
-        me_dict   = players.get("white" if is_white else "black", {})
-        opponent  = opp_dict.get("user", {}).get("name", "?")
-        opp_rating = opp_dict.get("rating", "?")
-        my_rating  = me_dict.get("rating", "?")
-
-        winner = g.get("winner", "")
-        status = g.get("status", "")
-        if not winner or status == "draw":
-            result, result_icon, result_cls = "Draw", "½", "draw"
-        elif (winner == "white" and is_white) or (winner == "black" and not is_white):
-            result, result_icon, result_cls = "Win", "✅", "win"
-        else:
-            result, result_icon, result_cls = "Loss", "❌", "loss"
-
-        op = g.get("opening", {}) or {}
-        opening_name = op.get("name", "Unknown Opening").split(":")[0].strip()
-        opening_eco  = op.get("eco", "")
-        termination  = TERMINATION_MAP.get(status, status.title())
-        speed        = g.get("speed", g.get("perf", "?"))
-
-        moves_str  = g.get("moves", "") or ""
-        num_moves  = len(moves_str.split()) // 2
-        all_moves  = moves_str.split()
-        # Last 4 half-moves as final sequence
-        final_seq  = " ".join(all_moves[-6:]) if len(all_moves) >= 6 else moves_str
-
-        # Groq deep analysis
-        analysis = ""
-        if GROQ_KEY and opening_name:
-            prompt = (
-                f"Chess analysis. I played {my_side} (rated {my_rating}) vs {opponent} ({opp_rating}). "
-                f"Opening: {opening_eco} {opening_name}. Result: {result} by {termination} in {num_moves} moves. "
-                f"Final moves: {final_seq}. "
-                f"Give ONE specific, actionable improvement in 25 words. Brutal honesty. No fluff."
-            )
-            analysis = groq_complete(prompt, max_tokens=60)
-
+    for speed, stats in yest_games.items():
+        w = stats.get("win", 0)
+        l = stats.get("loss", 0)
+        d = stats.get("draw", 0)
+        total = w + l + d
+        pct   = round(w / total * 100) if total else 0
         games.append({
-            "id": g.get("id",""), "url": f"https://lichess.org/{g.get('id','')}",
-            "result": result, "result_icon": result_icon, "result_cls": result_cls,
-            "my_side": my_side, "my_rating": my_rating,
-            "opponent": opponent, "opp_rating": opp_rating,
-            "opening": opening_name, "eco": opening_eco,
-            "moves": num_moves, "termination": termination,
-            "speed": speed.title() if speed else "?",
-            "final_seq": final_seq, "analysis": analysis,
+            "speed":       speed.title(),
+            "wins":        w,
+            "losses":      l,
+            "draws":       d,
+            "total":       total,
+            "pct":         pct,
+            "profile_url": f"https://lichess.org/@/{LICHESS_USER}",
         })
     return games
 
 def get_lichess_summary(games: list[dict]) -> dict:
     if not games:
         return {}
-    wins   = sum(1 for g in games if g["result"] == "Win")
-    losses = sum(1 for g in games if g["result"] == "Loss")
-    draws  = sum(1 for g in games if g["result"] == "Draw")
-    total  = len(games)
+    wins   = sum(g["wins"]   for g in games)
+    losses = sum(g["losses"] for g in games)
+    draws  = sum(g["draws"]  for g in games)
+    total  = wins + losses + draws
     pct    = round(wins / total * 100) if total else 0
     icon   = "✅" if pct >= 55 else ("⚖️" if pct >= 45 else "❌")
-    # opening weakness (last 14d)
-    op_stats: dict = {}
-    raw14 = _stream_lichess(
-        f"https://lichess.org/api/games/user/{LICHESS_USER}",
-        {"since": int((datetime.now(timezone.utc)-timedelta(days=14)).timestamp()*1000),
-         "opening": "true", "max": 40},
-    )
-    for g in raw14:
-        white_id = g.get("players",{}).get("white",{}).get("user",{}).get("name","").lower()
-        is_white = white_id == LICHESS_USER.lower()
-        winner   = g.get("winner","")
-        won = (winner=="white" and is_white) or (winner=="black" and not is_white)
-        op_name = (g.get("opening",{}) or {}).get("name","Unknown").split(":")[0].strip()
-        if op_name not in op_stats:
-            op_stats[op_name] = [0,0]
-        op_stats[op_name][1] += 1
-        if won:
-            op_stats[op_name][0] += 1
-    weak = [(n,w,t) for n,(w,t) in op_stats.items() if t >= 2]
-    study_opening = ""
-    if weak:
-        weak.sort(key=lambda x: x[1]/x[2])
-        n,w,t = weak[0]
-        study_opening = f"{n} ({w}/{t} = {round(w/t*100)}% WR)"
+    # 7-day trend from activity
+    trend = []
+    try:
+        r = requests.get(
+            f"https://lichess.org/api/user/{LICHESS_USER.lower()}/activity",
+            headers={"Accept": "application/json"}, timeout=15,
+        )
+        if r.status_code == 200:
+            for entry in r.json()[:7]:
+                ts   = entry.get("interval", {}).get("start", 0) // 1000
+                day  = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%m/%d")
+                g    = entry.get("games", {})
+                tw   = sum(v.get("win",0)  for v in g.values())
+                tl   = sum(v.get("loss",0) for v in g.values())
+                td   = sum(v.get("draw",0) for v in g.values())
+                tt   = tw + tl + td
+                p    = round(tw/tt*100) if tt else 0
+                trend.append({"day": day, "wins": tw, "losses": tl, "draws": td, "total": tt, "pct": p})
+    except Exception:
+        pass
     return {
         "total": total, "wins": wins, "losses": losses, "draws": draws,
-        "pct": pct, "icon": icon,
-        "score": f"{wins}/{total}",
-        "study_opening": study_opening,
+        "pct": pct, "icon": icon, "score": f"{wins}/{total}",
+        "trend": trend,
     }
 
 def fetch_lichess_puzzle() -> dict:
@@ -1676,59 +1632,50 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 
   {% if lichess_games %}
-  {%- set wins = lichess_summary.wins %}
-  {%- set losses = lichess_summary.losses %}
-  {%- set draws = lichess_summary.draws %}
-  {%- set total = lichess_summary.total %}
-  {%- set pct = lichess_summary.pct %}
-  <!-- session header -->
   <div class="lichess-summary">
-    <div class="ls-stat"><div class="ls-num" style="color:var(--green)">{{ wins }}</div><div class="ls-label">Wins</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--red)">{{ losses }}</div><div class="ls-label">Losses</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--muted)">{{ draws }}</div><div class="ls-label">Draws</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--gold)">{{ pct }}%</div><div class="ls-label">Win Rate</div></div>
-    <div class="ls-stat"><div class="ls-num">{{ total }}</div><div class="ls-label">Games</div></div>
-    {% if lichess_summary.study_opening %}
-    <div style="margin-left:auto;font-size:11px;padding:6px 10px;background:#1a0a0a;border:1px solid var(--red);border-radius:4px">
-      📚 Study: <strong style="color:#f87171">{{ lichess_summary.study_opening }}</strong>
-    </div>
-    {% endif %}
+    <div class="ls-stat"><div class="ls-num" style="color:var(--green)">{{ lichess_summary.wins }}</div><div class="ls-label">Wins</div></div>
+    <div class="ls-stat"><div class="ls-num" style="color:var(--red)">{{ lichess_summary.losses }}</div><div class="ls-label">Losses</div></div>
+    <div class="ls-stat"><div class="ls-num" style="color:var(--muted)">{{ lichess_summary.draws }}</div><div class="ls-label">Draws</div></div>
+    <div class="ls-stat"><div class="ls-num" style="color:var(--gold)">{{ lichess_summary.pct }}%</div><div class="ls-label">Win Rate</div></div>
+    <div class="ls-stat"><div class="ls-num">{{ lichess_summary.total }}</div><div class="ls-label">Games</div></div>
   </div>
-  <!-- verdict -->
-  <div style="font-size:13px;padding:10px 14px;margin-bottom:12px;background:var(--surface);border-left:3px solid {{ 'var(--green)' if pct >= 55 else ('var(--gold)' if pct >= 45 else 'var(--red)') }}">
+
+  <div style="font-size:13px;padding:10px 14px;margin-bottom:14px;background:var(--surface);border-left:3px solid {% if lichess_summary.pct >= 55 %}var(--green){% elif lichess_summary.pct >= 45 %}var(--gold){% else %}var(--red){% endif %}">
     {{ lichess_summary.icon }}
-    {% if pct >= 55 %} Good session — openings holding. Review wins to reinforce the patterns.
-    {% elif pct >= 45 %} Balanced session. Find the turning point in each loss.
-    {% else %} Rough session. Step away, review losses before next game. Pattern > volume.{% endif %}
+    {% if lichess_summary.pct >= 55 %} Good session — W{{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review wins to lock in the patterns.
+    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
+    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before next game. Pattern > volume.{% endif %}
   </div>
-  <!-- per-game cards -->
-  <div class="chess-game-grid">
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
     {% for g in lichess_games %}
-    <div class="game-card {{ g.result_cls }}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="game-result {{ g.result_cls }}">{{ g.result_icon }} {{ g.result }}</span>
-          <span style="font-size:10px;color:var(--muted)">as {{ g.my_side }}</span>
-          <span style="font-size:9px;color:var(--muted);background:#111;padding:1px 5px;border-radius:2px">{{ g.speed }}</span>
-        </div>
-        <a href="{{ g.url }}" target="_blank" style="font-size:10px;color:var(--accent);font-family:monospace">▶ Review</a>
+    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 18px;min-width:140px;flex:1">
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">{{ g.speed }}</div>
+      <div style="font-size:22px;font-weight:700;font-family:monospace;color:{% if g.pct >= 55 %}var(--green){% elif g.pct >= 45 %}var(--gold){% else %}var(--red){% endif %}">{{ g.pct }}%</div>
+      <div style="font-size:11px;color:#aaa;margin-top:4px">
+        <span style="color:var(--green)">W{{ g.wins }}</span> ·
+        <span style="color:var(--red)">L{{ g.losses }}</span> ·
+        <span style="color:var(--muted)">D{{ g.draws }}</span> · {{ g.total }} games
       </div>
-      <div class="game-opening">{% if g.eco %}<span style="color:var(--gold);margin-right:4px">{{ g.eco }}</span>{% endif %}{{ g.opening }}</div>
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">{{ g.opponent }}</strong>
-        <span style="color:var(--muted)">({{ g.opp_rating }})</span>
-        · {{ g.moves }} moves · {{ g.termination }}
-        · Me: <span style="color:var(--muted)">{{ g.my_rating }}</span>
-      </div>
-      {% if g.final_seq %}
-      <div class="game-moves">Final: <code>{{ g.final_seq }}</code></div>
-      {% endif %}
-      {% if g.analysis %}
-      <div class="game-analysis">💡 {{ g.analysis }}</div>
-      {% endif %}
+      <a href="{{ g.profile_url }}" target="_blank" style="font-size:9px;color:var(--muted);margin-top:6px;display:block">view on Lichess →</a>
     </div>
     {% endfor %}
   </div>
+
+  {% if lichess_summary.trend %}
+  <div style="margin-bottom:14px">
+    <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">7-Day Win Rate Trend</div>
+    <div style="display:flex;gap:6px;align-items:flex-end;height:70px">
+      {% for t in lichess_summary.trend | reverse %}
+      <div style="flex:1;text-align:center;display:flex;flex-direction:column;justify-content:flex-end">
+        <div style="height:{{ [t.pct * 60 // 100, 3] | max }}px;background:{% if t.pct >= 55 %}var(--green){% elif t.pct >= 45 %}var(--gold){% else %}var(--red){% endif %}"></div>
+        <div style="font-size:8px;color:var(--muted);margin-top:2px">{{ t.day }}</div>
+        <div style="font-size:8px;color:#aaa">{{ t.pct }}%</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 
   {% else %}
   <div style="padding:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center">
@@ -1736,9 +1683,8 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
   {% endif %}
 
-  <!-- Daily Puzzle -->
   {% if lichess_puzzle %}
-  <div style="margin-top:16px;padding:14px;background:#0d1117;border:1px solid var(--gold);border-radius:4px">
+  <div style="margin-top:4px;padding:14px;background:#0d1117;border:1px solid var(--gold)">
     <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px">🧩 Today's Puzzle</div>
     <div style="font-size:12px;color:#ddd;margin-bottom:6px">
       Rating: <strong style="color:var(--gold)">{{ lichess_puzzle.rating }}</strong>
