@@ -26,6 +26,7 @@ from signals.indicators import (
     _tight_sl, _structure_targets,
 )
 from signals.regime   import regime_filter, count_hh_hl
+from symbols          import to_yahoo
 from signals.universe import (
     is_trading_day, FNO_ELIGIBLE, load_nifty500, load_nifty200,
     _next_thursday, _last_thursday_of_month, _smart_expiry, _fno_suggest,
@@ -1070,7 +1071,7 @@ def _check_breakouts(df_d, df_w, df_m):
 def analyze_breakout(symbol):
     """Full breakout analysis: daily + weekly + monthly."""
     try:
-        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        sym_yf = to_yahoo(symbol)
         df_d = _yf_download(sym_yf, period="2y",  interval="1d",  progress=False, auto_adjust=True)
         df_w = _yf_download(sym_yf, period="2y",  interval="1wk", progress=False, auto_adjust=True)
         df_m = _yf_download(sym_yf, period="3y",  interval="1mo", progress=False, auto_adjust=True)
@@ -1230,7 +1231,7 @@ def analyze_4h(symbol):
     Targets: T1=2×ATR (1:2 RR), T2=3.5×ATR (structural)
     """
     try:
-        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        sym_yf = to_yahoo(symbol)
         df = _yf_download(sym_yf, period="90d", interval="4h",
                          progress=False, auto_adjust=True)
         if df is None or df.empty or len(df) < 35:
@@ -1589,7 +1590,7 @@ def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
     Returns signal dict or None.
     """
     try:
-        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        sym_yf = to_yahoo(symbol)
         df = _yf_download(sym_yf, period=period, interval=interval,
                          progress=False, auto_adjust=True)
         if df is None or df.empty or len(df) < 40:
@@ -1749,7 +1750,7 @@ def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
       • Volume expansion: 10 pts
     """
     try:
-        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        sym_yf = to_yahoo(symbol)
         wk = _yf_download(sym_yf, period="3y", interval="1wk",
                          progress=False, auto_adjust=True)
         if wk is None or wk.empty or len(wk) < 52:
@@ -1959,7 +1960,7 @@ def analyze_tg_momentum(symbol):
     Pass: RSI rose from <45 to >48 in last 5 candles + volume 3x avg + bullish candle pattern.
     """
     try:
-        sym_yf = symbol if symbol.endswith(".NS") else symbol + ".NS"
+        sym_yf = to_yahoo(symbol)
         df = yf.Ticker(sym_yf).history(
                 period="90d", interval="4h", auto_adjust=True)
         if df is None or df.empty or len(df) < 30:

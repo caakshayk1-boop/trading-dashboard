@@ -19,6 +19,7 @@ All results logged to signals.db + exported to data/*.json for Streamlit Cloud.
 import sys, logging, os, math
 from datetime import datetime, date
 import pytz
+from symbols import to_yahoo
 
 os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
@@ -111,7 +112,7 @@ def run_price_alerts(time_str: str):
 
     for _, row in open_df.iterrows():
         try:
-            sym_yf  = row["symbol"].replace(".NS", "") + ".NS"
+            sym_yf  = to_yahoo(row["symbol"])
             # Fetch 5-min candles for the day — most recent price
             tick = yf.download(sym_yf, period="1d", interval="5m",
                                progress=False, auto_adjust=True, timeout=8)
