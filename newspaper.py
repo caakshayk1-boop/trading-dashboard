@@ -522,19 +522,19 @@ def get_fpna_tip() -> dict:
 LICHESS_USER = "AKK_010"
 
 def fetch_lichess_games() -> list[dict]:
-    """Fetch yesterday's Lichess games for AKK_010. Returns list of analysed game dicts."""
+    """Fetch last 30 days of Lichess games for AKK_010."""
     from datetime import datetime, timezone, timedelta
     try:
-        yesterday = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
-        today     = yesterday + timedelta(days=1)
+        now       = datetime.now(timezone.utc)
+        since     = now - timedelta(days=30)
         token     = os.environ.get("LICHESS_TOKEN", "")
         headers   = {"Accept": "application/x-ndjson"}
         if token:
             headers["Authorization"] = f"Bearer {token}"
         params = {
-            "since":   int(yesterday.timestamp() * 1000),
-            "until":   int(today.timestamp() * 1000),
-            "max":     30,
+            "since":   int(since.timestamp() * 1000),
+            "until":   int(now.timestamp() * 1000),
+            "max":     50,
             "moves":   "true",
             "opening": "true",
             "evals":   "false",
@@ -1357,13 +1357,14 @@ body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;font-siz
 a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .up{color:var(--green)} .dn{color:var(--red)}
 
-.masthead{border-bottom:3px double var(--border);padding:20px 20px 14px;text-align:center;background:#060709}
-.paper-name{font-size:42px;font-weight:900;letter-spacing:8px;color:var(--accent);line-height:1;font-family:sans-serif}
-.paper-sub{font-style:italic;color:var(--muted);font-size:12px;margin-top:4px;letter-spacing:2px}
-.paper-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:10px;color:var(--muted);
+.sticky-header{position:sticky;top:0;z-index:200;background:#060709}
+.masthead{border-bottom:1px solid var(--border);padding:8px 20px;text-align:center;background:#060709;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.paper-name{font-size:22px;font-weight:900;letter-spacing:4px;color:var(--accent);line-height:1;font-family:sans-serif;white-space:nowrap}
+.paper-sub{display:none}
+.paper-meta{display:flex;gap:16px;font-size:10px;color:var(--muted);justify-content:flex-end;flex:1;
   border-top:1px solid var(--border);padding-top:8px;font-family:monospace}
 
-.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border)}
 .nav a{padding:9px 13px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;
   white-space:nowrap;border-right:1px solid var(--border)}
 .nav a:hover{color:var(--accent);background:var(--surface);text-decoration:none}
@@ -1532,13 +1533,12 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 </head>
 <body>
 
+<div class="sticky-header">
 <div class="masthead">
   <div class="paper-name">THE DAILY SIGNAL</div>
-  <div class="paper-sub">Akshay's Personal Intelligence Brief · Numbers First · Always</div>
   <div class="paper-meta">
-    <span>news.askakshay.com · Personal Edition</span>
     <span>{{ date_str }}</span>
-    <span>{{ updated_at }} IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻ refresh</a></span>
+    <span>{{ updated_at }} IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻</a></span>
   </div>
 </div>
 
@@ -1560,6 +1560,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#tracker">📈 Tracker</a>
   <a href="#hacks">💰 Money</a>
 </nav>
+</div><!-- /sticky-header -->
 
 <div class="ticker">
   {% for m in markets %}
@@ -1640,7 +1641,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 
 <!-- LICHESS GAMES -->
 <section class="section" id="lichess">
-  <div class="label">♟ Yesterday's Chess — AKK_010 on Lichess
+  <div class="label">♟ Chess History — AKK_010 on Lichess · Last 30 Days
     <a href="https://lichess.org/@/AKK_010" target="_blank" style="font-size:9px;color:var(--muted);margin-left:8px">profile →</a>
   </div>
   {% if lichess_games %}
@@ -1678,7 +1679,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
   {% else %}
   <div style="padding:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px">
-    No games played yesterday on Lichess · <a href="https://lichess.org/@/AKK_010" target="_blank">Play today →</a>
+    No games found in the last 30 days · <a href="https://lichess.org/@/AKK_010" target="_blank">Play on Lichess →</a>
   </div>
   {% endif %}
 </section>
