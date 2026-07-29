@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
 THE DAILY SIGNAL — Akshay's Personal Intelligence Brief
-Sections: Weather · World News · Dubai Jobs · Markets · FP&A · Entrepreneur Quote
-          Daily Lesson · Business Case Study · Top 5 Picks · Stock Tracker
-          Money Hack · Productivity
+Sections: Weather · World News · Markets · Quote · Wisdom/Dad · Chess · FP&A→CFO
+          Business Case Study · Top 5 Picks · Stock Tracker · Money Hack · Productivity
 Refreshes at 6 AM IST daily. Deploy: news.askakshay.com
 """
 from __future__ import annotations
@@ -477,6 +476,95 @@ def get_fpna_tip() -> dict:
     return {"title": title, "body": body, "index": idx + 1, "total": len(FPNA_TIPS)}
 
 # ─────────────────────────────────────────────────────────────
+# FP&A → CFO CAREER PATH
+# ─────────────────────────────────────────────────────────────
+
+CFO_PATH_LESSONS = [
+    ("FC Step 1: Own the Close", "Financial Controllers close the books — every month, clean, on time, no surprises. Speed + accuracy is the baseline. If close takes 10 days, get it to 5. Automate reconciliations. Build a close checklist and hit it every time."),
+    ("FC Step 2: IFRS Mastery", "IFRS 16 (leases), IFRS 9 (financial instruments), IFRS 15 (revenue recognition) — these are the FC's bread and butter in Dubai/GCC. Know them technically AND practically. Interviewers will test this. Study one standard per week."),
+    ("FC Step 3: Internal Controls", "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes."),
+    ("FC Step 4: ERP Ownership", "SAP S/4HANA or Oracle Fusion — the FC owns the finance module. Know chart of accounts design, cost centre structure, intercompany eliminations, period-end close in the system. This separates candidates. SAP certification: ₹15K online."),
+    ("FC Step 5: Treasury Basics", "Cash flow forecasting, FX hedging policy, bank relationship management, working capital optimisation. The jump from FP&A to FC often requires you to pick up treasury. Start with 13-week cash flow models."),
+    ("CFO Step 1: Strategy + Finance", "CFOs translate business strategy into financial reality. They ask: what's the ROI, what's the IRR, what's the payback period? Practice building business cases. Every investment decision has a financial model behind it."),
+    ("CFO Step 2: Investor Relations", "Listed company CFOs speak to markets quarterly. Practice presenting results: 'Revenue grew 18% YoY driven by X. EBITDA margin expanded 200bps due to Y. FY26 guidance: Z.' Short, precise, numbers-first. Record yourself."),
+    ("CFO Step 3: M&A Fundamentals", "Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions."),
+    ("CFO Step 4: Board Communication", "CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings."),
+    ("CFO Step 5: Culture + People", "The best CFOs build finance teams that the business trusts. Hire people better than you. Create a learning culture. A CFO who hoards information creates a bottleneck. One who shares insight creates leverage."),
+    ("Dubai FC Reality", "AED 30K+ FC roles at ADNOC, Emirates, MAF, DP World: they want Big 4 background OR 8+ years in a listed company + CA/ACCA + ERP experience. Your edge: FP&A depth + IFRS knowledge + Power BI automation. Highlight cost savings you drove."),
+    ("The CA→FC→CFO Timeline", "CA qualified → 2-3 years Big 4/audit → Senior FP&A → Finance Manager → Financial Controller (5-8 years post-qualification) → CFO (10-15 years). Dubai compresses this by 2-3 years if you hit the right company at the right growth stage."),
+    ("FC Interview: Top 5 Questions", "1. Walk me through month-end close. 2. How do you handle a material variance? 3. What internal controls have you implemented? 4. Describe your IFRS 16 experience. 5. How do you present bad news to management? Prepare 2-min answers for all five."),
+    ("CFO Interview: Top 5 Questions", "1. What's your capital allocation philosophy? 2. How do you manage a cash crisis? 3. Describe a time you stopped a bad investment. 4. How do you build trust with the CEO? 5. Walk me through a fundraise or M&A you led. Practice until smooth."),
+    ("Power BI for Finance Leaders", "Build a CFO dashboard: P&L vs Budget, Cashflow waterfall, Working Capital trend, Revenue bridge. Link to ERP via DirectQuery. Refresh daily. Present this in interviews as your personal project. It shows initiative + technical skill + commercial sense."),
+]
+
+def get_cfo_lesson() -> dict:
+    idx = (date.today().toordinal() + 11) % len(CFO_PATH_LESSONS)
+    title, body = CFO_PATH_LESSONS[idx]
+    return {"title": title, "body": body, "index": idx + 1, "total": len(CFO_PATH_LESSONS)}
+
+# ─────────────────────────────────────────────────────────────
+# CHESS TUTOR — Daily lesson rotating
+# ─────────────────────────────────────────────────────────────
+
+CHESS_LESSONS = [
+    ("Opening Principle #1: Control the Centre", "Place pawns on e4/d4 (White) or e5/d5 (Black). Pieces control more squares from the centre. A pawn on e4 controls d5 and f5. A pawn on the edge controls only 1 square. Open with 1.e4 or 1.d4 and you immediately claim space. This is the foundation of all chess strategy."),
+    ("Opening Principle #2: Develop Your Pieces", "In the first 10 moves, move each piece once. Get knights out before bishops (Ng1-f3, Nb1-c3). Don't move the same piece twice. Don't bring the queen out early — she gets chased. Goal: by move 8, have 3-4 pieces off the back rank. Development = time. Time = initiative."),
+    ("Opening Principle #3: Castle Early", "King safety is non-negotiable in the opening. Castle within the first 10 moves. An uncastled king in the centre is a target. After castling, your king is protected by 3 pawns and 2 corner squares. Rooks also connect after castling. Rule: castle before you attack."),
+    ("Tactics: The Pin", "A pin prevents a piece from moving because moving it would expose a more valuable piece behind it. Absolute pin = pinned to the king (piece cannot move legally). Relative pin = pinned to queen/rook (can move but it's a blunder). Identify pins in every position. Then exploit them."),
+    ("Tactics: The Fork", "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest — they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap."),
+    ("Tactics: The Skewer", "A skewer is a reverse pin. A valuable piece is attacked, it moves, and the piece behind it is captured. Skewers happen on open files and diagonals. Rooks and bishops execute skewers. Pattern: Rook checks king → king moves → rook captures queen. Spot this on every open file."),
+    ("Tactics: Discovered Attack", "Moving one piece reveals an attack from another. The moved piece itself may also attack something. Discovered checks are devastating — the opponent must deal with the check while you capture elsewhere. Pattern: move a blocking piece with tempo, reveal a rook/bishop attack. Double attacks are impossible to fully defend."),
+    ("Endgame: King Activity", "In the endgame, the king becomes a fighting piece. Centralise your king immediately. A king on e4 controls d3, d4, d5, e3, e5, f3, f4, f5 — 8 squares. A king on a1 controls only 3. Rule: when queens are off the board, march your king to the centre. Opposition matters: two kings facing each other, one move apart — the side NOT to move has the opposition."),
+    ("Endgame: Pawn Endgames", "If you're a pawn up in a king+pawn endgame, you usually win. Key concepts: 1. Opposition — control the square in front of your pawn. 2. The square of the pawn — if the opposing king can't enter the square, your pawn promotes. 3. Key squares — a pawn on e4's key squares are d6, e6, f6. Reach them with your king and you win."),
+    ("Strategy: Weak Squares", "A weak square is one that cannot be defended by a pawn. d5 is weak for Black if the c6 and e6 pawns are gone or never played. Plant a knight on a weak square — it becomes an 'outpost.' From d5, a knight controls 8 squares and cannot be chased. Outpost knight + weak squares = long-term advantage."),
+    ("Strategy: Open Files for Rooks", "Rooks need open files to be active. An open file has no pawns. A semi-open file has only enemy pawns. Double rooks on an open file (called 'Rooks on 7th') is a deadly battery. Strategy: open files by pawn trades, then occupy them immediately. Don't leave your rooks passive on the back rank."),
+    ("Strategy: Pawn Structure", "Your pawn structure dictates your plan. Doubled pawns (two pawns on same file) = weakness. Isolated pawn = can't be defended by a pawn, needs piece protection. Passed pawn = no enemy pawn can stop it = future queen. Backward pawn = can't advance, target for opponent. Know your pawn structure and play accordingly."),
+    ("Middlegame: Piece Coordination", "Good chess is about all your pieces working together. Ask: which of my pieces is worst placed? Improve it. A knight on the rim is dim (a1, h1 etc). A bishop blocked by its own pawns is a 'tall pawn.' Rooks need open files. Queen needs safety. Coordinate: every piece pointing at the same sector = overwhelming attack."),
+    ("Calculation: The LPDO Rule", "LPDO = Loose Pieces Drop Off. Before every move, scan the board: which of my pieces are undefended? Which of my opponent's pieces are undefended? Undefended pieces are targets for tactics. A simple habit: after finding your move, ask 'does this leave anything undefended?' This alone prevents most blunders."),
+    ("Time Management", "Chess is a timed game. Use 70-80% of your clock in complex positions, blitz transitions and endgames you know. Common mistake: spending 15 minutes in the opening, then rushing in the critical middlegame. Rule: if a position is complicated and you see candidate moves, spend the time here — not in simple positions. Clock is a resource, not just a constraint."),
+    ("Opening: Sicilian Defence Basics", "After 1.e4 c5 — Black fights for the centre asymmetrically. Black gets queenside counterplay; White gets kingside attack. Most common openings at club level. Learn one variation: Sicilian Najdorf (1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6). It's played by Kasparov, Fischer, Carlsen. Understand the plans before memorising moves."),
+    ("Opening: Italian Game Basics", "1.e4 e5 2.Nf3 Nc6 3.Bc4. White targets f7, the weakest square in Black's position. Giuoco Piano (3...Bc5) leads to rich middlegame. Learn: castle early, play d3, develop bishop to e3, then push d4 for centre control. Safe, instructive, good for learning. Magnus Carlsen played this at the top level."),
+    ("Thinking Process", "Every move: 1. What did my opponent just do? (threats?) 2. What are my candidate moves? (at least 2-3) 3. Calculate each candidate 2-3 moves deep. 4. Use LPDO check. 5. Make the move. Don't play on impulse. Even 30 seconds of structured thinking eliminates 80% of blunders. This process is the difference between 800 and 1200 Elo."),
+    ("Study Plan: 15 Min/Day", "15 minutes daily beats 3 hours once a week. Split: 5 min puzzles (Chess.com/Lichess tactics trainer) + 5 min play (1 game, 10+0 or 15+10) + 5 min review (analyse your game, find the turning point). After 30 days: you'll feel patterns automatically. Tactics + play + review = the triangle of improvement."),
+    ("Rating Progress Reality", "800→1000: Learn not to blunder pieces for free. 1000→1200: Basic tactics (forks, pins). 1200→1500: Strategy (plans, pawn structure). 1500→1800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily — minimum. No shortcut."),
+]
+
+def get_chess_lesson() -> dict:
+    idx = (date.today().toordinal() + 13) % len(CHESS_LESSONS)
+    title, body = CHESS_LESSONS[idx]
+    return {"title": title, "body": body, "index": idx + 1, "total": len(CHESS_LESSONS)}
+
+# ─────────────────────────────────────────────────────────────
+# WISDOM: BETTER PERSON · BETTER DAD · HAPPY LIFE
+# ─────────────────────────────────────────────────────────────
+
+WISDOM_LESSONS = [
+    ("Being Present", "Your daughter doesn't need a perfect father. She needs a present one. Put the phone down for 20 minutes when you get home. Look her in the eyes. Play on the floor. These moments are the whole point. Work can wait. She is growing every day whether you show up or not."),
+    ("The Compound Effect of Small Moments", "You don't build a relationship in big moments. You build it in 10,000 small ones. Morning hugs. Saying her name with warmth. Listening when she babbles even though you don't understand. These stack. In 15 years, she'll feel either deeply loved or quietly neglected. Both are built today."),
+    ("Regulate Yourself First", "You cannot be a calm parent if you're running on stress, sleep debt, and financial anxiety. Your regulation is their regulation — babies co-regulate with caregivers. Deep breath before you pick her up. Shoulders down. Slow exhale. Your nervous system sets the tone for the room."),
+    ("Stoic Parenting", "Marcus Aurelius raised children while running an empire. His journal shows he constantly asked: am I reacting or responding? Reacting is automatic. Responding is chosen. The next time your baby cries at 2am, ask yourself: how do I want to respond to this? You always have a choice in the gap between stimulus and response."),
+    ("Simplicity is the Path to Happiness", "Happiness research consistently shows: strong relationships + meaningful work + enough (not excessive) money = high life satisfaction. You're already building all three. Don't confuse complexity for progress. The man who simplifies wins. Less decisions, less noise, less comparison."),
+    ("The Gratitude Practise", "Every morning, before checking your phone: name 3 specific things you're grateful for. Not 'health and family' — that's lazy. Something specific: 'my daughter smiled when she saw me yesterday,' 'I understood a balance sheet faster than last year,' 'KL at 26°C.' Specificity trains the brain to notice abundance."),
+    ("Being a Better Husband", "The best fathers are also good partners. Your daughter watches how you treat her mother. That becomes her template for relationships. Simple acts: say thank you. Notice when your partner is tired. Take something off her plate without being asked. Ask about her day and actually listen. Small but it compounds."),
+    ("On Anger", "Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive."),
+    ("Financial Peace = Emotional Peace", "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition — it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational."),
+    ("The Long Game of Parenting", "You won't remember 2026 as a year. You'll remember it as the year your daughter started talking, your first steps in Dubai, the grind that changed everything. Keep a journal. Even one line per day. In 10 years, you'll read it and understand why it was worth it."),
+    ("Wisdom from Fathers Before You", "Your father had flaws. His father did too. But they also gave you things you don't yet see. The goal isn't to be a perfect father — it's to be a slightly more conscious one. Break the patterns you don't want to pass on. Keep the ones that built you. Each generation improves a little. That's legacy."),
+    ("On Failure", "You will fail your daughter sometimes. You'll be impatient. You'll miss something important. You'll get it wrong. What matters is the repair: the apology, the return, the consistent showing up after the mistake. Children don't need perfect parents. They need parents who can say sorry and mean it."),
+    ("Rest is Productive", "High performers rest. Sleep is not laziness — it's when the brain consolidates learning, the body repairs, emotional regulation resets. Cutting sleep to work more is borrowing from tomorrow's performance to pay today's anxiety. Protect 7 hours. It will make you a better analyst, better father, better human."),
+    ("The Identity Question", "Who are you when the job title is gone, when the market is closed, when your daughter is asleep? Define yourself by what you do, not what you've achieved. 'I am someone who learns daily. I love deeply. I show up.' These don't depend on AED 30K or a Dubai visa. They're yours now."),
+    ("Letting Go of Control", "You can control your effort. You cannot control outcomes. The job market, the Instagram algorithm, the baby's sleep schedule — all outside your control. Epictetus: 'Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are, and you will have a tranquil flow of life.'"),
+    ("Joy is a Practise", "Joy doesn't arrive when the conditions are right. It's practiced in the conditions you have. Find one thing today that is genuinely good. Savour it for 30 seconds. This is not toxic positivity — it's neurological training. Brains that practise noticing goodness get better at finding it, even in hard seasons."),
+    ("On Discipline and Freedom", "The most disciplined people are the freest. Akshay who wakes at 6am, exercises, studies, then works has more hours and more energy than the one who stays up late and drags through mornings. Discipline is choosing what you want most over what you want now. It's the highest form of self-respect."),
+    ("Your Daughter Will Watch Everything", "She'll watch how you handle a setback. How you speak about money. How you treat waiters. How you react when you're wrong. How you love her mother. You are her first example of what a man is. Be the man you'd want her to marry someday. That's the bar."),
+]
+
+def get_wisdom_lesson() -> dict:
+    idx = (date.today().toordinal() + 17) % len(WISDOM_LESSONS)
+    title, body = WISDOM_LESSONS[idx]
+    return {"title": title, "body": body, "index": idx + 1, "total": len(WISDOM_LESSONS)}
+
+# ─────────────────────────────────────────────────────────────
 # TOP 5 STOCK PICKS
 # ─────────────────────────────────────────────────────────────
 
@@ -816,13 +904,16 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .lead-side{padding:16px;border-left:1px solid var(--border)}
 .lead h2{font-size:20px;line-height:1.3;margin-bottom:10px}
 
-/* JOBS */
-.jobs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:580px){.jobs-grid{grid-template-columns:1fr}}
-.jcard{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--purple);padding:13px}
-.jcard .src{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;font-family:sans-serif}
-.jcard h4{font-size:13px;font-weight:700;line-height:1.4;margin-bottom:5px}
-.jcard p{font-size:11px;color:var(--muted)}
+/* WISDOM / CHESS / CFO */
+.wisdom-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px}
+.wisdom-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
+.wisdom-body{font-size:13px;line-height:1.8;color:#ccc}
+.chess-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);padding:20px}
+.chess-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
+.chess-body{font-size:13px;line-height:1.8;color:#ccc}
+.cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
+.cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
+.cfo-body{font-size:13px;line-height:1.8;color:#ccc}
 
 /* MARKETS */
 .mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -905,12 +996,14 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 <nav class="nav">
   <a href="#weather">🌤 Weather</a>
   <a href="#news">🌍 World</a>
-  <a href="#jobs">🇦🇪 Jobs</a>
   <a href="#markets">📊 Markets</a>
   <a href="#quote">💬 Quote</a>
   <a href="#lesson">🌏 Lesson</a>
+  <a href="#wisdom">🧘 Wisdom</a>
+  <a href="#chess">♟ Chess</a>
   <a href="#case">📚 Case Study</a>
   <a href="#fpna">🎓 FP&A</a>
+  <a href="#cfo">🏆 FC→CFO</a>
   <a href="#picks">🔥 Top 5</a>
   <a href="#tracker">📈 Tracker</a>
   <a href="#hacks">💰 Money</a>
@@ -993,27 +1086,24 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 </section>
 
-<!-- GULF JOBS -->
-<section class="section" id="jobs">
-  <div class="label">🌍 Gulf + India FP&A Jobs · Live from LinkedIn · AED 30K+ Target</div>
-  <div class="jobs-grid">
-    {% for j in dubai_jobs %}
-    <div class="jcard">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <div class="src">{{ j.source }}</div>
-        <div style="font-size:10px;color:var(--muted)">{{ j.city[:30] }}</div>
-      </div>
-      <h4>{% if j.link %}<a href="{{ j.link }}" target="_blank" style="color:var(--text)">{{ j.title }}</a>{% else %}{{ j.title }}{% endif %}</h4>
-    </div>
-    {% endfor %}
-    {% if not dubai_jobs %}<p style="color:var(--muted)">Fetching live jobs...</p>{% endif %}
+<!-- WISDOM: BETTER PERSON · BETTER DAD -->
+<section class="section" id="wisdom">
+  <div class="label">🧘 Daily Wisdom — Better Person · Better Dad · Happy Life · {{ wisdom.index }}/{{ wisdom.total }}</div>
+  <div class="wisdom-card">
+    <div class="wisdom-title">{{ wisdom.title }}</div>
+    <div class="wisdom-body">{{ wisdom.body }}</div>
   </div>
-  <div style="margin-top:10px;font-size:11px;color:var(--muted);padding:10px;background:var(--surface);border:1px solid var(--border)">
-    <strong style="color:var(--purple)">Search More:</strong>
-    <a href="https://www.linkedin.com/jobs/search/?keywords=FP%26A+Manager&location=Dubai" target="_blank">LinkedIn UAE</a> ·
-    <a href="https://www.linkedin.com/jobs/search/?keywords=FP%26A+Finance+Manager&location=Saudi+Arabia" target="_blank">LinkedIn KSA</a> ·
-    <a href="https://www.naukrigulf.com/fp-a-jobs-in-uae" target="_blank">NaukriGulf</a> ·
-    <a href="https://www.bayt.com/en/uae/jobs/financial-planning-analysis-manager-jobs/" target="_blank">Bayt</a>
+</section>
+
+<!-- CHESS TUTOR -->
+<section class="section" id="chess">
+  <div class="label">♟ Chess Tutor — Daily Lesson · {{ chess.index }}/{{ chess.total }}</div>
+  <div class="chess-card">
+    <div class="chess-title">{{ chess.title }}</div>
+    <div class="chess-body">{{ chess.body }}</div>
+    <div style="margin-top:12px;font-size:10px;color:var(--muted);font-family:monospace">
+      Practice on: <a href="https://lichess.org/study" target="_blank">Lichess Study</a> · <a href="https://chess.com/puzzles" target="_blank">Chess.com Puzzles</a>
+    </div>
   </div>
 </section>
 
@@ -1075,6 +1165,15 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.<br><br>
       Keyword tip: Put "IFRS 16 implementation" and "rolling forecast" in your cover letter.</p>
     </div>
+  </div>
+</section>
+
+<!-- FC → CFO PATH -->
+<section class="section" id="cfo">
+  <div class="label">🏆 Financial Controller → CFO Path · Practical Guidance · {{ cfo.index }}/{{ cfo.total }}</div>
+  <div class="cfo-card">
+    <div class="cfo-title">{{ cfo.title }}</div>
+    <div class="cfo-body">{{ cfo.body }}</div>
   </div>
 </section>
 
@@ -1215,11 +1314,13 @@ def index():
         markets = fetch_markets()
         news    = fetch_global_news()
         fpna    = get_fpna_tip()
+        cfo     = get_cfo_lesson()
+        chess   = get_chess_lesson()
+        wisdom  = get_wisdom_lesson()
         top5    = get_top5_picks()
         tracker = get_tracker_stocks()
         money   = get_money_hack()
         prod    = get_productivity_tip()
-        jobs    = fetch_dubai_jobs()
         weather = fetch_weather()
         quote   = get_entrepreneur_quote()
         lesson  = get_world_lesson()
@@ -1228,9 +1329,10 @@ def index():
         return render_template_string(TEMPLATE,
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=now.strftime("%H:%M"),
-            markets=markets, news=news, fpna=fpna,
+            markets=markets, news=news, fpna=fpna, cfo=cfo,
+            chess=chess, wisdom=wisdom,
             top5=top5, tracker=tracker, money_hack=money,
-            productivity_tip=prod, dubai_jobs=jobs, weather=weather,
+            productivity_tip=prod, weather=weather,
             quote=quote, lesson=lesson, case=case,
         )
     except Exception as e:
@@ -1241,8 +1343,11 @@ def index():
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=f"{now.strftime('%H:%M')} (partial)",
             markets=[], news=[], fpna={"title":"Loading","body":"","index":0,"total":1},
+            cfo={"title":"Loading","body":"","index":0,"total":1},
+            chess={"title":"Loading","body":"","index":0,"total":1},
+            wisdom={"title":"Loading","body":"","index":0,"total":1},
             top5=[], tracker=[], money_hack={"title":"Loading","body":""},
-            productivity_tip="Loading...", dubai_jobs=[], weather=[],
+            productivity_tip="Loading...", weather=[],
             quote={"quote":"","name":"","index":0,"total":1},
             lesson={"tradition":"","lesson":"","source":""},
             case={"title":"","story":"","lesson":""},
