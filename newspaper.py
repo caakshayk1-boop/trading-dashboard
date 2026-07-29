@@ -596,7 +596,7 @@ def _lichess_export_games(since_ms: int, until_ms: int) -> list[dict]:
             timeout=25, stream=True,
         )
         if r.status_code != 200:
-            log.warning(f"Lichess export: {r.status_code}")
+            log.warning(f"Lichess export: {r.status_code} — {r.text[:200]}")
             return []
         games = []
         for line in r.iter_lines():
