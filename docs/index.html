@@ -92,6 +92,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
 .cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
 .cfo-body{font-size:13px;line-height:1.8;color:#ccc}
+.alert-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.af-btn{padding:4px 12px;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:monospace}
+.af-btn.active{border-color:var(--accent);color:var(--accent)}
+.alert-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.alert-tbl th{text-align:left;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--border)}
+.alert-tbl td{padding:7px 8px;border-bottom:1px solid #1a1c1f;vertical-align:middle}
+.alert-tbl tr:hover td{background:var(--surface)}
+.badge{display:inline-block;padding:2px 7px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
+.badge-win{background:#064e3b;color:#34d399}
+.badge-loss{background:#450a0a;color:#f87171}
+.badge-open{background:#1e3a5f;color:#60a5fa}
+.badge-cancelled{background:#1c1c1c;color:#555}
+.alert-sym{font-weight:700;font-family:monospace;color:#e2e8f0}
+.alert-buy{color:var(--green)}
+.alert-sell{color:var(--red)}
+.alert-stats{display:flex;gap:20px;margin-bottom:14px;padding:12px;background:var(--surface);border:1px solid var(--border)}
+.ast{text-align:center}
+.ast-num{font-size:18px;font-weight:700;font-family:monospace}
+.ast-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
 .book-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #c084fc;padding:20px}
 .book-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;font-family:sans-serif;margin-bottom:4px}
 .book-title{font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:12px;line-height:1.4}
@@ -174,7 +193,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <div class="paper-meta">
     <span>news.askakshay.com · Personal Edition</span>
     <span>Wednesday, July 29 2026</span>
-    <span>22:13 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻ refresh</a></span>
+    <span>22:19 IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻ refresh</a></span>
   </div>
 </div>
 
@@ -191,6 +210,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#fpna">🎓 FP&A</a>
   <a href="#cfo">🏆 FC→CFO</a>
   <a href="#book">📚 Books</a>
+  <a href="#alerts">🔔 Alerts</a>
   <a href="#picks">🔥 Top 5</a>
   <a href="#tracker">📈 Tracker</a>
   <a href="#hacks">💰 Money</a>
@@ -206,25 +226,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">S&P 500</span>
-    <span>7354</span>
+    <span>7363</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Nasdaq</span>
-    <span>24568</span>
+    <span>24616</span>
     <span class="dn"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Gold</span>
-    <span>$4075.8</span>
+    <span>$4075.1</span>
     <span class="up"></span>
   </div>
   
   <div class="t-item">
     <span class="t-name">Crude</span>
-    <span>$84.26</span>
+    <span>$84.49</span>
     <span class="up"></span>
   </div>
   
@@ -236,7 +256,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   
   <div class="t-item">
     <span class="t-name">BTC</span>
-    <span>$63601</span>
+    <span>$63617</span>
     <span class="dn"></span>
   </div>
   
@@ -264,8 +284,8 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-range">↑ 37.3° · ↓ 29.3°</div>
       <div class="wx-meta">
         <span>💧 76%</span>
-        <span>💨 5.2 km/h</span>
-        <span>🌡 Feels 38.4°C</span>
+        <span>💨 6.5 km/h</span>
+        <span>🌡 Feels 38.0°C</span>
       </div>
       <div class="wx-rain lo">
         🌧 Rain chance: 22%
@@ -276,13 +296,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">IN</div>
       <div class="wx-city">Kolkata</div>
       <div class="wx-emoji">🌦️</div>
-      <div class="wx-temp">27.0°C</div>
+      <div class="wx-temp">27.1°C</div>
       <div class="wx-cond">Light Drizzle</div>
       <div class="wx-range">↑ 30.9° · ↓ 25.7°</div>
       <div class="wx-meta">
         <span>💧 90%</span>
-        <span>💨 11.3 km/h</span>
-        <span>🌡 Feels 32.2°C</span>
+        <span>💨 10.7 km/h</span>
+        <span>🌡 Feels 32.4°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 100% — carry umbrella
@@ -293,13 +313,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       <div class="wx-country">MY</div>
       <div class="wx-city">Kuala Lumpur</div>
       <div class="wx-emoji">☁️</div>
-      <div class="wx-temp">25.5°C</div>
+      <div class="wx-temp">25.4°C</div>
       <div class="wx-cond">Overcast</div>
       <div class="wx-range">↑ 31.4° · ↓ 23.7°</div>
       <div class="wx-meta">
         <span>💧 94%</span>
-        <span>💨 0.3 km/h</span>
-        <span>🌡 Feels 31.9°C</span>
+        <span>💨 0.2 km/h</span>
+        <span>🌡 Feels 31.8°C</span>
       </div>
       <div class="wx-rain hi">
         🌧 Rain chance: 84% — carry umbrella
@@ -399,23 +419,23 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
       
       <div class="ncard">
         <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/energy/articles/why-wall-street-split-phillips-162957977.html" target="_blank" style="color:var(--text)">Why Wall Street Is Split on Phillips 66 (PSX) Even as Its Numbers Improve</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 16:29</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
+        <h3><a href="https://finance.yahoo.com/small-business/articles/vinted-taps-dhl-germany-collection-162615559.html" target="_blank" style="color:var(--text)">Vinted taps DHL’s Germany collection points to expand second-hand market</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 16:26</div>
+      </div>
+      
+      <div class="ncard">
+        <div class="src">Yahoo Finance</div>
         <h3><a href="https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-fed-decision-warsh-sk-hynix-stock/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Stock Market Today: Dow Sinks As Fed Rate Call Looms; Bloom Energy Reverses Lower After Crushing Earnings (Live Coverage</a></h3>
         <p></p>
         <div class="ts">Jul 29 16:24</div>
-      </div>
-      
-      <div class="ncard">
-        <div class="src">Yahoo Finance</div>
-        <h3><a href="https://www.investors.com/news/dow-jones-stock-chevron-oil-price-surge-trump-venezuela-cvx-stock-price/?src=A00220&yptr=yahoo" target="_blank" style="color:var(--text)">Dow Leader Rides Surging Oil Prices And Trump's Venezuela Spoils</a></h3>
-        <p></p>
-        <div class="ts">Jul 29 16:16</div>
-      </div>
-      
-      <div class="ncard">
-        <div class="src">Yahoo Finance</div>
-        <h3><a href="https://finance.yahoo.com/news/oil-rises-us-iran-tension-032028533.html" target="_blank" style="color:var(--text)">Oil jumps 7% on escalating Middle East airstrikes</a></h3>
-        <p></p>
-        <div class="ts">Jul 29 16:16</div>
       </div>
       
       <div class="ncard">
@@ -475,25 +495,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">S&P 500</div>
-      <div class="mkt-price">7354</div>
+      <div class="mkt-price">7363</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card d">
       <div class="mkt-name">Nasdaq</div>
-      <div class="mkt-price">24568</div>
+      <div class="mkt-price">24616</div>
       <div class="mkt-chg dn"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Gold</div>
-      <div class="mkt-price">$4075.8</div>
+      <div class="mkt-price">$4075.1</div>
       <div class="mkt-chg up"></div>
     </div>
     
     <div class="mkt-card u">
       <div class="mkt-name">Crude</div>
-      <div class="mkt-price">$84.26</div>
+      <div class="mkt-price">$84.49</div>
       <div class="mkt-chg up"></div>
     </div>
     
@@ -505,7 +525,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
     
     <div class="mkt-card d">
       <div class="mkt-name">BTC</div>
-      <div class="mkt-price">$63601</div>
+      <div class="mkt-price">$63617</div>
       <div class="mkt-chg dn"></div>
     </div>
     
@@ -643,6 +663,19 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 </section>
 
+<!-- TELEGRAM ALERTS LOG -->
+<section class="section" id="alerts">
+  <div class="label">🔔 Telegram Alert Log · All Signals Sent · 0 total
+    <a href="alerts.json" target="_blank" style="font-size:9px;color:var(--muted);margin-left:12px;font-family:monospace">↓ alerts.json</a>
+  </div>
+
+  
+  <div style="padding:20px;color:var(--muted);font-size:13px;text-align:center;background:var(--surface);border:1px solid var(--border)">
+    No alerts logged yet · Alerts appear here after Telegram signals are sent
+  </div>
+  
+</section>
+
 </div>
 
 <div class="footer">
@@ -653,6 +686,15 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 <script>
 // Auto-refresh every 5 min
 setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+
+// Alert log filter
+function filterAlerts(badge, btn) {
+  document.querySelectorAll('.af-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#alertTable tbody tr').forEach(row => {
+    row.style.display = (badge === 'all' || row.dataset.badge === badge) ? '' : 'none';
+  });
+}
 
 // Block tracker form submissions on static GitHub Pages (routes don't exist)
 document.addEventListener('DOMContentLoaded', () => {

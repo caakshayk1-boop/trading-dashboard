@@ -6,6 +6,7 @@ Calls all newspaper data functions → renders Jinja2 template → writes docs/i
 """
 from __future__ import annotations
 
+import json
 import os
 import pathlib
 import sys
@@ -33,6 +34,7 @@ from newspaper import (
     get_chess_lesson,
     get_wisdom_lesson,
     get_book_lesson,
+    fetch_alert_log,
     get_top5_picks,
     get_tracker_stocks,
     get_money_hack,
@@ -81,6 +83,10 @@ def generate() -> None:
     top5    = get_top5_picks()
     tracker = get_tracker_stocks()
 
+    print("[generate] Fetching alert log...")
+    alerts = fetch_alert_log(limit=200)
+    print(f"[generate] Alerts: {len(alerts)} signals found")
+
     print("[generate] Fetching Lichess games...")
     lichess_games   = fetch_lichess_games()
     lichess_summary = get_lichess_summary(lichess_games)
@@ -108,6 +114,7 @@ def generate() -> None:
         tracker=tracker,
         lichess_games=lichess_games,
         lichess_summary=lichess_summary,
+        alerts=alerts,
     )
 
     # Write output
@@ -115,6 +122,9 @@ def generate() -> None:
     out_dir.mkdir(exist_ok=True)
     out_file = out_dir / "index.html"
     out_file.write_text(html, encoding="utf-8")
+    (out_dir / "alerts.json").write_text(
+        json.dumps(alerts, default=str, indent=2), encoding="utf-8"
+    )
     size_kb = out_file.stat().st_size // 1024
     print(f"[generate] ✅ Written to {out_file} ({size_kb}KB)")
 

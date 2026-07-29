@@ -37,6 +37,46 @@ def _db():
     con.row_factory = _db_mod.Row
     return con
 
+def fetch_alert_log(limit: int = 200) -> list[dict]:
+    """Read Telegram alert history from all_signals table (signals.db / Turso)."""
+    try:
+        with _db() as con:
+            rows = con.execute("""
+                SELECT date, symbol, action, timeframe, signal_type,
+                       entry, sl, target1, target2, rr, score,
+                       status, lifecycle_status, exit_price, pnl_pct,
+                       closed_at, sent_at
+                FROM all_signals
+                ORDER BY date DESC, id DESC
+                LIMIT ?
+            """, (limit,)).fetchall()
+        result = []
+        for r in rows:
+            r = dict(r)
+            # badge colour logic
+            s = (r.get("status") or "").upper()
+            lc = (r.get("lifecycle_status") or "").upper()
+            if s == "TARGET_HIT" or lc == "TARGET_HIT":
+                badge = "win"
+            elif s in ("SL_HIT", "STOPPED") or lc in ("SL_HIT", "STOPPED"):
+                badge = "loss"
+            elif s == "OPEN":
+                badge = "open"
+            else:
+                badge = "cancelled"
+            r["badge"] = badge
+            # friendly pnl
+            p = r.get("pnl_pct")
+            r["pnl_str"] = (f"+{p:.1f}%" if p and p > 0 else f"{p:.1f}%") if p else "—"
+            # short date
+            r["alert_date"] = (r.get("date") or "")[:10]
+            r["close_date"] = (r.get("closed_at") or "")[:10] or "—"
+            result.append(r)
+        return result
+    except Exception as e:
+        log.warning(f"fetch_alert_log: {e}")
+        return []
+
 def init_newspaper_db():
     with _db() as con:
         con.execute("""CREATE TABLE IF NOT EXISTS stock_tracker (
@@ -1397,6 +1437,25 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
 .cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
 .cfo-body{font-size:13px;line-height:1.8;color:#ccc}
+.alert-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.af-btn{padding:4px 12px;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:monospace}
+.af-btn.active{border-color:var(--accent);color:var(--accent)}
+.alert-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.alert-tbl th{text-align:left;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--border)}
+.alert-tbl td{padding:7px 8px;border-bottom:1px solid #1a1c1f;vertical-align:middle}
+.alert-tbl tr:hover td{background:var(--surface)}
+.badge{display:inline-block;padding:2px 7px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
+.badge-win{background:#064e3b;color:#34d399}
+.badge-loss{background:#450a0a;color:#f87171}
+.badge-open{background:#1e3a5f;color:#60a5fa}
+.badge-cancelled{background:#1c1c1c;color:#555}
+.alert-sym{font-weight:700;font-family:monospace;color:#e2e8f0}
+.alert-buy{color:var(--green)}
+.alert-sell{color:var(--red)}
+.alert-stats{display:flex;gap:20px;margin-bottom:14px;padding:12px;background:var(--surface);border:1px solid var(--border)}
+.ast{text-align:center}
+.ast-num{font-size:18px;font-weight:700;font-family:monospace}
+.ast-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
 .book-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #c084fc;padding:20px}
 .book-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;font-family:sans-serif;margin-bottom:4px}
 .book-title{font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:12px;line-height:1.4}
@@ -1496,6 +1555,7 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   <a href="#fpna">🎓 FP&A</a>
   <a href="#cfo">🏆 FC→CFO</a>
   <a href="#book">📚 Books</a>
+  <a href="#alerts">🔔 Alerts</a>
   <a href="#picks">🔥 Top 5</a>
   <a href="#tracker">📈 Tracker</a>
   <a href="#hacks">💰 Money</a>
@@ -1839,6 +1899,81 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
   </div>
 </section>
 
+<!-- TELEGRAM ALERTS LOG -->
+<section class="section" id="alerts">
+  <div class="label">🔔 Telegram Alert Log · All Signals Sent · {{ alerts|length }} total
+    <a href="alerts.json" target="_blank" style="font-size:9px;color:var(--muted);margin-left:12px;font-family:monospace">↓ alerts.json</a>
+  </div>
+
+  {% if alerts %}
+  {% set wins = alerts | selectattr("badge","eq","win") | list | length %}
+  {% set losses = alerts | selectattr("badge","eq","loss") | list | length %}
+  {% set opens = alerts | selectattr("badge","eq","open") | list | length %}
+  {% set closed = wins + losses %}
+  {% set winrate = ((wins / closed * 100) | round(0) | int) if closed > 0 else 0 %}
+  <div class="alert-stats">
+    <div class="ast"><div class="ast-num" style="color:var(--green)">{{ wins }}</div><div class="ast-label">Targets Hit</div></div>
+    <div class="ast"><div class="ast-num" style="color:var(--red)">{{ losses }}</div><div class="ast-label">SL Hit</div></div>
+    <div class="ast"><div class="ast-num" style="color:#60a5fa">{{ opens }}</div><div class="ast-label">Open</div></div>
+    <div class="ast"><div class="ast-num" style="color:var(--gold)">{{ winrate }}%</div><div class="ast-label">Win Rate</div></div>
+    <div class="ast"><div class="ast-num">{{ alerts|length }}</div><div class="ast-label">Total Alerts</div></div>
+  </div>
+
+  <div class="alert-filters">
+    <button class="af-btn active" onclick="filterAlerts('all',this)">ALL</button>
+    <button class="af-btn" onclick="filterAlerts('open',this)">OPEN</button>
+    <button class="af-btn" onclick="filterAlerts('win',this)">TARGET HIT</button>
+    <button class="af-btn" onclick="filterAlerts('loss',this)">SL HIT</button>
+    <button class="af-btn" onclick="filterAlerts('cancelled',this)">CANCELLED</button>
+  </div>
+
+  <div class="overflow">
+    <table class="alert-tbl" id="alertTable">
+      <thead><tr>
+        <th>Alert Date</th>
+        <th>Symbol</th>
+        <th>Signal</th>
+        <th>Timeframe</th>
+        <th>Entry</th>
+        <th>SL</th>
+        <th>Target 1</th>
+        <th>Target 2</th>
+        <th>RR</th>
+        <th>Exit Price</th>
+        <th>P&L</th>
+        <th>Close Date</th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody>
+      {% for a in alerts %}
+        <tr data-badge="{{ a.badge }}">
+          <td style="font-family:monospace;color:var(--muted)">{{ a.alert_date }}</td>
+          <td>
+            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a>
+          </td>
+          <td class="{{ 'alert-buy' if a.action == 'BUY' else 'alert-sell' }}">{{ a.action }}{% if a.signal_type %} <span style="color:var(--muted);font-size:9px">· {{ a.signal_type }}</span>{% endif %}</td>
+          <td style="color:var(--muted)">{{ a.timeframe or '—' }}</td>
+          <td style="font-family:monospace">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
+          <td style="font-family:monospace;color:var(--red)">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
+          <td style="font-family:monospace;color:var(--green)">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
+          <td style="font-family:monospace;color:var(--green)">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
+          <td style="font-family:monospace;color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
+          <td style="font-family:monospace">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
+          <td style="font-family:monospace" class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else '') }}">{{ a.pnl_str }}</td>
+          <td style="font-family:monospace;color:var(--muted)">{{ a.close_date }}</td>
+          <td><span class="badge badge-{{ a.badge }}">{{ a.status or 'OPEN' }}</span></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="padding:20px;color:var(--muted);font-size:13px;text-align:center;background:var(--surface);border:1px solid var(--border)">
+    No alerts logged yet · Alerts appear here after Telegram signals are sent
+  </div>
+  {% endif %}
+</section>
+
 </div>
 
 <div class="footer">
@@ -1849,6 +1984,15 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 <script>
 // Auto-refresh every 5 min
 setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+
+// Alert log filter
+function filterAlerts(badge, btn) {
+  document.querySelectorAll('.af-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#alertTable tbody tr').forEach(row => {
+    row.style.display = (badge === 'all' || row.dataset.badge === badge) ? '' : 'none';
+  });
+}
 
 // Block tracker form submissions on static GitHub Pages (routes don't exist)
 document.addEventListener('DOMContentLoaded', () => {
@@ -1897,6 +2041,7 @@ def index():
         case           = get_case_study()
         lichess_games  = fetch_lichess_games()
         lichess_summary = get_lichess_summary(lichess_games)
+        alerts         = fetch_alert_log()
 
         return render_template_string(TEMPLATE,
             date_str=now.strftime("%A, %B %d %Y"),
@@ -1907,6 +2052,7 @@ def index():
             productivity_tip=prod, weather=weather,
             quote=quote, lesson=lesson, case=case,
             lichess_games=lichess_games, lichess_summary=lichess_summary,
+            alerts=alerts,
         )
     except Exception as e:
         log.error(f"index error: {e}")
@@ -1926,6 +2072,7 @@ def index():
             lesson={"tradition":"","lesson":"","source":""},
             case={"title":"","story":"","lesson":""},
             lichess_games=[], lichess_summary={},
+            alerts=[],
         ), 200
 
 @app.route("/tracker/add", methods=["POST"])
