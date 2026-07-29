@@ -34,29 +34,38 @@ SYMBOLS = ["GOLD", "SILVER", "CRUDE", "NATGAS"]
 # Per asset class: bars allowed for a trade to resolve, warmup before the
 # first evaluation, and how long the regime frame must be.
 PROFILES = {
-    "cf":     {"horizon": 48, "warmup": 120, "regime_min": 60, "bar_hours": 1},
-    "equity": {"horizon": 20, "warmup": 260, "regime_min": 55, "bar_hours": 24},
+    "cf":           {"horizon": 48, "warmup": 120, "regime_min": 60, "bar_hours": 1},
+    "equity":       {"horizon": 20, "warmup": 260, "regime_min": 55, "bar_hours": 24},
+    # NSE trades 6.25h/day, so ~30 hourly bars is about a week held.
+    "equity_intra": {"horizon": 30, "warmup": 260, "regime_min": 55, "bar_hours": 1},
 }
+_EQUITY = ("equity", "equity_intra")
 
 
 def load(symbol: str, asset: str = "cf"):
     """Fetch the three frames evaluate() needs. Returns None if data is short."""
-    warmup = PROFILES[asset]["warmup"]
-    if asset == "equity":
-        import equity_engine
-        got = equity_engine.fetch(symbol, horizon="swing")
-        if got is None:
-            return None
-        entry, regime, daily, _ = got
-        frames = (entry, regime, daily)
+    p = PROFILES[asset]
+    t = to_yahoo(symbol)
+    dl = lambda period, iv: yf.download(t, period=period, interval=iv,
+                                        progress=False, auto_adjust=True)
+
+    if asset == "equity_intra":
+        # equity_engine.fetch() returns only a 5-day daily frame here — all the
+        # live scanner needs for today's range. A backtest has to slice daily
+        # history across the whole period, so fetch it long.
+        frames = (dl("720d", "1h"), dl("5y", "1d"), dl("5y", "1d"))
+    elif asset == "equity":
+        frames = (dl("5y", "1d"), dl("5y", "1wk"), dl("5y", "1d"))
     else:
-        t = to_yahoo(symbol)
-        frames = tuple(
-            yf.download(t, period="730d", interval=iv, progress=False, auto_adjust=True)
-            for iv in ("1h", "4h", "1d")
-        )
-    if any(d is None or len(d) < warmup for d in frames):
-        return None
+        frames = (dl("730d", "1h"), dl("730d", "4h"), dl("730d", "1d"))
+
+    entry, regime, daily = frames
+    # The daily frame only supplies today's high/low and the previous close,
+    # so it needs 2 bars, not a full warmup.
+    if entry is None or len(entry) < p["warmup"]:      return None
+    if regime is None or len(regime) < p["regime_min"]: return None
+    if daily is None or len(daily) < 2:                 return None
+
     for d in frames:
         d.index = pd.to_datetime(d.index, utc=True)
     return frames
@@ -147,7 +156,8 @@ def report(trades, label=""):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--asset", default="cf", choices=["cf", "equity"])
+    ap.add_argument("--asset", default="cf",
+                    choices=["cf", "equity", "equity_intra"])
     ap.add_argument("--symbols", default=None)
     ap.add_argument("--sweep", action="append", default=[],
                     help="field=v1,v2,v3 — repeatable, cartesian product")
@@ -155,14 +165,14 @@ def main():
 
     if args.symbols:
         syms = [s.strip().upper() for s in args.symbols.split(",") if s.strip()]
-    elif args.asset == "equity":
+    elif args.asset in _EQUITY:
         import equity_engine
         syms = equity_engine.LIQUID
     else:
         syms = SYMBOLS
 
     base = CONFIG
-    if args.asset == "equity":
+    if args.asset in _EQUITY:
         import equity_engine
         base = equity_engine.EQUITY_CONFIG
 

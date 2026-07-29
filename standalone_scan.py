@@ -608,20 +608,18 @@ def main():
         _safe("price_alerts", run_price_alerts, time_str)
         _safe("markets",      run_markets,      time_str)
 
-        if slot == "morning":
-            sigs_4h = _safe("4h_scan",        run_4h_scan,        time_str)
-            tlm_4h  = _safe("tlm_4h",         run_tlm_scan,       time_str, interval="4h")
-            comms   = _safe("commodity_scan",  run_commodity_scan, time_str)
-            counts  = {"4h": len(sigs_4h), "ai_4h": len(tlm_4h), "commodities": len(comms)}
-
-        elif slot == "midday":
-            signals = _safe("swing_scan",      run_swing_scan,     time_str)
-            _safe("fno_alerts",                run_fno_alerts,     time_str, signals)
-            sigs_4h = _safe("4h_scan",         run_4h_scan,        time_str)
-            tlm_4h  = _safe("tlm_4h",          run_tlm_scan,       time_str, interval="4h")
-            comms   = _safe("commodity_scan",  run_commodity_scan, time_str)
-            counts  = {"swing": len(signals), "4h": len(sigs_4h),
-                       "ai_4h": len(tlm_4h), "commodities": len(comms)}
+        if slot in ("morning", "midday"):
+            # Signal generation removed here on 2026-07-30. Every scan that ran
+            # in these slots (4h, tlm, swing, commodity) derived targets from
+            # the stop distance, so R:R was a constant and none of it was ever
+            # measured. When the rebuilt engine was backtested on an intraday
+            # horizon it returned -0.005R over 583 trades, against +0.171R on
+            # daily closes — the intraday edge is not there to capture.
+            #
+            # These slots now run position management only: price alerts and
+            # the market snapshot, both executed above for every slot. Entries
+            # come from the EOD measured scan.
+            counts = {"mode": "position-management-only"}
 
         elif slot == "eod":
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
