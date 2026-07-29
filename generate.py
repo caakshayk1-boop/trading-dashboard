@@ -41,6 +41,7 @@ from newspaper import (
     get_productivity_tip,
     fetch_lichess_games,
     get_lichess_summary,
+    fetch_lichess_puzzle,
     init_newspaper_db,
     TEMPLATE,
 )
@@ -90,7 +91,8 @@ def generate() -> None:
     print("[generate] Fetching Lichess games...")
     lichess_games   = fetch_lichess_games()
     lichess_summary = get_lichess_summary(lichess_games)
-    print(f"[generate] Lichess: {len(lichess_games)} games yesterday")
+    lichess_puzzle  = fetch_lichess_puzzle()
+    print(f"[generate] Lichess: {len(lichess_games)} games yesterday, puzzle: {bool(lichess_puzzle)}")
 
     # Render template
     print("[generate] Rendering HTML...")
@@ -114,6 +116,7 @@ def generate() -> None:
         tracker=tracker,
         lichess_games=lichess_games,
         lichess_summary=lichess_summary,
+        lichess_puzzle=lichess_puzzle,
         alerts=alerts,
     )
 
