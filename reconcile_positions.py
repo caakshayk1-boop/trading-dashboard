@@ -130,10 +130,14 @@ def main(apply: bool) -> int:
         for i in range(0, len(stale), 400):
             chunk = stale[i:i + 400]
             marks = ",".join("?" * len(chunk))
+            # Tuple, not list: sqlite3 accepts either, libsql_experimental
+            # (which is what runs against Turso) rejects a list with
+            # "argument 'parameters': 'list' object cannot be converted to
+            # 'PyTuple'". Local testing on sqlite3 will not catch this.
             c.execute(
                 f"UPDATE all_signals SET status='VOID', closed_at=?, why_triggered=? "
                 f"WHERE id IN ({marks}) AND status IN ('OPEN','T1_HIT')",
-                [now.isoformat(), note, *chunk])
+                (now.isoformat(), note, *chunk))
         c.commit()
 
     with tracker._conn() as c:
