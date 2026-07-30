@@ -290,6 +290,51 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ar-translit{font-family:var(--mono);font-size:15px;color:var(--text);letter-spacing:.4px;margin-bottom:6px}
 .ar-meaning{font-size:14px;color:var(--muted);font-style:italic}
 @media(max-width:640px){ .arabic-hero{padding:20px 12px} }
+/* Streak tracker — client-side only */
+.streak{margin-top:18px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.stk-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.stk-lab{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--lime);margin-bottom:5px}
+.stk-sub{font-size:12px;color:var(--dim)}
+.stk-nums{display:flex;gap:18px}
+.stk-n{text-align:right}
+.stk-n b{display:block;font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--text);line-height:1}
+.stk-n i{font-style:normal;font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim)}
+.stk-checks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.stk-c{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;
+  background:var(--bg);border:1px solid var(--line);border-radius:100px;padding:6px 12px;user-select:none;
+  transition:all .18s var(--ease)}
+.stk-c:hover{border-color:var(--line2);color:var(--text)}
+.stk-c.done{background:rgba(61,220,151,.10);border-color:rgba(61,220,151,.42);color:var(--up)}
+.stk-c input{accent-color:var(--up);margin:0;cursor:pointer}
+.stk-strip{display:flex;gap:3px;margin-bottom:9px}
+.stk-d{flex:1;height:22px;border-radius:3px;background:rgba(255,255,255,.05);border:1px solid transparent}
+.stk-d.p1{background:rgba(61,220,151,.22)} .stk-d.p2{background:rgba(61,220,151,.45)}
+.stk-d.p3{background:rgba(61,220,151,.72)} .stk-d.today{border-color:var(--lime)}
+.stk-foot{font-size:11px;color:var(--dim)}
+/* Weekly review */
+.deep-q{padding:22px 24px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.22);
+  border-radius:14px;margin-bottom:16px}
+.dq-lab{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--violet);margin-bottom:9px}
+.deep-q h3{font-size:clamp(18px,2.4vw,25px);font-weight:700;letter-spacing:-.7px;line-height:1.3;
+  color:var(--text);margin-bottom:8px}
+.deep-q p{font-size:13.5px;color:var(--muted);line-height:1.65}
+.rv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.rv-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.rv-card.wide{grid-column:1/-1}
+.rv-card label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--lime);margin-bottom:5px}
+.rv-hint{font-size:11.5px;color:var(--dim);margin-bottom:9px;line-height:1.5}
+.rv-card textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;
+  padding:10px 12px;color:var(--text);font-family:inherit;font-size:13px;line-height:1.6;resize:vertical}
+.rv-card textarea:focus{outline:none;border-color:var(--lime)}
+.rv-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;flex-wrap:wrap}
+.rv-status{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.rv-btn{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:100px;
+  padding:8px 16px;cursor:pointer;transition:all .18s var(--ease)}
+.rv-btn:hover{border-color:var(--lime);color:var(--lime)}
+@media(max-width:640px){ .rv-grid{grid-template-columns:1fr} .stk-nums{gap:14px} }
 .pane{display:none;animation:panein .5s var(--ease)}
 .pane.on{display:block}
 @keyframes panein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -436,7 +481,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Thursday, July 30 2026</span>
-      <span class="live"><i></i>21:19 IST</span>
+      <span class="live"><i></i>21:30 IST</span>
     </div>
   </div>
 </header>
@@ -450,8 +495,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#desk"><i>05</i>The Desk</a>
     <a href="#mind"><i>06</i>The Mind</a>
     <a href="#way"><i>07</i>The Way</a>
-    <a href="#chess"><i>08</i>Chess</a>
-    <a href="#alerts"><i>09</i>Signal Log</a>
+    <a href="#review"><i>08</i>The Review</a>
+    <a href="#chess"><i>09</i>Chess</a>
+    <a href="#alerts"><i>10</i>Signal Log</a>
   </div>
 </nav>
 
@@ -494,7 +540,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   
   <div class="wxrail">
     
-    <div class="wxchip " title="Feels 37.2°C · 70% humidity · 7.6 km/h wind">
+    <div class="wxchip " title="Feels 37.3°C · 70% humidity · 6.8 km/h wind">
       <span class="e">☀️</span>
       <span>
         <span class="c">Bikaner</span>
@@ -503,7 +549,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="t">31.4°</span>
     </div>
     
-    <div class="wxchip rain" title="Feels 32.1°C · 88% humidity · 12.6 km/h wind">
+    <div class="wxchip rain" title="Feels 32.0°C · 88% humidity · 12.5 km/h wind">
       <span class="e">⛅</span>
       <span>
         <span class="c">Kolkata</span>
@@ -512,13 +558,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="t">27.2°</span>
     </div>
     
-    <div class="wxchip rain" title="Feels 31.3°C · 90% humidity · 3.0 km/h wind">
+    <div class="wxchip rain" title="Feels 31.1°C · 90% humidity · 2.9 km/h wind">
       <span class="e">⛅</span>
       <span>
         <span class="c">Kuala Lumpur</span>
-        <span class="m"> ↑31.8° ↓23.4° · 🌧 73% · umbrella</span>
+        <span class="m"> ↑32.7° ↓23.8° · 🌧 78% · umbrella</span>
       </span>
-      <span class="t">25.7°</span>
+      <span class="t">25.6°</span>
     </div>
     
   </div>
@@ -537,25 +583,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7396</span>
+      <span class="p">7394</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">25012</span>
+      <span class="p">24982</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4158.1</span>
+      <span class="p">$4164.6</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$84.06</span>
+      <span class="p">$83.84</span>
       <span class="c dn">▼ </span>
     </div>
     
@@ -567,7 +613,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$64695</span>
+      <span class="p">$64664</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -585,25 +631,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7396</span>
+      <span class="p">7394</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">25012</span>
+      <span class="p">24982</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4158.1</span>
+      <span class="p">$4164.6</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$84.06</span>
+      <span class="p">$83.84</span>
       <span class="c dn">▼ </span>
     </div>
     
@@ -615,7 +661,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$64695</span>
+      <span class="p">$64664</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -650,25 +696,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="mkt u rv" style="--d:0.04s">
       <div class="n">S&P 500</div>
-      <div class="p">7396</div>
+      <div class="p">7394</div>
       <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.08s">
       <div class="n">Nasdaq</div>
-      <div class="p">25012</div>
+      <div class="p">24982</div>
       <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.12s">
       <div class="n">Gold</div>
-      <div class="p">$4158.1</div>
+      <div class="p">$4164.6</div>
       <div class="c up">▲ </div>
     </div>
     
     <div class="mkt d rv" style="--d:0.16s">
       <div class="n">Crude</div>
-      <div class="p">$84.06</div>
+      <div class="p">$83.84</div>
       <div class="c dn">▼ </div>
     </div>
     
@@ -680,7 +726,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="mkt u rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$64695</div>
+      <div class="p">$64664</div>
       <div class="c up">▲ </div>
     </div>
     
@@ -801,7 +847,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span class="s">CNBC</span>
         <h3><a href="https://www.cnbc.com/2026/07/30/ferrari-ceo-luce-ev-debut.html" target="_blank">Ferrari CEO says he 'would not change anything' about polarizing Luce EV debut</a></h3>
         <p>Ferrari is pleased with the launch of the Luce all-electric vehicle despite significant criticism upon the car's spring debut, according to CEO Benede</p>
-        <div class="ts">Jul 30 14:22</div>
+        <div class="ts">Jul 30 15:56</div>
       </div>
       
       <div class="ncard rv" style="--d:0.05s">
@@ -834,30 +880,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.25s">
         <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/personal-finance/insurance/article/cheap-life-insurance-153738210.html" target="_blank">Cheap life insurance: How to get coverage</a></h3>
+        <h3><a href="https://www.investors.com/news/technology/sphere-stock-sphr-q2-2026-report/?src=A00220&yptr=yahoo" target="_blank">Sphere Entertainment Stock Rises On Q2 Revenue Beat</a></h3>
         <p></p>
         <div class="ts">Jul 30 15:37</div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/technology/ai/articles/nvidia-nvda-reportedly-anchors-hut-152040779.html" target="_blank">Nvidia (NVDA) Reportedly Anchors Hut 8’s (HUT) $19.6 Billion AI Lease Bet</a></h3>
+        <h3><a href="https://finance.yahoo.com/personal-finance/insurance/article/cheap-life-insurance-153738210.html" target="_blank">Cheap life insurance: How to get coverage</a></h3>
         <p></p>
-        <div class="ts">Jul 30 15:20</div>
+        <div class="ts">Jul 30 15:37</div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/technology/ai/articles/chips-ships-nvidia-plans-shipbuilding-152033700.html" target="_blank">Chips to ships: Nvidia plans new shipbuilding investment with Kawasaki</a></h3>
+        <h3><a href="https://finance.yahoo.com/energy/articles/shell-turns-volatility-cash-machine-153721224.html" target="_blank">Shell Turns Volatility Into a Cash Machine</a></h3>
         <p></p>
-        <div class="ts">Jul 30 15:20</div>
+        <div class="ts">Jul 30 15:37</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/personal-finance/banking/article/equifaxs-22-million-credit-reporting-settlement-who-qualifies-130000338.html" target="_blank">Equifax's $2.2 million credit reporting settlement: Who qualifies</a></h3>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/adidas-wins-world-cup-loses-152830349.html" target="_blank">Adidas Wins the World Cup and Loses the Market</a></h3>
         <p></p>
-        <div class="ts">Jul 30 13:00</div>
+        <div class="ts">Jul 30 15:28</div>
       </div>
       
     </div>
@@ -1036,6 +1082,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button class="tab" data-p="w4">⚙️ Model · 9/20</button>
     <button class="tab" data-p="w5">🇦🇪 Arabic · 5/30</button>
     <button class="tab" data-p="w6">🎯 Drill · 1/20</button>
+    <button class="tab" data-p="w7">💪 Health · 11/20</button>
   </div>
 
   <div class="rv">
@@ -1095,10 +1142,91 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div class="act"><b>The rep</b>Ten numbers. Find 1%, 3%, and 15% of each. Under 60 seconds total.</div>
       </div>
     </div>
+
+    <div class="pane" id="w7">
+      <div class="essay" style="--ac:var(--pink,#FF7AA2)">
+        <div class="meta">Health · 11/20 · the asset with no substitute</div>
+        <h3>Alcohol Has No Healthy Dose</h3>
+        <p>The J-curve was confounding — the abstainer group included the already-sick. Current evidence points to a linear dose-response for cancer risk from zero, and sleep architecture degrades from the first drink.</p>
+        <div class="act"><b>Today's lever</b>Count last week's units honestly. Not a judgement, a baseline.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- streak tracker: localStorage only, no server -->
+  <div class="streak rv" id="streakBox" hidden>
+    <div class="stk-head">
+      <div>
+        <div class="stk-lab">Today's practice</div>
+        <div class="stk-sub">Tick what you actually did. Stored in this browser only.</div>
+      </div>
+      <div class="stk-nums">
+        <div class="stk-n"><b id="stkCur">0</b><i>current</i></div>
+        <div class="stk-n"><b id="stkBest">0</b><i>best</i></div>
+        <div class="stk-n"><b id="stkRate">0%</b><i>30d</i></div>
+      </div>
+    </div>
+    <div class="stk-checks" id="stkChecks"></div>
+    <div class="stk-strip" id="stkStrip" title="Last 30 days"></div>
+    <div class="stk-foot">A day counts once you tick anything. Streak breaks on a fully empty day.</div>
   </div>
 </section>
 
-<!-- ══════════ 08 CHESS ══════════ -->
+<!-- ══════════ 08 THE REVIEW ══════════ -->
+<section class="sec" id="review">
+  <div class="shead rv">
+    <div>
+      <span class="snum">08 / THE REVIEW</span>
+      <h2 class="stitle">Look back, or none of it compounds.</h2>
+    </div>
+    <p class="sdesc">Week 31 of 2026.
+      3 days until the weekend review.
+      Answers save in this browser, keyed to the week.</p>
+  </div>
+
+  <div class="rv">
+    <div class="deep-q">
+      <div class="dq-lab">This week's question · 10/20</div>
+      <h3>Which number moved, and did you cause it?</h3>
+      <p>Attribution is harder than measurement and matters more.</p>
+    </div>
+
+    <div class="rv-grid" id="reviewGrid" data-week="2026-W31">
+      <div class="rv-card">
+        <label for="rvNumbers">The numbers</label>
+        <div class="rv-hint">What moved, by how much, and did you cause it?</div>
+        <textarea id="rvNumbers" rows="4" placeholder="e.g. 12 applications sent · SIP ₹10,000 · expectancy +0.14R over 22 signals"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvWins">Wins</label>
+        <div class="rv-hint">Only things that finished. Not things that progressed.</div>
+        <textarea id="rvWins" rows="4" placeholder="What actually shipped or closed"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvMisses">Misses</label>
+        <div class="rv-hint">What slipped, and the cause — not the excuse.</div>
+        <textarea id="rvMisses" rows="4" placeholder="What did not happen, and why"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvAnswer">Answer to this week's question</label>
+        <div class="rv-hint">Which number moved, and did you cause it?</div>
+        <textarea id="rvAnswer" rows="4" placeholder="Be specific. Vague answers are avoidance."></textarea>
+      </div>
+      <div class="rv-card wide">
+        <label for="rvChange">One change for next week</label>
+        <div class="rv-hint">Exactly one. A list of five is a list of none.</div>
+        <textarea id="rvChange" rows="3" placeholder="One change. Specific enough to verify next Sunday."></textarea>
+      </div>
+    </div>
+
+    <div class="rv-bar">
+      <span class="rv-status" id="rvStatus">Not started</span>
+      <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 09 CHESS ══════════ -->
 <section class="sec" id="chess">
   <div class="shead rv">
     <div>
@@ -1769,7 +1897,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1906 · 🔴 stretch</h3>
+      <h3>Rating 1978 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Opening · Crushing · Fork</p>
       <div class="q">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
       <a href="https://lichess.org/training/YxGsl" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -1778,7 +1906,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
-<!-- ══════════ 09 SIGNAL LOG ══════════ -->
+<!-- ══════════ 10 SIGNAL LOG ══════════ -->
 <section class="sec" id="alerts">
   <div class="shead rv">
     <div>
@@ -5034,7 +5162,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Thursday, July 30 2026 · 21:19 IST<br>
+      Thursday, July 30 2026 · 21:30 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -5147,6 +5275,177 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
     });
   });
+
+  /* ── practice streak + weekly review (localStorage, no server) ──
+     The published site is static GitHub Pages, so there is nowhere to persist
+     server-side. State is per-browser and per-device by design; the review
+     exports to Markdown so anything worth keeping leaves the browser. */
+  (function(){
+    var TRACKS = [
+      ["minimalism","🪶 Minimalism"], ["etiquette","🤝 Etiquette"],
+      ["stillness","🧘 Stillness"],   ["model","⚙️ Model"],
+      ["arabic","🇦🇪 Arabic"],        ["drill","🎯 Drill"],
+      ["health","💪 Health"]
+    ];
+    var KEY = "tds.practice.v1";
+
+    function todayKey(d){
+      d = d || new Date();
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0")
+           + "-" + String(d.getDate()).padStart(2,"0");
+    }
+    function load(){
+      try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+    function save(d){
+      try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e){}
+    }
+    function dayCount(store, key){
+      var v = store[key];
+      return (v && v.length) ? v.length : 0;
+    }
+    /* Streak counts back from today. Today not yet ticked does not break it —
+       the day is still in progress; yesterday empty does. */
+    function streak(store){
+      var n = 0, d = new Date();
+      if (dayCount(store, todayKey(d)) === 0) d.setDate(d.getDate() - 1);
+      for(;;){
+        if (dayCount(store, todayKey(d)) === 0) break;
+        n++; d.setDate(d.getDate() - 1);
+        if (n > 3650) break;
+      }
+      return n;
+    }
+    function best(store){
+      var keys = Object.keys(store).filter(function(k){ return dayCount(store,k) > 0; }).sort();
+      var run = 0, top = 0, prev = null;
+      keys.forEach(function(k){
+        var d = new Date(k + "T00:00:00");
+        if (prev && Math.round((d - prev) / 86400000) === 1) run++; else run = 1;
+        if (run > top) top = run;
+        prev = d;
+      });
+      return top;
+    }
+
+    var box = document.getElementById("streakBox");
+    if (box){
+      box.hidden = false;
+      var store = load();
+      var checks = document.getElementById("stkChecks");
+
+      TRACKS.forEach(function(t){
+        var id = t[0], label = t[1];
+        var lab = document.createElement("label");
+        lab.className = "stk-c";
+        var cb = document.createElement("input");
+        cb.type = "checkbox"; cb.dataset.track = id;
+        var span = document.createElement("span"); span.textContent = label;
+        lab.appendChild(cb); lab.appendChild(span);
+        cb.addEventListener("change", function(){
+          var st = load(), k = todayKey(), cur = st[k] || [];
+          if (cb.checked){ if (cur.indexOf(id) < 0) cur.push(id); }
+          else { cur = cur.filter(function(x){ return x !== id; }); }
+          if (cur.length) st[k] = cur; else delete st[k];
+          save(st); render();
+        });
+        checks.appendChild(lab);
+      });
+
+      function render(){
+        var st = load(), today = st[todayKey()] || [];
+        checks.querySelectorAll("input").forEach(function(cb){
+          cb.checked = today.indexOf(cb.dataset.track) >= 0;
+          cb.parentNode.classList.toggle("done", cb.checked);
+        });
+        document.getElementById("stkCur").textContent  = streak(st);
+        document.getElementById("stkBest").textContent = Math.max(best(st), streak(st));
+
+        var strip = document.getElementById("stkStrip");
+        strip.innerHTML = "";
+        var hit = 0;
+        for (var i = 29; i >= 0; i--){
+          var d = new Date(); d.setDate(d.getDate() - i);
+          var k = todayKey(d), c = dayCount(st, k);
+          if (c > 0) hit++;
+          var cell = document.createElement("div");
+          cell.className = "stk-d" + (c >= 5 ? " p3" : c >= 3 ? " p2" : c > 0 ? " p1" : "")
+                         + (i === 0 ? " today" : "");
+          cell.title = k + " — " + c + " of " + TRACKS.length;
+          strip.appendChild(cell);
+        }
+        document.getElementById("stkRate").textContent = Math.round(hit / 30 * 100) + "%";
+      }
+      render();
+    }
+
+    /* ── weekly review ── */
+    var grid = document.getElementById("reviewGrid");
+    if (grid){
+      var week = grid.dataset.week;
+      var RKEY = "tds.review." + week;
+      var fields = ["rvNumbers","rvWins","rvMisses","rvAnswer","rvChange"];
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(RKEY) || "{}") || {}; } catch(e){}
+
+      function status(){
+        var filled = fields.filter(function(id){
+          var el = document.getElementById(id);
+          return el && el.value.trim().length > 0;
+        }).length;
+        var el = document.getElementById("rvStatus");
+        el.textContent = filled === 0 ? "Not started"
+          : filled === fields.length ? ("Complete · saved for " + week)
+          : (filled + " of " + fields.length + " · saved for " + week);
+      }
+
+      fields.forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (saved[id]) el.value = saved[id];
+        el.addEventListener("input", function(){
+          var cur = {};
+          fields.forEach(function(f){
+            var e = document.getElementById(f);
+            if (e && e.value.trim()) cur[f] = e.value;
+          });
+          try { localStorage.setItem(RKEY, JSON.stringify(cur)); } catch(e){}
+          status();
+        });
+      });
+      status();
+
+      var copyBtn = document.getElementById("rvCopy");
+      if (copyBtn){
+        copyBtn.addEventListener("click", function(){
+          function val(id){ var e = document.getElementById(id); return e ? e.value.trim() : ""; }
+          var q = grid.parentNode.querySelector(".deep-q h3");
+          var md = "## Weekly Review — " + week + "\n\n"
+            + "### The numbers\n" + (val("rvNumbers") || "—") + "\n\n"
+            + "### Wins\n" + (val("rvWins") || "—") + "\n\n"
+            + "### Misses\n" + (val("rvMisses") || "—") + "\n\n"
+            + "### " + (q ? q.textContent : "This week's question") + "\n"
+            + (val("rvAnswer") || "—") + "\n\n"
+            + "### One change for next week\n" + (val("rvChange") || "—") + "\n";
+          function done(ok){
+            copyBtn.textContent = ok ? "Copied" : "Copy failed";
+            setTimeout(function(){ copyBtn.textContent = "Copy week as Markdown"; }, 1800);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(md).then(function(){ done(true); },
+                                                   function(){ done(false); });
+          } else {
+            var ta = document.createElement("textarea");
+            ta.value = md; document.body.appendChild(ta); ta.select();
+            var ok = false;
+            try { ok = document.execCommand("copy"); } catch(e){}
+            document.body.removeChild(ta); done(ok);
+          }
+        });
+      }
+    }
+  })();
 
   /* ── static host: disable server-only routes ── */
   if (location.hostname.indexOf('github.io') !== -1){
