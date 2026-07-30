@@ -1414,12 +1414,31 @@ def _way_placeholder() -> dict:
     blank = {"title": "Loading", "body": "", "action": "", "index": 0, "total": 1}
     return {"minimalism": dict(blank), "etiquette": dict(blank),
             "stillness": dict(blank), "model": dict(blank), "drill": dict(blank),
+            "health": dict(blank),
             "arabic": {"script": "", "translit": "", "meaning": "", "use": "",
                        "index": 0, "total": 1}}
 
 
+def _review_placeholder() -> dict:
+    from datetime import date as _d
+    y, w, wd = _d.today().isocalendar()
+    return {"prompt": "Loading", "why": "", "index": 0, "total": 1,
+            "week": w, "year": y, "key": f"{y}-W{w:02d}", "weekday": wd,
+            "days_left": 7 - wd, "is_review_day": wd >= 6}
+
+
+def get_review() -> dict:
+    """Weekly review frame. Never raises."""
+    try:
+        import way
+        return way.get_review()
+    except Exception as e:
+        log.warning(f"review: {e}")
+        return _review_placeholder()
+
+
 def get_way() -> dict:
-    """Six daily tracks for The Way. Falls back to placeholders, never raises —
+    """Daily tracks for The Way. Falls back to placeholders, never raises —
     a content module must not be able to take the whole page down."""
     try:
         import way
@@ -2014,6 +2033,51 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ar-translit{font-family:var(--mono);font-size:15px;color:var(--text);letter-spacing:.4px;margin-bottom:6px}
 .ar-meaning{font-size:14px;color:var(--muted);font-style:italic}
 @media(max-width:640px){ .arabic-hero{padding:20px 12px} }
+/* Streak tracker — client-side only */
+.streak{margin-top:18px;padding:18px 20px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.stk-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.stk-lab{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--lime);margin-bottom:5px}
+.stk-sub{font-size:12px;color:var(--dim)}
+.stk-nums{display:flex;gap:18px}
+.stk-n{text-align:right}
+.stk-n b{display:block;font-size:22px;font-weight:700;letter-spacing:-1px;color:var(--text);line-height:1}
+.stk-n i{font-style:normal;font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim)}
+.stk-checks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.stk-c{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;
+  background:var(--bg);border:1px solid var(--line);border-radius:100px;padding:6px 12px;user-select:none;
+  transition:all .18s var(--ease)}
+.stk-c:hover{border-color:var(--line2);color:var(--text)}
+.stk-c.done{background:rgba(61,220,151,.10);border-color:rgba(61,220,151,.42);color:var(--up)}
+.stk-c input{accent-color:var(--up);margin:0;cursor:pointer}
+.stk-strip{display:flex;gap:3px;margin-bottom:9px}
+.stk-d{flex:1;height:22px;border-radius:3px;background:rgba(255,255,255,.05);border:1px solid transparent}
+.stk-d.p1{background:rgba(61,220,151,.22)} .stk-d.p2{background:rgba(61,220,151,.45)}
+.stk-d.p3{background:rgba(61,220,151,.72)} .stk-d.today{border-color:var(--lime)}
+.stk-foot{font-size:11px;color:var(--dim)}
+/* Weekly review */
+.deep-q{padding:22px 24px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.22);
+  border-radius:14px;margin-bottom:16px}
+.dq-lab{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--violet);margin-bottom:9px}
+.deep-q h3{font-size:clamp(18px,2.4vw,25px);font-weight:700;letter-spacing:-.7px;line-height:1.3;
+  color:var(--text);margin-bottom:8px}
+.deep-q p{font-size:13.5px;color:var(--muted);line-height:1.65}
+.rv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.rv-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.rv-card.wide{grid-column:1/-1}
+.rv-card label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--lime);margin-bottom:5px}
+.rv-hint{font-size:11.5px;color:var(--dim);margin-bottom:9px;line-height:1.5}
+.rv-card textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;
+  padding:10px 12px;color:var(--text);font-family:inherit;font-size:13px;line-height:1.6;resize:vertical}
+.rv-card textarea:focus{outline:none;border-color:var(--lime)}
+.rv-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;flex-wrap:wrap}
+.rv-status{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.rv-btn{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:100px;
+  padding:8px 16px;cursor:pointer;transition:all .18s var(--ease)}
+.rv-btn:hover{border-color:var(--lime);color:var(--lime)}
+@media(max-width:640px){ .rv-grid{grid-template-columns:1fr} .stk-nums{gap:14px} }
 .pane{display:none;animation:panein .5s var(--ease)}
 .pane.on{display:block}
 @keyframes panein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -2174,8 +2238,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#desk"><i>05</i>The Desk</a>
     <a href="#mind"><i>06</i>The Mind</a>
     <a href="#way"><i>07</i>The Way</a>
-    <a href="#chess"><i>08</i>Chess</a>
-    <a href="#alerts"><i>09</i>Signal Log</a>
+    <a href="#review"><i>08</i>The Review</a>
+    <a href="#chess"><i>09</i>Chess</a>
+    <a href="#alerts"><i>10</i>Signal Log</a>
   </div>
 </nav>
 
@@ -2596,6 +2661,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button class="tab" data-p="w4">⚙️ Model · {{ way.model.index }}/{{ way.model.total }}</button>
     <button class="tab" data-p="w5">🇦🇪 Arabic · {{ way.arabic.index }}/{{ way.arabic.total }}</button>
     <button class="tab" data-p="w6">🎯 Drill · {{ way.drill.index }}/{{ way.drill.total }}</button>
+    <button class="tab" data-p="w7">💪 Health · {{ way.health.index }}/{{ way.health.total }}</button>
   </div>
 
   <div class="rv">
@@ -2655,10 +2721,91 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div class="act"><b>The rep</b>{{ way.drill.action }}</div>
       </div>
     </div>
+
+    <div class="pane" id="w7">
+      <div class="essay" style="--ac:var(--pink,#FF7AA2)">
+        <div class="meta">Health · {{ way.health.index }}/{{ way.health.total }} · the asset with no substitute</div>
+        <h3>{{ way.health.title }}</h3>
+        <p>{{ way.health.body }}</p>
+        <div class="act"><b>Today's lever</b>{{ way.health.action }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- streak tracker: localStorage only, no server -->
+  <div class="streak rv" id="streakBox" hidden>
+    <div class="stk-head">
+      <div>
+        <div class="stk-lab">Today's practice</div>
+        <div class="stk-sub">Tick what you actually did. Stored in this browser only.</div>
+      </div>
+      <div class="stk-nums">
+        <div class="stk-n"><b id="stkCur">0</b><i>current</i></div>
+        <div class="stk-n"><b id="stkBest">0</b><i>best</i></div>
+        <div class="stk-n"><b id="stkRate">0%</b><i>30d</i></div>
+      </div>
+    </div>
+    <div class="stk-checks" id="stkChecks"></div>
+    <div class="stk-strip" id="stkStrip" title="Last 30 days"></div>
+    <div class="stk-foot">A day counts once you tick anything. Streak breaks on a fully empty day.</div>
   </div>
 </section>
 
-<!-- ══════════ 08 CHESS ══════════ -->
+<!-- ══════════ 08 THE REVIEW ══════════ -->
+<section class="sec" id="review">
+  <div class="shead rv">
+    <div>
+      <span class="snum">08 / THE REVIEW</span>
+      <h2 class="stitle">Look back, or none of it compounds.</h2>
+    </div>
+    <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
+      {% if review.is_review_day %}Review day — do it now.{% else %}{{ review.days_left }} day{{ '' if review.days_left == 1 else 's' }} until the weekend review.{% endif %}
+      Answers save in this browser, keyed to the week.</p>
+  </div>
+
+  <div class="rv">
+    <div class="deep-q">
+      <div class="dq-lab">This week's question · {{ review.index }}/{{ review.total }}</div>
+      <h3>{{ review.prompt }}</h3>
+      <p>{{ review.why }}</p>
+    </div>
+
+    <div class="rv-grid" id="reviewGrid" data-week="{{ review.key }}">
+      <div class="rv-card">
+        <label for="rvNumbers">The numbers</label>
+        <div class="rv-hint">What moved, by how much, and did you cause it?</div>
+        <textarea id="rvNumbers" rows="4" placeholder="e.g. 12 applications sent · SIP ₹10,000 · expectancy +0.14R over 22 signals"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvWins">Wins</label>
+        <div class="rv-hint">Only things that finished. Not things that progressed.</div>
+        <textarea id="rvWins" rows="4" placeholder="What actually shipped or closed"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvMisses">Misses</label>
+        <div class="rv-hint">What slipped, and the cause — not the excuse.</div>
+        <textarea id="rvMisses" rows="4" placeholder="What did not happen, and why"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvAnswer">Answer to this week's question</label>
+        <div class="rv-hint">{{ review.prompt }}</div>
+        <textarea id="rvAnswer" rows="4" placeholder="Be specific. Vague answers are avoidance."></textarea>
+      </div>
+      <div class="rv-card wide">
+        <label for="rvChange">One change for next week</label>
+        <div class="rv-hint">Exactly one. A list of five is a list of none.</div>
+        <textarea id="rvChange" rows="3" placeholder="One change. Specific enough to verify next Sunday."></textarea>
+      </div>
+    </div>
+
+    <div class="rv-bar">
+      <span class="rv-status" id="rvStatus">Not started</span>
+      <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 09 CHESS ══════════ -->
 <section class="sec" id="chess">
   <div class="shead rv">
     <div>
@@ -2819,7 +2966,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
-<!-- ══════════ 09 SIGNAL LOG ══════════ -->
+<!-- ══════════ 10 SIGNAL LOG ══════════ -->
 <section class="sec" id="alerts">
   <div class="shead rv">
     <div>
@@ -3007,6 +3154,177 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     });
   });
 
+  /* ── practice streak + weekly review (localStorage, no server) ──
+     The published site is static GitHub Pages, so there is nowhere to persist
+     server-side. State is per-browser and per-device by design; the review
+     exports to Markdown so anything worth keeping leaves the browser. */
+  (function(){
+    var TRACKS = [
+      ["minimalism","🪶 Minimalism"], ["etiquette","🤝 Etiquette"],
+      ["stillness","🧘 Stillness"],   ["model","⚙️ Model"],
+      ["arabic","🇦🇪 Arabic"],        ["drill","🎯 Drill"],
+      ["health","💪 Health"]
+    ];
+    var KEY = "tds.practice.v1";
+
+    function todayKey(d){
+      d = d || new Date();
+      return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0")
+           + "-" + String(d.getDate()).padStart(2,"0");
+    }
+    function load(){
+      try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; }
+      catch(e){ return {}; }
+    }
+    function save(d){
+      try { localStorage.setItem(KEY, JSON.stringify(d)); } catch(e){}
+    }
+    function dayCount(store, key){
+      var v = store[key];
+      return (v && v.length) ? v.length : 0;
+    }
+    /* Streak counts back from today. Today not yet ticked does not break it —
+       the day is still in progress; yesterday empty does. */
+    function streak(store){
+      var n = 0, d = new Date();
+      if (dayCount(store, todayKey(d)) === 0) d.setDate(d.getDate() - 1);
+      for(;;){
+        if (dayCount(store, todayKey(d)) === 0) break;
+        n++; d.setDate(d.getDate() - 1);
+        if (n > 3650) break;
+      }
+      return n;
+    }
+    function best(store){
+      var keys = Object.keys(store).filter(function(k){ return dayCount(store,k) > 0; }).sort();
+      var run = 0, top = 0, prev = null;
+      keys.forEach(function(k){
+        var d = new Date(k + "T00:00:00");
+        if (prev && Math.round((d - prev) / 86400000) === 1) run++; else run = 1;
+        if (run > top) top = run;
+        prev = d;
+      });
+      return top;
+    }
+
+    var box = document.getElementById("streakBox");
+    if (box){
+      box.hidden = false;
+      var store = load();
+      var checks = document.getElementById("stkChecks");
+
+      TRACKS.forEach(function(t){
+        var id = t[0], label = t[1];
+        var lab = document.createElement("label");
+        lab.className = "stk-c";
+        var cb = document.createElement("input");
+        cb.type = "checkbox"; cb.dataset.track = id;
+        var span = document.createElement("span"); span.textContent = label;
+        lab.appendChild(cb); lab.appendChild(span);
+        cb.addEventListener("change", function(){
+          var st = load(), k = todayKey(), cur = st[k] || [];
+          if (cb.checked){ if (cur.indexOf(id) < 0) cur.push(id); }
+          else { cur = cur.filter(function(x){ return x !== id; }); }
+          if (cur.length) st[k] = cur; else delete st[k];
+          save(st); render();
+        });
+        checks.appendChild(lab);
+      });
+
+      function render(){
+        var st = load(), today = st[todayKey()] || [];
+        checks.querySelectorAll("input").forEach(function(cb){
+          cb.checked = today.indexOf(cb.dataset.track) >= 0;
+          cb.parentNode.classList.toggle("done", cb.checked);
+        });
+        document.getElementById("stkCur").textContent  = streak(st);
+        document.getElementById("stkBest").textContent = Math.max(best(st), streak(st));
+
+        var strip = document.getElementById("stkStrip");
+        strip.innerHTML = "";
+        var hit = 0;
+        for (var i = 29; i >= 0; i--){
+          var d = new Date(); d.setDate(d.getDate() - i);
+          var k = todayKey(d), c = dayCount(st, k);
+          if (c > 0) hit++;
+          var cell = document.createElement("div");
+          cell.className = "stk-d" + (c >= 5 ? " p3" : c >= 3 ? " p2" : c > 0 ? " p1" : "")
+                         + (i === 0 ? " today" : "");
+          cell.title = k + " — " + c + " of " + TRACKS.length;
+          strip.appendChild(cell);
+        }
+        document.getElementById("stkRate").textContent = Math.round(hit / 30 * 100) + "%";
+      }
+      render();
+    }
+
+    /* ── weekly review ── */
+    var grid = document.getElementById("reviewGrid");
+    if (grid){
+      var week = grid.dataset.week;
+      var RKEY = "tds.review." + week;
+      var fields = ["rvNumbers","rvWins","rvMisses","rvAnswer","rvChange"];
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(RKEY) || "{}") || {}; } catch(e){}
+
+      function status(){
+        var filled = fields.filter(function(id){
+          var el = document.getElementById(id);
+          return el && el.value.trim().length > 0;
+        }).length;
+        var el = document.getElementById("rvStatus");
+        el.textContent = filled === 0 ? "Not started"
+          : filled === fields.length ? ("Complete · saved for " + week)
+          : (filled + " of " + fields.length + " · saved for " + week);
+      }
+
+      fields.forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (saved[id]) el.value = saved[id];
+        el.addEventListener("input", function(){
+          var cur = {};
+          fields.forEach(function(f){
+            var e = document.getElementById(f);
+            if (e && e.value.trim()) cur[f] = e.value;
+          });
+          try { localStorage.setItem(RKEY, JSON.stringify(cur)); } catch(e){}
+          status();
+        });
+      });
+      status();
+
+      var copyBtn = document.getElementById("rvCopy");
+      if (copyBtn){
+        copyBtn.addEventListener("click", function(){
+          function val(id){ var e = document.getElementById(id); return e ? e.value.trim() : ""; }
+          var q = grid.parentNode.querySelector(".deep-q h3");
+          var md = "## Weekly Review — " + week + "\n\n"
+            + "### The numbers\n" + (val("rvNumbers") || "—") + "\n\n"
+            + "### Wins\n" + (val("rvWins") || "—") + "\n\n"
+            + "### Misses\n" + (val("rvMisses") || "—") + "\n\n"
+            + "### " + (q ? q.textContent : "This week's question") + "\n"
+            + (val("rvAnswer") || "—") + "\n\n"
+            + "### One change for next week\n" + (val("rvChange") || "—") + "\n";
+          function done(ok){
+            copyBtn.textContent = ok ? "Copied" : "Copy failed";
+            setTimeout(function(){ copyBtn.textContent = "Copy week as Markdown"; }, 1800);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(md).then(function(){ done(true); },
+                                                   function(){ done(false); });
+          } else {
+            var ta = document.createElement("textarea");
+            ta.value = md; document.body.appendChild(ta); ta.select();
+            var ok = false;
+            try { ok = document.execCommand("copy"); } catch(e){}
+            document.body.removeChild(ta); done(ok);
+          }
+        });
+      }
+    }
+  })();
+
   /* ── static host: disable server-only routes ── */
   if (location.hostname.indexOf('github.io') !== -1){
     document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(function(f){
@@ -3044,6 +3362,7 @@ def index():
         wisdom         = get_wisdom_lesson()
         book           = get_book_lesson()
         way_ctx        = get_way()
+        review_ctx     = get_review()
         top5           = get_top5_picks()
         tracker        = get_tracker_stocks()
         money          = get_money_hack()
@@ -3061,7 +3380,7 @@ def index():
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=now.strftime("%H:%M"),
             markets=markets, news=news, fpna=fpna, cfo=cfo,
-            chess=chess, wisdom=wisdom, book=book, way=way_ctx,
+            chess=chess, wisdom=wisdom, book=book, way=way_ctx, review=review_ctx,
             top5=top5, tracker=tracker, money_hack=money,
             productivity_tip=prod, weather=weather,
             quote=quote, lesson=lesson, case=case,
@@ -3080,7 +3399,7 @@ def index():
             chess={"title":"Loading","body":"","index":0,"total":1},
             wisdom={"title":"Loading","body":"","index":0,"total":1},
             book={"book":"Loading","author":"","chapter":"Loading","lesson":"","key_quote":"","action":"","index":0,"total":1},
-            way=_way_placeholder(),
+            way=_way_placeholder(), review=_review_placeholder(),
             top5=[], tracker=[], money_hack={"title":"Loading","body":""},
             productivity_tip="Loading...", weather=[],
             quote={"quote":"","name":"","index":0,"total":1},

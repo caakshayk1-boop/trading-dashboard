@@ -391,8 +391,122 @@ DRILLS = [
 ]
 
 
+# ── HEALTH ───────────────────────────────────────────────────────────────────
+# The only asset with no substitute. One lever a day, each with the mechanism —
+# not "drink water", but why and how much.
+
+HEALTH = [
+    ("VO2max Is The Strongest Predictor",
+     "Cardiorespiratory fitness predicts all-cause mortality better than smoking status, blood pressure, or cholesterol. Moving from the bottom quartile to merely above-average is the single largest risk reduction available to you — larger than any drug.",
+     "One 20-minute session where holding a conversation is difficult."),
+    ("Zone 2, Most Of The Time",
+     "Roughly 80% of cardio should be easy enough to hold a conversation. It builds mitochondrial density and fat oxidation. Most people train too hard to recover and too easy to adapt — the worst of both.",
+     "45 minutes at a pace where you can speak in full sentences."),
+    ("Strength Is Longevity, Not Vanity",
+     "Muscle mass and grip strength both independently predict lifespan. After 30 you lose 3–8% of muscle per decade unless you resist it, and the decline accelerates. Sarcopenia is what puts people in care homes.",
+     "Two sets of a compound lift. Squat, hinge, push, or pull."),
+    ("Protein: 1.6g Per Kg, Minimum",
+     "At 75kg that is 120g daily — far above most intakes. Protein is the one macro where the deficiency is common and the consequence is muscle you cannot easily get back.",
+     "Compute your target. Hit it for one day and see how hard it actually is."),
+    ("Sleep Is The Performance Lever",
+     "Under 7 hours measurably degrades reaction time, glucose control, immune function, and emotional regulation. One night at 4 hours drops next-day insulin sensitivity by around 25%. You cannot out-discipline this.",
+     "Fixed lights-out tonight. Same time tomorrow."),
+    ("Light Sets The Clock",
+     "Morning daylight within an hour of waking anchors circadian rhythm and improves sleep that night more reliably than any supplement. Outdoor light is 10–100x brighter than indoor, even when overcast.",
+     "Ten minutes outside within an hour of waking. No sunglasses."),
+    ("Walking Is Underrated",
+     "8,000 steps a day is associated with a large mortality reduction versus 4,000, and the curve is steepest at the low end. The gains come from moving more, not from moving harder.",
+     "Add one 15-minute walk. After a meal is best for glucose."),
+    ("Sitting Is Not The New Smoking, But",
+     "Prolonged uninterrupted sitting impairs glucose handling regardless of whether you exercised that day. The fix is frequency of interruption, not total exercise volume.",
+     "Stand or walk 2 minutes every 30. Set a timer for one work block."),
+    ("Grip Strength As A Biomarker",
+     "It correlates with cardiovascular mortality and cognitive decline, and it is trivially measurable. It is a proxy for total-body strength and neuromuscular health.",
+     "Two sets of dead hangs or farmer's carries to failure."),
+    ("Zone 5 Once A Week",
+     "Short maximal intervals raise VO2max faster than steady work. Four minutes hard, four easy, four times. Unpleasant, brief, and disproportionately effective.",
+     "One 4x4 interval session. Only if Zone 2 is already habitual."),
+    ("Alcohol Has No Healthy Dose",
+     "The J-curve was confounding — the abstainer group included the already-sick. Current evidence points to a linear dose-response for cancer risk from zero, and sleep architecture degrades from the first drink.",
+     "Count last week's units honestly. Not a judgement, a baseline."),
+    ("Visceral Fat Is The One That Matters",
+     "Fat around the organs is metabolically active and drives insulin resistance. Waist-to-height under 0.5 is the simplest useful screen — better than BMI, which cannot distinguish muscle from fat.",
+     "Measure waist and height. Divide. Should be under 0.5."),
+    ("Fibre, Not Supplements",
+     "Most people get under half the recommended 30g. Fibre feeds the gut microbiome, blunts glucose response, and is one of the few dietary factors with consistent large-cohort support.",
+     "Add one high-fibre food today. Legumes, oats, or berries."),
+    ("Train Balance Before You Need It",
+     "Falls are a leading cause of injury death in older adults, and balance declines silently from midlife. It is trainable at any age and takes 60 seconds a day.",
+     "Stand on one leg, 30 seconds each side. Eyes closed to progress."),
+    ("Heat And Cold Are Adjuncts, Not Basics",
+     "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
+     "Only add these once training, sleep, and protein are consistent."),
+    ("Blood Panel Annually, Minimum",
+     "ApoB, HbA1c, fasting insulin, hs-CRP, lipid panel, vitamin D. ApoB predicts cardiovascular risk better than LDL-C and is rarely ordered unless you ask specifically.",
+     "Book the panel. Ask for ApoB by name."),
+    ("Breathe Through Your Nose",
+     "Nasal breathing improves oxygen uptake, filters air, and produces nitric oxide, which is a vasodilator. Mouth breathing during sleep correlates with poorer sleep quality and dental issues.",
+     "Nasal-only breathing for one Zone 2 session. Pace will drop. That is the point."),
+    ("Stress Is Physiological, Not Just Mental",
+     "Chronic cortisol elevation drives visceral fat, impairs sleep, and suppresses immune function. The body does not distinguish financial stress from physical threat.",
+     "Five minutes of slow exhale-biased breathing. Exhale twice as long as inhale."),
+    ("Muscle Is A Glucose Sink",
+     "Skeletal muscle disposes of most post-meal glucose. More muscle means better glycaemic control independent of diet — the metabolic argument for lifting, separate from strength.",
+     "A short walk or 20 bodyweight squats after your largest meal."),
+    ("Consistency Beats Optimisation",
+     "The perfect protocol you follow 30% of the time loses to the adequate one you follow 90% of the time. Every fitness argument online is about the last 5% and ignores the first 95%.",
+     "Pick the minimum session you would do on your worst week. That is your floor."),
+]
+
+# ── WEEKLY REVIEW ────────────────────────────────────────────────────────────
+# Rotates by ISO week, not day. The fixed frame stays; the deep question moves.
+
+REVIEW_PROMPTS = [
+    ("What did you avoid this week, and what did avoiding it cost?",
+     "Avoidance is rarely laziness. It is usually an unnamed fear or an unclear next step. Name which."),
+    ("Which single decision this week will still matter in a year?",
+     "Most weeks contain one. If you cannot find it, that is the finding."),
+    ("Where did you confuse motion for progress?",
+     "Busy is the most convincing disguise failure wears."),
+    ("What did you learn that changed a belief, not just added a fact?",
+     "Facts accumulate. Beliefs updating is the rarer and more valuable event."),
+    ("Who did you help with no expectation of return?",
+     "If the answer is nobody, the week was narrower than it needed to be."),
+    ("What would you do differently with the same information?",
+     "Separates decision quality from outcome. Only the first is yours."),
+    ("Which commitment are you continuing purely out of sunk cost?",
+     "Name it. You do not have to quit it today, but name it."),
+    ("Where were you the bottleneck?",
+     "The honest answer is usually a decision you delayed, not work you failed to do."),
+    ("What did your daughter see you do this week?",
+     "Not what you told her. What she watched."),
+    ("Which number moved, and did you cause it?",
+     "Attribution is harder than measurement and matters more."),
+    ("What did you say yes to that you should have declined?",
+     "Every yes was a no to something. Name what it displaced."),
+    ("Where did you take a risk that was actually a gamble?",
+     "A risk has a modelled downside. A gamble has an unexamined one."),
+    ("What are you pretending not to know?",
+     "There is usually one thing. It is usually the important one."),
+    ("Which relationship did you invest in, and which did you let drift?",
+     "Drift is a decision made by not deciding."),
+    ("What did you build that will still work if you stop touching it?",
+     "Leverage is what runs without you. Everything else is a job."),
+    ("Where did you optimise something that should have been deleted?",
+     "Via negativa. The best improvement is often removal."),
+    ("What made you angry, and what did it tell you about your boundaries?",
+     "Anger is information about a violated value. Read it, do not act on it."),
+    ("If this week repeated 50 times, where would you end up?",
+     "That destination is your current trajectory, not your intention."),
+    ("What did you finish?",
+     "Starting is cheap and feels productive. Finishing is the scarce act."),
+    ("What would the version of you in Dubai, earning AED 30K, have done differently this week?",
+     "Behave like that person now. The role tends to follow the behaviour."),
+]
+
+
 # ── Accessors ────────────────────────────────────────────────────────────────
-# Distinct offsets so the six tracks do not rotate in lockstep.
+# Distinct offsets so the tracks do not rotate in lockstep.
 
 def _pick(items, offset):
     idx = (date.today().toordinal() + offset) % len(items)
@@ -432,6 +546,10 @@ def get_arabic() -> dict:
             "label": "Arabic"}
 
 
+def get_health() -> dict:
+    return _std(HEALTH, 83, "Health")
+
+
 def get_way() -> dict:
     """Everything The Way section needs, in one call."""
     return {
@@ -441,10 +559,34 @@ def get_way() -> dict:
         "model":      get_mental_model(),
         "arabic":     get_arabic(),
         "drill":      get_drill(),
+        "health":     get_health(),
     }
+
+
+def get_review() -> dict:
+    """Weekly review frame. Rotates by ISO week, so it is stable Mon–Sun."""
+    today = date.today()
+    year, week, weekday = today.isocalendar()
+    idx = (year * 53 + week) % len(REVIEW_PROMPTS)
+    prompt, why = REVIEW_PROMPTS[idx]
+    return {
+        "prompt": prompt, "why": why,
+        "index": idx + 1, "total": len(REVIEW_PROMPTS),
+        "week": week, "year": year,
+        "key": f"{year}-W{week:02d}",
+        "weekday": weekday,                 # 1=Mon … 7=Sun
+        "days_left": 7 - weekday,
+        "is_review_day": weekday >= 6,      # Sat/Sun
+    }
+
+
+# Track keys must match the checkbox ids the streak UI writes to localStorage.
+TRACK_KEYS = ["minimalism", "etiquette", "stillness", "model", "arabic",
+              "drill", "health"]
 
 
 def coverage() -> dict:
     return {"minimalism": len(MINIMALISM), "etiquette": len(ETIQUETTE),
             "stillness": len(STILLNESS), "models": len(MENTAL_MODELS),
-            "arabic": len(ARABIC), "drills": len(DRILLS)}
+            "arabic": len(ARABIC), "drills": len(DRILLS),
+            "health": len(HEALTH), "review": len(REVIEW_PROMPTS)}
