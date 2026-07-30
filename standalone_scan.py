@@ -33,6 +33,65 @@ logging.basicConfig(
 
 IST = pytz.timezone("Asia/Kolkata")
 
+# ── Position lifecycle limits ─────────────────────────────────────────────────
+# These are the horizons backtest.py actually measured, not new inventions:
+#   PROFILES["cf"]     = {"horizon": 48, "bar_hours": 1}   → 48h  time stop
+#   PROFILES["equity"] = {"horizon": 20, "bar_hours": 24}  → 20 bars ≈ 28 days
+# The live tracker never implemented a time stop at all, so a 1H forex signal
+# filed on 2026-06-03 was still "OPEN" on 2026-07-30 and kept being re-evaluated
+# against the current day's range. 386 such rows had accumulated (311 of them
+# 1H), which is what produced the 180-alert flood. Same 48-bar / 20-bar
+# convention extended to the other timeframes the bot emits.
+MAX_HOLD_HOURS = {
+    "15M": 6,          # intraday — dead at the close regardless
+    "15m": 6,
+    "1H":  48,         # backtested cf horizon
+    "4H":  48 * 4,     # 48 bars × 4h = 8 days
+    "1D":  20 * 24,    # backtested equity horizon ≈ 28 calendar days
+    "DAILY": 20 * 24,
+    "SWING": 20 * 24,
+    "WEEKLY": 20 * 24 * 7,
+    "MONTHLY": 180 * 24,   # hard ceiling — nothing is a live position past 6mo
+}
+_DEFAULT_MAX_HOLD_HOURS = 20 * 24
+
+# A single scan must never be able to send 180 messages. If more alerts than
+# this resolve in one run, they are collapsed into one digest. This is the
+# backstop that makes the failure mode "one ugly message" instead of a flood,
+# independent of whatever causes the pile-up next time.
+ALERT_CAP = 8
+
+# Quote units, so a USDJPY alert stops claiming "₹160.3" and AUDUSD stops
+# printing "Entry ₹0.7 → T2 ₹0.7" after rounding to one decimal.
+_USD_QUOTED = {"GOLD", "SILVER", "CRUDE", "NATGAS", "NGAS", "XAUUSD", "XAGUSD",
+               "WTI", "BRENT", "COPPER"}
+_FX_PAIRS   = {"USDJPY", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD", "USDCHF",
+               "USDCAD", "EURJPY", "GBPJPY"}
+
+
+def _unit(symbol: str) -> str:
+    s = (symbol or "").upper()
+    if s in _USD_QUOTED:
+        return "$"
+    if s in _FX_PAIRS:
+        return ""          # a rate, not a money amount
+    return "₹"             # NSE equities and the INR pairs (USDINR = ₹/USD)
+
+
+def _fmt(symbol: str, v: float) -> str:
+    """Price with enough precision to be readable. 0.6543, not 0.7."""
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return "?"
+    a = abs(v)
+    dp = 5 if a < 1 else 4 if a < 10 else 2
+    return f"{_unit(symbol)}{v:,.{dp}f}"
+
+
+def _max_hold_hours(timeframe: str) -> int:
+    return MAX_HOLD_HOURS.get((timeframe or "").upper(), _DEFAULT_MAX_HOLD_HOURS)
+
 # ── NSE Holiday Calendar 2025 ─────────────────────────────────────────────────
 NSE_HOLIDAYS = {
     # 2025
@@ -77,27 +136,60 @@ def _send(msg):
 
 
 # ── Price Alert Monitor (checks open signals against live prices) ─────────────
+def _bar_window(tf: str, age_hours: float):
+    """(period, interval) for yfinance covering this signal's life so far."""
+    tfu = (tf or "").upper()
+    if tfu in ("15M", "1H", "4H"):
+        days = max(2, int(age_hours / 24) + 2)
+        # yfinance caps 1h history at 730d and 15m at 60d; both are far beyond
+        # any live hold under MAX_HOLD_HOURS.
+        return f"{min(days, 60)}d", ("15m" if tfu == "15M" else "1h")
+    days = max(5, int(age_hours / 24) + 5)
+    return f"{min(days, 365)}d", "1d"
+
+
+def _since_entry(tick, opened_at):
+    """Slice bars to those strictly after the signal was filed.
+
+    The old code took High.max()/Low.min() over the whole fetched frame, so a
+    stop that was breached *before* the entry existed counted as a stop-out, and
+    a month-old row was judged against today's range. A level only counts if
+    price traded there after we were in the trade.
+    """
+    if opened_at is None or getattr(tick.index, "tz", None) is None:
+        return tick
+    try:
+        return tick[tick.index > opened_at]
+    except Exception:
+        return tick
+
+
 def run_price_alerts(time_str: str):
     """
-    Runs every scan cycle. Checks all open signals in all_signals table.
-    Sends Telegram alert when SL1 / Final SL / T1 / T2 is hit.
-    Updates signal status in DB.
+    Position management for every OPEN signal in all_signals.
 
-    Alert hierarchy (per signal, in priority order):
-      SL_HIT  → red stop-loss alert + status updated (no more checks)
-      T2_HIT  → green target 2 alert + close signal
-      T1_HIT  → green target 1 alert + move SL to entry (signal stays open for T2)
-      SL1_WARN → amber warning when price drops below SL1 (first SL level)
+    Rules, in priority order per signal:
+      time stop → EXPIRED, real R booked at last close (matches backtest.py)
+      SL_HIT    → exit; if the bar gapped through the stop, book the gap
+      T2_HIT    → full exit
+      T1_HIT    → partial; stays OPEN and keeps trailing for T2
+      SL1_WARN  → one warning per signal, ever (flagged in alert_flags)
+
+    Everything is evaluated only on bars printed after the signal was filed, and
+    the whole run is capped at ALERT_CAP messages — past that it sends one digest.
     """
     import yfinance as yf
     import pandas as pd
+    import json as _json
+    from datetime import timedelta
+
     try:
         from tracker import _conn, init_db
         init_db()
         with _conn() as c:
             open_df = pd.read_sql(
-                "SELECT * FROM all_signals WHERE status='OPEN' ORDER BY date DESC",
-                c)
+                "SELECT * FROM all_signals WHERE status IN ('OPEN','T1_HIT') "
+                "ORDER BY date DESC", c)
     except Exception as e:
         logging.warning(f"price_alerts: DB read failed: {e}")
         return
@@ -106,122 +198,206 @@ def run_price_alerts(time_str: str):
         logging.info("price_alerts: no open signals to check")
         return
 
-    logging.info(f"price_alerts: checking {len(open_df)} open signals")
+    now = datetime.now(IST)
+    logging.info(f"price_alerts: {len(open_df)} open signals to evaluate")
+
     updates = []   # (new_status, exit_price, pnl_pct, r_mult, sig_id)
-    alerts_sent = 0
+    flags   = []   # (flag_string, sig_id)
+    alerts  = []   # (kind, symbol, message) — sent after the cap check
+    expired = 0
+
+    def _opened_at(row):
+        """Signal fill time in IST, from sent_at (preferred) or date.
+
+        sent_at is IST-aware for anything filed after the tracker timezone fix;
+        rows written before it hold a naive UTC stamp, which this reads as IST.
+        That makes them look 5h30m younger than they are — irrelevant against a
+        48h time stop, and those rows are voided by reconcile_positions anyway.
+        """
+        for key in ("sent_at", "date"):
+            raw = row.get(key)
+            if raw in (None, ""):
+                continue
+            txt = str(raw)
+            try:
+                dt = datetime.fromisoformat(txt)
+                return dt if dt.tzinfo else IST.localize(dt)
+            except ValueError:
+                pass
+            for f, n in (("%Y-%m-%d %H:%M:%S", 19), ("%Y-%m-%dT%H:%M:%S", 19),
+                         ("%Y-%m-%d", 10)):
+                try:
+                    return IST.localize(datetime.strptime(txt[:n], f))
+                except ValueError:
+                    continue
+        return None
 
     for _, row in open_df.iterrows():
+        sym = row["symbol"]
         try:
-            sym_yf  = to_yahoo(row["symbol"])
-            # Fetch 5-min candles for the day — most recent price
-            tick = yf.download(sym_yf, period="1d", interval="5m",
-                               progress=False, auto_adjust=True, timeout=8)
-            if tick is None or tick.empty:
-                # Fallback: 1-day daily
-                tick = yf.download(sym_yf, period="2d", interval="1d",
-                                   progress=False, auto_adjust=True, timeout=8)
-            if tick is None or tick.empty:
-                continue
-
-            cur_price = float(tick["Close"].squeeze().iloc[-1])
-            cur_hi    = float(tick["High"].squeeze().max())
-            cur_lo    = float(tick["Low"].squeeze().min())
-
+            sig_id = int(row["id"])
+            tf     = row.get("timeframe") or "SWING"
+            action = str(row.get("action", "BUY")).upper()
             entry  = float(row["entry"])
-            sl     = float(row["sl"]  or entry * 0.95)   # final SL
-            sl1_v  = float(row.get("metadata") and
-                           __import__("json").loads(row.get("metadata") or "{}").get("sl1", 0)
-                           or entry * 0.97)              # warning SL
+            sl     = float(row["sl"] or entry * 0.95)
             t1     = float(row["target1"])
             t2     = float(row.get("target2") or t1 * 1.04)
-            sig_id = int(row["id"])
-            action = str(row.get("action", "BUY")).upper()
-            sym    = row["symbol"]
-            tf     = row.get("timeframe", "SWING")
+            meta   = _json.loads(row.get("metadata") or "{}")
+            sl1_v  = float(meta.get("sl1") or entry * 0.97)
+            seen   = str(row.get("alert_flags") or "")
+            buy    = action != "SELL"
+            risk   = abs(entry - sl) or 1.0
 
-            risk = abs(entry - sl) or 1
+            opened_at = _opened_at(row)
+            age_h = ((now - opened_at).total_seconds() / 3600.0
+                     if opened_at else _max_hold_hours(tf) + 1)
+            limit_h = _max_hold_hours(tf)
 
-            # Check levels using day's H/L (intraday accuracy)
-            if action == "SELL":
-                sl_hit  = cur_hi >= sl
-                sl1_hit = cur_hi >= sl1_v and cur_hi < sl
-                t1_hit  = cur_lo <= t1 and not sl_hit
-                t2_hit  = cur_lo <= t2 and not sl_hit
+            period, interval = _bar_window(tf, min(age_h, limit_h))
+            tick = yf.download(to_yahoo(sym), period=period, interval=interval,
+                               progress=False, auto_adjust=True, timeout=8)
+            if tick is None or tick.empty:
+                logging.debug(f"price_alerts {sym}: no data")
+                continue
+
+            last_close = float(tick["Close"].squeeze().iloc[-1])
+
+            # ── Time stop ────────────────────────────────────────────────────
+            # Book the real R at the last close, exactly as backtest.py does.
+            # Dropping unresolved trades instead would bias the ledger toward
+            # fast movers and inflate the measured edge.
+            if age_h > limit_h:
+                r_m = ((last_close - entry) / risk) if buy else ((entry - last_close) / risk)
+                pnl = ((last_close - entry) / entry * 100) * (1 if buy else -1)
+                updates.append(("EXPIRED", round(last_close, 4), round(pnl, 2),
+                                round(r_m, 2), sig_id))
+                expired += 1
+                logging.info(f"TIME STOP: {sym} {tf} age={age_h:.0f}h "
+                             f"limit={limit_h}h r={r_m:+.2f}")
+                continue
+
+            win = _since_entry(tick, opened_at)
+            if win.empty:
+                continue
+
+            hi = float(win["High"].squeeze().max())
+            lo = float(win["Low"].squeeze().min())
+
+            if buy:
+                sl_hit  = lo <= sl
+                t2_hit  = hi >= t2 and not sl_hit
+                t1_hit  = hi >= t1 and not sl_hit
+                sl1_hit = lo <= sl1_v and lo > sl
             else:
-                sl_hit  = cur_lo <= sl
-                sl1_hit = cur_lo <= sl1_v and cur_lo > sl
-                t1_hit  = cur_hi >= t1 and not sl_hit
-                t2_hit  = cur_hi >= t2 and not sl_hit
+                sl_hit  = hi >= sl
+                t2_hit  = lo <= t2 and not sl_hit
+                t1_hit  = lo <= t1 and not sl_hit
+                sl1_hit = hi >= sl1_v and hi < sl
 
             if sl_hit:
-                pnl   = round((sl - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
-                r_m   = round((sl - entry) / (risk if action == "BUY" else -risk), 2)
-                updates.append(("SL_HIT", sl, pnl, r_m, sig_id))
-                _send(
+                # If a bar opened beyond the stop we did not get filled at the
+                # stop. Booking a flat -1.0R every time hid real gap risk.
+                try:
+                    opens = win["Open"].squeeze()
+                    lows  = win["Low"].squeeze()
+                    highs = win["High"].squeeze()
+                    trig  = (lows <= sl) if buy else (highs >= sl)
+                    gap_o = float(opens[trig].iloc[0])
+                except Exception:
+                    gap_o = sl
+                exit_p = min(sl, gap_o) if buy else max(sl, gap_o)
+                r_m = ((exit_p - entry) / risk) if buy else ((entry - exit_p) / risk)
+                pnl = ((exit_p - entry) / entry * 100) * (1 if buy else -1)
+                gap_note = "" if abs(exit_p - sl) < 1e-9 else "  ⚠ gapped through stop"
+                updates.append(("SL_HIT", round(exit_p, 4), round(pnl, 2),
+                                round(r_m, 2), sig_id))
+                alerts.append(("SL", sym,
                     f"🛑 *SL HIT — {sym}* | {tf}\n"
-                    f"Entry ₹{entry:.1f} → SL ₹{sl:.1f} touched\n"
-                    f"Loss: `{pnl}%` | R: `{r_m}`\n"
-                    f"_Exit trade. Review thesis before re-entry._"
-                )
-                alerts_sent += 1
-                logging.info(f"SL HIT: {sym} entry={entry} sl={sl} cur_lo={cur_lo}")
+                    f"Entry {_fmt(sym, entry)} → exit {_fmt(sym, exit_p)}{gap_note}\n"
+                    f"P&L: `{pnl:+.2f}%` | R: `{r_m:+.2f}`\n"
+                    f"_Exit trade. Review thesis before re-entry._"))
 
             elif t2_hit:
-                pnl  = round((t2 - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
-                r_m  = round(abs(t2 - entry) / risk, 2)
-                updates.append(("T2_HIT", t2, pnl, r_m, sig_id))
-                _send(
+                r_m = abs(t2 - entry) / risk
+                pnl = ((t2 - entry) / entry * 100) * (1 if buy else -1)
+                updates.append(("T2_HIT", round(t2, 4), round(pnl, 2),
+                                round(r_m, 2), sig_id))
+                alerts.append(("T2", sym,
                     f"🎯🎯 *TARGET 2 HIT — {sym}* | {tf}\n"
-                    f"Entry ₹{entry:.1f} → T2 ₹{t2:.1f}\n"
-                    f"Gain: `+{pnl}%` | `{r_m}R` ✅\n"
-                    f"_Full exit. Exceptional trade._"
-                )
-                alerts_sent += 1
-                logging.info(f"T2 HIT: {sym} t2={t2} gain={pnl}%")
+                    f"Entry {_fmt(sym, entry)} → T2 {_fmt(sym, t2)}\n"
+                    f"Gain: `{pnl:+.2f}%` | `{r_m:.2f}R` ✅\n"
+                    f"_Full exit._"))
 
-            elif t1_hit:
-                pnl  = round((t1 - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
-                # Mark as T1_HIT but keep open (still tracking for T2)
-                updates.append(("T1_HIT", t1, pnl, round(abs(t1 - entry) / risk, 2), sig_id))
-                _send(
+            elif t1_hit and "T1" not in seen:
+                # Stays OPEN so it can still trail to T2 — the previous code set
+                # status='T1_HIT', which fell out of the OPEN filter and froze
+                # 24 signals there permanently.
+                r_m = abs(t1 - entry) / risk
+                pnl = ((t1 - entry) / entry * 100) * (1 if buy else -1)
+                flags.append((seen + "T1;", sig_id))
+                alerts.append(("T1", sym,
                     f"✅ *TARGET 1 HIT — {sym}* | {tf}\n"
-                    f"Entry ₹{entry:.1f} → T1 ₹{t1:.1f}\n"
-                    f"Gain: `+{pnl}%` ✓\n"
-                    f"_Book 50% · Move SL to entry · Trail remaining for T2 ₹{t2:.1f}_"
-                )
-                alerts_sent += 1
+                    f"Entry {_fmt(sym, entry)} → T1 {_fmt(sym, t1)}\n"
+                    f"Gain: `{pnl:+.2f}%` | `{r_m:.2f}R` ✓\n"
+                    f"_Book 50% · SL to entry · trail for T2 {_fmt(sym, t2)}_"))
 
-            elif sl1_hit:
-                # Warning only — don't update DB status yet
-                drop = round((cur_price - entry) / entry * 100, 2)
-                _send(
+            elif sl1_hit and "SL1" not in seen:
+                # One warning per signal for its whole life. This never wrote to
+                # the DB before, so it re-fired on every single scan.
+                flags.append((seen + "SL1;", sig_id))
+                chg = (last_close - entry) / entry * 100 * (1 if buy else -1)
+                alerts.append(("SL1", sym,
                     f"⚠️ *SL1 WARNING — {sym}* | {tf}\n"
-                    f"Price ₹{cur_price:.1f} breached warning SL ₹{sl1_v:.1f}\n"
-                    f"Change: `{drop}%` | Final SL: ₹{sl:.1f}\n"
-                    f"_Tighten or exit half position. Watch closely._"
-                )
-                alerts_sent += 1
+                    f"Price {_fmt(sym, last_close)} breached warning SL {_fmt(sym, sl1_v)}\n"
+                    f"Change: `{chg:+.2f}%` | Final SL: {_fmt(sym, sl)}\n"
+                    f"_Tighten or exit half. Watch closely._"))
 
         except Exception as e:
-            logging.warning(f"price_alerts {row.get('symbol','?')}: {e}")
+            logging.warning(f"price_alerts {sym}: {e}")
             continue
 
-    # Write status updates to DB
-    if updates:
-        try:
-            from tracker import _conn
-            with _conn() as c:
-                for new_status, exit_p, pnl, r_m, sig_id in updates:
-                    c.execute(
-                        "UPDATE all_signals SET status=?, exit_price=?, pnl_pct=?, r_multiple=? "
-                        "WHERE id=? AND status='OPEN'",
-                        (new_status, exit_p, pnl, r_m, sig_id))
-                c.commit()
-            logging.info(f"price_alerts: {len(updates)} signal statuses updated")
-        except Exception as e:
-            logging.warning(f"price_alerts: DB update failed: {e}")
+    # ── Send: individually up to the cap, one digest beyond it ────────────────
+    if len(alerts) <= ALERT_CAP:
+        for _kind, _sym, msg in alerts:
+            _send(msg)
+    else:
+        counts = {}
+        for kind, _sym, _m in alerts:
+            counts[kind] = counts.get(kind, 0) + 1
+        label = {"SL": "stopped out", "T2": "hit T2", "T1": "hit T1",
+                 "SL1": "SL1 warnings"}
+        lines = [f"📋 *Position update* — {time_str}",
+                 f"_{len(alerts)} levels resolved this scan — digest, not {len(alerts)} messages._\n"]
+        for k in ("T2", "T1", "SL", "SL1"):
+            if counts.get(k):
+                syms = [s for kk, s, _ in alerts if kk == k]
+                lines.append(f"• *{counts[k]} {label[k]}*: {', '.join(syms[:12])}"
+                             + ("…" if len(syms) > 12 else ""))
+        lines.append("\n_Full detail in the EOD ledger._")
+        _send("\n".join(lines))
+        logging.warning(f"price_alerts: {len(alerts)} alerts collapsed into digest "
+                        f"(cap {ALERT_CAP})")
 
-    logging.info(f"price_alerts: done | {alerts_sent} alerts sent | {len(updates)} updated")
+    # ── Persist ──────────────────────────────────────────────────────────────
+    try:
+        from tracker import _conn
+        from tracker import _now_ist
+        with _conn() as c:
+            for new_status, exit_p, pnl, r_m, sig_id in updates:
+                c.execute(
+                    "UPDATE all_signals SET status=?, exit_price=?, pnl_pct=?, "
+                    "r_multiple=?, closed_at=? WHERE id=? AND status IN ('OPEN','T1_HIT')",
+                    (new_status, exit_p, pnl, r_m, _now_ist(), sig_id))
+            for flag, sig_id in flags:
+                c.execute("UPDATE all_signals SET alert_flags=? WHERE id=?",
+                          (flag, sig_id))
+            c.commit()
+        logging.info(f"price_alerts: {len(updates)} closed ({expired} on time stop), "
+                     f"{len(flags)} flagged")
+    except Exception as e:
+        logging.warning(f"price_alerts: DB update failed: {e}")
+
+    logging.info(f"price_alerts: done | {len(alerts)} alerts | {len(updates)} closed")
 
 
 def _slot(now_ist, is_holiday=False):

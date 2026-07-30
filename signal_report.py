@@ -32,7 +32,11 @@ log = logging.getLogger(__name__)
 # denylist rather than an allowlist: the writers emit SL_HIT / T1_HIT /
 # T2_HIT today, and a new exit status added later must not silently vanish
 # from the ledger.
-NOT_CLOSED = ("OPEN", "CANCELLED")
+# VOID = rows that leaked before the time stop existed (see reconcile_positions.py).
+# They were never managed as positions, so they carry no usable outcome and must
+# not be averaged into expectancy. EXPIRED is deliberately absent: a time stop is
+# a real result and backtest.py counts it, so the live ledger must too.
+NOT_CLOSED = ("OPEN", "T1_HIT", "CANCELLED", "VOID")
 
 
 def _fetch(days: int) -> pd.DataFrame:

@@ -19,7 +19,14 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 log = logging.getLogger(__name__)
 
 IST          = timezone(timedelta(hours=5, minutes=30))
-CF_COOLDOWN  = 4 * 3600   # 4 hours between same-direction signals per symbol
+
+# 48h, not 4h. backtest.py derives its cooldown from the holding horizon
+# (cooldown = horizon * bar_hours = 48 * 1 = 48h for the cf profile), so the
+# +0.171R/-0.029R figures assume at most one trade per symbol per 48 hours.
+# Live was re-firing every 4 hours — 12x the tested rate — which is how 60
+# simultaneously-"open" NATGAS rows and 56 CRUDE rows accumulated. Anything
+# looser than the backtest is a different strategy with unmeasured expectancy.
+CF_COOLDOWN  = 48 * 3600
 
 
 # ── Turso-based CF dedup ─────────────────────────────────────────────────────
@@ -73,6 +80,31 @@ def cf_mark_sent(symbol: str, bias: str):
         con.close()
     except Exception as e:
         log.warning(f"cf_mark_sent error: {e}")
+
+
+def cf_position_open(symbol: str, bias: str) -> bool:
+    """True if this symbol already has a live position in all_signals.
+
+    cf_dedup alone was not enough: cf_expire_old() deletes its rows after 24h,
+    so a symbol that stayed open for weeks became eligible to re-fire and each
+    fire inserted another OPEN row. The position table is the real authority on
+    whether we are already in the trade.
+    """
+    try:
+        import db
+        con = db.connect()
+        row = con.execute(
+            "SELECT 1 FROM all_signals WHERE symbol=? AND signal_type='cf_1h' "
+            "AND status IN ('OPEN','T1_HIT') LIMIT 1", (symbol,)
+        ).fetchone()
+        con.close()
+        if row:
+            log.info(f"CF skip: {symbol} already has a live position")
+            return True
+        return False
+    except Exception as e:
+        log.warning(f"cf_position_open error: {e}")
+        return False   # fail open — a missed dedup is better than a missed exit
 
 
 def cf_expire_old():
@@ -140,7 +172,9 @@ def run_cf_scan():
         import traceback; traceback.print_exc()
         return
 
-    fresh = [s for s in signals if not cf_already_sent(s["name"], s["bias"])]
+    fresh = [s for s in signals
+             if not cf_already_sent(s["name"], s["bias"])
+             and not cf_position_open(s["name"], s["bias"])]
     if not fresh:
         log.info(f"CF scan: {len(signals)} signal(s), all deduped or none found")
         return

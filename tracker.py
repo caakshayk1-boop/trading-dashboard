@@ -9,6 +9,23 @@ from symbols import to_yahoo
 # signal filed this evening IST looks like it belongs to "tomorrow".
 _IST = timezone(timedelta(hours=5, minutes=30))
 
+# date.today() and datetime.utcnow() both resolve to UTC on a GitHub Actions
+# runner, so every signal filed between 00:00 and 05:30 IST was being stamped
+# with the previous day's date, and every sent_at was written 5h30m behind the
+# "IST" label the newspaper renders it under. Route all signal dating through
+# these two helpers — never call date.today()/utcnow() directly in this module.
+def _date_ist() -> date:
+    return datetime.now(_IST).date()
+
+
+def _today_ist() -> str:
+    return _date_ist().isoformat()
+
+
+def _now_ist() -> str:
+    return datetime.now(_IST).isoformat()
+
+
 log = logging.getLogger(__name__)
 
 def _conn():
@@ -157,6 +174,9 @@ def init_db():
             ("why_triggered",       "ALTER TABLE all_signals ADD COLUMN why_triggered TEXT"),
             ("market",              "ALTER TABLE all_signals ADD COLUMN market TEXT DEFAULT 'NSE'"),
             ("asset_type",          "ALTER TABLE all_signals ADD COLUMN asset_type TEXT DEFAULT 'Equity'"),
+            # SL1 is a warning, not an exit — it never wrote to the DB, so the
+            # same warning re-fired on every scan for the life of the signal.
+            ("alert_flags",         "ALTER TABLE all_signals ADD COLUMN alert_flags TEXT DEFAULT ''"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:
@@ -168,7 +188,7 @@ def init_db():
 
 def log_signals(signals):
     init_db()
-    today = str(date.today())
+    today = _today_ist()
     with _conn() as c:
         for s in signals:
             meta = json.dumps({
@@ -200,7 +220,7 @@ def log_signals(signals):
 def get_signals_display(days=3, min_score=0):
     """Return signals as list of dicts ready for card display, parsed from DB."""
     init_db()
-    cutoff = str(date.today() - timedelta(days=days))
+    cutoff = str(_date_ist() - timedelta(days=days))
     with _conn() as c:
         df = pd.read_sql(
             "SELECT * FROM signals WHERE date>=? AND score>=? AND status='OPEN' ORDER BY score DESC",
@@ -256,8 +276,8 @@ def is_duplicate(symbol, signal_type="swing"):
     Sticks to existing trade plan — no new entry until trade closes.
     """
     init_db()
-    cutoff_5d = str(date.today() - timedelta(days=5))
-    cutoff_7d = str(date.today() - timedelta(days=7))
+    cutoff_5d = str(_date_ist() - timedelta(days=5))
+    cutoff_7d = str(_date_ist() - timedelta(days=7))
     sym_clean = symbol.replace(".NS", "")
     with _conn() as c:
         # Check unified all_signals first (covers all signal types)
@@ -292,8 +312,8 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
                         timeframe="SWING", score=0, metadata=None):
     """Unified logger — called after every Telegram alert for performance tracking."""
     init_db()
-    today = str(date.today())
-    sent_at = datetime.utcnow().isoformat()
+    today = _today_ist()
+    sent_at = _now_ist()
     with _conn() as c:
         c.execute("""INSERT INTO all_signals
             (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
@@ -314,7 +334,7 @@ def mute_asset(symbol):
     init_db()
     with _conn() as c:
         c.execute("INSERT OR REPLACE INTO muted_assets VALUES (?,?)",
-                  (symbol, str(datetime.utcnow())))
+                  (symbol, _now_ist()))
         c.commit()
         _db.sync(c)
 
@@ -518,7 +538,7 @@ def get_history():
 # ── Breakouts ─────────────────────────────────────────────────────────────────
 def log_breakouts(breakouts):
     init_db()
-    today = str(date.today())
+    today = _today_ist()
     with _conn() as c:
         # Clear today's breakouts (re-scan replaces)
         c.execute("DELETE FROM breakouts WHERE date=?", (today,))
@@ -535,7 +555,7 @@ def log_breakouts(breakouts):
 
 def get_breakouts(days=3):
     init_db()
-    cutoff = str(date.today() - timedelta(days=days))
+    cutoff = str(_date_ist() - timedelta(days=days))
     with _conn() as c:
         df = pd.read_sql(
             "SELECT * FROM breakouts WHERE date>=? ORDER BY date DESC, rr DESC",
@@ -549,7 +569,7 @@ def get_breakouts(days=3):
 # ── 4H Signals ────────────────────────────────────────────────────────────────
 def log_4h_signals(signals):
     init_db()
-    today = str(date.today())
+    today = _today_ist()
     with _conn() as c:
         c.execute("DELETE FROM signals_4h WHERE date=?", (today,))
         for s in signals:
@@ -565,7 +585,7 @@ def log_4h_signals(signals):
 
 def get_4h_signals(days=1):
     init_db()
-    cutoff = str(date.today() - timedelta(days=days))
+    cutoff = str(_date_ist() - timedelta(days=days))
     with _conn() as c:
         return pd.read_sql(
             "SELECT * FROM signals_4h WHERE date>=? ORDER BY date DESC, vol_ratio DESC",
@@ -575,7 +595,7 @@ def get_4h_signals(days=1):
 # ── Commodity Signals ─────────────────────────────────────────────────────────
 def log_commodity_signals(signals):
     init_db()
-    today = str(date.today())
+    today = _today_ist()
     with _conn() as c:
         c.execute("DELETE FROM commodity_signals WHERE date=?", (today,))
         for s in signals:
@@ -591,7 +611,7 @@ def log_commodity_signals(signals):
 
 def get_commodity_signals(days=1):
     init_db()
-    cutoff = str(date.today() - timedelta(days=days))
+    cutoff = str(_date_ist() - timedelta(days=days))
     with _conn() as c:
         return pd.read_sql(
             "SELECT * FROM commodity_signals WHERE date>=? ORDER BY date DESC, adx DESC",
@@ -610,7 +630,7 @@ def log_scan_meta(slot, counts: dict):
             data  TEXT
         )""")
         c.execute("INSERT INTO scan_meta (ts,slot,data) VALUES (?,?,?)",
-                  (str(datetime.utcnow()), slot, json.dumps(counts)))
+                  (_now_ist(), slot, json.dumps(counts)))
         c.commit()
         _db.sync(c)
 
@@ -726,7 +746,7 @@ def _ensure_multibagger_table(c):
 
 def log_multibaggers(signals):
     init_db()
-    today = str(date.today())
+    today = _today_ist()
     with _conn() as c:
         _ensure_multibagger_table(c)
         c.execute("DELETE FROM multibaggers WHERE date=?", (today,))
@@ -748,7 +768,7 @@ def log_multibaggers(signals):
 def get_multibaggers(days=7):
     init_db()
     try:
-        cutoff = str(date.today() - timedelta(days=days))
+        cutoff = str(_date_ist() - timedelta(days=days))
         with _conn() as c:
             _ensure_multibagger_table(c)
             return pd.read_sql(
