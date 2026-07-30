@@ -1409,6 +1409,26 @@ BOOK_LESSONS = [
     ),
 ]
 
+def _way_placeholder() -> dict:
+    """Empty-but-renderable Way context for the error path."""
+    blank = {"title": "Loading", "body": "", "action": "", "index": 0, "total": 1}
+    return {"minimalism": dict(blank), "etiquette": dict(blank),
+            "stillness": dict(blank), "model": dict(blank), "drill": dict(blank),
+            "arabic": {"script": "", "translit": "", "meaning": "", "use": "",
+                       "index": 0, "total": 1}}
+
+
+def get_way() -> dict:
+    """Six daily tracks for The Way. Falls back to placeholders, never raises —
+    a content module must not be able to take the whole page down."""
+    try:
+        import way
+        return way.get_way()
+    except Exception as e:
+        log.warning(f"way: {e}")
+        return _way_placeholder()
+
+
 def get_book_lesson() -> dict:
     idx = (date.today().toordinal() + 23) % len(BOOK_LESSONS)
     book, author, chapter, lesson, key_quote, action = BOOK_LESSONS[idx]
@@ -1986,6 +2006,14 @@ table.t tbody tr:last-child td{border-bottom:none}
   font-family:var(--sans);transition:all .28s var(--ease);white-space:nowrap}
 .tab:hover{border-color:var(--line2);color:var(--text)}
 .tab.on{background:var(--lime);border-color:var(--lime);color:#000;font-weight:700}
+/* The Way — Arabic phrase card */
+.arabic-hero{text-align:center;padding:26px 18px;background:var(--bg);border:1px solid var(--line);
+  border-radius:14px;margin:14px 0 4px}
+.ar-script{font-size:clamp(34px,6vw,52px);line-height:1.5;color:var(--up);font-weight:600;
+  letter-spacing:0;margin-bottom:12px;direction:rtl;unicode-bidi:isolate}
+.ar-translit{font-family:var(--mono);font-size:15px;color:var(--text);letter-spacing:.4px;margin-bottom:6px}
+.ar-meaning{font-size:14px;color:var(--muted);font-style:italic}
+@media(max-width:640px){ .arabic-hero{padding:20px 12px} }
 .pane{display:none;animation:panein .5s var(--ease)}
 .pane.on{display:block}
 @keyframes panein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -2141,12 +2169,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="nav-in" id="navin">
     <a href="#markets"><i>01</i>Markets</a>
     <a href="#picks"><i>02</i>Trade Ideas</a>
-    <a href="#alerts"><i>03</i>Signal Log</a>
-    <a href="#tracker"><i>04</i>Portfolio</a>
-    <a href="#world"><i>05</i>World</a>
-    <a href="#desk"><i>06</i>The Desk</a>
-    <a href="#mind"><i>07</i>The Mind</a>
+    <a href="#tracker"><i>03</i>Portfolio</a>
+    <a href="#world"><i>04</i>World</a>
+    <a href="#desk"><i>05</i>The Desk</a>
+    <a href="#mind"><i>06</i>The Mind</a>
+    <a href="#way"><i>07</i>The Way</a>
     <a href="#chess"><i>08</i>Chess</a>
+    <a href="#alerts"><i>09</i>Signal Log</a>
   </div>
 </nav>
 
@@ -2289,73 +2318,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 </section>
 
-<!-- ══════════ 03 SIGNAL LOG ══════════ -->
-<section class="sec" id="alerts">
-  <div class="shead rv">
-    <div>
-      <span class="snum">03 / TRACK RECORD</span>
-      <h2 class="stitle">Every signal, scored.</h2>
-    </div>
-    <div style="text-align:right">
-      <p class="sdesc">Nothing hidden. Every Telegram alert ever sent, with entry, stop, target and outcome.</p>
-      <a class="slink" href="alerts.json" target="_blank" style="display:inline-block;margin-top:10px">↓ alerts.json</a>
-    </div>
-  </div>
-
-  {% if alerts %}
-  <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" data-count="{{ wins }}">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" data-count="{{ losses }}">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" style="color:var(--blue)" data-count="{{ opens }}">0</div><div class="k">Open</div></div>
-    <div class="kpi"><div class="v" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
-    <div class="kpi"><div class="v" data-count="{{ alerts|length }}">0</div><div class="k">Total Signals</div></div>
-  </div>
-
-  <div class="filters rv">
-    <button class="fbtn on" data-f="all">All</button>
-    <button class="fbtn" data-f="open">Open</button>
-    <button class="fbtn" data-f="win">Target Hit</button>
-    <button class="fbtn" data-f="loss">Stop Hit</button>
-    <button class="fbtn" data-f="cancelled">Cancelled</button>
-  </div>
-
-  <div class="tw rv">
-    <table class="t" id="alertTable">
-      <thead><tr>
-        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>
-        <th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
-      </tr></thead>
-      <tbody>
-      {% for a in alerts %}
-        <tr data-badge="{{ a.badge }}">
-          <td class="mono-dim">{{ a.alert_date }}</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a></td>
-          <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
-          <td class="mono-dim">{{ a.timeframe or '—' }}</td>
-          <td class="num">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
-          <td class="num dn">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
-          <td class="num up">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
-          <td class="num up">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
-          <td class="num" style="color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
-          <td class="num">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
-          <td class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else 'num') }}">{{ a.pnl_str }}</td>
-          <td class="mono-dim">{{ a.close_date }}</td>
-          <td><span class="badge badge-{{ a.badge }}">{% if a.badge == 'win' %}✅ Win{% elif a.badge == 'loss' %}❌ Stop{% elif a.badge == 'open' %}🔵 Open{% else %}{{ a.status or '—' }}{% endif %}</span></td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <div class="empty rv">No signals logged yet — alerts appear here after Telegram sends them.</div>
-  {% endif %}
-</section>
-
-<!-- ══════════ 04 PORTFOLIO ══════════ -->
+<!-- ══════════ 03 PORTFOLIO ══════════ -->
 <section class="sec" id="tracker">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / POSITIONS</span>
+      <span class="snum">03 / POSITIONS</span>
       <h2 class="stitle">The book.</h2>
     </div>
     <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
@@ -2414,11 +2381,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
-<!-- ══════════ 05 WORLD ══════════ -->
+<!-- ══════════ 04 WORLD ══════════ -->
 <section class="sec" id="world">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / CONTEXT</span>
+      <span class="snum">04 / CONTEXT</span>
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc">Wires only. Deduplicated, ranked, and cut to what actually changes a decision.</p>
@@ -2457,11 +2424,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 </section>
 
-<!-- ══════════ 06 THE DESK ══════════ -->
+<!-- ══════════ 05 THE DESK ══════════ -->
 <section class="sec" id="desk">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / THE DESK</span>
+      <span class="snum">05 / THE DESK</span>
       <h2 class="stitle">Compound the skill.</h2>
     </div>
     <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
@@ -2580,11 +2547,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
-<!-- ══════════ 07 THE MIND ══════════ -->
+<!-- ══════════ 06 THE MIND ══════════ -->
 <section class="sec" id="mind">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / THE MIND</span>
+      <span class="snum">06 / THE MIND</span>
       <h2 class="stitle">Sharpen the operator.</h2>
     </div>
     <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
@@ -2607,6 +2574,86 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="meta">{{ lesson.tradition }}</div>
       <h3 style="font-style:italic;font-weight:500;letter-spacing:-.5px">{{ lesson.lesson }}</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">— {{ lesson.source }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 07 THE WAY ══════════ -->
+<section class="sec" id="way">
+  <div class="shead rv">
+    <div>
+      <span class="snum">07 / THE WAY</span>
+      <h2 class="stitle">Simple living. High thinking.</h2>
+    </div>
+    <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
+      one honest rep. Six tracks, rotating daily on different cycles — the combination never repeats.</p>
+  </div>
+
+  <div class="tabs rv" id="wayTabs">
+    <button class="tab on" data-p="w1">🪶 Minimalism · {{ way.minimalism.index }}/{{ way.minimalism.total }}</button>
+    <button class="tab" data-p="w2">🤝 Etiquette · {{ way.etiquette.index }}/{{ way.etiquette.total }}</button>
+    <button class="tab" data-p="w3">🧘 Stillness · {{ way.stillness.index }}/{{ way.stillness.total }}</button>
+    <button class="tab" data-p="w4">⚙️ Model · {{ way.model.index }}/{{ way.model.total }}</button>
+    <button class="tab" data-p="w5">🇦🇪 Arabic · {{ way.arabic.index }}/{{ way.arabic.total }}</button>
+    <button class="tab" data-p="w6">🎯 Drill · {{ way.drill.index }}/{{ way.drill.total }}</button>
+  </div>
+
+  <div class="rv">
+    <div class="pane on" id="w1">
+      <div class="essay" style="--ac:var(--lime)">
+        <div class="meta">Minimalism · {{ way.minimalism.index }}/{{ way.minimalism.total }} · own less, decide less</div>
+        <h3>{{ way.minimalism.title }}</h3>
+        <p>{{ way.minimalism.body }}</p>
+        <div class="act"><b>Do this today</b>{{ way.minimalism.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w2">
+      <div class="essay" style="--ac:var(--gold)">
+        <div class="meta">Etiquette · {{ way.etiquette.index }}/{{ way.etiquette.total }} · trust compounds</div>
+        <h3>{{ way.etiquette.title }}</h3>
+        <p>{{ way.etiquette.body }}</p>
+        <div class="act"><b>Do this today</b>{{ way.etiquette.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w3">
+      <div class="essay" style="--ac:var(--blue)">
+        <div class="meta">Stillness · {{ way.stillness.index }}/{{ way.stillness.total }} · monk practice, modern life</div>
+        <h3>{{ way.stillness.title }}</h3>
+        <p>{{ way.stillness.body }}</p>
+        <div class="act"><b>Do this today</b>{{ way.stillness.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w4">
+      <div class="essay" style="--ac:var(--violet)">
+        <div class="meta">Mental Model · {{ way.model.index }}/{{ way.model.total }} · the latticework</div>
+        <h3>{{ way.model.title }}</h3>
+        <p>{{ way.model.body }}</p>
+        <div class="act"><b>Apply it today</b>{{ way.model.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w5">
+      <div class="essay" style="--ac:var(--up)">
+        <div class="meta">Arabic · {{ way.arabic.index }}/{{ way.arabic.total }} · for the Dubai move</div>
+        <div class="arabic-hero">
+          <div class="ar-script" dir="rtl" lang="ar">{{ way.arabic.script }}</div>
+          <div class="ar-translit">{{ way.arabic.translit }}</div>
+          <div class="ar-meaning">{{ way.arabic.meaning }}</div>
+        </div>
+        <div class="act"><b>When to use it</b>{{ way.arabic.use }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w6">
+      <div class="essay" style="--ac:var(--down)">
+        <div class="meta">Drill · {{ way.drill.index }}/{{ way.drill.total }} · ~10 minutes, deliberate</div>
+        <h3>{{ way.drill.title }}</h3>
+        <p>{{ way.drill.body }}</p>
+        <div class="act"><b>The rep</b>{{ way.drill.action }}</div>
+      </div>
     </div>
   </div>
 </section>
@@ -2772,6 +2819,68 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
+<!-- ══════════ 09 SIGNAL LOG ══════════ -->
+<section class="sec" id="alerts">
+  <div class="shead rv">
+    <div>
+      <span class="snum">09 / TRACK RECORD</span>
+      <h2 class="stitle">Every signal, scored.</h2>
+    </div>
+    <div style="text-align:right">
+      <p class="sdesc">Nothing hidden. Every Telegram alert ever sent, with entry, stop, target and outcome.</p>
+      <a class="slink" href="alerts.json" target="_blank" style="display:inline-block;margin-top:10px">↓ alerts.json</a>
+    </div>
+  </div>
+
+  {% if alerts %}
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v up" data-count="{{ wins }}">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" data-count="{{ losses }}">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" style="color:var(--blue)" data-count="{{ opens }}">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
+    <div class="kpi"><div class="v" data-count="{{ alerts|length }}">0</div><div class="k">Total Signals</div></div>
+  </div>
+
+  <div class="filters rv">
+    <button class="fbtn on" data-f="all">All</button>
+    <button class="fbtn" data-f="open">Open</button>
+    <button class="fbtn" data-f="win">Target Hit</button>
+    <button class="fbtn" data-f="loss">Stop Hit</button>
+    <button class="fbtn" data-f="cancelled">Cancelled</button>
+  </div>
+
+  <div class="tw rv">
+    <table class="t" id="alertTable">
+      <thead><tr>
+        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>
+        <th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+      {% for a in alerts %}
+        <tr data-badge="{{ a.badge }}">
+          <td class="mono-dim">{{ a.alert_date }}</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a></td>
+          <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
+          <td class="mono-dim">{{ a.timeframe or '—' }}</td>
+          <td class="num">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
+          <td class="num dn">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
+          <td class="num up">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
+          <td class="num up">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
+          <td class="num" style="color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
+          <td class="num">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
+          <td class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else 'num') }}">{{ a.pnl_str }}</td>
+          <td class="mono-dim">{{ a.close_date }}</td>
+          <td><span class="badge badge-{{ a.badge }}">{% if a.badge == 'win' %}✅ Win{% elif a.badge == 'loss' %}❌ Stop{% elif a.badge == 'open' %}🔵 Open{% else %}{{ a.status or '—' }}{% endif %}</span></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty rv">No signals logged yet — alerts appear here after Telegram sends them.</div>
+  {% endif %}
+</section>
+
 </main>
 
 <footer>
@@ -2881,14 +2990,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     });
   });
 
-  /* ── desk tabs ── */
-  document.querySelectorAll('#deskTabs .tab').forEach(function(t){
-    t.addEventListener('click', function(){
-      document.querySelectorAll('#deskTabs .tab').forEach(function(x){ x.classList.remove('on'); });
-      document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('on'); });
-      t.classList.add('on');
-      var pane = document.getElementById(t.dataset.p);
-      if (pane) pane.classList.add('on');
+  /* ── tab groups (desk, way) ──
+     Scoped to the owning <section>. The previous version cleared '.pane'
+     document-wide, so a second tab group anywhere on the page would blank the
+     first group's open pane on every click. */
+  document.querySelectorAll('.tabs').forEach(function(group){
+    var sec = group.closest('section') || document;
+    group.querySelectorAll('.tab').forEach(function(t){
+      t.addEventListener('click', function(){
+        group.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('on'); });
+        sec.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('on'); });
+        t.classList.add('on');
+        var pane = sec.querySelector('#' + t.dataset.p) || document.getElementById(t.dataset.p);
+        if (pane) pane.classList.add('on');
+      });
     });
   });
 
@@ -2928,6 +3043,7 @@ def index():
         chess          = get_chess_lesson()
         wisdom         = get_wisdom_lesson()
         book           = get_book_lesson()
+        way_ctx        = get_way()
         top5           = get_top5_picks()
         tracker        = get_tracker_stocks()
         money          = get_money_hack()
@@ -2945,7 +3061,7 @@ def index():
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=now.strftime("%H:%M"),
             markets=markets, news=news, fpna=fpna, cfo=cfo,
-            chess=chess, wisdom=wisdom, book=book,
+            chess=chess, wisdom=wisdom, book=book, way=way_ctx,
             top5=top5, tracker=tracker, money_hack=money,
             productivity_tip=prod, weather=weather,
             quote=quote, lesson=lesson, case=case,
@@ -2964,6 +3080,7 @@ def index():
             chess={"title":"Loading","body":"","index":0,"total":1},
             wisdom={"title":"Loading","body":"","index":0,"total":1},
             book={"book":"Loading","author":"","chapter":"Loading","lesson":"","key_quote":"","action":"","index":0,"total":1},
+            way=_way_placeholder(),
             top5=[], tracker=[], money_hack={"title":"Loading","body":""},
             productivity_tip="Loading...", weather=[],
             quote={"quote":"","name":"","index":0,"total":1},

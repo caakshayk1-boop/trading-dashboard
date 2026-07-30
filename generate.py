@@ -34,6 +34,7 @@ from newspaper import (
     get_chess_lesson,
     get_wisdom_lesson,
     get_book_lesson,
+    get_way,
     fetch_alert_log,
     get_top5_picks,
     get_tracker_stocks,
@@ -77,6 +78,7 @@ def generate() -> None:
     chess   = get_chess_lesson()
     wisdom  = get_wisdom_lesson()
     book    = get_book_lesson()
+    way     = get_way()
     money   = get_money_hack()
     prod    = get_productivity_tip()
 
@@ -110,6 +112,7 @@ def generate() -> None:
         chess=chess,
         wisdom=wisdom,
         book=book,
+        way=way,
         money_hack=money,
         productivity_tip=prod,
         top5=top5,
