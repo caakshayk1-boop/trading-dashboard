@@ -595,8 +595,14 @@ def _lichess_export_games(since_ms: int, until_ms: int) -> list[dict]:
     try:
         r = requests.get(
             f"https://lichess.org/api/games/user/{LICHESS_USER.lower()}",
+            # evals/accuracy/division/clocks power the best-move pick, the key
+            # facts and the strength estimate. All four are only populated for
+            # games Lichess has actually analysed, so every consumer below must
+            # degrade gracefully when they are absent.
             params={"since": since_ms, "until": until_ms,
-                    "opening": "true", "moves": "true", "max": 50},
+                    "opening": "true", "moves": "true", "max": 50,
+                    "evals": "true", "accuracy": "true",
+                    "division": "true", "clocks": "true"},
             headers={"Accept": "application/x-ndjson",
                      "Authorization": f"Bearer {token}"},
             timeout=25, stream=True,
@@ -615,6 +621,171 @@ def _lichess_export_games(since_ms: int, until_ms: int) -> list[dict]:
     except Exception as e:
         log.warning(f"Lichess export: {e}")
         return []
+
+
+# ── Game analysis helpers ────────────────────────────────────────────────────
+# Everything below derives from the Lichess `analysis` array (one entry per ply,
+# each with an `eval` in centipawns from White's point of view, plus a
+# `judgment` on inaccuracies/mistakes/blunders). Only present on analysed games.
+
+def _cp(entry: dict) -> float | None:
+    """Centipawn eval from White's perspective. Mate scores are clamped."""
+    if not isinstance(entry, dict):
+        return None
+    if "eval" in entry and entry["eval"] is not None:
+        return float(entry["eval"])
+    if entry.get("mate") is not None:
+        m = float(entry["mate"])
+        return 100000.0 if m > 0 else -100000.0
+    return None
+
+
+def _best_move(analysis: list, all_moves: list, is_white: bool) -> dict:
+    """The single strongest move I played, by eval swing in my favour.
+
+    analysis[i] is the evaluation *after* ply i, so the effect of my move at ply
+    i is analysis[i] - analysis[i-1], signed to my colour. Ignores swings that
+    merely recapture material the engine already expected, by requiring the move
+    to be the largest gain of the game rather than any positive gain.
+    """
+    if not analysis or not all_moves:
+        return {}
+    best, best_gain = None, 0.0
+    for i in range(len(analysis)):
+        # ply i is mine if (i even and I'm White) or (i odd and I'm Black)
+        if (i % 2 == 0) != is_white:
+            continue
+        after = _cp(analysis[i])
+        before = _cp(analysis[i - 1]) if i > 0 else 0.0
+        if after is None or before is None:
+            continue
+        gain = (after - before) if is_white else (before - after)
+        # A mate-in-N flip is worth surfacing but must not dwarf everything.
+        gain = max(min(gain, 900.0), -900.0)
+        if gain > best_gain and i < len(all_moves):
+            best_gain, best = gain, {
+                "san": all_moves[i],
+                "move_no": i // 2 + 1,
+                "gain_cp": int(round(gain)),
+                "eval_after": round(after / 100.0, 2),
+            }
+    if not best or best_gain < 40:      # nothing decisive enough to call "best"
+        return {}
+    return best
+
+
+def _strength_estimate(acpl: int | None, accuracy: float | None) -> int | None:
+    """Rough Elo-equivalent of how well this single game was played.
+
+    Anchored on average centipawn loss, which is the only strength proxy Lichess
+    hands back. This is a coarse mapping, not a rating calculation — it says
+    "you played around here today", nothing more. Displayed as an estimate and
+    never as an official figure.
+    """
+    if acpl is None and accuracy is None:
+        return None
+    if acpl is not None:
+        for ceiling, elo in ((10, 2500), (15, 2300), (20, 2150), (25, 2000),
+                             (35, 1850), (45, 1700), (60, 1550), (80, 1400),
+                             (110, 1250), (150, 1100)):
+            if acpl <= ceiling:
+                return elo
+        return 950
+    # Accuracy-only fallback, banded rather than linear: a linear fit made 82%
+    # accuracy read as ~2080, which is nonsense for a club blitz game.
+    for floor, elo in ((95, 2400), (90, 2100), (85, 1850), (80, 1650),
+                       (75, 1500), (70, 1350), (60, 1150), (50, 1000)):
+        if (accuracy or 0) >= floor:
+            return elo
+    return 900
+
+
+def _fide_equivalent(rating, speed: str) -> int | None:
+    """Approximate FIDE equivalent of a Lichess rating for this time control.
+
+    Lichess ratings sit materially above FIDE — the gap is widest for the fast
+    pools and narrows as the time control lengthens. These offsets are the
+    commonly cited community approximations, not an official conversion, and
+    there is no such thing as a FIDE rating for an online blitz game. Labelled
+    "est." everywhere it is shown.
+    """
+    if not isinstance(rating, int):
+        return None
+    offset = {"bullet": 500, "blitz": 400, "rapid": 300,
+              "classical": 250, "correspondence": 250}.get((speed or "").lower(), 400)
+    return max(600, rating - offset)
+
+
+def _standout(g: dict, analysis: list, is_white: bool, result: str,
+              termination: str, num_moves: int, my_an: dict) -> str:
+    """The one thing that made this game different from the others.
+
+    Checked in order of how much it should override the others, so a comeback
+    beats "clean game" and a blunder-fest beats a nice opening.
+    """
+    evals = [_cp(a) for a in analysis] if analysis else []
+    evals = [e for e in evals if e is not None]
+    mine = (lambda e: e) if is_white else (lambda e: -e)
+    my_evals = [mine(e) for e in evals]
+
+    worst = min(my_evals) if my_evals else None
+    best_pt = max(my_evals) if my_evals else None
+    blunders = (my_an or {}).get("blunder", 0)
+
+    if "mate" in (termination or "").lower() and result == "Win":
+        return f"Finished by checkmate on move {num_moves} — you converted rather than letting it drift."
+    if result == "Win" and worst is not None and worst <= -300:
+        return (f"A genuine comeback: the engine had you {abs(worst)/100:.1f} pawns "
+                f"down at the low point and you still won.")
+    if result == "Loss" and best_pt is not None and best_pt >= 300:
+        return (f"You were {best_pt/100:.1f} pawns up at the peak and lost from there "
+                f"— this is the game to review, not the openings.")
+    if result == "Win" and blunders == 0 and worst is not None and worst > -100:
+        return "Clean win — never worse than a pawn down, zero blunders. This is your template game."
+    if (termination or "").lower().startswith("time") :
+        return "Decided on the clock, not the board — the position was still playable when time ran out."
+    if blunders >= 3:
+        return f"{blunders} blunders in one game. The result is noise; the error count is the signal."
+    if num_moves <= 20:
+        return f"Over in {num_moves} moves — decided in the opening, so the opening is what to study."
+    if num_moves >= 60:
+        return f"{num_moves} moves of grinding. Endgame stamina, not opening prep, settled this one."
+    return ""
+
+
+def _key_facts(g: dict, my_an: dict, opp_an: dict, division: dict,
+               num_moves: int, my_rating, opp_rating, speed: str) -> list:
+    """Short factual bullets — only ones backed by data actually returned."""
+    facts = []
+    acc = (my_an or {}).get("accuracy")
+    if acc is not None:
+        opp_acc = (opp_an or {}).get("accuracy")
+        tail = f" vs their {opp_acc:.0f}%" if opp_acc is not None else ""
+        facts.append(f"Accuracy {acc:.0f}%{tail}")
+    acpl = (my_an or {}).get("acpl")
+    if acpl is not None:
+        facts.append(f"Average centipawn loss {acpl}")
+    errs = [(my_an or {}).get(k, 0) for k in ("inaccuracy", "mistake", "blunder")]
+    if any(errs):
+        def _p(n, one, many):
+            return f"{n} {one if n == 1 else many}"
+        facts.append(" · ".join([
+            _p(errs[0], "inaccuracy", "inaccuracies"),
+            _p(errs[1], "mistake", "mistakes"),
+            _p(errs[2], "blunder", "blunders")]))
+    if isinstance(my_rating, int) and isinstance(opp_rating, int):
+        gap = opp_rating - my_rating
+        facts.append(f"Rating gap {gap:+d} ({my_rating} vs {opp_rating})")
+    if division:
+        mg, eg = division.get("middlegame"), division.get("end")
+        if mg:
+            facts.append(f"Opening lasted {mg // 2} moves")
+        if eg:
+            facts.append(f"Endgame from move {eg // 2}")
+        elif mg:
+            facts.append("Never reached an endgame")
+    facts.append(f"{num_moves} moves · {(speed or '?').title()}")
+    return facts[:6]
 
 
 def _parse_game(g: dict) -> dict:
@@ -642,10 +813,6 @@ def _parse_game(g: dict) -> dict:
     all_moves = moves_str.split()
     num_moves = len(all_moves) // 2
 
-    # Key sequences: opening (first 5 moves) and final 6 half-moves
-    opening_seq = " ".join(all_moves[:10])
-    final_seq   = " ".join(all_moves[-6:]) if len(all_moves) >= 6 else moves_str
-
     termination = TERMINATION_MAP.get(status, status.title())
     speed       = g.get("speed", g.get("perf", "?"))
 
@@ -658,14 +825,31 @@ def _parse_game(g: dict) -> dict:
     opp_diff = opp.get("ratingDiff", None)
     me_diff  = me.get("ratingDiff", None)
 
-    # Groq analysis — only for losses and close games
+    # ── Engine-derived detail (only for games Lichess has analysed) ──────────
+    ply_analysis = g.get("analysis") or []
+    my_an  = me.get("analysis") or {}
+    opp_an = opp.get("analysis") or {}
+    division = g.get("division") or {}
+
+    best = _best_move(ply_analysis, all_moves, is_white)
+    key_facts = _key_facts(g, my_an, opp_an, division, num_moves,
+                           my_rating, opp_rating, speed)
+    standout = _standout(g, ply_analysis, is_white, result, termination,
+                         num_moves, my_an)
+    game_strength = _strength_estimate(my_an.get("acpl"), my_an.get("accuracy"))
+    est_fide      = _fide_equivalent(my_rating, speed)
+    analysed      = bool(ply_analysis or my_an)
+
+    # Groq analysis — now fed the engine's read of the game rather than a raw
+    # move dump, which it could not evaluate anyway.
     analysis = ""
     if GROQ_KEY:
         prompt = (
             f"Chess. I played {('White' if is_white else 'Black')} (rated {my_rating}) "
             f"vs {opponent} ({opp_rating}). "
             f"Opening: {op_eco} {op_name}. Result: {result} by {termination} in {num_moves} moves. "
-            f"Opening moves: {opening_seq}. Final moves: {final_seq}. "
+            f"Accuracy {my_an.get('accuracy','?')}%, ACPL {my_an.get('acpl','?')}, "
+            f"{my_an.get('blunder',0)} blunders, {my_an.get('mistake',0)} mistakes. "
             f"Give ONE brutally honest, specific improvement in 20 words. Numbers where possible."
         )
         analysis = groq_complete(prompt, max_tokens=55)
@@ -683,11 +867,15 @@ def _parse_game(g: dict) -> dict:
         "opponent": opponent,
         "me_diff": me_diff, "opp_diff": opp_diff,
         "opening": op_name, "eco": op_eco,
-        "opening_seq": opening_seq, "final_seq": final_seq,
         "moves": num_moves, "termination": termination,
         "speed": speed.title() if speed else "?",
         "analysis": analysis,
         "is_upset": is_upset, "is_collapse": is_collapse, "is_long": is_long,
+        # Replaces the opening/final move dumps: what actually happened.
+        "best_move": best, "key_facts": key_facts, "standout": standout,
+        "game_strength": game_strength, "est_fide": est_fide,
+        "accuracy": my_an.get("accuracy"), "acpl": my_an.get("acpl"),
+        "analysed": analysed,
     }
 
 
@@ -1224,11 +1412,22 @@ BOOK_LESSONS = [
 def get_book_lesson() -> dict:
     idx = (date.today().toordinal() + 23) % len(BOOK_LESSONS)
     book, author, chapter, lesson, key_quote, action = BOOK_LESSONS[idx]
-    return {
+    out = {
         "book": book, "author": author, "chapter": chapter,
         "lesson": lesson, "key_quote": key_quote, "action": action,
         "index": idx + 1, "total": len(BOOK_LESSONS),
+        "crux": [], "learnings": [], "examples": [], "adapt": [],
     }
+    # Book-level depth: the whole book in 10+ points, plus learnings, worked
+    # examples and how it applies here. Keyed by title, so all three Atomic
+    # Habits chapters share one crux instead of repeating it. Missing books
+    # degrade to the chapter lesson alone.
+    try:
+        from book_deep import deep_for
+        out.update({k: v for k, v in deep_for(book).items() if v})
+    except Exception as e:
+        log.warning(f"book_deep: {e}")
+    return out
 
 # ─────────────────────────────────────────────────────────────
 # TOP 5 STOCK PICKS
@@ -1804,6 +2003,26 @@ table.t tbody tr:last-child td{border-bottom:none}
   color:var(--ac,var(--lime));margin-bottom:7px}
 .essay .meta{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
   color:var(--dim);margin-bottom:10px}
+/* Book depth: full crux, learnings, examples, how to adapt */
+.bookdeep{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.bdhead{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--ac,var(--lime));margin-bottom:12px}
+.bookdeep ol.crux{margin:0;padding-left:0;list-style:none;counter-reset:cx}
+.bookdeep ol.crux li{counter-increment:cx;position:relative;padding-left:34px;margin-bottom:11px;
+  font-size:13.5px;line-height:1.65;color:#C4CAD2}
+.bookdeep ol.crux li::before{content:counter(cx,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-family:var(--mono);font-size:10.5px;color:var(--ac,var(--lime));opacity:.75}
+.bookdeep ul.bdlist{margin:0;padding-left:0;list-style:none}
+.bookdeep ul.bdlist li{position:relative;padding-left:20px;margin-bottom:10px;
+  font-size:13.5px;line-height:1.65;color:#C4CAD2}
+.bookdeep ul.bdlist li::before{content:"—";position:absolute;left:0;color:var(--ac,var(--lime));opacity:.7}
+.bookdeep ul.bdlist.eg li{color:#AEB5BE;font-size:13px}
+.bookdeep.adapt{background:var(--bg);border:1px solid var(--line);border-radius:12px;
+  padding:16px 18px;border-top:1px solid var(--line)}
+@media(max-width:640px){
+  .bookdeep ol.crux li{padding-left:28px;font-size:13px}
+  .bookdeep ul.bdlist li{font-size:13px}
+}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:760px){.two{grid-template-columns:1fr}}
 
@@ -1839,6 +2058,29 @@ table.t tbody tr:last-child td{border-bottom:none}
 .game .mv{font-family:var(--mono);font-size:10.5px;color:var(--dim);overflow-x:auto;white-space:nowrap;margin-top:5px}
 .game .an{margin-top:11px;padding:11px 13px;background:var(--bg);border-radius:10px;border-left:2px solid var(--lime);
   font-size:12.5px;color:#B4BAC2;line-height:1.7}
+/* Best move / standout / key facts — replaced the raw opening+final move dumps */
+.game .bestmv{margin-top:11px;padding:11px 13px;background:rgba(232,183,74,.06);
+  border:1px solid rgba(232,183,74,.22);border-radius:10px}
+.game .bmlab{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px}
+.game .bmrow{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.game .bmsan{font-family:var(--mono);font-size:17px;font-weight:700;color:#F2E4C0;letter-spacing:-.3px}
+.game .bmgain{font-size:12px;font-weight:600;color:var(--up)}
+.game .bmeval{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.game .uniq{margin-top:10px;padding:11px 13px;background:rgba(106,168,255,.05);
+  border-left:2px solid var(--blue);border-radius:10px;font-size:12.5px;color:#B4BAC2;line-height:1.65}
+.game .uniq b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--blue);margin-bottom:5px;font-weight:600}
+.game .kfacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.game .kf{font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);
+  border:1px solid var(--line);border-radius:7px;padding:4px 9px}
+.game .ratings{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;
+  padding-top:10px;border-top:1px solid var(--line)}
+.game .rt{display:flex;flex-direction:column;gap:2px}
+.game .rt i{font-style:normal;font-family:var(--mono);font-size:8.5px;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--dim)}
+.game .rt b{font-size:15px;font-weight:700;color:var(--gold);letter-spacing:-.4px}
+.game .rtnote{font-size:10px;color:var(--dim);line-height:1.5;flex:1;min-width:150px}
 .pill{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;padding:3px 8px;border-radius:100px;
   background:rgba(255,255,255,.05);color:var(--muted);text-transform:uppercase}
 .trend{display:flex;gap:6px;align-items:flex-end;height:88px;margin-top:12px}
@@ -2281,6 +2523,42 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <p>{{ book.lesson }}</p>
         <div class="q">{{ book.key_quote }}</div>
         <div class="act"><b>Today's action</b>{{ book.action }}</div>
+
+        {% if book.crux %}
+        <div class="bookdeep">
+          <div class="bdhead">The whole book · {{ book.crux|length }} points</div>
+          <ol class="crux">
+            {% for c in book.crux %}<li>{{ c }}</li>{% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+
+        {% if book.learnings %}
+        <div class="bookdeep">
+          <div class="bdhead">What actually changes in your head</div>
+          <ul class="bdlist">
+            {% for l in book.learnings %}<li>{{ l }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if book.examples %}
+        <div class="bookdeep">
+          <div class="bdhead">Examples</div>
+          <ul class="bdlist eg">
+            {% for e in book.examples %}<li>{{ e }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if book.adapt %}
+        <div class="bookdeep adapt">
+          <div class="bdhead">How to adapt it into your life</div>
+          <ul class="bdlist">
+            {% for a in book.adapt %}<li>{{ a }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
       </div>
     </div>
 
@@ -2408,8 +2686,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me {{ g.my_rating }} · {{ g.moves }} moves · {{ g.termination }}
         {% if g.me_diff is not none %}· <span class="{{ 'up' if g.me_diff > 0 else 'dn' }}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>{% endif %}
       </div>
-      {% if g.opening_seq %}<div class="mv"><span style="color:#3A3E44">OPENING </span>{{ g.opening_seq }}</div>{% endif %}
-      {% if g.final_seq %}<div class="mv"><span style="color:#3A3E44">FINAL </span>{{ g.final_seq }}</div>{% endif %}
+      {% if g.best_move %}
+      <div class="bestmv">
+        <div class="bmlab">Best move of the game</div>
+        <div class="bmrow">
+          <span class="bmsan">{{ g.best_move.move_no }}. {{ g.best_move.san }}</span>
+          <span class="bmgain">+{{ (g.best_move.gain_cp / 100) | round(1) }} pawns</span>
+          <span class="bmeval">eval after {{ "%+.2f"|format(g.best_move.eval_after) }}</span>
+        </div>
+      </div>
+      {% endif %}
+      {% if g.standout %}<div class="uniq"><b>What made it different</b>{{ g.standout }}</div>{% endif %}
+      {% if g.key_facts %}
+      <div class="kfacts">
+        {% for f in g.key_facts %}<span class="kf">{{ f }}</span>{% endfor %}
+      </div>
+      {% endif %}
+      {% if g.game_strength or g.est_fide %}
+      <div class="ratings">
+        {% if g.game_strength %}<span class="rt"><i>Played at</i><b>~{{ g.game_strength }}</b></span>{% endif %}
+        {% if g.est_fide %}<span class="rt"><i>Est. FIDE equiv.</i><b>~{{ g.est_fide }}</b></span>{% endif %}
+        <span class="rtnote">estimates from Lichess {{ g.speed|lower }} rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      {% endif %}
+      {% if not g.analysed %}<div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>{% endif %}
       {% if g.analysis %}<div class="an">💡 {{ g.analysis }}</div>{% endif %}
     </div>
     {% endfor %}
