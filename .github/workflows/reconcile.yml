@@ -1,0 +1,69 @@
+name: Reconcile Positions — void leaked OPEN rows
+
+# Maintenance job for reconcile_positions.py. Runs here rather than locally
+# because the live position table is on Turso and only GitHub Actions holds the
+# credentials.
+#
+# Manual only — never scheduled. This mutates the ledger, and the situation it
+# repairs (signals leaking to status='OPEN' forever) is fixed at source by the
+# time stop in standalone_scan.py. If this ever needs running again, something
+# upstream regressed and that is what to look at.
+#
+# Defaults to a DRY RUN. Set apply=true only after reading the dry-run counts.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Actually write the changes (false = dry run, report only)'
+        required: true
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+
+concurrency:
+  group: reconcile-positions
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          # reconcile_positions imports standalone_scan (for MAX_HOLD_HOURS) and
+          # tracker, which pull pandas/yfinance/pytz even though this job never
+          # fetches a price.
+          pip install "yfinance>=0.2.40" pandas numpy pytz requests python-dotenv
+          pip install libsql-experimental          # required — Turso is the live DB
+
+      - name: Fail fast if Turso is not configured
+        run: |
+          if [ -z "$TURSO_URL" ] || [ -z "$TURSO_TOKEN" ]; then
+            echo "::error::TURSO_URL/TURSO_TOKEN missing — db.py would silently fall back"
+            echo "::error::to an empty local signals.db and report 0 rows to reconcile."
+            exit 1
+          fi
+          echo "Turso configured."
+
+      - name: Dry run (always)
+        run: python reconcile_positions.py
+
+      - name: Apply
+        if: ${{ github.event.inputs.apply == 'true' }}
+        run: |
+          echo "::notice::Applying — leaked rows will be marked VOID."
+          python reconcile_positions.py --apply
