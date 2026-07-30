@@ -1,5 +1,8 @@
 config.py
 signals.db
+signals.db-shm
+signals.db-wal
+content_cache.json
 cache/
 logs/
 __pycache__/
