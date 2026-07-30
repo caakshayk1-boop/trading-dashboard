@@ -1350,7 +1350,23 @@ def route(text: str, chat_id: str):
 
 # ── Polling loop ──────────────────────────────────────────────────────────────
 def _delete_webhook():
-    """Delete any registered webhook so getUpdates polling works cleanly."""
+    """Delete the registered webhook so getUpdates polling works cleanly.
+
+    DISABLED BY DEFAULT. Commands are served by the Vercel webhook at
+    terminal.askakshay.com/api/telegram/webhook, and Telegram allows exactly one
+    delivery method — so running this bot locally for any reason would silently
+    unregister that webhook and kill every command until someone re-registered
+    it. That is precisely how commands died before.
+
+    Set ALLOW_WEBHOOK_DELETE=1 only if you are deliberately returning to
+    long-polling on an always-on host, and re-register the webhook afterwards.
+    """
+    if os.environ.get("ALLOW_WEBHOOK_DELETE") != "1":
+        logging.warning(
+            "Skipping deleteWebhook — the Vercel webhook owns command delivery. "
+            "Set ALLOW_WEBHOOK_DELETE=1 to override (this disables all commands)."
+        )
+        return
     try:
         r = requests.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/deleteWebhook",
