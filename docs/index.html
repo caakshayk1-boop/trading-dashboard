@@ -299,6 +299,26 @@ table.t tbody tr:last-child td{border-bottom:none}
   color:var(--ac,var(--lime));margin-bottom:7px}
 .essay .meta{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
   color:var(--dim);margin-bottom:10px}
+/* Book depth: full crux, learnings, examples, how to adapt */
+.bookdeep{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.bdhead{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--ac,var(--lime));margin-bottom:12px}
+.bookdeep ol.crux{margin:0;padding-left:0;list-style:none;counter-reset:cx}
+.bookdeep ol.crux li{counter-increment:cx;position:relative;padding-left:34px;margin-bottom:11px;
+  font-size:13.5px;line-height:1.65;color:#C4CAD2}
+.bookdeep ol.crux li::before{content:counter(cx,decimal-leading-zero);position:absolute;left:0;top:1px;
+  font-family:var(--mono);font-size:10.5px;color:var(--ac,var(--lime));opacity:.75}
+.bookdeep ul.bdlist{margin:0;padding-left:0;list-style:none}
+.bookdeep ul.bdlist li{position:relative;padding-left:20px;margin-bottom:10px;
+  font-size:13.5px;line-height:1.65;color:#C4CAD2}
+.bookdeep ul.bdlist li::before{content:"—";position:absolute;left:0;color:var(--ac,var(--lime));opacity:.7}
+.bookdeep ul.bdlist.eg li{color:#AEB5BE;font-size:13px}
+.bookdeep.adapt{background:var(--bg);border:1px solid var(--line);border-radius:12px;
+  padding:16px 18px;border-top:1px solid var(--line)}
+@media(max-width:640px){
+  .bookdeep ol.crux li{padding-left:28px;font-size:13px}
+  .bookdeep ul.bdlist li{font-size:13px}
+}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media(max-width:760px){.two{grid-template-columns:1fr}}
 
@@ -334,6 +354,29 @@ table.t tbody tr:last-child td{border-bottom:none}
 .game .mv{font-family:var(--mono);font-size:10.5px;color:var(--dim);overflow-x:auto;white-space:nowrap;margin-top:5px}
 .game .an{margin-top:11px;padding:11px 13px;background:var(--bg);border-radius:10px;border-left:2px solid var(--lime);
   font-size:12.5px;color:#B4BAC2;line-height:1.7}
+/* Best move / standout / key facts — replaced the raw opening+final move dumps */
+.game .bestmv{margin-top:11px;padding:11px 13px;background:rgba(232,183,74,.06);
+  border:1px solid rgba(232,183,74,.22);border-radius:10px}
+.game .bmlab{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:7px}
+.game .bmrow{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.game .bmsan{font-family:var(--mono);font-size:17px;font-weight:700;color:#F2E4C0;letter-spacing:-.3px}
+.game .bmgain{font-size:12px;font-weight:600;color:var(--up)}
+.game .bmeval{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.game .uniq{margin-top:10px;padding:11px 13px;background:rgba(106,168,255,.05);
+  border-left:2px solid var(--blue);border-radius:10px;font-size:12.5px;color:#B4BAC2;line-height:1.65}
+.game .uniq b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--blue);margin-bottom:5px;font-weight:600}
+.game .kfacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.game .kf{font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);
+  border:1px solid var(--line);border-radius:7px;padding:4px 9px}
+.game .ratings{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;
+  padding-top:10px;border-top:1px solid var(--line)}
+.game .rt{display:flex;flex-direction:column;gap:2px}
+.game .rt i{font-style:normal;font-family:var(--mono);font-size:8.5px;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--dim)}
+.game .rt b{font-size:15px;font-weight:700;color:var(--gold);letter-spacing:-.4px}
+.game .rtnote{font-size:10px;color:var(--dim);line-height:1.5;flex:1;min-width:150px}
 .pill{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;padding:3px 8px;border-radius:100px;
   background:rgba(255,255,255,.05);color:var(--muted);text-transform:uppercase}
 .trend{display:flex;gap:6px;align-items:flex-end;height:88px;margin-top:12px}
@@ -385,7 +428,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Thursday, July 30 2026</span>
-      <span class="live"><i></i>09:10 IST</span>
+      <span class="live"><i></i>20:42 IST</span>
     </div>
   </div>
 </header>
@@ -421,11 +464,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="statrail">
     <div class="stat">
-      <div class="v" style="color:var(--lime)" data-count="45" data-suffix="%">0%</div>
+      <div class="v" style="color:var(--lime)" data-count="41" data-suffix="%">0%</div>
       <div class="k">Signal Win Rate</div>
     </div>
     <div class="stat">
-      <div class="v" style="color:var(--blue)" data-count="125">0</div>
+      <div class="v" style="color:var(--blue)" data-count="43">0</div>
       <div class="k">Open Positions</div>
     </div>
     <div class="stat">
@@ -434,7 +477,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="stat">
       <div class="v" style="color:var(--up)"
-           data-count="5" data-total="8">0</div>
+           data-count="7" data-total="8">0</div>
       <div class="k">Markets Advancing</div>
     </div>
   </div>
@@ -442,31 +485,31 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   
   <div class="wxrail">
     
-    <div class="wxchip " title="Feels 38.0°C · 62% humidity · 3.4 km/h wind">
+    <div class="wxchip " title="Feels 36.9°C · 67% humidity · 10.1 km/h wind">
       <span class="e">🌤️</span>
       <span>
         <span class="c">Bikaner</span>
-        <span class="m"> ↑39.1° ↓29.4° · 🌧 27%</span>
+        <span class="m"> ↑37.9° ↓29.9° · 🌧 28%</span>
       </span>
-      <span class="t">32.4°</span>
+      <span class="t">31.8°</span>
     </div>
     
-    <div class="wxchip rain" title="Feels 33.6°C · 80% humidity · 15.4 km/h wind">
-      <span class="e">🌦️</span>
+    <div class="wxchip rain" title="Feels 32.4°C · 87% humidity · 11.8 km/h wind">
+      <span class="e">⛅</span>
       <span>
         <span class="c">Kolkata</span>
-        <span class="m"> ↑29.0° ↓25.8° · 🌧 100% · umbrella</span>
+        <span class="m"> ↑30.1° ↓25.8° · 🌧 100% · umbrella</span>
       </span>
-      <span class="t">29.0°</span>
+      <span class="t">27.4°</span>
     </div>
     
-    <div class="wxchip rain" title="Feels 34.1°C · 70% humidity · 9.1 km/h wind">
-      <span class="e">☁️</span>
+    <div class="wxchip rain" title="Feels 31.8°C · 87% humidity · 3.1 km/h wind">
+      <span class="e">⛅</span>
       <span>
         <span class="c">Kuala Lumpur</span>
-        <span class="m"> ↑31.2° ↓23.4° · 🌧 61% · umbrella</span>
+        <span class="m"> ↑31.8° ↓23.4° · 🌧 73% · umbrella</span>
       </span>
-      <span class="t">29.7°</span>
+      <span class="t">26.2°</span>
     </div>
     
   </div>
@@ -479,97 +522,97 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24250</span>
-      <span class="c dn">▼ </span>
+      <span class="p">₹24317</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7316</span>
-      <span class="c dn">▼ </span>
+      <span class="p">7374</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">24443</span>
-      <span class="c dn">▼ </span>
+      <span class="p">24944</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4109.6</span>
+      <span class="p">$4158.8</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$83.53</span>
-      <span class="c up">▲ </span>
+      <span class="p">$84.25</span>
+      <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.60</span>
+      <span class="p">₹95.67</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$64078</span>
+      <span class="p">$64624</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹77655</span>
+      <span class="p">₹77928</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24250</span>
-      <span class="c dn">▼ </span>
+      <span class="p">₹24317</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7316</span>
-      <span class="c dn">▼ </span>
+      <span class="p">7374</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">24443</span>
-      <span class="c dn">▼ </span>
+      <span class="p">24944</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4109.6</span>
+      <span class="p">$4158.8</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$83.53</span>
-      <span class="c up">▲ </span>
+      <span class="p">$84.25</span>
+      <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.60</span>
+      <span class="p">₹95.67</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$64078</span>
+      <span class="p">$64624</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹77655</span>
+      <span class="p">₹77928</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -585,56 +628,56 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="snum">01 / MARKETS</span>
       <h2 class="stitle">What moved.</h2>
     </div>
-    <p class="sdesc">5 of 8 tracked instruments are green.
+    <p class="sdesc">7 of 8 tracked instruments are green.
       Indices, commodities, crypto and FX — refreshed on every build.</p>
   </div>
   <div class="mkt-grid">
     
-    <div class="mkt d rv" style="--d:0.0s">
+    <div class="mkt u rv" style="--d:0.0s">
       <div class="n">Nifty 50</div>
-      <div class="p">₹24250</div>
-      <div class="c dn">▼ </div>
+      <div class="p">₹24317</div>
+      <div class="c up">▲ </div>
     </div>
     
-    <div class="mkt d rv" style="--d:0.04s">
+    <div class="mkt u rv" style="--d:0.04s">
       <div class="n">S&P 500</div>
-      <div class="p">7316</div>
-      <div class="c dn">▼ </div>
+      <div class="p">7374</div>
+      <div class="c up">▲ </div>
     </div>
     
-    <div class="mkt d rv" style="--d:0.08s">
+    <div class="mkt u rv" style="--d:0.08s">
       <div class="n">Nasdaq</div>
-      <div class="p">24443</div>
-      <div class="c dn">▼ </div>
+      <div class="p">24944</div>
+      <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.12s">
       <div class="n">Gold</div>
-      <div class="p">$4109.6</div>
+      <div class="p">$4158.8</div>
       <div class="c up">▲ </div>
     </div>
     
-    <div class="mkt u rv" style="--d:0.16s">
+    <div class="mkt d rv" style="--d:0.16s">
       <div class="n">Crude</div>
-      <div class="p">$83.53</div>
-      <div class="c up">▲ </div>
+      <div class="p">$84.25</div>
+      <div class="c dn">▼ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.2s">
       <div class="n">USD/INR</div>
-      <div class="p">₹95.60</div>
+      <div class="p">₹95.67</div>
       <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$64078</div>
+      <div class="p">$64624</div>
       <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.28s">
       <div class="n">Sensex</div>
-      <div class="p">₹77655</div>
+      <div class="p">₹77928</div>
       <div class="c up">▲ </div>
     </div>
     
@@ -672,10 +715,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   
   <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" data-count="34">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" data-count="41">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" style="color:var(--blue)" data-count="125">0</div><div class="k">Open</div></div>
-    <div class="kpi"><div class="v" style="color:var(--lime)" data-count="45" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
+    <div class="kpi"><div class="v up" data-count="64">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" data-count="93">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" style="color:var(--blue)" data-count="43">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v" style="color:var(--lime)" data-count="41" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
     <div class="kpi"><div class="v" data-count="200">0</div><div class="k">Total Signals</div></div>
   </div>
 
@@ -694,6 +737,198 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
       </tr></thead>
       <tbody>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
+          <td class="mono-dim">1H</td>
+          <td class="num">₹4153.40</td>
+          <td class="num dn">₹4078.87</td>
+          <td class="num up">₹4171.40</td>
+          <td class="num up">₹4293.00</td>
+          <td class="num" style="color:var(--gold)">1.87x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NESTLEIND" target="_blank">NESTLEIND</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · equity_measured</span></td>
+          <td class="mono-dim">1D</td>
+          <td class="num">₹1520.70</td>
+          <td class="num dn">₹1453.11</td>
+          <td class="num up">₹1532.60</td>
+          <td class="num up">₹1689.68</td>
+          <td class="num" style="color:var(--gold)">2.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NESTLEIND" target="_blank">NESTLEIND</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹1520.70</td>
+          <td class="num dn">₹1486.90</td>
+          <td class="num up">₹1571.39</td>
+          <td class="num up">₹1605.19</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:LAURUSLABS" target="_blank">LAURUSLABS</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹1781.30</td>
+          <td class="num dn">₹1736.42</td>
+          <td class="num up">₹1848.62</td>
+          <td class="num up">₹1893.51</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:MARICO" target="_blank">MARICO</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹885.30</td>
+          <td class="num dn">₹868.53</td>
+          <td class="num up">₹910.58</td>
+          <td class="num up">₹927.40</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDHOTEL" target="_blank">INDHOTEL</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹749.20</td>
+          <td class="num dn">₹734.47</td>
+          <td class="num up">₹771.43</td>
+          <td class="num up">₹786.21</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:IPCALAB" target="_blank">IPCALAB</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹1758.80</td>
+          <td class="num dn">₹1710.92</td>
+          <td class="num up">₹1843.31</td>
+          <td class="num up">₹1935.18</td>
+          <td class="num" style="color:var(--gold)">1.8x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDUSINDBK" target="_blank">INDUSINDBK</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹1008.20</td>
+          <td class="num dn">₹983.27</td>
+          <td class="num up">₹1045.59</td>
+          <td class="num up">₹1072.46</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NYKAA" target="_blank">NYKAA</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹332.20</td>
+          <td class="num dn">₹324.92</td>
+          <td class="num up">₹343.13</td>
+          <td class="num up">₹350.41</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BAJAJ-AUTO" target="_blank">BAJAJ-AUTO</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹11413.00</td>
+          <td class="num dn">₹11175.47</td>
+          <td class="num up">₹11769.30</td>
+          <td class="num up">₹12006.84</td>
+          <td class="num" style="color:var(--gold)">1.5x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:OFSS" target="_blank">OFSS</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹11142.00</td>
+          <td class="num dn">₹10699.90</td>
+          <td class="num up">₹11919.10</td>
+          <td class="num up">₹12247.26</td>
+          <td class="num" style="color:var(--gold)">1.8x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-07-30</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:OBEROIRLTY" target="_blank">OBEROIRLTY</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
+          <td class="mono-dim">Monthly</td>
+          <td class="num">₹1811.20</td>
+          <td class="num dn">₹1773.86</td>
+          <td class="num up">₹1899.39</td>
+          <td class="num up">₹1974.03</td>
+          <td class="num" style="color:var(--gold)">2.4x</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
       
         <tr data-badge="open">
           <td class="mono-dim">2026-07-29</td>
@@ -791,7 +1026,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-29</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -801,13 +1036,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.67</td>
           <td class="num up">₹2.65</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.71</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-29</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -817,10 +1052,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹56.84</td>
           <td class="num up">₹56.29</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹58.20</td>
+          <td class="pnl-d">-0.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -839,7 +1074,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-29</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:WTIUSD" target="_blank">WTIUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -849,10 +1084,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹80.12</td>
           <td class="num up">₹78.06</td>
           <td class="num" style="color:var(--gold)">2.0x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹85.27</td>
+          <td class="pnl-d">-3.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -967,7 +1202,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-29</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CHOLAFIN" target="_blank">CHOLAFIN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
@@ -977,10 +1212,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹1865.99</td>
           <td class="num up">₹1906.11</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹1765.67</td>
+          <td class="pnl-d">-2.2%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -999,7 +1234,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1009,13 +1244,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.66</td>
           <td class="num up">₹2.63</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.74</td>
+          <td class="pnl-d">-1.2%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1025,10 +1260,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹76.67</td>
           <td class="num up">₹74.84</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹81.24</td>
+          <td class="pnl-d">-2.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -1047,7 +1282,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1057,13 +1292,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3991.85</td>
           <td class="num up">₹3971.09</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4043.76</td>
+          <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1073,13 +1308,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.71</td>
           <td class="num up">₹2.69</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.77</td>
+          <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1089,13 +1324,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹79.06</td>
           <td class="num up">₹77.75</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹82.34</td>
+          <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAUUSD" target="_blank">XAUUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -1105,10 +1340,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3938.14</td>
           <td class="num up">₹3866.90</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4130.49</td>
+          <td class="pnl-d">-2.1%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -1287,7 +1522,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1297,13 +1532,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.74</td>
           <td class="num up">₹2.73</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.73</td>
+          <td class="pnl-u">+1.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-27</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1313,13 +1548,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.74</td>
           <td class="num up">₹2.71</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.74</td>
+          <td class="pnl-u">+1.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-27</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1329,10 +1564,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹81.05</td>
           <td class="num up">₹79.60</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹84.68</td>
+          <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -1351,7 +1586,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-27</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1361,13 +1596,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹81.54</td>
           <td class="num up">₹79.75</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹79.75</td>
+          <td class="pnl-u">+5.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-27</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1377,10 +1612,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.75</td>
           <td class="num up">₹2.71</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.75</td>
+          <td class="pnl-u">+2.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -1415,7 +1650,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-25</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SONACOMS" target="_blank">SONACOMS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -1425,10 +1660,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹735.70</td>
           <td class="num up">₹767.72</td>
           <td class="num" style="color:var(--gold)">0.9x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹735.70</td>
+          <td class="pnl-u">+2.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -1511,7 +1746,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-25</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1521,13 +1756,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹92.92</td>
           <td class="num up">₹94.55</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹88.84</td>
+          <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-24</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1537,13 +1772,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.83</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.79</td>
+          <td class="pnl-u">+3.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-24</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1553,10 +1788,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.98</td>
           <td class="num up">₹3.01</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.91</td>
+          <td class="pnl-d">-1.0%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -1687,7 +1922,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-24</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1697,10 +1932,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹93.59</td>
           <td class="num up">₹94.62</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹91.02</td>
+          <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -1719,7 +1954,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-24</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1729,13 +1964,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4005.74</td>
           <td class="num up">₹3987.09</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4052.34</td>
+          <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-23</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1745,13 +1980,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.99</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.94</td>
+          <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-23</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NTPCGREEN" target="_blank">NTPCGREEN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
@@ -1761,13 +1996,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹109.54</td>
           <td class="num up">₹117.00</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹90.89</td>
+          <td class="pnl-d">-7.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-23</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1777,13 +2012,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.00</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.93</td>
+          <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-23</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1793,10 +2028,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹90.07</td>
           <td class="num up">₹91.22</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹87.19</td>
+          <td class="pnl-d">-1.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -1815,7 +2050,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-23</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1825,13 +2060,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4175.63</td>
           <td class="num up">₹4205.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4101.41</td>
+          <td class="pnl-d">-0.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-22</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1841,13 +2076,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹89.14</td>
           <td class="num up">₹90.66</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹85.34</td>
+          <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-22</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1857,13 +2092,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.96</td>
           <td class="num up">₹2.99</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.88</td>
+          <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-22</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1873,13 +2108,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4193.67</td>
           <td class="num up">₹4218.52</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4131.55</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-22</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1889,10 +2124,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹88.72</td>
           <td class="num up">₹89.89</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹85.79</td>
+          <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -1911,7 +2146,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-22</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1921,10 +2156,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4147.58</td>
           <td class="num up">₹4166.29</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4100.78</td>
+          <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -1959,7 +2194,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-22</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -1969,10 +2204,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹86.65</td>
           <td class="num up">₹87.55</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹84.40</td>
+          <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -1991,7 +2226,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2001,10 +2236,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.81</td>
           <td class="num up">₹2.77</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.77</td>
+          <td class="pnl-u">+2.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -2023,7 +2258,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2033,10 +2268,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4102.40</td>
           <td class="num up">₹4125.47</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4125.47</td>
+          <td class="pnl-u">+1.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2183,7 +2418,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2193,13 +2428,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹84.24</td>
           <td class="num up">₹85.13</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹85.13</td>
+          <td class="pnl-u">+2.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NGAS" target="_blank">NGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -2209,10 +2444,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.70</td>
           <td class="num up">₹2.58</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.70</td>
+          <td class="pnl-u">+6.2%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2311,7 +2546,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2321,10 +2556,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4080.67</td>
           <td class="num up">₹4102.52</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4102.52</td>
+          <td class="pnl-u">+1.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -2343,7 +2578,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-20</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2353,13 +2588,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.82</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.79</td>
+          <td class="pnl-u">+2.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-20</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2369,13 +2604,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3975.99</td>
           <td class="num up">₹3953.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4032.67</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-20</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2385,10 +2620,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.84</td>
           <td class="num up">₹2.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.82</td>
+          <td class="pnl-u">+1.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2407,7 +2642,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-17</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2417,13 +2652,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹83.26</td>
           <td class="num up">₹84.33</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹84.33</td>
+          <td class="pnl-u">+3.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-17</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2433,13 +2668,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.84</td>
           <td class="num up">₹2.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.82</td>
+          <td class="pnl-u">+1.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-17</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2449,13 +2684,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.80</td>
           <td class="num up">₹2.76</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.76</td>
+          <td class="pnl-u">+3.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-17</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2465,13 +2700,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹77.88</td>
           <td class="num up">₹77.15</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹79.70</td>
+          <td class="pnl-d">-0.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-16</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2481,10 +2716,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹76.86</td>
           <td class="num up">₹75.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹79.56</td>
+          <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2503,7 +2738,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-16</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2513,13 +2748,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.99</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.91</td>
+          <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-16</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2529,10 +2764,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3960.53</td>
           <td class="num up">₹3934.75</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4024.98</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2551,7 +2786,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-15</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2561,10 +2796,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.98</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.88</td>
+          <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2583,7 +2818,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-15</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2593,13 +2828,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.96</td>
           <td class="num up">₹2.98</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.90</td>
+          <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-15</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2609,13 +2844,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹81.67</td>
           <td class="num up">₹82.61</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹82.61</td>
+          <td class="pnl-u">+2.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-15</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2625,10 +2860,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4009.17</td>
           <td class="num up">₹3991.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4054.55</td>
+          <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2647,7 +2882,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-15</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2657,13 +2892,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4005.58</td>
           <td class="num up">₹3982.56</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4063.11</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-14</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2673,13 +2908,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.83</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.79</td>
+          <td class="pnl-u">+2.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-14</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2689,10 +2924,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹81.94</td>
           <td class="num up">₹83.47</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹83.47</td>
+          <td class="pnl-u">+4.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2711,7 +2946,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-13</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2721,13 +2956,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹79.78</td>
           <td class="num up">₹81.15</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹81.15</td>
+          <td class="pnl-u">+4.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-13</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2737,13 +2972,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3958.65</td>
           <td class="num up">₹3929.88</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4030.57</td>
+          <td class="pnl-d">-0.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-13</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2753,10 +2988,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.82</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.79</td>
+          <td class="pnl-u">+2.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2775,7 +3010,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-13</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2785,10 +3020,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4028.23</td>
           <td class="num up">₹3999.72</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4099.51</td>
+          <td class="pnl-d">-0.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -2839,7 +3074,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-13</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2849,13 +3084,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.84</td>
           <td class="num up">₹2.80</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.80</td>
+          <td class="pnl-u">+3.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-12</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2865,13 +3100,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.87</td>
           <td class="num up">₹2.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.82</td>
+          <td class="pnl-u">+3.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-12</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2881,13 +3116,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹69.68</td>
           <td class="num up">₹68.53</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹72.56</td>
+          <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-12</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2897,10 +3132,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4148.00</td>
           <td class="num up">₹4170.86</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4090.84</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -3031,7 +3266,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-11</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3041,13 +3276,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.88</td>
           <td class="num up">₹2.83</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.83</td>
+          <td class="pnl-u">+3.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-11</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3057,10 +3292,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹69.79</td>
           <td class="num up">₹68.65</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹72.66</td>
+          <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -3079,7 +3314,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-11</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3089,13 +3324,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4162.78</td>
           <td class="num up">₹4185.36</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4106.31</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-10</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3105,13 +3340,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.85</td>
           <td class="num up">₹2.81</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.81</td>
+          <td class="pnl-u">+3.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-10</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3121,10 +3356,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹69.38</td>
           <td class="num up">₹68.19</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹72.35</td>
+          <td class="pnl-d">-1.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -3143,7 +3378,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-10</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3153,13 +3388,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4066.06</td>
           <td class="num up">₹4042.77</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4124.29</td>
+          <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-10</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3169,13 +3404,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2.95</td>
           <td class="num up">₹2.93</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹2.93</td>
+          <td class="pnl-u">+2.0%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-09</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3185,10 +3420,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.18</td>
           <td class="num up">₹3.16</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.16</td>
+          <td class="pnl-u">+1.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -3207,7 +3442,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3217,10 +3452,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹77.94</td>
           <td class="num up">₹79.65</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹79.65</td>
+          <td class="pnl-u">+5.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -3239,7 +3474,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3249,10 +3484,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3997.94</td>
           <td class="num up">₹3962.70</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4086.04</td>
+          <td class="pnl-d">-0.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -3335,7 +3570,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3345,13 +3580,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.36</td>
           <td class="num up">₹3.38</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.29</td>
+          <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3361,10 +3596,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹76.41</td>
           <td class="num up">₹77.71</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹77.71</td>
+          <td class="pnl-u">+4.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -3383,7 +3618,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:WTIUSD" target="_blank">WTIUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -3393,13 +3628,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹67.06</td>
           <td class="num up">₹63.23</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹77.41</td>
+          <td class="pnl-d">-6.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BRNUSD" target="_blank">BRNUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -3409,13 +3644,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹71.00</td>
           <td class="num up">₹67.24</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹81.17</td>
+          <td class="pnl-d">-5.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-08</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3425,13 +3660,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.30</td>
           <td class="num up">₹3.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.26</td>
+          <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-07</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3441,13 +3676,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.36</td>
           <td class="num up">₹3.41</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.22</td>
+          <td class="pnl-d">-1.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-07</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3457,13 +3692,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹70.06</td>
           <td class="num up">₹70.58</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹70.58</td>
+          <td class="pnl-u">+1.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-07</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3473,13 +3708,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.32</td>
           <td class="num up">₹3.35</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.26</td>
+          <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-07</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3489,13 +3724,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹69.76</td>
           <td class="num up">₹70.27</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹70.27</td>
+          <td class="pnl-u">+1.9%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3505,13 +3740,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.34</td>
           <td class="num up">₹3.40</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.17</td>
+          <td class="pnl-d">-2.0%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3521,13 +3756,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹70.13</td>
           <td class="num up">₹71.05</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹71.05</td>
+          <td class="pnl-u">+3.3%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NGAS" target="_blank">NGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -3537,13 +3772,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.14</td>
           <td class="num up">₹3.09</td>
           <td class="num" style="color:var(--gold)">2.0x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹3.09</td>
+          <td class="pnl-u">+3.1%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAGUSD" target="_blank">XAGUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -3553,13 +3788,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹58.74</td>
           <td class="num up">₹56.25</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹58.74</td>
+          <td class="pnl-u">+6.0%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAUUSD" target="_blank">XAUUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -3569,10 +3804,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4025.19</td>
           <td class="num up">₹3931.31</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹4025.19</td>
+          <td class="pnl-u">+3.4%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -3671,7 +3906,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3681,13 +3916,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹67.06</td>
           <td class="num up">₹66.22</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹69.16</td>
+          <td class="pnl-d">-1.2%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-06</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -3697,202 +3932,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3.11</td>
           <td class="num up">₹3.06</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-05</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹62.81</td>
-          <td class="num dn">₹61.96</td>
-          <td class="num up">₹64.09</td>
-          <td class="num up">₹64.94</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">₹64.94</td>
-          <td class="pnl-u">+3.4%</td>
+          <td class="num">₹3.06</td>
+          <td class="pnl-u">+3.5%</td>
           <td class="mono-dim">—</td>
           <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
-        <tr data-badge="open">
-          <td class="mono-dim">2026-07-05</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹4187.30</td>
-          <td class="num dn">₹4156.56</td>
-          <td class="num up">₹4233.41</td>
-          <td class="num up">₹4264.15</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-04</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹62.81</td>
-          <td class="num dn">₹61.96</td>
-          <td class="num up">₹64.09</td>
-          <td class="num up">₹64.94</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">₹64.94</td>
-          <td class="pnl-u">+3.4%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
-        <tr data-badge="open">
-          <td class="mono-dim">2026-07-04</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹4187.30</td>
-          <td class="num dn">₹4156.56</td>
-          <td class="num up">₹4233.41</td>
-          <td class="num up">₹4264.15</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-03</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹62.81</td>
-          <td class="num dn">₹61.96</td>
-          <td class="num up">₹64.09</td>
-          <td class="num up">₹64.94</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">₹64.94</td>
-          <td class="pnl-u">+3.4%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
-        <tr data-badge="open">
-          <td class="mono-dim">2026-07-03</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹4187.30</td>
-          <td class="num dn">₹4156.56</td>
-          <td class="num up">₹4233.41</td>
-          <td class="num up">₹4264.15</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-03</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹62.72</td>
-          <td class="num dn">₹61.87</td>
-          <td class="num up">₹64.00</td>
-          <td class="num up">₹64.85</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">₹64.85</td>
-          <td class="pnl-u">+3.4%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
-        <tr data-badge="open">
-          <td class="mono-dim">2026-07-03</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹4188.60</td>
-          <td class="num dn">₹4157.86</td>
-          <td class="num up">₹4234.71</td>
-          <td class="num up">₹4265.45</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-03</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹62.88</td>
-          <td class="num dn">₹62.02</td>
-          <td class="num up">₹64.15</td>
-          <td class="num up">₹65.00</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">₹65.00</td>
-          <td class="pnl-u">+3.4%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
-        <tr data-badge="open">
-          <td class="mono-dim">2026-07-03</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹4190.90</td>
-          <td class="num dn">₹4160.16</td>
-          <td class="num up">₹4237.01</td>
-          <td class="num up">₹4267.75</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-02</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹61.19</td>
-          <td class="num dn">₹60.09</td>
-          <td class="num up">₹62.84</td>
-          <td class="num up">₹63.94</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">₹63.94</td>
-          <td class="pnl-u">+4.5%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
-        <tr data-badge="open">
-          <td class="mono-dim">2026-07-02</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="num">₹4133.00</td>
-          <td class="num dn">₹4099.94</td>
-          <td class="num up">₹4182.60</td>
-          <td class="num up">₹4215.66</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
       </tbody>
@@ -3954,34 +3997,34 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">BBC Business · LEAD</span>
-        <h2><a href="https://www.bbc.co.uk/news/articles/cp8e6m4rndgo?at_medium=RSS&at_campaign=rss" target="_blank">Interest rates expected to be held again by Bank of England</a></h2>
-        <p>It would be the fifth hold in a row, with the Bank rate standing at 3.75% - the lowest since February 2023.</p>
+        <h2><a href="https://www.bbc.co.uk/news/articles/cp8e6m4rndgo?at_medium=RSS&at_campaign=rss" target="_blank">Bank holds interest rates but says it is ready to raise them if Iran war escalates</a></h2>
+        <p>The Bank also expects the economy to grow more than previously forecast this year, although uncertainties remain because of the Iran war.</p>
       </div>
       <div class="lead-s">
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/videos/ckg4jxwkn2lo?at_medium=RSS&at_campaign=rss" target="_blank">What happens here has a big impact on your money</a>
+          <a href="https://www.bbc.co.uk/news/articles/cd0xvrmlx2eo?at_medium=RSS&at_campaign=rss" target="_blank">US economic growth sees surprise slowdown in second quarter</a>
         </div>
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/crl70x0nxr9o?at_medium=RSS&at_campaign=rss" target="_blank">Burnham says nuclear sub investment will protect UK and boost jobs</a>
+          <a href="https://www.bbc.co.uk/news/articles/c4g4dkr40deo?at_medium=RSS&at_campaign=rss" target="_blank">Virtual interviews don't show bosses your personality, says Burnham</a>
         </div>
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/c8jngmk93p9o?at_medium=RSS&at_campaign=rss" target="_blank">I dropped out of university and built five beauty businesses. Here's how I did it</a>
+          <a href="https://www.bbc.co.uk/news/articles/cq6dmjv1jpdo?at_medium=RSS&at_campaign=rss" target="_blank">Hundreds of jobs to go at Jaguar Land Rover</a>
         </div>
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cy07wgqjv08o?at_medium=RSS&at_campaign=rss" target="_blank">'No magic wand' to tackle high prices, Fed boss says as US interest rates held</a>
+          <a href="https://www.bbc.co.uk/news/articles/cpq8n45r5e8o?at_medium=RSS&at_campaign=rss" target="_blank">Shell profits double as oil prices rise due to Iran war</a>
         </div>
         
         <div class="mini">
           <span class="s">CNBC</span>
-          <a href="https://www.cnbc.com/2026/07/29/starbucks-sbux-q3-2026-earnings.html" target="_blank">Starbucks stock jumps as coffee giant raises full-year outlook</a>
+          <a href="https://www.cnbc.com/2026/07/30/nbcuniversal-youtube-deal-streaming-wars.html" target="_blank">How NBCUniversal's deal with YouTube could jumpstart the next chapter of the streaming wars</a>
         </div>
         
       </div>
@@ -3991,65 +4034,65 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/29/carvana-cvna-earnings-q2-2026.html" target="_blank">Carvana stock falls as auto retailer’s 2026 earnings guidance misses Wall Street’s expectations</a></h3>
-        <p>Carvana said Wednesday it expects earnings of between $2.7 billion and $3 billion this year after reporting record quarterly results for the second qu</p>
-        <div class="ts">Jul 29 21:47</div>
+        <h3><a href="https://www.cnbc.com/2026/07/30/ferrari-ceo-luce-ev-debut.html" target="_blank">Ferrari CEO says he 'would not change anything' about polarizing Luce EV debut</a></h3>
+        <p>Ferrari is pleased with the launch of the Luce all-electric vehicle despite significant criticism upon the car's spring debut, according to CEO Benede</p>
+        <div class="ts">Jul 30 14:22</div>
       </div>
       
       <div class="ncard rv" style="--d:0.05s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/29/chipotle-mexican-grill-cmg-q2-2026-earnings.html" target="_blank">Chipotle hikes same-store sales forecast, says cyclospora fears hit sales in late July</a></h3>
-        <p>Chipotle Mexican Grill stock has fallen more than 7% this year, dragging its market value down to roughly $44 billion.</p>
-        <div class="ts">Jul 29 21:52</div>
+        <h3><a href="https://www.cnbc.com/2026/07/30/yum-brands-yum-q2-2026-earnings.html" target="_blank">Cyclospora outbreak has hurt Taco Bell but sales are already improving, Yum Brands CEO says</a></h3>
+        <p>The restaurant company provided no update on the cyclospora outbreak tied to Taco Bell restaurants is affecting its business.</p>
+        <div class="ts">Jul 30 13:06</div>
       </div>
       
       <div class="ncard rv" style="--d:0.1s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/29/nike-china-sales-decline.html" target="_blank">Nike was once China's sneaker king. Here's why its sales have fallen 30%</a></h3>
-        <p>China was once Nike's fastest-growing region but the company has lost relevance among young consumers and ceded market share to smaller, domestic bran</p>
-        <div class="ts">Jul 29 14:49</div>
+        <h3><a href="https://www.cnbc.com/2026/07/30/stellantis-q2-earnings-autos-jeep.html" target="_blank">Jeep maker Stellantis swings to profit on rising demand in North America</a></h3>
+        <p>Auto giant Stellantis on Thursday swung to profit in the second quarter, boosted by rising demand in North America.</p>
+        <div class="ts">Jul 30 15:02</div>
       </div>
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/fords-big-truck-bet-is-paying-off-and-wall-street-is-taking-notice-6a1de0fb?mod=mw_rss_topstories" target="_blank">Ford’s big-truck bet is paying off — and Wall Street is taking notice</a></h3>
-        <p>A turnaround story could be in the works at Ford, which gets less love than GM on Wall Street.</p>
-        <div class="ts">Jul 30 01:02</div>
+        <span class="s">CNBC</span>
+        <h3><a href="https://www.cnbc.com/2026/07/30/wealth-managers-ai-chatbots.html" target="_blank">Wealth managers face a new challenger: Their clients’ AI chatbots</a></h3>
+        <p>Large language models may give financial advisors a run for their money, but wealth management leaders say the human touch can't be replaced.</p>
+        <div class="ts">Jul 30 15:02</div>
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/why-sofis-stock-is-dropping-even-after-its-earnings-beat-expectations-ecc442eb?mod=mw_rss_topstories" target="_blank">Why SoFi’s stock drops, even after its earnings beat expectations</a></h3>
-        <p>Investors were disappointed by the neobank’s restrained guidance.</p>
-        <div class="ts">Jul 30 01:01</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/jim-cramer-says-post-earnings-221700892.html" target="_blank">Jim Cramer says this post-earnings sell-off is a golden buying opportunity</a></h3>
+        <p></p>
+        <div class="ts">Jul 29 22:17</div>
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/qualcomms-stock-falls-as-memory-woes-weigh-on-earnings-fc2b6317?mod=mw_rss_topstories" target="_blank">Qualcomm’s stock falls as memory woes weigh on earnings</a></h3>
-        <p>The chip company came up short on its bottom line.</p>
-        <div class="ts">Jul 30 00:20</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/hedge-funds-favor-union-pacific-145855454.html" target="_blank">Hedge Funds Favor Union Pacific Corporation (UNP) Over Canadian Pacific (CP): UNP Beat Earnings and Just Got a Major Win</a></h3>
+        <p></p>
+        <div class="ts">Jul 30 14:58</div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/starbucks-is-becoming-cool-again-heres-how-it-pulled-off-its-turnaround-d2949e64?mod=mw_rss_topstories" target="_blank">Starbucks is becoming cool again. Here’s how it pulled off its turnaround.</a></h3>
-        <p>Trendier products, faster service and more food options boost Starbucks’ earnings.</p>
-        <div class="ts">Jul 30 00:19</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/live/stock-market-today-thursday-july-30-dow-sp-500-nasdaq-082255995.html" target="_blank">Stock market today: Dow, S&P 500, Nasdaq rebound after Fed decision, as Microsoft leads tech gains</a></h3>
+        <p></p>
+        <div class="ts">Jul 30 08:22</div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/robinhood-puts-up-record-revenue-as-volatility-drives-a-trading-bonanza-8e0729c1?mod=mw_rss_topstories" target="_blank">Robinhood puts up record revenue as volatility drives a trading bonanza</a></h3>
-        <p>Prediction-market revenues on the popular trading app increased tenfold during the second quarter.</p>
-        <div class="ts">Jul 30 00:18</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/strong-demand-custom-silicon-chips-144115715.html" target="_blank">Strong Demand for Custom Silicon Chips Boosts Teradyne’s (TER) Market Outlook</a></h3>
+        <p></p>
+        <div class="ts">Jul 30 14:41</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
-        <span class="s">Investing.com</span>
-        <h3><a href="https://www.investing.com/news/company-news/pantoro-june-q4-2026-slides-production-rises-costs-elevated-93CH-4822304" target="_blank">Pantoro June Q4 2026 slides: production rises, costs elevated</a></h3>
-        <p></p>
-        <div class="ts">Jul 30 03:33</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/americans-are-spending-plenty-but-theyre-saving-much-less-ffb995d2?mod=mw_rss_topstories" target="_blank">Americans are spending plenty — but they’re saving much less</a></h3>
+        <p>Consumer spending rose again in June to cap off a strong second quarter, but households had to dig deep into their savings to pay for their purchases </p>
+        <div class="ts">Jul 30 14:40</div>
       </div>
       
     </div>
@@ -4122,6 +4165,42 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <p>McKeown's 90% rule for decisions: when evaluating an opportunity, give it a score from 0 to 100 on fit with your most important criteria. If it scores below 90, say no. This sounds extreme. In practice, it forces clarity: most things we say yes to are 60-70% fits — good enough, not great. The 60% fits crowd out the 90% opportunities that actually advance your most important goals. Every yes is an implicit no to everything else. The question is not 'is this a good opportunity?' but 'is this the best opportunity I have right now?'</p>
         <div class="q">Every yes costs you a no somewhere else. Make sure the trade is worth it.</div>
         <div class="act"><b>Today's action</b>Apply the 90% rule to your next opportunity or request. Score it honestly. If it's below 90, practice saying a polite no.</div>
+
+        
+        <div class="bookdeep">
+          <div class="bdhead">The whole book · 13 points</div>
+          <ol class="crux">
+            <li>Almost everything is noise. Very few things are exceptionally valuable.</li><li>The undisciplined pursuit of more is how capable people stall.</li><li>Replace 'How can I do it all?' with 'What is the one thing I should do?'</li><li>If you don't prioritise your life, someone else will.</li><li>Trade-offs are unavoidable. Pretending otherwise means choosing badly by default.</li><li>Explore widely before committing narrowly. More options examined, fewer selected.</li><li>Apply extreme criteria: not 'is this good?' but 'is this the best possible use of this time?'</li><li>'No' is a complete sentence. The discomfort of refusing lasts minutes; the cost of agreeing lasts months.</li><li>Sunk cost is not a reason. Ask what you would pay to acquire this commitment today.</li><li>Buffer time by 50%. Every plan without slack fails on contact with reality.</li><li>Remove the bottleneck rather than working harder around it.</li><li>Small wins beat big launches. Progress is the most effective motivator known.</li><li>Essentialism is a discipline, not a one-time purge. The noise regrows weekly.</li>
+          </ol>
+        </div>
+        
+
+        
+        <div class="bookdeep">
+          <div class="bdhead">What actually changes in your head</div>
+          <ul class="bdlist">
+            <li>Saying yes to everything is a decision — usually a bad one made passively.</li><li>The cost of a commitment is every alternative you can no longer take.</li><li>Capable people get buried precisely because they are capable.</li><li>Slack is not waste. Slack is what absorbs reality.</li>
+          </ul>
+        </div>
+        
+
+        
+        <div class="bookdeep">
+          <div class="bdhead">Examples</div>
+          <ul class="bdlist eg">
+            <li>Southwest Airlines said no to meals, assigned seating, and hub routing — and stayed profitable for decades while full-service rivals collapsed.</li><li>Warren Buffett attributes most of his wealth to roughly ten decisions, having passed on thousands.</li><li>McKeown attended a client meeting hours after his daughter's birth. He got neither the client's respect nor the moment back — the book's founding regret.</li>
+          </ul>
+        </div>
+        
+
+        
+        <div class="bookdeep adapt">
+          <div class="bdhead">How to adapt it into your life</div>
+          <ul class="bdlist">
+            <li>Five active projects maximum. TradeFlow, Codex, Meta recovery, Dubai, SIP. A sixth means one gets cut, not squeezed in.</li><li>Before any new build: what does this replace? If nothing, it doesn't start.</li><li>Kill features that no measurement supports. The deleted /fno and /options pages were the right call.</li><li>Buffer every deadline by 50%. A model promised Friday gets built by Wednesday.</li>
+          </ul>
+        </div>
+        
       </div>
     </div>
 
@@ -4246,8 +4325,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1562 · 29 moves · Resignation
         · <span class="up">+6 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 d6 e4 Nf6 Bd3 c6 c3 Qa5 Bd2 e5</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Qa6 Be1 Qxa4 Qxa4 b5 Rxb5</div>
+      
+      <div class="bestmv">
+        <div class="bmlab">Best move of the game</div>
+        <div class="bmrow">
+          <span class="bmsan">22. exd5</span>
+          <span class="bmgain">+0.5 pawns</span>
+          <span class="bmeval">eval after +3.76</span>
+        </div>
+      </div>
+      
+      
+      
+      <div class="kfacts">
+        <span class="kf">Accuracy 83% vs their 73%</span><span class="kf">Average centipawn loss 46</span><span class="kf">3 inaccuracies · 3 mistakes · 1 blunder</span><span class="kf">Rating gap +27 (1562 vs 1589)</span><span class="kf">29 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        <span class="rt"><i>Played at</i><b>~1550</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1162</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      
       
     </div>
     
@@ -4269,8 +4370,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1562 · 83 moves · Draw
         · <span class="dn">0 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>e4 e5 Nf3 d6 Bc4 Bg4 O-O Nf6 d3 h6</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Kb4 Rf4+ Rc4 Kf5 Rxf4+ Kxf4</div>
+      
+      <div class="uniq"><b>What made it different</b>83 moves of grinding. Endgame stamina, not opening prep, settled this one.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -26 (1562 vs 1536)</span><span class="kf">Endgame from move 33</span><span class="kf">83 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1162</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4292,8 +4406,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1568 · 23 moves · Time Out
         · <span class="dn">-6 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 e6 e3 f5 c4 Nf6 Bd3 b6 a3 Bb7</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Re1 Rdf8 Kc2 Rf1 Rxf1 Rxf1</div>
+      
+      <div class="uniq"><b>What made it different</b>Decided on the clock, not the board — the position was still playable when time ran out.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap +5 (1568 vs 1573)</span><span class="kf">Endgame from move 23</span><span class="kf">23 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1168</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4315,8 +4442,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1564 · 26 moves · Resignation
         · <span class="up">+4 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 d5 e3 Nc6 c4 dxc4 Bxc4 e6 Nf3 Nf6</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Bxf8 Qxf8 Qe8 Kg8 Qxf8+ Rxf8</div>
+      
+      
+      
+      <div class="kfacts">
+        <span class="kf">Accuracy 80% vs their 67%</span><span class="kf">Average centipawn loss 80</span><span class="kf">4 inaccuracies · 2 mistakes · 2 blunders</span><span class="kf">Rating gap -71 (1564 vs 1493)</span><span class="kf">Endgame from move 23</span><span class="kf">26 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        <span class="rt"><i>Played at</i><b>~1400</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1164</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      
       
     </div>
     
@@ -4338,8 +4478,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1559 · 23 moves · Checkmate
         · <span class="up">+5 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>b3 d5 Bb2 e6 e3 Nf6 Nf3 Be7 c4 c6</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Qf3 Rb8 Qe4 Bb7 Qd4 Qxg2#</div>
+      
+      <div class="uniq"><b>What made it different</b>Finished by checkmate on move 23 — you converted rather than letting it drift.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -57 (1559 vs 1502)</span><span class="kf">23 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1159</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4361,8 +4514,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1565 · 35 moves · Checkmate
         · <span class="dn">-6 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 Nf6 e3 g6 c4 Bg7 Nf3 O-O Bd3 d6</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Qxb7 Nf4 Qb8+ Bf8 Qxe5 Qxg2#</div>
+      
+      
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap +0 (1565 vs 1565)</span><span class="kf">Endgame from move 20</span><span class="kf">35 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1165</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4384,8 +4550,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1559 · 14 moves · Resignation
         · <span class="up">+6 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>e4 e5 Nf3 d6 c3 Bg4 Qb3 b6 Bc4 Qe7</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>gxf3 Ngf6 Rg1 Nc5 Qxa7 Qxa7</div>
+      
+      <div class="uniq"><b>What made it different</b>Over in 14 moves — decided in the opening, so the opening is what to study.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -7 (1559 vs 1552)</span><span class="kf">14 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1159</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4407,8 +4586,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1566 · 27 moves · Checkmate
         · <span class="dn">-7 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 d5 e3 Nc6 c4 e5 cxd5 Bb4+ Bd2 Qxd5</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Bd1 Nf4 d6 Nd3+ Kf1 Rf2#</div>
+      
+      
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -76 (1566 vs 1490)</span><span class="kf">27 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1166</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4430,8 +4622,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1561 · 1 moves · Resignation
         · <span class="up">+5 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 e5 d5</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>d4 e5 d5</div>
+      
+      <div class="uniq"><b>What made it different</b>Over in 1 moves — decided in the opening, so the opening is what to study.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -28 (1561 vs 1533)</span><span class="kf">1 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1161</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4453,8 +4658,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1554 · 15 moves · Resignation
         · <span class="up">+7 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>e4 e5 Nf3 d6 d4 exd4 Nxd4 c5 Nf3 Bg4</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Qd3 Nec6 c3 Ne5 Qg3 Ne2+</div>
+      
+      <div class="uniq"><b>What made it different</b>Over in 15 moves — decided in the opening, so the opening is what to study.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap +24 (1554 vs 1578)</span><span class="kf">15 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1154</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4476,8 +4694,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1558 · 29 moves · Resignation
         · <span class="dn">-4 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>e4 e5 Nf3 d6 d4 exd4 Nxd4 c5 Nf3 Bg4</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Kg7 Nxf6 Rxf6 Rxf6 Kxf6 g4</div>
+      
+      
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap +111 (1558 vs 1669)</span><span class="kf">Endgame from move 18</span><span class="kf">29 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1158</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4499,8 +4730,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1553 · 26 moves · Checkmate
         · <span class="up">+5 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 d5 e3 Nc6 c4 Nf6 cxd5 Nxd5 e4 Nf6</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Bc5+ Kf1 Rd8 Bxb7+ Kb8 Rxd8#</div>
+      
+      <div class="uniq"><b>What made it different</b>Finished by checkmate on move 26 — you converted rather than letting it drift.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -45 (1553 vs 1508)</span><span class="kf">Endgame from move 20</span><span class="kf">26 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1153</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4522,8 +4766,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1548 · 43 moves · Time Out
         · <span class="up">+5 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 d5 c4 c6 Nc3 e6 Nf3 Bb4 e3 Bxc3+</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Rb5 Rc1+ Kh2 Kh6 Rxa5 Rfc6</div>
+      
+      <div class="uniq"><b>What made it different</b>Decided on the clock, not the board — the position was still playable when time ran out.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -40 (1548 vs 1508)</span><span class="kf">Endgame from move 33</span><span class="kf">43 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1148</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4545,8 +4802,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1554 · 40 moves · Checkmate
         · <span class="dn">-6 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 e6 e4 d5 e5 c5 c3 Nc6 Bb5 Qb6</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Kf3 c2 Kg4 R2b4+ Kh5 g6#</div>
+      
+      
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -13 (1554 vs 1541)</span><span class="kf">Endgame from move 24</span><span class="kf">40 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1154</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4568,8 +4838,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         · me 1549 · 19 moves · Resignation
         · <span class="up">+5 pts</span>
       </div>
-      <div class="mv"><span style="color:#3A3E44">OPENING </span>d4 d6 e4 Nf6 Bd3 Nbd7 Nf3 e5 d5 Be7</div>
-      <div class="mv"><span style="color:#3A3E44">FINAL </span>Qxe7 h4 Nxg3 fxg3 Rxh4 gxh4</div>
+      
+      <div class="uniq"><b>What made it different</b>Over in 19 moves — decided in the opening, so the opening is what to study.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap -41 (1549 vs 1508)</span><span class="kf">Endgame from move 19</span><span class="kf">19 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1149</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
       
     </div>
     
@@ -4582,45 +4865,45 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="trend">
       
       <div>
-        <div class="bar" style="--h:51px;--d:0.0s;background:var(--up)"></div>
-        <div class="lb">07/22</div>
-        <div class="lb" style="color:var(--muted)">73%</div>
-      </div>
-      
-      <div>
-        <div class="bar" style="--h:36px;--d:0.07s;background:var(--gold)"></div>
+        <div class="bar" style="--h:36px;--d:0.0s;background:var(--gold)"></div>
         <div class="lb">07/23</div>
         <div class="lb" style="color:var(--muted)">52%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:23px;--d:0.14s;background:var(--down)"></div>
+        <div class="bar" style="--h:23px;--d:0.07s;background:var(--down)"></div>
         <div class="lb">07/24</div>
         <div class="lb" style="color:var(--muted)">33%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:35px;--d:0.21000000000000002s;background:var(--gold)"></div>
+        <div class="bar" style="--h:35px;--d:0.14s;background:var(--gold)"></div>
         <div class="lb">07/26</div>
         <div class="lb" style="color:var(--muted)">50%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:31px;--d:0.28s;background:var(--gold)"></div>
+        <div class="bar" style="--h:31px;--d:0.21000000000000002s;background:var(--gold)"></div>
         <div class="lb">07/27</div>
         <div class="lb" style="color:var(--muted)">45%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:46px;--d:0.35000000000000003s;background:var(--up)"></div>
+        <div class="bar" style="--h:46px;--d:0.28s;background:var(--up)"></div>
         <div class="lb">07/28</div>
         <div class="lb" style="color:var(--muted)">67%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:42px;--d:0.42000000000000004s;background:var(--up)"></div>
+        <div class="bar" style="--h:42px;--d:0.35000000000000003s;background:var(--up)"></div>
         <div class="lb">07/29</div>
         <div class="lb" style="color:var(--muted)">60%</div>
+      </div>
+      
+      <div>
+        <div class="bar" style="--h:35px;--d:0.42000000000000004s;background:var(--gold)"></div>
+        <div class="lb">07/30</div>
+        <div class="lb" style="color:var(--muted)">50%</div>
       </div>
       
     </div>
@@ -4641,10 +4924,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1816 · 🔴 stretch</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Middlegame · Short · Trapped Piece</p>
-      <div class="q">💡 Calculate 3 moves deep before touching a piece.</div>
-      <a href="https://lichess.org/training/bNE9X" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+      <h3>Rating 1909 · 🔴 stretch</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Opening · Crushing · Fork</p>
+      <div class="q">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
+      <a href="https://lichess.org/training/YxGsl" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
     </div>
     
   </div>
@@ -4662,7 +4945,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Thursday, July 30 2026 · 09:10 IST<br>
+      Thursday, July 30 2026 · 20:42 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
