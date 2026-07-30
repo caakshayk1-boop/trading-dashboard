@@ -1507,876 +1507,1108 @@ TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090A">
 <title>THE DAILY SIGNAL — {{ date_str }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#08090b;--surface:#0f1014;--border:#1c1e26;--accent:#f97316;--gold:#e8c547;
-  --red:#ef4444;--green:#22c55e;--blue:#3b82f6;--purple:#9b7fe8;--text:#e4e4e4;--muted:#666}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Georgia',serif;font-size:14px;line-height:1.65}
-a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
-.up{color:var(--green)} .dn{color:var(--red)}
-
-.sticky-header{position:sticky;top:0;z-index:200;background:#060709}
-.masthead{border-bottom:1px solid var(--border);padding:8px 20px;text-align:center;background:#060709;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.paper-name{font-size:22px;font-weight:900;letter-spacing:4px;color:var(--accent);line-height:1;font-family:sans-serif;white-space:nowrap}
-.paper-sub{display:none}
-.paper-meta{display:flex;gap:16px;font-size:10px;color:var(--muted);justify-content:flex-end;flex:1;
-  border-top:1px solid var(--border);padding-top:8px;font-family:monospace}
-
-.nav{display:flex;overflow-x:auto;background:#0a0b0e;border-bottom:1px solid var(--border)}
-.nav a{padding:9px 13px;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;
-  white-space:nowrap;border-right:1px solid var(--border)}
-.nav a:hover{color:var(--accent);background:var(--surface);text-decoration:none}
-
-.ticker{display:flex;overflow-x:auto;background:#060709;border-bottom:1px solid var(--border);padding:7px 0}
-.t-item{display:flex;gap:6px;align-items:center;padding:0 14px;border-right:1px solid #111;
-  white-space:nowrap;font-size:11px;font-family:monospace}
-.t-name{color:var(--muted);font-size:9px}
-
-.main{max-width:1200px;margin:0 auto;padding:0 14px}
-.section{margin:24px 0;padding-top:16px;border-top:2px solid var(--border)}
-.label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);
-  font-family:sans-serif;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-weight:700}
-.label::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* WEATHER */
-.weather-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:700px){.weather-grid{grid-template-columns:1fr}}
-.wx-card{background:var(--surface);border:1px solid var(--border);padding:16px;position:relative}
-.wx-city{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text);font-family:sans-serif}
-.wx-country{font-size:9px;color:var(--muted);letter-spacing:1px}
-.wx-emoji{font-size:36px;margin:8px 0 4px}
-.wx-temp{font-size:28px;font-weight:700;font-family:monospace;color:var(--accent)}
-.wx-cond{font-size:11px;color:var(--muted);margin-bottom:8px}
-.wx-meta{display:flex;gap:12px;font-size:10px;font-family:monospace;color:#555;flex-wrap:wrap}
-.wx-rain{display:inline-block;padding:3px 8px;font-size:10px;font-weight:700;font-family:sans-serif;
-  margin-top:8px;border-radius:2px}
-.wx-rain.hi{background:#ef444422;color:var(--red);border:1px solid #ef444433}
-.wx-rain.lo{background:#22c55e22;color:var(--green);border:1px solid #22c55e33}
-.wx-range{font-size:10px;color:var(--muted);margin-top:4px;font-family:monospace}
-
-/* NEWS */
-.news-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-@media(max-width:900px){.news-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:580px){.news-grid{grid-template-columns:1fr}}
-.ncard{border:1px solid var(--border);padding:14px;background:var(--surface)}
-.ncard .src{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;font-family:sans-serif}
-.ncard h3{font-size:13px;font-weight:700;line-height:1.4;margin-bottom:7px}
-.ncard p{font-size:11px;color:var(--muted);line-height:1.5}
-.ncard .ts{font-size:9px;color:#333;margin-top:7px;font-family:monospace}
-.lead{grid-column:1/-1;display:grid;grid-template-columns:3fr 2fr;gap:20px;border:1px solid #2a2214;background:#0b0a07}
-@media(max-width:640px){.lead{grid-template-columns:1fr}}
-.lead-main{padding:16px}
-.lead-side{padding:16px;border-left:1px solid var(--border)}
-.lead h2{font-size:20px;line-height:1.3;margin-bottom:10px}
-
-/* LICHESS */
-.chess-game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:12px}
-.game-card{background:var(--surface);border:1px solid var(--border);padding:14px;position:relative}
-.game-card.win{border-left:3px solid var(--green)}
-.game-card.loss{border-left:3px solid var(--red)}
-.game-card.draw{border-left:3px solid var(--muted)}
-.game-result{font-size:18px;font-weight:900;font-family:monospace}
-.game-result.win{color:var(--green)} .game-result.loss{color:var(--red)} .game-result.draw{color:var(--muted)}
-.game-meta{font-size:10px;color:var(--muted);font-family:monospace;margin:4px 0}
-.game-opening{font-size:11px;color:var(--gold);margin:5px 0;font-weight:700}
-.game-moves{font-size:10px;color:#555;font-family:monospace;margin-top:4px;line-height:1.5}
-.game-analysis{font-size:11px;color:#aaa;font-style:italic;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.lichess-summary{display:flex;gap:20px;padding:14px;background:var(--surface);border:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap;align-items:center}
-.ls-stat{text-align:center}
-.ls-num{font-size:28px;font-weight:900;font-family:monospace}
-.ls-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:sans-serif}
-.chess-game-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.game-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #555;padding:14px}
-.game-card.win{border-left-color:var(--green)}
-.game-card.loss{border-left-color:var(--red)}
-.game-card.draw{border-left-color:var(--muted)}
-.game-opening{font-size:12px;color:#ddd;margin-bottom:4px}
-.game-meta{font-size:11px;color:var(--muted)}
-.game-moves{font-size:10px;color:#aaa;overflow-x:auto;white-space:nowrap}
-.game-analysis{margin-top:8px;padding:8px 10px;background:#0d1117;border-left:3px solid var(--accent);font-size:11px;color:#ccc;line-height:1.6}
-
-/* WISDOM / CHESS / CFO */
-.wisdom-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px}
-.wisdom-title{font-size:13px;font-weight:700;color:var(--green);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
-.wisdom-body{font-size:13px;line-height:1.8;color:#ccc}
-.chess-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);padding:20px}
-.chess-title{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
-.chess-body{font-size:13px;line-height:1.8;color:#ccc}
-.cfo-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);padding:20px}
-.cfo-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px;font-family:sans-serif;text-transform:uppercase}
-.cfo-body{font-size:13px;line-height:1.8;color:#ccc}
-.alert-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.af-btn{padding:4px 12px;font-size:9px;letter-spacing:1px;text-transform:uppercase;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:monospace}
-.af-btn.active{border-color:var(--accent);color:var(--accent)}
-.alert-tbl{width:100%;border-collapse:collapse;font-size:11px}
-.alert-tbl th{text-align:left;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;border-bottom:1px solid var(--border)}
-.alert-tbl td{padding:7px 8px;border-bottom:1px solid #1a1c1f;vertical-align:middle}
-.alert-tbl tr:hover td{background:var(--surface)}
-.badge{display:inline-block;padding:2px 7px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:2px}
-.badge-win{background:#064e3b;color:#34d399}
-.badge-loss{background:#450a0a;color:#f87171}
-.badge-open{background:#1e3a5f;color:#60a5fa}
-.badge-cancelled{background:#1c1c1c;color:#555}
-.alert-sym{font-weight:700;font-family:monospace;color:#e2e8f0}
-.alert-buy{color:var(--green)}
-.alert-sell{color:var(--red)}
-.alert-stats{display:flex;gap:20px;margin-bottom:14px;padding:12px;background:var(--surface);border:1px solid var(--border)}
-.ast{text-align:center}
-.ast-num{font-size:18px;font-weight:700;font-family:monospace}
-.ast-label{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-.book-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid #c084fc;padding:20px}
-.book-meta{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c084fc;font-family:sans-serif;margin-bottom:4px}
-.book-title{font-size:15px;font-weight:700;color:#e9d5ff;margin-bottom:12px;line-height:1.4}
-.book-body{font-size:13px;line-height:1.9;color:#ccc;margin-bottom:16px}
-.book-quote{font-size:13px;font-style:italic;color:#c084fc;border-left:3px solid #c084fc;padding-left:12px;margin-bottom:16px}
-.book-action{background:#1e1333;border:1px solid #6d28d9;border-radius:6px;padding:14px;font-size:12px;color:#ddd;line-height:1.7}
-.book-action strong{color:#c084fc;display:block;margin-bottom:4px;font-size:11px;letter-spacing:1px;text-transform:uppercase}
-
-/* MARKETS */
-.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-.mkt-card{background:var(--surface);border:1px solid var(--border);padding:12px}
-.mkt-card.u{border-left:2px solid var(--green)} .mkt-card.d{border-left:2px solid var(--red)}
-.mkt-name{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:sans-serif}
-.mkt-price{font-size:18px;font-weight:700;font-family:monospace;margin:3px 0}
-.mkt-chg{font-size:13px;font-weight:700;font-family:monospace}
-
-/* QUOTE */
-.quote-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold);
-  padding:24px;text-align:center}
-.quote-text{font-size:18px;font-style:italic;line-height:1.6;color:var(--text);margin-bottom:14px;max-width:800px;margin-left:auto;margin-right:auto}
-.quote-name{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-family:sans-serif;font-weight:700}
-.quote-num{font-size:9px;color:var(--muted);margin-top:4px;font-family:monospace}
-
-/* LESSON */
-.lesson-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--blue);padding:20px}
-.lesson-tradition{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);font-family:sans-serif;font-weight:700;margin-bottom:8px}
-.lesson-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:8px;font-style:italic}
-.lesson-source{font-size:10px;color:var(--muted);font-family:monospace}
-
-/* CASE STUDY */
-.case-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--purple);padding:20px}
-.case-title{font-size:14px;font-weight:700;color:var(--purple);margin-bottom:10px;line-height:1.4}
-.case-story{font-size:13px;line-height:1.7;color:#ccc;margin-bottom:12px}
-.case-lesson{background:#0d0e12;border:1px solid var(--border);padding:12px;font-size:12px;color:var(--gold);line-height:1.6}
-.case-lesson::before{content:'💡 Lesson: ';font-weight:700}
-
-/* PICKS */
-.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.pick-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);padding:14px}
-.pick-sym{font-size:17px;font-weight:900;font-family:monospace;letter-spacing:1px}
-.pick-price{font-size:22px;font-weight:700;font-family:monospace;margin:4px 0}
-.pick-thesis{font-size:11px;color:#aaa;margin:8px 0;line-height:1.5;font-style:italic}
-.pick-tgt{font-size:11px;padding-top:8px;border-top:1px solid var(--border);margin-top:8px}
-.score-badge{display:inline-block;padding:2px 7px;font-size:9px;letter-spacing:1px;border-radius:2px;
-  background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25);font-family:sans-serif}
-
-/* TRACKER */
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th{background:#0a0b0e;color:var(--muted);font-size:9px;letter-spacing:1px;text-transform:uppercase;
-  padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
-.tbl td{padding:9px 10px;border-bottom:1px solid #111;vertical-align:middle}
-.tbl tr:hover td{background:#0f1014}
-.pnl-u{color:var(--green);font-weight:700} .pnl-d{color:var(--red);font-weight:700}
-.overflow{overflow-x:auto}
-
-/* TIPS */
-.tip-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:16px}
-.tip-card h3{color:var(--accent);font-size:14px;margin-bottom:8px}
-.tip-card p{font-size:13px;line-height:1.7}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:640px){.two{grid-template-columns:1fr}}
-
-/* ── MOBILE ─────────────────────────────────────────────── */
-@media(max-width:600px){
-  /* masthead */
-  .masthead{flex-direction:column;align-items:flex-start;padding:8px 12px;gap:6px}
-  .paper-name{font-size:17px;letter-spacing:2px}
-  .paper-meta{border-top:none;padding-top:0;font-size:9px;gap:8px}
-
-  /* nav: smaller text, hide less important items */
-  .nav a{padding:8px 10px;font-size:9px;letter-spacing:0.5px}
-
-  /* main padding */
-  .main{padding:0 8px}
-  .section{margin:16px 0;padding-top:12px}
-
-  /* markets: 2 columns on mobile */
-  .mkt-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .mkt-price{font-size:15px}
-
-  /* quote */
-  .quote-text{font-size:14px}
-  .quote-card{padding:16px}
-
-  /* lichess summary stats: 3 per row */
-  .lichess-summary{gap:10px;padding:10px}
-  .ls-num{font-size:20px}
-
-  /* chess game cards: full width */
-  .chess-game-grid{grid-template-columns:1fr}
-
-  /* alert table: scroll container + hide less critical columns */
-  .alert-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .alert-tbl{font-size:10px;min-width:520px}
-  .alert-stats{gap:10px;padding:10px;flex-wrap:wrap}
-  .ast-num{font-size:14px}
-
-  /* alert filters wrap */
-  .alert-filters{gap:6px}
-  .af-btn{padding:4px 8px;font-size:8px}
-
-  /* picks grid: 2 cols */
-  .pick-grid{grid-template-columns:repeat(2,1fr);gap:8px}
-  .pick-price{font-size:18px}
-
-  /* tracker table scroll */
-  .overflow{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .tbl{font-size:11px;min-width:480px}
-
-  /* book/wisdom/case cards */
-  .book-card,.wisdom-card,.chess-card,.cfo-card,.case-card,.lesson-card{padding:14px}
-  .quote-text{font-size:14px}
-  .book-body,.wisdom-body,.chess-body,.cfo-body,.case-story{font-size:12px}
-
-  /* weather: already 1-col at 700px */
-  .wx-card{padding:12px}
-  .wx-temp{font-size:22px}
-  .wx-emoji{font-size:28px}
-
-  /* tip cards */
-  .tip-card{padding:12px}
-  .tip-card p{font-size:12px}
-
-  /* ticker strip */
-  .ticker{padding:5px 0}
-  .t-item{padding:0 10px;font-size:10px}
-
-  /* section label smaller */
-  .label{font-size:8px;letter-spacing:2px}
+/* ═══════════════════ TOKENS ═══════════════════ */
+:root{
+  --bg:#08090A; --bg2:#0B0C0E; --surface:#121316; --surface2:#17181C;
+  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.15);
+  --lime:#B8EF43; --lime-soft:rgba(184,239,67,.12); --lime-line:rgba(184,239,67,.3);
+  --text:#F0F0F0; --muted:#8A9099; --dim:#5A6068;
+  --up:#3DDC97; --down:#FF5C5C; --gold:#E8C547; --blue:#6AA8FF; --violet:#A78BFA;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --gut:clamp(16px,4vw,40px);
 }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:120px;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;
+  line-height:1.6;font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.up{color:var(--up)} .dn{color:var(--down)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+::selection{background:var(--lime);color:#000}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#232529;border-radius:9px}
+::-webkit-scrollbar-thumb:hover{background:#33363c}
 
-/* FORMS */
-.form-box{background:var(--surface);border:1px solid var(--border);padding:15px;margin-top:14px}
-.form-box h4{color:var(--accent);font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
-.frow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:7px}
-.frow input{background:#060709;border:1px solid var(--border);color:var(--text);padding:6px 10px;font-size:12px;flex:1;min-width:100px}
-.frow input:focus{outline:none;border-color:var(--accent)}
-.btn{background:var(--accent);color:#000;border:none;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:1px}
-.btn-exit{background:transparent;color:var(--red);border:1px solid var(--red);padding:3px 9px;font-size:10px;cursor:pointer}
-.btn-obs{background:transparent;color:var(--purple);border:1px solid var(--purple);padding:3px 9px;font-size:9px;cursor:pointer;letter-spacing:1px}
-.footer{border-top:2px double var(--border);padding:20px;text-align:center;color:var(--muted);font-size:11px;margin-top:40px}
+/* ═══════════════════ TEXTURE + CHROME ═══════════════════ */
+.grain{position:fixed;inset:0;z-index:999;pointer-events:none;opacity:.04;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.vgrid{position:fixed;inset:0;z-index:0;pointer-events:none;max-width:1400px;margin:0 auto;
+  background-image:linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:calc(100% / 6) 100%;opacity:.55;}
+@media(max-width:900px){.vgrid{background-size:50% 100%;}}
+.progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--lime);z-index:1000;
+  box-shadow:0 0 12px var(--lime);transition:width .1s linear;}
+
+/* ═══════════════════ HEADER ═══════════════════ */
+.topbar{position:sticky;top:0;z-index:300;background:rgba(8,9,10,.82);
+  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
+  border-bottom:1px solid var(--line);}
+.topbar-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);height:60px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px;}
+.brand{display:flex;align-items:baseline;gap:9px;font-weight:700;font-size:17px;letter-spacing:-.4px;white-space:nowrap;}
+.brand b{color:var(--lime);font-weight:800}
+.brand .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);align-self:center;
+  animation:pulse 2.4s var(--ease) infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.stamp{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10.5px;
+  color:var(--muted);letter-spacing:.4px;text-transform:uppercase;}
+.stamp .live{color:var(--lime);display:inline-flex;align-items:center;gap:6px}
+.stamp .live i{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:pulse 1.8s infinite}
+@media(max-width:720px){.stamp span.d{display:none}}
+
+/* ═══════════════════ NAV ═══════════════════ */
+.nav{position:sticky;top:60px;z-index:290;background:rgba(8,9,10,.9);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
+.nav-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);display:flex;gap:2px;
+  overflow-x:auto;scrollbar-width:none;}
+.nav-in::-webkit-scrollbar{display:none}
+.nav a{position:relative;padding:11px 13px;font-size:11px;font-weight:500;letter-spacing:1.1px;
+  text-transform:uppercase;color:var(--dim);white-space:nowrap;transition:color .25s var(--ease);}
+.nav a i{font-style:normal;font-family:var(--mono);font-size:9px;color:#33363c;margin-right:5px;transition:color .25s}
+.nav a::after{content:'';position:absolute;left:13px;right:13px;bottom:0;height:2px;background:var(--lime);
+  transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease);}
+.nav a:hover{color:var(--text)}
+.nav a.on{color:var(--lime)}
+.nav a.on i{color:var(--lime)}
+.nav a.on::after{transform:scaleX(1)}
+
+/* ═══════════════════ HERO ═══════════════════ */
+.hero{position:relative;max-width:1400px;margin:0 auto;padding:clamp(48px,9vw,110px) var(--gut) clamp(30px,5vw,56px);
+  overflow:hidden;z-index:2;}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:-1}
+.orb.a{width:min(46vw,520px);aspect-ratio:1;background:rgba(184,239,67,.11);top:-14%;right:-8%;animation:drift 22s ease-in-out infinite;}
+.orb.b{width:min(34vw,380px);aspect-ratio:1;background:rgba(106,168,255,.07);bottom:-20%;left:-6%;animation:drift 28s ease-in-out infinite reverse;}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(-6%,7%)}}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:2.4px;text-transform:uppercase;color:var(--lime);border:1px solid var(--lime-line);
+  background:var(--lime-soft);padding:6px 13px;border-radius:100px;margin-bottom:26px;}
+h1.hl{font-size:clamp(40px,8.2vw,94px);line-height:.94;font-weight:800;letter-spacing:-3px;
+  max-width:15ch;margin-bottom:22px;}
+h1.hl .w{display:inline-block;overflow:hidden;vertical-align:top}
+h1.hl .w>span{display:inline-block;transform:translateY(105%);opacity:0;
+  animation:rise .9s var(--ease) forwards;animation-delay:var(--d,0s);}
+@keyframes rise{to{transform:translateY(0);opacity:1}}
+h1.hl em{font-style:normal;color:var(--lime)}
+.hero-sub{font-size:clamp(15px,1.7vw,19px);color:var(--muted);max-width:52ch;line-height:1.6;
+  opacity:0;animation:fadeUp .8s var(--ease) .7s forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* hero stat rail */
+.statrail{display:flex;flex-wrap:wrap;gap:0;margin-top:clamp(32px,5vw,54px);
+  border-top:1px solid var(--line);opacity:0;animation:fadeUp .8s var(--ease) .9s forwards;}
+.stat{flex:1 1 150px;padding:20px 22px 20px 0;border-right:1px solid var(--line);}
+.stat:last-child{border-right:none}
+.stat .v{font-family:var(--mono);font-size:clamp(26px,3.4vw,40px);font-weight:700;letter-spacing:-1.5px;line-height:1;}
+.stat .k{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-top:9px;font-weight:500;}
+@media(max-width:640px){.stat{flex:1 1 44%;padding:16px 14px 16px 0}}
+
+/* weather chips */
+.wxrail{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;opacity:0;animation:fadeUp .8s var(--ease) 1.05s forwards;}
+.wxchip{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:10px 15px;transition:border-color .3s,transform .3s var(--ease);cursor:default;}
+.wxchip:hover{border-color:var(--line2);transform:translateY(-2px)}
+.wxchip .e{font-size:22px;line-height:1}
+.wxchip .c{font-size:12px;font-weight:600;letter-spacing:.3px}
+.wxchip .t{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--lime)}
+.wxchip .m{font-size:10px;color:var(--dim);font-family:var(--mono)}
+.wxchip.rain{border-color:rgba(106,168,255,.35)}
+.wxchip.rain .t{color:var(--blue)}
+
+/* ═══════════════════ TICKER ═══════════════════ */
+.tickwrap{position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:var(--bg2);overflow:hidden;z-index:2;}
+.tickwrap::before,.tickwrap::after{content:'';position:absolute;top:0;bottom:0;width:90px;z-index:3;pointer-events:none}
+.tickwrap::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent)}
+.tickwrap::after{right:0;background:linear-gradient(270deg,var(--bg2),transparent)}
+.tick{display:flex;width:max-content;animation:marquee 46s linear infinite;}
+.tickwrap:hover .tick{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ti{display:flex;align-items:center;gap:9px;padding:11px 22px;border-right:1px solid var(--line);white-space:nowrap;}
+.ti .n{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);font-weight:500}
+.ti .p{font-family:var(--mono);font-size:13px;font-weight:600}
+.ti .c{font-family:var(--mono);font-size:12px;font-weight:700}
+
+/* ═══════════════════ SECTIONS ═══════════════════ */
+main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
+.sec{padding:clamp(56px,8vw,104px) 0;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:none}
+.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
+.snum{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:2px;margin-bottom:12px;display:block}
+.stitle{font-size:clamp(26px,4.4vw,50px);font-weight:700;letter-spacing:-1.8px;line-height:1}
+.sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
+.slink{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
+  border-bottom:1px solid var(--line2);padding-bottom:3px;transition:color .25s,border-color .25s}
+.slink:hover{color:var(--lime);border-color:var(--lime)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .75s var(--ease),transform .75s var(--ease);
+  transition-delay:var(--d,0s);}
+.rv.in{opacity:1;transform:none}
+
+/* ═══════════════════ CARD PRIMITIVE ═══════════════════ */
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:22px;transition:border-color .35s var(--ease),transform .35s var(--ease),background .35s;}
+.card:hover{border-color:var(--line2);transform:translateY(-3px);background:var(--surface2)}
+.card::before{content:'';position:absolute;top:0;left:22px;right:22px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--lime),transparent);opacity:0;transition:opacity .4s}
+.card:hover::before{opacity:.6}
+.tag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  padding:3px 8px;border-radius:5px;background:var(--lime-soft);color:var(--lime);border:1px solid var(--lime-line)}
+</style>
+<style>
+/* ═══════════════════ 01 MARKETS ═══════════════════ */
+.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.mkt{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:18px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
+.mkt:hover{transform:translateY(-3px);border-color:var(--line2)}
+.mkt::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;transition:width .3s var(--ease)}
+.mkt.u::after{background:var(--up)} .mkt.d::after{background:var(--down)}
+.mkt:hover::after{width:4px}
+.mkt .n{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);font-weight:500}
+.mkt .p{font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:-1px;margin:8px 0 4px}
+.mkt .c{font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
+.spark{position:absolute;right:0;bottom:0;opacity:.13;pointer-events:none}
+@media(max-width:520px){.mkt-grid{grid-template-columns:1fr 1fr;gap:9px}.mkt{padding:14px}.mkt .p{font-size:19px}}
+
+/* ═══════════════════ 02 PICKS ═══════════════════ */
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.pick{position:relative;background:linear-gradient(160deg,var(--surface),#0E0F12);border:1px solid var(--line);
+  border-radius:18px;padding:22px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
+.pick:hover{border-color:var(--lime-line);transform:translateY(-4px)}
+.pick .rank{position:absolute;top:-14px;right:10px;font-family:var(--mono);font-size:64px;font-weight:700;
+  color:rgba(255,255,255,.035);line-height:1;pointer-events:none}
+.pick .sym{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:-.4px}
+.pick .px{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:-1.6px;margin:6px 0 2px}
+.pick .mom{display:flex;gap:12px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
+.pick .mom b{font-weight:600}
+.pick .th{font-size:12.5px;color:#B4BAC2;line-height:1.6;margin:14px 0;font-style:italic;
+  border-left:2px solid var(--line2);padding-left:11px}
+.lvl{display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.lvl>div{flex:1}
+.lvl .k{font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);margin-bottom:3px}
+.lvl .v{font-family:var(--mono);font-size:14px;font-weight:700}
+.scorebar{height:3px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;margin-top:12px}
+.scorebar i{display:block;height:100%;background:linear-gradient(90deg,var(--lime),#7ED321);width:0;
+  transition:width 1.2s var(--ease) .2s;border-radius:3px}
+.rv.in .scorebar i{width:var(--w)}
+
+/* ═══════════════════ 03 SIGNAL LOG ═══════════════════ */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
+.kpi{background:var(--surface);padding:20px 18px}
+.kpi .v{font-family:var(--mono);font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-1.2px;line-height:1}
+.kpi .k{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-top:8px;font-weight:500}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.fbtn{padding:7px 15px;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--line);color:var(--muted);cursor:pointer;border-radius:100px;
+  transition:all .25s var(--ease)}
+.fbtn:hover{border-color:var(--line2);color:var(--text)}
+.fbtn.on{border-color:var(--lime);color:#000;background:var(--lime);font-weight:700}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;-webkit-overflow-scrolling:touch}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
+table.t th{position:sticky;top:0;background:#0E0F12;text-align:left;font-size:9.5px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
+table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+table.t tbody tr{transition:background .2s}
+table.t tbody tr:hover{background:rgba(255,255,255,.025)}
+table.t tbody tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;font-family:var(--mono);font-size:9.5px;
+  font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:100px;white-space:nowrap}
+.badge-win{background:rgba(61,220,151,.12);color:var(--up);border:1px solid rgba(61,220,151,.3)}
+.badge-loss{background:rgba(255,92,92,.1);color:var(--down);border:1px solid rgba(255,92,92,.28)}
+.badge-open{background:rgba(106,168,255,.1);color:var(--blue);border:1px solid rgba(106,168,255,.28)}
+.badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
+.sym{font-family:var(--mono);font-weight:700;color:#E6EAF0;transition:color .2s}
+.sym:hover{color:var(--lime)}
+.mono-dim{font-family:var(--mono);color:var(--dim);font-size:11.5px}
+.pnl-u{color:var(--up);font-weight:700;font-family:var(--mono)}
+.pnl-d{color:var(--down);font-weight:700;font-family:var(--mono)}
+
+/* ═══════════════════ 04 PORTFOLIO ═══════════════════ */
+.formbox{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:16px}
+.formbox h4{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--lime);margin-bottom:14px;font-weight:600}
+.frow{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:9px}
+.frow input{background:var(--bg);border:1px solid var(--line);color:var(--text);padding:10px 13px;
+  font-size:13px;flex:1;min-width:130px;border-radius:9px;font-family:var(--sans);transition:border-color .25s}
+.frow input::placeholder{color:var(--dim)}
+.frow input:focus{outline:none;border-color:var(--lime)}
+.btn{background:var(--lime);color:#000;border:none;padding:10px 20px;font-size:11.5px;font-weight:700;
+  cursor:pointer;letter-spacing:1.2px;border-radius:100px;font-family:var(--sans);text-transform:uppercase;
+  transition:transform .25s var(--ease),box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(184,239,67,.25)}
+.btn-sm{padding:6px 13px;font-size:10px}
+.btn-gh{background:transparent;color:var(--muted);border:1px solid var(--line);padding:6px 13px;
+  font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:100px;
+  text-transform:uppercase;transition:all .25s}
+.btn-gh:hover{border-color:var(--down);color:var(--down)}
+.btn-gh.v:hover{border-color:var(--violet);color:var(--violet)}
+
+/* ═══════════════════ 05 WORLD ═══════════════════ */
+.lead{display:grid;grid-template-columns:1.55fr 1fr;gap:0;border:1px solid var(--line);border-radius:18px;
+  overflow:hidden;margin-bottom:14px;background:var(--surface)}
+@media(max-width:820px){.lead{grid-template-columns:1fr}}
+.lead-m{padding:clamp(22px,3.4vw,38px)}
+.lead-m h2{font-size:clamp(21px,3vw,34px);font-weight:700;line-height:1.14;letter-spacing:-1.1px;margin:12px 0 14px}
+.lead-m h2 a{transition:color .25s}
+.lead-m h2 a:hover{color:var(--lime)}
+.lead-m p{font-size:14.5px;color:var(--muted);line-height:1.7}
+.lead-s{padding:clamp(20px,2.6vw,30px);border-left:1px solid var(--line);background:var(--bg2)}
+@media(max-width:820px){.lead-s{border-left:none;border-top:1px solid var(--line)}}
+.mini{padding:13px 0;border-bottom:1px solid var(--line)}
+.mini:last-child{border-bottom:none;padding-bottom:0}
+.mini .s{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--lime);display:block;margin-bottom:5px}
+.mini a{font-size:13.5px;font-weight:600;line-height:1.42;transition:color .25s}
+.mini a:hover{color:var(--lime)}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.ncard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;
+  transition:border-color .35s,transform .35s var(--ease)}
+.ncard:hover{border-color:var(--line2);transform:translateY(-3px)}
+.ncard .s{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--lime)}
+.ncard h3{font-size:15px;font-weight:600;line-height:1.4;margin:9px 0 9px;letter-spacing:-.2px}
+.ncard h3 a{transition:color .25s} .ncard h3 a:hover{color:var(--lime)}
+.ncard p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.ncard .ts{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+
+/* ═══════════════════ 06 THE DESK (tabs) ═══════════════════ */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.tab{padding:9px 17px;font-size:11.5px;font-weight:500;letter-spacing:.8px;background:transparent;
+  border:1px solid var(--line);color:var(--muted);cursor:pointer;border-radius:100px;
+  font-family:var(--sans);transition:all .28s var(--ease);white-space:nowrap}
+.tab:hover{border-color:var(--line2);color:var(--text)}
+.tab.on{background:var(--lime);border-color:var(--lime);color:#000;font-weight:700}
+.pane{display:none;animation:panein .5s var(--ease)}
+.pane.on{display:block}
+@keyframes panein{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.essay{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(22px,3.4vw,38px);
+  position:relative;overflow:hidden}
+.essay::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,var(--lime))}
+.essay h3{font-size:clamp(19px,2.6vw,27px);font-weight:700;letter-spacing:-.8px;line-height:1.25;
+  margin-bottom:16px;color:var(--ac,var(--lime))}
+.essay p{font-size:14.5px;line-height:1.85;color:#C4CAD2}
+.essay .q{font-size:15px;font-style:italic;color:var(--ac,var(--lime));border-left:2px solid var(--ac,var(--lime));
+  padding-left:15px;margin:20px 0;line-height:1.7}
+.essay .act{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+  margin-top:20px;font-size:13.5px;line-height:1.7;color:#C4CAD2}
+.essay .act b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--ac,var(--lime));margin-bottom:7px}
+.essay .meta{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+
+/* ═══════════════════ 07 THE MIND ═══════════════════ */
+.quote-hero{text-align:center;padding:clamp(34px,6vw,70px) clamp(20px,4vw,50px);
+  background:radial-gradient(ellipse at 50% 0%,rgba(232,197,71,.07),transparent 65%),var(--surface);
+  border:1px solid var(--line);border-radius:20px;position:relative;overflow:hidden}
+.quote-hero .mark{position:absolute;top:-30px;left:26px;font-size:170px;color:rgba(255,255,255,.028);
+  font-family:Georgia,serif;line-height:1;pointer-events:none}
+.quote-hero blockquote{font-size:clamp(19px,3vw,34px);font-weight:500;line-height:1.35;letter-spacing:-1px;
+  max-width:20ch;margin:0 auto 22px;position:relative}
+.quote-hero cite{font-family:var(--mono);font-size:11px;letter-spacing:2.6px;text-transform:uppercase;
+  color:var(--gold);font-style:normal;font-weight:600}
+.quote-hero .idx{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px}
+
+/* ═══════════════════ 08 CHESS ═══════════════════ */
+.chess-kpi{display:flex;gap:0;flex-wrap:wrap;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:18px}
+.ck{flex:1 1 90px;padding:18px 16px;border-right:1px solid var(--line);background:var(--surface)}
+.ck:last-child{border-right:none}
+.ck .v{font-family:var(--mono);font-size:clamp(20px,2.6vw,28px);font-weight:700;letter-spacing:-1px;line-height:1}
+.ck .k{font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-top:7px}
+.verdict{padding:18px 20px;background:rgba(61,220,151,.05);border:1px solid rgba(61,220,151,.22);
+  border-radius:14px;font-size:14px;line-height:1.75;color:#C4CAD2;margin-bottom:18px}
+.verdict b{color:var(--up);font-weight:700}
+.game{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--dim);border-radius:14px;
+  padding:18px;margin-bottom:10px;position:relative;transition:border-color .3s,transform .3s var(--ease)}
+.game:hover{transform:translateX(3px)}
+.game.win{border-left-color:var(--up)} .game.loss{border-left-color:var(--down)} .game.draw{border-left-color:var(--dim)}
+.game .hdr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+.game .res{font-weight:700;font-size:14px}
+.game .meta{font-size:12px;color:var(--muted);line-height:1.6}
+.game .op{font-size:13px;color:#DDE2E8;margin-bottom:6px;font-weight:500}
+.game .mv{font-family:var(--mono);font-size:10.5px;color:var(--dim);overflow-x:auto;white-space:nowrap;margin-top:5px}
+.game .an{margin-top:11px;padding:11px 13px;background:var(--bg);border-radius:10px;border-left:2px solid var(--lime);
+  font-size:12.5px;color:#B4BAC2;line-height:1.7}
+.pill{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;padding:3px 8px;border-radius:100px;
+  background:rgba(255,255,255,.05);color:var(--muted);text-transform:uppercase}
+.trend{display:flex;gap:6px;align-items:flex-end;height:88px;margin-top:12px}
+.trend>div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}
+.trend .bar{width:100%;border-radius:4px 4px 0 0;height:0;transition:height .9s var(--ease) var(--d,0s)}
+.rv.in .trend .bar{height:var(--h)}
+.trend .lb{font-family:var(--mono);font-size:9px;color:var(--dim)}
+
+/* ═══════════════════ FOOTER + FAB ═══════════════════ */
+footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:20px;background:var(--bg2)}
+.foot-in{max-width:1400px;margin:0 auto;padding:clamp(40px,6vw,70px) var(--gut);
+  display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;align-items:flex-end}
+.foot-in h4{font-size:clamp(24px,4vw,42px);font-weight:800;letter-spacing:-1.8px;line-height:1}
+.foot-in h4 b{color:var(--lime)}
+.foot-in .m{font-family:var(--mono);font-size:11px;color:var(--dim);line-height:2;text-align:right}
+@media(max-width:640px){.foot-in .m{text-align:left}}
+.fab{position:fixed;right:20px;bottom:20px;z-index:400;width:46px;height:46px;border-radius:50%;
+  background:var(--lime);color:#000;border:none;cursor:pointer;font-size:17px;display:grid;place-items:center;
+  opacity:0;pointer-events:none;transform:translateY(14px);transition:all .35s var(--ease);
+  box-shadow:0 8px 26px rgba(184,239,67,.3)}
+.fab.on{opacity:1;pointer-events:auto;transform:none}
+.empty{padding:34px 22px;text-align:center;color:var(--dim);font-size:13.5px;background:var(--surface);
+  border:1px dashed var(--line2);border-radius:16px}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  .rv{opacity:1;transform:none}
+  h1.hl .w>span{transform:none;opacity:1}
+  .hero-sub,.statrail,.wxrail{opacity:1}
+}
 </style>
 </head>
-<body>
 
-<div class="sticky-header">
-<div class="masthead">
-  <div class="paper-name">THE DAILY SIGNAL</div>
-  <div class="paper-meta">
-    <span>{{ date_str }}</span>
-    <span>{{ updated_at }} IST · <a href="javascript:window.location.reload()" style="color:var(--muted)">↻</a></span>
+<body>
+<div class="grain"></div>
+<div class="vgrid"></div>
+<div class="progress" id="prog"></div>
+
+{% set wins   = alerts | selectattr("badge","eq","win")  | list | length %}
+{% set losses = alerts | selectattr("badge","eq","loss") | list | length %}
+{% set opens  = alerts | selectattr("badge","eq","open") | list | length %}
+{% set closed = wins + losses %}
+{% set winrate = ((wins / closed * 100) | round(0) | int) if closed > 0 else 0 %}
+{% set advancers = markets | selectattr("up") | list | length %}
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="topbar">
+  <div class="topbar-in">
+    <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
+    <div class="stamp">
+      <span class="d">{{ date_str }}</span>
+      <span class="live"><i></i>{{ updated_at }} IST</span>
+    </div>
   </div>
-</div>
+</header>
 
 <nav class="nav">
-  <a href="#weather">🌤 Weather</a>
-  <a href="#news">🌍 World</a>
-  <a href="#markets">📊 Markets</a>
-  <a href="#lichess">♟ My Games</a>
-  <a href="#quote">💬 Quote</a>
-  <a href="#lesson">🌏 Lesson</a>
-  <a href="#wisdom">🧘 Wisdom</a>
-  <a href="#chess">♟ Chess</a>
-  <a href="#case">📚 Case Study</a>
-  <a href="#fpna">🎓 FP&A</a>
-  <a href="#cfo">🏆 FC→CFO</a>
-  <a href="#book">📚 Books</a>
-  <a href="#alerts">🔔 Alerts</a>
-  <a href="#picks">🔥 Top 5</a>
-  <a href="#tracker">📈 Tracker</a>
-  <a href="#hacks">💰 Money</a>
-</nav>
-</div><!-- /sticky-header -->
-
-<div class="ticker">
-  {% for m in markets %}
-  <div class="t-item">
-    <span class="t-name">{{ m.name }}</span>
-    <span>{{ m.price }}</span>
-    <span class="{{ 'up' if m.up else 'dn' }}">{{ m.change }}</span>
+  <div class="nav-in" id="navin">
+    <a href="#markets"><i>01</i>Markets</a>
+    <a href="#picks"><i>02</i>Trade Ideas</a>
+    <a href="#alerts"><i>03</i>Signal Log</a>
+    <a href="#tracker"><i>04</i>Portfolio</a>
+    <a href="#world"><i>05</i>World</a>
+    <a href="#desk"><i>06</i>The Desk</a>
+    <a href="#mind"><i>07</i>The Mind</a>
+    <a href="#chess"><i>08</i>Chess</a>
   </div>
-  {% endfor %}
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero" id="top">
+  <div class="orb a"></div><div class="orb b"></div>
+
+  <div class="eyebrow">◆ Compiled 6:00 AM IST · {{ date_str }}</div>
+
+  <h1 class="hl">
+    <span class="w"><span style="--d:.05s">Numbers</span></span>
+    <span class="w"><span style="--d:.13s">first.</span></span><br>
+    <span class="w"><span style="--d:.24s"><em>Noise</em></span></span>
+    <span class="w"><span style="--d:.32s"><em>last.</em></span></span>
+  </h1>
+
+  <p class="hero-sub">Markets, live signals, the world, and the work — one page, rebuilt every
+    morning before the open. No feeds. No scroll trap. Just what moved and what to do about it.</p>
+
+  <div class="statrail">
+    <div class="stat">
+      <div class="v" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div>
+      <div class="k">Signal Win Rate</div>
+    </div>
+    <div class="stat">
+      <div class="v" style="color:var(--blue)" data-count="{{ opens }}">0</div>
+      <div class="k">Open Positions</div>
+    </div>
+    <div class="stat">
+      <div class="v" data-count="{{ alerts|length }}">0</div>
+      <div class="k">Signals Logged</div>
+    </div>
+    <div class="stat">
+      <div class="v" style="color:{{ 'var(--up)' if advancers >= (markets|length / 2) else 'var(--down)' }}"
+           data-count="{{ advancers }}" data-total="{{ markets|length }}">0</div>
+      <div class="k">Markets Advancing</div>
+    </div>
+  </div>
+
+  {% if weather %}
+  <div class="wxrail">
+    {% for w in weather %}
+    <div class="wxchip {{ 'rain' if w.rain_alert else '' }}" title="Feels {{ w.feels }}°C · {{ w.humidity }}% humidity · {{ w.wind }} km/h wind">
+      <span class="e">{{ w.emoji }}</span>
+      <span>
+        <span class="c">{{ w.city }}</span>
+        <span class="m"> ↑{{ w.temp_max }}° ↓{{ w.temp_min }}° · 🌧 {{ w.rain_pct }}%{% if w.rain_alert %} · umbrella{% endif %}</span>
+      </span>
+      <span class="t">{{ w.temp }}°</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<!-- ══════════ TICKER ══════════ -->
+<div class="tickwrap">
+  <div class="tick">
+    {% for dup in [1,2] %}{% for m in markets %}
+    <div class="ti">
+      <span class="n">{{ m.name }}</span>
+      <span class="p">{{ m.price }}</span>
+      <span class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ m.change }}</span>
+    </div>
+    {% endfor %}{% endfor %}
+  </div>
 </div>
 
-<div class="main">
+<main>
 
-<!-- WEATHER -->
-<section class="section" id="weather">
-  <div class="label">🌤 Weather Today — Bikaner · Kolkata · Kuala Lumpur</div>
-  <div class="weather-grid">
-    {% for w in weather %}
-    <div class="wx-card">
-      <div class="wx-country">{{ w.country }}</div>
-      <div class="wx-city">{{ w.city }}</div>
-      <div class="wx-emoji">{{ w.emoji }}</div>
-      <div class="wx-temp">{{ w.temp }}°C</div>
-      <div class="wx-cond">{{ w.condition }}</div>
-      <div class="wx-range">↑ {{ w.temp_max }}° · ↓ {{ w.temp_min }}°</div>
-      <div class="wx-meta">
-        <span>💧 {{ w.humidity }}%</span>
-        <span>💨 {{ w.wind }} km/h</span>
-        <span>🌡 Feels {{ w.feels }}°C</span>
-      </div>
-      <div class="wx-rain {{ 'hi' if w.rain_alert else 'lo' }}">
-        🌧 Rain chance: {{ w.rain_pct }}%{% if w.rain_alert %} — carry umbrella{% endif %}
-      </div>
+<!-- ══════════ 01 MARKETS ══════════ -->
+<section class="sec" id="markets">
+  <div class="shead rv">
+    <div>
+      <span class="snum">01 / MARKETS</span>
+      <h2 class="stitle">What moved.</h2>
     </div>
-    {% endfor %}
-    {% if not weather %}
-    <p style="color:var(--muted);grid-column:1/-1">Weather loading...</p>
-    {% endif %}
+    <p class="sdesc">{{ advancers }} of {{ markets|length }} tracked instruments are green.
+      Indices, commodities, crypto and FX — refreshed on every build.</p>
   </div>
-</section>
-
-<!-- WORLD NEWS -->
-<section class="section" id="news">
-  <div class="label">🌍 World News — Last 24 Hours</div>
-  <div class="news-grid">
-    {% if news %}
-      {% set lead = news[0] %}
-      <div class="ncard lead">
-        <div class="lead-main">
-          <div class="src">{{ lead.source }} · LEAD</div>
-          <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank" style="color:var(--text)">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
-          <p style="font-size:13px;line-height:1.7;color:#aaa">{{ lead.summary }}</p>
-        </div>
-        <div class="lead-side">
-          {% for item in news[1:6] %}
-          <div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">
-            <div class="src">{{ item.source }}</div>
-            <div style="font-size:12px;font-weight:700;line-height:1.4">
-              {% if item.link %}<a href="{{ item.link }}" target="_blank" style="color:var(--text)">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      {% for item in news[6:15] %}
-      <div class="ncard">
-        <div class="src">{{ item.source }}</div>
-        <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank" style="color:var(--text)">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
-        <p>{{ item.summary[:140] }}</p>
-        <div class="ts">{{ item.published }}</div>
-      </div>
-      {% endfor %}
-    {% else %}
-      <p style="color:var(--muted)">Loading feeds...</p>
-    {% endif %}
-  </div>
-</section>
-
-<!-- LICHESS GAMES -->
-<section class="section" id="lichess">
-  <div class="label">♟ Yesterday's Chess — AKK_010 · Lichess
-    <a href="https://lichess.org/@/AKK_010" target="_blank" style="font-size:9px;color:var(--muted);margin-left:8px">profile →</a>
-  </div>
-
-  {% if lichess_games %}
-  <!-- ── STATS ROW ── -->
-  <div class="lichess-summary">
-    <div class="ls-stat"><div class="ls-num" style="color:var(--green)">{{ lichess_summary.wins }}</div><div class="ls-label">Wins</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--red)">{{ lichess_summary.losses }}</div><div class="ls-label">Losses</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--muted)">{{ lichess_summary.draws }}</div><div class="ls-label">Draws</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--gold)">{{ lichess_summary.pct }}%</div><div class="ls-label">Win Rate</div></div>
-    <div class="ls-stat"><div class="ls-num">{{ lichess_summary.total }}</div><div class="ls-label">Games</div></div>
-    {% if lichess_summary.mode == "full" %}
-    <div class="ls-stat"><div class="ls-num" style="color:var(--accent)">{{ lichess_summary.upsets }}</div><div class="ls-label">Upsets</div></div>
-    <div class="ls-stat"><div class="ls-num" style="color:var(--red)">{{ lichess_summary.collapses }}</div><div class="ls-label">Collapses</div></div>
-    {% endif %}
-  </div>
-
-  <!-- ── AI SESSION VERDICT ── -->
-  {% if lichess_summary.session_summary %}
-  <div style="padding:12px 14px;margin-bottom:14px;background:#0d1a0d;border:1px solid var(--green);border-left:4px solid var(--green);font-size:13px;line-height:1.7;color:#ccc">
-    🤖 <strong style="color:var(--green)">Coach's Verdict</strong><br>{{ lichess_summary.session_summary }}
-  </div>
-  {% else %}
-  <div style="font-size:13px;padding:10px 14px;margin-bottom:14px;background:var(--surface);border-left:3px solid {% if lichess_summary.pct >= 55 %}var(--green){% elif lichess_summary.pct >= 45 %}var(--gold){% else %}var(--red){% endif %}">
-    {{ lichess_summary.icon }}
-    {% if lichess_summary.pct >= 55 %} Good session — W{{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review wins to lock in the patterns.
-    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
-    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before next game. Pattern > volume.{% endif %}
-  </div>
-  {% endif %}
-
-  <!-- ── OPENING INTEL (full mode) ── -->
-  {% if lichess_summary.mode == "full" and (lichess_summary.weak_op or lichess_summary.best_op) %}
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-    {% if lichess_summary.weak_op %}
-    <div style="flex:1;padding:10px 14px;background:#1a0a0a;border:1px solid var(--red)">
-      <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:4px">📚 Study This Opening</div>
-      <div style="font-size:12px;color:#f87171">{{ lichess_summary.weak_op }}</div>
-    </div>
-    {% endif %}
-    {% if lichess_summary.best_op %}
-    <div style="flex:1;padding:10px 14px;background:#0a1a0a;border:1px solid var(--green)">
-      <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--green);margin-bottom:4px">💪 Strongest Opening</div>
-      <div style="font-size:12px;color:#86efac">{{ lichess_summary.best_op }}</div>
-    </div>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  <!-- ── PER-GAME CARDS (full mode) ── -->
-  {% if lichess_summary.mode == "full" %}
-  <div class="chess-game-grid">
-    {% for g in lichess_games %}
-    <div class="game-card {{ g.cls }}" style="position:relative">
-      <!-- badges -->
-      {% if g.is_upset %}<div style="position:absolute;top:8px;right:8px;background:#1e3a5f;color:#60a5fa;font-size:8px;padding:2px 6px;letter-spacing:1px">UPSET ⚡</div>{% endif %}
-      {% if g.is_collapse %}<div style="position:absolute;top:8px;right:8px;background:#450a0a;color:#f87171;font-size:8px;padding:2px 6px;letter-spacing:1px">COLLAPSE ⚠</div>{% endif %}
-      {% if g.is_long %}<div style="position:absolute;top:8px;right:8px;background:#1c1c1c;color:#aaa;font-size:8px;padding:2px 6px;letter-spacing:1px">{{ g.moves }}M EPIC</div>{% endif %}
-
-      <!-- header row -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:16px">{{ g.icon }}</span>
-        <span style="font-weight:700;font-size:13px;color:{% if g.cls == 'win' %}var(--green){% elif g.cls == 'loss' %}var(--red){% else %}var(--muted){% endif %}">{{ g.result }}</span>
-        <span style="font-size:10px;color:var(--muted)">as {{ g.my_side }}</span>
-        <span style="font-size:9px;background:#111;padding:1px 5px;color:var(--muted)">{{ g.speed }}</span>
-        <a href="{{ g.url }}" target="_blank" style="margin-left:auto;font-size:10px;color:var(--accent);font-family:monospace;white-space:nowrap">▶ Review</a>
-      </div>
-
-      <!-- opening -->
-      <div class="game-opening">
-        {% if g.eco %}<span style="color:var(--gold);margin-right:5px;font-weight:700">{{ g.eco }}</span>{% endif %}
-        {{ g.opening }}
-      </div>
-
-      <!-- opponent + rating -->
-      <div class="game-meta">
-        vs <strong style="color:var(--text)">{{ g.opponent }}</strong>
-        <span style="color:var(--muted)">({{ g.opp_rating }})</span>
-        · Me: {{ g.my_rating }}
-        · {{ g.moves }} moves · {{ g.termination }}
-        {% if g.me_diff is not none %}
-        · <span style="color:{% if g.me_diff > 0 %}var(--green){% else %}var(--red){% endif %}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>
-        {% endif %}
-      </div>
-
-      <!-- opening moves -->
-      {% if g.opening_seq %}
-      <div class="game-moves" style="margin-top:6px">
-        <span style="color:var(--muted);font-size:9px">OPENING: </span><code style="font-size:10px">{{ g.opening_seq }}</code>
-      </div>
-      {% endif %}
-
-      <!-- final moves -->
-      {% if g.final_seq %}
-      <div class="game-moves" style="margin-top:4px">
-        <span style="color:var(--muted);font-size:9px">FINAL: </span><code style="font-size:10px">{{ g.final_seq }}</code>
-      </div>
-      {% endif %}
-
-      <!-- AI analysis -->
-      {% if g.analysis %}
-      <div class="game-analysis">💡 {{ g.analysis }}</div>
-      {% endif %}
-    </div>
-    {% endfor %}
-  </div>
-
-  {% else %}
-  <!-- ── ACTIVITY MODE — speed breakdown cards ── -->
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-    {% for g in lichess_games %}
-    <div style="background:var(--surface);border:1px solid var(--border);padding:12px 18px;min-width:140px;flex:1">
-      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">{{ g.speed }}</div>
-      <div style="font-size:22px;font-weight:700;font-family:monospace;color:{% if g.pct >= 55 %}var(--green){% elif g.pct >= 45 %}var(--gold){% else %}var(--red){% endif %}">{{ g.pct }}%</div>
-      <div style="font-size:11px;color:#aaa;margin-top:4px">
-        <span style="color:var(--green)">W{{ g.wins }}</span> ·
-        <span style="color:var(--red)">L{{ g.losses }}</span> ·
-        <span style="color:var(--muted)">D{{ g.draws }}</span> · {{ g.total }} games
-      </div>
-      <a href="{{ g.profile_url }}" target="_blank" style="font-size:9px;color:var(--muted);margin-top:6px;display:block">view on Lichess →</a>
-    </div>
-    {% endfor %}
-  </div>
-  <div style="padding:10px 14px;background:#0d0d0d;border:1px solid #2a2a2a;font-size:11px;color:var(--muted);margin-bottom:14px">
-    ⚡ Add <code style="color:var(--accent)">LICHESS_TOKEN</code> to GitHub secrets for full per-game analysis, openings, key moves & AI coaching.
-    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--accent);margin-left:4px">Create token →</a>
-  </div>
-  {% endif %}
-
-  <!-- ── 7-DAY TREND ── -->
-  {% if lichess_summary.trend %}
-  <div style="margin-bottom:14px">
-    <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">📈 7-Day Win Rate</div>
-    <div style="display:flex;gap:6px;align-items:flex-end;height:70px">
-      {% for t in lichess_summary.trend | reverse %}
-      <div style="flex:1;text-align:center;display:flex;flex-direction:column;justify-content:flex-end">
-        <div style="height:{{ [t.pct * 60 // 100, 3] | max }}px;background:{% if t.pct >= 55 %}var(--green){% elif t.pct >= 45 %}var(--gold){% else %}var(--red){% endif %}"></div>
-        <div style="font-size:8px;color:var(--muted);margin-top:2px">{{ t.day }}</div>
-        <div style="font-size:8px;color:#aaa">{{ t.pct }}%</div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% else %}
-  <div style="padding:16px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:12px;text-align:center">
-    No games played yesterday · <a href="https://lichess.org/@/AKK_010" target="_blank" style="color:var(--accent)">Play on Lichess →</a>
-  </div>
-  {% endif %}
-
-  <!-- ── DAILY PUZZLE ── -->
-  {% if lichess_puzzle %}
-  <div style="margin-top:4px;padding:14px;background:#0d1117;border:1px solid var(--gold)">
-    <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px">🧩 Today's Puzzle</div>
-    <div style="font-size:12px;color:#ddd;margin-bottom:6px">
-      Rating: <strong style="color:var(--gold)">{{ lichess_puzzle.rating }}</strong>
-      {{ lichess_puzzle.level }} · <span style="color:var(--muted)">{{ lichess_puzzle.themes }}</span>
-    </div>
-    <div style="font-size:12px;font-style:italic;color:#aaa;margin-bottom:10px">💡 {{ lichess_puzzle.tip }}</div>
-    <a href="{{ lichess_puzzle.url }}" target="_blank"
-       style="display:inline-block;padding:5px 14px;background:var(--gold);color:#000;font-size:10px;font-weight:700;letter-spacing:1px;text-decoration:none">
-      → SOLVE ON LICHESS
-    </a>
-  </div>
-  {% endif %}
-</section>
-
-<!-- WISDOM: BETTER PERSON · BETTER DAD -->
-<section class="section" id="wisdom">
-  <div class="label">🧘 Daily Wisdom — Better Person · Better Dad · Happy Life · {{ wisdom.index }}/{{ wisdom.total }}</div>
-  <div class="wisdom-card">
-    <div class="wisdom-title">{{ wisdom.title }}</div>
-    <div class="wisdom-body">{{ wisdom.body }}</div>
-  </div>
-</section>
-
-<!-- CHESS TUTOR -->
-<section class="section" id="chess">
-  <div class="label">♟ Chess Tutor — Daily Lesson · {{ chess.index }}/{{ chess.total }}</div>
-  <div class="chess-card">
-    <div class="chess-title">{{ chess.title }}</div>
-    <div class="chess-body">{{ chess.body }}</div>
-    <div style="margin-top:12px;font-size:10px;color:var(--muted);font-family:monospace">
-      Practice on: <a href="https://lichess.org/study" target="_blank">Lichess Study</a> · <a href="https://chess.com/puzzles" target="_blank">Chess.com Puzzles</a>
-    </div>
-  </div>
-</section>
-
-<!-- MARKETS -->
-<section class="section" id="markets">
-  <div class="label">📊 Markets Now</div>
   <div class="mkt-grid">
     {% for m in markets %}
-    <div class="mkt-card {{ 'u' if m.up else 'd' }}">
-      <div class="mkt-name">{{ m.name }}</div>
-      <div class="mkt-price">{{ m.price }}</div>
-      <div class="mkt-chg {{ 'up' if m.up else 'dn' }}">{{ m.change }}</div>
+    <div class="mkt {{ 'u' if m.up else 'd' }} rv" style="--d:{{ loop.index0 * 0.04 }}s">
+      <div class="n">{{ m.name }}</div>
+      <div class="p">{{ m.price }}</div>
+      <div class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ m.change }}</div>
     </div>
     {% endfor %}
+    {% if not markets %}<div class="empty" style="grid-column:1/-1">Market data loading…</div>{% endif %}
   </div>
 </section>
 
-<!-- ENTREPRENEUR QUOTE -->
-<section class="section" id="quote">
-  <div class="label">💬 Entrepreneur Quote · {{ quote.index }}/{{ quote.total }}</div>
-  <div class="quote-card">
-    <div class="quote-text">"{{ quote.quote }}"</div>
-    <div class="quote-name">— {{ quote.name }}</div>
-    <div class="quote-num">Quote {{ quote.index }} of {{ quote.total }} · Rotates daily</div>
-  </div>
-</section>
-
-<!-- WORLD LESSON -->
-<section class="section" id="lesson">
-  <div class="label">🌏 Daily Lesson from the World</div>
-  <div class="lesson-card">
-    <div class="lesson-tradition">{{ lesson.tradition }}</div>
-    <div class="lesson-text">"{{ lesson.lesson }}"</div>
-    <div class="lesson-source">— {{ lesson.source }}</div>
-  </div>
-</section>
-
-<!-- BUSINESS CASE STUDY -->
-<section class="section" id="case">
-  <div class="label">📚 Business Case Study</div>
-  <div class="case-card">
-    <div class="case-title">{{ case.title }}</div>
-    <div class="case-story">{{ case.story }}</div>
-    <div class="case-lesson">{{ case.lesson }}</div>
-  </div>
-</section>
-
-<!-- FP&A LEARN -->
-<section class="section" id="fpna">
-  <div class="label">🎓 FP&A Learn · {{ fpna.index }}/{{ fpna.total }}</div>
-  <div class="two">
-    <div class="tip-card">
-      <h3>{{ fpna.title }}</h3>
-      <p>{{ fpna.body }}</p>
+<!-- ══════════ 02 TRADE IDEAS ══════════ -->
+<section class="sec" id="picks">
+  <div class="shead rv">
+    <div>
+      <span class="snum">02 / CONVICTION</span>
+      <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
-    <div class="tip-card" style="border-left-color:var(--purple)">
-      <h3 style="color:var(--purple)">🇦🇪 Dubai Corner</h3>
-      <p>AED 30K+ stack: CA/ACCA + SAP or Oracle + Power BI + IFRS 9/16.<br><br>
-      Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.<br><br>
-      Keyword tip: Put "IFRS 16 implementation" and "rolling forecast" in your cover letter.</p>
-    </div>
+    <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
+      Target 20–30%. Every idea carries a stop.</p>
   </div>
-</section>
-
-<!-- FC → CFO PATH -->
-<section class="section" id="cfo">
-  <div class="label">🏆 Financial Controller → CFO Path · Practical Guidance · {{ cfo.index }}/{{ cfo.total }}</div>
-  <div class="cfo-card">
-    <div class="cfo-title">{{ cfo.title }}</div>
-    <div class="cfo-body">{{ cfo.body }}</div>
-  </div>
-</section>
-
-<!-- BOOK LESSONS -->
-<section class="section" id="book">
-  <div class="label">📚 Book Library · Daily Lesson · {{ book.index }}/{{ book.total }} · Top Business &amp; Productivity Books</div>
-  <div class="book-card">
-    <div class="book-meta">{{ book.book }} · {{ book.author }}</div>
-    <div class="book-title">{{ book.chapter }}</div>
-    <div class="book-body">{{ book.lesson }}</div>
-    <div class="book-quote">"{{ book.key_quote }}"</div>
-    <div class="book-action"><strong>Today's Action</strong>{{ book.action }}</div>
-  </div>
-</section>
-
-<!-- TOP 5 PICKS -->
-<section class="section" id="picks">
-  <div class="label">🔥 Top 5 Trade Ideas · Global 200 Universe (India + US + Global) · Refreshes Weekly · 20–30% Target</div>
   {% if top5 %}
   <div class="pick-grid">
     {% for s in top5 %}
-    <div class="pick-card">
-      <div style="display:flex;justify-content:space-between;align-items:start">
-        <div class="pick-sym">{{ s.name }}</div>
-        <span class="score-badge">{{ s.score }}/100</span>
+    <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
+      <div class="rank">{{ "%02d"|format(loop.index) }}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym">{{ s.name }}</div>
+        <span class="tag">{{ s.score }}/100</span>
       </div>
-      <div class="pick-price">{{ s.currency }}{{ s.price }}</div>
-      <div class="{{ 'up' if s.change_1d >= 0 else 'dn' }}" style="font-size:12px;font-family:monospace">
-        1D {{ '+' if s.change_1d >= 0 else '' }}{{ s.change_1d }}% · 1M {{ '+' if s.mom_1m >= 0 else '' }}{{ s.mom_1m }}% · 3M {{ '+' if s.mom_3m >= 0 else '' }}{{ s.mom_3m }}%
+      <div class="px">{{ s.currency }}{{ s.price }}</div>
+      <div class="mom">
+        <span class="{{ 'up' if s.change_1d >= 0 else 'dn' }}">1D <b>{{ '+' if s.change_1d >= 0 else '' }}{{ s.change_1d | round(2) }}%</b></span>
+        <span class="{{ 'up' if s.mom_1m >= 0 else 'dn' }}">1M <b>{{ '+' if s.mom_1m >= 0 else '' }}{{ s.mom_1m | round(2) }}%</b></span>
+        <span class="{{ 'up' if s.mom_3m >= 0 else 'dn' }}">3M <b>{{ '+' if s.mom_3m >= 0 else '' }}{{ s.mom_3m | round(2) }}%</b></span>
       </div>
-      {% if s.thesis %}<div class="pick-thesis">"{{ s.thesis }}"</div>{% endif %}
-      <div class="pick-tgt">
-        🎯 <strong>{{ s.currency }}{{ s.target }}</strong> · 🛡 {{ s.currency }}{{ s.stop_loss }}<br>
-        <span style="color:var(--muted);font-size:10px">⏱ {{ s.timeframe }}</span>
-        <form action="/tracker/add" method="post" style="margin-top:8px">
-          <input type="hidden" name="symbol" value="{{ s.symbol }}">
-          <input type="hidden" name="name" value="{{ s.name }}">
-          <input type="hidden" name="entry_price" value="{{ s.price }}">
-          <input type="hidden" name="target_price" value="{{ s.target }}">
-          <input type="hidden" name="stop_loss" value="{{ s.stop_loss }}">
-          <input type="hidden" name="thesis" value="{{ s.thesis }}">
-          <input type="hidden" name="timeframe" value="{{ s.timeframe }}">
-          <button type="submit" class="btn" style="font-size:9px;padding:4px 10px">+ TRACK</button>
-        </form>
+      <div class="scorebar" style="--w:{{ s.score }}%"><i></i></div>
+      {% if s.thesis %}<div class="th">{{ s.thesis }}</div>{% endif %}
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">{{ s.timeframe }}</div></div>
       </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="{{ s.symbol }}">
+        <input type="hidden" name="name" value="{{ s.name }}">
+        <input type="hidden" name="entry_price" value="{{ s.price }}">
+        <input type="hidden" name="target_price" value="{{ s.target }}">
+        <input type="hidden" name="stop_loss" value="{{ s.stop_loss }}">
+        <input type="hidden" name="thesis" value="{{ s.thesis }}">
+        <input type="hidden" name="timeframe" value="{{ s.timeframe }}">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
     </div>
     {% endfor %}
   </div>
   {% else %}
-  <div style="padding:20px;color:var(--muted);font-size:13px;font-style:italic;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    📅 Top 5 picks refresh every Monday morning via GitHub Actions · Check back after 6 AM IST Monday
-  </div>
+  <div class="empty rv">📅 Picks refresh every Monday via GitHub Actions — check back after 6 AM IST Monday.</div>
   {% endif %}
 </section>
 
-<!-- STOCK TRACKER -->
-<section class="section" id="tracker">
-  <div class="label">📈 My Stock Tracker
-    <form action="/tracker/obsidian" method="post" style="display:inline;margin-left:10px">
-      <button type="submit" class="btn-obs">SYNC OBSIDIAN</button>
-    </form>
-    <a href="/tracker/history" target="_blank" style="font-size:9px;margin-left:8px;color:var(--muted)">exit history →</a>
+<!-- ══════════ 03 SIGNAL LOG ══════════ -->
+<section class="sec" id="alerts">
+  <div class="shead rv">
+    <div>
+      <span class="snum">03 / TRACK RECORD</span>
+      <h2 class="stitle">Every signal, scored.</h2>
+    </div>
+    <div style="text-align:right">
+      <p class="sdesc">Nothing hidden. Every Telegram alert ever sent, with entry, stop, target and outcome.</p>
+      <a class="slink" href="alerts.json" target="_blank" style="display:inline-block;margin-top:10px">↓ alerts.json</a>
+    </div>
   </div>
+
+  {% if alerts %}
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v up" data-count="{{ wins }}">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" data-count="{{ losses }}">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" style="color:var(--blue)" data-count="{{ opens }}">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
+    <div class="kpi"><div class="v" data-count="{{ alerts|length }}">0</div><div class="k">Total Signals</div></div>
+  </div>
+
+  <div class="filters rv">
+    <button class="fbtn on" data-f="all">All</button>
+    <button class="fbtn" data-f="open">Open</button>
+    <button class="fbtn" data-f="win">Target Hit</button>
+    <button class="fbtn" data-f="loss">Stop Hit</button>
+    <button class="fbtn" data-f="cancelled">Cancelled</button>
+  </div>
+
+  <div class="tw rv">
+    <table class="t" id="alertTable">
+      <thead><tr>
+        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>
+        <th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+      {% for a in alerts %}
+        <tr data-badge="{{ a.badge }}">
+          <td class="mono-dim">{{ a.alert_date }}</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a></td>
+          <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
+          <td class="mono-dim">{{ a.timeframe or '—' }}</td>
+          <td class="num">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
+          <td class="num dn">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
+          <td class="num up">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
+          <td class="num up">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
+          <td class="num" style="color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
+          <td class="num">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
+          <td class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else 'num') }}">{{ a.pnl_str }}</td>
+          <td class="mono-dim">{{ a.close_date }}</td>
+          <td><span class="badge badge-{{ a.badge }}">{% if a.badge == 'win' %}✅ Win{% elif a.badge == 'loss' %}❌ Stop{% elif a.badge == 'open' %}🔵 Open{% else %}{{ a.status or '—' }}{% endif %}</span></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty rv">No signals logged yet — alerts appear here after Telegram sends them.</div>
+  {% endif %}
+</section>
+
+<!-- ══════════ 04 PORTFOLIO ══════════ -->
+<section class="sec" id="tracker">
+  <div class="shead rv">
+    <div>
+      <span class="snum">04 / POSITIONS</span>
+      <h2 class="stitle">The book.</h2>
+    </div>
+    <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+      <form action="/tracker/obsidian" method="post" style="display:inline">
+        <button type="submit" class="btn-gh v">Sync Obsidian</button>
+      </form>
+      <a class="slink" href="/tracker/history" target="_blank">Exit history →</a>
+    </div>
+  </div>
+
   {% if tracker %}
-  <div class="overflow">
-    <table class="tbl">
+  <div class="tw rv">
+    <table class="t" style="min-width:820px">
       <thead><tr>
         <th>Symbol</th><th>Entry</th><th>Current</th><th>Target</th><th>Stop</th>
-        <th>P&L</th><th>Timeframe</th><th>Thesis</th><th>Added</th><th></th>
+        <th>P&amp;L</th><th>Horizon</th><th>Thesis</th><th>Added</th><th></th>
       </tr></thead>
       <tbody>
         {% for s in tracker %}
         <tr>
-          <td><strong>{{ s.symbol }}</strong></td>
-          <td style="font-family:monospace">{{ s.currency }}{{ s.entry_price }}</td>
-          <td style="font-family:monospace" class="{{ 'up' if s.winning else 'dn' }}">{{ s.currency }}{{ s.current_price }}</td>
-          <td style="font-family:monospace">{{ s.currency }}{{ s.target_price }}</td>
-          <td style="font-family:monospace;color:var(--muted)">{{ s.currency }}{{ s.stop_loss }}</td>
+          <td><strong class="sym">{{ s.symbol }}</strong></td>
+          <td class="num">{{ s.currency }}{{ s.entry_price }}</td>
+          <td class="num {{ 'up' if s.winning else 'dn' }}">{{ s.currency }}{{ s.current_price }}</td>
+          <td class="num up">{{ s.currency }}{{ s.target_price }}</td>
+          <td class="num dn">{{ s.currency }}{{ s.stop_loss }}</td>
           <td class="{{ 'pnl-u' if s.winning else 'pnl-d' }}">{{ '+' if s.winning else '' }}{{ s.pnl_pct }}%</td>
-          <td style="color:var(--muted);font-size:10px">{{ s.timeframe }}</td>
-          <td style="font-size:10px;max-width:180px">{{ s.thesis[:55] }}</td>
-          <td style="font-size:10px;color:var(--muted)">{{ s.added_date }}</td>
-          <td><form action="/tracker/exit/{{ s.id }}" method="post">
-            <button type="submit" class="btn-exit">EXIT</button></form></td>
+          <td class="mono-dim">{{ s.timeframe }}</td>
+          <td style="font-size:12px;color:var(--muted);max-width:220px">{{ s.thesis[:60] }}</td>
+          <td class="mono-dim">{{ s.added_date }}</td>
+          <td><form action="/tracker/exit/{{ s.id }}" method="post"><button type="submit" class="btn-gh">Exit</button></form></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
   {% else %}
-  <p style="color:var(--muted);font-size:12px;padding:14px;background:var(--surface);border:1px solid var(--border)">
-    No stocks tracked. Hit <strong>+ TRACK</strong> on any Top 5 pick or add manually below.
-  </p>
+  <div class="empty rv">No open positions. Hit <strong style="color:var(--lime)">+ Track</strong> on any trade idea, or add one below.</div>
   {% endif %}
-  <div class="form-box">
-    <h4>+ Add Stock Manually</h4>
+
+  <div class="formbox rv">
+    <h4>+ Add position manually</h4>
     <form action="/tracker/add" method="post">
       <div class="frow">
         <input type="text" name="symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
         <input type="text" name="name" placeholder="Name">
-        <input type="number" step="0.01" name="entry_price" placeholder="Entry Price" required>
-        <input type="number" step="0.01" name="target_price" placeholder="Target Price" required>
+        <input type="number" step="0.01" name="entry_price" placeholder="Entry price" required>
+        <input type="number" step="0.01" name="target_price" placeholder="Target price" required>
       </div>
       <div class="frow">
-        <input type="number" step="0.01" name="stop_loss" placeholder="Stop Loss">
+        <input type="number" step="0.01" name="stop_loss" placeholder="Stop loss">
         <input type="text" name="timeframe" placeholder="Timeframe" value="2-3 months">
         <input type="text" name="thesis" placeholder="Why this stock?" style="flex:3">
       </div>
-      <button type="submit" class="btn">ADD TO TRACKER</button>
+      <button type="submit" class="btn">Add to book</button>
     </form>
   </div>
 </section>
 
-<!-- MONEY + PRODUCTIVITY -->
-<section class="section" id="hacks">
-  <div class="label">💰 Money Hack &amp; ⚡ Productivity</div>
-  <div class="two">
-    <div class="tip-card">
-      <h3>💰 {{ money_hack.title }}</h3>
-      <p>{{ money_hack.body }}</p>
+<!-- ══════════ 05 WORLD ══════════ -->
+<section class="sec" id="world">
+  <div class="shead rv">
+    <div>
+      <span class="snum">05 / CONTEXT</span>
+      <h2 class="stitle">The world, last 24h.</h2>
     </div>
-    <div class="tip-card" style="border-left-color:var(--green)">
-      <h3 style="color:var(--green)">⚡ Today's Rule</h3>
-      <p>{{ productivity_tip }}</p>
+    <p class="sdesc">Wires only. Deduplicated, ranked, and cut to what actually changes a decision.</p>
+  </div>
+
+  {% if news %}
+    {% set lead = news[0] %}
+    <div class="lead rv">
+      <div class="lead-m">
+        <span class="tag">{{ lead.source }} · LEAD</span>
+        <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
+        <p>{{ lead.summary }}</p>
+      </div>
+      <div class="lead-s">
+        {% for item in news[1:6] %}
+        <div class="mini">
+          <span class="s">{{ item.source }}</span>
+          {% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}<a>{{ item.title }}</a>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
     </div>
-  </div>
-</section>
 
-<!-- TELEGRAM ALERTS LOG -->
-<section class="section" id="alerts">
-  <div class="label">🔔 Telegram Alert Log · All Signals Sent · {{ alerts|length }} total
-    <a href="alerts.json" target="_blank" style="font-size:9px;color:var(--muted);margin-left:12px;font-family:monospace">↓ alerts.json</a>
-  </div>
-
-  {% if alerts %}
-  {% set wins = alerts | selectattr("badge","eq","win") | list | length %}
-  {% set losses = alerts | selectattr("badge","eq","loss") | list | length %}
-  {% set opens = alerts | selectattr("badge","eq","open") | list | length %}
-  {% set closed = wins + losses %}
-  {% set winrate = ((wins / closed * 100) | round(0) | int) if closed > 0 else 0 %}
-  <div class="alert-stats">
-    <div class="ast"><div class="ast-num" style="color:var(--green)">{{ wins }}</div><div class="ast-label">Targets Hit</div></div>
-    <div class="ast"><div class="ast-num" style="color:var(--red)">{{ losses }}</div><div class="ast-label">SL Hit</div></div>
-    <div class="ast"><div class="ast-num" style="color:#60a5fa">{{ opens }}</div><div class="ast-label">Open</div></div>
-    <div class="ast"><div class="ast-num" style="color:var(--gold)">{{ winrate }}%</div><div class="ast-label">Win Rate</div></div>
-    <div class="ast"><div class="ast-num">{{ alerts|length }}</div><div class="ast-label">Total Alerts</div></div>
-  </div>
-
-  <div class="alert-filters">
-    <button class="af-btn active" onclick="filterAlerts('all',this)">ALL</button>
-    <button class="af-btn" onclick="filterAlerts('open',this)">OPEN</button>
-    <button class="af-btn" onclick="filterAlerts('win',this)">TARGET HIT</button>
-    <button class="af-btn" onclick="filterAlerts('loss',this)">SL HIT</button>
-    <button class="af-btn" onclick="filterAlerts('cancelled',this)">CANCELLED</button>
-  </div>
-
-  <div class="overflow alert-tbl-wrap">
-    <table class="alert-tbl" id="alertTable">
-      <thead><tr>
-        <th>Alert Date</th>
-        <th>Symbol</th>
-        <th>Signal</th>
-        <th>Timeframe</th>
-        <th>Entry</th>
-        <th>SL</th>
-        <th>Target 1</th>
-        <th>Target 2</th>
-        <th>RR</th>
-        <th>Exit Price</th>
-        <th>P&L</th>
-        <th>Close Date</th>
-        <th>Status</th>
-      </tr></thead>
-      <tbody>
-      {% for a in alerts %}
-        <tr data-badge="{{ a.badge }}">
-          <td style="font-family:monospace;color:var(--muted)">{{ a.alert_date }}</td>
-          <td>
-            <a class="alert-sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a>
-          </td>
-          <td class="{{ 'alert-buy' if a.action == 'BUY' else 'alert-sell' }}">{{ a.action }}{% if a.signal_type %} <span style="color:var(--muted);font-size:9px">· {{ a.signal_type }}</span>{% endif %}</td>
-          <td style="color:var(--muted)">{{ a.timeframe or '—' }}</td>
-          <td style="font-family:monospace">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
-          <td style="font-family:monospace;color:var(--red)">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
-          <td style="font-family:monospace;color:var(--green)">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
-          <td style="font-family:monospace;color:var(--green)">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
-          <td style="font-family:monospace;color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
-          <td style="font-family:monospace">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
-          <td style="font-family:monospace" class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else '') }}">{{ a.pnl_str }}</td>
-          <td style="font-family:monospace;color:var(--muted)">{{ a.close_date }}</td>
-          <td><span class="badge badge-{{ a.badge }}">{% if a.badge == 'win' %}✅ WIN{% elif a.badge == 'loss' %}❌ SL HIT{% elif a.badge == 'open' %}🔵 OPEN{% else %}{{ a.status or '—' }}{% endif %}</span></td>
-        </tr>
+    <div class="news-grid">
+      {% for item in news[6:15] %}
+      <div class="ncard rv" style="--d:{{ loop.index0 * 0.05 }}s">
+        <span class="s">{{ item.source }}</span>
+        <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
+        <p>{{ item.summary[:150] }}</p>
+        <div class="ts">{{ item.published }}</div>
+      </div>
       {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    </div>
   {% else %}
-  <div style="padding:20px;color:var(--muted);font-size:13px;text-align:center;background:var(--surface);border:1px solid var(--border)">
-    No alerts logged yet · Alerts appear here after Telegram signals are sent
-  </div>
+    <div class="empty rv">Loading feeds…</div>
   {% endif %}
 </section>
 
-</div>
+<!-- ══════════ 06 THE DESK ══════════ -->
+<section class="sec" id="desk">
+  <div class="shead rv">
+    <div>
+      <span class="snum">06 / THE DESK</span>
+      <h2 class="stitle">Compound the skill.</h2>
+    </div>
+    <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
+      Seven tabs, one discipline.</p>
+  </div>
 
-<div class="footer">
-  <strong style="color:var(--accent)">THE DAILY SIGNAL</strong> · Akshay Kothari · @askakshayfinance<br>
-  <span style="color:#333">news.askakshay.com · Refreshes 6 AM IST · Built with Claude Code</span>
-</div>
+  <div class="tabs rv" id="deskTabs">
+    <button class="tab on" data-p="d1">🎓 FP&amp;A · {{ fpna.index }}/{{ fpna.total }}</button>
+    <button class="tab" data-p="d2">🇦🇪 Dubai</button>
+    <button class="tab" data-p="d3">🏆 FC → CFO · {{ cfo.index }}/{{ cfo.total }}</button>
+    <button class="tab" data-p="d4">📊 Case Study</button>
+    <button class="tab" data-p="d5">📚 Book · {{ book.index }}/{{ book.total }}</button>
+    <button class="tab" data-p="d6">💰 Money</button>
+    <button class="tab" data-p="d7">⚡ Execution</button>
+  </div>
+
+  <div class="rv">
+    <div class="pane on" id="d1">
+      <div class="essay">
+        <div class="meta">FP&amp;A Learn · Lesson {{ fpna.index }} of {{ fpna.total }}</div>
+        <h3>{{ fpna.title }}</h3>
+        <p>{{ fpna.body }}</p>
+      </div>
+    </div>
+
+    <div class="pane" id="d2">
+      <div class="essay" style="--ac:var(--violet)">
+        <div class="meta">Dubai Corner · AED 30K+ Track</div>
+        <h3>The stack that clears AED 30K</h3>
+        <p>CA or ACCA, plus SAP or Oracle, plus Power BI, plus IFRS 9 and 16. That is the whole gate.
+          Miss one and you are competing on price.</p>
+        <div class="q">Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.</div>
+        <div class="act"><b>Keyword tip</b>Put "IFRS 16 implementation" and "rolling forecast" in the cover letter.
+          Recruiters grep for exactly those two strings.</div>
+      </div>
+    </div>
+
+    <div class="pane" id="d3">
+      <div class="essay" style="--ac:var(--gold)">
+        <div class="meta">Financial Controller → CFO · Step {{ cfo.index }} of {{ cfo.total }}</div>
+        <h3>{{ cfo.title }}</h3>
+        <p>{{ cfo.body }}</p>
+      </div>
+    </div>
+
+    <div class="pane" id="d4">
+      <div class="essay" style="--ac:var(--blue)">
+        <div class="meta">Business Case Study</div>
+        <h3>{{ case.title }}</h3>
+        <p>{{ case.story }}</p>
+        <div class="act"><b>💡 The lesson</b>{{ case.lesson }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="d5">
+      <div class="essay" style="--ac:var(--violet)">
+        <div class="meta">{{ book.book }} · {{ book.author }} · {{ book.index }}/{{ book.total }}</div>
+        <h3>{{ book.chapter }}</h3>
+        <p>{{ book.lesson }}</p>
+        <div class="q">{{ book.key_quote }}</div>
+        <div class="act"><b>Today's action</b>{{ book.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="d6">
+      <div class="essay" style="--ac:var(--lime)">
+        <div class="meta">Money Hack</div>
+        <h3>{{ money_hack.title }}</h3>
+        <p>{{ money_hack.body }}</p>
+      </div>
+    </div>
+
+    <div class="pane" id="d7">
+      <div class="essay" style="--ac:var(--up)">
+        <div class="meta">Today's Rule</div>
+        <h3>Execution beats intention</h3>
+        <p>{{ productivity_tip }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 07 THE MIND ══════════ -->
+<section class="sec" id="mind">
+  <div class="shead rv">
+    <div>
+      <span class="snum">07 / THE MIND</span>
+      <h2 class="stitle">Sharpen the operator.</h2>
+    </div>
+    <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
+  </div>
+
+  <div class="quote-hero rv">
+    <div class="mark">&ldquo;</div>
+    <blockquote>{{ quote.quote }}</blockquote>
+    <cite>— {{ quote.name }}</cite>
+    <div class="idx">Quote {{ quote.index }} of {{ quote.total }} · rotates daily</div>
+  </div>
+
+  <div class="two" style="margin-top:14px">
+    <div class="essay rv" style="--ac:var(--up)">
+      <div class="meta">Daily Wisdom · {{ wisdom.index }}/{{ wisdom.total }} · Better person · Better dad</div>
+      <h3>{{ wisdom.title }}</h3>
+      <p>{{ wisdom.body }}</p>
+    </div>
+    <div class="essay rv" style="--ac:var(--blue);--d:.08s">
+      <div class="meta">{{ lesson.tradition }}</div>
+      <h3 style="font-style:italic;font-weight:500;letter-spacing:-.5px">{{ lesson.lesson }}</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">— {{ lesson.source }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 08 CHESS ══════════ -->
+<section class="sec" id="chess">
+  <div class="shead rv">
+    <div>
+      <span class="snum">08 / THE BOARD</span>
+      <h2 class="stitle">Yesterday's chess.</h2>
+    </div>
+    <div style="text-align:right">
+      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.</p>
+      <a class="slink" href="https://lichess.org/@/AKK_010" target="_blank" style="display:inline-block;margin-top:10px">Profile →</a>
+    </div>
+  </div>
+
+  {% if lichess_games %}
+  <div class="chess-kpi rv">
+    <div class="ck"><div class="v up">{{ lichess_summary.wins }}</div><div class="k">Wins</div></div>
+    <div class="ck"><div class="v dn">{{ lichess_summary.losses }}</div><div class="k">Losses</div></div>
+    <div class="ck"><div class="v" style="color:var(--dim)">{{ lichess_summary.draws }}</div><div class="k">Draws</div></div>
+    <div class="ck"><div class="v" style="color:var(--lime)">{{ lichess_summary.pct }}%</div><div class="k">Win Rate</div></div>
+    <div class="ck"><div class="v">{{ lichess_summary.total }}</div><div class="k">Games</div></div>
+    {% if lichess_summary.mode == "full" %}
+    <div class="ck"><div class="v" style="color:var(--blue)">{{ lichess_summary.upsets }}</div><div class="k">Upsets</div></div>
+    <div class="ck"><div class="v dn">{{ lichess_summary.collapses }}</div><div class="k">Collapses</div></div>
+    {% endif %}
+  </div>
+
+  {% if lichess_summary.session_summary %}
+  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>{{ lichess_summary.session_summary }}</div>
+  {% else %}
+  <div class="verdict rv" style="background:rgba(255,255,255,.03);border-color:var(--line)">
+    {{ lichess_summary.icon }}
+    {% if lichess_summary.pct >= 55 %} Good session — {{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review the wins and lock in the patterns.
+    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
+    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before the next game. Pattern beats volume.{% endif %}
+  </div>
+  {% endif %}
+
+  {% if lichess_summary.mode == "full" and (lichess_summary.weak_op or lichess_summary.best_op) %}
+  <div class="two rv" style="margin-bottom:18px">
+    {% if lichess_summary.weak_op %}
+    <div class="card" style="border-color:rgba(255,92,92,.25)">
+      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--down);margin-bottom:6px">📚 Study this opening</div>
+      <div style="font-size:14px;color:#FFA0A0">{{ lichess_summary.weak_op }}</div>
+    </div>
+    {% endif %}
+    {% if lichess_summary.best_op %}
+    <div class="card" style="border-color:rgba(61,220,151,.25)">
+      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--up);margin-bottom:6px">💪 Strongest opening</div>
+      <div style="font-size:14px;color:#9BEFC9">{{ lichess_summary.best_op }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if lichess_summary.mode == "full" %}
+  <div class="rv">
+    {% for g in lichess_games %}
+    <div class="game {{ g.cls }}">
+      <div class="hdr">
+        <span style="font-size:17px">{{ g.icon }}</span>
+        <span class="res {{ 'up' if g.cls == 'win' else ('dn' if g.cls == 'loss' else '') }}"
+              {% if g.cls == 'draw' %}style="color:var(--dim)"{% endif %}>{{ g.result }}</span>
+        <span class="pill">as {{ g.my_side }}</span>
+        <span class="pill">{{ g.speed }}</span>
+        {% if g.is_upset %}<span class="pill" style="background:rgba(106,168,255,.14);color:var(--blue)">Upset ⚡</span>{% endif %}
+        {% if g.is_collapse %}<span class="pill" style="background:rgba(255,92,92,.13);color:var(--down)">Collapse ⚠</span>{% endif %}
+        {% if g.is_long %}<span class="pill">{{ g.moves }}M Epic</span>{% endif %}
+        <a href="{{ g.url }}" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+      </div>
+      <div class="op">{% if g.eco %}<span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">{{ g.eco }}</span>{% endif %}{{ g.opening }}</div>
+      <div class="meta">
+        vs <strong style="color:var(--text)">{{ g.opponent }}</strong> <span style="color:var(--dim)">({{ g.opp_rating }})</span>
+        · me {{ g.my_rating }} · {{ g.moves }} moves · {{ g.termination }}
+        {% if g.me_diff is not none %}· <span class="{{ 'up' if g.me_diff > 0 else 'dn' }}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>{% endif %}
+      </div>
+      {% if g.opening_seq %}<div class="mv"><span style="color:#3A3E44">OPENING </span>{{ g.opening_seq }}</div>{% endif %}
+      {% if g.final_seq %}<div class="mv"><span style="color:#3A3E44">FINAL </span>{{ g.final_seq }}</div>{% endif %}
+      {% if g.analysis %}<div class="an">💡 {{ g.analysis }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="two rv" style="margin-bottom:16px">
+    {% for g in lichess_games %}
+    <div class="card">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-bottom:8px">{{ g.speed }}</div>
+      <div class="num" style="font-size:30px;font-weight:700;letter-spacing:-1.4px;color:{% if g.pct >= 55 %}var(--up){% elif g.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}">{{ g.pct }}%</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:7px">
+        <span class="up">W{{ g.wins }}</span> · <span class="dn">L{{ g.losses }}</span> ·
+        <span style="color:var(--dim)">D{{ g.draws }}</span> · {{ g.total }} games
+      </div>
+      <a href="{{ g.profile_url }}" target="_blank" class="slink" style="display:inline-block;margin-top:11px">Lichess →</a>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets for per-game analysis, openings, key moves and AI coaching.
+    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--lime)">Create token →</a></div>
+  {% endif %}
+
+  {% if lichess_summary.trend %}
+  <div class="rv" style="margin-top:18px">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">📈 7-day win rate</div>
+    <div class="trend">
+      {% for t in lichess_summary.trend | reverse %}
+      <div>
+        <div class="bar" style="--h:{{ [t.pct * 70 // 100, 4] | max }}px;--d:{{ loop.index0 * 0.07 }}s;background:{% if t.pct >= 55 %}var(--up){% elif t.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}"></div>
+        <div class="lb">{{ t.day }}</div>
+        <div class="lb" style="color:var(--muted)">{{ t.pct }}%</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty rv">No games played yesterday · <a href="https://lichess.org/@/AKK_010" target="_blank" style="color:var(--lime)">Play on Lichess →</a></div>
+  {% endif %}
+
+  <div class="two rv" style="margin-top:18px">
+    <div class="essay" style="--ac:var(--gold)">
+      <div class="meta">Chess Tutor · Lesson {{ chess.index }}/{{ chess.total }}</div>
+      <h3>{{ chess.title }}</h3>
+      <p>{{ chess.body }}</p>
+      <p style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:14px">
+        Practise: <a href="https://lichess.org/study" target="_blank" style="color:var(--lime)">Lichess Study</a> ·
+        <a href="https://chess.com/puzzles" target="_blank" style="color:var(--lime)">Chess.com Puzzles</a></p>
+    </div>
+    {% if lichess_puzzle %}
+    <div class="essay" style="--ac:var(--gold);--d:.08s">
+      <div class="meta">🧩 Today's puzzle</div>
+      <h3>Rating {{ lichess_puzzle.rating }} · {{ lichess_puzzle.level }}</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">{{ lichess_puzzle.themes }}</p>
+      <div class="q">💡 {{ lichess_puzzle.tip }}</div>
+      <a href="{{ lichess_puzzle.url }}" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <h4>THE DAILY <b>SIGNAL</b></h4>
+      <p style="color:var(--muted);font-size:13.5px;margin-top:12px;max-width:38ch">
+        Built by Akshay Kothari. Rebuilt every morning at 6 AM IST by a machine that does not sleep.</p>
+    </div>
+    <div class="m">
+      <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
+      news.askakshay.com<br>
+      {{ date_str }} · {{ updated_at }} IST<br>
+      <span style="color:#2E3238">Built with Claude Code</span>
+    </div>
+  </div>
+</footer>
+
+<button class="fab" id="fab" aria-label="Back to top">↑</button>
 
 <script>
-// Auto-refresh every 5 min
-setTimeout(() => window.location.reload(), 5 * 60 * 1000);
+(function(){
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Alert log filter
-function filterAlerts(badge, btn) {
-  document.querySelectorAll('.af-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#alertTable tbody tr').forEach(row => {
-    row.style.display = (badge === 'all' || row.dataset.badge === badge) ? '' : 'none';
-  });
-}
+  /* ── scroll progress + fab ── */
+  var prog = document.getElementById('prog'), fab = document.getElementById('fab'), ticking = false;
+  function onScroll(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    fab.classList.toggle('on', window.scrollY > 700);
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking){ ticking = true; requestAnimationFrame(onScroll); }
+  }, {passive:true});
+  onScroll();
+  fab.addEventListener('click', function(){ window.scrollTo({top:0, behavior: RM ? 'auto' : 'smooth'}); });
 
-// Block tracker form submissions on static GitHub Pages (routes don't exist)
-document.addEventListener('DOMContentLoaded', () => {
-  const staticHost = location.hostname.includes('github.io');
-  if (staticHost) {
-    document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(f => {
-      f.addEventListener('submit', e => {
-        e.preventDefault();
-        alert('Stock Tracker requires the live server. This static page auto-refreshes daily with market data — tracker features are not available here.');
+  /* ── reveal on scroll ── */
+  var revs = document.querySelectorAll('.rv');
+  if (RM || !('IntersectionObserver' in window)){
+    revs.forEach(function(e){ e.classList.add('in'); });
+  } else {
+    var ro = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('in'); ro.unobserve(en.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.05});
+    revs.forEach(function(e){ ro.observe(e); });
+  }
+
+  /* ── count-up ── */
+  function countUp(el){
+    var target = parseFloat(el.dataset.count) || 0,
+        suffix = el.dataset.suffix || '',
+        total  = el.dataset.total ? '/' + el.dataset.total : '',
+        dur = 1100, t0 = null;
+    if (RM){ el.textContent = target + suffix + total; return; }
+    function step(ts){
+      if (!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1),
+          e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * e) + suffix + total;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var nums = document.querySelectorAll('[data-count]');
+  if (!('IntersectionObserver' in window)){
+    nums.forEach(countUp);
+  } else {
+    var co = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ countUp(en.target); co.unobserve(en.target); }
+      });
+    }, {threshold:0.4});
+    nums.forEach(function(e){ co.observe(e); });
+  }
+
+  /* ── nav active section ── */
+  var links = [].slice.call(document.querySelectorAll('.nav a')),
+      secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function setActive(){
+    var best = 0, y = window.scrollY + 200;
+    secs.forEach(function(s, i){ if (s && s.offsetTop <= y) best = i; });
+    links.forEach(function(a, i){ a.classList.toggle('on', i === best); });
+    var el = links[best];
+    if (el && el.offsetLeft !== undefined){
+      var bar = document.getElementById('navin');
+      if (el.offsetLeft < bar.scrollLeft || el.offsetLeft > bar.scrollLeft + bar.clientWidth - 100){
+        bar.scrollTo({left: el.offsetLeft - 20, behavior:'smooth'});
+      }
+    }
+  }
+  window.addEventListener('scroll', setActive, {passive:true});
+  setActive();
+
+  /* ── alert filters ── */
+  document.querySelectorAll('.fbtn').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.fbtn').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      var f = b.dataset.f;
+      document.querySelectorAll('#alertTable tbody tr').forEach(function(r){
+        r.style.display = (f === 'all' || r.dataset.badge === f) ? '' : 'none';
       });
     });
-    document.querySelectorAll('a[href^="/tracker"], a[href^="/api"]').forEach(a => {
-      a.addEventListener('click', e => { e.preventDefault(); });
-      a.style.opacity = '0.3';
-      a.style.cursor = 'not-allowed';
-      a.style.pointerEvents = 'auto';
+  });
+
+  /* ── desk tabs ── */
+  document.querySelectorAll('#deskTabs .tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('#deskTabs .tab').forEach(function(x){ x.classList.remove('on'); });
+      document.querySelectorAll('.pane').forEach(function(p){ p.classList.remove('on'); });
+      t.classList.add('on');
+      var pane = document.getElementById(t.dataset.p);
+      if (pane) pane.classList.add('on');
+    });
+  });
+
+  /* ── static host: disable server-only routes ── */
+  if (location.hostname.indexOf('github.io') !== -1){
+    document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(function(f){
+      f.addEventListener('submit', function(e){
+        e.preventDefault();
+        alert('The tracker needs the live server. This static page rebuilds daily with fresh market data — tracker actions are not available here.');
+      });
+    });
+    document.querySelectorAll('a[href^="/tracker"], a[href^="/api"]').forEach(function(a){
+      a.addEventListener('click', function(e){ e.preventDefault(); });
+      a.style.opacity = '.3'; a.style.cursor = 'not-allowed';
     });
   }
-});
+
+  /* ── auto refresh ── */
+  setTimeout(function(){ location.reload(); }, 5 * 60 * 1000);
+})();
 </script>
 </body>
 </html>"""
