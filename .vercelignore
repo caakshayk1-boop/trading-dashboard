@@ -1,0 +1,20 @@
+# The Vercel build only needs vercel-news/ (the app) and docs/ (the daily shell
+# that build.js copies into public/). Everything else here is the Python scanner
+# and its data — excluding it keeps the upload small and stops Vercel from
+# trying to detect a Python project at the root.
+#
+# Note the directory entries below: these follow gitignore semantics, where a
+# file cannot be re-included if its parent directory is itself excluded. The
+# bare `!vercel-news` / `!docs` lines are what make the `!.../**` lines work.
+*
+!vercel-news
+!vercel-news/**
+!docs
+!docs/index.html
+!docs/alerts.json
+
+# Never ship the ledger or its WAL, even by accident.
+signals.db
+signals.db-shm
+signals.db-wal
+.env

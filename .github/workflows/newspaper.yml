@@ -57,10 +57,9 @@ jobs:
       # by /api on every page load, so this does not need to run after a scan.
       # VERCEL_ORG_ID / VERCEL_PROJECT_ID (job env, above) make the CLI target
       # the existing project without a checked-in .vercel directory.
+      # Deploys from the repo root: the project's Root Directory is vercel-news,
+      # so Vercel builds that subdirectory while build.js can still reach
+      # ../docs/index.html. .vercelignore keeps the upload to just those two.
       - name: Deploy to Vercel (news.askakshay.com)
         if: env.VERCEL_TOKEN != ''
-        run: |
-          mkdir -p vercel-news/public
-          cp docs/index.html  vercel-news/public/index.html
-          cp docs/alerts.json vercel-news/public/alerts.json
-          npx --yes vercel@latest deploy vercel-news --prod --yes --token "$VERCEL_TOKEN"
+        run: npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
