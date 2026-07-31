@@ -13,10 +13,22 @@ const IST_OFFSET_MIN = 330;
 
 export default async function handler(req, res) {
   try {
+    if (req.method !== "GET" && req.method !== "POST") {
+      return fail(res, 405, "GET or POST only");
+    }
+    // Reject unauthorized writes before touching the database at all. An
+    // anonymous POST should cost one string comparison, not a Turso round trip.
+    if (req.method === "POST" && !authorized(req)) {
+      return fail(
+        res,
+        401,
+        process.env.EDIT_KEY
+          ? "Wrong edit key."
+          : "Writes are disabled — EDIT_KEY is not set on this deployment."
+      );
+    }
     await ensureTable();
-    if (req.method === "GET") return await list(req, res);
-    if (req.method === "POST") return await write(req, res);
-    return fail(res, 405, "GET or POST only");
+    return req.method === "GET" ? await list(req, res) : await write(req, res);
   } catch (e) {
     return fail(res, 500, `tracker failed: ${e.message}`);
   }
@@ -129,16 +141,8 @@ function decorate(r) {
       : null;
 }
 
+// Authorization is enforced by the handler above, before ensureTable().
 async function write(req, res) {
-  if (!authorized(req)) {
-    return fail(
-      res,
-      401,
-      process.env.EDIT_KEY
-        ? "Wrong edit key."
-        : "Writes are disabled — EDIT_KEY is not set on this deployment."
-    );
-  }
   const body = await readBody(req);
 
   if (str(body.action) === "exit") {
