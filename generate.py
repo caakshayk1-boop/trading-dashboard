@@ -23,7 +23,6 @@ from jinja2 import Template
 
 # Import everything from newspaper
 from newspaper import (
-    fetch_weather,
     fetch_global_news,
     fetch_markets,
     get_entrepreneur_quote,
@@ -61,9 +60,6 @@ def generate() -> None:
         print(f"[generate] DB init warning: {e}")
 
     # Fetch all data
-    print("[generate] Fetching weather...")
-    weather = fetch_weather()
-
     print("[generate] Fetching news...")
     news = fetch_global_news()
 
@@ -105,7 +101,6 @@ def generate() -> None:
         updated_at=now.strftime("%H:%M"),
         markets=markets,
         news=news,
-        weather=weather,
         quote=quote,
         lesson=lesson,
         case=case,
