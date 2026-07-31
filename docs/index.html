@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#08090A">
-<title>THE DAILY SIGNAL — Friday, July 31 2026</title>
+<title>THE DAILY SIGNAL — Saturday, August 01 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -23,8 +23,12 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:120px;-webkit-text-size-adjust:100%}
+/* overflow-x:clip, never hidden. `hidden` turns <body> into a scroll container,
+   which silently scopes every position:sticky to it instead of the viewport —
+   that is what stopped the header and nav from staying put on scroll. `clip`
+   contains the same overflow without creating that container. */
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;
-  line-height:1.6;font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  line-height:1.6;font-weight:400;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 .up{color:var(--up)} .dn{color:var(--down)}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
@@ -107,17 +111,6 @@ h1.hl em{font-style:normal;color:var(--lime)}
 .stat .k{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-top:9px;font-weight:500;}
 @media(max-width:640px){.stat{flex:1 1 44%;padding:16px 14px 16px 0}}
 
-/* weather chips */
-.wxrail{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;opacity:0;animation:fadeUp .8s var(--ease) 1.05s forwards;}
-.wxchip{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);
-  border-radius:14px;padding:10px 15px;transition:border-color .3s,transform .3s var(--ease);cursor:default;}
-.wxchip:hover{border-color:var(--line2);transform:translateY(-2px)}
-.wxchip .e{font-size:22px;line-height:1}
-.wxchip .c{font-size:12px;font-weight:600;letter-spacing:.3px}
-.wxchip .t{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--lime)}
-.wxchip .m{font-size:10px;color:var(--dim);font-family:var(--mono)}
-.wxchip.rain{border-color:rgba(106,168,255,.35)}
-.wxchip.rain .t{color:var(--blue)}
 
 /* ═══════════════════ TICKER ═══════════════════ */
 .tickwrap{position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -458,7 +451,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
   .rv{opacity:1;transform:none}
   h1.hl .w>span{transform:none;opacity:1}
-  .hero-sub,.statrail,.wxrail{opacity:1}
+  .hero-sub,.statrail{opacity:1}
 }
 
 /* ═══════════════════ LIVE LAYER ═══════════════════
@@ -494,14 +487,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   letter-spacing:1px;margin-top:7px}
 .perf-cell .sub{font-size:11px;color:var(--muted);margin-top:4px}
 
-.eqwrap{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:22px}
-.eqwrap h4{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;
-  letter-spacing:1.2px;margin-bottom:14px}
-.eqwrap svg{width:100%;height:190px;display:block;overflow:visible}
-.eqwrap .zero{stroke:var(--line2);stroke-dasharray:3 4}
-.eqwrap .curve{fill:none;stroke:var(--lime);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
-.eqwrap .fillArea{fill:var(--lime-soft)}
-.eqwrap .axis{font-family:var(--mono);font-size:9px;fill:var(--dim)}
 
 .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .brk-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
@@ -537,6 +522,62 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .keybox input{font-family:var(--mono);font-size:12px;color:var(--text);background:var(--bg2);
   border:1px solid var(--line2);border-radius:9px;padding:8px 11px;flex:1 1 180px}
 
+/* ═══════════════════ MIND GYM ═══════════════════ */
+.gym-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.gym-tab{display:flex;align-items:center;gap:7px;padding:9px 15px;font-size:11.5px;font-weight:600;
+  letter-spacing:.5px;background:transparent;border:1px solid var(--line);color:var(--muted);
+  cursor:pointer;border-radius:100px;font-family:var(--sans);transition:all .28s var(--ease);white-space:nowrap}
+.gym-tab:hover{border-color:var(--line2);color:var(--text)}
+.gym-tab.on{background:var(--lime);border-color:var(--lime);color:#000}
+.gym-tab .tdot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex:none}
+.gym-tab.on .tdot{background:#000}
+
+.gym-stage{background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(20px,4vw,34px);min-height:290px;display:flex;flex-direction:column;justify-content:center}
+.gym-q{font-size:clamp(21px,4.4vw,32px);font-weight:700;letter-spacing:-.6px;line-height:1.3;margin-bottom:6px}
+.gym-q .mono{font-family:var(--mono)}
+.gym-sub{font-size:12.5px;color:var(--muted);margin-bottom:20px}
+.gym-prompt{font-family:var(--mono);font-size:clamp(28px,7vw,52px);font-weight:700;color:var(--lime);
+  letter-spacing:2px;text-align:center;padding:22px 0}
+
+.gym-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.gym-opt{padding:16px 14px;font-family:var(--mono);font-size:16px;font-weight:600;background:var(--bg2);
+  border:1px solid var(--line2);color:var(--text);border-radius:12px;cursor:pointer;
+  transition:all .2s var(--ease);text-align:center}
+.gym-opt:hover:not(:disabled){border-color:var(--lime);color:var(--lime)}
+.gym-opt:disabled{cursor:default;opacity:.55}
+.gym-opt.right{background:var(--lime);border-color:var(--lime);color:#000;opacity:1}
+.gym-opt.wrong{background:rgba(255,92,92,.15);border-color:var(--down);color:var(--down);opacity:1}
+
+.gym-input{display:flex;gap:9px;flex-wrap:wrap}
+.gym-input input{flex:1 1 160px;font-family:var(--mono);font-size:19px;font-weight:600;color:var(--text);
+  background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;min-width:0}
+.gym-input input:focus{outline:none;border-color:var(--lime)}
+.gym-btn{padding:14px 24px;font-size:13px;font-weight:700;letter-spacing:.6px;background:var(--lime);
+  border:none;color:#000;border-radius:12px;cursor:pointer;font-family:var(--sans);transition:opacity .2s}
+.gym-btn:hover{opacity:.85}
+.gym-btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--muted)}
+.gym-btn.ghost:hover{border-color:var(--lime);color:var(--lime);opacity:1}
+
+.gym-fb{margin-top:18px;padding:14px 16px;border-radius:12px;font-size:13.5px;line-height:1.55;
+  border-left:3px solid var(--line2);background:var(--bg2)}
+.gym-fb.good{border-left-color:var(--up)} .gym-fb.bad{border-left-color:var(--down)}
+.gym-fb b{font-family:var(--mono)}
+
+.gym-meta{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  margin-bottom:16px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.6px}
+.gym-meta .prog{color:var(--lime)}
+.gym-score{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:20px}
+.gym-score div{background:var(--surface);padding:14px 12px;text-align:center}
+.gym-score .v{font-family:var(--mono);font-size:21px;font-weight:700}
+.gym-score .k{font-family:var(--mono);font-size:9.5px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:1px;margin-top:5px}
+@media(max-width:640px){
+  .gym-opts{grid-template-columns:1fr 1fr}
+  .gym-stage{min-height:250px}
+}
+
 /* Mobile: tables become the pain point on a phone, so give them a real scroll
    affordance and stop the control bars from stacking into a wall. */
 @media(max-width:640px){
@@ -570,8 +611,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="topbar-in">
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
-      <span class="d">Friday, July 31 2026</span>
-      <span class="live"><i></i>20:05 IST</span>
+      <span class="d">Saturday, August 01 2026</span>
+      <span class="live" id="istClock"><i></i>01:00 IST</span>
     </div>
   </div>
 </header>
@@ -587,8 +628,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#way"><i>07</i>The Way</a>
     <a href="#review"><i>08</i>The Review</a>
     <a href="#chess"><i>09</i>Chess</a>
-    <a href="#perf"><i>10</i>Performance</a>
-    <a href="#alerts"><i>11</i>Signal Log</a>
+    <a href="#gym"><i>10</i>Mind Gym</a>
+    <a href="#perf"><i>11</i>Performance</a>
+    <a href="#alerts"><i>12</i>Signal Log</a>
   </div>
 </nav>
 
@@ -603,7 +645,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="hero" id="top">
   <div class="orb a"></div><div class="orb b"></div>
 
-  <div class="eyebrow">◆ Compiled 6:00 AM IST · Friday, July 31 2026</div>
+  <div class="eyebrow">◆ Compiled 6:00 AM IST · Saturday, August 01 2026</div>
 
   <h1 class="hl">
     <span class="w"><span style="--d:.05s">Numbers</span></span>
@@ -630,142 +672,110 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="stat">
       <div class="v" style="color:var(--up)"
-           data-count="4" data-total="8">0</div>
+           data-count="6" data-total="8">0</div>
       <div class="k">Markets Advancing</div>
     </div>
   </div>
 
-  
-  <div class="wxrail">
-    
-    <div class="wxchip " title="Feels 37.9°C · 53% humidity · 12.4 km/h wind">
-      <span class="e">☁️</span>
-      <span>
-        <span class="c">Bikaner</span>
-        <span class="m"> ↑37.5° ↓30.4° · 🌧 24%</span>
-      </span>
-      <span class="t">34.1°</span>
-    </div>
-    
-    <div class="wxchip rain" title="Feels 33.5°C · 84% humidity · 9.6 km/h wind">
-      <span class="e">☁️</span>
-      <span>
-        <span class="c">Kolkata</span>
-        <span class="m"> ↑31.7° ↓26.5° · 🌧 94% · umbrella</span>
-      </span>
-      <span class="t">28.1°</span>
-    </div>
-    
-    <div class="wxchip rain" title="Feels 33.7°C · 89% humidity · 0.7 km/h wind">
-      <span class="e">☀️</span>
-      <span>
-        <span class="c">Kuala Lumpur</span>
-        <span class="m"> ↑32.2° ↓24.5° · 🌧 93% · umbrella</span>
-      </span>
-      <span class="t">27.0°</span>
-    </div>
-    
-  </div>
-  
 </section>
 
 <!-- ══════════ TICKER ══════════ -->
 <div class="tickwrap">
-  <div class="tick">
+  <div class="tick" id="tickRail">
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24384</span>
+      <span class="p">₹24317</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7434</span>
-      <span class="c dn">▼ </span>
+      <span class="p">7494</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">25147</span>
+      <span class="p">25366</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4093.4</span>
-      <span class="c dn">▼ </span>
+      <span class="p">$4104.7</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$85.03</span>
+      <span class="p">$84.81</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.37</span>
+      <span class="p">₹95.38</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62713</span>
+      <span class="p">$62955</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹78095</span>
+      <span class="p">₹77928</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24384</span>
+      <span class="p">₹24317</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7434</span>
-      <span class="c dn">▼ </span>
+      <span class="p">7494</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">25147</span>
+      <span class="p">25366</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4093.4</span>
-      <span class="c dn">▼ </span>
+      <span class="p">$4104.7</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$85.03</span>
+      <span class="p">$84.81</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.37</span>
+      <span class="p">₹95.38</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62713</span>
+      <span class="p">$62955</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹78095</span>
+      <span class="p">₹77928</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -781,56 +791,56 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="snum">01 / MARKETS</span>
       <h2 class="stitle">What moved.</h2>
     </div>
-    <p class="sdesc">4 of 8 tracked instruments are green.
-      Indices, commodities, crypto and FX — refreshed on every build.</p>
+    <p class="sdesc" id="mktDesc">6 of 8 tracked instruments are green.
+      Indices, commodities, crypto and FX.</p>
   </div>
-  <div class="mkt-grid">
+  <div class="mkt-grid" id="mktGrid">
     
     <div class="mkt u rv" style="--d:0.0s">
       <div class="n">Nifty 50</div>
-      <div class="p">₹24384</div>
+      <div class="p">₹24317</div>
       <div class="c up">▲ </div>
     </div>
     
-    <div class="mkt d rv" style="--d:0.04s">
+    <div class="mkt u rv" style="--d:0.04s">
       <div class="n">S&P 500</div>
-      <div class="p">7434</div>
-      <div class="c dn">▼ </div>
+      <div class="p">7494</div>
+      <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.08s">
       <div class="n">Nasdaq</div>
-      <div class="p">25147</div>
+      <div class="p">25366</div>
       <div class="c up">▲ </div>
     </div>
     
-    <div class="mkt d rv" style="--d:0.12s">
+    <div class="mkt u rv" style="--d:0.12s">
       <div class="n">Gold</div>
-      <div class="p">$4093.4</div>
-      <div class="c dn">▼ </div>
+      <div class="p">$4104.7</div>
+      <div class="c up">▲ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.16s">
       <div class="n">Crude</div>
-      <div class="p">$85.03</div>
+      <div class="p">$84.81</div>
       <div class="c up">▲ </div>
     </div>
     
     <div class="mkt d rv" style="--d:0.2s">
       <div class="n">USD/INR</div>
-      <div class="p">₹95.37</div>
+      <div class="p">₹95.38</div>
       <div class="c dn">▼ </div>
     </div>
     
     <div class="mkt d rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$62713</div>
+      <div class="p">$62955</div>
       <div class="c dn">▼ </div>
     </div>
     
     <div class="mkt u rv" style="--d:0.28s">
       <div class="n">Sensex</div>
-      <div class="p">₹78095</div>
+      <div class="p">₹77928</div>
       <div class="c up">▲ </div>
     </div>
     
@@ -926,12 +936,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <div class="mini">
           <span class="s">BBC Business</span>
+          <a href="https://www.bbc.co.uk/news/articles/cr7k49xjzzeo?at_medium=RSS&at_campaign=rss" target="_blank">AI firms must answer for rogue bots, says boss of hacked company</a>
+        </div>
+        
+        <div class="mini">
+          <span class="s">BBC Business</span>
           <a href="https://www.bbc.co.uk/news/articles/cpw9yrl4p2qo?at_medium=RSS&at_campaign=rss" target="_blank">Sainsbury's agrees to sell Argos for £120m</a>
         </div>
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cjd4yz35x8go?at_medium=RSS&at_campaign=rss" target="_blank">Healey announces his first Budget will be on 28 October</a>
+          <a href="https://www.bbc.co.uk/news/articles/cjd4yz35x8go?at_medium=RSS&at_campaign=rss" target="_blank">Budget to be held in October, Healey announces</a>
         </div>
         
         <div class="mini">
@@ -940,13 +955,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         </div>
         
         <div class="mini">
-          <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/c62q7w003lro?at_medium=RSS&at_campaign=rss" target="_blank">BP puts North Sea business up for sale</a>
-        </div>
-        
-        <div class="mini">
           <span class="s">CNBC</span>
-          <a href="https://www.cnbc.com/2026/07/31/gm-in-vehicle-ai-system.html" target="_blank">GM to launch its own in-vehicle AI system later this year</a>
+          <a href="https://www.cnbc.com/2026/07/31/leopold-aschenbrenner-situational-awareness-fund-fire-sale.html" target="_blank">How Leopold Aschenbrenner built a $45 billion AI hedge fund — and lost most of it in days</a>
         </div>
         
       </div>
@@ -956,65 +966,65 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/31/private-consumer-companies-ipo.html" target="_blank">More consumer companies are staying private for longer, avoiding the IPO road</a></h3>
-        <p>With the rise of secondary markets and a stronger liquidity environment, more companies are choosing to stay private for longer, according to experts.</p>
-        <div class="ts">Jul 31 11:30</div>
+        <h3><a href="https://www.cnbc.com/2026/07/31/clear-street-pre-ipo-platform-databricks.html" target="_blank">Fintech broker Clear Street offers investors pre-IPO access to $188 billion AI giant Databricks</a></h3>
+        <p>Fintech brokerage Clear Street is launching a private markets platform, beginning with Databricks stakes, to give investors more access to late-stage </p>
+        <div class="ts">Jul 31 18:20</div>
       </div>
       
       <div class="ncard rv" style="--d:0.05s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/30/rivian-rivn-q2-2026-earnings.html" target="_blank">Rivian reduces 2026 spending plans, narrows earnings guidance</a></h3>
-        <p>Rivian reduced its 2026 spending plans and slightly narrowed its previously forecast losses this year as the company reported second-quarter results.</p>
-        <div class="ts">Jul 30 21:19</div>
+        <h3><a href="https://www.cnbc.com/2026/07/31/spider-man-brand-new-day-box-office-preview-sales.html" target="_blank">‘Spider-Man: Brand New Day’ sets domestic box office preview record with $72 million</a></h3>
+        <p>Sony and Marvel's "Spider-Man: Brave New Day" is expected to haul in around $270 million domestically over its debut weekend.</p>
+        <div class="ts">Jul 31 19:12</div>
       </div>
       
       <div class="ncard rv" style="--d:0.1s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/30/the-odyssey-70mm-imax-run-extended-until-september.html" target="_blank">'The Odyssey' extends stay in 70 mm Imax theaters as shows sell out weeks in advance</a></h3>
-        <p>Universal and Imax have extended the availability of 70 mm screenings of Christopher Nolan's retelling of Homer's epic into mid-September.</p>
-        <div class="ts">Jul 30 20:51</div>
+        <h3><a href="https://www.cnbc.com/2026/07/31/fifa-world-cup-private-equity-sports.html" target="_blank">FIFA tests the limits of private equity in sports with World Cup subsidiary sale</a></h3>
+        <p>UEFA and Concacaf's rejection of FIFA's plan to sell a 20% stake in the World Cup's commercial operations highlights uneasiness with private equity in</p>
+        <div class="ts">Jul 31 18:08</div>
       </div>
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/30/uefa-threatens-world-cup-boycott-over-fifa-investment-plan.html" target="_blank">UEFA threatens World Cup boycott over FIFA private equity investment plan</a></h3>
-        <p>FIFA has faced backlash from global soccer governing bodies over the proposal to allow private investment.</p>
-        <div class="ts">Jul 30 19:59</div>
+        <h3><a href="https://www.cnbc.com/2026/07/31/gm-in-vehicle-ai-system.html" target="_blank">GM to launch proprietary in-vehicle AI system later this year</a></h3>
+        <p>General Motors plans to launch a proprietary in-vehicle artificial intelligence system that's better tailored for its customers later this year.</p>
+        <div class="ts">Jul 31 18:13</div>
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
-        <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/economy/policy/articles/fed-interest-rate-decision-rocks-163300252.html" target="_blank">Fed interest-rate decision rocks Wall Street's inflation fears</a></h3>
-        <p></p>
-        <div class="ts">Jul 30 16:33</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/we-already-have-wills-were-in-our-60s-with-1-5-million-how-do-we-prevent-family-drama-among-our-heirs-bf7b0eb1?mod=mw_rss_topstories" target="_blank">We’re in our 60s with $1.5 million. Would a trust be more effective than a will to prevent conflict among our heirs?</a></h3>
+        <p>“I realize that probate can be lengthy, public and expensive.”</p>
+        <div class="ts">Jul 31 19:16</div>
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
-        <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/markets/live/stock-market-today-friday-july-31-dow-sp-500-nasdaq-081227738.html" target="_blank">Stock market today: Dow, S&P 500, Nasdaq give up gains as 10-year yield surges, Big Tech's AI spending ramps up</a></h3>
-        <p></p>
-        <div class="ts">Jul 31 08:12</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/its-getting-easier-for-terminally-ill-people-to-end-their-own-lives-what-to-know-as-laws-change-4fa04c54?mod=mw_rss_topstories" target="_blank">It’s getting easier for terminally ill people to end their own lives. What to know as laws change.</a></h3>
+        <p>Patients must meet three conditions to qualify for Medical Aid in Dying.</p>
+        <div class="ts">Jul 31 19:04</div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
-        <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/markets/article/apple-is-growing-without-the-ai-spending-spree-engulfing-big-tech-chart-of-the-day-100000942.html" target="_blank">Apple is growing without the AI spending spree engulfing Big Tech: Chart of the Day</a></h3>
-        <p></p>
-        <div class="ts">Jul 31 10:00</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/supply-chain-legend-tim-cook-finally-meets-his-match-with-apples-memory-crunch-9bce0b11?mod=mw_rss_topstories" target="_blank">Supply-chain legend Tim Cook finally meets his match with Apple’s memory crunch</a></h3>
+        <p>Apple has found itself dealing with component shortages exacerbated by the AI boom, and the company is scrambling for solutions.</p>
+        <div class="ts">Jul 31 19:04</div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
-        <span class="s">Yahoo Finance</span>
-        <h3><a href="https://www.investors.com/research/ibd-stock-of-the-day/guardant-health-stock-buy-point-earnings-colon-cancer/?src=A00220&yptr=yahoo" target="_blank">Guardant Health, Stock Of The Day, Spikes After Hiking 2026 Outlook</a></h3>
-        <p></p>
-        <div class="ts">Jul 31 14:14</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/ai-stocks-may-have-bottomed-out-what-investors-should-watch-for-next-bda034c5?mod=mw_rss_topstories" target="_blank">AI stocks may have bottomed out. What investors should watch for next.</a></h3>
+        <p>Microsoft earnings provided optimism for the AI trade, as did the trading activity surrounding a hedge fund’s fire sale.</p>
+        <div class="ts">Jul 31 18:29</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
-        <span class="s">Yahoo Finance</span>
-        <h3><a href="https://finance.yahoo.com/energy/articles/inside-project-peregrine-why-blackstone-141322460.html" target="_blank">Inside Project Peregrine: Why Blackstone and KKR Bought Into Kuwait’s Oil Pipelines</a></h3>
-        <p></p>
-        <div class="ts">Jul 31 14:13</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/my-girlfriend-is-62-can-she-claim-her-late-husbands-full-social-security-benefit-or-does-she-have-to-wait-315c0fa1?mod=mw_rss_topstories" target="_blank">My girlfriend is 62. Can she claim her late husband’s full Social Security benefit — or does she have to wait?</a></h3>
+        <p>“Her husband passed away 10 years ago. They had been married for more than 20 years.”</p>
+        <div class="ts">Jul 31 18:15</div>
       </div>
       
     </div>
@@ -1352,11 +1362,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   
   <div class="chess-kpi rv">
-    <div class="ck"><div class="v up">6</div><div class="k">Wins</div></div>
-    <div class="ck"><div class="v dn">5</div><div class="k">Losses</div></div>
+    <div class="ck"><div class="v up">2</div><div class="k">Wins</div></div>
+    <div class="ck"><div class="v dn">6</div><div class="k">Losses</div></div>
     <div class="ck"><div class="v" style="color:var(--dim)">0</div><div class="k">Draws</div></div>
-    <div class="ck"><div class="v" style="color:var(--lime)">55%</div><div class="k">Win Rate</div></div>
-    <div class="ck"><div class="v">11</div><div class="k">Games</div></div>
+    <div class="ck"><div class="v" style="color:var(--lime)">25%</div><div class="k">Win Rate</div></div>
+    <div class="ck"><div class="v">8</div><div class="k">Games</div></div>
     
     <div class="ck"><div class="v" style="color:var(--blue)">0</div><div class="k">Upsets</div></div>
     <div class="ck"><div class="v dn">0</div><div class="k">Collapses</div></div>
@@ -1365,9 +1375,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   
   <div class="verdict rv" style="background:rgba(255,255,255,.03);border-color:var(--line)">
-    ✅
-     Good session — 6/11. Review the wins and lock in the patterns.
-    
+    ❌
+     Rough session. W2 L6. Review losses before the next game. Pattern beats volume.
   </div>
   
 
@@ -1376,13 +1385,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card" style="border-color:rgba(255,92,92,.25)">
       <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--down);margin-bottom:6px">📚 Study this opening</div>
-      <div style="font-size:14px;color:#FFA0A0">D00 Queen's Pawn Game (1/3 = 33% WR)</div>
+      <div style="font-size:14px;color:#FFA0A0">D00 Queen's Pawn Game (0/3 = 0% WR)</div>
     </div>
     
     
     <div class="card" style="border-color:rgba(61,220,151,.25)">
       <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--up);margin-bottom:6px">💪 Strongest opening</div>
-      <div style="font-size:14px;color:#9BEFC9">C25 Vienna Game (1/2 = 50% WR)</div>
+      <div style="font-size:14px;color:#9BEFC9">C41 Philidor Defense (2/2 = 100% WR)</div>
     </div>
     
   </div>
@@ -1400,26 +1409,26 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span class="pill">Blitz</span>
         
         
-        
-        <a href="https://lichess.org/ZJtuNw4k" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        <span class="pill">62M Epic</span>
+        <a href="https://lichess.org/dUvsC1P7" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C25</span>Vienna Game</div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C41</span>Philidor Defense</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">motorcyclemitch</strong> <span style="color:var(--dim)">(1589)</span>
-        · me 1571 · 20 moves · Resignation
+        vs <strong style="color:var(--text)">meazt</strong> <span style="color:var(--dim)">(1545)</span>
+        · me 1548 · 62 moves · Checkmate
         · <span class="up">+6 pts</span>
       </div>
       
-      <div class="uniq"><b>What made it different</b>Over in 20 moves — decided in the opening, so the opening is what to study.</div>
+      <div class="uniq"><b>What made it different</b>Finished by checkmate on move 62 — you converted rather than letting it drift.</div>
       
       <div class="kfacts">
-        <span class="kf">Rating gap +18 (1571 vs 1589)</span><span class="kf">20 moves · Blitz</span>
+        <span class="kf">Rating gap -3 (1548 vs 1545)</span><span class="kf">Endgame from move 20</span><span class="kf">62 moves · Blitz</span>
       </div>
       
       
       <div class="ratings">
         
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1171</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1148</b></span>
         <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
       </div>
       
@@ -1427,65 +1436,65 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
     </div>
     
-    <div class="game win">
+    <div class="game loss">
       <div class="hdr">
-        <span style="font-size:17px">✅</span>
-        <span class="res up"
-              >Win</span>
+        <span style="font-size:17px">❌</span>
+        <span class="res dn"
+              >Loss</span>
         <span class="pill">as White</span>
         <span class="pill">Blitz</span>
         
         
-        
-        <a href="https://lichess.org/icOmv5qi" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        <span class="pill">44M Epic</span>
+        <a href="https://lichess.org/WAd7maEs" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">A40</span>Englund Gambit Declined</div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">D00</span>Queen's Pawn Game</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">Mad_max9289</strong> <span style="color:var(--dim)">(1555)</span>
-        · me 1565 · 30 moves · Resignation
-        · <span class="up">+6 pts</span>
+        vs <strong style="color:var(--text)">chessYsr_00</strong> <span style="color:var(--dim)">(1482)</span>
+        · me 1555 · 44 moves · Resignation
+        · <span class="dn">-7 pts</span>
       </div>
       
-      
+      <div class="uniq"><b>What made it different</b>17 blunders in one game. The result is noise; the error count is the signal.</div>
       
       <div class="kfacts">
-        <span class="kf">Rating gap -10 (1565 vs 1555)</span><span class="kf">Endgame from move 30</span><span class="kf">30 moves · Blitz</span>
+        <span class="kf">Accuracy 59% vs their 62%</span><span class="kf">Average centipawn loss 143</span><span class="kf">4 inaccuracies · 1 mistake · 17 blunders</span><span class="kf">Rating gap -73 (1555 vs 1482)</span><span class="kf">44 moves · Blitz</span>
       </div>
       
       
       <div class="ratings">
-        
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1165</b></span>
+        <span class="rt"><i>Played at</i><b>~1100</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1155</b></span>
         <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
       </div>
       
-      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
+      
       
     </div>
     
-    <div class="game win">
+    <div class="game loss">
       <div class="hdr">
-        <span style="font-size:17px">✅</span>
-        <span class="res up"
-              >Win</span>
+        <span style="font-size:17px">❌</span>
+        <span class="res dn"
+              >Loss</span>
         <span class="pill">as Black</span>
         <span class="pill">Blitz</span>
         
         
         
-        <a href="https://lichess.org/WZp8r70q" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        <a href="https://lichess.org/OhbE4jPP" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C41</span>Philidor Defense</div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C25</span>Vienna Game</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">Mad_max9289</strong> <span style="color:var(--dim)">(1561)</span>
-        · me 1560 · 20 moves · Resignation
-        · <span class="up">+5 pts</span>
+        vs <strong style="color:var(--text)">lomarsic</strong> <span style="color:var(--dim)">(1585)</span>
+        · me 1560 · 25 moves · Checkmate
+        · <span class="dn">-5 pts</span>
       </div>
       
-      <div class="uniq"><b>What made it different</b>Over in 20 moves — decided in the opening, so the opening is what to study.</div>
+      
       
       <div class="kfacts">
-        <span class="kf">Rating gap +1 (1560 vs 1561)</span><span class="kf">Endgame from move 20</span><span class="kf">20 moves · Blitz</span>
+        <span class="kf">Rating gap +25 (1560 vs 1585)</span><span class="kf">Endgame from move 25</span><span class="kf">25 moves · Blitz</span>
       </div>
       
       
@@ -1499,114 +1508,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
     </div>
     
-    <div class="game win">
-      <div class="hdr">
-        <span style="font-size:17px">✅</span>
-        <span class="res up"
-              >Win</span>
-        <span class="pill">as White</span>
-        <span class="pill">Blitz</span>
-        
-        
-        
-        <a href="https://lichess.org/taK77Alk" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
-      </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">A45</span>Indian Defense</div>
-      <div class="meta">
-        vs <strong style="color:var(--text)">P37er</strong> <span style="color:var(--dim)">(1527)</span>
-        · me 1554 · 11 moves · Resignation
-        · <span class="up">+6 pts</span>
-      </div>
-      
-      <div class="uniq"><b>What made it different</b>Over in 11 moves — decided in the opening, so the opening is what to study.</div>
-      
-      <div class="kfacts">
-        <span class="kf">Rating gap -27 (1554 vs 1527)</span><span class="kf">11 moves · Blitz</span>
-      </div>
-      
-      
-      <div class="ratings">
-        
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1154</b></span>
-        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
-      </div>
-      
-      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      
-    </div>
-    
-    <div class="game loss">
-      <div class="hdr">
-        <span style="font-size:17px">❌</span>
-        <span class="res dn"
-              >Loss</span>
-        <span class="pill">as Black</span>
-        <span class="pill">Blitz</span>
-        
-        
-        <span class="pill">47M Epic</span>
-        <a href="https://lichess.org/XnwkfCa5" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
-      </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">D00</span>Queen's Pawn Game</div>
-      <div class="meta">
-        vs <strong style="color:var(--text)">MOYTACH</strong> <span style="color:var(--dim)">(1612)</span>
-        · me 1559 · 47 moves · Checkmate
-        · <span class="dn">-5 pts</span>
-      </div>
-      
-      
-      
-      <div class="kfacts">
-        <span class="kf">Rating gap +53 (1559 vs 1612)</span><span class="kf">Endgame from move 29</span><span class="kf">47 moves · Blitz</span>
-      </div>
-      
-      
-      <div class="ratings">
-        
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1159</b></span>
-        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
-      </div>
-      
-      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      
-    </div>
-    
-    <div class="game loss">
-      <div class="hdr">
-        <span style="font-size:17px">❌</span>
-        <span class="res dn"
-              >Loss</span>
-        <span class="pill">as White</span>
-        <span class="pill">Blitz</span>
-        
-        
-        <span class="pill">53M Epic</span>
-        <a href="https://lichess.org/D3SD7qSp" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
-      </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">D00</span>Queen's Pawn Game</div>
-      <div class="meta">
-        vs <strong style="color:var(--text)">chibibaa</strong> <span style="color:var(--dim)">(1631)</span>
-        · me 1564 · 53 moves · Resignation
-        · <span class="dn">-5 pts</span>
-      </div>
-      
-      
-      
-      <div class="kfacts">
-        <span class="kf">Rating gap +67 (1564 vs 1631)</span><span class="kf">Endgame from move 32</span><span class="kf">53 moves · Blitz</span>
-      </div>
-      
-      
-      <div class="ratings">
-        
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1164</b></span>
-        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
-      </div>
-      
-      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      
-    </div>
-    
     <div class="game loss">
       <div class="hdr">
         <span style="font-size:17px">❌</span>
@@ -1617,25 +1518,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         
         
-        <a href="https://lichess.org/bv4xbWIb" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        <a href="https://lichess.org/Grd5u6UF" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">A07</span>King's Indian Attack</div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C30</span>King's Gambit</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">Nihilidad_YunChe</strong> <span style="color:var(--dim)">(1594)</span>
-        · me 1569 · 31 moves · Resignation
-        · <span class="dn">-5 pts</span>
+        vs <strong style="color:var(--text)">Heromnxpw0</strong> <span style="color:var(--dim)">(1529)</span>
+        · me 1566 · 26 moves · Checkmate
+        · <span class="dn">-6 pts</span>
       </div>
       
       
       
       <div class="kfacts">
-        <span class="kf">Rating gap +25 (1569 vs 1594)</span><span class="kf">Endgame from move 27</span><span class="kf">31 moves · Blitz</span>
+        <span class="kf">Rating gap -37 (1566 vs 1529)</span><span class="kf">26 moves · Blitz</span>
       </div>
       
       
       <div class="ratings">
         
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1169</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1166</b></span>
         <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
       </div>
       
@@ -1643,35 +1544,35 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
     </div>
     
-    <div class="game win">
+    <div class="game loss">
       <div class="hdr">
-        <span style="font-size:17px">✅</span>
-        <span class="res up"
-              >Win</span>
+        <span style="font-size:17px">❌</span>
+        <span class="res dn"
+              >Loss</span>
         <span class="pill">as White</span>
         <span class="pill">Blitz</span>
         
         
         
-        <a href="https://lichess.org/0C133YeF" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        <a href="https://lichess.org/Nq8ZeJTX" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
       <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">B06</span>Modern Defense</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">NoobJoJo</strong> <span style="color:var(--dim)">(1542)</span>
-        · me 1564 · 27 moves · Resignation
-        · <span class="up">+5 pts</span>
+        vs <strong style="color:var(--text)">Groovekz</strong> <span style="color:var(--dim)">(1575)</span>
+        · me 1572 · 25 moves · Resignation
+        · <span class="dn">-6 pts</span>
       </div>
       
       
       
       <div class="kfacts">
-        <span class="kf">Rating gap -22 (1564 vs 1542)</span><span class="kf">Endgame from move 22</span><span class="kf">27 moves · Blitz</span>
+        <span class="kf">Rating gap +3 (1572 vs 1575)</span><span class="kf">25 moves · Blitz</span>
       </div>
       
       
       <div class="ratings">
         
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1164</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1172</b></span>
         <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
       </div>
       
@@ -1684,30 +1585,66 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span style="font-size:17px">❌</span>
         <span class="res dn"
               >Loss</span>
-        <span class="pill">as Black</span>
+        <span class="pill">as White</span>
+        <span class="pill">Blitz</span>
+        
+        
+        <span class="pill">82M Epic</span>
+        <a href="https://lichess.org/lIwXSxsu" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+      </div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">D00</span>Queen's Pawn Game</div>
+      <div class="meta">
+        vs <strong style="color:var(--text)">pawnographyChess</strong> <span style="color:var(--dim)">(1582)</span>
+        · me 1578 · 82 moves · Resignation
+        · <span class="dn">-6 pts</span>
+      </div>
+      
+      <div class="uniq"><b>What made it different</b>82 moves of grinding. Endgame stamina, not opening prep, settled this one.</div>
+      
+      <div class="kfacts">
+        <span class="kf">Rating gap +4 (1578 vs 1582)</span><span class="kf">Endgame from move 22</span><span class="kf">82 moves · Blitz</span>
+      </div>
+      
+      
+      <div class="ratings">
+        
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1178</b></span>
+        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      
+      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
+      
+    </div>
+    
+    <div class="game loss">
+      <div class="hdr">
+        <span style="font-size:17px">❌</span>
+        <span class="res dn"
+              >Loss</span>
+        <span class="pill">as White</span>
         <span class="pill">Blitz</span>
         
         
         
-        <a href="https://lichess.org/RXvRMP10" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        <a href="https://lichess.org/NWT18lmo" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C41</span>Philidor Defense</div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">D00</span>Queen's Pawn Game</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">sock_lamp</strong> <span style="color:var(--dim)">(1610)</span>
-        · me 1569 · 32 moves · Resignation
+        vs <strong style="color:var(--text)">JuliusIII</strong> <span style="color:var(--dim)">(1608)</span>
+        · me 1583 · 35 moves · Resignation
         · <span class="dn">-5 pts</span>
       </div>
       
       
       
       <div class="kfacts">
-        <span class="kf">Rating gap +41 (1569 vs 1610)</span><span class="kf">32 moves · Blitz</span>
+        <span class="kf">Rating gap +25 (1583 vs 1608)</span><span class="kf">Endgame from move 23</span><span class="kf">35 moves · Blitz</span>
       </div>
       
       
       <div class="ratings">
         
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1169</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1183</b></span>
         <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
       </div>
       
@@ -1720,66 +1657,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span style="font-size:17px">✅</span>
         <span class="res up"
               >Win</span>
-        <span class="pill">as White</span>
-        <span class="pill">Blitz</span>
-        
-        
-        
-        <a href="https://lichess.org/jLt1NDI1" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
-      </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">D00</span>Queen's Pawn Game</div>
-      <div class="meta">
-        vs <strong style="color:var(--text)">sundar1900</strong> <span style="color:var(--dim)">(1569)</span>
-        · me 1563 · 15 moves · Resignation
-        · <span class="up">+6 pts</span>
-      </div>
-      
-      <div class="uniq"><b>What made it different</b>Over in 15 moves — decided in the opening, so the opening is what to study.</div>
-      
-      <div class="kfacts">
-        <span class="kf">Rating gap +6 (1563 vs 1569)</span><span class="kf">15 moves · Blitz</span>
-      </div>
-      
-      
-      <div class="ratings">
-        
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1163</b></span>
-        <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
-      </div>
-      
-      <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      
-    </div>
-    
-    <div class="game loss">
-      <div class="hdr">
-        <span style="font-size:17px">❌</span>
-        <span class="res dn"
-              >Loss</span>
         <span class="pill">as Black</span>
         <span class="pill">Blitz</span>
         
         
-        <span class="pill">75M Epic</span>
-        <a href="https://lichess.org/J0Ydk8xp" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+        
+        <a href="https://lichess.org/lUwk7n8O" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
       </div>
-      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C25</span>Vienna Game</div>
+      <div class="op"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">C41</span>Philidor Defense</div>
       <div class="meta">
-        vs <strong style="color:var(--text)">SweetBonnieBrown</strong> <span style="color:var(--dim)">(1608)</span>
-        · me 1568 · 75 moves · Resignation
-        · <span class="dn">-5 pts</span>
+        vs <strong style="color:var(--text)">sylexzer</strong> <span style="color:var(--dim)">(1586)</span>
+        · me 1577 · 34 moves · Resignation
+        · <span class="up">+6 pts</span>
       </div>
       
-      <div class="uniq"><b>What made it different</b>75 moves of grinding. Endgame stamina, not opening prep, settled this one.</div>
+      
       
       <div class="kfacts">
-        <span class="kf">Rating gap +40 (1568 vs 1608)</span><span class="kf">Endgame from move 29</span><span class="kf">75 moves · Blitz</span>
+        <span class="kf">Rating gap +9 (1577 vs 1586)</span><span class="kf">Endgame from move 31</span><span class="kf">34 moves · Blitz</span>
       </div>
       
       
       <div class="ratings">
         
-        <span class="rt"><i>Est. FIDE equiv.</i><b>~1168</b></span>
+        <span class="rt"><i>Est. FIDE equiv.</i><b>~1177</b></span>
         <span class="rtnote">estimates from Lichess blitz rating &amp; centipawn loss — not official FIDE</span>
       </div>
       
@@ -1832,9 +1733,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       
       <div>
-        <div class="bar" style="--h:9px;--d:0.42000000000000004s;background:var(--down)"></div>
+        <div class="bar" style="--h:17px;--d:0.42000000000000004s;background:var(--down)"></div>
         <div class="lb">07/31</div>
-        <div class="lb" style="color:var(--muted)">14%</div>
+        <div class="lb" style="color:var(--muted)">25%</div>
       </div>
       
     </div>
@@ -1855,7 +1756,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1809 · 🔴 stretch</h3>
+      <h3>Rating 1865 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Exposed King · Middlegame · Opera Mate</p>
       <div class="q">💡 Three-move combination. The first move must be forcing.</div>
       <a href="https://lichess.org/training/as2Ko" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -1864,7 +1765,26 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
-<!-- ══════════ 10 PERFORMANCE ══════════
+<!-- ══════════ 10 MIND GYM ══════════
+     Pure client-side: deterministic daily seed, scores in localStorage. No
+     API, so it works identically on the static host. -->
+<section class="sec" id="gym">
+  <div class="shead rv">
+    <div>
+      <span class="snum">10 / MIND GYM</span>
+      <h2 class="stitle">Six minutes. Sharper.</h2>
+    </div>
+    <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
+      pressure, estimation, recall, and the two calculations a trading desk actually runs.
+      Scores stay in this browser.</p>
+  </div>
+
+  <div class="gym-tabs rv" id="gymTabs"></div>
+  <div class="gym-stage rv" id="gymStage"></div>
+  <div class="gym-score rv" id="gymScore"></div>
+</section>
+
+<!-- ══════════ 11 PERFORMANCE ══════════
      Entirely live. Hidden on a static host, where there is no ledger to
      compute an edge from. -->
 <section class="sec" id="perf" style="display:none">
@@ -1889,11 +1809,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   <div class="perf-grid rv" id="perfGrid"></div>
-  <div class="eqwrap rv" id="eqWrap">
-    <h4>Equity curve · cumulative R, closed signals in resolution order</h4>
-    <svg id="eqSvg" viewBox="0 0 800 190" preserveAspectRatio="none" role="img"
-         aria-label="Cumulative R equity curve"></svg>
-  </div>
   <div class="brk rv" id="perfBrk"></div>
 </section>
 
@@ -5170,7 +5085,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Friday, July 31 2026 · 20:05 IST<br>
+      Saturday, August 01 2026 · 01:00 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -5958,7 +5873,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         cell(t.open, 'Open now', 'excluded from every rate above', 'var(--blue)') +
         cell(h.trades, 'Closed trades', 'the sample this rests on');
 
-      drawEquity(j.equity_curve || []);
 
       function table(title, rows, labelWord){
         if (!rows || !rows.length) return '';
@@ -5980,40 +5894,524 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     }
 
     // Hand-rolled SVG path — no chart library, nothing to load, works offline.
-    function drawEquity(curve){
-      var svg = el('eqSvg');
-      if (!curve.length){
-        svg.innerHTML = '<text x="400" y="95" text-anchor="middle" class="axis">' +
-                        'No closed trades with an R value yet.</text>';
-        return;
-      }
-      var W = 800, H = 190, PAD = 18;
-      var vals = curve.map(function(p){ return p.cum_r; });
-      var lo = Math.min(0, Math.min.apply(null, vals));
-      var hi = Math.max(0, Math.max.apply(null, vals));
-      if (hi === lo) hi = lo + 1;
-      var x = function(i){ return PAD + (i / Math.max(curve.length - 1, 1)) * (W - PAD * 2); };
-      var y = function(v){ return H - PAD - ((v - lo) / (hi - lo)) * (H - PAD * 2); };
-
-      var d = curve.map(function(p, i){ return (i ? 'L' : 'M') + fmt(x(i), 1) + ' ' + fmt(y(p.cum_r), 1); }).join(' ');
-      var area = d + ' L' + fmt(x(curve.length - 1), 1) + ' ' + fmt(y(lo < 0 ? 0 : lo), 1) +
-                 ' L' + fmt(x(0), 1) + ' ' + fmt(y(lo < 0 ? 0 : lo), 1) + ' Z';
-      var last = curve[curve.length - 1];
-
-      svg.innerHTML =
-        '<path class="fillArea" d="' + area + '"/>' +
-        '<line class="zero" x1="' + PAD + '" x2="' + (W - PAD) + '" y1="' + fmt(y(0),1) + '" y2="' + fmt(y(0),1) + '"/>' +
-        '<path class="curve" d="' + d + '"/>' +
-        '<circle cx="' + fmt(x(curve.length - 1), 1) + '" cy="' + fmt(y(last.cum_r), 1) + '" r="3.5" fill="var(--lime)"/>' +
-        '<text class="axis" x="' + PAD + '" y="12">' + fmt(hi, 1) + 'R</text>' +
-        '<text class="axis" x="' + PAD + '" y="' + (H - 4) + '">' + fmt(lo, 1) + 'R</text>' +
-        '<text class="axis" x="' + (W - PAD) + '" y="12" text-anchor="end">' +
-          curve.length + ' trades → ' + (last.cum_r > 0 ? '+' : '') + fmt(last.cum_r, 1) + 'R</text>';
-    }
   })();
 
-  /* ── auto refresh ── */
-  setTimeout(function(){ location.reload(); }, 5 * 60 * 1000);
+  /* ══════════════ MIND GYM ══════════════
+     Five drills, one featured per day. Everything is generated from a seed
+     derived from the date, so the set is identical on every device all day and
+     changes at midnight IST — no content to author, no endpoint to call, and
+     it works unchanged on the static host. Scores live in localStorage. */
+  (function(){
+    var stage = document.getElementById('gymStage');
+    if (!stage) return;
+    var tabsEl = document.getElementById('gymTabs'),
+        scoreEl = document.getElementById('gymScore'),
+        LS = 'ds_gym_v1';
+
+    /* ── deterministic randomness ──
+       mulberry32 off a date-derived seed. Same day → same questions. */
+    function seedFor(dayKey, salt){
+      var h = 2166136261;
+      var str = dayKey + '|' + salt;
+      for (var i = 0; i < str.length; i++){
+        h ^= str.charCodeAt(i); h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+    function rng(seed){
+      return function(){
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    var R = {
+      int: function(r, a, b){ return a + Math.floor(r() * (b - a + 1)); },
+      pick: function(r, arr){ return arr[Math.floor(r() * arr.length)]; },
+      shuffle: function(r, arr){
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--){
+          var j = Math.floor(r() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+    };
+
+    function istDayKey(){
+      var n = new Date();
+      var ist = new Date(n.getTime() + (n.getTimezoneOffset() + 330) * 60000);
+      return ist.getFullYear() + '-' + ('0' + (ist.getMonth() + 1)).slice(-2) + '-' + ('0' + ist.getDate()).slice(-2);
+    }
+    var DAY = istDayKey();
+
+    function store(){ try { return JSON.parse(localStorage.getItem(LS) || '{}') || {}; } catch(e){ return {}; } }
+    function save(d){ try { localStorage.setItem(LS, JSON.stringify(d)); } catch(e){} }
+
+    function esc(s){
+      return String(s == null ? '' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    var fmt = function(v, d){
+      return Number(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+    };
+
+    /* ═══ the drills ═══
+       Each returns { rounds: [...] }, and each round renders itself and calls
+       done(correct) exactly once. */
+
+    // 1 · MENTAL MATH — the arithmetic an FP&A review actually needs at speed.
+    function mathRounds(r){
+      var out = [];
+      for (var i = 0; i < 8; i++){
+        var kind = R.pick(r, ['pct', 'margin', 'growth', 'markup', 'share']);
+        var q, ans, note;
+        if (kind === 'pct'){
+          var base = R.int(r, 20, 95) * 100, p = R.pick(r, [5, 8, 12, 15, 18, 25, 40]);
+          q = p + '% of ' + fmt(base, 0); ans = base * p / 100;
+          note = fmt(base,0) + ' × ' + p + '/100';
+        } else if (kind === 'margin'){
+          var rev = R.int(r, 40, 90) * 100, cost = Math.round(rev * (R.int(r, 45, 85) / 100));
+          q = 'Revenue ' + fmt(rev,0) + ', cost ' + fmt(cost,0) + ' — gross margin %';
+          ans = Math.round((rev - cost) / rev * 1000) / 10;
+          note = '(' + fmt(rev,0) + ' − ' + fmt(cost,0) + ') ÷ ' + fmt(rev,0);
+        } else if (kind === 'growth'){
+          var a = R.int(r, 20, 60) * 10, g = R.pick(r, [10, 15, 20, 25, 30, 50]);
+          q = fmt(a,0) + ' grows ' + g + '% — new value';
+          ans = Math.round(a * (1 + g / 100) * 100) / 100;
+          note = fmt(a,0) + ' × ' + (1 + g/100);
+        } else if (kind === 'markup'){
+          var c2 = R.int(r, 100, 900), m = R.pick(r, [20, 25, 30, 40, 50]);
+          q = 'Cost ' + fmt(c2,0) + ', markup ' + m + '% — selling price';
+          ans = Math.round(c2 * (1 + m / 100) * 100) / 100;
+          note = fmt(c2,0) + ' × ' + (1 + m/100);
+        } else {
+          var whole = R.int(r, 30, 90) * 100, part = Math.round(whole * (R.int(r, 10, 60) / 100));
+          q = fmt(part,0) + ' out of ' + fmt(whole,0) + ' — what %';
+          ans = Math.round(part / whole * 1000) / 10;
+          note = fmt(part,0) + ' ÷ ' + fmt(whole,0) + ' × 100';
+        }
+        out.push({ type: 'input', q: q, ans: ans, tol: 0.02, note: note, unit: kind === 'margin' || kind === 'share' ? '%' : '' });
+      }
+      return out;
+    }
+
+    // 2 · R:R AND SIZING — the two numbers that decide whether a trade is takeable.
+    function deskRounds(r){
+      var syms = ['RELIANCE','TCS','INFY','HDFCBANK','GOLD','CRUDE','NIFTY','SILVER'];
+      var out = [];
+      for (var i = 0; i < 7; i++){
+        var sym = R.pick(r, syms), entry = R.int(r, 100, 3000);
+        var riskPct = R.int(r, 2, 6), rewardMult = R.pick(r, [1.5, 2, 2.5, 3]);
+        var sl = Math.round(entry * (1 - riskPct / 100) * 100) / 100;
+        var risk = entry - sl;
+        if (i % 2 === 0){
+          var tgt = Math.round((entry + risk * rewardMult) * 100) / 100;
+          out.push({ type: 'input',
+            q: sym + ' — entry ' + fmt(entry,0) + ', stop ' + fmt(sl,2) + ', target ' + fmt(tgt,2) + '. R:R?',
+            ans: rewardMult, tol: 0.06,
+            note: 'Reward ' + fmt(tgt - entry,2) + ' ÷ risk ' + fmt(risk,2), unit: 'R' });
+        } else {
+          var cap = R.pick(r, [100000, 200000, 500000]), riskBudget = R.pick(r, [0.5, 1, 2]);
+          var qty = Math.floor(cap * riskBudget / 100 / risk);
+          out.push({ type: 'input',
+            q: 'Capital ' + fmt(cap,0) + ', risking ' + riskBudget + '% per trade. ' + sym +
+               ' entry ' + fmt(entry,0) + ', stop ' + fmt(sl,2) + '. Position size?',
+            ans: qty, tol: 0.04,
+            note: fmt(cap * riskBudget / 100, 0) + ' risk ÷ ' + fmt(risk,2) + ' per share', unit: 'sh' });
+        }
+      }
+      return out;
+    }
+
+    // 3 · ESTIMATION — order of magnitude. Scored on being in the right band,
+    // because that is the skill; the exact figure is not the point.
+    var FERMI = [
+      ['Seconds in a 30-day month', 2592000],
+      ['Heartbeats in an average year', 36792000],
+      ['Litres of water in an Olympic pool', 2500000],
+      ['Words in a 300-page novel', 90000],
+      ['Grains of rice in a 1 kg bag', 50000],
+      ['People who fly commercially worldwide each day', 12000000],
+      ['Weight of a fully loaded 747 in kg', 400000],
+      ['Kilometres from Mumbai to Dubai', 1930],
+      ['Petrol stations in India', 90000],
+      ['Cups of coffee drunk worldwide per day', 2250000000],
+      ['Steps in 10 kilometres of walking', 13000],
+      ['Bricks in a typical 2-storey house', 30000]
+    ];
+    function fermiRounds(r){
+      return R.shuffle(r, FERMI).slice(0, 6).map(function(f){
+        return { type: 'input', q: f[0], ans: f[1], logTol: 0.35,
+                 note: 'Order of magnitude is the win — within ~2× counts.', unit: '' };
+      });
+    }
+
+    // 4 · NUMBER RECALL — working memory, lengthening each round.
+    function recallRounds(r){
+      var out = [];
+      for (var len = 4; len <= 9; len++){
+        var digits = '';
+        for (var i = 0; i < len; i++) digits += R.int(r, 0, 9);
+        out.push({ type: 'recall', digits: digits, q: 'Memorise ' + len + ' digits' });
+      }
+      return out;
+    }
+
+    // 5 · MARKET LOGIC — multiple choice on things that cost money to get wrong.
+    var LOGIC = [
+      ['A stock falls 50%. What gain gets you back to breakeven?', ['100%','50%','75%','200%'], 0,
+       'Down 50% halves the base. Doubling the half is +100%. Losses need bigger wins than they look.'],
+      ['Two funds: A returns +30%, −20%. B returns +5%, +5%. Which ends higher?', ['B','A','Same','Need more info'], 0,
+       'A: 1.30 × 0.80 = 1.04. B: 1.05 × 1.05 = 1.1025. Volatility drags compounding.'],
+      ['Win rate 30%, average win 3R, average loss 1R. Expectancy?', ['+0.2R','−0.1R','+0.9R','0R'], 0,
+       '0.30 × 3 − 0.70 × 1 = +0.2R. A 30% win rate can print money.'],
+      ['₹1L at 12% for 30 years vs ₹3L at 8% for 30 years. Which is larger?', ['₹1L at 12%','₹3L at 8%','Equal','Depends on tax'], 0,
+       '₹1L × 1.12³⁰ ≈ ₹30L. ₹3L × 1.08³⁰ ≈ ₹30.2L — near dead heat. Rate rivals principal over long horizons.'],
+      ['Which costs more over 20 years on a ₹50L corpus?', ['1.5% expense ratio','₹50,000 one-time fee','A 10% single-year drawdown','A 2-year late start'], 0,
+       'A 1.5% drag compounds to roughly a quarter of the corpus. Recurring costs beat one-off shocks.'],
+      ['Position risks 1% of capital. How many consecutive losses to halve the account?', ['~69','~50','~100','~35'], 0,
+       'ln(0.5)/ln(0.99) ≈ 69. Small fixed risk is remarkably hard to kill.'],
+      ['EBITDA rises, operating cash flow falls. Most likely cause?', ['Working capital blew out','Sales fell','Depreciation rose','Interest rose'], 0,
+       'EBITDA ignores working capital. Receivables and inventory absorb the cash.'],
+      ['A 1.5 R:R setup needs what win rate to break even?', ['40%','50%','33%','60%'], 0,
+       '1/(1+1.5) = 40%. Below that the edge is negative no matter how good it feels.'],
+      ['₹10,000/month SIP at 12% for 10 years ends near', ['₹23L','₹12L','₹18L','₹35L'], 0,
+       'Roughly ₹23.2L on ₹12L invested. The second decade is where it gets interesting.'],
+      ['Rupee falls from 83 to 95 per dollar. A US-earning exporter sees', ['Higher rupee revenue','Lower rupee revenue','No change','Lower margins'], 0,
+       'Each dollar converts to more rupees. Importers take the opposite hit.']
+    ];
+    function logicRounds(r){
+      return R.shuffle(r, LOGIC).slice(0, 6).map(function(l){
+        var opts = l[1].map(function(t, i){ return { t: t, ok: i === l[2] }; });
+        return { type: 'choice', q: l[0], opts: R.shuffle(r, opts), note: l[3] };
+      });
+    }
+
+    var GAMES = [
+      { id:'math',    name:'Mental Math',   icon:'🔢', build: mathRounds,   blurb:'Percentages, margins, growth. No calculator.' },
+      { id:'desk',    name:'Desk Math',     icon:'🎯', build: deskRounds,   blurb:'R:R and position sizing — the two that decide the trade.' },
+      { id:'logic',   name:'Market Logic',  icon:'🧠', build: logicRounds,  blurb:'Things that cost money to get wrong.' },
+      { id:'fermi',   name:'Estimation',    icon:'📐', build: fermiRounds,  blurb:'Order of magnitude beats precision.' },
+      { id:'recall',  name:'Number Recall', icon:'🧩', build: recallRounds, blurb:'Working memory, four digits up to nine.' }
+    ];
+
+    // Featured game rotates by day, so the default changes every morning.
+    var dayIndex = Math.abs(seedFor(DAY, 'featured')) % GAMES.length;
+    var current = GAMES[dayIndex], rounds = [], idx = 0, correct = 0, startedAt = 0;
+
+    function tabs(){
+      tabsEl.innerHTML = GAMES.map(function(g, i){
+        return '<button class="gym-tab' + (g.id === current.id ? ' on' : '') + '" data-g="' + g.id + '">' +
+               (i === dayIndex ? '<span class="tdot" title="Today\'s pick"></span>' : '') +
+               g.icon + ' ' + esc(g.name) + '</button>';
+      }).join('');
+      Array.prototype.forEach.call(tabsEl.querySelectorAll('.gym-tab'), function(b){
+        b.addEventListener('click', function(){
+          var g = GAMES.filter(function(x){ return x.id === b.dataset.g; })[0];
+          if (g) { current = g; start(); }
+        });
+      });
+    }
+
+    function start(){
+      rounds = current.build(rng(seedFor(DAY, current.id)));
+      idx = 0; correct = 0; startedAt = Date.now();
+      tabs(); render();
+    }
+
+    function meta(){
+      return '<div class="gym-meta"><span>' + esc(current.icon + ' ' + current.name.toUpperCase()) +
+             ' · ' + esc(current.blurb) + '</span>' +
+             '<span class="prog">' + Math.min(idx + 1, rounds.length) + ' / ' + rounds.length + '</span></div>';
+    }
+
+    function finish(){
+      var secs = Math.round((Date.now() - startedAt) / 1000);
+      var pct = Math.round(correct / rounds.length * 100);
+      var d = store(); d[DAY] = d[DAY] || {};
+      var prev = d[DAY][current.id];
+      // Keep the day's best, not the latest — replaying should not punish you.
+      if (!prev || correct > prev.correct) d[DAY][current.id] = { correct: correct, total: rounds.length, secs: secs };
+      save(d);
+
+      var verdict = pct === 100 ? 'Clean sweep.' : pct >= 70 ? 'Solid.' : pct >= 40 ? 'Middling.' : 'Rough one.';
+      stage.innerHTML = meta() +
+        '<div class="gym-q">' + correct + ' / ' + rounds.length + ' <span style="color:var(--muted);font-size:.55em">' + verdict + '</span></div>' +
+        '<div class="gym-sub">' + secs + ' seconds · ' + pct + '% · ' +
+          (prev && correct <= prev.correct ? 'today\'s best stands at ' + prev.correct : 'new best for today') + '</div>' +
+        '<div class="gym-input"><button class="gym-btn" id="gymAgain">Run it again</button>' +
+        '<button class="gym-btn ghost" id="gymNext">Next drill →</button></div>';
+      document.getElementById('gymAgain').addEventListener('click', start);
+      document.getElementById('gymNext').addEventListener('click', function(){
+        current = GAMES[(GAMES.indexOf(current) + 1) % GAMES.length]; start();
+      });
+      paintScore();
+    }
+
+    function next(ok){
+      if (ok) correct++;
+      idx++;
+      setTimeout(function(){ idx >= rounds.length ? finish() : render(); }, ok ? 550 : 1900);
+    }
+
+    function feedback(ok, msg){
+      var fb = document.createElement('div');
+      fb.className = 'gym-fb ' + (ok ? 'good' : 'bad');
+      fb.innerHTML = msg;
+      stage.appendChild(fb);
+    }
+
+    function render(){
+      var q = rounds[idx];
+      if (!q) return finish();
+
+      if (q.type === 'choice'){
+        stage.innerHTML = meta() + '<div class="gym-q">' + esc(q.q) + '</div>' +
+          '<div class="gym-opts">' + q.opts.map(function(o, i){
+            return '<button class="gym-opt" data-i="' + i + '">' + esc(o.t) + '</button>';
+          }).join('') + '</div>';
+        Array.prototype.forEach.call(stage.querySelectorAll('.gym-opt'), function(b){
+          b.addEventListener('click', function(){
+            var o = q.opts[+b.dataset.i], ok = o.ok;
+            Array.prototype.forEach.call(stage.querySelectorAll('.gym-opt'), function(x, j){
+              x.disabled = true;
+              if (q.opts[j].ok) x.classList.add('right');
+            });
+            if (!ok) b.classList.add('wrong');
+            feedback(ok, (ok ? '<b>Right.</b> ' : '<b>No.</b> ') + esc(q.note));
+            next(ok);
+          });
+        });
+        return;
+      }
+
+      if (q.type === 'recall'){
+        stage.innerHTML = meta() + '<div class="gym-q">' + esc(q.q) + '</div>' +
+          '<div class="gym-sub">It disappears in ' + (1.2 + q.digits.length * 0.35).toFixed(1) + ' seconds.</div>' +
+          '<div class="gym-prompt" id="gymDigits">' + esc(q.digits) + '</div>';
+        setTimeout(function(){
+          stage.innerHTML = meta() + '<div class="gym-q">Type it back</div>' +
+            '<div class="gym-input"><input id="gymIn" inputmode="numeric" autocomplete="off" placeholder="' +
+            q.digits.length + ' digits">' +
+            '<button class="gym-btn" id="gymGo">Check</button></div>';
+          wireInput(function(val){
+            var ok = val.replace(/\D/g, '') === q.digits;
+            feedback(ok, ok ? '<b>Correct.</b> ' + esc(q.digits)
+                            : '<b>It was ' + esc(q.digits) + '.</b> You typed ' + esc(val || '—') + '.');
+            next(ok);
+          });
+        }, (1.2 + q.digits.length * 0.35) * 1000);
+        return;
+      }
+
+      // numeric input
+      stage.innerHTML = meta() + '<div class="gym-q">' + esc(q.q) + '</div>' +
+        '<div class="gym-input"><input id="gymIn" inputmode="decimal" autocomplete="off" placeholder="Your answer' +
+        (q.unit ? ' (' + esc(q.unit) + ')' : '') + '">' +
+        '<button class="gym-btn" id="gymGo">Check</button></div>';
+      wireInput(function(val){
+        var got = parseFloat(String(val).replace(/[, ]/g, ''));
+        var ok;
+        if (!isFinite(got)) ok = false;
+        else if (q.logTol){
+          // Estimation is judged on log distance — within about 2× is a pass.
+          ok = got > 0 && Math.abs(Math.log10(got) - Math.log10(q.ans)) <= q.logTol;
+        } else {
+          ok = Math.abs(got - q.ans) <= Math.max(Math.abs(q.ans) * q.tol, 0.01);
+        }
+        var shown = q.ans >= 1000 ? fmt(q.ans, 0) : fmt(q.ans, Math.abs(q.ans % 1) > 0 ? 2 : 0);
+        feedback(ok, (ok ? '<b>Right.</b> ' : '<b>Answer: ' + shown + (q.unit ? ' ' + esc(q.unit) : '') + '.</b> ') +
+                     (q.note ? esc(q.note) : ''));
+        next(ok);
+      });
+    }
+
+    function wireInput(check){
+      var inp = document.getElementById('gymIn'), go = document.getElementById('gymGo');
+      if (!inp || !go) return;
+      inp.focus();
+      var fired = false;
+      var submit = function(){
+        if (fired) return; fired = true;
+        go.disabled = true; inp.disabled = true;
+        check(inp.value.trim());
+      };
+      go.addEventListener('click', submit);
+      inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
+    }
+
+    function paintScore(){
+      var d = store(), today = d[DAY] || {};
+      var done = Object.keys(today).length;
+      var got = 0, tot = 0;
+      for (var k in today){ got += today[k].correct; tot += today[k].total; }
+
+      // Streak: consecutive days ending today with at least one drill played.
+      var streak = 0;
+      for (var i = 0; i < 400; i++){
+        var t = new Date(Date.now() - i * 86400000);
+        var ist = new Date(t.getTime() + (t.getTimezoneOffset() + 330) * 60000);
+        var key = ist.getFullYear() + '-' + ('0'+(ist.getMonth()+1)).slice(-2) + '-' + ('0'+ist.getDate()).slice(-2);
+        if (d[key] && Object.keys(d[key]).length) streak++;
+        else if (i > 0) break;
+      }
+
+      scoreEl.innerHTML =
+        '<div><div class="v" style="color:var(--lime)">' + done + '/' + GAMES.length + '</div><div class="k">Drills today</div></div>' +
+        '<div><div class="v">' + (tot ? Math.round(got / tot * 100) : 0) + '%</div><div class="k">Accuracy today</div></div>' +
+        '<div><div class="v" style="color:var(--gold)">' + streak + '</div><div class="k">Day streak</div></div>' +
+        '<div><div class="v" style="color:var(--blue)">' + Object.keys(d).length + '</div><div class="k">Days trained</div></div>';
+    }
+
+    start(); paintScore();
+  })();
+
+  /* ══════════════ LIVE CLOCK · MARKETS · NEWS ══════════════
+     The daily shell freezes at 06:00 IST. These three keep the page honest
+     without a rebuild: the clock ticks, prices refresh every 5 minutes, the
+     wires every 3 hours. All of it degrades to the baked-in values if /api
+     is not there (GitHub Pages), so nothing here can leave a blank section. */
+  (function(){
+    var API = '/api';
+
+    /* ── IST clock: real time, not build time ── */
+    var clock = document.getElementById('istClock');
+    if (clock){
+      var tick = function(){
+        var n = new Date();
+        // IST is UTC+5:30 with no DST, so a fixed offset is exact.
+        var ist = new Date(n.getTime() + (n.getTimezoneOffset() + 330) * 60000);
+        var hh = ('0' + ist.getHours()).slice(-2),
+            mm = ('0' + ist.getMinutes()).slice(-2),
+            ss = ('0' + ist.getSeconds()).slice(-2);
+        clock.innerHTML = '<i></i>' + hh + ':' + mm + ':' + ss + ' IST';
+      };
+      tick(); setInterval(tick, 1000);
+    }
+
+    function get(path){
+      return fetch(API + path, { cache: 'no-store' })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .catch(function(){ return null; });
+    }
+    function esc(s){
+      return String(s == null ? '' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    /* ── markets: every 5 minutes ── */
+    function paintMarkets(j){
+      if (!j || !j.ok || !j.markets || !j.markets.length) return;
+      var live = j.markets.filter(function(m){ return m.price_raw !== null; });
+      if (!live.length) return;
+
+      var cell = function(m){
+        var arrow = m.up ? '▲' : '▼', cls = m.up ? 'up' : 'dn';
+        return { arrow: arrow, cls: cls,
+                 chg: (m.change_pct > 0 ? '+' : '') + m.change_pct.toFixed(2) + '%' };
+      };
+
+      var rail = document.getElementById('tickRail');
+      if (rail){
+        var html = '';
+        // duplicated once — the marquee translates -50%, so the strip has to
+        // contain exactly two copies to loop seamlessly
+        for (var d = 0; d < 2; d++){
+          j.markets.forEach(function(m){
+            var c = cell(m);
+            html += '<div class="ti"><span class="n">' + esc(m.name) + '</span>' +
+                    '<span class="p">' + esc(m.price) + '</span>' +
+                    '<span class="c ' + c.cls + '">' + c.arrow + ' ' + c.chg + '</span></div>';
+          });
+        }
+        rail.innerHTML = html;
+      }
+
+      var grid = document.getElementById('mktGrid');
+      if (grid){
+        grid.innerHTML = j.markets.map(function(m, i){
+          var c = cell(m);
+          return '<div class="mkt ' + (m.up ? 'u' : 'd') + ' rv in" style="--d:' + (i * 0.04) + 's">' +
+                   '<div class="n">' + esc(m.name) + '</div>' +
+                   '<div class="p">' + esc(m.price) + '</div>' +
+                   '<div class="c ' + c.cls + '">' + c.arrow + ' ' + c.chg + '</div>' +
+                 '</div>';
+        }).join('');
+      }
+
+      var desc = document.getElementById('mktDesc');
+      if (desc){
+        var t = new Date(j.fetched_at);
+        var ist = new Date(t.getTime() + (t.getTimezoneOffset() + 330) * 60000);
+        desc.innerHTML = j.advancing + ' of ' + j.total + ' tracked instruments are green. ' +
+          'Live quotes — last read ' + ('0' + ist.getHours()).slice(-2) + ':' +
+          ('0' + ist.getMinutes()).slice(-2) + ' IST, refreshing every 5 minutes.';
+      }
+
+      var adv = document.querySelector('.statrail .stat .v[data-total]');
+      if (adv){ adv.textContent = j.advancing + '/' + j.total; }
+    }
+
+    function loadMarkets(){ get('/markets').then(paintMarkets); }
+    loadMarkets();
+    setInterval(loadMarkets, 5 * 60 * 1000);
+
+    /* ── news: every 3 hours ── */
+    function paintNews(j){
+      if (!j || !j.ok || !j.news || j.news.length < 3) return;
+      var sec = document.getElementById('world');
+      if (!sec) return;
+      var lead = j.news[0], rest = j.news.slice(1, 13);
+
+      var ago = function(iso){
+        if (!iso) return '';
+        var mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+        if (mins < 1)  return 'just now';
+        if (mins < 60) return mins + 'm ago';
+        var h = Math.round(mins / 60);
+        return h < 24 ? h + 'h ago' : Math.round(h / 24) + 'd ago';
+      };
+      // Reuses .ncard from the stylesheet rather than inventing classes, so
+      // live cards are pixel-identical to the ones the daily build renders.
+      var card = function(n, i){
+        var link = n.link
+          ? '<a href="' + esc(n.link) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>'
+          : esc(n.title);
+        return '<div class="ncard rv in" style="--d:' + (i * 0.04) + 's">' +
+                 '<span class="s">' + esc(n.source) + '</span>' +
+                 '<h3>' + link + '</h3>' +
+                 (n.summary ? '<p>' + esc(n.summary.slice(0, 150)) + '</p>' : '') +
+                 '<div class="ts">' + esc(ago(n.published)) + '</div>' +
+               '</div>';
+      };
+
+      var host = document.getElementById('newsLive');
+      if (!host){
+        host = document.createElement('div');
+        host.id = 'newsLive';
+        // Replace whatever the daily build rendered — the lead block and the
+        // grid both — with one live grid.
+        var olds = sec.querySelectorAll('.news-grid, .two, .empty');
+        if (olds.length){ olds[0].replaceWith(host); for (var k = 1; k < olds.length; k++) olds[k].remove(); }
+        else sec.appendChild(host);
+      }
+      host.className = 'news-grid';
+      host.innerHTML = [lead].concat(rest).map(card).join('');
+
+      var d = sec.querySelector('.sdesc');
+      if (d) d.textContent = 'Wires only, deduplicated. ' + j.count + ' stories from ' +
+                             j.sources_ok + ' feeds, refreshed every 3 hours.';
+    }
+
+    function loadNews(){ get('/news?limit=14').then(paintNews); }
+    loadNews();
+    setInterval(loadNews, 3 * 60 * 60 * 1000);
+  })();
+
+  /* No whole-page reload. The clock ticks, markets and news refresh on their
+     own timers, and the ledger sections pull on demand — reloading every five
+     minutes would only throw away scroll position and any game in progress. */
 })();
 </script>
 </body>
