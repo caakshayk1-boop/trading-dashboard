@@ -127,12 +127,85 @@ NSE_HOLIDAYS = {
 }
 
 
+# Reason the last _send() failed, for mark_alerts_sent(). Module-level so the
+# 17 _send() call sites keep their one-argument signature.
+_LAST_SEND_ERROR = None
+
+# Telegram hard-caps a message at 4096 chars. Leave headroom for the header.
+_TG_MAX_CHARS = 3800
+
+
 def _send(msg):
+    """Send to Telegram. Returns True only if Telegram accepted the message.
+
+    The return value used to be discarded and exceptions swallowed, so a 400 or
+    a 429 was indistinguishable from a successful send. Every caller that
+    records delivery must now branch on this.
+    """
+    global _LAST_SEND_ERROR
     try:
         from telegram_bot import _post
-        _post(msg)
+        ok = bool(_post(msg))
+        _LAST_SEND_ERROR = None if ok else "telegram API rejected the message"
+        if not ok:
+            logging.error("Telegram send rejected — see _post log above")
+        return ok
     except Exception as e:
-        logging.warning(f"Telegram send failed: {e}")
+        _LAST_SEND_ERROR = f"{type(e).__name__}: {e}"
+        logging.error(f"Telegram send failed: {e}")
+        return False
+
+
+def _send_chunked(header, blocks, footer=None):
+    """Send `blocks` across as many messages as Telegram's size limit needs.
+
+    Returns a list of per-block booleans, aligned to `blocks`. Callers previously
+    truncated their block list to 5 to stay under the limit, which silently
+    dropped the rest of the scan; the limit is characters, not signals.
+
+    Per-block rather than a single bool because a partial failure is real: if
+    chunk 2 of 3 is rejected, the signals in chunks 1 and 3 *were* delivered and
+    must not be recorded as unsent.
+    """
+    if not blocks:
+        return []
+    chunks, cur, cur_len = [], [], len(header)
+    for i, b in enumerate(blocks):
+        if cur and cur_len + len(b) + 1 > _TG_MAX_CHARS:
+            chunks.append(cur)
+            cur, cur_len = [], len(header)
+        cur.append((i, b))
+        cur_len += len(b) + 1
+    if cur:
+        chunks.append(cur)
+
+    sent = [False] * len(blocks)
+    for n, chunk in enumerate(chunks, 1):
+        head = header if len(chunks) == 1 else f"{header} `({n}/{len(chunks)})`"
+        parts = [head] + [b for _i, b in chunk]
+        if footer and n == len(chunks):
+            parts.append(footer)
+        ok = _send("\n".join(parts))
+        for idx, _b in chunk:
+            sent[idx] = ok
+    delivered = sum(sent)
+    if delivered != len(blocks):
+        logging.error(f"Telegram: {len(blocks) - delivered}/{len(blocks)} signals "
+                      f"NOT delivered across {len(chunks)} chunk(s)")
+    return sent
+
+
+def _record_delivery(ids, sent_flags, mark_fn):
+    """Persist the real per-signal delivery outcome."""
+    if not ids:
+        return
+    flags = list(sent_flags) + [False] * (len(ids) - len(sent_flags))
+    ok_ids   = [i for i, s in zip(ids, flags) if s]
+    fail_ids = [i for i, s in zip(ids, flags) if not s]
+    if ok_ids:
+        mark_fn(ok_ids, True)
+    if fail_ids:
+        mark_fn(fail_ids, False, _LAST_SEND_ERROR or "telegram send failed")
 
 
 # ── Price Alert Monitor (checks open signals against live prices) ─────────────
@@ -474,64 +547,75 @@ def _filter_commodity_conflicts(sigs):
 
 def run_4h_scan(time_str):
     from scanner import scan_4h
-    from tracker import log_4h_signals, log_to_all_signals, is_duplicate
+    from tracker import (log_4h_signals, log_batch_to_all_signals,
+                         duplicate_symbols, mark_alerts_sent)
     logging.info("Running 4H RSI-55 scan...")
-    sigs = scan_4h()
+    raw = scan_4h()
     # Dedup: skip already-alerted symbols
-    sigs = [s for s in sigs if not is_duplicate(s["symbol"], "4h")]
-    logging.info(f"4H scan: {len(sigs)} signals after dedup")
+    dupes = duplicate_symbols([s["symbol"] for s in raw], "4h")
+    sigs = [s for s in raw if str(s["symbol"]).replace(".NS", "") not in dupes]
+    logging.info(f"4H scan: {len(sigs)} to alert ({len(raw)} raw → {len(dupes)} deduped out)")
     if sigs:
         log_4h_signals(sigs)
-        lines = [f"⚡ *4H Signals* — {time_str}\n"]
-        for b in sigs[:5]:
+        blocks, rows = [], []
+        for b in sigs:
             fno_tag = " `F&O`" if b.get("fno") else ""
-            lines.append(
+            blocks.append(
                 f"• *{b['symbol']}*{fno_tag} | 4H | BUY ₹{b['price']}\n"
                 f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b.get('target2','?')} | RR {b['rr']}"
             )
-            # Log to unified performance table
-            log_to_all_signals(
-                b["symbol"], "4h", "BUY", b["price"], b["sl"],
-                b["target1"], b.get("target2", b["target1"]), b.get("target2", b["target1"]),
-                b["rr"], timeframe="4H", score=int(b.get("score", 0))
-            )
-        _send("\n".join(lines))
+            rows.append({
+                "symbol": b["symbol"], "signal_type": "4h", "action": "BUY",
+                "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
+                "t2": b.get("target2", b["target1"]), "t3": b.get("target2", b["target1"]),
+                "rr": b["rr"], "timeframe": "4H", "score": int(b.get("score", 0)),
+            })
+        ids  = log_batch_to_all_signals(rows)
+        sent = _send_chunked(f"⚡ *4H Signals* ({len(sigs)}) — {time_str}\n", blocks)
+        _record_delivery(ids, sent, mark_alerts_sent)
     return sigs
 
 
 def run_commodity_scan(time_str):
     from scanner import scan_commodities
-    from tracker import log_commodity_signals, log_to_all_signals, is_duplicate
+    from tracker import (log_commodity_signals, log_batch_to_all_signals,
+                         duplicate_symbols, mark_alerts_sent)
     logging.info("Running commodity scan...")
     raw_sigs = scan_commodities()
     # Conflict filter: remove opposing signals for same commodity group
-    sigs = _filter_commodity_conflicts(raw_sigs)
+    filtered = _filter_commodity_conflicts(raw_sigs)
     # Dedup per symbol
-    sigs = [s for s in sigs if not is_duplicate(s["symbol"], "commodity")]
-    logging.info(f"Commodity scan: {len(sigs)} signals (from {len(raw_sigs)} raw)")
+    dupes = duplicate_symbols([s["symbol"] for s in filtered], "commodity")
+    sigs = [s for s in filtered if str(s["symbol"]).replace(".NS", "") not in dupes]
+    logging.info(f"Commodity scan: {len(sigs)} to alert ({len(raw_sigs)} raw → "
+                 f"{len(raw_sigs) - len(filtered)} conflicts → {len(dupes)} deduped out)")
     if sigs:
         log_commodity_signals(sigs)
-        lines = [f"🥇 *Commodity Signals* — {time_str}\n"]
+        blocks, rows = [], []
         for s in sigs:
             arrow = "▲ BUY" if s["action"] == "BUY" else "▼ SELL"
             col   = "📈" if s["action"] == "BUY" else "📉"
-            lines.append(
+            blocks.append(
                 f"{col} *{s['symbol']}* `{s['timeframe']}` | {arrow} @ {s['price']}\n"
                 f"  SL {s['sl']} | T1 {s['target1']} | T2 {s['target2']} | RR {s['rr']}"
             )
-            log_to_all_signals(
-                s["symbol"], "commodity", s["action"], s["price"], s["sl"],
-                s["target1"], s["target2"], s.get("target3", s["target2"]),
-                s["rr"], timeframe=s.get("timeframe", "Daily"), score=0
-            )
-        _send("\n".join(lines))
+            rows.append({
+                "symbol": s["symbol"], "signal_type": "commodity", "action": s["action"],
+                "entry": s["price"], "sl": s["sl"], "t1": s["target1"],
+                "t2": s["target2"], "t3": s.get("target3", s["target2"]),
+                "rr": s["rr"], "timeframe": s.get("timeframe", "Daily"), "score": 0,
+            })
+        ids  = log_batch_to_all_signals(rows)
+        sent = _send_chunked(f"🥇 *Commodity Signals* ({len(sigs)}) — {time_str}\n", blocks)
+        _record_delivery(ids, sent, mark_alerts_sent)
     return sigs
 
 
 def run_swing_scan(time_str):
     from scanner import scan_all
     from telegram_bot import send_alert, send_summary, send_top_picks
-    from tracker import log_signals, update_outcomes, update_all_outcomes, init_db, log_to_all_signals
+    from tracker import (log_signals, update_outcomes, update_all_outcomes, init_db,
+                         log_batch_to_all_signals, mark_alerts_sent)
     try:
         from config import SEND_TOP_PICKS_ONLY
     except (ImportError, ModuleNotFoundError):
@@ -549,20 +633,35 @@ def run_swing_scan(time_str):
     if signals:
         log_signals(signals)
         # Log all to unified performance table
-        for s in signals:
-            log_to_all_signals(
-                s["symbol"], "swing", s.get("action","BUY"), s["price"],
-                s.get("sl2", s["price"]*0.96),
-                s["target1"], s["target2"], s["target3"],
-                s.get("rr2", 0), timeframe="SWING", score=s.get("score", 0),
-                metadata={"setup_type": s.get("setup_type")}
-            )
+        ids = log_batch_to_all_signals([{
+            "symbol": s["symbol"], "signal_type": "swing",
+            "action": s.get("action", "BUY"), "entry": s["price"],
+            "sl": s.get("sl2", s["price"] * 0.96), "t1": s["target1"],
+            "t2": s["target2"], "t3": s["target3"], "rr": s.get("rr2", 0),
+            "timeframe": "SWING", "score": s.get("score", 0),
+            "metadata": {"setup_type": s.get("setup_type")},
+        } for s in signals])
+        # send_alert() drops anything under score 65, so most swing rows are
+        # logged but never pushed. That is a threshold decision, not a delivery
+        # failure — record it as such instead of leaving the row looking sent.
         if SEND_TOP_PICKS_ONLY:
-            send_top_picks(signals, top_n=5)
+            top_ids = [i for i, s in zip(ids, signals) if int(s.get("score", 0)) >= 65][:5]
+            skipped = [i for i in ids if i not in top_ids]
+            ok = bool(send_top_picks(signals, top_n=5))
+            mark_alerts_sent(top_ids, ok, "telegram send failed")
+            mark_alerts_sent(skipped, False, "not alerted: outside top 5 A/A+ picks")
         else:
-            for s in signals:
+            # Group the outcomes so the whole scan costs 3 UPDATEs, not one per
+            # signal — mark_alerts_sent takes a list for exactly this reason.
+            delivered, below_thresh, failed = [], [], []
+            for sig_id, s in zip(ids, signals):
+                score = int(s.get("score", 0))
                 ok = send_alert(s)
-                logging.info(f"Alert: {s['symbol']} score={s['score']} ok={ok}")
+                logging.info(f"Alert: {s['symbol']} score={score} ok={ok}")
+                (delivered if ok else below_thresh if score < 65 else failed).append(sig_id)
+            mark_alerts_sent(delivered, True)
+            mark_alerts_sent(below_thresh, False, "not alerted: score < 65 (below A/A+)")
+            mark_alerts_sent(failed, False, "telegram send failed or direction-locked")
     send_summary(signals)
     return signals
 
@@ -580,7 +679,7 @@ def run_measured_equity_scan(time_str):
     """
     import equity_engine
     from cf_engine import format_alert
-    from tracker import log_to_all_signals, init_db
+    from tracker import log_batch_to_all_signals, init_db, mark_alerts_sent
 
     init_db()
     logging.info("Running measured equity scan (EOD, daily close)...")
@@ -589,25 +688,27 @@ def run_measured_equity_scan(time_str):
     if not signals:
         return []
 
-    body = [f"\U0001F4CF *Measured Equity Signals* — {time_str}",
-            "_Daily close · weekly regime · structural targets_\n"]
-    for s in signals:
-        body.append(format_alert(s))
-    body.append("\n_Backtested +0.171R/trade · not SEBI advice_")
-    _send("\n".join(body))
+    # Log before sending so the ledger holds every signal even if Telegram is
+    # down, then record the real delivery outcome against those same rows.
+    try:
+        ids = log_batch_to_all_signals([{
+            "symbol": s["name"], "signal_type": "equity_measured", "action": s["bias"],
+            "entry": s["price"], "sl": s["sl"], "t1": s["t1"], "t2": s["t2"],
+            "t3": s["t3"], "rr": s["rr"], "timeframe": "1D", "score": s["score"],
+            "metadata": {"rsi_4h": s["rsi_4h"], "vol_ratio": s["vol_ratio"],
+                         "target_source": s["target_source"],
+                         "sl_atr_mult": s["sl_atr_mult"]},
+        } for s in signals])
+    except Exception as e:
+        logging.error(f"measured equity DB log failed: {e}")
+        ids = []
 
-    for s in signals:
-        try:
-            log_to_all_signals(
-                s["name"], "equity_measured", s["bias"], s["price"], s["sl"],
-                s["t1"], s["t2"], s["t3"], s["rr"], timeframe="1D",
-                score=s["score"],
-                metadata={"rsi_4h": s["rsi_4h"], "vol_ratio": s["vol_ratio"],
-                          "target_source": s["target_source"],
-                          "sl_atr_mult": s["sl_atr_mult"]},
-            )
-        except Exception as e:
-            logging.debug(f"measured equity DB log: {e}")
+    sent = _send_chunked(
+        f"\U0001F4CF *Measured Equity Signals* ({len(signals)}) — {time_str}\n"
+        "_Daily close · weekly regime · structural targets_\n",
+        [format_alert(s) for s in signals],
+        footer="\n_Backtested +0.171R/trade · not SEBI advice_")
+    _record_delivery(ids, sent, mark_alerts_sent)
     return signals
 
 
@@ -626,9 +727,10 @@ def run_signal_ledger(time_str, days: int = 30):
 
 def run_breakout_scan(time_str):
     from scanner import scan_breakouts
-    from tracker import log_breakouts, log_to_all_signals, is_duplicate
+    from tracker import (log_breakouts, log_batch_to_all_signals,
+                         duplicate_symbols, mark_alerts_sent)
     logging.info("Running breakout scan (F&O universe)...")
-    all_bos = scan_breakouts()
+    raw_bos = scan_breakouts()
     # Drop NaN signals (yfinance sometimes returns NaN for price/ATR)
     def _valid(b):
         for k in ("price", "sl", "target1", "target2", "rr"):
@@ -639,56 +741,78 @@ def run_breakout_scan(time_str):
             except (TypeError, ValueError):
                 return False
         return True
-    all_bos = [b for b in all_bos if _valid(b)]
-    # Dedup
-    breakouts = [b for b in all_bos if not is_duplicate(b["symbol"], "breakout")]
-    logging.info(f"Breakouts: {len(breakouts)} (from {len(all_bos)} raw)")
+    all_bos = [b for b in raw_bos if _valid(b)]
+    if len(all_bos) != len(raw_bos):
+        # This filter used to drop signals with no trace of how many.
+        bad = [b.get("symbol", "?") for b in raw_bos if not _valid(b)]
+        logging.warning(f"Breakouts: dropped {len(bad)} with NaN/missing prices — "
+                        f"{', '.join(bad[:10])}{'…' if len(bad) > 10 else ''}")
+    dupes = duplicate_symbols([b["symbol"] for b in all_bos], "breakout")
+    breakouts = [b for b in all_bos if str(b["symbol"]).replace(".NS", "") not in dupes]
+    logging.info(f"Breakouts: {len(breakouts)} to alert "
+                 f"({len(raw_bos)} raw → {len(all_bos)} valid → {len(dupes)} deduped out)")
     if breakouts:
         log_breakouts(breakouts)
-        lines = [f"📊 *Breakouts* — {time_str}\n"]
-        for b in breakouts[:5]:
+        # Every deduped breakout is logged and alerted. This used to be
+        # `breakouts[:5]`, which capped BOTH the message and the DB write — on
+        # 2026-07-31 that turned 53 breakouts into 5 rows and silently discarded
+        # the other 48 from the ledger as well as from Telegram.
+        blocks, rows = [], []
+        for b in breakouts:
             fno_tag  = " `F&O`" if b.get("fno") else ""
             tf_emoji = {"Monthly": "📅", "Weekly": "📆", "Daily": "📋"}.get(b["timeframe"], "📋")
-            lines.append(
+            blocks.append(
                 f"{tf_emoji} *{b['symbol']}*{fno_tag} | {b['timeframe']} | BUY ₹{b['price']}\n"
                 f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b['target2']} | RR {b['rr']}"
             )
-            log_to_all_signals(
-                b["symbol"], "breakout", "BUY", b["price"], b["sl"],
-                b["target1"], b["target2"], b.get("target3", b["target2"]),
-                b["rr"], timeframe=b["timeframe"], score=0
-            )
-        _send("\n".join(lines))
+            rows.append({
+                "symbol": b["symbol"], "signal_type": "breakout", "action": "BUY",
+                "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
+                "t2": b["target2"], "t3": b.get("target3", b["target2"]),
+                "rr": b["rr"], "timeframe": b["timeframe"], "score": 0,
+            })
+        # One connection for the whole batch — see log_batch_to_all_signals.
+        ids = log_batch_to_all_signals(rows)
+        sent = _send_chunked(f"📊 *Breakouts* ({len(breakouts)}) — {time_str}\n", blocks)
+        _record_delivery(ids, sent, mark_alerts_sent)
     return breakouts
 
 
 def run_tlm_scan(time_str, interval="4h"):
     """AI Channel Breakout scanner."""
     from scanner import scan_tlm_breakouts
-    from tracker import log_breakouts, log_to_all_signals, is_duplicate
+    from tracker import (log_breakouts, log_batch_to_all_signals,
+                         duplicate_symbols, mark_alerts_sent)
     tf_label = "4H" if interval == "4h" else "Daily"
+    sig_type = f"ai_{tf_label.lower()}"
     logging.info(f"Running AI channel breakout scan ({tf_label})...")
     all_sigs = scan_tlm_breakouts(interval=interval)
-    tlm_sigs = [s for s in all_sigs if not is_duplicate(s["symbol"], f"ai_{tf_label.lower()}")]
-    logging.info(f"AI scan ({tf_label}): {len(tlm_sigs)} (from {len(all_sigs)} raw)")
+    dupes = duplicate_symbols([s["symbol"] for s in all_sigs], sig_type)
+    tlm_sigs = [s for s in all_sigs if str(s["symbol"]).replace(".NS", "") not in dupes]
+    logging.info(f"AI scan ({tf_label}): {len(tlm_sigs)} to alert "
+                 f"({len(all_sigs)} raw → {len(dupes)} deduped out)")
     if tlm_sigs:
         for s in tlm_sigs:
             s.setdefault("patterns", [s.get("pattern", "AI Channel Breakout")])
             s.setdefault("target3", s.get("target2", 0))
         log_breakouts(tlm_sigs)
-        lines = [f"🤖 *AI Signals* ({tf_label}) — {time_str}\n"]
-        for b in tlm_sigs[:5]:
+        blocks, rows = [], []
+        for b in tlm_sigs:
             fno_tag = " `F&O`" if b.get("fno") else ""
-            lines.append(
+            blocks.append(
                 f"• *{b['symbol']}*{fno_tag} | {tf_label} | BUY ₹{b['price']}\n"
                 f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b['target2']} | RR {b['rr']}"
             )
-            log_to_all_signals(
-                b["symbol"], f"ai_{tf_label.lower()}", "BUY", b["price"], b["sl"],
-                b["target1"], b["target2"], b.get("target3", b["target2"]),
-                b["rr"], timeframe=tf_label, score=0
-            )
-        _send("\n".join(lines))
+            rows.append({
+                "symbol": b["symbol"], "signal_type": sig_type, "action": "BUY",
+                "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
+                "t2": b["target2"], "t3": b.get("target3", b["target2"]),
+                "rr": b["rr"], "timeframe": tf_label, "score": 0,
+            })
+        ids  = log_batch_to_all_signals(rows)
+        sent = _send_chunked(
+            f"🤖 *AI Signals* ({tf_label}, {len(tlm_sigs)}) — {time_str}\n", blocks)
+        _record_delivery(ids, sent, mark_alerts_sent)
     return tlm_sigs
 
 
@@ -696,41 +820,47 @@ def run_fno_alerts(time_str, signals):
     fno_sigs = [s for s in signals if s.get("fno_eligible") and s.get("fno_suggestion")]
     if not fno_sigs:
         return
-    lines = [f"🎯 *F&O Setups* — {time_str}\n"]
-    for s in fno_sigs[:4]:
+    blocks = []
+    for s in fno_sigs:
         f = s["fno_suggestion"]
-        lines.append(
+        blocks.append(
             f"• *{s['symbol']}* {f['direction']} | "
             f"Strike ₹{f.get('use_strike', f['atm_strike'])} | "
             f"Expiry: {f['expiry']} | Hold ~{f.get('hold_days','?')}d | "
             f"Risk ~{f['risk_pts']}pts"
         )
-    _send("\n".join(lines))
+    _send_chunked(f"🎯 *F&O Setups* ({len(fno_sigs)}) — {time_str}\n", blocks)
 
 
 def run_intraday_scan(time_str):
     """30-min intraday momentum: VWAP + RSI55 cross + vol surge on Nifty 50 universe."""
     from scanner import scan_intraday_momentum
-    from tracker import log_to_all_signals, is_duplicate
+    from tracker import (log_batch_to_all_signals, duplicate_symbols, mark_alerts_sent)
     logging.info("Running intraday momentum scan (15m)...")
-    sigs = scan_intraday_momentum()
-    sigs = [s for s in sigs if not is_duplicate(s["symbol"], "intraday")]
-    logging.info(f"Intraday: {len(sigs)} signals after dedup")
+    raw = scan_intraday_momentum()
+    dupes = duplicate_symbols([s["symbol"] for s in raw], "intraday")
+    sigs = [s for s in raw if str(s["symbol"]).replace(".NS", "") not in dupes]
+    logging.info(f"Intraday: {len(sigs)} to alert ({len(raw)} raw → {len(dupes)} deduped out)")
     if sigs:
-        lines = [f"⚡ *Intraday Momentum* — {time_str}\n_(15m · VWAP + RSI55 + Vol surge)_\n"]
-        for s in sigs[:6]:
-            lines.append(
+        blocks, rows = [], []
+        for s in sigs:
+            blocks.append(
                 f"• *{s['symbol']}* | 15m | BUY ₹{s['price']}\n"
                 f"  SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']}"
                 f" | RR {s['rr']} | Vol {s['vol_ratio']}x | RSI {s['rsi']}"
             )
-            log_to_all_signals(
-                s["symbol"], "intraday", "BUY", s["price"], s["sl"],
-                s["target1"], s["target2"], s["target2"],
-                s["rr"], timeframe="15m", score=s.get("score", 0)
-            )
-        lines.append("\n_Intraday only · Exit by 3:15 PM IST_")
-        _send("\n".join(lines))
+            rows.append({
+                "symbol": s["symbol"], "signal_type": "intraday", "action": "BUY",
+                "entry": s["price"], "sl": s["sl"], "t1": s["target1"],
+                "t2": s["target2"], "t3": s["target2"], "rr": s["rr"],
+                "timeframe": "15m", "score": s.get("score", 0),
+            })
+        ids  = log_batch_to_all_signals(rows)
+        sent = _send_chunked(
+            f"⚡ *Intraday Momentum* ({len(sigs)}) — {time_str}\n"
+            "_(15m · VWAP + RSI55 + Vol surge)_\n",
+            blocks, footer="\n_Intraday only · Exit by 3:15 PM IST_")
+        _record_delivery(ids, sent, mark_alerts_sent)
     return sigs
 
 
@@ -743,22 +873,20 @@ def run_multibagger_scan(time_str):
     logging.info(f"Multibagger scan: {len(mbs)} candidates")
     if mbs:
         log_multibaggers(mbs)
-        lines = [
-            f"🚀 *Potential Multibaggers* — Weekly Watchlist\n"
-            f"_{time_str}_\n"
-            f"_(Weekly breakout + momentum + volume expansion)_\n"
-        ]
-        for i, m in enumerate(mbs[:10], 1):
+        blocks = []
+        for i, m in enumerate(mbs, 1):
             fno_tag = " `F&O`" if m.get("fno") else ""
             pe_str  = f" | PE {m['pe']:.0f}x" if m.get("pe") else ""
-            lines.append(
+            blocks.append(
                 f"{i}. *{m['symbol']}*{fno_tag} | ₹{m['price']}\n"
                 f"   T1 ₹{m['target1']} | T2 ₹{m['target2']} | SL ₹{m['sl']}"
                 f" | RR {m['rr']}{pe_str}\n"
                 f"   _{m['reason']}_"
             )
-        lines.append("\n_Horizon: 6–12 months · Not SEBI advice_")
-        _send("\n".join(lines))
+        _send_chunked(
+            f"🚀 *Potential Multibaggers* ({len(mbs)}) — Weekly Watchlist\n"
+            f"_{time_str}_\n_(Weekly breakout + momentum + volume expansion)_\n",
+            blocks, footer="\n_Horizon: 6–12 months · Not SEBI advice_")
     return mbs
 
 

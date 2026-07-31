@@ -1142,8 +1142,11 @@ def scan_breakouts(universe=None):
             if r and r.get("symbol", "").replace(".NS", "") not in SIGNAL_BLACKLIST:
                 results.append(r)
 
+    # R:R leads, timeframe is only the tiebreak. Sorting on timeframe first made
+    # a Monthly breakout at 1.5R outrank a Weekly at 3.0R, so on any day with
+    # enough Monthly hits no Weekly setup could reach the top of the list.
     tf_rank = {"Monthly": 3, "Weekly": 2, "Daily": 1}
-    results.sort(key=lambda x: (tf_rank.get(x["timeframe"], 0), x["rr"]), reverse=True)
+    results.sort(key=lambda x: (x["rr"], tf_rank.get(x["timeframe"], 0)), reverse=True)
     logging.info(f"Breakout scan: {len(results)} confirmed breakouts")
     return results
 

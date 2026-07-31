@@ -140,10 +140,15 @@ def run_cf_scan():
     TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "")
     TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
-    def post(text: str):
+    def post(text: str) -> bool:
+        """Returns True only if Telegram accepted the message.
+
+        The result used to be discarded, so a rejected alert was indistinguishable
+        from a delivered one and the DB row still looked sent.
+        """
         if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
             print(text)
-            return
+            return False
         try:
             r = req_lib.post(
                 f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
@@ -151,16 +156,22 @@ def run_cf_scan():
                       "parse_mode": "Markdown"},
                 timeout=15,
             )
+            if r.ok:
+                return True
             # Malformed Markdown otherwise drops the whole alert silently.
-            if not r.ok and r.status_code == 400 and "parse" in r.text.lower():
+            if r.status_code == 400 and "parse" in r.text.lower():
                 log.warning("Markdown rejected — resending as plain text")
-                req_lib.post(
+                r = req_lib.post(
                     f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
                     json={"chat_id": TELEGRAM_CHAT_ID, "text": text},
                     timeout=15,
                 )
+                return bool(r.ok)
+            log.error(f"Telegram API error {r.status_code} — {r.text[:200]}")
+            return False
         except Exception as e:
-            log.warning(f"Telegram error: {e}")
+            log.error(f"Telegram error: {e}")
+            return False
 
     ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
     log.info(f"CF scan at {ts}")
@@ -185,23 +196,25 @@ def run_cf_scan():
         body.append(cf_engine.format_alert(s))
         cf_mark_sent(s["name"], s["bias"])
     body.append("\n_Not SEBI advice · @askakshayfinance_")
-    post("\n".join(body))
-    log.info(f"CF scan: {len(fresh)} signal(s) sent")
+    sent_ok = post("\n".join(body))
+    log.info(f"CF scan: {len(fresh)} signal(s), telegram_ok={sent_ok}")
 
     try:
-        from tracker import log_to_all_signals, init_db
+        from tracker import log_to_all_signals, mark_alerts_sent, init_db
         init_db()
+        ids = []
         for s in fresh:
-            log_to_all_signals(
+            ids.append(log_to_all_signals(
                 s["name"], "cf_1h", s["bias"], s["price"], s["sl"],
                 s["t1"], s["t2"], s["t3"], s["rr"], timeframe="1H",
                 score=s["score"],
                 metadata={"rsi_4h": s["rsi_4h"], "vol_ratio": s["vol_ratio"],
                           "target_source": s["target_source"],
                           "sl_atr_mult": s["sl_atr_mult"]},
-            )
+            ))
+        mark_alerts_sent(ids, sent_ok, "telegram send failed")
     except Exception as _e:
-        log.debug(f"CF DB log: {_e}")
+        log.warning(f"CF DB log: {_e}")
 
 
 def run_daily_brief():

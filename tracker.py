@@ -31,7 +31,19 @@ log = logging.getLogger(__name__)
 def _conn():
     return _db.connect()
 
-def init_db():
+
+# Schema creation + migrations are idempotent but not free: every init_db() opens
+# a connection, and under Turso connect() does a full replica sync. Nearly every
+# public function here calls it, so a 53-signal scan paid that cost ~106 times
+# (measured ~8.7s per insert in CI). Run it once per process, per database.
+_DB_READY = None   # resolved DB target this process has already initialised
+
+
+def init_db(force: bool = False):
+    global _DB_READY
+    target = getattr(_db, "TURSO_URL", "") or getattr(_db, "LOCAL_DB", "")
+    if not force and _DB_READY == target:
+        return
     with _conn() as c:
         c.execute("""CREATE TABLE IF NOT EXISTS signals (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -177,6 +189,11 @@ def init_db():
             # SL1 is a warning, not an exit — it never wrote to the DB, so the
             # same warning re-fired on every scan for the life of the signal.
             ("alert_flags",         "ALTER TABLE all_signals ADD COLUMN alert_flags TEXT DEFAULT ''"),
+            # sent_at used to be stamped at INSERT time, before the Telegram call
+            # even ran — so a failed send still looked delivered. It is now set
+            # only by mark_alerts_sent() after Telegram returns OK, and the
+            # failure reason lands here. sent_at IS NULL now means "never sent".
+            ("send_error",          "ALTER TABLE all_signals ADD COLUMN send_error TEXT"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:
@@ -184,6 +201,7 @@ def init_db():
         _ensure_multibagger_table(c)
         c.commit()
         _db.sync(c)
+        _DB_READY = target
         log.info("DB init OK")
 
 def log_signals(signals):
@@ -308,22 +326,129 @@ def is_duplicate(symbol, signal_type="swing"):
     return False
 
 
+def duplicate_symbols(symbols, signal_type="swing"):
+    """Batch form of is_duplicate — returns the set of symbols to skip.
+
+    Same three rules, resolved in one connection instead of one per symbol.
+    Scanning 53 breakouts through is_duplicate() opened 106 connections; under
+    Turso each of those does a replica sync.
+    """
+    clean = {str(s).replace(".NS", "") for s in symbols if s}
+    if not clean:
+        return set()
+    init_db()
+    cutoff_5d = str(_date_ist() - timedelta(days=5))
+    cutoff_7d = str(_date_ist() - timedelta(days=7))
+    ordered = sorted(clean)
+    ph = ",".join("?" for _ in ordered)
+    dupes = set()
+    with _conn() as c:
+        for sql, params in (
+            (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "
+             f"AND signal_type=? AND status='OPEN' AND date>=?",
+             tuple(ordered) + (signal_type, cutoff_5d)),
+            (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "
+             f"AND signal_type=? AND status='SL_HIT' AND date>=?",
+             tuple(ordered) + (signal_type, cutoff_7d)),
+            # Legacy: the old signals table is not signal_type aware.
+            (f"SELECT DISTINCT symbol FROM signals WHERE symbol IN ({ph}) "
+             f"AND status='OPEN' AND date>=?",
+             tuple(ordered) + (cutoff_5d,)),
+        ):
+            dupes.update(r[0] for r in c.execute(sql, params).fetchall())
+    if dupes:
+        log.info(f"Duplicate skip ({signal_type}): {len(dupes)} symbol(s) — "
+                 f"{', '.join(sorted(dupes)[:10])}{'…' if len(dupes) > 10 else ''}")
+    return dupes
+
+
 def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
                         timeframe="SWING", score=0, metadata=None):
-    """Unified logger — called after every Telegram alert for performance tracking."""
+    """Unified signal logger — returns the new row id.
+
+    The row is written with sent_at NULL. Delivery is recorded separately by
+    mark_alerts_sent() once Telegram has actually accepted the message. The
+    ledger must record every signal the scanner produced whether or not
+    Telegram was reachable, so this deliberately does not depend on the send.
+    """
     init_db()
     today = _today_ist()
-    sent_at = _now_ist()
     with _conn() as c:
         c.execute("""INSERT INTO all_signals
             (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
              rr,score,status,sent_at,metadata)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',?,?)""",
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?)""",
             (today, signal_type, symbol, action, timeframe, entry, sl, t1, t2, t3,
-             rr, score, sent_at, json.dumps(metadata or {})))
+             rr, score, json.dumps(metadata or {})))
+        row_id = c.execute("SELECT last_insert_rowid()").fetchone()[0]
         c.commit()
         _db.sync(c)
-    log.info(f"all_signals logged: {symbol} {signal_type} {action} entry={entry}")
+    log.info(f"all_signals logged: {symbol} {signal_type} {action} entry={entry} id={row_id}")
+    return row_id
+
+
+def log_batch_to_all_signals(rows):
+    """Insert many signals over ONE connection. Returns row ids in input order.
+
+    log_to_all_signals() opens a connection, init_db()s and syncs per call —
+    against Turso that measured ~8.7s per row in CI. Fine when the caller was
+    capped at 5 signals; a 50-signal scan would add minutes to every run.
+
+    `rows` are dicts with the same keys as log_to_all_signals' arguments.
+    """
+    if not rows:
+        return []
+    init_db()
+    today = _today_ist()
+    ids = []
+    with _conn() as c:
+        for r in rows:
+            c.execute("""INSERT INTO all_signals
+                (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
+                 rr,score,status,sent_at,metadata)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?)""",
+                (today, r["signal_type"], r["symbol"], r.get("action", "BUY"),
+                 r.get("timeframe", "SWING"), r["entry"], r["sl"],
+                 r["t1"], r["t2"], r["t3"], r["rr"], r.get("score", 0),
+                 json.dumps(r.get("metadata") or {})))
+            ids.append(c.execute("SELECT last_insert_rowid()").fetchone()[0])
+        c.commit()
+        _db.sync(c)
+    log.info(f"all_signals batch logged: {len(ids)} row(s) "
+             f"({', '.join(r['symbol'] for r in rows[:8])}"
+             f"{'…' if len(rows) > 8 else ''})")
+    return ids
+
+
+def mark_alerts_sent(row_ids, ok: bool, error: str = None):
+    """Record the real outcome of the Telegram send for these all_signals rows.
+
+    ok=True   → stamp sent_at, clear any previous error.
+    ok=False  → leave sent_at NULL and store why. These rows are the backlog:
+                `SELECT * FROM all_signals WHERE sent_at IS NULL` is exactly the
+                set of signals the site shows but Telegram never delivered.
+    """
+    ids = [i for i in (row_ids or []) if i]
+    if not ids:
+        return 0
+    init_db()
+    placeholders = ",".join("?" for _ in ids)
+    with _conn() as c:
+        if ok:
+            c.execute(
+                f"UPDATE all_signals SET sent_at=?, send_error=NULL WHERE id IN ({placeholders})",
+                tuple([_now_ist()] + ids))
+        else:
+            c.execute(
+                f"UPDATE all_signals SET send_error=? WHERE id IN ({placeholders})",
+                tuple([(error or "telegram send failed")[:300]] + ids))
+        c.commit()
+        _db.sync(c)
+    if ok:
+        log.info(f"alerts marked sent: {len(ids)} row(s)")
+    else:
+        log.error(f"alerts NOT delivered: {len(ids)} row(s) — {error}")
+    return len(ids)
 
 def is_muted(symbol):
     init_db()
@@ -540,8 +665,15 @@ def log_breakouts(breakouts):
     init_db()
     today = _today_ist()
     with _conn() as c:
-        # Clear today's breakouts (re-scan replaces)
-        c.execute("DELETE FROM breakouts WHERE date=?", (today,))
+        # Replace only the symbols in this batch. Deleting the whole day meant
+        # the EOD run wiped the midday run's rows — and because dedup excludes
+        # anything already alerted, those symbols were not in the EOD list to be
+        # re-inserted, so the day's breakout history lost them entirely.
+        syms = sorted({b["symbol"] for b in breakouts})
+        if syms:
+            ph = ",".join("?" for _ in syms)
+            c.execute(f"DELETE FROM breakouts WHERE date=? AND symbol IN ({ph})",
+                      tuple([today] + syms))
         for b in breakouts:
             c.execute("""INSERT INTO breakouts
                 (date,symbol,timeframe,pattern,patterns,price,sl,target1,target2,target3,rr,vol_ratio,fno,tv_link)

@@ -72,6 +72,13 @@ jobs:
       - name: Ensure data directory exists
         run: mkdir -p data logs cache
 
+      # Gate the scan on the alert pipeline being intact. A silent regression
+      # here does not fail the run — it just stops signals reaching Telegram
+      # while the site keeps showing them as sent, which is how 2026-07-31 went
+      # unnoticed. Stubbed network, throwaway DB, runs in about a second.
+      - name: Verify alert pipeline
+        run: python test_alert_pipeline.py
+
       # Slot detection was removed with the intraday tier. It keyed off the
       # UTC minute and fell through to "intraday" on anything unrecognised —
       # so a cron delayed past its window (GitHub routinely runs several

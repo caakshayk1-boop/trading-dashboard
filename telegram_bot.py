@@ -2,7 +2,7 @@
 Telegram bot — signal delivery + commands (/start /active /performance /mute /stats)
 PDF spec: Part 9
 """
-import requests, os, logging
+import requests, os, logging, time
 from datetime import datetime
 import pytz
 
@@ -43,7 +43,31 @@ def _set_direction_lock(symbol: str, action: str) -> None:
     _direction_lock[symbol] = {"action": action, "date": today}
 
 
+# Telegram throttles a chat at roughly one message per second and ~20/minute for
+# groups. Nothing paced sends before, which was survivable only because the scan
+# paths were capped at 5 signals; an uncapped scan sends enough messages to trip
+# it. Pace proactively, and obey Retry-After when it happens anyway.
+_MIN_SEND_GAP_S = 1.1
+_MAX_SEND_ATTEMPTS = 3
+_RETRY_AFTER_CAP_S = 30
+_last_send_ts = 0.0
+
+
+def _throttle():
+    global _last_send_ts
+    gap = time.monotonic() - _last_send_ts
+    if gap < _MIN_SEND_GAP_S:
+        time.sleep(_MIN_SEND_GAP_S - gap)
+    _last_send_ts = time.monotonic()
+
+
 def _post(text, chat_id=None):
+    """Send one Telegram message. Returns True only if Telegram accepted it.
+
+    Retries on 429 (honouring Retry-After) and on transport errors. A 400 from
+    unbalanced Markdown is retried once as plain text — an unbalanced * or _
+    anywhere makes Telegram reject the WHOLE alert, so the signal would be lost.
+    """
     if not TELEGRAM_TOKEN:
         logging.error("_post: TELEGRAM_TOKEN is not set — message not sent")
         return False
@@ -54,25 +78,55 @@ def _post(text, chat_id=None):
         "parse_mode": "Markdown",
         "disable_web_page_preview": True,
     }
-    try:
-        r = requests.post(url, data=payload, timeout=10)
-        if r.ok:
-            return True
-        # An unbalanced * or _ anywhere in the message makes Telegram reject
-        # the WHOLE alert with 400 "can't parse entities" — the signal is lost
-        # silently. Resend unformatted rather than drop it.
-        if r.status_code == 400 and "parse" in r.text.lower():
-            logging.warning(
-                f"_post: Markdown rejected ({r.text[:120]}) — resending as plain text")
-            payload.pop("parse_mode", None)
-            r = requests.post(url, data=payload, timeout=10)
+    for attempt in range(1, _MAX_SEND_ATTEMPTS + 1):
+        try:
+            _throttle()
+            r = requests.post(url, data=payload, timeout=15)
             if r.ok:
                 return True
-        logging.error(f"_post: Telegram API error {r.status_code} — {r.text[:200]}")
-        return False
-    except Exception as e:
-        logging.error(f"_post: Exception sending Telegram message — {e}")
-        return False
+
+            if r.status_code == 429:
+                wait = _RETRY_AFTER_CAP_S
+                try:
+                    wait = int(r.json().get("parameters", {}).get("retry_after", 1))
+                except Exception:
+                    pass
+                wait = min(max(wait, 1), _RETRY_AFTER_CAP_S)
+                if attempt < _MAX_SEND_ATTEMPTS:
+                    logging.warning(f"_post: rate limited — retrying in {wait}s "
+                                    f"(attempt {attempt}/{_MAX_SEND_ATTEMPTS})")
+                    time.sleep(wait)
+                    continue
+                logging.error("_post: rate limited — attempts exhausted, message lost")
+                return False
+
+            if r.status_code == 400 and "parse" in r.text.lower() and "parse_mode" in payload:
+                logging.warning(
+                    f"_post: Markdown rejected ({r.text[:120]}) — resending as plain text")
+                payload.pop("parse_mode", None)
+                continue
+
+            # 5xx is transient; 4xx other than the two above will not improve.
+            if r.status_code >= 500 and attempt < _MAX_SEND_ATTEMPTS:
+                logging.warning(f"_post: Telegram {r.status_code} — retrying "
+                                f"(attempt {attempt}/{_MAX_SEND_ATTEMPTS})")
+                time.sleep(2 * attempt)
+                continue
+            logging.error(f"_post: Telegram API error {r.status_code} — {r.text[:200]}")
+            return False
+
+        except requests.RequestException as e:
+            if attempt < _MAX_SEND_ATTEMPTS:
+                logging.warning(f"_post: transport error ({e}) — retrying "
+                                f"(attempt {attempt}/{_MAX_SEND_ATTEMPTS})")
+                time.sleep(2 * attempt)
+                continue
+            logging.error(f"_post: Exception sending Telegram message — {e}")
+            return False
+        except Exception as e:
+            logging.error(f"_post: Exception sending Telegram message — {e}")
+            return False
+    return False
 
 
 def _conviction(score: int) -> str:
@@ -131,10 +185,10 @@ def send_alert(signal):
 
 
 def send_top_picks(signals, top_n=5):
-    """Send ranked summary — only A/A+ signals included."""
+    """Send ranked summary — only A/A+ signals included. Returns True if sent."""
     top = [s for s in signals if int(s.get("score", 0)) >= 65][:top_n]
     if not top:
-        return
+        return False
     ts = datetime.now(IST).strftime("%d %b %Y %I:%M %p IST")
     lines = [f"🏆 *Top {len(top)} Swing Picks — {ts}*\n"]
     for i, s in enumerate(top, 1):
@@ -145,7 +199,7 @@ def send_top_picks(signals, top_n=5):
             f"   ₹{s['price']} | SL ₹{s['sl2']} | T2 ₹{s['t2']} | RR {s.get('rr2',0)}x"
         )
     lines.append("\n_Dhruvedge · Entry only on A/A+ · Not SEBI advice_")
-    _post("\n".join(lines))
+    return _post("\n".join(lines))
 
 
 def send_summary(signals):
