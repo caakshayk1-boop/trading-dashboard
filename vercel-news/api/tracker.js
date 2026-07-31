@@ -66,17 +66,24 @@ async function list(req, res) {
       if (q !== null && q !== undefined) r.current_price = q;
     }
     // Persist the refreshed prices so the daily static build renders something
-    // recent even when it runs without a quote provider.
-    await Promise.all(
-      rows
-        .filter((r) => r.current_price !== null)
-        .map((r) =>
-          db().execute({
-            sql: "UPDATE stock_tracker SET current_price=?, updated_at=? WHERE id=?",
-            args: [r.current_price, now, r.id],
-          })
-        )
-    );
+    // recent even when it runs without a quote provider. One batch, not one
+    // round trip per position — the book is 28 deep and the database is in
+    // Tokyo while the function runs in Singapore.
+    const writes = rows
+      .filter((r) => r.current_price !== null)
+      .map((r) => ({
+        sql: "UPDATE stock_tracker SET current_price=?, updated_at=? WHERE id=?",
+        args: [r.current_price, now, r.id],
+      }));
+    if (writes.length) {
+      // A failed price write must not blank the response — the caller still
+      // gets live prices, they just aren't cached for the next static build.
+      try {
+        await db().batch(writes, "write");
+      } catch (e) {
+        console.warn(`tracker: price cache write failed (${e.message})`);
+      }
+    }
   }
 
   for (const r of rows) decorate(r);
@@ -171,25 +178,42 @@ async function write(req, res) {
 }
 
 // Yahoo's chart endpoint stays reachable from serverless IPs where the older
-// /v7/quote endpoint returns 401. One request per symbol, failures are silent —
-// a missing quote falls back to the last stored price rather than blanking the row.
+// /v7/quote endpoint returns 401. Failures are silent — a missing quote falls
+// back to the last stored price rather than blanking the row.
+//
+// Concurrency is capped: firing 28+ parallel requests at Yahoo invites rate
+// limiting, and the whole handler has to finish inside the function timeout.
+// The deadline below is what guarantees that — once it passes, the remaining
+// symbols keep their stored prices instead of hanging the request.
+const QUOTE_CONCURRENCY = 8;
+const QUOTE_DEADLINE_MS = 7000;
+
 async function quoteAll(symbols) {
   const out = {};
-  await Promise.all(
-    [...new Set(symbols)].map(async (sym) => {
+  const queue = [...new Set(symbols)];
+  const deadline = Date.now() + QUOTE_DEADLINE_MS;
+
+  const worker = async () => {
+    while (queue.length) {
+      if (Date.now() >= deadline) return;
+      const sym = queue.shift();
       try {
+        const budget = Math.max(deadline - Date.now(), 1);
         const r = await fetch(
           `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?range=1d&interval=1d`,
-          { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(6000) }
+          { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(budget) }
         );
-        if (!r.ok) return;
+        if (!r.ok) continue;
         const j = await r.json();
-        const p = j?.chart?.result?.[0]?.meta?.regularMarketPrice;
-        out[sym] = num(p);
+        out[sym] = num(j?.chart?.result?.[0]?.meta?.regularMarketPrice);
       } catch {
         /* leave undefined — caller keeps the stored price */
       }
-    })
+    }
+  };
+
+  await Promise.all(
+    Array.from({ length: Math.min(QUOTE_CONCURRENCY, queue.length) }, worker)
   );
   return out;
 }

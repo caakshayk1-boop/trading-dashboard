@@ -2,6 +2,7 @@
 // TURSO_URL / TURSO_TOKEN are the same secrets the GitHub Actions scanner uses,
 // so the site reads the exact ledger the bot writes — no copy, no drift.
 import { createClient } from "@libsql/client";
+import { timingSafeEqual } from "node:crypto";
 
 let _client = null;
 
@@ -61,11 +62,17 @@ export function fail(res, status, message) {
 // Writes are gated on a shared key. Fails closed: no EDIT_KEY set means the
 // public internet cannot touch the ledger, which is the safe default for a
 // public site sitting on top of a live trading database.
+//
+// timingSafeEqual, because `===` on strings short-circuits at the first
+// differing byte and leaks the key a character at a time to anyone willing to
+// measure. The length is compared separately since timingSafeEqual throws on
+// mismatched buffers — length alone is not worth protecting.
 export function authorized(req) {
   const key = process.env.EDIT_KEY;
   if (!key) return false;
   const sent = req.headers["x-edit-key"];
-  return typeof sent === "string" && sent.length > 0 && sent === key;
+  if (typeof sent !== "string" || sent.length !== key.length) return false;
+  return timingSafeEqual(Buffer.from(sent), Buffer.from(key));
 }
 
 export async function readBody(req) {

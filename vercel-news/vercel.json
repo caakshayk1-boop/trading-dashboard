@@ -3,6 +3,11 @@
   "outputDirectory": "public",
   "buildCommand": "node build.js",
   "installCommand": "npm install",
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 15
+    }
+  },
   "headers": [
     {
       "source": "/index.html",

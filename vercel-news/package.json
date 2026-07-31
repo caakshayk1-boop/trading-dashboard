@@ -2,6 +2,7 @@
   "name": "daily-signal-web",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "description": "THE DAILY SIGNAL — live layer over the Turso signal ledger",
   "dependencies": {
     "@libsql/client": "^0.15.7"

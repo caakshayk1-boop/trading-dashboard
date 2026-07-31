@@ -16,6 +16,23 @@ const COLS = `date, symbol, action, timeframe, signal_type, entry, sl,
               target1, target2, rr, score, status, lifecycle_status,
               exit_price, pnl_pct, r_multiple, closed_at, sent_at, market, asset_type`;
 
+// The badge is derived from two columns, so filtering it in JavaScript after
+// the query would filter only the current page — ask for 300 wins and you'd get
+// however many happen to sit in the newest 300 rows. These mirror badgeOf() in
+// SQL so the filter applies to the whole ledger and pagination stays honest.
+const WIN_LIST = "'TARGET_HIT','T1_HIT','T2_HIT','TP1_HIT','TP2_HIT','PROFIT'";
+const LOSS_LIST = "'SL_HIT','STOPPED','STOP_HIT','LOSS'";
+const BADGE_SQL = {
+  win: `(upper(coalesce(status,'')) IN (${WIN_LIST}) OR upper(coalesce(lifecycle_status,'')) IN (${WIN_LIST}))`,
+  loss: `(upper(coalesce(status,'')) NOT IN (${WIN_LIST})
+          AND upper(coalesce(lifecycle_status,'')) NOT IN (${WIN_LIST})
+          AND (upper(coalesce(status,'')) IN (${LOSS_LIST}) OR upper(coalesce(lifecycle_status,'')) IN (${LOSS_LIST})))`,
+  open: `(upper(coalesce(status,'')) NOT IN (${WIN_LIST},${LOSS_LIST})
+          AND upper(coalesce(lifecycle_status,'')) NOT IN (${WIN_LIST},${LOSS_LIST})
+          AND (upper(coalesce(status,'')) = 'OPEN' OR upper(coalesce(lifecycle_status,'')) = 'OPEN'))`,
+};
+BADGE_SQL.cancelled = `(NOT ${BADGE_SQL.win} AND NOT ${BADGE_SQL.loss} AND NOT ${BADGE_SQL.open})`;
+
 export default async function handler(req, res) {
   if (req.method !== "GET") return fail(res, 405, "GET only");
 
@@ -35,6 +52,11 @@ export default async function handler(req, res) {
     args.push(`%${String(q.symbol).toUpperCase()}%`);
   }
   if (q.tf) { where.push("timeframe = ?"); args.push(String(q.tf)); }
+  if (q.status) {
+    const clause = BADGE_SQL[String(q.status).toLowerCase()];
+    if (!clause) return fail(res, 400, "status must be one of: win, loss, open, cancelled");
+    where.push(clause);
+  }
 
   const limit = Math.min(Math.max(parseInt(q.limit, 10) || 300, 1), 2000);
   const offset = Math.max(parseInt(q.offset, 10) || 0, 0);
@@ -46,14 +68,7 @@ export default async function handler(req, res) {
 
   try {
     const rs = await db().execute({ sql, args: [...args, limit, offset] });
-    let rows = rs.rows.map(shape);
-
-    // status filter is applied after shaping — the badge is derived from two
-    // columns, so it cannot be expressed cleanly in SQL
-    if (q.status) {
-      const want = String(q.status).toLowerCase();
-      rows = rows.filter((r) => r.badge === want);
-    }
+    const rows = rs.rows.map(shape);
 
     json(res, 200, {
       ok: true,
