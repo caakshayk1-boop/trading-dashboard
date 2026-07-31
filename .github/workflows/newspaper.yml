@@ -13,6 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # The `secrets` context is not available in a step-level `if`. Mapping the
+    # token into the job env is what makes the deploy step skippable when it
+    # has not been configured yet.
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,14 +55,10 @@ jobs:
       # news.askakshay.com serves the Vercel deploy. Only the daily shell is
       # published here — signals, positions and stats are read live from Turso
       # by /api on every page load, so this does not need to run after a scan.
+      # VERCEL_ORG_ID / VERCEL_PROJECT_ID (job env, above) make the CLI target
+      # the existing project without a checked-in .vercel directory.
       - name: Deploy to Vercel (news.askakshay.com)
-        if: ${{ secrets.VERCEL_TOKEN != '' }}
-        env:
-          # VERCEL_ORG_ID / VERCEL_PROJECT_ID make the CLI target the existing
-          # project without a checked-in .vercel directory.
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        if: env.VERCEL_TOKEN != ''
         run: |
           mkdir -p vercel-news/public
           cp docs/index.html  vercel-news/public/index.html
