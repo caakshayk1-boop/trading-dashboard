@@ -13,14 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
-    # The `secrets` context is not available in a step-level `if`. Mapping the
-    # token into the job env is what makes the deploy step skippable when it
-    # has not been configured yet.
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,14 +44,10 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
 
-      # news.askakshay.com serves the Vercel deploy. Only the daily shell is
-      # published here — signals, positions and stats are read live from Turso
-      # by /api on every page load, so this does not need to run after a scan.
-      # VERCEL_ORG_ID / VERCEL_PROJECT_ID (job env, above) make the CLI target
-      # the existing project without a checked-in .vercel directory.
-      # Deploys from the repo root: the project's Root Directory is vercel-news,
-      # so Vercel builds that subdirectory while build.js can still reach
-      # ../docs/index.html. .vercelignore keeps the upload to just those two.
-      - name: Deploy to Vercel (news.askakshay.com)
-        if: env.VERCEL_TOKEN != ''
-        run: npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
+      # No deploy step here on purpose. The Vercel project vercel-news is
+      # connected to this repository, so the push above is what ships the site.
+      # A CLI deploy would publish the same commit a second time.
+      #
+      # Only the daily shell is published this way — signals, positions and
+      # stats are read live from Turso by /api on every page load, which is why
+      # nothing needs to redeploy after a scan.
