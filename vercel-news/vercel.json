@@ -1,9 +1,17 @@
 {
-  "redirects": [
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "public",
+  "buildCommand": "node build.js",
+  "installCommand": "npm install",
+  "headers": [
     {
-      "source": "/(.*)",
-      "destination": "https://worker-production-d45d.up.railway.app/$1",
-      "permanent": false
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
     }
+  ],
+  "rewrites": [
+    { "source": "/day/:date", "destination": "/index.html" }
   ]
 }

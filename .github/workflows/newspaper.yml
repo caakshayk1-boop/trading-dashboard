@@ -43,3 +43,20 @@ jobs:
           git add docs/index.html docs/alerts.json
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
+
+      # news.askakshay.com serves the Vercel deploy. Only the daily shell is
+      # published here — signals, positions and stats are read live from Turso
+      # by /api on every page load, so this does not need to run after a scan.
+      - name: Deploy to Vercel (news.askakshay.com)
+        if: ${{ secrets.VERCEL_TOKEN != '' }}
+        env:
+          # VERCEL_ORG_ID / VERCEL_PROJECT_ID make the CLI target the existing
+          # project without a checked-in .vercel directory.
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          mkdir -p vercel-news/public
+          cp docs/index.html  vercel-news/public/index.html
+          cp docs/alerts.json vercel-news/public/alerts.json
+          npx --yes vercel@latest deploy vercel-news --prod --yes --token "$VERCEL_TOKEN"

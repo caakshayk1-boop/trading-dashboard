@@ -1,0 +1,171 @@
+// GET /api/stats — performance analytics over the whole Turso ledger.
+//
+// Every rate here is computed over CLOSED signals only. Counting open signals
+// as wins is how a 50% system starts looking like an 80% one, so open trades
+// are reported separately and never folded into win rate or expectancy.
+//
+// Query params:
+//   from=, to=   optional date range (YYYY-MM-DD)
+//   tf=          restrict to one timeframe
+import { db, num, str, badgeOf, json, fail } from "./_db.js";
+
+export default async function handler(req, res) {
+  if (req.method !== "GET") return fail(res, 405, "GET only");
+
+  const q = req.query || {};
+  const where = [];
+  const args = [];
+  if (q.from) { where.push("substr(date,1,10) >= ?"); args.push(String(q.from).slice(0, 10)); }
+  if (q.to)   { where.push("substr(date,1,10) <= ?"); args.push(String(q.to).slice(0, 10)); }
+  if (q.tf)   { where.push("timeframe = ?");          args.push(String(q.tf)); }
+
+  const sql = `SELECT date, symbol, timeframe, signal_type, entry, sl, target1,
+                      status, lifecycle_status, pnl_pct, r_multiple, closed_at
+               FROM all_signals
+               ${where.length ? "WHERE " + where.join(" AND ") : ""}
+               ORDER BY date ASC, id ASC`;
+
+  try {
+    const rs = await db().execute({ sql, args });
+    const rows = rs.rows.map((r) => ({
+      date: str(r.date).slice(0, 10),
+      symbol: str(r.symbol),
+      timeframe: str(r.timeframe) || "—",
+      signal_type: str(r.signal_type) || "—",
+      entry: num(r.entry),
+      sl: num(r.sl),
+      badge: badgeOf(r.status, r.lifecycle_status),
+      pnl_pct: num(r.pnl_pct),
+      r_multiple: rMultiple(r),
+      closed_at: str(r.closed_at).slice(0, 10) || str(r.date).slice(0, 10),
+    }));
+
+    const closed = rows.filter((r) => r.badge === "win" || r.badge === "loss");
+    const open = rows.filter((r) => r.badge === "open").length;
+    const cancelled = rows.filter((r) => r.badge === "cancelled").length;
+
+    json(res, 200, {
+      ok: true,
+      generated_at: new Date().toISOString(),
+      basis: "Win rate, avg R and expectancy are computed over closed signals only. Open signals are excluded.",
+      totals: {
+        all: rows.length,
+        closed: closed.length,
+        open,
+        cancelled,
+        first_date: rows.length ? rows[0].date : null,
+        last_date: rows.length ? rows[rows.length - 1].date : null,
+      },
+      headline: headline(closed),
+      equity_curve: equityCurve(closed),
+      by_month: group(closed, (r) => r.closed_at.slice(0, 7)),
+      by_timeframe: group(closed, (r) => r.timeframe),
+      by_signal_type: group(closed, (r) => r.signal_type),
+      by_symbol: group(closed, (r) => r.symbol, 5),
+    }, 300);
+  } catch (e) {
+    fail(res, 500, `stats query failed: ${e.message}`);
+  }
+}
+
+// Prefer the stored r_multiple. Fall back to deriving it from the realised
+// percentage move against the original risk (entry → stop) so older rows that
+// predate the r_multiple column still contribute.
+function rMultiple(r) {
+  const stored = num(r.r_multiple);
+  if (stored !== null) return stored;
+  const pnl = num(r.pnl_pct);
+  const entry = num(r.entry);
+  const sl = num(r.sl);
+  if (pnl === null || entry === null || sl === null || entry === 0) return null;
+  const riskPct = (Math.abs(entry - sl) / entry) * 100;
+  if (riskPct === 0) return null;
+  return pnl / riskPct;
+}
+
+function headline(closed) {
+  const n = closed.length;
+  if (!n) {
+    return { trades: 0, win_rate: null, avg_r: null, expectancy_r: null,
+             avg_win_r: null, avg_loss_r: null, profit_factor: null,
+             best_r: null, worst_r: null, max_drawdown_r: null };
+  }
+  const wins = closed.filter((r) => r.badge === "win");
+  const losses = closed.filter((r) => r.badge === "loss");
+  const rs = closed.map((r) => r.r_multiple).filter((v) => v !== null);
+  const winR = wins.map((r) => r.r_multiple).filter((v) => v !== null);
+  const lossR = losses.map((r) => r.r_multiple).filter((v) => v !== null);
+
+  const grossWin = winR.reduce((a, b) => a + Math.max(b, 0), 0);
+  const grossLoss = Math.abs(lossR.reduce((a, b) => a + Math.min(b, 0), 0));
+
+  return {
+    trades: n,
+    wins: wins.length,
+    losses: losses.length,
+    win_rate: round((wins.length / n) * 100, 1),
+    avg_r: rs.length ? round(mean(rs), 3) : null,
+    // Expectancy per trade in R — the number that actually decides whether the
+    // system is worth running.
+    expectancy_r: rs.length ? round(mean(rs), 3) : null,
+    avg_win_r: winR.length ? round(mean(winR), 2) : null,
+    avg_loss_r: lossR.length ? round(mean(lossR), 2) : null,
+    profit_factor: grossLoss > 0 ? round(grossWin / grossLoss, 2) : null,
+    best_r: rs.length ? round(Math.max(...rs), 2) : null,
+    worst_r: rs.length ? round(Math.min(...rs), 2) : null,
+    max_drawdown_r: maxDrawdown(closed),
+  };
+}
+
+function equityCurve(closed) {
+  const ordered = [...closed]
+    .filter((r) => r.r_multiple !== null)
+    .sort((a, b) => (a.closed_at < b.closed_at ? -1 : a.closed_at > b.closed_at ? 1 : 0));
+  let cum = 0;
+  return ordered.map((r, i) => {
+    cum += r.r_multiple;
+    return { i: i + 1, date: r.closed_at, symbol: r.symbol,
+             r: round(r.r_multiple, 3), cum_r: round(cum, 3) };
+  });
+}
+
+function maxDrawdown(closed) {
+  const curve = equityCurve(closed);
+  if (!curve.length) return null;
+  let peak = 0, dd = 0;
+  for (const p of curve) {
+    if (p.cum_r > peak) peak = p.cum_r;
+    dd = Math.min(dd, p.cum_r - peak);
+  }
+  return round(dd, 2);
+}
+
+// Group closed trades by an arbitrary key. minTrades drops buckets too small
+// to mean anything — a 1-trade symbol at 100% win rate is noise, not an edge.
+function group(closed, keyFn, minTrades = 1) {
+  const buckets = new Map();
+  for (const r of closed) {
+    const k = keyFn(r) || "—";
+    if (!buckets.has(k)) buckets.set(k, []);
+    buckets.get(k).push(r);
+  }
+  const out = [];
+  for (const [key, items] of buckets) {
+    if (items.length < minTrades) continue;
+    const wins = items.filter((r) => r.badge === "win").length;
+    const rs = items.map((r) => r.r_multiple).filter((v) => v !== null);
+    out.push({
+      key,
+      trades: items.length,
+      wins,
+      losses: items.length - wins,
+      win_rate: round((wins / items.length) * 100, 1),
+      avg_r: rs.length ? round(mean(rs), 3) : null,
+      total_r: rs.length ? round(rs.reduce((a, b) => a + b, 0), 2) : null,
+    });
+  }
+  return out.sort((a, b) => (b.total_r ?? -999) - (a.total_r ?? -999));
+}
+
+const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+const round = (v, d) => (v === null || !Number.isFinite(v) ? null : Math.round(v * 10 ** d) / 10 ** d);

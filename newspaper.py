@@ -2203,6 +2203,96 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   h1.hl .w>span{transform:none;opacity:1}
   .hero-sub,.statrail,.wxrail{opacity:1}
 }
+
+/* ═══════════════════ LIVE LAYER ═══════════════════
+   Everything below drives the /api-backed sections. On a static host the
+   API probe fails and these components stay hidden, leaving the daily
+   snapshot exactly as it renders today. */
+.livebar{position:sticky;top:60px;z-index:290;display:none;align-items:center;gap:10px;
+  padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
+  border-bottom:1px solid var(--line);background:rgba(8,9,10,.9);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.livebar.on{display:flex}
+.livebar .pip{width:6px;height:6px;border-radius:50%;background:var(--up);flex:none;
+  animation:pulse 2.4s var(--ease) infinite}
+.livebar.stale .pip{background:var(--gold);animation:none}
+.livebar.off .pip{background:var(--dim);animation:none}
+.livebar .msg{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.livebar button{font:inherit;color:var(--lime);background:none;border:1px solid var(--lime-line);
+  border-radius:999px;padding:3px 11px;cursor:pointer;flex:none}
+.livebar button:hover{background:var(--lime-soft)}
+
+.ctlbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:0 0 16px}
+.ctlbar input,.ctlbar select{font-family:var(--mono);font-size:12px;color:var(--text);
+  background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;min-width:0}
+.ctlbar input:focus,.ctlbar select:focus{outline:none;border-color:var(--lime-line)}
+.ctlbar input[type=search]{flex:1 1 200px}
+.ctlbar .ghost{color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:auto}
+
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
+.perf-cell{background:var(--surface);padding:18px 16px}
+.perf-cell .v{font-family:var(--mono);font-size:25px;font-weight:700;letter-spacing:-1px;line-height:1.1}
+.perf-cell .k{font-family:var(--mono);font-size:10px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:1px;margin-top:7px}
+.perf-cell .sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+.eqwrap{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:22px}
+.eqwrap h4{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:1.2px;margin-bottom:14px}
+.eqwrap svg{width:100%;height:190px;display:block;overflow:visible}
+.eqwrap .zero{stroke:var(--line2);stroke-dasharray:3 4}
+.eqwrap .curve{fill:none;stroke:var(--lime);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.eqwrap .fillArea{fill:var(--lime-soft)}
+.eqwrap .axis{font-family:var(--mono);font-size:9px;fill:var(--dim)}
+
+.brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.brk-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.brk-card h4{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;
+  letter-spacing:1.2px;margin-bottom:12px}
+.brk-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
+  padding:8px 0;border-top:1px solid var(--line);font-size:12.5px}
+.brk-row:first-of-type{border-top:none}
+.brk-row .kk{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brk-row .nn{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.brk-row .rr{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
+
+.arch{display:flex;gap:7px;overflow-x:auto;padding:4px 0 12px;-webkit-overflow-scrolling:touch}
+.arch::-webkit-scrollbar{height:5px}
+.arch-day{flex:none;min-width:76px;background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:10px;text-align:center;cursor:pointer;transition:.18s var(--ease)}
+.arch-day:hover{border-color:var(--lime-line);transform:translateY(-2px)}
+.arch-day.on{border-color:var(--lime);background:var(--lime-soft)}
+.arch-day .d{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.arch-day .n{font-family:var(--mono);font-size:17px;font-weight:700;margin:3px 0}
+.arch-day .r{font-family:var(--mono);font-size:10px}
+
+.pos-alert{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;
+  text-transform:uppercase;padding:2px 7px;border-radius:999px;margin-left:6px;vertical-align:middle}
+.pos-alert.near-stop{background:rgba(255,92,92,.14);color:var(--down)}
+.pos-alert.stop-hit{background:var(--down);color:#000;font-weight:700}
+.pos-alert.near-target{background:rgba(61,220,151,.14);color:var(--up)}
+.pos-alert.target-hit{background:var(--up);color:#000;font-weight:700}
+
+.keybox{display:none;gap:9px;flex-wrap:wrap;align-items:center;margin:0 0 16px;padding:14px;
+  background:var(--surface);border:1px dashed var(--line2);border-radius:14px;font-size:12.5px;color:var(--muted)}
+.keybox.on{display:flex}
+.keybox input{font-family:var(--mono);font-size:12px;color:var(--text);background:var(--bg2);
+  border:1px solid var(--line2);border-radius:9px;padding:8px 11px;flex:1 1 180px}
+
+/* Mobile: tables become the pain point on a phone, so give them a real scroll
+   affordance and stop the control bars from stacking into a wall. */
+@media(max-width:640px){
+  .livebar{top:56px;font-size:10px;padding:7px 14px}
+  .livebar .msg{white-space:normal}
+  .perf-cell .v{font-size:21px}
+  .ctlbar input[type=search]{flex:1 1 100%}
+  .ctlbar .ghost{margin-left:0;width:100%}
+  .tw{position:relative}
+  .tw::after{content:"swipe →";position:absolute;right:8px;top:-16px;font-family:var(--mono);
+    font-size:9px;color:var(--dim);letter-spacing:.8px}
+  .arch-day{min-width:66px;padding:8px}
+}
 </style>
 </head>
 
@@ -2240,9 +2330,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#way"><i>07</i>The Way</a>
     <a href="#review"><i>08</i>The Review</a>
     <a href="#chess"><i>09</i>Chess</a>
-    <a href="#alerts"><i>10</i>Signal Log</a>
+    <a href="#perf"><i>10</i>Performance</a>
+    <a href="#alerts"><i>11</i>Signal Log</a>
   </div>
 </nav>
+
+<!-- Live-layer status. Hidden until the API probe resolves one way or the other. -->
+<div class="livebar" id="livebar">
+  <span class="pip"></span>
+  <span class="msg" id="livemsg">Checking live ledger…</span>
+  <button type="button" id="liverefresh">Refresh</button>
+</div>
 
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
@@ -2262,15 +2360,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="statrail">
     <div class="stat">
-      <div class="v" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div>
+      <div class="v" id="heroRate" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div>
       <div class="k">Signal Win Rate</div>
     </div>
     <div class="stat">
-      <div class="v" style="color:var(--blue)" data-count="{{ opens }}">0</div>
+      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">0</div>
       <div class="k">Open Positions</div>
     </div>
     <div class="stat">
-      <div class="v" data-count="{{ alerts|length }}">0</div>
+      <div class="v" id="heroTotal" data-count="{{ alerts|length }}">0</div>
       <div class="k">Signals Logged</div>
     </div>
     <div class="stat">
@@ -2395,9 +2493,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <button type="submit" class="btn-gh v">Sync Obsidian</button>
       </form>
       <a class="slink" href="/tracker/history" target="_blank">Exit history →</a>
+      <button type="button" class="btn-gh" id="posHistBtn" style="display:none">Closed positions</button>
     </div>
   </div>
 
+  <!-- Live book. Filled from /api/tracker; the server-rendered block below is
+       the fallback for the static build. -->
+  <div id="posLive" style="display:none"></div>
+
+  <div class="keybox" id="keybox">
+    <span>Editing the book needs your key. Stored in this browser only.</span>
+    <input type="password" id="keyInput" placeholder="Edit key" autocomplete="off">
+    <button type="button" class="btn btn-sm" id="keySave">Unlock</button>
+  </div>
+
+  <div id="posStatic">
   {% if tracker %}
   <div class="tw rv">
     <table class="t" style="min-width:820px">
@@ -2426,10 +2536,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% else %}
   <div class="empty rv">No open positions. Hit <strong style="color:var(--lime)">+ Track</strong> on any trade idea, or add one below.</div>
   {% endif %}
+  </div>
 
   <div class="formbox rv">
     <h4>+ Add position manually</h4>
-    <form action="/tracker/add" method="post">
+    <form action="/tracker/add" method="post" id="posAddForm">
       <div class="frow">
         <input type="text" name="symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
         <input type="text" name="name" placeholder="Name">
@@ -2966,6 +3077,39 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
+<!-- ══════════ 10 PERFORMANCE ══════════
+     Entirely live. Hidden on a static host, where there is no ledger to
+     compute an edge from. -->
+<section class="sec" id="perf" style="display:none">
+  <div class="shead rv">
+    <div>
+      <span class="snum">10 / EDGE</span>
+      <h2 class="stitle">Does this actually work?</h2>
+    </div>
+    <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
+      Open signals are excluded, because counting them is how a 50% system starts looking like an 80% one.</p>
+  </div>
+
+  <div class="ctlbar rv">
+    <select id="perfTf"><option value="">All timeframes</option></select>
+    <select id="perfRange">
+      <option value="">All time</option>
+      <option value="30">Last 30 days</option>
+      <option value="90">Last 90 days</option>
+      <option value="365">Last 12 months</option>
+    </select>
+    <span class="ghost" id="perfBasis"></span>
+  </div>
+
+  <div class="perf-grid rv" id="perfGrid"></div>
+  <div class="eqwrap rv" id="eqWrap">
+    <h4>Equity curve · cumulative R, closed signals in resolution order</h4>
+    <svg id="eqSvg" viewBox="0 0 800 190" preserveAspectRatio="none" role="img"
+         aria-label="Cumulative R equity curve"></svg>
+  </div>
+  <div class="brk rv" id="perfBrk"></div>
+</section>
+
 <!-- ══════════ 10 SIGNAL LOG ══════════ -->
 <section class="sec" id="alerts">
   <div class="shead rv">
@@ -2979,13 +3123,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
   </div>
 
+  <!-- Archive strip: one tile per trading day, newest first. Live only. -->
+  <div id="archWrap" style="display:none">
+    <div class="ctlbar rv" style="margin-bottom:8px">
+      <span class="ghost" style="margin-left:0">ARCHIVE — tap a day to load it</span>
+      <button type="button" class="fbtn" id="archAll">Show all days</button>
+    </div>
+    <div class="arch rv" id="archStrip"></div>
+  </div>
+
+  <div class="ctlbar rv" id="alertCtl" style="display:none">
+    <input type="search" id="alertSearch" placeholder="Search symbol — e.g. BAJFINANCE" autocomplete="off">
+    <input type="date" id="alertFrom" aria-label="From date">
+    <input type="date" id="alertTo" aria-label="To date">
+    <select id="alertTfSel"><option value="">All timeframes</option></select>
+    <span class="ghost" id="alertCount"></span>
+  </div>
+
   {% if alerts %}
   <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" data-count="{{ wins }}">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" data-count="{{ losses }}">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" style="color:var(--blue)" data-count="{{ opens }}">0</div><div class="k">Open</div></div>
-    <div class="kpi"><div class="v" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
-    <div class="kpi"><div class="v" data-count="{{ alerts|length }}">0</div><div class="k">Total Signals</div></div>
+    <div class="kpi"><div class="v up" id="kpiWin" data-count="{{ wins }}">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="{{ losses }}">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="{{ opens }}">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
+    <div class="kpi"><div class="v" id="kpiTotal" data-count="{{ alerts|length }}">0</div><div class="k">Total Signals</div></div>
   </div>
 
   <div class="filters rv">
@@ -3071,11 +3232,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   if (RM || !('IntersectionObserver' in window)){
     revs.forEach(function(e){ e.classList.add('in'); });
   } else {
+    // threshold must stay 0 (any pixel intersecting), not a ratio. A ratio of
+    // 0.05 is unsatisfiable for anything taller than 20x the viewport, and the
+    // signal log grows past that as soon as the live feed loads a few hundred
+    // rows — the table would then never reveal and the section would render blank.
     var ro = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
         if (en.isIntersecting){ en.target.classList.add('in'); ro.unobserve(en.target); }
       });
-    }, {rootMargin:'0px 0px -8% 0px', threshold:0.05});
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0});
     revs.forEach(function(e){ ro.observe(e); });
   }
 
@@ -3087,6 +3252,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         dur = 1100, t0 = null;
     if (RM){ el.textContent = target + suffix + total; return; }
     function step(ts){
+      // The live layer may replace this number mid-animation with the real
+      // value from the ledger. It marks the node when it does; keep animating
+      // past that and the page settles back on the stale snapshot figure.
+      if (el.dataset.live) return;
       if (!t0) t0 = ts;
       var p = Math.min((ts - t0) / dur, 1),
           e = 1 - Math.pow(1 - p, 3);
@@ -3325,19 +3494,554 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     }
   })();
 
-  /* ── static host: disable server-only routes ── */
-  if (location.hostname.indexOf('github.io') !== -1){
-    document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(function(f){
-      f.addEventListener('submit', function(e){
-        e.preventDefault();
-        alert('The tracker needs the live server. This static page rebuilds daily with fresh market data — tracker actions are not available here.');
+  /* ═══════════════════════════════════════════════════════════════════
+     LIVE LAYER
+
+     The page shell is rebuilt once a day. The trading data is not — it
+     comes from /api, which reads the same Turso ledger the scanner writes
+     to, so a signal that fired ten minutes ago shows up on the next load.
+
+     If /api is unreachable (plain static host, or the deploy lost its env
+     vars) everything below no-ops and the server-rendered snapshot stays
+     exactly as it is. Nothing here is allowed to break the daily paper.
+     ═══════════════════════════════════════════════════════════════════ */
+  (function(){
+    var API      = '/api';
+    var KEY_LS   = 'ds_edit_key';
+    var live     = false;
+    var allRows  = [];      // last signal set pulled from /api/signals
+    var archDate = null;    // when set, we are looking at one archived day
+
+    function el(id){ return document.getElementById(id); }
+
+    // The scroll-reveal IntersectionObserver registers once, at load, over the
+    // .rv elements that exist and are laid out at that moment. Anything the
+    // live layer un-hides or injects afterwards was never observed, so it
+    // would sit at opacity:0 for good. Every render path calls this.
+    function reveal(root){
+      if (!root) return;
+      var nodes = [];
+      if (root.classList && root.classList.contains('rv')) nodes.push(root);
+      root.querySelectorAll('.rv').forEach(function(n){ nodes.push(n); });
+      nodes.forEach(function(n){
+        // Snap, never animate. These nodes appear in response to an API call,
+        // not to a scroll, so there is no reveal to choreograph — and a .75s
+        // opacity transition on a signal table tens of thousands of pixels tall
+        // means compositing a layer that size, which is where it gets stuck.
+        n.style.transition = 'none';
+        n.classList.add('in');
       });
+    }
+    function fmt(n, d){
+      if (n === null || n === undefined || !isFinite(n)) return '—';
+      return Number(n).toFixed(d === undefined ? 2 : d);
+    }
+    function esc(s){
+      return String(s === null || s === undefined ? '' : s)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+    }
+    function money(v){ return v === null || v === undefined ? '—' : '₹' + fmt(v, 2); }
+    function editKey(){ try { return localStorage.getItem(KEY_LS) || ''; } catch(e){ return ''; } }
+
+    function api(path, opts){
+      opts = opts || {};
+      var h = opts.headers || {};
+      if (opts.method === 'POST'){
+        h['Content-Type'] = 'application/json';
+        h['x-edit-key'] = editKey();
+      }
+      opts.headers = h;
+      return fetch(API + path, opts).then(function(r){
+        return r.json().catch(function(){ return { ok:false, error:'bad response' }; })
+                .then(function(j){ if (!r.ok && j.ok === undefined) j.ok = false; return j; });
+      });
+    }
+
+    function bar(state, msg){
+      var b = el('livebar'); if (!b) return;
+      b.classList.add('on');
+      b.classList.remove('stale','off');
+      if (state !== 'live') b.classList.add(state);
+      el('livemsg').textContent = msg;
+    }
+
+    /* ── boot: is there a ledger behind this page? ── */
+    api('/health').then(function(h){
+      if (!h || !h.ok) throw new Error(h && h.error ? h.error : 'unreachable');
+      live = true;
+      var stamp = h.latest_signal_date || '—';
+      bar('live', 'LIVE LEDGER · ' + h.signals + ' signals · latest ' + stamp +
+                  ' · ' + h.open_positions + ' open positions' +
+                  (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
+      start();
+    }).catch(function(e){
+      // Static host, or the API is down. Say so plainly instead of letting the
+      // page pretend a 6 AM snapshot is live data.
+      bar('off', 'STATIC SNAPSHOT · rebuilt daily at 6:00 AM IST · live ledger unavailable (' + e.message + ')');
+      staticFallback();
+      var rb = el('liverefresh'); if (rb) rb.style.display = 'none';
     });
-    document.querySelectorAll('a[href^="/tracker"], a[href^="/api"]').forEach(function(a){
-      a.addEventListener('click', function(e){ e.preventDefault(); });
-      a.style.opacity = '.3'; a.style.cursor = 'not-allowed';
-    });
-  }
+
+    /* ── static fallback: keep the old behaviour, minus the alert() popup ── */
+    function staticFallback(){
+      document.querySelectorAll('form[action^="/tracker"], form[action^="/api"]').forEach(function(f){
+        f.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          var note = f.querySelector('.formnote');
+          if (!note){
+            note = document.createElement('div');
+            note.className = 'formnote';
+            note.style.cssText = 'margin-top:10px;font-size:12px;color:var(--gold)';
+            f.appendChild(note);
+          }
+          note.textContent = 'This build has no ledger behind it — open news.askakshay.com to edit the book.';
+        });
+      });
+      document.querySelectorAll('a[href^="/tracker"], a[href^="/api"]').forEach(function(a){
+        a.addEventListener('click', function(ev){ ev.preventDefault(); });
+        a.style.opacity = '.3'; a.style.cursor = 'not-allowed';
+      });
+    }
+
+    function start(){
+      el('perf').style.display = '';
+      el('archWrap').style.display = '';
+      el('alertCtl').style.display = 'flex';
+      el('posStatic').style.display = 'none';
+      el('posLive').style.display = '';
+      el('posHistBtn').style.display = '';
+      el('keybox').classList.toggle('on', !editKey());
+
+      // Flask-only controls. There is no /tracker/* on the serverless host, so
+      // rather than leave buttons that 404, hide them — "Closed positions"
+      // above already replaces the exit-history link.
+      document.querySelectorAll('form[action^="/tracker/obsidian"], a[href^="/tracker/history"]')
+        .forEach(function(n){ n.style.display = 'none'; });
+
+      ensureAlertTable();
+      ['perf','archWrap','alertCtl','alerts','tracker'].forEach(function(id){ reveal(el(id)); });
+      wireKey();
+      wireTracker();
+      wireAlertControls();
+      wirePerfControls();
+
+      loadSignals();
+      loadArchive();
+      loadStats();
+      loadPositions();
+
+      el('liverefresh').addEventListener('click', function(){
+        loadSignals(); loadStats(); loadPositions();
+      });
+
+      // Deep link: /day/2026-07-31 opens straight into that day's archive.
+      var m = location.pathname.match(/^\/day\/(\d{4}-\d{2}-\d{2})/);
+      if (m) selectDay(m[1]);
+    }
+
+    /* ═══════ edit key ═══════ */
+    function wireKey(){
+      el('keySave').addEventListener('click', function(){
+        var v = el('keyInput').value.trim();
+        if (!v) return;
+        try { localStorage.setItem(KEY_LS, v); } catch(e){}
+        el('keybox').classList.remove('on');
+        loadPositions();
+      });
+      el('keyInput').addEventListener('keydown', function(ev){
+        if (ev.key === 'Enter') el('keySave').click();
+      });
+    }
+
+    /* ═══════ positions ═══════ */
+    var showingHistory = false;
+
+    function loadPositions(){
+      var box = el('posLive');
+      box.innerHTML = '<div class="empty">Loading the book…</div>';
+      api('/tracker' + (showingHistory ? '?history=1' : '')).then(function(j){
+        if (!j.ok) { box.innerHTML = '<div class="empty">Could not load positions: ' + esc(j.error) + '</div>'; return; }
+        renderPositions(j);
+      });
+    }
+
+    function renderPositions(j){
+      var box = el('posLive');
+      var rows = j.positions || [];
+      if (!showingHistory) setKpi('heroOpen', rows.length);
+      if (!rows.length){
+        box.innerHTML = '<div class="empty">' +
+          (showingHistory ? 'No closed positions yet.'
+                          : 'No open positions. Hit <strong style="color:var(--lime)">+ Track</strong> on any trade idea, or add one below.') +
+          '</div>';
+        return;
+      }
+      var warn = rows.filter(function(r){ return r.alert; });
+      var html = '';
+      if (warn.length && !showingHistory){
+        html += '<div class="ctlbar"><span class="ghost" style="margin-left:0;color:var(--gold)">⚠ ' +
+                warn.length + ' position' + (warn.length > 1 ? 's need' : ' needs') + ' attention — ' +
+                esc(warn.map(function(r){ return r.symbol + ' (' + r.alert.replace('-',' ') + ')'; }).join(', ')) +
+                '</span></div>';
+      }
+      html += '<div class="tw"><table class="t" style="min-width:880px"><thead><tr>' +
+              '<th>Symbol</th><th>Entry</th><th>Current</th><th>Target</th><th>Stop</th>' +
+              '<th>P&amp;L</th><th>R</th><th>Horizon</th><th>Thesis</th><th>Added</th><th></th>' +
+              '</tr></thead><tbody>';
+      rows.forEach(function(r){
+        var cur = r.currency || '₹';
+        html += '<tr>' +
+          '<td><strong class="sym">' + esc(r.symbol) + '</strong>' +
+            (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') + '</td>' +
+          '<td class="num">' + cur + fmt(r.entry_price) + '</td>' +
+          '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) + '</td>' +
+          '<td class="num up">' + (r.target_price ? cur + fmt(r.target_price) : '—') + '</td>' +
+          '<td class="num dn">' + (r.stop_loss ? cur + fmt(r.stop_loss) : '—') + '</td>' +
+          '<td class="' + (r.winning ? 'pnl-u' : 'pnl-d') + '">' +
+            (r.pnl_pct === null ? '—' : (r.pnl_pct > 0 ? '+' : '') + fmt(r.pnl_pct, 2) + '%') + '</td>' +
+          '<td class="num">' + (r.r_multiple === null ? '—' : fmt(r.r_multiple, 2) + 'R') + '</td>' +
+          '<td class="mono-dim">' + esc(r.timeframe) + '</td>' +
+          '<td style="font-size:12px;color:var(--muted);max-width:220px">' + esc((r.thesis || '').slice(0, 70)) + '</td>' +
+          '<td class="mono-dim">' + esc(r.added_date) + '</td>' +
+          '<td>' + (showingHistory ? '<span class="mono-dim">' + esc(r.status) + '</span>'
+                                   : '<button type="button" class="btn-gh" data-exit="' + r.id + '">Exit</button>') + '</td>' +
+          '</tr>';
+      });
+      html += '</tbody></table></div>';
+      box.innerHTML = html;
+      reveal(box);
+
+      box.querySelectorAll('[data-exit]').forEach(function(b){
+        b.addEventListener('click', function(){
+          if (!confirm('Close this position?')) return;
+          b.disabled = true; b.textContent = '…';
+          api('/tracker', { method:'POST', body: JSON.stringify({ action:'exit', id: Number(b.dataset.exit) }) })
+            .then(function(r){
+              if (!r.ok){ b.disabled = false; b.textContent = 'Exit'; keyError(r.error); return; }
+              loadPositions();
+            });
+        });
+      });
+    }
+
+    function keyError(msg){
+      el('keybox').classList.add('on');
+      el('keybox').querySelector('span').textContent = msg || 'Write refused.';
+    }
+
+    function wireTracker(){
+      el('posHistBtn').addEventListener('click', function(){
+        showingHistory = !showingHistory;
+        this.textContent = showingHistory ? 'Open positions' : 'Closed positions';
+        loadPositions();
+      });
+
+      // Both the manual form and every "+ Track" button on the trade ideas
+      // become real writes instead of dead POSTs to a server that isn't there.
+      document.querySelectorAll('form[action^="/tracker/add"]').forEach(function(f){
+        f.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          var d = {};
+          new FormData(f).forEach(function(v, k){ d[k] = v; });
+          var btn = f.querySelector('button[type=submit]');
+          var label = btn ? btn.textContent : '';
+          if (btn){ btn.disabled = true; btn.textContent = 'Saving…'; }
+          api('/tracker', { method:'POST', body: JSON.stringify(d) }).then(function(r){
+            if (btn){ btn.disabled = false; btn.textContent = r.ok ? '✓ Tracked' : label; }
+            if (!r.ok){ keyError(r.error); return; }
+            f.reset();
+            loadPositions();
+            if (btn) setTimeout(function(){ btn.textContent = label; }, 2200);
+          });
+        });
+      });
+    }
+
+    /* ═══════ signal feed + search ═══════ */
+
+    // The KPI row, filter buttons and table only exist when the daily build
+    // found signals. If the build ran while the ledger was unreachable, the
+    // section holds an empty-state div instead — rebuild the scaffolding so
+    // live data still has somewhere to land.
+    function ensureAlertTable(){
+      if (document.querySelector('#alertTable tbody')) return;
+      var sec = el('alerts');
+      var empty = sec.querySelector('.empty');
+      var host = document.createElement('div');
+      host.innerHTML =
+        '<div class="kpi-row rv">' +
+          '<div class="kpi"><div class="v up" id="kpiWin">0</div><div class="k">Targets Hit</div></div>' +
+          '<div class="kpi"><div class="v dn" id="kpiLoss">0</div><div class="k">Stops Hit</div></div>' +
+          '<div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)">0</div><div class="k">Open</div></div>' +
+          '<div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)">—</div><div class="k">Win Rate</div></div>' +
+          '<div class="kpi"><div class="v" id="kpiTotal">0</div><div class="k">Total Signals</div></div>' +
+        '</div>' +
+        '<div class="filters rv">' +
+          '<button class="fbtn on" data-f="all">All</button>' +
+          '<button class="fbtn" data-f="open">Open</button>' +
+          '<button class="fbtn" data-f="win">Target Hit</button>' +
+          '<button class="fbtn" data-f="loss">Stop Hit</button>' +
+          '<button class="fbtn" data-f="cancelled">Cancelled</button>' +
+        '</div>' +
+        '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
+          '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>' +
+          '<th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
+        '</tr></thead><tbody></tbody></table></div>';
+      if (empty) empty.replaceWith(host); else sec.appendChild(host);
+      reveal(host);
+    }
+
+    function loadSignals(){
+      var qs = archDate ? '?date=' + archDate + '&limit=2000' : '?limit=800';
+      api('/signals' + qs).then(function(j){
+        if (!j.ok) return;
+        allRows = j.signals || [];
+        fillTfSelect(el('alertTfSel'), allRows);
+        renderAlerts();
+      });
+    }
+
+    function fillTfSelect(sel, rows){
+      if (!sel || sel.dataset.filled) return;
+      var seen = {};
+      rows.forEach(function(r){ if (r.timeframe) seen[r.timeframe] = 1; });
+      Object.keys(seen).sort().forEach(function(tf){
+        var o = document.createElement('option');
+        o.value = tf; o.textContent = tf; sel.appendChild(o);
+      });
+      sel.dataset.filled = '1';
+    }
+
+    function activeBadge(){
+      var on = document.querySelector('.fbtn.on[data-f]');
+      return on ? on.dataset.f : 'all';
+    }
+
+    function renderAlerts(){
+      var tbody = document.querySelector('#alertTable tbody');
+      if (!tbody) return;
+      var q     = (el('alertSearch').value || '').trim().toUpperCase();
+      var from  = el('alertFrom').value;
+      var to    = el('alertTo').value;
+      var tf    = el('alertTfSel').value;
+      var badge = activeBadge();
+
+      var rows = allRows.filter(function(r){
+        if (badge !== 'all' && r.badge !== badge) return false;
+        if (q && r.symbol.toUpperCase().indexOf(q) === -1) return false;
+        if (from && r.date < from) return false;
+        if (to   && r.date > to)   return false;
+        if (tf   && r.timeframe !== tf) return false;
+        return true;
+      });
+
+      // 800 rows of innerHTML is fine; building them one node at a time is not.
+      var html = rows.map(function(a){
+        var badgeTxt = a.badge === 'win' ? '✅ Win' : a.badge === 'loss' ? '❌ Stop'
+                     : a.badge === 'open' ? '🔵 Open' : (a.status || '—');
+        return '<tr data-badge="' + a.badge + '">' +
+          '<td class="mono-dim">' + esc(a.date) + '</td>' +
+          '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' + encodeURIComponent(a.symbol) +
+              '" target="_blank" rel="noopener">' + esc(a.symbol) + '</a></td>' +
+          '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
+              (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
+          '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
+          '<td class="num">' + money(a.entry) + '</td>' +
+          '<td class="num dn">' + money(a.sl) + '</td>' +
+          '<td class="num up">' + money(a.target1) + '</td>' +
+          '<td class="num up">' + money(a.target2) + '</td>' +
+          '<td class="num" style="color:var(--gold)">' + (a.rr === null ? '—' : fmt(a.rr, 1) + 'x') + '</td>' +
+          '<td class="num">' + money(a.exit_price) + '</td>' +
+          '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
+          '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
+          '<td><span class="badge badge-' + a.badge + '">' + badgeTxt + '</span></td>' +
+          '</tr>';
+      }).join('');
+
+      tbody.innerHTML = html || '<tr><td colspan="13" style="padding:26px;text-align:center;color:var(--dim)">' +
+                                'Nothing matches those filters.</td></tr>';
+
+      el('alertCount').textContent = rows.length + ' of ' + allRows.length + ' shown' +
+        (archDate ? ' · archive ' + archDate : '');
+
+      // KPI row reflects what is actually on screen.
+      var w = rows.filter(function(r){ return r.badge === 'win';  }).length;
+      var l = rows.filter(function(r){ return r.badge === 'loss'; }).length;
+      var o = rows.filter(function(r){ return r.badge === 'open'; }).length;
+      setKpi('kpiWin', w); setKpi('kpiLoss', l); setKpi('kpiOpen', o);
+      setKpi('kpiRate', (w + l) ? Math.round(w / (w + l) * 100) + '%' : '—');
+      setKpi('kpiTotal', rows.length);
+    }
+
+    function setKpi(id, v){
+      var n = el(id); if (!n) return;
+      // data-count drives a 1.1s count-up animation that writes textContent on
+      // every frame. Removing the attribute is not enough — an already-running
+      // loop captured its target and would animate straight over this value.
+      // The flag makes that loop stand down.
+      n.dataset.live = '1';
+      n.removeAttribute('data-count');
+      n.textContent = v;
+    }
+
+    function wireAlertControls(){
+      ['alertSearch','alertFrom','alertTo','alertTfSel'].forEach(function(id){
+        var n = el(id); if (!n) return;
+        n.addEventListener('input', renderAlerts);
+        n.addEventListener('change', renderAlerts);
+      });
+      // Take over the badge buttons. The original handler shows/hides rows
+      // directly, which would fight with the search filter, so it is unbound
+      // by cloning the node.
+      document.querySelectorAll('.fbtn[data-f]').forEach(function(b){
+        var c = b.cloneNode(true);
+        b.parentNode.replaceChild(c, b);
+        c.addEventListener('click', function(){
+          document.querySelectorAll('.fbtn[data-f]').forEach(function(x){ x.classList.remove('on'); });
+          c.classList.add('on');
+          renderAlerts();
+        });
+      });
+    }
+
+    /* ═══════ archive ═══════ */
+    function loadArchive(){
+      api('/archive?limit=120').then(function(j){
+        if (!j.ok) return;
+        var strip = el('archStrip');
+        strip.innerHTML = (j.days || []).map(function(d){
+          var rTxt = d.total_r === null ? '' :
+            '<div class="r ' + (d.total_r >= 0 ? 'up' : 'dn') + '">' +
+            (d.total_r > 0 ? '+' : '') + fmt(d.total_r, 1) + 'R</div>';
+          return '<div class="arch-day" data-date="' + d.date + '" title="' + d.date + ' · ' +
+                 d.wins + 'W / ' + d.losses + 'L / ' + d.open + ' open">' +
+                 '<div class="d">' + d.date.slice(5) + '</div>' +
+                 '<div class="n">' + d.signals + '</div>' + rTxt + '</div>';
+        }).join('');
+        reveal(el('archWrap'));
+        strip.querySelectorAll('.arch-day').forEach(function(n){
+          n.addEventListener('click', function(){ selectDay(n.dataset.date); });
+        });
+      });
+      el('archAll').addEventListener('click', function(){ selectDay(null); });
+    }
+
+    function selectDay(date){
+      archDate = date;
+      document.querySelectorAll('.arch-day').forEach(function(n){
+        n.classList.toggle('on', !!date && n.dataset.date === date);
+      });
+      if (date && history.replaceState) history.replaceState({}, '', '/day/' + date);
+      else if (history.replaceState) history.replaceState({}, '', '/');
+      loadSignals();
+      document.getElementById('alerts').scrollIntoView({ behavior:'smooth', block:'start' });
+    }
+
+    /* ═══════ performance ═══════ */
+    function wirePerfControls(){
+      ['perfTf','perfRange'].forEach(function(id){
+        el(id).addEventListener('change', loadStats);
+      });
+    }
+
+    function loadStats(){
+      var qs = [];
+      var tf = el('perfTf').value;
+      var days = el('perfRange').value;
+      if (tf) qs.push('tf=' + encodeURIComponent(tf));
+      if (days){
+        var d = new Date(Date.now() - Number(days) * 86400000);
+        qs.push('from=' + d.toISOString().slice(0, 10));
+      }
+      api('/stats' + (qs.length ? '?' + qs.join('&') : '')).then(function(j){
+        if (!j.ok) return;
+        fillTfSelect(el('perfTf'), (j.by_timeframe || []).map(function(b){ return { timeframe: b.key }; }));
+        renderStats(j);
+      });
+    }
+
+    function renderStats(j){
+      var h = j.headline, t = j.totals;
+      el('perfBasis').textContent = t.closed + ' closed of ' + t.all + ' signals · ' +
+        (t.first_date || '—') + ' → ' + (t.last_date || '—');
+
+      // The hero rail is baked at 6 AM. Left alone it would greet you with a
+      // win rate from yesterday's snapshot, which is the exact staleness this
+      // whole layer exists to kill.
+      setKpi('heroRate',  h.win_rate === null ? '—' : h.win_rate + '%');
+      setKpi('heroTotal', t.all);
+
+      function cell(v, k, sub, colour){
+        return '<div class="perf-cell"><div class="v"' + (colour ? ' style="color:' + colour + '"' : '') + '>' +
+               v + '</div><div class="k">' + k + '</div>' +
+               (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>';
+      }
+      var expColour = h.expectancy_r === null ? '' : (h.expectancy_r >= 0 ? 'var(--up)' : 'var(--down)');
+      el('perfGrid').innerHTML =
+        cell(h.win_rate === null ? '—' : h.win_rate + '%', 'Win rate', h.wins + 'W / ' + h.losses + 'L', 'var(--lime)') +
+        cell(h.expectancy_r === null ? '—' : (h.expectancy_r > 0 ? '+' : '') + fmt(h.expectancy_r, 3) + 'R',
+             'Expectancy / trade', 'the number that decides everything', expColour) +
+        cell(h.profit_factor === null ? '—' : fmt(h.profit_factor, 2), 'Profit factor', 'gross win ÷ gross loss') +
+        cell(h.avg_win_r === null ? '—' : '+' + fmt(h.avg_win_r, 2) + 'R', 'Avg win', '', 'var(--up)') +
+        cell(h.avg_loss_r === null ? '—' : fmt(h.avg_loss_r, 2) + 'R', 'Avg loss', '', 'var(--down)') +
+        cell(h.max_drawdown_r === null ? '—' : fmt(h.max_drawdown_r, 2) + 'R', 'Max drawdown', 'peak to trough', 'var(--gold)') +
+        cell(t.open, 'Open now', 'excluded from every rate above', 'var(--blue)') +
+        cell(h.trades, 'Closed trades', 'the sample this rests on');
+
+      drawEquity(j.equity_curve || []);
+
+      function table(title, rows, labelWord){
+        if (!rows || !rows.length) return '';
+        return '<div class="brk-card"><h4>' + title + '</h4>' +
+          rows.slice(0, 8).map(function(b){
+            var col = b.total_r === null ? '' : (b.total_r >= 0 ? 'var(--up)' : 'var(--down)');
+            return '<div class="brk-row"><span class="kk">' + esc(b.key) + '</span>' +
+              '<span class="nn">' + b.trades + ' ' + labelWord + ' · ' + fmt(b.win_rate, 0) + '%</span>' +
+              '<span class="rr" style="color:' + col + '">' +
+              (b.total_r === null ? '—' : (b.total_r > 0 ? '+' : '') + fmt(b.total_r, 1) + 'R') + '</span></div>';
+          }).join('') + '</div>';
+      }
+      el('perfBrk').innerHTML =
+        table('By timeframe', j.by_timeframe, 'tr') +
+        table('By signal type', j.by_signal_type, 'tr') +
+        table('By month', j.by_month, 'tr') +
+        table('Top symbols · 5+ closed trades', j.by_symbol, 'tr');
+      reveal(el('perf'));
+    }
+
+    // Hand-rolled SVG path — no chart library, nothing to load, works offline.
+    function drawEquity(curve){
+      var svg = el('eqSvg');
+      if (!curve.length){
+        svg.innerHTML = '<text x="400" y="95" text-anchor="middle" class="axis">' +
+                        'No closed trades with an R value yet.</text>';
+        return;
+      }
+      var W = 800, H = 190, PAD = 18;
+      var vals = curve.map(function(p){ return p.cum_r; });
+      var lo = Math.min(0, Math.min.apply(null, vals));
+      var hi = Math.max(0, Math.max.apply(null, vals));
+      if (hi === lo) hi = lo + 1;
+      var x = function(i){ return PAD + (i / Math.max(curve.length - 1, 1)) * (W - PAD * 2); };
+      var y = function(v){ return H - PAD - ((v - lo) / (hi - lo)) * (H - PAD * 2); };
+
+      var d = curve.map(function(p, i){ return (i ? 'L' : 'M') + fmt(x(i), 1) + ' ' + fmt(y(p.cum_r), 1); }).join(' ');
+      var area = d + ' L' + fmt(x(curve.length - 1), 1) + ' ' + fmt(y(lo < 0 ? 0 : lo), 1) +
+                 ' L' + fmt(x(0), 1) + ' ' + fmt(y(lo < 0 ? 0 : lo), 1) + ' Z';
+      var last = curve[curve.length - 1];
+
+      svg.innerHTML =
+        '<path class="fillArea" d="' + area + '"/>' +
+        '<line class="zero" x1="' + PAD + '" x2="' + (W - PAD) + '" y1="' + fmt(y(0),1) + '" y2="' + fmt(y(0),1) + '"/>' +
+        '<path class="curve" d="' + d + '"/>' +
+        '<circle cx="' + fmt(x(curve.length - 1), 1) + '" cy="' + fmt(y(last.cum_r), 1) + '" r="3.5" fill="var(--lime)"/>' +
+        '<text class="axis" x="' + PAD + '" y="12">' + fmt(hi, 1) + 'R</text>' +
+        '<text class="axis" x="' + PAD + '" y="' + (H - 4) + '">' + fmt(lo, 1) + 'R</text>' +
+        '<text class="axis" x="' + (W - PAD) + '" y="12" text-anchor="end">' +
+          curve.length + ' trades → ' + (last.cum_r > 0 ? '+' : '') + fmt(last.cum_r, 1) + 'R</text>';
+    }
+  })();
 
   /* ── auto refresh ── */
   setTimeout(function(){ location.reload(); }, 5 * 60 * 1000);
