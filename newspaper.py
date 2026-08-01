@@ -4179,9 +4179,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<td class="num" style="color:var(--gold)">' + (a.rr === null ? '—' : fmt(a.rr, 1) + 'x') + '</td>' +
           // The win rate this setup needs just to break even, 1/(1+R). Shown
           // next to R:R because the two are the same fact and only one of them
-          // is obvious.
-          '<td class="num mono-dim">' + (a.breakeven_wr === null || a.breakeven_wr === undefined
-                                          ? '—' : fmt(a.breakeven_wr, 0) + '%') + '</td>' +
+          // is obvious. v1 rows predate the stored column, so derive it from
+          // R:R — those are precisely the rows worth seeing it on.
+          '<td class="num mono-dim">' + beWr(a) + '</td>' +
           '<td class="num">' + money(a.exit_price) + '</td>' +
           '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
           '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
@@ -4348,6 +4348,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         }).join('');
         reveal(sec);
       }).catch(function(){ /* no /api/sip on a static host — section stays hidden */ });
+    }
+
+    // Break-even win rate: stored on v2 rows, derived from R:R on older ones.
+    // Red once it exceeds the ~37% this system actually wins, which is the
+    // whole reason the gate exists.
+    function beWr(a){
+      var v = (a.breakeven_wr === null || a.breakeven_wr === undefined)
+            ? (a.rr > 0 ? 100 / (1 + a.rr) : null)
+            : a.breakeven_wr;
+      if (v === null) return '—';
+      return '<span style="color:' + (v > 37 ? 'var(--down)' : 'var(--dim)') + '">' +
+             fmt(v, 0) + '%</span>';
     }
 
     // A/B/UNVERIFIED from signals/quality.py. UNVERIFIED means the setup
