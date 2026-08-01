@@ -26,6 +26,7 @@ from signals.indicators import (
     _tight_sl, _structure_targets,
 )
 from signals.regime   import regime_filter, count_hh_hl
+from signals.quality  import GateConfig, qualify, rr_of, breakeven_win_rate
 from symbols          import to_yahoo
 from signals.universe import (
     is_trading_day, FNO_ELIGIBLE, load_nifty500, load_nifty200,
@@ -33,7 +34,8 @@ from signals.universe import (
 )
 try:
     from config import (MIN_SIGNAL_SCORE, MIN_PRICE, MIN_AVG_VOLUME,
-                        ENABLE_WEEKLY_CONFIRM, MAX_PE, MAX_WORKERS, CAPITAL, RISK_PER_TRADE)
+                        ENABLE_WEEKLY_CONFIRM, MAX_PE, MAX_WORKERS, CAPITAL,
+                        RISK_PER_TRADE, MIN_RR)
 except (ImportError, ModuleNotFoundError):
     # Railway / CI: config.py is gitignored — use env vars with sane defaults
     MIN_SIGNAL_SCORE    = int(os.environ.get("MIN_SIGNAL_SCORE", 70))
@@ -44,6 +46,21 @@ except (ImportError, ModuleNotFoundError):
     MAX_WORKERS         = int(os.environ.get("MAX_WORKERS", 10))
     CAPITAL             = float(os.environ.get("CAPITAL", 500000))
     RISK_PER_TRADE      = float(os.environ.get("RISK_PER_TRADE", 0.01))
+    MIN_RR              = float(os.environ.get("MIN_RR", 2.0))
+
+# Every scan runs through this. MIN_RR/MAX_PE come from config so there is one
+# place to change the floor — scan_all() used to import MIN_RR and then compare
+# against a hardcoded 1.5, which is how sub-2R signals kept reaching Telegram.
+GATE = GateConfig(
+    min_rr=float(MIN_RR),
+    min_price=float(MIN_PRICE),
+    max_pe=float(MAX_PE) if MAX_PE else 1e9,
+    min_turnover_cr=float(os.environ.get("MIN_TURNOVER_CR", 25)),
+    min_market_cap_cr=float(os.environ.get("MIN_MARKET_CAP_CR", 5000)),
+)
+# Cap on how many signals any single scan may publish. Spraying 23 setups is
+# not a watchlist, it is noise — ranking is only meaningful if it truncates.
+MAX_SIGNALS_PER_SCAN = int(os.environ.get("MAX_SIGNALS_PER_SCAN", 5))
 
 os.makedirs("logs", exist_ok=True)
 os.makedirs("cache", exist_ok=True)
@@ -64,8 +81,114 @@ _NSE_HOLIDAYS_2026 = {
 SIGNAL_BLACKLIST = {
     "OLECTRA", "JBMA", "NBCC", "MCX",
     # yfinance 404 — NSE ticker changed or data unavailable:
-     
+
 }
+
+
+def _avg_turnover_cr(close, volume, window: int = 20, bars_per_day: float = 1.0):
+    """Average DAILY traded value in ₹ crore, or None if it can't be computed.
+
+    Volume alone is a bad liquidity proxy — 5 lakh shares of a ₹20 stock is
+    ₹1cr and untradeable at size, while 20k shares of a ₹4,000 stock is ₹8cr.
+    Turnover is the number that decides whether a position can be exited.
+
+    `bars_per_day` scales sub-daily frames to a daily figure so one threshold
+    works everywhere: the NSE session is 6h15m, so a 4H frame has ~2 bars/day.
+    """
+    try:
+        val = float((close * volume).rolling(window).mean().iloc[-1])
+    except (ValueError, TypeError, IndexError, KeyError):
+        return None
+    if val != val:          # NaN
+        return None
+    return val * bars_per_day / 1e7          # INR → crore
+
+
+def _apply_quality_gate(results, cfg=None, entry_key="price", sl_key="sl",
+                        t1_key="target1", rank_key=None, limit=None,
+                        label="scan", engine=None):
+    """Two-stage filter: cheap price gates first, fundamentals only on survivors.
+
+    Fundamentals cost one Yahoo call per symbol and Yahoo 429s on bursts, so
+    running them inside the scan's thread pool would both be slow and poison
+    the IP. Price gates drop most candidates for free; only what survives is
+    worth a network call. On a warm cache the second stage costs nothing.
+
+    `engine` is the all_signals.signal_type this scan writes. When given, the
+    R:R floor comes from that engine's own measured win rate rather than the
+    global default — see signals/expectancy.py for why a flat floor is wrong.
+
+    Attaches `quality` (a QualityResult) to every surviving dict and returns
+    the ranked, truncated list.
+    """
+    from dataclasses import replace as _replace
+
+    import fundamentals as fnd
+    from signals import expectancy
+
+    cfg = cfg or GATE
+    if not results:
+        return []
+
+    if engine:
+        floor = expectancy.floor_for(engine, default=cfg.min_rr)
+        if floor != cfg.min_rr:
+            info = expectancy.report().get("engines", {}).get(engine, {})
+            logging.info(
+                f"{label}: R:R floor {floor} from measured record — "
+                f"{info.get('trades')} trades, {info.get('win_rate')}% win rate, "
+                f"break-even {info.get('breakeven_rr')}R ({info.get('status')})")
+            cfg = _replace(cfg, min_rr=floor)
+
+    # Stage 1 — price gates only (fund=None ⇒ fundamental checks are skipped).
+    stage1 = []
+    for r in results:
+        pre = qualify(r.get("symbol", "?"), r.get(entry_key, 0), r.get(sl_key, 0),
+                      r.get(t1_key, 0), avg_turnover_cr=r.get("turnover_cr"),
+                      fund=None, cfg=cfg)
+        if pre.passed:
+            stage1.append(r)
+        else:
+            logging.info(f"{label} gate1 reject {r.get('symbol')}: {pre.reason}")
+
+    if not stage1:
+        logging.info(f"{label}: 0 of {len(results)} cleared price gates")
+        return []
+
+    # Stage 2 — warm the fundamentals cache for survivors only, then re-gate.
+    hits, tried = fnd.prefetch([r["symbol"] for r in stage1])
+    if tried and hits / tried < 0.5:
+        # Yahoo is down or rate-limiting. Signals still publish, but as
+        # UNVERIFIED so the site can show that the data layer failed rather
+        # than implying these names passed a fundamental check they never ran.
+        logging.error(f"{label}: fundamentals hit rate {hits}/{tried} — "
+                      f"publishing as UNVERIFIED")
+
+    passed = []
+    for r in stage1:
+        fund = fnd.get(r["symbol"], allow_fetch=False)
+        res = qualify(r["symbol"], r.get(entry_key, 0), r.get(sl_key, 0),
+                      r.get(t1_key, 0), avg_turnover_cr=r.get("turnover_cr"),
+                      fund=fund, cfg=cfg)
+        if not res.passed:
+            logging.info(f"{label} gate2 reject {r['symbol']}: {res.reason}")
+            continue
+        r["quality"] = res
+        r["grade"] = res.grade
+        r["breakeven_wr"] = round(breakeven_win_rate(res.rr) * 100, 1)
+        passed.append(r)
+
+    # Grade first, then whatever the scan ranks on. An A at 2.6R should always
+    # outrank a B at 2.6R.
+    grade_rank = {"A": 3, "B": 2, "UNVERIFIED": 1}
+    passed.sort(key=lambda x: (grade_rank.get(x.get("grade"), 0),
+                               x[rank_key] if rank_key else x["quality"].rr),
+                reverse=True)
+    out = passed[:limit] if limit else passed
+    logging.info(f"{label}: {len(results)} raw → {len(stage1)} price-gated → "
+                 f"{len(passed)} qualified → {len(out)} published")
+    return out
+
 
 def is_trading_day(dt=None):
     """Returns True if dt (default=today IST) is a valid NSE trading day."""
@@ -895,6 +1018,7 @@ def analyze_stock(symbol, nifty_ret=0.0):
             "adx":            data["adx_val"],
             "vol_ratio":      data["vol_ratio"],
             "atr":            data["atr_val"],
+            "turnover_cr":    _avg_turnover_cr(close, volume),
             "sl1":            data["sl1"],
             "sl2":            data["sl2"],
             "target1":        data["t1"],
@@ -940,10 +1064,11 @@ def scan_all(min_score=None):
                 continue
             if r["score"] < min_score:
                 continue
-            rr = r.get("rr2") or r.get("rr1") or 0
-            if rr < 1.5:  # minimum R:R 1.5x for high-quality signals
-                continue
-            if r.get("adx_val", 0) < 20:  # trend must be confirmed (ADX ≥ 20)
+            # The R:R floor lives in the quality gate now. This used to read
+            # `rr < 1.5` against rr2 (a T2 measure) while MIN_RR=2.0 sat
+            # imported and unused two lines above — so the config value that
+            # looked like the floor had no effect on anything.
+            if r.get("adx", 0) < 20:  # trend must be confirmed (ADX ≥ 20)
                 continue
             if r.get("vol_ratio", 0) < 2.5:  # volume surge required
                 continue
@@ -964,13 +1089,15 @@ def scan_all(min_score=None):
         sig["scanned_at"] = scan_ts
         results.append(sig)
         seen_symbols.add(sym_clean)
-        if len(results) >= 6:  # max 6 high-quality signals per scan
-            break
+
+    # Structural SL (sl2) is the exit; sl1 is only a warning level.
+    gated = _apply_quality_gate(results, sl_key="sl2", rank_key="score", engine="swing",
+                                limit=MAX_SIGNALS_PER_SCAN, label="swing")
 
     # No fallback — if zero signals fire, that is correct. Do not relax criteria.
-    logging.info(f"Scan done: {len(results)} A/A+ signals from {len(universe)} stocks "
-                 f"(score≥{min_score}, RR≥1.5, ADX≥20, Vol≥2.5x)")
-    return results
+    logging.info(f"Scan done: {len(gated)} A/A+ signals from {len(universe)} stocks "
+                 f"(score≥{min_score}, RR≥{GATE.min_rr}, ADX≥20, Vol≥2.5x)")
+    return gated
 
 
 # ── Privacy: obfuscate indicator names for display ────────────────────────────
@@ -1098,6 +1225,7 @@ def analyze_breakout(symbol):
         vol    = df_d["Volume"].squeeze()
         avg_v  = float(vol.rolling(20).mean().iloc[-1]) or 1
         vol_r  = round(float(vol.iloc[-1]) / avg_v, 1)
+        turnover_cr = _avg_turnover_cr(df_d["Close"].squeeze(), vol)
 
         sym_clean  = symbol.replace(".NS", "")
         best_tf, best_pat = max(patterns, key=lambda x: {"Monthly":3,"Weekly":2,"Daily":1}.get(x[0],0))
@@ -1115,6 +1243,7 @@ def analyze_breakout(symbol):
             "pattern":     best_pat,
             "patterns":    [f"{tf}: {pt}" for tf, pt in patterns],
             "vol_ratio":   vol_r,
+            "turnover_cr": turnover_cr,
             "sl":          sl,
             "target1":     t1,
             "target2":     t2,
@@ -1142,13 +1271,16 @@ def scan_breakouts(universe=None):
             if r and r.get("symbol", "").replace(".NS", "") not in SIGNAL_BLACKLIST:
                 results.append(r)
 
-    # R:R leads, timeframe is only the tiebreak. Sorting on timeframe first made
-    # a Monthly breakout at 1.5R outrank a Weekly at 3.0R, so on any day with
-    # enough Monthly hits no Weekly setup could reach the top of the list.
-    tf_rank = {"Monthly": 3, "Weekly": 2, "Daily": 1}
-    results.sort(key=lambda x: (x["rr"], tf_rank.get(x["timeframe"], 0)), reverse=True)
-    logging.info(f"Breakout scan: {len(results)} confirmed breakouts")
-    return results
+    # This scan had no R:R floor at all — it sorted by R:R and published every
+    # result. On 2026-08-01 that put a 0.5R SUNPHARMA breakout on the site: a
+    # trade needing a 66.7% win rate against a measured 36.8%. The gate is the
+    # floor now, and it also rejects setups where _structure_targets() snapped
+    # T1 down to nearby resistance and quietly crushed the reward — the target
+    # is not fudged upward past a real barrier, the trade is simply skipped.
+    gated = _apply_quality_gate(results, rank_key="rr", engine="breakout",
+                                limit=MAX_SIGNALS_PER_SCAN, label="breakout")
+    logging.info(f"Breakout scan: {len(gated)} confirmed breakouts (from {len(results)} raw)")
+    return gated
 
 
 # ── Forex & Commodities scan ──────────────────────────────────────────────────
@@ -1249,6 +1381,7 @@ def analyze_4h(symbol):
         avg_v   = float(volume.rolling(20).mean().iloc[-1])
         cur_v   = float(volume.iloc[-1])
         vol_r   = round(cur_v / avg_v, 2) if avg_v > 0 else 1.0
+        turnover_cr = _avg_turnover_cr(close, volume, bars_per_day=2)
 
         rsi_s      = rsi(close)
         cur_rsi    = float(rsi_s.iloc[-1])
@@ -1307,10 +1440,14 @@ def analyze_4h(symbol):
             t1 = round(channel_top + channel_width * 0.6, 2)
             t2 = round(channel_top + channel_width * 1.2, 2)
 
-        risk = round(price - sl, 2)
-        rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
-        if rr < 2.0:
-            return None
+        # R:R is measured against T1, not T2. This used to gate on T2, so a 4H
+        # signal could show "RR 2.5" while its actual reward-to-first-target was
+        # under 1.0 — TORNTPHARM on 2026-08-01 displayed 2.5 and was 0.98 to T1.
+        # The breakout scan already measured against T1, so the ledger's `rr`
+        # column held two different quantities and could not be analysed.
+        risk  = round(price - sl, 2)
+        rr    = round((t1 - price) / risk, 2) if risk > 0 else 0
+        rr_t2 = round((t2 - price) / risk, 2) if risk > 0 else 0
 
         sym_clean  = symbol.replace(".NS", "")
         setup_label = "ChannelBO↑" if (path_b_valid and not path_a_valid) else "RSI55✓"
@@ -1325,10 +1462,12 @@ def analyze_4h(symbol):
             "rsi":       round(cur_rsi, 1),
             "adx":       round(cur_adx_4h, 1),
             "vol_ratio": vol_r,
+            "turnover_cr": turnover_cr,
             "sl":        sl,
             "target1":   t1,
             "target2":   t2,
             "rr":        rr,
+            "rr_t2":     rr_t2,
             "fno":       sym_clean in FNO_ELIGIBLE,
             "tv_link":   f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
             "reason":    f"[{setup_label}] {reason}",
@@ -1353,9 +1492,10 @@ def scan_4h(universe=None):
             if r and r.get("symbol", "").replace(".NS", "") not in SIGNAL_BLACKLIST:
                 results.append(r)
 
-    results.sort(key=lambda x: x["vol_ratio"], reverse=True)
-    logging.info(f"4H scan: {len(results)} early signals")
-    return results[:15]
+    gated = _apply_quality_gate(results, rank_key="vol_ratio", engine="4h",
+                                limit=MAX_SIGNALS_PER_SCAN, label="4h")
+    logging.info(f"4H scan: {len(gated)} early signals (from {len(results)} raw)")
+    return gated
 
 
 def fetch_forex_comm():
@@ -1875,6 +2015,8 @@ def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
             "wk_rsi":       round(wr, 1),
             "wk_adx":       round(wa, 1),
             "vol_ratio":    vol_r,
+            # Weekly bars → daily-equivalent turnover (5 sessions per bar).
+            "turnover_cr":  _avg_turnover_cr(wk_c, wk_v, bars_per_day=0.2),
             "sl":           sl,
             "support1":     support1,
             "support2":     support2,
@@ -1924,9 +2066,15 @@ def scan_multibaggers(universe=None, top_n=15) -> list:
             if r:
                 results.append(r)
 
-    results.sort(key=lambda x: x["score"], reverse=True)
-    logging.info(f"Multibagger scan: {len(results)} candidates → top {top_n}")
-    return results[:top_n]
+    # Multibaggers are 6–12 month holds, so an earnings date three days out is
+    # not a reason to skip one — the blackout is switched off here and nowhere
+    # else. Every other gate (liquidity, PAT, D/E, growth, R:R) still applies.
+    from dataclasses import replace as _replace
+    mb_gate = _replace(GATE, earnings_blackout_days=0)
+    gated = _apply_quality_gate(results, cfg=mb_gate, rank_key="score",
+                                limit=top_n, label="multibagger")
+    logging.info(f"Multibagger scan: {len(results)} candidates → {len(gated)} qualified")
+    return gated
 
 
 # ── Telegram Bot Scan — 4H Momentum ──────────────────────────────────────────
