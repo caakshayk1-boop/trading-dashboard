@@ -228,6 +228,280 @@ INTERVIEW_TECH = [
      "is now locked four weeks later so we commit on actual trend. Revised full-year is AED 462M.' "
      "Never open with context and never let the explanation exceed four sentences before the number.",
      "Every board, everywhere"),
+
+    # ── consolidation, groups and standards ──
+    ("You acquire 80% of a subsidiary. Walk me through the consolidation mechanics.",
+     "Recognise 100% of the subsidiary's assets and liabilities at fair value, not 80% — control, "
+     "not ownership, drives consolidation. The 20% you do not own becomes non-controlling interest, "
+     "shown within equity. Goodwill is consideration transferred plus NCI measured either at fair "
+     "value (full goodwill) or at its share of net assets (partial goodwill) — an accounting policy "
+     "choice that changes the goodwill number materially. Eliminate all intragroup balances, "
+     "transactions and unrealised profit in stock. Post-acquisition profit splits between parent "
+     "and NCI by ownership.",
+     "Al-Futtaim · Landmark Group · Unilever"),
+
+    ("How do you test goodwill for impairment, and why does retail make it harder?",
+     "Goodwill is not amortised — it is tested annually at the cash-generating unit level. Compare "
+     "the CGU's carrying amount to its recoverable amount, the higher of fair value less costs of "
+     "disposal and value in use. Retail is harder for two reasons: defining the CGU, because a "
+     "single store may not generate independent cash inflows once you have click-and-collect and "
+     "online returns routed through it; and the discount rate, because store-level risk differs "
+     "from group WACC. Auditors challenge the growth rate beyond year five hardest — keep it at or "
+     "below long-run GDP for the market.",
+     "Big Four · Majid Al Futtaim · Tesco"),
+
+    ("What is the difference between an associate and a subsidiary in your accounts?",
+     "Control versus significant influence. A subsidiary is controlled — you consolidate line by "
+     "line and recognise NCI. An associate is significant influence, presumed at 20–50%, accounted "
+     "for using the equity method: one line on the balance sheet at cost plus your share of "
+     "post-acquisition reserves, and one line in P&L for your share of profit. Nothing of the "
+     "associate's revenue or EBITDA enters your group numbers — a point that catches people out "
+     "when a joint-venture-heavy group reports headline growth.",
+     "Emaar · Chalhoub · Nestlé"),
+
+    ("A supplier offers 5% discount for payment in 10 days instead of 60. Take it?",
+     "Annualise it. You forgo 5% to accelerate payment by 50 days. The implied annual cost of not "
+     "taking it is roughly 5/95 × 365/50 ≈ 38%. Unless your marginal cost of capital exceeds 38%, "
+     "take the discount — this is one of the highest-return decisions in working capital. The "
+     "caveat is liquidity: if taking it forces you onto an overdraft at 9% you still win, but if it "
+     "breaches a covenant or leaves no buffer, the arithmetic is not the whole answer.",
+     "Walmart · Lulu · P&G"),
+
+    ("Explain deferred tax to a board member in 60 seconds.",
+     "Accounting profit and taxable profit are computed under different rules, so tax paid this "
+     "year rarely matches tax on this year's reported profit. Deferred tax records the future "
+     "consequence of that gap. The classic retail example is accelerated capital allowances on "
+     "fit-out: you get the tax relief early, so you owe more tax later — that future obligation "
+     "sits as a deferred tax liability. It is not cash and it is not a provision for a dispute; it "
+     "is timing. Say that last sentence, because it is what they are actually worried about.",
+     "Any audit committee"),
+
+    ("Your group operates in a country that introduces 15% VAT. What breaks?",
+     "Systems and margin, in that order. Systems: tax codes on every SKU, correct treatment of "
+     "zero-rated versus exempt lines, input recovery on mixed-use costs, and the reverse charge on "
+     "imported services — all of which must be in the ERP before go-live, not after. Margin: if "
+     "you absorb VAT rather than pass it through, gross margin falls by roughly the VAT rate on "
+     "the absorbed portion. Cash: output VAT is collected before it is remitted, so there is a "
+     "temporary working capital benefit that people mistake for profit.",
+     "Gulf CFOs post-2018 · PwC"),
+
+    ("How do you account for customer loyalty points under IFRS 15?",
+     "Points are a separate performance obligation. You allocate part of the original transaction "
+     "price to the points based on their standalone selling price, adjusted for expected breakage, "
+     "and defer that portion as contract liability. Revenue is recognised when points are redeemed "
+     "or expire. Practically: the deferral reduces reported revenue today, and the breakage "
+     "estimate is a judgement auditors probe every year. Retailers who ignore this overstate "
+     "current-period revenue and get a restatement.",
+     "Alshaya · Carrefour · Starbucks"),
+
+    # ── retail operating economics ──
+    ("What is shrinkage, what causes it, and what is an acceptable level?",
+     "Shrinkage is the gap between book inventory and counted inventory — theft (external and "
+     "internal), administrative error, damage and supplier short-delivery. Fashion retail typically "
+     "runs 1–2% of sales; grocery higher. The important split is internal versus external, because "
+     "the remedies differ entirely: internal is a controls and rostering problem, external is "
+     "layout, tagging and security. Any store more than 100bps above the estate average is a "
+     "process failure, not bad luck — investigate the receiving dock first.",
+     "Landmark Group · Target · Alshaya"),
+
+    ("Online returns are 30% versus 8% in store. How does that change unit economics?",
+     "It can invert them. Model the full return cost: outbound delivery, return shipping, "
+     "inspection labour, repackaging, markdown on anything not resaleable as new, and the working "
+     "capital locked in goods in transit. At 30% returns a nominally profitable online order can "
+     "land negative. Fixes: better size guidance and imagery to cut the cause; charge for returns "
+     "where the market allows; route returns to stores so the item re-enters saleable stock nearest "
+     "demand. Report online contribution after returns, never before.",
+     "Zara · ASOS · Namshi"),
+
+    ("Compare owned retail, franchise, and concession from a finance perspective.",
+     "Owned: full revenue, full margin, full capex, full lease and staffing risk. Franchise: you "
+     "book a royalty and wholesale margin — far lower revenue, far lower risk, and no control over "
+     "the customer experience. Concession: you occupy space inside a host retailer, pay a "
+     "percentage of sales rather than fixed rent, so occupancy cost flexes with trading and "
+     "downside is capped. In the Gulf, franchise is the dominant international-brand model, which "
+     "is why groups like Alshaya and Al-Futtaim report differently from the brands they carry.",
+     "Alshaya · Al-Futtaim · Chalhoub"),
+
+    ("Sales per square foot is falling but total sales are rising. Diagnose it.",
+     "You are adding space faster than sales. That is not automatically wrong — new stores ramp, "
+     "so a growth phase depresses the average mechanically. Split the estate: stores open more than "
+     "24 months versus less. If mature-store density is also falling, you have a genuine "
+     "productivity problem — likely range, pricing, or footfall. If mature density is flat or up "
+     "and only the blended number falls, it is a mix effect and it corrects as the new stores "
+     "mature. Never let a board see the blended number alone.",
+     "IKEA · Marks & Spencer · Max Fashion"),
+
+    ("How do you measure promotional effectiveness properly?",
+     "Incremental margin, not uplift. Take the sales during the promotion, subtract what the "
+     "baseline would have been without it, subtract the margin given away on units that would have "
+     "sold at full price anyway, and subtract any cannibalisation of adjacent full-price lines. "
+     "The result is often negative for deep discounts on already-popular SKUs. Use a control group "
+     "of comparable stores where operationally possible — without a counterfactual, every promotion "
+     "looks successful because sales always rise.",
+     "Tesco · Carrefour · Americana"),
+
+    ("What is open-to-buy and why should finance care?",
+     "Open-to-buy is the budget available to purchase stock for a future period, given planned "
+     "sales, planned markdowns and target closing stock. It is where merchandise planning and "
+     "finance meet. Finance should care because it is the single control that prevents "
+     "over-buying — the root cause of the markdown spiral that destroys gross margin two seasons "
+     "later. If buyers can commit outside OTB without sign-off, your inventory forecast is "
+     "decoration.",
+     "Landmark Group · H&M · Inditex"),
+
+    ("A category has 40% gross margin but negative contribution. How?",
+     "Gross margin ignores everything below the line. That category may carry disproportionate "
+     "space, handling cost, markdown, shrink or return rate. Bulky low-value goods are the classic "
+     "case — good percentage margin, terrible margin per square metre per week. Move to a "
+     "contribution view: gross profit less directly attributable space, labour, logistics and "
+     "markdown. Assortment decisions made on gross margin percentage alone are how retailers end "
+     "up with profitable-looking categories that lose money.",
+     "Costco · Lulu · Tesco"),
+
+    # ── treasury, capital and risk ──
+    ("Explain covenant headroom and how you monitor it.",
+     "Covenants are contractual ratios — typically net debt to EBITDA, interest cover, and "
+     "sometimes minimum net worth — tested quarterly. Headroom is the distance between your "
+     "forecast ratio and the limit. Monitor it forward, not backward: run the covenant calculation "
+     "inside the rolling forecast so you see a breach two quarters out while you can still act. "
+     "Post-IFRS 16, check whether the definitions are frozen GAAP or current GAAP — lease "
+     "liabilities entering net debt has breached covenants that had nothing to do with performance.",
+     "Any leveraged group"),
+
+    ("How would you hedge FX exposure for a retailer buying in USD and selling in MYR?",
+     "First separate transaction exposure (committed purchase orders) from translation exposure "
+     "(consolidating a foreign subsidiary). Hedge transaction exposure with forwards matched to the "
+     "payment dates on the buying calendar — typically rolling 6–12 months, hedging a declining "
+     "percentage the further out you go. Do not hedge translation exposure with derivatives; it is "
+     "an accounting effect, not a cash one. State the policy in a treasury mandate with limits, so "
+     "hedging never becomes speculation with a different name.",
+     "Landmark Group · Unilever · Shell"),
+
+    ("What is your WACC and how would you set the hurdle rate for a new store?",
+     "WACC = cost of equity × equity weight + after-tax cost of debt × debt weight. Cost of equity "
+     "via CAPM: risk-free rate plus beta times equity risk premium, with a country risk premium "
+     "for emerging markets. But do not use group WACC as the store hurdle — a new store in a new "
+     "market is riskier than the average of the existing business. Add a premium and be explicit "
+     "about it. The common error is a single group hurdle applied to everything, which "
+     "systematically over-invests in risky projects and under-invests in safe ones.",
+     "Emaar · Majid Al Futtaim · IKEA"),
+
+    ("Describe the difference between a cash flow forecast and a liquidity plan.",
+     "The forecast is your best estimate of receipts and payments. The liquidity plan is what you "
+     "do if the forecast is wrong — committed facilities, uncommitted lines, the order in which "
+     "you would draw them, what you would stop spending, and how quickly you could release working "
+     "capital. Boards ask for the forecast; the CFO's real job is the plan. Stress it: what happens "
+     "to cash if sales fall 20% for two quarters while committed rent and payroll continue.",
+     "Every treasurer since 2020"),
+
+    ("How do you evaluate a capex request for store refurbishment versus a new store?",
+     "Both need incremental cash flow, but the counterfactual differs. For a new store, the "
+     "baseline is zero. For a refurbishment, the baseline is the store's declining trajectory "
+     "without investment — so the benefit is the uplift over that decline, not over today. People "
+     "systematically overstate refurbishment returns by comparing post-refit sales to pre-refit "
+     "sales, which double-counts the natural trend and any category resets. Ask for the "
+     "do-nothing case in writing.",
+     "Marks & Spencer · Landmark Group"),
+
+    ("What is the effect of a sale-and-leaseback on your financials?",
+     "Cash in now, occupancy cost forever. You derecognise the asset, recognise a gain or loss "
+     "limited to the rights transferred, and recognise a right-of-use asset and lease liability "
+     "under IFRS 16 — so leverage does not fall by the full cash proceeds. It flatters current-year "
+     "cash and often current-year profit while committing you to rent for 15–20 years. Legitimate "
+     "for releasing capital from non-core property; a warning sign when used to plug an operating "
+     "cash shortfall.",
+     "Tesco · Carrefour · Retail REITs"),
+
+    # ── controls, systems, and the modern finance function ──
+    ("You suspect fraud in a store's cash handling. What is your first move?",
+     "Do not confront and do not alert. Preserve evidence first — secure the system logs, till "
+     "data, CCTV and reconciliations before anyone knows there is a question. Then escalate per "
+     "policy: internal audit, legal, and whoever the fraud policy names, usually the audit "
+     "committee chair for anything material or involving management. Only then investigate. The "
+     "most common and most costly mistake is a well-meaning manager asking questions locally, which "
+     "destroys evidence and tips off the person involved.",
+     "Any group with an audit committee"),
+
+    ("What controls matter most in a 60-store retail environment?",
+     "Rank by exposure. Cash and tender reconciliation daily at store level with independent "
+     "review; goods receiving matched three-way to purchase order and invoice, because that is "
+     "where margin leaks; inventory counts on a rolling cycle rather than one annual heroic count; "
+     "markdown authorisation limits by role; and user access in the ERP reviewed quarterly, "
+     "especially for leavers. Segregation of duties is hardest at small stores — compensate with "
+     "detective controls and exception reporting rather than pretending it exists.",
+     "Landmark Group · Alshaya · Americana"),
+
+    ("How would you use automation or AI in the finance function without losing control?",
+     "Automate the deterministic and keep judgement human. Good candidates: bank reconciliation "
+     "matching, invoice coding, intercompany elimination, variance flagging, and first-draft "
+     "commentary. Bad candidates: provisioning, impairment, anything requiring an assertion to "
+     "auditors. The control question is auditability — if you cannot explain how the output was "
+     "produced and reperform it, it is not usable in a statutory process. Keep a human approval "
+     "step on anything that posts to the ledger.",
+     "Every CFO agenda, 2024 onward"),
+
+    ("Your ERP implementation is running three months late. What do you tell the steering committee?",
+     "The date, the cause, the options with costs, and your recommendation. Be specific about "
+     "which workstream is late and why — usually data migration or the volume of unresolved "
+     "customisation requests, not the software. Present the real choice: go live late and clean, "
+     "or on time with manual workarounds and a defined remediation plan. Quantify the workaround "
+     "cost in FTE months. Having led D365 across two countries, the credible line is that data "
+     "quality determines the date more than configuration does.",
+     "Your own D365 experience"),
+
+    ("How do you close the books in five days instead of fifteen?",
+     "Move work out of the close. Accruals estimated from a model rather than waiting for invoices; "
+     "reconciliations performed continuously rather than at month end; intercompany agreed on a "
+     "cut-off calendar with a hard deadline and a default position if unresolved; fixed asset and "
+     "depreciation runs automated; and reporting built on the ledger rather than rebuilt in Excel. "
+     "The cultural half matters more than the technical half — a fast close requires accepting a "
+     "materiality threshold below which you do not adjust.",
+     "Your own 40% reduction · Unilever"),
+
+    ("What is the one number you would put on a retail CEO's daily dashboard?",
+     "Like-for-like sales versus plan, with gross margin rate alongside it. One without the other "
+     "is dangerous — sales up on margin collapse is a discount habit forming, and margin up on "
+     "sales collapse is a range problem. If forced to a single figure, gross profit versus plan, "
+     "because it moves only when something real happens. Everything else — footfall, conversion, "
+     "basket, density — is diagnostic detail you reach for once that number moves.",
+     "Retail CEOs everywhere"),
+
+    ("Explain contribution margin versus gross margin and when each misleads.",
+     "Gross margin is revenue less cost of goods — it answers whether you bought and priced well. "
+     "Contribution margin deducts all variable costs, including logistics, payment fees, markdown "
+     "and returns — it answers whether the sale was worth making. Gross margin misleads for "
+     "high-return or bulky goods; contribution misleads when 'variable' costs are actually "
+     "committed in the short run, which makes closure decisions look better on paper than in cash. "
+     "Use gross margin for buying decisions and contribution for range and channel decisions.",
+     "Amazon · Tesco · Landmark Group"),
+
+    ("How would you build the finance case for entering Saudi Arabia?",
+     "Model it as an option, not a certainty. Entry costs: legal structure and Saudisation "
+     "obligations under Nitaqat, which drive a materially different payroll cost curve; local "
+     "content and CITC/ZATCA compliance; e-invoicing (FATOORA) from day one. Revenue: a much "
+     "larger population than the UAE with different mall economics and a younger consumer. Build "
+     "the base case on 3–5 stores, not the full ambition, with an explicit go/no-go gate after "
+     "24 months and a costed exit. The board decision you want is a staged commitment.",
+     "Alshaya · Landmark · Americana"),
+
+    ("What is EBITDAR and why does retail use it?",
+     "EBITDA before rent. Retail and hospitality use it because the owned-versus-leased decision "
+     "distorts EBITDA comparability — a company that owns its stores shows higher EBITDA than an "
+     "identical company that leases them, purely from capital structure. EBITDAR strips that out. "
+     "Post-IFRS 16 it matters less for reported figures since operating leases already sit below "
+     "EBITDA, but it remains standard in valuation and in comparing operators across "
+     "own-versus-lease models.",
+     "Retail analysts · Americana · Alshaya"),
+
+    ("Your auditor raises going concern. How do you respond?",
+     "Take it seriously and answer with evidence, not reassurance. Provide a cash flow forecast "
+     "covering at least twelve months from signing, with the assumptions documented and stress "
+     "cases run; the status of facilities including expiry dates and covenant projections; and "
+     "board-approved mitigating actions with dates. If there is material uncertainty, the honest "
+     "route is disclosure rather than argument — an unqualified opinion with a material "
+     "uncertainty paragraph is survivable; a fight with the auditor that ends in a qualification "
+     "is not.",
+     "Any group under stress"),
 ]
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -359,6 +633,162 @@ INTERVIEW_SOFT = [
      "make sure they got the credit. The best version includes what you changed structurally so "
      "junior challenge became normal rather than exceptional.",
      "Amazon · Google · Unilever"),
+
+    ("What is the hardest decision you have made in your career?",
+     "Hard means genuinely two-sided, not merely unpleasant. Redundancies, closing a site, "
+     "overruling someone you respected, or choosing between two people for one role. Structure: "
+     "the trade-off, the information you had and did not have, how you decided, what it cost, and "
+     "what you would do differently. Interviewers discount any answer where the right choice was "
+     "obvious in hindsight — say what made it genuinely close.",
+     "Majid Al Futtaim · GE · Unilever"),
+
+    ("How do you handle a request from the CEO that you believe is unethical?",
+     "Slow it down without escalating to confrontation. First assume miscommunication and restate "
+     "what you understood — a surprising share of these resolve there. If it holds, state your "
+     "objection privately, in writing, with the specific standard or law engaged. Offer the "
+     "compliant alternative that gets closest to the commercial aim. If pressed, escalate to the "
+     "audit committee chair. Say plainly that you would resign rather than sign something you "
+     "believe is false — the willingness is the answer they are testing for.",
+     "Every CFO search · post-Wirecard"),
+
+    ("Describe a time you led a team through significant change.",
+     "Use the ERP implementation — it is the strongest card in your hand. Cover what changed for "
+     "the people, not just the systems: roles that disappeared, processes relearned, the period "
+     "where everything took longer. Explain how you handled the dip in morale at go-live, who "
+     "resisted and how you brought them round, and the measurable outcome. The 40% close reduction "
+     "is the proof point; the retention of the team through it is the actual answer.",
+     "Your own D365 story"),
+
+    ("How would your team describe your management style?",
+     "Answer with evidence rather than adjectives. 'They would say I am specific — I give the "
+     "number I expect and the date, and I do not change it quietly. They would also say I go into "
+     "detail on their work more than some managers, which is useful when they are learning and "
+     "irritating when they are not, so I have had to learn where to stop.' Naming the downside of "
+     "your own style is what makes the strength believable.",
+     "Universal"),
+
+    ("Why are you leaving your current role?",
+     "Never criticise the employer. Frame as pull, not push, and make it structural rather than "
+     "personal: the scope you want next does not exist there in the timeframe you want it. If "
+     "there is an obvious reason they will infer — a merger, a new boss, relocation — name it "
+     "briefly and neutrally before they ask. Anything that sounds like a grievance transfers "
+     "directly onto how they imagine you will talk about them.",
+     "Universal"),
+
+    ("How do you stay current technically while managing?",
+     "Be specific and verifiable. Name the standard you last read in full and why, the technical "
+     "update you attended, the thing you built yourself recently rather than delegated. Vague "
+     "answers about 'reading widely' land badly with technical interviewers. The strongest version "
+     "connects it to a decision: 'I went back through IFRS 16 properly when we hit the lease "
+     "modification question on the Indonesian stores, and that changed how we structured the "
+     "renewal.'",
+     "Big Four partners · Group CFOs"),
+
+    ("A peer takes credit for your team's work in front of the CEO. What do you do?",
+     "Not in the room. Afterwards, directly and without an audience: describe what you observed, "
+     "not their motive, and say what you need going forward. If it repeats, correct it factually "
+     "in the moment — 'just to add, the modelling on that was Priya's team' — which is a "
+     "contribution rather than an accusation. Escalating first, or absorbing it silently and "
+     "resenting it, are both worse. They are testing composure and whether you protect your team.",
+     "Any matrixed organisation"),
+
+    ("What do you know about our company?",
+     "The disqualifying answer is anything from the homepage. Come with: their last reported "
+     "results and one number from them, their format or brand mix and how it differs from peers, "
+     "one strategic move in the last 18 months, and one question you genuinely cannot answer from "
+     "outside. For a Gulf retail group that means knowing their franchise portfolio, which markets "
+     "they operate directly versus through partners, and their exposure to mall footfall.",
+     "Every interview, every time"),
+
+    ("How do you handle stress and long hours during close or audit?",
+     "They are checking sustainability, not stoicism. Do not claim you thrive on pressure. Give "
+     "the operating answer: what you do to make the peak smaller (moving work out of the close), "
+     "how you protect the team (rotating the worst shifts, protecting recovery time after), and "
+     "what you personally do that is non-negotiable. Having a young child is relevant here and "
+     "worth saying — it reads as someone with real boundaries rather than someone who has not "
+     "been tested yet.",
+     "Universal"),
+
+    ("Tell me about a time you had to say no to a business partner.",
+     "Retail finance says no constantly — to a buy outside open-to-buy, a promotion that destroys "
+     "margin, a headcount request without a business case. Pick one and show the method: you did "
+     "not just refuse, you showed the number that made it a no, and you offered what would make it "
+     "a yes. The best answers end with the partner coming back with a version you could approve, "
+     "because that proves the relationship survived.",
+     "Landmark Group · P&G · Mars"),
+
+    ("Where do you think retail is heading in the next five years?",
+     "Have a view and defend it with numbers, not trends. Something like: physical stores stop "
+     "being judged on their own sales as fulfilment and returns blur the channels, which breaks "
+     "conventional store P&L and forces a catchment-level view; margin pressure shifts from price "
+     "to cost-to-serve; and in the Gulf specifically, corporate tax and e-invoicing professionalise "
+     "finance functions that were previously light. Then say what you would do about it in the "
+     "role you are interviewing for.",
+     "Gulf retail boards · Search firms"),
+
+    ("What questions do you have for us?",
+     "Never none. Ask things that reveal you are evaluating them: what does the first 12 months "
+     "look like for whoever takes this; what is the finance function currently not able to answer "
+     "that the board keeps asking; how is the relationship between finance and the commercial "
+     "teams today; and why is the role open. The last one is the most informative and the least "
+     "asked. Avoid salary and benefits at first interview.",
+     "Universal"),
+
+    ("How do you build credibility in the first 90 days in a new company?",
+     "Deliver one visible thing early and be accurate about everything. Concretely: get the close "
+     "done cleanly, learn the actual business by walking the stores rather than reading the "
+     "reports, and find the one number everyone argues about and fix its definition. Do not "
+     "restructure anything in the first quarter. Credibility in finance is cumulative and fragile "
+     "— it comes from being right repeatedly, not from an early bold move.",
+     "Every incoming CFO"),
+
+    ("Tell me about a time you were wrong about a person.",
+     "A quieter question than it looks — it tests self-awareness and whether you revise judgements. "
+     "Both directions work: someone you underestimated who turned out strong, or someone you "
+     "backed who did not work out. The second is braver and lands better if you own the hiring or "
+     "promotion decision. End with what you changed about how you assess people, ideally something "
+     "structural like a different interview question or a probation checkpoint.",
+     "Amazon · Unilever · Alshaya"),
+
+    ("What motivates you, besides money?",
+     "Be concrete or it sounds rehearsed. Good answers name the specific texture of the work: "
+     "seeing a decision you modelled play out in real numbers weeks later, building a team member "
+     "into something they were not when they arrived, or the particular satisfaction of a clean "
+     "close. Avoid 'challenge' and 'growth' unqualified. If money genuinely is a driver — Dubai, "
+     "young family — it is fine to say it is one of several, and honest beats performed modesty.",
+     "Universal"),
+
+    ("How do you decide what to delegate?",
+     "Give a rule. Something like: delegate anything where the cost of a mistake is recoverable and "
+     "the learning value is high; keep anything where your specific judgement is the reason the "
+     "answer is right, and anything you would have to redo. The failure mode interviewers probe is "
+     "the controller who keeps the technical work because it is comfortable and delegates only the "
+     "admin — which caps the team's growth and yours.",
+     "GE · Unilever · Group CFOs"),
+
+    ("Describe a situation where you had incomplete information and had to decide anyway.",
+     "Forecasting and provisioning are full of these. Structure: what you knew, what you could not "
+     "know in the time available, the cost of waiting, the assumption you took and why, and how you "
+     "made the assumption visible rather than burying it. The mark of seniority is deciding with "
+     "70% of the information and saying explicitly what would change your mind — say that phrase.",
+     "Amazon · McKinsey · Boards"),
+
+    ("How do you give feedback to someone more senior than you?",
+     "Ask permission, be specific, and stay on observable behaviour and its effect. 'Can I give you "
+     "a reaction to how the numbers landed in that meeting? When the forecast changed without the "
+     "bridge, the room stopped trusting the rest of the pack.' No adjectives about them, one "
+     "concrete instance, and a suggestion. Then stop talking. Most people either avoid this "
+     "entirely or overcorrect into confrontation.",
+     "Any senior finance role"),
+
+    ("If we hire you and in a year it has not worked, what is the most likely reason?",
+     "A genuinely good question and a rare one. Answer honestly with the real risk, not a "
+     "disguised strength: a mismatch on decision-making pace, an unclear boundary between your "
+     "scope and someone else's, or a business where the data foundations are worse than described "
+     "so the first year goes on plumbing rather than insight. Then say what you would do in month "
+     "one to check for it. Naming the failure mode makes you look like someone who has thought "
+     "about the job rather than the offer.",
+     "Senior search processes"),
 ]
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -406,6 +836,69 @@ SPANISH = [
     ("tomar una decisión", "to make a decision", "Tenemos que tomar una decisión hoy.", "We have to make a decision today.", "Business"),
     ("con calma", "calmly / take it easy", "Vamos con calma.", "Let us take it slowly.", "Idiom"),
     ("más vale tarde que nunca", "better late than never", "Entregó el informe — más vale tarde que nunca.", "He delivered the report — better late than never.", "Idiom"),
+
+    # ── work: meetings, reporting, negotiation ──
+    ("el margen bruto", "gross margin", "El margen bruto bajó dos puntos.", "Gross margin fell two points.", "Business"),
+    ("el costo", "the cost", "El costo subió por el transporte.", "The cost went up because of shipping.", "Business"),
+    ("la tasa", "the rate", "La tasa de interés cambió ayer.", "The interest rate changed yesterday.", "Business"),
+    ("el impuesto", "the tax", "El impuesto corporativo es del 9%.", "Corporate tax is 9%.", "Business"),
+    ("la factura", "the invoice", "Todavía no recibimos la factura.", "We have not received the invoice yet.", "Business"),
+    ("el proveedor", "the supplier", "Negociamos mejores plazos con el proveedor.", "We negotiated better terms with the supplier.", "Business"),
+    ("la sucursal", "the branch / outlet", "Abrimos una sucursal en Kuala Lumpur.", "We opened a branch in Kuala Lumpur.", "Business"),
+    ("las ventas", "the sales", "Las ventas subieron un 8% este mes.", "Sales rose 8% this month.", "Business"),
+    ("el pronóstico", "the forecast", "El pronóstico no coincide con la realidad.", "The forecast does not match reality.", "Business"),
+    ("aprobar", "to approve", "El director aprobó el gasto.", "The director approved the expense.", "Business"),
+    ("revisar", "to review / check", "Voy a revisar los números otra vez.", "I am going to check the numbers again.", "Business"),
+    ("entregar", "to deliver / hand in", "Entregamos el reporte a tiempo.", "We delivered the report on time.", "Business"),
+    ("contratar", "to hire", "Vamos a contratar dos analistas.", "We are going to hire two analysts.", "Business"),
+    ("el riesgo", "the risk", "Ese riesgo es demasiado alto.", "That risk is too high.", "Business"),
+    ("la junta", "the board / meeting", "La junta se reúne el martes.", "The board meets on Tuesday.", "Business"),
+    ("a tiempo", "on time", "Nunca entrega a tiempo.", "He never delivers on time.", "Business"),
+    ("hace falta", "it is needed / lacking", "Hace falta más información.", "More information is needed.", "Business"),
+    ("me parece que", "it seems to me that", "Me parece que el plan es muy optimista.", "It seems to me the plan is very optimistic.", "Business"),
+    ("en resumen", "in summary", "En resumen, recomiendo esperar un trimestre.", "In summary, I recommend waiting a quarter.", "Business"),
+    ("depende de", "it depends on", "Depende del tipo de cambio.", "It depends on the exchange rate.", "Business"),
+
+    # ── family and home ──
+    ("la esposa", "the wife", "Mi esposa trabaja desde casa.", "My wife works from home.", "Family"),
+    ("el bebé", "the baby", "El bebé está aprendiendo a sentarse.", "The baby is learning to sit up.", "Family"),
+    ("llorar", "to cry", "Llora cuando tiene sueño.", "She cries when she is sleepy.", "Family"),
+    ("comer", "to eat", "Ya empieza a comer sólidos.", "She is starting to eat solids.", "Family"),
+    ("jugar", "to play", "Me gusta jugar con ella por la tarde.", "I like to play with her in the afternoon.", "Family"),
+    ("crecer rápido", "to grow fast", "Crece muy rápido.", "She is growing very fast.", "Family"),
+    ("el pañal", "the nappy / diaper", "Hay que cambiar el pañal.", "The nappy needs changing.", "Family"),
+    ("la siesta", "the nap", "Duerme la siesta a las dos.", "She naps at two o'clock.", "Family"),
+    ("tener hambre", "to be hungry", "Creo que tiene hambre.", "I think she is hungry.", "Family"),
+    ("cuidar", "to look after", "Cuido a mi hija los domingos.", "I look after my daughter on Sundays.", "Family"),
+
+    # ── everyday, travel, and the small connective words ──
+    ("¿dónde está?", "where is it?", "¿Dónde está la salida?", "Where is the exit?", "Everyday"),
+    ("quisiera", "I would like", "Quisiera un café, por favor.", "I would like a coffee, please.", "Everyday"),
+    ("la cuenta", "the bill / account", "La cuenta, por favor.", "The bill, please.", "Everyday"),
+    ("ahora mismo", "right now", "Lo hago ahora mismo.", "I will do it right now.", "Everyday"),
+    ("todavía no", "not yet", "Todavía no he terminado.", "I have not finished yet.", "Everyday"),
+    ("otra vez", "again", "Explícamelo otra vez, por favor.", "Explain it to me again, please.", "Everyday"),
+    ("tal vez", "maybe", "Tal vez mañana.", "Maybe tomorrow.", "Everyday"),
+    ("por supuesto", "of course", "Por supuesto, sin problema.", "Of course, no problem.", "Everyday"),
+    ("lo siento", "I am sorry", "Lo siento, llegué tarde.", "I am sorry, I arrived late.", "Everyday"),
+    ("¿qué significa?", "what does it mean?", "¿Qué significa esta palabra?", "What does this word mean?", "Everyday"),
+    ("más o menos", "more or less", "Más o menos entiendo.", "I more or less understand.", "Everyday"),
+    ("darse cuenta", "to realise", "Me di cuenta del error muy tarde.", "I realised the mistake too late.", "Everyday"),
+    ("hace dos años", "two years ago", "Empecé hace dos años.", "I started two years ago.", "Everyday"),
+    ("desde entonces", "since then", "Desde entonces todo cambió.", "Since then everything changed.", "Everyday"),
+    ("mientras tanto", "meanwhile", "Mientras tanto, seguimos con el plan.", "Meanwhile, we continue with the plan.", "Everyday"),
+
+    # ── idiom and register ──
+    ("estar al día", "to be up to date", "Estoy al día con los reportes.", "I am up to date with the reports.", "Idiom"),
+    ("dar en el clavo", "to hit the nail on the head", "Diste en el clavo con ese análisis.", "You hit the nail on the head with that analysis.", "Idiom"),
+    ("costar un ojo de la cara", "to cost a fortune", "Ese proyecto costó un ojo de la cara.", "That project cost a fortune.", "Idiom"),
+    ("no tener pelos en la lengua", "to speak bluntly", "Ella no tiene pelos en la lengua.", "She does not mince her words.", "Idiom"),
+    ("ponerse las pilas", "to get moving / step up", "Hay que ponerse las pilas este trimestre.", "We need to step up this quarter.", "Idiom"),
+    ("de golpe", "all at once / suddenly", "Los costos subieron de golpe.", "Costs rose all at once.", "Idiom"),
+    ("a la larga", "in the long run", "A la larga, la disciplina gana.", "In the long run, discipline wins.", "Idiom"),
+    ("sobre la marcha", "on the fly / as we go", "Lo ajustamos sobre la marcha.", "We adjust it as we go.", "Idiom"),
+    ("echar una mano", "to lend a hand", "¿Me echas una mano con esto?", "Can you lend me a hand with this?", "Idiom"),
+    ("valer la pena el esfuerzo", "to be worth the effort", "Vale la pena el esfuerzo.", "It is worth the effort.", "Idiom"),
 ]
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -454,6 +947,56 @@ VOCAB = [
      "Do not extrapolate a festive quarter across the year.", "Naming the error is often the fastest way to kill a bad forecast."),
     ("Judicious", "joo-DISH-uhs", "Showing good judgement.",
      "A judicious use of markdown clears stock without training customers to wait.", "Sounds considered rather than cautious."),
+    ("Precipitate", "pri-SIP-i-tayt", "To cause something to happen suddenly.",
+     "The covenant test precipitated the refinancing.", "As a verb it means trigger; as an adjective (pri-SIP-i-tit) it means hasty. Different stress."),
+    ("Marginal", "MAR-ji-nuhl", "Relating to the next unit; or barely sufficient.",
+     "The marginal store adds revenue but no profit.", "In economics it means 'the next one'. Most people misuse it to mean 'small'."),
+    ("Systemic", "sis-TEM-ik", "Affecting the whole system.",
+     "This is a systemic control weakness, not an isolated error.", "Not 'systematic', which means methodical. The two get confused in audit reports constantly."),
+    ("Preclude", "pri-KLOOD", "To prevent from happening.",
+     "The lease terms preclude subletting.", "More precise than 'stop' when something is ruled out in advance."),
+    ("Salutary", "SAL-yuh-ter-ee", "Producing a good effect, usually unpleasantly.",
+     "The audit finding was a salutary reminder about access controls.", "The useful shock. Slightly formal, lands well in written commentary."),
+    ("Endemic", "en-DEM-ik", "Regularly found in a particular place or group.",
+     "Shrinkage at that level is endemic to the format, not to the store.", "Distinguishes a structural feature from a local failure — useful when defending a manager."),
+    ("Countenance", "KOWN-tuh-nuhns", "To tolerate or approve of.",
+     "The board will not countenance another delay.", "Formal, strong. One use per document, maximum."),
+    ("Attenuate", "uh-TEN-yoo-ayt", "To reduce in force or effect.",
+     "Hedging attenuates the FX impact but does not remove it.", "The honest word when something is dampened rather than solved."),
+    ("Spurious", "SPYOOR-ee-uhs", "False; not genuine, despite appearing so.",
+     "That correlation is spurious — both track store openings.", "The exact word for a relationship in the data that is real-looking and meaningless."),
+    ("Requisite", "REK-wi-zit", "Required for a purpose.",
+     "She has the requisite experience for the controller role.", "Slightly more formal than 'required'. Common in job specs and board papers."),
+    ("Efficacy", "EF-i-kuh-see", "The ability to produce the intended result.",
+     "We have no evidence on the efficacy of that promotion.", "Not the same as efficiency. Efficacy is 'does it work', efficiency is 'at what cost'."),
+    ("Untoward", "un-TOR-d", "Unexpected and inconvenient or inappropriate.",
+     "Nothing untoward emerged from the review.", "Standard audit and legal register for 'we found nothing concerning'."),
+    ("Predicated", "PRED-i-kay-tid", "Founded or based on.",
+     "The forecast is predicated on two store openings in Q3.", "The precise way to surface an assumption the whole number rests on."),
+    ("Incremental", "in-kruh-MEN-tuhl", "Additional, over and above the existing base.",
+     "Only AED 3M of that is incremental revenue.", "The single most important word in investment appraisal. Everything hinges on the baseline."),
+    ("Ameliorate", "uh-MEEL-yuh-rayt", "To make a bad situation better.",
+     "The payment plan ameliorated the cash position without fixing it.", "Implies improvement without resolution — which is often the honest description."),
+    ("Cursory", "KUR-suh-ree", "Hasty and not thorough.",
+     "A cursory review would not have caught this.", "Useful for defending the depth of your own work, or flagging the shallowness of someone else's."),
+    ("Purview", "PUR-vyoo", "The scope of someone's responsibility or authority.",
+     "Treasury policy falls within the CFO's purview.", "Cleaner than 'remit' or 'area' when you mean formal authority."),
+    ("Notwithstanding", "not-with-STAN-ding", "In spite of.",
+     "Notwithstanding the shortfall, cash generation held.", "Can lead the sentence or follow the noun. A single well-placed use signals command of register."),
+    ("Corroborate", "kuh-ROB-uh-rayt", "To confirm with independent evidence.",
+     "The stock count corroborates the system balance.", "Independence is the point. Two reports from the same system do not corroborate anything."),
+    ("Ostensible", "os-TEN-si-buhl", "Stated as true, but possibly not.",
+     "The ostensible reason for the variance was FX.", "Adjective form of 'ostensibly'. Signals doubt politely enough to survive minutes."),
+    ("Exigency", "EK-si-juhn-see", "An urgent need or demand.",
+     "Cash exigencies drove the decision, not strategy.", "Explains a decision made under pressure without excusing it."),
+    ("Tantamount", "TAN-tuh-mownt", "Equivalent in effect to.",
+     "Approving that is tantamount to reopening the budget.", "Names the real consequence of a decision people are framing as minor."),
+    ("Perfunctory", "puhr-FUNGK-tuh-ree", "Done as a duty, without care.",
+     "The reconciliation had become perfunctory.", "Describes a control that exists on paper and has stopped working."),
+    ("Salience", "SAY-lee-uhns", "The quality of being most noticeable or important.",
+     "The salience of the cash line rose sharply after the covenant test.", "Noun form of salient. Useful when describing shifting board attention."),
+    ("Obviate", "OB-vee-ayt", "To remove the need for.",
+     "Automating the match obviates the manual review.", "Stronger and more precise than 'reduces'. It means the need disappears entirely."),
 ]
 
 SPEAKING_DRILLS = [
@@ -477,6 +1020,46 @@ SPEAKING_DRILLS = [
      "Being talked over in a board meeting is a delivery problem, not a rank problem."),
     ("Explain it to a seven-year-old", "Explain IFRS 16 or working capital with no jargon, in under 40 seconds, out loud.",
      "The constraint exposes whether you understand it or have memorised it."),
+    ("Answer, then stop", "Ask yourself an interview question, answer it, and physically close your mouth. Count three seconds before adding anything.",
+     "Over-explaining after a complete answer is the most common interview mistake at senior level. The silence is theirs to fill."),
+    ("Vary the pace", "Read a paragraph aloud twice — once flat, once slowing down on the two most important words.",
+     "Emphasis by pace is more persuasive than emphasis by volume, and it survives a phone line."),
+    ("Land the number", "Say five figures out loud with a small pause before each one: 'margin fell … 180 basis points'.",
+     "The pause makes the listener wait for the number, which makes them remember it."),
+    ("Lose the apology", "Speak for two minutes without 'sorry', 'just', or 'I might be wrong but'.",
+     "Hedging language before a fact invites challenge to the fact. Reserve qualifiers for genuine uncertainty."),
+    ("Record and listen back", "Record 60 seconds answering 'why do you want to be a CFO?'. Listen once for content, once for delivery only.",
+     "Almost nobody does this, and it is the single fastest improvement available. You will hear things no one will tell you."),
+    ("The hostile question", "Rehearse: 'That is a fair challenge — here is the assumption behind it.' Say it five times until it is automatic.",
+     "Having a rehearsed opening for a hostile question buys three seconds of thinking without looking rattled."),
+    ("Shorten your sentences", "Take a written paragraph of your own and read it aloud, splitting every sentence longer than 15 words.",
+     "Your written voice is already short. Spoken sentences drift longer under pressure — this recalibrates it."),
+    ("Name then explain", "Practise five answers that open with the conclusion: 'No — and the reason is…'",
+     "Burying the verdict at the end forces the listener to hold everything in memory. Lead with it."),
+    ("Own the accent", "Read a page aloud focusing only on the final consonant of each word, at normal speed.",
+     "Clarity comes from finishing words, not from changing your accent. Endings are where intelligibility is lost."),
+    ("The elevator version", "Explain your entire current role in 20 seconds: scope, scale, and one outcome with a number.",
+     "You will need this more than any other single answer — in interviews, at conferences, and in lifts."),
+    ("Breathe before the hard part", "Identify the toughest sentence in an answer and take a full breath immediately before it.",
+     "Nerves shorten breath, which raises pitch and speeds delivery precisely when you most need authority."),
+    ("Cut the throat-clear", "Notice and eliminate the meaningless opener: 'So…', 'Yeah, so…', 'I guess…'.",
+     "It signals you started talking before you started thinking, even when you did not."),
+    ("Read a wire story aloud", "Take one headline from the World section and read the first paragraph aloud, twice.",
+     "Journalistic prose is tightly written. Reading it aloud daily rewires sentence rhythm faster than conversation does."),
+    ("Say the difficult number", "Practise delivering bad news out loud: 'We are AED 14M behind.' No preamble, no cushion.",
+     "The instinct is to soften it with context first. Context after the number is briefing; before it is stalling."),
+    ("One-minute summary", "At the end of the day, summarise it out loud in 60 seconds as if to a CFO.",
+     "Daily practice at compressing information is the underlying skill in every senior finance conversation."),
+    ("Slow the Q&A", "Have someone ask you three questions in a row. Pause two seconds before each answer.",
+     "Rapid answers read as reflexive. A deliberate pause reads as considered, and buys you the sentence you actually want."),
+    ("Vary sentence length", "Speak for 90 seconds deliberately alternating one short sentence and one longer one.",
+     "Monotone rhythm loses a room faster than monotone pitch. Your writing already does this — make speech match."),
+    ("Kill the upspeak on numbers", "Say ten figures aloud, dropping pitch on the last syllable of each.",
+     "Rising pitch on a number makes it sound like an estimate. You rarely want that."),
+    ("Handle 'I do not know'", "Rehearse: 'I do not have that number in front of me. I will have it to you by Thursday.' Say it without apology.",
+     "Senior people say this comfortably. Guessing to avoid it is how credibility is actually lost."),
+    ("Present standing", "Deliver a two-minute update standing up, even alone at your desk.",
+     "Posture changes breath, breath changes voice. It transfers to seated delivery after about a week."),
 ]
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -521,6 +1104,51 @@ FATHER = [
      "Catching the window before the overtired threshold is the difference between a 5-minute settle and a 40-minute one. Every baby's signal set is different; only observation finds hers."),
     ("Do one thing badly", "Take over a task you normally leave to her mother, and accept doing it worse for a fortnight.",
      "Competence gaps between parents are self-reinforcing — the more skilled parent does more, and the gap widens. Deliberately absorbing the early incompetence is how it closes."),
+
+    ("Point at things", "Point at an object and name it, then look at her to check she followed your finger.",
+     "Following a point is a joint-attention milestone that typically emerges between 9 and 12 months. Practising the gesture now builds toward it, and delayed joint attention is one of the earlier developmental flags worth knowing about."),
+    ("Give her the spoon", "Let her hold a second spoon while you feed her with the first.",
+     "It converts feeding from something done to her into something she participates in. Control over the process reduces resistance later, when refusal becomes a real phase."),
+    ("Wait out the frustration noise", "When she grumbles at a task, wait. Only step in if it escalates to genuine distress.",
+     "There is a difference between frustration and distress, and learning to tell them apart is a skill you build now. Frustration tolerated becomes persistence; frustration always rescued becomes helplessness."),
+    ("One-word labels", "Use single words for objects she sees constantly — 'cup', 'light', 'dog' — rather than full sentences.",
+     "Isolated words are easier to segment from the speech stream. Mix with full sentences; she needs both the target and the grammar around it."),
+    ("Vary who holds her", "Hand her to grandparents, friends, and colleagues while you stay visible in the room.",
+     "Stranger wariness peaks around now. Practising handovers while you remain in sight teaches that unfamiliar people are safe, without forcing separation at the same time."),
+    ("Describe her, not just the world", "Narrate what she is doing: 'you are banging the cup, you are looking at me.'",
+     "Self-directed narration builds the vocabulary of internal states. It is the same mechanism as labelling emotions, applied to actions first because they are observable."),
+    ("Build then let her destroy", "Stack three blocks, let her knock them down, rebuild. Repeat until she loses interest.",
+     "Cause and effect is the entire lesson. Knocking down precedes building by months — do not rush to the constructive half."),
+    ("Check the floor at her eye level", "Lie on the floor and look across the room from her height. Remove what you find.",
+     "Mobility arrives suddenly. Anything reachable at that height will be in her mouth within days of her crawling, and you will not get advance notice."),
+    ("Read her a real book", "Read something you are reading, aloud, for five minutes. Content is irrelevant.",
+     "Prosody, turn-taking and attention are carried by adult speech regardless of vocabulary. It also means reading time survives on days when the board pack is due."),
+    ("Sit her up and step back", "Sit her unsupported on a soft surface within arm's reach, and let her balance.",
+     "Independent sitting typically consolidates around 7–8 months. Constant propping delays the postural adjustments she needs to make herself."),
+    ("Introduce water in an open cup", "Offer a few sips from a small open cup, held by you. Expect most of it to spill.",
+     "Open-cup drinking develops different oral motor patterns than a bottle or spout. Starting now, badly, is easier than starting later, correctly."),
+    ("Do bedtime alone once this week", "Handle the entire routine solo — no handover, no rescue.",
+     "Solo caregiving builds a distinct relationship rather than an assisted one. It also gives her mother an uninterrupted evening, which is not a small thing at seven months."),
+    ("Notice what she is not doing", "Once a week, check the milestone list rather than assuming.",
+     "Sitting, transferring objects hand to hand, responding to her name, and babbling with consonants are the seven-month markers. Knowing the list means concerns get raised early, when intervention works best."),
+    ("Let her see you fail", "When you drop or fumble something in front of her, react calmly and try again visibly.",
+     "Emotional regulation is learned by observation long before instruction. Your reaction to small frustrations is a template she is already recording."),
+    ("Sing the same song at the same moment", "Attach one song to one transition — nappy change, bath, car seat.",
+     "Predictable audio cues reduce transition resistance because she knows what comes next. It is the cheapest behavioural tool available at this age."),
+    ("Massage after the bath", "Two minutes of firm, slow strokes on legs and back after bathing.",
+     "Sustained touch by a father has measurable effects on infant stress response, and it gives you a reliable daily block of contact that is not feeding or settling."),
+    ("Put her in front of a mirror", "Hold her at a mirror and name both of you.",
+     "Self-recognition does not arrive until around 18 months, so she is currently treating the reflection as another baby — which is exactly why it holds her attention and drives social behaviours."),
+    ("Talk to her about your day", "Tell her what happened at work, in full sentences, as if she understands.",
+     "The content is irrelevant and the exposure is not. It also forces you to articulate the day, which is a decent end-of-work ritual in its own right."),
+    ("Stop at eye contact", "When she catches your eye across the room, stop and respond — smile, wave, say her name.",
+     "Social referencing is beginning: she checks your face to decide how to feel about things. Responding consistently makes you a reliable reference point."),
+    ("Give her something to solve", "Put a favourite toy just inside an open container so she has to reach in.",
+     "Means-end reasoning — using one action to achieve a separate goal — is developing now. Small solvable problems build it; unsolvable ones just frustrate."),
+    ("Take a photo of the ordinary", "Photograph something unremarkable — her on the floor, mid-task — rather than a milestone.",
+     "You will have hundreds of milestone photos and almost none of the texture of daily life at seven months, which is what you will actually want later."),
+    ("Ask her mother what she needs", "Ask directly, once, and act on the answer without negotiating it.",
+     "The most reliable predictor of a child's early environment is the functioning of the partnership around them. This is a fatherhood task, not a marital one."),
 ]
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -583,6 +1211,65 @@ WISDOM = [
     ("Buddhism", "Appamada", "Diligence, heedfulness",
      "The Buddha's last words were reportedly about this — striving on with diligence. It is the opposite of drifting.",
      "Diligence is not intensity, it is not letting things run on autopilot. Audit one recurring commitment this week and ask whether you would start it today."),
+
+    ("Jainism", "Satya", "Truthfulness",
+     "The second great vow. Jain teaching qualifies it sharply: truth that causes harm is not virtue, so silence is sometimes the higher form of satya.",
+     "Before delivering a hard truth, ask whether you are serving accuracy or serving yourself. Both can be honest; only one is useful."),
+    ("Jainism", "Brahmacharya", "Restraint, classically of the senses",
+     "For laypeople this is moderation rather than abstinence — the discipline of not letting appetite set the agenda.",
+     "Pick the appetite that currently sets your agenda — the phone, the market screen, the second helping — and put one structural limit on it. Not willpower; a limit."),
+    ("Jainism", "Karma as physical residue", "Action leaves a trace",
+     "Jain metaphysics treats karma as fine matter that adheres to the soul through action and intent. Unusually, intent matters as much as the act.",
+     "Judge your own decisions on intent and process, not only outcome. A profitable trade taken for bad reasons still deposits the bad habit."),
+    ("Jainism", "Aparigraha for time", "Non-possessiveness applied to hours",
+     "The vow limits accumulation. Applied beyond property, hoarding commitments is a form of grasping — saying yes to everything is acquisitiveness in a respectable costume.",
+     "Say no to one thing this week that you would normally accept out of reflex rather than interest."),
+    ("Jainism", "Samyak Charitra", "Right conduct",
+     "The third jewel, and deliberately placed after right perception and right knowledge — you cannot act well on a false picture.",
+     "When a decision feels hard, check whether it is genuinely a conduct problem or actually a perception problem you have not resolved. Most are the latter."),
+    ("Jainism", "Ahimsa in speech", "Non-violence applied to words",
+     "Jain tradition treats harsh speech as a form of violence, listing it alongside physical harm rather than as a lesser category.",
+     "Review one message you sent under pressure this week. Would you send it unchanged now? The gap between those two versions is the practice."),
+    ("Jainism", "Anuvrata", "The lesser vows",
+     "Householders take limited versions of the great vows rather than the monastic form — the tradition explicitly designs for people with jobs and families.",
+     "Do not adopt a practice you cannot sustain alongside work and a seven-month-old. A small vow kept beats a large one abandoned."),
+    ("Jainism", "Pratikramana", "Ritual review and turning back",
+     "A periodic practice of reviewing one's conduct, acknowledging where one fell short, and resolving to correct it. Structurally, an audit.",
+     "You already run a monthly close on the business. Run a fifteen-minute one on yourself: what did I get wrong, what am I changing, what is the date."),
+    ("Jainism", "Trishna", "Craving, thirst",
+     "The endless wanting that survives every acquisition. Jain and Buddhist thought agree closely here — the object changes, the wanting does not.",
+     "Notice the next thing you tell yourself you will be satisfied after getting. Write it down. Check in six months whether the satisfaction arrived."),
+
+    ("Buddhism", "Anatta", "Non-self",
+     "The doctrine that there is no fixed, unchanging self — what feels like a permanent 'I' is a process, continually reconstructed.",
+     "When you catch yourself saying 'I am not a numbers-under-pressure person', notice that is a description of a habit, not a fact about you."),
+    ("Buddhism", "Right Livelihood", "Work that does not require harm",
+     "One of the eightfold path's least discussed elements: how you earn matters as much as how you behave outside earning.",
+     "Ask whether any part of your work depends on someone else not understanding something. That is the test, and it applies to finance more than most fields."),
+    ("Buddhism", "Right Effort", "Applied in the correct direction",
+     "Effort is one of the eight, but so is rightness of effort. Energy in the wrong direction is not neutral; it entrenches the error.",
+     "Before adding hours to a problem, spend ten minutes asking whether the problem is the right one. Most overwork is misdirection, not insufficiency."),
+    ("Buddhism", "The Two Truths", "Conventional and ultimate",
+     "Something can be true conventionally and empty ultimately — a table is a table for practical purposes and a collection of parts on analysis. Both are needed.",
+     "Hold the forecast as both real enough to act on and provisional enough to abandon. Treating a model as ultimately true is how people ride a position down."),
+    ("Buddhism", "Kalama Sutta", "Test it yourself",
+     "The Buddha told the Kalamas not to accept teaching on authority, tradition, or scripture — but to test whether it leads to benefit when practised.",
+     "Apply it to strategy advice, including from people senior to you. What is the evidence, and what would falsify it? Deference is not evidence."),
+    ("Buddhism", "Mudita", "Sympathetic joy",
+     "The third sublime state: genuine pleasure at another's success. Named separately because it is rarer and harder than compassion for suffering.",
+     "Pick the peer whose progress you find least comfortable and find the thing they did well. Envy is the most common emotion in a competitive finance function and the least admitted."),
+    ("Buddhism", "Papañca", "Mental proliferation",
+     "The mind's tendency to spin a single perception into an elaborate narrative — one ambiguous email becoming a theory about your standing at work.",
+     "When you notice the story running, return to what actually happened, stated in one sentence with no interpretation. The gap is usually startling."),
+    ("Buddhism", "Impermanence of success", "Anicca applied upward",
+     "Impermanence is usually offered as consolation in difficulty. It applies symmetrically: the good quarter, the promotion, the peak are equally conditioned.",
+     "On a good week, note it explicitly and hold it lightly. The habit of not over-identifying with wins is what makes losses survivable."),
+    ("Buddhism", "Dana", "Generosity, listed first",
+     "In the traditional sequence of practices, generosity comes before ethics and meditation — as the foundation rather than the reward.",
+     "Give something away before you feel you have surplus. Time or attention counts; the point is that it precedes abundance rather than following it."),
+    ("Buddhism", "Right Intention", "The direction before the act",
+     "The second element of the path, sitting between right view and right speech — the resolve that shapes what follows.",
+     "Before a difficult conversation, name your intention in one sentence. If it is 'to be proved right', the conversation will fail regardless of your evidence."),
 ]
 
 
@@ -652,7 +1339,43 @@ def get_all(day: date | None = None) -> dict:
     }
 
 
+def validate() -> list[str]:
+    """Shape check on every bank. These are hand-authored tuples, and a dropped
+    field is invisible until the page renders — a missing element in one WISDOM
+    entry raised 'not enough values to unpack' only at render time. Run this in
+    CI so the failure happens at commit, not in front of a reader."""
+    problems = []
+    expected = [
+        ("INTERVIEW_TECH", INTERVIEW_TECH, 3), ("INTERVIEW_SOFT", INTERVIEW_SOFT, 3),
+        ("SPANISH", SPANISH, 5), ("VOCAB", VOCAB, 5),
+        ("SPEAKING_DRILLS", SPEAKING_DRILLS, 3), ("FATHER", FATHER, 3), ("WISDOM", WISDOM, 5),
+    ]
+    for name, bank, width in expected:
+        for i, row in enumerate(bank):
+            if not isinstance(row, tuple):
+                problems.append(f"{name}[{i}]: expected tuple, got {type(row).__name__}")
+            elif len(row) != width:
+                problems.append(f"{name}[{i}]: expected {width} fields, got {len(row)} "
+                                f"— starts {str(row[:1])[:60]}")
+            elif any(not isinstance(f, str) or not f.strip() for f in row):
+                problems.append(f"{name}[{i}]: empty or non-string field")
+    # Every tradition must be able to fill its daily slot.
+    for tradition in ("Jainism", "Buddhism"):
+        n = len([w for w in WISDOM if w and w[0] == tradition])
+        if n < 2:
+            problems.append(f"WISDOM: only {n} {tradition} entries — need at least 2")
+    return problems
+
+
 if __name__ == "__main__":
+    issues = validate()
+    if issues:
+        print("❌ bank validation failed:")
+        for p in issues:
+            print("   ", p)
+        raise SystemExit(1)
+    print("✅ all banks well-formed\n")
+
     import json
     d = get_all()
     print(json.dumps(d, indent=2, ensure_ascii=False)[:1500])

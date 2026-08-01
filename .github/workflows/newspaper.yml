@@ -26,6 +26,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # The learning banks are hand-authored tuples; a dropped field only
+      # surfaces at render time. Fail here instead.
+      - name: Validate daily learning banks
+        run: python daily_learning.py > /dev/null
+
       - name: Generate newspaper HTML
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
