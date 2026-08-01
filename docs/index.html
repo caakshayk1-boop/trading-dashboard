@@ -677,7 +677,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Saturday, August 01 2026</span>
-      <span class="live" id="istClock"><i></i>13:51 IST</span>
+      <span class="live" id="istClock"><i></i>22:31 IST</span>
     </div>
   </div>
 </header>
@@ -687,7 +687,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#markets"><i>01</i>Markets</a>
     <a href="#picks"><i>02</i>Trade Ideas</a>
     <a href="#tracker"><i>03</i>Portfolio</a>
-    <a href="#perf"><i>04</i>Performance</a>
+    <a href="#sip"><i>04</i>SIP Buckets</a>
+    <a href="#perf"><i>05</i>Performance</a>
     <a href="#interview"><i>05</i>Interview</a>
     <a href="#language"><i>06</i>Language</a>
     <a href="#father"><i>07</i>Father</a>
@@ -729,11 +730,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="statrail">
     <div class="stat">
-      <div class="v" id="heroRate" style="color:var(--lime)" data-count="28" data-suffix="%">0%</div>
+      <div class="v" id="heroRate" style="color:var(--lime)" data-count="26" data-suffix="%">0%</div>
       <div class="k">Signal Win Rate</div>
     </div>
     <div class="stat">
-      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="43">0</div>
+      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="27">0</div>
       <div class="k">Open Positions</div>
     </div>
     <div class="stat">
@@ -791,7 +792,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$63043</span>
+      <span class="p">$62864</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -839,7 +840,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$63043</span>
+      <span class="p">$62864</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -904,7 +905,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="mkt u rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$63043</div>
+      <div class="p">$62864</div>
       <div class="c up">▲ </div>
     </div>
     
@@ -982,6 +983,47 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <button type="submit" class="btn">Add to book</button>
     </form>
   </div>
+</section>
+
+<!-- ══════════ 04 SIP BUCKETS ══════════
+     ₹10,000/month, stepped up 10% each SIP year, one bucket per month, four
+     names per bucket. Every bucket keeps its own cost basis and its own XIRR —
+     a blended portfolio number would hide which months' picks actually worked,
+     which is the only feedback the ranking engine gets.
+     Filled from /api/sip; the whole section hides itself on a static build. -->
+<section class="sec" id="sip" style="display:none">
+  <div class="shead rv">
+    <div>
+      <span class="snum">04 / COMPOUNDING</span>
+      <h2 class="stitle">One bucket a month.</h2>
+    </div>
+    <span class="slink" id="sipPlan">—</span>
+  </div>
+
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v" id="sipMonthly">—</div><div class="k">This month</div></div>
+    <div class="kpi"><div class="v" id="sipBuckets">0</div><div class="k">Buckets</div></div>
+    <div class="kpi"><div class="v" id="sipInvested">—</div><div class="k">Invested</div></div>
+    <div class="kpi"><div class="v" id="sipValue">—</div><div class="k">Value</div></div>
+    <div class="kpi"><div class="v" id="sipPnl">—</div><div class="k">Unrealised</div></div>
+  </div>
+
+  <div id="sipBody"></div>
+
+  <div class="shead rv" style="margin-top:34px;border-top:1px solid var(--line);padding-top:22px">
+    <div>
+      <span class="snum">THE ARITHMETIC</span>
+      <h2 class="stitle" style="font-size:24px">Where the step-up takes it.</h2>
+    </div>
+  </div>
+  <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
+    <th>Year</th><th>Monthly</th><th>Invested</th><th>@10%</th><th>@12%</th><th>@14%</th>
+  </tr></thead><tbody></tbody></table></div>
+  <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
+    Projections are compound arithmetic on the contribution schedule, not a forecast.
+    They assume the return shown is achieved every year with no gaps in contribution.
+    Actual equity returns arrive in a very different order, and sequence matters.
+  </p>
 </section>
 
 <!-- ══════════ 05 INTERVIEW PREP ══════════ -->
@@ -1159,14 +1201,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">BBC Business · LEAD</span>
-        <h2><a href="https://www.bbc.co.uk/news/articles/c77g6dm5pr8o?at_medium=RSS&at_campaign=rss" target="_blank">Snapchat joins other popular platforms in fight against 'AI slop'</a></h2>
-        <p>Snapchat, YouTube, LinkedIn, and Substack are trying to combat the proliferation of fake AI content.</p>
+        <h2><a href="https://www.bbc.co.uk/news/articles/clyvd8363wlo?at_medium=RSS&at_campaign=rss" target="_blank">Faisal Islam: Four reasons why Fifa's World Cup plan never stacked up</a></h2>
+        <p>The actual presentation of FIFA's plan to part-privatise the World Cup raises many more questions than it answers.</p>
       </div>
       <div class="lead-s">
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cn9n2v3lwr0o?at_medium=RSS&at_campaign=rss" target="_blank">Passenger on British Airways mayday flight describes fear and shout of 'I don't want to die'</a>
+          <a href="https://www.bbc.co.uk/news/articles/c77g6dm5pr8o?at_medium=RSS&at_campaign=rss" target="_blank">Snapchat joins other popular platforms in fight against 'AI slop'</a>
         </div>
         
         <div class="mini">
@@ -1175,18 +1217,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         </div>
         
         <div class="mini">
-          <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cpw9yrl4p2qo?at_medium=RSS&at_campaign=rss" target="_blank">Sainsbury's agrees to sell Argos for £120m</a>
-        </div>
-        
-        <div class="mini">
-          <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cjd4yz35x8go?at_medium=RSS&at_campaign=rss" target="_blank">Stick to spending limits, PM and chancellor tell ministers in joint memo</a>
+          <span class="s">CNBC</span>
+          <a href="https://www.cnbc.com/2026/08/01/best-buy-ceo-jason-bonfig-smaller-stores.html" target="_blank">To keep growing, incoming Best Buy CEO says he first wants to go smaller</a>
         </div>
         
         <div class="mini">
           <span class="s">CNBC</span>
           <a href="https://www.cnbc.com/2026/07/31/leopold-aschenbrenner-situational-awareness-fund-fire-sale.html" target="_blank">How Leopold Aschenbrenner built a $45 billion AI hedge fund — and lost most of it in days</a>
+        </div>
+        
+        <div class="mini">
+          <span class="s">CNBC</span>
+          <a href="https://www.cnbc.com/2026/07/31/clear-street-pre-ipo-platform-databricks.html" target="_blank">Fintech broker Clear Street offers investors pre-IPO access to $188 billion AI giant Databricks</a>
         </div>
         
       </div>
@@ -1196,65 +1238,65 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/31/clear-street-pre-ipo-platform-databricks.html" target="_blank">Fintech broker Clear Street offers investors pre-IPO access to $188 billion AI giant Databricks</a></h3>
-        <p>Fintech brokerage Clear Street is launching a private markets platform, beginning with Databricks stakes, to give investors more access to late-stage </p>
-        <div class="ts">Jul 31 21:49</div>
-      </div>
-      
-      <div class="ncard rv" style="--d:0.05s">
-        <span class="s">CNBC</span>
         <h3><a href="https://www.cnbc.com/2026/07/31/spider-man-brand-new-day-box-office-preview-sales.html" target="_blank">‘Spider-Man: Brand New Day’ sets domestic box office preview record with $72 million</a></h3>
         <p>Sony and Marvel's "Spider-Man: Brave New Day" is expected to haul in around $270 million domestically over its debut weekend.</p>
         <div class="ts">Jul 31 21:06</div>
       </div>
       
-      <div class="ncard rv" style="--d:0.1s">
+      <div class="ncard rv" style="--d:0.05s">
         <span class="s">CNBC</span>
         <h3><a href="https://www.cnbc.com/2026/07/31/fifa-world-cup-private-equity-sports.html" target="_blank">FIFA tests the limits of private equity in sports with World Cup subsidiary sale</a></h3>
         <p>UEFA and Concacaf's rejection of FIFA's plan to sell a 20% stake in the World Cup's commercial operations highlights uneasiness with private equity in</p>
         <div class="ts">Jul 31 20:40</div>
       </div>
       
-      <div class="ncard rv" style="--d:0.15000000000000002s">
-        <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/07/31/gm-in-vehicle-ai-system.html" target="_blank">GM to launch proprietary in-vehicle AI system later this year</a></h3>
-        <p>General Motors plans to launch a proprietary in-vehicle artificial intelligence system that's better tailored for its customers later this year.</p>
-        <div class="ts">Jul 31 18:13</div>
-      </div>
-      
-      <div class="ncard rv" style="--d:0.2s">
+      <div class="ncard rv" style="--d:0.1s">
         <span class="s">Yahoo Finance</span>
         <h3><a href="https://finance.yahoo.com/markets/crypto/articles/want-trade-spacex-apple-1inch-194500911.html" target="_blank">Want to trade SpaceX for Apple? 1inch says skip the dollars</a></h3>
         <p></p>
         <div class="ts">Jul 31 19:45</div>
       </div>
       
+      <div class="ncard rv" style="--d:0.15000000000000002s">
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://www.investors.com/news/ge-aerospace-ai-play-netapp-lead-5-stocks-near-buy-points/?src=A00220&yptr=yahoo" target="_blank">GE Aerospace, AI Play Lead Five Stocks Near Buy Points</a></h3>
+        <p></p>
+        <div class="ts">Aug 01 15:22</div>
+      </div>
+      
+      <div class="ncard rv" style="--d:0.2s">
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/economy/policy/articles/bank-england-moving-away-coal-150000057.html" target="_blank">The Bank of England Is Moving Away From Coal</a></h3>
+        <p></p>
+        <div class="ts">Aug 01 15:00</div>
+      </div>
+      
       <div class="ncard rv" style="--d:0.25s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/its-like-buying-a-lottery-ticket-fidelity-asked-for-my-former-sister-in-laws-death-certificate-does-this-mean-im-due-a-windfall-2ebdcd69?mod=mw_rss_topstories" target="_blank">My ex-husband’s sister died — so why is Fidelity asking me for her death certificate?</a></h3>
-        <p>“Part of me jokes that paying for a death certificate would be like buying a lottery ticket.”</p>
-        <div class="ts">Aug 01 00:45</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/personal-finance/banking/article/best-cd-rates-today-saturday-august-1-2026-best-cd-account-earns-410-apy-100000014.html" target="_blank">Best CD rates today, Saturday, August 1, 2026: Best CD account earns 4.10% APY</a></h3>
+        <p></p>
+        <div class="ts">Aug 01 10:00</div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/if-social-securitys-funding-crisis-is-the-elephant-in-the-room-this-is-the-mouse-everyone-has-overlooked-you-have-been-warned-b95c450d?mod=mw_rss_topstories" target="_blank">If Social Security’s funding crisis is the elephant in the room, this is the mouse everyone has overlooked. You have bee</a></h3>
-        <p>“Delaying Social Security until 70 results in an increased monthly payment — and that comes with proportionally higher cost-of-living adjustments.”</p>
-        <div class="ts">Aug 01 00:25</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/1-5-car-buyers-stuck-142500536.html" target="_blank">1 in 5 new car buyers are stuck in a $1,000-a-month nightmare — and it’s ruining their long-term wealth</a></h3>
+        <p></p>
+        <div class="ts">Aug 01 14:25</div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/july-ends-on-a-hopeful-note-for-stocks-after-momentum-trade-sees-biggest-wipeout-since-2000-4b90b6b2?mod=mw_rss_topstories" target="_blank">July ends on a hopeful note for stocks after momentum trade sees biggest wipeout since 2000</a></h3>
-        <p>Investors are seeing more signs that the bottom is near, if not already in.</p>
-        <div class="ts">Jul 31 22:21</div>
+        <h3><a href="https://www.marketwatch.com/story/im-75-and-afraid-to-let-my-retirement-fund-dip-below-1-million-am-i-being-too-aggressive-6b780ef9?mod=mw_rss_topstories" target="_blank">I’m 75 and afraid to let my retirement fund dip below $1 million. Am I being too conservative?</a></h3>
+        <p>Spending down assets can be unsettling after a lifetime of saving.</p>
+        <div class="ts">Aug 01 16:41</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/situational-awareness-vs-long-term-capital-management-a-side-by-side-comparison-e3e047b7?mod=mw_rss_topstories" target="_blank">Situational Awareness vs. Long-Term Capital Management: A side-by-side comparison</a></h3>
-        <p>There are more similarities between the two hedge-fund blowups than one might expect.</p>
-        <div class="ts">Jul 31 22:09</div>
+        <h3><a href="https://www.marketwatch.com/story/its-like-buying-a-lottery-ticket-fidelity-asked-for-my-former-sister-in-laws-death-certificate-does-this-mean-im-due-a-windfall-2ebdcd69?mod=mw_rss_topstories" target="_blank">My ex-husband’s sister died — so why is Fidelity asking me for her death certificate?</a></h3>
+        <p>“Part of me jokes that paying for a death certificate would be like buying a lottery ticket.”</p>
+        <div class="ts">Aug 01 16:30</div>
       </div>
       
     </div>
@@ -1927,45 +1969,45 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="trend">
       
       <div>
-        <div class="bar" style="--h:23px;--d:0.0s;background:var(--down)"></div>
-        <div class="lb">07/24</div>
-        <div class="lb" style="color:var(--muted)">33%</div>
-      </div>
-      
-      <div>
-        <div class="bar" style="--h:35px;--d:0.07s;background:var(--gold)"></div>
+        <div class="bar" style="--h:35px;--d:0.0s;background:var(--gold)"></div>
         <div class="lb">07/26</div>
         <div class="lb" style="color:var(--muted)">50%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:31px;--d:0.14s;background:var(--gold)"></div>
+        <div class="bar" style="--h:31px;--d:0.07s;background:var(--gold)"></div>
         <div class="lb">07/27</div>
         <div class="lb" style="color:var(--muted)">45%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:46px;--d:0.21000000000000002s;background:var(--up)"></div>
+        <div class="bar" style="--h:46px;--d:0.14s;background:var(--up)"></div>
         <div class="lb">07/28</div>
         <div class="lb" style="color:var(--muted)">67%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:42px;--d:0.28s;background:var(--up)"></div>
+        <div class="bar" style="--h:42px;--d:0.21000000000000002s;background:var(--up)"></div>
         <div class="lb">07/29</div>
         <div class="lb" style="color:var(--muted)">60%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:38px;--d:0.35000000000000003s;background:var(--up)"></div>
+        <div class="bar" style="--h:38px;--d:0.28s;background:var(--up)"></div>
         <div class="lb">07/30</div>
         <div class="lb" style="color:var(--muted)">55%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:17px;--d:0.42000000000000004s;background:var(--down)"></div>
+        <div class="bar" style="--h:17px;--d:0.35000000000000003s;background:var(--down)"></div>
         <div class="lb">07/31</div>
         <div class="lb" style="color:var(--muted)">25%</div>
+      </div>
+      
+      <div>
+        <div class="bar" style="--h:4px;--d:0.42000000000000004s;background:var(--down)"></div>
+        <div class="lb">08/01</div>
+        <div class="lb" style="color:var(--muted)">0%</div>
       </div>
       
     </div>
@@ -1986,10 +2028,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 2076 · 🔴 stretch</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Middlegame · Advantage · Long</p>
-      <div class="q">💡 Move one piece to unleash the attack of another behind it.</div>
-      <a href="https://lichess.org/training/i4BRT" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+      <h3>Rating 1916 · 🔴 stretch</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Clearance · Advantage · Long</p>
+      <div class="q">💡 Calculate 3 moves deep before touching a piece.</div>
+      <a href="https://lichess.org/training/6mjNJ" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
     </div>
     
   </div>
@@ -2078,10 +2120,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   
   <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" id="kpiWin" data-count="43">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="109">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="43">0</div><div class="k">Open</div></div>
-    <div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)" data-count="28" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
+    <div class="kpi"><div class="v up" id="kpiWin" data-count="44">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="124">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="27">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)" data-count="26" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
     <div class="kpi"><div class="v" id="kpiTotal" data-count="200">0</div><div class="k">Total Signals</div></div>
   </div>
 
@@ -2101,7 +2143,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr></thead>
       <tbody>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SUNPHARMA" target="_blank">SUNPHARMA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2111,13 +2153,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2007.21</td>
           <td class="num up">₹2036.67</td>
           <td class="num" style="color:var(--gold)">0.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1948.50</td>
+          <td class="pnl-d">-2.1%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HDFCAMC" target="_blank">HDFCAMC</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2127,10 +2169,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2681.53</td>
           <td class="num up">₹2824.21</td>
           <td class="num" style="color:var(--gold)">1.0x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹2515.90</td>
+          <td class="pnl-d">-3.8%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2181,7 +2223,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TECHM" target="_blank">TECHM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2191,13 +2233,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹1720.54</td>
           <td class="num up">₹1766.70</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1576.00</td>
+          <td class="pnl-d">-4.6%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:MOTHERSON" target="_blank">MOTHERSON</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2207,13 +2249,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹156.75</td>
           <td class="num up">₹160.75</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹146.75</td>
+          <td class="pnl-d">-2.7%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:RECLTD" target="_blank">RECLTD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2223,13 +2265,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹384.27</td>
           <td class="num up">₹391.81</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹353.45</td>
+          <td class="pnl-d">-5.2%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PETRONET" target="_blank">PETRONET</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2239,13 +2281,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹289.71</td>
           <td class="num up">₹295.68</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹274.78</td>
+          <td class="pnl-d">-2.1%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:M&M" target="_blank">M&M</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2255,13 +2297,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹3530.30</td>
           <td class="num up">₹3618.16</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹3183.00</td>
+          <td class="pnl-d">-6.3%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HAL" target="_blank">HAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2271,13 +2313,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹4777.96</td>
           <td class="num up">₹4865.61</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹4558.86</td>
+          <td class="pnl-d">-1.9%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:EICHERMOT" target="_blank">EICHERMOT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2287,13 +2329,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹8067.89</td>
           <td class="num up">₹8224.15</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹7600.41</td>
+          <td class="pnl-d">-3.0%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:COFORGE" target="_blank">COFORGE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2303,13 +2345,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹1810.41</td>
           <td class="num up">₹1870.01</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1492.08</td>
+          <td class="pnl-d">-13.3%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CIPLA" target="_blank">CIPLA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2319,13 +2361,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹1520.63</td>
           <td class="num up">₹1552.25</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1412.60</td>
+          <td class="pnl-d">-4.1%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BAJAJFINSV" target="_blank">BAJAJFINSV</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2335,13 +2377,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2097.14</td>
           <td class="num up">₹2142.51</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1885.00</td>
+          <td class="pnl-d">-7.1%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BALKRISIND" target="_blank">BALKRISIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2351,10 +2393,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹2599.76</td>
           <td class="num up">₹2683.93</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹2047.80</td>
+          <td class="pnl-d">-17.2%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2373,7 +2415,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AWL" target="_blank">AWL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2383,10 +2425,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹197.61</td>
           <td class="num up">₹198.90</td>
           <td class="num" style="color:var(--gold)">1.7x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹198.90</td>
+          <td class="pnl-u">+5.0%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2421,7 +2463,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:IDFCFIRSTB" target="_blank">IDFCFIRSTB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2431,10 +2473,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹88.32</td>
           <td class="num up">₹88.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹88.32</td>
+          <td class="pnl-u">+4.3%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2469,7 +2511,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="win">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-31</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PIDILITIND" target="_blank">PIDILITIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2479,10 +2521,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹1628.82</td>
           <td class="num up">₹1692.22</td>
           <td class="num" style="color:var(--gold)">0.5x</td>
-          <td class="num">₹1628.82</td>
-          <td class="pnl-u">+1.1%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
+          <td class="num">₹1562.00</td>
+          <td class="pnl-d">-3.1%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2565,7 +2607,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-31</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:KARURVYSYA" target="_blank">KARURVYSYA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2575,10 +2617,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num up">₹358.46</td>
           <td class="num up">₹368.33</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹333.78</td>
+          <td class="pnl-d">-2.9%</td>
+          <td class="mono-dim">2026-08-01</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -5319,7 +5361,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Saturday, August 01 2026 · 13:51 IST<br>
+      Saturday, August 01 2026 · 22:31 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -5689,8 +5731,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       if (!h || !h.ok) throw new Error(h && h.error ? h.error : 'unreachable');
       live = true;
       var stamp = h.latest_signal_date || '—';
-      bar('live', 'LIVE LEDGER · ' + h.signals + ' signals · latest ' + stamp +
-                  ' · ' + h.open_positions + ' open positions' +
+      // "0 open positions" used to sit directly above a table of 67 rows
+      // badged OPEN. Both numbers were right and meant different things: a
+      // tracked position is one you hold, an OPEN signal is a setup that has
+      // not resolved. Naming them differently is the whole fix.
+      var tracked = (h.tracked_positions !== undefined ? h.tracked_positions
+                                                       : h.open_positions);
+      var vtxt = '';
+      if (h.by_version){
+        var v2 = h.by_version.v2 || 0, v1 = h.by_version.v1 || 0;
+        vtxt = ' · ' + v2 + ' gated (v2) / ' + v1 + ' legacy (v1)';
+      }
+      bar('live', 'LIVE LEDGER · ' + h.signals + ' signals' + vtxt +
+                  ' · latest ' + stamp +
+                  ' · ' + tracked + ' tracked · ' + (h.open_setups || 0) + ' open setups' +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
       start();
     }).catch(function(e){
@@ -5748,9 +5802,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       loadArchive();
       loadStats();
       loadPositions();
+      loadSip();
 
       el('liverefresh').addEventListener('click', function(){
-        loadSignals(); loadStats(); loadPositions();
+        loadSignals(); loadStats(); loadPositions(); loadSip();
       });
 
       // Deep link: /day/2026-07-31 opens straight into that day's archive.
@@ -5902,16 +5957,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<button class="fbtn" data-f="loss">Stop Hit</button>' +
           '<button class="fbtn" data-f="cancelled">Cancelled</button>' +
         '</div>' +
+        // Engine generation. v1 is every signal before the quality gate; it is
+        // kept, not deleted, because it is the 476-trade control group the new
+        // gate has to beat. Default view is v2 only.
+        '<div class="filters rv" style="margin-top:6px">' +
+          '<button class="fbtn on" data-v="v2">Gated (v2)</button>' +
+          '<button class="fbtn" data-v="v1">Legacy (v1)</button>' +
+          '<button class="fbtn" data-v="all">Both</button>' +
+        '</div>' +
         '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
-          '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>' +
-          '<th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
+          '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>' +
+          '<th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
         '</tr></thead><tbody></tbody></table></div>';
       if (empty) empty.replaceWith(host); else sec.appendChild(host);
       reveal(host);
     }
 
+    function activeVersion(){
+      var on = document.querySelector('.fbtn.on[data-v]');
+      return on ? on.dataset.v : 'v2';
+    }
+
     function loadSignals(){
       var qs = archDate ? '?date=' + archDate + '&limit=2000' : '?limit=800';
+      qs += '&version=' + activeVersion();
       api('/signals' + qs).then(function(j){
         if (!j.ok) return;
         allRows = j.signals || [];
@@ -5965,11 +6034,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
+          '<td class="mono-dim">' + gradeCell(a) + '</td>' +
           '<td class="num">' + money(a.entry) + '</td>' +
           '<td class="num dn">' + money(a.sl) + '</td>' +
           '<td class="num up">' + money(a.target1) + '</td>' +
           '<td class="num up">' + money(a.target2) + '</td>' +
           '<td class="num" style="color:var(--gold)">' + (a.rr === null ? '—' : fmt(a.rr, 1) + 'x') + '</td>' +
+          // The win rate this setup needs just to break even, 1/(1+R). Shown
+          // next to R:R because the two are the same fact and only one of them
+          // is obvious.
+          '<td class="num mono-dim">' + (a.breakeven_wr === null || a.breakeven_wr === undefined
+                                          ? '—' : fmt(a.breakeven_wr, 0) + '%') + '</td>' +
           '<td class="num">' + money(a.exit_price) + '</td>' +
           '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
           '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
@@ -5977,8 +6052,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '</tr>';
       }).join('');
 
-      tbody.innerHTML = html || '<tr><td colspan="13" style="padding:26px;text-align:center;color:var(--dim)">' +
-                                'Nothing matches those filters.</td></tr>';
+      tbody.innerHTML = html || '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
+                                (activeVersion() === 'v2'
+                                  ? 'No gated signals yet. The v2 engine publishes only setups that clear ' +
+                                    'their engine’s measured break-even R:R — quiet is the intended ' +
+                                    'state. Switch to Legacy (v1) for the pre-gate history.'
+                                  : 'Nothing matches those filters.') + '</td></tr>';
 
       // Spell out the full span. The table always held every signal, but with
       // the newest first it read as though the history stopped a week back.
@@ -6029,6 +6108,120 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           renderAlerts();
         });
       });
+      // Engine-version buttons re-query the API rather than filtering in the
+      // browser: the 800-row page would otherwise be drawn entirely from
+      // whichever version happened to fill it.
+      document.querySelectorAll('.fbtn[data-v]').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.querySelectorAll('.fbtn[data-v]').forEach(function(x){ x.classList.remove('on'); });
+          b.classList.add('on');
+          loadSignals();
+        });
+      });
+    }
+
+    /* ═══════ SIP buckets ═══════ */
+    function inr(v, d){
+      if (v === null || v === undefined || !isFinite(v)) return '—';
+      return '₹' + Number(v).toLocaleString('en-IN', {
+        minimumFractionDigits: d === undefined ? 0 : d,
+        maximumFractionDigits: d === undefined ? 0 : d });
+    }
+
+    function loadSip(){
+      api('/sip').then(function(j){
+        if (!j || !j.ok) return;
+        var sec = el('sip'); if (!sec) return;
+        sec.style.display = '';
+
+        var p = j.plan || {};
+        el('sipPlan').textContent = '₹' + Number(p.base_monthly || 0).toLocaleString('en-IN') +
+          '/mo base · +' + (p.step_up_pct || 0) + '%/yr · SIP year ' + (p.sip_year || 1);
+        el('sipMonthly').textContent = inr(p.monthly_amount);
+
+        var t = j.totals || {};
+        el('sipBuckets').textContent = t.buckets || 0;
+        el('sipInvested').textContent = inr(t.invested);
+        el('sipValue').textContent = inr(t.value);
+        var pn = el('sipPnl');
+        pn.textContent = (t.pnl === null || t.pnl === undefined) ? '—'
+          : inr(t.pnl) + (t.pnl_pct === null ? '' : ' (' + fmt(t.pnl_pct, 1) + '%)');
+        pn.className = 'v ' + (t.pnl > 0 ? 'up' : t.pnl < 0 ? 'dn' : '');
+
+        // Projection table is pure arithmetic and always renders, even before
+        // the first bucket exists — the plan is worth seeing on day one.
+        var pb = document.querySelector('#sipProj tbody');
+        if (pb) pb.innerHTML = (j.projections || []).map(function(r){
+          return '<tr><td class="mono-dim">' + r.years + '</td>' +
+            '<td class="num">' + inr(r.monthly) + '</td>' +
+            '<td class="num mono-dim">' + inr(r.invested) + '</td>' +
+            '<td class="num">' + inr(r.r10) + '</td>' +
+            '<td class="num up">' + inr(r.r12) + '</td>' +
+            '<td class="num up">' + inr(r.r14) + '</td></tr>';
+        }).join('');
+
+        var body = el('sipBody');
+        if (!j.ready || !(j.buckets || []).length){
+          body.innerHTML = '<div class="empty rv">' + esc(j.message ||
+            'No buckets yet. The first one is proposed on the next monthly run.') +
+            '</div>';
+          reveal(sec); return;
+        }
+
+        body.innerHTML = (j.buckets || []).map(function(b){
+          var hs = (b.holdings || []).map(function(h){
+            var live = h.status === 'held' && h.qty && h.buy_price;
+            var val  = live ? h.qty * (h.last_price || h.buy_price) : null;
+            var cost = live ? h.qty * h.buy_price : null;
+            var pct  = live && cost ? (val / cost - 1) * 100 : null;
+            return '<tr>' +
+              '<td class="mono-dim">' + (h.rank || '') + '</td>' +
+              '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
+                  encodeURIComponent(h.symbol) + '" target="_blank" rel="noopener">' +
+                  esc(h.symbol) + '</a></td>' +
+              '<td class="num">' + fmt(h.score, 1) + '</td>' +
+              '<td class="num">' + inr(h.allocated) + '</td>' +
+              '<td class="num">' + (h.buy_price ? inr(h.buy_price, 2) : '—') + '</td>' +
+              '<td class="num">' + (h.last_price ? inr(h.last_price, 2) : '—') + '</td>' +
+              '<td class="' + (pct > 0 ? 'pnl-u' : pct < 0 ? 'pnl-d' : 'num') + '">' +
+                  (pct === null ? '—' : (pct > 0 ? '+' : '') + fmt(pct, 1) + '%') + '</td>' +
+              '<td><span class="badge badge-' + (h.status === 'held' ? 'open' : 'cancelled') +
+                  '">' + esc(h.status) + '</span></td>' +
+              '<td class="mono-dim" style="font-size:10px">' + esc(h.rationale || '') + '</td>' +
+              '</tr>';
+          }).join('');
+
+          var xir = b.xirr_pct === null || b.xirr_pct === undefined
+            ? '' : ' · XIRR ' + fmt(b.xirr_pct, 1) + '%';
+          var pl  = b.pnl_pct === null || b.pnl_pct === undefined
+            ? '' : ' · ' + (b.pnl > 0 ? '+' : '') + fmt(b.pnl_pct, 1) + '%';
+          return '<div class="rv" style="margin-bottom:26px">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
+                 'flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
+              '<strong style="font-family:var(--mono);font-size:13px;letter-spacing:1px">' +
+                esc(b.bucket) + '</strong>' +
+              '<span class="mono-dim" style="font-size:11px">' +
+                inr(b.monthly_amount) + ' · year ' + b.sip_year + ' · ' +
+                b.held + '/' + b.names + ' held' + pl + xir + '</span>' +
+            '</div>' +
+            '<div class="tw"><table class="t" style="min-width:860px"><thead><tr>' +
+              '<th>#</th><th>Symbol</th><th>Score</th><th>Allocated</th><th>Buy</th>' +
+              '<th>Last</th><th>P&amp;L</th><th>Status</th><th>Why</th>' +
+            '</tr></thead><tbody>' + hs + '</tbody></table></div></div>';
+        }).join('');
+        reveal(sec);
+      }).catch(function(){ /* no /api/sip on a static host — section stays hidden */ });
+    }
+
+    // A/B/UNVERIFIED from signals/quality.py. UNVERIFIED means the setup
+    // cleared every price gate but Yahoo had no fundamentals for it — worth
+    // showing as distinct from a clean pass rather than silently equal to one.
+    function gradeCell(a){
+      if (!a.grade) return '<span style="color:var(--dim)">—</span>';
+      var col = a.grade === 'A' ? 'var(--lime)'
+              : a.grade === 'B' ? 'var(--gold)' : 'var(--dim)';
+      var txt = a.grade === 'UNVERIFIED' ? 'UNVER' : a.grade;
+      return '<span style="color:' + col + ';font-weight:700">' + esc(txt) + '</span>';
     }
 
     /* ═══════ archive ═══════ */
