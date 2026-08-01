@@ -677,7 +677,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Saturday, August 01 2026</span>
-      <span class="live" id="istClock"><i></i>22:41 IST</span>
+      <span class="live" id="istClock"><i></i>22:44 IST</span>
     </div>
   </div>
 </header>
@@ -792,7 +792,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62865</span>
+      <span class="p">$62823</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -840,7 +840,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62865</span>
+      <span class="p">$62823</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -905,7 +905,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="mkt u rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$62865</div>
+      <div class="p">$62823</div>
       <div class="c up">▲ </div>
     </div>
     
@@ -2028,7 +2028,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1926 · 🔴 stretch</h3>
+      <h3>Rating 1869 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Clearance · Advantage · Long</p>
       <div class="q">💡 Calculate 3 moves deep before touching a piece.</div>
       <a href="https://lichess.org/training/6mjNJ" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -5971,7 +5971,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Saturday, August 01 2026 · 22:41 IST<br>
+      Saturday, August 01 2026 · 22:44 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -6655,9 +6655,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<td class="num" style="color:var(--gold)">' + (a.rr === null ? '—' : fmt(a.rr, 1) + 'x') + '</td>' +
           // The win rate this setup needs just to break even, 1/(1+R). Shown
           // next to R:R because the two are the same fact and only one of them
-          // is obvious.
-          '<td class="num mono-dim">' + (a.breakeven_wr === null || a.breakeven_wr === undefined
-                                          ? '—' : fmt(a.breakeven_wr, 0) + '%') + '</td>' +
+          // is obvious. v1 rows predate the stored column, so derive it from
+          // R:R — those are precisely the rows worth seeing it on.
+          '<td class="num mono-dim">' + beWr(a) + '</td>' +
           '<td class="num">' + money(a.exit_price) + '</td>' +
           '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
           '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
@@ -6824,6 +6824,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         }).join('');
         reveal(sec);
       }).catch(function(){ /* no /api/sip on a static host — section stays hidden */ });
+    }
+
+    // Break-even win rate: stored on v2 rows, derived from R:R on older ones.
+    // Red once it exceeds the ~37% this system actually wins, which is the
+    // whole reason the gate exists.
+    function beWr(a){
+      var v = (a.breakeven_wr === null || a.breakeven_wr === undefined)
+            ? (a.rr > 0 ? 100 / (1 + a.rr) : null)
+            : a.breakeven_wr;
+      if (v === null) return '—';
+      return '<span style="color:' + (v > 37 ? 'var(--down)' : 'var(--dim)') + '">' +
+             fmt(v, 0) + '%</span>';
     }
 
     // A/B/UNVERIFIED from signals/quality.py. UNVERIFIED means the setup
