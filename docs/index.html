@@ -677,7 +677,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Saturday, August 01 2026</span>
-      <span class="live" id="istClock"><i></i>22:31 IST</span>
+      <span class="live" id="istClock"><i></i>22:41 IST</span>
     </div>
   </div>
 </header>
@@ -792,7 +792,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62864</span>
+      <span class="p">$62865</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -840,7 +840,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62864</span>
+      <span class="p">$62865</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -905,7 +905,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="mkt u rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$62864</div>
+      <div class="p">$62865</div>
       <div class="c up">▲ </div>
     </div>
     
@@ -1287,16 +1287,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/im-75-and-afraid-to-let-my-retirement-fund-dip-below-1-million-am-i-being-too-aggressive-6b780ef9?mod=mw_rss_topstories" target="_blank">I’m 75 and afraid to let my retirement fund dip below $1 million. Am I being too conservative?</a></h3>
-        <p>Spending down assets can be unsettling after a lifetime of saving.</p>
-        <div class="ts">Aug 01 16:41</div>
+        <h3><a href="https://www.marketwatch.com/story/hsas-can-be-a-great-retirement-tool-if-youre-healthy-or-wealthy-5a3e2991?mod=mw_rss_topstories" target="_blank">Health savings accounts can be a great retirement tool – if you’re healthy or wealthy</a></h3>
+        <p>HSAs can offset healthcare costs in your old age. But most people can’t afford to wait.</p>
+        <div class="ts">Aug 01 17:09</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/its-like-buying-a-lottery-ticket-fidelity-asked-for-my-former-sister-in-laws-death-certificate-does-this-mean-im-due-a-windfall-2ebdcd69?mod=mw_rss_topstories" target="_blank">My ex-husband’s sister died — so why is Fidelity asking me for her death certificate?</a></h3>
-        <p>“Part of me jokes that paying for a death certificate would be like buying a lottery ticket.”</p>
-        <div class="ts">Aug 01 16:30</div>
+        <h3><a href="https://www.marketwatch.com/story/im-75-and-afraid-to-let-my-retirement-fund-dip-below-1-million-am-i-being-too-aggressive-6b780ef9?mod=mw_rss_topstories" target="_blank">I’m 75 and afraid to let my retirement fund dip below $1 million. Am I being too conservative?</a></h3>
+        <p>Spending down assets can be unsettling after a lifetime of saving.</p>
+        <div class="ts">Aug 01 16:41</div>
       </div>
       
     </div>
@@ -2028,7 +2028,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1916 · 🔴 stretch</h3>
+      <h3>Rating 1926 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Clearance · Advantage · Long</p>
       <div class="q">💡 Calculate 3 moves deep before touching a piece.</div>
       <a href="https://lichess.org/training/6mjNJ" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -2135,11 +2135,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button class="fbtn" data-f="cancelled">Cancelled</button>
   </div>
 
+  <!-- Engine generation. ensureAlertTable() returns early when this
+       server-rendered table already exists, so these buttons have to live here
+       too or the live layer has nothing to bind to. Hidden until the API probe
+       confirms a ledger — there is nothing to switch between on a static host. -->
+  <div class="filters rv" id="alertVer" style="margin-top:6px;display:none">
+    <button class="fbtn on" data-v="v2">Gated (v2)</button>
+    <button class="fbtn" data-v="v1">Legacy (v1)</button>
+    <button class="fbtn" data-v="all">Both</button>
+  </div>
+
   <div class="tw rv">
     <table class="t" id="alertTable">
       <thead><tr>
-        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>
-        <th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
+        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>
+        <th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
       </tr></thead>
       <tbody>
       
@@ -2148,11 +2158,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SUNPHARMA" target="_blank">SUNPHARMA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1990.50</td>
           <td class="num dn">₹1956.37</td>
           <td class="num up">₹2007.21</td>
           <td class="num up">₹2036.67</td>
           <td class="num" style="color:var(--gold)">0.5x</td>
+          
+          <td class="num mono-dim">67%</td>
           <td class="num">₹1948.50</td>
           <td class="pnl-d">-2.1%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2164,11 +2177,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HDFCAMC" target="_blank">HDFCAMC</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2615.80</td>
           <td class="num dn">₹2547.32</td>
           <td class="num up">₹2681.53</td>
           <td class="num up">₹2824.21</td>
           <td class="num" style="color:var(--gold)">1.0x</td>
+          
+          <td class="num mono-dim">50%</td>
           <td class="num">₹2515.90</td>
           <td class="pnl-d">-3.8%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2180,11 +2196,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDIGO" target="_blank">INDIGO</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹5171.00</td>
           <td class="num dn">₹5062.13</td>
           <td class="num up">₹5298.38</td>
           <td class="num up">₹5411.81</td>
           <td class="num" style="color:var(--gold)">1.2x</td>
+          
+          <td class="num mono-dim">45%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2196,11 +2215,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DLF" target="_blank">DLF</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹659.30</td>
           <td class="num dn">₹641.47</td>
           <td class="num up">₹680.00</td>
           <td class="num up">₹703.87</td>
           <td class="num" style="color:var(--gold)">1.2x</td>
+          
+          <td class="num mono-dim">45%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2212,11 +2234,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AUBANK" target="_blank">AUBANK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1047.30</td>
           <td class="num dn">₹1019.38</td>
           <td class="num up">₹1083.90</td>
           <td class="num up">₹1117.09</td>
           <td class="num" style="color:var(--gold)">1.3x</td>
+          
+          <td class="num mono-dim">43%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2228,11 +2253,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TECHM" target="_blank">TECHM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1651.30</td>
           <td class="num dn">₹1605.14</td>
           <td class="num up">₹1720.54</td>
           <td class="num up">₹1766.70</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1576.00</td>
           <td class="pnl-d">-4.6%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2244,11 +2272,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:MOTHERSON" target="_blank">MOTHERSON</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹150.80</td>
           <td class="num dn">₹146.75</td>
           <td class="num up">₹156.75</td>
           <td class="num up">₹160.75</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹146.75</td>
           <td class="pnl-d">-2.7%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2260,11 +2291,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:RECLTD" target="_blank">RECLTD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹373.00</td>
           <td class="num dn">₹365.40</td>
           <td class="num up">₹384.27</td>
           <td class="num up">₹391.81</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹353.45</td>
           <td class="pnl-d">-5.2%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2276,11 +2310,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PETRONET" target="_blank">PETRONET</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹280.80</td>
           <td class="num dn">₹274.78</td>
           <td class="num up">₹289.71</td>
           <td class="num up">₹295.68</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹274.78</td>
           <td class="pnl-d">-2.1%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2292,11 +2329,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:M&M" target="_blank">M&M</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3398.50</td>
           <td class="num dn">₹3310.64</td>
           <td class="num up">₹3530.30</td>
           <td class="num up">₹3618.16</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹3183.00</td>
           <td class="pnl-d">-6.3%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2308,11 +2348,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HAL" target="_blank">HAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4646.50</td>
           <td class="num dn">₹4558.86</td>
           <td class="num up">₹4777.96</td>
           <td class="num up">₹4865.61</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹4558.86</td>
           <td class="pnl-d">-1.9%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2324,11 +2367,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:EICHERMOT" target="_blank">EICHERMOT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹7833.50</td>
           <td class="num dn">₹7677.24</td>
           <td class="num up">₹8067.89</td>
           <td class="num up">₹8224.15</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹7600.41</td>
           <td class="pnl-d">-3.0%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2340,11 +2386,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:COFORGE" target="_blank">COFORGE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1721.00</td>
           <td class="num dn">₹1661.40</td>
           <td class="num up">₹1810.41</td>
           <td class="num up">₹1870.01</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1492.08</td>
           <td class="pnl-d">-13.3%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2356,11 +2405,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CIPLA" target="_blank">CIPLA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1473.20</td>
           <td class="num dn">₹1441.58</td>
           <td class="num up">₹1520.63</td>
           <td class="num up">₹1552.25</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1412.60</td>
           <td class="pnl-d">-4.1%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2372,11 +2424,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BAJAJFINSV" target="_blank">BAJAJFINSV</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2029.10</td>
           <td class="num dn">₹1983.74</td>
           <td class="num up">₹2097.14</td>
           <td class="num up">₹2142.51</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1885.00</td>
           <td class="pnl-d">-7.1%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2388,11 +2443,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BALKRISIND" target="_blank">BALKRISIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2473.50</td>
           <td class="num dn">₹2389.33</td>
           <td class="num up">₹2599.76</td>
           <td class="num up">₹2683.93</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹2047.80</td>
           <td class="pnl-d">-17.2%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2404,11 +2462,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BPCL" target="_blank">BPCL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹319.80</td>
           <td class="num dn">₹312.29</td>
           <td class="num up">₹330.93</td>
           <td class="num up">₹338.39</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2420,11 +2481,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AWL" target="_blank">AWL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹189.40</td>
           <td class="num dn">₹184.51</td>
           <td class="num up">₹197.61</td>
           <td class="num up">₹198.90</td>
           <td class="num" style="color:var(--gold)">1.7x</td>
+          
+          <td class="num mono-dim">37%</td>
           <td class="num">₹198.90</td>
           <td class="pnl-u">+5.0%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2436,11 +2500,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ADANIENT" target="_blank">ADANIENT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3009.50</td>
           <td class="num dn">₹2954.61</td>
           <td class="num up">₹3118.02</td>
           <td class="num up">₹3228.78</td>
           <td class="num" style="color:var(--gold)">2.0x</td>
+          
+          <td class="num mono-dim">33%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2452,11 +2519,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TRIDENT" target="_blank">TRIDENT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹24.70</td>
           <td class="num dn">₹24.34</td>
           <td class="num up">₹25.55</td>
           <td class="num up">₹26.73</td>
           <td class="num" style="color:var(--gold)">2.3x</td>
+          
+          <td class="num mono-dim">30%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2468,11 +2538,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:IDFCFIRSTB" target="_blank">IDFCFIRSTB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹84.70</td>
           <td class="num dn">₹83.20</td>
           <td class="num up">₹88.32</td>
           <td class="num up">₹88.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹88.32</td>
           <td class="pnl-u">+4.3%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2484,11 +2557,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TORNTPHARM" target="_blank">TORNTPHARM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹5122.80</td>
           <td class="num dn">₹5033.06</td>
           <td class="num up">₹5210.80</td>
           <td class="num up">₹5343.40</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2500,11 +2576,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TATASTEEL" target="_blank">TATASTEEL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹190.00</td>
           <td class="num dn">₹187.15</td>
           <td class="num up">₹193.15</td>
           <td class="num up">₹197.63</td>
           <td class="num" style="color:var(--gold)">2.7x</td>
+          
+          <td class="num mono-dim">27%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2516,11 +2595,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PIDILITIND" target="_blank">PIDILITIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1611.40</td>
           <td class="num dn">₹1579.07</td>
           <td class="num up">₹1628.82</td>
           <td class="num up">₹1692.22</td>
           <td class="num" style="color:var(--gold)">0.5x</td>
+          
+          <td class="num mono-dim">67%</td>
           <td class="num">₹1562.00</td>
           <td class="pnl-d">-3.1%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2532,11 +2614,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:STARHEALTH" target="_blank">STARHEALTH</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹601.00</td>
           <td class="num dn">₹582.74</td>
           <td class="num up">₹621.78</td>
           <td class="num up">₹646.66</td>
           <td class="num" style="color:var(--gold)">1.1x</td>
+          
+          <td class="num mono-dim">48%</td>
           <td class="num">₹581.05</td>
           <td class="pnl-d">-3.3%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2548,11 +2633,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TORNTPHARM" target="_blank">TORNTPHARM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹5122.80</td>
           <td class="num dn">₹4983.96</td>
           <td class="num up">₹5331.06</td>
           <td class="num up">₹5469.90</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹4983.96</td>
           <td class="pnl-d">-2.7%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2564,11 +2652,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TITAN" target="_blank">TITAN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4875.20</td>
           <td class="num dn">₹4799.89</td>
           <td class="num up">₹4988.17</td>
           <td class="num up">₹5063.48</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹4686.90</td>
           <td class="pnl-d">-3.9%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2580,11 +2671,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ABCAPITAL" target="_blank">ABCAPITAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹404.30</td>
           <td class="num dn">₹393.62</td>
           <td class="num up">₹420.32</td>
           <td class="num up">₹431.00</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹393.62</td>
           <td class="pnl-d">-2.6%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2596,11 +2690,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PVRINOX" target="_blank">PVRINOX</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1132.80</td>
           <td class="num dn">₹1099.94</td>
           <td class="num up">₹1182.21</td>
           <td class="num up">₹1215.12</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1072.30</td>
           <td class="pnl-d">-5.3%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2612,11 +2709,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:KARURVYSYA" target="_blank">KARURVYSYA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹343.60</td>
           <td class="num dn">₹333.78</td>
           <td class="num up">₹358.46</td>
           <td class="num up">₹368.33</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹333.78</td>
           <td class="pnl-d">-2.9%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2628,11 +2728,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GAIL" target="_blank">GAIL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹181.40</td>
           <td class="num dn">₹177.59</td>
           <td class="num up">₹187.23</td>
           <td class="num up">₹191.09</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹170.11</td>
           <td class="pnl-d">-6.2%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2644,11 +2747,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CHOLAFIN" target="_blank">CHOLAFIN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1849.20</td>
           <td class="num dn">₹1791.31</td>
           <td class="num up">₹1936.04</td>
           <td class="num up">₹1993.93</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1744.00</td>
           <td class="pnl-d">-5.7%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2660,11 +2766,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BAJFINANCE" target="_blank">BAJFINANCE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1140.30</td>
           <td class="num dn">₹1110.68</td>
           <td class="num up">₹1184.73</td>
           <td class="num up">₹1214.36</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1026.70</td>
           <td class="pnl-d">-10.0%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2676,11 +2785,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4153.40</td>
           <td class="num dn">₹4078.87</td>
           <td class="num up">₹4171.40</td>
           <td class="num up">₹4293.00</td>
           <td class="num" style="color:var(--gold)">1.87x</td>
+          
+          <td class="num mono-dim">35%</td>
           <td class="num">₹4078.87</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -2692,11 +2804,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NESTLEIND" target="_blank">NESTLEIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · equity_measured</span></td>
           <td class="mono-dim">1D</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1520.70</td>
           <td class="num dn">₹1453.11</td>
           <td class="num up">₹1532.60</td>
           <td class="num up">₹1689.68</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1439.80</td>
           <td class="pnl-d">-5.3%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2708,11 +2823,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NESTLEIND" target="_blank">NESTLEIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1520.70</td>
           <td class="num dn">₹1486.90</td>
           <td class="num up">₹1571.39</td>
           <td class="num up">₹1605.19</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1439.80</td>
           <td class="pnl-d">-5.3%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2724,11 +2842,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:LAURUSLABS" target="_blank">LAURUSLABS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1781.30</td>
           <td class="num dn">₹1736.42</td>
           <td class="num up">₹1848.62</td>
           <td class="num up">₹1893.51</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1560.00</td>
           <td class="pnl-d">-12.4%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2740,11 +2861,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:MARICO" target="_blank">MARICO</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹885.30</td>
           <td class="num dn">₹868.53</td>
           <td class="num up">₹910.58</td>
           <td class="num up">₹927.40</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹847.92</td>
           <td class="pnl-d">-4.2%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2756,11 +2880,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDHOTEL" target="_blank">INDHOTEL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹749.20</td>
           <td class="num dn">₹734.47</td>
           <td class="num up">₹771.43</td>
           <td class="num up">₹786.21</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹718.00</td>
           <td class="pnl-d">-4.2%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2772,11 +2899,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:IPCALAB" target="_blank">IPCALAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1758.80</td>
           <td class="num dn">₹1710.92</td>
           <td class="num up">₹1843.31</td>
           <td class="num up">₹1935.18</td>
           <td class="num" style="color:var(--gold)">1.8x</td>
+          
+          <td class="num mono-dim">36%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2788,11 +2918,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDUSINDBK" target="_blank">INDUSINDBK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1008.20</td>
           <td class="num dn">₹983.27</td>
           <td class="num up">₹1045.59</td>
           <td class="num up">₹1072.46</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2804,11 +2937,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NYKAA" target="_blank">NYKAA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹332.20</td>
           <td class="num dn">₹324.92</td>
           <td class="num up">₹343.13</td>
           <td class="num up">₹350.41</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹323.30</td>
           <td class="pnl-d">-2.7%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2820,11 +2956,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BAJAJ-AUTO" target="_blank">BAJAJ-AUTO</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹11413.00</td>
           <td class="num dn">₹11175.47</td>
           <td class="num up">₹11769.30</td>
           <td class="num up">₹12006.84</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹11175.47</td>
           <td class="pnl-d">-2.1%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2836,11 +2975,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:OFSS" target="_blank">OFSS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹11142.00</td>
           <td class="num dn">₹10699.90</td>
           <td class="num up">₹11919.10</td>
           <td class="num up">₹12247.26</td>
           <td class="num" style="color:var(--gold)">1.8x</td>
+          
+          <td class="num mono-dim">36%</td>
           <td class="num">₹10688.00</td>
           <td class="pnl-d">-4.1%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2852,11 +2994,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:OBEROIRLTY" target="_blank">OBEROIRLTY</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1811.20</td>
           <td class="num dn">₹1773.86</td>
           <td class="num up">₹1899.39</td>
           <td class="num up">₹1974.03</td>
           <td class="num" style="color:var(--gold)">2.4x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2868,11 +3013,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CIPLA" target="_blank">CIPLA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1474.30</td>
           <td class="num dn">₹1329.46</td>
           <td class="num up">₹1691.56</td>
           <td class="num up">₹1836.40</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2884,11 +3032,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GODREJPROP" target="_blank">GODREJPROP</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2156.00</td>
           <td class="num dn">₹2091.03</td>
           <td class="num up">₹2253.45</td>
           <td class="num up">₹2318.42</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹2064.02</td>
           <td class="pnl-d">-4.3%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2900,11 +3051,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DIVISLAB" target="_blank">DIVISLAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹7784.50</td>
           <td class="num dn">₹7619.29</td>
           <td class="num up">₹8032.32</td>
           <td class="num up">₹8197.53</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹7324.79</td>
           <td class="pnl-d">-5.9%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2916,11 +3070,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:LALPATHLAB" target="_blank">LALPATHLAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1882.50</td>
           <td class="num dn">₹1820.89</td>
           <td class="num up">₹1974.92</td>
           <td class="num up">₹2036.53</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1697.48</td>
           <td class="pnl-d">-9.8%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -2932,11 +3089,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GRANULES" target="_blank">GRANULES</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹841.80</td>
           <td class="num dn">₹817.66</td>
           <td class="num up">₹882.30</td>
           <td class="num up">₹905.45</td>
           <td class="num" style="color:var(--gold)">1.7x</td>
+          
+          <td class="num mono-dim">37%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -2948,11 +3108,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TORNTPHARM" target="_blank">TORNTPHARM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4878.50</td>
           <td class="num dn">₹4805.32</td>
           <td class="num up">₹5060.37</td>
           <td class="num up">₹5208.16</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹5060.37</td>
           <td class="pnl-u">+3.7%</td>
           <td class="mono-dim">—</td>
@@ -2964,11 +3127,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.69</td>
           <td class="num dn">₹2.71</td>
           <td class="num up">₹2.67</td>
           <td class="num up">₹2.65</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.71</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -2980,11 +3146,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.65</td>
           <td class="num dn">₹58.20</td>
           <td class="num up">₹56.84</td>
           <td class="num up">₹56.29</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹58.20</td>
           <td class="pnl-d">-0.9%</td>
           <td class="mono-dim">—</td>
@@ -2996,11 +3165,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DIVISLAB" target="_blank">DIVISLAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹7751.50</td>
           <td class="num dn">₹7718.19</td>
           <td class="num up">₹7801.47</td>
           <td class="num up">₹7834.78</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹7718.19</td>
           <td class="pnl-d">-0.4%</td>
           <td class="mono-dim">—</td>
@@ -3012,11 +3184,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:WTIUSD" target="_blank">WTIUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹82.18</td>
           <td class="num dn">₹85.27</td>
           <td class="num up">₹80.12</td>
           <td class="num up">₹78.06</td>
           <td class="num" style="color:var(--gold)">2.0x</td>
+          
+          <td class="num mono-dim">33%</td>
           <td class="num">₹85.27</td>
           <td class="pnl-d">-3.8%</td>
           <td class="mono-dim">—</td>
@@ -3028,11 +3203,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NGAS" target="_blank">NGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.70</td>
           <td class="num dn">₹2.83</td>
           <td class="num up">₹2.53</td>
           <td class="num up">₹2.41</td>
           <td class="num" style="color:var(--gold)">2.2x</td>
+          
+          <td class="num mono-dim">31%</td>
           <td class="num">₹2.92</td>
           <td class="pnl-d">-8.0%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3044,11 +3222,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:WHIRLPOOL" target="_blank">WHIRLPOOL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹785.70</td>
           <td class="num dn">₹746.60</td>
           <td class="num up">₹844.35</td>
           <td class="num up">₹883.45</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3060,11 +3241,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CIPLA" target="_blank">CIPLA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1484.50</td>
           <td class="num dn">₹1395.47</td>
           <td class="num up">₹1618.05</td>
           <td class="num up">₹1707.07</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3076,11 +3260,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INFY" target="_blank">INFY</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1153.10</td>
           <td class="num dn">₹1069.63</td>
           <td class="num up">₹1278.30</td>
           <td class="num up">₹1361.77</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3092,11 +3279,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:COLPAL" target="_blank">COLPAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2187.00</td>
           <td class="num dn">₹2075.05</td>
           <td class="num up">₹2354.92</td>
           <td class="num up">₹2466.87</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2075.05</td>
           <td class="pnl-d">-5.1%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3108,11 +3298,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CIPLA" target="_blank">CIPLA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1485.70</td>
           <td class="num dn">₹1459.24</td>
           <td class="num up">₹1526.84</td>
           <td class="num up">₹1587.08</td>
           <td class="num" style="color:var(--gold)">3.8x</td>
+          
+          <td class="num mono-dim">21%</td>
           <td class="num">₹1459.24</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
@@ -3124,11 +3317,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TATAELXSI" target="_blank">TATAELXSI</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3663.20</td>
           <td class="num dn">₹3597.13</td>
           <td class="num up">₹3714.34</td>
           <td class="num up">₹3847.18</td>
           <td class="num" style="color:var(--gold)">2.8x</td>
+          
+          <td class="num mono-dim">26%</td>
           <td class="num">₹3597.13</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3140,11 +3336,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CHOLAFIN" target="_blank">CHOLAFIN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1805.80</td>
           <td class="num dn">₹1765.67</td>
           <td class="num up">₹1865.99</td>
           <td class="num up">₹1906.11</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1765.67</td>
           <td class="pnl-d">-2.2%</td>
           <td class="mono-dim">—</td>
@@ -3156,11 +3355,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TATAINVEST" target="_blank">TATAINVEST</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹681.00</td>
           <td class="num dn">₹670.56</td>
           <td class="num up">₹694.43</td>
           <td class="num up">₹721.91</td>
           <td class="num" style="color:var(--gold)">3.9x</td>
+          
+          <td class="num mono-dim">20%</td>
           <td class="num">₹670.56</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -3172,11 +3374,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.71</td>
           <td class="num dn">₹2.74</td>
           <td class="num up">₹2.66</td>
           <td class="num up">₹2.63</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.74</td>
           <td class="pnl-d">-1.2%</td>
           <td class="mono-dim">—</td>
@@ -3188,11 +3393,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹79.41</td>
           <td class="num dn">₹81.24</td>
           <td class="num up">₹76.67</td>
           <td class="num up">₹74.84</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹81.24</td>
           <td class="pnl-d">-2.3%</td>
           <td class="mono-dim">—</td>
@@ -3204,11 +3412,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.24</td>
           <td class="num dn">₹57.90</td>
           <td class="num up">₹56.25</td>
           <td class="num up">₹55.59</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹57.90</td>
           <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
@@ -3220,11 +3431,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4023.00</td>
           <td class="num dn">₹4043.76</td>
           <td class="num up">₹3991.85</td>
           <td class="num up">₹3971.09</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4043.76</td>
           <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
@@ -3236,11 +3450,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.75</td>
           <td class="num dn">₹2.77</td>
           <td class="num up">₹2.71</td>
           <td class="num up">₹2.69</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.77</td>
           <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
@@ -3252,11 +3469,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹81.03</td>
           <td class="num dn">₹82.34</td>
           <td class="num up">₹79.06</td>
           <td class="num up">₹77.75</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹82.34</td>
           <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
@@ -3268,11 +3488,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAUUSD" target="_blank">XAUUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4045.00</td>
           <td class="num dn">₹4130.49</td>
           <td class="num up">₹3938.14</td>
           <td class="num up">₹3866.90</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
           <td class="num">₹4130.49</td>
           <td class="pnl-d">-2.1%</td>
           <td class="mono-dim">—</td>
@@ -3284,11 +3507,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAGUSD" target="_blank">XAGUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.49</td>
           <td class="num dn">₹59.69</td>
           <td class="num up">₹54.74</td>
           <td class="num up">₹52.90</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
           <td class="num">₹59.69</td>
           <td class="pnl-d">-3.8%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -3300,11 +3526,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SBICARD" target="_blank">SBICARD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹663.00</td>
           <td class="num dn">₹576.92</td>
           <td class="num up">₹792.12</td>
           <td class="num up">₹878.20</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3316,11 +3545,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TECHM" target="_blank">TECHM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1630.80</td>
           <td class="num dn">₹1576.57</td>
           <td class="num up">₹1712.15</td>
           <td class="num up">₹1766.38</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3332,11 +3564,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TCS" target="_blank">TCS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2411.00</td>
           <td class="num dn">₹2240.17</td>
           <td class="num up">₹2667.24</td>
           <td class="num up">₹2838.07</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3348,11 +3583,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BSOFT" target="_blank">BSOFT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹305.00</td>
           <td class="num dn">₹280.65</td>
           <td class="num up">₹341.53</td>
           <td class="num up">₹365.88</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3364,11 +3602,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:COFORGE" target="_blank">COFORGE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1670.20</td>
           <td class="num dn">₹1458.70</td>
           <td class="num up">₹1987.45</td>
           <td class="num up">₹2198.95</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3380,11 +3621,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SBICARD" target="_blank">SBICARD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹663.30</td>
           <td class="num dn">₹650.75</td>
           <td class="num up">₹685.74</td>
           <td class="num up">₹713.73</td>
           <td class="num" style="color:var(--gold)">4.0x</td>
+          
+          <td class="num mono-dim">20%</td>
           <td class="num">₹645.00</td>
           <td class="pnl-d">-2.8%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3396,11 +3640,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GODREJPROP" target="_blank">GODREJPROP</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2112.00</td>
           <td class="num dn">₹2071.77</td>
           <td class="num up">₹2157.26</td>
           <td class="num up">₹2212.57</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2061.30</td>
           <td class="pnl-d">-2.4%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3412,11 +3659,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CHOLAFIN" target="_blank">CHOLAFIN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1801.60</td>
           <td class="num dn">₹1769.75</td>
           <td class="num up">₹1818.76</td>
           <td class="num up">₹1881.24</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1769.75</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3428,11 +3678,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NAUKRI" target="_blank">NAUKRI</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1238.45</td>
           <td class="num dn">₹1212.80</td>
           <td class="num up">₹1268.49</td>
           <td class="num up">₹1313.58</td>
           <td class="num" style="color:var(--gold)">2.9x</td>
+          
+          <td class="num mono-dim">26%</td>
           <td class="num">₹1212.15</td>
           <td class="pnl-d">-2.1%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3444,11 +3697,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ESCORTS" target="_blank">ESCORTS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3012.70</td>
           <td class="num dn">₹2967.51</td>
           <td class="num up">₹3021.82</td>
           <td class="num up">₹3108.26</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
           <td class="num">₹2967.51</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3460,11 +3716,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.77</td>
           <td class="num dn">₹2.78</td>
           <td class="num up">₹2.74</td>
           <td class="num up">₹2.73</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.73</td>
           <td class="pnl-u">+1.3%</td>
           <td class="mono-dim">—</td>
@@ -3476,11 +3735,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.79</td>
           <td class="num dn">₹2.82</td>
           <td class="num up">₹2.74</td>
           <td class="num up">₹2.71</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.74</td>
           <td class="pnl-u">+1.7%</td>
           <td class="mono-dim">2026-07-30</td>
@@ -3492,11 +3754,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹83.23</td>
           <td class="num dn">₹84.68</td>
           <td class="num up">₹81.05</td>
           <td class="num up">₹79.60</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹84.68</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
@@ -3508,11 +3773,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SUNPHARMA" target="_blank">SUNPHARMA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1971.80</td>
           <td class="num dn">₹1966.13</td>
           <td class="num up">₹1980.30</td>
           <td class="num up">₹1985.97</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1985.97</td>
           <td class="pnl-u">+0.7%</td>
           <td class="mono-dim">—</td>
@@ -3524,11 +3792,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹84.22</td>
           <td class="num dn">₹86.01</td>
           <td class="num up">₹81.54</td>
           <td class="num up">₹79.75</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹79.75</td>
           <td class="pnl-u">+5.3%</td>
           <td class="mono-dim">—</td>
@@ -3540,11 +3811,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.82</td>
           <td class="num dn">₹2.86</td>
           <td class="num up">₹2.75</td>
           <td class="num up">₹2.71</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.75</td>
           <td class="pnl-u">+2.3%</td>
           <td class="mono-dim">2026-07-30</td>
@@ -3556,11 +3830,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AARTIIND" target="_blank">AARTIIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹477.80</td>
           <td class="num dn">₹465.09</td>
           <td class="num up">₹508.35</td>
           <td class="num up">₹508.35</td>
           <td class="num" style="color:var(--gold)">2.4x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹508.35</td>
           <td class="pnl-u">+6.4%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3572,11 +3849,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NHPC" target="_blank">NHPC</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Weekly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹79.40</td>
           <td class="num dn">₹78.18</td>
           <td class="num up">₹82.58</td>
           <td class="num up">₹82.58</td>
           <td class="num" style="color:var(--gold)">2.6x</td>
+          
+          <td class="num mono-dim">28%</td>
           <td class="num">₹78.18</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -3588,11 +3868,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SONACOMS" target="_blank">SONACOMS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹718.00</td>
           <td class="num dn">₹698.04</td>
           <td class="num up">₹735.70</td>
           <td class="num up">₹767.72</td>
           <td class="num" style="color:var(--gold)">0.9x</td>
+          
+          <td class="num mono-dim">53%</td>
           <td class="num">₹684.60</td>
           <td class="pnl-d">-4.7%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3604,11 +3887,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DIVISLAB" target="_blank">DIVISLAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹7248.50</td>
           <td class="num dn">₹7139.77</td>
           <td class="num up">₹7370.91</td>
           <td class="num up">₹7604.13</td>
           <td class="num" style="color:var(--gold)">1.1x</td>
+          
+          <td class="num mono-dim">48%</td>
           <td class="num">₹7604.13</td>
           <td class="pnl-u">+4.9%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3620,11 +3906,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:MANAPPURAM" target="_blank">MANAPPURAM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹353.00</td>
           <td class="num dn">₹342.57</td>
           <td class="num up">₹368.51</td>
           <td class="num up">₹378.89</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹324.00</td>
           <td class="pnl-d">-8.2%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3636,11 +3925,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:LAURUSLABS" target="_blank">LAURUSLABS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1608.00</td>
           <td class="num dn">₹1543.95</td>
           <td class="num up">₹1704.07</td>
           <td class="num up">₹1768.12</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1768.12</td>
           <td class="pnl-u">+10.0%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3652,11 +3944,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:LAURUSLABS" target="_blank">LAURUSLABS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1608.00</td>
           <td class="num dn">₹1583.44</td>
           <td class="num up">₹1647.06</td>
           <td class="num up">₹1694.52</td>
           <td class="num" style="color:var(--gold)">3.5x</td>
+          
+          <td class="num mono-dim">22%</td>
           <td class="num">₹1694.52</td>
           <td class="pnl-u">+5.4%</td>
           <td class="mono-dim">—</td>
@@ -3668,11 +3963,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:LALPATHLAB" target="_blank">LALPATHLAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1759.20</td>
           <td class="num dn">₹1723.27</td>
           <td class="num up">₹1813.10</td>
           <td class="num up">₹1849.03</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1849.03</td>
           <td class="pnl-u">+5.1%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3684,11 +3982,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹90.47</td>
           <td class="num dn">₹88.84</td>
           <td class="num up">₹92.92</td>
           <td class="num up">₹94.55</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹88.84</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
@@ -3700,11 +4001,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.88</td>
           <td class="num dn">₹2.92</td>
           <td class="num up">₹2.83</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.79</td>
           <td class="pnl-u">+3.5%</td>
           <td class="mono-dim">—</td>
@@ -3716,11 +4020,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.94</td>
           <td class="num dn">₹2.91</td>
           <td class="num up">₹2.98</td>
           <td class="num up">₹3.01</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.91</td>
           <td class="pnl-d">-1.0%</td>
           <td class="mono-dim">—</td>
@@ -3732,11 +4039,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PVRINOX" target="_blank">PVRINOX</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1063.95</td>
           <td class="num dn">₹973.20</td>
           <td class="num up">₹1200.07</td>
           <td class="num up">₹1290.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3748,11 +4058,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:FEDERALBNK" target="_blank">FEDERALBNK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹354.30</td>
           <td class="num dn">₹347.04</td>
           <td class="num up">₹365.19</td>
           <td class="num up">₹372.46</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹328.55</td>
           <td class="pnl-d">-7.3%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3764,11 +4077,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:EXIDEIND" target="_blank">EXIDEIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹443.00</td>
           <td class="num dn">₹431.17</td>
           <td class="num up">₹460.74</td>
           <td class="num up">₹472.57</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹431.17</td>
           <td class="pnl-d">-2.7%</td>
           <td class="mono-dim">—</td>
@@ -3780,11 +4096,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:OBEROIRLTY" target="_blank">OBEROIRLTY</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1821.20</td>
           <td class="num dn">₹1772.85</td>
           <td class="num up">₹1897.68</td>
           <td class="num up">₹1974.03</td>
           <td class="num" style="color:var(--gold)">1.6x</td>
+          
+          <td class="num mono-dim">38%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -3796,11 +4115,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PHOENIXLTD" target="_blank">PHOENIXLTD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2010.70</td>
           <td class="num dn">₹1964.75</td>
           <td class="num up">₹2091.99</td>
           <td class="num up">₹2158.95</td>
           <td class="num" style="color:var(--gold)">1.8x</td>
+          
+          <td class="num mono-dim">36%</td>
           <td class="num">₹1964.75</td>
           <td class="pnl-d">-2.3%</td>
           <td class="mono-dim">—</td>
@@ -3812,11 +4134,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDUSINDBK" target="_blank">INDUSINDBK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹996.00</td>
           <td class="num dn">₹977.24</td>
           <td class="num up">₹1036.92</td>
           <td class="num up">₹1072.46</td>
           <td class="num" style="color:var(--gold)">2.2x</td>
+          
+          <td class="num mono-dim">31%</td>
           <td class="num">₹1072.46</td>
           <td class="pnl-u">+7.7%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -3828,11 +4153,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SONACOMS" target="_blank">SONACOMS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹733.10</td>
           <td class="num dn">₹701.92</td>
           <td class="num up">₹779.87</td>
           <td class="num up">₹811.05</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹765.20</td>
           <td class="pnl-u">+4.4%</td>
           <td class="mono-dim">2026-08-01</td>
@@ -3844,11 +4172,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PVRINOX" target="_blank">PVRINOX</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1042.65</td>
           <td class="num dn">₹1021.52</td>
           <td class="num up">₹1074.35</td>
           <td class="num up">₹1095.48</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹1021.52</td>
           <td class="pnl-d">-2.0%</td>
           <td class="mono-dim">—</td>
@@ -3860,11 +4191,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹92.05</td>
           <td class="num dn">₹91.02</td>
           <td class="num up">₹93.59</td>
           <td class="num up">₹94.62</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹91.02</td>
           <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
@@ -3876,11 +4210,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.65</td>
           <td class="num dn">₹58.23</td>
           <td class="num up">₹56.76</td>
           <td class="num up">₹56.18</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹58.23</td>
           <td class="pnl-d">-1.0%</td>
           <td class="mono-dim">—</td>
@@ -3892,11 +4229,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4033.70</td>
           <td class="num dn">₹4052.34</td>
           <td class="num up">₹4005.74</td>
           <td class="num up">₹3987.09</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4052.34</td>
           <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
@@ -3908,11 +4248,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.96</td>
           <td class="num dn">₹2.94</td>
           <td class="num up">₹2.99</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.94</td>
           <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
@@ -3924,11 +4267,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NTPCGREEN" target="_blank">NTPCGREEN</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹98.35</td>
           <td class="num dn">₹90.89</td>
           <td class="num up">₹109.54</td>
           <td class="num up">₹117.00</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹90.89</td>
           <td class="pnl-d">-7.6%</td>
           <td class="mono-dim">—</td>
@@ -3940,11 +4286,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.96</td>
           <td class="num dn">₹2.93</td>
           <td class="num up">₹3.00</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.93</td>
           <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
@@ -3956,11 +4305,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹88.34</td>
           <td class="num dn">₹87.19</td>
           <td class="num up">₹90.07</td>
           <td class="num up">₹91.22</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹87.19</td>
           <td class="pnl-d">-1.3%</td>
           <td class="mono-dim">—</td>
@@ -3972,11 +4324,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹60.10</td>
           <td class="num dn">₹59.31</td>
           <td class="num up">₹61.28</td>
           <td class="num up">₹62.07</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹62.07</td>
           <td class="pnl-u">+3.3%</td>
           <td class="mono-dim">—</td>
@@ -3988,11 +4343,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4131.10</td>
           <td class="num dn">₹4101.41</td>
           <td class="num up">₹4175.63</td>
           <td class="num up">₹4205.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4101.41</td>
           <td class="pnl-d">-0.7%</td>
           <td class="mono-dim">—</td>
@@ -4004,11 +4362,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹86.86</td>
           <td class="num dn">₹85.34</td>
           <td class="num up">₹89.14</td>
           <td class="num up">₹90.66</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹85.34</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
@@ -4020,11 +4381,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.91</td>
           <td class="num dn">₹2.88</td>
           <td class="num up">₹2.96</td>
           <td class="num up">₹2.99</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.88</td>
           <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
@@ -4036,11 +4400,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4156.40</td>
           <td class="num dn">₹4131.55</td>
           <td class="num up">₹4193.67</td>
           <td class="num up">₹4218.52</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4131.55</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -4052,11 +4419,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹86.96</td>
           <td class="num dn">₹85.79</td>
           <td class="num up">₹88.72</td>
           <td class="num up">₹89.89</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹85.79</td>
           <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
@@ -4068,11 +4438,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹59.76</td>
           <td class="num dn">₹59.21</td>
           <td class="num up">₹60.59</td>
           <td class="num up">₹61.14</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹61.14</td>
           <td class="pnl-u">+2.3%</td>
           <td class="mono-dim">—</td>
@@ -4084,11 +4457,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4119.50</td>
           <td class="num dn">₹4100.78</td>
           <td class="num up">₹4147.58</td>
           <td class="num up">₹4166.29</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4100.78</td>
           <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
@@ -4100,11 +4476,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PIIND" target="_blank">PIIND</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2731.30</td>
           <td class="num dn">₹2690.33</td>
           <td class="num up">₹2773.08</td>
           <td class="num up">₹2865.36</td>
           <td class="num" style="color:var(--gold)">3.3x</td>
+          
+          <td class="num mono-dim">23%</td>
           <td class="num">₹2690.33</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -4116,11 +4495,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:JSWSTEEL" target="_blank">JSWSTEEL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1272.50</td>
           <td class="num dn">₹1253.41</td>
           <td class="num up">₹1295.76</td>
           <td class="num up">₹1324.92</td>
           <td class="num" style="color:var(--gold)">2.7x</td>
+          
+          <td class="num mono-dim">27%</td>
           <td class="num">₹1253.41</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -4132,11 +4514,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹85.30</td>
           <td class="num dn">₹84.40</td>
           <td class="num up">₹86.65</td>
           <td class="num up">₹87.55</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹84.40</td>
           <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
@@ -4148,11 +4533,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹60.11</td>
           <td class="num dn">₹59.51</td>
           <td class="num up">₹61.01</td>
           <td class="num up">₹61.61</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹61.61</td>
           <td class="pnl-u">+2.5%</td>
           <td class="mono-dim">—</td>
@@ -4164,11 +4552,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.85</td>
           <td class="num dn">₹2.88</td>
           <td class="num up">₹2.81</td>
           <td class="num up">₹2.77</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.77</td>
           <td class="pnl-u">+2.7%</td>
           <td class="mono-dim">—</td>
@@ -4180,11 +4571,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹59.03</td>
           <td class="num dn">₹58.41</td>
           <td class="num up">₹59.95</td>
           <td class="num up">₹60.57</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹60.57</td>
           <td class="pnl-u">+2.6%</td>
           <td class="mono-dim">—</td>
@@ -4196,11 +4590,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4067.80</td>
           <td class="num dn">₹4044.73</td>
           <td class="num up">₹4102.40</td>
           <td class="num up">₹4125.47</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4125.47</td>
           <td class="pnl-u">+1.4%</td>
           <td class="mono-dim">—</td>
@@ -4212,11 +4609,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAUUSD" target="_blank">XAUUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4063.80</td>
           <td class="num dn">₹4158.08</td>
           <td class="num up">₹3945.96</td>
           <td class="num up">₹3867.39</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
           <td class="num">₹4163.90</td>
           <td class="pnl-d">-2.5%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -4228,11 +4628,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ACC" target="_blank">ACC</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1387.80</td>
           <td class="num dn">₹1306.90</td>
           <td class="num up">₹1509.15</td>
           <td class="num up">₹1590.05</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -4244,11 +4647,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AWL" target="_blank">AWL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹193.93</td>
           <td class="num dn">₹181.15</td>
           <td class="num up">₹213.10</td>
           <td class="num up">₹225.88</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -4260,11 +4666,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:KARURVYSYA" target="_blank">KARURVYSYA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹340.30</td>
           <td class="num dn">₹282.04</td>
           <td class="num up">₹427.69</td>
           <td class="num up">₹485.95</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -4276,11 +4685,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BAJFINANCE" target="_blank">BAJFINANCE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1069.20</td>
           <td class="num dn">₹1045.64</td>
           <td class="num up">₹1104.54</td>
           <td class="num up">₹1128.09</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹1045.64</td>
           <td class="pnl-d">-2.2%</td>
           <td class="mono-dim">—</td>
@@ -4292,11 +4704,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ABCAPITAL" target="_blank">ABCAPITAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹409.00</td>
           <td class="num dn">₹398.75</td>
           <td class="num up">₹424.49</td>
           <td class="num up">₹434.79</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹398.75</td>
           <td class="pnl-d">-2.5%</td>
           <td class="mono-dim">—</td>
@@ -4308,11 +4723,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GRANULES" target="_blank">GRANULES</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹875.70</td>
           <td class="num dn">₹857.99</td>
           <td class="num up">₹905.45</td>
           <td class="num up">₹938.83</td>
           <td class="num" style="color:var(--gold)">1.7x</td>
+          
+          <td class="num mono-dim">37%</td>
           <td class="num">₹857.99</td>
           <td class="pnl-d">-2.0%</td>
           <td class="mono-dim">—</td>
@@ -4324,11 +4742,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ADANIENT" target="_blank">ADANIENT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3182.70</td>
           <td class="num dn">₹3114.09</td>
           <td class="num up">₹3296.19</td>
           <td class="num up">₹3371.85</td>
           <td class="num" style="color:var(--gold)">1.7x</td>
+          
+          <td class="num mono-dim">37%</td>
           <td class="num">₹3114.09</td>
           <td class="pnl-d">-2.2%</td>
           <td class="mono-dim">—</td>
@@ -4340,11 +4761,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:IPCALAB" target="_blank">IPCALAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1799.00</td>
           <td class="num dn">₹1770.53</td>
           <td class="num up">₹1886.40</td>
           <td class="num up">₹1935.18</td>
           <td class="num" style="color:var(--gold)">3.1x</td>
+          
+          <td class="num mono-dim">24%</td>
           <td class="num">₹1770.53</td>
           <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
@@ -4356,11 +4780,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹82.90</td>
           <td class="num dn">₹82.01</td>
           <td class="num up">₹84.24</td>
           <td class="num up">₹85.13</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹85.13</td>
           <td class="pnl-u">+2.7%</td>
           <td class="mono-dim">—</td>
@@ -4372,11 +4799,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NGAS" target="_blank">NGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.88</td>
           <td class="num dn">₹3.02</td>
           <td class="num up">₹2.70</td>
           <td class="num up">₹2.58</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
           <td class="num">₹2.70</td>
           <td class="pnl-u">+6.2%</td>
           <td class="mono-dim">—</td>
@@ -4388,11 +4818,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAGUSD" target="_blank">XAGUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹58.76</td>
           <td class="num dn">₹61.24</td>
           <td class="num up">₹55.64</td>
           <td class="num up">₹53.57</td>
           <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
           <td class="num">—</td>
           <td class="num">—</td>
           <td class="mono-dim">—</td>
@@ -4404,11 +4837,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AMBUJACEM" target="_blank">AMBUJACEM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹441.25</td>
           <td class="num dn">₹434.63</td>
           <td class="num up">₹453.76</td>
           <td class="num up">₹466.72</td>
           <td class="num" style="color:var(--gold)">3.8x</td>
+          
+          <td class="num mono-dim">21%</td>
           <td class="num">₹434.63</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -4420,11 +4856,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ASTRAL" target="_blank">ASTRAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹1405.00</td>
           <td class="num dn">₹1383.24</td>
           <td class="num up">₹1436.32</td>
           <td class="num up">₹1482.94</td>
           <td class="num" style="color:var(--gold)">3.6x</td>
+          
+          <td class="num mono-dim">22%</td>
           <td class="num">₹1436.32</td>
           <td class="pnl-u">+2.2%</td>
           <td class="mono-dim">2026-07-30</td>
@@ -4436,11 +4875,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ULTRACEMCO" target="_blank">ULTRACEMCO</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹11993.00</td>
           <td class="num dn">₹11813.10</td>
           <td class="num up">₹12228.80</td>
           <td class="num up">₹12581.60</td>
           <td class="num" style="color:var(--gold)">3.3x</td>
+          
+          <td class="num mono-dim">23%</td>
           <td class="num">₹11813.10</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -4452,11 +4894,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:KARURVYSYA" target="_blank">KARURVYSYA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹332.70</td>
           <td class="num dn">₹324.41</td>
           <td class="num up">₹345.14</td>
           <td class="num up">₹353.44</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹324.41</td>
           <td class="pnl-d">-2.5%</td>
           <td class="mono-dim">—</td>
@@ -4468,11 +4913,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹58.01</td>
           <td class="num dn">₹57.30</td>
           <td class="num up">₹59.06</td>
           <td class="num up">₹59.76</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹59.76</td>
           <td class="pnl-u">+3.0%</td>
           <td class="mono-dim">—</td>
@@ -4484,11 +4932,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4047.90</td>
           <td class="num dn">₹4026.05</td>
           <td class="num up">₹4080.67</td>
           <td class="num up">₹4102.52</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4102.52</td>
           <td class="pnl-u">+1.4%</td>
           <td class="mono-dim">—</td>
@@ -4500,11 +4951,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.03</td>
           <td class="num dn">₹56.36</td>
           <td class="num up">₹58.02</td>
           <td class="num up">₹58.68</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹58.68</td>
           <td class="pnl-u">+2.9%</td>
           <td class="mono-dim">—</td>
@@ -4516,11 +4970,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.86</td>
           <td class="num dn">₹2.89</td>
           <td class="num up">₹2.82</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.79</td>
           <td class="pnl-u">+2.4%</td>
           <td class="mono-dim">—</td>
@@ -4532,11 +4989,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4010.00</td>
           <td class="num dn">₹4032.67</td>
           <td class="num up">₹3975.99</td>
           <td class="num up">₹3953.32</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4032.67</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -4548,11 +5008,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.87</td>
           <td class="num dn">₹2.89</td>
           <td class="num up">₹2.84</td>
           <td class="num up">₹2.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.82</td>
           <td class="pnl-u">+1.9%</td>
           <td class="mono-dim">—</td>
@@ -4564,11 +5027,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DIVISLAB" target="_blank">DIVISLAB</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹7387.50</td>
           <td class="num dn">₹7364.52</td>
           <td class="num up">₹7421.97</td>
           <td class="num up">₹7444.95</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹7364.52</td>
           <td class="pnl-d">-0.3%</td>
           <td class="mono-dim">—</td>
@@ -4580,11 +5046,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹81.66</td>
           <td class="num dn">₹80.59</td>
           <td class="num up">₹83.26</td>
           <td class="num up">₹84.33</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹84.33</td>
           <td class="pnl-u">+3.3%</td>
           <td class="mono-dim">—</td>
@@ -4596,11 +5065,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.87</td>
           <td class="num dn">₹2.89</td>
           <td class="num up">₹2.84</td>
           <td class="num up">₹2.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.82</td>
           <td class="pnl-u">+1.6%</td>
           <td class="mono-dim">—</td>
@@ -4612,11 +5084,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.86</td>
           <td class="num dn">₹2.90</td>
           <td class="num up">₹2.80</td>
           <td class="num up">₹2.76</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.76</td>
           <td class="pnl-u">+3.5%</td>
           <td class="mono-dim">—</td>
@@ -4628,11 +5103,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹78.97</td>
           <td class="num dn">₹79.70</td>
           <td class="num up">₹77.88</td>
           <td class="num up">₹77.15</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹79.70</td>
           <td class="pnl-d">-0.9%</td>
           <td class="mono-dim">—</td>
@@ -4644,11 +5122,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹78.48</td>
           <td class="num dn">₹79.56</td>
           <td class="num up">₹76.86</td>
           <td class="num up">₹75.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹79.56</td>
           <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
@@ -4660,11 +5141,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹56.00</td>
           <td class="num dn">₹56.82</td>
           <td class="num up">₹54.77</td>
           <td class="num up">₹53.95</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹56.82</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -4676,11 +5160,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.94</td>
           <td class="num dn">₹2.91</td>
           <td class="num up">₹2.99</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.91</td>
           <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
@@ -4692,11 +5179,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3999.20</td>
           <td class="num dn">₹4024.98</td>
           <td class="num up">₹3960.53</td>
           <td class="num up">₹3934.75</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4024.98</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -4708,11 +5198,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.47</td>
           <td class="num dn">₹58.24</td>
           <td class="num up">₹56.30</td>
           <td class="num up">₹55.52</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹58.24</td>
           <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
@@ -4724,11 +5217,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.92</td>
           <td class="num dn">₹2.88</td>
           <td class="num up">₹2.98</td>
           <td class="num up">₹3.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.88</td>
           <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
@@ -4740,11 +5236,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹57.92</td>
           <td class="num dn">₹58.75</td>
           <td class="num up">₹56.66</td>
           <td class="num up">₹55.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹58.75</td>
           <td class="pnl-d">-1.4%</td>
           <td class="mono-dim">—</td>
@@ -4756,11 +5255,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.92</td>
           <td class="num dn">₹2.90</td>
           <td class="num up">₹2.96</td>
           <td class="num up">₹2.98</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.90</td>
           <td class="pnl-d">-0.8%</td>
           <td class="mono-dim">—</td>
@@ -4772,11 +5274,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹80.25</td>
           <td class="num dn">₹79.31</td>
           <td class="num up">₹81.67</td>
           <td class="num up">₹82.61</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹82.61</td>
           <td class="pnl-u">+2.9%</td>
           <td class="mono-dim">—</td>
@@ -4788,11 +5293,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4036.40</td>
           <td class="num dn">₹4054.55</td>
           <td class="num up">₹4009.17</td>
           <td class="num up">₹3991.02</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4054.55</td>
           <td class="pnl-d">-0.5%</td>
           <td class="mono-dim">—</td>
@@ -4804,11 +5312,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹58.76</td>
           <td class="num dn">₹59.37</td>
           <td class="num up">₹57.83</td>
           <td class="num up">₹57.22</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹59.37</td>
           <td class="pnl-d">-1.1%</td>
           <td class="mono-dim">—</td>
@@ -4820,11 +5331,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4040.10</td>
           <td class="num dn">₹4063.11</td>
           <td class="num up">₹4005.58</td>
           <td class="num up">₹3982.56</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4063.11</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -4836,11 +5350,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.87</td>
           <td class="num dn">₹2.90</td>
           <td class="num up">₹2.83</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.79</td>
           <td class="pnl-u">+2.7%</td>
           <td class="mono-dim">—</td>
@@ -4852,11 +5369,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹79.65</td>
           <td class="num dn">₹78.12</td>
           <td class="num up">₹81.94</td>
           <td class="num up">₹83.47</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹83.47</td>
           <td class="pnl-u">+4.8%</td>
           <td class="mono-dim">—</td>
@@ -4868,11 +5388,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HINDUNILVR" target="_blank">HINDUNILVR</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2136.00</td>
           <td class="num dn">₹2132.64</td>
           <td class="num up">₹2146.14</td>
           <td class="num up">₹2152.90</td>
           <td class="num" style="color:var(--gold)">5.0x</td>
+          
+          <td class="num mono-dim">17%</td>
           <td class="num">₹2132.64</td>
           <td class="pnl-d">-0.2%</td>
           <td class="mono-dim">—</td>
@@ -4884,11 +5407,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹77.73</td>
           <td class="num dn">₹76.36</td>
           <td class="num up">₹79.78</td>
           <td class="num up">₹81.15</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹81.15</td>
           <td class="pnl-u">+4.4%</td>
           <td class="mono-dim">—</td>
@@ -4900,11 +5426,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4001.80</td>
           <td class="num dn">₹4030.57</td>
           <td class="num up">₹3958.65</td>
           <td class="num up">₹3929.88</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4030.57</td>
           <td class="pnl-d">-0.7%</td>
           <td class="mono-dim">—</td>
@@ -4916,11 +5445,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.87</td>
           <td class="num dn">₹2.90</td>
           <td class="num up">₹2.82</td>
           <td class="num up">₹2.79</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.79</td>
           <td class="pnl-u">+2.6%</td>
           <td class="mono-dim">—</td>
@@ -4932,11 +5464,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹58.35</td>
           <td class="num dn">₹59.06</td>
           <td class="num up">₹57.29</td>
           <td class="num up">₹56.59</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹59.06</td>
           <td class="pnl-d">-1.2%</td>
           <td class="mono-dim">—</td>
@@ -4948,11 +5483,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4071.00</td>
           <td class="num dn">₹4099.51</td>
           <td class="num up">₹4028.23</td>
           <td class="num up">₹3999.72</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4099.51</td>
           <td class="pnl-d">-0.7%</td>
           <td class="mono-dim">—</td>
@@ -4964,11 +5502,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:ONGC" target="_blank">ONGC</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹248.65</td>
           <td class="num dn">₹247.93</td>
           <td class="num up">₹249.73</td>
           <td class="num up">₹250.46</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹250.46</td>
           <td class="pnl-u">+0.7%</td>
           <td class="mono-dim">—</td>
@@ -4980,11 +5521,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:POWERGRID" target="_blank">POWERGRID</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹285.80</td>
           <td class="num dn">₹285.18</td>
           <td class="num up">₹286.74</td>
           <td class="num up">₹287.36</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹287.36</td>
           <td class="pnl-u">+0.6%</td>
           <td class="mono-dim">—</td>
@@ -4996,11 +5540,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GAIL" target="_blank">GAIL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · intraday</span></td>
           <td class="mono-dim">15m</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹172.82</td>
           <td class="num dn">₹172.32</td>
           <td class="num up">₹173.57</td>
           <td class="num up">₹174.08</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹174.08</td>
           <td class="pnl-u">+0.7%</td>
           <td class="mono-dim">—</td>
@@ -5012,11 +5559,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.90</td>
           <td class="num dn">₹2.95</td>
           <td class="num up">₹2.84</td>
           <td class="num up">₹2.80</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.80</td>
           <td class="pnl-u">+3.6%</td>
           <td class="mono-dim">—</td>
@@ -5028,11 +5578,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.94</td>
           <td class="num dn">₹2.99</td>
           <td class="num up">₹2.87</td>
           <td class="num up">₹2.82</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.82</td>
           <td class="pnl-u">+3.9%</td>
           <td class="mono-dim">—</td>
@@ -5044,11 +5597,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹71.41</td>
           <td class="num dn">₹72.56</td>
           <td class="num up">₹69.68</td>
           <td class="num up">₹68.53</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹72.56</td>
           <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
@@ -5060,11 +5616,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4113.70</td>
           <td class="num dn">₹4090.84</td>
           <td class="num up">₹4148.00</td>
           <td class="num up">₹4170.86</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4090.84</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -5076,11 +5635,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DLF" target="_blank">DLF</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
           <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹685.75</td>
           <td class="num dn">₹613.55</td>
           <td class="num up">₹794.05</td>
           <td class="num up">₹866.25</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹659.80</td>
           <td class="pnl-d">-3.8%</td>
           <td class="mono-dim">2026-07-31</td>
@@ -5092,11 +5654,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:PHOENIXLTD" target="_blank">PHOENIXLTD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2138.90</td>
           <td class="num dn">₹2078.58</td>
           <td class="num up">₹2229.38</td>
           <td class="num up">₹2289.71</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹2078.58</td>
           <td class="pnl-d">-2.8%</td>
           <td class="mono-dim">—</td>
@@ -5108,11 +5673,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GRASIM" target="_blank">GRASIM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹3213.60</td>
           <td class="num dn">₹3157.18</td>
           <td class="num up">₹3298.23</td>
           <td class="num up">₹3354.64</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹3157.18</td>
           <td class="pnl-d">-1.8%</td>
           <td class="mono-dim">—</td>
@@ -5124,11 +5692,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NYKAA" target="_blank">NYKAA</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹330.10</td>
           <td class="num dn">₹322.08</td>
           <td class="num up">₹342.13</td>
           <td class="num up">₹350.16</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹322.08</td>
           <td class="pnl-d">-2.4%</td>
           <td class="mono-dim">—</td>
@@ -5140,11 +5711,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DELHIVERY" target="_blank">DELHIVERY</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹520.30</td>
           <td class="num dn">₹505.58</td>
           <td class="num up">₹542.38</td>
           <td class="num up">₹557.11</td>
           <td class="num" style="color:var(--gold)">1.5x</td>
+          
+          <td class="num mono-dim">40%</td>
           <td class="num">₹505.58</td>
           <td class="pnl-d">-2.8%</td>
           <td class="mono-dim">—</td>
@@ -5156,11 +5730,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SONACOMS" target="_blank">SONACOMS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
           <td class="mono-dim">Monthly</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹668.50</td>
           <td class="num dn">₹653.38</td>
           <td class="num up">₹693.88</td>
           <td class="num up">₹710.77</td>
           <td class="num" style="color:var(--gold)">1.7x</td>
+          
+          <td class="num mono-dim">37%</td>
           <td class="num">₹710.77</td>
           <td class="pnl-u">+6.3%</td>
           <td class="mono-dim">—</td>
@@ -5172,11 +5749,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HAL" target="_blank">HAL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4512.90</td>
           <td class="num dn">₹4445.21</td>
           <td class="num up">₹4619.54</td>
           <td class="num up">₹4737.08</td>
           <td class="num" style="color:var(--gold)">3.3x</td>
+          
+          <td class="num mono-dim">23%</td>
           <td class="num">₹4445.21</td>
           <td class="pnl-d">-1.5%</td>
           <td class="mono-dim">—</td>
@@ -5188,11 +5768,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:RBLBANK" target="_blank">RBLBANK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
           <td class="mono-dim">4H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹380.65</td>
           <td class="num dn">₹373.06</td>
           <td class="num up">₹388.95</td>
           <td class="num up">₹401.70</td>
           <td class="num" style="color:var(--gold)">2.8x</td>
+          
+          <td class="num mono-dim">26%</td>
           <td class="num">₹373.06</td>
           <td class="pnl-d">-2.0%</td>
           <td class="mono-dim">—</td>
@@ -5204,11 +5787,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.95</td>
           <td class="num dn">₹2.99</td>
           <td class="num up">₹2.88</td>
           <td class="num up">₹2.83</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.83</td>
           <td class="pnl-u">+3.9%</td>
           <td class="mono-dim">—</td>
@@ -5220,11 +5806,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹71.51</td>
           <td class="num dn">₹72.66</td>
           <td class="num up">₹69.79</td>
           <td class="num up">₹68.65</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹72.66</td>
           <td class="pnl-d">-1.6%</td>
           <td class="mono-dim">—</td>
@@ -5236,11 +5825,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹60.30</td>
           <td class="num dn">₹59.64</td>
           <td class="num up">₹61.30</td>
           <td class="num up">₹61.96</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹61.96</td>
           <td class="pnl-u">+2.8%</td>
           <td class="mono-dim">—</td>
@@ -5252,11 +5844,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4128.90</td>
           <td class="num dn">₹4106.31</td>
           <td class="num up">₹4162.78</td>
           <td class="num up">₹4185.36</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4106.31</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -5268,11 +5863,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.92</td>
           <td class="num dn">₹2.97</td>
           <td class="num up">₹2.85</td>
           <td class="num up">₹2.81</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.81</td>
           <td class="pnl-u">+3.9%</td>
           <td class="mono-dim">—</td>
@@ -5284,11 +5882,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:CRUDE" target="_blank">CRUDE</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹71.16</td>
           <td class="num dn">₹72.35</td>
           <td class="num up">₹69.38</td>
           <td class="num up">₹68.19</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹72.35</td>
           <td class="pnl-d">-1.7%</td>
           <td class="mono-dim">—</td>
@@ -5300,11 +5901,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹59.83</td>
           <td class="num dn">₹60.58</td>
           <td class="num up">₹58.72</td>
           <td class="num up">₹57.98</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹60.58</td>
           <td class="pnl-d">-1.2%</td>
           <td class="mono-dim">—</td>
@@ -5316,11 +5920,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹4101.00</td>
           <td class="num dn">₹4124.29</td>
           <td class="num up">₹4066.06</td>
           <td class="num up">₹4042.77</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹4124.29</td>
           <td class="pnl-d">-0.6%</td>
           <td class="mono-dim">—</td>
@@ -5332,11 +5939,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
           <td class="mono-dim">1H</td>
+          <td class="mono-dim">—</td>
           <td class="num">₹2.99</td>
           <td class="num dn">₹3.01</td>
           <td class="num up">₹2.95</td>
           <td class="num up">₹2.93</td>
           <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
           <td class="num">₹2.93</td>
           <td class="pnl-u">+2.0%</td>
           <td class="mono-dim">—</td>
@@ -5361,7 +5971,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Saturday, August 01 2026 · 22:31 IST<br>
+      Saturday, August 01 2026 · 22:41 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -5780,6 +6390,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       el('perf').style.display = '';
       el('archWrap').style.display = '';
       el('alertCtl').style.display = 'flex';
+      // Only meaningful with an API behind the page — a static host has one
+      // baked-in snapshot and nothing to switch between.
+      var av = el('alertVer'); if (av) av.style.display = 'flex';
       el('posStatic').style.display = 'none';
       el('posLive').style.display = '';
       el('posHistBtn').style.display = '';
