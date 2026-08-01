@@ -47,7 +47,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/index.html docs/alerts.json
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
+          # Rebase before pushing. This step raced the scanner's data commit and
+          # any hand push, and a losing race failed the whole run — meaning the
+          # page silently did not rebuild that day. Only generated files are
+          # touched here, so a rebase can never conflict with source changes.
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            echo "push attempt $i lost a race — retrying"
+            sleep 5
+          done
+          echo "::error::could not push docs/ after 3 attempts"
+          exit 1
 
       # No deploy step here on purpose. The Vercel project vercel-news is
       # connected to this repository, so the push above is what ships the site.
