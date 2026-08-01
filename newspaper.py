@@ -3438,11 +3438,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button class="fbtn" data-f="cancelled">Cancelled</button>
   </div>
 
+  <!-- Engine generation. ensureAlertTable() returns early when this
+       server-rendered table already exists, so these buttons have to live here
+       too or the live layer has nothing to bind to. Hidden until the API probe
+       confirms a ledger — there is nothing to switch between on a static host. -->
+  <div class="filters rv" id="alertVer" style="margin-top:6px;display:none">
+    <button class="fbtn on" data-v="v2">Gated (v2)</button>
+    <button class="fbtn" data-v="v1">Legacy (v1)</button>
+    <button class="fbtn" data-v="all">Both</button>
+  </div>
+
   <div class="tw rv">
     <table class="t" id="alertTable">
       <thead><tr>
-        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>
-        <th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
+        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>
+        <th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
       </tr></thead>
       <tbody>
       {% for a in alerts %}
@@ -3451,11 +3461,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a></td>
           <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
           <td class="mono-dim">{{ a.timeframe or '—' }}</td>
+          <td class="mono-dim">{{ a.grade or '—' }}</td>
           <td class="num">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
           <td class="num dn">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
           <td class="num up">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
           <td class="num up">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
           <td class="num" style="color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
+          {# Break-even win rate, 1/(1+R) — the same fact as R:R, made visible. #}
+          <td class="num mono-dim">{% if a.rr %}{{ "%.0f"|format(100.0 / (1.0 + a.rr)) }}%{% else %}—{% endif %}</td>
           <td class="num">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
           <td class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else 'num') }}">{{ a.pnl_str }}</td>
           <td class="mono-dim">{{ a.close_date }}</td>
@@ -3901,6 +3914,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       el('perf').style.display = '';
       el('archWrap').style.display = '';
       el('alertCtl').style.display = 'flex';
+      // Only meaningful with an API behind the page — a static host has one
+      // baked-in snapshot and nothing to switch between.
+      var av = el('alertVer'); if (av) av.style.display = 'flex';
       el('posStatic').style.display = 'none';
       el('posLive').style.display = '';
       el('posHistBtn').style.display = '';
