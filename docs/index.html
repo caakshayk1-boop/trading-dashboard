@@ -49,7 +49,13 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 0 12px var(--lime);transition:width .1s linear;}
 
 /* ═══════════════════ HEADER ═══════════════════ */
-.topbar{position:sticky;top:0;z-index:300;background:rgba(8,9,10,.82);
+/* One sticky container for the whole header. Previously .topbar, .nav and
+   .livebar were each position:sticky — .nav and .livebar both at top:60px, so
+   once scrolled they landed on the same 60 pixels and the status bar covered
+   the section menu. Sticking the wrapper instead means the three stack in
+   normal flow and no magic offsets can drift apart. */
+.headstack{position:sticky;top:0;z-index:300}
+.topbar{background:rgba(8,9,10,.82);
   backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
   border-bottom:1px solid var(--line);}
 .topbar-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);height:60px;
@@ -66,7 +72,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:720px){.stamp span.d{display:none}}
 
 /* ═══════════════════ NAV ═══════════════════ */
-.nav{position:sticky;top:60px;z-index:290;background:rgba(8,9,10,.9);
+.nav{background:rgba(8,9,10,.9);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
 .nav-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);display:flex;gap:2px;
   overflow-x:auto;scrollbar-width:none;}
@@ -458,7 +464,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    Everything below drives the /api-backed sections. On a static host the
    API probe fails and these components stay hidden, leaving the daily
    snapshot exactly as it renders today. */
-.livebar{position:sticky;top:60px;z-index:290;display:none;align-items:center;gap:10px;
+.livebar{display:none;align-items:center;gap:10px;
   padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
   border-bottom:1px solid var(--line);background:rgba(8,9,10,.9);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
@@ -522,6 +528,64 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .keybox input{font-family:var(--mono);font-size:12px;color:var(--text);background:var(--bg2);
   border:1px solid var(--line2);border-radius:9px;padding:8px 11px;flex:1 1 180px}
 
+/* ═══════════════════ LEARNING TRACKS ═══════════════════ */
+.lrn-head{display:flex;align-items:center;gap:12px;margin:26px 0 14px}
+.lrn-head:first-of-type{margin-top:0}
+.lrn-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--lime);white-space:nowrap}
+.lrn-head::after{content:'';flex:1;height:1px;background:var(--line)}
+
+.qa-grid{display:grid;gap:11px}
+.qa{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  transition:border-color .3s var(--ease)}
+.qa[open]{border-color:var(--lime-line)}
+.qa summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;justify-content:space-between;
+  align-items:flex-start;gap:16px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:'+';font-family:var(--mono);font-size:17px;color:var(--dim);flex:none;line-height:1.3}
+.qa[open] summary::after{content:'−';color:var(--lime)}
+.qa:hover summary::after{color:var(--lime)}
+.qa-q{font-size:14.5px;font-weight:600;line-height:1.5;letter-spacing:-.15px;flex:1}
+.qa-who{font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.5px;
+  text-align:right;flex:none;max-width:180px;line-height:1.5}
+.qa-a{padding:0 20px 20px;font-size:13.5px;line-height:1.72;color:var(--muted);
+  border-top:1px solid var(--line);padding-top:16px;margin:0 20px 20px;padding-left:0;padding-right:0}
+
+.lrn-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;
+  transition:border-color .3s var(--ease)}
+.lrn-card:hover{border-color:var(--line2)}
+.lrn-card.jain{border-left:3px solid var(--gold)}
+.lrn-card.budd{border-left:3px solid var(--violet)}
+.lrn-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:9px}
+.lrn-word{font-size:23px;font-weight:700;letter-spacing:-.5px;color:var(--lime);line-height:1.25}
+.lrn-word.sm{font-size:18px;color:var(--text)}
+.lrn-word .tr{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0}
+.lrn-mean{font-size:13.5px;color:var(--text);margin-top:6px}
+.lrn-ex{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);display:grid;gap:5px}
+.lrn-ex .es{font-size:13.5px;font-style:italic;color:var(--text)}
+.lrn-ex .en{font-size:12px;color:var(--dim)}
+.lrn-do{font-size:13.5px;line-height:1.65;color:var(--text);margin-top:10px}
+.lrn-why{font-size:12.5px;line-height:1.68;color:var(--muted);margin-top:13px;padding-top:12px;
+  border-top:1px solid var(--line)}
+.lrn-why b{color:var(--lime);font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
+  text-transform:uppercase;margin-right:7px}
+
+.drill{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--lime);
+  border-radius:16px;padding:22px}
+.drill-t{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.drill-d{font-size:13.5px;line-height:1.7;color:var(--text);margin-top:9px}
+.drill-w{font-size:12.5px;line-height:1.65;color:var(--muted);margin-top:13px;padding-top:12px;
+  border-top:1px solid var(--line)}
+
+@media(max-width:640px){
+  .qa summary{padding:15px 16px;gap:10px}
+  .qa-q{font-size:13.5px}
+  .qa-who{display:none}
+  .qa-a{margin:0 16px 16px;font-size:13px}
+  .lrn-word{font-size:20px}
+}
+
 /* ═══════════════════ MIND GYM ═══════════════════ */
 .gym-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
 .gym-tab{display:flex;align-items:center;gap:7px;padding:9px 15px;font-size:11.5px;font-weight:600;
@@ -581,7 +645,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 /* Mobile: tables become the pain point on a phone, so give them a real scroll
    affordance and stop the control bars from stacking into a wall. */
 @media(max-width:640px){
-  .livebar{top:56px;font-size:10px;padding:7px 14px}
+  .livebar{font-size:10px;padding:7px 14px}
   .livebar .msg{white-space:normal}
   .perf-cell .v{font-size:21px}
   .ctlbar input[type=search]{flex:1 1 100%}
@@ -607,12 +671,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 
 <!-- ══════════ HEADER ══════════ -->
+<div class="headstack">
 <header class="topbar">
   <div class="topbar-in">
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Saturday, August 01 2026</span>
-      <span class="live" id="istClock"><i></i>09:32 IST</span>
+      <span class="live" id="istClock"><i></i>10:52 IST</span>
     </div>
   </div>
 </header>
@@ -622,15 +687,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#markets"><i>01</i>Markets</a>
     <a href="#picks"><i>02</i>Trade Ideas</a>
     <a href="#tracker"><i>03</i>Portfolio</a>
-    <a href="#world"><i>04</i>World</a>
-    <a href="#desk"><i>05</i>The Desk</a>
-    <a href="#mind"><i>06</i>The Mind</a>
-    <a href="#way"><i>07</i>The Way</a>
-    <a href="#review"><i>08</i>The Review</a>
-    <a href="#chess"><i>09</i>Chess</a>
-    <a href="#gym"><i>10</i>Mind Gym</a>
-    <a href="#perf"><i>11</i>Performance</a>
-    <a href="#alerts"><i>12</i>Signal Log</a>
+    <a href="#perf"><i>04</i>Performance</a>
+    <a href="#interview"><i>05</i>Interview</a>
+    <a href="#language"><i>06</i>Language</a>
+    <a href="#father"><i>07</i>Father</a>
+    <a href="#wisdom"><i>08</i>Wisdom</a>
+    <a href="#gym"><i>09</i>Mind Gym</a>
+    <a href="#alerts"><i>10</i>Signal Log</a>
+    <a href="#world"><i>11</i>World</a>
+    <a href="#desk"><i>12</i>The Desk</a>
+    <a href="#mind"><i>13</i>The Mind</a>
+    <a href="#way"><i>14</i>The Way</a>
+    <a href="#review"><i>15</i>The Review</a>
+    <a href="#chess"><i>16</i>Chess</a>
   </div>
 </nav>
 
@@ -640,6 +709,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <span class="msg" id="livemsg">Checking live ledger…</span>
   <button type="button" id="liverefresh">Refresh</button>
 </div>
+</div><!-- /.headstack -->
 
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
@@ -721,7 +791,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62942</span>
+      <span class="p">$63012</span>
       <span class="c dn">▼ </span>
     </div>
     
@@ -769,7 +839,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62942</span>
+      <span class="p">$63012</span>
       <span class="c dn">▼ </span>
     </div>
     
@@ -834,7 +904,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="mkt d rv" style="--d:0.24s">
       <div class="n">BTC</div>
-      <div class="p">$62942</div>
+      <div class="p">$63012</div>
       <div class="c dn">▼ </div>
     </div>
     
@@ -911,6 +981,166 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <button type="submit" class="btn">Add to book</button>
     </form>
+  </div>
+</section>
+
+<!-- ══════════ 05 INTERVIEW PREP ══════════ -->
+<section class="sec" id="interview">
+  <div class="shead rv">
+    <div>
+      <span class="snum">05 / THE SEAT</span>
+      <h2 class="stitle">CFO in three years.</h2>
+    </div>
+    <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
+      and the controller-to-CFO jump. The non-technical ones decide the offer more often than the
+      technical ones do.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Technical</span></div>
+  <div class="qa-grid rv">
+    
+    <details class="qa">
+      <summary><span class="qa-q">How would you decide between renting and buying a distribution centre?</span><span class="qa-who">Amazon · Lulu · DP World</span></summary>
+      <div class="qa-a">Compare NPV of both over the same horizon at the same discount rate. Rent is an operating commitment — now on balance sheet under IFRS 16 anyway — with flexibility to exit. Buying ties up capital and carries residual value risk, but fixes occupancy cost and creates an asset. The real question is strategic, not arithmetic: how confident are you in the network design over 15 years. If the answer is 'not very', pay the premium for optionality.</div>
+    </details>
+    
+    <details class="qa">
+      <summary><span class="qa-q">UAE corporate tax is 9%. How does that change your group structure thinking?</span><span class="qa-who">PwC Gulf · Chalhoub · Emaar</span></summary>
+      <div class="qa-a">It ends the era of treating the UAE as a zero-tax base. Key points: 9% applies above AED 375K taxable income; qualifying free zone persons can still get 0% on qualifying income but the conditions are strict and substance-tested; transfer pricing documentation is now mandatory and OECD-aligned. Practically: intercompany charges between a UAE HQ and operating markets need defensible benchmarking, and management fee structures designed purely for tax will be challenged. Model the effective rate, not the headline rate.</div>
+    </details>
+    
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Everything else</span></div>
+  <div class="qa-grid rv">
+    
+    <details class="qa">
+      <summary><span class="qa-q">Why should we hire you over a candidate with Big Four and listed-company experience?</span><span class="qa-who">Every shortlist</span></summary>
+      <div class="qa-a">Do not disparage the alternative. Frame the trade: audit teaches you to verify what happened; operating finance teaches you to change what happens next. Then be specific about what you own that they do not — a live multi-country P&L, an ERP implementation you led rather than advised on, and store-level decisions you made and were held to. End with the honest gap and how you would close it. Confidence with a named weakness beats confidence alone.</div>
+    </details>
+    
+    <details class="qa">
+      <summary><span class="qa-q">How do you influence people who do not report to you?</span><span class="qa-who">Landmark Group · Alshaya · Carrefour</span></summary>
+      <div class="qa-a">Retail finance is almost entirely this — Buying, Operations and Retail Heads do not report to you. The answer is currency: work out what each function is measured on and frame your ask in their terms. A buyer cares about sell-through and margin, not about your working capital target — so bring them the SKU-level analysis showing which lines tie up cash without turning. Give people the analysis they cannot build themselves, and influence follows. Name a specific instance and the outcome.</div>
+    </details>
+    
+  </div>
+</section>
+
+<!-- ══════════ 06 LANGUAGE ══════════ -->
+<section class="sec" id="language">
+  <div class="shead rv">
+    <div>
+      <span class="snum">06 / LANGUAGE</span>
+      <h2 class="stitle">Two tongues, sharper.</h2>
+    </div>
+    <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
+      one delivery drill. Say them out loud — reading them does nothing.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">🇪🇸 Español</span></div>
+  <div class="two rv">
+    
+    <div class="lrn-card">
+      <div class="lrn-tag">Business</div>
+      <div class="lrn-word">estoy de acuerdo</div>
+      <div class="lrn-mean">I agree</div>
+      <div class="lrn-ex"><span class="es">Estoy de acuerdo con tu análisis.</span><span class="en">I agree with your analysis.</span></div>
+    </div>
+    
+    <div class="lrn-card">
+      <div class="lrn-tag">Business</div>
+      <div class="lrn-word">invertir</div>
+      <div class="lrn-mean">to invest</div>
+      <div class="lrn-ex"><span class="es">Prefiero invertir a largo plazo.</span><span class="en">I prefer to invest for the long term.</span></div>
+    </div>
+    
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Vocabulary</span></div>
+  <div class="two rv">
+    
+    <div class="lrn-card">
+      <div class="lrn-tag">ik-STRAP-uh-layt</div>
+      <div class="lrn-word">Extrapolate</div>
+      <div class="lrn-mean">To extend a trend beyond known data.</div>
+      <div class="lrn-ex"><span class="es">Do not extrapolate a festive quarter across the year.</span><span class="en">Naming the error is often the fastest way to kill a bad forecast.</span></div>
+    </div>
+    
+    <div class="lrn-card">
+      <div class="lrn-tag">TEN-yoo-uhs</div>
+      <div class="lrn-word">Tenuous</div>
+      <div class="lrn-mean">Weak; barely holding together.</div>
+      <div class="lrn-ex"><span class="es">The link between the campaign and the sales lift is tenuous.</span><span class="en">Precise way to challenge a claim without calling it wrong.</span></div>
+    </div>
+    
+  </div>
+
+  
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Speaking drill</span></div>
+  <div class="drill rv">
+    <div class="drill-t">Explain it to a seven-year-old</div>
+    <div class="drill-d">Explain IFRS 16 or working capital with no jargon, in under 40 seconds, out loud.</div>
+    <div class="drill-w">The constraint exposes whether you understand it or have memorised it.</div>
+  </div>
+  
+</section>
+
+<!-- ══════════ 07 FATHERHOOD ══════════ -->
+<section class="sec" id="father">
+  <div class="shead rv">
+    <div>
+      <span class="snum">07 / THE FATHER</span>
+      <h2 class="stitle">Seven months old.</h2>
+    </div>
+    <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
+      is presence rather than technique — but the technique is not nothing.</p>
+  </div>
+  <div class="two rv">
+    
+    <div class="lrn-card tall">
+      <div class="lrn-tag">Today</div>
+      <div class="lrn-word sm">Offer food she can hold</div>
+      <div class="lrn-do">Soft strips she can grip herself — steamed carrot, banana, well-cooked pasta. Accept the mess.</div>
+      <div class="lrn-why"><b>Why</b> Self-feeding at 7 months develops the pincer grip and, more importantly, lets her control intake. Children who regulate their own portions early are less likely to over-eat later.</div>
+    </div>
+    
+    <div class="lrn-card tall">
+      <div class="lrn-tag">Today</div>
+      <div class="lrn-word sm">Protect the sleep routine</div>
+      <div class="lrn-do">Same order, same lighting, same time — bath, feed, book, bed. Do it yourself at least twice a week.</div>
+      <div class="lrn-why"><b>Why</b> Consistency of sequence matters more than the exact timing. Fathers who own bedtime regularly build a distinct attachment relationship rather than a substitute one.</div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- ══════════ 08 WISDOM ══════════ -->
+<section class="sec" id="wisdom">
+  <div class="shead rv">
+    <div>
+      <span class="snum">08 / HOW TO LIVE</span>
+      <h2 class="stitle">Jainism and Buddhism.</h2>
+    </div>
+    <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
+      the thing to do with it today.</p>
+  </div>
+  <div class="two rv">
+    
+    <div class="lrn-card tall jain">
+      <div class="lrn-tag">Jainism</div>
+      <div class="lrn-word sm">Samyak Darshana <span class="tr">· Right perception</span></div>
+      <div class="lrn-do">Seeing things as they are, before preference distorts them. The first of the three jewels, and deliberately placed before right conduct.</div>
+      <div class="lrn-why"><b>Today</b> Separate the number from what you want the number to be. Write the actual result before writing the explanation — the order changes the explanation.</div>
+    </div>
+    
+    <div class="lrn-card tall budd">
+      <div class="lrn-tag">Buddhism</div>
+      <div class="lrn-word sm">Appamada <span class="tr">· Diligence, heedfulness</span></div>
+      <div class="lrn-do">The Buddha's last words were reportedly about this — striving on with diligence. It is the opposite of drifting.</div>
+      <div class="lrn-why"><b>Today</b> Diligence is not intensity, it is not letting things run on autopilot. Audit one recurring commitment this week and ask whether you would start it today.</div>
+    </div>
+    
   </div>
 </section>
 
@@ -993,38 +1223,38 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/crypto/articles/want-trade-spacex-apple-1inch-194500911.html" target="_blank">Want to trade SpaceX for Apple? 1inch says skip the dollars</a></h3>
+        <p></p>
+        <div class="ts">Jul 31 19:45</div>
+      </div>
+      
+      <div class="ncard rv" style="--d:0.25s">
         <span class="s">MarketWatch</span>
         <h3><a href="https://www.marketwatch.com/story/its-like-buying-a-lottery-ticket-fidelity-asked-for-my-former-sister-in-laws-death-certificate-does-this-mean-im-due-a-windfall-2ebdcd69?mod=mw_rss_topstories" target="_blank">My ex-husband’s sister died — so why is Fidelity asking me for her death certificate?</a></h3>
         <p>“Part of me jokes that paying for a death certificate would be like buying a lottery ticket.”</p>
         <div class="ts">Aug 01 00:45</div>
       </div>
       
-      <div class="ncard rv" style="--d:0.25s">
+      <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">MarketWatch</span>
         <h3><a href="https://www.marketwatch.com/story/if-social-securitys-funding-crisis-is-the-elephant-in-the-room-this-is-the-mouse-everyone-has-overlooked-you-have-been-warned-b95c450d?mod=mw_rss_topstories" target="_blank">If Social Security’s funding crisis is the elephant in the room, this is the mouse everyone has overlooked. You have bee</a></h3>
         <p>“Delaying Social Security until 70 results in an increased monthly payment — and that comes with proportionally higher cost-of-living adjustments.”</p>
         <div class="ts">Aug 01 00:25</div>
       </div>
       
-      <div class="ncard rv" style="--d:0.30000000000000004s">
+      <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">MarketWatch</span>
         <h3><a href="https://www.marketwatch.com/story/july-ends-on-a-hopeful-note-for-stocks-after-momentum-trade-sees-biggest-wipeout-since-2000-4b90b6b2?mod=mw_rss_topstories" target="_blank">July ends on a hopeful note for stocks after momentum trade sees biggest wipeout since 2000</a></h3>
         <p>Investors are seeing more signs that the bottom is near, if not already in.</p>
         <div class="ts">Jul 31 22:21</div>
       </div>
       
-      <div class="ncard rv" style="--d:0.35000000000000003s">
+      <div class="ncard rv" style="--d:0.4s">
         <span class="s">MarketWatch</span>
         <h3><a href="https://www.marketwatch.com/story/situational-awareness-vs-long-term-capital-management-a-side-by-side-comparison-e3e047b7?mod=mw_rss_topstories" target="_blank">Situational Awareness vs. Long-Term Capital Management: A side-by-side comparison</a></h3>
         <p>There are more similarities between the two hedge-fund blowups than one might expect.</p>
         <div class="ts">Jul 31 22:09</div>
-      </div>
-      
-      <div class="ncard rv" style="--d:0.4s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/the-s-p-500-is-making-a-change-by-adding-this-little-known-industrial-stock-da648bd1?mod=mw_rss_topstories" target="_blank">The S&P 500 is making a change by adding this little-known industrial stock</a></h3>
-        <p>Ferguson Enterprises’ stock was rallying more than 8% after news the Newport News, Va., company will be joining the S&amp;P 500 index, edging out bett</p>
-        <div class="ts">Jul 31 21:53</div>
       </div>
       
     </div>
@@ -1756,7 +1986,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1884 · 🔴 stretch</h3>
+      <h3>Rating 1777 · 🟡 at level</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Exposed King · Middlegame · Opera Mate</p>
       <div class="q">💡 Three-move combination. The first move must be forcing.</div>
       <a href="https://lichess.org/training/as2Ko" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -1828,10 +2058,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <!-- Archive strip: one tile per trading day, newest first. Live only. -->
   <div id="archWrap" style="display:none">
     <div class="ctlbar rv" style="margin-bottom:8px">
-      <span class="ghost" style="margin-left:0">ARCHIVE — tap a day to load it</span>
-      <button type="button" class="fbtn" id="archAll">Show all days</button>
+      <span class="ghost" style="margin-left:0" id="archSpan">ARCHIVE</span>
+      <button type="button" class="fbtn on" id="archAll">Show all days</button>
+      <span id="archMonths"></span>
     </div>
     <div class="arch rv" id="archStrip"></div>
+    <div class="ghost" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin:-4px 0 4px">
+      ← scroll sideways for the full history →
+    </div>
   </div>
 
   <div class="ctlbar rv" id="alertCtl" style="display:none">
@@ -5085,7 +5319,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Saturday, August 01 2026 · 09:32 IST<br>
+      Saturday, August 01 2026 · 10:52 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -5746,7 +5980,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       tbody.innerHTML = html || '<tr><td colspan="13" style="padding:26px;text-align:center;color:var(--dim)">' +
                                 'Nothing matches those filters.</td></tr>';
 
-      el('alertCount').textContent = rows.length + ' of ' + allRows.length + ' shown' +
+      // Spell out the full span. The table always held every signal, but with
+      // the newest first it read as though the history stopped a week back.
+      var span = '';
+      if (allRows.length){
+        var ds = allRows.map(function(r){ return r.date; }).filter(Boolean).sort();
+        var uniq = ds.filter(function(v, i){ return ds.indexOf(v) === i; });
+        span = ' · ' + ds[0] + ' → ' + ds[ds.length - 1] + ' · ' + uniq.length + ' trading days';
+      }
+      el('alertCount').textContent = rows.length + ' of ' + allRows.length + ' shown' + span +
         (archDate ? ' · archive ' + archDate : '');
 
       // KPI row reflects what is actually on screen.
@@ -5791,7 +6033,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     /* ═══════ archive ═══════ */
     function loadArchive(){
-      api('/archive?limit=120').then(function(j){
+      api('/archive?limit=1000').then(function(j){
         if (!j.ok) return;
         var strip = el('archStrip');
         strip.innerHTML = (j.days || []).map(function(d){
@@ -5803,6 +6045,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                  '<div class="d">' + d.date.slice(5) + '</div>' +
                  '<div class="n">' + d.signals + '</div>' + rTxt + '</div>';
         }).join('');
+        // Only ~16 chips fit on a desktop screen and ~5 on a phone, which made
+        // a 57-day archive look like one week. Say the span out loud and offer
+        // month jumps so the depth is discoverable without horizontal scrolling.
+        var days = j.days || [];
+        if (days.length){
+          var span = el('archSpan');
+          if (span) span.textContent = 'ARCHIVE — ' + days.length + ' trading days, ' +
+            days[days.length - 1].date + ' → ' + days[0].date + ' · tap a day';
+          var months = [];
+          days.forEach(function(d){
+            var m = d.date.slice(0, 7);
+            if (months.indexOf(m) === -1) months.push(m);
+          });
+          var mEl = el('archMonths');
+          if (mEl) {
+            mEl.innerHTML = months.map(function(m){
+              return '<button type="button" class="fbtn" data-m="' + m + '">' + m + '</button>';
+            }).join('');
+            mEl.querySelectorAll('button').forEach(function(b){
+              b.addEventListener('click', function(){
+                var first = strip.querySelector('.arch-day[data-date^="' + b.dataset.m + '"]');
+                if (first) strip.scrollLeft = first.offsetLeft - 12;
+              });
+            });
+          }
+        }
         reveal(el('archWrap'));
         strip.querySelectorAll('.arch-day').forEach(function(n){
           n.addEventListener('click', function(){ selectDay(n.dataset.date); });
