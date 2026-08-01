@@ -28,6 +28,24 @@ def _now_ist() -> str:
 
 log = logging.getLogger(__name__)
 
+# Which signal engine produced a row. Bumped when the gating rules change in a
+# way that makes old and new signals non-comparable, so performance can be
+# measured per generation instead of blended into one misleading average.
+#
+#   v1 — everything up to 2026-08-02. No R:R floor on the breakout scan (it
+#        published a 0.5R setup), R:R measured against T2 in the 4H scan and
+#        T1 elsewhere, no liquidity or fundamental gates, and scan_all()'s
+#        ADX check read a key that did not exist so the swing engine emitted
+#        nothing for its entire life.
+#   v2 — per-engine R:R floors derived from each engine's own measured win
+#        rate (signals/expectancy.py), plus liquidity, PAT, D/E, growth and
+#        earnings-blackout gates (signals/quality.py).
+#
+# v1 rows are NEVER deleted. They are 476 closed trades — the only evidence
+# base this system has, and the control group the new gate is measured against.
+ENGINE_VERSION = "v2"
+
+
 def _conn():
     return _db.connect()
 
@@ -194,6 +212,13 @@ def init_db(force: bool = False):
             # only by mark_alerts_sent() after Telegram returns OK, and the
             # failure reason lands here. sent_at IS NULL now means "never sent".
             ("send_error",          "ALTER TABLE all_signals ADD COLUMN send_error TEXT"),
+            # SQLite backfills existing rows with the DEFAULT on ADD COLUMN, so
+            # this tags all 575 pre-existing signals as v1 in one statement
+            # without touching a single row of data.
+            ("engine_version",      "ALTER TABLE all_signals ADD COLUMN engine_version TEXT DEFAULT 'v1'"),
+            ("grade",               "ALTER TABLE all_signals ADD COLUMN grade TEXT"),
+            ("breakeven_wr",        "ALTER TABLE all_signals ADD COLUMN breakeven_wr REAL"),
+            ("turnover_cr",         "ALTER TABLE all_signals ADD COLUMN turnover_cr REAL"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:
@@ -376,10 +401,10 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
     with _conn() as c:
         c.execute("""INSERT INTO all_signals
             (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
-             rr,score,status,sent_at,metadata)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?)""",
+             rr,score,status,sent_at,metadata,engine_version)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?)""",
             (today, signal_type, symbol, action, timeframe, entry, sl, t1, t2, t3,
-             rr, score, json.dumps(metadata or {})))
+             rr, score, json.dumps(metadata or {}), ENGINE_VERSION))
         row_id = c.execute("SELECT last_insert_rowid()").fetchone()[0]
         c.commit()
         _db.sync(c)
@@ -405,12 +430,13 @@ def log_batch_to_all_signals(rows):
         for r in rows:
             c.execute("""INSERT INTO all_signals
                 (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
-                 rr,score,status,sent_at,metadata)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?)""",
+                 rr,score,status,sent_at,metadata,engine_version,grade,breakeven_wr,turnover_cr)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?,?)""",
                 (today, r["signal_type"], r["symbol"], r.get("action", "BUY"),
                  r.get("timeframe", "SWING"), r["entry"], r["sl"],
                  r["t1"], r["t2"], r["t3"], r["rr"], r.get("score", 0),
-                 json.dumps(r.get("metadata") or {})))
+                 json.dumps(r.get("metadata") or {}), ENGINE_VERSION,
+                 r.get("grade"), r.get("breakeven_wr"), r.get("turnover_cr")))
             ids.append(c.execute("SELECT last_insert_rowid()").fetchone()[0])
         c.commit()
         _db.sync(c)

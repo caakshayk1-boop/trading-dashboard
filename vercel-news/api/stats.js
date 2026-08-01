@@ -7,7 +7,7 @@
 // Query params:
 //   from=, to=   optional date range (YYYY-MM-DD)
 //   tf=          restrict to one timeframe
-import { db, num, str, badgeOf, json, fail } from "./_db.js";
+import { db, num, str, badgeOf, json, fail, columns, optional } from "./_db.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return fail(res, 405, "GET only");
@@ -19,13 +19,27 @@ export default async function handler(req, res) {
   if (q.to)   { where.push("substr(date,1,10) <= ?"); args.push(String(q.to).slice(0, 10)); }
   if (q.tf)   { where.push("timeframe = ?");          args.push(String(q.tf)); }
 
-  const sql = `SELECT date, symbol, timeframe, signal_type, entry, sl, target1,
-                      status, lifecycle_status, pnl_pct, r_multiple, closed_at
+  try {
+    const cols = await columns();
+    const versioned = cols.has("engine_version");
+
+    // Unlike /api/signals this defaults to "all". Expectancy is the whole
+    // point of this route and v2 starts at zero closed trades — defaulting to
+    // v2 would show an empty performance page and hide the 476-trade record
+    // the new gate is supposed to be judged against.
+    const version = String(q.version || "all").toLowerCase();
+    if (versioned && version !== "all") {
+      if (version === "v1") where.push("(COALESCE(engine_version,'v1') = 'v1')");
+      else { where.push("COALESCE(engine_version,'v1') = ?"); args.push(version); }
+    }
+
+    const sql = `SELECT date, symbol, timeframe, signal_type, entry, sl, target1,
+                      status, lifecycle_status, pnl_pct, r_multiple, closed_at,
+                      ${await optional("engine_version")}, ${await optional("grade")}
                FROM all_signals
                ${where.length ? "WHERE " + where.join(" AND ") : ""}
                ORDER BY date ASC, id ASC`;
 
-  try {
     const rs = await db().execute({ sql, args });
     const rows = rs.rows.map((r) => ({
       date: str(r.date).slice(0, 10),
@@ -38,6 +52,8 @@ export default async function handler(req, res) {
       pnl_pct: num(r.pnl_pct),
       r_multiple: rMultiple(r),
       closed_at: str(r.closed_at).slice(0, 10) || str(r.date).slice(0, 10),
+      engine_version: str(r.engine_version) || "v1",
+      grade: str(r.grade) || "—",
     }));
 
     const closed = rows.filter((r) => r.badge === "win" || r.badge === "loss");
@@ -47,6 +63,7 @@ export default async function handler(req, res) {
     json(res, 200, {
       ok: true,
       generated_at: new Date().toISOString(),
+      version,
       basis: "Win rate, avg R and expectancy are computed over closed signals only. Open signals are excluded.",
       totals: {
         all: rows.length,
@@ -62,10 +79,49 @@ export default async function handler(req, res) {
       by_timeframe: group(closed, (r) => r.timeframe),
       by_signal_type: group(closed, (r) => r.signal_type),
       by_symbol: group(closed, (r) => r.symbol, 5),
+      // v1 vs v2 side by side — the only honest way to answer "did the gate
+      // help?". v2 will read 0 trades until its first signal closes.
+      by_engine_version: group(closed, (r) => r.engine_version),
+      by_grade: group(closed, (r) => r.grade),
+      // Per-engine break-even R:R, mirroring signals/expectancy.py. This is
+      // what sets each scanner's R:R floor, so the site shows the same
+      // arithmetic the scanner acts on.
+      engine_floors: engineFloors(closed),
     }, 300);
   } catch (e) {
     fail(res, 500, `stats query failed: ${e.message}`);
   }
+}
+
+// breakeven_rr = (1 - p) / p. Mirrors signals/expectancy.py — keep the
+// constants in step with that module.
+function engineFloors(closed) {
+  const MIN_SAMPLE = 25, DEFAULT_FLOOR = 2.0, SAFETY = 1.15, CAP = 6.0;
+  const buckets = new Map();
+  for (const r of closed) {
+    const k = r.signal_type || "—";
+    if (!buckets.has(k)) buckets.set(k, []);
+    buckets.get(k).push(r);
+  }
+  const out = [];
+  for (const [key, items] of buckets) {
+    const wins = items.filter((r) => r.badge === "win").length;
+    const n = items.length;
+    const p = wins / n;
+    let breakeven = null, floor = DEFAULT_FLOOR, status = "insufficient-sample";
+    if (n >= MIN_SAMPLE) {
+      if (p <= 0) { floor = CAP; status = "disabled"; }
+      else {
+        breakeven = (1 - p) / p;
+        floor = round(Math.min(Math.max(breakeven * SAFETY, DEFAULT_FLOOR), CAP), 2);
+        status = floor >= CAP ? "disabled" : "active";
+      }
+    }
+    out.push({ key, trades: n, win_rate: round(p * 100, 1),
+               breakeven_rr: breakeven === null ? null : round(breakeven, 2),
+               floor, status });
+  }
+  return out.sort((a, b) => b.trades - a.trades);
 }
 
 // Prefer the stored r_multiple. Fall back to deriving it from the realised

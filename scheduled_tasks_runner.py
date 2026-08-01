@@ -224,6 +224,21 @@ def run_daily_brief():
     log.info("Daily brief sent")
 
 
+def run_sip_bucket():
+    """Propose this month's SIP bucket and mark existing holdings to market.
+
+    build_bucket() is idempotent per calendar month, so running this daily is
+    safe — the bucket is created on the first run of the month and every later
+    run only refreshes prices.
+    """
+    import sip_engine
+    log.info("SIP: building/refreshing this month's bucket")
+    b = sip_engine.build_bucket()
+    n = sip_engine.refresh_prices()
+    log.info(f"SIP: bucket {b.get('bucket')} — {len(b.get('holdings', []))} names, "
+             f"{n} prices refreshed")
+
+
 if __name__ == "__main__":
     task = sys.argv[1] if len(sys.argv) > 1 else "auto"
 
@@ -231,6 +246,8 @@ if __name__ == "__main__":
         run_cf_scan()
     elif task == "daily_brief":
         run_daily_brief()
+    elif task == "sip_bucket":
+        run_sip_bucket()
     else:
         now_ist = datetime.now(IST)
         if now_ist.hour == 6 and now_ist.minute < 15:

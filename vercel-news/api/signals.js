@@ -8,13 +8,19 @@
 //   symbol=           substring match
 //   status=win|loss|open|cancelled
 //   tf=               timeframe exact match
+//   version=          engine_version: v2 (default), v1, or "all"
 //   limit=            default 300, max 2000
 //   offset=           pagination
-import { db, num, str, badgeOf, json, fail } from "./_db.js";
+import { db, num, str, badgeOf, json, fail, columns, optional } from "./_db.js";
 
-const COLS = `date, symbol, action, timeframe, signal_type, entry, sl,
+const BASE_COLS = `date, symbol, action, timeframe, signal_type, entry, sl,
               target1, target2, rr, score, status, lifecycle_status,
               exit_price, pnl_pct, r_multiple, closed_at, sent_at, market, asset_type`;
+
+// Signals generated before the quality gate landed (2026-08-02) are tagged v1
+// and are NOT deleted — they are the control group the new gate is measured
+// against. The site just stops showing them by default.
+const CURRENT_VERSION = "v2";
 
 // The badge is derived from two columns, so filtering it in JavaScript after
 // the query would filter only the current page — ask for 300 wins and you'd get
@@ -61,12 +67,37 @@ export default async function handler(req, res) {
   const limit = Math.min(Math.max(parseInt(q.limit, 10) || 300, 1), 2000);
   const offset = Math.max(parseInt(q.offset, 10) || 0, 0);
 
-  const sql = `SELECT ${COLS} FROM all_signals
+  try {
+    const cols = await columns();
+    const versioned = cols.has("engine_version");
+
+    // Default to the current engine. Older rows stay queryable with
+    // ?version=v1 or ?version=all — nothing is hidden, just not the default.
+    const version = String(q.version || CURRENT_VERSION).toLowerCase();
+    if (versioned && version !== "all") {
+      // Rows written before the column existed carry the 'v1' backfill
+      // default, but a NULL can still appear if a writer predates the
+      // migration, so treat NULL as v1 rather than dropping it silently.
+      if (version === "v1") {
+        where.push("(COALESCE(engine_version,'v1') = 'v1')");
+      } else {
+        where.push("COALESCE(engine_version,'v1') = ?");
+        args.push(version);
+      }
+    }
+
+    const extra = [
+      await optional("engine_version"),
+      await optional("grade"),
+      await optional("breakeven_wr"),
+      await optional("turnover_cr"),
+    ].join(", ");
+
+    const sql = `SELECT ${BASE_COLS}, ${extra} FROM all_signals
                ${where.length ? "WHERE " + where.join(" AND ") : ""}
                ORDER BY date DESC, id DESC
                LIMIT ? OFFSET ?`;
 
-  try {
     const rs = await db().execute({ sql, args: [...args, limit, offset] });
     const rows = rs.rows.map(shape);
 
@@ -75,6 +106,7 @@ export default async function handler(req, res) {
       count: rows.length,
       offset,
       limit,
+      version: versioned ? version : "unversioned",
       generated_at: new Date().toISOString(),
       signals: rows,
     }, 60);
@@ -107,5 +139,9 @@ function shape(r) {
     sent_at: str(r.sent_at),
     market: str(r.market),
     asset_type: str(r.asset_type),
+    engine_version: str(r.engine_version) || "v1",
+    grade: str(r.grade) || null,
+    breakeven_wr: num(r.breakeven_wr),
+    turnover_cr: num(r.turnover_cr),
   };
 }

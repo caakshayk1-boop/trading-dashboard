@@ -30,6 +30,31 @@ export function str(v) {
   return v === null || v === undefined ? "" : String(v);
 }
 
+// The scanner adds columns via ALTER TABLE inside init_db(), which runs at the
+// start of a scan — so this API can be deployed before the column it wants
+// exists. Naming a missing column in a SELECT fails the whole query and 500s
+// the page, so every optional column is probed first. Cached per lambda
+// instance; a cold start re-probes, which is how a new column gets picked up.
+let _colCache = null;
+
+export async function columns(table = "all_signals") {
+  if (_colCache) return _colCache;
+  try {
+    const rs = await db().execute(`PRAGMA table_info(${table})`);
+    _colCache = new Set(rs.rows.map((r) => str(r.name || r[1])));
+  } catch {
+    _colCache = new Set();
+  }
+  return _colCache;
+}
+
+// Returns `col` when the table has it, else `NULL AS col`, so callers can build
+// a SELECT list that is always valid.
+export async function optional(col, table = "all_signals") {
+  const cols = await columns(table);
+  return cols.has(col) ? col : `NULL AS ${col}`;
+}
+
 const WIN = new Set(["TARGET_HIT", "T1_HIT", "T2_HIT", "TP1_HIT", "TP2_HIT", "PROFIT"]);
 const LOSS = new Set(["SL_HIT", "STOPPED", "STOP_HIT", "LOSS"]);
 

@@ -1,6 +1,6 @@
 // GET /api/health — is the ledger reachable, how fresh is it, and are writes armed.
 // First thing to hit when the site looks wrong.
-import { db, str, json } from "./_db.js";
+import { db, str, json, columns } from "./_db.js";
 
 export default async function handler(req, res) {
   const out = {
@@ -27,7 +27,27 @@ export default async function handler(req, res) {
     const tr = await db().execute(
       "SELECT COUNT(*) AS n FROM stock_tracker WHERE status='active'"
     ).catch(() => ({ rows: [{ n: 0 }] }));
-    out.open_positions = Number(tr.rows[0]?.n || 0);
+    // Positions you actually track (the "+ Track" button), NOT signals whose
+    // status is OPEN. These are different things and the header used to print
+    // both as "open positions", 40px apart, with different numbers.
+    out.tracked_positions = Number(tr.rows[0]?.n || 0);
+    out.open_positions = out.tracked_positions;   // kept for older clients
+
+    const os_ = await db().execute(
+      "SELECT COUNT(*) AS n FROM all_signals WHERE upper(COALESCE(status,''))='OPEN'"
+    ).catch(() => ({ rows: [{ n: 0 }] }));
+    out.open_setups = Number(os_.rows[0]?.n || 0);
+
+    const cols = await columns();
+    if (cols.has("engine_version")) {
+      const vr = await db().execute(
+        `SELECT COALESCE(engine_version,'v1') AS v, COUNT(*) AS n
+         FROM all_signals GROUP BY 1`
+      ).catch(() => ({ rows: [] }));
+      out.by_version = Object.fromEntries(
+        vr.rows.map((r) => [str(r.v) || "v1", Number(r.n || 0)])
+      );
+    }
 
     return json(res, 200, out);
   } catch (e) {

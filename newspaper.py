@@ -2431,7 +2431,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#markets"><i>01</i>Markets</a>
     <a href="#picks"><i>02</i>Trade Ideas</a>
     <a href="#tracker"><i>03</i>Portfolio</a>
-    <a href="#perf"><i>04</i>Performance</a>
+    <a href="#sip"><i>04</i>SIP Buckets</a>
+    <a href="#perf"><i>05</i>Performance</a>
     <a href="#interview"><i>05</i>Interview</a>
     <a href="#language"><i>06</i>Language</a>
     <a href="#father"><i>07</i>Father</a>
@@ -2654,6 +2655,47 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <button type="submit" class="btn">Add to book</button>
     </form>
   </div>
+</section>
+
+<!-- ══════════ 04 SIP BUCKETS ══════════
+     ₹10,000/month, stepped up 10% each SIP year, one bucket per month, four
+     names per bucket. Every bucket keeps its own cost basis and its own XIRR —
+     a blended portfolio number would hide which months' picks actually worked,
+     which is the only feedback the ranking engine gets.
+     Filled from /api/sip; the whole section hides itself on a static build. -->
+<section class="sec" id="sip" style="display:none">
+  <div class="shead rv">
+    <div>
+      <span class="snum">04 / COMPOUNDING</span>
+      <h2 class="stitle">One bucket a month.</h2>
+    </div>
+    <span class="slink" id="sipPlan">—</span>
+  </div>
+
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v" id="sipMonthly">—</div><div class="k">This month</div></div>
+    <div class="kpi"><div class="v" id="sipBuckets">0</div><div class="k">Buckets</div></div>
+    <div class="kpi"><div class="v" id="sipInvested">—</div><div class="k">Invested</div></div>
+    <div class="kpi"><div class="v" id="sipValue">—</div><div class="k">Value</div></div>
+    <div class="kpi"><div class="v" id="sipPnl">—</div><div class="k">Unrealised</div></div>
+  </div>
+
+  <div id="sipBody"></div>
+
+  <div class="shead rv" style="margin-top:34px;border-top:1px solid var(--line);padding-top:22px">
+    <div>
+      <span class="snum">THE ARITHMETIC</span>
+      <h2 class="stitle" style="font-size:24px">Where the step-up takes it.</h2>
+    </div>
+  </div>
+  <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
+    <th>Year</th><th>Monthly</th><th>Invested</th><th>@10%</th><th>@12%</th><th>@14%</th>
+  </tr></thead><tbody></tbody></table></div>
+  <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
+    Projections are compound arithmetic on the contribution schedule, not a forecast.
+    They assume the return shown is achieved every year with no gaps in contribution.
+    Actual equity returns arrive in a very different order, and sequence matters.
+  </p>
 </section>
 
 <!-- ══════════ 05 INTERVIEW PREP ══════════ -->
@@ -3810,8 +3852,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       if (!h || !h.ok) throw new Error(h && h.error ? h.error : 'unreachable');
       live = true;
       var stamp = h.latest_signal_date || '—';
-      bar('live', 'LIVE LEDGER · ' + h.signals + ' signals · latest ' + stamp +
-                  ' · ' + h.open_positions + ' open positions' +
+      // "0 open positions" used to sit directly above a table of 67 rows
+      // badged OPEN. Both numbers were right and meant different things: a
+      // tracked position is one you hold, an OPEN signal is a setup that has
+      // not resolved. Naming them differently is the whole fix.
+      var tracked = (h.tracked_positions !== undefined ? h.tracked_positions
+                                                       : h.open_positions);
+      var vtxt = '';
+      if (h.by_version){
+        var v2 = h.by_version.v2 || 0, v1 = h.by_version.v1 || 0;
+        vtxt = ' · ' + v2 + ' gated (v2) / ' + v1 + ' legacy (v1)';
+      }
+      bar('live', 'LIVE LEDGER · ' + h.signals + ' signals' + vtxt +
+                  ' · latest ' + stamp +
+                  ' · ' + tracked + ' tracked · ' + (h.open_setups || 0) + ' open setups' +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
       start();
     }).catch(function(e){
@@ -3869,9 +3923,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       loadArchive();
       loadStats();
       loadPositions();
+      loadSip();
 
       el('liverefresh').addEventListener('click', function(){
-        loadSignals(); loadStats(); loadPositions();
+        loadSignals(); loadStats(); loadPositions(); loadSip();
       });
 
       // Deep link: /day/2026-07-31 opens straight into that day's archive.
@@ -4023,16 +4078,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<button class="fbtn" data-f="loss">Stop Hit</button>' +
           '<button class="fbtn" data-f="cancelled">Cancelled</button>' +
         '</div>' +
+        // Engine generation. v1 is every signal before the quality gate; it is
+        // kept, not deleted, because it is the 476-trade control group the new
+        // gate has to beat. Default view is v2 only.
+        '<div class="filters rv" style="margin-top:6px">' +
+          '<button class="fbtn on" data-v="v2">Gated (v2)</button>' +
+          '<button class="fbtn" data-v="v1">Legacy (v1)</button>' +
+          '<button class="fbtn" data-v="all">Both</button>' +
+        '</div>' +
         '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
-          '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Entry</th><th>SL</th>' +
-          '<th>T1</th><th>T2</th><th>RR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
+          '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>' +
+          '<th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
         '</tr></thead><tbody></tbody></table></div>';
       if (empty) empty.replaceWith(host); else sec.appendChild(host);
       reveal(host);
     }
 
+    function activeVersion(){
+      var on = document.querySelector('.fbtn.on[data-v]');
+      return on ? on.dataset.v : 'v2';
+    }
+
     function loadSignals(){
       var qs = archDate ? '?date=' + archDate + '&limit=2000' : '?limit=800';
+      qs += '&version=' + activeVersion();
       api('/signals' + qs).then(function(j){
         if (!j.ok) return;
         allRows = j.signals || [];
@@ -4086,11 +4155,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
+          '<td class="mono-dim">' + gradeCell(a) + '</td>' +
           '<td class="num">' + money(a.entry) + '</td>' +
           '<td class="num dn">' + money(a.sl) + '</td>' +
           '<td class="num up">' + money(a.target1) + '</td>' +
           '<td class="num up">' + money(a.target2) + '</td>' +
           '<td class="num" style="color:var(--gold)">' + (a.rr === null ? '—' : fmt(a.rr, 1) + 'x') + '</td>' +
+          // The win rate this setup needs just to break even, 1/(1+R). Shown
+          // next to R:R because the two are the same fact and only one of them
+          // is obvious.
+          '<td class="num mono-dim">' + (a.breakeven_wr === null || a.breakeven_wr === undefined
+                                          ? '—' : fmt(a.breakeven_wr, 0) + '%') + '</td>' +
           '<td class="num">' + money(a.exit_price) + '</td>' +
           '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
           '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
@@ -4098,8 +4173,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '</tr>';
       }).join('');
 
-      tbody.innerHTML = html || '<tr><td colspan="13" style="padding:26px;text-align:center;color:var(--dim)">' +
-                                'Nothing matches those filters.</td></tr>';
+      tbody.innerHTML = html || '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
+                                (activeVersion() === 'v2'
+                                  ? 'No gated signals yet. The v2 engine publishes only setups that clear ' +
+                                    'their engine’s measured break-even R:R — quiet is the intended ' +
+                                    'state. Switch to Legacy (v1) for the pre-gate history.'
+                                  : 'Nothing matches those filters.') + '</td></tr>';
 
       // Spell out the full span. The table always held every signal, but with
       // the newest first it read as though the history stopped a week back.
@@ -4150,6 +4229,120 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           renderAlerts();
         });
       });
+      // Engine-version buttons re-query the API rather than filtering in the
+      // browser: the 800-row page would otherwise be drawn entirely from
+      // whichever version happened to fill it.
+      document.querySelectorAll('.fbtn[data-v]').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.querySelectorAll('.fbtn[data-v]').forEach(function(x){ x.classList.remove('on'); });
+          b.classList.add('on');
+          loadSignals();
+        });
+      });
+    }
+
+    /* ═══════ SIP buckets ═══════ */
+    function inr(v, d){
+      if (v === null || v === undefined || !isFinite(v)) return '—';
+      return '₹' + Number(v).toLocaleString('en-IN', {
+        minimumFractionDigits: d === undefined ? 0 : d,
+        maximumFractionDigits: d === undefined ? 0 : d });
+    }
+
+    function loadSip(){
+      api('/sip').then(function(j){
+        if (!j || !j.ok) return;
+        var sec = el('sip'); if (!sec) return;
+        sec.style.display = '';
+
+        var p = j.plan || {};
+        el('sipPlan').textContent = '₹' + Number(p.base_monthly || 0).toLocaleString('en-IN') +
+          '/mo base · +' + (p.step_up_pct || 0) + '%/yr · SIP year ' + (p.sip_year || 1);
+        el('sipMonthly').textContent = inr(p.monthly_amount);
+
+        var t = j.totals || {};
+        el('sipBuckets').textContent = t.buckets || 0;
+        el('sipInvested').textContent = inr(t.invested);
+        el('sipValue').textContent = inr(t.value);
+        var pn = el('sipPnl');
+        pn.textContent = (t.pnl === null || t.pnl === undefined) ? '—'
+          : inr(t.pnl) + (t.pnl_pct === null ? '' : ' (' + fmt(t.pnl_pct, 1) + '%)');
+        pn.className = 'v ' + (t.pnl > 0 ? 'up' : t.pnl < 0 ? 'dn' : '');
+
+        // Projection table is pure arithmetic and always renders, even before
+        // the first bucket exists — the plan is worth seeing on day one.
+        var pb = document.querySelector('#sipProj tbody');
+        if (pb) pb.innerHTML = (j.projections || []).map(function(r){
+          return '<tr><td class="mono-dim">' + r.years + '</td>' +
+            '<td class="num">' + inr(r.monthly) + '</td>' +
+            '<td class="num mono-dim">' + inr(r.invested) + '</td>' +
+            '<td class="num">' + inr(r.r10) + '</td>' +
+            '<td class="num up">' + inr(r.r12) + '</td>' +
+            '<td class="num up">' + inr(r.r14) + '</td></tr>';
+        }).join('');
+
+        var body = el('sipBody');
+        if (!j.ready || !(j.buckets || []).length){
+          body.innerHTML = '<div class="empty rv">' + esc(j.message ||
+            'No buckets yet. The first one is proposed on the next monthly run.') +
+            '</div>';
+          reveal(sec); return;
+        }
+
+        body.innerHTML = (j.buckets || []).map(function(b){
+          var hs = (b.holdings || []).map(function(h){
+            var live = h.status === 'held' && h.qty && h.buy_price;
+            var val  = live ? h.qty * (h.last_price || h.buy_price) : null;
+            var cost = live ? h.qty * h.buy_price : null;
+            var pct  = live && cost ? (val / cost - 1) * 100 : null;
+            return '<tr>' +
+              '<td class="mono-dim">' + (h.rank || '') + '</td>' +
+              '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
+                  encodeURIComponent(h.symbol) + '" target="_blank" rel="noopener">' +
+                  esc(h.symbol) + '</a></td>' +
+              '<td class="num">' + fmt(h.score, 1) + '</td>' +
+              '<td class="num">' + inr(h.allocated) + '</td>' +
+              '<td class="num">' + (h.buy_price ? inr(h.buy_price, 2) : '—') + '</td>' +
+              '<td class="num">' + (h.last_price ? inr(h.last_price, 2) : '—') + '</td>' +
+              '<td class="' + (pct > 0 ? 'pnl-u' : pct < 0 ? 'pnl-d' : 'num') + '">' +
+                  (pct === null ? '—' : (pct > 0 ? '+' : '') + fmt(pct, 1) + '%') + '</td>' +
+              '<td><span class="badge badge-' + (h.status === 'held' ? 'open' : 'cancelled') +
+                  '">' + esc(h.status) + '</span></td>' +
+              '<td class="mono-dim" style="font-size:10px">' + esc(h.rationale || '') + '</td>' +
+              '</tr>';
+          }).join('');
+
+          var xir = b.xirr_pct === null || b.xirr_pct === undefined
+            ? '' : ' · XIRR ' + fmt(b.xirr_pct, 1) + '%';
+          var pl  = b.pnl_pct === null || b.pnl_pct === undefined
+            ? '' : ' · ' + (b.pnl > 0 ? '+' : '') + fmt(b.pnl_pct, 1) + '%';
+          return '<div class="rv" style="margin-bottom:26px">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
+                 'flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
+              '<strong style="font-family:var(--mono);font-size:13px;letter-spacing:1px">' +
+                esc(b.bucket) + '</strong>' +
+              '<span class="mono-dim" style="font-size:11px">' +
+                inr(b.monthly_amount) + ' · year ' + b.sip_year + ' · ' +
+                b.held + '/' + b.names + ' held' + pl + xir + '</span>' +
+            '</div>' +
+            '<div class="tw"><table class="t" style="min-width:860px"><thead><tr>' +
+              '<th>#</th><th>Symbol</th><th>Score</th><th>Allocated</th><th>Buy</th>' +
+              '<th>Last</th><th>P&amp;L</th><th>Status</th><th>Why</th>' +
+            '</tr></thead><tbody>' + hs + '</tbody></table></div></div>';
+        }).join('');
+        reveal(sec);
+      }).catch(function(){ /* no /api/sip on a static host — section stays hidden */ });
+    }
+
+    // A/B/UNVERIFIED from signals/quality.py. UNVERIFIED means the setup
+    // cleared every price gate but Yahoo had no fundamentals for it — worth
+    // showing as distinct from a clean pass rather than silently equal to one.
+    function gradeCell(a){
+      if (!a.grade) return '<span style="color:var(--dim)">—</span>';
+      var col = a.grade === 'A' ? 'var(--lime)'
+              : a.grade === 'B' ? 'var(--gold)' : 'var(--dim)';
+      var txt = a.grade === 'UNVERIFIED' ? 'UNVER' : a.grade;
+      return '<span style="color:' + col + ';font-weight:700">' + esc(txt) + '</span>';
     }
 
     /* ═══════ archive ═══════ */
