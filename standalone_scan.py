@@ -473,6 +473,58 @@ def run_price_alerts(time_str: str):
     logging.info(f"price_alerts: done | {len(alerts)} alerts | {len(updates)} closed")
 
 
+def _quality_fields(sig, extra_meta=None):
+    """Gate verdict → the columns log_batch_to_all_signals persists.
+
+    Carrying the grade into the ledger is what makes the v1/v2 comparison
+    possible later: without it every new row looks identical to an old one and
+    "did the gate help?" becomes unanswerable.
+    """
+    meta = dict(extra_meta or {})
+    q = sig.get("quality")
+    if q is not None:
+        meta.update(q.as_metadata())
+    return {
+        "grade":        sig.get("grade"),
+        "breakeven_wr": sig.get("breakeven_wr"),
+        "turnover_cr":  sig.get("turnover_cr"),
+        "metadata":     meta,
+    }
+
+
+VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full", "none"}
+
+
+def _requested_slot(argv=None):
+    """Slot named explicitly on the command line, or None.
+
+    GitHub's scheduled runs are routinely delayed — measured on this repo:
+    the 06:15Z cron fired at 09:17Z and the 11:00Z cron at 12:48Z on
+    2026-07-31, and the Saturday 04:00Z cron at 06:27Z on 2026-08-01. Those
+    delays land at 14:47 and 18:18 IST, which fall in the gaps between the
+    _slot() windows (9–10:30, 11–14, 15–18) and silently drop into the "full"
+    off-hours fallback. "full" skips the measured equity scan and the signal
+    ledger, so a late EOD cron quietly stopped logging outcomes.
+
+    daily_scan.yml now passes --slot per cron entry, so intent survives the
+    delay. The clock stays as the fallback for manual and ad-hoc runs.
+    """
+    argv = sys.argv[1:] if argv is None else argv
+    for i, a in enumerate(argv):
+        val = None
+        if a.startswith("--slot="):
+            val = a.split("=", 1)[1]
+        elif a == "--slot" and i + 1 < len(argv):
+            val = argv[i + 1]
+        if val:
+            val = val.strip().lower()
+            if val not in VALID_SLOTS:
+                raise SystemExit(
+                    f"--slot {val!r} is not one of: {', '.join(sorted(VALID_SLOTS))}")
+            return val
+    return None
+
+
 def _slot(now_ist, is_holiday=False):
     """Return scan slot based on IST time, weekday, holiday."""
     wd = now_ist.weekday()  # 0=Mon … 5=Sat … 6=Sun
@@ -569,6 +621,7 @@ def run_4h_scan(time_str):
                 "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
                 "t2": b.get("target2", b["target1"]), "t3": b.get("target2", b["target1"]),
                 "rr": b["rr"], "timeframe": "4H", "score": int(b.get("score", 0)),
+                **_quality_fields(b),
             })
         ids  = log_batch_to_all_signals(rows)
         sent = _send_chunked(f"⚡ *4H Signals* ({len(sigs)}) — {time_str}\n", blocks)
@@ -639,7 +692,7 @@ def run_swing_scan(time_str):
             "sl": s.get("sl2", s["price"] * 0.96), "t1": s["target1"],
             "t2": s["target2"], "t3": s["target3"], "rr": s.get("rr2", 0),
             "timeframe": "SWING", "score": s.get("score", 0),
-            "metadata": {"setup_type": s.get("setup_type")},
+            **_quality_fields(s, {"setup_type": s.get("setup_type")}),
         } for s in signals])
         # send_alert() drops anything under score 65, so most swing rows are
         # logged but never pushed. That is a threshold decision, not a delivery
@@ -770,6 +823,7 @@ def run_breakout_scan(time_str):
                 "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
                 "t2": b["target2"], "t3": b.get("target3", b["target2"]),
                 "rr": b["rr"], "timeframe": b["timeframe"], "score": 0,
+                **_quality_fields(b),
             })
         # One connection for the whole batch — see log_batch_to_all_signals.
         ids = log_batch_to_all_signals(rows)
@@ -900,8 +954,24 @@ def main():
     today_str  = now.strftime("%Y-%m-%d")
     time_str   = now.strftime("%d %b %Y %I:%M %p IST")
     is_holiday = today_str in NSE_HOLIDAYS
-    slot       = _slot(now, is_holiday=is_holiday)
+    clock_slot = _slot(now, is_holiday=is_holiday)
+    requested  = _requested_slot()
     counts     = {}
+
+    if requested:
+        slot = requested
+        # Sunday and NSE holidays still win over an explicit --slot: the cron
+        # is Mon-Fri but a queued run can spill past midnight IST, and there is
+        # nothing to scan on a closed exchange whatever the workflow asked for.
+        if clock_slot == "none":
+            logging.info(f"--slot {requested} ignored — market closed today.")
+            return 0
+        if requested != clock_slot:
+            logging.warning(
+                f"slot override: workflow asked for {requested!r}, clock says "
+                f"{clock_slot!r} (run is {now.strftime('%H:%M')} IST — cron delayed)")
+    else:
+        slot = clock_slot
 
     if slot == "none":
         logging.info("Sunday or post-holiday non-morning — no scan.")

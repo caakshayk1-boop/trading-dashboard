@@ -79,13 +79,33 @@ jobs:
       - name: Verify alert pipeline
         run: python test_alert_pipeline.py
 
-      # Slot detection was removed with the intraday tier. It keyed off the
-      # UTC minute and fell through to "intraday" on anything unrecognised —
-      # so a cron delayed past its window (GitHub routinely runs several
-      # minutes late) would silently run the wrong scanner. standalone_scan.py
-      # derives its own slot from IST, which is the correct source anyway.
+      # Slot comes from the cron that fired, not from the clock at run time.
+      # Deriving it from the clock looked correct but wasn't: GitHub delays
+      # scheduled runs by hours, not minutes (measured here — 06:15Z fired at
+      # 09:17Z, 11:00Z at 12:48Z, Saturday 04:00Z at 06:27Z). Those land at
+      # 14:47 and 18:18 IST, outside every _slot() window, so both weekday runs
+      # on 2026-07-31 silently took the "full" fallback — which skips the
+      # measured equity scan and the signal ledger.
+      #
+      # github.event.schedule holds the cron expression for scheduled runs and
+      # is empty for workflow_dispatch, so manual runs keep using the clock.
       - name: Run scanner
-        run: python standalone_scan.py
+        env:
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          case "$SCHEDULE" in
+            "15 6 * * 1-5") SLOT=midday  ;;
+            "0 11 * * 1-5") SLOT=eod     ;;
+            "0 4 * * 6")    SLOT=weekend ;;
+            *)              SLOT=""      ;;
+          esac
+          if [ -n "$SLOT" ]; then
+            echo "cron '$SCHEDULE' → slot $SLOT"
+            python standalone_scan.py --slot "$SLOT"
+          else
+            echo "no schedule match (manual run) → slot from IST clock"
+            python standalone_scan.py
+          fi
 
       - name: Commit signal data to repo
         if: always()

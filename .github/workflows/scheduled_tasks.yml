@@ -5,6 +5,7 @@ name: Scheduled Tasks — CF Scans + Daily Brief
 on:
   schedule:
     - cron: '30 0 * * *'      # 6:00 AM  IST — daily brief (every day)
+    - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh
     - cron: '30 4 * * 1-5'    # 10:00 AM IST — CF scan (Mon–Fri only)
     - cron: '30 8 * * 1-5'    # 2:00 PM  IST — CF scan (Mon–Fri only)
     - cron: '30 12 * * 1-5'   # 6:00 PM  IST — CF scan (Mon–Fri only)
@@ -16,7 +17,7 @@ on:
         required: false
         default: 'auto'
         type: choice
-        options: [auto, daily_brief, cf_scan]
+        options: [auto, daily_brief, cf_scan, sip_bucket]
 
 concurrency:
   group: scheduled-tasks
@@ -54,22 +55,28 @@ jobs:
           pip install "yfinance>=0.2.40" pandas numpy ta requests pytz \
                       feedparser groq libsql-experimental python-dotenv
 
+      # Task comes from the cron that fired, not from the wall clock. Reading
+      # `date -u +%H` had the same failure as daily_scan.yml: GitHub delays
+      # scheduled runs by hours, so the 00:30Z daily-brief cron arriving at
+      # 02:10Z failed the `HOUR_UTC = 00` test and silently ran a CF scan
+      # instead — the brief just never went out that day, with a green tick.
       - name: Detect task
         id: task
+        env:
+          INPUT: ${{ github.event.inputs.task }}
+          SCHEDULE: ${{ github.event.schedule }}
         run: |
-          INPUT="${{ github.event.inputs.task }}"
-          HOUR_UTC=$(date -u +%H)
-          MIN_UTC=$(date -u +%M)
-
-          if [ "$INPUT" = "daily_brief" ]; then
-            echo "task=daily_brief" >> $GITHUB_OUTPUT
-          elif [ "$INPUT" = "cf_scan" ]; then
-            echo "task=cf_scan" >> $GITHUB_OUTPUT
-          elif [ "$HOUR_UTC" = "00" ] && [ "$MIN_UTC" -le 40 ]; then
-            echo "task=daily_brief" >> $GITHUB_OUTPUT
+          if [ -n "$INPUT" ] && [ "$INPUT" != "auto" ]; then
+            TASK="$INPUT"
           else
-            echo "task=cf_scan" >> $GITHUB_OUTPUT
+            case "$SCHEDULE" in
+              "30 0 * * *") TASK=daily_brief ;;
+              "45 1 * * *") TASK=sip_bucket  ;;
+              *)            TASK=cf_scan     ;;
+            esac
           fi
+          echo "cron '$SCHEDULE' input '$INPUT' → task $TASK"
+          echo "task=$TASK" >> $GITHUB_OUTPUT
 
       - name: Run daily brief
         if: steps.task.outputs.task == 'daily_brief'
@@ -79,6 +86,10 @@ jobs:
           send_brief()
           print('Daily brief sent.')
           "
+
+      - name: Run SIP bucket
+        if: steps.task.outputs.task == 'sip_bucket'
+        run: python scheduled_tasks_runner.py sip_bucket
 
       - name: Run CF scan
         if: steps.task.outputs.task == 'cf_scan'
