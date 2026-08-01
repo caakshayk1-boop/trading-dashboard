@@ -17,6 +17,7 @@ from flask import Flask, render_template_string, jsonify, request, redirect
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from content_cache import get_cached_markets, get_cached_jobs, get_cached_news, get_cached_quote
+import daily_learning
 import db as _db_mod
 
 log = logging.getLogger(__name__)
@@ -1792,7 +1793,13 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 0 12px var(--lime);transition:width .1s linear;}
 
 /* ═══════════════════ HEADER ═══════════════════ */
-.topbar{position:sticky;top:0;z-index:300;background:rgba(8,9,10,.82);
+/* One sticky container for the whole header. Previously .topbar, .nav and
+   .livebar were each position:sticky — .nav and .livebar both at top:60px, so
+   once scrolled they landed on the same 60 pixels and the status bar covered
+   the section menu. Sticking the wrapper instead means the three stack in
+   normal flow and no magic offsets can drift apart. */
+.headstack{position:sticky;top:0;z-index:300}
+.topbar{background:rgba(8,9,10,.82);
   backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
   border-bottom:1px solid var(--line);}
 .topbar-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);height:60px;
@@ -1809,7 +1816,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:720px){.stamp span.d{display:none}}
 
 /* ═══════════════════ NAV ═══════════════════ */
-.nav{position:sticky;top:60px;z-index:290;background:rgba(8,9,10,.9);
+.nav{background:rgba(8,9,10,.9);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
 .nav-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);display:flex;gap:2px;
   overflow-x:auto;scrollbar-width:none;}
@@ -2201,7 +2208,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    Everything below drives the /api-backed sections. On a static host the
    API probe fails and these components stay hidden, leaving the daily
    snapshot exactly as it renders today. */
-.livebar{position:sticky;top:60px;z-index:290;display:none;align-items:center;gap:10px;
+.livebar{display:none;align-items:center;gap:10px;
   padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
   border-bottom:1px solid var(--line);background:rgba(8,9,10,.9);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
@@ -2265,6 +2272,64 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .keybox input{font-family:var(--mono);font-size:12px;color:var(--text);background:var(--bg2);
   border:1px solid var(--line2);border-radius:9px;padding:8px 11px;flex:1 1 180px}
 
+/* ═══════════════════ LEARNING TRACKS ═══════════════════ */
+.lrn-head{display:flex;align-items:center;gap:12px;margin:26px 0 14px}
+.lrn-head:first-of-type{margin-top:0}
+.lrn-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--lime);white-space:nowrap}
+.lrn-head::after{content:'';flex:1;height:1px;background:var(--line)}
+
+.qa-grid{display:grid;gap:11px}
+.qa{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  transition:border-color .3s var(--ease)}
+.qa[open]{border-color:var(--lime-line)}
+.qa summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;justify-content:space-between;
+  align-items:flex-start;gap:16px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:'+';font-family:var(--mono);font-size:17px;color:var(--dim);flex:none;line-height:1.3}
+.qa[open] summary::after{content:'−';color:var(--lime)}
+.qa:hover summary::after{color:var(--lime)}
+.qa-q{font-size:14.5px;font-weight:600;line-height:1.5;letter-spacing:-.15px;flex:1}
+.qa-who{font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.5px;
+  text-align:right;flex:none;max-width:180px;line-height:1.5}
+.qa-a{padding:0 20px 20px;font-size:13.5px;line-height:1.72;color:var(--muted);
+  border-top:1px solid var(--line);padding-top:16px;margin:0 20px 20px;padding-left:0;padding-right:0}
+
+.lrn-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;
+  transition:border-color .3s var(--ease)}
+.lrn-card:hover{border-color:var(--line2)}
+.lrn-card.jain{border-left:3px solid var(--gold)}
+.lrn-card.budd{border-left:3px solid var(--violet)}
+.lrn-tag{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:9px}
+.lrn-word{font-size:23px;font-weight:700;letter-spacing:-.5px;color:var(--lime);line-height:1.25}
+.lrn-word.sm{font-size:18px;color:var(--text)}
+.lrn-word .tr{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0}
+.lrn-mean{font-size:13.5px;color:var(--text);margin-top:6px}
+.lrn-ex{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);display:grid;gap:5px}
+.lrn-ex .es{font-size:13.5px;font-style:italic;color:var(--text)}
+.lrn-ex .en{font-size:12px;color:var(--dim)}
+.lrn-do{font-size:13.5px;line-height:1.65;color:var(--text);margin-top:10px}
+.lrn-why{font-size:12.5px;line-height:1.68;color:var(--muted);margin-top:13px;padding-top:12px;
+  border-top:1px solid var(--line)}
+.lrn-why b{color:var(--lime);font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
+  text-transform:uppercase;margin-right:7px}
+
+.drill{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--lime);
+  border-radius:16px;padding:22px}
+.drill-t{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.drill-d{font-size:13.5px;line-height:1.7;color:var(--text);margin-top:9px}
+.drill-w{font-size:12.5px;line-height:1.65;color:var(--muted);margin-top:13px;padding-top:12px;
+  border-top:1px solid var(--line)}
+
+@media(max-width:640px){
+  .qa summary{padding:15px 16px;gap:10px}
+  .qa-q{font-size:13.5px}
+  .qa-who{display:none}
+  .qa-a{margin:0 16px 16px;font-size:13px}
+  .lrn-word{font-size:20px}
+}
+
 /* ═══════════════════ MIND GYM ═══════════════════ */
 .gym-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
 .gym-tab{display:flex;align-items:center;gap:7px;padding:9px 15px;font-size:11.5px;font-weight:600;
@@ -2324,7 +2389,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 /* Mobile: tables become the pain point on a phone, so give them a real scroll
    affordance and stop the control bars from stacking into a wall. */
 @media(max-width:640px){
-  .livebar{top:56px;font-size:10px;padding:7px 14px}
+  .livebar{font-size:10px;padding:7px 14px}
   .livebar .msg{white-space:normal}
   .perf-cell .v{font-size:21px}
   .ctlbar input[type=search]{flex:1 1 100%}
@@ -2350,6 +2415,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% set advancers = markets | selectattr("up") | list | length %}
 
 <!-- ══════════ HEADER ══════════ -->
+<div class="headstack">
 <header class="topbar">
   <div class="topbar-in">
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
@@ -2365,15 +2431,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#markets"><i>01</i>Markets</a>
     <a href="#picks"><i>02</i>Trade Ideas</a>
     <a href="#tracker"><i>03</i>Portfolio</a>
-    <a href="#world"><i>04</i>World</a>
-    <a href="#desk"><i>05</i>The Desk</a>
-    <a href="#mind"><i>06</i>The Mind</a>
-    <a href="#way"><i>07</i>The Way</a>
-    <a href="#review"><i>08</i>The Review</a>
-    <a href="#chess"><i>09</i>Chess</a>
-    <a href="#gym"><i>10</i>Mind Gym</a>
-    <a href="#perf"><i>11</i>Performance</a>
-    <a href="#alerts"><i>12</i>Signal Log</a>
+    <a href="#perf"><i>04</i>Performance</a>
+    <a href="#interview"><i>05</i>Interview</a>
+    <a href="#language"><i>06</i>Language</a>
+    <a href="#father"><i>07</i>Father</a>
+    <a href="#wisdom"><i>08</i>Wisdom</a>
+    <a href="#gym"><i>09</i>Mind Gym</a>
+    <a href="#alerts"><i>10</i>Signal Log</a>
+    <a href="#world"><i>11</i>World</a>
+    <a href="#desk"><i>12</i>The Desk</a>
+    <a href="#mind"><i>13</i>The Mind</a>
+    <a href="#way"><i>14</i>The Way</a>
+    <a href="#review"><i>15</i>The Review</a>
+    <a href="#chess"><i>16</i>Chess</a>
   </div>
 </nav>
 
@@ -2383,6 +2453,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <span class="msg" id="livemsg">Checking live ledger…</span>
   <button type="button" id="liverefresh">Refresh</button>
 </div>
+</div><!-- /.headstack -->
 
 <!-- ══════════ HERO ══════════ -->
 <section class="hero" id="top">
@@ -2582,6 +2653,128 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <button type="submit" class="btn">Add to book</button>
     </form>
+  </div>
+</section>
+
+<!-- ══════════ 05 INTERVIEW PREP ══════════ -->
+<section class="sec" id="interview">
+  <div class="shead rv">
+    <div>
+      <span class="snum">05 / THE SEAT</span>
+      <h2 class="stitle">CFO in three years.</h2>
+    </div>
+    <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
+      and the controller-to-CFO jump. The non-technical ones decide the offer more often than the
+      technical ones do.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Technical</span></div>
+  <div class="qa-grid rv">
+    {% for q in interview_tech %}
+    <details class="qa">
+      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
+      <div class="qa-a">{{ q.a }}</div>
+    </details>
+    {% endfor %}
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Everything else</span></div>
+  <div class="qa-grid rv">
+    {% for q in interview_soft %}
+    <details class="qa">
+      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
+      <div class="qa-a">{{ q.a }}</div>
+    </details>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ══════════ 06 LANGUAGE ══════════ -->
+<section class="sec" id="language">
+  <div class="shead rv">
+    <div>
+      <span class="snum">06 / LANGUAGE</span>
+      <h2 class="stitle">Two tongues, sharper.</h2>
+    </div>
+    <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
+      one delivery drill. Say them out loud — reading them does nothing.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">🇪🇸 Español</span></div>
+  <div class="two rv">
+    {% for w in spanish %}
+    <div class="lrn-card">
+      <div class="lrn-tag">{{ w.tag }}</div>
+      <div class="lrn-word">{{ w.word }}</div>
+      <div class="lrn-mean">{{ w.meaning }}</div>
+      <div class="lrn-ex"><span class="es">{{ w.es }}</span><span class="en">{{ w.en }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Vocabulary</span></div>
+  <div class="two rv">
+    {% for v in vocab %}
+    <div class="lrn-card">
+      <div class="lrn-tag">{{ v.say }}</div>
+      <div class="lrn-word">{{ v.word }}</div>
+      <div class="lrn-mean">{{ v.meaning }}</div>
+      <div class="lrn-ex"><span class="es">{{ v.example }}</span><span class="en">{{ v.note }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if speaking %}
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Speaking drill</span></div>
+  <div class="drill rv">
+    <div class="drill-t">{{ speaking.title }}</div>
+    <div class="drill-d">{{ speaking.drill }}</div>
+    <div class="drill-w">{{ speaking.why }}</div>
+  </div>
+  {% endif %}
+</section>
+
+<!-- ══════════ 07 FATHERHOOD ══════════ -->
+<section class="sec" id="father">
+  <div class="shead rv">
+    <div>
+      <span class="snum">07 / THE FATHER</span>
+      <h2 class="stitle">Seven months old.</h2>
+    </div>
+    <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
+      is presence rather than technique — but the technique is not nothing.</p>
+  </div>
+  <div class="two rv">
+    {% for f in father %}
+    <div class="lrn-card tall">
+      <div class="lrn-tag">Today</div>
+      <div class="lrn-word sm">{{ f.title }}</div>
+      <div class="lrn-do">{{ f.do }}</div>
+      <div class="lrn-why"><b>Why</b> {{ f.why }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ══════════ 08 WISDOM ══════════ -->
+<section class="sec" id="wisdom">
+  <div class="shead rv">
+    <div>
+      <span class="snum">08 / HOW TO LIVE</span>
+      <h2 class="stitle">Jainism and Buddhism.</h2>
+    </div>
+    <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
+      the thing to do with it today.</p>
+  </div>
+  <div class="two rv">
+    {% for w in life_wisdom %}
+    <div class="lrn-card tall {{ 'jain' if w.tradition == 'Jainism' else 'budd' }}">
+      <div class="lrn-tag">{{ w.tradition }}</div>
+      <div class="lrn-word sm">{{ w.term }} <span class="tr">· {{ w.translation }}</span></div>
+      <div class="lrn-do">{{ w.teaching }}</div>
+      <div class="lrn-why"><b>Today</b> {{ w.apply }}</div>
+    </div>
+    {% endfor %}
   </div>
 </section>
 
@@ -3168,10 +3361,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <!-- Archive strip: one tile per trading day, newest first. Live only. -->
   <div id="archWrap" style="display:none">
     <div class="ctlbar rv" style="margin-bottom:8px">
-      <span class="ghost" style="margin-left:0">ARCHIVE — tap a day to load it</span>
-      <button type="button" class="fbtn" id="archAll">Show all days</button>
+      <span class="ghost" style="margin-left:0" id="archSpan">ARCHIVE</span>
+      <button type="button" class="fbtn on" id="archAll">Show all days</button>
+      <span id="archMonths"></span>
     </div>
     <div class="arch rv" id="archStrip"></div>
+    <div class="ghost" style="font-family:var(--mono);font-size:10px;color:var(--dim);margin:-4px 0 4px">
+      ← scroll sideways for the full history →
+    </div>
   </div>
 
   <div class="ctlbar rv" id="alertCtl" style="display:none">
@@ -3904,7 +4101,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       tbody.innerHTML = html || '<tr><td colspan="13" style="padding:26px;text-align:center;color:var(--dim)">' +
                                 'Nothing matches those filters.</td></tr>';
 
-      el('alertCount').textContent = rows.length + ' of ' + allRows.length + ' shown' +
+      // Spell out the full span. The table always held every signal, but with
+      // the newest first it read as though the history stopped a week back.
+      var span = '';
+      if (allRows.length){
+        var ds = allRows.map(function(r){ return r.date; }).filter(Boolean).sort();
+        var uniq = ds.filter(function(v, i){ return ds.indexOf(v) === i; });
+        span = ' · ' + ds[0] + ' → ' + ds[ds.length - 1] + ' · ' + uniq.length + ' trading days';
+      }
+      el('alertCount').textContent = rows.length + ' of ' + allRows.length + ' shown' + span +
         (archDate ? ' · archive ' + archDate : '');
 
       // KPI row reflects what is actually on screen.
@@ -3949,7 +4154,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     /* ═══════ archive ═══════ */
     function loadArchive(){
-      api('/archive?limit=120').then(function(j){
+      api('/archive?limit=1000').then(function(j){
         if (!j.ok) return;
         var strip = el('archStrip');
         strip.innerHTML = (j.days || []).map(function(d){
@@ -3961,6 +4166,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                  '<div class="d">' + d.date.slice(5) + '</div>' +
                  '<div class="n">' + d.signals + '</div>' + rTxt + '</div>';
         }).join('');
+        // Only ~16 chips fit on a desktop screen and ~5 on a phone, which made
+        // a 57-day archive look like one week. Say the span out loud and offer
+        // month jumps so the depth is discoverable without horizontal scrolling.
+        var days = j.days || [];
+        if (days.length){
+          var span = el('archSpan');
+          if (span) span.textContent = 'ARCHIVE — ' + days.length + ' trading days, ' +
+            days[days.length - 1].date + ' → ' + days[0].date + ' · tap a day';
+          var months = [];
+          days.forEach(function(d){
+            var m = d.date.slice(0, 7);
+            if (months.indexOf(m) === -1) months.push(m);
+          });
+          var mEl = el('archMonths');
+          if (mEl) {
+            mEl.innerHTML = months.map(function(m){
+              return '<button type="button" class="fbtn" data-m="' + m + '">' + m + '</button>';
+            }).join('');
+            mEl.querySelectorAll('button').forEach(function(b){
+              b.addEventListener('click', function(){
+                var first = strip.querySelector('.arch-day[data-date^="' + b.dataset.m + '"]');
+                if (first) strip.scrollLeft = first.offsetLeft - 12;
+              });
+            });
+          }
+        }
         reveal(el('archWrap'));
         strip.querySelectorAll('.arch-day').forEach(function(n){
           n.addEventListener('click', function(){ selectDay(n.dataset.date); });
@@ -4580,6 +4811,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 # ─────────────────────────────────────────────────────────────
 
 @app.route("/")
+def _learning_ctx() -> dict:
+    """The daily curriculum. Authored local data with no network or DB behind
+    it, so it renders even on the error path where everything else is empty."""
+    try:
+        d = daily_learning.get_all()
+        return {
+            "interview_tech": d["interview_tech"], "interview_soft": d["interview_soft"],
+            "spanish": d["spanish"], "vocab": d["vocab"], "speaking": d["speaking"],
+            "father": d["father"], "life_wisdom": d["wisdom"],
+        }
+    except Exception as e:
+        log.warning(f"learning tracks: {e}")
+        return {"interview_tech": [], "interview_soft": [], "spanish": [],
+                "vocab": [], "speaking": {}, "father": [], "life_wisdom": []}
+
+
 def index():
     try:
         now     = datetime.now(IST)
@@ -4614,6 +4861,7 @@ def index():
             quote=quote, lesson=lesson, case=case,
             lichess_games=lichess_games, lichess_summary=lichess_summary, lichess_puzzle=lichess_puzzle,
             alerts=alerts,
+            **_learning_ctx(),
         )
     except Exception as e:
         log.error(f"index error: {e}")
@@ -4635,6 +4883,7 @@ def index():
             case={"title":"","story":"","lesson":""},
             lichess_games=[], lichess_summary={}, lichess_puzzle={},
             alerts=[],
+            **_learning_ctx(),
         ), 200
 
 @app.route("/tracker/add", methods=["POST"])

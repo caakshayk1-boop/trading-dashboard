@@ -45,6 +45,7 @@ from newspaper import (
     fetch_lichess_puzzle,
     init_newspaper_db,
     TEMPLATE,
+    _learning_ctx,
 )
 
 IST = timezone(timedelta(hours=5, minutes=30))
@@ -119,6 +120,7 @@ def generate() -> None:
         lichess_summary=lichess_summary,
         lichess_puzzle=lichess_puzzle,
         alerts=alerts,
+        **_learning_ctx(),
     )
 
     # Write output
