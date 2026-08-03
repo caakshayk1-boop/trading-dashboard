@@ -47,9 +47,40 @@ class _ConnWrapper:
     libsql_experimental.Connection doesn't implement __enter__/__exit__,
     but tracker.py uses `with _conn() as c:` extensively.
     """
+    # Attributes belonging to the wrapper itself. Everything else set on this
+    # object is meant for the connection underneath.
+    _OWN = frozenset({"_conn", "_turso"})
+
     def __init__(self, conn, turso: bool = False):
-        self._conn  = conn
-        self._turso = turso
+        object.__setattr__(self, "_conn", conn)
+        object.__setattr__(self, "_turso", turso)
+
+    def __setattr__(self, name: str, value):
+        """Forward attribute writes to the real connection.
+
+        Reads were proxied, writes were not — so `con.row_factory = db.Row`
+        set row_factory on the wrapper and left the connection at its default.
+        Every keyed row access downstream (`row["picks"]`) then raised
+        "tuple indices must be integers", inside except-blocks that turned a
+        broken read into an empty result. It looked like no data rather than a
+        bug, which is why it survived: the tables it touched were empty.
+
+        Tolerant on purpose. libsql_experimental's Connection is a native type
+        that rejects unknown attributes, so a hard forward would turn a silent
+        no-op into an AttributeError on the Turso path — breaking the scanner
+        and the newspaper build to fix a local-only annoyance. Falls back to
+        the wrapper, which is exactly the old behaviour.
+
+        Because of that fallback, callers must NOT assume row_factory took:
+        read rows positionally, or map them by column name explicitly.
+        """
+        if name in self._OWN:
+            object.__setattr__(self, name, value)
+            return
+        try:
+            setattr(self._conn, name, value)
+        except (AttributeError, TypeError):
+            object.__setattr__(self, name, value)
 
     def __enter__(self):
         return self

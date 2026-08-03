@@ -15,6 +15,7 @@ Env vars (set on Railway):
 import os
 import base64
 import logging
+import time
 import requests
 from datetime import datetime, timezone, timedelta
 
@@ -42,14 +43,39 @@ def _alert_telegram(msg: str) -> None:
         pass
 
 
-def _verify_write(path: str) -> bool:
-    """Confirm the file actually exists in GitHub after a PUT. Returns True if confirmed."""
+def _verify_write(path: str, expect_sha: str | None = None,
+                  attempts: int = 4) -> bool:
+    """Confirm the file is readable back from GitHub after a PUT.
+
+    The contents API is read-through a cache and is only eventually consistent
+    with a commit that landed milliseconds ago — a GET fired immediately after
+    a 200/201 PUT routinely 404s on a newly created file. That produced a daily
+    "PUT succeeded but file not found on GET" alert for writes that were in
+    fact committed. So: retry with backoff, and when the PUT told us the blob
+    SHA, treat anything else as not-yet-visible rather than missing.
+    """
     url = f"{_GH_API_BASE}/{path}"
-    try:
-        r = requests.get(url, headers=_gh_headers(), timeout=10)
-        return r.status_code == 200
-    except Exception:
-        return False
+    # Cache-busting query + no-cache header; both are needed, the CDN honours
+    # neither on its own.
+    headers = {**_gh_headers(), "Cache-Control": "no-cache"}
+    delay = 1.5
+    for i in range(attempts):
+        try:
+            r = requests.get(url, headers=headers, params={"ref": "main"}, timeout=10)
+            if r.status_code == 200:
+                if not expect_sha:
+                    return True
+                if (r.json() or {}).get("sha") == expect_sha:
+                    return True
+                logging.info(f"obsidian_sync verify {path}: stale read, retrying")
+            elif r.status_code not in (404, 409):
+                logging.warning(f"obsidian_sync verify {path}: HTTP {r.status_code}")
+        except Exception as e:
+            logging.warning(f"obsidian_sync verify {path}: {e}")
+        if i < attempts - 1:
+            time.sleep(delay)
+            delay *= 2
+    return False
 
 
 def _gh_headers() -> dict:
@@ -103,17 +129,26 @@ def _gh_put_file(path: str, content: str, message: str, sha: str | None = None) 
             logging.warning(f"obsidian_sync PUT {path}: {r.status_code} {r.text[:200]}")
             _alert_telegram(f"⚠️ *Obsidian sync failed* (PUT)\n`{path}`\nHTTP {r.status_code} — signals NOT written to Obsidian.")
             return False
+        done = r.json() or {}
     except Exception as e:
         logging.warning(f"obsidian_sync PUT {path}: {e}")
         _alert_telegram(f"⚠️ *Obsidian sync error*\n`{path}`\n`{e}`")
         return False
 
-    # Verify file actually landed in the repo
-    if not _verify_write(path):
-        logging.warning(f"obsidian_sync VERIFY failed for {path}")
-        _alert_telegram(f"⚠️ *Obsidian sync verify failed*\n`{path}` — PUT succeeded (HTTP 200) but file not found on GET. Check GitHub API rate limits.")
+    # The PUT response carries the commit it created and the blob it wrote.
+    # That IS the proof the write landed — the read-back below only checks
+    # whether GitHub is serving it yet, which is a different question and not
+    # one worth waking anybody up over.
+    new_sha    = (done.get("content") or {}).get("sha")
+    commit_sha = (done.get("commit") or {}).get("sha")
+    if not commit_sha:
+        logging.warning(f"obsidian_sync PUT {path}: 200 with no commit in response")
+        _alert_telegram(f"⚠️ *Obsidian sync failed*\n`{path}` — PUT returned OK but no commit. Not written.")
         return False
 
+    if not _verify_write(path, new_sha):
+        logging.info(f"obsidian_sync: {path} committed as {commit_sha[:7]} but not "
+                     "readable back yet — contents API lag, write is safe")
     return True
 
 

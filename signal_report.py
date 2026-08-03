@@ -48,7 +48,11 @@ def _fetch(days: int) -> pd.DataFrame:
             "SELECT date, signal_type, symbol, action, timeframe, entry, sl, "
             "target1, target2, rr, score, status, exit_price, pnl_pct, "
             "r_multiple FROM all_signals WHERE date >= ? ORDER BY date DESC",
-            c, params=[since],
+            # Tuple, not list. pandas hands `params` straight to the DBAPI
+            # cursor, and libsql_experimental only accepts a tuple — a list
+            # raises "argument 'parameters': 'list' object cannot be converted
+            # to 'PyTuple'", which killed the whole EOD ledger post.
+            c, params=(since,),
         )
 
 

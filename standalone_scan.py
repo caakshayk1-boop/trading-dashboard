@@ -995,6 +995,8 @@ def main():
         _safe("price_alerts", run_price_alerts, time_str)
         _safe("markets",      run_markets,      time_str)
 
+        mode = None   # set by slots that generate no signals by design
+
         if slot in ("morning", "midday"):
             # Signal generation removed here on 2026-07-30. Every scan that ran
             # in these slots (4h, tlm, swing, commodity) derived targets from
@@ -1006,7 +1008,13 @@ def main():
             # These slots now run position management only: price alerts and
             # the market snapshot, both executed above for every slot. Entries
             # come from the EOD measured scan.
-            counts = {"mode": "position-management-only"}
+            # Counts must stay numeric. A {"mode": "position-management-only"}
+            # marker used to live here and blew up the completion summary with
+            # "unsupported operand type(s) for +: 'int' and 'str'" — which
+            # aborted the whole scan AFTER the work was done, so every midday
+            # run reported itself as a Scanner Error.
+            counts = {}
+            mode = "position-management-only"
 
         elif slot == "eod":
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
@@ -1060,12 +1068,16 @@ def main():
         logging.info("Signal data exported to data/")
 
         # ── Slot completion summary (always sends so you know scan ran) ──
-        total = sum(counts.values())
-        parts = [f"{k.upper()}: {v}" for k, v in counts.items() if v > 0]
+        # Defensive on type: a non-numeric entry sneaking into `counts` must
+        # never take down a scan whose real work already succeeded.
+        nums  = {k: v for k, v in counts.items() if isinstance(v, (int, float))}
+        total = sum(nums.values())
+        parts = [f"{k.upper()}: {v}" for k, v in nums.items() if v > 0]
         if total == 0:
             _send(
                 f"✅ *{slot.upper()} scan complete* — {time_str}\n"
-                f"_No qualifying signals. Regime/score/RR filters not met._"
+                + (f"_{mode.replace('-', ' ')} — no entries by design._" if mode
+                   else "_No qualifying signals. Regime/score/RR filters not met._")
             )
         else:
             _send(

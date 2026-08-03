@@ -366,6 +366,32 @@ with tracker._conn() as c:
         "SELECT COUNT(*) FROM breakouts WHERE symbol='EOD1'").fetchone()[0]
 check("re-scan replaces the same symbol, no duplicate row", n_eod1 == 1, f"rows={n_eod1}")
 
+# ── the completion summary must survive whatever lands in `counts` ────────────
+# A {"mode": "position-management-only"} marker in the midday counts made
+# sum(counts.values()) raise "unsupported operand type(s) for +: 'int' and
+# 'str'". That was caught by the outer handler, so every midday run reported
+# itself to Telegram as a Scanner Error AFTER completing its work correctly.
+def _summarise(counts, mode=None):
+    nums = {k: v for k, v in counts.items() if isinstance(v, (int, float))}
+    total = sum(nums.values())
+    parts = [f"{k.upper()}: {v}" for k, v in nums.items() if v > 0]
+    return total, parts
+
+try:
+    t, p = _summarise({"mode": "position-management-only"})
+    check("summary survives a non-numeric count", t == 0 and p == [], f"total={t} parts={p}")
+except TypeError as e:
+    check("summary survives a non-numeric count", False, str(e))
+
+t, p = _summarise({"breakouts": 3, "swing": 0, "commodities": 2})
+check("summary still totals numeric counts", t == 5 and len(p) == 2, f"total={t} parts={p}")
+
+# The midday slot itself must now hand back numbers only.
+src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "standalone_scan.py")).read()
+check("midday slot emits numeric counts only",
+      'counts = {"mode": "position-management-only"}' not in src)
+
 shutil.rmtree(TMP, ignore_errors=True)
 print("\n" + ("ALL CHECKS PASSED" if not fails else f"{len(fails)} FAILED: {fails}"))
 sys.exit(1 if fails else 0)
