@@ -37,8 +37,10 @@ from newspaper import (
     get_review,
     fetch_alert_log,
     get_top5_picks,
+    last_known_picks,
     get_tracker_stocks,
     get_money_hack,
+    get_dubai_note,
     get_productivity_tip,
     fetch_lichess_games,
     get_lichess_summary,
@@ -79,10 +81,25 @@ def generate() -> None:
     way     = get_way()
     review  = get_review()
     money   = get_money_hack()
+    dubai   = get_dubai_note()
     prod    = get_productivity_tip()
 
+    # Picks are keyed by ISO week. Nothing warms that cache on a static build —
+    # under Flask a startup thread did it — so every Monday the section
+    # rendered "check back Monday". Build it here, and fall back to the last
+    # week we do have rather than shipping an empty section if Yahoo is down.
     print("[generate] Fetching top 5 picks...")
-    top5    = get_top5_picks()
+    try:
+        top5 = get_top5_picks(build_if_missing=True)
+    except Exception as e:
+        print(f"[generate] ⚠️  picks build failed: {e}")
+        top5 = []
+    top5_week = None
+    if not top5:
+        top5, top5_week = last_known_picks()
+        if top5:
+            print(f"[generate] ⚠️  using last known picks from {top5_week}")
+    print(f"[generate] Picks: {len(top5)}")
     tracker = get_tracker_stocks()
 
     print("[generate] Fetching alert log...")
@@ -95,11 +112,17 @@ def generate() -> None:
     lichess_puzzle  = fetch_lichess_puzzle()
     print(f"[generate] Lichess: {len(lichess_games)} games yesterday, puzzle: {bool(lichess_puzzle)}")
 
+    # Build id — one per generated shell. A tab compares this against
+    # /edition.json to know it is showing a superseded edition.
+    build_id = now.strftime("%Y%m%dT%H%M%S")
+
     # Render template
     print("[generate] Rendering HTML...")
     html = Template(TEMPLATE).render(
         date_str=now.strftime("%A, %B %d %Y"),
         updated_at=now.strftime("%H:%M"),
+        build_id=build_id,
+        build_date=now.strftime("%Y-%m-%d"),
         markets=markets,
         news=news,
         quote=quote,
@@ -113,8 +136,10 @@ def generate() -> None:
         way=way,
         review=review,
         money_hack=money,
+        dubai=dubai,
         productivity_tip=prod,
         top5=top5,
+        top5_week=top5_week,
         tracker=tracker,
         lichess_games=lichess_games,
         lichess_summary=lichess_summary,
@@ -133,11 +158,19 @@ def generate() -> None:
         if "game-card" in existing and "LICHESS_TOKEN" not in existing:
             print("[generate] ⚠️  Skipping index.html overwrite — existing file has full chess data, no token locally")
             (out_dir / "alerts.json").write_text(json.dumps(alerts, default=str, indent=2), encoding="utf-8")
+            # No edition.json write here on purpose: index.html was not
+            # rewritten, so publishing a new build id would tell every open tab
+            # to reload into the same page it already has.
             return
     out_file.write_text(html, encoding="utf-8")
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
     )
+    (out_dir / "edition.json").write_text(json.dumps({
+        "build_id":   build_id,
+        "build_date": now.strftime("%Y-%m-%d"),
+        "built_at":   now.isoformat(),
+    }), encoding="utf-8")
     size_kb = out_file.stat().st_size // 1024
     print(f"[generate] ✅ Written to {out_file} ({size_kb}KB)")
 

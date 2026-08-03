@@ -1569,8 +1569,13 @@ def _build_picks() -> list[dict]:
     return top5
 
 def _week_key() -> str:
-    """ISO week key e.g. '2026-W23' — picks refresh every Monday."""
-    d = date.today()
+    """ISO week key e.g. '2026-W23' — picks refresh every Monday.
+
+    Keyed on the IST date, not the runner's UTC date. Everything else on this
+    page is stamped IST, and a delayed GitHub run near the UTC/IST boundary
+    would otherwise file Monday's picks under last week.
+    """
+    d = datetime.now(IST).date()
     return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
 
 def _warm_picks_cache():
@@ -1579,7 +1584,7 @@ def _warm_picks_cache():
         row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (week,)).fetchone()
         if row:
             with _picks_lock:
-                _picks_cache[week] = json.loads(row["picks"])
+                _picks_cache[week] = json.loads(row[0])
             log.info(f"picks: loaded from DB cache ({week})")
             return
     log.info(f"picks: warming cache for {week} — scanning {len(WATCHLIST)} stocks...")
@@ -1590,27 +1595,69 @@ def _warm_picks_cache():
         _picks_cache[week] = picks
     log.info(f"picks: cached {len(picks)} top picks for {week}")
 
-def get_top5_picks() -> list[dict]:
+def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
+    """This week's five ideas.
+
+    `build_if_missing` exists because the static generator has no long-running
+    process behind it. Under Flask, _warm_picks_cache() runs on a background
+    thread at startup; generate.py never called it, so on the first build of a
+    new ISO week the DB had no row for that week and the section rendered its
+    "check back Monday" empty state — every Monday, all day. See generate.py.
+    """
     week = _week_key()
     with _picks_lock:
         if week in _picks_cache: return _picks_cache[week]
     with _db() as con:
         row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (week,)).fetchone()
         if row:
-            picks = json.loads(row["picks"])
+            picks = json.loads(row[0])
             with _picks_lock: _picks_cache[week] = picks
             return picks
+
+    if build_if_missing:
+        _warm_picks_cache()
+        with _picks_lock:
+            return _picks_cache.get(week, [])
+
     return []
+
+
+def last_known_picks() -> tuple[list[dict], str | None]:
+    """Most recent week's picks, whatever week that was, plus its key.
+
+    A fallback for the build: stale ideas clearly labelled as last week's beat
+    an empty section, and beat blocking the whole newspaper on a Yahoo outage.
+    """
+    with _db() as con:
+        row = con.execute(
+            "SELECT pick_date, picks FROM newspaper_stocks_picked "
+            "ORDER BY pick_date DESC LIMIT 1").fetchone()
+    if not row:
+        return [], None
+    try:
+        return json.loads(row[1]), row[0]
+    except (ValueError, TypeError):
+        return [], None
 
 # ─────────────────────────────────────────────────────────────
 # STOCK TRACKER
 # ─────────────────────────────────────────────────────────────
 
 def get_tracker_stocks() -> list[dict]:
+    # Named columns and an explicit mapping, not SELECT * with keyed access.
+    # row_factory does not survive the Turso connection wrapper, so keyed
+    # access raised "tuple indices must be integers" and took the whole 6 AM
+    # build down with it — but only once a position existed, which is why an
+    # empty book hid it.
+    cols = ("id", "symbol", "name", "entry_price", "current_price",
+            "target_price", "stop_loss", "thesis", "timeframe", "added_date")
     with _db() as con:
-        rows = con.execute("SELECT * FROM stock_tracker WHERE status='active' ORDER BY added_date DESC").fetchall()
+        rows = con.execute(
+            f"SELECT {', '.join(cols)} FROM stock_tracker "
+            "WHERE status='active' ORDER BY added_date DESC").fetchall()
     out = []
-    for r in rows:
+    for raw in rows:
+        r = dict(zip(cols, raw))
         sym = r["symbol"]
         current = r["current_price"] or r["entry_price"] or 0
         try:
@@ -1697,6 +1744,226 @@ PRODUCTIVITY_TIPS = [
 def get_productivity_tip() -> str:
     idx = (date.today().toordinal() + 7) % len(PRODUCTIVITY_TIPS)
     return PRODUCTIVITY_TIPS[idx]
+
+# ─────────────────────────────────────────────────────────────
+# DUBAI CORNER — AED 30K+ TRACK
+#
+# This pane was a single hardcoded block in the template. Same headline, same
+# five employers, same cover-letter tip, every day since it shipped — the one
+# section on a page that rebuilds daily which never changed. It is also the
+# section attached to the deadline that matters (Dubai FP&A, AED 30K+, by
+# mid-2026), so a static pane there is worse than none.
+#
+# Fields: title, body, targets line, (action label, action).
+# ─────────────────────────────────────────────────────────────
+
+DUBAI_TRACK = [
+    ("The stack that clears AED 30K",
+     "CA or ACCA, plus SAP or Oracle, plus Power BI, plus IFRS 9 and 16. That is the whole gate. "
+     "Miss one and you are competing on price.",
+     "Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.",
+     ("Keyword tip", 'Put "IFRS 16 implementation" and "rolling forecast" in the cover letter. '
+      "Recruiters grep for exactly those two strings.")),
+
+    ("What AED 30K actually is",
+     "AED 30,000/month is ₹6,86,000 at 22.87. Tax on it: zero. The equivalent Indian gross, "
+     "after 30% plus cess, is roughly ₹1.18 crore a year. That is the arbitrage — not the number itself.",
+     "Reality check: housing eats AED 6–9K of it in Dubai Marina or JVC.",
+     ("Run the number", "Build the AED-to-net-savings model before the first interview. "
+      "Negotiating without it is negotiating on vibes.")),
+
+    ("The package is not the salary",
+     "Gulf offers split into basic, housing, transport and a school allowance. Gratuity accrues on "
+     "BASIC only — 21 days' basic per year for the first five. An offer that is 40% basic and 60% "
+     "allowances quietly halves your end-of-service.",
+     "Ask for the split in writing before you counter.",
+     ("Negotiation lever", "Push basic up, not total up. Same headline number, materially more gratuity.")),
+
+    ("Who actually hires FP&A in the UAE",
+     "Four pools, in order of volume: government-linked groups (ADNOC, DEWA, Etihad), retail and "
+     "F&B conglomerates (MAF, Landmark, Alshaya), logistics and ports (DP World, Aramex), and Big 4 "
+     "advisory. Retail hires the most and pays the least. Government-linked pays the most and moves slowest.",
+     "Best ratio of pay to speed: logistics and healthcare groups.",
+     ("This week", "Pick one pool. Applying across all four with one CV is why nothing lands.")),
+
+    ("The visa question, answered",
+     "Employment visa is sponsored by the employer — you do not need one to apply, and any recruiter "
+     "asking you to pay for one is running a scam. The Golden Visa needs a AED 30K+ salary and a "
+     "degree attestation, which is exactly why AED 30K is the threshold worth targeting.",
+     "Attest the degree in India first. It takes 3–6 weeks and blocks everything downstream.",
+     ("Do now", "MEA attestation on the CA certificate and the degree. Before an offer, not after.")),
+
+    ("Your CV is being read by software",
+     "Most Gulf groups run Taleo or SuccessFactors. Two columns, tables, headers and a photo all "
+     "parse to garbage. Single column, standard headings, .docx not PDF, no logos.",
+     "Job title in the CV header must match the job title in the posting. Literally.",
+     ("30-minute fix", "Rewrite the top third of the CV as: title, then five bullets, "
+      "each with a number in it.")),
+
+    ("The IFRS 16 story they want",
+     "Every UAE retail and logistics group is lease-heavy, so IFRS 16 is not a technical question — "
+     "it is the whole job. Have one story ready: the portfolio size, the discount rate you used, "
+     "how you handled the transition, and what broke.",
+     "If you have not run one, say so and describe the mechanics anyway. Bluffing gets caught in round two.",
+     ("Prep", "Write the story in 200 words. Say it out loud until it takes 90 seconds.")),
+
+    ("Recruiters worth the email",
+     "Michael Page, Robert Half, Hays and Charterhouse run most of the AED 25–45K finance mandates. "
+     "Cooper Fitch and Nathan HR sit closer to the local groups.",
+     "One consultant per firm. Four firms. Not forty applications.",
+     ("Message", "Two lines: what you do, what you want, salary expectation. Recruiters bin the essays.")),
+
+    ("Time your application to the budget cycle",
+     "UAE groups build budgets September to November and hire FP&A ahead of it. January is the second "
+     "window, funded by the new year's headcount. Ramadan and July–August are dead.",
+     "That makes September the highest-yield month of the year to be applying.",
+     ("Plan", "Have the CV, LinkedIn and referral list finished by mid-August. Not started.")),
+
+    ("The 'why Dubai' answer",
+     "Every panel asks it, and 'better opportunities' loses the room. The answer that works is "
+     "specific: the sector, the company's stage, and what you do about a problem they actually have.",
+     "Weak: growth and exposure. Strong: your lease portfolio doubled after the 2024 expansion.",
+     ("Homework", "Read the last annual report before the call. Quote one number from it.")),
+
+    ("Referral beats portal, by a lot",
+     "Applications through a company portal convert at low single digits. An internal referral converts "
+     "an order of magnitude better. The list of people who can refer you is smaller than you think and "
+     "you already know most of them.",
+     "ICAI Dubai Chapter has roughly 4,000 members. That is the network.",
+     ("This week", "Message five CAs already in the UAE. Ask for a 15-minute call, not a job.")),
+
+    ("Power BI is the tiebreaker",
+     "Between two CAs with identical FP&A experience, the one who can build the dashboard gets the "
+     "offer. Not because the dashboard matters — because it proves you will not need an analyst.",
+     "DAX, one real model, published. A certificate without an artefact proves nothing.",
+     ("Build", "One dashboard on your own trading ledger. It is real data and it is defensible.")),
+
+    ("What the counter-offer is really for",
+     "First offers in the Gulf come in 10–15% below the band because everybody counters. Not "
+     "countering does not read as humble; it reads as someone who did not check.",
+     "Counter once, with a number and a reason. Then stop.",
+     ("Script", '"Based on the band for this role and my IFRS 16 experience, I was targeting AED X."')),
+
+    ("The cost side nobody models",
+     "Housing is paid annually up front in Dubai, or quarterly at a premium. Schooling runs AED 25–60K "
+     "per child per year. Health insurance is mandatory and usually covered. Add a AED 40–60K "
+     "first-year setup cost before the savings maths works.",
+     "Sharjah rent is roughly half of Dubai's. The commute costs you 90 minutes a day.",
+     ("Model it", "Year-one net savings, not monthly salary. They are very different numbers.")),
+
+    ("Arabic is not required. Reading it helps.",
+     "No finance role in the Gulf requires Arabic. But invoices, government portals and trade licences "
+     "arrive in it, and being able to read a heading rather than forwarding it is a visible edge.",
+     "Numbers, months, and twenty document words. That is the whole ask.",
+     ("Ten minutes", "Learn the Arabic numerals and the words for invoice, tax, and licence.")),
+
+    ("Corporate tax changed the job",
+     "The UAE introduced 9% corporate tax from June 2023. Every group now needs someone who can model "
+     "an effective tax rate, handle transfer pricing between free-zone and mainland entities, and file. "
+     "That is new demand, and the supply of people who have actually done it is thin.",
+     "Free-zone qualifying income at 0% is the question that separates the prepared from the rest.",
+     ("Edge", "Read the FTA corporate tax guide. Two hours buys you a whole interview answer.")),
+
+    ("Free zone vs mainland, in one line",
+     "A free-zone entity is 100% foreign-owned, tax-advantaged and restricted to trading within its "
+     "zone or abroad. A mainland entity can trade anywhere in the UAE and pays the 9%. Groups run both, "
+     "and the intercompany between them is where the FP&A work lives.",
+     "If you can explain this cleanly, you are ahead of most candidates.",
+     ("Say it", "Practise the explanation in 30 seconds. It comes up constantly.")),
+
+    ("Six weeks, not six months",
+     "Government-linked groups take three to six months from application to offer. Private groups take "
+     "four to eight weeks. Applying only to the first kind and then reading the silence as rejection is "
+     "the most common way this search dies.",
+     "Run both pipelines at once. The fast one funds the patience for the slow one.",
+     ("Track it", "One sheet: company, date applied, stage, next action, date of next action.")),
+
+    ("The LinkedIn setting that matters most",
+     "Set location to Dubai, United Arab Emirates and turn on Open to Work for recruiters only. Gulf "
+     "recruiters filter by location before they read anything, and a Mumbai location excludes you from "
+     "the search entirely.",
+     "This is a two-minute change that decides whether you are visible at all.",
+     ("Now", "Location, headline with the target title, and the About section rewritten in numbers.")),
+
+    ("Month-end close is the first question",
+     "Not 'walk me through your CV' — 'walk me through your close'. They want the day count, what runs "
+     "on which day, where it breaks, and what you did about it.",
+     "A close you shortened from 10 days to 6 is a better answer than any certificate.",
+     ("Prep", "Write your close calendar as a day-by-day list. Learn it.")),
+
+    ("Saudi pays more. Consider it.",
+     "Riyadh FP&A bands sit 15–25% above Dubai's for the same role, driven by Vision 2030 spending, and "
+     "the tax position is the same. The trade is lifestyle and family logistics, not money.",
+     "Also live: Qatar and Bahrain, both quieter and both hiring.",
+     ("Widen", "Add Riyadh to the search. The Dubai-only filter is a self-imposed pay cut.")),
+
+    ("The reference call decides it",
+     "Gulf groups check references properly, and they call the person you name. A manager who says "
+     "'he was good' loses you the band. A manager who says 'he cut our forecast error from 12% to 4%' "
+     "wins you the counter.",
+     "Brief your references. Give them the number you want said.",
+     ("Do", "Pick two. Send each a three-line note on what the role needs.")),
+
+    ("Attestation is the silent blocker",
+     "Degree and CA certificate need MEA attestation in India, then UAE embassy attestation, then MOFA "
+     "in the UAE. Three to six weeks if nothing goes wrong. Offers have been withdrawn over this.",
+     "Start it before you have an offer. It expires slowly and costs little.",
+     ("Cost", "Roughly ₹8–15K all-in per document, and the only thing it buys is not losing the job.")),
+
+    ("Notice period is a negotiation, not a fact",
+     "Gulf employers plan around a 30-day joiner. A 90-day Indian notice period kills live mandates. "
+     "Buy-out clauses exist in most Indian contracts and employers routinely fund them.",
+     "Say the real number early. Discovering it in week six loses the offer.",
+     ("Ask", "Find out your buy-out amount now. It is a line in the contract.")),
+
+    ("What a Financial Controller title actually needs",
+     "The jump from FP&A Manager to Controller in the Gulf is statutory reporting plus audit ownership "
+     "plus a team. If the CV has no signed statutory set on it, that is the gap — not the years.",
+     "Controller bands start around AED 40K. It is the next rung, and it is close.",
+     ("Gap", "Get a statutory reporting line on the CV in the next six months. Any entity, any size.")),
+
+    ("Consolidation is the differentiator",
+     "Multi-entity, multi-currency consolidation with intercompany elimination is what a Gulf group does "
+     "every month and what most candidates have never touched. Naming the tool — HFM, OneStream, "
+     "Tagetik, SAP BPC — moves you up a band on its own.",
+     "IFRS 10, IFRS 3 and IAS 21 are the standards behind it. Know which does what.",
+     ("Learn", "Take one 20-entity consolidation end to end, even as an exercise. Then say so.")),
+
+    ("Do not send the same CV twice",
+     "One master CV, then a version per pool: retail, logistics, energy, advisory. Same facts, different "
+     "order, different top five bullets. It takes 20 minutes per version and roughly doubles response rate.",
+     "The bullet at the top of the page is doing 80% of the work.",
+     ("Rule", "If the top bullet does not name the sector's core problem, rewrite it.")),
+
+    ("Interviews here are panels",
+     "Expect three rounds: recruiter screen, hiring manager, then a panel with the CFO and a business "
+     "head. The business head is the one to convince — they decide whether finance is useful or overhead.",
+     "Answer the business head in their language, not in accounting standards.",
+     ("Prep", "Have one story about a decision you changed with a number.")),
+
+    ("The offer letter clauses to read twice",
+     "Probation length (usually six months, terminable on 14 days), annual leave (30 calendar days is "
+     "standard, 22 working days is not the same thing), flight allowance, and whether the visa is "
+     "sponsored for family from day one or after probation.",
+     "Family sponsorship after probation means six months of separation nobody mentioned.",
+     ("Check", "Ask about family visa timing before you accept, in writing.")),
+
+    ("Why applications stall at 60%",
+     "Most Gulf portals reject on missing fields, not on merit. Passport number, visa status, notice "
+     "period, current and expected salary. Leave one blank and the application never reaches a human.",
+     "Expected salary blank is read as 'unclear', which is worse than a high number.",
+     ("Fix", "Keep a text file with every field the portals ask for. Paste, do not retype.")),
+]
+
+
+def get_dubai_note() -> dict:
+    """Today's Dubai Corner entry. Rotates daily on the same ordinal scheme as
+    every other bank on this page, so the whole desk turns over together."""
+    idx = (date.today().toordinal() + 3) % len(DUBAI_TRACK)
+    title, body, targets, (act_label, action) = DUBAI_TRACK[idx]
+    return {"title": title, "body": body, "targets": targets,
+            "action_label": act_label, "action": action,
+            "index": idx + 1, "total": len(DUBAI_TRACK)}
 
 # ─────────────────────────────────────────────────────────────
 # OBSIDIAN SYNC
@@ -1868,13 +2135,37 @@ h1.hl em{font-style:normal;color:var(--lime)}
 .tickwrap::before,.tickwrap::after{content:'';position:absolute;top:0;bottom:0;width:90px;z-index:3;pointer-events:none}
 .tickwrap::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent)}
 .tickwrap::after{right:0;background:linear-gradient(270deg,var(--bg2),transparent)}
-.tick{display:flex;width:max-content;animation:marquee 46s linear infinite;}
-.tickwrap:hover .tick{animation-play-state:paused}
+/* The rail carries ~110 instruments in eleven labelled segments, so the loop
+   is set by --tickdur (written by the client from the item count) rather than
+   fixed — 46s across that many items is unreadable. */
+.tick{display:flex;width:max-content;animation:marquee var(--tickdur,46s) linear infinite;}
+.tickwrap:hover .tick,.tickwrap.hold .tick{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ti{display:flex;align-items:center;gap:9px;padding:11px 22px;border-right:1px solid var(--line);white-space:nowrap;}
 .ti .n{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);font-weight:500}
 .ti .p{font-family:var(--mono);font-size:13px;font-weight:600}
 .ti .c{font-family:var(--mono);font-size:12px;font-weight:700}
+.ti .note{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.5px}
+
+/* Segment head — the thing that makes a 110-item rail readable instead of
+   an undifferentiated stream of numbers. */
+.tseg{display:flex;align-items:center;gap:8px;padding:11px 20px 11px 22px;white-space:nowrap;
+  border-right:1px solid var(--line);background:
+    linear-gradient(90deg,color-mix(in srgb,var(--sc,var(--lime)) 16%,transparent),transparent);}
+.tseg .ic{font-size:13px;line-height:1}
+.tseg .lb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--sc,var(--lime))}
+.tseg::before{content:'';width:3px;height:15px;border-radius:2px;background:var(--sc,var(--lime))}
+.ti.hi .p{color:var(--sc,inherit)}
+
+/* The rail is the only market surface on the page now, so it gets a control:
+   the whole strip is a live region a reader can freeze to actually read it. */
+.tickctl{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:4;
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  background:var(--bg2);color:var(--dim);border:1px solid var(--line);border-radius:99px;
+  padding:4px 10px;cursor:pointer}
+.tickctl:hover{color:var(--lime);border-color:var(--lime)}
+@media(max-width:640px){.tickctl{display:none}}
 
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
@@ -1904,21 +2195,10 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   padding:3px 8px;border-radius:5px;background:var(--lime-soft);color:var(--lime);border:1px solid var(--lime-line)}
 </style>
 <style>
-/* ═══════════════════ 01 MARKETS ═══════════════════ */
-.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
-.mkt{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;
-  padding:18px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
-.mkt:hover{transform:translateY(-3px);border-color:var(--line2)}
-.mkt::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;transition:width .3s var(--ease)}
-.mkt.u::after{background:var(--up)} .mkt.d::after{background:var(--down)}
-.mkt:hover::after{width:4px}
-.mkt .n{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);font-weight:500}
-.mkt .p{font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:-1px;margin:8px 0 4px}
-.mkt .c{font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
-.spark{position:absolute;right:0;bottom:0;opacity:.13;pointer-events:none}
-@media(max-width:520px){.mkt-grid{grid-template-columns:1fr 1fr;gap:9px}.mkt{padding:14px}.mkt .p{font-size:19px}}
+/* The .mkt / .mkt-grid rules that lived here belonged to the "What moved"
+   section, which duplicated the ticker and has been removed. */
 
-/* ═══════════════════ 02 PICKS ═══════════════════ */
+/* ═══════════════════ 01 PICKS ═══════════════════ */
 .pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .pick{position:relative;background:linear-gradient(160deg,var(--surface),#0E0F12);border:1px solid var(--line);
   border-radius:18px;padding:22px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
@@ -2222,6 +2502,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   border-radius:999px;padding:3px 11px;cursor:pointer;flex:none}
 .livebar button:hover{background:var(--lime-soft)}
 
+/* Stale-edition notice. Gold, not lime: this is not a healthy state. */
+.editionbar{display:none;align-items:center;gap:12px;
+  padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
+  border-bottom:1px solid var(--gold);background:rgba(255,193,71,.10);color:var(--gold)}
+.editionbar.on{display:flex}
+.editionbar span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editionbar button{font:inherit;color:#000;background:var(--gold);border:none;
+  border-radius:999px;padding:4px 13px;cursor:pointer;flex:none;font-weight:700}
+
 .ctlbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:0 0 16px}
 .ctlbar input,.ctlbar select{font-family:var(--mono);font-size:12px;color:var(--text);
   background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;min-width:0}
@@ -2426,25 +2715,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </header>
 
+<!-- Nav order MUST match document order. It did not: Performance, Mind Gym and
+     Signal Log were listed near the top while their sections sit at the very
+     bottom, so the scroll spy underlined "Chess" while you were reading the
+     signal log and "The Mind" while you were reading The Desk. The numbers had
+     drifted too — two 05s in the nav, and section headings that disagreed with
+     it. One sequence now, top to bottom, nav and headings the same. -->
 <nav class="nav">
   <div class="nav-in" id="navin">
-    <a href="#markets"><i>01</i>Markets</a>
-    <a href="#picks"><i>02</i>Trade Ideas</a>
-    <a href="#tracker"><i>03</i>Portfolio</a>
-    <a href="#sip"><i>04</i>SIP Buckets</a>
-    <a href="#perf"><i>05</i>Performance</a>
-    <a href="#interview"><i>05</i>Interview</a>
-    <a href="#language"><i>06</i>Language</a>
-    <a href="#father"><i>07</i>Father</a>
-    <a href="#wisdom"><i>08</i>Wisdom</a>
-    <a href="#gym"><i>09</i>Mind Gym</a>
-    <a href="#alerts"><i>10</i>Signal Log</a>
-    <a href="#world"><i>11</i>World</a>
-    <a href="#desk"><i>12</i>The Desk</a>
-    <a href="#mind"><i>13</i>The Mind</a>
-    <a href="#way"><i>14</i>The Way</a>
-    <a href="#review"><i>15</i>The Review</a>
-    <a href="#chess"><i>16</i>Chess</a>
+    <a href="#picks"><i>01</i>Trade Ideas</a>
+    <a href="#tracker"><i>02</i>Portfolio</a>
+    <a href="#sip"><i>03</i>SIP Buckets</a>
+    <a href="#interview"><i>04</i>Interview</a>
+    <a href="#language"><i>05</i>Language</a>
+    <a href="#father"><i>06</i>Father</a>
+    <a href="#wisdom"><i>07</i>Wisdom</a>
+    <a href="#world"><i>08</i>World</a>
+    <a href="#desk"><i>09</i>The Desk</a>
+    <a href="#mind"><i>10</i>The Mind</a>
+    <a href="#way"><i>11</i>The Way</a>
+    <a href="#review"><i>12</i>The Review</a>
+    <a href="#chess"><i>13</i>Chess</a>
+    <a href="#gym"><i>14</i>Mind Gym</a>
+    <a href="#perf"><i>15</i>Performance</a>
+    <a href="#alerts"><i>16</i>Signal Log</a>
   </div>
 </nav>
 
@@ -2453,6 +2747,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <span class="pip"></span>
   <span class="msg" id="livemsg">Checking live ledger…</span>
   <button type="button" id="liverefresh">Refresh</button>
+</div>
+
+<!-- A tab left open overnight kept serving the previous edition: the clock
+     ticked, the ledger bar refreshed, but the masthead still read yesterday's
+     date and the hero still held yesterday's numbers. Two tabs open a minute
+     apart disagreed about what day it was. The page now knows its own build id
+     and says so when a newer one is published. -->
+<div class="editionbar" id="editionbar" data-build="{{ build_id }}">
+  <span>A newer edition was published — this tab is still showing {{ date_str }}.</span>
+  <button type="button" id="editionReload">Load it</button>
 </div>
 </div><!-- /.headstack -->
 
@@ -2494,10 +2798,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 </section>
 
-<!-- ══════════ TICKER ══════════ -->
-<div class="tickwrap">
+<!-- ══════════ TICKER ══════════
+     The only market surface on the page. A "What moved" grid used to sit
+     directly below carrying the identical nine instruments — same names, same
+     numbers, twice, 200px apart. The grid is gone; the rail absorbed its job
+     and now runs the whole board in segments, ordered by when each market
+     actually opens in IST. Filled live from /api/ticker; the markup below is
+     the 6 AM snapshot that renders before that resolves and on a static
+     host. -->
+<div class="tickwrap" id="tickWrap">
   <div class="tick" id="tickRail">
-    {% for dup in [1,2] %}{% for m in markets %}
+    {% for dup in [1,2] %}
+    <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
+    {% for m in markets %}
     <div class="ti">
       <span class="n">{{ m.name }}</span>
       <span class="p">{{ m.price }}</span>
@@ -2505,41 +2818,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endfor %}{% endfor %}
   </div>
+  <button type="button" class="tickctl" id="tickHold" aria-pressed="false">Pause</button>
 </div>
 
 <main>
 
-<!-- ══════════ 01 MARKETS ══════════ -->
-<section class="sec" id="markets">
-  <div class="shead rv">
-    <div>
-      <span class="snum">01 / MARKETS</span>
-      <h2 class="stitle">What moved.</h2>
-    </div>
-    <p class="sdesc" id="mktDesc">{{ advancers }} of {{ markets|length }} tracked instruments are green.
-      Indices, commodities, crypto and FX.</p>
-  </div>
-  <div class="mkt-grid" id="mktGrid">
-    {% for m in markets %}
-    <div class="mkt {{ 'u' if m.up else 'd' }} rv" style="--d:{{ loop.index0 * 0.04 }}s">
-      <div class="n">{{ m.name }}</div>
-      <div class="p">{{ m.price }}</div>
-      <div class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ m.change }}</div>
-    </div>
-    {% endfor %}
-    {% if not markets %}<div class="empty" style="grid-column:1/-1">Market data loading…</div>{% endif %}
-  </div>
-</section>
-
-<!-- ══════════ 02 TRADE IDEAS ══════════ -->
+<!-- ══════════ 01 TRADE IDEAS ══════════ -->
 <section class="sec" id="picks">
   <div class="shead rv">
     <div>
-      <span class="snum">02 / CONVICTION</span>
+      <span class="snum">01 / CONVICTION</span>
       <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
-      Target 20–30%. Every idea carries a stop.</p>
+      Target 20–30%. Every idea carries a stop.
+      {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
+      showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
   </div>
   {% if top5 %}
   <div class="pick-grid">
@@ -2577,7 +2871,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% endfor %}
   </div>
   {% else %}
-  <div class="empty rv">📅 Picks refresh every Monday via GitHub Actions — check back after 6 AM IST Monday.</div>
+  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
+    if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
   {% endif %}
 </section>
 
@@ -2585,7 +2880,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="tracker">
   <div class="shead rv">
     <div>
-      <span class="snum">03 / POSITIONS</span>
+      <span class="snum">02 / POSITIONS</span>
       <h2 class="stitle">The book.</h2>
     </div>
     <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
@@ -2666,10 +2961,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="sip" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / COMPOUNDING</span>
+      <span class="snum">03 / COMPOUNDING</span>
       <h2 class="stitle">One bucket a month.</h2>
     </div>
-    <span class="slink" id="sipPlan">—</span>
+    <div style="text-align:right">
+      <span class="slink" id="sipPlan">—</span>
+      <p class="sdesc" style="margin-top:8px">Whole shares only — every name in a bucket
+        is priced so at least one share fits its slice. Buckets are never blended; the
+        month that worked and the month that did not stay visible as separate lines.</p>
+    </div>
   </div>
 
   <div class="kpi-row rv">
@@ -2689,7 +2989,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
   </div>
   <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
-    <th>Year</th><th>Monthly</th><th>Invested</th><th>@10%</th><th>@12%</th><th>@14%</th>
+    <th>Year</th><th>Monthly</th><th>Invested</th><th>@12%</th><th>@14%</th><th>@16%</th>
   </tr></thead><tbody></tbody></table></div>
   <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
     Projections are compound arithmetic on the contribution schedule, not a forecast.
@@ -2702,7 +3002,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="interview">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / THE SEAT</span>
+      <span class="snum">04 / THE SEAT</span>
       <h2 class="stitle">CFO in three years.</h2>
     </div>
     <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
@@ -2735,7 +3035,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="language">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / LANGUAGE</span>
+      <span class="snum">05 / LANGUAGE</span>
       <h2 class="stitle">Two tongues, sharper.</h2>
     </div>
     <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
@@ -2780,7 +3080,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="father">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / THE FATHER</span>
+      <span class="snum">06 / THE FATHER</span>
       <h2 class="stitle">Seven months old.</h2>
     </div>
     <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
@@ -2802,7 +3102,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="wisdom">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / HOW TO LIVE</span>
+      <span class="snum">07 / HOW TO LIVE</span>
       <h2 class="stitle">Jainism and Buddhism.</h2>
     </div>
     <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
@@ -2824,7 +3124,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="world">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / CONTEXT</span>
+      <span class="snum">08 / CONTEXT</span>
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc">Wires only. Deduplicated, ranked, and cut to what actually changes a decision.</p>
@@ -2867,7 +3167,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="desk">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / THE DESK</span>
+      <span class="snum">09 / THE DESK</span>
       <h2 class="stitle">Compound the skill.</h2>
     </div>
     <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
@@ -2876,7 +3176,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="tabs rv" id="deskTabs">
     <button class="tab on" data-p="d1">🎓 FP&amp;A · {{ fpna.index }}/{{ fpna.total }}</button>
-    <button class="tab" data-p="d2">🇦🇪 Dubai</button>
+    <button class="tab" data-p="d2">🇦🇪 Dubai · {{ dubai.index }}/{{ dubai.total }}</button>
     <button class="tab" data-p="d3">🏆 FC → CFO · {{ cfo.index }}/{{ cfo.total }}</button>
     <button class="tab" data-p="d4">📊 Case Study</button>
     <button class="tab" data-p="d5">📚 Book · {{ book.index }}/{{ book.total }}</button>
@@ -2895,13 +3195,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     <div class="pane" id="d2">
       <div class="essay" style="--ac:var(--violet)">
-        <div class="meta">Dubai Corner · AED 30K+ Track</div>
-        <h3>The stack that clears AED 30K</h3>
-        <p>CA or ACCA, plus SAP or Oracle, plus Power BI, plus IFRS 9 and 16. That is the whole gate.
-          Miss one and you are competing on price.</p>
-        <div class="q">Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.</div>
-        <div class="act"><b>Keyword tip</b>Put "IFRS 16 implementation" and "rolling forecast" in the cover letter.
-          Recruiters grep for exactly those two strings.</div>
+        <div class="meta">Dubai Corner · AED 30K+ Track · {{ dubai.index }}/{{ dubai.total }}</div>
+        <h3>{{ dubai.title }}</h3>
+        <p>{{ dubai.body }}</p>
+        <div class="q">{{ dubai.targets }}</div>
+        <div class="act"><b>{{ dubai.action_label }}</b>{{ dubai.action }}</div>
       </div>
     </div>
 
@@ -2990,7 +3288,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="mind">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / THE MIND</span>
+      <span class="snum">10 / THE MIND</span>
       <h2 class="stitle">Sharpen the operator.</h2>
     </div>
     <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
@@ -3021,7 +3319,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="way">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / THE WAY</span>
+      <span class="snum">11 / THE WAY</span>
       <h2 class="stitle">Simple living. High thinking.</h2>
     </div>
     <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
@@ -3129,7 +3427,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="review">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / THE REVIEW</span>
+      <span class="snum">12 / THE REVIEW</span>
       <h2 class="stitle">Look back, or none of it compounds.</h2>
     </div>
     <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
@@ -3183,7 +3481,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="chess">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / THE BOARD</span>
+      <span class="snum">13 / THE BOARD</span>
       <h2 class="stitle">Yesterday's chess.</h2>
     </div>
     <div style="text-align:right">
@@ -3346,7 +3644,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="gym">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / MIND GYM</span>
+      <span class="snum">14 / MIND GYM</span>
       <h2 class="stitle">Six minutes. Sharper.</h2>
     </div>
     <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
@@ -3365,7 +3663,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="perf" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / EDGE</span>
+      <span class="snum">15 / EDGE</span>
       <h2 class="stitle">Does this actually work?</h2>
     </div>
     <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
@@ -3391,7 +3689,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="alerts">
   <div class="shead rv">
     <div>
-      <span class="snum">09 / TRACK RECORD</span>
+      <span class="snum">16 / TRACK RECORD</span>
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -4189,12 +4487,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '</tr>';
       }).join('');
 
-      tbody.innerHTML = html || '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
-                                (activeVersion() === 'v2'
-                                  ? 'No gated signals yet. The v2 engine publishes only setups that clear ' +
-                                    'their engine’s measured break-even R:R — quiet is the intended ' +
-                                    'state. Switch to Legacy (v1) for the pre-gate history.'
-                                  : 'Nothing matches those filters.') + '</td></tr>';
+      // The empty state has to name the actual reason. It used to always blame
+      // the v2 gate — so with an archive day still selected, three live gated
+      // signals sitting in the ledger read as "no gated signals yet".
+      var why;
+      if (archDate){
+        why = 'No signals on ' + esc(archDate) + ' for this filter. ' +
+              '<a href="#" id="archClear" style="color:var(--lime)">Show all days</a> to see the rest.';
+      } else if (from || to || tf || el('alertSearch').value.trim()){
+        why = 'Nothing matches those filters.';
+      } else if (activeVersion() === 'v2'){
+        why = 'No gated signals yet. The v2 engine publishes only setups that clear ' +
+              'their engine’s measured break-even R:R — quiet is the intended ' +
+              'state. Switch to Legacy (v1) for the pre-gate history.';
+      } else {
+        why = 'Nothing matches those filters.';
+      }
+      tbody.innerHTML = html ||
+        '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
+        why + '</td></tr>';
+      var clear = document.getElementById('archClear');
+      if (clear) clear.addEventListener('click', function(ev){ ev.preventDefault(); selectDay(null); });
 
       // Spell out the full span. The table always held every signal, but with
       // the newest first it read as though the history stopped a week back.
@@ -4289,12 +4602,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         // the first bucket exists — the plan is worth seeing on day one.
         var pb = document.querySelector('#sipProj tbody');
         if (pb) pb.innerHTML = (j.projections || []).map(function(r){
-          return '<tr><td class="mono-dim">' + r.years + '</td>' +
+          // 18 years is when the daughter hits college age — the one horizon
+          // here anchored to a date rather than a round number, so it is
+          // marked rather than left to blend into the others.
+          var mark = r.years === 18
+            ? ' <span class="mono-dim" style="font-size:10px;color:var(--gold)">college</span>' : '';
+          return '<tr><td class="mono-dim">' + r.years + mark + '</td>' +
             '<td class="num">' + inr(r.monthly) + '</td>' +
             '<td class="num mono-dim">' + inr(r.invested) + '</td>' +
-            '<td class="num">' + inr(r.r10) + '</td>' +
-            '<td class="num up">' + inr(r.r12) + '</td>' +
-            '<td class="num up">' + inr(r.r14) + '</td></tr>';
+            '<td class="num">' + inr(r.r12) + '</td>' +
+            '<td class="num up">' + inr(r.r14) + '</td>' +
+            '<td class="num up">' + inr(r.r16) + '</td></tr>';
         }).join('');
 
         var body = el('sipBody');
@@ -4311,12 +4629,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             var val  = live ? h.qty * (h.last_price || h.buy_price) : null;
             var cost = live ? h.qty * h.buy_price : null;
             var pct  = live && cost ? (val / cost - 1) * 100 : null;
+            // Qty is the whole point of the rework: the bucket now proposes a
+            // buyable number of shares, not a rupee slice that may not cover
+            // one share of the name it is pointed at.
             return '<tr>' +
               '<td class="mono-dim">' + (h.rank || '') + '</td>' +
               '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
                   encodeURIComponent(h.symbol) + '" target="_blank" rel="noopener">' +
                   esc(h.symbol) + '</a></td>' +
               '<td class="num">' + fmt(h.score, 1) + '</td>' +
+              '<td class="num">' + (h.ref_price ? inr(h.ref_price, 2) : '—') + '</td>' +
+              '<td class="num" style="font-weight:700">' +
+                  (h.proposed_qty ? h.proposed_qty + '<span class="mono-dim" style="font-size:10px"> sh</span>' : '—') + '</td>' +
               '<td class="num">' + inr(h.allocated) + '</td>' +
               '<td class="num">' + (h.buy_price ? inr(h.buy_price, 2) : '—') + '</td>' +
               '<td class="num">' + (h.last_price ? inr(h.last_price, 2) : '—') + '</td>' +
@@ -4332,6 +4656,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             ? '' : ' · XIRR ' + fmt(b.xirr_pct, 1) + '%';
           var pl  = b.pnl_pct === null || b.pnl_pct === undefined
             ? '' : ' · ' + (b.pnl > 0 ? '+' : '') + fmt(b.pnl_pct, 1) + '%';
+          // Whole shares never spend the month to the rupee. Show the gap
+          // rather than let the numbers quietly not add up.
+          var left = (b.cash_left > 0)
+            ? ' · ' + inr(b.proposed_cost) + ' deployable, ' + inr(b.cash_left) + ' idle' : '';
           return '<div class="rv" style="margin-bottom:26px">' +
             '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
                  'flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
@@ -4339,10 +4667,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                 esc(b.bucket) + '</strong>' +
               '<span class="mono-dim" style="font-size:11px">' +
                 inr(b.monthly_amount) + ' · year ' + b.sip_year + ' · ' +
-                b.held + '/' + b.names + ' held' + pl + xir + '</span>' +
+                b.held + '/' + b.names + ' held' + left + pl + xir + '</span>' +
             '</div>' +
-            '<div class="tw"><table class="t" style="min-width:860px"><thead><tr>' +
-              '<th>#</th><th>Symbol</th><th>Score</th><th>Allocated</th><th>Buy</th>' +
+            '<div class="tw"><table class="t" style="min-width:960px"><thead><tr>' +
+              '<th>#</th><th>Symbol</th><th>Score</th><th>Ref px</th><th>Buy qty</th>' +
+              '<th>Cost</th><th>Bought at</th>' +
               '<th>Last</th><th>P&amp;L</th><th>Status</th><th>Why</th>' +
             '</tr></thead><tbody>' + hs + '</tbody></table></div></div>';
         }).join('');
@@ -4426,6 +4755,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       document.querySelectorAll('.arch-day').forEach(function(n){
         n.classList.toggle('on', !!date && n.dataset.date === date);
       });
+      // "Show all days" shipped with class="fbtn on" hardcoded, so it was lit
+      // permanently — including while a single archived day was filtering the
+      // table down to nothing. The control said one thing and the query did
+      // another. It now reflects the actual state.
+      var all = el('archAll');
+      if (all) all.classList.toggle('on', !date);
       if (date && history.replaceState) history.replaceState({}, '', '/day/' + date);
       else if (history.replaceState) history.replaceState({}, '', '/');
       loadSignals();
@@ -4759,10 +5094,39 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       paintScore();
     }
 
+    // The result used to erase itself on a timer — 550ms when right, 1.9s when
+    // wrong. Both are shorter than it takes to read a sentence, so the next
+    // question replaced the explanation before you had seen it, and the drill
+    // taught nothing. The reader advances it now; nothing moves on its own.
     function next(ok){
       if (ok) correct++;
       idx++;
-      setTimeout(function(){ idx >= rounds.length ? finish() : render(); }, ok ? 550 : 1900);
+      var last = idx >= rounds.length;
+      var go = document.createElement('div');
+      go.className = 'gym-input';
+      go.style.marginTop = '14px';
+      go.innerHTML = '<button class="gym-btn" id="gymNextQ">' +
+        (last ? 'See the score →' : 'Next question →') +
+        '</button><span class="mono-dim" style="font-size:11px;align-self:center">' +
+        (last ? '' : 'or press Enter') + '</span>';
+      stage.appendChild(go);
+
+      var fired = false;
+      var advance = function(){
+        if (fired) return; fired = true;
+        document.removeEventListener('keydown', onKey);
+        last ? finish() : render();
+      };
+      var onKey = function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); advance(); }
+      };
+      document.getElementById('gymNextQ').addEventListener('click', advance);
+      document.getElementById('gymNextQ').focus();
+      // Bind on the next tick. Answering with Enter is still dispatching that
+      // keydown when this runs, and a listener added mid-dispatch on an
+      // ancestor still receives it — so binding synchronously would skip the
+      // feedback with the very keystroke that produced it.
+      setTimeout(function(){ document.addEventListener('keydown', onKey); }, 0);
     }
 
     function feedback(ok, msg){
@@ -4910,62 +5274,129 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    /* ── markets: every 5 minutes ── */
-    function paintMarkets(j){
-      if (!j || !j.ok || !j.markets || !j.markets.length) return;
-      var live = j.markets.filter(function(m){ return m.price_raw !== null; });
-      if (!live.length) return;
+    /* ── ticker: every 5 minutes ──
+       One rail, eleven segments, ordered by when each market opens in IST:
+       Asia 05:30 → India 09:15 → Europe 12:30 → US 19:00, then the things that
+       never close (commodities, FX, crypto) and finally the ledger's own
+       multibagger ideas. Each segment gets a coloured head so 110 instruments
+       read as a board rather than a stream. */
+    var SEGCOLOR = {
+      asia:'var(--blue)', india:'var(--lime)', gainers:'var(--up)', losers:'var(--down)',
+      europe:'var(--violet)', us:'var(--blue)', ustop:'var(--blue)',
+      commodities:'var(--gold)', fx:'var(--violet)', crypto:'var(--gold)',
+      multibagger:'var(--lime)'
+    };
 
-      var cell = function(m){
-        var arrow = m.up ? '▲' : '▼', cls = m.up ? 'up' : 'dn';
-        return { arrow: arrow, cls: cls,
-                 chg: (m.change_pct > 0 ? '+' : '') + m.change_pct.toFixed(2) + '%' };
-      };
-
+    function paintTicker(j){
+      if (!j || !j.ok || !j.segments || !j.segments.length) return;
       var rail = document.getElementById('tickRail');
-      if (rail){
-        var html = '';
-        // duplicated once — the marquee translates -50%, so the strip has to
-        // contain exactly two copies to loop seamlessly
-        for (var d = 0; d < 2; d++){
-          j.markets.forEach(function(m){
-            var c = cell(m);
-            html += '<div class="ti"><span class="n">' + esc(m.name) + '</span>' +
-                    '<span class="p">' + esc(m.price) + '</span>' +
-                    '<span class="c ' + c.cls + '">' + c.arrow + ' ' + c.chg + '</span></div>';
+      if (!rail) return;
+
+      var items = 0, html = '';
+      // Duplicated once: the marquee translates -50%, so the strip must hold
+      // exactly two copies to loop without a visible seam.
+      for (var d = 0; d < 2; d++){
+        j.segments.forEach(function(s){
+          var col = SEGCOLOR[s.key] || 'var(--lime)';
+          html += '<div class="tseg" style="--sc:' + col + '">' +
+                    '<span class="ic">' + esc(s.icon) + '</span>' +
+                    '<span class="lb">' + esc(s.label) + '</span></div>';
+          s.items.forEach(function(m){
+            if (!d) items++;
+            var chg = (m.change_pct > 0 ? '+' : '') + m.change_pct.toFixed(2) + '%';
+            html += '<div class="ti" style="--sc:' + col + '">' +
+                      '<span class="n">' + esc(m.name) + '</span>' +
+                      '<span class="p">' + esc(m.price) + '</span>' +
+                      '<span class="c ' + (m.up ? 'up' : 'dn') + '">' +
+                        (m.up ? '▲' : '▼') + ' ' + chg + '</span>' +
+                      (m.note ? '<span class="note">' + esc(m.note) + '</span>' : '') +
+                    '</div>';
           });
-        }
-        rail.innerHTML = html;
+        });
       }
+      rail.innerHTML = html;
+      // ~1.6s per instrument keeps it legible whatever the board size; a fixed
+      // 46s across 110 items was a blur.
+      rail.style.setProperty('--tickdur', Math.max(60, Math.round(items * 1.6)) + 's');
 
-      var grid = document.getElementById('mktGrid');
-      if (grid){
-        grid.innerHTML = j.markets.map(function(m, i){
-          var c = cell(m);
-          return '<div class="mkt ' + (m.up ? 'u' : 'd') + ' rv in" style="--d:' + (i * 0.04) + 's">' +
-                   '<div class="n">' + esc(m.name) + '</div>' +
-                   '<div class="p">' + esc(m.price) + '</div>' +
-                   '<div class="c ' + c.cls + '">' + c.arrow + ' ' + c.chg + '</div>' +
-                 '</div>';
-        }).join('');
-      }
-
-      var desc = document.getElementById('mktDesc');
-      if (desc){
-        var t = new Date(j.fetched_at);
-        var ist = new Date(t.getTime() + (t.getTimezoneOffset() + 330) * 60000);
-        desc.innerHTML = j.advancing + ' of ' + j.total + ' tracked instruments are green. ' +
-          'Live quotes — last read ' + ('0' + ist.getHours()).slice(-2) + ':' +
-          ('0' + ist.getMinutes()).slice(-2) + ' IST, refreshing every 5 minutes.';
-      }
-
+      // Same guard the ledger's setKpi() uses. Writing textContent alone is not
+      // enough: the hero count-up animation writes this node every frame for
+      // 1.1s and settles it back on the 6 AM snapshot figure — which is how it
+      // ended up reading 0/1 next to a rail carrying 46 live instruments.
       var adv = document.querySelector('.statrail .stat .v[data-total]');
-      if (adv){ adv.textContent = j.advancing + '/' + j.total; }
+      if (adv){
+        adv.dataset.live = '1';
+        adv.removeAttribute('data-count');
+        adv.textContent = j.advancing + '/' + j.total;
+      }
     }
 
-    function loadMarkets(){ get('/markets').then(paintMarkets); }
-    loadMarkets();
-    setInterval(loadMarkets, 5 * 60 * 1000);
+    function loadTicker(){
+      // /api/ticker is the current route. /markets is the old nine-instrument
+      // one, kept as a fallback so an older deploy still shows a live rail.
+      get('/ticker').then(function(j){
+        if (j && j.ok) return paintTicker(j);
+        return get('/markets').then(function(m){
+          if (!m || !m.ok || !m.markets) return;
+          paintTicker({ ok:true, advancing:m.advancing, total:m.total,
+                        segments:[{ key:'india', label:'Markets', icon:'📈',
+                                    items:m.markets.filter(function(x){ return x.price_raw !== null; }) }] });
+        });
+      });
+    }
+    loadTicker();
+    setInterval(loadTicker, 5 * 60 * 1000);
+
+    /* ── edition freshness ──
+       The shell is rebuilt once a day and cached in the tab that loaded it.
+       Nothing told a long-lived tab that a newer edition existed, so an
+       overnight tab kept showing yesterday's masthead and yesterday's hero
+       numbers while a fresh tab beside it showed today's — two views of the
+       same URL, one minute apart, disagreeing. Poll the build id, say so, and
+       reload silently only when the tab is not being looked at. */
+    (function(){
+      var bar = document.getElementById('editionbar');
+      if (!bar) return;
+      var mine = bar.dataset.build || '';
+      if (!mine) return;                       // pre-stamp build, nothing to compare
+
+      var notified = false;
+      function check(){
+        if (notified) return;
+        fetch('/edition.json?t=' + Date.now(), { cache: 'no-store' })
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(j){
+            if (!j || !j.build_id || j.build_id === mine) return;
+            notified = true;
+            // Nothing is lost by reloading a tab nobody is looking at. A tab
+            // in the foreground may have a drill in progress or a filter set,
+            // so that one gets asked.
+            if (document.visibilityState === 'hidden'){ location.reload(); return; }
+            bar.classList.add('on');
+          })
+          .catch(function(){ /* offline or a host without edition.json */ });
+      }
+      document.getElementById('editionReload')
+        .addEventListener('click', function(){ location.reload(); });
+      // On focus as well as on a timer: coming back to the tab in the morning
+      // is exactly when the answer has changed.
+      document.addEventListener('visibilitychange', function(){
+        if (document.visibilityState === 'visible') check();
+      });
+      check();
+      setInterval(check, 10 * 60 * 1000);
+    })();
+
+    // A marquee you cannot stop is a marquee you cannot read.
+    (function(){
+      var wrap = document.getElementById('tickWrap'), btn = document.getElementById('tickHold');
+      if (!wrap || !btn) return;
+      btn.addEventListener('click', function(){
+        var held = wrap.classList.toggle('hold');
+        btn.textContent = held ? 'Play' : 'Pause';
+        btn.setAttribute('aria-pressed', held ? 'true' : 'false');
+      });
+    })();
 
     /* ── news: every 3 hours ── */
     function paintNews(j){
@@ -5063,6 +5494,7 @@ def index():
         top5           = get_top5_picks()
         tracker        = get_tracker_stocks()
         money          = get_money_hack()
+        dubai          = get_dubai_note()
         prod           = get_productivity_tip()
         quote          = get_entrepreneur_quote()
         lesson         = get_world_lesson()
@@ -5077,7 +5509,7 @@ def index():
             updated_at=now.strftime("%H:%M"),
             markets=markets, news=news, fpna=fpna, cfo=cfo,
             chess=chess, wisdom=wisdom, book=book, way=way_ctx, review=review_ctx,
-            top5=top5, tracker=tracker, money_hack=money,
+            top5=top5, tracker=tracker, money_hack=money, dubai=dubai,
             productivity_tip=prod,
             quote=quote, lesson=lesson, case=case,
             lichess_games=lichess_games, lichess_summary=lichess_summary, lichess_puzzle=lichess_puzzle,
@@ -5098,6 +5530,7 @@ def index():
             book={"book":"Loading","author":"","chapter":"Loading","lesson":"","key_quote":"","action":"","index":0,"total":1},
             way=_way_placeholder(), review=_review_placeholder(),
             top5=[], tracker=[], money_hack={"title":"Loading","body":""},
+            dubai=get_dubai_note(),
             productivity_tip="Loading...",
             quote={"quote":"","name":"","index":0,"total":1},
             lesson={"tradition":"","lesson":"","source":""},

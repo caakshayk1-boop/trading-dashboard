@@ -17,12 +17,16 @@ const publicDir = join(here, "public");
 const target = join(publicDir, "index.html");
 const source = join(here, "..", "docs", "index.html");
 const alertsSrc = join(here, "..", "docs", "alerts.json");
+// Build stamp for the shell. Open tabs poll it to notice they are showing a
+// superseded edition; without it they render yesterday's paper indefinitely.
+const editionSrc = join(here, "..", "docs", "edition.json");
 
 mkdirSync(publicDir, { recursive: true });
 
 if (existsSync(source)) {
   copyFileSync(source, target);
   if (existsSync(alertsSrc)) copyFileSync(alertsSrc, join(publicDir, "alerts.json"));
+  if (existsSync(editionSrc)) copyFileSync(editionSrc, join(publicDir, "edition.json"));
   console.log(`[build] copied docs/index.html → public/ (${Math.round(statSync(target).size / 1024)}KB)`);
 } else if (existsSync(target)) {
   console.log(`[build] using pre-staged public/index.html (${Math.round(statSync(target).size / 1024)}KB)`);

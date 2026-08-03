@@ -65,7 +65,9 @@ async function quote(t) {
   const base = { name: t.name, symbol: t.symbol, prefix: t.prefix };
   try {
     const r = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(t.symbol)}?range=5d&interval=1d`,
+      // range=1d, not 5d: chartPreviousClose is the close before the requested
+      // window, so a 5d range returned a five-day move labelled as the day's.
+      `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(t.symbol)}?range=1d&interval=1d`,
       { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(6000) }
     );
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
