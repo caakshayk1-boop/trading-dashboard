@@ -52,12 +52,29 @@ ANNUAL_STEP_UP = 0.10
 NAMES_PER_BUCKET = 4
 SIP_START = date(2026, 8, 1)          # year 1 begins here; step-ups key off it
 
+# Horizons and rates the site projects. 18 is the college-age horizon; 12/14/16
+# brackets what Indian equity has actually delivered. Mirrored in
+# vercel-news/api/sip.js — change both.
+PROJECTION_YEARS = (5, 10, 15, 18)
+PROJECTION_RATES = (0.12, 0.14, 0.16)
+
 _IST = timezone(timedelta(hours=5, minutes=30))
 
 # Hard vetoes — a name failing any of these is not ranked at all.
 MIN_MARKET_CAP_CR = 5000.0
 MAX_DEBT_TO_EQUITY = 1.5              # skipped for lenders
 MAX_PE = 80.0
+
+# Weights are renormalised over whatever factors Yahoo actually returned, which
+# means a name with one factor present scores on that one factor alone. That is
+# how JSWDULUX reached 96.2/100 on 15% coverage — a single cheap PE and nothing
+# else — and outranked fully-covered names. A score built from under half the
+# model is not a score, so those names are vetoed rather than ranked.
+MIN_FACTOR_COVERAGE = 0.50
+
+# How far down the ranking to price-check before giving up on filling a bucket.
+# Deep enough that a slice of a few thousand rupees still finds four names.
+PRICE_LOOKAHEAD = 60
 
 WEIGHTS = {
     "roe": 0.25,
@@ -106,6 +123,10 @@ def init_sip_db():
         for col, sql in [
             ("last_price",    "ALTER TABLE sip_holdings ADD COLUMN last_price REAL"),
             ("last_price_at", "ALTER TABLE sip_holdings ADD COLUMN last_price_at TEXT"),
+            # Shares the proposal says to buy. Deliberately separate from `qty`,
+            # which means shares actually bought — conflating a suggestion with
+            # a fill is how a plan starts reporting returns it never earned.
+            ("proposed_qty",  "ALTER TABLE sip_holdings ADD COLUMN proposed_qty INTEGER"),
         ]:
             try:
                 have = [r[1] for r in c.execute("PRAGMA table_info(sip_holdings)").fetchall()]
@@ -293,6 +314,9 @@ def score_universe(symbols=None, limit_universe: int | None = None) -> list[dict
             notes.append(f"margin {pm:.0%}")
 
         avail = sum(WEIGHTS[k] for k, (_v, ok) in parts.items() if ok)
+        if avail < MIN_FACTOR_COVERAGE:
+            log.debug(f"sip veto {f['symbol']}: {avail:.0%} factor coverage")
+            continue
         total = (sum(v * WEIGHTS[k] for k, (v, ok) in parts.items() if ok) / avail
                  if avail > 0 else 0.0)
         coverage = round(avail * 100)
@@ -324,6 +348,76 @@ def bucket_name(on: date | None = None) -> str:
     return on.strftime("%Y-%m")
 
 
+def ref_prices(symbols: list[str]) -> dict[str, float]:
+    """Last close per symbol. Empty dict rather than an exception on failure."""
+    if not symbols:
+        return {}
+    try:
+        import yfinance as yf
+        from symbols import to_yahoo
+    except ImportError as e:
+        log.warning(f"sip ref_prices: {e}")
+        return {}
+
+    out = {}
+    for s in symbols:
+        try:
+            df = yf.download(to_yahoo(s), period="5d", interval="1d",
+                             progress=False, auto_adjust=True)
+            if df is None or df.empty:
+                continue
+            px = float(df["Close"].to_numpy().ravel()[-1])
+            if px == px and px > 0:          # px == px filters NaN
+                out[s] = round(px, 2)
+        except Exception as e:
+            log.warning(f"sip ref price {s}: {e}")
+    return out
+
+
+def allocate_whole_shares(picks: list[dict], budget: float,
+                          prices: dict[str, float]) -> list[dict]:
+    """Turn a ranked shortlist and a rupee budget into buyable share counts.
+
+    The bucket used to divide the month evenly and stop there: ₹10,000 over
+    four names is ₹2,500 each, and ₹2,500 does not buy one share of a ₹2,983
+    stock. The proposal was arithmetically tidy and impossible to execute.
+
+    So: an even split is the starting point, not the answer. Each name takes
+    the whole shares its slice affords, then the unspent remainder is walked
+    back down the ranking one share at a time until nothing more fits. Names
+    priced above their own slice have already been filtered out upstream — a
+    name that cannot take a single share does not belong in the bucket.
+    """
+    if not picks:
+        return []
+
+    per = budget / len(picks)
+    for p in picks:
+        px = prices.get(p["symbol"])
+        p["ref_price"] = px
+        p["proposed_qty"] = int(per // px) if px else 0
+        p["allocated"] = round((p["proposed_qty"] or 0) * (px or 0), 2)
+
+    # Spend the remainder in rank order — the highest-conviction name gets the
+    # extra share, not whichever one happens to be cheapest.
+    spent = sum(p["allocated"] for p in picks)
+    leftover = budget - spent
+    progress = True
+    while progress and leftover > 0:
+        progress = False
+        for p in picks:
+            px = p.get("ref_price")
+            if px and px <= leftover:
+                p["proposed_qty"] += 1
+                p["allocated"] = round(p["allocated"] + px, 2)
+                leftover = round(leftover - px, 2)
+                progress = True
+
+    for p in picks:
+        p["cash_left"] = round(leftover, 2)
+    return picks
+
+
 def build_bucket(on: date | None = None, names: int = NAMES_PER_BUCKET,
                  dry_run: bool = False, candidates=None) -> dict:
     """Propose this month's bucket. Idempotent — an existing bucket is returned
@@ -342,24 +436,51 @@ def build_bucket(on: date | None = None, names: int = NAMES_PER_BUCKET,
 
     amount = monthly_amount(on)
     ranked = candidates if candidates is not None else score_universe()
+    per_slice = amount / max(names, 1)
+
     # One name per sector: four picks that are all private banks is one bet,
-    # not four.
+    # not four. And nothing priced above its own slice — a name whose share
+    # price exceeds the money allotted to it cannot be bought at all, which is
+    # what put ₹2,983 JSWDULUX in a ₹2,500 slot.
+    # Prices for the shortlist in one pass. Priced lazily per candidate this
+    # would be one Yahoo round trip per rejected name, and at a ₹2,500 slice a
+    # lot of the Nifty 500 gets rejected on price alone.
+    shortlist = ranked[:PRICE_LOOKAHEAD]
+    prices = ref_prices([r["symbol"] for r in shortlist])
+
     picks, seen_sectors = [], set()
-    for r in ranked:
-        if r["sector"] in seen_sectors and len(seen_sectors) < names:
-            continue
-        picks.append(r)
-        seen_sectors.add(r["sector"])
+    for r in shortlist:
         if len(picks) >= names:
             break
+        if r["sector"] in seen_sectors and len(seen_sectors) < names:
+            continue
+        px = prices.get(r["symbol"])
+        if not px:
+            log.debug(f"sip skip {r['symbol']}: no reference price")
+            continue
+        if px > per_slice:
+            log.info(f"sip skip {r['symbol']}: ₹{px:,.2f}/share exceeds the "
+                     f"₹{per_slice:,.0f} slice — cannot buy one share")
+            continue
+        r["_px"] = px
+        picks.append(r)
+        seen_sectors.add(r["sector"])
 
-    per = round(amount / max(len(picks), 1), 2)
+    if len(picks) < names:
+        log.warning(f"sip: only {len(picks)}/{names} names affordable at "
+                    f"₹{per_slice:,.0f} a slice from the top {len(shortlist)} ranked")
+
+    allocate_whole_shares(picks, amount, {p["symbol"]: p["_px"] for p in picks})
+
     proposal = {
         "bucket": bname, "monthly_amount": amount, "sip_year": sip_year(on),
-        "per_name": per, "status": "proposed",
+        "per_name": round(per_slice, 2), "status": "proposed",
+        "cash_left": picks[0]["cash_left"] if picks else round(amount, 2),
         "holdings": [{
-            "symbol": p["symbol"], "allocated": per, "score": p["score"],
-            "rank": i + 1, "sector": p["sector"], "rationale": p["rationale"],
+            "symbol": p["symbol"], "allocated": p["allocated"],
+            "ref_price": p["ref_price"], "proposed_qty": p["proposed_qty"],
+            "score": p["score"], "rank": i + 1, "sector": p["sector"],
+            "rationale": p["rationale"],
         } for i, p in enumerate(picks)],
     }
     if dry_run:
@@ -372,14 +493,16 @@ def build_bucket(on: date | None = None, names: int = NAMES_PER_BUCKET,
                   (bname, datetime.now(_IST).isoformat(), amount, sip_year(on)))
         for h in proposal["holdings"]:
             c.execute("""INSERT INTO sip_holdings
-                         (bucket, symbol, allocated, score, rank, rationale, status)
-                         VALUES (?,?,?,?,?,?,'proposed')""",
-                      (bname, h["symbol"], h["allocated"], h["score"],
-                       h["rank"], h["rationale"]))
+                         (bucket, symbol, allocated, ref_price, proposed_qty,
+                          score, rank, rationale, status)
+                         VALUES (?,?,?,?,?,?,?,?,'proposed')""",
+                      (bname, h["symbol"], h["allocated"], h["ref_price"],
+                       h["proposed_qty"], h["score"], h["rank"], h["rationale"]))
         c.commit()
         _db.sync(c)
-    log.info(f"sip: bucket {bname} created — ₹{amount:,.0f} across "
-             f"{len(picks)} names ({', '.join(p['symbol'] for p in picks)})")
+    log.info(f"sip: bucket {bname} created — ₹{amount:,.0f} across {len(picks)} names ("
+             + ", ".join(f"{p['symbol']}×{p['proposed_qty']}" for p in picks)
+             + f"), ₹{proposal['cash_left']:,.0f} unspent")
     return get_bucket(bname)
 
 
@@ -391,7 +514,8 @@ def get_bucket(bname: str) -> dict:
             return {}
         hs = c.execute("""SELECT symbol, allocated, ref_price, buy_price, qty,
                                  bought_at, score, rank, rationale, status,
-                                 exit_price, exited_at, last_price, last_price_at
+                                 exit_price, exited_at, last_price, last_price_at,
+                                 proposed_qty
                           FROM sip_holdings WHERE bucket=? ORDER BY rank""",
                        (bname,)).fetchall()
     return {
@@ -402,6 +526,7 @@ def get_bucket(bname: str) -> dict:
             "qty": h[4], "bought_at": h[5], "score": h[6], "rank": h[7],
             "rationale": h[8], "status": h[9], "exit_price": h[10],
             "exited_at": h[11], "last_price": h[12], "last_price_at": h[13],
+            "proposed_qty": h[14],
         } for h in hs],
     }
 
@@ -513,12 +638,13 @@ if __name__ == "__main__":
     import sys
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     if "--project" in sys.argv:
-        print(f"{'Yr':<4}{'Monthly':>10}{'Invested':>14}{'@10%':>14}{'@12%':>14}{'@14%':>14}")
-        for y in (1, 3, 5, 7, 10, 15, 20, 25):
+        heads = "".join(f"{f'@{r:.0%}':>14}" for r in PROJECTION_RATES)
+        print(f"{'Yr':<4}{'Monthly':>10}{'Invested':>14}{heads}")
+        for y in PROJECTION_YEARS:
             m = BASE_MONTHLY * (1 + ANNUAL_STEP_UP) ** (y - 1)
-            a, b_, c_ = (projection(y, r) for r in (0.10, 0.12, 0.14))
-            print(f"{y:<4}{m:>10,.0f}{a['invested']:>14,.0f}"
-                  f"{a['corpus']:>14,.0f}{b_['corpus']:>14,.0f}{c_['corpus']:>14,.0f}")
+            rows = [projection(y, r) for r in PROJECTION_RATES]
+            corpora = "".join(f"{p['corpus']:>14,.0f}" for p in rows)
+            print(f"{y:<4}{m:>10,.0f}{rows[0]['invested']:>14,.0f}{corpora}")
     else:
         out = build_bucket(dry_run="--dry-run" in sys.argv)
         print(json.dumps(out, indent=2, default=str))

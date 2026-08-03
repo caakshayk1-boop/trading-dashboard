@@ -35,17 +35,22 @@ export function str(v) {
 // exists. Naming a missing column in a SELECT fails the whole query and 500s
 // the page, so every optional column is probed first. Cached per lambda
 // instance; a cold start re-probes, which is how a new column gets picked up.
-let _colCache = null;
+// Keyed BY TABLE. This was a single shared variable, so the first table probed
+// in a lambda answered for every other one — asking for sip_holdings columns
+// after all_signals returned all_signals' column set, silently.
+const _colCache = new Map();
 
 export async function columns(table = "all_signals") {
-  if (_colCache) return _colCache;
+  if (_colCache.has(table)) return _colCache.get(table);
+  let cols;
   try {
     const rs = await db().execute(`PRAGMA table_info(${table})`);
-    _colCache = new Set(rs.rows.map((r) => str(r.name || r[1])));
+    cols = new Set(rs.rows.map((r) => str(r.name || r[1])));
   } catch {
-    _colCache = new Set();
+    cols = new Set();
   }
-  return _colCache;
+  _colCache.set(table, cols);
+  return cols;
 }
 
 // Returns `col` when the table has it, else `NULL AS col`, so callers can build

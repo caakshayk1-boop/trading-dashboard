@@ -12,7 +12,7 @@
 // Query params:
 //   bucket=YYYY-MM   one bucket only
 //   limit=           max buckets returned (default 36)
-import { db, num, str, json, fail } from "./_db.js";
+import { db, num, str, json, fail, columns } from "./_db.js";
 
 const BASE_MONTHLY = 10000;
 const STEP_UP = 0.10;
@@ -23,6 +23,18 @@ export default async function handler(req, res) {
   const q = req.query || {};
 
   try {
+    // db() throws synchronously when the env vars are absent, so the .catch()
+    // chained onto the query below never gets attached and the route 500s
+    // instead of degrading. The projection table is pure arithmetic and worth
+    // showing even with no ledger behind it.
+    if (!process.env.TURSO_URL || !process.env.TURSO_TOKEN) {
+      return json(res, 200, {
+        ok: true, ready: false,
+        message: "Ledger not configured for this deployment — showing the plan only.",
+        plan: plan(), projections: projections(), buckets: [],
+      }, 60);
+    }
+
     // The SIP tables are created by sip_engine.init_sip_db() on the Python
     // side. Until that has run at least once they do not exist, and querying a
     // missing table throws — so the page gets an explicit "not set up yet"
@@ -54,9 +66,15 @@ export default async function handler(req, res) {
     let holdings = [];
     if (names.length) {
       const ph = names.map(() => "?").join(",");
+      // proposed_qty / ref_price arrive via ALTER TABLE in
+      // sip_engine.init_sip_db(), so this route can be deployed before the
+      // Python side has run. Naming a missing column fails the whole query.
+      const cols = await columns("sip_holdings");
+      const opt = (c) => (cols.has(c) ? c : `NULL AS ${c}`);
       const hrs = await db().execute({
         sql: `SELECT bucket, symbol, allocated, buy_price, qty, bought_at,
-                     score, rank, rationale, status, last_price, last_price_at
+                     score, rank, rationale, status, last_price, last_price_at,
+                     ${opt("ref_price")}, ${opt("proposed_qty")}
               FROM sip_holdings WHERE bucket IN (${ph}) ORDER BY bucket DESC, rank ASC`,
         args: names,
       });
@@ -89,6 +107,10 @@ export default async function handler(req, res) {
         status: str(r.status),
         names: hs.length,
         held: held.length,
+        proposed_cost: round(
+          hs.reduce((a, h) => a + (h.allocated || 0), 0), 2),
+        cash_left: round(
+          (num(r.monthly_amount) || 0) - hs.reduce((a, h) => a + (h.allocated || 0), 0), 2),
         invested: round(invested, 2),
         value: round(value, 2),
         pnl: round(value - invested, 2),
@@ -125,6 +147,10 @@ function shapeHolding(h) {
   return {
     symbol: str(h.symbol),
     allocated: num(h.allocated),
+    ref_price: num(h.ref_price),
+    // Shares the proposal says to buy, as a whole number. Distinct from `qty`,
+    // which is shares actually bought.
+    proposed_qty: num(h.proposed_qty),
     buy_price: num(h.buy_price),
     qty: num(h.qty),
     bought_at: str(h.bought_at),
@@ -155,11 +181,20 @@ function plan() {
 
 // Step-up SIP future value. Contributions at month end, rate compounded
 // monthly from the annual figure.
+//
+// Four horizons, three rates. 5/10/15 are the decision points; 18 is the one
+// that matters most here — it is when the daughter reaches college age, and it
+// is the only row on this page tied to a real date rather than a round number.
+// 12/14/16% brackets what Indian equity has actually delivered; the old 10%
+// floor was never the question being asked.
+export const PROJECTION_YEARS = [5, 10, 15, 18];
+export const PROJECTION_RATES = [["r12", 0.12], ["r14", 0.14], ["r16", 0.16]];
+
 function projections() {
   const out = [];
-  for (const years of [1, 3, 5, 7, 10, 15, 20, 25]) {
+  for (const years of PROJECTION_YEARS) {
     const row = { years };
-    for (const [label, rate] of [["r10", 0.10], ["r12", 0.12], ["r14", 0.14]]) {
+    for (const [label, rate] of PROJECTION_RATES) {
       let m = BASE_MONTHLY, corpus = 0, invested = 0;
       const mr = Math.pow(1 + rate, 1 / 12) - 1;
       for (let y = 0; y < years; y++) {
