@@ -124,13 +124,37 @@ h1.hl em{font-style:normal;color:var(--lime)}
 .tickwrap::before,.tickwrap::after{content:'';position:absolute;top:0;bottom:0;width:90px;z-index:3;pointer-events:none}
 .tickwrap::before{left:0;background:linear-gradient(90deg,var(--bg2),transparent)}
 .tickwrap::after{right:0;background:linear-gradient(270deg,var(--bg2),transparent)}
-.tick{display:flex;width:max-content;animation:marquee 46s linear infinite;}
-.tickwrap:hover .tick{animation-play-state:paused}
+/* The rail carries ~110 instruments in eleven labelled segments, so the loop
+   is set by --tickdur (written by the client from the item count) rather than
+   fixed — 46s across that many items is unreadable. */
+.tick{display:flex;width:max-content;animation:marquee var(--tickdur,46s) linear infinite;}
+.tickwrap:hover .tick,.tickwrap.hold .tick{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ti{display:flex;align-items:center;gap:9px;padding:11px 22px;border-right:1px solid var(--line);white-space:nowrap;}
 .ti .n{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);font-weight:500}
 .ti .p{font-family:var(--mono);font-size:13px;font-weight:600}
 .ti .c{font-family:var(--mono);font-size:12px;font-weight:700}
+.ti .note{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.5px}
+
+/* Segment head — the thing that makes a 110-item rail readable instead of
+   an undifferentiated stream of numbers. */
+.tseg{display:flex;align-items:center;gap:8px;padding:11px 20px 11px 22px;white-space:nowrap;
+  border-right:1px solid var(--line);background:
+    linear-gradient(90deg,color-mix(in srgb,var(--sc,var(--lime)) 16%,transparent),transparent);}
+.tseg .ic{font-size:13px;line-height:1}
+.tseg .lb{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--sc,var(--lime))}
+.tseg::before{content:'';width:3px;height:15px;border-radius:2px;background:var(--sc,var(--lime))}
+.ti.hi .p{color:var(--sc,inherit)}
+
+/* The rail is the only market surface on the page now, so it gets a control:
+   the whole strip is a live region a reader can freeze to actually read it. */
+.tickctl{position:absolute;right:8px;top:50%;transform:translateY(-50%);z-index:4;
+  font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  background:var(--bg2);color:var(--dim);border:1px solid var(--line);border-radius:99px;
+  padding:4px 10px;cursor:pointer}
+.tickctl:hover{color:var(--lime);border-color:var(--lime)}
+@media(max-width:640px){.tickctl{display:none}}
 
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
@@ -160,21 +184,10 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   padding:3px 8px;border-radius:5px;background:var(--lime-soft);color:var(--lime);border:1px solid var(--lime-line)}
 </style>
 <style>
-/* ═══════════════════ 01 MARKETS ═══════════════════ */
-.mkt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
-.mkt{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;
-  padding:18px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
-.mkt:hover{transform:translateY(-3px);border-color:var(--line2)}
-.mkt::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;transition:width .3s var(--ease)}
-.mkt.u::after{background:var(--up)} .mkt.d::after{background:var(--down)}
-.mkt:hover::after{width:4px}
-.mkt .n{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);font-weight:500}
-.mkt .p{font-family:var(--mono);font-size:24px;font-weight:700;letter-spacing:-1px;margin:8px 0 4px}
-.mkt .c{font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;gap:5px}
-.spark{position:absolute;right:0;bottom:0;opacity:.13;pointer-events:none}
-@media(max-width:520px){.mkt-grid{grid-template-columns:1fr 1fr;gap:9px}.mkt{padding:14px}.mkt .p{font-size:19px}}
+/* The .mkt / .mkt-grid rules that lived here belonged to the "What moved"
+   section, which duplicated the ticker and has been removed. */
 
-/* ═══════════════════ 02 PICKS ═══════════════════ */
+/* ═══════════════════ 01 PICKS ═══════════════════ */
 .pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .pick{position:relative;background:linear-gradient(160deg,var(--surface),#0E0F12);border:1px solid var(--line);
   border-radius:18px;padding:22px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
@@ -478,6 +491,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   border-radius:999px;padding:3px 11px;cursor:pointer;flex:none}
 .livebar button:hover{background:var(--lime-soft)}
 
+/* Stale-edition notice. Gold, not lime: this is not a healthy state. */
+.editionbar{display:none;align-items:center;gap:12px;
+  padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
+  border-bottom:1px solid var(--gold);background:rgba(255,193,71,.10);color:var(--gold)}
+.editionbar.on{display:flex}
+.editionbar span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editionbar button{font:inherit;color:#000;background:var(--gold);border:none;
+  border-radius:999px;padding:4px 13px;cursor:pointer;flex:none;font-weight:700}
+
 .ctlbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:0 0 16px}
 .ctlbar input,.ctlbar select{font-family:var(--mono);font-size:12px;color:var(--text);
   background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;min-width:0}
@@ -677,30 +699,35 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Monday, August 03 2026</span>
-      <span class="live" id="istClock"><i></i>09:37 IST</span>
+      <span class="live" id="istClock"><i></i>21:05 IST</span>
     </div>
   </div>
 </header>
 
+<!-- Nav order MUST match document order. It did not: Performance, Mind Gym and
+     Signal Log were listed near the top while their sections sit at the very
+     bottom, so the scroll spy underlined "Chess" while you were reading the
+     signal log and "The Mind" while you were reading The Desk. The numbers had
+     drifted too — two 05s in the nav, and section headings that disagreed with
+     it. One sequence now, top to bottom, nav and headings the same. -->
 <nav class="nav">
   <div class="nav-in" id="navin">
-    <a href="#markets"><i>01</i>Markets</a>
-    <a href="#picks"><i>02</i>Trade Ideas</a>
-    <a href="#tracker"><i>03</i>Portfolio</a>
-    <a href="#sip"><i>04</i>SIP Buckets</a>
-    <a href="#perf"><i>05</i>Performance</a>
-    <a href="#interview"><i>05</i>Interview</a>
-    <a href="#language"><i>06</i>Language</a>
-    <a href="#father"><i>07</i>Father</a>
-    <a href="#wisdom"><i>08</i>Wisdom</a>
-    <a href="#gym"><i>09</i>Mind Gym</a>
-    <a href="#alerts"><i>10</i>Signal Log</a>
-    <a href="#world"><i>11</i>World</a>
-    <a href="#desk"><i>12</i>The Desk</a>
-    <a href="#mind"><i>13</i>The Mind</a>
-    <a href="#way"><i>14</i>The Way</a>
-    <a href="#review"><i>15</i>The Review</a>
-    <a href="#chess"><i>16</i>Chess</a>
+    <a href="#picks"><i>01</i>Trade Ideas</a>
+    <a href="#tracker"><i>02</i>Portfolio</a>
+    <a href="#sip"><i>03</i>SIP Buckets</a>
+    <a href="#interview"><i>04</i>Interview</a>
+    <a href="#language"><i>05</i>Language</a>
+    <a href="#father"><i>06</i>Father</a>
+    <a href="#wisdom"><i>07</i>Wisdom</a>
+    <a href="#world"><i>08</i>World</a>
+    <a href="#desk"><i>09</i>The Desk</a>
+    <a href="#mind"><i>10</i>The Mind</a>
+    <a href="#way"><i>11</i>The Way</a>
+    <a href="#review"><i>12</i>The Review</a>
+    <a href="#chess"><i>13</i>Chess</a>
+    <a href="#gym"><i>14</i>Mind Gym</a>
+    <a href="#perf"><i>15</i>Performance</a>
+    <a href="#alerts"><i>16</i>Signal Log</a>
   </div>
 </nav>
 
@@ -709,6 +736,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <span class="pip"></span>
   <span class="msg" id="livemsg">Checking live ledger…</span>
   <button type="button" id="liverefresh">Refresh</button>
+</div>
+
+<!-- A tab left open overnight kept serving the previous edition: the clock
+     ticked, the ledger bar refreshed, but the masthead still read yesterday's
+     date and the hero still held yesterday's numbers. Two tabs open a minute
+     apart disagreed about what day it was. The page now knows its own build id
+     and says so when a newer one is published. -->
+<div class="editionbar" id="editionbar" data-build="20260803T210531">
+  <span>A newer edition was published — this tab is still showing Monday, August 03 2026.</span>
+  <button type="button" id="editionReload">Load it</button>
 </div>
 </div><!-- /.headstack -->
 
@@ -734,7 +771,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="k">Signal Win Rate</div>
     </div>
     <div class="stat">
-      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="27">0</div>
+      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="21">0</div>
       <div class="k">Open Positions</div>
     </div>
     <div class="stat">
@@ -750,187 +787,293 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 </section>
 
-<!-- ══════════ TICKER ══════════ -->
-<div class="tickwrap">
+<!-- ══════════ TICKER ══════════
+     The only market surface on the page. A "What moved" grid used to sit
+     directly below carrying the identical nine instruments — same names, same
+     numbers, twice, 200px apart. The grid is gone; the rail absorbed its job
+     and now runs the whole board in segments, ordered by when each market
+     actually opens in IST. Filled live from /api/ticker; the markup below is
+     the 6 AM snapshot that renders before that resolves and on a static
+     host. -->
+<div class="tickwrap" id="tickWrap">
   <div class="tick" id="tickRail">
     
+    <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
+    
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24553</span>
+      <span class="p">₹24774</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7490</span>
+      <span class="p">7578</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">25374</span>
+      <span class="p">25835</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4049.1</span>
-      <span class="c dn">▼ </span>
-    </div>
-    
-    <div class="ti">
-      <span class="n">Crude</span>
-      <span class="p">$84.67</span>
+      <span class="p">$4092.6</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
+      <span class="n">Crude</span>
+      <span class="p">$79.55</span>
+      <span class="c dn">▼ </span>
+    </div>
+    
+    <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.18</span>
+      <span class="p">₹95.33</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62841</span>
+      <span class="p">$63676</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹78574</span>
+      <span class="p">₹78639</span>
       <span class="c up">▲ </span>
     </div>
     
+    <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
+    
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24553</span>
+      <span class="p">₹24774</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7490</span>
+      <span class="p">7578</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">25374</span>
+      <span class="p">25835</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4049.1</span>
-      <span class="c dn">▼ </span>
-    </div>
-    
-    <div class="ti">
-      <span class="n">Crude</span>
-      <span class="p">$84.67</span>
+      <span class="p">$4092.6</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
+      <span class="n">Crude</span>
+      <span class="p">$79.55</span>
+      <span class="c dn">▼ </span>
+    </div>
+    
+    <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.18</span>
+      <span class="p">₹95.33</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$62841</span>
+      <span class="p">$63676</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹78574</span>
+      <span class="p">₹78639</span>
       <span class="c up">▲ </span>
     </div>
     
   </div>
+  <button type="button" class="tickctl" id="tickHold" aria-pressed="false">Pause</button>
 </div>
 
 <main>
 
-<!-- ══════════ 01 MARKETS ══════════ -->
-<section class="sec" id="markets">
-  <div class="shead rv">
-    <div>
-      <span class="snum">01 / MARKETS</span>
-      <h2 class="stitle">What moved.</h2>
-    </div>
-    <p class="sdesc" id="mktDesc">6 of 8 tracked instruments are green.
-      Indices, commodities, crypto and FX.</p>
-  </div>
-  <div class="mkt-grid" id="mktGrid">
-    
-    <div class="mkt u rv" style="--d:0.0s">
-      <div class="n">Nifty 50</div>
-      <div class="p">₹24553</div>
-      <div class="c up">▲ </div>
-    </div>
-    
-    <div class="mkt u rv" style="--d:0.04s">
-      <div class="n">S&P 500</div>
-      <div class="p">7490</div>
-      <div class="c up">▲ </div>
-    </div>
-    
-    <div class="mkt u rv" style="--d:0.08s">
-      <div class="n">Nasdaq</div>
-      <div class="p">25374</div>
-      <div class="c up">▲ </div>
-    </div>
-    
-    <div class="mkt d rv" style="--d:0.12s">
-      <div class="n">Gold</div>
-      <div class="p">$4049.1</div>
-      <div class="c dn">▼ </div>
-    </div>
-    
-    <div class="mkt u rv" style="--d:0.16s">
-      <div class="n">Crude</div>
-      <div class="p">$84.67</div>
-      <div class="c up">▲ </div>
-    </div>
-    
-    <div class="mkt d rv" style="--d:0.2s">
-      <div class="n">USD/INR</div>
-      <div class="p">₹95.18</div>
-      <div class="c dn">▼ </div>
-    </div>
-    
-    <div class="mkt u rv" style="--d:0.24s">
-      <div class="n">BTC</div>
-      <div class="p">$62841</div>
-      <div class="c up">▲ </div>
-    </div>
-    
-    <div class="mkt u rv" style="--d:0.28s">
-      <div class="n">Sensex</div>
-      <div class="p">₹78574</div>
-      <div class="c up">▲ </div>
-    </div>
-    
-    
-  </div>
-</section>
-
-<!-- ══════════ 02 TRADE IDEAS ══════════ -->
+<!-- ══════════ 01 TRADE IDEAS ══════════ -->
 <section class="sec" id="picks">
   <div class="shead rv">
     <div>
-      <span class="snum">02 / CONVICTION</span>
+      <span class="snum">01 / CONVICTION</span>
       <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
-      Target 20–30%. Every idea carries a stop.</p>
+      Target 20–30%. Every idea carries a stop.
+      </p>
   </div>
   
-  <div class="empty rv">📅 Picks refresh every Monday via GitHub Actions — check back after 6 AM IST Monday.</div>
+  <div class="pick-grid">
+    
+    <div class="pick rv" style="--d:0.0s">
+      <div class="rank">01</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym">BAJFINANCE</div>
+        <span class="tag">100/100</span>
+      </div>
+      <div class="px">₹1153.0</div>
+      <div class="mom">
+        <span class="up">1D <b>+1.03%</b></span>
+        <span class="up">1M <b>+11.8%</b></span>
+        <span class="up">3M <b>+22.1%</b></span>
+      </div>
+      <div class="scorebar" style="--w:100%"><i></i></div>
+      <div class="th">Strong 22% 3-month momentum with bullish trend structure.</div>
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">₹1441.25</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">₹1060.76</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">2–3 months</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="BAJFINANCE.NS">
+        <input type="hidden" name="name" value="BAJFINANCE">
+        <input type="hidden" name="entry_price" value="1153.0">
+        <input type="hidden" name="target_price" value="1441.25">
+        <input type="hidden" name="stop_loss" value="1060.76">
+        <input type="hidden" name="thesis" value="Strong 22% 3-month momentum with bullish trend structure.">
+        <input type="hidden" name="timeframe" value="2–3 months">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    
+    <div class="pick rv" style="--d:0.07s">
+      <div class="rank">02</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym">TECHM</div>
+        <span class="tag">100/100</span>
+      </div>
+      <div class="px">₹1649.0</div>
+      <div class="mom">
+        <span class="dn">1D <b>-0.14%</b></span>
+        <span class="up">1M <b>+16.9%</b></span>
+        <span class="up">3M <b>+15.0%</b></span>
+      </div>
+      <div class="scorebar" style="--w:100%"><i></i></div>
+      <div class="th">Strong 15% 3-month momentum with bullish trend structure.</div>
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">₹1978.8</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">₹1517.08</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">2–3 months</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="TECHM.NS">
+        <input type="hidden" name="name" value="TECHM">
+        <input type="hidden" name="entry_price" value="1649.0">
+        <input type="hidden" name="target_price" value="1978.8">
+        <input type="hidden" name="stop_loss" value="1517.08">
+        <input type="hidden" name="thesis" value="Strong 15% 3-month momentum with bullish trend structure.">
+        <input type="hidden" name="timeframe" value="2–3 months">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    
+    <div class="pick rv" style="--d:0.14s">
+      <div class="rank">03</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym">PERSISTENT</div>
+        <span class="tag">100/100</span>
+      </div>
+      <div class="px">₹5575.0</div>
+      <div class="mom">
+        <span class="up">1D <b>+0.47%</b></span>
+        <span class="up">1M <b>+19.5%</b></span>
+        <span class="up">3M <b>+16.8%</b></span>
+      </div>
+      <div class="scorebar" style="--w:100%"><i></i></div>
+      <div class="th">Strong 17% 3-month momentum with bullish trend structure.</div>
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">₹6968.75</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">₹5129.0</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">2–3 months</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="PERSISTENT.NS">
+        <input type="hidden" name="name" value="PERSISTENT">
+        <input type="hidden" name="entry_price" value="5575.0">
+        <input type="hidden" name="target_price" value="6968.75">
+        <input type="hidden" name="stop_loss" value="5129.0">
+        <input type="hidden" name="thesis" value="Strong 17% 3-month momentum with bullish trend structure.">
+        <input type="hidden" name="timeframe" value="2–3 months">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    
+    <div class="pick rv" style="--d:0.21000000000000002s">
+      <div class="rank">04</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym">COFORGE</div>
+        <span class="tag">100/100</span>
+      </div>
+      <div class="px">₹1768.0</div>
+      <div class="mom">
+        <span class="up">1D <b>+2.97%</b></span>
+        <span class="up">1M <b>+21.3%</b></span>
+        <span class="up">3M <b>+54.2%</b></span>
+      </div>
+      <div class="scorebar" style="--w:100%"><i></i></div>
+      <div class="th">Strong 54% 3-month momentum with bullish trend structure.</div>
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">₹2210.0</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">₹1626.56</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">2–3 months</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="COFORGE.NS">
+        <input type="hidden" name="name" value="COFORGE">
+        <input type="hidden" name="entry_price" value="1768.0">
+        <input type="hidden" name="target_price" value="2210.0">
+        <input type="hidden" name="stop_loss" value="1626.56">
+        <input type="hidden" name="thesis" value="Strong 54% 3-month momentum with bullish trend structure.">
+        <input type="hidden" name="timeframe" value="2–3 months">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    
+    <div class="pick rv" style="--d:0.28s">
+      <div class="rank">05</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym">LALPATHLAB</div>
+        <span class="tag">100/100</span>
+      </div>
+      <div class="px">₹1900.4</div>
+      <div class="mom">
+        <span class="dn">1D <b>-0.25%</b></span>
+        <span class="up">1M <b>+15.8%</b></span>
+        <span class="up">3M <b>+21.4%</b></span>
+      </div>
+      <div class="scorebar" style="--w:100%"><i></i></div>
+      <div class="th">Strong 21% 3-month momentum with bullish trend structure.</div>
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">₹2375.5</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">₹1748.37</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">2–3 months</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="LALPATHLAB.NS">
+        <input type="hidden" name="name" value="LALPATHLAB">
+        <input type="hidden" name="entry_price" value="1900.4">
+        <input type="hidden" name="target_price" value="2375.5">
+        <input type="hidden" name="stop_loss" value="1748.37">
+        <input type="hidden" name="thesis" value="Strong 21% 3-month momentum with bullish trend structure.">
+        <input type="hidden" name="timeframe" value="2–3 months">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    
+  </div>
   
 </section>
 
@@ -938,7 +1081,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="tracker">
   <div class="shead rv">
     <div>
-      <span class="snum">03 / POSITIONS</span>
+      <span class="snum">02 / POSITIONS</span>
       <h2 class="stitle">The book.</h2>
     </div>
     <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
@@ -994,10 +1137,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="sip" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / COMPOUNDING</span>
+      <span class="snum">03 / COMPOUNDING</span>
       <h2 class="stitle">One bucket a month.</h2>
     </div>
-    <span class="slink" id="sipPlan">—</span>
+    <div style="text-align:right">
+      <span class="slink" id="sipPlan">—</span>
+      <p class="sdesc" style="margin-top:8px">Whole shares only — every name in a bucket
+        is priced so at least one share fits its slice. Buckets are never blended; the
+        month that worked and the month that did not stay visible as separate lines.</p>
+    </div>
   </div>
 
   <div class="kpi-row rv">
@@ -1017,7 +1165,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
   </div>
   <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
-    <th>Year</th><th>Monthly</th><th>Invested</th><th>@10%</th><th>@12%</th><th>@14%</th>
+    <th>Year</th><th>Monthly</th><th>Invested</th><th>@12%</th><th>@14%</th><th>@16%</th>
   </tr></thead><tbody></tbody></table></div>
   <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
     Projections are compound arithmetic on the contribution schedule, not a forecast.
@@ -1030,7 +1178,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="interview">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / THE SEAT</span>
+      <span class="snum">04 / THE SEAT</span>
       <h2 class="stitle">CFO in three years.</h2>
     </div>
     <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
@@ -1073,7 +1221,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="language">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / LANGUAGE</span>
+      <span class="snum">05 / LANGUAGE</span>
       <h2 class="stitle">Two tongues, sharper.</h2>
     </div>
     <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
@@ -1132,7 +1280,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="father">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / THE FATHER</span>
+      <span class="snum">06 / THE FATHER</span>
       <h2 class="stitle">Seven months old.</h2>
     </div>
     <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
@@ -1161,7 +1309,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="wisdom">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / HOW TO LIVE</span>
+      <span class="snum">07 / HOW TO LIVE</span>
       <h2 class="stitle">Jainism and Buddhism.</h2>
     </div>
     <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
@@ -1190,7 +1338,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="world">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / CONTEXT</span>
+      <span class="snum">08 / CONTEXT</span>
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc">Wires only. Deduplicated, ranked, and cut to what actually changes a decision.</p>
@@ -1208,12 +1356,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cglj1pr0wjwo?at_medium=RSS&at_campaign=rss" target="_blank">US and Japan take action to prop up yen in rare joint move</a>
+          <a href="https://www.bbc.co.uk/news/articles/cp3rkzpl7ngo?at_medium=RSS&at_campaign=rss" target="_blank">It may be easier to get your first mortgage than you think - here's why</a>
         </div>
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cp3rkzpl7ngo?at_medium=RSS&at_campaign=rss" target="_blank">The change that may help you get a mortgage as a first-time buyer</a>
+          <a href="https://www.bbc.co.uk/news/articles/czjlvrd9e43o?at_medium=RSS&at_campaign=rss" target="_blank">Xbox Series X price hiked by £170 due to rising memory chip costs</a>
         </div>
         
         <div class="mini">
@@ -1222,13 +1370,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         </div>
         
         <div class="mini">
-          <span class="s">CNBC</span>
-          <a href="https://www.cnbc.com/2026/08/02/flights-are-getting-even-more-expensive-as-fuel-prices-rise.html" target="_blank">Why flights are so expensive and will likely stay that way</a>
+          <span class="s">BBC Business</span>
+          <a href="https://www.bbc.co.uk/news/articles/cglj1pr0wjwo?at_medium=RSS&at_campaign=rss" target="_blank">US and Japan take action to prop up yen in rare joint move</a>
         </div>
         
         <div class="mini">
-          <span class="s">Yahoo Finance</span>
-          <a href="https://finance.yahoo.com/markets/stocks/articles/warren-buffett-keeps-pointing-same-160300409.html" target="_blank">Warren Buffett keeps pointing at the same ETF for a reason</a>
+          <span class="s">CNBC</span>
+          <a href="https://www.cnbc.com/2026/08/03/spider-man-brand-new-day-debut-360m-highest-domestic-opening-ever.html" target="_blank">'Spider-Man: Brand New Day' beats out 'Avengers: Endgame' for highest domestic opening ever</a>
         </div>
         
       </div>
@@ -1237,66 +1385,66 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="news-grid">
       
       <div class="ncard rv" style="--d:0.0s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/we-already-have-wills-were-in-our-60s-with-1-5-million-how-do-we-prevent-family-drama-among-our-heirs-bf7b0eb1?mod=mw_rss_topstories" target="_blank">We’re in our 60s with $1.5 million. Would a trust be more effective than a will to prevent conflict among our heirs?</a></h3>
-        <p>“I realize that probate can be lengthy, public and expensive.”</p>
-        <div class="ts">Aug 02 17:00</div>
+        <span class="s">CNBC</span>
+        <h3><a href="https://www.cnbc.com/2026/08/03/visa-buys-biocatch-fraud-detection.html" target="_blank">Visa to buy cybersecurity firm BioCatch for $2.4 billion amid surge in AI-powered scams</a></h3>
+        <p>It is also the latest move by Visa to expand its value-added services business, which has become one of the company's fastest-growing divisions.</p>
+        <div class="ts">Aug 03 14:11</div>
       </div>
       
       <div class="ncard rv" style="--d:0.05s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/my-girlfriend-is-62-can-she-claim-her-late-husbands-full-social-security-benefit-or-does-she-have-to-wait-315c0fa1?mod=mw_rss_topstories" target="_blank">My girlfriend is 62. Can she claim her late husband’s full Social Security benefit — or does she have to wait?</a></h3>
-        <p>“Her husband passed away 10 years ago. They had been married for more than 20 years.”</p>
-        <div class="ts">Aug 02 16:00</div>
+        <span class="s">CNBC</span>
+        <h3><a href="https://www.cnbc.com/2026/08/03/electric-lsv-stellantis-fiat-toppolino.html" target="_blank">Are Americans ready to embrace tiny 'cars'? These companies think so</a></h3>
+        <p>Electric low-speed vehicles, or LSVs, are a step above a traditional golf cart but below a typical light-duty car or truck sold in the U.S.</p>
+        <div class="ts">Aug 03 14:55</div>
       </div>
       
       <div class="ncard rv" style="--d:0.1s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/heres-whats-worth-streaming-in-august-2026-on-netflix-hulu-hbo-max-and-more-21b78a08?mod=mw_rss_topstories" target="_blank">Here’s what’s worth streaming in August 2026 on Netflix, Hulu, HBO Max and more</a></h3>
-        <p>Turn off your brain and enjoy new seasons of Apple’s ‘Ted Lasso,’ Amazon’s ‘Reacher,’ Netflix’s ‘Outer Banks’ and much more</p>
-        <div class="ts">Aug 02 15:19</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/stocks/articles/warren-buffett-keeps-pointing-same-160300409.html" target="_blank">Warren Buffett keeps pointing at the same ETF for a reason</a></h3>
+        <p></p>
+        <div class="ts">Aug 02 16:03</div>
       </div>
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/its-like-buying-a-lottery-ticket-fidelity-asked-for-my-former-sister-in-laws-death-certificate-does-this-mean-im-due-a-windfall-2ebdcd69?mod=mw_rss_topstories" target="_blank">My ex-husband’s sister died — so why is Fidelity asking me for her death certificate?</a></h3>
-        <p>“Part of me jokes that paying for a death certificate would be like buying a lottery ticket.”</p>
-        <div class="ts">Aug 02 14:00</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/technology/ai/articles/ibm-quantum-bet-just-got-151648951.html" target="_blank">IBM’s Quantum Bet Just Got Bigger—What the HRL Deal Means for Investors</a></h3>
+        <p></p>
+        <div class="ts">Aug 03 15:16</div>
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/s-p-500-profit-growth-is-getting-even-wilder-as-amazon-makes-its-mark-5ddf2082?mod=mw_rss_topstories" target="_blank">S&P 500 profit growth is getting even wilder as Amazon makes its mark</a></h3>
-        <p>Amazon is the latest Big Tech company to report abnormally large earnings growth, thanks to paper gains on Anthropic investments.</p>
-        <div class="ts">Aug 02 14:00</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/markets/currencies/articles/average-auto-loan-payments-expect-174817148.html" target="_blank">Average car payments in 2026: What to expect</a></h3>
+        <p></p>
+        <div class="ts">Aug 03 15:16</div>
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
-        <span class="s">Investing.com</span>
-        <h3><a href="https://www.investing.com/news/company-news/vista-group-h1-2026-slides-saas-revenue-surges-38-guidance-raised-93CH-4829762" target="_blank">Vista Group H1 2026 slides: SaaS revenue surges 38%, guidance raised</a></h3>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://finance.yahoo.com/economy/policy/articles/uk-restructuring-plans-radar-us-151337992.html" target="_blank">UK restructuring plans on radar as US debtors scan beyond Chapter 11</a></h3>
         <p></p>
-        <div class="ts">Aug 03 03:54</div>
+        <div class="ts">Aug 03 15:13</div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
-        <span class="s">Investing.com</span>
-        <h3><a href="https://www.investing.com/news/stock-market-news/asia-stocks-retreat-as-kospi-sinks-4-ai-selloff-outweighs-iran-optimism-4829761" target="_blank">Asia stocks retreat as KOSPI sinks 4%; AI selloff outweighs Iran optimism</a></h3>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://www.investors.com/news/marriott-international-earnings-q2-2026-travel-demand-middle-east-mar-stock/?src=A00220&yptr=yahoo" target="_blank">Marriott Outlook Comes Up Short As Middle East Conflicts Drag On Results</a></h3>
         <p></p>
-        <div class="ts">Aug 03 03:47</div>
+        <div class="ts">Aug 03 15:12</div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
-        <span class="s">Investing.com</span>
-        <h3><a href="https://www.investing.com/news/transcripts/earnings-call-transcript-vista-group-lifts-h1-2026-revenue-outlook-on-saas-growth-93CH-4829760" target="_blank">Earnings call transcript: Vista Group lifts H1 2026 revenue outlook on SaaS growth</a></h3>
-        <p></p>
-        <div class="ts">Aug 03 03:43</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/joint-u-s-japanese-intervention-boosts-the-yen-but-will-it-be-enough-069451f5?mod=mw_rss_topstories" target="_blank">Why the U.S. decided to help Japan by boosting the flailing yen</a></h3>
+        <p>The U.S. Treasury Department and Federal Reserve have joined forces with their Japanese counterparts to stage a historic joint intervention to boost t</p>
+        <div class="ts">Aug 03 15:20</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
-        <span class="s">Investing.com</span>
-        <h3><a href="https://www.investing.com/news/commodities-news/cubas-national-electric-grid-collapses-plunging-island-into-darkness-4829759" target="_blank">Cuba’s national electric grid collapses, plunging island into darkness</a></h3>
-        <p></p>
-        <div class="ts">Aug 03 03:36</div>
+        <span class="s">MarketWatch</span>
+        <h3><a href="https://www.marketwatch.com/story/disappointed-by-your-skimpy-pay-raise-blame-your-healthcare-benefits-8025491b?mod=mw_rss_topstories" target="_blank">Disappointed by your skimpy pay raise? Blame your healthcare benefits.</a></h3>
+        <p>It’s been two decades since companies’ health-benefit costs have climbed this fast.</p>
+        <div class="ts">Aug 03 15:17</div>
       </div>
       
     </div>
@@ -1307,7 +1455,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="desk">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / THE DESK</span>
+      <span class="snum">09 / THE DESK</span>
       <h2 class="stitle">Compound the skill.</h2>
     </div>
     <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
@@ -1316,7 +1464,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="tabs rv" id="deskTabs">
     <button class="tab on" data-p="d1">🎓 FP&amp;A · 12/20</button>
-    <button class="tab" data-p="d2">🇦🇪 Dubai</button>
+    <button class="tab" data-p="d2">🇦🇪 Dubai · 5/30</button>
     <button class="tab" data-p="d3">🏆 FC → CFO · 13/15</button>
     <button class="tab" data-p="d4">📊 Case Study</button>
     <button class="tab" data-p="d5">📚 Book · 31/48</button>
@@ -1335,13 +1483,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     <div class="pane" id="d2">
       <div class="essay" style="--ac:var(--violet)">
-        <div class="meta">Dubai Corner · AED 30K+ Track</div>
-        <h3>The stack that clears AED 30K</h3>
-        <p>CA or ACCA, plus SAP or Oracle, plus Power BI, plus IFRS 9 and 16. That is the whole gate.
-          Miss one and you are competing on price.</p>
-        <div class="q">Targets: ADNOC · Emirates · Majid Al Futtaim · DP World · FAB · Emaar.</div>
-        <div class="act"><b>Keyword tip</b>Put "IFRS 16 implementation" and "rolling forecast" in the cover letter.
-          Recruiters grep for exactly those two strings.</div>
+        <div class="meta">Dubai Corner · AED 30K+ Track · 5/30</div>
+        <h3>The visa question, answered</h3>
+        <p>Employment visa is sponsored by the employer — you do not need one to apply, and any recruiter asking you to pay for one is running a scam. The Golden Visa needs a AED 30K+ salary and a degree attestation, which is exactly why AED 30K is the threshold worth targeting.</p>
+        <div class="q">Attest the degree in India first. It takes 3–6 weeks and blocks everything downstream.</div>
+        <div class="act"><b>Do now</b>MEA attestation on the CA certificate and the degree. Before an offer, not after.</div>
       </div>
     </div>
 
@@ -1430,7 +1576,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="mind">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / THE MIND</span>
+      <span class="snum">10 / THE MIND</span>
       <h2 class="stitle">Sharpen the operator.</h2>
     </div>
     <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
@@ -1461,7 +1607,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="way">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / THE WAY</span>
+      <span class="snum">11 / THE WAY</span>
       <h2 class="stitle">Simple living. High thinking.</h2>
     </div>
     <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
@@ -1569,7 +1715,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="review">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / THE REVIEW</span>
+      <span class="snum">12 / THE REVIEW</span>
       <h2 class="stitle">Look back, or none of it compounds.</h2>
     </div>
     <p class="sdesc">Week 32 of 2026.
@@ -1623,7 +1769,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="chess">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / THE BOARD</span>
+      <span class="snum">13 / THE BOARD</span>
       <h2 class="stitle">Yesterday's chess.</h2>
     </div>
     <div style="text-align:right">
@@ -1738,9 +1884,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       
       <div>
-        <div class="bar" style="--h:70px;--d:0.42000000000000004s;background:var(--up)"></div>
+        <div class="bar" style="--h:35px;--d:0.42000000000000004s;background:var(--gold)"></div>
         <div class="lb">08/03</div>
-        <div class="lb" style="color:var(--muted)">100%</div>
+        <div class="lb" style="color:var(--muted)">50%</div>
       </div>
       
     </div>
@@ -1761,10 +1907,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1768 · 🟡 at level</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Middlegame · Short · Advantage</p>
+      <h3>Rating 1725 · 🟡 at level</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Middlegame · Advantage · Fork</p>
       <div class="q">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
-      <a href="https://lichess.org/training/X0Xmi" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+      <a href="https://lichess.org/training/Tsqqj" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
     </div>
     
   </div>
@@ -1776,7 +1922,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="gym">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / MIND GYM</span>
+      <span class="snum">14 / MIND GYM</span>
       <h2 class="stitle">Six minutes. Sharper.</h2>
     </div>
     <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
@@ -1795,7 +1941,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="perf" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / EDGE</span>
+      <span class="snum">15 / EDGE</span>
       <h2 class="stitle">Does this actually work?</h2>
     </div>
     <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
@@ -1821,7 +1967,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="alerts">
   <div class="shead rv">
     <div>
-      <span class="snum">09 / TRACK RECORD</span>
+      <span class="snum">16 / TRACK RECORD</span>
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -1853,9 +1999,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   
   <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" id="kpiWin" data-count="44">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="124">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="27">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v up" id="kpiWin" data-count="45">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="129">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="21">0</div><div class="k">Open</div></div>
     <div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)" data-count="26" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
     <div class="kpi"><div class="v" id="kpiTotal" data-count="200">0</div><div class="k">Total Signals</div></div>
   </div>
@@ -1885,6 +2031,63 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
       </tr></thead>
       <tbody>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-08-03</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:EICHERMOT" target="_blank">EICHERMOT</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · equity_measured</span></td>
+          <td class="mono-dim">1D</td>
+          <td class="mono-dim">—</td>
+          <td class="num">₹8050.00</td>
+          <td class="num dn">₹7728.02</td>
+          <td class="num up">₹8144.71</td>
+          <td class="num up">₹8854.96</td>
+          <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-08-03</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SUNPHARMA" target="_blank">SUNPHARMA</a></td>
+          <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · equity_measured</span></td>
+          <td class="mono-dim">1D</td>
+          <td class="mono-dim">—</td>
+          <td class="num">₹1963.50</td>
+          <td class="num dn">₹1892.21</td>
+          <td class="num up">₹1988.00</td>
+          <td class="num up">₹2141.72</td>
+          <td class="num" style="color:var(--gold)">2.5x</td>
+          
+          <td class="num mono-dim">29%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
+      
+        <tr data-badge="open">
+          <td class="mono-dim">2026-08-03</td>
+          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BRNUSD" target="_blank">BRNUSD</a></td>
+          <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
+          <td class="mono-dim">Daily</td>
+          <td class="mono-dim">—</td>
+          <td class="num">₹83.59</td>
+          <td class="num dn">₹89.80</td>
+          <td class="num up">₹75.83</td>
+          <td class="num up">₹70.66</td>
+          <td class="num" style="color:var(--gold)">2.1x</td>
+          
+          <td class="num mono-dim">32%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="mono-dim">—</td>
+          <td><span class="badge badge-open">🔵 Open</span></td>
+        </tr>
       
         <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
@@ -1924,7 +2127,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDIGO" target="_blank">INDIGO</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -1937,13 +2140,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.2x</td>
           
           <td class="num mono-dim">45%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹4950.00</td>
+          <td class="pnl-d">-4.3%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:DLF" target="_blank">DLF</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -1956,13 +2159,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.2x</td>
           
           <td class="num mono-dim">45%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹631.23</td>
+          <td class="pnl-d">-4.3%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AUBANK" target="_blank">AUBANK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -1975,10 +2178,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.3x</td>
           
           <td class="num mono-dim">43%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹968.06</td>
+          <td class="pnl-d">-7.6%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2190,7 +2393,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BPCL" target="_blank">BPCL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2203,10 +2406,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.5x</td>
           
           <td class="num mono-dim">40%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹306.90</td>
+          <td class="pnl-d">-4.0%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -2285,7 +2488,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TORNTPHARM" target="_blank">TORNTPHARM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
@@ -2298,13 +2501,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹5033.06</td>
+          <td class="pnl-d">-1.8%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-08-01</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TATASTEEL" target="_blank">TATASTEEL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · 4h</span></td>
@@ -2317,10 +2520,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.7x</td>
           
           <td class="num mono-dim">27%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
+          <td class="num">₹193.15</td>
+          <td class="pnl-u">+1.7%</td>
           <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2646,7 +2849,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-07-30</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:INDUSINDBK" target="_blank">INDUSINDBK</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2659,10 +2862,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.5x</td>
           
           <td class="num mono-dim">40%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1072.46</td>
+          <td class="pnl-u">+6.4%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -2817,7 +3020,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-29</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GRANULES" target="_blank">GRANULES</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · breakout</span></td>
@@ -2830,10 +3033,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.7x</td>
           
           <td class="num mono-dim">37%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹817.66</td>
+          <td class="pnl-d">-2.9%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="win">
@@ -2849,9 +3052,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">₹5060.37</td>
-          <td class="pnl-u">+3.7%</td>
-          <td class="mono-dim">—</td>
+          <td class="num">₹5208.16</td>
+          <td class="pnl-u">+6.8%</td>
+          <td class="mono-dim">2026-08-03</td>
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
@@ -4375,7 +4578,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:AWL" target="_blank">AWL</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_daily</span></td>
@@ -4388,10 +4591,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹181.15</td>
+          <td class="pnl-d">-6.6%</td>
+          <td class="mono-dim">2026-08-03</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -5629,63 +5832,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="loss">
-          <td class="mono-dim">2026-07-10</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SILVER" target="_blank">SILVER</a></td>
-          <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="mono-dim">—</td>
-          <td class="num">₹59.83</td>
-          <td class="num dn">₹60.58</td>
-          <td class="num up">₹58.72</td>
-          <td class="num up">₹57.98</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          
-          <td class="num mono-dim">29%</td>
-          <td class="num">₹60.58</td>
-          <td class="pnl-d">-1.2%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-loss">❌ Stop</span></td>
-        </tr>
-      
-        <tr data-badge="loss">
-          <td class="mono-dim">2026-07-10</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
-          <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="mono-dim">—</td>
-          <td class="num">₹4101.00</td>
-          <td class="num dn">₹4124.29</td>
-          <td class="num up">₹4066.06</td>
-          <td class="num up">₹4042.77</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          
-          <td class="num mono-dim">29%</td>
-          <td class="num">₹4124.29</td>
-          <td class="pnl-d">-0.6%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-loss">❌ Stop</span></td>
-        </tr>
-      
-        <tr data-badge="win">
-          <td class="mono-dim">2026-07-10</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:NATGAS" target="_blank">NATGAS</a></td>
-          <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
-          <td class="mono-dim">1H</td>
-          <td class="mono-dim">—</td>
-          <td class="num">₹2.99</td>
-          <td class="num dn">₹3.01</td>
-          <td class="num up">₹2.95</td>
-          <td class="num up">₹2.93</td>
-          <td class="num" style="color:var(--gold)">2.5x</td>
-          
-          <td class="num mono-dim">29%</td>
-          <td class="num">₹2.93</td>
-          <td class="pnl-u">+2.0%</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-win">✅ Win</span></td>
-        </tr>
-      
       </tbody>
     </table>
   </div>
@@ -5704,7 +5850,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Monday, August 03 2026 · 09:37 IST<br>
+      Monday, August 03 2026 · 21:05 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -6398,12 +6544,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '</tr>';
       }).join('');
 
-      tbody.innerHTML = html || '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
-                                (activeVersion() === 'v2'
-                                  ? 'No gated signals yet. The v2 engine publishes only setups that clear ' +
-                                    'their engine’s measured break-even R:R — quiet is the intended ' +
-                                    'state. Switch to Legacy (v1) for the pre-gate history.'
-                                  : 'Nothing matches those filters.') + '</td></tr>';
+      // The empty state has to name the actual reason. It used to always blame
+      // the v2 gate — so with an archive day still selected, three live gated
+      // signals sitting in the ledger read as "no gated signals yet".
+      var why;
+      if (archDate){
+        why = 'No signals on ' + esc(archDate) + ' for this filter. ' +
+              '<a href="#" id="archClear" style="color:var(--lime)">Show all days</a> to see the rest.';
+      } else if (from || to || tf || el('alertSearch').value.trim()){
+        why = 'Nothing matches those filters.';
+      } else if (activeVersion() === 'v2'){
+        why = 'No gated signals yet. The v2 engine publishes only setups that clear ' +
+              'their engine’s measured break-even R:R — quiet is the intended ' +
+              'state. Switch to Legacy (v1) for the pre-gate history.';
+      } else {
+        why = 'Nothing matches those filters.';
+      }
+      tbody.innerHTML = html ||
+        '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
+        why + '</td></tr>';
+      var clear = document.getElementById('archClear');
+      if (clear) clear.addEventListener('click', function(ev){ ev.preventDefault(); selectDay(null); });
 
       // Spell out the full span. The table always held every signal, but with
       // the newest first it read as though the history stopped a week back.
@@ -6498,12 +6659,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         // the first bucket exists — the plan is worth seeing on day one.
         var pb = document.querySelector('#sipProj tbody');
         if (pb) pb.innerHTML = (j.projections || []).map(function(r){
-          return '<tr><td class="mono-dim">' + r.years + '</td>' +
+          // 18 years is when the daughter hits college age — the one horizon
+          // here anchored to a date rather than a round number, so it is
+          // marked rather than left to blend into the others.
+          var mark = r.years === 18
+            ? ' <span class="mono-dim" style="font-size:10px;color:var(--gold)">college</span>' : '';
+          return '<tr><td class="mono-dim">' + r.years + mark + '</td>' +
             '<td class="num">' + inr(r.monthly) + '</td>' +
             '<td class="num mono-dim">' + inr(r.invested) + '</td>' +
-            '<td class="num">' + inr(r.r10) + '</td>' +
-            '<td class="num up">' + inr(r.r12) + '</td>' +
-            '<td class="num up">' + inr(r.r14) + '</td></tr>';
+            '<td class="num">' + inr(r.r12) + '</td>' +
+            '<td class="num up">' + inr(r.r14) + '</td>' +
+            '<td class="num up">' + inr(r.r16) + '</td></tr>';
         }).join('');
 
         var body = el('sipBody');
@@ -6520,12 +6686,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             var val  = live ? h.qty * (h.last_price || h.buy_price) : null;
             var cost = live ? h.qty * h.buy_price : null;
             var pct  = live && cost ? (val / cost - 1) * 100 : null;
+            // Qty is the whole point of the rework: the bucket now proposes a
+            // buyable number of shares, not a rupee slice that may not cover
+            // one share of the name it is pointed at.
             return '<tr>' +
               '<td class="mono-dim">' + (h.rank || '') + '</td>' +
               '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
                   encodeURIComponent(h.symbol) + '" target="_blank" rel="noopener">' +
                   esc(h.symbol) + '</a></td>' +
               '<td class="num">' + fmt(h.score, 1) + '</td>' +
+              '<td class="num">' + (h.ref_price ? inr(h.ref_price, 2) : '—') + '</td>' +
+              '<td class="num" style="font-weight:700">' +
+                  (h.proposed_qty ? h.proposed_qty + '<span class="mono-dim" style="font-size:10px"> sh</span>' : '—') + '</td>' +
               '<td class="num">' + inr(h.allocated) + '</td>' +
               '<td class="num">' + (h.buy_price ? inr(h.buy_price, 2) : '—') + '</td>' +
               '<td class="num">' + (h.last_price ? inr(h.last_price, 2) : '—') + '</td>' +
@@ -6541,6 +6713,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             ? '' : ' · XIRR ' + fmt(b.xirr_pct, 1) + '%';
           var pl  = b.pnl_pct === null || b.pnl_pct === undefined
             ? '' : ' · ' + (b.pnl > 0 ? '+' : '') + fmt(b.pnl_pct, 1) + '%';
+          // Whole shares never spend the month to the rupee. Show the gap
+          // rather than let the numbers quietly not add up.
+          var left = (b.cash_left > 0)
+            ? ' · ' + inr(b.proposed_cost) + ' deployable, ' + inr(b.cash_left) + ' idle' : '';
           return '<div class="rv" style="margin-bottom:26px">' +
             '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
                  'flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
@@ -6548,10 +6724,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                 esc(b.bucket) + '</strong>' +
               '<span class="mono-dim" style="font-size:11px">' +
                 inr(b.monthly_amount) + ' · year ' + b.sip_year + ' · ' +
-                b.held + '/' + b.names + ' held' + pl + xir + '</span>' +
+                b.held + '/' + b.names + ' held' + left + pl + xir + '</span>' +
             '</div>' +
-            '<div class="tw"><table class="t" style="min-width:860px"><thead><tr>' +
-              '<th>#</th><th>Symbol</th><th>Score</th><th>Allocated</th><th>Buy</th>' +
+            '<div class="tw"><table class="t" style="min-width:960px"><thead><tr>' +
+              '<th>#</th><th>Symbol</th><th>Score</th><th>Ref px</th><th>Buy qty</th>' +
+              '<th>Cost</th><th>Bought at</th>' +
               '<th>Last</th><th>P&amp;L</th><th>Status</th><th>Why</th>' +
             '</tr></thead><tbody>' + hs + '</tbody></table></div></div>';
         }).join('');
@@ -6635,6 +6812,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       document.querySelectorAll('.arch-day').forEach(function(n){
         n.classList.toggle('on', !!date && n.dataset.date === date);
       });
+      // "Show all days" shipped with class="fbtn on" hardcoded, so it was lit
+      // permanently — including while a single archived day was filtering the
+      // table down to nothing. The control said one thing and the query did
+      // another. It now reflects the actual state.
+      var all = el('archAll');
+      if (all) all.classList.toggle('on', !date);
       if (date && history.replaceState) history.replaceState({}, '', '/day/' + date);
       else if (history.replaceState) history.replaceState({}, '', '/');
       loadSignals();
@@ -6968,10 +7151,39 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       paintScore();
     }
 
+    // The result used to erase itself on a timer — 550ms when right, 1.9s when
+    // wrong. Both are shorter than it takes to read a sentence, so the next
+    // question replaced the explanation before you had seen it, and the drill
+    // taught nothing. The reader advances it now; nothing moves on its own.
     function next(ok){
       if (ok) correct++;
       idx++;
-      setTimeout(function(){ idx >= rounds.length ? finish() : render(); }, ok ? 550 : 1900);
+      var last = idx >= rounds.length;
+      var go = document.createElement('div');
+      go.className = 'gym-input';
+      go.style.marginTop = '14px';
+      go.innerHTML = '<button class="gym-btn" id="gymNextQ">' +
+        (last ? 'See the score →' : 'Next question →') +
+        '</button><span class="mono-dim" style="font-size:11px;align-self:center">' +
+        (last ? '' : 'or press Enter') + '</span>';
+      stage.appendChild(go);
+
+      var fired = false;
+      var advance = function(){
+        if (fired) return; fired = true;
+        document.removeEventListener('keydown', onKey);
+        last ? finish() : render();
+      };
+      var onKey = function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); advance(); }
+      };
+      document.getElementById('gymNextQ').addEventListener('click', advance);
+      document.getElementById('gymNextQ').focus();
+      // Bind on the next tick. Answering with Enter is still dispatching that
+      // keydown when this runs, and a listener added mid-dispatch on an
+      // ancestor still receives it — so binding synchronously would skip the
+      // feedback with the very keystroke that produced it.
+      setTimeout(function(){ document.addEventListener('keydown', onKey); }, 0);
     }
 
     function feedback(ok, msg){
@@ -7119,62 +7331,129 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    /* ── markets: every 5 minutes ── */
-    function paintMarkets(j){
-      if (!j || !j.ok || !j.markets || !j.markets.length) return;
-      var live = j.markets.filter(function(m){ return m.price_raw !== null; });
-      if (!live.length) return;
+    /* ── ticker: every 5 minutes ──
+       One rail, eleven segments, ordered by when each market opens in IST:
+       Asia 05:30 → India 09:15 → Europe 12:30 → US 19:00, then the things that
+       never close (commodities, FX, crypto) and finally the ledger's own
+       multibagger ideas. Each segment gets a coloured head so 110 instruments
+       read as a board rather than a stream. */
+    var SEGCOLOR = {
+      asia:'var(--blue)', india:'var(--lime)', gainers:'var(--up)', losers:'var(--down)',
+      europe:'var(--violet)', us:'var(--blue)', ustop:'var(--blue)',
+      commodities:'var(--gold)', fx:'var(--violet)', crypto:'var(--gold)',
+      multibagger:'var(--lime)'
+    };
 
-      var cell = function(m){
-        var arrow = m.up ? '▲' : '▼', cls = m.up ? 'up' : 'dn';
-        return { arrow: arrow, cls: cls,
-                 chg: (m.change_pct > 0 ? '+' : '') + m.change_pct.toFixed(2) + '%' };
-      };
-
+    function paintTicker(j){
+      if (!j || !j.ok || !j.segments || !j.segments.length) return;
       var rail = document.getElementById('tickRail');
-      if (rail){
-        var html = '';
-        // duplicated once — the marquee translates -50%, so the strip has to
-        // contain exactly two copies to loop seamlessly
-        for (var d = 0; d < 2; d++){
-          j.markets.forEach(function(m){
-            var c = cell(m);
-            html += '<div class="ti"><span class="n">' + esc(m.name) + '</span>' +
-                    '<span class="p">' + esc(m.price) + '</span>' +
-                    '<span class="c ' + c.cls + '">' + c.arrow + ' ' + c.chg + '</span></div>';
+      if (!rail) return;
+
+      var items = 0, html = '';
+      // Duplicated once: the marquee translates -50%, so the strip must hold
+      // exactly two copies to loop without a visible seam.
+      for (var d = 0; d < 2; d++){
+        j.segments.forEach(function(s){
+          var col = SEGCOLOR[s.key] || 'var(--lime)';
+          html += '<div class="tseg" style="--sc:' + col + '">' +
+                    '<span class="ic">' + esc(s.icon) + '</span>' +
+                    '<span class="lb">' + esc(s.label) + '</span></div>';
+          s.items.forEach(function(m){
+            if (!d) items++;
+            var chg = (m.change_pct > 0 ? '+' : '') + m.change_pct.toFixed(2) + '%';
+            html += '<div class="ti" style="--sc:' + col + '">' +
+                      '<span class="n">' + esc(m.name) + '</span>' +
+                      '<span class="p">' + esc(m.price) + '</span>' +
+                      '<span class="c ' + (m.up ? 'up' : 'dn') + '">' +
+                        (m.up ? '▲' : '▼') + ' ' + chg + '</span>' +
+                      (m.note ? '<span class="note">' + esc(m.note) + '</span>' : '') +
+                    '</div>';
           });
-        }
-        rail.innerHTML = html;
+        });
       }
+      rail.innerHTML = html;
+      // ~1.6s per instrument keeps it legible whatever the board size; a fixed
+      // 46s across 110 items was a blur.
+      rail.style.setProperty('--tickdur', Math.max(60, Math.round(items * 1.6)) + 's');
 
-      var grid = document.getElementById('mktGrid');
-      if (grid){
-        grid.innerHTML = j.markets.map(function(m, i){
-          var c = cell(m);
-          return '<div class="mkt ' + (m.up ? 'u' : 'd') + ' rv in" style="--d:' + (i * 0.04) + 's">' +
-                   '<div class="n">' + esc(m.name) + '</div>' +
-                   '<div class="p">' + esc(m.price) + '</div>' +
-                   '<div class="c ' + c.cls + '">' + c.arrow + ' ' + c.chg + '</div>' +
-                 '</div>';
-        }).join('');
-      }
-
-      var desc = document.getElementById('mktDesc');
-      if (desc){
-        var t = new Date(j.fetched_at);
-        var ist = new Date(t.getTime() + (t.getTimezoneOffset() + 330) * 60000);
-        desc.innerHTML = j.advancing + ' of ' + j.total + ' tracked instruments are green. ' +
-          'Live quotes — last read ' + ('0' + ist.getHours()).slice(-2) + ':' +
-          ('0' + ist.getMinutes()).slice(-2) + ' IST, refreshing every 5 minutes.';
-      }
-
+      // Same guard the ledger's setKpi() uses. Writing textContent alone is not
+      // enough: the hero count-up animation writes this node every frame for
+      // 1.1s and settles it back on the 6 AM snapshot figure — which is how it
+      // ended up reading 0/1 next to a rail carrying 46 live instruments.
       var adv = document.querySelector('.statrail .stat .v[data-total]');
-      if (adv){ adv.textContent = j.advancing + '/' + j.total; }
+      if (adv){
+        adv.dataset.live = '1';
+        adv.removeAttribute('data-count');
+        adv.textContent = j.advancing + '/' + j.total;
+      }
     }
 
-    function loadMarkets(){ get('/markets').then(paintMarkets); }
-    loadMarkets();
-    setInterval(loadMarkets, 5 * 60 * 1000);
+    function loadTicker(){
+      // /api/ticker is the current route. /markets is the old nine-instrument
+      // one, kept as a fallback so an older deploy still shows a live rail.
+      get('/ticker').then(function(j){
+        if (j && j.ok) return paintTicker(j);
+        return get('/markets').then(function(m){
+          if (!m || !m.ok || !m.markets) return;
+          paintTicker({ ok:true, advancing:m.advancing, total:m.total,
+                        segments:[{ key:'india', label:'Markets', icon:'📈',
+                                    items:m.markets.filter(function(x){ return x.price_raw !== null; }) }] });
+        });
+      });
+    }
+    loadTicker();
+    setInterval(loadTicker, 5 * 60 * 1000);
+
+    /* ── edition freshness ──
+       The shell is rebuilt once a day and cached in the tab that loaded it.
+       Nothing told a long-lived tab that a newer edition existed, so an
+       overnight tab kept showing yesterday's masthead and yesterday's hero
+       numbers while a fresh tab beside it showed today's — two views of the
+       same URL, one minute apart, disagreeing. Poll the build id, say so, and
+       reload silently only when the tab is not being looked at. */
+    (function(){
+      var bar = document.getElementById('editionbar');
+      if (!bar) return;
+      var mine = bar.dataset.build || '';
+      if (!mine) return;                       // pre-stamp build, nothing to compare
+
+      var notified = false;
+      function check(){
+        if (notified) return;
+        fetch('/edition.json?t=' + Date.now(), { cache: 'no-store' })
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(j){
+            if (!j || !j.build_id || j.build_id === mine) return;
+            notified = true;
+            // Nothing is lost by reloading a tab nobody is looking at. A tab
+            // in the foreground may have a drill in progress or a filter set,
+            // so that one gets asked.
+            if (document.visibilityState === 'hidden'){ location.reload(); return; }
+            bar.classList.add('on');
+          })
+          .catch(function(){ /* offline or a host without edition.json */ });
+      }
+      document.getElementById('editionReload')
+        .addEventListener('click', function(){ location.reload(); });
+      // On focus as well as on a timer: coming back to the tab in the morning
+      // is exactly when the answer has changed.
+      document.addEventListener('visibilitychange', function(){
+        if (document.visibilityState === 'visible') check();
+      });
+      check();
+      setInterval(check, 10 * 60 * 1000);
+    })();
+
+    // A marquee you cannot stop is a marquee you cannot read.
+    (function(){
+      var wrap = document.getElementById('tickWrap'), btn = document.getElementById('tickHold');
+      if (!wrap || !btn) return;
+      btn.addEventListener('click', function(){
+        var held = wrap.classList.toggle('hold');
+        btn.textContent = held ? 'Play' : 'Pause';
+        btn.setAttribute('aria-pressed', held ? 'true' : 'false');
+      });
+    })();
 
     /* ── news: every 3 hours ── */
     function paintNews(j){
