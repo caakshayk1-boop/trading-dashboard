@@ -269,6 +269,12 @@ def init_db(force: bool = False):
             # should have filled, in R. NESTLEIND booked -1.2R against a -1.0R
             # stop on 2026-07-31 and nothing recorded the extra -0.2R.
             ("slippage_r",          "ALTER TABLE all_signals ADD COLUMN slippage_r REAL"),
+            # Stamped by regrade.py. NULL means the row still carries the number
+            # produced by the pre-2026-08-05 grader, which tested the stop first
+            # across a merged, unbounded window and graded 1H signals on daily
+            # bars. Those values are not evidence; this column is how a consumer
+            # tells the two populations apart.
+            ("regraded_at",         "ALTER TABLE all_signals ADD COLUMN regraded_at TEXT"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:

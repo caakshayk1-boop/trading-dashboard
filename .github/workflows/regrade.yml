@@ -1,0 +1,79 @@
+name: Ledger — Re-grade Closed Signals
+
+# The closed ledger was graded by the pre-2026-08-05 update_all_outcomes(),
+# which collapsed the post-signal window into a single min/max pair, tested the
+# stop before the target, ran to today with no end date, and graded 1H signals
+# on daily bars. Every expectancy figure in the terminal rests on those rows.
+#
+# regrade.py re-walks them chronologically on their own timeframe. Turso is the
+# source of truth, so this has to run here — a local --apply is overwritten by
+# the next bot run.
+#
+# Defaults to a dry run. Applying is an explicit, deliberate choice.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Write corrections to the ledger (leave false for a dry run)'
+        type: boolean
+        default: false
+      engine:
+        description: 'Limit to one signal_type (blank = all)'
+        type: string
+        default: ''
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+  GH_PAT:      ${{ secrets.GH_PAT }}
+
+jobs:
+  regrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Re-grade (report)
+        run: |
+          python regrade.py ${{ inputs.engine && format('--engine {0}', inputs.engine) || '' }}
+
+      - name: Timezone sensitivity
+        if: inputs.engine == 'cf_1h' || inputs.engine == ''
+        run: |
+          # sent_at is naive and the runners write UTC while the feed labels IST.
+          # A conclusion that survives a +/-5.5h shift does not rest on that guess.
+          for shift in 0 5.5 -5.5; do
+            echo "--- shift ${shift}h ---"
+            python regrade.py --engine cf_1h --shift "$shift" 2>/dev/null | tail -3
+          done
+
+      - name: Apply corrections
+        if: inputs.apply
+        run: |
+          python regrade.py ${{ inputs.engine && format('--engine {0}', inputs.engine) || '' }} --apply
+
+      - name: Export refreshed feed
+        if: inputs.apply
+        run: python -c "import tracker; tracker.export_signals_json()"
+
+      - name: Commit refreshed feed
+        if: inputs.apply
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/all_signals.json
+          git diff --staged --quiet || git commit -m "chore: refresh feed after ledger re-grade"
+          git push
