@@ -11,7 +11,7 @@
 //   version=          engine_version: v2 (default), v1, or "all"
 //   limit=            default 300, max 2000
 //   offset=           pagination
-import { db, num, str, badgeOf, json, fail, columns, optional } from "./_db.js";
+import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
 
 const BASE_COLS = `date, symbol, action, timeframe, signal_type, entry, sl,
               target1, target2, rr, score, status, lifecycle_status,
@@ -120,6 +120,9 @@ function shape(r) {
   return {
     date: str(r.date).slice(0, 10),
     symbol: str(r.symbol),
+    // Derived, because the ledger has no currency column and the table was
+    // printing dollar-quoted commodities with a rupee sign.
+    currency: currencyOf(r.symbol),
     action: str(r.action) || "BUY",
     timeframe: str(r.timeframe),
     signal_type: str(r.signal_type),

@@ -148,6 +148,10 @@ def fetch(symbol: str) -> dict | None:
         "pe": _num(info.get("trailingPE")),
         "forward_pe": _num(info.get("forwardPE")),
         "roe": _num(info.get("returnOnEquity")),                      # fraction
+        # Return on assets is the check on ROE: a high ROE built on leverage
+        # shows up as a thin ROA. Yahoo exposes no ROCE, so this is the closest
+        # honest proxy for capital efficiency. Used by ai_longterm.
+        "return_on_assets": _num(info.get("returnOnAssets")),          # fraction
         "debt_to_equity": (dte_raw / 100.0) if dte_raw is not None else None,
         "revenue_growth": _num(info.get("revenueGrowth")),            # fraction, yoy
         "earnings_growth": _num(info.get("earningsGrowth")),          # fraction, yoy

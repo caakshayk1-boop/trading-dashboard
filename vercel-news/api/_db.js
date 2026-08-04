@@ -74,6 +74,27 @@ export function badgeOf(status, lifecycle) {
   return "cancelled";
 }
 
+// Mirrors _unit() in standalone_scan.py. The ledger holds NSE equities in
+// rupees alongside commodities and FX quoted in dollars, and the table rendered
+// every one of them with a ₹ — Brent crude at "₹83.59", gold at "₹4,135.80".
+// Derived from the symbol because the ledger has no currency column.
+const USD_SYMBOLS = new Set([
+  "GOLD", "SILVER", "CRUDE", "NATGAS", "NGAS", "COPPER",
+  "XAUUSD", "XAGUSD", "WTI", "WTIUSD", "BRENT", "BRNUSD",
+]);
+// Rates, not money amounts: "1.1517", not "$1.1517".
+const FX_PAIRS = new Set([
+  "USDJPY", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD",
+  "USDCHF", "USDCAD", "EURJPY", "GBPJPY",
+]);
+
+export function currencyOf(symbol) {
+  const s = str(symbol).toUpperCase().replace(/\.(NS|BO)$/, "");
+  if (USD_SYMBOLS.has(s)) return "$";
+  if (FX_PAIRS.has(s)) return "";
+  return "₹";   // NSE equities, and the INR pairs where ₹ is correct
+}
+
 export function json(res, status, body, cacheSeconds = 0) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader(

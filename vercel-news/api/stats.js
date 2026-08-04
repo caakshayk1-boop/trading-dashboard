@@ -19,6 +19,15 @@ export default async function handler(req, res) {
   if (q.to)   { where.push("substr(date,1,10) <= ?"); args.push(String(q.to).slice(0, 10)); }
   if (q.tf)   { where.push("timeframe = ?");          args.push(String(q.tf)); }
 
+  // Long-horizon ideas are NOT trades and must never reach expectancy.
+  // ai_longterm rows carry a 200DMA structure stop and a 2-3 year horizon; a
+  // single one resolving would land in the R-multiple statistics as though it
+  // were a swing trade and move the only honest number on this site. Mirrors
+  // ai_longterm.EXCLUDE_FROM_EXPECTANCY on the Python side.
+  const NON_TRADING = ["ai_longterm"];
+  where.push(`COALESCE(signal_type,'') NOT IN (${NON_TRADING.map(() => "?").join(",")})`);
+  args.push(...NON_TRADING);
+
   try {
     const cols = await columns();
     const versioned = cols.has("engine_version");

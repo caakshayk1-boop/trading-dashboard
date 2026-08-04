@@ -63,8 +63,19 @@ ALERT_CAP = 8
 
 # Quote units, so a USDJPY alert stops claiming "₹160.3" and AUDUSD stops
 # printing "Entry ₹0.7 → T2 ₹0.7" after rounding to one decimal.
+# Hand-maintained aliases PLUS the symbols the commodity scanner actually
+# writes. The two drifted: this set held "WTI" and "BRENT" while the ledger
+# stores WTIUSD and BRNUSD, so every Brent and WTI alert fell through to the
+# rupee default — "Entry ₹83.59 → exit ₹90.49" for Brent crude, quoted in
+# dollars per barrel. Deriving from COMMODITY_TICKERS means adding a commodity
+# can no longer silently redenominate it.
 _USD_QUOTED = {"GOLD", "SILVER", "CRUDE", "NATGAS", "NGAS", "XAUUSD", "XAGUSD",
-               "WTI", "BRENT", "COPPER"}
+               "WTI", "WTIUSD", "BRENT", "BRNUSD", "COPPER"}
+try:
+    from scanner import COMMODITY_TICKERS as _COMM
+    _USD_QUOTED |= {k.upper() for k in _COMM}
+except Exception:  # scanner imports yfinance; never let that break formatting
+    pass
 _FX_PAIRS   = {"USDJPY", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD", "USDCHF",
                "USDCAD", "EURJPY", "GBPJPY"}
 
@@ -559,7 +570,11 @@ def run_markets(time_str):
         for r in fc:
             sign  = "+" if r["Chg%"] >= 0 else ""
             arrow = "▲" if r["Chg%"] >= 0 else "▼"
-            lines.append(f"{arrow} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%)")
+            # Flag when a metal fell back to the futures contract: that
+            # percentage can carry a contract-roll gap and is not comparable
+            # with the spot price beside it.
+            note = "  ⚠ futures basis" if r.get("Basis") == "futures" else ""
+            lines.append(f"{arrow} *{r['Asset']}*: `{r['Last']}` ({sign}{r['Chg%']}%){note}")
         _send("\n".join(lines))
     except Exception as e:
         logging.warning(f"run_markets skipped: {e}")
@@ -918,6 +933,26 @@ def run_intraday_scan(time_str):
     return sigs
 
 
+def run_ai_longterm_scan(time_str):
+    """Weekly long-horizon picks — Saturday only.
+
+    Deliberately separate from every other scan here. These are 2–3 year
+    ownership ideas screened on return on capital, growth, leverage and
+    valuation, with the chart used only to reject structural downtrends. They
+    carry a 200DMA-structure stop, not a trade stop, and they are excluded from
+    the R-multiple statistics — see ai_longterm.EXCLUDE_FROM_EXPECTANCY.
+    """
+    import ai_longterm as ail
+    logging.info("Running AI long-term scan (weekly)...")
+    picks = ail.build()
+    if picks:
+        _send(ail.to_telegram(picks))
+    else:
+        _send(f"🧠 *AI Long-Term Picks* — {time_str}\n"
+              f"_Nothing cleared the business and trend screens this week._")
+    return picks
+
+
 def run_multibagger_scan(time_str):
     """Weekly multibagger scan — Saturday only."""
     from scanner import scan_multibaggers
@@ -1039,11 +1074,12 @@ def main():
             tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
             comms     = _safe("commodity_scan",run_commodity_scan, time_str)
             mbs       = _safe("multibagger",   run_multibagger_scan, time_str)
+            lt        = _safe("ai_longterm",   run_ai_longterm_scan, time_str)
             counts    = {
                 "4h": len(sigs_4h), "ai_4h": len(tlm_4h),
                 "swing": len(signals), "breakouts": len(breakouts),
                 "ai_daily": len(tlm_daily), "commodities": len(comms),
-                "multibaggers": len(mbs),
+                "multibaggers": len(mbs), "longterm": len(lt),
             }
 
         elif slot == "holiday":

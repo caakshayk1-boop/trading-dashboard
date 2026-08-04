@@ -38,6 +38,16 @@ def _db():
     con.row_factory = _db_mod.Row
     return con
 
+def _price_unit(symbol) -> str:
+    """Currency for a ledger symbol. Single source: standalone_scan._unit(),
+    which itself derives the commodity set from the scanner's own table."""
+    try:
+        from standalone_scan import _unit
+        return _unit(str(symbol or "").replace(".NS", "").replace(".BO", ""))
+    except Exception:
+        return "₹"
+
+
 def fetch_alert_log(limit: int = 200) -> list[dict]:
     """Read Telegram alert history from all_signals table (signals.db / Turso)."""
     try:
@@ -72,6 +82,9 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
             else:
                 badge = "cancelled"
             r["badge"] = badge
+            # Same symbol → currency rule the alerts and the API use. Without
+            # it the 6 AM snapshot renders dollar-quoted commodities in rupees.
+            r["currency"] = _price_unit(r.get("symbol"))
             # friendly pnl
             p = r.get("pnl_pct")
             r["pnl_str"] = (f"+{p:.1f}%" if p and p > 0 else f"{p:.1f}%") if p else "—"
@@ -2141,7 +2154,9 @@ h1.hl em{font-style:normal;color:var(--lime)}
 .tick{display:flex;width:max-content;animation:marquee var(--tickdur,46s) linear infinite;}
 .tickwrap:hover .tick,.tickwrap.hold .tick{animation-play-state:paused}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.ti{display:flex;align-items:center;gap:9px;padding:11px 22px;border-right:1px solid var(--line);white-space:nowrap;}
+/* Compact inside the sticky stack — topbar + nav + livebar + rail is already
+   four rows before any content, and on a laptop that is a lot of chrome. */
+.ti{display:flex;align-items:center;gap:9px;padding:8px 20px;border-right:1px solid var(--line);white-space:nowrap;}
 .ti .n{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim);font-weight:500}
 .ti .p{font-family:var(--mono);font-size:13px;font-weight:600}
 .ti .c{font-family:var(--mono);font-size:12px;font-weight:700}
@@ -2149,7 +2164,7 @@ h1.hl em{font-style:normal;color:var(--lime)}
 
 /* Segment head — the thing that makes a 110-item rail readable instead of
    an undifferentiated stream of numbers. */
-.tseg{display:flex;align-items:center;gap:8px;padding:11px 20px 11px 22px;white-space:nowrap;
+.tseg{display:flex;align-items:center;gap:8px;padding:8px 18px 8px 20px;white-space:nowrap;
   border-right:1px solid var(--line);background:
     linear-gradient(90deg,color-mix(in srgb,var(--sc,var(--lime)) 16%,transparent),transparent);}
 .tseg .ic{font-size:13px;line-height:1}
@@ -2166,6 +2181,10 @@ h1.hl em{font-style:normal;color:var(--lime)}
   padding:4px 10px;cursor:pointer}
 .tickctl:hover{color:var(--lime);border-color:var(--lime)}
 @media(max-width:640px){.tickctl{display:none}}
+/* Phone: topbar + nav + livebar is already most of the viewport. The rail
+   is the row that can go — the same numbers are a scroll away in the
+   sections below. */
+@media(max-width:560px){.headstack .tickwrap{display:none}}
 
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
@@ -2758,6 +2777,33 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <span>A newer edition was published — this tab is still showing {{ date_str }}.</span>
   <button type="button" id="editionReload">Load it</button>
 </div>
+<!-- ══════════ TICKER ══════════
+     Lives INSIDE .headstack (position:sticky) so it is on screen the whole
+     way down the page. Below the hero it sat past a full viewport of
+     headline, so on most screens only a sliver of it was ever visible —
+     a market rail you have to scroll to find is not a market rail.
+     The only market surface on the page. A "What moved" grid used to sit
+     directly below carrying the identical nine instruments — same names, same
+     numbers, twice, 200px apart. The grid is gone; the rail absorbed its job
+     and now runs the whole board in segments, ordered by when each market
+     actually opens in IST. Filled live from /api/ticker; the markup below is
+     the 6 AM snapshot that renders before that resolves and on a static
+     host. -->
+<div class="tickwrap" id="tickWrap">
+  <div class="tick" id="tickRail">
+    {% for dup in [1,2] %}
+    <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
+    {% for m in markets %}
+    <div class="ti">
+      <span class="n">{{ m.name }}</span>
+      <span class="p">{{ m.price }}</span>
+      <span class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ m.change }}</span>
+    </div>
+    {% endfor %}{% endfor %}
+  </div>
+  <button type="button" class="tickctl" id="tickHold" aria-pressed="false">Pause</button>
+</div>
+
 </div><!-- /.headstack -->
 
 <!-- ══════════ HERO ══════════ -->
@@ -2783,7 +2829,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="stat">
       <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">0</div>
-      <div class="k">Open Positions</div>
+      <div class="k">Open Setups</div>
     </div>
     <div class="stat">
       <div class="v" id="heroTotal" data-count="{{ alerts|length }}">0</div>
@@ -2797,29 +2843,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
 </section>
-
-<!-- ══════════ TICKER ══════════
-     The only market surface on the page. A "What moved" grid used to sit
-     directly below carrying the identical nine instruments — same names, same
-     numbers, twice, 200px apart. The grid is gone; the rail absorbed its job
-     and now runs the whole board in segments, ordered by when each market
-     actually opens in IST. Filled live from /api/ticker; the markup below is
-     the 6 AM snapshot that renders before that resolves and on a static
-     host. -->
-<div class="tickwrap" id="tickWrap">
-  <div class="tick" id="tickRail">
-    {% for dup in [1,2] %}
-    <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
-    {% for m in markets %}
-    <div class="ti">
-      <span class="n">{{ m.name }}</span>
-      <span class="p">{{ m.price }}</span>
-      <span class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ m.change }}</span>
-    </div>
-    {% endfor %}{% endfor %}
-  </div>
-  <button type="button" class="tickctl" id="tickHold" aria-pressed="false">Pause</button>
-</div>
 
 <main>
 
@@ -3760,14 +3783,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
           <td class="mono-dim">{{ a.timeframe or '—' }}</td>
           <td class="mono-dim">{{ a.grade or '—' }}</td>
-          <td class="num">{% if a.entry %}₹{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
-          <td class="num dn">{% if a.sl %}₹{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
-          <td class="num up">{% if a.target1 %}₹{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
-          <td class="num up">{% if a.target2 %}₹{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
+          <td class="num">{% if a.entry %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>
+          <td class="num dn">{% if a.sl %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.sl) }}{% else %}—{% endif %}</td>
+          <td class="num up">{% if a.target1 %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.target1) }}{% else %}—{% endif %}</td>
+          <td class="num up">{% if a.target2 %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.target2) }}{% else %}—{% endif %}</td>
           <td class="num" style="color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
           {# Break-even win rate, 1/(1+R) — the same fact as R:R, made visible. #}
           <td class="num mono-dim">{% if a.rr %}{{ "%.0f"|format(100.0 / (1.0 + a.rr)) }}%{% else %}—{% endif %}</td>
-          <td class="num">{% if a.exit_price %}₹{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
+          <td class="num">{% if a.exit_price %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
           <td class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else 'num') }}">{{ a.pnl_str }}</td>
           <td class="mono-dim">{{ a.close_date }}</td>
           <td><span class="badge badge-{{ a.badge }}">{% if a.badge == 'win' %}✅ Win{% elif a.badge == 'loss' %}❌ Stop{% elif a.badge == 'open' %}🔵 Open{% else %}{{ a.status or '—' }}{% endif %}</span></td>
@@ -4133,7 +4156,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;');
     }
-    function money(v){ return v === null || v === undefined ? '—' : '₹' + fmt(v, 2); }
+    // Currency comes from the row, not from a hardcoded ₹. The ledger mixes
+    // NSE equities with commodities and FX quoted in dollars, and every one of
+    // them used to render as rupees — Brent at "₹83.59", gold at "₹4,135.80".
+    function money(v, cur){
+      if (v === null || v === undefined) return '—';
+      return (cur === undefined || cur === null ? '₹' : cur) + fmt(v, 2);
+    }
     function editKey(){ try { return localStorage.getItem(KEY_LS) || ''; } catch(e){ return ''; } }
 
     function api(path, opts){
@@ -4174,6 +4203,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         var v2 = h.by_version.v2 || 0, v1 = h.by_version.v1 || 0;
         vtxt = ' · ' + v2 + ' gated (v2) / ' + v1 + ' legacy (v1)';
       }
+      setKpi('heroOpen', h.open_setups || 0);
       bar('live', 'LIVE LEDGER · ' + h.signals + ' signals' + vtxt +
                   ' · latest ' + stamp +
                   ' · ' + tracked + ' tracked · ' + (h.open_setups || 0) + ' open setups' +
@@ -4277,7 +4307,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     function renderPositions(j){
       var box = el('posLive');
       var rows = j.positions || [];
-      if (!showingHistory) setKpi('heroOpen', rows.length);
+      // Deliberately does NOT touch heroOpen. That tile counts unresolved
+      // SETUPS in the ledger; this list is the tracked book. Writing the book
+      // count there is what put "0 Open Positions" above five OPEN rows.
       if (!rows.length){
         box.innerHTML = '<div class="empty">' +
           (showingHistory ? 'No closed positions yet.'
@@ -4470,17 +4502,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
           '<td class="mono-dim">' + gradeCell(a) + '</td>' +
-          '<td class="num">' + money(a.entry) + '</td>' +
-          '<td class="num dn">' + money(a.sl) + '</td>' +
-          '<td class="num up">' + money(a.target1) + '</td>' +
-          '<td class="num up">' + money(a.target2) + '</td>' +
+          '<td class="num">' + money(a.entry, a.currency) + '</td>' +
+          '<td class="num dn">' + money(a.sl, a.currency) + '</td>' +
+          '<td class="num up">' + money(a.target1, a.currency) + '</td>' +
+          '<td class="num up">' + money(a.target2, a.currency) + '</td>' +
           '<td class="num" style="color:var(--gold)">' + (a.rr === null ? '—' : fmt(a.rr, 1) + 'x') + '</td>' +
           // The win rate this setup needs just to break even, 1/(1+R). Shown
           // next to R:R because the two are the same fact and only one of them
           // is obvious. v1 rows predate the stored column, so derive it from
           // R:R — those are precisely the rows worth seeing it on.
           '<td class="num mono-dim">' + beWr(a) + '</td>' +
-          '<td class="num">' + money(a.exit_price) + '</td>' +
+          '<td class="num">' + money(a.exit_price, a.currency) + '</td>' +
           '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
           '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
           '<td><span class="badge badge-' + a.badge + '">' + badgeTxt + '</span></td>' +

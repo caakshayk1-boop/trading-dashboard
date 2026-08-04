@@ -1498,20 +1498,74 @@ def scan_4h(universe=None):
     return gated
 
 
+# Metals quote SPOT, and take their percentage from a continuous ETF, not from
+# the futures contract.
+#
+# GC=F is a single dated contract. When the front month rolls, yesterday's
+# close and today's close belong to DIFFERENT contracts, and the difference
+# between them is a cost-of-carry gap, not a market move. On 2026-08-04 that
+# printed "Gold 4140.0 (+2.64%)" to Telegram on a day gold actually moved about
+# +1.2%. Silver printed +4.21% against a real +3.3%.
+#
+# So: price comes from the spot feed (what a jeweller, Google or XAU/USD
+# quotes), and the change comes from GLD/SLV, which hold metal and therefore
+# have no roll discontinuity.
+_METAL_SPOT = {
+    "Gold":   {"code": "XAU", "proxy": "GLD"},
+    "Silver": {"code": "XAG", "proxy": "SLV"},
+}
+
+
+def _spot_price(code: str):
+    """Spot metal in USD/oz, or None if the feed is unavailable."""
+    try:
+        r = requests.get(f"https://api.gold-api.com/price/{code}",
+                         headers={"User-Agent": "Mozilla/5.0"}, timeout=8)
+        if r.status_code != 200:
+            return None
+        p = float((r.json() or {}).get("price") or 0)
+        return p if p > 0 else None
+    except Exception:
+        return None
+
+
+def _pct_change(ticker: str):
+    """Previous-session percentage change for a ticker, or None."""
+    try:
+        h = yf.Ticker(ticker).history(period="5d")
+        if len(h) < 2:
+            return None
+        prev, last = float(h["Close"].iloc[-2]), float(h["Close"].iloc[-1])
+        return round((last - prev) / prev * 100, 2) if prev else None
+    except Exception:
+        return None
+
+
 def fetch_forex_comm():
-    """Fetch live prices + 1-day change for forex & commodities."""
+    """Live prices + 1-day change for forex & commodities."""
     rows = []
     for name, ticker in FOREX_COMM.items():
         try:
-            h = yf.Ticker(ticker).history(period="3d")
+            spot = _METAL_SPOT.get(name)
+            if spot:
+                px  = _spot_price(spot["code"])
+                chg = _pct_change(spot["proxy"])
+                if px is not None and chg is not None:
+                    rows.append({"Asset": name, "Last": round(px, 2), "Chg%": chg,
+                                 "Trend": "▲" if chg >= 0 else "▼", "Basis": "spot"})
+                    continue
+                # Spot or proxy down — fall through to the futures contract
+                # rather than drop the row, but say so.
+            h = yf.Ticker(ticker).history(period="5d")
             if len(h) >= 2:
                 prev = float(h["Close"].iloc[-2])
                 last = float(h["Close"].iloc[-1])
                 chg  = round((last - prev) / prev * 100, 2)
                 rows.append({"Asset": name, "Last": round(last, 2), "Chg%": chg,
-                             "Trend": "▲" if chg >= 0 else "▼"})
-        except Exception:
-            pass
+                             "Trend": "▲" if chg >= 0 else "▼",
+                             "Basis": "futures" if spot else "market"})
+        except Exception as e:
+            logging.warning(f"fetch_forex_comm {name}: {e}")
     return rows
 
 
