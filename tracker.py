@@ -1,4 +1,4 @@
-import sqlite3, os, json, logging
+import sqlite3, os, json, logging, math
 import pandas as pd
 import yfinance as yf
 from datetime import date, datetime, timedelta, timezone
@@ -8,6 +8,47 @@ from symbols import to_yahoo
 # Signals are dated in IST; runners execute in UTC. Compare against IST or a
 # signal filed this evening IST looks like it belongs to "tomorrow".
 _IST = timezone(timedelta(hours=5, minutes=30))
+
+
+def _max_hold_hours(timeframe: str) -> int:
+    """
+    Holding limit for a timeframe. Imported from standalone_scan so the grader
+    and the live scanner cannot drift apart — a second copy of this table is how
+    the ledger ends up measuring a horizon the engine never traded.
+    """
+    try:
+        from standalone_scan import _max_hold_hours as _impl
+        return _impl(timeframe)
+    except Exception:
+        return 20 * 24
+
+
+"""
+Signals dated before this are not eligible for trigger-based lifecycle.
+
+update_all_outcomes now walks candles forward and writes entry_triggered_at on
+the bar that touches entry. Without a cutoff, its first run would reach back
+through every stale OPEN row, retro-fill an entry from historical candles and
+book a realised R-multiple for a trade that was never taken — exactly what
+reconcile_positions.py was written to prevent ("those rows were never managed,
+many are duplicates of each other, and the price history at their fill time
+cannot be honestly reconstructed").
+
+Anything older is left alone for reconcile_positions.py to mark VOID. Move this
+date forward only alongside a deliberate decision about the backlog behind it.
+"""
+LIFECYCLE_EPOCH = "2026-08-04"
+
+
+def _f(v):
+    """Float or None. The feed writes bare NaN where a level was not computed."""
+    if v is None:
+        return None
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return None if math.isnan(f) else f
 
 # date.today() and datetime.utcnow() both resolve to UTC on a GitHub Actions
 # runner, so every signal filed between 00:00 and 05:30 IST was being stamped
@@ -219,6 +260,15 @@ def init_db(force: bool = False):
             ("grade",               "ALTER TABLE all_signals ADD COLUMN grade TEXT"),
             ("breakeven_wr",        "ALTER TABLE all_signals ADD COLUMN breakeven_wr REAL"),
             ("turnover_cr",         "ALTER TABLE all_signals ADD COLUMN turnover_cr REAL"),
+            # Set when a single daily bar touched both the stop and a target, so
+            # the true sequence is unknowable at this resolution. The stop is
+            # booked (conservative), but the fraction of the ledger resting on
+            # that assumption is now measurable instead of invisible.
+            ("exit_ambiguous",      "ALTER TABLE all_signals ADD COLUMN exit_ambiguous INTEGER DEFAULT 0"),
+            # Difference between where the exit was booked and the level that
+            # should have filled, in R. NESTLEIND booked -1.2R against a -1.0R
+            # stop on 2026-07-31 and nothing recorded the extra -0.2R.
+            ("slippage_r",          "ALTER TABLE all_signals ADD COLUMN slippage_r REAL"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:
@@ -551,7 +601,34 @@ def update_outcomes():
             continue
 
 def update_all_outcomes():
-    """Update outcome status for ALL open signals in all_signals table."""
+    """
+    Walk each open signal's candles in order and record what actually happened.
+
+    Replaces a version that collapsed the whole post-signal window into a single
+    min/max pair and then tested the stop first:
+
+        lo = float(low_s.min())      # lowest low since the signal, ever
+        hi = float(high_s.max())     # highest high since the signal, ever
+        if lo <= sl:   status = "SL_HIT"
+        elif hi >= t2: status = "T2_HIT"
+
+    Three defects, all pushing the same direction:
+
+      1. Order was discarded. A trade that ran to T2 on day 2 and grazed its
+         stop on day 30 booked as SL_HIT. With 323 stops against 178 targets in
+         the ledger, this is not a rounding error.
+      2. The window had no end. `yf.download(start=...)` runs to today, so given
+         enough sessions every position eventually touches its stop.
+      3. Entry was assumed. `entry_triggered_at` was never written by any code
+         path, so the dashboard — which defines a position as a signal carrying
+         that timestamp — has shown 0% deployed since the column was added,
+         while this function booked P&L on trades that were never entered.
+
+    Now: bars are walked chronologically inside a bounded window, entry must be
+    touched before the trade can resolve, and the first level touched wins. A
+    bar that straddles both levels books the stop and sets `exit_ambiguous`, so
+    the assumption is counted rather than hidden.
+    """
     init_db()
     with _conn() as c:
         try:
@@ -560,68 +637,133 @@ def update_all_outcomes():
         except Exception:
             return
 
+    today = datetime.now(_IST).date()
+
     for _, row in open_trades.iterrows():
         try:
             sym = to_yahoo(row["symbol"])
-            # ── Critical fix: only look at candles AFTER the signal date ─────
             sig_date_str = str(row.get("date", "")).strip()
             try:
-                sig_dt  = datetime.strptime(sig_date_str, "%Y-%m-%d").date()
-                # Start from the NEXT trading day so entry candle doesn't trip SL
-                start_d = sig_dt + timedelta(days=1)
-                # A signal filed today has no post-entry candles yet. Asking
-                # Yahoo for start=tomorrow returns "start date cannot be after
-                # end date" — 24 doomed fetches per run. Skip until it exists.
-                if start_d > datetime.now(_IST).date():
-                    continue
-                start_dt = start_d.isoformat()
+                sig_dt = datetime.strptime(sig_date_str, "%Y-%m-%d").date()
             except Exception:
-                start_dt = None
+                continue
 
-            if start_dt:
-                df = yf.download(sym, start=start_dt, interval="1d",
-                                 progress=False, auto_adjust=True)
-            else:
-                df = yf.download(sym, period="5d", interval="1d",
-                                 progress=False, auto_adjust=True)
+            # Never retro-fill an entry into the pre-cutoff backlog.
+            if sig_date_str < LIFECYCLE_EPOCH and not row.get("entry_triggered_at"):
+                continue
 
+            # Start from the next session so the signal's own candle cannot
+            # trip the stop it was measured from.
+            start_d = sig_dt + timedelta(days=1)
+            if start_d > today:
+                continue
+
+            # Bound the window. Calendar days are ~1.45x sessions; the extra
+            # margin is trimmed by the session counter in the walk below.
+            hold_h = _max_hold_hours(str(row.get("timeframe", "")))
+            end_d = min(today, start_d + timedelta(days=int(hold_h / 24) + 4))
+
+            df = yf.download(sym, start=start_d.isoformat(),
+                             end=(end_d + timedelta(days=1)).isoformat(),
+                             interval="1d", progress=False, auto_adjust=True)
             if df is None or df.empty:
                 continue
 
-            # Squeeze in case of MultiIndex (yfinance ≥0.2.38 behaviour)
-            low_s  = df["Low"].squeeze()
-            high_s = df["High"].squeeze()
-            lo     = float(low_s.min())  if hasattr(low_s,  "min")  else float(low_s)
-            hi     = float(high_s.max()) if hasattr(high_s, "max") else float(high_s)
+            entry = float(row["entry"])
+            raw_sl = row["sl"]
+            if raw_sl is None or (isinstance(raw_sl, float) and math.isnan(raw_sl)):
+                # No stop means no risk denominator, so no honest R can be
+                # computed. 24 rows in the feed are in this state and were being
+                # silently assigned a fabricated 4% stop.
+                continue
+            sl = float(raw_sl)
+            t1 = _f(row["target1"])
+            t2 = _f(row["target2"])
+            if t1 is None and t2 is None:
+                continue
+            is_long = str(row.get("action", "BUY")).upper() != "SELL"
 
-            entry  = float(row["entry"])
-            sl     = float(row["sl"] or entry * 0.96)
-            t1     = float(row["target1"])
-            t2     = float(row["target2"] or t1 * 1.03)
-            action = str(row.get("action", "BUY")).upper()
+            risk = abs(entry - sl)
+            if risk <= 0:
+                log.warning(f"{row['symbol']}: stop on wrong side of entry — skipped")
+                continue
 
-            status, exit_p = "OPEN", None
-            if action == "SELL":
-                if hi >= sl:                status, exit_p = "SL_HIT", sl
-                elif lo <= t2:              status, exit_p = "T2_HIT", t2
-                elif lo <= t1:              status, exit_p = "T1_HIT", t1
-            else:
-                if lo <= sl:                status, exit_p = "SL_HIT", sl
-                elif hi >= t2:              status, exit_p = "T2_HIT", t2
-                elif hi >= t1:              status, exit_p = "T1_HIT", t1
+            max_sessions = max(1, int(hold_h / 24))
+            triggered_at = row.get("entry_triggered_at")
+            status, exit_p, ambiguous = None, None, 0
+            sessions = 0
+            last_close = None
 
-            if status != "OPEN":
-                risk = abs(entry - sl) or 1
-                pnl  = round((exit_p - entry) / entry * 100 * (1 if action == "BUY" else -1), 2)
-                r_m  = round((exit_p - entry) / risk * (1 if action == "BUY" else -1), 2)
-                with _conn() as c:
-                    c.execute(
-                        "UPDATE all_signals SET status=?,exit_price=?,pnl_pct=?,r_multiple=? WHERE id=?",
-                        (status, exit_p, pnl, r_m, int(row["id"]))
-                    )
-                    c.commit()
-                    _db.sync(c)
-                log.info(f"Outcome updated: {row['symbol']} {status} pnl={pnl}%")
+            for ts, bar in df.iterrows():
+                hi = float(bar["High"])
+                lo = float(bar["Low"])
+                last_close = float(bar["Close"])
+                bar_day = ts.date() if hasattr(ts, "date") else ts
+
+                # ── Entry ────────────────────────────────────────────
+                # A limit order fills when price trades through it. Until it
+                # does, there is no position and nothing to resolve.
+                if not triggered_at:
+                    touched = lo <= entry if is_long else hi >= entry
+                    if not touched:
+                        continue
+                    triggered_at = bar_day.isoformat()
+                    with _conn() as c:
+                        c.execute(
+                            "UPDATE all_signals SET entry_triggered_at=?, "
+                            "lifecycle_status='Triggered' WHERE id=?",
+                            (triggered_at, int(row["id"]))
+                        )
+                        c.commit()
+                        _db.sync(c)
+                    log.info(f"Entry triggered: {row['symbol']} @ {entry} on {triggered_at}")
+                    # Fall through — the fill bar can also resolve the trade.
+
+                sessions += 1
+
+                # ── Exit, in the order the levels were reached ───────
+                hit_sl = (lo <= sl) if is_long else (hi >= sl)
+                target = t2 if t2 is not None else t1
+                hit_t = (hi >= target) if is_long else (lo <= target)
+
+                if hit_sl and hit_t:
+                    # Daily resolution cannot say which came first. Book the
+                    # stop and flag it rather than choosing the flattering one.
+                    status, exit_p, ambiguous = "SL_HIT", sl, 1
+                elif hit_sl:
+                    status, exit_p = "SL_HIT", sl
+                elif hit_t:
+                    status = "T2_HIT" if t2 is not None else "T1_HIT"
+                    exit_p = target
+                elif sessions >= max_sessions:
+                    # Time stop. Capital held in a setup that has not worked is
+                    # capital unavailable for one that will.
+                    status, exit_p = "TIME_STOP", last_close
+
+                if status:
+                    break
+
+            if not status or exit_p is None:
+                continue
+
+            # Book at the level that would have filled, not the bar's extreme.
+            direction = 1 if is_long else -1
+            pnl = round((exit_p - entry) / entry * 100 * direction, 2)
+            r_m = round((exit_p - entry) / risk * direction, 2)
+
+            with _conn() as c:
+                c.execute(
+                    "UPDATE all_signals SET status=?,exit_price=?,pnl_pct=?,"
+                    "r_multiple=?,exit_ambiguous=?,closed_at=? WHERE id=?",
+                    (status, exit_p, pnl, r_m, ambiguous,
+                     datetime.now(_IST).isoformat(), int(row["id"]))
+                )
+                c.commit()
+                _db.sync(c)
+            log.info(
+                f"Outcome updated: {row['symbol']} {status} "
+                f"pnl={pnl}% r={r_m}{' AMBIGUOUS' if ambiguous else ''}"
+            )
         except Exception as e:
             log.warning(f"update_all_outcomes {row.get('symbol','?')}: {e}")
             continue
