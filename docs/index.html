@@ -157,10 +157,39 @@ h1.hl em{font-style:normal;color:var(--lime)}
   padding:4px 10px;cursor:pointer}
 .tickctl:hover{color:var(--lime);border-color:var(--lime)}
 @media(max-width:640px){.tickctl{display:none}}
-/* Phone: topbar + nav + livebar is already most of the viewport. The rail
-   is the row that can go — the same numbers are a scroll away in the
-   sections below. */
-@media(max-width:560px){.headstack .tickwrap{display:none}}
+/* Phone: the rail STAYS. Hiding it was the wrong trade — on a phone the
+   ticker is the single most-wanted row on the page, and "the numbers are a
+   scroll away" is exactly the scroll a market rail exists to save.
+   The header pays for it instead: the topbar shrinks, and the livebar (a long
+   diagnostic string that ellipsises to nothing useful at this width anyway)
+   drops out. Net sticky height is lower than before AND the prices are there. */
+@media(max-width:560px){
+  .headstack .tickwrap{display:block}
+  .topbar-in{height:48px}
+  .brand{font-size:15px}
+  .stamp .d{display:none}          /* the date is in the hero eyebrow already */
+  .ti{padding:7px 14px;gap:7px}
+  .ti .n{font-size:9px;letter-spacing:1px}
+  .ti .p{font-size:12px}
+  .ti .c{font-size:11px}
+  .tseg{padding:7px 12px 7px 14px}
+  .tseg .lb{font-size:9px;letter-spacing:1.4px}
+
+  /* Scrolling DOWN collapses the chrome and keeps only the prices pinned;
+     scrolling UP brings the whole header back. Standard mobile pattern, and it
+     is what makes a four-row sticky stack affordable on a 390px screen:
+     ~146px of chrome while reading becomes ~30px of ticker. */
+  .headstack .topbar,
+  .headstack .nav,
+  .headstack .livebar{transition:margin-top .22s var(--ease),opacity .18s linear}
+  .headstack.compact .topbar{margin-top:-48px}
+  .headstack.compact .nav,
+  .headstack.compact .livebar{opacity:0;pointer-events:none;
+    margin-top:0;height:0;overflow:hidden;border:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .headstack .topbar,.headstack .nav,.headstack .livebar{transition:none}
+}
 
 /* ═══════════════════ WORLD MAP ═══════════════════ */
 .wmap-wrap{margin:0 0 30px;background:var(--surface);border:1px solid var(--line);
@@ -788,7 +817,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
       <span class="d">Wednesday, August 05 2026</span>
-      <span class="live" id="istClock"><i></i>09:14 IST</span>
+      <span class="live" id="istClock"><i></i>17:22 IST</span>
     </div>
   </div>
 </header>
@@ -834,7 +863,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260805T091419">
+<div class="editionbar" id="editionbar" data-build="20260805T172234">
   <span>A newer edition was published — this tab is still showing Wednesday, August 05 2026.</span>
   <button type="button" id="editionReload">Load it</button>
 </div>
@@ -857,7 +886,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24669</span>
+      <span class="p">₹24625</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -875,39 +904,39 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4185.0</span>
+      <span class="p">$4246.4</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$74.75</span>
-      <span class="c dn">▼ </span>
+      <span class="p">$75.93</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹94.96</span>
+      <span class="p">₹95.12</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$64090</span>
-      <span class="c up">▲ </span>
+      <span class="p">$64041</span>
+      <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹78429</span>
-      <span class="c dn">▼ </span>
+      <span class="p">₹78581</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24669</span>
+      <span class="p">₹24625</span>
       <span class="c up">▲ </span>
     </div>
     
@@ -925,32 +954,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4185.0</span>
+      <span class="p">$4246.4</span>
       <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$74.75</span>
-      <span class="c dn">▼ </span>
+      <span class="p">$75.93</span>
+      <span class="c up">▲ </span>
     </div>
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹94.96</span>
+      <span class="p">₹95.12</span>
       <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$64090</span>
-      <span class="c up">▲ </span>
+      <span class="p">$64041</span>
+      <span class="c dn">▼ </span>
     </div>
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹78429</span>
-      <span class="c dn">▼ </span>
+      <span class="p">₹78581</span>
+      <span class="c up">▲ </span>
     </div>
     
   </div>
@@ -981,7 +1010,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="k">Signal Win Rate</div>
     </div>
     <div class="stat">
-      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="22">0</div>
+      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="14">0</div>
       <div class="k">Open Setups</div>
     </div>
     <div class="stat">
@@ -990,7 +1019,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="stat">
       <div class="v" style="color:var(--up)"
-           data-count="5" data-total="8">0</div>
+           data-count="6" data-total="8">0</div>
       <div class="k">Markets Advancing</div>
     </div>
   </div>
@@ -1041,19 +1070,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">BBC Business · LEAD</span>
-        <h2><a href="https://www.bbc.co.uk/news/articles/cly843vd3jmo?at_medium=RSS&at_campaign=rss" target="_blank">Fashion brand Jaded has ad banned for 'glamourising smoking'</a></h2>
-        <p>The advertising watchdog said Jaded London's marketing email made smoking seem appealing.</p>
+        <h2><a href="https://www.bbc.co.uk/news/articles/ckgdmv7elg8o?at_medium=RSS&at_campaign=rss" target="_blank">Government to prioritise job creation in awarding public contracts under new rules</a></h2>
+        <p>The changes are part of government efforts to tackle the youth unemployment crisis.</p>
       </div>
       <div class="lead-s">
         
         <div class="mini">
           <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/c1w1lvn7d9go?at_medium=RSS&at_campaign=rss" target="_blank">AI used new levels of 'autonomy and deception' to trick people in safety test</a>
-        </div>
-        
-        <div class="mini">
-          <span class="s">BBC Business</span>
-          <a href="https://www.bbc.co.uk/news/articles/cjejyl34345o?at_medium=RSS&at_campaign=rss" target="_blank">Saudi-led group completes $55bn purchase of gaming giant EA</a>
+          <a href="https://www.bbc.co.uk/news/articles/c4gwv9590xeo?at_medium=RSS&at_campaign=rss" target="_blank">Vegetables to get smaller and more expensive due to hot weather, farmers warn</a>
         </div>
         
         <div class="mini">
@@ -1063,12 +1087,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <div class="mini">
           <span class="s">BBC Business</span>
+          <a href="https://www.bbc.co.uk/news/articles/c0qvpveg20vo?at_medium=RSS&at_campaign=rss" target="_blank">SpaceX shares sink after first earnings report reveals huge AI spending plans</a>
+        </div>
+        
+        <div class="mini">
+          <span class="s">BBC Business</span>
           <a href="https://www.bbc.co.uk/news/articles/cgr7nxve05go?at_medium=RSS&at_campaign=rss" target="_blank">'I feel like I dug my own grave': The workers caught in the AI transition</a>
         </div>
         
         <div class="mini">
           <span class="s">CNBC</span>
-          <a href="https://www.cnbc.com/2026/08/04/gm-chinese-automaker-extend-tie-up-amid-geopolitical-tensions-with-us.html" target="_blank">GM, Chinese automaker extend joint venture for 20 years despite geopolitical tensions with U.S.</a>
+          <a href="https://www.cnbc.com/2026/08/05/eli-lilly-lly-earnings-q2-2026.html" target="_blank">Eli Lilly easily tops quarterly estimates, raises outlook as Zepbound and Mounjaro sales surge</a>
         </div>
         
       </div>
@@ -1078,30 +1107,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/08/04/lucid-group-lcid-earnings-q2-2026.html" target="_blank">Lucid begins 'operational reset' as CEO says EV maker will delay midsize vehicle</a></h3>
-        <p>The company didn't provide updated guidance. New CEO Silvio Napoli earlier this year suspended production expectations.</p>
-        <div class="ts">Aug 04 22:47</div>
+        <h3><a href="https://www.cnbc.com/2026/08/05/disney-dis-earnings-q3-2026.html" target="_blank">Disney tops earnings estimates as parks and streaming offer a boost</a></h3>
+        <p>Disney reported growth at its domestic theme parks and cruises despite mounting macroeconomic uncertainty for consumers.</p>
+        <div class="ts">Aug 05 10:59</div>
       </div>
       
       <div class="ncard rv" style="--d:0.05s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/08/04/paramount-skydance-psky-earnings-q2-2026.html" target="_blank">Paramount Skydance raises full-year profit guidance, remains 'confident' about WBD merger</a></h3>
-        <p>Paramount Skydance reported second-quarter earnings after the bell and said it continues to prepare for its proposed merger with Warner Bros. Discover</p>
-        <div class="ts">Aug 04 21:15</div>
+        <h3><a href="https://www.cnbc.com/2026/08/05/cvs-health-cvs-earnings-q2-2026.html" target="_blank">CVS blows past estimates, hikes guidance as insurance unit continues to improve</a></h3>
+        <p>CVS also announced a new collaboration with Eli Lilly that will make Zepbound and Foundayo accessible to eligible patients on the CVS Health app.</p>
+        <div class="ts">Aug 05 10:59</div>
       </div>
       
       <div class="ncard rv" style="--d:0.1s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/08/04/chipotle-stock-falls-salmonella-outbreak-minnesota.html" target="_blank">Chipotle stock falls on potential link to salmonella outbreak in Minnesota</a></h3>
-        <p>Chipotle has pulled the affected supply from restaurants and replaced them with peppers from different growers, according to the company.</p>
-        <div class="ts">Aug 04 20:13</div>
+        <h3><a href="https://www.cnbc.com/2026/08/04/gm-chinese-automaker-extend-tie-up-amid-geopolitical-tensions-with-us.html" target="_blank">GM, Chinese automaker extend joint venture for 20 years despite geopolitical tensions with U.S.</a></h3>
+        <p>GM said the deal will focus on domestic sales of Buick and Cadillac models in China and exporting Chevrolet products built in China for non-U.S. marke</p>
+        <div class="ts">Aug 05 02:30</div>
       </div>
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/08/04/novo-nordisk-releases-earnings-and-guidance.html" target="_blank">Novo Nordisk shares slide after guidance disappoints investors</a></h3>
-        <p>Novo Nordisk raised its financial outlook as it tries to catch up with rival Eli Lilly in the booming GLP-1 market.</p>
-        <div class="ts">Aug 04 20:12</div>
+        <h3><a href="https://www.cnbc.com/2026/08/04/lucid-group-lcid-earnings-q2-2026.html" target="_blank">Lucid begins 'operational reset' as CEO says EV maker will delay midsize vehicle</a></h3>
+        <p>The company didn't provide updated guidance. New CEO Silvio Napoli earlier this year suspended production expectations.</p>
+        <div class="ts">Aug 04 22:47</div>
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
@@ -1112,31 +1141,31 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/stocks-return-to-record-highs-investors-who-sat-tight-during-the-recent-momentum-crash-are-being-rewarded-8c960105?mod=mw_rss_topstories" target="_blank">Stocks return to record highs. Investors who sat tight during the recent momentum crash are being rewarded.</a></h3>
-        <p>The S&amp;P 500 booked its 25th record close of 2026, after a 42-day break.</p>
-        <div class="ts">Aug 04 22:40</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://www.investors.com/news/technology/uber-stock-q2-2026-earnings-robotaxi/?src=A00220&yptr=yahoo" target="_blank">Uber Stock Slips After Earnings. Here Are The Numbers To Know.</a></h3>
+        <p></p>
+        <div class="ts">Aug 05 11:27</div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/upstarts-ai-upgrades-pay-off-as-a-pickup-in-loan-growth-helps-send-the-stock-higher-32e7ec9d?mod=mw_rss_topstories" target="_blank">Upstart’s AI upgrades pay off, as a pickup in loan growth helps send the stock higher</a></h3>
-        <p>The AI lending company says it’s enhanced its model to better assess the risk of borrowers.</p>
-        <div class="ts">Aug 04 22:22</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://www.investors.com/news/technology/sharkninja-stock-sn-q2-2026-earnings/?src=A00220&yptr=yahoo" target="_blank">SharkNinja Beats June-Quarter Views Amid Hot Device Sales</a></h3>
+        <p></p>
+        <div class="ts">Aug 05 11:24</div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
-        <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/chipotle-pulls-jalapenos-from-some-locations-after-salmonella-investigation-heres-what-to-know-20d8c66f?mod=mw_rss_topstories" target="_blank">Chipotle pulls jalapenos from some locations after salmonella investigation. Here’s what to know.</a></h3>
-        <p>While Chipotle’s stock slid on Tuesday, it said health investigators had “no ongoing concerns” with the chain after it removed the jalapenos.</p>
-        <div class="ts">Aug 04 21:54</div>
+        <span class="s">Yahoo Finance</span>
+        <h3><a href="https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-sp-500-spacex-amd-arista-eli-lily-earnings/?src=A00220&yptr=yahoo" target="_blank">Dow Jones Futures Rise; SpaceX, AMD Dive As Arista, Eli Lilly Jump With S&P 500 At Highs</a></h3>
+        <p></p>
+        <div class="ts">Aug 05 11:24</div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/stocks-face-their-weakest-seasonal-stretch-why-extreme-investor-pessimism-could-limit-any-selling-768261e9?mod=mw_rss_topstories" target="_blank">Stocks face their weakest seasonal stretch. Why extreme investor pessimism could limit any selling.</a></h3>
-        <p>U.S. stocks are entering what has historically been the weakest stretch of the year, but unusually bearish investor sentiment could help limit any pul</p>
-        <div class="ts">Aug 04 21:25</div>
+        <h3><a href="https://www.marketwatch.com/story/walt-disneys-stock-climbs-as-company-cites-toy-story-5-for-earnings-growth-fe0c86c1?mod=mw_rss_topstories" target="_blank">Walt Disney’s stock climbs as company cites ‘Toy Story 5’ for earnings growth</a></h3>
+        <p>Walt Disney’s stock, which has been struggling all year, rallied on Wednesday as the entertainment giant reported surprisingly strong earnings.</p>
+        <div class="ts">Aug 05 11:42</div>
       </div>
       
     </div>
@@ -2032,45 +2061,45 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="trend">
       
       <div>
-        <div class="bar" style="--h:42px;--d:0.0s;background:var(--up)"></div>
-        <div class="lb">07/29</div>
-        <div class="lb" style="color:var(--muted)">60%</div>
-      </div>
-      
-      <div>
-        <div class="bar" style="--h:38px;--d:0.07s;background:var(--up)"></div>
+        <div class="bar" style="--h:38px;--d:0.0s;background:var(--up)"></div>
         <div class="lb">07/30</div>
         <div class="lb" style="color:var(--muted)">55%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:17px;--d:0.14s;background:var(--down)"></div>
+        <div class="bar" style="--h:17px;--d:0.07s;background:var(--down)"></div>
         <div class="lb">07/31</div>
         <div class="lb" style="color:var(--muted)">25%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:4px;--d:0.21000000000000002s;background:var(--down)"></div>
+        <div class="bar" style="--h:4px;--d:0.14s;background:var(--down)"></div>
         <div class="lb">08/01</div>
         <div class="lb" style="color:var(--muted)">0%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:4px;--d:0.28s;background:var(--down)"></div>
+        <div class="bar" style="--h:4px;--d:0.21000000000000002s;background:var(--down)"></div>
         <div class="lb">08/02</div>
         <div class="lb" style="color:var(--muted)">0%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:35px;--d:0.35000000000000003s;background:var(--gold)"></div>
+        <div class="bar" style="--h:35px;--d:0.28s;background:var(--gold)"></div>
         <div class="lb">08/03</div>
         <div class="lb" style="color:var(--muted)">50%</div>
       </div>
       
       <div>
-        <div class="bar" style="--h:4px;--d:0.42000000000000004s;background:var(--down)"></div>
+        <div class="bar" style="--h:4px;--d:0.35000000000000003s;background:var(--down)"></div>
         <div class="lb">08/04</div>
         <div class="lb" style="color:var(--muted)">0%</div>
+      </div>
+      
+      <div>
+        <div class="bar" style="--h:23px;--d:0.42000000000000004s;background:var(--down)"></div>
+        <div class="lb">08/05</div>
+        <div class="lb" style="color:var(--muted)">33%</div>
       </div>
       
     </div>
@@ -2091,10 +2120,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 1990 · 🔴 stretch</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Clearance · Middlegame · Advantage</p>
-      <div class="q">💡 Calculate 3 moves deep before touching a piece.</div>
-      <a href="https://lichess.org/training/YjIDu" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+      <h3>Rating 2071 · 🔴 stretch</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Exposed King · Endgame · Long</p>
+      <div class="q">💡 King activity and pawn structure dominate. Technique over tactics here.</div>
+      <a href="https://lichess.org/training/vLfgH" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
     </div>
     
   </div>
@@ -2183,9 +2212,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   
   <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" id="kpiWin" data-count="43">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="130">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="22">0</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v up" id="kpiWin" data-count="44">0</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="132">0</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="14">0</div><div class="k">Open</div></div>
     <div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)" data-count="25" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
     <div class="kpi"><div class="v" id="kpiTotal" data-count="200">0</div><div class="k">Total Signals</div></div>
   </div>
@@ -2216,7 +2245,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr></thead>
       <tbody>
       
-        <tr data-badge="open">
+        <tr data-badge="win">
           <td class="mono-dim">2026-08-04</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:GOLD" target="_blank">GOLD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · cf_1h</span></td>
@@ -2229,10 +2258,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.82x</td>
           
           <td class="num mono-dim">35%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">$4215.50</td>
+          <td class="pnl-u">+1.9%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -2254,7 +2283,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-open">🔵 Open</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-08-04</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:HINDALCO" target="_blank">HINDALCO</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · equity_measured</span></td>
@@ -2267,10 +2296,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">1.92x</td>
           
           <td class="num mono-dim">34%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹968.00</td>
+          <td class="pnl-d">-5.1%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="open">
@@ -3717,7 +3746,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="cancelled">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:SBICARD" target="_blank">SBICARD</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
@@ -3730,13 +3759,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹664.10</td>
+          <td class="pnl-u">+0.2%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-cancelled">EXPIRED</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="cancelled">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TECHM" target="_blank">TECHM</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
@@ -3749,13 +3778,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1648.40</td>
+          <td class="pnl-u">+1.1%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-cancelled">EXPIRED</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="cancelled">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:TCS" target="_blank">TCS</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
@@ -3768,13 +3797,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
+          <td class="num">₹2411.10</td>
           <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-cancelled">EXPIRED</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="cancelled">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:BSOFT" target="_blank">BSOFT</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
@@ -3787,13 +3816,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹324.15</td>
+          <td class="pnl-u">+6.3%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-cancelled">EXPIRED</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="cancelled">
           <td class="mono-dim">2026-07-28</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:COFORGE" target="_blank">COFORGE</a></td>
           <td class="up" style="font-weight:600">BUY<span class="mono-dim" style="font-size:10px"> · ai_4h</span></td>
@@ -3806,10 +3835,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.5x</td>
           
           <td class="num mono-dim">29%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">₹1773.80</td>
+          <td class="pnl-u">+6.2%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-cancelled">EXPIRED</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -5009,7 +5038,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td><span class="badge badge-win">✅ Win</span></td>
         </tr>
       
-        <tr data-badge="open">
+        <tr data-badge="loss">
           <td class="mono-dim">2026-07-21</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:XAGUSD" target="_blank">XAGUSD</a></td>
           <td class="dn" style="font-weight:600">SELL<span class="mono-dim" style="font-size:10px"> · commodity</span></td>
@@ -5022,10 +5051,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">2.1x</td>
           
           <td class="num mono-dim">32%</td>
-          <td class="num">—</td>
-          <td class="num">—</td>
-          <td class="mono-dim">—</td>
-          <td><span class="badge badge-open">🔵 Open</span></td>
+          <td class="num">$61.24</td>
+          <td class="pnl-d">-4.2%</td>
+          <td class="mono-dim">2026-08-05</td>
+          <td><span class="badge badge-loss">❌ Stop</span></td>
         </tr>
       
         <tr data-badge="loss">
@@ -6034,7 +6063,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="m">
       <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
-      Wednesday, August 05 2026 · 09:14 IST<br>
+      Wednesday, August 05 2026 · 17:22 IST<br>
       <span style="color:#2E3238">Built with Claude Code</span>
     </div>
   </div>
@@ -7706,6 +7735,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
       check();
       setInterval(check, 10 * 60 * 1000);
+    })();
+
+
+    /* ── mobile: collapse the header chrome on scroll-down ──
+       Keeps the ticker pinned while reading. The rail was hidden outright on
+       phones for a while; that saved 30px and cost the one row people open
+       this page for. */
+    (function(){
+      var stack = document.querySelector('.headstack');
+      if (!stack) return;
+      var last = window.scrollY, ticking = false;
+      function apply(){
+        ticking = false;
+        if (!window.matchMedia('(max-width:560px)').matches){
+          stack.classList.remove('compact'); last = window.scrollY; return;
+        }
+        var y = window.scrollY, dy = y - last;
+        if (Math.abs(dy) < 6) return;          // ignore jitter and rubber-band
+        if (y < 120) stack.classList.remove('compact');
+        else if (dy > 0) stack.classList.add('compact');
+        else stack.classList.remove('compact');
+        last = y;
+      }
+      window.addEventListener('scroll', function(){
+        if (!ticking){ ticking = true; requestAnimationFrame(apply); }
+      }, {passive:true});
     })();
 
     // A marquee you cannot stop is a marquee you cannot read.
