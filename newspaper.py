@@ -2595,7 +2595,9 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.4px}
 @media(max-width:520px){.ltgrid{grid-template-columns:1fr}}
 
-.who{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
+/* Single column since the stat tiles came out — a 1.6fr/1fr grid with one
+   child leaves 38% of the row empty. */
+.who{display:block}
 .who-m{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--lime);
   border-radius:16px;padding:26px}
 .who-name{font-size:27px;font-weight:800;letter-spacing:-1px}
@@ -2607,13 +2609,6 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .who-links a{font-family:var(--mono);font-size:11px;letter-spacing:.6px;color:var(--lime);
   border:1px solid var(--lime-line);border-radius:99px;padding:6px 13px;transition:background .25s}
 .who-links a:hover{background:var(--lime-soft)}
-.who-s{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
-.who-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;
-  padding:18px 16px;text-align:center}
-.who-stat b{display:block;font-family:var(--mono);font-size:21px;font-weight:700;letter-spacing:-.5px}
-.who-stat span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.2px;
-  text-transform:uppercase;color:var(--dim);margin-top:6px}
-@media(max-width:840px){.who{grid-template-columns:1fr}}
 
 /* ═══════════════════ SUBSCRIBE ═══════════════════ */
 .sub-cta{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--lime);
@@ -3572,10 +3567,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn &nearr;</a>
         <a href="https://www.instagram.com/askakshayfinance" target="_blank" rel="noopener">@askakshayfinance &nearr;</a>
       </div>
-    </div>
-    <div class="who-s">
-      <div class="who-stat"><b>10y</b><span>Corporate finance</span></div>
-      <div class="who-stat"><b>$100M+</b><span>P&amp;L managed</span></div>
     </div>
   </div>
 </section>{% endif %}
@@ -4841,7 +4832,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   });
 
   /* ── nav active section ── */
-  var links = [].slice.call(document.querySelectorAll('.nav a')),
+  // In-page anchors ONLY. The cross-page link added by the split has
+  // href="/desk", and feeding that to querySelector throws
+  // "'/desk' is not a valid selector" — a SyntaxError that aborted this whole
+  // script block, taking the ticker, the world map, the music crates and the
+  // command palette down with it. One bad selector, an entire dead page.
+  var links = [].slice.call(document.querySelectorAll('.nav a[href^="#"]')),
       secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
   function setActive(){
     var best = 0, y = window.scrollY + 200;
