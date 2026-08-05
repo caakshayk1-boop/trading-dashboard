@@ -2324,10 +2324,8 @@ a{color:inherit;text-decoration:none}
    once scrolled they landed on the same 60 pixels and the status bar covered
    the section menu. Sticking the wrapper instead means the three stack in
    normal flow and no magic offsets can drift apart. */
-.headstack{position:sticky;top:0;z-index:300}
-.topbar{background:rgba(8,9,10,.82);
-  backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);
-  border-bottom:1px solid var(--line);}
+.headstack{position:sticky;top:0;z-index:300;background:var(--bg)}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);}
 .topbar-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);height:60px;
   display:flex;align-items:center;justify-content:space-between;gap:18px;}
 .brand{display:flex;align-items:baseline;gap:9px;font-weight:700;font-size:17px;letter-spacing:-.4px;white-space:nowrap;}
@@ -2342,7 +2340,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:720px){.stamp span.d{display:none}}
 
 /* ═══════════════════ NAV ═══════════════════ */
-.nav{background:rgba(8,9,10,.9);
+.nav{background:var(--bg);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
 .nav-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);display:flex;gap:2px;
   overflow-x:auto;scrollbar-width:none;}
@@ -3066,8 +3064,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    snapshot exactly as it renders today. */
 .livebar{display:none;align-items:center;gap:10px;
   padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
-  border-bottom:1px solid var(--line);background:rgba(8,9,10,.9);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  border-bottom:1px solid var(--line);background:var(--bg)}
 .livebar.on{display:flex}
 .livebar .pip{width:6px;height:6px;border-radius:50%;background:var(--up);flex:none;
   animation:pulse 2.4s var(--ease) infinite}
@@ -3081,7 +3078,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 /* Stale-edition notice. Gold, not lime: this is not a healthy state. */
 .editionbar{display:none;align-items:center;gap:12px;
   padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
-  border-bottom:1px solid var(--gold);background:rgba(255,193,71,.10);color:var(--gold)}
+  border-bottom:1px solid var(--gold);color:var(--gold);
+  background:linear-gradient(rgba(255,193,71,.10),rgba(255,193,71,.10)),var(--bg)}
 .editionbar.on{display:flex}
 .editionbar span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .editionbar button{font:inherit;color:#000;background:var(--gold);border:none;

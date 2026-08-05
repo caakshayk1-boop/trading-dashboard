@@ -56,6 +56,12 @@ jobs:
       - name: Ensure dirs
         run: mkdir -p data logs cache
 
+      # Every handler this dispatches to, imported before anything runs. Three
+      # commands pointed at function names that did not exist and the failure
+      # surfaced only as a Telegram error message on a green workflow.
+      - name: Verify command handlers resolve
+        run: python on_demand_runner.py --selftest
+
       - name: Run command
         run: |
           python on_demand_runner.py \

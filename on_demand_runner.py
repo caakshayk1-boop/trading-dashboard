@@ -5,7 +5,7 @@ on_demand_runner.py — GitHub Actions entry point for on-demand Telegram comman
 Usage:
     python on_demand_runner.py <command> <chat_id> [args]
 
-Commands: scan | brief | trade | cf | magic | intraday | carousel | track
+Commands: scan | brief (alias research) | trade | cf | magic | intraday | carousel | track
 Called from .github/workflows/on_demand.yml triggered by Vercel webhook.
 """
 
@@ -40,6 +40,9 @@ def post(chat_id: str, text: str):
 def run(command: str, chat_id: str, args: str):
     log.info(f"on_demand: command={command} chat_id={chat_id} args={args!r}")
 
+    if command in ("brief", "research"):
+        command = "brief"
+
     if command == "scan":
         try:
             from claude_bot import _run_swing_scan
@@ -61,9 +64,10 @@ def run(command: str, chat_id: str, args: str):
             post(chat_id, "Usage: `Brief: NSE:TICKER`")
             return
         try:
-            from claude_bot import _handle_brief
-            _handle_brief(args, chat_id)
+            from claude_bot import do_brief
+            post(chat_id, do_brief(args))
         except Exception as e:
+            log.exception("brief failed")
             post(chat_id, f"❌ Brief error: `{e}`")
 
     elif command == "trade":
@@ -71,9 +75,10 @@ def run(command: str, chat_id: str, args: str):
             post(chat_id, "Usage: `Trade: NSE:TICKER`")
             return
         try:
-            from claude_bot import _handle_trade
-            _handle_trade(args, chat_id)
+            from claude_bot import do_trade
+            post(chat_id, do_trade(args))
         except Exception as e:
+            log.exception("trade failed")
             post(chat_id, f"❌ Trade error: `{e}`")
 
     elif command == "magic":
@@ -97,9 +102,10 @@ def run(command: str, chat_id: str, args: str):
             post(chat_id, "Usage: `Carousel: topic`")
             return
         try:
-            from claude_bot import _handle_carousel
-            _handle_carousel(args, chat_id)
+            from claude_bot import do_carousel
+            do_carousel(args, chat_id)          # posts its own document
         except Exception as e:
+            log.exception("carousel failed")
             post(chat_id, f"❌ Carousel error: `{e}`")
 
     elif command == "track":
@@ -116,7 +122,34 @@ def run(command: str, chat_id: str, args: str):
         post(chat_id, f"❌ Unknown command: `{command}`")
 
 
+def selftest() -> int:
+    """Import every handler this runner dispatches to.
+
+    The three broken commands were broken for weeks because an ImportError
+    inside a per-command try/except reads exactly like a runtime failure and
+    the workflow still goes green. This turns that into one loud check.
+    """
+    import importlib
+    need = [("claude_bot", n) for n in
+            ("do_brief", "do_trade", "do_carousel", "_run_swing_scan",
+             "_scan_commodity_forex", "_run_magic_scan", "_run_intraday_scan", "route")]
+    bad = []
+    for mod, fn in need:
+        try:
+            if not hasattr(importlib.import_module(mod), fn):
+                bad.append(f"{mod}.{fn} missing")
+        except Exception as e:
+            bad.append(f"{mod}: {e}")
+    for b in bad:
+        print(f"FAIL {b}")
+    print("selftest: OK" if not bad else f"selftest: {len(bad)} broken")
+    return 1 if bad else 0
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "--selftest":
+        sys.exit(selftest())
+
     if len(sys.argv) < 3:
         print("Usage: python on_demand_runner.py <command> <chat_id> [args]")
         sys.exit(1)
