@@ -41,6 +41,7 @@ from newspaper import (
     get_tracker_stocks,
     get_money_hack,
     get_dubai_note,
+    daughter_age,
     get_productivity_tip,
     fetch_lichess_games,
     get_lichess_summary,
@@ -82,6 +83,9 @@ def generate() -> None:
     review  = get_review()
     money   = get_money_hack()
     dubai   = get_dubai_note()
+    daughter = daughter_age()
+    import music as _music
+    music_lib = _music.library()
     prod    = get_productivity_tip()
 
     # Picks are keyed by ISO week. Nothing warms that cache on a static build —
@@ -191,6 +195,8 @@ def generate() -> None:
         review=review,
         money_hack=money,
         dubai=dubai,
+        daughter=daughter,
+        music=music_lib,
         productivity_tip=prod,
         top5=top5,
         top5_week=top5_week,

@@ -121,21 +121,59 @@ def groq_complete(prompt: str, max_tokens: int = 120) -> str:
         r = requests.post(
             "https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-            json={"model": "llama3-8b-8192", "messages": [{"role": "user", "content": prompt}],
+            # llama3-8b-8192 was decommissioned by Groq. Every call 400'd and
+            # every caller silently used its fallback string — which is exactly
+            # how five different stocks ended up with the same one-line thesis.
+            json={"model": "llama-3.3-70b-versatile",
+                  "messages": [{"role": "user", "content": prompt}],
                   "max_tokens": max_tokens, "temperature": 0.7},
-            timeout=10,
+            timeout=15,
         )
         if r.status_code == 200:
             return r.json()["choices"][0]["message"]["content"].strip()
+        # Log the body, not just the code. A decommissioned model returns a 400
+        # that says so in plain English, and nobody ever saw it.
+        log.warning(f"Groq {r.status_code}: {r.text[:200]}")
     except Exception as e:
         log.warning(f"Groq: {e}")
     return ""
 
-def ai_stock_thesis(symbol: str, mom_1m: float, mom_3m: float, score: int) -> str:
-    prompt = (f"Stock: {symbol}. 1M: {mom_1m:.1f}%. 3M: {mom_3m:.1f}%. Score: {score}/100. "
-              "One sentence (max 20 words), numbers-first, why 20-30% return in 1-3 months. No fluff.")
-    result = groq_complete(prompt, max_tokens=60)
-    return result or f"Strong {mom_3m:.0f}% 3-month momentum with bullish trend structure."
+def ai_stock_thesis(symbol: str, mom_1m: float, mom_3m: float, score: int,
+                    ext20: float = 0.0, vol_ratio: float = 1.0) -> str:
+    """One line on why this specific name, not a sentence that fits any name.
+
+    The old prompt passed only two momentum figures, so the model had nothing
+    distinguishing to say and every card read alike. It gets the whole shape of
+    the setup now — where price sits against its average, whether the one-month
+    thrust is accelerating away from the three-month trend, and whether volume
+    confirmed it — and is told in the prompt not to reuse a stock phrase.
+    """
+    accel = "accelerating" if mom_1m * 3 > mom_3m else "consolidating"
+    prompt = (
+        f"Indian stock {symbol}. 1-month {mom_1m:+.1f}%, 3-month {mom_3m:+.1f}% ({accel}). "
+        f"Price sits {ext20:+.1f}% vs its 20-day average. Volume {vol_ratio:.2f}x its "
+        f"20-day norm. Composite score {score}/100.\n"
+        "Write ONE sentence, max 22 words, for a chartered accountant who reads numbers "
+        "first. Lead with the most distinctive figure. Say what the setup IS, not that it "
+        "is 'strong' or has 'bullish structure' — those phrases are banned. No hedging, "
+        "no disclaimer, no ticker repetition."
+    )
+    result = groq_complete(prompt, max_tokens=70)
+    if result:
+        return result.strip().strip('"')
+    # Fallback still varies by what is actually distinctive about the name,
+    # rather than one template with a number swapped in.
+    if vol_ratio >= 1.4:
+        return (f"{vol_ratio:.1f}x normal volume behind a {mom_1m:+.0f}% month — "
+                f"participation is confirming the move.")
+    if mom_1m * 3 > mom_3m * 1.5:
+        return (f"{mom_1m:+.0f}% in a month against {mom_3m:+.0f}% over three — "
+                f"the trend is accelerating, not maturing.")
+    if ext20 < 2:
+        return (f"{mom_3m:+.0f}% over three months but only {ext20:+.1f}% above its "
+                f"20-day average — extended trend, unextended price.")
+    return (f"{mom_3m:+.0f}% three-month trend, {ext20:+.1f}% above the 20-day, "
+            f"volume {vol_ratio:.2f}x normal.")
 
 # ─────────────────────────────────────────────────────────────
 # WEATHER — OpenMeteo (free, no key)
@@ -1483,6 +1521,47 @@ def get_book_lesson() -> dict:
     return out
 
 # ─────────────────────────────────────────────────────────────
+# DAUGHTER — age derived, never hardcoded
+# ─────────────────────────────────────────────────────────────
+
+DAUGHTER_BORN = date(2025, 12, 25)
+
+_MONTH_WORDS = ("Newborn", "One month", "Two months", "Three months", "Four months",
+                "Five months", "Six months", "Seven months", "Eight months",
+                "Nine months", "Ten months", "Eleven months")
+
+
+def daughter_age(on: date | None = None) -> dict:
+    """Her age today, in the units a parent actually uses.
+
+    Under two years people say months; after that, years. The section heading,
+    the milestone band and the Spanish sentence about her all read from here,
+    so they cannot drift apart or go stale.
+    """
+    on = on or datetime.now(IST).date()
+    months = (on.year - DAUGHTER_BORN.year) * 12 + (on.month - DAUGHTER_BORN.month)
+    if on.day < DAUGHTER_BORN.day:
+        months -= 1
+    months = max(0, months)
+    days = (on - DAUGHTER_BORN).days
+
+    if months < 24:
+        word = _MONTH_WORDS[months] if months < len(_MONTH_WORDS) else f"{months} months"
+        heading = f"{word} old." if months != 1 else "One month old."
+    else:
+        years = months // 12
+        rem = months % 12
+        heading = f"{years} year{'s' if years > 1 else ''} old." if not rem \
+                  else f"{years}y {rem}m old."
+
+    # Bands match how developmental guidance is actually written.
+    band = ("newborn" if months < 3 else "infant" if months < 7
+            else "crawling" if months < 10 else "cruising" if months < 13
+            else "toddler" if months < 24 else "preschool")
+    return {"months": months, "days": days, "heading": heading, "band": band,
+            "born": DAUGHTER_BORN.isoformat()}
+
+# ─────────────────────────────────────────────────────────────
 # TOP 5 STOCK PICKS
 # ─────────────────────────────────────────────────────────────
 
@@ -1546,17 +1625,35 @@ def score_stock(sym: str) -> Optional[dict]:
         mom_1m   = (price - close.iloc[-22]) / close.iloc[-22] * 100 if len(close) >= 22 else 0
         mom_3m   = (price - close.iloc[0])   / close.iloc[0]  * 100
         vol_ratio = hist["Volume"].iloc[-5:].mean() / (hist["Volume"].iloc[-20:].mean() or 1)
-        score    = sum([
-            25 if price > ema20  else 0,
-            20 if price > ema50  else 0,
-            15 if ema20 > ema50  else 0,
-            20 if mom_1m > 5     else 0,
-            10 if mom_3m > 10    else 0,
-            10 if vol_ratio > 1.2 else 0,
-        ])
+        # Graded, not binary. The old version was six pass/fail buckets adding
+        # to exactly 100, so in a strong tape every decent name cleared all six
+        # and the "Top 5" was five stocks tied on 100/100 in arbitrary order —
+        # a score with no power to rank is not a score.
+        #
+        # Each component now returns a fraction of its weight, so two stocks
+        # that both sit above their averages are still separated by how far
+        # above, by how much momentum, and by how much volume confirmed it.
+        def _band(v, lo, hi):
+            """0 at lo, 1 at hi, linear between. Clamped."""
+            if hi == lo:
+                return 1.0 if v >= hi else 0.0
+            return max(0.0, min(1.0, (v - lo) / (hi - lo)))
+
+        ext20 = (price - ema20) / ema20 * 100 if ema20 else 0      # % above 20EMA
+        ext50 = (price - ema50) / ema50 * 100 if ema50 else 0
+        sep   = (ema20 - ema50) / ema50 * 100 if ema50 else 0      # trend separation
+        score = round(
+            25 * _band(ext20,  -2,  8) +      # holding above the fast average
+            20 * _band(ext50,  -2, 15) +      # and well above the slow one
+            15 * _band(sep,     0,  6) +      # averages stacked, not crossing
+            20 * _band(mom_1m,  0, 15) +      # one-month thrust
+            10 * _band(mom_3m,  0, 35) +      # three-month trend
+            10 * _band(vol_ratio, 0.9, 1.8)   # participation confirming it
+        )
         currency = "₹" if ".NS" in sym or ".BO" in sym else "$"
         target   = round(price * (1.25 if mom_3m > 15 else 1.20), 2)
         return {"symbol": sym, "name": sym.replace(".NS","").replace(".BO",""),
+                "ext20": round(ext20, 2), "vol_ratio": round(float(vol_ratio), 2),
                 "price": round(price, 2), "change_1d": round((price - close.iloc[-2]) / close.iloc[-2] * 100, 2),
                 "mom_1m": round(mom_1m, 1), "mom_3m": round(mom_3m, 1), "score": score,
                 "target": target, "stop_loss": round(price * 0.92, 2),
@@ -1577,7 +1674,8 @@ def _build_picks() -> list[dict]:
     scored.sort(key=lambda x: x["score"], reverse=True)
     top5 = scored[:5]
     for s in top5:
-        s["thesis"] = ai_stock_thesis(s["name"], s["mom_1m"], s["mom_3m"], s["score"])
+        s["thesis"] = ai_stock_thesis(s["name"], s["mom_1m"], s["mom_3m"], s["score"],
+                                      s.get("ext20", 0.0), s.get("vol_ratio", 1.0))
         time.sleep(0.1)
     return top5
 
@@ -2369,7 +2467,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .who-links a{font-family:var(--mono);font-size:11px;letter-spacing:.6px;color:var(--lime);
   border:1px solid var(--lime-line);border-radius:99px;padding:6px 13px;transition:background .25s}
 .who-links a:hover{background:var(--lime-soft)}
-.who-s{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.who-s{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
 .who-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;
   padding:18px 16px;text-align:center}
 .who-stat b{display:block;font-family:var(--mono);font-size:21px;font-weight:700;letter-spacing:-.5px}
@@ -2416,6 +2514,70 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .foot-legal a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
 .foot-legal a:hover{color:var(--lime)}
 @media(max-width:840px){.foot-legal{grid-template-columns:1fr;gap:20px}}
+
+/* ═══════════════════ MUSIC ═══════════════════ */
+.crates{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.crate{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.crate[data-crate="bhakti"]{border-left:3px solid var(--gold)}
+.crate[data-crate="songs"]{border-left:3px solid var(--violet)}
+.crate-h{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line)}
+.crate-h .ic{font-size:15px;line-height:1}
+.crate-h .nm{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--text);font-weight:700;flex:1}
+.crate-h .ct{font-family:var(--mono);font-size:10px;color:var(--dim);
+  border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.crate-l{list-style:none;margin:0;padding:0}
+.trk{display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid var(--line)}
+.trk:last-child{border-bottom:none}
+.trk.more{display:none}
+.crate.open .trk.more{display:flex;animation:trkIn .32s var(--ease) both}
+@keyframes trkIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.trk .no{font-family:var(--mono);font-size:10.5px;color:var(--dim);width:20px;flex:none}
+.trk a{flex:1;display:flex;flex-direction:column;gap:2px;padding:11px 0;min-height:24px;
+  text-decoration:none}
+.trk .ti{font-size:14px;font-weight:500;color:var(--text);line-height:1.35}
+.trk .ar{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.3px}
+.trk .pl{font-size:10px;color:var(--dim);flex:none;transition:color .2s,transform .2s var(--ease)}
+.trk:hover{background:var(--bg2)}
+.trk:hover .ti{color:var(--lime)}
+.trk:hover .pl{color:var(--lime);transform:scale(1.35)}
+.crate-more{width:100%;background:none;border:none;border-top:1px solid var(--line);
+  color:var(--dim);font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;
+  text-transform:uppercase;padding:13px;cursor:pointer;min-height:24px;transition:color .2s}
+.crate-more:hover{color:var(--lime)}
+@media(max-width:760px){.crates{grid-template-columns:1fr}}
+
+/* ═══════════ MAP MOTION ═══════════
+   The map was static apart from two pulse rings. It is a *live* incident feed,
+   so it should read as alive without becoming a toy: a terminator line for
+   where night currently falls, a sweep that passes once every 12s, and dots
+   that arrive rather than appear. Everything here is transform/opacity only,
+   so it composites on the GPU and costs no layout. All of it stops under
+   prefers-reduced-motion. */
+.wmap{isolation:isolate}
+/* Night side — a real datum, positioned from UTC by JS. */
+.wm-night{position:absolute;top:0;bottom:0;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg,transparent,rgba(3,6,14,.52) 18%,rgba(3,6,14,.52) 82%,transparent);
+  transition:left .8s var(--ease),width .8s var(--ease)}
+/* Radar sweep, one pass every 12s. */
+.wm-sweep{position:absolute;top:0;bottom:0;width:14%;pointer-events:none;z-index:2;
+  background:linear-gradient(90deg,transparent,rgba(184,239,67,.055) 55%,rgba(184,239,67,.11));
+  border-right:1px solid rgba(184,239,67,.18);
+  animation:wmSweep 12s linear infinite}
+@keyframes wmSweep{from{transform:translateX(-120%)}to{transform:translateX(820%)}}
+/* Dots land instead of blinking on. */
+.wmap circle.ev{transform-box:fill-box;transform-origin:center;
+  animation:wmDrop .5s var(--ease) both;animation-delay:var(--d,0s)}
+@keyframes wmDrop{from{transform:scale(0);opacity:0}60%{transform:scale(1.28)}to{transform:scale(1);opacity:1}}
+.wmap circle.ev{transition:filter .2s}
+.wmap circle.ev:hover{filter:brightness(1.35) drop-shadow(0 0 4px currentColor)}
+/* A red country keeps a slow breath so escalation reads before you hover. */
+.wmap circle.ev.red{animation:wmDrop .5s var(--ease) both,wmBreathe 2.8s ease-in-out 1s infinite}
+@keyframes wmBreathe{0%,100%{opacity:1}50%{opacity:.62}}
+@media(prefers-reduced-motion:reduce){
+  .wm-sweep{display:none}
+  .wmap circle.ev,.wmap circle.ev.red{animation:none;opacity:1}
+}
 
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
@@ -2989,6 +3151,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a href="#way"><i>13</i>The Way</a>
     <a href="#review"><i>14</i>The Review</a>
     <a href="#chess"><i>15</i>Chess</a>
+    <a href="#music"><i>16</i>Music</a>
     <a href="#gym"><i>16</i>Mind Gym</a>
     <a href="#perf"><i>17</i>Performance</a>
     <a href="#alerts"><i>18</i>Signal Log</a>
@@ -3117,6 +3280,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
            aria-label="World map of the last 24 hours of news">
         <g id="wmDots"></g>
       </svg>
+      <div class="wm-night" id="wmNight" aria-hidden="true"></div>
+      <div class="wm-night" id="wmNight2" aria-hidden="true" style="display:none"></div>
+      <div class="wm-sweep" aria-hidden="true"></div>
       <div class="wm-tip" id="wmTip" hidden></div>
     </div>
     <div class="wm-foot" id="wmFoot">Reading the wires…</div>
@@ -3196,7 +3362,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="who-m">
       <div class="who-name">Akshay K Kothari</div>
       <div class="who-role">Chartered Accountant &middot; FP&amp;A &middot; AI builder</div>
-      <p>CA with 10 years in corporate finance. $25M+ P&amp;L managed. I build AI tools
+      <p>CA with 10 years in corporate finance. $100M+ P&amp;L managed. I build AI tools
         finance teams actually pay for &mdash; and write the essays, models and calculators
         behind them.</p>
       <p class="who-sub">This page is one of those tools. Every signal below is logged the
@@ -3211,9 +3377,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="who-s">
       <div class="who-stat"><b>10y</b><span>Corporate finance</span></div>
-      <div class="who-stat"><b>$25M+</b><span>P&amp;L managed</span></div>
-      <div class="who-stat"><b>Nifty 500</b><span>Scanned daily</span></div>
-      <div class="who-stat"><b>6:00 AM</b><span>Rebuilt, IST</span></div>
+      <div class="who-stat"><b>$100M+</b><span>P&amp;L managed</span></div>
     </div>
   </div>
 </section>
@@ -3495,10 +3659,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">09 / THE FATHER</span>
-      <h2 class="stitle">Seven months old.</h2>
+      <h2 class="stitle">{{ daughter.heading }}</h2>
     </div>
     <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
-      is presence rather than technique — but the technique is not nothing.</p>
+      is presence rather than technique — but the technique is not nothing.<br>
+      <span class="mono-dim" style="font-size:11px">Born 25 December 2025 &middot;
+        day {{ "{:,}".format(daughter.days) }}</span></p>
   </div>
   <div class="two rv">
     {% for f in father %}
@@ -4014,6 +4180,51 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <!-- ══════════ 10 MIND GYM ══════════
      Pure client-side: deterministic daily seed, scores in localStorage. No
      API, so it works identically on the static host. -->
+<!-- ══════════ MUSIC ══════════
+     Two crates, side by side. Edit music.py to add a line; the 6 AM build
+     picks it up. Five show, the rest are one click away — a shelf you can see
+     the whole of is a shelf you stop scanning. -->
+<section class="sec" id="music">
+  <div class="shead rv">
+    <div>
+      <span class="snum">16 / ON REPEAT</span>
+      <h2 class="stitle">What&rsquo;s playing.</h2>
+    </div>
+    <p class="sdesc">{{ music.total }} tracks on the shelf. Anything on the left,
+      bhakti on the right. Tap a title to play it on YouTube.</p>
+  </div>
+
+  <div class="crates rv">
+    {% for crate in [{'key':'songs','icon':'🎧','name':'Anything','items':music.songs},
+                     {'key':'bhakti','icon':'🪔','name':'Bhakti','items':music.bhakti}] %}
+    <div class="crate" data-crate="{{ crate.key }}">
+      <div class="crate-h">
+        <span class="ic">{{ crate.icon }}</span>
+        <span class="nm">{{ crate.name }}</span>
+        <span class="ct">{{ crate['items']|length }}</span>
+      </div>
+      <ol class="crate-l">
+        {% for t in crate['items'] %}
+        <li class="trk{% if loop.index > music.top_n %} more{% endif %}">
+          <span class="no">{{ "%02d"|format(loop.index) }}</span>
+          <a href="{{ t.url }}" target="_blank" rel="noopener">
+            <span class="ti">{{ t.title }}</span>
+            <span class="ar">{{ t.artist }}</span>
+          </a>
+          <span class="pl" aria-hidden="true">▶</span>
+        </li>
+        {% endfor %}
+      </ol>
+      {% if crate['items']|length > music.top_n %}
+      <button type="button" class="crate-more" aria-expanded="false">
+        Show all {{ crate['items']|length }} &darr;
+      </button>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
 <section class="sec" id="gym">
   <div class="shead rv">
     <div>
@@ -4289,6 +4500,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     }, {threshold:0.4});
     nums.forEach(function(e){ co.observe(e); });
   }
+
+
+  /* ── music crates ── */
+  document.querySelectorAll('.crate-more').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var crate = btn.closest('.crate');
+      var open = crate.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var n = crate.querySelectorAll('.trk').length;
+      btn.innerHTML = open ? 'Show fewer &uarr;' : 'Show all ' + n + ' &darr;';
+    });
+  });
 
   /* ── nav active section ── */
   var links = [].slice.call(document.querySelectorAll('.nav a')),
@@ -6074,7 +6297,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       var dots = document.getElementById('wmDots');
       if (dots){
         var html = '';
-        (j.countries || []).forEach(function(c){
+        (j.countries || []).forEach(function(c, i){
           var p = wmProject(c.lat, c.lon);
           // Size carries volume, colour carries tone. A 40-story day in the US
           // must not swamp a 4-story war, so it is a log-ish scale.
@@ -6083,7 +6306,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             html += '<circle class="halo ' + c.tone + '" cx="' + p.x.toFixed(2) +
                     '" cy="' + p.y.toFixed(2) + '" r="1.5"/>';
           }
-          html += '<circle class="ev ' + c.tone + '" cx="' + p.x.toFixed(2) + '" cy="' +
+          html += '<circle class="ev ' + c.tone + '" style="--d:' + (i * 0.035).toFixed(2) +
+                  's" cx="' + p.x.toFixed(2) + '" cy="' +
                   p.y.toFixed(2) + '" r="' + r.toFixed(2) + '"' +
                   ' data-c="' + esc(c.name) + '" data-n="' + c.count +
                   '" data-t="' + esc((c.top && c.top.title) || '') + '"' +
@@ -6161,6 +6385,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
     }
 
+
+    // Night band. Solar noon sits at the meridian where local time is 12:00,
+    // so the dark half is centred on the antimeridian of that longitude. Not a
+    // decoration — it is why Asia is quiet when New York is loud.
+    function wmNight(){
+      var el = document.getElementById('wmNight');
+      if (!el) return;
+      var utcH = new Date().getUTCHours() + new Date().getUTCMinutes() / 60;
+      var noonLon = (12 - utcH) * 15;                 // degrees east of Greenwich
+      var midnight = noonLon + 180;
+      while (midnight > 180) midnight -= 360;
+      while (midnight < -180) midnight += 360;
+      var centre = (midnight + 180) / 360 * 100;      // % across the map
+      var left = centre - 25, width = 50;
+
+      // The night side wraps around the antimeridian. Drawn as one band it
+      // simply clips at the edge of the map and the Pacific stays lit at 3am.
+      // Anything past an edge is drawn again on the opposite side.
+      var el2 = document.getElementById('wmNight2');
+      el.style.left = Math.max(0, left) + '%';
+      el.style.width = (left < 0 ? width + left : Math.min(width, 100 - left)) + '%';
+      if (el2){
+        if (left < 0){
+          el2.style.display = ''; el2.style.left = (100 + left) + '%'; el2.style.width = (-left) + '%';
+        } else if (left + width > 100){
+          el2.style.display = ''; el2.style.left = '0%'; el2.style.width = (left + width - 100) + '%';
+        } else {
+          el2.style.display = 'none';
+        }
+      }
+    }
+    wmNight();
+    setInterval(wmNight, 10 * 60 * 1000);
+
     function loadWorld(){
       get('/world?hours=24&limit=15').then(function(j){
         if (j && j.ok) return paintWorld(j);
@@ -6228,6 +6486,9 @@ def index():
         tracker        = get_tracker_stocks()
         money          = get_money_hack()
         dubai          = get_dubai_note()
+        daughter       = daughter_age()
+        import music as _music
+        music_lib      = _music.library()
         prod           = get_productivity_tip()
         quote          = get_entrepreneur_quote()
         lesson         = get_world_lesson()
@@ -6242,7 +6503,7 @@ def index():
             updated_at=now.strftime("%H:%M"),
             markets=markets, news=news, fpna=fpna, cfo=cfo,
             chess=chess, wisdom=wisdom, book=book, way=way_ctx, review=review_ctx,
-            top5=top5, tracker=tracker, money_hack=money, dubai=dubai,
+            top5=top5, tracker=tracker, money_hack=money, dubai=dubai, daughter=daughter, music=music_lib,
             productivity_tip=prod,
             quote=quote, lesson=lesson, case=case,
             lichess_games=lichess_games, lichess_summary=lichess_summary, lichess_puzzle=lichess_puzzle,
@@ -6263,7 +6524,8 @@ def index():
             book={"book":"Loading","author":"","chapter":"Loading","lesson":"","key_quote":"","action":"","index":0,"total":1},
             way=_way_placeholder(), review=_review_placeholder(),
             top5=[], tracker=[], money_hack={"title":"Loading","body":""},
-            dubai=get_dubai_note(),
+            dubai=get_dubai_note(), daughter=daughter_age(),
+            music=__import__('music').library(),
             productivity_tip="Loading...",
             quote={"quote":"","name":"","index":0,"total":1},
             lesson={"tradition":"","lesson":"","source":""},
