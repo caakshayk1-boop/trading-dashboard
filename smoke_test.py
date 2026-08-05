@@ -81,6 +81,10 @@ def main() -> int:
         print(f"    ticker items    {r['tickerItems']}")
         print(f"    map pixels      {r['mapPainted']}")
         print(f"    dom nodes       {r['domNodes']}")
+        spy = r.get("spy") or {}
+        print(f"    scroll spy      {spy.get('checked', 0)} checked, "
+              f"{len(spy.get('mismatched', []))} wrong "
+              f"{','.join(spy.get('mismatched', [])[:4])}")
         print(f"    js errors       {len(r['errors'])}")
         for e in r["errors"][:4]:
             print(f"      · {e}")
@@ -94,6 +98,9 @@ def main() -> int:
                 fails.append(f"{path}: section '{sid}' missing")
         if not r["navMatchesDom"]:
             fails.append(f"{path}: nav order does not match document order")
+        if (r.get("spy") or {}).get("mismatched"):
+            fails.append(f"{path}: nav highlight wrong at "
+                         + ", ".join(r["spy"]["mismatched"][:5]))
         if not r["hasCsp"]:
             fails.append(f"{path}: no Content-Security-Policy")
         # The two that would have caught the outage.

@@ -49,6 +49,31 @@ const { chromium } = require('playwright');
       };
     });
 
+    // Scroll spy. Three separate bugs have put the nav highlight on the wrong
+    // section — a hardcoded header offset, offsetTop measured against a
+    // position:relative <main> instead of the document, and hidden sections
+    // reporting top 0 and therefore matching everywhere. None of them are
+    // visible in the HTML, only in a scrolled viewport. So: park just below
+    // each visible section's top and assert the nav agrees with where we are.
+    r.spy = await page.evaluate(async () => {
+      const links = [...document.querySelectorAll('.nav a[href^="#"]')];
+      const ids = links.map(a => a.getAttribute('href').slice(1))
+                       .filter(id => document.getElementById(id)?.getClientRects().length);
+      const hh = parseInt(getComputedStyle(document.documentElement)
+                   .getPropertyValue('--headh')) || 200;
+      const bad = [];
+      for (const id of ids) {
+        const top = document.getElementById(id).getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: top - hh + 20, behavior: 'instant' });
+        await new Promise(r => setTimeout(r, 160));
+        const on = document.querySelector('.nav a.on');
+        const got = on ? on.getAttribute('href').slice(1) : 'none';
+        if (got !== id) bad.push(id + '→' + got);
+      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return { checked: ids.length, mismatched: bad };
+    });
+
     r.errors = errors;
     r.want = want;
     out.pages[path] = r;

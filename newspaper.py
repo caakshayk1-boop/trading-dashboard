@@ -85,6 +85,9 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
             # Same symbol → currency rule the alerts and the API use. Without
             # it the 6 AM snapshot renders dollar-quoted commodities in rupees.
             r["currency"] = _price_unit(r.get("symbol"))
+            # "" when there is no chart we can name. The template links only
+            # when this is non-empty.
+            r["tv"] = tv_alert_symbol(r.get("symbol"))
             # friendly pnl
             p = r.get("pnl_pct")
             r["pnl_str"] = (f"+{p:.1f}%" if p and p > 0 else f"{p:.1f}%") if p else "—"
@@ -1633,6 +1636,14 @@ def page_context(page: str) -> dict:
         "secs": {i for i, _ in rows},
         "nav": [{"id": i, "label": lbl, "n": f"{n:02d}"}
                 for n, (i, lbl) in enumerate(rows, 1)],
+        # Section headings read their number from here rather than carrying a
+        # literal, so the nav and the heading cannot disagree — which they did,
+        # with Performance showing "17 / EDGE" under a nav item numbered 07.
+        # Number AND label both come from SECTION_MAP. Carrying the label as a
+        # literal in the template is how "07 Performance" in the nav ended up
+        # over "17 / EDGE" on the page — two sources of truth for one name.
+        "secnum": {i: f"{n:02d}" for n, (i, _l) in enumerate(rows, 1)},
+        "seclabel": {i: l.upper() for i, l in rows},
         "page_title": meta["title"],
         "page_desc": meta["desc"],
         "page_path": meta["path"],
@@ -1737,10 +1748,73 @@ def score_stock(sym: str) -> Optional[dict]:
                 "price": round(price, 2), "change_1d": round((price - close.iloc[-2]) / close.iloc[-2] * 100, 2),
                 "mom_1m": round(mom_1m, 1), "mom_3m": round(mom_3m, 1), "score": score,
                 "target": target, "stop_loss": round(price * 0.92, 2),
-                "timeframe": "2–3 months", "currency": currency, "thesis": ""}
+                "timeframe": "2–3 months", "currency": currency,
+                "tv": tv_symbol(sym), "thesis": ""}
     except Exception as e:
         log.warning(f"score_stock {sym}: {e}")
         return None
+
+# Non-NSE alert symbols → TradingView. The alert table used to hard-prefix
+# every symbol with "NSE:", which is right for the equities that make up most of
+# the ledger and wrong for every commodity, FX pair and crypto in it —
+# "NSE:BRNUSD" is not a symbol, so the chart link opened an error page. Same
+# root cause as Brent being priced in ₹.
+#
+# Only verified TradingView symbols go in here. Anything non-NSE that is NOT in
+# this map renders as plain text with no link: no chart beats a broken chart.
+TV_ALIASES = {
+    # metals
+    "GOLD": "TVC:GOLD", "XAUUSD": "OANDA:XAUUSD",
+    "SILVER": "TVC:SILVER", "XAGUSD": "OANDA:XAGUSD",
+    "COPPER": "COMEX:HG1!",
+    # energy
+    "CRUDE": "TVC:USOIL", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL",
+    "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL",
+    "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!",
+    # crypto
+    "BTCUSD": "BINANCE:BTCUSDT", "ETHUSD": "BINANCE:ETHUSDT",
+    "BNBUSD": "BINANCE:BNBUSDT", "SOLUSD": "BINANCE:SOLUSDT",
+    "XRPUSD": "BINANCE:XRPUSDT", "DOGEUSD": "BINANCE:DOGEUSDT",
+    # fx
+    "USDJPY": "FX:USDJPY", "EURUSD": "FX:EURUSD", "GBPUSD": "FX:GBPUSD",
+    "AUDUSD": "FX:AUDUSD", "NZDUSD": "FX:NZDUSD", "USDCHF": "FX:USDCHF",
+    "USDCAD": "FX:USDCAD", "EURJPY": "FX:EURJPY", "GBPJPY": "FX:GBPJPY",
+    "USDINR": "FX_IDC:USDINR", "MYRINR": "FX_IDC:MYRINR",
+    "USDMYR": "FX_IDC:USDMYR",
+    # index
+    "DXY": "TVC:DXY", "NIFTY": "NSE:NIFTY", "BANKNIFTY": "NSE:BANKNIFTY",
+}
+
+
+def tv_alert_symbol(symbol: str) -> str:
+    """Alert-ledger symbol → TradingView symbol, or "" when there is no chart."""
+    s = (symbol or "").upper()
+    if s in TV_ALIASES:
+        return TV_ALIASES[s]
+    if _price_unit(s) == "\u20b9":       # an NSE equity
+        return f"NSE:{s}"
+    return ""
+
+
+# Yahoo suffix → TradingView exchange prefix. TradingView will happily resolve a
+# bare US ticker, but "7203.T" is not a symbol it knows — a chart link that
+# opens an error page is worse than no link, so map the suffix explicitly and
+# leave anything unrecognised bare rather than guessing an exchange.
+_TV_EXCHANGE = {
+    ".NS": "NSE", ".BO": "BSE", ".T": "TSE", ".L": "LSE", ".HK": "HKEX",
+    ".SS": "SSE", ".SZ": "SZSE", ".DE": "XETR", ".PA": "EURONEXT",
+    ".AX": "ASX", ".TO": "TSX", ".SW": "SIX", ".KS": "KRX", ".SI": "SGX",
+    ".TW": "TWSE", ".MI": "MIL", ".AS": "EURONEXT", ".MC": "BME",
+}
+
+
+def tv_symbol(yahoo: str) -> str:
+    """Yahoo ticker → TradingView chart symbol."""
+    for suf, ex in _TV_EXCHANGE.items():
+        if yahoo.endswith(suf):
+            return f"{ex}:{yahoo[: -len(suf)]}"
+    return yahoo
+
 
 def _build_picks() -> list[dict]:
     """Score all 60 stocks, return top 5 by momentum score.
@@ -1767,7 +1841,7 @@ def _build_picks() -> list[dict]:
 # graded components, and the site kept showing five stocks tied on 100/100 —
 # correct new code, stale cached output, and nothing to tell them apart.
 #   v2 — graded components, stock-specific thesis (2026-08-05)
-PICKS_ENGINE = "v2"
+PICKS_ENGINE = "v3"
 
 
 def _week_key() -> str:
@@ -2297,7 +2371,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   --gut:clamp(16px,4vw,40px);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:120px;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:var(--headh,200px);-webkit-text-size-adjust:100%}
 /* overflow-x:clip, never hidden. `hidden` turns <body> into a scroll container,
    which silently scopes every position:sticky to it instead of the viewport —
    that is what stopped the header and nav from staying put on scroll. `clip`
@@ -2397,6 +2471,9 @@ h1.hl em{font-style:normal;color:var(--lime)}
 :focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:3px}
 /* The sticky header must not cover whatever just received focus (2.4.11). */
 a,button,input,select,textarea,[tabindex]{scroll-margin-top:190px}
+/* Section anchors clear the sticky stack too, or clicking a nav item lands
+   with the heading hidden behind the header it just scrolled past. */
+main section.sec{scroll-margin-top:calc(var(--headh,200px) + 12px)}
 
 /* WCAG 2.2 SC 2.5.8 — 24x24 minimum. Symbol links in the tables measured
    23x17; a bare checkbox measured 13x13. Sizing the hit area, not the text. */
@@ -2661,10 +2738,11 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 @media(max-width:840px){.foot-legal{grid-template-columns:1fr;gap:20px}}
 
 /* ═══════════════════ MUSIC ═══════════════════ */
-.crates{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.crates{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .crate{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .crate[data-crate="bhakti"]{border-left:3px solid var(--gold)}
 .crate[data-crate="songs"]{border-left:3px solid var(--violet)}
+.crate[data-crate="global"]{border-left:3px solid var(--blue)}
 .crate-h{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--line)}
 .crate-h .ic{font-size:15px;line-height:1}
 .crate-h .nm{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;
@@ -2690,6 +2768,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   color:var(--dim);font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;
   text-transform:uppercase;padding:13px;cursor:pointer;min-height:24px;transition:color .2s}
 .crate-more:hover{color:var(--lime)}
+@media(max-width:1040px){.crates{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.crates{grid-template-columns:1fr}}
 
 /* ═══════════ MAP MOTION ═══════════
@@ -2745,6 +2824,13 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   #hcLine{animation:none;stroke-dashoffset:0}#hcDot{animation:none;opacity:1}
 }
 @media(max-width:640px){.herocurve{margin-top:26px}.herocurve svg{height:74px}}
+
+/* Trade idea symbols open the chart, same as the long-term cards. The name
+   was plain text on the one card type where you most want the chart. */
+.pick .sym a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;
+  transition:color .2s,border-color .2s}
+.pick .sym a:hover{color:var(--lime);border-bottom-color:var(--lime-line)}
+.pick .sym a::after{content:' ↗';font-size:.62em;opacity:.5;vertical-align:super}
 
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
@@ -3469,7 +3555,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'world' in secs %}<section class="sec" id="world">
   <div class="shead rv">
     <div>
-      <span class="snum">01 / CONTEXT</span>
+      <span class="snum">{{ secnum['world'] }} / {{ seclabel['world'] }}</span>
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
@@ -3573,7 +3659,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'who' in secs %}<section class="sec" id="who">
   <div class="shead rv">
     <div>
-      <span class="snum">02 / WHO</span>
+      <span class="snum">{{ secnum['who'] }} / {{ seclabel['who'] }}</span>
       <h2 class="stitle">Who is publishing this.</h2>
     </div>
     <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
@@ -3604,7 +3690,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'picks' in secs %}<section class="sec" id="picks">
   <div class="shead rv">
     <div>
-      <span class="snum">03 / CONVICTION</span>
+      <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span>
       <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
@@ -3618,7 +3704,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
       <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-        <div class="sym">{{ s.name }}</div>
+        <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
+             target="_blank" rel="noopener"
+             title="Open {{ s.name }} on TradingView">{{ s.name }}</a></div>
         <span class="tag">{{ s.score }}/100</span>
       </div>
       <div class="px">{{ s.currency }}{{ s.price }}</div>
@@ -3661,7 +3749,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'longterm' in secs %}<section class="sec" id="longterm">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / CONVICTION · LONG</span>
+      <span class="snum">{{ secnum['longterm'] }} / {{ seclabel['longterm'] }}</span>
       <h2 class="stitle">Own the business.</h2>
     </div>
     <p class="sdesc">Five NSE names screened on return on capital, growth, leverage and what
@@ -3680,7 +3768,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'tracker' in secs %}<section class="sec" id="tracker">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / POSITIONS</span>
+      <span class="snum">{{ secnum['tracker'] }} / {{ seclabel['tracker'] }}</span>
       <h2 class="stitle">The book.</h2>
     </div>
     <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
@@ -3761,7 +3849,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'sip' in secs %}<section class="sec" id="sip" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / COMPOUNDING</span>
+      <span class="snum">{{ secnum['sip'] }} / {{ seclabel['sip'] }}</span>
       <h2 class="stitle">One bucket a month.</h2>
     </div>
     <div style="text-align:right">
@@ -3802,7 +3890,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'interview' in secs %}<section class="sec" id="interview">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / THE SEAT</span>
+      <span class="snum">{{ secnum['interview'] }} / {{ seclabel['interview'] }}</span>
       <h2 class="stitle">CFO in three years.</h2>
     </div>
     <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
@@ -3835,7 +3923,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'language' in secs %}<section class="sec" id="language">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / LANGUAGE</span>
+      <span class="snum">{{ secnum['language'] }} / {{ seclabel['language'] }}</span>
       <h2 class="stitle">Two tongues, sharper.</h2>
     </div>
     <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
@@ -3880,7 +3968,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'father' in secs %}<section class="sec" id="father">
   <div class="shead rv">
     <div>
-      <span class="snum">09 / THE FATHER</span>
+      <span class="snum">{{ secnum['father'] }} / {{ seclabel['father'] }}</span>
       <h2 class="stitle">{{ daughter.heading }}</h2>
     </div>
     <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
@@ -3904,7 +3992,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'wisdom' in secs %}<section class="sec" id="wisdom">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / HOW TO LIVE</span>
+      <span class="snum">{{ secnum['wisdom'] }} / {{ seclabel['wisdom'] }}</span>
       <h2 class="stitle">Jainism and Buddhism.</h2>
     </div>
     <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
@@ -3928,7 +4016,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'desk' in secs %}<section class="sec" id="desk">
   <div class="shead rv">
     <div>
-      <span class="snum">11 / THE DESK</span>
+      <span class="snum">{{ secnum['desk'] }} / {{ seclabel['desk'] }}</span>
       <h2 class="stitle">Compound the skill.</h2>
     </div>
     <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
@@ -4049,7 +4137,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'mind' in secs %}<section class="sec" id="mind">
   <div class="shead rv">
     <div>
-      <span class="snum">12 / THE MIND</span>
+      <span class="snum">{{ secnum['mind'] }} / {{ seclabel['mind'] }}</span>
       <h2 class="stitle">Sharpen the operator.</h2>
     </div>
     <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
@@ -4080,7 +4168,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'way' in secs %}<section class="sec" id="way">
   <div class="shead rv">
     <div>
-      <span class="snum">13 / THE WAY</span>
+      <span class="snum">{{ secnum['way'] }} / {{ seclabel['way'] }}</span>
       <h2 class="stitle">Simple living. High thinking.</h2>
     </div>
     <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
@@ -4188,7 +4276,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'review' in secs %}<section class="sec" id="review">
   <div class="shead rv">
     <div>
-      <span class="snum">14 / THE REVIEW</span>
+      <span class="snum">{{ secnum['review'] }} / {{ seclabel['review'] }}</span>
       <h2 class="stitle">Look back, or none of it compounds.</h2>
     </div>
     <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
@@ -4242,7 +4330,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'chess' in secs %}<section class="sec" id="chess">
   <div class="shead rv">
     <div>
-      <span class="snum">15 / THE BOARD</span>
+      <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
       <h2 class="stitle">Yesterday's chess.</h2>
     </div>
     <div style="text-align:right">
@@ -4403,22 +4491,26 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Pure client-side: deterministic daily seed, scores in localStorage. No
      API, so it works identically on the static host. -->
 <!-- ══════════ MUSIC ══════════
-     Two crates, side by side. Edit music.py to add a line; the 6 AM build
-     picks it up. Five show, the rest are one click away — a shelf you can see
-     the whole of is a shelf you stop scanning. -->
+     Three crates. Two are yours (edit music.py to add a line; the 6 AM build
+     picks it up), the third is a fixed all-time canon. Five show, the rest are
+     one click away — a shelf you can see the whole of is a shelf you stop
+     scanning. The five on top rotate daily, so the shelf reads differently
+     every morning without the list changing. -->
 {% if 'music' in secs %}<section class="sec" id="music">
   <div class="shead rv">
     <div>
-      <span class="snum">16 / ON REPEAT</span>
+      <span class="snum">{{ secnum['music'] }} / {{ seclabel['music'] }}</span>
       <h2 class="stitle">What&rsquo;s playing.</h2>
     </div>
-    <p class="sdesc">{{ music.total }} tracks on the shelf. Anything on the left,
-      bhakti on the right. Tap a title to play it on YouTube.</p>
+    <p class="sdesc">{{ music.total }} tracks across three crates &mdash; mine,
+      bhakti, and the all-time canon. The top five rotate every morning. Tap a
+      title and it plays.</p>
   </div>
 
   <div class="crates rv">
     {% for crate in [{'key':'songs','icon':'🎧','name':'Anything','items':music.songs},
-                     {'key':'bhakti','icon':'🪔','name':'Bhakti','items':music.bhakti}] %}
+                     {'key':'bhakti','icon':'🪔','name':'Bhakti','items':music.bhakti},
+                     {'key':'global','icon':'🌍','name':'All time','items':music['global']}] %}
     <div class="crate" data-crate="{{ crate.key }}">
       <div class="crate-h">
         <span class="ic">{{ crate.icon }}</span>
@@ -4450,7 +4542,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'gym' in secs %}<section class="sec" id="gym">
   <div class="shead rv">
     <div>
-      <span class="snum">16 / MIND GYM</span>
+      <span class="snum">{{ secnum['gym'] }} / {{ seclabel['gym'] }}</span>
       <h2 class="stitle">Six minutes. Sharper.</h2>
     </div>
     <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
@@ -4469,7 +4561,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'perf' in secs %}<section class="sec" id="perf" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">17 / EDGE</span>
+      <span class="snum">{{ secnum['perf'] }} / {{ seclabel['perf'] }}</span>
       <h2 class="stitle">Does this actually work?</h2>
     </div>
     <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
@@ -4495,7 +4587,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'alerts' in secs %}<section class="sec" id="alerts">
   <div class="shead rv">
     <div>
-      <span class="snum">18 / TRACK RECORD</span>
+      <span class="snum">{{ secnum['alerts'] }} / {{ seclabel['alerts'] }}</span>
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -4567,7 +4659,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       {% for a in alerts[:20] %}
         <tr data-badge="{{ a.badge }}">
           <td class="mono-dim">{{ a.alert_date }}</td>
-          <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a></td>
+          <td>{% if a.tv %}<a class="sym" href="https://www.tradingview.com/chart/?symbol={{ a.tv }}"
+            target="_blank" rel="noopener">{{ a.symbol }}</a>{% else %}{{ a.symbol }}{% endif %}</td>
           <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
           <td class="mono-dim">{{ a.timeframe or '—' }}</td>
           <td class="mono-dim">{{ a.grade or '—' }}</td>
@@ -4873,9 +4966,41 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   // command palette down with it. One bad selector, an entire dead page.
   var links = [].slice.call(document.querySelectorAll('.nav a[href^="#"]')),
       secs  = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  // The sticky stack's real height, measured rather than assumed. It was
+  // hardcoded at 200px while the stack grew to topbar + nav + livebar + ticker
+  // and then gained an edition bar, so every offset derived from it was short.
+  // Re-measured on demand because the stack collapses on mobile scroll and the
+  // edition bar can appear at any time.
+  function headH(){
+    var stack = document.querySelector('.headstack');
+    return stack ? stack.getBoundingClientRect().height : 160;
+  }
+  // Anchor jumps land under a header of exactly the same height.
+  function syncScrollPad(){
+    document.documentElement.style.setProperty('--headh', Math.round(headH()) + 'px');
+  }
+  syncScrollPad();
+  window.addEventListener('resize', syncScrollPad, {passive:true});
+
   function setActive(){
-    var best = 0, y = window.scrollY + 200;
-    secs.forEach(function(s, i){ if (s && s.offsetTop <= y) best = i; });
+    var best = -1;
+    // Distance from the top of the DOCUMENT. offsetTop is measured against the
+    // offsetParent, and <main> is position:relative — so every section read
+    // ~2000px short of its real position while being compared against
+    // window.scrollY. That is the mismatch that put the highlight a whole
+    // section ahead of the reader.
+    // A few px past the header so a section counts as current the moment its
+    // heading clears the chrome, not when its top edge does.
+    var y = window.scrollY + headH() + 12;
+    secs.forEach(function(s, i){
+      // Sections stay display:none until the live API confirms there is
+      // anything to put in them. A hidden section reports top 0, which
+      // otherwise makes it match at every scroll position and pins the
+      // highlight to whichever hidden section sits latest in the nav.
+      if (!s || !s.getClientRects().length) return;
+      if (s.getBoundingClientRect().top + window.scrollY <= y) best = i;
+    });
+    if (best < 0) best = 0;
     links.forEach(function(a, i){ a.classList.toggle('on', i === best); });
     var el = links[best];
     if (el && el.offsetLeft !== undefined){
@@ -5460,6 +5585,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       return on ? on.dataset.f : 'all';
     }
 
+    // Mirrors newspaper.tv_alert_symbol(). Commodities, FX and crypto are not
+    // NSE symbols; prefixing them anyway produced chart links that 404.
+    var TV_ALIASES = {{ tv_aliases|tojson }};
+    function tvSym(sym, cur){
+      var s = (sym || '').toUpperCase();
+      if (TV_ALIASES[s]) return TV_ALIASES[s];
+      return cur === '\u20b9' || !cur ? 'NSE:' + s : '';
+    }
+    function symCell(sym, cur){
+      var tv = tvSym(sym, cur);
+      if (!tv) return esc(sym);          // no chart beats a broken chart
+      return '<a class="sym" href="https://www.tradingview.com/chart/?symbol=' +
+             encodeURIComponent(tv) + '" target="_blank" rel="noopener">' +
+             esc(sym) + '</a>';
+    }
+
     function renderAlerts(){
       var tbody = document.querySelector('#alertTable tbody');
       if (!tbody) return;
@@ -5484,8 +5625,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                      : a.badge === 'open' ? '🔵 Open' : (a.status || '—');
         return '<tr data-badge="' + a.badge + '">' +
           '<td class="mono-dim">' + esc(a.date) + '</td>' +
-          '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' + encodeURIComponent(a.symbol) +
-              '" target="_blank" rel="noopener">' + esc(a.symbol) + '</a></td>' +
+          '<td>' + symCell(a.symbol, a.currency) + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
@@ -6493,7 +6633,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       rail.innerHTML = html;
       // ~1.6s per instrument keeps it legible whatever the board size; a fixed
       // 46s across 110 items was a blur.
-      rail.style.setProperty('--tickdur', Math.max(60, Math.round(items * 1.6)) + 's');
+      // ~1.15s per instrument. 1.6 was legible but slow enough that a full
+      // pass took nearly three minutes and the far segments felt unreachable.
+      rail.style.setProperty('--tickdur', Math.max(45, Math.round(items * 1.15)) + 's');
 
       // Same guard the ledger's setKpi() uses. Writing textContent alone is not
       // enough: the hero count-up animation writes this node every frame for
@@ -6725,8 +6867,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                   p.y.toFixed(2) + '" r="' + r.toFixed(2) + '"' +
                   ' data-c="' + esc(c.name) + '" data-n="' + c.count +
                   '" data-t="' + esc((c.top && c.top.title) || '') + '"' +
+                  ' data-url="' + esc((c.top && c.top.link) || '') + '"' +
+                  ' role="link" tabindex="0"' +
                   ' data-tone="' + c.tone + '"><title>' + esc(c.name) + ' · ' +
-                  c.count + ' stories</title></circle>';
+                  c.count + ' stories — open the story</title></circle>';
         });
         dots.innerHTML = html;
         wmWireTips();
@@ -6785,11 +6929,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     function wmWireTips(){
       var tip = document.getElementById('wmTip'), wrap = document.getElementById('worldMap');
       if (!tip || !wrap) return;
+      // A dot that shows a headline on hover and does nothing on click is a
+      // dead end — the headline is the thing you want to read.
+      function openStory(c){
+        var u = c.getAttribute('data-url');
+        if (u) window.open(u, '_blank', 'noopener');
+      }
       wrap.querySelectorAll('circle.ev').forEach(function(c){
+        c.addEventListener('click', function(){ openStory(c); });
+        c.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openStory(c); }
+        });
         c.addEventListener('mouseenter', function(ev){
           tip.innerHTML = '<div class="c">' + esc(c.dataset.c) + '</div>' +
                           '<div class="h">' + esc(c.dataset.t || '—') + '</div>' +
-                          '<div class="m">' + c.dataset.n + ' stories · ' + c.dataset.tone + '</div>';
+                          '<div class="m">' + c.dataset.n + ' stories · ' + c.dataset.tone +
+                          (c.getAttribute('data-url') ? ' · click to read' : '') + '</div>';
           tip.hidden = false;
           var b = wrap.getBoundingClientRect(), r = c.getBoundingClientRect();
           tip.style.left = Math.max(6, Math.min(b.width - 300, r.left - b.left - 140)) + 'px';
@@ -6913,6 +7068,7 @@ def index():
         alerts         = fetch_alert_log()
 
         return render_template_string(TEMPLATE,
+            tv_aliases=TV_ALIASES,
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=now.strftime("%H:%M"),
             markets=markets, news=news, fpna=fpna, cfo=cfo,
@@ -6929,6 +7085,7 @@ def index():
         import traceback; traceback.print_exc()
         now = datetime.now(IST)
         return render_template_string(TEMPLATE,
+            tv_aliases=TV_ALIASES,
             date_str=now.strftime("%A, %B %d %Y"),
             updated_at=f"{now.strftime('%H:%M')} (partial)",
             markets=[], news=[], fpna={"title":"Loading","body":"","index":0,"total":1},

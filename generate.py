@@ -49,6 +49,7 @@ from newspaper import (
     fetch_lichess_puzzle,
     init_newspaper_db,
     TEMPLATE,
+    TV_ALIASES,
     _learning_ctx,
 )
 
@@ -219,6 +220,7 @@ def generate() -> None:
     print("[generate] Rendering HTML...")
     tpl = Template(TEMPLATE)
     base = dict(
+        tv_aliases=TV_ALIASES,
         date_str=now.strftime("%A, %B %d %Y"),
         updated_at=now.strftime("%H:%M"),
         build_id=build_id,
