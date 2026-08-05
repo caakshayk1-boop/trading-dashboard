@@ -97,6 +97,10 @@ export default async function handler(req, res) {
       await optional("grade"),
       await optional("breakeven_wr"),
       await optional("turnover_cr"),
+      // Engine payload — the long-term cards render their thesis, sector and
+      // factor scores from here. Probed like the rest because it arrives via
+      // ALTER TABLE and naming a missing column fails the whole query.
+      await optional("metadata"),
     ].join(", ");
 
     const sql = `SELECT ${BASE_COLS}, ${extra} FROM all_signals
@@ -152,5 +156,19 @@ function shape(r) {
     grade: str(r.grade) || null,
     breakeven_wr: num(r.breakeven_wr),
     turnover_cr: num(r.turnover_cr),
+    // Engine-specific payload — thesis, sector, rationale, factor scores.
+    // Stored as a JSON string; a malformed blob must not take down the feed.
+    metadata: parseMeta(r.metadata),
   };
+}
+
+function parseMeta(v) {
+  const raw = str(v).trim();
+  if (!raw || raw === "{}") return null;
+  try {
+    const o = JSON.parse(raw);
+    return o && typeof o === "object" ? o : null;
+  } catch {
+    return null;
+  }
 }
