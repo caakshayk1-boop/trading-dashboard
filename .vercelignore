@@ -16,6 +16,11 @@
 # It is allow-listed by name like the two above — omit it and build.js finds
 # nothing to copy, /edition.json 404s, and every tab silently stops checking.
 !docs/edition.json
+!docs/robots.txt
+!docs/sitemap.xml
+!docs/manifest.webmanifest
+!docs/icon.svg
+!docs/og.png
 
 # Never ship the ledger or its WAL, even by accident.
 signals.db

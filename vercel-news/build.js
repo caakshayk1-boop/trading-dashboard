@@ -27,6 +27,12 @@ if (existsSync(source)) {
   copyFileSync(source, target);
   if (existsSync(alertsSrc)) copyFileSync(alertsSrc, join(publicDir, "alerts.json"));
   if (existsSync(editionSrc)) copyFileSync(editionSrc, join(publicDir, "edition.json"));
+  // Crawl files, PWA manifest and the social card. All 404'd before:
+  // /robots.txt, /sitemap.xml, /favicon.ico and /manifest.json.
+  for (const f of ["robots.txt", "sitemap.xml", "manifest.webmanifest", "icon.svg", "og.png"]) {
+    const src = join(here, "..", "docs", f);
+    if (existsSync(src)) copyFileSync(src, join(publicDir, f));
+  }
   console.log(`[build] copied docs/index.html → public/ (${Math.round(statSync(target).size / 1024)}KB)`);
 } else if (existsSync(target)) {
   console.log(`[build] using pre-staged public/index.html (${Math.round(statSync(target).size / 1024)}KB)`);

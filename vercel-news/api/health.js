@@ -49,7 +49,10 @@ export default async function handler(req, res) {
       );
     }
 
-    return json(res, 200, out);
+    // 30s at the edge. This was no-store, so every page load paid a cold
+    // Turso connect — 2,787ms measured — while the live-ledger bar sat on
+    // "Checking live ledger…". Staleness of half a minute is invisible here.
+    return json(res, 200, out, 30);
   } catch (e) {
     out.error = e.message;
     return json(res, 503, out);
