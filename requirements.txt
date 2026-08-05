@@ -23,6 +23,11 @@ upstox-python-sdk; python_version>="3.9"
 flask>=3.0
 gunicorn>=21.0
 
+# Social card rendering (og_card.py -> docs/og.png)
+# Best-effort: og_card catches ImportError and skips rather than failing the
+# daily build, so a missing Pillow shows up as no card, not a red workflow.
+Pillow>=10.0
+
 # Telegram AI bot
 groq>=0.4.0
 
