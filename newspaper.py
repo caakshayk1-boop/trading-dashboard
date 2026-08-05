@@ -4154,9 +4154,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 </section>
 
-</main>
-
-
 <!-- Capture. The page previously had none: 16,156 words and no way to keep a
      reader. Placed after proof, not before it. -->
 <div class="sub-cta rv" data-src="ledger">
@@ -4177,6 +4174,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="sub-msg" role="status" aria-live="polite"></div>
   </div>
 </div>
+
+</main>
+
+
 
 <footer>
   <div class="foot-in">
