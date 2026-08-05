@@ -8,6 +8,8 @@
 //   symbol=           substring match
 //   status=win|loss|open|cancelled
 //   tf=               timeframe exact match
+//   type=             signal_type exact match (e.g. ai_longterm)
+//   exclude_type=     signal_type to omit
 //   version=          engine_version: v2 (default), v1, or "all"
 //   limit=            default 300, max 2000
 //   offset=           pagination
@@ -58,6 +60,10 @@ export default async function handler(req, res) {
     args.push(`%${String(q.symbol).toUpperCase()}%`);
   }
   if (q.tf) { where.push("timeframe = ?"); args.push(String(q.tf)); }
+  // signal_type filter — the long-horizon engine writes ai_longterm rows
+  // that belong in their own section, not mixed into the trade log.
+  if (q.type) { where.push("signal_type = ?"); args.push(String(q.type)); }
+  else if (q.exclude_type) { where.push("COALESCE(signal_type,'') != ?"); args.push(String(q.exclude_type)); }
   if (q.status) {
     const clause = BADGE_SQL[String(q.status).toLowerCase()];
     if (!clause) return fail(res, 400, "status must be one of: win, loss, open, cancelled");

@@ -2186,6 +2186,89 @@ h1.hl em{font-style:normal;color:var(--lime)}
    sections below. */
 @media(max-width:560px){.headstack .tickwrap{display:none}}
 
+/* ═══════════════════ WORLD MAP ═══════════════════ */
+.wmap-wrap{margin:0 0 30px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden}
+.wmap-head{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line)}
+.wm-t{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim)}
+.wm-legend{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.6px;color:var(--dim)}
+.wm-legend .dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;
+  vertical-align:middle}
+.wm-legend .dot.red{background:var(--down)}
+.wm-legend .dot.green{background:var(--up)}
+.wm-legend .dot.blue{background:#3d6ea8}
+.wmap{position:relative;background:
+  radial-gradient(ellipse at 50% 40%,rgba(61,110,168,.10),transparent 70%)}
+.wmap svg{display:block;width:100%;height:auto}
+/* Baseline landmass — the "blue map stays the same across the globe" layer. */
+.wmap rect.land{fill:#31537d;opacity:.55}
+.wmap circle.ev{cursor:pointer}
+.wmap circle.ev.red{fill:var(--down)}
+.wmap circle.ev.green{fill:var(--up)}
+.wmap circle.ev.blue{fill:#6ea8ff}
+.wmap circle.halo{fill:none;stroke-width:.6}
+.wmap circle.halo.red{stroke:var(--down);animation:wmPulse 2.6s ease-out infinite}
+.wmap circle.halo.green{stroke:var(--up);animation:wmPulse 3.4s ease-out infinite}
+@keyframes wmPulse{0%{r:1.5;opacity:.9}100%{r:6;opacity:0}}
+.wm-tip{position:absolute;z-index:5;max-width:290px;background:var(--bg2);
+  border:1px solid var(--line2);border-radius:10px;padding:10px 12px;pointer-events:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.wm-tip .c{font-family:var(--mono);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--lime);margin-bottom:5px}
+.wm-tip .h{font-size:12.5px;line-height:1.45;color:var(--text)}
+.wm-tip .m{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px}
+.wm-foot{padding:10px 16px;border-top:1px solid var(--line);font-family:var(--mono);
+  font-size:10px;letter-spacing:.5px;color:var(--dim)}
+@media(prefers-reduced-motion:reduce){.wmap circle.halo{animation:none;opacity:.25}}
+@media(max-width:640px){.wm-legend{font-size:9px;gap:9px}}
+
+.ncard .tone{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  padding:2px 7px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.ncard .tone.red{background:rgba(255,92,92,.16);color:var(--down)}
+.ncard .tone.green{background:rgba(60,220,130,.14);color:var(--up)}
+
+.ltgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.lt{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;
+  transition:border-color .35s,transform .35s var(--ease)}
+.lt:hover{transform:translateY(-3px);border-color:var(--line2)}
+.lt-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.lt .sec-l{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:1px;
+  text-transform:uppercase;margin-top:3px}
+.lt .px{font-family:var(--mono);font-size:23px;font-weight:700;letter-spacing:-.6px;margin:12px 0 8px}
+.lt .th{font-size:13px;line-height:1.55;color:var(--muted);margin:10px 0}
+.lt .facts{font-family:var(--mono);font-size:10.5px;line-height:1.6;color:var(--dim);
+  padding:8px 10px;background:var(--bg2);border-radius:8px}
+.lt .lvl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.lt .lvl .k{font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.6px}
+.lt .lvl .v{font-family:var(--mono);font-size:12.5px;font-weight:700;margin-top:3px}
+.lt .lvl .pc{display:block;font-size:9.5px;font-weight:500;opacity:.8}
+.lt-f{margin-top:14px;padding-top:11px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.4px}
+@media(max-width:520px){.ltgrid{grid-template-columns:1fr}}
+
+.who{display:grid;grid-template-columns:1.6fr 1fr;gap:22px;align-items:start}
+.who-m{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--lime);
+  border-radius:16px;padding:26px}
+.who-name{font-size:27px;font-weight:800;letter-spacing:-1px}
+.who-role{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--lime);margin:6px 0 16px}
+.who-m p{font-size:14.5px;line-height:1.65;color:var(--muted);margin-bottom:12px}
+.who-m .who-sub{font-size:13px;color:var(--dim)}
+.who-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.who-links a{font-family:var(--mono);font-size:11px;letter-spacing:.6px;color:var(--lime);
+  border:1px solid var(--lime-line);border-radius:99px;padding:6px 13px;transition:background .25s}
+.who-links a:hover{background:var(--lime-soft)}
+.who-s{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.who-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:18px 16px;text-align:center}
+.who-stat b{display:block;font-family:var(--mono);font-size:21px;font-weight:700;letter-spacing:-.5px}
+.who-stat span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--dim);margin-top:6px}
+@media(max-width:840px){.who{grid-template-columns:1fr}}
+
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
 .sec{padding:clamp(56px,8vw,104px) 0;border-bottom:1px solid var(--line)}
@@ -2742,22 +2825,24 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      it. One sequence now, top to bottom, nav and headings the same. -->
 <nav class="nav">
   <div class="nav-in" id="navin">
-    <a href="#picks"><i>01</i>Trade Ideas</a>
-    <a href="#tracker"><i>02</i>Portfolio</a>
-    <a href="#sip"><i>03</i>SIP Buckets</a>
-    <a href="#interview"><i>04</i>Interview</a>
-    <a href="#language"><i>05</i>Language</a>
-    <a href="#father"><i>06</i>Father</a>
-    <a href="#wisdom"><i>07</i>Wisdom</a>
-    <a href="#world"><i>08</i>World</a>
-    <a href="#desk"><i>09</i>The Desk</a>
-    <a href="#mind"><i>10</i>The Mind</a>
-    <a href="#way"><i>11</i>The Way</a>
-    <a href="#review"><i>12</i>The Review</a>
-    <a href="#chess"><i>13</i>Chess</a>
-    <a href="#gym"><i>14</i>Mind Gym</a>
-    <a href="#perf"><i>15</i>Performance</a>
-    <a href="#alerts"><i>16</i>Signal Log</a>
+    <a href="#world"><i>01</i>World</a>
+    <a href="#who"><i>02</i>Who</a>
+    <a href="#picks"><i>03</i>Trade Ideas</a>
+    <a href="#longterm"><i>04</i>Long-Term</a>
+    <a href="#tracker"><i>05</i>Portfolio</a>
+    <a href="#sip"><i>06</i>SIP Buckets</a>
+    <a href="#interview"><i>07</i>Interview</a>
+    <a href="#language"><i>08</i>Language</a>
+    <a href="#father"><i>09</i>Father</a>
+    <a href="#wisdom"><i>10</i>Wisdom</a>
+    <a href="#desk"><i>11</i>The Desk</a>
+    <a href="#mind"><i>12</i>The Mind</a>
+    <a href="#way"><i>13</i>The Way</a>
+    <a href="#review"><i>14</i>The Review</a>
+    <a href="#chess"><i>15</i>Chess</a>
+    <a href="#gym"><i>16</i>Mind Gym</a>
+    <a href="#perf"><i>17</i>Performance</a>
+    <a href="#alerts"><i>18</i>Signal Log</a>
   </div>
 </nav>
 
@@ -2846,11 +2931,122 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <main>
 
+<!-- ══════════ 04 WORLD ══════════ -->
+<section class="sec" id="world">
+  <div class="shead rv">
+    <div>
+      <span class="snum">01 / CONTEXT</span>
+      <h2 class="stitle">The world, last 24h.</h2>
+    </div>
+    <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
+      actually changes a decision.</p>
+  </div>
+
+  <!-- Live incident map.
+       Land is a 156x66 dot grid rasterised once from Natural Earth (public
+       domain) and run-length encoded into the string below — no external asset,
+       no runtime fetch, nothing for a CSP to block. Blue is the baseline
+       everywhere; a country lights red or green when the last 24 hours of wires
+       say something is happening there. Filled from /api/world. -->
+  <div class="wmap-wrap rv">
+    <div class="wmap-head">
+      <span class="wm-t">Live incident map · rolling 24h</span>
+      <span class="wm-legend">
+        <i class="dot red"></i>escalation
+        <i class="dot green"></i>good news
+        <i class="dot blue"></i>quiet
+      </span>
+    </div>
+    <div class="wmap" id="worldMap" data-mask="2a.8.8.a.7d.2.1.8.1.16.1b.2.12.2.41.1.3.1.1.1.2.7.2.16.e.3.23.3.39.2.3.1.3.2.1.2.1.1.1.1.5.15.24.3.d.6.35.3.1a.10.21.1.c.a.36.a.1.2.3.7.8.e.20.2.6.1.1.18.4.5.14.a.4.2.4.7.1.1.1.1.4.1.1.5.5.e.12.5.10.28.5.2.2.2.5.24.3.4.5.9.14.c.1.1.1.39.1.2.2.23.6.3.1.1.4.6.7.4.b.4.2.4.2.3d.4.1.2.20.8.3.6.4.15.5.1.45.6.1f.7.4.9.2.15.6.1.3b.1.1.1.4.c.3.6.13.7.4.1.2.1d.2.1.3.2.34.7.2.10.1.a.14.5.6.18.2.6.2.2.33.8.3.1c.15.1.a.15.4.7.1.1.32.8.3.1f.14.1.a.14.1.1.3.1.3c.6.1.1f.1b.2.1.1.1.19.3c.29.1a.2.3.15.3e.2a.1c.19.e.3.2c.2a.18.1.1.18.1.2.4.1.2.1.5.5.2a.2.2.27.17.1b.5.4.2.1.4.2.2.2.26.2e.16.1c.4.9.1.1.29.2.1.30.14.1d.3.7.1.2.1.2.29.2.1.4.1.2b.13.1e.8.9.1.1.24.3.1.1.4.2c.10.1f.a.3.1.5.25.4.1.32.e.1f.39.37.6.6.1.1e.1a.1.1f.36.1.1.5.8.1.1b.15.1.6.3.1b.3a.4.23.16.2.8.4.16.1.1.39.4.7.1.1b.17.1.9.4.9.1.9.27.1.15.4.3.1.6.2.17.17.2.7.7.5.4.5.1.1.40.6.1f.18.1.6.8.4.5.5.6.1.3f.4.1d.18.2.3.a.3.7.5.5.1.41.2.1d.19.1.1.c.3.9.3.5.2.41.1.3.3.18.19.1.2.b.2.a.2.6.1.42.1.2.7.14.1c.b.1.14.1.43.9.14.1a.16.1.6.1.47.c.1a.11.15.1.1.1.4.2.47.c.1a.10.17.2.3.3.46.d.1a.f.18.2.2.4.46.10.17.e.1a.1.3.3.1.1.4.1.1.1.3d.13.15.c.1c.1.d.4.3a.14.14.c.1d.1.d.4.3.1.36.13.15.b.22.2.1.1.6.1.1.1.3a.12.16.c.69.10.17.c.3.1.22.3.2.1.3d.10.16.d.2.2.20.5.2.2.3e.e.16.b.3.2.20.7.1.2.3f.d.17.9.4.2.1f.c.3e.c.18.9.4.2.1d.f.3c.b.1a.9.4.2.1c.11.3b.a.1c.7.23.11.3b.a.1c.7.24.11.3a.9.1e.5.25.10.3b.8.1f.4.26.4.4.8.3b.6.4b.1.8.6.3b.7.56.4.3b.5.66.2.2f.4.5b.1.b.1.30.4.65.2.31.3.65.2.31.4.98.3.9a.2.9b.2.1a3">
+      <svg viewBox="0 0 156 66" preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="World map of the last 24 hours of news">
+        <g id="wmLand"></g>
+        <g id="wmDots"></g>
+      </svg>
+      <div class="wm-tip" id="wmTip" hidden></div>
+    </div>
+    <div class="wm-foot" id="wmFoot">Reading the wires…</div>
+  </div>
+
+  {% if news %}
+    {% set lead = news[0] %}
+    <div class="lead rv">
+      <div class="lead-m">
+        <span class="tag">{{ lead.source }} · LEAD</span>
+        <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
+        <p>{{ lead.summary }}</p>
+      </div>
+      <div class="lead-s">
+        {% for item in news[1:6] %}
+        <div class="mini">
+          <span class="s">{{ item.source }}</span>
+          {% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}<a>{{ item.title }}</a>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="news-grid">
+      {% for item in news[6:15] %}
+      <div class="ncard rv" style="--d:{{ loop.index0 * 0.05 }}s">
+        <span class="s">{{ item.source }}</span>
+        <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
+        <p>{{ item.summary[:150] }}</p>
+        <div class="ts">{{ item.published }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty rv">Loading feeds…</div>
+  {% endif %}
+</section>
+
+<!-- ══════════ WHO ══════════
+     Wording lifted from askakshay.com so the two sites say the same thing.
+     Sits between the world and the trade ideas: a reader who arrived from a
+     Telegram link should know whose ledger they are reading before they read
+     the numbers. -->
+<section class="sec" id="who">
+  <div class="shead rv">
+    <div>
+      <span class="snum">02 / WHO</span>
+      <h2 class="stitle">Who is publishing this.</h2>
+    </div>
+    <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
+      can&rsquo;t build. Both, here.</p>
+  </div>
+
+  <div class="who rv">
+    <div class="who-m">
+      <div class="who-name">Akshay K Kothari</div>
+      <div class="who-role">Chartered Accountant &middot; FP&amp;A &middot; AI builder</div>
+      <p>CA with 10 years in corporate finance. $25M+ P&amp;L managed. I build AI tools
+        finance teams actually pay for &mdash; and write the essays, models and calculators
+        behind them.</p>
+      <p class="who-sub">This page is one of those tools. Every signal below is logged the
+        moment it fires, scored when it closes, and left on the record either way.
+        Wins and losses both. Nothing hidden.</p>
+      <div class="who-links">
+        <a href="https://askakshay.com" target="_blank" rel="noopener">askakshay.com &nearr;</a>
+        <a href="https://terminal.askakshay.com" target="_blank" rel="noopener">Dhruvedge terminal &nearr;</a>
+        <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn &nearr;</a>
+        <a href="https://www.instagram.com/askakshayfinance" target="_blank" rel="noopener">@askakshayfinance &nearr;</a>
+      </div>
+    </div>
+    <div class="who-s">
+      <div class="who-stat"><b>10y</b><span>Corporate finance</span></div>
+      <div class="who-stat"><b>$25M+</b><span>P&amp;L managed</span></div>
+      <div class="who-stat"><b>Nifty 500</b><span>Scanned daily</span></div>
+      <div class="who-stat"><b>6:00 AM</b><span>Rebuilt, IST</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════ 01 TRADE IDEAS ══════════ -->
 <section class="sec" id="picks">
   <div class="shead rv">
     <div>
-      <span class="snum">01 / CONVICTION</span>
+      <span class="snum">03 / CONVICTION</span>
       <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
@@ -2899,11 +3095,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 </section>
 
+<!-- ══════════ LONG-TERM CONVICTION ══════════
+     Written by ai_longterm.py, which screens the business before the chart.
+     Deliberately NOT in the trade log above and excluded from expectancy: a
+     2-3 year idea cannot resolve on a 20-day horizon, and letting it into the
+     R statistics would corrupt the only honest number here. -->
+<section class="sec" id="longterm" style="display:none">
+  <div class="shead rv">
+    <div>
+      <span class="snum">04 / CONVICTION · LONG</span>
+      <h2 class="stitle">Own the business.</h2>
+    </div>
+    <p class="sdesc">Five NSE names screened on return on capital, growth, leverage and what
+      you pay — the chart only votes on whether the trend is intact. Two to three years.
+      Selection is arithmetic; the paragraph under each is AI. Excluded from the trading
+      win rate on purpose.</p>
+  </div>
+  <div id="ltBody"></div>
+</section>
+
 <!-- ══════════ 03 PORTFOLIO ══════════ -->
 <section class="sec" id="tracker">
   <div class="shead rv">
     <div>
-      <span class="snum">02 / POSITIONS</span>
+      <span class="snum">05 / POSITIONS</span>
       <h2 class="stitle">The book.</h2>
     </div>
     <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
@@ -2984,7 +3199,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="sip" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">03 / COMPOUNDING</span>
+      <span class="snum">06 / COMPOUNDING</span>
       <h2 class="stitle">One bucket a month.</h2>
     </div>
     <div style="text-align:right">
@@ -3025,7 +3240,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="interview">
   <div class="shead rv">
     <div>
-      <span class="snum">04 / THE SEAT</span>
+      <span class="snum">07 / THE SEAT</span>
       <h2 class="stitle">CFO in three years.</h2>
     </div>
     <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
@@ -3058,7 +3273,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="language">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / LANGUAGE</span>
+      <span class="snum">08 / LANGUAGE</span>
       <h2 class="stitle">Two tongues, sharper.</h2>
     </div>
     <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
@@ -3103,7 +3318,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="father">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / THE FATHER</span>
+      <span class="snum">09 / THE FATHER</span>
       <h2 class="stitle">Seven months old.</h2>
     </div>
     <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
@@ -3125,7 +3340,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="wisdom">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / HOW TO LIVE</span>
+      <span class="snum">10 / HOW TO LIVE</span>
       <h2 class="stitle">Jainism and Buddhism.</h2>
     </div>
     <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
@@ -3143,54 +3358,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>
 
-<!-- ══════════ 04 WORLD ══════════ -->
-<section class="sec" id="world">
-  <div class="shead rv">
-    <div>
-      <span class="snum">08 / CONTEXT</span>
-      <h2 class="stitle">The world, last 24h.</h2>
-    </div>
-    <p class="sdesc">Wires only. Deduplicated, ranked, and cut to what actually changes a decision.</p>
-  </div>
 
-  {% if news %}
-    {% set lead = news[0] %}
-    <div class="lead rv">
-      <div class="lead-m">
-        <span class="tag">{{ lead.source }} · LEAD</span>
-        <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
-        <p>{{ lead.summary }}</p>
-      </div>
-      <div class="lead-s">
-        {% for item in news[1:6] %}
-        <div class="mini">
-          <span class="s">{{ item.source }}</span>
-          {% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}<a>{{ item.title }}</a>{% endif %}
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div class="news-grid">
-      {% for item in news[6:15] %}
-      <div class="ncard rv" style="--d:{{ loop.index0 * 0.05 }}s">
-        <span class="s">{{ item.source }}</span>
-        <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
-        <p>{{ item.summary[:150] }}</p>
-        <div class="ts">{{ item.published }}</div>
-      </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="empty rv">Loading feeds…</div>
-  {% endif %}
-</section>
 
 <!-- ══════════ 05 THE DESK ══════════ -->
 <section class="sec" id="desk">
   <div class="shead rv">
     <div>
-      <span class="snum">09 / THE DESK</span>
+      <span class="snum">11 / THE DESK</span>
       <h2 class="stitle">Compound the skill.</h2>
     </div>
     <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
@@ -3311,7 +3485,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="mind">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / THE MIND</span>
+      <span class="snum">12 / THE MIND</span>
       <h2 class="stitle">Sharpen the operator.</h2>
     </div>
     <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
@@ -3342,7 +3516,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="way">
   <div class="shead rv">
     <div>
-      <span class="snum">11 / THE WAY</span>
+      <span class="snum">13 / THE WAY</span>
       <h2 class="stitle">Simple living. High thinking.</h2>
     </div>
     <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
@@ -3450,7 +3624,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="review">
   <div class="shead rv">
     <div>
-      <span class="snum">12 / THE REVIEW</span>
+      <span class="snum">14 / THE REVIEW</span>
       <h2 class="stitle">Look back, or none of it compounds.</h2>
     </div>
     <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
@@ -3504,7 +3678,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="chess">
   <div class="shead rv">
     <div>
-      <span class="snum">13 / THE BOARD</span>
+      <span class="snum">15 / THE BOARD</span>
       <h2 class="stitle">Yesterday's chess.</h2>
     </div>
     <div style="text-align:right">
@@ -3667,7 +3841,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="gym">
   <div class="shead rv">
     <div>
-      <span class="snum">14 / MIND GYM</span>
+      <span class="snum">16 / MIND GYM</span>
       <h2 class="stitle">Six minutes. Sharper.</h2>
     </div>
     <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
@@ -3686,7 +3860,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="perf" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">15 / EDGE</span>
+      <span class="snum">17 / EDGE</span>
       <h2 class="stitle">Does this actually work?</h2>
     </div>
     <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
@@ -3712,7 +3886,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="alerts">
   <div class="shead rv">
     <div>
-      <span class="snum">16 / TRACK RECORD</span>
+      <span class="snum">18 / TRACK RECORD</span>
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -4268,6 +4442,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       loadStats();
       loadPositions();
       loadSip();
+      loadLongTerm();
 
       el('liverefresh').addEventListener('click', function(){
         loadSignals(); loadStats(); loadPositions(); loadSip();
@@ -4600,6 +4775,61 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           loadSignals();
         });
       });
+    }
+
+
+    /* ═══════ long-term conviction ═══════ */
+    function loadLongTerm(){
+      api('/signals?type=ai_longterm&version=all&limit=40').then(function(j){
+        if (!j || !j.ok) return;
+        var rows = j.signals || [];
+        if (!rows.length) return;             // stays hidden until the first scan
+        var sec = el('longterm'); if (!sec) return;
+        sec.style.display = '';
+
+        // Newest run only. The engine writes a fresh five every Saturday and
+        // showing every week at once would read as thirty live convictions.
+        var newest = rows[0].date;
+        rows = rows.filter(function(r){ return r.date === newest; });
+
+        el('ltBody').innerHTML =
+          '<div class="ltgrid">' + rows.map(function(r, i){
+            var m = r.metadata || {};
+            var up1 = r.entry ? (r.target1 / r.entry - 1) * 100 : null;
+            var up2 = r.entry ? (r.target2 / r.entry - 1) * 100 : null;
+            var dn  = r.entry ? (1 - r.sl / r.entry) * 100 : null;
+            return '<div class="lt rv" style="--d:' + (i * 0.06) + 's">' +
+              '<div class="lt-h">' +
+                '<div><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
+                  encodeURIComponent(r.symbol) + '" target="_blank" rel="noopener">' +
+                  esc(r.symbol) + '</a>' +
+                  '<div class="sec-l">' + esc(m.sector || '') + '</div></div>' +
+                '<span class="tag">' + fmt(r.score, 0) + '/100' +
+                  (r.grade ? ' · ' + esc(r.grade) : '') + '</span>' +
+              '</div>' +
+              '<div class="px">' + money(r.entry, r.currency) + '</div>' +
+              '<div class="scorebar" style="--w:' + Math.min(100, r.score || 0) + '%"><i></i></div>' +
+              (m.thesis ? '<div class="th">' + esc(m.thesis) + '</div>' : '') +
+              (m.rationale ? '<div class="facts">' + esc(m.rationale) + '</div>' : '') +
+              '<div class="lvl">' +
+                '<div><div class="k">🎯 T1</div><div class="v up">' + money(r.target1, r.currency) +
+                  (up1 === null ? '' : '<span class="pc">+' + fmt(up1, 0) + '%</span>') + '</div></div>' +
+                '<div><div class="k">🎯 T2</div><div class="v up">' + money(r.target2, r.currency) +
+                  (up2 === null ? '' : '<span class="pc">+' + fmt(up2, 0) + '%</span>') + '</div></div>' +
+                '<div><div class="k">🛡 Structure</div><div class="v dn">' + money(r.sl, r.currency) +
+                  (dn === null ? '' : '<span class="pc">−' + fmt(dn, 0) + '%</span>') + '</div></div>' +
+              '</div>' +
+              '<div class="lt-f">' +
+                'business ' + fmt(m.fund_score, 0) + ' · chart ' + fmt(m.tech_score, 0) +
+                ' · ' + fmt(m.coverage, 0) + '% factor coverage · ' + esc(m.horizon || '2-3 years') +
+              '</div>' +
+            '</div>';
+          }).join('') + '</div>' +
+          '<p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">' +
+          'Ranked ' + esc(newest) + '. The stop is the 200-day structure, not a trade stop — ' +
+          'it marks where the reason for owning it stopped being true. Not SEBI advice.</p>';
+        reveal(sec);
+      }).catch(function(){ /* no API — section stays hidden */ });
     }
 
     /* ═══════ SIP buckets ═══════ */
@@ -5403,7 +5633,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             // Nothing is lost by reloading a tab nobody is looking at. A tab
             // in the foreground may have a drill in progress or a filter set,
             // so that one gets asked.
-            if (document.visibilityState === 'hidden'){ location.reload(); return; }
+            //
+            // Reload AT MOST ONCE per build id. Without that guard this is a
+            // hot loop: if the CDN serves a shell whose stamp still differs
+            // from edition.json — which happens for real during a deploy, and
+            // happened here in testing — the reloaded page fails the same
+            // check and reloads again, forever, on a tab nobody can see.
+            var KEY = 'ds_edition_reloaded';
+            var tried = null;
+            try { tried = sessionStorage.getItem(KEY); } catch(e){}
+            if (document.visibilityState === 'hidden' && tried !== j.build_id){
+              try { sessionStorage.setItem(KEY, j.build_id); } catch(e){}
+              location.reload();
+              return;
+            }
+            // Either we are being watched, or we already reloaded for this
+            // edition and the host is still serving the old shell. Ask.
             bar.classList.add('on');
           })
           .catch(function(){ /* offline or a host without edition.json */ });
@@ -5477,9 +5722,146 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                              j.sources_ok + ' feeds, refreshed every 3 hours.';
     }
 
+
+    /* ══════════════ WORLD MAP + 24h DESK ══════════════
+       One fetch drives both: the map dots and the headline list underneath
+       are the same 24-hour window, so they can never disagree. */
+    var WM_W = 156, WM_H = 66, WM_LAT_TOP = 84, WM_LAT_BOT = -60;
+
+    function wmDrawLand(){
+      var host = document.getElementById('worldMap');
+      var g = document.getElementById('wmLand');
+      if (!host || !g || g.childNodes.length) return;
+      var enc = host.dataset.mask || '';
+      if (!enc) return;
+      // Run-length decode: alternating water/land counts in base16, water first.
+      var runs = enc.split('.'), on = false, i = 0, frag = '';
+      for (var k = 0; k < runs.length; k++){
+        var n = parseInt(runs[k], 16) || 0;
+        if (on){
+          for (var j = 0; j < n; j++){
+            var idx = i + j, x = idx % WM_W, y = (idx / WM_W) | 0;
+            frag += '<rect class="land" x="' + x + '" y="' + y + '" width="0.85" height="0.85" rx="0.35"/>';
+          }
+        }
+        i += n; on = !on;
+      }
+      g.innerHTML = frag;
+    }
+
+    function wmProject(lat, lon){
+      return {
+        x: (lon + 180) / 360 * WM_W,
+        y: (WM_LAT_TOP - lat) / (WM_LAT_TOP - WM_LAT_BOT) * WM_H
+      };
+    }
+
+    function paintWorld(j){
+      if (!j || !j.ok) return;
+      wmDrawLand();
+
+      var dots = document.getElementById('wmDots');
+      if (dots){
+        var html = '';
+        (j.countries || []).forEach(function(c){
+          var p = wmProject(c.lat, c.lon);
+          // Size carries volume, colour carries tone. A 40-story day in the US
+          // must not swamp a 4-story war, so it is a log-ish scale.
+          var r = Math.min(2.6, 0.8 + Math.log(1 + c.count) * 0.55);
+          if (c.tone !== 'blue'){
+            html += '<circle class="halo ' + c.tone + '" cx="' + p.x.toFixed(2) +
+                    '" cy="' + p.y.toFixed(2) + '" r="1.5"/>';
+          }
+          html += '<circle class="ev ' + c.tone + '" cx="' + p.x.toFixed(2) + '" cy="' +
+                  p.y.toFixed(2) + '" r="' + r.toFixed(2) + '"' +
+                  ' data-c="' + esc(c.name) + '" data-n="' + c.count +
+                  '" data-t="' + esc((c.top && c.top.title) || '') + '"' +
+                  ' data-tone="' + c.tone + '"><title>' + esc(c.name) + ' · ' +
+                  c.count + ' stories</title></circle>';
+        });
+        dots.innerHTML = html;
+        wmWireTips();
+      }
+
+      var foot = document.getElementById('wmFoot');
+      if (foot){
+        var t = j.totals || {};
+        foot.textContent = j.count + ' stories · ' + (j.countries || []).length +
+          ' countries · ' + (t.red || 0) + ' escalating, ' + (t.green || 0) + ' improving · ' +
+          j.sources_ok + '/' + j.sources_total + ' feeds · tagging is keyword-based and approximate';
+      }
+
+      // Headlines: same window, same fetch.
+      var sec = document.getElementById('world');
+      var host = document.getElementById('worldLive');
+      if (!host && sec){
+        host = document.createElement('div');
+        host.id = 'worldLive';
+        var olds = sec.querySelectorAll('.lead, .news-grid, .empty');
+        if (olds.length){ olds[0].replaceWith(host); for (var m = 1; m < olds.length; m++) olds[m].remove(); }
+        else sec.appendChild(host);
+      }
+      if (host){
+        host.className = 'news-grid';
+        host.innerHTML = (j.top || []).map(function(n, i){
+          var link = n.link
+            ? '<a href="' + esc(n.link) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>'
+            : esc(n.title);
+          var flag = n.tone === 'red' ? '<span class="tone red">▲ escalation</span>'
+                   : n.tone === 'green' ? '<span class="tone green">▼ good news</span>' : '';
+          return '<div class="ncard rv in" style="--d:' + (i * 0.04) + 's">' +
+                   '<span class="s">' + esc(n.source) + '</span>' + flag +
+                   '<h3>' + link + '</h3>' +
+                   (n.summary ? '<p>' + esc(n.summary.slice(0, 150)) + '</p>' : '') +
+                   '<div class="ts">' + esc(wmAgo(n.published)) +
+                   (n.places && n.places.length ? ' · ' + esc(n.places.join(', ')) : '') +
+                   '</div></div>';
+        }).join('');
+      }
+
+      var d = document.getElementById('worldDesc');
+      if (d) d.textContent = 'Wires only, deduplicated, last ' + j.window_hours +
+        ' hours. ' + j.count + ' stories from ' + j.sources_ok + ' feeds, refreshed every 15 minutes.';
+    }
+
+    function wmAgo(iso){
+      if (!iso) return '';
+      var mins = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return mins + 'm ago';
+      var h = Math.round(mins / 60);
+      return h < 24 ? h + 'h ago' : Math.round(h / 24) + 'd ago';
+    }
+
+    function wmWireTips(){
+      var tip = document.getElementById('wmTip'), wrap = document.getElementById('worldMap');
+      if (!tip || !wrap) return;
+      wrap.querySelectorAll('circle.ev').forEach(function(c){
+        c.addEventListener('mouseenter', function(ev){
+          tip.innerHTML = '<div class="c">' + esc(c.dataset.c) + '</div>' +
+                          '<div class="h">' + esc(c.dataset.t || '—') + '</div>' +
+                          '<div class="m">' + c.dataset.n + ' stories · ' + c.dataset.tone + '</div>';
+          tip.hidden = false;
+          var b = wrap.getBoundingClientRect(), r = c.getBoundingClientRect();
+          tip.style.left = Math.max(6, Math.min(b.width - 300, r.left - b.left - 140)) + 'px';
+          tip.style.top  = Math.max(6, r.top - b.top - tip.offsetHeight - 10) + 'px';
+        });
+        c.addEventListener('mouseleave', function(){ tip.hidden = true; });
+      });
+    }
+
+    function loadWorld(){ get('/world?hours=24&limit=15').then(paintWorld); }
+    wmDrawLand();
+    loadWorld();
+    setInterval(loadWorld, 15 * 60 * 1000);
+
+    // /api/world supersedes /api/news for this section: same headlines, but
+    // scoped to a real 24h window and carrying the geo tags the map needs.
+    // paintNews stays as the fallback for a deploy without /api/world.
     function loadNews(){ get('/news?limit=14').then(paintNews); }
-    loadNews();
-    setInterval(loadNews, 3 * 60 * 60 * 1000);
+    get('/world?hours=1&limit=1').then(function(j){
+      if (!j || !j.ok){ loadNews(); setInterval(loadNews, 3 * 60 * 60 * 1000); }
+    });
   })();
 
   /* No whole-page reload. The clock ticks, markets and news refresh on their
