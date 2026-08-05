@@ -1679,15 +1679,26 @@ def _build_picks() -> list[dict]:
         time.sleep(0.1)
     return top5
 
+# Bump when score_stock() or ai_stock_thesis() changes shape. The cache key
+# carries it, so a scoring change invalidates itself instead of serving last
+# week's numbers computed by last week's code.
+#
+# Learned the hard way: the scorer was rewritten from six pass/fail buckets to
+# graded components, and the site kept showing five stocks tied on 100/100 —
+# correct new code, stale cached output, and nothing to tell them apart.
+#   v2 — graded components, stock-specific thesis (2026-08-05)
+PICKS_ENGINE = "v2"
+
+
 def _week_key() -> str:
-    """ISO week key e.g. '2026-W23' — picks refresh every Monday.
+    """Cache key: ISO week plus the engine that produced the picks.
 
     Keyed on the IST date, not the runner's UTC date. Everything else on this
     page is stamped IST, and a delayed GitHub run near the UTC/IST boundary
     would otherwise file Monday's picks under last week.
     """
     d = datetime.now(IST).date()
-    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
+    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}-{PICKS_ENGINE}"
 
 def _warm_picks_cache():
     week = _week_key()
