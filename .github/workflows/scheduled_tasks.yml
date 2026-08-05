@@ -17,7 +17,7 @@ on:
         required: false
         default: 'auto'
         type: choice
-        options: [auto, daily_brief, cf_scan, sip_bucket]
+        options: [auto, daily_brief, cf_scan, sip_bucket, ai_longterm]
 
 concurrency:
   group: scheduled-tasks
@@ -90,6 +90,12 @@ jobs:
       - name: Run SIP bucket
         if: steps.task.outputs.task == 'sip_bucket'
         run: python scheduled_tasks_runner.py sip_bucket
+
+      # On demand only. The Saturday scan runs this weekly; this exists so one
+      # section can be populated without dispatching the whole weekend battery.
+      - name: Run AI long-term screen
+        if: steps.task.outputs.task == 'ai_longterm'
+        run: python scheduled_tasks_runner.py ai_longterm
 
       - name: Run CF scan
         if: steps.task.outputs.task == 'cf_scan'

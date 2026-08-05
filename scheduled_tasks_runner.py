@@ -239,6 +239,27 @@ def run_sip_bucket():
              f"{n} prices refreshed")
 
 
+def run_ai_longterm():
+    """Weekly long-horizon screen, on demand.
+
+    Normally fires inside the Saturday scan. Exposed as its own task because
+    there was no way to run just this one — the alternative was dispatching the
+    entire weekend battery and sending a dozen unrelated Telegram messages to
+    populate one section.
+    """
+    import ai_longterm as ail
+    from datetime import datetime as _dt
+    picks = ail.build()
+    msg = ail.to_telegram(picks)
+    try:
+        from telegram_bot import _post
+        _post(msg)
+    except Exception as e:
+        log.warning(f"ai_longterm telegram: {e}")
+    log.info(f"ai_longterm: {len(picks)} picks written")
+    return picks
+
+
 if __name__ == "__main__":
     task = sys.argv[1] if len(sys.argv) > 1 else "auto"
 
@@ -248,6 +269,8 @@ if __name__ == "__main__":
         run_daily_brief()
     elif task == "sip_bucket":
         run_sip_bucket()
+    elif task == "ai_longterm":
+        run_ai_longterm()
     else:
         now_ist = datetime.now(IST)
         if now_ist.hour == 6 and now_ist.minute < 15:

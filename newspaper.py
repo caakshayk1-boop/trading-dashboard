@@ -2590,6 +2590,28 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   .wmap circle.ev,.wmap circle.ev.red{animation:none;opacity:1}
 }
 
+/* ═══════════ HERO EQUITY CURVE ═══════════ */
+.herocurve{margin-top:34px;max-width:640px;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.herocurve[hidden]{display:none}
+.hc-h{display:flex;justify-content:space-between;align-items:baseline;
+  padding:12px 16px 8px}
+.hc-t{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--dim)}
+.hc-v{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--lime)}
+.herocurve svg{display:block;width:100%;height:96px}
+#hcLine{stroke-dasharray:var(--len,0);stroke-dashoffset:var(--len,0);
+  animation:hcDraw 1.1s var(--ease) .25s forwards}
+@keyframes hcDraw{to{stroke-dashoffset:0}}
+#hcDot{opacity:0;animation:hcPop .3s var(--ease) 1.3s forwards}
+@keyframes hcPop{to{opacity:1}}
+.hc-f{display:flex;justify-content:space-between;gap:10px;padding:8px 16px 12px;
+  font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.4px}
+@media(prefers-reduced-motion:reduce){
+  #hcLine{animation:none;stroke-dashoffset:0}#hcDot{animation:none;opacity:1}
+}
+@media(max-width:640px){.herocurve{margin-top:26px}.herocurve svg{height:74px}}
+
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
 .sec{padding:clamp(56px,8vw,104px) 0;border-bottom:1px solid var(--line)}
@@ -3250,6 +3272,36 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
   </div>
 
+
+  <!-- Track record, in the hero. The full performance section stays where it
+       is; this is the one-glance version, because the argument this page makes
+       is "here is the record" and the record was 17 sections down. Drawn from
+       /api/stats; hidden entirely on a static host with no ledger. -->
+  <div class="herocurve" id="heroCurve" hidden>
+    <div class="hc-h">
+      <span class="hc-t">Cumulative R · every closed signal</span>
+      <span class="hc-v" id="hcTotal">—</span>
+    </div>
+    <svg viewBox="0 0 600 96" preserveAspectRatio="none" role="img"
+         aria-labelledby="hcDesc">
+      <title id="hcDesc">Cumulative R-multiple across every closed signal</title>
+      <defs>
+        <linearGradient id="hcFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--lime)" stop-opacity=".22"/>
+          <stop offset="100%" stop-color="var(--lime)" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path id="hcArea" fill="url(#hcFill)"></path>
+      <path id="hcLine" fill="none" stroke="var(--lime)" stroke-width="1.6"
+            vector-effect="non-scaling-stroke" stroke-linejoin="round"></path>
+      <circle id="hcDot" r="3" fill="var(--lime)"></circle>
+    </svg>
+    <div class="hc-f">
+      <span id="hcFrom">—</span>
+      <span id="hcNote">drawdowns included — that is the point</span>
+      <span id="hcTo">—</span>
+    </div>
+  </div>
 </section>
 
 <main>
@@ -3451,7 +3503,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Deliberately NOT in the trade log above and excluded from expectancy: a
      2-3 year idea cannot resolve on a 20-day horizon, and letting it into the
      R statistics would corrupt the only honest number here. -->
-<section class="sec" id="longterm" style="display:none">
+<section class="sec" id="longterm">
   <div class="shead rv">
     <div>
       <span class="snum">04 / CONVICTION · LONG</span>
@@ -3462,7 +3514,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       Selection is arithmetic; the paragraph under each is AI. Excluded from the trading
       win rate on purpose.</p>
   </div>
-  <div id="ltBody"></div>
+  <div id="ltBody">
+    <div class="empty rv">The screen runs with the Saturday scan. Five names clear the
+      business filter — return on capital, growth, leverage, valuation — before the chart
+      gets a vote, and it publishes fewer than five rather than pad the list.</div>
+  </div>
 </section>
 
 <!-- ══════════ 03 PORTFOLIO ══════════ -->
@@ -4836,10 +4892,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         var v2 = h.by_version.v2 || 0, v1 = h.by_version.v1 || 0;
         vtxt = ' · ' + v2 + ' gated (v2) / ' + v1 + ' legacy (v1)';
       }
+      // The open count has to be broken down the same way the total is, or the
+      // header reads "38 open setups" over a table showing 3 — the table
+      // defaults to the gated engine and the header was counting both.
+      var otxt = (h.open_setups || 0) + ' open setups';
+      if (h.open_by_version){
+        var o2 = h.open_by_version.v2 || 0, o1 = h.open_by_version.v1 || 0;
+        otxt = o2 + ' gated open / ' + o1 + ' legacy open';
+      }
       setKpi('heroOpen', h.open_setups || 0);
       bar('live', 'LIVE LEDGER · ' + h.signals + ' signals' + vtxt +
                   ' · latest ' + stamp +
-                  ' · ' + tracked + ' tracked · ' + (h.open_setups || 0) + ' open setups' +
+                  ' · ' + tracked + ' tracked · ' + otxt +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
       start();
     }).catch(function(e){
@@ -5289,14 +5353,53 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
     })();
 
+
+    /* ═══════ hero equity curve ═══════
+       The record, above the fold. Same data as the performance section below;
+       this one just has to be readable in one glance. */
+    function paintHeroCurve(j){
+      var box = el('heroCurve');
+      if (!box || !j || !j.ok) return;
+      var pts = (j.equity_curve || []).filter(function(p){ return isFinite(p.cum_r); });
+      if (pts.length < 5) return;
+
+      var W = 600, H = 96, PAD = 6;
+      var ys = pts.map(function(p){ return p.cum_r; });
+      var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+      if (hi === lo) hi = lo + 1;
+      var x = function(i){ return (i / (pts.length - 1)) * W; };
+      var y = function(v){ return PAD + (1 - (v - lo) / (hi - lo)) * (H - PAD * 2); };
+
+      var d = '';
+      pts.forEach(function(p, i){ d += (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.cum_r).toFixed(1) + ' '; });
+      var line = el('hcLine'), area = el('hcArea'), dot = el('hcDot');
+      line.setAttribute('d', d);
+      area.setAttribute('d', d + 'L' + W + ' ' + H + ' L0 ' + H + ' Z');
+      dot.setAttribute('cx', x(pts.length - 1).toFixed(1));
+      dot.setAttribute('cy', y(ys[ys.length - 1]).toFixed(1));
+
+      // Dash length drives the draw-in. Measured, not guessed, because the path
+      // length depends on how volatile the curve actually is.
+      try { line.style.setProperty('--len', Math.ceil(line.getTotalLength())); } catch(e){}
+
+      var last = ys[ys.length - 1];
+      var tot = el('hcTotal');
+      tot.textContent = (last > 0 ? '+' : '') + last.toFixed(1) + 'R';
+      tot.style.color = last >= 0 ? 'var(--lime)' : 'var(--down)';
+      line.setAttribute('stroke', last >= 0 ? 'var(--lime)' : 'var(--down)');
+      dot.setAttribute('fill', last >= 0 ? 'var(--lime)' : 'var(--down)');
+      el('hcFrom').textContent = pts[0].date || '';
+      el('hcTo').textContent = (pts[pts.length - 1].date || '') + ' · ' + pts.length + ' closed';
+      box.hidden = false;
+    }
+
     /* ═══════ long-term conviction ═══════ */
     function loadLongTerm(){
       api('/signals?type=ai_longterm&version=all&limit=40').then(function(j){
         if (!j || !j.ok) return;
         var rows = j.signals || [];
-        if (!rows.length) return;             // stays hidden until the first scan
         var sec = el('longterm'); if (!sec) return;
-        sec.style.display = '';
+        if (!rows.length) return;             // keeps the explanatory empty state
 
         // Newest run only. The engine writes a fresh five every Saturday and
         // showing every week at once would read as thirty live convictions.
@@ -5558,6 +5661,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       }
       api('/stats' + (qs.length ? '?' + qs.join('&') : '')).then(function(j){
         if (!j.ok) return;
+        paintHeroCurve(j);
         fillTfSelect(el('perfTf'), (j.by_timeframe || []).map(function(b){ return { timeframe: b.key }; }));
         renderStats(j);
       });

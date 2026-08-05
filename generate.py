@@ -70,6 +70,12 @@ def generate() -> None:
     print("[generate] Fetching markets...")
     markets = fetch_markets()
 
+    # Say whether the AI key arrived, never what it is. The thesis path fell
+    # back silently for weeks because an absent key returns "" before any
+    # request is made, so there was no error anywhere to find.
+    _gk = os.environ.get("GROQ_API_KEY", "")
+    print(f"[generate] GROQ_API_KEY: {'present, ' + str(len(_gk)) + ' chars' if _gk else 'ABSENT — AI copy will use fallbacks'}")
+
     print("[generate] Loading rotating content...")
     quote   = get_entrepreneur_quote()
     lesson  = get_world_lesson()

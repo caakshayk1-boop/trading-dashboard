@@ -38,6 +38,20 @@ export default async function handler(req, res) {
     ).catch(() => ({ rows: [{ n: 0 }] }));
     out.open_setups = Number(os_.rows[0]?.n || 0);
 
+    // Split by engine. The header said "38 open setups" directly above a table
+    // showing 3, because the header counted every engine and the table defaults
+    // to the gated one. Both were right; only one was labelled.
+    const cols0 = await columns();
+    if (cols0.has("engine_version")) {
+      const ov = await db().execute(
+        `SELECT COALESCE(engine_version,'v1') AS v, COUNT(*) AS n
+         FROM all_signals WHERE upper(COALESCE(status,''))='OPEN' GROUP BY 1`
+      ).catch(() => ({ rows: [] }));
+      out.open_by_version = Object.fromEntries(
+        ov.rows.map((r) => [str(r.v) || "v1", Number(r.n || 0)])
+      );
+    }
+
     const cols = await columns();
     if (cols.has("engine_version")) {
       const vr = await db().execute(
