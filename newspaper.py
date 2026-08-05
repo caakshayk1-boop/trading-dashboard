@@ -1562,6 +1562,86 @@ def daughter_age(on: date | None = None) -> dict:
             "born": DAUGHTER_BORN.isoformat()}
 
 # ─────────────────────────────────────────────────────────────
+# PAGE SPLIT
+#
+# One page carrying nineteen sections served five unrelated readers and put a
+# 19-item nav behind a horizontal scroller. The build emits two pages from the
+# same template instead:
+#
+#   /       the financial product — markets, ideas, the book, the record
+#   /desk   the practice — languages, fatherhood, chess, music, drills
+#
+# Same data, same styles, same components. A section belongs to exactly one
+# page and the nav is generated from this list, so the two can never drift
+# out of order the way the hand-written nav did.
+# ─────────────────────────────────────────────────────────────
+
+SECTION_MAP = [
+    # (id,          nav label,      page)
+    ("world",       "World",        "main"),
+    ("who",         "Who",          "main"),
+    ("picks",       "Trade Ideas",  "main"),
+    ("longterm",    "Long-Term",    "main"),
+    ("tracker",     "Portfolio",    "main"),
+    ("sip",         "SIP Buckets",  "main"),
+    ("interview",   "Interview",    "desk"),
+    ("language",    "Language",     "desk"),
+    ("father",      "Father",       "desk"),
+    ("wisdom",      "Wisdom",       "desk"),
+    ("desk",        "The Desk",     "desk"),
+    ("mind",        "The Mind",     "desk"),
+    ("way",         "The Way",      "desk"),
+    ("review",      "The Review",   "desk"),
+    ("chess",       "Chess",        "desk"),
+    ("music",       "Music",        "desk"),
+    ("gym",         "Mind Gym",     "desk"),
+    ("perf",        "Performance",  "main"),
+    ("alerts",      "Signal Log",   "main"),
+]
+
+PAGE_META = {
+    "main": {
+        "title": "The Daily Signal — live NSE trading ledger, scored",
+        "desc": ("A public, auditable NSE trading ledger. Every signal logged when it "
+                 "fires and scored when it closes — wins and losses both. Live markets, "
+                 "long-term conviction picks and the last 24 hours of world news, "
+                 "rebuilt at 6 AM IST daily by Akshay Kothari, CA."),
+        "path": "/",
+        "other_label": "The Desk",
+        "other_path": "/desk",
+        "other_hint": "languages, fatherhood, chess, music, drills",
+    },
+    "desk": {
+        "title": "The Desk — languages, fatherhood, chess and the daily drills",
+        "desc": ("The practice behind the ledger: Spanish and Arabic drills, one thing "
+                 "to do with a seven-month-old, chess from yesterday's games, the "
+                 "reading, and six minutes of mental arithmetic. Rebuilt daily."),
+        "path": "/desk",
+        "other_label": "The Signal",
+        "other_path": "/",
+        "other_hint": "markets, trade ideas, the live ledger",
+    },
+}
+
+
+def page_context(page: str) -> dict:
+    """Sections and nav for one page, in document order."""
+    rows = [(i, lbl) for i, lbl, pg in SECTION_MAP if pg == page]
+    meta = PAGE_META[page]
+    return {
+        "page": page,
+        "secs": {i for i, _ in rows},
+        "nav": [{"id": i, "label": lbl, "n": f"{n:02d}"}
+                for n, (i, lbl) in enumerate(rows, 1)],
+        "page_title": meta["title"],
+        "page_desc": meta["desc"],
+        "page_path": meta["path"],
+        "other_label": meta["other_label"],
+        "other_path": meta["other_path"],
+        "other_hint": meta["other_hint"],
+    }
+
+# ─────────────────────────────────────────────────────────────
 # TOP 5 STOCK PICKS
 # ─────────────────────────────────────────────────────────────
 
@@ -2143,9 +2223,9 @@ TEMPLATE = r"""<!DOCTYPE html>
      search engines a brand-new ranking target every 24 hours and never
      accumulated authority for anything. The subject leads now; the date is a
      suffix that says the page is fresh without being the thing being ranked. -->
-<title>The Daily Signal — live NSE trading ledger, scored · {{ date_str }}</title>
-<meta name="description" content="A public, auditable NSE trading ledger. Every signal logged when it fires and scored when it closes — wins and losses both. Live markets, long-term conviction picks and the last 24 hours of world news, rebuilt at 6 AM IST daily by Akshay Kothari, CA.">
-<link rel="canonical" href="https://news.askakshay.com/">
+<title>{{ page_title }} · {{ date_str }}</title>
+<meta name="description" content="{{ page_desc }}">
+<link rel="canonical" href="https://news.askakshay.com{{ page_path }}">
 <meta name="author" content="Akshay K Kothari">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 
@@ -2153,8 +2233,8 @@ TEMPLATE = r"""<!DOCTYPE html>
      removed every reason to paste the link anywhere. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="The Daily Signal">
-<meta property="og:url" content="https://news.askakshay.com/">
-<meta property="og:title" content="The Daily Signal — live NSE trading ledger, scored">
+<meta property="og:url" content="https://news.askakshay.com{{ page_path }}">
+<meta property="og:title" content="{{ page_title }}">
 <meta property="og:description" content="Every signal logged when it fires, scored when it closes. Wins and losses both, in public. Rebuilt 6 AM IST.">
 <meta property="og:image" content="https://news.askakshay.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -2162,7 +2242,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta property="og:image:alt" content="The Daily Signal — win rate, signals logged and open setups for {{ date_str }}">
 <meta property="og:locale" content="en_IN">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Daily Signal — live NSE trading ledger, scored">
+<meta name="twitter:title" content="{{ page_title }}">
 <meta name="twitter:description" content="Every signal logged when it fires, scored when it closes. Wins and losses both, in public.">
 <meta name="twitter:image" content="https://news.askakshay.com/og.png">
 
@@ -2175,12 +2255,24 @@ TEMPLATE = r"""<!DOCTYPE html>
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
 <script type="application/ld+json">{{ jsonld }}</script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Trimmed from 8 weights + italic to the 5 the stylesheet actually uses
-     (400/500/600/700/800, counted). Dropping 300 and the italic face;
-     the two <em> uses are display headings that synthesise acceptably. -->
-<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
+     contacted; removing it means the site now truthfully loads nothing from
+     anyone else, and it drops two DNS lookups plus a render-blocking
+     stylesheet from the critical path. Latin subset, the five weights the
+     stylesheet actually uses, 61 KB across eight files that cache
+     independently of the daily HTML rebuild. -->
+<link rel="preload" href="/fonts/FiraSans-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-400.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/FiraSans-400.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/FiraSans-500.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/FiraSans-600.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/FiraSans-700.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/FiraSans-800.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/JetBrainsMono-400.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/JetBrainsMono-500.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/JetBrainsMono-700.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+</style>
 <style>
 /* ═══════════════════ TOKENS ═══════════════════ */
 :root{
@@ -2316,6 +2408,45 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   background:var(--lime);color:#000;font-family:var(--mono);font-size:13px;
   font-weight:700;padding:12px 20px;border-radius:0 0 8px 0}
 .skip:focus{left:0}
+
+.nav-other{margin-left:auto;color:var(--lime)!important;border-left:1px solid var(--line);
+  padding-left:18px!important}
+.nav-other:hover{background:var(--lime-soft)}
+@media(max-width:900px){.nav-other{margin-left:0}}
+
+/* ═══════════════════ COMMAND PALETTE ═══════════════════ */
+.cmdk{position:fixed;inset:0;z-index:500;display:flex;align-items:flex-start;
+  justify-content:center;padding:12vh 20px 20px}
+.cmdk[hidden]{display:none}
+.cmdk-bd{position:absolute;inset:0;background:rgba(4,5,6,.72);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:cmdkFade .16s ease}
+@keyframes cmdkFade{from{opacity:0}to{opacity:1}}
+.cmdk-box{position:relative;width:min(620px,100%);background:var(--surface);
+  border:1px solid var(--line2);border-radius:16px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.6);animation:cmdkIn .18s var(--ease)}
+@keyframes cmdkIn{from{opacity:0;transform:translateY(-10px) scale(.985)}to{opacity:1;transform:none}}
+.cmdk-box input{width:100%;background:none;border:none;border-bottom:1px solid var(--line);
+  padding:18px 20px;color:var(--text);font-family:var(--mono);font-size:15px;outline:none}
+.cmdk-box input::placeholder{color:var(--dim)}
+.cmdk-list{list-style:none;margin:0;padding:6px;max-height:46vh;overflow-y:auto}
+.cmdk-list li{display:flex;align-items:center;gap:11px;padding:10px 14px;border-radius:9px;
+  cursor:pointer;min-height:24px}
+.cmdk-list li[aria-selected="true"]{background:var(--lime-soft)}
+.cmdk-list li .k{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:4px;padding:2px 6px;flex:none}
+.cmdk-list li .t{flex:1;font-size:14px;color:var(--text)}
+.cmdk-list li .m{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.cmdk-list li[aria-selected="true"] .t{color:var(--lime)}
+.cmdk-empty{padding:22px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:12px}
+.cmdk-ft{display:flex;gap:16px;padding:10px 18px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10px;color:var(--dim)}
+.cmdk-ft kbd{background:var(--bg2);border:1px solid var(--line);border-radius:4px;
+  padding:1px 5px;margin-right:4px}
+.cmdk-hint{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;
+  color:var(--dim);border:1px solid var(--line);border-radius:99px;padding:4px 10px;
+  cursor:pointer;min-height:24px}
+.cmdk-hint:hover{color:var(--lime);border-color:var(--lime-line)}
+@media(max-width:640px){.cmdk{padding:8vh 12px 12px}.cmdk-ft{display:none}}
 
 /* ═══════════════════ TICKER ═══════════════════ */
 .tickwrap{position:relative;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -3137,7 +3268,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </head>
 
 <body>
-<a class="skip" href="#world">Skip to content</a>
+<a class="skip" href="#{{ nav[0].id }}">Skip to content</a>
 <div class="grain"></div>
 <div class="vgrid"></div>
 <div class="progress" id="prog"></div>
@@ -3149,12 +3280,34 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% set winrate = ((wins / closed * 100) | round(0) | int) if closed > 0 else 0 %}
 {% set advancers = markets | selectattr("up") | list | length %}
 
+<!-- ══════════ COMMAND PALETTE ══════════
+     ⌘K / Ctrl-K. Replaces most of what the nav was doing: jump to a section,
+     look up a symbol anywhere in the ledger, or cross to the other page — all
+     without reading a 19-item scroller. Symbols come from /api/signals, which
+     the page has already loaded. -->
+<div class="cmdk" id="cmdk" hidden>
+  <div class="cmdk-bd" data-close></div>
+  <div class="cmdk-box" role="dialog" aria-modal="true" aria-label="Search">
+    <input id="cmdkIn" type="text" autocomplete="off" spellcheck="false"
+           placeholder="Jump to a section, or type a symbol…" aria-controls="cmdkList">
+    <ul class="cmdk-list" id="cmdkList" role="listbox"></ul>
+    <div class="cmdk-ft">
+      <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> move</span>
+      <span><kbd>&crarr;</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+
 <!-- ══════════ HEADER ══════════ -->
 <div class="headstack">
 <header class="topbar">
   <div class="topbar-in">
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
     <div class="stamp">
+      <button type="button" class="cmdk-hint" id="cmdkOpen" aria-label="Search">
+        <span>⌘K</span><span>Search</span>
+      </button>
       <span class="d">{{ date_str }}</span>
       <span class="live" id="istClock"><i></i>{{ updated_at }} IST</span>
     </div>
@@ -3169,25 +3322,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      it. One sequence now, top to bottom, nav and headings the same. -->
 <nav class="nav">
   <div class="nav-in" id="navin">
-    <a href="#world"><i>01</i>World</a>
-    <a href="#who"><i>02</i>Who</a>
-    <a href="#picks"><i>03</i>Trade Ideas</a>
-    <a href="#longterm"><i>04</i>Long-Term</a>
-    <a href="#tracker"><i>05</i>Portfolio</a>
-    <a href="#sip"><i>06</i>SIP Buckets</a>
-    <a href="#interview"><i>07</i>Interview</a>
-    <a href="#language"><i>08</i>Language</a>
-    <a href="#father"><i>09</i>Father</a>
-    <a href="#wisdom"><i>10</i>Wisdom</a>
-    <a href="#desk"><i>11</i>The Desk</a>
-    <a href="#mind"><i>12</i>The Mind</a>
-    <a href="#way"><i>13</i>The Way</a>
-    <a href="#review"><i>14</i>The Review</a>
-    <a href="#chess"><i>15</i>Chess</a>
-    <a href="#music"><i>16</i>Music</a>
-    <a href="#gym"><i>16</i>Mind Gym</a>
-    <a href="#perf"><i>17</i>Performance</a>
-    <a href="#alerts"><i>18</i>Signal Log</a>
+    {% for n in nav %}<a href="#{{ n.id }}"><i>{{ n.n }}</i>{{ n.label }}</a>
+    {% endfor %}
+    <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
   </div>
 </nav>
 
@@ -3307,7 +3444,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <main>
 
 <!-- ══════════ 04 WORLD ══════════ -->
-<section class="sec" id="world">
+{% if 'world' in secs %}<section class="sec" id="world">
   <div class="shead rv">
     <div>
       <span class="snum">01 / CONTEXT</span>
@@ -3382,7 +3519,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% else %}
     <div class="empty rv">Loading feeds…</div>
   {% endif %}
-</section>
+</section>{% endif %}
 
 
 <!-- Capture. The page previously had none: 16,156 words and no way to keep a
@@ -3411,7 +3548,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Sits between the world and the trade ideas: a reader who arrived from a
      Telegram link should know whose ledger they are reading before they read
      the numbers. -->
-<section class="sec" id="who">
+{% if 'who' in secs %}<section class="sec" id="who">
   <div class="shead rv">
     <div>
       <span class="snum">02 / WHO</span>
@@ -3443,10 +3580,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="who-stat"><b>$100M+</b><span>P&amp;L managed</span></div>
     </div>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 01 TRADE IDEAS ══════════ -->
-<section class="sec" id="picks">
+{% if 'picks' in secs %}<section class="sec" id="picks">
   <div class="shead rv">
     <div>
       <span class="snum">03 / CONVICTION</span>
@@ -3496,14 +3633,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
     if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
   {% endif %}
-</section>
+</section>{% endif %}
 
 <!-- ══════════ LONG-TERM CONVICTION ══════════
      Written by ai_longterm.py, which screens the business before the chart.
      Deliberately NOT in the trade log above and excluded from expectancy: a
      2-3 year idea cannot resolve on a 20-day horizon, and letting it into the
      R statistics would corrupt the only honest number here. -->
-<section class="sec" id="longterm">
+{% if 'longterm' in secs %}<section class="sec" id="longterm">
   <div class="shead rv">
     <div>
       <span class="snum">04 / CONVICTION · LONG</span>
@@ -3519,10 +3656,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       business filter — return on capital, growth, leverage, valuation — before the chart
       gets a vote, and it publishes fewer than five rather than pad the list.</div>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 03 PORTFOLIO ══════════ -->
-<section class="sec" id="tracker">
+{% if 'tracker' in secs %}<section class="sec" id="tracker">
   <div class="shead rv">
     <div>
       <span class="snum">05 / POSITIONS</span>
@@ -3595,7 +3732,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <button type="submit" class="btn">Add to book</button>
     </form>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 04 SIP BUCKETS ══════════
      ₹10,000/month, stepped up 10% each SIP year, one bucket per month, four
@@ -3603,7 +3740,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      a blended portfolio number would hide which months' picks actually worked,
      which is the only feedback the ranking engine gets.
      Filled from /api/sip; the whole section hides itself on a static build. -->
-<section class="sec" id="sip" style="display:none">
+{% if 'sip' in secs %}<section class="sec" id="sip" style="display:none">
   <div class="shead rv">
     <div>
       <span class="snum">06 / COMPOUNDING</span>
@@ -3641,10 +3778,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     They assume the return shown is achieved every year with no gaps in contribution.
     Actual equity returns arrive in a very different order, and sequence matters.
   </p>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 05 INTERVIEW PREP ══════════ -->
-<section class="sec" id="interview">
+{% if 'interview' in secs %}<section class="sec" id="interview">
   <div class="shead rv">
     <div>
       <span class="snum">07 / THE SEAT</span>
@@ -3674,10 +3811,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </details>
     {% endfor %}
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 06 LANGUAGE ══════════ -->
-<section class="sec" id="language">
+{% if 'language' in secs %}<section class="sec" id="language">
   <div class="shead rv">
     <div>
       <span class="snum">08 / LANGUAGE</span>
@@ -3719,10 +3856,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="drill-w">{{ speaking.why }}</div>
   </div>
   {% endif %}
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 07 FATHERHOOD ══════════ -->
-<section class="sec" id="father">
+{% if 'father' in secs %}<section class="sec" id="father">
   <div class="shead rv">
     <div>
       <span class="snum">09 / THE FATHER</span>
@@ -3743,10 +3880,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endfor %}
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 08 WISDOM ══════════ -->
-<section class="sec" id="wisdom">
+{% if 'wisdom' in secs %}<section class="sec" id="wisdom">
   <div class="shead rv">
     <div>
       <span class="snum">10 / HOW TO LIVE</span>
@@ -3765,12 +3902,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endfor %}
   </div>
-</section>
+</section>{% endif %}
 
 
 
 <!-- ══════════ 05 THE DESK ══════════ -->
-<section class="sec" id="desk">
+{% if 'desk' in secs %}<section class="sec" id="desk">
   <div class="shead rv">
     <div>
       <span class="snum">11 / THE DESK</span>
@@ -3888,10 +4025,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
     </div>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 06 THE MIND ══════════ -->
-<section class="sec" id="mind">
+{% if 'mind' in secs %}<section class="sec" id="mind">
   <div class="shead rv">
     <div>
       <span class="snum">12 / THE MIND</span>
@@ -3919,10 +4056,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">— {{ lesson.source }}</p>
     </div>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 07 THE WAY ══════════ -->
-<section class="sec" id="way">
+{% if 'way' in secs %}<section class="sec" id="way">
   <div class="shead rv">
     <div>
       <span class="snum">13 / THE WAY</span>
@@ -4027,10 +4164,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="stk-strip" id="stkStrip" title="Last 30 days"></div>
     <div class="stk-foot">A day counts once you tick anything. Streak breaks on a fully empty day.</div>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 08 THE REVIEW ══════════ -->
-<section class="sec" id="review">
+{% if 'review' in secs %}<section class="sec" id="review">
   <div class="shead rv">
     <div>
       <span class="snum">14 / THE REVIEW</span>
@@ -4081,10 +4218,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
     </div>
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 09 CHESS ══════════ -->
-<section class="sec" id="chess">
+{% if 'chess' in secs %}<section class="sec" id="chess">
   <div class="shead rv">
     <div>
       <span class="snum">15 / THE BOARD</span>
@@ -4242,7 +4379,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endif %}
   </div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 10 MIND GYM ══════════
      Pure client-side: deterministic daily seed, scores in localStorage. No
@@ -4251,7 +4388,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Two crates, side by side. Edit music.py to add a line; the 6 AM build
      picks it up. Five show, the rest are one click away — a shelf you can see
      the whole of is a shelf you stop scanning. -->
-<section class="sec" id="music">
+{% if 'music' in secs %}<section class="sec" id="music">
   <div class="shead rv">
     <div>
       <span class="snum">16 / ON REPEAT</span>
@@ -4290,9 +4427,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endfor %}
   </div>
-</section>
+</section>{% endif %}
 
-<section class="sec" id="gym">
+{% if 'gym' in secs %}<section class="sec" id="gym">
   <div class="shead rv">
     <div>
       <span class="snum">16 / MIND GYM</span>
@@ -4306,12 +4443,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="gym-tabs rv" id="gymTabs"></div>
   <div class="gym-stage rv" id="gymStage"></div>
   <div class="gym-score rv" id="gymScore"></div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 11 PERFORMANCE ══════════
      Entirely live. Hidden on a static host, where there is no ledger to
      compute an edge from. -->
-<section class="sec" id="perf" style="display:none">
+{% if 'perf' in secs %}<section class="sec" id="perf" style="display:none">
   <div class="shead rv">
     <div>
       <span class="snum">17 / EDGE</span>
@@ -4334,10 +4471,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="perf-grid rv" id="perfGrid"></div>
   <div class="brk rv" id="perfBrk"></div>
-</section>
+</section>{% endif %}
 
 <!-- ══════════ 10 SIGNAL LOG ══════════ -->
-<section class="sec" id="alerts">
+{% if 'alerts' in secs %}<section class="sec" id="alerts">
   <div class="shead rv">
     <div>
       <span class="snum">18 / TRACK RECORD</span>
@@ -4430,7 +4567,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% else %}
   <div class="empty rv">No signals logged yet — alerts appear here after Telegram sends them.</div>
   {% endif %}
-</section>
+</section>{% endif %}
 
 <!-- Capture. The page previously had none: 16,156 words and no way to keep a
      reader. Placed after proof, not before it. -->
@@ -4568,6 +4705,131 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     nums.forEach(function(e){ co.observe(e); });
   }
 
+
+
+  /* ══════════════ COMMAND PALETTE ══════════════
+     Sections come from the nav that is already on the page; symbols are
+     harvested from the signal table once the ledger loads. Nothing extra is
+     fetched — the palette is a view over data the page already has. */
+  (function(){
+    var box = document.getElementById('cmdk');
+    if (!box) return;
+    // esc() is defined inside the live-layer IIFE, which is a different scope.
+    // Referencing it from here threw on every keystroke and the palette
+    // silently returned nothing — its own copy, because a shared helper that
+    // is not actually shared is worse than a duplicated four-liner.
+    function esc(v){
+      return String(v == null ? '' : v)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    var input = document.getElementById('cmdkIn'),
+        list  = document.getElementById('cmdkList'),
+        open  = document.getElementById('cmdkOpen');
+    var items = [], results = [], sel = 0;
+
+    function collect(){
+      items = [];
+      document.querySelectorAll('.nav-in a[href^="#"]').forEach(function(a){
+        items.push({kind:'Go', label:a.textContent.replace(/^\d+/,'').trim(),
+                    meta:'section', href:a.getAttribute('href')});
+      });
+      var other = document.querySelector('.nav-other');
+      if (other) items.push({kind:'Page', label:other.textContent.replace('→','').trim(),
+                             meta:other.getAttribute('href'), href:other.getAttribute('href'), hard:true});
+      // Symbols from whatever the ledger has rendered.
+      var seen = {};
+      document.querySelectorAll('#alertTable tbody tr td:nth-child(2) .sym, .lt .sym, .pick .sym')
+        .forEach(function(el){
+          var sym = el.textContent.trim();
+          if (!sym || seen[sym]) return;
+          seen[sym] = 1;
+          items.push({kind:'Symbol', label:sym, meta:'filter the ledger', sym:sym});
+        });
+    }
+
+    function score(q, s){
+      s = s.toLowerCase();
+      if (s.indexOf(q) === 0) return 0;      // prefix beats substring
+      var i = s.indexOf(q);
+      return i === -1 ? -1 : i + 1;
+    }
+
+    function render(){
+      var q = input.value.trim().toLowerCase();
+      results = !q ? items.slice(0, 12)
+        : items.map(function(it){ return {it:it, s:score(q, it.label)}; })
+               .filter(function(r){ return r.s >= 0; })
+               .sort(function(a,b){ return a.s - b.s; })
+               .slice(0, 12).map(function(r){ return r.it; });
+      sel = 0;
+      if (!results.length){
+        list.innerHTML = '<div class="cmdk-empty">Nothing matches &ldquo;' + esc(input.value) + '&rdquo;</div>';
+        return;
+      }
+      list.innerHTML = results.map(function(it, i){
+        return '<li role="option" data-i="' + i + '" aria-selected="' + (i === 0) + '">' +
+               '<span class="k">' + esc(it.kind) + '</span>' +
+               '<span class="t">' + esc(it.label) + '</span>' +
+               '<span class="m">' + esc(it.meta || '') + '</span></li>';
+      }).join('');
+      list.querySelectorAll('li').forEach(function(li){
+        li.addEventListener('click', function(){ go(+li.dataset.i); });
+        li.addEventListener('mousemove', function(){ move(+li.dataset.i - sel); });
+      });
+    }
+
+    function move(d){
+      if (!results.length) return;
+      sel = (sel + d + results.length) % results.length;
+      list.querySelectorAll('li').forEach(function(li, i){
+        li.setAttribute('aria-selected', i === sel);
+        if (i === sel) li.scrollIntoView({block:'nearest'});
+      });
+    }
+
+    function go(i){
+      var it = results[i];
+      if (!it) return;
+      close();
+      if (it.hard){ location.href = it.href; return; }
+      if (it.href){
+        var t = document.querySelector(it.href);
+        if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
+        return;
+      }
+      if (it.sym){
+        // Reuse the ledger's own search box so filtering stays one code path.
+        var box2 = document.getElementById('alertSearch');
+        if (box2){
+          box2.value = it.sym;
+          box2.dispatchEvent(new Event('input', {bubbles:true}));
+          var sec = document.getElementById('alerts');
+          if (sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      }
+    }
+
+    function show(){
+      collect();
+      box.hidden = false;
+      input.value = '';
+      render();
+      setTimeout(function(){ input.focus(); }, 20);
+    }
+    function close(){ box.hidden = true; }
+
+    document.addEventListener('keydown', function(e){
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); box.hidden ? show() : close(); return; }
+      if (box.hidden) return;
+      if (e.key === 'Escape'){ e.preventDefault(); close(); }
+      else if (e.key === 'ArrowDown'){ e.preventDefault(); move(1); }
+      else if (e.key === 'ArrowUp'){ e.preventDefault(); move(-1); }
+      else if (e.key === 'Enter'){ e.preventDefault(); go(sel); }
+    });
+    input.addEventListener('input', render);
+    if (open) open.addEventListener('click', show);
+    box.querySelector('[data-close]').addEventListener('click', close);
+  })();
 
   /* ── music crates ── */
   document.querySelectorAll('.crate-more').forEach(function(btn){

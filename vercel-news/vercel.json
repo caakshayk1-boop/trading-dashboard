@@ -22,6 +22,12 @@
       ]
     },
     {
+      "source": "/fonts/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
       "source": "/og.png",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400" }
@@ -39,6 +45,7 @@
     }
   ],
   "rewrites": [
-    { "source": "/day/:date", "destination": "/index.html" }
+    { "source": "/day/:date", "destination": "/index.html" },
+    { "source": "/desk", "destination": "/desk.html" }
   ]
 }

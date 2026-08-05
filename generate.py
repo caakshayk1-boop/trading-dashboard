@@ -42,6 +42,7 @@ from newspaper import (
     get_money_hack,
     get_dubai_note,
     daughter_age,
+    page_context,
     get_productivity_tip,
     fetch_lichess_games,
     get_lichess_summary,
@@ -179,9 +180,11 @@ def generate() -> None:
     # /edition.json to know it is showing a superseded edition.
     build_id = now.strftime("%Y%m%dT%H%M%S")
 
-    # Render template
+    # Render template — once per page. Same data, same styles; the section
+    # guards in the template decide what appears on which.
     print("[generate] Rendering HTML...")
-    html = Template(TEMPLATE).render(
+    tpl = Template(TEMPLATE)
+    base = dict(
         date_str=now.strftime("%A, %B %d %Y"),
         updated_at=now.strftime("%H:%M"),
         build_id=build_id,
@@ -213,22 +216,29 @@ def generate() -> None:
         alerts=alerts,
         **_learning_ctx(),
     )
+    pages = {"main": "index.html", "desk": "desk.html"}
 
     # Write output
     out_dir = pathlib.Path("docs")
     out_dir.mkdir(exist_ok=True)
-    out_file = out_dir / "index.html"
-    # Skip overwrite if running locally without token and existing file has full-mode chess
-    if not os.environ.get("LICHESS_TOKEN") and out_file.exists():
-        existing = out_file.read_text(encoding="utf-8")
+    # Chess moved to /desk in the page split, so the "would this local run
+    # clobber real Lichess data?" guard has to look there, not at index.html.
+    chess_file = out_dir / "desk.html"
+    if not os.environ.get("LICHESS_TOKEN") and chess_file.exists():
+        existing = chess_file.read_text(encoding="utf-8")
         if "game-card" in existing and "LICHESS_TOKEN" not in existing:
-            print("[generate] ⚠️  Skipping index.html overwrite — existing file has full chess data, no token locally")
+            print("[generate] ⚠️  Skipping render — desk.html has full chess data, no token locally")
             (out_dir / "alerts.json").write_text(json.dumps(alerts, default=str, indent=2), encoding="utf-8")
             # No edition.json write here on purpose: index.html was not
             # rewritten, so publishing a new build id would tell every open tab
             # to reload into the same page it already has.
             return
-    out_file.write_text(html, encoding="utf-8")
+    for pg, fname in pages.items():
+        ctx = dict(base)
+        ctx.update(page_context(pg))
+        (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
+        kb = (out_dir / fname).stat().st_size // 1024
+        print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
     )
@@ -263,7 +273,8 @@ def generate() -> None:
     # nothing ever told a crawler they existed.
     days = sorted({str(a.get("alert_date") or "")[:10] for a in alerts if a.get("alert_date")},
                   reverse=True)[:200]
-    urls = [(site + "/", now.strftime("%Y-%m-%d"), "daily", "1.0")]
+    urls = [(site + "/", now.strftime("%Y-%m-%d"), "daily", "1.0"),
+            (site + "/desk", now.strftime("%Y-%m-%d"), "daily", "0.8")]
     urls += [(f"{site}/day/{d}", d, "monthly", "0.4") for d in days if d]
     (out_dir / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -290,8 +301,7 @@ def generate() -> None:
         "build_date": now.strftime("%Y-%m-%d"),
         "built_at":   now.isoformat(),
     }), encoding="utf-8")
-    size_kb = out_file.stat().st_size // 1024
-    print(f"[generate] ✅ Written to {out_file} ({size_kb}KB)")
+
 
 if __name__ == "__main__":
     generate()

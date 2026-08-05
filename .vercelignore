@@ -21,6 +21,9 @@
 !docs/manifest.webmanifest
 !docs/icon.svg
 !docs/og.png
+!docs/desk.html
+!docs/fonts
+!docs/fonts/**
 
 # Never ship the ledger or its WAL, even by accident.
 signals.db

@@ -8,7 +8,7 @@
 // Two situations, both handled:
 //   1. Repo checkout available  → copy ../docs/index.html
 //   2. CI copied it in already  → public/index.html already present, keep it
-import { existsSync, mkdirSync, copyFileSync, writeFileSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync, writeFileSync, statSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -29,9 +29,20 @@ if (existsSync(source)) {
   if (existsSync(editionSrc)) copyFileSync(editionSrc, join(publicDir, "edition.json"));
   // Crawl files, PWA manifest and the social card. All 404'd before:
   // /robots.txt, /sitemap.xml, /favicon.ico and /manifest.json.
-  for (const f of ["robots.txt", "sitemap.xml", "manifest.webmanifest", "icon.svg", "og.png"]) {
+  for (const f of ["desk.html", "robots.txt", "sitemap.xml", "manifest.webmanifest", "icon.svg", "og.png"]) {
     const src = join(here, "..", "docs", f);
     if (existsSync(src)) copyFileSync(src, join(publicDir, f));
+  }
+  // Self-hosted faces. These are the reason the page contacts no third party.
+  const fontSrc = join(here, "..", "docs", "fonts");
+  if (existsSync(fontSrc)) {
+    const fontOut = join(publicDir, "fonts");
+    mkdirSync(fontOut, { recursive: true });
+    let n = 0;
+    for (const f of readdirSync(fontSrc)) {
+      if (f.endsWith(".woff2")) { copyFileSync(join(fontSrc, f), join(fontOut, f)); n++; }
+    }
+    console.log(`[build] copied ${n} font files`);
   }
   console.log(`[build] copied docs/index.html → public/ (${Math.round(statSync(target).size / 1024)}KB)`);
 } else if (existsSync(target)) {
