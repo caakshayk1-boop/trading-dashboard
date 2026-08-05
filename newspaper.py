@@ -5657,10 +5657,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         var sec = el('longterm'); if (!sec) return;
         if (!rows.length) return;             // keeps the explanatory empty state
 
-        // Newest run only. The engine writes a fresh five every Saturday and
-        // showing every week at once would read as thirty live convictions.
+        // Newest run only, and one card per company. Filtering on date alone
+        // was not enough: two runs on the same day — the weekly scan plus an
+        // on-demand one — both stamp today, so the section rendered ten cards
+        // for seven companies with three shown twice. Rows arrive newest-first,
+        // so the first sighting of a symbol is the current view of it.
         var newest = rows[0].date;
-        rows = rows.filter(function(r){ return r.date === newest; });
+        var seenSym = {};
+        rows = rows.filter(function(r){
+          if (r.date !== newest) return false;
+          if (seenSym[r.symbol]) return false;
+          seenSym[r.symbol] = 1;
+          return true;
+        });
 
         el('ltBody').innerHTML =
           '<div class="ltgrid">' + rows.map(function(r, i){
