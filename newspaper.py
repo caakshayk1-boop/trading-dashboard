@@ -2181,10 +2181,39 @@ h1.hl em{font-style:normal;color:var(--lime)}
   padding:4px 10px;cursor:pointer}
 .tickctl:hover{color:var(--lime);border-color:var(--lime)}
 @media(max-width:640px){.tickctl{display:none}}
-/* Phone: topbar + nav + livebar is already most of the viewport. The rail
-   is the row that can go — the same numbers are a scroll away in the
-   sections below. */
-@media(max-width:560px){.headstack .tickwrap{display:none}}
+/* Phone: the rail STAYS. Hiding it was the wrong trade — on a phone the
+   ticker is the single most-wanted row on the page, and "the numbers are a
+   scroll away" is exactly the scroll a market rail exists to save.
+   The header pays for it instead: the topbar shrinks, and the livebar (a long
+   diagnostic string that ellipsises to nothing useful at this width anyway)
+   drops out. Net sticky height is lower than before AND the prices are there. */
+@media(max-width:560px){
+  .headstack .tickwrap{display:block}
+  .topbar-in{height:48px}
+  .brand{font-size:15px}
+  .stamp .d{display:none}          /* the date is in the hero eyebrow already */
+  .ti{padding:7px 14px;gap:7px}
+  .ti .n{font-size:9px;letter-spacing:1px}
+  .ti .p{font-size:12px}
+  .ti .c{font-size:11px}
+  .tseg{padding:7px 12px 7px 14px}
+  .tseg .lb{font-size:9px;letter-spacing:1.4px}
+
+  /* Scrolling DOWN collapses the chrome and keeps only the prices pinned;
+     scrolling UP brings the whole header back. Standard mobile pattern, and it
+     is what makes a four-row sticky stack affordable on a 390px screen:
+     ~146px of chrome while reading becomes ~30px of ticker. */
+  .headstack .topbar,
+  .headstack .nav,
+  .headstack .livebar{transition:margin-top .22s var(--ease),opacity .18s linear}
+  .headstack.compact .topbar{margin-top:-48px}
+  .headstack.compact .nav,
+  .headstack.compact .livebar{opacity:0;pointer-events:none;
+    margin-top:0;height:0;overflow:hidden;border:0}
+}
+@media(prefers-reduced-motion:reduce){
+  .headstack .topbar,.headstack .nav,.headstack .livebar{transition:none}
+}
 
 /* ═══════════════════ WORLD MAP ═══════════════════ */
 .wmap-wrap{margin:0 0 30px;background:var(--surface);border:1px solid var(--line);
@@ -5662,6 +5691,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
       check();
       setInterval(check, 10 * 60 * 1000);
+    })();
+
+
+    /* ── mobile: collapse the header chrome on scroll-down ──
+       Keeps the ticker pinned while reading. The rail was hidden outright on
+       phones for a while; that saved 30px and cost the one row people open
+       this page for. */
+    (function(){
+      var stack = document.querySelector('.headstack');
+      if (!stack) return;
+      var last = window.scrollY, ticking = false;
+      function apply(){
+        ticking = false;
+        if (!window.matchMedia('(max-width:560px)').matches){
+          stack.classList.remove('compact'); last = window.scrollY; return;
+        }
+        var y = window.scrollY, dy = y - last;
+        if (Math.abs(dy) < 6) return;          // ignore jitter and rubber-band
+        if (y < 120) stack.classList.remove('compact');
+        else if (dy > 0) stack.classList.add('compact');
+        else stack.classList.remove('compact');
+        last = y;
+      }
+      window.addEventListener('scroll', function(){
+        if (!ticking){ ticking = true; requestAnimationFrame(apply); }
+      }, {passive:true});
     })();
 
     // A marquee you cannot stop is a marquee you cannot read.
