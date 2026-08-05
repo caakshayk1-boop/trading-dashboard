@@ -2216,6 +2216,11 @@ TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Enforced from this point in the document, so it must precede every inline
+     style and script. Strict because nothing loads from a third party any
+     more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
+     the per-build nonce. -->
+<meta http-equiv="Content-Security-Policy" content="{{ csp }}">
 <meta name="theme-color" content="#08090A">
 <meta name="color-scheme" content="dark">
 
@@ -2253,7 +2258,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json">{{ jsonld }}</script>
+<script type="application/ld+json" nonce="{{ nonce }}">{{ jsonld }}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -2395,7 +2400,12 @@ a,button,input,select,textarea,[tabindex]{scroll-margin-top:190px}
 
 /* WCAG 2.2 SC 2.5.8 — 24x24 minimum. Symbol links in the tables measured
    23x17; a bare checkbox measured 13x13. Sizing the hit area, not the text. */
-.sym,.slink,td a,.fbtn,.tab{min-height:24px;display:inline-flex;align-items:center}
+.sym,.slink,td a,.fbtn,.tab{min-height:24px;min-width:24px;display:inline-flex;
+  align-items:center;justify-content:flex-start}
+/* Short tickers were still narrow targets even with a height floor. The pad is
+   on the inline box so the hit area grows without moving the text. */
+td a.sym,.crate-l a{padding-block:4px}
+.wm-legend .dot,.trk .pl{pointer-events:none}
 td a.sym{padding:2px 0}
 input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-color:var(--lime)}
 .btn-gh,.gym-btn,.tickctl,.livebar button{min-height:24px}
@@ -3372,6 +3382,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="eyebrow">◆ Compiled 6:00 AM IST · {{ date_str }}</div>
 
+  {% if page == 'desk' %}
+  <h1 class="hl">
+    <span class="w"><span style="--d:.05s">The</span></span>
+    <span class="w"><span style="--d:.13s">reps</span></span><br>
+    <span class="w"><span style="--d:.24s"><em>behind</em></span></span>
+    <span class="w"><span style="--d:.32s"><em>the record.</em></span></span>
+  </h1>
+
+  <p class="hero-sub">The ledger is what happened. This is the practice underneath it —
+    two languages, one thing to do with a seven-month-old, yesterday&rsquo;s chess, the
+    reading, and six minutes of arithmetic under time pressure. Rebuilt every morning,
+    same as the other page.</p>
+  {% else %}
   <h1 class="hl">
     <span class="w"><span style="--d:.05s">Numbers</span></span>
     <span class="w"><span style="--d:.13s">first.</span></span><br>
@@ -3381,7 +3404,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <p class="hero-sub">Markets, live signals, the world, and the work — one page, rebuilt every
     morning before the open. No feeds. No scroll trap. Just what moved and what to do about it.</p>
+  {% endif %}
 
+  {% if page != 'desk' %}
   <div class="statrail">
     <div class="stat">
       <div class="v" id="heroRate" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div>
@@ -3403,6 +3428,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
 
+  {% endif %}
+
+  {% if page != 'desk' %}
   <!-- Track record, in the hero. The full performance section stays where it
        is; this is the one-glance version, because the argument this page makes
        is "here is the record" and the record was 17 sections down. Drawn from
@@ -3432,6 +3460,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span id="hcTo">—</span>
     </div>
   </div>
+  {% endif %}
 </section>
 
 <main>
@@ -3587,7 +3616,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="pick-grid">
     {% for s in top5 %}
     <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
-      <div class="rank">{{ "%02d"|format(loop.index) }}</div>
+      <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
         <div class="sym">{{ s.name }}</div>
         <span class="tag">{{ s.score }}/100</span>
@@ -4027,7 +4056,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   <div class="quote-hero rv">
-    <div class="mark">&ldquo;</div>
+    <div class="mark" aria-hidden="true">&ldquo;</div>
     <blockquote>{{ quote.quote }}</blockquote>
     <cite>— {{ quote.name }}</cite>
     <div class="idx">Quote {{ quote.index }} of {{ quote.total }} · rotates daily</div>
@@ -4530,7 +4559,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
       </tr></thead>
       <tbody>
-      {% for a in alerts %}
+      {# Only the first rows are server-rendered. The live layer replaces this
+         table from /api/signals within a few hundred ms, so the other 180 rows
+         were ~120 KB shipped to every visitor on every request and discarded
+         before they could be read. This many is enough to fill the fold on a
+         tall screen while the ledger loads. #}
+      {% for a in alerts[:20] %}
         <tr data-badge="{{ a.badge }}">
           <td class="mono-dim">{{ a.alert_date }}</td>
           <td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:{{ a.symbol }}" target="_blank">{{ a.symbol }}</a></td>
@@ -4627,7 +4661,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script>
+<script nonce="{{ nonce }}">
 (function(){
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

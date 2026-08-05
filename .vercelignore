@@ -25,6 +25,9 @@
 !docs/fonts
 !docs/fonts/**
 
+node_modules
+smoke_runner.cjs
+
 # Never ship the ledger or its WAL, even by accident.
 signals.db
 signals.db-shm

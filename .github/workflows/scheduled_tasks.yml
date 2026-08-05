@@ -17,7 +17,7 @@ on:
         required: false
         default: 'auto'
         type: choice
-        options: [auto, daily_brief, cf_scan, sip_bucket, ai_longterm]
+        options: [auto, daily_brief, cf_scan, sip_bucket, ai_longterm, health, subscribers]
 
 concurrency:
   group: scheduled-tasks
@@ -72,6 +72,7 @@ jobs:
             case "$SCHEDULE" in
               "30 0 * * *") TASK=daily_brief ;;
               "45 1 * * *") TASK=sip_bucket  ;;
+              "0 3,9,15 * * *") TASK=health   ;;
               *)            TASK=cf_scan     ;;
             esac
           fi
@@ -96,6 +97,16 @@ jobs:
       - name: Run AI long-term screen
         if: steps.task.outputs.task == 'ai_longterm'
         run: python scheduled_tasks_runner.py ai_longterm
+
+      # Three times a day. Nothing else watches production, and every failure
+      # this week was a 200 with a degraded body — which uptime pings miss.
+      - name: Health watch
+        if: steps.task.outputs.task == 'health'
+        run: python health_watch.py
+
+      - name: Export subscribers
+        if: steps.task.outputs.task == 'subscribers'
+        run: python scheduled_tasks_runner.py subscribers
 
       - name: Run CF scan
         if: steps.task.outputs.task == 'cf_scan'

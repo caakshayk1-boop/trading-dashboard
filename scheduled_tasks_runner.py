@@ -260,6 +260,71 @@ def run_ai_longterm():
     return picks
 
 
+def run_subscribers():
+    """Send the current mailing list to Telegram as a CSV.
+
+    The capture form writes to Turso and there was no way to read it back —
+    a list you cannot export is not a list you own.
+    """
+    import io, csv
+    import db as _db
+    rows = []
+    try:
+        with _db.connect() as c:
+            rows = c.execute(
+                "SELECT email, source, created_at, status FROM subscribers "
+                "WHERE status='active' ORDER BY created_at DESC").fetchall()
+    except Exception as e:
+        log.warning(f"subscribers: {e}")
+        _post_text(f"❌ Subscriber export failed: `{e}`")
+        return []
+
+    if not rows:
+        _post_text("📭 No subscribers yet.")
+        return []
+
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["email", "source", "created_at", "status"])
+    for r in rows:
+        w.writerow(list(r))
+
+    _post_document(buf.getvalue().encode(),
+                   f"subscribers-{datetime.now(IST).date().isoformat()}.csv",
+                   f"📬 *{len(rows)} active subscribers*\n_Import this anywhere. "
+                   f"The list is yours, not a vendor's._")
+    log.info(f"subscribers: exported {len(rows)}")
+    return rows
+
+
+def _post_text(text: str):
+    import requests
+    tok = os.environ.get("TELEGRAM_TOKEN", "")
+    chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not tok or not chat:
+        print(text); return
+    try:
+        requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                      json={"chat_id": chat, "text": text, "parse_mode": "Markdown"},
+                      timeout=15)
+    except Exception as e:
+        log.warning(f"telegram: {e}")
+
+
+def _post_document(data: bytes, filename: str, caption: str):
+    import requests
+    tok = os.environ.get("TELEGRAM_TOKEN", "")
+    chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not tok or not chat:
+        print(caption); return
+    try:
+        requests.post(f"https://api.telegram.org/bot{tok}/sendDocument",
+                      data={"chat_id": chat, "caption": caption, "parse_mode": "Markdown"},
+                      files={"document": (filename, data, "text/csv")}, timeout=30)
+    except Exception as e:
+        log.warning(f"telegram doc: {e}")
+
+
 if __name__ == "__main__":
     task = sys.argv[1] if len(sys.argv) > 1 else "auto"
 
@@ -271,6 +336,8 @@ if __name__ == "__main__":
         run_sip_bucket()
     elif task == "ai_longterm":
         run_ai_longterm()
+    elif task == "subscribers":
+        run_subscribers()
     else:
         now_ist = datetime.now(IST)
         if now_ist.hour == 6 and now_ist.minute < 15:

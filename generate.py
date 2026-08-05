@@ -180,6 +180,40 @@ def generate() -> None:
     # /edition.json to know it is showing a superseded edition.
     build_id = now.strftime("%Y%m%dT%H%M%S")
 
+    # CSP nonce, one per build. Every inline <style> and <script> carries it,
+    # which is what lets the policy be strict — no 'unsafe-inline' anywhere.
+    # Regenerated each build so a leaked nonce is worthless the next morning.
+    import secrets
+    nonce = secrets.token_urlsafe(16)
+
+    # Delivered as a <meta> in the document rather than a Vercel header,
+    # because the nonce changes every build and vercel.json is static.
+    # frame-ancestors is ignored in meta form by design — X-Frame-Options in
+    # vercel.json covers that one.
+    # script-src is strict — nonce only, no 'unsafe-inline'. That is the
+    # directive that actually stops XSS, and it holds here because every
+    # <script> on the page is ours and carries the nonce.
+    #
+    # style-src deliberately allows 'unsafe-inline'. A nonce cannot cover style
+    # ATTRIBUTES, only <style> elements, and the moment a nonce is present the
+    # browser ignores 'unsafe-inline' for that directive entirely — so the two
+    # cannot coexist. This page sets per-item animation delays, ticker segment
+    # colours and score-bar widths as inline style attributes computed at
+    # runtime; there is no static class that expresses them. Enforcing a strict
+    # style-src blocked 50+ of them and broke the layout outright.
+    #
+    # The trade, stated plainly: CSS injection stays possible, script injection
+    # does not. That is the right side of the trade — a style attribute cannot
+    # exfiltrate the ledger, and connect-src 'self' means nothing can be sent
+    # anywhere regardless.
+    csp = ("default-src 'self'; "
+           f"script-src 'self' 'nonce-{nonce}'; "
+           "style-src 'self' 'unsafe-inline'; "
+           "img-src 'self' data:; font-src 'self'; "
+           # The browser only ever talks to this origin's /api. gold-api and
+           # Yahoo are called server-side.
+           "connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'")
+
     # Render template — once per page. Same data, same styles; the section
     # guards in the template decide what appears on which.
     print("[generate] Rendering HTML...")
@@ -188,6 +222,8 @@ def generate() -> None:
         date_str=now.strftime("%A, %B %d %Y"),
         updated_at=now.strftime("%H:%M"),
         build_id=build_id,
+        nonce=nonce,
+        csp=csp,
         jsonld=jsonld,
         build_date=now.strftime("%Y-%m-%d"),
         markets=markets,

@@ -61,6 +61,21 @@ jobs:
           echo "::error::could not push docs/ after 3 attempts"
           exit 1
 
+      # The page a browser renders, checked after it is live. Everything above
+      # validates Python and JSON; nothing validated that the page still works
+      # — which is how a one-line selector change took the whole site down with
+      # a green build. Runs against production because that is what users get.
+      - name: Wait for deploy
+        run: sleep 75
+
+      - name: Install Playwright
+        run: |
+          npm i -D playwright --no-audit --no-fund
+          npx playwright install chromium
+
+      - name: Smoke test the rendered page
+        run: python smoke_test.py https://news.askakshay.com
+
       # No deploy step here on purpose. The Vercel project vercel-news is
       # connected to this repository, so the push above is what ships the site.
       # A CLI deploy would publish the same commit a second time.

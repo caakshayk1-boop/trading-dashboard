@@ -395,6 +395,27 @@ def build(n: int = PICKS, dry_run: bool = False, candidates=None) -> list[dict]:
     if dry_run:
         return picks
 
+    # One batch per day. The weekly Saturday scan and any on-demand run both
+    # stamp today, so a second run appended a second five and the section
+    # rendered ten cards for seven companies. The renderer dedupes defensively,
+    # but the ledger should not hold the duplicates in the first place —
+    # anything reading it directly would double-count.
+    try:
+        import db as _db
+        today = datetime.now(IST).date().isoformat()
+        with _db.connect() as c:
+            n = c.execute(
+                "SELECT COUNT(*) FROM all_signals WHERE signal_type=? AND date=?",
+                (SIGNAL_TYPE, today)).fetchone()[0]
+            if n:
+                c.execute("DELETE FROM all_signals WHERE signal_type=? AND date=?",
+                          (SIGNAL_TYPE, today))
+                c.commit()
+                _db.sync(c)
+                log.info(f"ai_longterm: replaced {n} rows already written today")
+    except Exception as e:
+        log.warning(f"ai_longterm: could not clear today's rows — {e}")
+
     from tracker import log_batch_to_all_signals
     rows = [{
         "symbol": c["symbol"], "signal_type": SIGNAL_TYPE, "action": "BUY",

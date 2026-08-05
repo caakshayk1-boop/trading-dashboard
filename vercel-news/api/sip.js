@@ -137,7 +137,7 @@ export default async function handler(req, res) {
         pnl_pct: totInv ? round((totVal / totInv - 1) * 100, 2) : null,
       },
       buckets,
-    }, 120);
+    }, 600);
   } catch (e) {
     fail(res, 500, `sip query failed: ${e.message}`);
   }
