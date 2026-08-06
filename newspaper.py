@@ -7,7 +7,7 @@ Refreshes at 6 AM IST daily. Deploy: news.askakshay.com
 """
 from __future__ import annotations
 
-import os, json, sqlite3, logging, time, threading
+import os, json, math, sqlite3, logging, time, threading
 from datetime import datetime, timezone, timedelta, date
 from typing import Optional
 import feedparser
@@ -1587,6 +1587,9 @@ SECTION_MAP = [
     ("longterm",    "Long-Term",    "main"),
     ("tracker",     "Portfolio",    "main"),
     ("sip",         "SIP Buckets",  "main"),
+    # Pure client-side arithmetic — no API, no ledger. It therefore works
+    # identically on the static host, and unlike #sip it must NOT start hidden.
+    ("swp",         "SWP",          "main"),
     ("interview",   "Interview",    "desk"),
     ("language",    "Language",     "desk"),
     ("father",      "Father",       "desk"),
@@ -1705,10 +1708,51 @@ WATCHLIST = [
 _picks_cache: dict = {}
 _picks_lock = threading.Lock()
 
+# Yahoo suffix → the currency that exchange actually quotes in. Every non-NSE
+# name used to render with a "$", so a London quote came out as "$1523.40" when
+# HSBA.L is quoted in pence, and a Copenhagen quote as "$295.15" when NOVO-B.CO
+# is in kroner. The suffix is the only reliable signal here that costs nothing:
+# reading Ticker.info["currency"] is right too, but it is one extra network
+# round-trip per symbol across a 200-name universe.
+_CURRENCY_BY_SUFFIX = {
+    ".NS": "₹", ".BO": "₹",     # India
+    ".L":  "p",                            # London quotes in PENCE, not pounds
+    ".T":  "¥",                       # Tokyo
+    ".HK": "HK$",
+    ".CO": "kr", ".ST": "kr", ".OL": "kr", # Copenhagen / Stockholm / Oslo
+    ".DE": "€", ".PA": "€", ".AS": "€", ".MC": "€",
+    ".MI": "€",
+    ".SW": "CHF", ".AX": "A$", ".TO": "C$",
+    ".JK": "Rp", ".KS": "₩", ".SI": "S$", ".TW": "NT$",
+    ".SS": "¥", ".SZ": "¥",
+}
+
+
+def pick_currency(sym: str) -> str:
+    """Currency symbol for a Yahoo ticker. Bare tickers are US listings."""
+    for suf, cur in _CURRENCY_BY_SUFFIX.items():
+        if sym.endswith(suf):
+            return cur
+    return "$"
+
+
 def score_stock(sym: str) -> Optional[dict]:
     try:
         hist     = yf.Ticker(sym).history(period="3mo")
         if hist.empty or len(hist) < 20: return None
+        # Yahoo intermittently returns rows with a null Close for non-US
+        # listings — a holiday on that exchange, or a partial response when 200
+        # symbols are pulled in a loop from a GitHub Actions runner. The frame
+        # is neither empty nor short, so both guards above pass and the NaN
+        # flows into every derived metric.
+        #
+        # Dropping them here is not cosmetic. _band() clamps with min/max, and
+        # `nan < 1.0` is False, so a NaN input used to clamp to 1.0 — a PERFECT
+        # component score. Five NaN metrics scored ~95/100 and carried the
+        # symbol into the top 5, displacing a real idea and rendering "$nan".
+        # A missing measurement has to score zero, never full marks.
+        hist     = hist[hist["Close"].notna()]
+        if len(hist) < 20: return None
         close    = hist["Close"]
         ema20    = close.ewm(span=20).mean().iloc[-1]
         ema50    = close.ewm(span=50).mean().iloc[-1]
@@ -1726,6 +1770,12 @@ def score_stock(sym: str) -> Optional[dict]:
         # above, by how much momentum, and by how much volume confirmed it.
         def _band(v, lo, hi):
             """0 at lo, 1 at hi, linear between. Clamped."""
+            # NaN is checked before the clamp, and deliberately scores 0.
+            # min()/max() do not propagate NaN — `nan < 1.0` is False, so
+            # min(1.0, nan) returns 1.0 and a missing metric used to earn full
+            # marks. That is how two unpriceable symbols reached the top 5.
+            if v is None or not math.isfinite(v):
+                return 0.0
             if hi == lo:
                 return 1.0 if v >= hi else 0.0
             return max(0.0, min(1.0, (v - lo) / (hi - lo)))
@@ -1741,7 +1791,16 @@ def score_stock(sym: str) -> Optional[dict]:
             10 * _band(mom_3m,  0, 35) +      # three-month trend
             10 * _band(vol_ratio, 0.9, 1.8)   # participation confirming it
         )
-        currency = "₹" if ".NS" in sym or ".BO" in sym else "$"
+        # Last gate before this dict reaches a template. Everything above is
+        # arithmetic on floats, and one NaN slipping through renders "$nan" in
+        # a price, a target and a stop — a card that looks like a trade idea
+        # and carries no tradeable number. Drop the symbol instead.
+        if not all(math.isfinite(float(v)) for v in
+                   (price, ema20, ema50, mom_1m, mom_3m, vol_ratio, score)):
+            log.warning(f"score_stock {sym}: non-finite metric, dropped from ranking")
+            return None
+
+        currency = pick_currency(sym)
         target   = round(price * (1.25 if mom_3m > 15 else 1.20), 2)
         return {"symbol": sym, "name": sym.replace(".NS","").replace(".BO",""),
                 "ext20": round(ext20, 2), "vol_ratio": round(float(vol_ratio), 2),
@@ -1841,7 +1900,12 @@ def _build_picks() -> list[dict]:
 # graded components, and the site kept showing five stocks tied on 100/100 —
 # correct new code, stale cached output, and nothing to tell them apart.
 #   v2 — graded components, stock-specific thesis (2026-08-05)
-PICKS_ENGINE = "v3"
+#   v3 — (2026-08-05)
+#   v4 — NaN metrics score 0 instead of clamping to a perfect 1.0, unpriceable
+#        symbols are dropped, and non-US listings carry their real currency.
+#        Without this bump the cached ranking keeps serving the two "$nan"
+#        cards that the NaN-clamp bug promoted into the top 5. (2026-08-06)
+PICKS_ENGINE = "v4"
 
 
 def _week_key() -> str:
@@ -2764,6 +2828,56 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .trk:hover{background:var(--bg2)}
 .trk:hover .ti{color:var(--lime)}
 .trk:hover .pl{color:var(--lime);transform:scale(1.35)}
+/* ═══════════════════ SWP ═══════════════════ */
+.swp-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;
+  margin-bottom:22px}
+.swp-in label{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim)}
+.swp-in input{background:var(--bg2);border:1px solid var(--line);border-radius:8px;
+  color:var(--text);font-family:var(--mono);font-size:14px;padding:10px 12px;
+  min-height:44px;width:100%;transition:border-color .18s}
+.swp-in input:focus{outline:none;border-color:var(--lime)}
+.swp-verdict{font-family:var(--mono);font-size:13px;line-height:1.6;padding:14px 16px;
+  border-left:2px solid var(--lime);background:var(--bg2);border-radius:0 8px 8px 0;
+  margin-bottom:22px;color:var(--text)}
+.swp-verdict.short{border-left-color:var(--down)}
+.swp-toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.swp-toggle button{background:none;border:none;color:var(--dim);cursor:pointer;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+  padding:9px 13px;min-height:38px;transition:background .18s,color .18s}
+.swp-toggle button.on{background:var(--lime);color:var(--bg)}
+#swpChart{display:block;width:100%;height:auto;margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.6px;color:var(--dim)}
+.legend .sw{display:inline-block;width:11px;height:3px;border-radius:2px;
+  margin-right:7px;vertical-align:middle}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  margin-bottom:10px;flex-wrap:wrap}
+.cardhead .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--dim)}
+#swp .card{margin-bottom:18px}
+#swpTbl tr.ret td{color:var(--lime);border-top:1px solid var(--lime)}
+#swpTbl tr.dead td{color:var(--down);opacity:.75}
+@media(max-width:600px){.swp-in{grid-template-columns:1fr 1fr}}
+
+/* Like control. 34px square is below the 44px touch guidance on its own, so
+   the row itself is the generous target and this sits inside it — the whole
+   .trk highlights on hover and the button only has to be hittable, not huge.
+   Kept at opacity 0 on the pointer devices that can reveal it on hover, and
+   always visible on touch, where there is no hover to reveal anything. */
+.trk .lk{flex:none;width:34px;height:34px;display:grid;place-items:center;
+  background:none;border:none;border-radius:50%;cursor:pointer;
+  font-size:14px;line-height:1;color:var(--dim);opacity:0;
+  transition:color .2s,opacity .2s,transform .2s var(--ease)}
+.trk:hover .lk,.trk .lk:focus-visible{opacity:1}
+.trk .lk:hover{color:var(--down);background:var(--bg2);transform:scale(1.18)}
+/* Liked is a state, not a hover affordance — it stays lit and stays visible. */
+.trk .lk[aria-pressed="true"]{opacity:1;color:var(--down)}
+.trk .lk.busy{opacity:1;color:var(--gold)}
+@media(hover:none){.trk .lk{opacity:1}}
+.crate-note{margin-top:12px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.4px;color:var(--dim);min-height:16px}
+.crate-note.err{color:var(--gold)}
 .crate-more{width:100%;background:none;border:none;border-top:1px solid var(--line);
   color:var(--dim);font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;
   text-transform:uppercase;padding:13px;cursor:pointer;min-height:24px;transition:color .2s}
@@ -3500,7 +3614,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="stat">
       <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">0</div>
-      <div class="k">Open Setups</div>
+      <div class="k" id="heroOpenK">Open Setups</div>
     </div>
     <div class="stat">
       <div class="v" id="heroTotal" data-count="{{ alerts|length }}">0</div>
@@ -3630,26 +3744,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>{% endif %}
 
 
-<!-- Capture. The page previously had none: 16,156 words and no way to keep a
-     reader. Placed after proof, not before it. -->
-<div class="sub-cta rv" data-src="world">
-  <div>
-    <h3>The 6 AM edition, in your inbox.</h3>
-    <p>One email each morning: what moved, what the engine flagged overnight, and the one number that changed. Same page, delivered before the open.</p>
-    <p class="fine">No spam. Unsubscribe any time. Your address is stored on my own server, never sold.</p>
-  </div>
-  <div>
-    <form class="sub-form" id="subTop" novalidate>
-      <label class="hp" aria-hidden="true">Company
-        <input type="text" name="company" tabindex="-1" autocomplete="off"></label>
-      <label for="subTop-e" class="hp">Email address</label>
-      <input id="subTop-e" type="email" name="email" required autocomplete="email"
-             inputmode="email" placeholder="you@company.com">
-      <button type="submit">Send it</button>
-    </form>
-    <div class="sub-msg" role="status" aria-live="polite"></div>
-  </div>
-</div>
+<!-- Capture. There is exactly ONE subscribe box on this page, and it sits at
+     the bottom (id="subEnd") after the ledger. A second copy used to sit here,
+     above the fold, asking for an email before the reader had seen a single
+     scored trade — two asks on one page, and the top one had nothing to point
+     back to. The claim that earns the address is the losing month printed in
+     public further down, so the ask belongs after it, not before.
+     The submit handler binds to every .sub-form, so it needs no change. -->
 
 <!-- ══════════ WHO ══════════
      Wording lifted from askakshay.com so the two sites say the same thing.
@@ -3884,6 +3985,94 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     They assume the return shown is achieved every year with no gaps in contribution.
     Actual equity returns arrive in a very different order, and sequence matters.
   </p>
+</section>{% endif %}
+
+<!-- ══════════ SWP ══════════
+     The other half of the SIP section: buckets say what goes in, this says
+     what comes out and for how long. Entirely client-side arithmetic — no API,
+     no ledger — so it behaves the same on the static host and needs no
+     display:none/reveal dance.
+
+     Two things here are not the usual calculator arithmetic and are the whole
+     reason it is worth having:
+       1. Withdrawals are grossed up for capital gains tax using proportional
+          cost-basis depletion, so the number entered is what actually reaches
+          the bank. A calculator that ignores tax overstates how long the
+          corpus lasts, which is the one thing it exists to tell you.
+       2. The corpus is shown in nominal AND today's rupees. ₹2 Cr at 60 is not
+          ₹2 Cr of groceries at 60, and the nominal line is the flattering one. -->
+{% if 'swp' in secs %}<section class="sec" id="swp">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['swp'] }} / {{ seclabel['swp'] }}</span>
+      <h2 class="stitle">And what it pays out.</h2>
+    </div>
+    <p class="sdesc">Accumulate to retirement, then draw down. Withdrawals are grossed up
+      for capital gains tax, so the monthly figure is what lands in the bank, not what
+      leaves the fund. The dashed line is the same corpus in today&rsquo;s rupees.</p>
+  </div>
+
+  <div class="swp-in rv">
+    <label>Age now<input type="number" id="swpCurAge" value="34" min="18" max="75" step="1"></label>
+    <label>Retire at<input type="number" id="swpRetAge" value="55" min="35" max="80" step="1"></label>
+    <label>Plan till<input type="number" id="swpEndAge" value="90" min="60" max="105" step="1"></label>
+    <label>Corpus today<input type="number" id="swpCorpus" value="500000" min="0" step="10000"></label>
+    <label>SIP / month<input type="number" id="swpSip" value="30000" min="0" step="1000"></label>
+    <label>Step-up % / yr<input type="number" id="swpStep" value="10" min="0" max="25" step="1"></label>
+    <label>Return pre %<input type="number" id="swpRetPre" value="12" min="0" max="30" step="0.5"></label>
+    <label>Return post %<input type="number" id="swpRetPost" value="8" min="0" max="30" step="0.5"></label>
+    <label>Inflation %<input type="number" id="swpInfl" value="6" min="0" max="15" step="0.5"></label>
+    <label>Withdraw / mth<input type="number" id="swpDraw" value="100000" min="0" step="5000"></label>
+    <label>LTCG tax %<input type="number" id="swpTax" value="12.5" min="0" max="40" step="0.5"></label>
+  </div>
+
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v" id="swpKCorpus">—</div><div class="k">Corpus at retirement</div></div>
+    <div class="kpi"><div class="v" id="swpKNeed">—</div><div class="k">Corpus required</div></div>
+    <div class="kpi"><div class="v" id="swpKDraw">—</div><div class="k">First withdrawal / month</div></div>
+    <div class="kpi"><div class="v" id="swpKLast">—</div><div class="k">Money lasts till</div></div>
+  </div>
+
+  <div class="swp-verdict rv" id="swpVerdict"></div>
+
+  <div class="card rv">
+    <div class="cardhead">
+      <span class="eyebrow">Corpus path</span>
+      <span class="eyebrow" id="swpPeak">&nbsp;</span>
+    </div>
+    <svg id="swpChart" viewBox="0 0 760 214" width="100%" role="img" aria-labelledby="swpChartT">
+      <title id="swpChartT">Corpus rises to retirement age, then declines</title>
+    </svg>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--blue)"></i>Corpus (nominal)</span>
+      <span><i class="sw" style="background:var(--dim)"></i>Same corpus in today&rsquo;s rupees</span>
+    </div>
+  </div>
+
+  <div class="card rv">
+    <div class="cardhead">
+      <span class="eyebrow">Year by year</span>
+      <div class="swp-toggle">
+        <button type="button" data-mode="nominal" class="on">Nominal &#8377;</button>
+        <button type="button" data-mode="real">Today&rsquo;s &#8377;</button>
+      </div>
+    </div>
+    <div class="tw">
+      <table class="t" id="swpTbl" style="min-width:560px">
+        <thead><tr><th>Age</th><th>Year</th><th>In / Out (yr)</th><th>Closing corpus</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px;color:var(--dim);font-size:12px">
+      Withdrawals are grossed up so the figure shown is what reaches your bank after capital
+      gains tax, using proportional cost-basis depletion. Returns compound monthly off the
+      effective annual rate.
+      <br><br>
+      The model assumes a smooth return every single year &mdash; real markets do not, and a bad
+      first five years of retirement destroys a corpus that the average return says is safe.
+      Treat the required-corpus number as a floor, not a target.
+    </p>
+  </div>
 </section>{% endif %}
 
 <!-- ══════════ 05 INTERVIEW PREP ══════════ -->
@@ -4519,13 +4708,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <ol class="crate-l">
         {% for t in crate['items'] %}
-        <li class="trk{% if loop.index > music.top_n %} more{% endif %}">
+        <li class="trk{% if loop.index > music.top_n %} more{% endif %}"
+            data-title="{{ t.title }}" data-artist="{{ t.artist }}" data-url="{{ t.url }}">
           <span class="no">{{ "%02d"|format(loop.index) }}</span>
           <a href="{{ t.url }}" target="_blank" rel="noopener">
             <span class="ti">{{ t.title }}</span>
             <span class="ar">{{ t.artist }}</span>
           </a>
           <span class="pl" aria-hidden="true">▶</span>
+          <!-- A real <button>, not a span with a click handler: this is a
+               control, so it needs to be tabbable and to announce its state.
+               aria-pressed carries "liked" to a screen reader; the heart glyph
+               alone carries it to everyone else. -->
+          <button type="button" class="lk" aria-pressed="false"
+                  title="Save to my songs" aria-label="Save {{ t.title }} to my songs">♥</button>
         </li>
         {% endfor %}
       </ol>
@@ -4536,7 +4732,23 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       {% endif %}
     </div>
     {% endfor %}
+
+    <!-- The fourth crate. Empty in the 6 AM build and filled by /api/music on
+         load, because likes arrive through the day and the page is static.
+         Hidden until it has something in it — an empty shelf next to three
+         full ones reads like a bug. -->
+    <div class="crate" data-crate="liked" id="likedCrate" style="display:none">
+      <div class="crate-h">
+        <span class="ic">♥</span>
+        <span class="nm">Liked</span>
+        <span class="ct" id="likedCt">0</span>
+      </div>
+      <ol class="crate-l" id="likedList"></ol>
+      <button type="button" class="crate-more" aria-expanded="false" id="likedMore"
+              style="display:none">Show all &darr;</button>
+    </div>
   </div>
+  <div class="crate-note" id="likeNote" role="status" aria-live="polite"></div>
 </section>{% endif %}
 
 {% if 'gym' in secs %}<section class="sec" id="gym">
@@ -4958,6 +5170,384 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     });
   });
 
+  /* ── SWP: accumulate, then draw down ──
+     Self-contained and API-free on purpose: this is arithmetic, not data, so
+     it must behave identically on the static 6 AM build and on the live host.
+     Nothing here touches the ledger. */
+  (function(){
+    var root = document.getElementById('swp');
+    if (!root) return;
+
+    var mode = 'nominal';
+
+    function val(id, dflt){
+      var e = document.getElementById('swp' + id);
+      var v = e ? parseFloat(e.value) : NaN;
+      return isFinite(v) ? v : dflt;
+    }
+
+    // Indian grouping, and crore/lakh past the point where digits stop being
+    // readable. A retirement corpus written as 21837450 is a number nobody can
+    // hold in their head; ₹2.18 Cr is.
+    function inr(v){
+      if (v === null || v === undefined || !isFinite(v)) return '—';
+      var n = Math.round(v), sign = n < 0 ? '-' : '';
+      n = Math.abs(n);
+      if (n >= 1e7) return sign + '₹' + (n / 1e7).toFixed(2) + ' Cr';
+      if (n >= 1e5) return sign + '₹' + (n / 1e5).toFixed(2) + ' L';
+      return sign + '₹' + n.toLocaleString('en-IN');
+    }
+
+    /* One year of drawdown, month by month.
+
+       The tax handling is the part that matters. A withdrawal is not pure
+       gain: it is part return-of-capital and part profit, in the same ratio
+       the whole corpus is. That is proportional cost-basis depletion, and it
+       means only `gainFrac` of each rupee is taxable. To actually LAND the
+       target amount in the bank, the gross redemption has to be scaled up by
+       1/(1 - gainFrac*tax) — otherwise the plan silently delivers less every
+       month and the corpus lasts longer on paper than in life. */
+    function drawdown(c0, basisRatio, o){
+      var corpus = c0, basis = c0 * basisRatio;
+      var netDraw = o.firstNet, rows = [], deadAt = null;
+
+      for (var y = 0; y < o.years; y++){
+        var paid = 0;
+        for (var m = 0; m < 12; m++){
+          corpus = corpus * (1 + o.mPost);
+          if (corpus <= 0){ corpus = 0; break; }
+
+          var gainFrac = Math.max(0, (corpus - basis) / corpus);
+          var eff = 1 - gainFrac * o.tax;
+          if (eff < 0.01) eff = 0.01;          // guard a 100% tax input
+
+          var gross = netDraw / eff;
+          var last = false;
+          if (gross >= corpus){ gross = corpus; last = true; }
+
+          // Basis must be reduced using the corpus BEFORE the withdrawal —
+          // that is what makes the ratio proportional.
+          var basisShare = gross * (basis / corpus);
+          corpus -= gross;
+          basis = Math.max(0, basis - basisShare);
+          paid += gross * eff;                 // what reached the bank
+          if (corpus <= 1e-6){ corpus = 0; last = true; }
+          if (last) break;
+        }
+        rows.push({ age: o.retAge + y + 1, corpus: corpus, flow: paid, phase: 'dec' });
+        if (corpus <= 0 && deadAt === null) deadAt = o.retAge + y + 1;
+        netDraw = netDraw * (1 + o.infl);
+      }
+      return { rows: rows, deadAt: deadAt, survives: deadAt === null };
+    }
+
+    function model(){
+      var curAge = Math.round(val('CurAge', 34));
+      var retAge = Math.round(val('RetAge', 55));
+      var endAge = Math.round(val('EndAge', 90));
+      if (retAge <= curAge) retAge = curAge + 1;
+      if (endAge <= retAge) endAge = retAge + 1;
+
+      var infl  = val('Infl', 6) / 100;
+      var tax   = val('Tax', 12.5) / 100;
+      var step  = val('Step', 10) / 100;
+      // Monthly rate from the EFFECTIVE annual rate. annual/12 is the common
+      // shortcut and it is wrong: 12/12 = 1% a month compounds to 12.68% a
+      // year, which inflates a 20-year corpus by a double-digit percentage.
+      var mPre  = Math.pow(1 + val('RetPre', 12) / 100, 1 / 12) - 1;
+      var mPost = Math.pow(1 + val('RetPost', 8) / 100, 1 / 12) - 1;
+
+      var corpus = val('Corpus', 0), basis = corpus, sip = val('Sip', 0);
+      var series = [{ age: curAge, corpus: corpus, flow: 0, phase: 'acc' }];
+
+      for (var y = 0; y < retAge - curAge; y++){
+        var put = 0;
+        for (var m = 0; m < 12; m++){
+          corpus = corpus * (1 + mPre) + sip;
+          basis += sip;
+          put += sip;
+        }
+        series.push({ age: curAge + y + 1, corpus: corpus, flow: put, phase: 'acc' });
+        sip = sip * (1 + step);
+      }
+
+      var atRet = corpus;
+      var basisRatio = atRet > 0 ? Math.min(1, basis / atRet) : 1;
+
+      // Entered in today's money, so it has to be inflated to the retirement
+      // year before the first cheque is written.
+      var firstNet = val('Draw', 0) * Math.pow(1 + infl, retAge - curAge);
+      var o = { years: endAge - retAge, retAge: retAge, mPost: mPost,
+                infl: infl, tax: tax, firstNet: firstNet };
+
+      var dd = drawdown(atRet, basisRatio, o);
+
+      // Smallest retirement corpus that survives to endAge, by bisection.
+      // Solved rather than derived because the tax gross-up makes the
+      // withdrawal depend on the corpus, so there is no clean closed form.
+      var lo = 0, hi = Math.max(1e7, firstNet * 12 * o.years * 3);
+      if (drawdown(hi, basisRatio, o).survives){
+        for (var i = 0; i < 44; i++){
+          var mid = (lo + hi) / 2;
+          if (drawdown(mid, basisRatio, o).survives) hi = mid; else lo = mid;
+        }
+      } else { hi = NaN; }
+
+      return { series: series.concat(dd.rows), atRet: atRet, firstNet: firstNet,
+               required: hi, deadAt: dd.deadAt, survives: dd.survives,
+               curAge: curAge, retAge: retAge, endAge: endAge, infl: infl };
+    }
+
+    var CW = 760, CH = 190;
+
+    function chart(R){
+      var svg = document.getElementById('swpChart');
+      if (!svg) return;
+      var span = R.endAge - R.curAge;
+      var maxC = Math.max.apply(null, R.series.map(function(d){ return d.corpus; }));
+      if (!(maxC > 0)) maxC = 1;
+
+      function px(age){ return (age - R.curAge) / span * CW; }
+      function py(c){ return CH - (c / maxC) * CH; }
+      function real(d){ return d.corpus / Math.pow(1 + R.infl, d.age - R.curAge); }
+
+      var line = R.series.map(function(d){ return px(d.age) + ',' + py(d.corpus); }).join(' ');
+      var rline = R.series.map(function(d){ return px(d.age) + ',' + py(real(d)); }).join(' ');
+      var area = '0,' + CH + ' ' + line + ' ' + CW + ',' + CH;
+
+      var g = '<polygon points="' + area + '" fill="var(--blue)" opacity="0.10"></polygon>' +
+              '<polyline points="' + line + '" fill="none" stroke="var(--blue)" stroke-width="2"></polyline>' +
+              '<polyline points="' + rline + '" fill="none" stroke="var(--dim)" stroke-width="1.2" ' +
+                'stroke-dasharray="4 3"></polyline>' +
+              '<line x1="' + px(R.retAge) + '" y1="0" x2="' + px(R.retAge) + '" y2="' + CH +
+                '" stroke="var(--lime)" stroke-width="1"></line>';
+      if (!R.survives && R.deadAt !== null){
+        g += '<line x1="' + px(R.deadAt) + '" y1="0" x2="' + px(R.deadAt) + '" y2="' + CH +
+             '" stroke="var(--down)" stroke-width="1.5"></line>';
+      }
+      g += '<line x1="0" y1="' + CH + '" x2="' + CW + '" y2="' + CH +
+           '" stroke="var(--line)" stroke-width="1"></line>';
+      [0, 0.25, 0.5, 0.75, 1].forEach(function(f){
+        var age = Math.round(R.curAge + f * span);
+        g += '<text x="' + (f * CW) + '" y="' + (CH + 18) + '" font-size="11" fill="var(--dim)" ' +
+             'font-family="var(--mono)" text-anchor="' +
+             (f === 0 ? 'start' : f === 1 ? 'end' : 'middle') + '">' + age + '</text>';
+      });
+      svg.innerHTML = '<title id="swpChartT">Corpus rises to ' + inr(R.atRet) + ' at age ' +
+                      R.retAge + ', then declines</title>' + g;
+
+      var pk = document.getElementById('swpPeak');
+      if (pk) pk.textContent = 'peak ' + inr(maxC);
+    }
+
+    function table(R){
+      var tb = document.querySelector('#swpTbl tbody');
+      if (!tb) return;
+      var html = '';
+      R.series.slice(1).forEach(function(d){
+        var k = mode === 'real' ? Math.pow(1 + R.infl, d.age - R.curAge) : 1;
+        var yr = (new Date()).getFullYear() + Math.round(d.age - R.curAge);
+        var isRet = d.age === R.retAge;
+        var broke = d.phase === 'dec' && d.corpus <= 0;
+        var flow = d.phase === 'acc'
+          ? '+' + inr(d.flow / k)
+          : (broke && d.flow <= 0 ? '—' : '−' + inr(d.flow / k));
+        html += '<tr class="' + (isRet ? 'ret' : broke ? 'dead' : '') + '">' +
+                  '<td>' + Math.round(d.age) + '</td>' +
+                  '<td class="mono-dim">' + yr + '</td>' +
+                  '<td class="' + (d.phase === 'acc' ? 'up' : 'dn') + '">' + flow + '</td>' +
+                  '<td class="num">' + (broke ? 'nil' : inr(d.corpus / k)) + '</td>' +
+                '</tr>';
+      });
+      tb.innerHTML = html;
+    }
+
+    function render(){
+      var R = model();
+      var set = function(id, txt){
+        var e = document.getElementById(id); if (e) e.textContent = txt;
+      };
+      set('swpKCorpus', inr(R.atRet));
+      set('swpKNeed', isFinite(R.required) ? inr(R.required) : 'unreachable');
+      set('swpKDraw', inr(R.firstNet));
+      set('swpKLast', R.survives ? 'age ' + R.endAge + ' ✓' : 'age ' + R.deadAt);
+
+      var v = document.getElementById('swpVerdict');
+      if (v){
+        if (R.survives){
+          var spare = R.atRet - R.required;
+          v.className = 'swp-verdict';
+          v.textContent = 'Lasts to ' + R.endAge + '. At ' + R.retAge + ' you need ' +
+            inr(R.required) + ' and the plan reaches ' + inr(R.atRet) + ' — ' +
+            inr(Math.abs(spare)) + (spare >= 0 ? ' clear.' : ' short.');
+        } else {
+          v.className = 'swp-verdict short';
+          v.textContent = 'Runs out at ' + R.deadAt + ', ' + (R.endAge - R.deadAt) +
+            ' years early. You reach ' + inr(R.atRet) + ' at ' + R.retAge +
+            (isFinite(R.required)
+              ? ' against ' + inr(R.required) + ' needed — short by ' +
+                inr(R.required - R.atRet) + '.'
+              : ' and no corpus survives this withdrawal at this return.');
+        }
+      }
+      chart(R);
+      table(R);
+    }
+
+    root.querySelectorAll('.swp-in input').forEach(function(i){
+      i.addEventListener('input', render);
+    });
+    root.querySelectorAll('.swp-toggle button').forEach(function(b){
+      b.addEventListener('click', function(){
+        mode = b.dataset.mode;
+        root.querySelectorAll('.swp-toggle button').forEach(function(x){
+          x.classList.toggle('on', x === b);
+        });
+        render();
+      });
+    });
+
+    render();
+  })();
+
+  /* ── liked songs ──
+     Deliberately self-contained rather than folded into the ledger block
+     below. Music is a /desk section and the ledger block early-returns on
+     /desk, so hanging this off start() would wire it on the one page that does
+     not have a music section and skip the one that does. It needs the edit key
+     and one endpoint; that is small enough to carry its own helpers. */
+  (function(){
+    var crates = document.querySelector('.crates');
+    if (!crates) return;                        // not the music page
+
+    var note  = document.getElementById('likeNote');
+    var shelf = document.getElementById('likedCrate');
+    var list  = document.getElementById('likedList');
+    var count = document.getElementById('likedCt');
+    var liked = Object.create(null);             // "title artist" -> true
+
+    function key(t, a){ return (t || '') + ' ' + (a || ''); }
+    function editKey(){
+      try { return localStorage.getItem('ds_edit_key') || ''; } catch(e){ return ''; }
+    }
+    function esc(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+      });
+    }
+    function say(msg, isErr){
+      if (!note) return;
+      note.className = 'crate-note' + (isErr ? ' err' : '');
+      note.textContent = msg || '';
+    }
+
+    // Reflect state onto every copy of a track. The same song can appear in
+    // more than one crate and again in the Liked shelf; liking it in one place
+    // has to light it up everywhere, or the shelf and the crate disagree.
+    function paint(){
+      document.querySelectorAll('.trk').forEach(function(li){
+        var b = li.querySelector('.lk');
+        if (!b) return;
+        var on = !!liked[key(li.dataset.title, li.dataset.artist)];
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        b.title = on ? 'Remove from my songs' : 'Save to my songs';
+      });
+    }
+
+    function renderShelf(songs){
+      if (!shelf || !list) return;
+      if (!songs.length){ shelf.style.display = 'none'; return; }
+      shelf.style.display = '';
+      if (count) count.textContent = songs.length;
+      var TOP = 5, html = '';
+      songs.forEach(function(s, i){
+        html += '<li class="trk' + (i >= TOP ? ' more' : '') + '"' +
+                ' data-title="' + esc(s.title) + '"' +
+                ' data-artist="' + esc(s.artist) + '"' +
+                ' data-url="' + esc(s.url) + '">' +
+                  '<span class="no">' + ('0' + (i + 1)).slice(-2) + '</span>' +
+                  (s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">'
+                         : '<a>') +
+                    '<span class="ti">' + esc(s.title) + '</span>' +
+                    '<span class="ar">' + esc(s.artist) + '</span>' +
+                  '</a>' +
+                  '<span class="pl" aria-hidden="true">&#9654;</span>' +
+                  '<button type="button" class="lk" aria-pressed="true"' +
+                  ' title="Remove from my songs"' +
+                  ' aria-label="Remove ' + esc(s.title) + ' from my songs">&hearts;</button>' +
+                '</li>';
+      });
+      list.innerHTML = html;
+      var more = document.getElementById('likedMore');
+      if (more){
+        var extra = songs.length > TOP;
+        more.style.display = extra ? '' : 'none';
+        if (extra && shelf.className.indexOf('open') < 0){
+          more.innerHTML = 'Show all ' + songs.length + ' &darr;';
+        }
+      }
+    }
+
+    function load(){
+      fetch('/api/music')
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if (!j || !j.ok) return;
+          liked = Object.create(null);
+          (j.songs || []).forEach(function(s){ liked[key(s.title, s.artist)] = true; });
+          renderShelf(j.songs || []);
+          paint();
+        })
+        .catch(function(){ /* static host: the hearts still render, inert */ });
+    }
+
+    // One delegated listener on the container, so tracks rendered into the
+    // Liked shelf after load are wired for free.
+    crates.addEventListener('click', function(ev){
+      var btn = ev.target.closest ? ev.target.closest('.lk') : null;
+      if (!btn) return;
+      ev.preventDefault();
+
+      var li = btn.closest('.trk');
+      if (!li) return;
+      var title = li.dataset.title || '', artist = li.dataset.artist || '';
+      var on = btn.getAttribute('aria-pressed') === 'true';
+
+      if (!editKey()){
+        say('Set your edit key in the Portfolio section to save songs.', true);
+        return;
+      }
+
+      btn.classList.add('busy');
+      fetch('/api/music', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-edit-key': editKey() },
+        body: JSON.stringify({
+          action: on ? 'unlike' : 'like',
+          title: title, artist: artist,
+          url: li.dataset.url || '',
+          crate: (li.closest('.crate') || {}).dataset ? li.closest('.crate').dataset.crate : ''
+        })
+      })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          btn.classList.remove('busy');
+          if (!j || !j.ok){
+            say((j && j.error) || 'Could not save that.', true);
+            return;
+          }
+          say(j.liked ? '♥ Saved to my songs.' : 'Removed from my songs.');
+          load();                                   // resync from the store
+        })
+        .catch(function(){
+          btn.classList.remove('busy');
+          say('Network error — not saved.', true);
+        });
+    });
+
+    load();
+  })();
+
   /* ── nav active section ── */
   // In-page anchors ONLY. The cross-page link added by the split has
   // href="/desk", and feeding that to querySelector throws
@@ -5315,15 +5905,41 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         var o2 = h.open_by_version.v2 || 0, o1 = h.open_by_version.v1 || 0;
         otxt = o2 + ' gated open / ' + o1 + ' legacy open';
       }
-      setKpi('heroOpen', h.open_setups || 0);
+      // Count the same population the table below shows. The tile read 47
+      // (every version ever logged) directly above a live bar reading
+      // "17 gated open / 30 legacy open" and a table listing 17 — three
+      // numbers for one question. v2 is the gated engine and the only one
+      // still generating setups, so that is the honest headline; v1 is a
+      // frozen legacy population that nothing acts on any more.
+      var heroOpen = h.open_setups || 0, openLbl = 'Open Setups';
+      if (h.open_by_version && h.open_by_version.v2 !== undefined){
+        heroOpen = h.open_by_version.v2;
+        // Say which population, or the tile is just a different unexplained
+        // number from the one in the bar.
+        openLbl = 'Open Setups (gated)';
+      }
+      setKpi('heroOpen', heroOpen);
+      var hk = el('heroOpenK'); if (hk) hk.textContent = openLbl;
       bar('live', 'LIVE LEDGER · ' + h.signals + ' signals' + vtxt +
                   ' · latest ' + stamp +
                   ' · ' + tracked + ' tracked · ' + otxt +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
-      start();
+      // Wiring the page is NOT part of deciding whether the ledger is up. The
+      // health check has already answered that. Left unguarded, any DOM error
+      // inside start() lands in the .catch() below and gets reported as
+      // "live ledger unavailable (...)" over a live API — which is exactly how
+      // /desk spent a day claiming the ledger was down because it has no
+      // #perf section to show. A broken widget is a console error, not an
+      // outage notice.
+      try {
+        start();
+      } catch (err) {
+        console.error('ledger UI failed to wire (the API is fine):', err);
+      }
     }).catch(function(e){
-      // Static host, or the API is down. Say so plainly instead of letting the
-      // page pretend a 6 AM snapshot is live data.
+      // Reached only when /health itself failed: static host, or the API is
+      // down. Say so plainly instead of letting the page pretend a 6 AM
+      // snapshot is live data.
       bar('off', 'STATIC SNAPSHOT · rebuilt daily at 6:00 AM IST · live ledger unavailable (' + e.message + ')');
       staticFallback();
       var rb = el('liverefresh'); if (rb) rb.style.display = 'none';
@@ -5350,17 +5966,34 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
     }
 
+    // Null-safe show/hide. This script block is shared by both pages, but the
+    // ledger sections (perf, alerts, tracker, archive) are main-page only —
+    // SECTION_MAP puts them on "main" and /desk gets languages, chess and
+    // music instead. Every el() below used to be dereferenced blind, so on
+    // /desk the first line threw and the health .catch() below reported a
+    // perfectly healthy API as "live ledger unavailable".
+    function show(id, val){
+      var n = el(id);
+      if (n) n.style.display = val;
+      return n;
+    }
+
     function start(){
-      el('perf').style.display = '';
-      el('archWrap').style.display = '';
-      el('alertCtl').style.display = 'flex';
+      // Does this page carry the ledger UI at all? /desk does not, and there
+      // is nothing to wire there — but the ledger itself is fine, so this must
+      // not be reported as an outage.
+      if (!el('perf') && !el('tracker') && !el('alerts')) return;
+
+      show('perf', '');
+      show('archWrap', '');
+      show('alertCtl', 'flex');
       // Only meaningful with an API behind the page — a static host has one
       // baked-in snapshot and nothing to switch between.
-      var av = el('alertVer'); if (av) av.style.display = 'flex';
-      el('posStatic').style.display = 'none';
-      el('posLive').style.display = '';
-      el('posHistBtn').style.display = '';
-      el('keybox').classList.toggle('on', !editKey());
+      show('alertVer', 'flex');
+      show('posStatic', 'none');
+      show('posLive', '');
+      show('posHistBtn', '');
+      var kb = el('keybox'); if (kb) kb.classList.toggle('on', !editKey());
 
       // Flask-only controls. There is no /tracker/* on the serverless host, so
       // rather than leave buttons that 404, hide them — "Closed positions"
@@ -5382,7 +6015,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       loadSip();
       loadLongTerm();
 
-      el('liverefresh').addEventListener('click', function(){
+      var lr = el('liverefresh');
+      if (lr) lr.addEventListener('click', function(){
         loadSignals(); loadStats(); loadPositions(); loadSip();
       });
 
@@ -6631,11 +7265,29 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         });
       }
       rail.innerHTML = html;
-      // ~1.6s per instrument keeps it legible whatever the board size; a fixed
-      // 46s across 110 items was a blur.
-      // ~1.15s per instrument. 1.6 was legible but slow enough that a full
-      // pass took nearly three minutes and the far segments felt unreachable.
-      rail.style.setProperty('--tickdur', Math.max(45, Math.round(items * 1.15)) + 's');
+
+      // Speed is measured in pixels per second, not seconds per item.
+      //
+      // Both earlier attempts tuned "seconds per instrument" (1.6s, then
+      // 1.15s), which only controls speed if every item is the same width.
+      // They are not — a rendered .ti averages ~215px, so 1.15s/item was
+      // really ~186 px/s: about three times reading speed, and no amount of
+      // fiddling with that constant would have made it legible because the
+      // constant was never the speed.
+      //
+      // Measure the strip and divide. scrollWidth holds two copies (the
+      // marquee translates -50%), so half of it is one loop's distance. The
+      // result is a genuinely constant scroll rate whatever the board size or
+      // the screen width, tunable by exactly one honest number.
+      var PX_PER_SEC = 80;              // ~2.7s for an instrument to cross a fixed point
+      var loopPx = rail.scrollWidth / 2;
+      if (loopPx > 0){
+        rail.style.setProperty('--tickdur', Math.round(loopPx / PX_PER_SEC) + 's');
+      } else {
+        // Called before layout (display:none, or a hidden tab). Fall back to
+        // the old count-based estimate rather than divide by zero.
+        rail.style.setProperty('--tickdur', Math.max(45, Math.round(items * 2.7)) + 's');
+      }
 
       // Same guard the ledger's setKpi() uses. Writing textContent alone is not
       // enough: the hero count-up animation writes this node every frame for
