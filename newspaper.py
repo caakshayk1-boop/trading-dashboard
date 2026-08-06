@@ -2917,13 +2917,13 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .player-x{background:none;border:none;color:var(--dim);cursor:pointer;
   font-size:14px;line-height:1;flex:none;width:30px;height:30px;border-radius:50%}
 .player-x:hover{color:var(--down);background:var(--surface2)}
-/* No aspect-ratio box any more: the Apple widget is a fixed-height audio
-   strip, not a 16:9 video. Reserving video-shaped space for it left a large
-   empty rectangle under the controls. */
-.player-f{position:relative;width:100%;height:175px;background:var(--bg2)}
-.player-f iframe{display:block;width:100%;height:100%;border:0;overflow:hidden}
-.player-n{margin:0;padding:8px 12px 10px;font-family:var(--mono);font-size:9.5px;
-  line-height:1.5;letter-spacing:.3px;color:var(--dim);border-top:1px solid var(--line)}
+/* 16:9, and sized so the player clears YouTube's documented 200x200 minimum
+   for embedded players (356 wide gives ~200 high). Smaller than that would be
+   a nicer audio bar and would breach the embed terms. */
+.player-f{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.player-f iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.player-a{font-size:13px;line-height:1;color:var(--dim);text-decoration:none;flex:none}
+.player-a:hover{color:var(--text)}
 @media(max-width:620px){
   .player{right:0;left:0;bottom:0;width:auto;max-width:none;border-radius:14px 14px 0 0}
 }
@@ -4762,9 +4762,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <p class="sdesc">{{ music.total }} tracks across three crates &mdash; mine,
       bhakti, and the all-time canon. The top five rotate every morning. Tap a
-      title and it plays here, audio only.
+      title and it plays here &mdash; full length, free, no account needed.
       {% if music.playable < music.total %}<br><span style="color:var(--dim)">{{ music.total - music.playable }} of
-      them aren&rsquo;t on Apple Music in this region and still open externally.</span>{% endif %}</p>
+      them isn&rsquo;t pinned yet and still opens a search.</span>{% endif %}</p>
   </div>
 
   <div class="crates rv">
@@ -4836,20 +4836,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
        built in JS rather than sitting here with a src, so the page contacts
        Apple only once you actually press play.
 
-       Full-length playback needs you signed in to Apple Music in this
-       browser. Signed out, the widget plays a 30-second preview — that is
-       Apple's behaviour, not something this page controls, so the player says
-       so rather than letting a clip look like a bug. -->
+       Full length, free, no account. YouTube's embed terms require the player
+       stay visible, so the dock is kept small and pinned out of the way rather
+       than collapsed to an audio bar — the honest version of "audio only" when
+       no free full-length audio-only source exists. -->
   <div class="player" id="player" hidden>
     <div class="player-h">
       <span class="player-t" id="playerT">—</span>
+      <a class="player-a" id="playerA" href="#" target="_blank" rel="noopener"
+         title="Open this track in Apple Music" style="display:none">&#63743;</a>
       <a class="player-y" id="playerY" href="#" target="_blank" rel="noopener"
-         title="Open this track in Apple Music">Open ↗</a>
+         title="Open this track on YouTube">Open ↗</a>
       <button type="button" class="player-x" id="playerX" aria-label="Close player">✕</button>
     </div>
     <div class="player-f" id="playerF"></div>
-    <p class="player-n">Full track when you&rsquo;re signed in to Apple Music &mdash;
-      a 30-second preview otherwise.</p>
   </div>
 </section>{% endif %}
 
@@ -5053,9 +5053,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         thing: sending the daily edition. It is never sold, never shared, and never passed
         to an ad network. This page loads no analytics and no tracking scripts of any kind,
         and the fonts are served from this domain. As loaded it contacts no third party at
-        all. The one exception is deliberate and opt-in: pressing play on a track loads the
-        Apple Music audio player, which is a connection to Apple. It is created only on
-        that click &mdash; if you never press play, it never loads.
+        all. The one exception is deliberate and opt-in: pressing play on a track loads a
+        YouTube player, which is a connection to Google. It uses the no-cookie player and
+        is created only on that click &mdash; if you never press play, it never loads.
         Reply to any edition to be removed, or write to
         <a href="mailto:ca.akkothari@gmail.com">ca.akkothari@gmail.com</a>.</p>
     </div>
@@ -5681,39 +5681,41 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     function play(li){
       var embed = li.dataset.embed;
-      // No Apple id means nothing to play in page — the two tracks Apple does
-      // not carry on this storefront. Let the anchor open YouTube instead.
+      // No embed means no pinned id — a search-link-only track. Let the anchor
+      // do its normal thing.
       if (!embed || !pBox) return false;
 
       var t = li.dataset.title || '', a = li.dataset.artist || '';
       pTitle.textContent = a ? t + ' — ' + a : t;
-      pYt.href = li.dataset.apple || li.dataset.url || '#';
+      pYt.href = li.dataset.url || '#';
+      // Secondary link, only for the tracks that have one.
+      var ap = document.getElementById('playerA');
+      if (ap){
+        var au = li.dataset.apple || '';
+        ap.href = au || '#';
+        ap.style.display = au ? '' : 'none';
+      }
       // Replacing the whole node rather than reassigning src: swapping src on
       // a live media iframe can leave the previous track's audio running, so
       // the shelf ends up playing two songs at once.
       pFrame.innerHTML = '';
       var f = document.createElement('iframe');
-      f.src = embed;
+      // rel=0 keeps the end screen to this channel, modestbranding trims the
+      // chrome. The player stays visible at its documented minimum size —
+      // YouTube's embed terms require that, so "audio only" here means the
+      // dock is small and out of the way, not that the video is hidden.
+      f.src = embed + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
       f.title = pTitle.textContent;
-      // encrypted-media is not optional: the widget initialises EME before it
-      // will render anything, so without it you get a grey placeholder rather
-      // than an error. autoplay is requested but the browser's own policy
-      // still governs it — on a cold visit the widget's own play button may be
-      // needed, and that gate is not ours to remove.
-      //
-      // No sandbox attribute on purpose. It looks like free hardening, but the
-      // widget needs same-origin storage to talk to Apple's catalogue, and a
-      // sandbox tight enough to be worth having breaks it. The iframe is
-      // cross-origin, so it cannot touch this document either way.
-      f.allow = 'autoplay *; encrypted-media *;';
-      f.referrerPolicy = 'origin';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.setAttribute('allowfullscreen', '');
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
       pFrame.appendChild(f);
       pBox.hidden = false;
 
       if (playing) playing.classList.remove('on');
       var b = li.querySelector('.pl');
       if (b){ b.classList.add('on'); playing = b; }
-      say('Playing — audio only.');
+      say('Playing. Full track, free, no account.');
       return true;
     }
 

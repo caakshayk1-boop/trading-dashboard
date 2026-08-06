@@ -16,16 +16,18 @@ different every morning without the list changing.
 To add a song, append a tuple to the right list:
 
     ("Title", "Artist")                              → search link only
-    ("Title", "Artist", "YT_ID")                     → link out, no in-page audio
-    ("Title", "Artist", "YT_ID", "ALBUM_ID/TRACK_ID") → plays on the page
+    ("Title", "Artist", "YT_ID")                     → plays on the page
+    ("Title", "Artist", "YT_ID", "ALBUM_ID/TRACK_ID") → plays, plus an Apple link
 
-The fourth field is what makes a track playable here, and it is a PAIR:
-Apple's embed is addressed by album with the track as `?i=`, which is what its
-own share sheet emits. A bare `/song/<id>` URL answers 200 and then renders an
-empty placeholder — it looks correct until nothing plays.
+YT_ID is what makes a track playable — the part after `v=` in a YouTube URL.
+YouTube is the player because it is the only source that is free, needs no
+account, and carries this catalogue at full length. Apple Music was tried and
+reverted: signed out its widget plays 30 seconds, and full playback needs a
+subscription.
 
-VIDEO_ID is the part after `v=` in a YouTube URL. It is now only the outbound
-link and the fallback for tracks Apple does not carry on this storefront.
+The fourth field is optional and is only a LINK for anyone who does subscribe.
+It is a pair, because Apple addresses a track by album with `?i=`; a bare
+`/song/<id>` URL answers 200 and renders an empty placeholder.
 
 Both ids for a song, in one command:
 
@@ -133,23 +135,31 @@ def _entry(row: tuple) -> dict:
     else:
         q = urllib.parse.quote_plus(f"{title} {artist}".strip())
         url = f"https://www.youtube.com/results?search_query={q}"
-    # Apple's embed is addressed by ALBUM with the track as ?i=, which is what
-    # its own share sheet emits. A bare /song/<id> route answers 200 and then
-    # renders an empty placeholder, so it looks like it works right up until
-    # nothing plays — which is why the id here is stored as "album/track".
-    embed = apple_url = ""
+    # What actually plays is the YouTube embed, because it is the only source
+    # that is free, needs no account, and carries this whole catalogue at full
+    # length. Apple's widget is audio-only and looked like the better fit until
+    # the constraint that matters showed up: signed out it plays a 30-second
+    # preview, and full playback needs a paid subscription.
+    #
+    # There is no legal alternative. Every free, no-auth music API (Deezer,
+    # TheAudioDB and friends) returns metadata and 30-second previews; the ones
+    # that stream in full are licensed catalogues of royalty-free music, which
+    # is not the music on this shelf. Unofficial JioSaavn-style endpoints do
+    # return full-song CDN links and are deliberately not used here: they break
+    # without notice, and re-streaming that audio is infringement.
+    embed = f"https://www.youtube-nocookie.com/embed/{vid}" if vid else ""
+
+    # Kept as a secondary link, not the player. Costs nothing and is the better
+    # destination for anyone who does subscribe.
+    apple_url = ""
     if apple and "/" in apple:
         album, track = apple.split("/", 1)
-        embed = (f"https://embed.music.apple.com/{STOREFRONT}/album/{album}"
-                 f"?i={track}&theme=dark")
         apple_url = f"https://music.apple.com/{STOREFRONT}/album/{album}?i={track}"
 
     return {
         "title": title, "artist": artist, "url": url,
         "vid": vid or "", "pinned": bool(vid),
         "apple": apple or "",
-        # Built here rather than in the template so the storefront and the URL
-        # shape live in exactly one place.
         "embed": embed,
         "apple_url": apple_url,
     }
@@ -179,7 +189,9 @@ def library(on: date | None = None) -> dict:
         "top_n": TOP_N,
         "total": len(songs) + len(bhakti) + len(glob),
         "pinned": sum(1 for c in (songs, bhakti, glob) for t in c if t["pinned"]),
-        "playable": sum(1 for c in (songs, bhakti, glob) for t in c if t["apple"]),
+        # What can actually play in the dock, which is the YouTube embed —
+        # NOT the Apple id, which is only a secondary link now.
+        "playable": sum(1 for c in (songs, bhakti, glob) for t in c if t["embed"]),
     }
 
 
@@ -265,9 +277,11 @@ def check() -> int:
             bad += 1
             print(f"WRONG  {name:7} {title} [{vid}] resolves to {d['title'][:50]!r}")
 
-    playable = sum(1 for _n, _t, _v, a in rows if a)
-    print(f"\n{len(rows)} tracks · {playable} playable on the page · "
-          f"{len(ids)} with a YouTube link · {bad} problem(s)")
+    # Playable means the YouTube id, because that is what the dock embeds.
+    # The Apple pair is only a secondary link.
+    print(f"\n{len(rows)} tracks · {len(ids)} playable on the page · "
+          f"{sum(1 for _n, _t, _v, a in rows if a)} with an Apple link · "
+          f"{bad} problem(s)")
     return 1 if bad else 0
 
 
