@@ -5482,7 +5482,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       set('swpSumCorpus', inr(R.atRet));
       set('swpSumAge', R.retAge);
       set('swpSumDraw', inr(R.firstNet));
-      var sl = el('swpSumLast');
+      // document.getElementById, NOT the el() helper: el() is defined inside
+      // the ledger IIFE further down and does not exist in this scope. This
+      // one call threw "el is not defined", which aborted the whole script
+      // block on / — dead ticker, dead world map, dead scroll spy — while
+      // /desk was untouched because it has no SWP section.
+      var sl = document.getElementById('swpSumLast');
       if (sl){
         sl.textContent = R.survives ? 'lasts to ' + R.endAge
                                     : 'runs out at ' + R.deadAt;
