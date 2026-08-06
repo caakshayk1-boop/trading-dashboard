@@ -210,29 +210,30 @@ def generate() -> None:
     # frame-src is the ONLY third-party grant here, and it buys the in-page
     # music player. Without it `default-src 'self'` blocks the embed outright.
     #
-    # Three deliberate limits on that grant:
-    #   · youtube-nocookie.com, not youtube.com — no tracking cookie is set
-    #     unless playback actually starts.
+    # It points at Apple Music, not YouTube, because the shelf plays audio and
+    # a video embed was the wrong shape for that — a 16:9 rectangle for
+    # something you only listen to.
+    #
+    # Two deliberate limits on the grant:
     #   · The iframe is created on click, never at page load, so a reader who
-    #     does not press play contacts Google not at all.
-    #   · script-src is NOT widened. The obvious alternative is YouTube's
-    #     IFrame Player API, which would need `script-src https://www.youtube.com`
-    #     and hand a third party script execution on a page that fronts a
+    #     does not press play contacts Apple not at all.
+    #   · script-src is NOT widened. The alternative is Apple's MusicKit JS
+    #     (or YouTube's IFrame API), which would need a third-party origin in
+    #     script-src and hand it script execution on a page that fronts a
     #     trading ledger. A plain iframe cannot reach into this document, so
     #     the weaker embed is the right trade — the cost is that we cannot
-    #     detect an embed-disabled video programmatically, which is why the
-    #     player carries a visible "Open on YouTube" escape hatch.
+    #     drive playback programmatically, only hand the widget a track.
     csp = ("default-src 'self'; "
            f"script-src 'self' 'nonce-{nonce}'; "
            "style-src 'self' 'unsafe-inline'; "
-           # i.ytimg.com is the player's poster frame. Without it every play
-           # logs two CSP violations and the player shows a black box until
-           # the first frame decodes. It costs nothing in privacy terms: the
-           # request happens inside the embed, which only exists after the
-           # reader pressed play and already contacted Google. Images cannot
-           # execute, so this grants no new capability.
-           "img-src 'self' data: https://i.ytimg.com; font-src 'self'; "
-           "frame-src https://www.youtube-nocookie.com; "
+           # mzstatic is Apple's artwork CDN, which the widget draws its cover
+           # art from. Without it every play logs CSP violations and the
+           # player shows a blank tile. The request is made by the embed,
+           # which only exists once the reader pressed play and already
+           # reached Apple, and images cannot execute — no new capability.
+           "img-src 'self' data: https://*.mzstatic.com; font-src 'self'; "
+           "frame-src https://embed.music.apple.com; "
+           "media-src https://*.mzstatic.com blob:; "
            # The browser only ever talks to this origin's /api. gold-api and
            # Yahoo are called server-side.
            "connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'")

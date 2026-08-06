@@ -2856,6 +2856,23 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .cardhead .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim)}
 #swp .card{margin-bottom:18px}
+/* Summary strip — the collapsed state's entire content, and it stays put when
+   expanded so the headline numbers never disappear while you are editing. */
+.swp-sum{display:flex;justify-content:space-between;align-items:center;gap:16px;
+  flex-wrap:wrap;padding:16px 18px;margin-bottom:18px;background:var(--surface);
+  border:1px solid var(--line);border-radius:12px}
+.swp-sum-k{font-family:var(--mono);font-size:13px;color:var(--muted);
+  display:flex;gap:10px;flex-wrap:wrap;align-items:baseline}
+.swp-sum-k b{color:var(--text);font-weight:600}
+.swp-sum-k .sep{color:var(--line2)}
+.swp-sum-k .short{color:var(--down)}
+.swp-sum-k .ok{color:var(--lime)}
+.swp-toggle-all{background:none;border:1px solid var(--line2);border-radius:8px;
+  color:var(--dim);cursor:pointer;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:1.2px;text-transform:uppercase;padding:10px 14px;min-height:40px;
+  white-space:nowrap;transition:color .18s,border-color .18s}
+.swp-toggle-all:hover{color:var(--lime);border-color:var(--lime)}
+.swp-body[hidden]{display:none}
 #swpTbl tr.ret td{color:var(--lime);border-top:1px solid var(--lime)}
 #swpTbl tr.dead td{color:var(--down);opacity:.75}
 @media(max-width:600px){.swp-in{grid-template-columns:1fr 1fr}}
@@ -2900,8 +2917,13 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .player-x{background:none;border:none;color:var(--dim);cursor:pointer;
   font-size:14px;line-height:1;flex:none;width:30px;height:30px;border-radius:50%}
 .player-x:hover{color:var(--down);background:var(--surface2)}
-.player-f{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.player-f iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+/* No aspect-ratio box any more: the Apple widget is a fixed-height audio
+   strip, not a 16:9 video. Reserving video-shaped space for it left a large
+   empty rectangle under the controls. */
+.player-f{position:relative;width:100%;height:175px;background:var(--bg2)}
+.player-f iframe{display:block;width:100%;height:100%;border:0;overflow:hidden}
+.player-n{margin:0;padding:8px 12px 10px;font-family:var(--mono);font-size:9.5px;
+  line-height:1.5;letter-spacing:.3px;color:var(--dim);border-top:1px solid var(--line)}
 @media(max-width:620px){
   .player{right:0;left:0;bottom:0;width:auto;max-width:none;border-radius:14px 14px 0 0}
 }
@@ -4039,6 +4061,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       leaves the fund. The dashed line is the same corpus in today&rsquo;s rupees.</p>
   </div>
 
+  <!-- Collapsed by default. The eleven inputs and a 35-row table are for the
+       sittings where you actually re-plan; the rest of the time the four
+       numbers in the summary are the whole point, and the section should not
+       push Performance and the Signal Log a screen and a half down the page.
+       The summary strip below stays visible in BOTH states, so collapsing
+       hides the controls, never the answer. -->
+  <div class="swp-sum rv" id="swpSum">
+    <div class="swp-sum-k">
+      <span><b id="swpSumCorpus">—</b> at <span id="swpSumAge">—</span></span>
+      <span class="sep">·</span>
+      <span><b id="swpSumDraw">—</b>/month</span>
+      <span class="sep">·</span>
+      <span id="swpSumLast">—</span>
+    </div>
+    <button type="button" class="swp-toggle-all" id="swpExpand" aria-expanded="false"
+            aria-controls="swpBody">Adjust the plan &darr;</button>
+  </div>
+
+  <div id="swpBody" class="swp-body" hidden>
   <div class="swp-in rv">
     <label>Age now<input type="number" id="swpCurAge" value="34" min="18" max="75" step="1"></label>
     <label>Retire at<input type="number" id="swpRetAge" value="55" min="35" max="80" step="1"></label>
@@ -4100,6 +4141,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       Treat the required-corpus number as a floor, not a target.
     </p>
   </div>
+  </div><!-- /#swpBody -->
 </section>{% endif %}
 
 <!-- ══════════ 05 INTERVIEW PREP ══════════ -->
@@ -4720,7 +4762,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <p class="sdesc">{{ music.total }} tracks across three crates &mdash; mine,
       bhakti, and the all-time canon. The top five rotate every morning. Tap a
-      title and it plays.</p>
+      title and it plays here, audio only.
+      {% if music.playable < music.total %}<br><span style="color:var(--dim)">{{ music.total - music.playable }} of
+      them aren&rsquo;t on Apple Music in this region and still open externally.</span>{% endif %}</p>
   </div>
 
   <div class="crates rv">
@@ -4737,7 +4781,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         {% for t in crate['items'] %}
         <li class="trk{% if loop.index > music.top_n %} more{% endif %}"
             data-title="{{ t.title }}" data-artist="{{ t.artist }}" data-url="{{ t.url }}"
-            data-vid="{{ t.vid }}">
+            data-vid="{{ t.vid }}" data-embed="{{ t.embed }}" data-apple="{{ t.apple_url }}">
           <span class="no">{{ "%02d"|format(loop.index) }}</span>
           <!-- Still a real anchor to YouTube. It is the no-JS path and the
                middle-click/"open in new tab" path, and the click handler
@@ -4782,21 +4826,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
   <div class="crate-note" id="likeNote" role="status" aria-live="polite"></div>
 
-  <!-- Docked player. Deliberately NOT one iframe per row: a row-level embed
-       stops the moment you scroll to another crate, and forty idle iframes is
-       forty third-party connections. One player, created on first play and
-       reused, keeps the music running while you read the rest of the page.
+  <!-- Docked player. Audio only — this is the Apple Music widget, not a video
+       embed, so pressing play gives sound and nothing to watch.
 
-       The iframe is built in JS rather than sitting here with a src, so the
-       page contacts Google only once you actually press play. -->
+       Deliberately NOT one iframe per row: a row-level embed stops the moment
+       you scroll to another crate, and forty idle iframes is forty
+       third-party connections. One player, created on first play and reused,
+       keeps the music running while you read the rest of the page. It is
+       built in JS rather than sitting here with a src, so the page contacts
+       Apple only once you actually press play.
+
+       Full-length playback needs you signed in to Apple Music in this
+       browser. Signed out, the widget plays a 30-second preview — that is
+       Apple's behaviour, not something this page controls, so the player says
+       so rather than letting a clip look like a bug. -->
   <div class="player" id="player" hidden>
     <div class="player-h">
       <span class="player-t" id="playerT">—</span>
       <a class="player-y" id="playerY" href="#" target="_blank" rel="noopener"
-         title="If the embed is blocked for this video, open it on YouTube">Open on YouTube ↗</a>
+         title="Open this track in Apple Music">Open ↗</a>
       <button type="button" class="player-x" id="playerX" aria-label="Close player">✕</button>
     </div>
     <div class="player-f" id="playerF"></div>
+    <p class="player-n">Full track when you&rsquo;re signed in to Apple Music &mdash;
+      a 30-second preview otherwise.</p>
   </div>
 </section>{% endif %}
 
@@ -5000,9 +5053,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         thing: sending the daily edition. It is never sold, never shared, and never passed
         to an ad network. This page loads no analytics and no tracking scripts of any kind,
         and the fonts are served from this domain. As loaded it contacts no third party at
-        all. The one exception is deliberate and opt-in: pressing play on a track opens a
-        YouTube player, which is a connection to Google. It uses the no-cookie player and
-        is created only on that click &mdash; if you never press play, it never loads.
+        all. The one exception is deliberate and opt-in: pressing play on a track loads the
+        Apple Music audio player, which is a connection to Apple. It is created only on
+        that click &mdash; if you never press play, it never loads.
         Reply to any edition to be removed, or write to
         <a href="mailto:ca.akkothari@gmail.com">ca.akkothari@gmail.com</a>.</p>
     </div>
@@ -5424,6 +5477,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       set('swpKDraw', inr(R.firstNet));
       set('swpKLast', R.survives ? 'age ' + R.endAge + ' ✓' : 'age ' + R.deadAt);
 
+      // The collapsed summary. Written on every render, not just on collapse,
+      // so the strip cannot drift from the panel it is summarising.
+      set('swpSumCorpus', inr(R.atRet));
+      set('swpSumAge', R.retAge);
+      set('swpSumDraw', inr(R.firstNet));
+      var sl = el('swpSumLast');
+      if (sl){
+        sl.textContent = R.survives ? 'lasts to ' + R.endAge
+                                    : 'runs out at ' + R.deadAt;
+        sl.className = R.survives ? 'ok' : 'short';
+      }
+
       var v = document.getElementById('swpVerdict');
       if (v){
         if (R.survives){
@@ -5445,6 +5510,34 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       chart(R);
       table(R);
     }
+
+    /* ── collapse / expand ──
+       The state is remembered, because someone who opens this to re-plan
+       usually opens it again the next few mornings, and re-expanding it every
+       time is friction for exactly the person the section is for. */
+    var body = document.getElementById('swpBody'),
+        exp  = document.getElementById('swpExpand'),
+        LS   = 'ds_swp_open';
+
+    function setOpen(open, persist){
+      if (!body || !exp) return;
+      body.hidden = !open;
+      exp.setAttribute('aria-expanded', open ? 'true' : 'false');
+      exp.innerHTML = open ? 'Hide the workings &uarr;' : 'Adjust the plan &darr;';
+      if (persist){ try { localStorage.setItem(LS, open ? '1' : '0'); } catch(e){} }
+    }
+
+    if (exp){
+      exp.addEventListener('click', function(){
+        setOpen(body.hidden, true);
+        // Re-render on open: the chart is an SVG sized by its container, and
+        // one laid out while display:none has no width to measure.
+        if (!body.hidden) render();
+      });
+    }
+    var saved = '0';
+    try { saved = localStorage.getItem(LS) || '0'; } catch(e){}
+    setOpen(saved === '1', false);
 
     root.querySelectorAll('.swp-in input').forEach(function(i){
       i.addEventListener('input', render);
@@ -5513,15 +5606,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       if (count) count.textContent = songs.length;
       var TOP = 5, html = '';
       songs.forEach(function(s, i){
-        // The stored url is the watch link; recover the id from it so a liked
-        // track plays in-page like any other row. Without this the Liked crate
-        // would be the one shelf that still bounced you to YouTube.
+        // The like row stores only title/artist/url. Find the same track in a
+        // crate above and borrow its embed, so a liked track plays in place
+        // like any other row. Cheaper and more honest than widening the
+        // stored schema: the crates are the source of truth for what a track
+        // IS, the shelf only records that you liked it — which also means a
+        // re-pinned id reaches the Liked crate for free.
         var m = /[?&]v=([\w-]{6,})/.exec(s.url || '');
         var vid = m ? m[1] : '';
+        var src = null;
+        document.querySelectorAll('.crate:not([data-crate="liked"]) .trk')
+          .forEach(function(n){ if (!src && n.dataset.title === s.title) src = n; });
+        var embed = src ? (src.dataset.embed || '') : '';
+        var appleU = src ? (src.dataset.apple || '') : '';
         html += '<li class="trk' + (i >= TOP ? ' more' : '') + '"' +
                 ' data-title="' + esc(s.title) + '"' +
                 ' data-artist="' + esc(s.artist) + '"' +
                 ' data-url="' + esc(s.url) + '"' +
+                ' data-embed="' + esc(embed) + '"' +
+                ' data-apple="' + esc(appleU) + '"' +
                 ' data-vid="' + esc(vid) + '">' +
                   '<span class="no">' + ('0' + (i + 1)).slice(-2) + '</span>' +
                   (s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">'
@@ -5572,32 +5675,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         playing = null;
 
     function play(li){
-      var vid = li.dataset.vid, url = li.dataset.url;
-      // No id means there is nothing to embed — an unpinned track only has a
-      // YouTube *search* URL. Let the anchor do its normal thing.
-      if (!vid || !pBox) return false;
+      var embed = li.dataset.embed;
+      // No Apple id means nothing to play in page — the two tracks Apple does
+      // not carry on this storefront. Let the anchor open YouTube instead.
+      if (!embed || !pBox) return false;
 
       var t = li.dataset.title || '', a = li.dataset.artist || '';
       pTitle.textContent = a ? t + ' — ' + a : t;
-      pYt.href = url || ('https://www.youtube.com/watch?v=' + vid);
+      pYt.href = li.dataset.apple || li.dataset.url || '#';
       // Replacing the whole node rather than reassigning src: swapping src on
-      // a live YouTube iframe leaves the previous video's audio running in
-      // some builds, so the shelf ends up playing two songs at once.
+      // a live media iframe can leave the previous track's audio running, so
+      // the shelf ends up playing two songs at once.
       pFrame.innerHTML = '';
       var f = document.createElement('iframe');
-      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(vid) +
-              '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      f.src = embed;
       f.title = pTitle.textContent;
-      f.allow = 'autoplay; encrypted-media; picture-in-picture';
-      f.setAttribute('allowfullscreen', '');
-      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      // encrypted-media is not optional: the widget initialises EME before it
+      // will render anything, so without it you get a grey placeholder rather
+      // than an error. autoplay is requested but the browser's own policy
+      // still governs it — on a cold visit the widget's own play button may be
+      // needed, and that gate is not ours to remove.
+      //
+      // No sandbox attribute on purpose. It looks like free hardening, but the
+      // widget needs same-origin storage to talk to Apple's catalogue, and a
+      // sandbox tight enough to be worth having breaks it. The iframe is
+      // cross-origin, so it cannot touch this document either way.
+      f.allow = 'autoplay *; encrypted-media *;';
+      f.referrerPolicy = 'origin';
       pFrame.appendChild(f);
       pBox.hidden = false;
 
       if (playing) playing.classList.remove('on');
       var b = li.querySelector('.pl');
       if (b){ b.classList.add('on'); playing = b; }
-      say('Playing here. Embeds can be disabled per video — use “Open on YouTube” if it will not start.');
+      say('Playing — audio only.');
       return true;
     }
 
