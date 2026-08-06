@@ -275,6 +275,19 @@ def init_db(force: bool = False):
             # bars. Those values are not evidence; this column is how a consumer
             # tells the two populations apart.
             ("regraded_at",         "ALTER TABLE all_signals ADD COLUMN regraded_at TEXT"),
+            # SIMULATED = price traded through the entry level, so the strategy
+            # would have filled here. CONFIRMED = the user actually placed the
+            # order and said so. SKIPPED = the user explicitly passed.
+            #
+            # Nothing automated may ever write CONFIRMED. There is no broker
+            # integration in this repo — upstox_provider is read-only market
+            # data — so a fill the bot infers from a price touch is a paper
+            # trade. Without this column the terminal would show "29.8%
+            # deployed" against capital that was never committed.
+            ("fill_type",           "ALTER TABLE all_signals ADD COLUMN fill_type TEXT"),
+            ("confirmed_at",        "ALTER TABLE all_signals ADD COLUMN confirmed_at TEXT"),
+            ("confirmed_qty",       "ALTER TABLE all_signals ADD COLUMN confirmed_qty INTEGER"),
+            ("confirmed_price",     "ALTER TABLE all_signals ADD COLUMN confirmed_price REAL"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:
@@ -715,14 +728,19 @@ def update_all_outcomes():
                         continue
                     triggered_at = bar_day.isoformat()
                     with _conn() as c:
+                        # fill_type is written only if nothing has claimed it.
+                        # A user confirmation must never be downgraded back to
+                        # SIMULATED by a later scan.
                         c.execute(
                             "UPDATE all_signals SET entry_triggered_at=?, "
-                            "lifecycle_status='Triggered' WHERE id=?",
+                            "lifecycle_status='Triggered', "
+                            "fill_type=COALESCE(fill_type,'SIMULATED') WHERE id=?",
                             (triggered_at, int(row["id"]))
                         )
                         c.commit()
                         _db.sync(c)
-                    log.info(f"Entry triggered: {row['symbol']} @ {entry} on {triggered_at}")
+                    log.info(f"Entry touched (SIMULATED): {row['symbol']} @ {entry} "
+                             f"on {triggered_at} — no order was placed")
                     # Fall through — the fill bar can also resolve the trade.
 
                 sessions += 1
@@ -773,6 +791,100 @@ def update_all_outcomes():
         except Exception as e:
             log.warning(f"update_all_outcomes {row.get('symbol','?')}: {e}")
             continue
+
+
+def set_fill_type(symbol: str, fill_type: str, qty=None, price=None):
+    """
+    Mark the newest open position in `symbol` as CONFIRMED or SKIPPED.
+
+    This is the only writer of CONFIRMED anywhere in the codebase, and it is
+    reachable only from a Telegram command a human typed. The scanner writes
+    SIMULATED and nothing else — it infers fills from price touching a level,
+    which is a paper trade, not an execution.
+
+    Returns (ok, message) so the caller can reply either way.
+    """
+    init_db()
+    symbol = symbol.upper()
+    with _conn() as c:
+        c.row_factory = _db.Row
+        row = c.execute(
+            "SELECT id, symbol, entry, sl, target2, target1, fill_type "
+            "FROM all_signals WHERE UPPER(symbol)=? AND status='OPEN' "
+            "ORDER BY date DESC LIMIT 1",
+            (symbol,)
+        ).fetchone()
+
+    if row is None:
+        return False, (f"No open setup for *{symbol}*. "
+                       f"Use /book to see what is live.")
+
+    prev = row["fill_type"] or "SIMULATED"
+    if fill_type == "SKIPPED":
+        with _conn() as c:
+            c.execute("UPDATE all_signals SET fill_type='SKIPPED' WHERE id=?",
+                      (int(row["id"]),))
+            c.commit()
+            _db.sync(c)
+        return True, (f"⏭ *{symbol}* marked SKIPPED. It stays in the shadow "
+                      f"ledger for measurement but claims no capital.")
+
+    fill_price = price if price is not None else float(row["entry"])
+    with _conn() as c:
+        c.execute(
+            "UPDATE all_signals SET fill_type='CONFIRMED', confirmed_at=?, "
+            "confirmed_qty=?, confirmed_price=? WHERE id=?",
+            (datetime.now(_IST).isoformat(), qty, fill_price, int(row["id"]))
+        )
+        c.commit()
+        _db.sync(c)
+
+    qty_txt = f"{qty} sh" if qty else "ticket qty"
+    return True, (f"✅ *{symbol}* CONFIRMED at ₹{fill_price:,.2f} ({qty_txt}).\n"
+                  f"Was {prev}. It now counts toward deployed capital and P&L.")
+
+
+def book_summary() -> str:
+    """Live book split by whether the capital is real."""
+    init_db()
+    with _conn() as c:
+        c.row_factory = _db.Row
+        rows = c.execute(
+            "SELECT symbol, entry, sl, fill_type, confirmed_qty, confirmed_price, "
+            "entry_triggered_at, signal_type FROM all_signals "
+            "WHERE status='OPEN' AND entry_triggered_at IS NOT NULL "
+            "ORDER BY date DESC"
+        ).fetchall()
+
+    if not rows:
+        return ("📋 *Book*\n\nNothing has triggered yet. "
+                "Setups are waiting for price to reach entry.")
+
+    conf = [r for r in rows if (r["fill_type"] or "") == "CONFIRMED"]
+    sim = [r for r in rows if (r["fill_type"] or "SIMULATED") == "SIMULATED"]
+    skip = [r for r in rows if (r["fill_type"] or "") == "SKIPPED"]
+
+    out = ["📋 *Book*", ""]
+    if conf:
+        out.append("*CONFIRMED — real capital*")
+        for r in conf:
+            px = float(r["confirmed_price"] or r["entry"])
+            qty = r["confirmed_qty"]
+            qty_txt = f" × {qty}" if qty else ""
+            out.append(f"  • {r['symbol']} @ ₹{px:,.2f}{qty_txt}")
+    else:
+        out.append("*CONFIRMED — real capital*\n  none")
+    out.append("")
+    out.append(f"*SIMULATED — paper only ({len(sim)})*")
+    for r in sim[:10]:
+        out.append(f"  • {r['symbol']} @ ₹{float(r['entry']):,.2f} · {r['signal_type']}")
+    if skip:
+        out.append("")
+        out.append(f"*SKIPPED* — {', '.join(r['symbol'] for r in skip[:10])}")
+    out.append("")
+    out.append("_Simulated fills are inferred from price touching entry. "
+               "No order was placed. Use /confirm SYMBOL when you place one._")
+    return "\n".join(out)
 
 
 def get_performance():

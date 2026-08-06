@@ -6,6 +6,8 @@ import requests, os, logging, time
 from datetime import datetime
 import pytz
 
+import tracker
+
 TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
@@ -294,6 +296,38 @@ def handle_command(text, chat_id):
             _post(f"🔇 Muted alerts for *{sym}*. Use /unmute {sym} to re-enable.", chat_id)
         else:
             _post("Usage: /mute SYMBOL (e.g. /mute RELIANCE)", chat_id)
+
+    elif text.startswith("/confirm") or text.startswith("/skip"):
+        # The only path that can mark a fill real.
+        #
+        # This repo has no broker integration — upstox_provider is read-only
+        # market data — so every fill the scanner records is inferred from a
+        # price touch, not from an executed order. Without an explicit human
+        # confirmation the terminal would report deployed capital and P&L
+        # against money that was never committed.
+        parts = text.split()
+        cmd = "SKIPPED" if text.startswith("/skip") else "CONFIRMED"
+        if len(parts) < 2:
+            _post(
+                "Usage:\n"
+                "`/confirm SYMBOL [qty] [price]` — you placed this order\n"
+                "`/skip SYMBOL` — you passed on it\n\n"
+                "Without qty/price the ticket's own numbers are used.\n"
+                "Only confirmed trades count toward deployed capital.",
+                chat_id
+            )
+        else:
+            sym = parts[1].upper()
+            qty = int(parts[2]) if len(parts) > 2 and parts[2].isdigit() else None
+            try:
+                price = float(parts[3]) if len(parts) > 3 else None
+            except ValueError:
+                price = None
+            ok, msg = tracker.set_fill_type(sym, cmd, qty, price)
+            _post(msg if ok else f"⚠️ {msg}", chat_id)
+
+    elif text.startswith("/book"):
+        _post(tracker.book_summary(), chat_id)
 
     elif text.startswith("/stats"):
         _post(
