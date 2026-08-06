@@ -225,7 +225,13 @@ def generate() -> None:
     csp = ("default-src 'self'; "
            f"script-src 'self' 'nonce-{nonce}'; "
            "style-src 'self' 'unsafe-inline'; "
-           "img-src 'self' data:; font-src 'self'; "
+           # i.ytimg.com is the player's poster frame. Without it every play
+           # logs two CSP violations and the player shows a black box until
+           # the first frame decodes. It costs nothing in privacy terms: the
+           # request happens inside the embed, which only exists after the
+           # reader pressed play and already contacted Google. Images cannot
+           # execute, so this grants no new capability.
+           "img-src 'self' data: https://i.ytimg.com; font-src 'self'; "
            "frame-src https://www.youtube-nocookie.com; "
            # The browser only ever talks to this origin's /api. gold-api and
            # Yahoo are called server-side.
