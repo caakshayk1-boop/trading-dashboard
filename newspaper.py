@@ -2878,6 +2878,33 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .crate-note{margin-top:12px;font-family:var(--mono);font-size:11px;
   letter-spacing:.4px;color:var(--dim);min-height:16px}
 .crate-note.err{color:var(--gold)}
+/* The play control is a button now, not a decorative span. Same look, but it
+   is tabbable and hittable. .trk:hover styling already targets .pl. */
+.trk .pl{background:none;border:none;padding:0;width:26px;height:34px;cursor:pointer}
+.trk .pl.on{color:var(--lime);opacity:1;transform:scale(1.3)}
+
+/* Docked player. Fixed bottom-right on desktop so it survives scrolling;
+   full-width across the bottom on phones, where a floating card would cover
+   the crate you are picking from. */
+.player{position:fixed;right:20px;bottom:20px;width:360px;max-width:calc(100vw - 32px);
+  background:var(--surface);border:1px solid var(--line2);border-radius:14px;
+  overflow:hidden;z-index:60;box-shadow:0 18px 48px rgba(0,0,0,.6)}
+.player[hidden]{display:none}
+.player-h{display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border-bottom:1px solid var(--line);background:var(--bg2)}
+.player-t{flex:1;font-size:12.5px;font-weight:500;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-y{font-family:var(--mono);font-size:10px;letter-spacing:.6px;
+  color:var(--dim);text-decoration:none;flex:none;white-space:nowrap}
+.player-y:hover{color:var(--lime)}
+.player-x{background:none;border:none;color:var(--dim);cursor:pointer;
+  font-size:14px;line-height:1;flex:none;width:30px;height:30px;border-radius:50%}
+.player-x:hover{color:var(--down);background:var(--surface2)}
+.player-f{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.player-f iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+@media(max-width:620px){
+  .player{right:0;left:0;bottom:0;width:auto;max-width:none;border-radius:14px 14px 0 0}
+}
 .crate-more{width:100%;background:none;border:none;border-top:1px solid var(--line);
   color:var(--dim);font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;
   text-transform:uppercase;padding:13px;cursor:pointer;min-height:24px;transition:color .2s}
@@ -4709,13 +4736,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <ol class="crate-l">
         {% for t in crate['items'] %}
         <li class="trk{% if loop.index > music.top_n %} more{% endif %}"
-            data-title="{{ t.title }}" data-artist="{{ t.artist }}" data-url="{{ t.url }}">
+            data-title="{{ t.title }}" data-artist="{{ t.artist }}" data-url="{{ t.url }}"
+            data-vid="{{ t.vid }}">
           <span class="no">{{ "%02d"|format(loop.index) }}</span>
+          <!-- Still a real anchor to YouTube. It is the no-JS path and the
+               middle-click/"open in new tab" path, and the click handler
+               calls preventDefault only when it can actually play in-page. -->
           <a href="{{ t.url }}" target="_blank" rel="noopener">
             <span class="ti">{{ t.title }}</span>
             <span class="ar">{{ t.artist }}</span>
           </a>
-          <span class="pl" aria-hidden="true">▶</span>
+          <button type="button" class="pl" title="Play here"
+                  aria-label="Play {{ t.title }} on this page">▶</button>
           <!-- A real <button>, not a span with a click handler: this is a
                control, so it needs to be tabbable and to announce its state.
                aria-pressed carries "liked" to a screen reader; the heart glyph
@@ -4749,6 +4781,23 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
   </div>
   <div class="crate-note" id="likeNote" role="status" aria-live="polite"></div>
+
+  <!-- Docked player. Deliberately NOT one iframe per row: a row-level embed
+       stops the moment you scroll to another crate, and forty idle iframes is
+       forty third-party connections. One player, created on first play and
+       reused, keeps the music running while you read the rest of the page.
+
+       The iframe is built in JS rather than sitting here with a src, so the
+       page contacts Google only once you actually press play. -->
+  <div class="player" id="player" hidden>
+    <div class="player-h">
+      <span class="player-t" id="playerT">—</span>
+      <a class="player-y" id="playerY" href="#" target="_blank" rel="noopener"
+         title="If the embed is blocked for this video, open it on YouTube">Open on YouTube ↗</a>
+      <button type="button" class="player-x" id="playerX" aria-label="Close player">✕</button>
+    </div>
+    <div class="player-f" id="playerF"></div>
+  </div>
 </section>{% endif %}
 
 {% if 'gym' in secs %}<section class="sec" id="gym">
@@ -4949,9 +4998,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <h4>Your email</h4>
       <p>If you subscribe, your address is stored on my own database and used for one
         thing: sending the daily edition. It is never sold, never shared, and never passed
-        to an ad network. This page loads no analytics and no tracking scripts of any kind
-        &mdash; the only third party it contacts is Google Fonts. Reply to any edition to be
-        removed, or write to
+        to an ad network. This page loads no analytics and no tracking scripts of any kind,
+        and the fonts are served from this domain. As loaded it contacts no third party at
+        all. The one exception is deliberate and opt-in: pressing play on a track opens a
+        YouTube player, which is a connection to Google. It uses the no-cookie player and
+        is created only on that click &mdash; if you never press play, it never loads.
+        Reply to any edition to be removed, or write to
         <a href="mailto:ca.akkothari@gmail.com">ca.akkothari@gmail.com</a>.</p>
     </div>
     <div>
@@ -5461,17 +5513,24 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       if (count) count.textContent = songs.length;
       var TOP = 5, html = '';
       songs.forEach(function(s, i){
+        // The stored url is the watch link; recover the id from it so a liked
+        // track plays in-page like any other row. Without this the Liked crate
+        // would be the one shelf that still bounced you to YouTube.
+        var m = /[?&]v=([\w-]{6,})/.exec(s.url || '');
+        var vid = m ? m[1] : '';
         html += '<li class="trk' + (i >= TOP ? ' more' : '') + '"' +
                 ' data-title="' + esc(s.title) + '"' +
                 ' data-artist="' + esc(s.artist) + '"' +
-                ' data-url="' + esc(s.url) + '">' +
+                ' data-url="' + esc(s.url) + '"' +
+                ' data-vid="' + esc(vid) + '">' +
                   '<span class="no">' + ('0' + (i + 1)).slice(-2) + '</span>' +
                   (s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">'
                          : '<a>') +
                     '<span class="ti">' + esc(s.title) + '</span>' +
                     '<span class="ar">' + esc(s.artist) + '</span>' +
                   '</a>' +
-                  '<span class="pl" aria-hidden="true">&#9654;</span>' +
+                  '<button type="button" class="pl" title="Play here"' +
+                  ' aria-label="Play ' + esc(s.title) + ' on this page">&#9654;</button>' +
                   '<button type="button" class="lk" aria-pressed="true"' +
                   ' title="Remove from my songs"' +
                   ' aria-label="Remove ' + esc(s.title) + ' from my songs">&hearts;</button>' +
@@ -5501,10 +5560,77 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         .catch(function(){ /* static host: the hearts still render, inert */ });
     }
 
+    /* ── the player ──
+       One iframe, created on first play and reused after that. It is built
+       here rather than sitting in the HTML with a src so that a reader who
+       never presses play never contacts Google at all. youtube-nocookie.com
+       for the same reason. */
+    var pBox = document.getElementById('player'),
+        pFrame = document.getElementById('playerF'),
+        pTitle = document.getElementById('playerT'),
+        pYt = document.getElementById('playerY'),
+        playing = null;
+
+    function play(li){
+      var vid = li.dataset.vid, url = li.dataset.url;
+      // No id means there is nothing to embed — an unpinned track only has a
+      // YouTube *search* URL. Let the anchor do its normal thing.
+      if (!vid || !pBox) return false;
+
+      var t = li.dataset.title || '', a = li.dataset.artist || '';
+      pTitle.textContent = a ? t + ' — ' + a : t;
+      pYt.href = url || ('https://www.youtube.com/watch?v=' + vid);
+      // Replacing the whole node rather than reassigning src: swapping src on
+      // a live YouTube iframe leaves the previous video's audio running in
+      // some builds, so the shelf ends up playing two songs at once.
+      pFrame.innerHTML = '';
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(vid) +
+              '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      f.title = pTitle.textContent;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture';
+      f.setAttribute('allowfullscreen', '');
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      pFrame.appendChild(f);
+      pBox.hidden = false;
+
+      if (playing) playing.classList.remove('on');
+      var b = li.querySelector('.pl');
+      if (b){ b.classList.add('on'); playing = b; }
+      say('Playing here. Embeds can be disabled per video — use “Open on YouTube” if it will not start.');
+      return true;
+    }
+
+    function stop(){
+      if (!pBox) return;
+      pFrame.innerHTML = '';           // kills the audio
+      pBox.hidden = true;
+      if (playing){ playing.classList.remove('on'); playing = null; }
+    }
+
+    var px = document.getElementById('playerX');
+    if (px) px.addEventListener('click', stop);
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && pBox && !pBox.hidden) stop();
+    });
+
     // One delegated listener on the container, so tracks rendered into the
     // Liked shelf after load are wired for free.
     crates.addEventListener('click', function(ev){
-      var btn = ev.target.closest ? ev.target.closest('.lk') : null;
+      if (!ev.target.closest) return;
+
+      // Play: the ▶ button, or the title itself. preventDefault happens only
+      // when play() actually took it, so an unpinned track still opens YouTube
+      // and cmd/ctrl-click keeps working as a normal link.
+      var hit = ev.target.closest('.pl') || ev.target.closest('.trk a');
+      if (hit && !ev.target.closest('.lk')){
+        if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button > 0) return;
+        var row = hit.closest('.trk');
+        if (row && play(row)){ ev.preventDefault(); return; }
+        return;
+      }
+
+      var btn = ev.target.closest('.lk');
       if (!btn) return;
       ev.preventDefault();
 

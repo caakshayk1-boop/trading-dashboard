@@ -207,10 +207,26 @@ def generate() -> None:
     # does not. That is the right side of the trade — a style attribute cannot
     # exfiltrate the ledger, and connect-src 'self' means nothing can be sent
     # anywhere regardless.
+    # frame-src is the ONLY third-party grant here, and it buys the in-page
+    # music player. Without it `default-src 'self'` blocks the embed outright.
+    #
+    # Three deliberate limits on that grant:
+    #   · youtube-nocookie.com, not youtube.com — no tracking cookie is set
+    #     unless playback actually starts.
+    #   · The iframe is created on click, never at page load, so a reader who
+    #     does not press play contacts Google not at all.
+    #   · script-src is NOT widened. The obvious alternative is YouTube's
+    #     IFrame Player API, which would need `script-src https://www.youtube.com`
+    #     and hand a third party script execution on a page that fronts a
+    #     trading ledger. A plain iframe cannot reach into this document, so
+    #     the weaker embed is the right trade — the cost is that we cannot
+    #     detect an embed-disabled video programmatically, which is why the
+    #     player carries a visible "Open on YouTube" escape hatch.
     csp = ("default-src 'self'; "
            f"script-src 'self' 'nonce-{nonce}'; "
            "style-src 'self' 'unsafe-inline'; "
            "img-src 'self' data:; font-src 'self'; "
+           "frame-src https://www.youtube-nocookie.com; "
            # The browser only ever talks to this origin's /api. gold-api and
            # Yahoo are called server-side.
            "connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'")
