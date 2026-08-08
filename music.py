@@ -55,6 +55,7 @@ them, because a wrong id and a right id look identical in this file.
 
 from __future__ import annotations
 
+import random
 import urllib.parse
 from datetime import date
 
@@ -166,16 +167,27 @@ def _entry(row: tuple) -> dict:
 
 
 def _rotate(rows: list, on: date | None = None) -> list:
-    """Same list, different five on top each day.
+    """Same list, a genuinely different five on top each day.
 
-    The shelf never changes but what greets you does. Ordinal-based, matching
-    every other rotating bank on the site, so the whole page turns over
-    together rather than one section drifting on its own clock.
+    The old version sliced at `ordinal % len` and concatenated, which advances
+    the window by exactly ONE position a day. With a 10-track crate that means
+    four of the five on display yesterday are still on display today — the
+    shelf technically rotated and looked frozen for a week.
+
+    Deterministic shuffle instead: seed a PRNG with the date, shuffle a copy.
+    Same date always gives the same order, so the page is stable all day and
+    reproducible for any date, but consecutive days share no structure and the
+    visible five actually turn over. Every track still appears — this reorders
+    the crate, it does not sample from it.
     """
     if not rows:
         return rows
-    n = (on or date.today()).toordinal() % len(rows)
-    return rows[n:] + rows[:n]
+    d = on or date.today()
+    out = list(rows)
+    # Seeded on the date alone, so all three crates reshuffle together on the
+    # same clock as the rest of the site's daily banks.
+    random.Random(d.toordinal()).shuffle(out)
+    return out
 
 
 def library(on: date | None = None) -> dict:
