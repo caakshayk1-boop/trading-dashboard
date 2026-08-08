@@ -2828,6 +2828,12 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .trk:hover{background:var(--bg2)}
 .trk:hover .ti{color:var(--lime)}
 .trk:hover .pl{color:var(--lime);transform:scale(1.35)}
+/* Small-sample warning on the performance section. Gold, not red: this is not
+   an error, it is a true statement about how little data there is. */
+.thin-warn{font-family:var(--mono);font-size:12px;line-height:1.65;
+  color:var(--gold);background:var(--bg2);border-left:2px solid var(--gold);
+  border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0 0;max-width:78ch}
+
 /* ═══════════════════ SWP ═══════════════════ */
 .swp-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;
   margin-bottom:22px}
@@ -4893,6 +4899,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="ghost" id="perfBasis"></span>
   </div>
 
+  <!-- Shown by renderStats() while the closed count is below MIN_N_FOR_EDGE.
+       The record restarted on the gated engine, so it will be visible for a
+       while — that is the honest state of a ledger that has just begun. -->
+  <p class="thin-warn rv" id="perfThin" style="display:none"></p>
+
   <div class="perf-grid rv" id="perfGrid"></div>
   <div class="brk rv" id="perfBrk"></div>
 </section>{% endif %}
@@ -4952,11 +4963,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
        server-rendered table already exists, so these buttons have to live here
        too or the live layer has nothing to bind to. Hidden until the API probe
        confirms a ledger — there is nothing to switch between on a static host. -->
-  <div class="filters rv" id="alertVer" style="margin-top:6px;display:none">
-    <button class="fbtn on" data-v="v2">Gated (v2)</button>
-    <button class="fbtn" data-v="v1">Legacy (v1)</button>
-    <button class="fbtn" data-v="all">Both</button>
-  </div>
+  <!-- The version switch is gone. There is one engine on this page now: the
+       gated one. The pre-gate history still exists in the database and is
+       still reachable at /api/signals?version=v1 for anyone auditing, but it
+       is no longer part of what this site claims as its record — the
+       2026-08-08 re-grade showed most of that population was a grading
+       artifact, and a toggle that lets a reader pick the flattering number is
+       not a ledger. -->
+  <div class="filters rv" id="alertVer" style="margin-top:6px;display:none"></div>
 
   <div class="tw rv">
     <table class="t" id="alertTable">
@@ -6136,18 +6150,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       // not resolved. Naming them differently is the whole fix.
       var tracked = (h.tracked_positions !== undefined ? h.tracked_positions
                                                        : h.open_positions);
+      // One engine now, so the bar states one count. It used to read
+      // "30 gated (v2) / 575 legacy (v1)", which invited the reader to add
+      // them up — and the 575 are a pre-gate population the 2026-08-08
+      // re-grade showed was mostly a grading artifact.
       var vtxt = '';
-      if (h.by_version){
-        var v2 = h.by_version.v2 || 0, v1 = h.by_version.v1 || 0;
-        vtxt = ' · ' + v2 + ' gated (v2) / ' + v1 + ' legacy (v1)';
+      if (h.by_version && h.by_version.v2 !== undefined){
+        vtxt = ' · ' + h.by_version.v2 + ' logged';
       }
-      // The open count has to be broken down the same way the total is, or the
-      // header reads "38 open setups" over a table showing 3 — the table
-      // defaults to the gated engine and the header was counting both.
       var otxt = (h.open_setups || 0) + ' open setups';
-      if (h.open_by_version){
-        var o2 = h.open_by_version.v2 || 0, o1 = h.open_by_version.v1 || 0;
-        otxt = o2 + ' gated open / ' + o1 + ' legacy open';
+      if (h.open_by_version && h.open_by_version.v2 !== undefined){
+        otxt = h.open_by_version.v2 + ' open setups';
       }
       // Count the same population the table below shows. The tile read 47
       // (every version ever logged) directly above a live bar reading
@@ -6158,9 +6171,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       var heroOpen = h.open_setups || 0, openLbl = 'Open Setups';
       if (h.open_by_version && h.open_by_version.v2 !== undefined){
         heroOpen = h.open_by_version.v2;
-        // Say which population, or the tile is just a different unexplained
-        // number from the one in the bar.
-        openLbl = 'Open Setups (gated)';
+        // No "(gated)" qualifier any more — there is nothing to distinguish it
+        // from, so the label would only raise a question the page no longer
+        // answers.
+        openLbl = 'Open Setups';
       }
       setKpi('heroOpen', heroOpen);
       var hk = el('heroOpenK'); if (hk) hk.textContent = openLbl;
@@ -6415,14 +6429,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           '<button class="fbtn" data-f="loss">Stop Hit</button>' +
           '<button class="fbtn" data-f="cancelled">Cancelled</button>' +
         '</div>' +
-        // Engine generation. v1 is every signal before the quality gate; it is
-        // kept, not deleted, because it is the 476-trade control group the new
-        // gate has to beat. Default view is v2 only.
-        '<div class="filters rv" style="margin-top:6px">' +
-          '<button class="fbtn on" data-v="v2">Gated (v2)</button>' +
-          '<button class="fbtn" data-v="v1">Legacy (v1)</button>' +
-          '<button class="fbtn" data-v="all">Both</button>' +
-        '</div>' +
+        // No engine switch. One engine, one record — see the note on
+        // #alertVer above.
+        ''  +
         '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
           '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>' +
           '<th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
@@ -6537,7 +6546,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       } else if (activeVersion() === 'v2'){
         why = 'No gated signals yet. The v2 engine publishes only setups that clear ' +
               'their engine’s measured break-even R:R — quiet is the intended ' +
-              'state. Switch to Legacy (v1) for the pre-gate history.';
+              'state.';
       } else {
         why = 'Nothing matches those filters.';
       }
@@ -6703,7 +6712,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     /* ═══════ long-term conviction ═══════ */
     function loadLongTerm(){
-      api('/signals?type=ai_longterm&version=all&limit=40').then(function(j){
+      api('/signals?type=ai_longterm&version=v2&limit=40').then(function(j){
         if (!j || !j.ok) return;
         var rows = j.signals || [];
         var sec = el('longterm'); if (!sec) return;
@@ -6984,10 +6993,31 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       });
     }
 
+    // Below this many closed trades, an expectancy figure is noise wearing a
+    // decimal point. The page still shows the number — hiding it would be its
+    // own kind of dishonesty — but says outright that it does not mean
+    // anything yet. Starting the record fresh on the gated engine is exactly
+    // the moment this matters: five trades at +0.14R is not an edge, and the
+    // whole point of this ledger is not to claim one before it is earned.
+    var MIN_N_FOR_EDGE = 30;
+
     function renderStats(j){
       var h = j.headline, t = j.totals;
       el('perfBasis').textContent = t.closed + ' closed of ' + t.all + ' signals · ' +
         (t.first_date || '—') + ' → ' + (t.last_date || '—');
+
+      var warn = el('perfThin');
+      if (warn){
+        var thin = (t.closed || 0) < MIN_N_FOR_EDGE;
+        warn.style.display = thin ? '' : 'none';
+        if (thin){
+          warn.textContent = 'Only ' + (t.closed || 0) + ' closed trade' +
+            ((t.closed === 1) ? '' : 's') + '. These figures are not an edge ' +
+            'measurement yet — at this sample size one trade moves them ' +
+            'materially. Treat them as a running tally, not a result. ' +
+            MIN_N_FOR_EDGE + '+ closed before any of it means something.';
+        }
+      }
 
       // The hero rail is baked at 6 AM. Left alone it would greet you with a
       // win rate from yesterday's snapshot, which is the exact staleness this

@@ -32,11 +32,17 @@ export default async function handler(req, res) {
     const cols = await columns();
     const versioned = cols.has("engine_version");
 
-    // Unlike /api/signals this defaults to "all". Expectancy is the whole
-    // point of this route and v2 starts at zero closed trades — defaulting to
-    // v2 would show an empty performance page and hide the 476-trade record
-    // the new gate is supposed to be judged against.
-    const version = String(q.version || "all").toLowerCase();
+    // Defaults to v2, matching /api/signals. This used to default to "all" so
+    // the performance page would not start empty, but that meant the headline
+    // expectancy blended two different engines — and once the 2026-08-08
+    // re-grade showed the v1 record was largely a grading artifact, publishing
+    // it as the record was worse than publishing nothing.
+    //
+    // v1 is not deleted. `?version=v1` and `?version=all` still return it, so
+    // the history is auditable; it is simply no longer what the site claims as
+    // its record. The cost is a small n, which the page states plainly rather
+    // than dressing up.
+    const version = String(q.version || "v2").toLowerCase();
     if (versioned && version !== "all") {
       if (version === "v1") where.push("(COALESCE(engine_version,'v1') = 'v1')");
       else { where.push("COALESCE(engine_version,'v1') = ?"); args.push(version); }
