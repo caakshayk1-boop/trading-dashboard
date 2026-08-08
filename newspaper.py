@@ -6150,14 +6150,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       // not resolved. Naming them differently is the whole fix.
       var tracked = (h.tracked_positions !== undefined ? h.tracked_positions
                                                        : h.open_positions);
-      // One engine now, so the bar states one count. It used to read
-      // "30 gated (v2) / 575 legacy (v1)", which invited the reader to add
-      // them up — and the 575 are a pre-gate population the 2026-08-08
-      // re-grade showed was mostly a grading artifact.
-      var vtxt = '';
-      if (h.by_version && h.by_version.v2 !== undefined){
-        vtxt = ' · ' + h.by_version.v2 + ' logged';
-      }
+      // One engine now, so the bar states ONE count — the v2 one. h.signals
+      // is every row ever written including the pre-gate population, so
+      // leaving it in put "605 signals · 30 logged" side by side and invited
+      // the reader to wonder which was the record. It is 30.
+      var logged = (h.by_version && h.by_version.v2 !== undefined)
+                 ? h.by_version.v2 : (h.signals || 0);
       var otxt = (h.open_setups || 0) + ' open setups';
       if (h.open_by_version && h.open_by_version.v2 !== undefined){
         otxt = h.open_by_version.v2 + ' open setups';
@@ -6178,7 +6176,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       }
       setKpi('heroOpen', heroOpen);
       var hk = el('heroOpenK'); if (hk) hk.textContent = openLbl;
-      bar('live', 'LIVE LEDGER · ' + h.signals + ' signals' + vtxt +
+      bar('live', 'LIVE LEDGER · ' + logged + ' signals' +
                   ' · latest ' + stamp +
                   ' · ' + tracked + ' tracked · ' + otxt +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
