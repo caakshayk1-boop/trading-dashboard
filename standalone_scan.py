@@ -55,6 +55,13 @@ MAX_HOLD_HOURS = {
 }
 _DEFAULT_MAX_HOLD_HOURS = 20 * 24
 
+# How far through its own stop a fill may be booked before the number is
+# treated as a data artifact rather than a real overnight gap. A liquid NSE
+# name gapping 4% is a bad morning; 14% is what the ledger recorded for
+# BALKRISIND at a price that never traded after the signal existed. Beyond
+# this the stop is booked instead, and the discrepancy is logged.
+MAX_GAP_SLIP_PCT = 4.0
+
 # A single scan must never be able to send 180 messages. If more alerts than
 # this resolve in one run, they are collapsed into one digest. This is the
 # backstop that makes the failure mode "one ugly message" instead of a flood,
@@ -235,17 +242,38 @@ def _bar_window(tf: str, age_hours: float):
 def _since_entry(tick, opened_at):
     """Slice bars to those strictly after the signal was filed.
 
-    The old code took High.max()/Low.min() over the whole fetched frame, so a
-    stop that was breached *before* the entry existed counted as a stop-out, and
-    a month-old row was judged against today's range. A level only counts if
-    price traded there after we were in the trade.
+    A level only counts if price traded there while we were in the trade.
+
+    FAILS CLOSED. The previous version returned the whole fetched frame
+    whenever it could not bound the window — no timestamp, or a tz-naive index
+    — and that silent fallback is what produced phantom stop-outs:
+
+        HINDALCO, signalled 2026-08-07 with a stop at 1013.89, was booked
+        SL_HIT at 990.00. That is precisely the OPEN of 2026-08-03, four days
+        before the signal existed. Price never traded at 990 after the signal
+        at all. 45 rows across the ledger are stopped past their own stop this
+        way, the worst at -6.58R, and capping them at the -1R a stop actually
+        pays moves measured expectancy from +0.090R to +0.222R over 515 trades.
+
+    Returning an empty frame leaves the signal OPEN for the next run, which is
+    the honest outcome when we cannot say what happened. Grading a trade
+    against bars that predate it is never better than grading it later.
     """
-    if opened_at is None or getattr(tick.index, "tz", None) is None:
-        return tick
+    if opened_at is None:
+        return tick.iloc[0:0]
+
+    idx = tick.index
     try:
-        return tick[tick.index > opened_at]
+        if getattr(idx, "tz", None) is None:
+            # Naive index: compare on calendar date instead of dropping the
+            # bound entirely. Daily bars from yfinance arrive naive often
+            # enough that discarding them outright would stall grading.
+            cutoff = opened_at.date() if hasattr(opened_at, "date") else opened_at
+            return tick[[d.date() > cutoff for d in idx]]
+        return tick[idx > opened_at]
     except Exception:
-        return tick
+        # Cannot bound it -> refuse to grade it.
+        return tick.iloc[0:0]
 
 
 def run_price_alerts(time_str: str):
@@ -381,6 +409,13 @@ def run_price_alerts(time_str: str):
             if sl_hit:
                 # If a bar opened beyond the stop we did not get filled at the
                 # stop. Booking a flat -1.0R every time hid real gap risk.
+                #
+                # `win` is now guaranteed post-entry (see _since_entry), so the
+                # bar this reads can no longer predate the signal. A second
+                # guard below refuses anything that still looks impossible: a
+                # genuine overnight gap in a liquid name is a few percent, not
+                # fourteen, and BALKRISIND was booked 14.29% through its stop
+                # at a price that never traded after the signal.
                 try:
                     opens = win["Open"].squeeze()
                     lows  = win["Low"].squeeze()
@@ -390,6 +425,16 @@ def run_price_alerts(time_str: str):
                 except Exception:
                     gap_o = sl
                 exit_p = min(sl, gap_o) if buy else max(sl, gap_o)
+
+                # Sanity bound. Beyond this the number is far likelier to be a
+                # data artifact than a real gap, and a fabricated -5R poisons
+                # expectancy far more than an under-reported one.
+                slip_pct = abs(exit_p - sl) / sl * 100 if sl else 0.0
+                if slip_pct > MAX_GAP_SLIP_PCT:
+                    logging.warning(
+                        f"{sym}: exit {exit_p} is {slip_pct:.1f}% through stop {sl} "
+                        f"— implausible, booking the stop instead")
+                    exit_p = sl
                 r_m = ((exit_p - entry) / risk) if buy else ((entry - exit_p) / risk)
                 pnl = ((exit_p - entry) / entry * 100) * (1 if buy else -1)
                 gap_note = "" if abs(exit_p - sl) < 1e-9 else "  ⚠ gapped through stop"

@@ -688,6 +688,16 @@ def update_all_outcomes():
             if df is None or df.empty:
                 continue
 
+            # yfinance returns MultiIndex columns — ("Close", "HINDALCO.NS") —
+            # even for a single ticker. `bar["High"]` then yields a Series, and
+            # float(Series) raises. The whole walk sits inside `except
+            # Exception: continue`, so EVERY signal was skipped with nothing
+            # but a log.warning: this grader has not resolved a single trade,
+            # which is why the only outcomes in the ledger came from
+            # standalone_scan's cruder path and its phantom stop-outs.
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
+
             entry = float(row["entry"])
             raw_sl = row["sl"]
             if raw_sl is None or (isinstance(raw_sl, float) and math.isnan(raw_sl)):
@@ -712,6 +722,7 @@ def update_all_outcomes():
             status, exit_p, ambiguous = None, None, 0
             sessions = 0
             last_close = None
+            exit_day = None
 
             for ts, bar in df.iterrows():
                 hi = float(bar["High"])
@@ -765,6 +776,13 @@ def update_all_outcomes():
                     status, exit_p = "TIME_STOP", last_close
 
                 if status:
+                    # The bar that resolved it — NOT the clock. closed_at was
+                    # datetime.now(), so it recorded when this job happened to
+                    # run, which is why 25 trades in the ledger are stamped
+                    # closed on a Saturday with the exchange shut. A close date
+                    # that cannot be reconciled against a session is worthless
+                    # for any holding-period or day-of-week analysis.
+                    exit_day = bar_day.isoformat()
                     break
 
             if not status or exit_p is None:
@@ -780,7 +798,8 @@ def update_all_outcomes():
                     "UPDATE all_signals SET status=?,exit_price=?,pnl_pct=?,"
                     "r_multiple=?,exit_ambiguous=?,closed_at=? WHERE id=?",
                     (status, exit_p, pnl, r_m, ambiguous,
-                     datetime.now(_IST).isoformat(), int(row["id"]))
+                     exit_day or datetime.now(_IST).date().isoformat(),
+                     int(row["id"]))
                 )
                 c.commit()
                 _db.sync(c)
