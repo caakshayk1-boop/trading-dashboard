@@ -23,6 +23,12 @@ on:
         type: string
         default: ''
 
+# Default GITHUB_TOKEN is read-only, so the data push 403s and — because
+# it is followed by `|| true` in places — the run still goes green while
+# the scan output is discarded. Same grant newspaper.yml already has.
+permissions:
+  contents: write
+
 concurrency:
   group: ledger-write
   cancel-in-progress: false

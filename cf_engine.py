@@ -58,6 +58,14 @@ class Config:
     day_buffer:   float = 0.0015
     # Acceptance gates.
     min_rr:       float = 1.8   # measured off structural T2, not asserted
+    # T1 must pay back at least the risk. It used to be levels[0] — whatever
+    # structural level happened to be nearest — with no distance test at all,
+    # so HINDALCO shipped a first target 0.80% above entry against a 4.31%
+    # stop: 0.19R. A target you would never take is not a target, and it sat
+    # in the table and in Telegram labelled "T1" beside an RR of 2.41 that was
+    # quoted off T2. 26 signals across cf_1h, equity_measured, breakout, 4h
+    # and commodity carried a T1 closer than their own risk.
+    min_rr_t1:    float = 1.0
     min_vol_ratio: float = 1.0  # 1H volume vs 20-bar average (futures volume is
                                 # spiky; 1.2 rejected 67% of valid setups)
     require_volume: bool = True
@@ -252,13 +260,27 @@ def evaluate(name, df1h, df4h, df1d, price=None, cfg: Config = CONFIG):
     if not levels:
         return _reject("no_targets")
 
-    # T1 is the nearest level price must clear. T2 is the NEAREST level that
-    # actually pays for the risk taken — picking a fixed index instead means a
-    # wide stop can never qualify, which is what strangled the first run.
-    t1 = levels[0]
+    # T2 is the NEAREST level that actually pays for the risk taken — picking a
+    # fixed index instead means a wide stop can never qualify, which is what
+    # strangled the first run.
     t2 = next((lv for lv in levels if abs(lv - price) / risk >= cfg.min_rr), None)
     if t2 is None:
         return _reject("min_rr")           # no level far enough to be worth it
+
+    # T1 gets the same treatment at a lower bar: the nearest level that at
+    # least returns the risk. `levels[0]` was taken blind, which is how a
+    # 0.19R "target" reached the ledger. If no structural level is far enough,
+    # synthesise one at exactly min_rr_t1 — an honest R-multiple beats a level
+    # that happens to be close. t1_source records which, so a reader can tell.
+    t1 = next((lv for lv in levels if abs(lv - price) / risk >= cfg.min_rr_t1), None)
+    t1_source = "structure"
+    if t1 is None:
+        t1 = price + cfg.min_rr_t1 * risk if direction == "BUY" \
+            else price - cfg.min_rr_t1 * risk
+        t1_source = "r_multiple"
+    # T1 must never sit beyond T2 — that would invert the scale-out.
+    if (direction == "BUY" and t1 > t2) or (direction != "BUY" and t1 < t2):
+        t1, t1_source = t2, "clamped_to_t2"
 
     rr = abs(t2 - price) / risk            # measured off a real level
     beyond = [lv for lv in levels if abs(lv - price) > abs(t2 - price)]
@@ -270,9 +292,14 @@ def evaluate(name, df1h, df4h, df1d, price=None, cfg: Config = CONFIG):
         "t1": round(t1, 4), "t2": round(t2, 4),
         "t3": round(t3, 4) if t3 is not None else None,
         "rr": round(rr, 2),
+        # RR has always been measured to T2. That is defensible, but the table
+        # shows T1, T2 and one RR, so a reader reasonably reads it against T1.
+        # Publish both and the ambiguity disappears.
+        "rr_t1": round(abs(t1 - price) / risk, 2),
         "risk_pct": round(risk / price * 100, 2),
         "sl_atr_mult": round(risk / a, 2),
         "target_source": tsrc,
+        "t1_source": t1_source,
         "rsi_4h": round(rsi_4h, 1), "rsi_1h": round(rsi_1h, 1),
         "vol_ratio": round(vol_ratio, 2) if vol_ratio else None,
         "day_high": round(day_high, 4), "day_low": round(day_low, 4),
