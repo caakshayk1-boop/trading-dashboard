@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import urllib.request
 from datetime import date, datetime, timedelta
 
@@ -69,11 +70,12 @@ CATEGORIES: list[tuple[str, str, tuple[str, ...], str, str]] = [
     ("elss",     "ELSS (tax saving)",  ("ELSS", "TAX SAVER", "TAX SAVING"),
      "Equity Scheme - ELSS",
      "80C deduction with a 3-year lock-in — the shortest lock-in of any 80C option."),
-    # Nifty 50 trackers ONLY. An unrestricted "Index" bucket put a Nifty Next
-    # 50 fund (18.91%) above a Nifty 50 fund (8.99%) and made it look like the
-    # better fund. It is not — it tracks a different index. Comparing index
-    # funds is only meaningful against the SAME benchmark, where the spread is
-    # cost and tracking error, not skill.
+    # Plain Nifty 50 trackers ONLY, and this needs a regex rather than a
+    # substring. "NIFTY 50" matches "NIFTY 500", so a UTI Nifty 500 Value 50
+    # fund led this table at 26.41% — against a Nifty 50 that returned ~9% over
+    # the same three years. Equal Weight and Next 50 are different indices too.
+    # Comparing index funds is only meaningful against the SAME benchmark,
+    # where the spread is cost and tracking error rather than skill.
     ("index",    "Index — Nifty 50",   ("NIFTY 50", "NIFTY50"),
      "Other Scheme - Index Funds",
      "No manager, so no manager risk. All of these track the same index — the "
@@ -84,6 +86,23 @@ CATEGORIES: list[tuple[str, str, tuple[str, ...], str, str]] = [
 ]
 
 EXCLUDE = ("IDCW", "DIVIDEND", "REGULAR", "BONUS", "PAYOUT", "REINVEST")
+
+# Extra rejects for the Nifty 50 bucket. AMFI files every index tracker under
+# one scheme_category ("Other Scheme - Index Funds"), so the category field
+# cannot separate a Nifty 50 fund from a Nifty 500 Value 50 one — only the name
+# can, and the name needs care:
+#
+#   · "NIFTY 50" is a prefix of "NIFTY 500", which is how a UTI Nifty 500
+#     Value 50 fund led the table at 26.41% against a Nifty 50 that did ~9%.
+#   · Equal Weight, Next 50, Value 20 and the rest track different indices.
+#     Ranking them together implies a skill difference that cannot exist
+#     between funds tracking the same benchmark.
+_NIFTY50_RE = re.compile(r"NIFTY\s*-?\s*50(?!\d)")
+_NIFTY50_REJECT = (
+    "500", "NEXT", "EQUAL", "VALUE", "MIDCAP", "MID CAP", "SMALLCAP",
+    "SMALL CAP", "ARBITRAGE", "TOP", "QUALITY", "ALPHA", "LOW VOL",
+    "MOMENTUM", "ESG", "SHARIAH",
+)
 MAX_PER_CATEGORY = 60          # candidates fetched per category
 TOP_N = 3                      # published per category
 MIN_YEARS = 3
@@ -187,6 +206,16 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
             # on purpose so nothing is missed; this is what keeps buckets clean.
             if (meta.get("scheme_category") or "").strip() != amfi_cat:
                 continue
+
+            # Index funds all share one AMFI category, so the benchmark has to
+            # be pinned by name. See _NIFTY50_REJECT for why this is not a
+            # simple substring test.
+            if key == "index":
+                nm = (meta.get("scheme_name") or "").upper()
+                if not _NIFTY50_RE.search(nm):
+                    continue
+                if any(x in nm for x in _NIFTY50_REJECT):
+                    continue
 
             # AMFI lists one scheme under several codes (growth/IDCW ISIN
             # splits), so an unguarded run printed HDFC Flexi Cap twice in a
