@@ -97,18 +97,15 @@ def generate() -> None:
     music_lib = _music.library()
     prod    = get_productivity_tip()
 
-    # ~700 NAV downloads, so weekly-cached like the picks and never run inside
-    # a page request. A failure returns {} and the section hides itself rather
-    # than failing the whole build over a third-party API.
-    print("[generate] Building fund screen (weekly cache)...")
-    try:
-        fund_screen = get_fund_screen(build_if_missing=True)
-        _cats = fund_screen.get("categories", [])
-        print(f"[generate] Fund screen: {len(_cats)} categories, "
-              f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
-    except Exception as e:
-        print(f"[generate] ⚠️  fund screen failed: {e}")
-        fund_screen = {}
+    # READ ONLY. build_if_missing=True here cost the daily job its 15-minute
+    # budget — ~700 sequential NAV downloads took the run to 15m14s and GitHub
+    # cancelled it, breaking the newspaper. The screen is a weekly artefact and
+    # is built by its own workflow (fund_screen.yml); this build only renders
+    # whatever is already cached, and hides the section when nothing is.
+    fund_screen = get_fund_screen()
+    _cats = fund_screen.get("categories", [])
+    print(f"[generate] Fund screen (cached): {len(_cats)} categories, "
+          f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
 
     # Picks are keyed by ISO week. Nothing warms that cache on a static build —
     # under Flask a startup thread did it — so every Monday the section

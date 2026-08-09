@@ -1,0 +1,83 @@
+name: Fund Screen — weekly SIP ranking
+
+# Builds the SIP fund screen and caches it in Turso (newspaper_funds, keyed by
+# ISO week). The daily newspaper only READS that cache.
+#
+# It has its own workflow because it does not belong in the daily build: ~700
+# sequential NAV downloads took the 6 AM job from ~4 minutes to 15m14s, past
+# its 15-minute cap, and GitHub cancelled the run — so a weekly nice-to-have
+# broke the daily paper. Slow work that changes weekly gets its own clock.
+
+on:
+  schedule:
+    - cron: '0 20 * * 6'      # Sunday 01:30 IST — after the week's last NAV
+  workflow_dispatch:
+    inputs:
+      per_category:
+        description: 'Candidates fetched per category (higher = slower, wider)'
+        required: false
+        default: '45'
+
+concurrency:
+  group: fund-screen
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    # Generous on purpose: this is the job that is ALLOWED to be slow.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build and cache the screen
+        env:
+          PER_CAT: ${{ inputs.per_category || '45' }}
+        run: |
+          python - <<'PY'
+          import os, json, logging
+          logging.basicConfig(level=logging.INFO, format="%(message)s")
+          import funds, newspaper
+
+          n = int(os.environ.get("PER_CAT", "45"))
+          data = funds.build(limit_per_cat=n)
+          if not data.get("ok"):
+              raise SystemExit(f"screen failed: {data.get('error')}")
+
+          cats = data["categories"]
+          total = sum(len(c["funds"]) for c in cats)
+          print(f"\n{len(cats)} categories, {total} funds published")
+          for c in cats:
+              top = c["funds"][0]["r3"] if c["funds"] else None
+              print(f"  {c['label']:22} {c['screened']:3} screened  top {top}%")
+
+          # Empty categories mean the AMFI category string moved or every
+          # candidate went stale. Fail loudly rather than caching a blank
+          # section that then renders as "nothing here" for a week.
+          empty = [c["label"] for c in cats if not c["funds"]]
+          if empty:
+              raise SystemExit(f"empty categories: {empty}")
+
+          week = newspaper._week_key()
+          with newspaper._db() as con:
+              con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
+                  week TEXT PRIMARY KEY, payload TEXT)""")
+              con.execute("INSERT OR REPLACE INTO newspaper_funds VALUES (?,?)",
+                          (week, json.dumps(data)))
+              con.commit()
+          print(f"\ncached for week {week}")
+          PY
