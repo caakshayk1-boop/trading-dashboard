@@ -112,6 +112,11 @@ def init_newspaper_db():
         con.execute("""CREATE TABLE IF NOT EXISTS newspaper_stocks_picked (
             pick_date TEXT PRIMARY KEY, picks TEXT
         )""")
+        # The fund screen is ~700 NAV downloads, so it is cached weekly like
+        # the stock picks rather than recomputed per build.
+        con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
+            week TEXT PRIMARY KEY, payload TEXT
+        )""")
 
 # ─────────────────────────────────────────────────────────────
 # GROQ AI
@@ -1587,6 +1592,7 @@ SECTION_MAP = [
     ("longterm",    "Long-Term",    "main"),
     ("tracker",     "Portfolio",    "main"),
     ("sip",         "SIP Buckets",  "main"),
+    ("funds",       "Fund Screen",  "main"),
     # Pure client-side arithmetic — no API, no ledger. It therefore works
     # identically on the static host, and unlike #sip it must NOT start hidden.
     ("swp",         "SWP",          "main"),
@@ -1906,6 +1912,41 @@ def _build_picks() -> list[dict]:
 #        Without this bump the cached ranking keeps serving the two "$nan"
 #        cards that the NaN-clamp bug promoted into the top 5. (2026-08-06)
 PICKS_ENGINE = "v4"
+
+
+def get_fund_screen(build_if_missing: bool = False) -> dict:
+    """This week's SIP screen, cached. Empty dict when unavailable.
+
+    Never blocks a page render: ~700 NAV downloads take minutes, so a cache
+    miss returns nothing and the section hides itself rather than hanging the
+    build behind a third-party API.
+    """
+    week = _week_key()
+    try:
+        with _db() as con:
+            row = con.execute("SELECT payload FROM newspaper_funds WHERE week=?",
+                              (week,)).fetchone()
+            if row:
+                return json.loads(row[0])
+    except Exception as e:
+        log.warning(f"fund cache read: {e}")
+
+    if not build_if_missing:
+        return {}
+
+    try:
+        import funds as _funds
+        data = _funds.build()
+        if not data.get("ok"):
+            return {}
+        with _db() as con:
+            con.execute("INSERT OR REPLACE INTO newspaper_funds VALUES (?,?)",
+                        (week, json.dumps(data)))
+            con.commit()
+        return data
+    except Exception as e:
+        log.warning(f"fund screen build failed: {e}")
+        return {}
 
 
 def _week_key() -> str:
@@ -2828,6 +2869,16 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .trk:hover{background:var(--bg2)}
 .trk:hover .ti{color:var(--lime)}
 .trk:hover .pl{color:var(--lime);transform:scale(1.35)}
+/* ═══════════════════ FUND SCREEN ═══════════════════ */
+.fund-note{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--muted);
+  background:var(--bg2);border-left:2px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:14px 18px;margin-bottom:22px;max-width:82ch}
+.fund-note strong{color:var(--text)}
+.fundcat{margin-bottom:26px}
+.fundcat-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.fundcat-h h3{font-size:17px;margin:0}
+.fundcat-b{color:var(--muted);font-size:13px;margin:4px 0 12px;max-width:74ch}
+
 /* Small-sample warning on the performance section. Gold, not red: this is not
    an error, it is a true statement about how little data there is. */
 .thin-warn{font-family:var(--mono);font-size:12px;line-height:1.65;
@@ -4041,6 +4092,81 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     Actual equity returns arrive in a very different order, and sequence matters.
   </p>
 </section>{% endif %}
+
+<!-- ══════════ FUND SCREEN ══════════
+     A ranking of public data, not a recommendation. Direct + Growth plans
+     only, ranked on CAGR computed here from AMFI's own NAV series.
+
+     Deliberately shows the drawdown next to the return: a 3-year CAGR on its
+     own tells you the reward and hides the ride, and the small-cap column is
+     where that gap is widest. -->
+{% if 'funds' in secs and fund_screen.get('categories') %}
+<section class="sec" id="funds">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['funds'] }} / {{ seclabel['funds'] }}</span>
+      <h2 class="stitle">Where the SIP goes.</h2>
+    </div>
+    <p class="sdesc">Top three by three-year return in each category, from
+      {{ fund_screen.source }}. Direct plans only &mdash; same portfolio, same
+      manager, without the distributor commission. Returns are computed from the
+      published NAV series, not copied off a factsheet.</p>
+  </div>
+
+  <div class="fund-note rv">
+    <strong>On expense ratio.</strong> Per-scheme TER is not published in the free
+    AMFI feed, so this screen does not claim to know it. The cost lever that
+    <em>is</em> visible is Direct versus Regular, and it is the big one: a Regular
+    plan carries the distributor commission inside its TER, typically 0.5&ndash;1.2%
+    a year more for the same portfolio. Everything below is Direct.
+  </div>
+
+  {% for cat in fund_screen.categories %}
+  {% if cat.funds %}
+  <div class="fundcat rv">
+    <div class="fundcat-h">
+      <h3>{{ cat.label }}</h3>
+      <span class="ghost">{{ cat.screened }} screened</span>
+    </div>
+    <p class="fundcat-b">{{ cat.blurb }}</p>
+    <div class="tw">
+      <table class="t" style="min-width:640px">
+        <thead><tr>
+          <th>#</th><th>Fund</th><th class="num">3Y</th><th class="num">5Y</th>
+          <th class="num">Worst fall (3y)</th><th class="num">NAV</th><th></th>
+        </tr></thead>
+        <tbody>
+          {% for f in cat.funds %}
+          <tr>
+            <td class="mono-dim">{{ loop.index }}</td>
+            <td><strong>{{ f.name }}</strong><br>
+                <span class="mono-dim" style="font-size:11px">{{ f.house }}</span></td>
+            <td class="num up">{{ f.r3 }}%</td>
+            <td class="num">{{ f.r5 if f.r5 is not none else '—' }}{{ '%' if f.r5 is not none else '' }}</td>
+            <td class="num dn">{{ f.dd3 if f.dd3 is not none else '—' }}{{ '%' if f.dd3 is not none else '' }}</td>
+            <td class="num mono-dim">{{ f.nav }}</td>
+            <td><a href="{{ f.url }}" target="_blank" rel="noopener"
+                   class="btn-gh" title="The NAV series this ranking was computed from">Data</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Past return is the only thing a NAV series can tell you, and it is the weakest
+    predictor of the next three years there is. A fund at the top of a three-year
+    table is often there because its style was in favour, not because it will stay
+    there. This is a screen, not advice &mdash; I am not a SEBI-registered adviser.
+    <br><br>
+    NAV as of {{ fund_screen.categories[0].funds[0].nav_date if fund_screen.categories[0].funds else '—' }}.
+    Screen rebuilt weekly.
+  </p>
+</section>
+{% endif %}
 
 <!-- ══════════ SWP ══════════
      The other half of the SIP section: buckets say what goes in, this says
@@ -7998,6 +8124,7 @@ def index():
             markets=markets, news=news, fpna=fpna, cfo=cfo,
             chess=chess, wisdom=wisdom, book=book, way=way_ctx, review=review_ctx,
             top5=top5, tracker=tracker, money_hack=money, dubai=dubai, daughter=daughter, music=music_lib,
+            fund_screen=get_fund_screen(),
             productivity_tip=prod,
             quote=quote, lesson=lesson, case=case,
             lichess_games=lichess_games, lichess_summary=lichess_summary, lichess_puzzle=lichess_puzzle,
@@ -8018,7 +8145,7 @@ def index():
             wisdom={"title":"Loading","body":"","index":0,"total":1},
             book={"book":"Loading","author":"","chapter":"Loading","lesson":"","key_quote":"","action":"","index":0,"total":1},
             way=_way_placeholder(), review=_review_placeholder(),
-            top5=[], tracker=[], money_hack={"title":"Loading","body":""},
+            top5=[], tracker=[], fund_screen={}, money_hack={"title":"Loading","body":""},
             dubai=get_dubai_note(), daughter=daughter_age(),
             music=__import__('music').library(),
             productivity_tip="Loading...",

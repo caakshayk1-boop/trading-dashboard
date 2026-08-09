@@ -37,6 +37,7 @@ from newspaper import (
     get_review,
     fetch_alert_log,
     get_top5_picks,
+    get_fund_screen,
     last_known_picks,
     get_tracker_stocks,
     get_money_hack,
@@ -95,6 +96,19 @@ def generate() -> None:
     import music as _music
     music_lib = _music.library()
     prod    = get_productivity_tip()
+
+    # ~700 NAV downloads, so weekly-cached like the picks and never run inside
+    # a page request. A failure returns {} and the section hides itself rather
+    # than failing the whole build over a third-party API.
+    print("[generate] Building fund screen (weekly cache)...")
+    try:
+        fund_screen = get_fund_screen(build_if_missing=True)
+        _cats = fund_screen.get("categories", [])
+        print(f"[generate] Fund screen: {len(_cats)} categories, "
+              f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
+    except Exception as e:
+        print(f"[generate] ⚠️  fund screen failed: {e}")
+        fund_screen = {}
 
     # Picks are keyed by ISO week. Nothing warms that cache on a static build —
     # under Flask a startup thread did it — so every Monday the section
@@ -271,6 +285,9 @@ def generate() -> None:
         music=music_lib,
         productivity_tip=prod,
         top5=top5,
+        # Weekly, cached. build_if_missing so a fresh week actually builds it;
+        # a failure returns {} and the section hides rather than failing the build.
+        fund_screen=fund_screen,
         top5_week=top5_week,
         tracker=tracker,
         lichess_games=lichess_games,
