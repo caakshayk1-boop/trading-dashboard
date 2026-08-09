@@ -38,6 +38,7 @@ from newspaper import (
     fetch_alert_log,
     get_top5_picks,
     get_fund_screen,
+    open_setup_context,
     last_known_picks,
     get_tracker_stocks,
     get_money_hack,
@@ -128,6 +129,14 @@ def generate() -> None:
     print("[generate] Fetching alert log...")
     alerts = fetch_alert_log(limit=200)
     print(f"[generate] Alerts: {len(alerts)} signals found")
+
+    print("[generate] Pricing open setups...")
+    try:
+        open_ctx = open_setup_context(alerts)
+        print(f"[generate] Open setup context: {len(open_ctx)} symbols priced")
+    except Exception as e:
+        print(f"[generate] ⚠️  open setup context failed: {e}")
+        open_ctx = {}
 
     print("[generate] Fetching Lichess games...")
     lichess_games   = fetch_lichess_games()
@@ -310,6 +319,10 @@ def generate() -> None:
         "date_str": now.strftime("%A, %B %d %Y"),
         "picks": top5,
         "picks_week": top5_week,
+        # Live price + sector per OPEN setup. Powers distance-to-entry and
+        # correlation-aware heat on the page; both would otherwise need a
+        # Yahoo call from the browser, which is not available to it.
+        "open_context": open_ctx,
         "desk": {
             "chess": chess,
             "wisdom": wisdom,

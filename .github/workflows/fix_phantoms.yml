@@ -57,6 +57,15 @@ jobs:
         if: inputs.apply == 'true'
         run: python fix_phantom_exits.py --apply
 
+      # Last, so excursions are measured against outcomes that have already
+      # been corrected by the two passes above.
+      - name: Excursions (report)
+        run: python backfill_excursions.py
+
+      - name: Excursions (apply)
+        if: inputs.apply == 'true'
+        run: python backfill_excursions.py --apply
+
       - name: Export refreshed feed
         if: inputs.apply == 'true'
         run: python -c "import tracker; tracker.export_signals_json()"

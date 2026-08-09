@@ -2024,6 +2024,52 @@ def last_known_picks() -> tuple[list[dict], str | None]:
 # STOCK TRACKER
 # ─────────────────────────────────────────────────────────────
 
+def open_setup_context(alerts: list[dict]) -> dict:
+    """Live price and sector for every OPEN setup, keyed by symbol.
+
+    Serves two questions the page could not answer:
+
+      · Which of these is actionable TODAY? A setup whose entry is 9% below
+        the last price has already run away; one sitting 0.4% away is live.
+        Twenty open setups all look equally available in a table, and they
+        are not.
+
+      · How correlated is the book? Portfolio heat counted twenty setups at
+        1% as 20% of risk. If fifteen are the same sector that is nearer one
+        bet held fifteen ways, and the honest number is worse than 20%.
+
+    Built here rather than in the browser because sector lookup is a Yahoo
+    call per symbol and the page must never wait on that. Roughly 20 symbols,
+    a few seconds — nothing like the fund screen that blew the build budget.
+    """
+    syms = sorted({str(a.get("symbol") or "").strip()
+                   for a in alerts
+                   if str(a.get("badge") or "") == "open" and a.get("symbol")})
+    out: dict[str, dict] = {}
+    for sym in syms[:60]:            # bounded: a runaway ledger cannot stall the build
+        try:
+            t = yf.Ticker(to_yahoo(sym))
+            price = None
+            try:
+                price = float(t.fast_info.last_price)
+            except Exception:
+                pass
+            sector = ""
+            try:
+                # .info is the slow path and frequently rate-limited; it is
+                # allowed to fail without costing us the price.
+                sector = str((t.info or {}).get("sector") or "")
+            except Exception:
+                pass
+            if price is None and not sector:
+                continue
+            out[sym] = {"price": round(price, 4) if price else None, "sector": sector}
+        except Exception as e:
+            log.debug(f"open_setup_context {sym}: {e}")
+            continue
+    return out
+
+
 def get_tracker_stocks() -> list[dict]:
     # Named columns and an explicit mapping, not SELECT * with keyed access.
     # row_factory does not survive the Turso connection wrapper, so keyed
@@ -2951,6 +2997,16 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .heat-n.hot{color:var(--down)}
 .heat-w{font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--muted);
   margin:8px 0 0;max-width:82ch}
+.heat-w b{color:var(--text)}
+.heat-g{display:flex;gap:26px;flex-wrap:wrap;margin-top:10px}
+.heat-g>div{display:flex;flex-direction:column;gap:3px}
+.heat-g span{font-family:var(--mono);font-size:9.5px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--dim)}
+.heat-g b{font-family:var(--mono);font-size:11.5px;color:var(--muted);font-weight:400}
+/* Distance from entry, under the entry price. Green within 1% (live), grey to
+   4%, red beyond (already gone). */
+.dist{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-top:2px}
+.dist.up{color:var(--up)} .dist.dn{color:var(--down)}
 
 /* ═══════════════════ UNDERWATER ═══════════════════ */
 .uw{margin:22px 0 6px}
@@ -6503,7 +6559,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       wireSheet();
       wirePerfControls();
 
-      loadSignals();
+      // Context first, then the rows — otherwise the first render has no
+      // prices and every distance cell is blank until something re-renders.
+      loadOpenCtx().then(loadSignals);
       loadArchive();
       loadStats();
       loadPositions();
@@ -6962,32 +7020,71 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
       var saved = sizerSaved();
       var pct = saved.pct || 1;
-      var byEngine = {};
-      open.forEach(function(r){
-        var k = r.signal_type || 'other';
-        byEngine[k] = (byEngine[k] || 0) + 1;
-      });
       var total = open.length * pct;
-      // 6% is the conventional line at which a correlated drawdown starts
-      // taking a real bite; it is a rule of thumb, and labelled as one.
+
+      function tally(keyOf){
+        var m = {};
+        open.forEach(function(r){ var k = keyOf(r) || 'unknown'; m[k] = (m[k] || 0) + 1; });
+        return Object.keys(m).sort(function(a, b){ return m[b] - m[a]; })
+                 .map(function(k){ return { k: k, n: m[k] }; });
+      }
+      var byEngine = tally(function(r){ return r.signal_type; });
+      var bySector = tally(function(r){
+        var c = OPEN_CTX[r.symbol]; return c && c.sector ? c.sector : '';
+      });
+
+      // The concentration that actually matters. Twenty setups at 1% is 20%
+      // of the book ONLY if they move independently — and they do not. The
+      // largest single cluster is the number that decides how bad a bad day
+      // gets, so it is stated separately rather than buried in a list.
+      var topSector = bySector.filter(function(x){ return x.k !== 'unknown'; })[0];
+      var topEngine = byEngine[0];
+      var clusterPct = topSector ? topSector.n * pct : 0;
       var hot = total > 6;
 
-      var eng = Object.keys(byEngine).sort(function(a, b){ return byEngine[b] - byEngine[a]; });
+      function line(list, noun){
+        return list.slice(0, 4).map(function(x){
+          return x.n + ' ' + esc(x.k);
+        }).join(' · ') + (list.length > 4 ? ' · +' + (list.length - 4) + ' more' : '');
+      }
+
       box.innerHTML =
         '<div class="heat-h"><span class="eyebrow">Portfolio heat</span>' +
           '<span class="eyebrow">' + open.length + ' open · ' + pct + '% each</span></div>' +
         '<div class="heat-n ' + (hot ? 'hot' : '') + '">' + fmt(total, 1) + '%</div>' +
+        '<div class="heat-g">' +
+          '<div><span>By engine</span><b>' + line(byEngine) + '</b></div>' +
+          (bySector.length && topSector
+            ? '<div><span>By sector</span><b>' + line(bySector) + '</b></div>' : '') +
+        '</div>' +
         '<p class="heat-w">' +
-          (hot
-            ? 'Taking every open setup at ' + pct + '% would put ' + fmt(total, 1) +
-              '% of the book at risk simultaneously. Above roughly 6% a correlated ' +
-              'move stops being a bad week. These are not independent bets — ' +
-              eng.map(function(k){ return byEngine[k] + ' from ' + esc(k); }).join(', ') +
-              '.'
-            : 'Taking every open setup at ' + pct + '% risks ' + fmt(total, 1) +
-              '% of the book at once. Change the risk figure in any trade sheet ' +
-              'and this follows it.') +
+          'Taking every open setup at ' + pct + '% risks ' + fmt(total, 1) +
+          '% of the book at once' + (hot ? ' — above the ~6% where a correlated move stops being a bad week' : '') + '. ' +
+          (topEngine && topEngine.n > 1
+            ? 'But ' + topEngine.n + ' of them come from <b>' + esc(topEngine.k) +
+              '</b> alone, so they are not ' + open.length + ' independent bets. '
+            : '') +
+          (clusterPct >= 3
+            ? 'The largest sector cluster is <b>' + esc(topSector.k) + '</b> at ' +
+              topSector.n + ' setups — ' + fmt(clusterPct, 1) +
+              '% of the book riding one sector move.'
+            : topSector
+              ? 'No single sector holds more than ' + fmt(clusterPct, 1) + '% of the book.'
+              : '') +
         '</p>';
+    }
+
+    /* Live price + sector per open setup, written by the 6 AM build into
+       today.json. A static file rather than an endpoint because the Vercel
+       Hobby plan is already at its 12-function ceiling, and because the
+       browser cannot do a sector lookup at all. Empty on a static host, which
+       degrades to exactly what the page showed before. */
+    var OPEN_CTX = {};
+    function loadOpenCtx(){
+      return fetch('/today.json', { cache: 'no-store' })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(j){ if (j && j.open_context) OPEN_CTX = j.open_context; })
+        .catch(function(){ /* static host: distance and sector simply absent */ });
     }
 
     var pendingSheet = null;
@@ -7022,7 +7119,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
           '<td class="mono-dim">' + gradeCell(a) + '</td>' +
-          '<td class="num">' + money(a.entry, a.currency) + '</td>' +
+          '<td class="num">' + money(a.entry, a.currency) + distCell(a) + '</td>' +
           '<td class="num dn">' + money(a.sl, a.currency) + '</td>' +
           '<td class="num up">' + money(a.target1, a.currency) + '</td>' +
           '<td class="num up">' + money(a.target2, a.currency) + '</td>' +
@@ -7389,6 +7486,25 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     // Break-even win rate: stored on v2 rows, derived from R:R on older ones.
     // Red once it exceeds the ~37% this system actually wins, which is the
     // whole reason the gate exists.
+    /* How far price sits from the entry, for setups that have not filled.
+       A table of twenty open setups implies twenty things you could do today;
+       most have already moved past their entry or are nowhere near it. Only
+       shown on OPEN rows — on a closed trade the distance is history. */
+    function distCell(a){
+      if (a.badge !== 'open') return '';
+      var c = OPEN_CTX[a.symbol];
+      if (!c || !c.price || !a.entry) return '';
+      var d = (c.price - a.entry) / a.entry * 100;
+      var isLong = (a.action || 'BUY').toUpperCase() !== 'SELL';
+      // "Away" means price still has to come back TO the entry to fill.
+      // Positive d on a long means price has run above the entry.
+      var away = isLong ? d : -d;
+      var cls = Math.abs(away) <= 1 ? 'up' : Math.abs(away) <= 4 ? '' : 'dn';
+      return '<div class="dist ' + cls + '" title="Last ' + money(c.price, a.currency) +
+             ' — ' + (away >= 0 ? 'above' : 'below') + ' entry">' +
+             (away >= 0 ? '+' : '') + fmt(away, 1) + '%</div>';
+    }
+
     function beWr(a){
       var v = (a.breakeven_wr === null || a.breakeven_wr === undefined)
             ? (a.rr > 0 ? 100 / (1 + a.rr) : null)

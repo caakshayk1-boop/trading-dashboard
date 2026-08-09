@@ -723,6 +723,7 @@ def update_all_outcomes():
             sessions = 0
             last_close = None
             exit_day = None
+            best_fav, worst_adv = 0.0, 0.0     # excursions, in price terms
 
             for ts, bar in df.iterrows():
                 hi = float(bar["High"])
@@ -755,6 +756,22 @@ def update_all_outcomes():
                     # Fall through — the fill bar can also resolve the trade.
 
                 sessions += 1
+
+                # ── Excursion ────────────────────────────────────────
+                # How far the trade ran in favour, and how far against,
+                # while it was open. Recorded in R because that is the only
+                # unit comparable across a 90-rupee stock and a 4000-dollar
+                # ounce of gold.
+                #
+                # This is what tells you whether the stops are wrong. A book
+                # of losers that each ran +1.5R in favour before turning is a
+                # trailing-stop problem; a book of losers that never went
+                # green is a selection problem. Without it, both look
+                # identical in the ledger — a column of -1R.
+                fav = (hi - entry) if is_long else (entry - lo)
+                adv = (entry - lo) if is_long else (hi - entry)
+                if fav > best_fav: best_fav = fav
+                if adv > worst_adv: worst_adv = adv
 
                 # ── Exit, in the order the levels were reached ───────
                 hit_sl = (lo <= sl) if is_long else (hi >= sl)
@@ -796,9 +813,11 @@ def update_all_outcomes():
             with _conn() as c:
                 c.execute(
                     "UPDATE all_signals SET status=?,exit_price=?,pnl_pct=?,"
-                    "r_multiple=?,exit_ambiguous=?,closed_at=? WHERE id=?",
+                    "r_multiple=?,exit_ambiguous=?,closed_at=?,"
+                    "max_profit_pct=?,max_drawdown_pct=? WHERE id=?",
                     (status, exit_p, pnl, r_m, ambiguous,
                      exit_day or datetime.now(_IST).date().isoformat(),
+                     round(best_fav / risk, 3), round(-worst_adv / risk, 3),
                      int(row["id"]))
                 )
                 c.commit()
