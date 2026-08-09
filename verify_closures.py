@@ -98,13 +98,17 @@ def main() -> int:
     args = ap.parse_args()
 
     tracker.init_db()
-    placeholders = ",".join("?" for _ in LEVEL_CLOSED)
+    # Inlined rather than parameterised: the Turso cursor rejects a list for
+    # `parameters` ("'list' object cannot be converted to 'PyTuple'") and
+    # LEVEL_CLOSED is a module constant of literals, so there is nothing to
+    # inject.
+    in_list = ",".join(f"'{s}'" for s in LEVEL_CLOSED)
     with tracker._conn() as c:
         rows = pd.read_sql(
             f"SELECT id, symbol, date, closed_at, action, entry, sl, target1, target2, "
             f"exit_price, r_multiple, status, signal_type FROM all_signals "
-            f"WHERE upper(coalesce(status,'')) IN ({placeholders})",
-            c, params=list(LEVEL_CLOSED)
+            f"WHERE upper(coalesce(status,'')) IN ({in_list})",
+            c
         ).to_dict("records")
 
     log.info(f"verifying {len(rows)} level-closed signals\n")
