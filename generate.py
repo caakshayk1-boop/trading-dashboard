@@ -46,6 +46,7 @@ from newspaper import (
     daughter_age,
     page_context,
     empty_sections,
+    ENGINE_CHANGES,
     get_productivity_tip,
     fetch_lichess_games,
     get_lichess_summary,
@@ -319,6 +320,10 @@ def generate() -> None:
         "date": now.strftime("%Y-%m-%d"),
         "date_str": now.strftime("%A, %B %d %Y"),
         "picks": top5,
+        # The engine log, so /engine on Telegram quotes the same rule
+        # changes the page shows. Same list object the template renders —
+        # the bot cannot cite a rule the site does not.
+        "engine": ENGINE_CHANGES,
         "picks_week": top5_week,
         # Live price + sector per OPEN setup. Powers distance-to-entry and
         # correlation-aware heat on the page; both would otherwise need a
