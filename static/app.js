@@ -2349,6 +2349,18 @@ var TV_ALIASES = (function () {
       // whole layer exists to kill.
       setKpi('heroRate',  h.win_rate === null ? '—' : h.win_rate + '%');
       setKpi('heroTotal', t.all);
+      // The sample the hero number rests on, stated beside the hero number.
+      // Without it the rail read "66.7% Signal Win Rate" in the accent colour
+      // off THREE closed trades, while the caveat that says so lived nine
+      // sections below the fold. A headline rate and its sample size are one
+      // fact; splitting them across a scroll is how the page overstated itself.
+      var hn = el('heroRateNote'), hr = el('heroRate');
+      var nClosed = h.trades || 0, thinN = nClosed < MIN_N_FOR_EDGE;
+      if (hn){
+        hn.textContent = nClosed + ' closed' + (thinN ? ' · too few to measure' : '');
+      }
+      // Colour is a claim. Reserve the accent for a rate that has earned it.
+      if (hr) hr.style.color = thinN ? 'var(--muted)' : 'var(--lime)';
 
       function cell(v, k, sub, colour){
         return '<div class="perf-cell"><div class="v"' + (colour ? ' style="color:' + colour + '"' : '') + '>' +
@@ -2357,7 +2369,8 @@ var TV_ALIASES = (function () {
       }
       var expColour = h.expectancy_r === null ? '' : (h.expectancy_r >= 0 ? 'var(--up)' : 'var(--down)');
       el('perfGrid').innerHTML =
-        cell(h.win_rate === null ? '—' : h.win_rate + '%', 'Win rate', h.wins + 'W / ' + h.losses + 'L', 'var(--lime)') +
+        cell(h.win_rate === null ? '—' : h.win_rate + '%', 'Win rate', h.wins + 'W / ' + h.losses + 'L',
+             thinN ? 'var(--muted)' : 'var(--lime)') +
         cell(h.expectancy_r === null ? '—' : (h.expectancy_r > 0 ? '+' : '') + fmt(h.expectancy_r, 3) + 'R',
              'Expectancy / trade', 'the number that decides everything', expColour) +
         cell(h.profit_factor === null ? '—' : fmt(h.profit_factor, 2), 'Profit factor', 'gross win ÷ gross loss') +
@@ -2985,6 +2998,11 @@ var TV_ALIASES = (function () {
             }
             // Either we are being watched, or we already reloaded for this
             // edition and the host is still serving the old shell. Ask.
+            // Name the edition being offered. "A newer edition was published"
+            // gave the reader nothing to weigh the reload against — a banner
+            // that cannot say what it is offering reads as chrome.
+            var when = document.getElementById('editionWhen');
+            if (when && j.build_date) when.textContent = ' · ' + j.build_date;
             bar.classList.add('on');
           })
           .catch(function(){ /* offline or a host without edition.json */ });

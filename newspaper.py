@@ -252,6 +252,113 @@ def fetch_dubai_jobs() -> list[dict]:
 def fetch_markets() -> list[dict]:
     return get_cached_markets()
 
+
+# ─────────────────────────────────────────────────────────────
+# MARKET REGIME
+# ─────────────────────────────────────────────────────────────
+# The page showed eight instruments and eight percentages and left the reader
+# to hold them in their head. This states the one thing those eight numbers
+# jointly say — is risk being taken today or shed — and then shows its work,
+# because an unexplained "72/100" is exactly the black-box number this site
+# exists not to publish.
+#
+# It is deliberately not a proprietary index. It is the daily move of the same
+# eight instruments in the rail, weighted, with risk assets counted positive
+# and havens counted negative. Anyone can recompute it from the rail above it.
+#
+# (name → (side, weight, the daily % move that counts as a FULL move))
+# Normalisers are per asset class on purpose: a 1.5% day in Nifty and a 1.5%
+# day in USD/INR are not the same event. The rupee one is 0.4% because that is
+# already a large day for it; treating them alike made FX noise dominate.
+REGIME_WEIGHTS = {
+    "Nifty 50": ("risk",  12, 1.5),
+    "Sensex":   ("risk",   8, 1.5),
+    "S&P 500":  ("risk",  12, 1.2),
+    "Nasdaq":   ("risk",  12, 1.5),
+    "BTC":      ("risk",   6, 3.0),
+    "Gold":     ("haven",  8, 1.0),
+    "USD/INR":  ("haven",  8, 0.4),   # rupee weakness reads as risk-off here
+    "Crude":    ("haven",  6, 2.5),
+}
+
+
+def market_regime(markets: list[dict]) -> dict:
+    """One risk-appetite reading, 0–100, plus the components behind it.
+
+    50 is neutral. Every risk asset pushes up by its weight scaled by how big
+    its move was against that asset's own full-move normaliser; every haven
+    pushes down the same way.
+
+    Each side is then normalised to 50 points of headroom against the weight
+    ACTUALLY PRESENT on that side in this build. Two reasons, and both are
+    correctness rather than taste. The raw weights sum to 50 on the risk side
+    and 22 on the haven side, so an all-out risk day printed 100 while an
+    equally violent flight to safety printed 28 — the same conviction reading
+    as a very different number depending on which way it pointed. And when
+    Yahoo drops an instrument, its weight silently leaves the scale, so the
+    reading would drift toward neutral for a data outage rather than a calm
+    market. Normalising per side, per build, fixes both.
+
+    Returns {} when no instrument priced — a regime built on the fallback rows
+    (change_pct 0, price "—") would read a confident neutral 50 off no data,
+    which is the failure mode this codebase keeps hitting. Silence is correct.
+    """
+    parts = []
+    raw = {"risk": 0.0, "haven": 0.0}      # signed, before normalising
+    cap = {"risk": 0.0, "haven": 0.0}      # weight present on each side
+    for m in markets or []:
+        w = REGIME_WEIGHTS.get(m.get("name"))
+        # price "—" is content_cache's fetch-failed row. It carries change_pct
+        # 0, which is indistinguishable from a genuinely flat day unless the
+        # price is checked too.
+        if not w or m.get("price") in (None, "", "—"):
+            continue
+        side, weight, norm = w
+        pct = float(m.get("change_pct") or 0)
+        scaled = max(-1.0, min(1.0, pct / norm)) if norm else 0.0
+        raw[side] += weight * scaled
+        cap[side] += weight
+        parts.append({"name": m["name"], "side": side, "pct": pct,
+                      "weight": weight, "scaled": round(scaled, 3)})
+    if not parts:
+        return {}
+
+    total = 0.0
+    for side, sign in (("risk", 1), ("haven", -1)):
+        if cap[side]:
+            total += sign * raw[side] * (50.0 / cap[side])
+    # Each part's share of the final reading, on the same normalised scale, so
+    # the drivers named below are the ones that actually moved the number.
+    for p in parts:
+        sign = 1 if p["side"] == "risk" else -1
+        p["push"] = round(sign * p["weight"] * p["scaled"] * (50.0 / cap[p["side"]]), 1)
+        del p["weight"], p["scaled"]
+
+    score = int(round(max(0.0, min(100.0, 50 + total))))
+    if   score >= 70: label, tone = "Risk-on",          "up"
+    elif score >= 56: label, tone = "Leaning risk-on",  "up"
+    elif score >= 45: label, tone = "Mixed",            "flat"
+    elif score >= 31: label, tone = "Leaning risk-off", "dn"
+    else:             label, tone = "Risk-off",         "dn"
+
+    # The two instruments that moved the reading most, either way. This is the
+    # "why" — without it the number is a claim.
+    #
+    # Only instruments that actually moved it qualify. Sorting by abs(push)
+    # alone returns whatever happened to be first on a flat day, so the page
+    # would print "moved most by Nifty 50 +0.0%" — naming a driver of nothing.
+    drivers = [p for p in sorted(parts, key=lambda p: abs(p["push"]), reverse=True)
+               if abs(p["push"]) >= 0.5][:2]
+    return {
+        "score": score, "label": label, "tone": tone,
+        "parts": parts, "drivers": drivers,
+        "n": len(parts),
+        # Under half the board priced, the reading is a couple of instruments
+        # wearing a 0–100 scale. Say so rather than letting it pass as a
+        # measurement of "the market".
+        "thin": len(parts) < 4,
+    }
+
 # ─────────────────────────────────────────────────────────────
 # ENTREPRENEUR QUOTES — 100 quotes
 # ─────────────────────────────────────────────────────────────
@@ -1660,32 +1767,41 @@ ENGINE_CHANGES = [
     },
 ]
 
+# The fourth column is the nav GROUP. Eleven equally-weighted numbered links
+# told a first-time reader nothing about what this page is for — Fund Screen
+# and Signal Log looked like the same kind of thing, and the answer to "what do
+# I use this site for?" was "read all eleven and decide". The group is a label
+# only: document order is still the single sequence everything derives from,
+# because nav order MUST match document order (see page_context). Consecutive
+# rows sharing a group render under one heading; a group that appears twice in
+# the sequence simply gets its heading twice, which is the honest rendering of
+# a page whose order is fixed.
 SECTION_MAP = [
-    # (id,          nav label,      page)
-    ("world",       "World",        "main"),
-    ("who",         "Who",          "main"),
-    ("picks",       "Trade Ideas",  "main"),
-    ("longterm",    "Long-Term",    "main"),
-    ("tracker",     "Portfolio",    "main"),
-    ("sip",         "SIP Buckets",  "main"),
-    ("funds",       "Fund Screen",  "main"),
+    # (id,          nav label,      page,   nav group)
+    ("world",       "World",        "main", "Markets"),
+    ("who",         "Who",          "main", "About"),
+    ("picks",       "Trade Ideas",  "main", "Ideas"),
+    ("longterm",    "Long-Term",    "main", "Ideas"),
+    ("tracker",     "Portfolio",    "main", "The Book"),
+    ("sip",         "SIP Buckets",  "main", "Invest"),
+    ("funds",       "Fund Screen",  "main", "Invest"),
     # Pure client-side arithmetic — no API, no ledger. It therefore works
     # identically on the static host, and unlike #sip it must NOT start hidden.
-    ("swp",         "SWP",          "main"),
-    ("interview",   "Interview",    "desk"),
-    ("language",    "Language",     "desk"),
-    ("father",      "Father",       "desk"),
-    ("wisdom",      "Wisdom",       "desk"),
-    ("desk",        "The Desk",     "desk"),
-    ("mind",        "The Mind",     "desk"),
-    ("way",         "The Way",      "desk"),
-    ("review",      "The Review",   "desk"),
-    ("chess",       "Chess",        "desk"),
-    ("music",       "Music",        "desk"),
-    ("gym",         "Mind Gym",     "desk"),
-    ("perf",        "Performance",  "main"),
-    ("rules",       "Engine Log",   "main"),
-    ("alerts",      "Signal Log",   "main"),
+    ("swp",         "SWP",          "main", "Invest"),
+    ("interview",   "Interview",    "desk", "Work"),
+    ("language",    "Language",     "desk", "Practice"),
+    ("father",      "Father",       "desk", "Practice"),
+    ("wisdom",      "Wisdom",       "desk", "Practice"),
+    ("desk",        "The Desk",     "desk", "Reading"),
+    ("mind",        "The Mind",     "desk", "Reading"),
+    ("way",         "The Way",      "desk", "Reading"),
+    ("review",      "The Review",   "desk", "Reading"),
+    ("chess",       "Chess",        "desk", "Drills"),
+    ("music",       "Music",        "desk", "Drills"),
+    ("gym",         "Mind Gym",     "desk", "Drills"),
+    ("perf",        "Performance",  "main", "Track Record"),
+    ("rules",       "Engine Log",   "main", "Track Record"),
+    ("alerts",      "Signal Log",   "main", "Track Record"),
 ]
 
 PAGE_META = {
@@ -1742,22 +1858,27 @@ def page_context(page: str, drop=()) -> dict:
     an extra condition must be named in `drop` when that condition is false,
     never left to disappear underneath the nav.
     """
-    rows = [(i, lbl) for i, lbl, pg in SECTION_MAP
+    rows = [(i, lbl, grp) for i, lbl, pg, grp in SECTION_MAP
             if pg == page and i not in set(drop)]
     meta = PAGE_META[page]
+    # `head` marks the first item of each run of one group, so the nav can
+    # print the group name once above the run instead of repeating it per link.
+    nav = []
+    for n, (i, lbl, grp) in enumerate(rows, 1):
+        nav.append({"id": i, "label": lbl, "n": f"{n:02d}", "group": grp,
+                    "head": grp if (n == 1 or rows[n - 2][2] != grp) else ""})
     return {
         "page": page,
-        "secs": {i for i, _ in rows},
-        "nav": [{"id": i, "label": lbl, "n": f"{n:02d}"}
-                for n, (i, lbl) in enumerate(rows, 1)],
+        "secs": {i for i, _l, _g in rows},
+        "nav": nav,
         # Section headings read their number from here rather than carrying a
         # literal, so the nav and the heading cannot disagree — which they did,
         # with Performance showing "17 / EDGE" under a nav item numbered 07.
         # Number AND label both come from SECTION_MAP. Carrying the label as a
         # literal in the template is how "07 Performance" in the nav ended up
         # over "17 / EDGE" on the page — two sources of truth for one name.
-        "secnum": {i: f"{n:02d}" for n, (i, _l) in enumerate(rows, 1)},
-        "seclabel": {i: l.upper() for i, l in rows},
+        "secnum": {i: f"{n:02d}" for n, (i, _l, _g) in enumerate(rows, 1)},
+        "seclabel": {i: l.upper() for i, l, _g in rows},
         # Supplied here rather than at each render call site. There are two of
         # those in the Flask path alone plus the static generator, and the
         # error-path render is the one that would have silently dropped it —
@@ -1899,14 +2020,26 @@ def score_stock(sym: str) -> Optional[dict]:
         ext20 = (price - ema20) / ema20 * 100 if ema20 else 0      # % above 20EMA
         ext50 = (price - ema50) / ema50 * 100 if ema50 else 0
         sep   = (ema20 - ema50) / ema50 * 100 if ema50 else 0      # trend separation
-        score = round(
-            25 * _band(ext20,  -2,  8) +      # holding above the fast average
-            20 * _band(ext50,  -2, 15) +      # and well above the slow one
-            15 * _band(sep,     0,  6) +      # averages stacked, not crossing
-            20 * _band(mom_1m,  0, 15) +      # one-month thrust
-            10 * _band(mom_3m,  0, 35) +      # three-month trend
-            10 * _band(vol_ratio, 0.9, 1.8)   # participation confirming it
-        )
+        # Components are built as a list rather than summed inline so the card
+        # can show WHERE a score came from. "93/100" with no breakdown is the
+        # one black-box number this page publishes, and a reader has no way to
+        # tell a 93 carried by momentum from a 93 carried by volume — which are
+        # different trades. Same arithmetic as before; it is now inspectable.
+        # (label, value, weight, band low, band high)
+        COMPONENTS = [
+            ("Above 20-day avg",  ext20,     25, -2,  8),
+            ("Above 50-day avg",  ext50,     20, -2, 15),
+            ("Averages stacked",  sep,       15,  0,  6),
+            ("1-month thrust",    mom_1m,    20,  0, 15),
+            ("3-month trend",     mom_3m,    10,  0, 35),
+            ("Volume confirming", vol_ratio, 10, 0.9, 1.8),
+        ]
+        # Sum at full precision, round only what is shown. Summing the rounded
+        # components instead would move some scores by a point against every
+        # score already in the DB, for no reason other than display.
+        earned = [(lbl, w * _band(v, lo, hi), w) for lbl, v, w, lo, hi in COMPONENTS]
+        score = round(sum(e for _l, e, _w in earned))
+        factors = [{"k": lbl, "w": w, "e": round(e, 1)} for lbl, e, w in earned]
         # Last gate before this dict reaches a template. Everything above is
         # arithmetic on floats, and one NaN slipping through renders "$nan" in
         # a price, a target and a stop — a card that looks like a trade idea
@@ -1924,6 +2057,12 @@ def score_stock(sym: str) -> Optional[dict]:
                 "mom_1m": round(mom_1m, 1), "mom_3m": round(mom_3m, 1), "score": score,
                 "target": target, "stop_loss": round(price * 0.92, 2),
                 "timeframe": "2–3 months", "currency": currency,
+                # What the score is made of, and the level that ends the idea.
+                # The 20-day average is the invalidation because it is the same
+                # line the largest single component scores — an idea whose
+                # biggest reason to exist has broken is not a smaller idea, it
+                # is a different one.
+                "factors": factors, "ema20": round(float(ema20), 2),
                 "tv": tv_symbol(sym), "thesis": ""}
     except Exception as e:
         log.warning(f"score_stock {sym}: {e}")
@@ -2021,7 +2160,11 @@ def _build_picks() -> list[dict]:
 #        symbols are dropped, and non-US listings carry their real currency.
 #        Without this bump the cached ranking keeps serving the two "$nan"
 #        cards that the NaN-clamp bug promoted into the top 5. (2026-08-06)
-PICKS_ENGINE = "v4"
+# v5: score_stock now returns `factors` (the per-component breakdown behind the
+# composite) and `ema20` (the invalidation level). The key is part of the cache
+# key on purpose — without the bump the page would render this week's v4 rows,
+# which have neither field, and the new card would silently show nothing.
+PICKS_ENGINE = "v5"
 
 
 # A weekly screen is rebuilt every 7 days, so anything inside two cycles is
@@ -2771,6 +2914,15 @@ a{color:inherit;text-decoration:none}
 .nav a i{font-style:normal;font-family:var(--mono);font-size:9px;color:#33363c;margin-right:5px;transition:color .25s}
 .nav a::after{content:'';position:absolute;left:13px;right:13px;bottom:0;height:2px;background:var(--lime);
   transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease);}
+/* Group label. Not a link and not focusable — it names the run of links after
+   it so eleven equal-weight items read as five decisions instead of eleven.
+   aria-hidden on the element, with the group folded into each link's
+   aria-label, because a screen reader hitting a bare orphan word between
+   links learns nothing from it. */
+.nav-g{display:flex;align-items:center;padding:11px 11px 11px 16px;font-family:var(--mono);
+  font-size:8.5px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;
+  color:#4A4F57;white-space:nowrap;border-left:1px solid var(--line);}
+.nav-g:first-child{border-left:none;padding-left:0}
 .nav a:hover{color:var(--text)}
 .nav a.on{color:var(--lime)}
 .nav a.on i{color:var(--lime)}
@@ -2804,7 +2956,47 @@ h1.hl em{font-style:normal;color:var(--lime)}
 .stat:last-child{border-right:none}
 .stat .v{font-family:var(--mono);font-size:clamp(26px,3.4vw,40px);font-weight:700;letter-spacing:-1.5px;line-height:1;}
 .stat .k{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-top:9px;font-weight:500;}
+/* The sample a headline rate rests on, carried by the rate itself. */
+.stat .kn{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:5px;letter-spacing:.3px}
 @media(max-width:640px){.stat{flex:1 1 44%;padding:16px 14px 16px 0}}
+
+/* ═══════════════════ TODAY IN 60 SECONDS ═══════════════════ */
+.brief{margin-top:clamp(26px,4vw,40px);border:1px solid var(--line);border-radius:10px;
+  background:var(--card,rgba(255,255,255,.015));overflow:hidden}
+.brief-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:13px 18px;border-bottom:1px solid var(--line)}
+.brief-t{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--lime)}
+.brief-d{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.4px}
+
+.regime{padding:15px 18px;border-bottom:1px solid var(--line)}
+.rg-l{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.rg-k{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);font-weight:500}
+.rg-v{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:-.3px;color:var(--muted)}
+.rg-v.up{color:var(--lime)} .rg-v.dn{color:var(--down)} .rg-v.flat{color:var(--gold)}
+.rg-v i{font-style:normal;font-size:11px;color:var(--dim);font-weight:500}
+/* The meter. The tick at 50 is the whole point — a bar with no neutral mark
+   cannot show which side of neutral the reading is on. */
+.rg-bar{position:relative;height:5px;border-radius:3px;background:rgba(255,255,255,.06);margin:10px 0 9px}
+.rg-bar i{position:absolute;inset:0 auto 0 0;width:var(--rg);border-radius:3px;
+  background:linear-gradient(90deg,var(--down),var(--gold) 50%,var(--lime));}
+.rg-bar b{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--dim);opacity:.7}
+.rg-why{font-size:12px;line-height:1.65;color:var(--muted)}
+.rg-why b{font-weight:600} .rg-why b.up{color:var(--up)} .rg-why b.dn{color:var(--down)}
+.rg-why b.warn{display:block;margin-top:5px;color:var(--gold);font-weight:500}
+
+.brief-l{list-style:none;margin:0;padding:4px 0}
+.brief-l li{display:flex;gap:12px;padding:10px 18px;font-size:13.5px;line-height:1.6;color:var(--muted)}
+.brief-l li + li{border-top:1px solid rgba(255,255,255,.04)}
+.brief-l .bn{font-family:var(--mono);font-size:10px;color:#4A4F57;padding-top:3px;flex:0 0 auto}
+.brief-l b{color:var(--text);font-weight:600}
+.brief-l .up{color:var(--up)} .brief-l .dn{color:var(--down)}
+.brief-l a{color:var(--lime);white-space:nowrap;border-bottom:1px solid rgba(184,239,67,.28)}
+.brief-l a:hover{border-bottom-color:var(--lime)}
+@media(max-width:640px){
+  .brief-l li{padding:10px 14px;font-size:13px}
+  .brief-h,.regime{padding-left:14px;padding-right:14px}
+}
 
 
 /* ═══════════════════ ACCESSIBILITY BASELINE ═══════════════════ */
@@ -3445,6 +3637,30 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   transition:width 1.2s var(--ease) .2s;border-radius:3px}
 .rv.in .scorebar i{width:var(--w)}
 
+/* Score breakdown. <details> rather than a click handler so it works with the
+   script blocked, which is the same reader the SSR fixes above are for. */
+.why{margin-top:12px}
+.why summary{cursor:pointer;list-style:none;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);padding:5px 0;
+  transition:color .2s var(--ease)}
+.why summary::-webkit-details-marker{display:none}
+.why summary::after{content:' ▾';font-size:9px}
+.why[open] summary::after{content:' ▴'}
+.why summary:hover{color:var(--lime)}
+.why summary span{color:#4A4F57}
+.why-b{padding:4px 0 2px;display:grid;gap:5px}
+.why-r{display:grid;grid-template-columns:1fr 54px auto;align-items:center;gap:8px;font-size:11px}
+.why-r .wk{color:var(--muted)}
+.why-r .wb{height:3px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
+.why-r .wb i{display:block;height:100%;width:var(--w);background:var(--lime);opacity:.75;border-radius:2px}
+.why-r .wn{font-family:var(--mono);font-size:10.5px;color:var(--text);text-align:right}
+.why-r .wn em{font-style:normal;color:#4A4F57}
+
+/* The level that ends the idea. Gold, not red — it has not happened. */
+.inval{margin-top:12px;font-size:11.5px;line-height:1.6;color:var(--muted);
+  border-left:2px solid rgba(224,178,74,.45);padding-left:11px}
+.inval b{color:var(--gold);font-weight:600;letter-spacing:.3px}
+
 /* ═══════════════════ 03 SIGNAL LOG ═══════════════════ */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);
   border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
@@ -3732,7 +3948,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   border-bottom:1px solid var(--gold);color:var(--gold);
   background:linear-gradient(rgba(255,193,71,.10),rgba(255,193,71,.10)),var(--bg)}
 .editionbar.on{display:flex}
-.editionbar span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Was nowrap + ellipsis, which truncated the message to "New edition
+   publish…" on anything narrower than a laptop — the banner said least
+   exactly where it had least room. It wraps now; two lines beats a clipped
+   sentence. */
+.editionbar span{flex:1;min-width:0;line-height:1.55}
+.editionbar b{font-weight:700;letter-spacing:.6px;text-transform:uppercase}
 .editionbar button{font:inherit;color:#000;background:var(--gold);border:none;
   border-radius:999px;padding:4px 13px;cursor:pointer;flex:none;font-weight:700}
 
@@ -4006,7 +4227,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      it. One sequence now, top to bottom, nav and headings the same. -->
 <nav class="nav">
   <div class="nav-in" id="navin">
-    {% for n in nav %}<a href="#{{ n.id }}"><i>{{ n.n }}</i>{{ n.label }}</a>
+    {% for n in nav %}{% if n.head %}<span class="nav-g" aria-hidden="true">{{ n.head }}</span>{% endif %}<a href="#{{ n.id }}" aria-label="{{ n.group }} — {{ n.label }}"><i>{{ n.n }}</i>{{ n.label }}</a>
     {% endfor %}
     <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
   </div>
@@ -4025,8 +4246,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
 <div class="editionbar" id="editionbar" data-build="{{ build_id }}">
-  <span>A newer edition was published — this tab is still showing {{ date_str }}.</span>
-  <button type="button" id="editionReload">Load it</button>
+  <span><b>New edition published<span id="editionWhen"></span>.</b>
+    This tab is still showing {{ date_str }} — its markets, ideas and ledger are stale.</span>
+  <button type="button" id="editionReload">Load the new edition</button>
 </div>
 <!-- ══════════ TICKER ══════════
      Lives INSIDE .headstack (position:sticky) so it is on screen the whole
@@ -4045,10 +4267,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% for dup in [1,2] %}
     <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
     {% for m in markets %}
+    {# `m.change` does not exist — content_cache builds `change_pct`. Jinja
+       renders a missing key as empty, so the 6 AM snapshot shipped "▲ " with
+       no number against every instrument, and that is what a crawler, an LLM
+       scraper and any reader with JS blocked saw: a market rail of bare
+       arrows. It only looked right because /api/ticker overwrites the whole
+       rail a moment later for everyone else. #}
     <div class="ti">
       <span class="n">{{ m.name }}</span>
       <span class="p">{{ m.price }}</span>
-      <span class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ m.change }}</span>
+      <span class="c {{ 'up' if m.up else 'dn' }}">{{ '▲' if m.up else '▼' }} {{ '+' if m.change_pct > 0 else '' }}{{ m.change_pct }}%</span>
     </div>
     {% endfor %}{% endfor %}
   </div>
@@ -4088,24 +4316,124 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 
   {% if page != 'desk' %}
+  <!-- Every tile ships its REAL value as its text, not "0".
+       data-count still drives the count-up for a reader with JS, and setKpi()
+       overwrites from /api/stats once the live ledger answers. What changed is
+       the no-JS floor: a crawler, an LLM scraper and a reader with script
+       blocked all used to be served "0% Signal Win Rate · 0 Signals Logged"
+       above a page full of signals. A legitimate-looking zero is worse than a
+       blank — it reads as a measured result.
+
+       The win rate is also no longer unconditionally lime. Below SAMPLE_FLOOR
+       closed trades it renders muted and carries its own sample count, because
+       "66.7%" set in the accent colour over three trades is the single most
+       misleading thing this page could say — and it said it, in the hero,
+       while the ledger underneath it read 21% over 116. -->
   <div class="statrail">
     <div class="stat">
-      <div class="v" id="heroRate" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div>
+      <div class="v" id="heroRate"
+           style="color:{{ 'var(--lime)' if closed >= 30 else 'var(--muted)' }}"
+           data-count="{{ winrate }}" data-suffix="%">{{ winrate }}%</div>
       <div class="k">Signal Win Rate</div>
+      <div class="kn" id="heroRateNote">{{ closed }} closed{{ ' · too few to measure' if closed < 30 else '' }}</div>
     </div>
     <div class="stat">
-      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">0</div>
+      <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">{{ opens }}</div>
       <div class="k" id="heroOpenK">Open Setups</div>
     </div>
     <div class="stat">
-      <div class="v" id="heroTotal" data-count="{{ alerts|length }}">0</div>
+      <div class="v" id="heroTotal" data-count="{{ alerts|length }}">{{ alerts|length }}</div>
       <div class="k">Signals Logged</div>
     </div>
     <div class="stat">
       <div class="v" style="color:{{ 'var(--up)' if advancers >= (markets|length / 2) else 'var(--down)' }}"
-           data-count="{{ advancers }}" data-total="{{ markets|length }}">0</div>
+           data-count="{{ advancers }}" data-total="{{ markets|length }}">{{ advancers }}/{{ markets|length }}</div>
       <div class="k">Markets Advancing</div>
     </div>
+  </div>
+
+  <!-- ══════════ TODAY IN 60 SECONDS ══════════
+       The page had eleven equally-loud sections and no answer to "why open
+       this every morning". This is the answer, and it is the only thing above
+       the fold that is allowed to be: four lines that each hand off to the
+       section that proves them. Everything in it is already on the page — this
+       block adds no new data source, only an order of reading. -->
+  <div class="brief rv" id="brief">
+    <div class="brief-h">
+      <span class="brief-t">Today in 60 seconds</span>
+      <span class="brief-d">{{ date_str }}</span>
+    </div>
+
+    {% if regime %}
+    <div class="regime">
+      <div class="rg-l">
+        <span class="rg-k">Market regime</span>
+        <span class="rg-v {{ regime.tone }}">{{ regime.label }} · {{ regime.score }}<i>/100</i></span>
+      </div>
+      <div class="rg-bar" style="--rg:{{ regime.score }}%"><i></i><b></b></div>
+      <div class="rg-why">
+        Risk appetite across {{ regime.n }} instrument{{ '' if regime.n == 1 else 's' }},
+        weighted by move size.{% if regime.drivers %} Moved most by
+        {% for d in regime.drivers %}<b class="{{ 'up' if d.pct >= 0 else 'dn' }}">{{ d.name }}
+          {{ '+' if d.pct > 0 else '' }}{{ d.pct }}%</b>{{ ' and ' if not loop.last }}{% endfor %}.
+        {% else %} Nothing moved enough to push it either way.{% endif %}
+        50 is neutral; risk assets push up, havens push down.
+        {% if regime.thin %}<b class="warn">Under half the board priced this morning —
+        read it as a sketch, not a measurement.</b>{% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <ol class="brief-l">
+      {% set movers = markets | rejectattr('price', 'in', ['—', '', None]) | sort(attribute='change_pct', reverse=true) | list %}
+      {% if movers %}
+      <li>
+        <span class="bn">01</span>
+        <div>
+          <b>What moved.</b>
+          {% for m in movers[:2] %}<span class="up">{{ m.name }} +{{ m.change_pct }}%</span>{{ ', ' if not loop.last }}{% endfor %}{% if movers|length > 2 %};
+          <span class="dn">{{ movers[-1].name }} {{ movers[-1].change_pct }}%</span>{% endif %}.
+          <a href="#world">Full board &rarr;</a>
+        </div>
+      </li>
+      {% endif %}
+
+      <li>
+        <span class="bn">02</span>
+        <div>
+          <b>The record.</b>
+          {% if closed >= 30 %}{{ closed }} closed signals, {{ winrate }}% of them winners.
+          {% elif closed %}Only {{ closed }} closed signal{{ '' if closed == 1 else 's' }} — too few to
+            call an edge either way. Read it as a running tally.
+          {% else %}Nothing has closed yet. There is no rate to report.{% endif %}
+          <a href="#perf">Full record &rarr;</a>
+        </div>
+      </li>
+
+      {% if engine_changes %}
+      {% set ec = engine_changes[0] %}
+      <li>
+        <span class="bn">03</span>
+        <div>
+          <b>What changed in the engine.</b>
+          <span class="mono-dim">{{ ec.date }} · {{ ec.tag }}</span> — {{ ec.title }}.
+          <a href="#rules">Why &rarr;</a>
+        </div>
+      </li>
+      {% endif %}
+
+      {% if top5 %}
+      <li>
+        <span class="bn">04</span>
+        <div>
+          <b>Top idea.</b>
+          {{ top5[0].name }} at {{ top5[0].score }}/100{% if top5|length > 1 %}, then
+          {{ top5[1].name }} at {{ top5[1].score }}{% endif %}.
+          <a href="#picks">All five &rarr;</a>
+        </div>
+      </li>
+      {% endif %}
+    </ol>
   </div>
 
 
@@ -4299,6 +4627,36 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <div class="scorebar" style="--w:{{ s.score }}%"><i></i></div>
       {% if s.thesis %}<div class="th">{{ s.thesis }}</div>{% endif %}
+
+      {# Where the score came from. A composite with no breakdown is a number
+         the reader has to take on trust, and the whole argument of this site
+         is that nothing here should be taken on trust. Collapsed by default —
+         it is the answer to a question, not the headline. #}
+      {% if s.factors %}
+      <details class="why">
+        <summary>Why {{ s.score }}<span>/100</span></summary>
+        <div class="why-b">
+          {% for f in s.factors %}
+          <div class="why-r">
+            <span class="wk">{{ f.k }}</span>
+            <span class="wb" style="--w:{{ (f.e / f.w * 100) | round(0) | int }}%"><i></i></span>
+            <span class="wn">{{ f.e }}<em>/{{ f.w }}</em></span>
+          </div>
+          {% endfor %}
+        </div>
+      </details>
+      {% endif %}
+
+      {# The level that ends the idea, stated before it is reached. An idea
+         with a target and a stop but no invalidation only tells you where you
+         are wrong on price, never where you are wrong on the reason. #}
+      {% if s.ema20 %}
+      <div class="inval">
+        <b>Wrong if</b> {{ s.name }} closes below {{ s.currency }}{{ s.ema20 }} — its 20-day
+        average, and the single biggest component of that score.
+      </div>
+      {% endif %}
+
       <div class="lvl">
         <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
         <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
@@ -5498,11 +5856,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   {% if alerts %}
   <div class="kpi-row rv">
-    <div class="kpi"><div class="v up" id="kpiWin" data-count="{{ wins }}">0</div><div class="k">Targets Hit</div></div>
-    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="{{ losses }}">0</div><div class="k">Stops Hit</div></div>
-    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="{{ opens }}">0</div><div class="k">Open</div></div>
-    <div class="kpi"><div class="v" id="kpiRate" style="color:var(--lime)" data-count="{{ winrate }}" data-suffix="%">0%</div><div class="k">Win Rate</div></div>
-    <div class="kpi"><div class="v" id="kpiTotal" data-count="{{ alerts|length }}">0</div><div class="k">Total Signals</div></div>
+    <div class="kpi"><div class="v up" id="kpiWin" data-count="{{ wins }}">{{ wins }}</div><div class="k">Targets Hit</div></div>
+    <div class="kpi"><div class="v dn" id="kpiLoss" data-count="{{ losses }}">{{ losses }}</div><div class="k">Stops Hit</div></div>
+    <div class="kpi"><div class="v" id="kpiOpen" style="color:var(--blue)" data-count="{{ opens }}">{{ opens }}</div><div class="k">Open</div></div>
+    <div class="kpi"><div class="v" id="kpiRate"
+         style="color:{{ 'var(--lime)' if closed >= 30 else 'var(--muted)' }}"
+         data-count="{{ winrate }}" data-suffix="%">{{ winrate }}%</div><div class="k">Win Rate</div></div>
+    <div class="kpi"><div class="v" id="kpiTotal" data-count="{{ alerts|length }}">{{ alerts|length }}</div><div class="k">Total Signals</div></div>
   </div>
 
   <div class="filters rv">

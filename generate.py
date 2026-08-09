@@ -25,6 +25,7 @@ from jinja2 import Template
 from newspaper import (
     fetch_global_news,
     fetch_markets,
+    market_regime,
     get_entrepreneur_quote,
     get_world_lesson,
     get_case_study,
@@ -75,6 +76,12 @@ def generate() -> None:
 
     print("[generate] Fetching markets...")
     markets = fetch_markets()
+    # One risk-appetite reading over the same instruments the rail shows.
+    # Empty when nothing priced — the hero block hides rather than printing a
+    # confident neutral 50 off a failed fetch.
+    regime = market_regime(markets)
+    print(f"[generate] Regime: {regime.get('label','—')} {regime.get('score','—')}"
+          f"/100 over {regime.get('n', 0)} instruments")
 
     # Say whether the AI key arrived, never what it is. The thesis path fell
     # back silently for weeks because an absent key returns "" before any
@@ -277,6 +284,7 @@ def generate() -> None:
         jsonld=jsonld,
         build_date=now.strftime("%Y-%m-%d"),
         markets=markets,
+        regime=regime,
         news=news,
         quote=quote,
         lesson=lesson,
