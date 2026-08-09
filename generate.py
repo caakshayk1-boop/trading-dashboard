@@ -253,6 +253,7 @@ def generate() -> None:
 
     # Render template — once per page. Same data, same styles; the section
     # guards in the template decide what appears on which.
+    _lc = _learning_ctx()
     print("[generate] Rendering HTML...")
     tpl = Template(TEMPLATE)
     base = dict(
@@ -291,8 +292,48 @@ def generate() -> None:
         lichess_summary=lichess_summary,
         lichess_puzzle=lichess_puzzle,
         alerts=alerts,
-        **_learning_ctx(),
+        **_lc,
     )
+    # ── today.json — the edition, machine-readable ──────────────────────────
+    # The Telegram bot needs the trade ideas and the desk sections, and neither
+    # is in Turso: picks are a weekly cache and the desk banks are pure Python
+    # content chosen per day. A /api/picks and /api/desk would have been the
+    # obvious answer and is not available — the Vercel Hobby plan caps a
+    # deployment at 12 serverless functions and vercel-news is already at 12.
+    #
+    # So the build writes what it already has in memory to a static file. No
+    # function, no database round trip, and it cannot disagree with the page
+    # because it is rendered from the same objects in the same pass.
+    today_json = {
+        "build_id": build_id,
+        "date": now.strftime("%Y-%m-%d"),
+        "date_str": now.strftime("%A, %B %d %Y"),
+        "picks": top5,
+        "picks_week": top5_week,
+        "desk": {
+            "chess": chess,
+            "wisdom": wisdom,
+            "book": book,
+            "way": way,
+            "quote": quote,
+            "lesson": lesson,
+            "case": case,
+            "fpna": fpna,
+            "cfo": cfo,
+            "money_hack": money,
+            "dubai": dubai,
+            "daughter": daughter,
+            "productivity": prod,
+            "father": _lc.get("father", []),
+            "life_wisdom": _lc.get("life_wisdom", []),
+            "spanish": _lc.get("spanish", []),
+            "vocab": _lc.get("vocab", []),
+            "speaking": _lc.get("speaking", []),
+            "interview_tech": _lc.get("interview_tech", []),
+            "interview_soft": _lc.get("interview_soft", []),
+        },
+    }
+
     pages = {"main": "index.html", "desk": "desk.html"}
 
     # Write output
@@ -316,6 +357,10 @@ def generate() -> None:
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
+    (out_dir / "today.json").write_text(
+        json.dumps(today_json, default=str, indent=1), encoding="utf-8")
+    print(f"[generate] ✅ today.json ({len(today_json['picks'])} picks, "
+          f"{len(today_json['desk'])} desk keys)")
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
     )
