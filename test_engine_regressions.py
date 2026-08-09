@@ -15,7 +15,7 @@ from __future__ import annotations
 import math
 import re
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 import pandas as pd
 
@@ -317,6 +317,50 @@ def test_engine_log_copy_is_markup_safe() -> None:
           "only adopted changes are listed; the rejected tests are the credible part")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 10. A weekly cache must not blank its section every Monday.
+#
+# The fund screen is cached under _week_key(), which is an ISO week PLUS
+# PICKS_ENGINE. Both parts expire it for reasons that have nothing to do with
+# fund data: the week rolls over every Monday, and bumping the picks engine —
+# a different feature entirely — orphaned the cache as a side effect. On
+# 2026-08-10 the Fund Screen was simply absent from the published page.
+#
+# The fallback must be bounded by the DATA's age, not by the key, and an
+# unreadable timestamp must hide the section rather than publish rankings of
+# unknown vintage under today's date.
+# ─────────────────────────────────────────────────────────────────────────────
+def test_fund_cache_survives_week_rollover() -> None:
+    print("\n[10] fund screen — a week rollover must not blank the section")
+    import newspaper
+
+    cap = getattr(newspaper, "MAX_FUND_CACHE_AGE_DAYS", None)
+    check("MAX_FUND_CACHE_AGE_DAYS exists", cap is not None)
+    check("cap spans at least one rebuild cycle", cap is not None and 8 <= cap <= 31,
+          f"cap={cap} — under 8 re-creates the Monday hole, over 31 is not a weekly screen")
+
+    age = newspaper._payload_age_days
+    now = datetime.now(timezone.utc)
+    check("fresh payload reads ~0 days",
+          abs(age({"generated_at": now.isoformat()})) < 0.01)
+    check("8-day payload reads 8 days",
+          abs(age({"generated_at": (now - timedelta(days=8)).isoformat()}) - 8) < 0.01)
+    check("Z-suffixed timestamp parses",
+          age({"generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ")}) is not None,
+          "funds.build() writes isoformat()+'Z'; it must not read as unknown")
+    # None means unknown, and unknown must never be treated as fresh.
+    check("missing timestamp is unknown, not zero", age({}) is None)
+    check("unparseable timestamp is unknown, not zero",
+          age({"generated_at": "not-a-date"}) is None)
+
+    # The nav and the section have to agree about whether funds exist.
+    check("empty fund screen drops 'funds' from the nav",
+          "funds" in newspaper.empty_sections({}),
+          "nav would advertise a section the page does not render")
+    check("populated fund screen keeps 'funds'",
+          "funds" not in newspaper.empty_sections({"categories": [{"name": "Flexi Cap"}]}))
+
+
 def main() -> int:
     print("engine regressions — every case here shipped to production once\n")
     for fn in (test_band_rejects_nan,
@@ -327,7 +371,8 @@ def main() -> int:
                test_excursion_signs,
                test_app_js_is_not_a_template,
                test_buy_band_excludes_the_bleed_zone,
-               test_engine_log_copy_is_markup_safe):
+               test_engine_log_copy_is_markup_safe,
+               test_fund_cache_survives_week_rollover):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001

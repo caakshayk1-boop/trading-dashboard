@@ -2024,6 +2024,31 @@ def _build_picks() -> list[dict]:
 PICKS_ENGINE = "v4"
 
 
+# A weekly screen is rebuilt every 7 days, so anything inside two cycles is
+# still a fair answer to "which funds rank best". Past that it stops being
+# stale and starts being wrong, and the section hides itself instead.
+MAX_FUND_CACHE_AGE_DAYS = 15
+
+
+def _payload_age_days(data: dict):
+    """Age of a fund payload in days, or None if it cannot be established.
+
+    None is deliberately NOT treated as fresh by the caller. An unreadable
+    timestamp is exactly the case where serving the data anyway would publish
+    fund rankings of unknown vintage under today's date.
+    """
+    ts = (data or {}).get("generated_at")
+    if not ts:
+        return None
+    try:
+        built = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+        if built.tzinfo is None:
+            built = built.replace(tzinfo=timezone.utc)
+        return (datetime.now(timezone.utc) - built).total_seconds() / 86400
+    except ValueError:
+        return None
+
+
 def get_fund_screen(build_if_missing: bool = False) -> dict:
     """This week's SIP screen, cached. Empty dict when unavailable.
 
@@ -2038,6 +2063,25 @@ def get_fund_screen(build_if_missing: bool = False) -> dict:
                               (week,)).fetchone()
             if row:
                 return json.loads(row[0])
+
+            # Exact-key miss is the NORMAL state every Monday, and it used to
+            # take the whole Fund Screen off the site until the weekly workflow
+            # next ran. Two ways to miss:
+            #   · the ISO week rolls over, and this screen is rebuilt weekly;
+            #   · _week_key() embeds PICKS_ENGINE, so bumping the picks engine
+            #     — nothing to do with funds — silently orphaned the cache too.
+            # Fund NAVs do not expire on a Monday, so fall back to the most
+            # recent build and let the DATA decide whether it is still usable.
+            row = con.execute("SELECT payload FROM newspaper_funds "
+                              "ORDER BY week DESC LIMIT 1").fetchone()
+            if row:
+                data = json.loads(row[0])
+                age = _payload_age_days(data)
+                if age is not None and age <= MAX_FUND_CACHE_AGE_DAYS:
+                    log.info(f"fund screen: serving previous build, {age:.1f}d old")
+                    return data
+                log.warning("fund screen: hiding it — newest build is "
+                            + ("of unknown age" if age is None else f"{age:.1f}d old"))
     except Exception as e:
         log.warning(f"fund cache read: {e}")
 
