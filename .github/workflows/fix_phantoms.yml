@@ -1,4 +1,4 @@
-name: Fix Phantom Exits
+name: Ledger Integrity — phantom exits + unresolvable closures
 
 # Books a stop at the stop when the recorded exit price never actually traded
 # during the trade. Turso is the source of truth, so this has to run here — a
@@ -41,10 +41,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Report
+      # Order matters: reopen trades that were never resolved FIRST, so the
+      # exit-price pass only ever looks at closures that really happened.
+      - name: Verify closures (report)
+        run: python verify_closures.py
+
+      - name: Verify closures (apply)
+        if: inputs.apply == 'true'
+        run: python verify_closures.py --apply
+
+      - name: Phantom exits (report)
         run: python fix_phantom_exits.py
 
-      - name: Apply
+      - name: Phantom exits (apply)
         if: inputs.apply == 'true'
         run: python fix_phantom_exits.py --apply
 
