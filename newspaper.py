@@ -1584,6 +1584,82 @@ def daughter_age(on: date | None = None) -> dict:
 # out of order the way the hand-written nav did.
 # ─────────────────────────────────────────────────────────────
 
+# ── Engine log ───────────────────────────────────────────────────────────────
+# Every rule change made because the ledger said so, with the number that
+# forced it. Server-rendered and static on purpose: this sits in its own
+# always-visible section rather than inside #perf, because #perf starts
+# display:none and is only revealed once the ledger API answers. On the static
+# snapshot that section never appears, and a changelog nobody can read on a bad
+# day is worth nothing.
+#
+# `verdict` is deliberately not always "adopted". A log that only records
+# changes which worked is marketing; the rejected entries are the ones that
+# make the adopted ones worth believing.
+ENGINE_CHANGES = [
+    {
+        "date": "2026-08-09",
+        "tag": "SELECTION",
+        "verdict": "adopted",
+        "title": "Stop buying strength that has already run",
+        "body": ("The 4H RSI ceiling for longs was 75. Splitting every closed trade by "
+                 "the RSI recorded at entry showed the engine bleeding above 65 and "
+                 "profitable below it. The ceiling is now 65."),
+        # No raw "<" or "&" in any string here. generate.py renders with
+        # jinja2.Template(), which defaults to autoescape=False, while the
+        # Flask path escapes. A literal "BUY, 4H RSI < 65" survived locally and
+        # silently truncated to "BUY, 4H RSI" in the built page, because the
+        # browser read "< 65</th><td>" as a tag. Comparison words, not glyphs.
+        "evidence": [("BUY, 4H RSI 65 and over", "−0.599R", "n=90", "−5.6 SE"),
+                     ("BUY, 4H RSI under 65", "+0.274R", "n=67", "+1.5 SE")],
+        "note": ("Holds in both halves of the sample and at every cut point tested "
+                 "(60, 65, 70), so it is not one lucky threshold. The threshold was "
+                 "still chosen from this sample, so treat the size as an upper bound."),
+    },
+    {
+        "date": "2026-08-08",
+        "tag": "STOPS",
+        "verdict": "rejected",
+        "title": "A break-even stop would not have helped",
+        "body": ("The median losing trade was +1.44R in profit before it reversed, and "
+                 "59% touched a full +1R first. That looks like an obvious fix: move "
+                 "the stop to entry once price pays 1R. Re-walking every trade bar by "
+                 "bar, with winners subject to the same rule, says otherwise."),
+        "evidence": [("baseline", "+0.194R", "", ""),
+                     ("break-even @1R", "+0.166R", "", "worse")],
+        "note": ("The first version of this test only altered losers, which guarantees "
+                 "a positive answer. Correcting it reversed the conclusion. Nothing "
+                 "tested cleared one standard error, so no stop rule was adopted."),
+    },
+    {
+        "date": "2026-08-08",
+        "tag": "INTEGRITY",
+        "verdict": "adopted",
+        "title": "Trades were being closed at prices that never traded",
+        "body": ("The grader had never resolved a single trade — an exception was being "
+                 "swallowed silently — leaving a fallback path that could book an exit "
+                 "at a bar from before the signal existed. Every closed trade was "
+                 "re-graded against bars that actually printed."),
+        "evidence": [("reopened, never truly closed", "57", "", ""),
+                     ("exits corrected to a real price", "22", "", ""),
+                     ("published expectancy", "+0.090R → −0.182R", "", "")],
+        "note": ("This moved the headline number against me. It is published anyway, "
+                 "because the earlier number was not real. Pre-correction data is kept "
+                 "in the repo rather than deleted."),
+    },
+    {
+        "date": "2026-08-07",
+        "tag": "TARGETS",
+        "verdict": "adopted",
+        "title": "A first target must pay back the risk",
+        "body": ("T1 was whichever structural level sat nearest the entry, with no "
+                 "distance test. One signal shipped a T1 worth 0.19R against its own "
+                 "stop, printed beside an R:R of 2.41 quoted off T2. T1 must now "
+                 "return at least 1R."),
+        "evidence": [("signals carrying a sub-1R T1", "26", "", "")],
+        "note": "",
+    },
+]
+
 SECTION_MAP = [
     # (id,          nav label,      page)
     ("world",       "World",        "main"),
@@ -1608,6 +1684,7 @@ SECTION_MAP = [
     ("music",       "Music",        "desk"),
     ("gym",         "Mind Gym",     "desk"),
     ("perf",        "Performance",  "main"),
+    ("rules",       "Engine Log",   "main"),
     ("alerts",      "Signal Log",   "main"),
 ]
 
@@ -1653,6 +1730,11 @@ def page_context(page: str) -> dict:
         # over "17 / EDGE" on the page — two sources of truth for one name.
         "secnum": {i: f"{n:02d}" for n, (i, _l) in enumerate(rows, 1)},
         "seclabel": {i: l.upper() for i, l in rows},
+        # Supplied here rather than at each render call site. There are two of
+        # those in the Flask path alone plus the static generator, and the
+        # error-path render is the one that would have silently dropped it —
+        # which is precisely the day the log needs to still be on the page.
+        "engine_changes": ENGINE_CHANGES,
         "page_title": meta["title"],
         "page_desc": meta["desc"],
         "page_path": meta["path"],
@@ -3609,6 +3691,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .brk-row .nn{font-family:var(--mono);font-size:11px;color:var(--dim)}
 .brk-row .rr{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
 
+/* Engine log. A ledger of rule changes, so it reads as a record: a fixed
+   metadata rail on the left, prose on the right, hairline between entries. */
+.elog{list-style:none;border-top:1px solid var(--line)}
+.elog-i{display:grid;grid-template-columns:132px 1fr;gap:0 28px;
+  padding:26px 0;border-bottom:1px solid var(--line)}
+.elog-m{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.elog-d{font-family:var(--mono);font-size:11px;color:var(--muted);
+  font-variant-numeric:tabular-nums;letter-spacing:.4px}
+.elog-t{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;color:var(--dim)}
+.elog-v{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;
+  border:1px solid var(--line2);border-radius:4px;padding:2px 7px}
+.elog-v.adopted{color:var(--lime);border-color:var(--lime-line);background:var(--lime-soft)}
+/* Rejected is deliberately not red. It is not a failure state — it is a test
+   that returned a negative, which is the point of publishing it. */
+.elog-v.rejected{color:var(--muted)}
+.elog-b{min-width:0}
+.elog-h{font-size:19px;font-weight:600;letter-spacing:-.3px;text-wrap:balance;margin-bottom:8px}
+.elog-p{color:var(--muted);font-size:14px;max-width:62ch}
+.elog-e{width:100%;border-collapse:collapse;margin:14px 0 0;font-size:12.5px}
+.elog-e th{text-align:left;font-weight:500;color:var(--text);padding:6px 12px 6px 0}
+.elog-e td{padding:6px 0 6px 12px;text-align:right;white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.elog-e tr+tr th,.elog-e tr+tr td{border-top:1px solid var(--line)}
+.elog-n,.elog-s{color:var(--dim);font-size:11px}
+.elog-c{margin-top:12px;padding-left:13px;border-left:2px solid var(--line2);
+  color:var(--dim);font-size:12.5px;line-height:1.65;max-width:62ch}
+@media(max-width:640px){
+  .elog-i{grid-template-columns:1fr;gap:12px}
+  .elog-m{flex-direction:row;align-items:center;gap:10px}
+  /* The evidence table is the one thing here that can force a sideways page
+     scroll on a narrow screen, so it gets its own scroll container. */
+  .elog-e{display:block;overflow-x:auto}
+}
+
 .arch{display:flex;gap:7px;overflow-x:auto;padding:4px 0 12px;-webkit-overflow-scrolling:touch}
 .arch::-webkit-scrollbar{height:5px}
 .arch-day{flex:none;min-width:76px;background:var(--surface);border:1px solid var(--line);
@@ -5222,6 +5338,52 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
        paintUnderwater() from the same equity_curve the hero chart uses. -->
   <div class="uw rv" id="perfUw"></div>
   <div class="brk rv" id="perfBrk"></div>
+</section>{% endif %}
+
+<!-- ══════════ ENGINE LOG ══════════
+     Server-rendered and always visible — no API, no display:none. It has to
+     survive the static snapshot, because the whole point is that a reader can
+     see what changed in the rules even on a day the ledger is unreachable. -->
+{% if 'rules' in secs %}<section class="sec" id="rules">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['rules'] }} / {{ seclabel['rules'] }}</span>
+      <h2 class="stitle">What the ledger changed.</h2>
+    </div>
+    <p class="sdesc">Every rule the engine follows because the record forced it — with the number
+      that forced it. Including the ideas that were tested and thrown away.</p>
+  </div>
+
+  <ol class="elog rv">
+    {% for c in engine_changes %}
+    <li class="elog-i">
+      <div class="elog-m">
+        <time class="elog-d">{{ c.date }}</time>
+        <span class="elog-t">{{ c.tag }}</span>
+        <span class="elog-v {{ c.verdict }}">{{ c.verdict }}</span>
+      </div>
+      <div class="elog-b">
+        <h3 class="elog-h">{{ c.title }}</h3>
+        <p class="elog-p">{{ c.body }}</p>
+        {% if c.evidence %}
+        <table class="elog-e">
+          <tbody>
+          {% for label, val, n, sig in c.evidence %}
+            <tr>
+              <th scope="row">{{ label }}</th>
+              <td class="num">{{ val }}</td>
+              <td class="num elog-n">{{ n }}</td>
+              <td class="num elog-s">{{ sig }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+        {% if c.note %}<p class="elog-c">{{ c.note }}</p>{% endif %}
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
 </section>{% endif %}
 
 <!-- ══════════ 10 SIGNAL LOG ══════════ -->

@@ -47,7 +47,26 @@ import pandas as pd
 @dataclass
 class Config:
     # 4H RSI regime bands — both sides bounded so we never chase exhaustion.
-    rsi_4h_buy:  tuple = (55.0, 75.0)
+    #
+    # The BUY ceiling was 75 until 2026-08-09, when the closed ledger was
+    # finally large enough to test it. It is the one selection input in this
+    # engine with a result that survives scrutiny:
+    #
+    #     cf_1h BUY, 4H RSI >= 65   n=90   -0.599R   (-5.6 SE)
+    #     cf_1h BUY, 4H RSI <  65   n=67   +0.274R   (+1.5 SE)
+    #
+    # Not a threshold artefact — 60, 65 and 70 all improve expectancy, and the
+    # sign holds in both halves of the sample period, so it does not rest on
+    # one cut point or one market phase. 65 is where the band actually turns
+    # (55-60 +0.432R, 60-65 +0.160R, 65-70 -0.657R, 75+ -0.802R).
+    #
+    # Caveat kept in the open: the threshold was chosen from this same sample,
+    # so the magnitude is optimistic even though the direction is not. Treat
+    # +0.144R as an upper bound until out-of-sample trades accumulate.
+    rsi_4h_buy:  tuple = (55.0, 65.0)
+    # Left at 45 deliberately. The sell side is NOT monotone (25-35 is the
+    # worst sell band at -2.0 SE while <25 is the best), so the same argument
+    # does not carry over and no change is made on weaker evidence.
     rsi_4h_sell: tuple = (25.0, 45.0)
     # 1H entry-timing bands.
     rsi_1h_buy:  tuple = (45.0, 75.0)
@@ -314,7 +333,13 @@ def _score(rr, vol_ratio, rsi_4h, direction, tsrc, cfg):
     s = 0.0
     s += min(rr / 4.0, 1.0) * 40                                    # reward
     s += min((vol_ratio or 1.0) / 2.5, 1.0) * 20                    # participation
-    mid = 65 if direction == "BUY" else 35                          # sweet spot
+    # Sweet spot, measured rather than assumed. This was 65 for BUY, which
+    # awarded PEAK conviction at exactly the RSI where the ledger says the
+    # engine starts bleeding (65-70: -0.657R). With the buy band now capped at
+    # 65 it would also have peaked on the band's worst edge. The measured
+    # profitable zone is 55-65 (55-60 +0.432R, 60-65 +0.160R), so 58 is its
+    # centre of mass. SELL is unchanged — see rsi_4h_sell for why.
+    mid = 58 if direction == "BUY" else 35                          # sweet spot
     s += max(0.0, 1 - abs(rsi_4h - mid) / 25) * 25                  # momentum quality
     s += 15 if tsrc == "structure" else 5                           # real levels
     return round(s)

@@ -237,6 +237,86 @@ def test_app_js_is_not_a_template() -> None:
           "app.js reads TV_ALIASES from this block; without it charts lose their links")
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 8. The BUY band must not reach back into the bleed zone.
+#
+# Unlike every case above, this is not a coding defect — it is a selection
+# defect, and the only one in the engine with statistical support. Buying at
+# 4H RSI >= 65 returned -0.599R over 90 cf_1h trades (-5.6 SE) while the same
+# engine below 65 returned +0.274R. The band allowed 75.
+#
+# Pinned because a band is one number in a dataclass: it is the easiest thing
+# in this repo to widen "just to get more signals", and doing so silently
+# reintroduces the single largest measured loss source in the ledger.
+# ─────────────────────────────────────────────────────────────────────────────
+def test_buy_band_excludes_the_bleed_zone() -> None:
+    print("\n[8] selection — BUY must not chase 4H RSI into the bleed zone")
+    import cf_engine
+
+    cfg = cf_engine.CONFIG
+    lo, hi = cfg.rsi_4h_buy
+    check("BUY ceiling <= 65", hi <= 65.0,
+          f"rsi_4h_buy={cfg.rsi_4h_buy} — 65+ measured -0.599R over 90 trades")
+    check("BUY floor still 55", lo == 55.0,
+          f"floor moved to {lo}; 55-60 is the best measured band (+0.432R)")
+    check("band is non-empty", lo < hi)
+
+    # The scorer must not award peak conviction at the edge that bleeds.
+    s_at_edge = cf_engine._score(3.0, 1.5, hi, "BUY", "structure", cfg)
+    s_inside = cf_engine._score(3.0, 1.5, 58.0, "BUY", "structure", cfg)
+    check("conviction peaks inside the band, not at the ceiling",
+          s_inside > s_at_edge,
+          f"score at 58 = {s_inside}, at ceiling {hi} = {s_at_edge}")
+
+    # A setup above the ceiling must be rejected outright, not merely scored low.
+    check("rsi above ceiling is out of band", not (lo <= 70.0 <= hi),
+          "70 still satisfies the buy band")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 9. Engine-log copy must survive an UNESCAPED render.
+#
+# generate.py builds the static site with jinja2.Template(), which defaults to
+# autoescape=False; the Flask path escapes. So a literal "<" in copy renders
+# correctly on localhost and silently truncates in the published page — the
+# browser swallows "< 65</th><td>" as a tag. "BUY, 4H RSI < 65" shipped as
+# "BUY, 4H RSI" with its whole row of numbers gone.
+#
+# Pinned rather than fixed at the renderer: turning autoescape on in generate.py
+# is the real repair, but it changes escaping for every string on the site at
+# once and needs its own verification pass.
+# ─────────────────────────────────────────────────────────────────────────────
+def test_engine_log_copy_is_markup_safe() -> None:
+    print("\n[9] engine log — copy must not contain raw markup characters")
+    import newspaper
+
+    changes = newspaper.ENGINE_CHANGES
+    check("engine log is non-empty", len(changes) > 0)
+
+    bad: list[str] = []
+    for c in changes:
+        fields = [c.get("title", ""), c.get("body", ""), c.get("note", ""),
+                  c.get("tag", ""), c.get("verdict", ""), c.get("date", "")]
+        for label, val, n, sig in c.get("evidence", []):
+            fields += [label, val, n, sig]
+        for f_ in fields:
+            if "<" in f_ or ">" in f_ or "&" in f_:
+                bad.append(f"{c.get('date')}: {f_!r}")
+    check("no raw < > or & in any entry", not bad,
+          f"{len(bad)} field(s) would corrupt the built page: {bad[:3]}")
+
+    # Every entry needs a verdict the stylesheet actually styles.
+    styled = {"adopted", "rejected"}
+    unknown = [c["verdict"] for c in changes if c.get("verdict") not in styled]
+    check("every verdict has a matching CSS class", not unknown,
+          f"unstyled verdicts: {unknown}")
+
+    # A log that never records a negative result is marketing, not a record.
+    check("at least one rejected entry is published",
+          any(c.get("verdict") == "rejected" for c in changes),
+          "only adopted changes are listed; the rejected tests are the credible part")
+
+
 def main() -> int:
     print("engine regressions — every case here shipped to production once\n")
     for fn in (test_band_rejects_nan,
@@ -245,7 +325,9 @@ def main() -> int:
                test_gap_slip_is_bounded,
                test_closed_at_is_a_bar_date,
                test_excursion_signs,
-               test_app_js_is_not_a_template):
+               test_app_js_is_not_a_template,
+               test_buy_band_excludes_the_bleed_zone,
+               test_engine_log_copy_is_markup_safe):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
