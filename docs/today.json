@@ -1,5 +1,5 @@
 {
- "build_id": "20260810T011456",
+ "build_id": "20260810T012503",
  "date": "2026-08-10",
  "date_str": "Monday, August 10 2026",
  "picks": [
@@ -87,6 +87,96 @@
    "currency": "\u20b9",
    "tv": "NSE:PAYTM",
    "thesis": "84 composite score with 20.4% 3-month gain and 1.23x volume."
+  }
+ ],
+ "engine": [
+  {
+   "date": "2026-08-09",
+   "tag": "SELECTION",
+   "verdict": "adopted",
+   "title": "Stop buying strength that has already run",
+   "body": "The 4H RSI ceiling for longs was 75. Splitting every closed trade by the RSI recorded at entry showed the engine bleeding above 65 and profitable below it. The ceiling is now 65.",
+   "evidence": [
+    [
+     "BUY, 4H RSI 65 and over",
+     "\u22120.599R",
+     "n=90",
+     "\u22125.6 SE"
+    ],
+    [
+     "BUY, 4H RSI under 65",
+     "+0.274R",
+     "n=67",
+     "+1.5 SE"
+    ]
+   ],
+   "note": "Holds in both halves of the sample and at every cut point tested (60, 65, 70), so it is not one lucky threshold. The threshold was still chosen from this sample, so treat the size as an upper bound."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "STOPS",
+   "verdict": "rejected",
+   "title": "A break-even stop would not have helped",
+   "body": "The median losing trade was +1.44R in profit before it reversed, and 59% touched a full +1R first. That looks like an obvious fix: move the stop to entry once price pays 1R. Re-walking every trade bar by bar, with winners subject to the same rule, says otherwise.",
+   "evidence": [
+    [
+     "baseline",
+     "+0.194R",
+     "",
+     ""
+    ],
+    [
+     "break-even @1R",
+     "+0.166R",
+     "",
+     "worse"
+    ]
+   ],
+   "note": "The first version of this test only altered losers, which guarantees a positive answer. Correcting it reversed the conclusion. Nothing tested cleared one standard error, so no stop rule was adopted."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "INTEGRITY",
+   "verdict": "adopted",
+   "title": "Trades were being closed at prices that never traded",
+   "body": "The grader had never resolved a single trade \u2014 an exception was being swallowed silently \u2014 leaving a fallback path that could book an exit at a bar from before the signal existed. Every closed trade was re-graded against bars that actually printed.",
+   "evidence": [
+    [
+     "reopened, never truly closed",
+     "57",
+     "",
+     ""
+    ],
+    [
+     "exits corrected to a real price",
+     "22",
+     "",
+     ""
+    ],
+    [
+     "published expectancy",
+     "+0.090R \u2192 \u22120.182R",
+     "",
+     ""
+    ]
+   ],
+   "note": "This moved the headline number against me. It is published anyway, because the earlier number was not real. Pre-correction data is kept in the repo rather than deleted."
+  },
+  {
+   "date": "2026-08-07",
+   "tag": "TARGETS",
+   "verdict": "adopted",
+   "title": "A first target must pay back the risk",
+   "body": "T1 was whichever structural level sat nearest the entry, with no distance test. One signal shipped a T1 worth 0.19R against its own stop, printed beside an R:R of 2.41 quoted off T2. T1 must now return at least 1R.",
+   "evidence": [
+    [
+     "signals carrying a sub-1R T1",
+     "26",
+     "",
+     ""
+    ]
+   ],
+   "note": ""
   }
  ],
  "picks_week": null,
