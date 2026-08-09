@@ -41,6 +41,14 @@ jobs:
           node --check static/app.js
           npx --yes eslint@9 static/app.js
 
+      # Installed before generate so BOTH the pre-publish gate and the
+      # post-deploy check can use it. smoke_runner.cjs is Node, not Python —
+      # `pip install playwright` gets you a package the runner cannot import.
+      - name: Install Playwright (node)
+        run: |
+          npm i -D playwright --no-audit --no-fund
+          npx playwright install chromium --with-deps
+
       - name: Generate newspaper HTML
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -57,7 +65,6 @@ jobs:
       # which is exactly what happened on 2026-08-08.
       - name: Pre-publish check (nothing is committed yet)
         run: |
-          pip install playwright > /dev/null && playwright install chromium --with-deps > /dev/null 2>&1 || true
           python -m http.server 4321 --directory docs > /dev/null 2>&1 &
           for i in $(seq 1 20); do curl -sf http://127.0.0.1:4321/ > /dev/null && break; sleep 0.5; done
           python smoke_test.py http://127.0.0.1:4321 --pre
@@ -94,11 +101,6 @@ jobs:
       # a green build. Runs against production because that is what users get.
       - name: Wait for deploy
         run: sleep 75
-
-      - name: Install Playwright
-        run: |
-          npm i -D playwright --no-audit --no-fund
-          npx playwright install chromium
 
       - name: Smoke test the rendered page
         run: python smoke_test.py https://news.askakshay.com
