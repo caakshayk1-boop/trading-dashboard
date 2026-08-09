@@ -59,6 +59,10 @@ jobs:
 
       # Last, so excursions are measured against outcomes that have already
       # been corrected by the two passes above.
+      # Rule-vs-rule on the same bars, at each engine's own resolution.
+      - name: Exit rule study
+        run: python exit_rule_study.py
+
       - name: Excursions (report)
         run: python backfill_excursions.py
 

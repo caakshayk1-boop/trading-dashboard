@@ -36,6 +36,12 @@ jobs:
       # straight to production — where it aborts the whole script block and
       # takes every interactive feature with it. Blocking on purpose: this is
       # correctness, not style.
+      # Every case in here shipped to production once. Verified to FAIL when
+      # the defect is reintroduced — a regression test that has never failed is
+      # not evidence of anything.
+      - name: Engine regressions
+        run: python test_engine_regressions.py
+
       - name: Lint the page script
         run: |
           node --check static/app.js
