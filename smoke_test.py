@@ -49,6 +49,11 @@ PAGES = {
     "/desk": {"min_sections": 11, "must": ["chess", "music", "gym"]},
 }
 
+# python -m http.server has no extensionless routing, so /desk is a 404 there
+# while Vercel rewrites it to desk.html. Ask for the file directly in --pre.
+if PRE:
+    PAGES = {("/desk.html" if k == "/desk" else k): v for k, v in PAGES.items()}
+
 
 
 def main() -> int:
@@ -95,12 +100,22 @@ def main() -> int:
         print(f"    scroll spy      {spy.get('checked', 0)} checked, "
               f"{len(spy.get('mismatched', []))} wrong "
               f"{','.join(spy.get('mismatched', [])[:4])}")
-        print(f"    js errors       {len(r['errors'])}")
+        print(f"    js errors       {len(r['errors'])}"
+              + (f"  ({len([e for e in r['errors'] if not e.startswith('console:')])} fatal)"
+                 if PRE else ""))
         for e in r["errors"][:4]:
             print(f"      · {e}")
 
-        if r["errors"]:
-            fails.append(f"{path}: {len(r['errors'])} JS error(s) — {r['errors'][0][:90]}")
+        # In --pre the page is served from a plain static folder: there is no
+        # /api layer and no Vercel rewrite, so every live call and the /desk
+        # route 404. Those are console resource errors, not JS exceptions, and
+        # failing on them would make the gate cry wolf until it got disabled.
+        # An uncaught exception (pageerror) is fatal in both modes — that is
+        # the class that aborts the whole script block.
+        errs = [e for e in r["errors"]
+                if not PRE or not e.startswith("console:")]
+        if errs:
+            fails.append(f"{path}: {len(errs)} JS error(s) — {errs[0][:90]}")
         if len(r["sections"]) < want["min_sections"]:
             fails.append(f"{path}: {len(r['sections'])} sections, expected {want['min_sections']}")
         for sid in want["must"]:
