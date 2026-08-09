@@ -2872,11 +2872,15 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 /* ═══════════════════ TRADE SHEET ═══════════════════ */
 #alertTable tr.clickable{cursor:pointer}
 #alertTable tr.clickable:hover{background:var(--bg2)}
-.sheet{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);
+.sheet{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.72);
   display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:5vh 16px}
 .sheet[hidden]{display:none}
 .sheet-in{position:relative;background:var(--surface);border:1px solid var(--line2);
   border-radius:16px;padding:26px;max-width:720px;width:100%;margin-bottom:5vh}
+/* The sticky header stack is z-index 300 and the command palette 500. At 120
+   the sheet opened UNDERNEATH both: its own title and close button sat behind
+   the nav, so it looked truncated rather than broken and there was no obvious
+   way out of it. 600 clears the whole stack. */
 .sheet-x{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--dim);
   font-size:16px;cursor:pointer;width:34px;height:34px;border-radius:50%}
 .sheet-x:hover{color:var(--text);background:var(--bg2)}
@@ -2921,6 +2925,32 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   .tl-row{grid-template-columns:1fr;gap:2px}
   .scale .lv{width:56px}
 }
+
+/* ═══════════════════ SIZER + HEAT ═══════════════════ */
+.sizer{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:20px;background:var(--bg2)}
+.sizer-h{font-family:var(--mono);font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--dim);margin-bottom:12px}
+.sizer-in{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.sizer-in label{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);
+  font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--dim);flex:1;min-width:120px}
+.sizer-in input{background:var(--surface);border:1px solid var(--line2);border-radius:8px;
+  color:var(--text);font-family:var(--mono);font-size:14px;padding:9px 11px;min-height:42px;width:100%}
+.sizer-in input:focus{outline:none;border-color:var(--lime)}
+.sz-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;
+  font-family:var(--mono);font-size:12.5px;border-bottom:1px solid var(--line)}
+.sz-row:last-of-type{border-bottom:none}
+.sz-row span{color:var(--dim)} .sz-row b{color:var(--text)}
+.sz-note{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin:10px 0 0;line-height:1.6}
+.sz-warn{font-family:var(--mono);font-size:11px;color:var(--gold);margin:10px 0 0;line-height:1.6}
+.heat{margin:18px 0 22px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface)}
+.heat-h{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px}
+.heat-h .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:1.3px;
+  text-transform:uppercase;color:var(--dim)}
+.heat-n{font-family:var(--mono);font-size:32px;font-weight:600;color:var(--lime);line-height:1.1}
+.heat-n.hot{color:var(--down)}
+.heat-w{font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--muted);
+  margin:8px 0 0;max-width:82ch}
 
 /* ═══════════════════ UNDERWATER ═══════════════════ */
 .uw{margin:22px 0 6px}
@@ -5204,6 +5234,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="empty rv">No signals logged yet — alerts appear here after Telegram sends them.</div>
   {% endif %}
 
+  <!-- Total open risk, painted by paintHeat() once the rows are in. -->
+  <div class="heat rv" id="heat"></div>
+
   <!-- The trade sheet. It lives HERE, in the static section, not in the
        JS-built controls: that builder only runs when #alertTable is missing,
        and it is not — so a sheet defined there is never created and every row
@@ -6664,6 +6697,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         allRows = j.signals || [];
         fillTfSelect(el('alertTfSel'), allRows);
         renderAlerts();
+        paintHeat(allRows);
         if (pendingSheet){ var sid = pendingSheet; pendingSheet = null; openSheet(sid); }
       });
     }
@@ -6797,8 +6831,73 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         (flags.length ? '<div class="sheet-flags">' + flags.map(function(f){
           return '<p>⚠ ' + f + '</p>'; }).join('') + '</div>' : '') +
 
+        // ── size it ──
+        // The gap between "here is a setup" and "here is what I do" is one
+        // division nobody does under pressure, and getting it wrong is how a
+        // short went 88x. Quantity comes from RISK, never from capital: you
+        // size so that a stop costs a fixed fraction of the book, and the
+        // capital required falls out of that — not the other way round.
+        (risk ? '<div class="sizer" data-entry="' + a.entry + '" data-risk="' + risk + '">' +
+          '<div class="sizer-h">Size it</div>' +
+          '<div class="sizer-in">' +
+            '<label>Capital ₹<input type="number" class="szCap" value="500000" min="0" step="10000"></label>' +
+            '<label>Risk %<input type="number" class="szPct" value="1" min="0.1" max="5" step="0.1"></label>' +
+          '</div>' +
+          '<div class="sizer-out"></div>' +
+        '</div>' : '') +
+
         (tv ? '<a class="btn btn-sm" target="_blank" rel="noopener" href="https://www.tradingview.com/chart/?symbol=' +
               encodeURIComponent(tv) + '">Open the real chart on TradingView →</a>' : '');
+    }
+
+    /* Position sizing, live inside the sheet.
+       Persisted in localStorage because capital and risk tolerance do not
+       change per trade — retyping them on every sheet is how people stop
+       using the calculator and start guessing. */
+    var SZ_LS = 'ds_size_v1';
+    function sizerSaved(){
+      try { return JSON.parse(localStorage.getItem(SZ_LS) || '{}'); } catch(e){ return {}; }
+    }
+    function wireSizer(root){
+      var box = root.querySelector('.sizer');
+      if (!box) return;
+      var cap = box.querySelector('.szCap'), pct = box.querySelector('.szPct'),
+          out = box.querySelector('.sizer-out');
+      var saved = sizerSaved();
+      if (saved.cap) cap.value = saved.cap;
+      if (saved.pct) pct.value = saved.pct;
+
+      function calc(){
+        var C = parseFloat(cap.value), P = parseFloat(pct.value);
+        var entry = parseFloat(box.dataset.entry), perUnit = parseFloat(box.dataset.risk);
+        if (!isFinite(C) || !isFinite(P) || !isFinite(perUnit) || perUnit <= 0){
+          out.innerHTML = ''; return;
+        }
+        try { localStorage.setItem(SZ_LS, JSON.stringify({ cap: C, pct: P })); } catch(e){}
+
+        var riskAmt = C * (P / 100);
+        var qty = Math.floor(riskAmt / perUnit);
+        var deployed = qty * entry;
+        // Sizing off risk can demand more capital than exists — a tight stop
+        // on an expensive share is exactly that case. Say so instead of
+        // printing a quantity that cannot be bought.
+        var over = deployed > C;
+        out.innerHTML =
+          '<div class="sz-row"><span>Quantity</span><b>' + qty.toLocaleString('en-IN') + '</b></div>' +
+          '<div class="sz-row"><span>Capital deployed</span><b>₹' +
+            Math.round(deployed).toLocaleString('en-IN') + '</b></div>' +
+          '<div class="sz-row"><span>Risked if stopped</span><b class="dn">₹' +
+            Math.round(qty * perUnit).toLocaleString('en-IN') + '</b></div>' +
+          (over
+            ? '<p class="sz-warn">That is ₹' + Math.round(deployed - C).toLocaleString('en-IN') +
+              ' more than the capital entered. The stop is tight relative to the price, so a ' +
+              P + '% risk needs a bigger book than you have. Size down or skip it.</p>'
+            : '<p class="sz-note">Quantity is derived from RISK, not capital. ' +
+              'Whole units only — no fractional shares.</p>');
+      }
+      cap.addEventListener('input', calc);
+      pct.addEventListener('input', calc);
+      calc();
     }
 
     function openSheet(id){
@@ -6809,6 +6908,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       var box = el('sheet');
       if (!a || !box) return;
       el('sheetBody').innerHTML = sheetFor(a);
+      wireSizer(el('sheetBody'));
       box.hidden = false;
       document.body.style.overflow = 'hidden';
       // Deep link without a navigation, so Back closes the sheet.
@@ -6843,6 +6943,49 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         if (e.key === 'Escape') closeSheet();
       });
       window.addEventListener('popstate', function(){ closeSheet(false); });
+    }
+
+    /* ══════════ portfolio heat ══════════
+       Every open setup, priced as risk. One trade at 1% is nothing; twenty
+       open setups at 1% each is the whole book on the line, and the ledger
+       has been showing 20 open at once. This is the number that says whether
+       "take the signals" is a plan or a margin call — and it is deliberately
+       counted on OPEN setups, not on positions held, because that is what a
+       reader of this page is being handed. */
+    function paintHeat(rows){
+      var box = el('heat');
+      if (!box) return;
+      var open = rows.filter(function(r){ return r.badge === 'open'; });
+      if (!open.length){ box.innerHTML = ''; return; }
+
+      var saved = sizerSaved();
+      var pct = saved.pct || 1;
+      var byEngine = {};
+      open.forEach(function(r){
+        var k = r.signal_type || 'other';
+        byEngine[k] = (byEngine[k] || 0) + 1;
+      });
+      var total = open.length * pct;
+      // 6% is the conventional line at which a correlated drawdown starts
+      // taking a real bite; it is a rule of thumb, and labelled as one.
+      var hot = total > 6;
+
+      var eng = Object.keys(byEngine).sort(function(a, b){ return byEngine[b] - byEngine[a]; });
+      box.innerHTML =
+        '<div class="heat-h"><span class="eyebrow">Portfolio heat</span>' +
+          '<span class="eyebrow">' + open.length + ' open · ' + pct + '% each</span></div>' +
+        '<div class="heat-n ' + (hot ? 'hot' : '') + '">' + fmt(total, 1) + '%</div>' +
+        '<p class="heat-w">' +
+          (hot
+            ? 'Taking every open setup at ' + pct + '% would put ' + fmt(total, 1) +
+              '% of the book at risk simultaneously. Above roughly 6% a correlated ' +
+              'move stops being a bad week. These are not independent bets — ' +
+              eng.map(function(k){ return byEngine[k] + ' from ' + esc(k); }).join(', ') +
+              '.'
+            : 'Taking every open setup at ' + pct + '% risks ' + fmt(total, 1) +
+              '% of the book at once. Change the risk figure in any trade sheet ' +
+              'and this follows it.') +
+        '</p>';
     }
 
     var pendingSheet = null;
