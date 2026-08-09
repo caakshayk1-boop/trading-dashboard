@@ -5236,17 +5236,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <!-- Total open risk, painted by paintHeat() once the rows are in. -->
   <div class="heat rv" id="heat"></div>
-
-  <!-- The trade sheet. It lives HERE, in the static section, not in the
-       JS-built controls: that builder only runs when #alertTable is missing,
-       and it is not — so a sheet defined there is never created and every row
-       click did nothing. -->
-  <div class="sheet" id="sheet" hidden>
-    <div class="sheet-in">
-      <button type="button" class="sheet-x" id="sheetX" aria-label="Close">✕</button>
-      <div id="sheetBody"></div>
-    </div>
-  </div>
 </section>{% endif %}
 
 <!-- Capture. The page previously had none: 16,156 words and no way to keep a
@@ -5271,6 +5260,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </div>
 
 </main>
+
+<!-- The trade sheet sits OUTSIDE <main> deliberately. main is
+     position:relative with z-index:2, which creates a stacking context — a
+     modal nested inside it is confined to that context and can never paint
+     above the sticky header at z-index 300, whatever z-index it is given. It
+     opened behind the nav with its own close button hidden, which reads as a
+     truncated panel rather than a layering bug. -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in">
+    <button type="button" class="sheet-x" id="sheetX" aria-label="Close">✕</button>
+    <div id="sheetBody"></div>
+  </div>
+</div>
 
 
 
