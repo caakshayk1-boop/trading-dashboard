@@ -4219,15 +4219,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <h4>+ Add position manually</h4>
     <form action="/tracker/add" method="post" id="posAddForm">
       <div class="frow">
-        <input type="text" name="symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
-        <input type="text" name="name" placeholder="Name">
-        <input type="number" step="0.01" name="entry_price" placeholder="Entry price" required>
-        <input type="number" step="0.01" name="target_price" placeholder="Target price" required>
+        <input type="text" name="symbol" aria-label="Symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
+        <input type="text" name="name" aria-label="Company name" placeholder="Name">
+        <input type="number" step="0.01" name="entry_price" aria-label="Entry price" placeholder="Entry price" required>
+        <input type="number" step="0.01" name="target_price" aria-label="Target price" placeholder="Target price" required>
       </div>
       <div class="frow">
-        <input type="number" step="0.01" name="stop_loss" placeholder="Stop loss">
-        <input type="text" name="timeframe" placeholder="Timeframe" value="2-3 months">
-        <input type="text" name="thesis" placeholder="Why this stock?" style="flex:3">
+        <input type="number" step="0.01" name="stop_loss" aria-label="Stop loss" placeholder="Stop loss">
+        <input type="text" name="timeframe" aria-label="Timeframe" placeholder="Timeframe" value="2-3 months">
+        <input type="text" name="thesis" aria-label="Thesis" placeholder="Why this stock?" style="flex:3">
       </div>
       <button type="submit" class="btn">Add to book</button>
     </form>
@@ -5202,8 +5202,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   <div class="ctlbar rv">
-    <select id="perfTf"><option value="">All timeframes</option></select>
-    <select id="perfRange">
+    <select id="perfTf" aria-label="Filter performance by timeframe"><option value="">All timeframes</option></select>
+    <select id="perfRange" aria-label="Filter performance by date range">
       <option value="">All time</option>
       <option value="30">Last 30 days</option>
       <option value="90">Last 90 days</option>
@@ -5255,7 +5255,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
            placeholder="Search symbol — e.g. BAJFINANCE" autocomplete="off">
     <input type="date" id="alertFrom" aria-label="From date">
     <input type="date" id="alertTo" aria-label="To date">
-    <select id="alertTfSel"><option value="">All timeframes</option></select>
+    <select id="alertTfSel" aria-label="Filter the signal log by timeframe"><option value="">All timeframes</option></select>
     <span class="ghost" id="alertCount"></span>
   </div>
 
