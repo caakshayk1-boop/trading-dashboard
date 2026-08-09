@@ -5203,6 +5203,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% else %}
   <div class="empty rv">No signals logged yet — alerts appear here after Telegram sends them.</div>
   {% endif %}
+
+  <!-- The trade sheet. It lives HERE, in the static section, not in the
+       JS-built controls: that builder only runs when #alertTable is missing,
+       and it is not — so a sheet defined there is never created and every row
+       click did nothing. -->
+  <div class="sheet" id="sheet" hidden>
+    <div class="sheet-in">
+      <button type="button" class="sheet-x" id="sheetX" aria-label="Close">✕</button>
+      <div id="sheetBody"></div>
+    </div>
+  </div>
 </section>{% endif %}
 
 <!-- Capture. The page previously had none: 16,156 words and no way to keep a
@@ -6632,16 +6643,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
           '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>' +
           '<th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
-        '</tr></thead><tbody></tbody></table></div>' +
-        // The trade sheet. A ledger you can read but not point at is not
-        // auditable; this is the "show me THIS trade" surface, deep-linkable
-        // via ?signal=<id> so a single row can be sent to someone.
-        '<div class="sheet" id="sheet" hidden>' +
-          '<div class="sheet-in">' +
-            '<button type="button" class="sheet-x" id="sheetX" aria-label="Close">✕</button>' +
-            '<div id="sheetBody"></div>' +
-          '</div>' +
-        '</div>';
+        '</tr></thead><tbody></tbody></table></div>';
+        // No #sheet here — it is in the static section markup. Two copies
+        // would give two elements with the same id and openSheet() would fill
+        // whichever the DOM handed back first.
       if (empty) empty.replaceWith(host); else sec.appendChild(host);
       reveal(host);
     }
