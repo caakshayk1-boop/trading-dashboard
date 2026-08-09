@@ -18,6 +18,36 @@ const BASE_MONTHLY = 10000;
 const STEP_UP = 0.10;
 const SIP_START = { y: 2026, m: 8 };
 
+
+// ── fund screen ─────────────────────────────────────────────────────────────
+// Served from /api/sip rather than its own route: the Hobby plan caps a
+// deployment at 12 serverless functions and this was the 13th. It belongs
+// here anyway — buckets are what you already hold, the screen is what the
+// next SIP could go into, and they are one section on the page.
+//
+// Read-only. funds.py builds this during the 6 AM job (~700 NAV downloads)
+// and caches it in newspaper_funds by ISO week; building on demand would hang
+// the request behind a third-party API for minutes.
+async function fundScreen() {
+  try {
+    await db().execute(`CREATE TABLE IF NOT EXISTS newspaper_funds (
+      week TEXT PRIMARY KEY, payload TEXT
+    )`);
+    // Newest week wins, and last week is served rather than nothing when a
+    // Monday build has not run yet — stale by days on a number measured in
+    // years is fine, an empty section is not.
+    const rs = await db().execute(
+      "SELECT week, payload FROM newspaper_funds ORDER BY week DESC LIMIT 1"
+    );
+    if (!rs.rows.length) return { ready: false, categories: [] };
+    const payload = JSON.parse(String(rs.rows[0].payload));
+    return { ...payload, ready: true, week: String(rs.rows[0].week) };
+  } catch {
+    // Never let the screen take the SIP buckets down with it.
+    return { ready: false, categories: [] };
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") return fail(res, 405, "GET only");
   const q = req.query || {};
@@ -47,6 +77,7 @@ export default async function handler(req, res) {
         ok: true, ready: false,
         message: "No SIP buckets yet — run `python sip_engine.py` to build the first one.",
         plan: plan(), projections: projections(), buckets: [],
+        fund_screen: await fundScreen(),
       }, 60);
     }
 
@@ -137,6 +168,8 @@ export default async function handler(req, res) {
         pnl_pct: totInv ? round((totVal / totInv - 1) * 100, 2) : null,
       },
       buckets,
+      // The screen is independent of whether any bucket exists yet.
+      fund_screen: await fundScreen(),
     }, 600);
   } catch (e) {
     fail(res, 500, `sip query failed: ${e.message}`);
