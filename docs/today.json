@@ -1,5 +1,5 @@
 {
- "build_id": "20260810T012503",
+ "build_id": "20260810T021537",
  "date": "2026-08-10",
  "date_str": "Monday, August 10 2026",
  "picks": [
@@ -17,8 +17,41 @@
    "stop_loss": 304.05,
    "timeframe": "2\u20133 months",
    "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 3.2
+    }
+   ],
+   "ema20": 289.96,
    "tv": "SNOW",
-   "thesis": "116.8% 3-month gain with 93 composite score and rising volume."
+   "thesis": "116.8% 3-month gain with price 14.0% above 20-day average."
   },
   {
    "symbol": "COFORGE.NS",
@@ -34,8 +67,41 @@
    "stop_loss": 1633.92,
    "timeframe": "2\u20133 months",
    "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 19.2
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 14.1
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 1641.3,
    "tv": "NSE:COFORGE",
-   "thesis": "88 composite score with 38.8% 3-month gain and +21.5% 1-month rise."
+   "thesis": "+38.8% 3-month gain with 88 composite score."
   },
   {
    "symbol": "MSFT",
@@ -51,8 +117,41 @@
    "stop_loss": 459.99,
    "timeframe": "2\u20133 months",
    "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 12.8
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 5.9
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 2.1
+    }
+   ],
+   "ema20": 438.46,
    "tv": "MSFT",
-   "thesis": "86 composite score with 30.1% 1-month gain and 1.09x volume."
+   "thesis": "86 composite score with 30.1% 1-month gain and accelerating momentum."
   },
   {
    "symbol": "NET",
@@ -68,8 +167,41 @@
    "stop_loss": 276.25,
    "timeframe": "2\u20133 months",
    "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 19.1
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 13.4
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 11.8
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 6.9
+    }
+   ],
+   "ema20": 276.85,
    "tv": "NET",
-   "thesis": "53.1% 3-month gain with 86 composite score, 8.9% 1-month rise."
+   "thesis": "53.1% 3-month gain, with price 8.5% above 20-day average."
   },
   {
    "symbol": "PAYTM.NS",
@@ -85,6 +217,39 @@
    "stop_loss": 1326.27,
    "timeframe": "2\u20133 months",
    "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 23.1
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 18.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 14.1
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 18.9
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 5.8
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 3.6
+    }
+   ],
+   "ema20": 1344.18,
    "tv": "NSE:PAYTM",
    "thesis": "84 composite score with 20.4% 3-month gain and 1.23x volume."
   }
