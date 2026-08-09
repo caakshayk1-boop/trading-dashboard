@@ -61,20 +61,33 @@ def _f(v):
         return None
 
 
-def bars_after(symbol: str, sig_date: str, until: str | None):
-    """Sessions strictly after the signal date. None when data is unavailable —
-    which must never be read as 'no bars', or every unfetchable symbol would be
-    reopened."""
+def bars_after(symbol: str, sig_date: str, timeframe: str):
+    """Sessions strictly after the signal, bounded by the strategy's own hold.
+
+    NOT bounded by closed_at: that column recorded datetime.now() until
+    2026-08-08, so it says when the grader ran, not when anything happened.
+    Using it truncated the window to a weekend for three 2026-07-31 breakouts
+    and reported "no trading session has occurred" for trades that had a week
+    of sessions available.
+
+    Nor is it left open-ended to today. A June signal that grazed its stop in
+    August is not a stop-out — it is a trade that should have timed out weeks
+    earlier. The window is the horizon the engine itself trades on.
+
+    Returns None when data is unavailable, which must never be read as "no
+    bars" — a Yahoo outage would otherwise reopen the whole book.
+    """
     try:
-        start = datetime.fromisoformat(sig_date[:10]).date() + timedelta(days=1)
+        sig = datetime.fromisoformat(sig_date[:10]).date()
     except ValueError:
         return None
-    end = datetime.now().date() + timedelta(days=1)
-    if until:
-        try:
-            end = min(end, datetime.fromisoformat(until[:10]).date() + timedelta(days=3))
-        except ValueError:
-            pass
+    start = sig + timedelta(days=1)
+
+    hold_h = tracker._max_hold_hours(str(timeframe or ""))
+    # Calendar days run ~1.45x sessions; the margin is deliberate so a real
+    # touch near the end of the horizon is not missed on a technicality.
+    end = min(datetime.now().date(), sig + timedelta(days=int(hold_h / 24 * 1.6) + 3))
+    end = end + timedelta(days=1)          # yfinance end is exclusive
     if start >= end:
         # The signal is newer than any session that could resolve it. That is a
         # real, knowable answer — not missing data.
@@ -106,7 +119,7 @@ def main() -> int:
     with tracker._conn() as c:
         rows = pd.read_sql(
             f"SELECT id, symbol, date, closed_at, action, entry, sl, target1, target2, "
-            f"exit_price, r_multiple, status, signal_type FROM all_signals "
+            f"exit_price, r_multiple, status, signal_type, timeframe FROM all_signals "
             f"WHERE upper(coalesce(status,'')) IN ({in_list})",
             c
         ).to_dict("records")
@@ -122,14 +135,14 @@ def main() -> int:
         is_long = str(s.get("action", "BUY")).upper() != "SELL"
         st = str(s["status"]).upper()
 
-        df = bars_after(s["symbol"], str(s["date"]), str(s.get("closed_at") or ""))
+        df = bars_after(s["symbol"], str(s["date"]), str(s.get("timeframe") or ""))
         if df is None:
             nodata += 1
             continue
         checked += 1
 
         if len(df) == 0:
-            reopen.append((s, "no trading session has occurred since the signal"))
+            reopen.append((s, "no session in the strategy's holding window"))
             continue
 
         lo, hi = float(df["Low"].min()), float(df["High"].max())
