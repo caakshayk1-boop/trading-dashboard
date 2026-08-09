@@ -1,92 +1,92 @@
 {
- "build_id": "20260809T234717",
- "date": "2026-08-09",
- "date_str": "Sunday, August 09 2026",
+ "build_id": "20260810T004038",
+ "date": "2026-08-10",
+ "date_str": "Monday, August 10 2026",
  "picks": [
   {
    "symbol": "SNOW",
    "name": "SNOW",
-   "ext20": 12.19,
-   "vol_ratio": 1.15,
-   "price": 320.76,
-   "change_1d": 1.24,
-   "mom_1m": 22.8,
-   "mom_3m": 129.5,
+   "ext20": 13.98,
+   "vol_ratio": 1.19,
+   "price": 330.49,
+   "change_1d": 3.93,
+   "mom_1m": 23.6,
+   "mom_3m": 116.8,
    "score": 93,
-   "target": 400.95,
-   "stop_loss": 295.1,
+   "target": 413.11,
+   "stop_loss": 304.05,
    "timeframe": "2\u20133 months",
    "currency": "$",
    "tv": "SNOW",
-   "thesis": "129.5% 3-month gain, with 93 composite score and 1.15x volume."
+   "thesis": "116.8% 3-month gain with 93 composite score and rising volume."
   },
   {
    "symbol": "COFORGE.NS",
    "name": "COFORGE",
-   "ext20": 8.96,
-   "vol_ratio": 0.61,
-   "price": 1772.8,
-   "change_1d": -0.24,
-   "mom_1m": 23.2,
-   "mom_3m": 39.1,
-   "score": 89,
-   "target": 2216.0,
-   "stop_loss": 1630.98,
+   "ext20": 8.21,
+   "vol_ratio": 0.57,
+   "price": 1776.0,
+   "change_1d": 0.18,
+   "mom_1m": 21.5,
+   "mom_3m": 38.8,
+   "score": 88,
+   "target": 2220.0,
+   "stop_loss": 1633.92,
    "timeframe": "2\u20133 months",
    "currency": "\u20b9",
    "tv": "NSE:COFORGE",
-   "thesis": "89 composite score with 39.1% 3-month gain and 23.2% 1-month rise."
-  },
-  {
-   "symbol": "PAYTM.NS",
-   "name": "PAYTM",
-   "ext20": 8.11,
-   "vol_ratio": 1.13,
-   "price": 1442.0,
-   "change_1d": 0.91,
-   "mom_1m": 17.9,
-   "mom_3m": 29.8,
-   "score": 89,
-   "target": 1802.5,
-   "stop_loss": 1326.64,
-   "timeframe": "2\u20133 months",
-   "currency": "\u20b9",
-   "tv": "NSE:PAYTM",
-   "thesis": "89 composite score with 1.13x volume and 17.9% 1-month gain."
+   "thesis": "88 composite score with 38.8% 3-month gain and +21.5% 1-month rise."
   },
   {
    "symbol": "MSFT",
    "name": "MSFT",
-   "ext20": 14.82,
-   "vol_ratio": 1.15,
-   "price": 495.5,
-   "change_1d": 1.65,
-   "mom_1m": 29.3,
-   "mom_3m": 20.0,
-   "score": 85,
-   "target": 619.38,
-   "stop_loss": 455.86,
+   "ext20": 14.03,
+   "vol_ratio": 1.09,
+   "price": 499.99,
+   "change_1d": 0.03,
+   "mom_1m": 30.1,
+   "mom_3m": 20.7,
+   "score": 86,
+   "target": 624.99,
+   "stop_loss": 459.99,
    "timeframe": "2\u20133 months",
    "currency": "$",
    "tv": "MSFT",
-   "thesis": "85 composite score with 29.3% 1-month gain and 14.8% above 20-day average."
+   "thesis": "86 composite score with 30.1% 1-month gain and 1.09x volume."
   },
   {
-   "symbol": "BAJFINANCE.NS",
-   "name": "BAJFINANCE",
-   "ext20": 6.19,
+   "symbol": "NET",
+   "name": "NET",
+   "ext20": 8.46,
    "vol_ratio": 1.52,
-   "price": 1144.8,
-   "change_1d": -1.21,
-   "mom_1m": 13.3,
-   "mom_3m": 17.4,
-   "score": 78,
-   "target": 1431.0,
-   "stop_loss": 1053.22,
+   "price": 300.27,
+   "change_1d": 5.57,
+   "mom_1m": 8.9,
+   "mom_3m": 53.1,
+   "score": 86,
+   "target": 375.34,
+   "stop_loss": 276.25,
+   "timeframe": "2\u20133 months",
+   "currency": "$",
+   "tv": "NET",
+   "thesis": "53.1% 3-month gain with 86 composite score, 8.9% 1-month rise."
+  },
+  {
+   "symbol": "PAYTM.NS",
+   "name": "PAYTM",
+   "ext20": 7.25,
+   "vol_ratio": 1.23,
+   "price": 1441.6,
+   "change_1d": -0.03,
+   "mom_1m": 14.1,
+   "mom_3m": 20.4,
+   "score": 84,
+   "target": 1802.0,
+   "stop_loss": 1326.27,
    "timeframe": "2\u20133 months",
    "currency": "\u20b9",
-   "tv": "NSE:BAJFINANCE",
-   "thesis": "78/100 composite score with 17.4% 3-month gain and 1.52x average volume."
+   "tv": "NSE:PAYTM",
+   "thesis": "84 composite score with 20.4% 3-month gain and 1.23x volume."
   }
  ],
  "picks_week": null,
@@ -366,7 +366,7 @@
   },
   "daughter": {
    "months": 7,
-   "days": 227,
+   "days": 228,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -374,91 +374,91 @@
   "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
   "father": [
    {
-    "title": "Put her in front of a mirror",
-    "do": "Hold her at a mirror and name both of you.",
-    "why": "Self-recognition does not arrive until around 18 months, so she is currently treating the reflection as another baby \u2014 which is exactly why it holds her attention and drives social behaviours."
+    "title": "Stop at eye contact",
+    "do": "When she catches your eye across the room, stop and respond \u2014 smile, wave, say her name.",
+    "why": "Social referencing is beginning: she checks your face to decide how to feel about things. Responding consistently makes you a reliable reference point."
    },
    {
-    "title": "Ask her mother what she needs",
-    "do": "Ask directly, once, and act on the answer without negotiating it.",
-    "why": "The most reliable predictor of a child's early environment is the functioning of the partnership around them. This is a fatherhood task, not a marital one."
+    "title": "Let her lead the play",
+    "do": "Follow what she reaches for instead of redirecting to the toy you chose. Sit on the floor at her level for 15 minutes.",
+    "why": "Serve-and-return interaction builds the circuitry for attention and self-regulation. Following her focus teaches that her signals produce a response \u2014 the root of secure attachment."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Anuvrata",
-    "translation": "The lesser vows",
-    "teaching": "Householders take limited versions of the great vows rather than the monastic form \u2014 the tradition explicitly designs for people with jobs and families.",
-    "apply": "Do not adopt a practice you cannot sustain alongside work and a seven-month-old. A small vow kept beats a large one abandoned."
+    "term": "Pratikramana",
+    "translation": "Ritual review and turning back",
+    "teaching": "A periodic practice of reviewing one's conduct, acknowledging where one fell short, and resolving to correct it. Structurally, an audit.",
+    "apply": "You already run a monthly close on the business. Run a fifteen-minute one on yourself: what did I get wrong, what am I changing, what is the date."
    },
    {
     "tradition": "Buddhism",
-    "term": "Impermanence of success",
-    "translation": "Anicca applied upward",
-    "teaching": "Impermanence is usually offered as consolation in difficulty. It applies symmetrically: the good quarter, the promotion, the peak are equally conditioned.",
-    "apply": "On a good week, note it explicitly and hold it lightly. The habit of not over-identifying with wins is what makes losses survivable."
+    "term": "Dana",
+    "translation": "Generosity, listed first",
+    "teaching": "In the traditional sequence of practices, generosity comes before ethics and meditation \u2014 as the foundation rather than the reward.",
+    "apply": "Give something away before you feel you have surplus. Time or attention counts; the point is that it precedes abundance rather than following it."
    }
   ],
   "spanish": [
    {
-    "word": "aprobar",
-    "meaning": "to approve",
-    "es": "El director aprob\u00f3 el gasto.",
-    "en": "The director approved the expense.",
+    "word": "entregar",
+    "meaning": "to deliver / hand in",
+    "es": "Entregamos el reporte a tiempo.",
+    "en": "We delivered the report on time.",
     "tag": "Business"
    },
    {
-    "word": "la esposa",
-    "meaning": "the wife",
-    "es": "Mi esposa trabaja desde casa.",
-    "en": "My wife works from home.",
+    "word": "llorar",
+    "meaning": "to cry",
+    "es": "Llora cuando tiene sue\u00f1o.",
+    "en": "She cries when she is sleepy.",
     "tag": "Family"
    }
   ],
   "vocab": [
    {
-    "word": "Requisite",
-    "say": "REK-wi-zit",
-    "meaning": "Required for a purpose.",
-    "example": "She has the requisite experience for the controller role.",
-    "note": "Slightly more formal than 'required'. Common in job specs and board papers."
+    "word": "Untoward",
+    "say": "un-TOR-d",
+    "meaning": "Unexpected and inconvenient or inappropriate.",
+    "example": "Nothing untoward emerged from the review.",
+    "note": "Standard audit and legal register for 'we found nothing concerning'."
    },
    {
-    "word": "Predicated",
-    "say": "PRED-i-kay-tid",
-    "meaning": "Founded or based on.",
-    "example": "The forecast is predicated on two store openings in Q3.",
-    "note": "The precise way to surface an assumption the whole number rests on."
+    "word": "Ameliorate",
+    "say": "uh-MEEL-yuh-rayt",
+    "meaning": "To make a bad situation better.",
+    "example": "The payment plan ameliorated the cash position without fixing it.",
+    "note": "Implies improvement without resolution \u2014 which is often the honest description."
    }
   ],
   "speaking": {
-   "title": "Name the number first",
-   "drill": "Practise flipping five sentences so the figure leads: not 'because of markdown, margin fell 180bps' but 'margin fell 180bps \u2014 markdown'.",
-   "why": "Numbers-first is your written voice. Make it your spoken one."
+   "title": "Handle the interruption",
+   "drill": "Rehearse: 'Let me finish this point, then I will take that.' Say it out loud five times until it sounds calm rather than defensive.",
+   "why": "Being talked over in a board meeting is a delivery problem, not a rank problem."
   },
   "interview_tech": [
    {
-    "q": "Explain deferred tax to a board member in 60 seconds.",
-    "a": "Accounting profit and taxable profit are computed under different rules, so tax paid this year rarely matches tax on this year's reported profit. Deferred tax records the future consequence of that gap. The classic retail example is accelerated capital allowances on fit-out: you get the tax relief early, so you owe more tax later \u2014 that future obligation sits as a deferred tax liability. It is not cash and it is not a provision for a dispute; it is timing. Say that last sentence, because it is what they are actually worried about.",
-    "who": "Any audit committee"
+    "q": "How do you account for customer loyalty points under IFRS 15?",
+    "a": "Points are a separate performance obligation. You allocate part of the original transaction price to the points based on their standalone selling price, adjusted for expected breakage, and defer that portion as contract liability. Revenue is recognised when points are redeemed or expire. Practically: the deferral reduces reported revenue today, and the breakage estimate is a judgement auditors probe every year. Retailers who ignore this overstate current-period revenue and get a restatement.",
+    "who": "Alshaya \u00b7 Carrefour \u00b7 Starbucks"
    },
    {
-    "q": "How do you measure promotional effectiveness properly?",
-    "a": "Incremental margin, not uplift. Take the sales during the promotion, subtract what the baseline would have been without it, subtract the margin given away on units that would have sold at full price anyway, and subtract any cannibalisation of adjacent full-price lines. The result is often negative for deep discounts on already-popular SKUs. Use a control group of comparable stores where operationally possible \u2014 without a counterfactual, every promotion looks successful because sales always rise.",
-    "who": "Tesco \u00b7 Carrefour \u00b7 Americana"
+    "q": "A category has 40% gross margin but negative contribution. How?",
+    "a": "Gross margin ignores everything below the line. That category may carry disproportionate space, handling cost, markdown, shrink or return rate. Bulky low-value goods are the classic case \u2014 good percentage margin, terrible margin per square metre per week. Move to a contribution view: gross profit less directly attributable space, labour, logistics and markdown. Assortment decisions made on gross margin percentage alone are how retailers end up with profitable-looking categories that lose money.",
+    "who": "Costco \u00b7 Lulu \u00b7 Tesco"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you were wrong about a person.",
-    "a": "A quieter question than it looks \u2014 it tests self-awareness and whether you revise judgements. Both directions work: someone you underestimated who turned out strong, or someone you backed who did not work out. The second is braver and lands better if you own the hiring or promotion decision. End with what you changed about how you assess people, ideally something structural like a different interview question or a probation checkpoint.",
-    "who": "Amazon \u00b7 Unilever \u00b7 Alshaya"
+    "q": "How do you decide what to delegate?",
+    "a": "Give a rule. Something like: delegate anything where the cost of a mistake is recoverable and the learning value is high; keep anything where your specific judgement is the reason the answer is right, and anything you would have to redo. The failure mode interviewers probe is the controller who keeps the technical work because it is comfortable and delegates only the admin \u2014 which caps the team's growth and yours.",
+    "who": "GE \u00b7 Unilever \u00b7 Group CFOs"
    },
    {
-    "q": "If we hire you and in a year it has not worked, what is the most likely reason?",
-    "a": "A genuinely good question and a rare one. Answer honestly with the real risk, not a disguised strength: a mismatch on decision-making pace, an unclear boundary between your scope and someone else's, or a business where the data foundations are worse than described so the first year goes on plumbing rather than insight. Then say what you would do in month one to check for it. Naming the failure mode makes you look like someone who has thought about the job rather than the offer.",
-    "who": "Senior search processes"
+    "q": "Tell me about a time you disagreed with your CEO.",
+    "a": "They are testing whether you have spine and judgement, not whether you win. Use STAR and pick a disagreement where you were partly wrong \u2014 it reads as honest. Cover: what the disagreement was, what evidence you brought, how you escalated it appropriately, what the decision was, and crucially what you did after the decision went against you. The signal they want: you argue hard privately and commit fully publicly.",
+    "who": "Majid Al Futtaim \u00b7 Unilever \u00b7 Amazon"
    }
   ]
  }
