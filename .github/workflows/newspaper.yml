@@ -45,7 +45,13 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # FOURTH allow-list for a docs/ file. To reach production it must be
+          # written by generate.py, added here, named in .vercelignore AND
+          # copied by vercel-news/build.js. today.json had three of the four
+          # and 404'd; the build log said it was written, which made it look
+          # like anything but a missing filename.
           git add docs/index.html docs/desk.html docs/alerts.json docs/edition.json \
+                  docs/today.json \
                   docs/robots.txt docs/sitemap.xml docs/manifest.webmanifest \
                   docs/icon.svg docs/og.png docs/fonts
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
