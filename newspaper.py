@@ -1713,9 +1713,37 @@ PAGE_META = {
 }
 
 
-def page_context(page: str) -> dict:
-    """Sections and nav for one page, in document order."""
-    rows = [(i, lbl) for i, lbl, pg in SECTION_MAP if pg == page]
+def empty_sections(fund_screen=None) -> set:
+    """Sections that must not be advertised in the nav on this build.
+
+    A helper rather than an inline check so the decision has one home. Only
+    generate.py consumes it today — the Flask routes never pass `secs` at all,
+    so they already render without sections — but the published page is built
+    here, and this is where the nav and the document have to agree.
+    """
+    drop = set()
+    if not (fund_screen or {}).get("categories"):
+        drop.add("funds")
+    return drop
+
+
+def page_context(page: str, drop=()) -> dict:
+    """Sections and nav for one page, in document order.
+
+    `drop` removes sections that have no data to show. It exists because the
+    nav was built unconditionally from SECTION_MAP while at least one section
+    carried an EXTRA render condition of its own — #funds only appears when the
+    weekly fund cache is populated. On a build with an empty cache the nav
+    advertised eleven sections and the document contained ten, which is both a
+    dead nav link for a reader and a hard failure of the pre-publish gate.
+
+    Dropping here keeps nav, section numbering and the section guard reading
+    from one list, in the same spirit as secnum/seclabel below. A section with
+    an extra condition must be named in `drop` when that condition is false,
+    never left to disappear underneath the nav.
+    """
+    rows = [(i, lbl) for i, lbl, pg in SECTION_MAP
+            if pg == page and i not in set(drop)]
     meta = PAGE_META[page]
     return {
         "page": page,
@@ -4403,7 +4431,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Deliberately shows the drawdown next to the return: a 3-year CAGR on its
      own tells you the reward and hides the ride, and the small-cap column is
      where that gap is widest. -->
-{% if 'funds' in secs and fund_screen.get('categories') %}
+{# Guard is `secs` alone. The extra `fund_screen.get('categories')` test that
+   used to live here is what let the section vanish while the nav still linked
+   to it — see page_context(drop=...), which now decides this once. #}
+{% if 'funds' in secs %}
 <section class="sec" id="funds">
   <div class="shead rv">
     <div>

@@ -45,6 +45,7 @@ from newspaper import (
     get_dubai_note,
     daughter_age,
     page_context,
+    empty_sections,
     get_productivity_tip,
     fetch_lichess_games,
     get_lichess_summary,
@@ -366,7 +367,9 @@ def generate() -> None:
             return
     for pg, fname in pages.items():
         ctx = dict(base)
-        ctx.update(page_context(pg))
+        # Sections with nothing to render are dropped from the nav too,
+        # so a reader never gets a link to a section that is not there.
+        ctx.update(page_context(pg, drop=empty_sections(fund_screen)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
