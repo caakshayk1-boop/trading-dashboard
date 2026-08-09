@@ -2031,42 +2031,79 @@ def open_setup_context(alerts: list[dict]) -> dict:
 
       · Which of these is actionable TODAY? A setup whose entry is 9% below
         the last price has already run away; one sitting 0.4% away is live.
-        Twenty open setups all look equally available in a table, and they
-        are not.
+      · How correlated is the book? Heat counted twenty setups at 1% as 20%
+        of risk. If fifteen share a sector that is nearer one bet held fifteen
+        ways, and the honest number is worse.
 
-      · How correlated is the book? Portfolio heat counted twenty setups at
-        1% as 20% of risk. If fifteen are the same sector that is nearer one
-        bet held fifteen ways, and the honest number is worse than 20%.
-
-    Built here rather than in the browser because sector lookup is a Yahoo
-    call per symbol and the page must never wait on that. Roughly 20 symbols,
-    a few seconds — nothing like the fund screen that blew the build budget.
+    Prices are fetched in ONE batched download. The first version called
+    yf.Ticker().fast_info per symbol and then .info for the sector; from a
+    GitHub runner Yahoo rate-limited every one of them and the build logged
+    "0 symbols priced" while reporting success. Batch for prices, and cache
+    sectors permanently — a company changes sector approximately never, so
+    fetching it more than once per symbol is pure rate-limit exposure.
     """
     syms = sorted({str(a.get("symbol") or "").strip()
                    for a in alerts
                    if str(a.get("badge") or "") == "open" and a.get("symbol")})
-    out: dict[str, dict] = {}
-    for sym in syms[:60]:            # bounded: a runaway ledger cannot stall the build
-        try:
-            t = yf.Ticker(to_yahoo(sym))
-            price = None
+    if not syms:
+        return {}
+    syms = syms[:60]                     # bounded: cannot stall the build
+
+    # Imported here, not at module scope: newspaper.py is imported by
+    # generate.py at build time and by the Flask app at boot, and a top-level
+    # import of a sibling module that itself imports yfinance lengthens both.
+    from symbols import to_yahoo
+
+    with _db() as con:
+        con.execute("""CREATE TABLE IF NOT EXISTS symbol_sector (
+            symbol TEXT PRIMARY KEY, sector TEXT, fetched_at TEXT
+        )""")
+        known = {r[0]: r[1] for r in
+                 con.execute("SELECT symbol, sector FROM symbol_sector").fetchall()}
+
+    # ── prices: one request for the lot ──
+    prices: dict[str, float] = {}
+    ymap = {to_yahoo(s): s for s in syms}
+    try:
+        df = yf.download(list(ymap.keys()), period="5d", interval="1d",
+                         progress=False, auto_adjust=True, group_by="ticker")
+        for yt, orig in ymap.items():
             try:
-                price = float(t.fast_info.last_price)
+                # group_by="ticker" gives MultiIndex columns for >1 symbol and
+                # flat columns for exactly one. nlevels avoids importing pandas
+                # into this module for a single isinstance check.
+                col = df[yt]["Close"] if getattr(df.columns, "nlevels", 1) > 1 else df["Close"]
+                col = col.dropna()
+                if len(col):
+                    prices[orig] = round(float(col.iloc[-1]), 4)
             except Exception:
-                pass
-            sector = ""
-            try:
-                # .info is the slow path and frequently rate-limited; it is
-                # allowed to fail without costing us the price.
-                sector = str((t.info or {}).get("sector") or "")
-            except Exception:
-                pass
-            if price is None and not sector:
                 continue
-            out[sym] = {"price": round(price, 4) if price else None, "sector": sector}
-        except Exception as e:
-            log.debug(f"open_setup_context {sym}: {e}")
+    except Exception as e:
+        log.warning(f"open_setup_context batch price fetch: {e}")
+
+    # ── sectors: only for symbols never seen before ──
+    missing = [s for s in syms if s not in known]
+    for sym in missing[:25]:             # cap the slow path per build
+        sec = ""
+        try:
+            sec = str((yf.Ticker(to_yahoo(sym)).info or {}).get("sector") or "")
+        except Exception:
+            sec = ""
+        known[sym] = sec
+        try:
+            with _db() as con:
+                con.execute("INSERT OR REPLACE INTO symbol_sector VALUES (?,?,?)",
+                            (sym, sec, datetime.now(IST).isoformat()))
+                con.commit()
+        except Exception:
+            pass
+
+    out: dict[str, dict] = {}
+    for sym in syms:
+        px, sec = prices.get(sym), known.get(sym, "")
+        if px is None and not sec:
             continue
+        out[sym] = {"price": px, "sector": sec}
     return out
 
 
