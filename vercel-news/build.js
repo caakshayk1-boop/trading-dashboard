@@ -27,9 +27,16 @@ if (existsSync(source)) {
   copyFileSync(source, target);
   if (existsSync(alertsSrc)) copyFileSync(alertsSrc, join(publicDir, "alerts.json"));
   if (existsSync(editionSrc)) copyFileSync(editionSrc, join(publicDir, "edition.json"));
-  // Crawl files, PWA manifest and the social card. All 404'd before:
+  // Crawl files, PWA manifest, the social card, and the machine-readable
+  // edition the Telegram bot reads for /ideas and /desk. All 404'd before:
   // /robots.txt, /sitemap.xml, /favicon.ico and /manifest.json.
-  for (const f of ["desk.html", "robots.txt", "sitemap.xml", "manifest.webmanifest", "icon.svg", "og.png"]) {
+  //
+  // NOTE: a docs/ file needs allow-listing in THREE places to reach the web —
+  // written by generate.py, named in .vercelignore, and named here. today.json
+  // had the first two and still 404'd. If a file is missing in production and
+  // the build log says it was written, this list is why.
+  for (const f of ["desk.html", "robots.txt", "sitemap.xml", "manifest.webmanifest",
+                   "icon.svg", "og.png", "today.json"]) {
     const src = join(here, "..", "docs", f);
     if (existsSync(src)) copyFileSync(src, join(publicDir, f));
   }
