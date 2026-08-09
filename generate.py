@@ -370,6 +370,16 @@ def generate() -> None:
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
+    # The page script. It is a real file in static/ now rather than a string
+    # inside newspaper.py — see the header of static/app.js for why. Copied
+    # rather than generated, so what ships is byte-identical to what CI linted.
+    _appjs = pathlib.Path(__file__).parent / "static" / "app.js"
+    if _appjs.exists():
+        (out_dir / "app.js").write_text(_appjs.read_text(encoding="utf-8"), encoding="utf-8")
+        print(f"[generate] ✅ app.js ({_appjs.stat().st_size // 1024}KB)")
+    else:
+        print("[generate] ❌ static/app.js MISSING — the page will have no behaviour")
+
     (out_dir / "today.json").write_text(
         json.dumps(today_json, default=str, indent=1), encoding="utf-8")
     print(f"[generate] ✅ today.json ({len(today_json['picks'])} picks, "

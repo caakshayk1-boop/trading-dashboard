@@ -30,7 +30,17 @@ import pathlib
 import subprocess
 import sys
 
-BASE = sys.argv[1].rstrip("/") if len(sys.argv) > 1 else "https://news.askakshay.com"
+# --pre runs against a LOCAL server serving freshly generated docs/, BEFORE
+# anything is committed. It drops the assertions that need the live /api layer
+# (ticker segments, world map) and keeps the ones that catch a dead page — JS
+# errors, missing sections, broken scroll spy.
+#
+# This exists because the full check runs after publish, so a red result has
+# always meant "the broken page is already live". On 2026-08-08 the main page
+# served with an aborted script block for ~7 minutes for exactly that reason.
+PRE = "--pre" in sys.argv
+_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+BASE = _args[0].rstrip("/") if _args else "https://news.askakshay.com"
 
 # id → minimum sections that must render. Fewer than this and a page guard has
 # broken, which is invisible in the HTML diff but obvious here.
@@ -70,7 +80,7 @@ def main() -> int:
         return 1
 
     fails = []
-    print(f"smoke: {BASE}\n")
+    print(f"smoke{' [pre-publish]' if PRE else ''}: {BASE}\n")
     for path, r in data["pages"].items():
         want = r["want"]
         print(f"  {path}")
@@ -98,16 +108,17 @@ def main() -> int:
                 fails.append(f"{path}: section '{sid}' missing")
         if not r["navMatchesDom"]:
             fails.append(f"{path}: nav order does not match document order")
-        if (r.get("spy") or {}).get("mismatched"):
+        if not PRE and (r.get("spy") or {}).get("mismatched"):
             fails.append(f"{path}: nav highlight wrong at "
                          + ", ".join(r["spy"]["mismatched"][:5]))
         if not r["hasCsp"]:
             fails.append(f"{path}: no Content-Security-Policy")
-        # The two that would have caught the outage.
-        if path == "/" and r["tickerSegments"] < 8:
+        # The two that would have caught the outage. Both need the live API,
+        # so they are skipped in --pre where only the static shell exists.
+        if not PRE and path == "/" and r["tickerSegments"] < 8:
             fails.append(f"/: ticker has {r['tickerSegments']} segments, expected 8+ "
                          "(a fallback to /api/markets looks like this)")
-        if path == "/" and r["mapPainted"] < 10000:
+        if not PRE and path == "/" and r["mapPainted"] < 10000:
             fails.append(f"/: world map painted {r['mapPainted']} px, expected 10000+")
         print()
 

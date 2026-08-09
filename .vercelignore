@@ -20,6 +20,8 @@
 # Allow-listed BY NAME like every other file here — omit it and the bot's
 # section commands silently 404 with no error anywhere.
 !docs/today.json
+# The page script. Without this the site renders and does nothing.
+!docs/app.js
 !docs/robots.txt
 !docs/sitemap.xml
 !docs/manifest.webmanifest

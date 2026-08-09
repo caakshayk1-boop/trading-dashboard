@@ -31,6 +31,16 @@ jobs:
       - name: Validate daily learning banks
         run: python daily_learning.py > /dev/null
 
+      # Possible only since app.js became a real file. While it was a string
+      # inside newspaper.py nothing could parse it, and a syntax error shipped
+      # straight to production — where it aborts the whole script block and
+      # takes every interactive feature with it. Blocking on purpose: this is
+      # correctness, not style.
+      - name: Lint the page script
+        run: |
+          node --check static/app.js
+          npx --yes eslint@9 static/app.js
+
       - name: Generate newspaper HTML
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
@@ -40,6 +50,17 @@ jobs:
           TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
           LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
         run: python generate.py
+
+      # THE GATE. Serve the freshly generated docs/ locally and check it before
+      # anything is committed. The full smoke test still runs after deploy, but
+      # by then a failure only reports that the broken page is already public —
+      # which is exactly what happened on 2026-08-08.
+      - name: Pre-publish check (nothing is committed yet)
+        run: |
+          pip install playwright > /dev/null && playwright install chromium --with-deps > /dev/null 2>&1 || true
+          python -m http.server 4321 --directory docs > /dev/null 2>&1 &
+          for i in $(seq 1 20); do curl -sf http://127.0.0.1:4321/ > /dev/null && break; sleep 0.5; done
+          python smoke_test.py http://127.0.0.1:4321 --pre
 
       - name: Commit & push docs/index.html
         run: |
@@ -51,7 +72,7 @@ jobs:
           # and 404'd; the build log said it was written, which made it look
           # like anything but a missing filename.
           git add docs/index.html docs/desk.html docs/alerts.json docs/edition.json \
-                  docs/today.json \
+                  docs/today.json docs/app.js \
                   docs/robots.txt docs/sitemap.xml docs/manifest.webmanifest \
                   docs/icon.svg docs/og.png docs/fonts
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
