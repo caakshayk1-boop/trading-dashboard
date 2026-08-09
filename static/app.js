@@ -1283,8 +1283,8 @@ var TV_ALIASES = (function () {
                 '</span></div>';
       }
       html += '<div class="tw"><table class="t" style="min-width:880px"><thead><tr>' +
-              '<th>Symbol</th><th>Entry</th><th>Current</th><th>Target</th><th>Stop</th>' +
-              '<th>P&amp;L</th><th>R</th><th>Horizon</th><th>Thesis</th><th>Added</th><th></th>' +
+              '<th scope="col">Symbol</th><th scope="col">Entry</th><th scope="col">Current</th><th scope="col">Target</th><th scope="col">Stop</th>' +
+              '<th scope="col">P&amp;L</th><th scope="col">R</th><th scope="col">Horizon</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>' +
               '</tr></thead><tbody>';
       rows.forEach(function(r){
         var cur = r.currency || '₹';
@@ -1385,8 +1385,8 @@ var TV_ALIASES = (function () {
         // #alertVer above.
         ''  +
         '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
-          '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>' +
-          '<th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
+          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>' +
+          '<th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>' +
         '</tr></thead><tbody></tbody></table></div>';
         // No #sheet here — it is in the static section markup. Two copies
         // would give two elements with the same id and openSheet() would fill
@@ -2124,9 +2124,9 @@ var TV_ALIASES = (function () {
                 b.held + '/' + b.names + ' held' + left + pl + xir + '</span>' +
             '</div>' +
             '<div class="tw"><table class="t" style="min-width:960px"><thead><tr>' +
-              '<th>#</th><th>Symbol</th><th>Score</th><th>Ref px</th><th>Buy qty</th>' +
-              '<th>Cost</th><th>Bought at</th>' +
-              '<th>Last</th><th>P&amp;L</th><th>Status</th><th>Why</th>' +
+              '<th scope="col">#</th><th scope="col">Symbol</th><th scope="col">Score</th><th scope="col">Ref px</th><th scope="col">Buy qty</th>' +
+              '<th scope="col">Cost</th><th scope="col">Bought at</th>' +
+              '<th scope="col">Last</th><th scope="col">P&amp;L</th><th scope="col">Status</th><th scope="col">Why</th>' +
             '</tr></thead><tbody>' + hs + '</tbody></table></div></div>';
         }).join('');
         reveal(sec);

@@ -3784,6 +3784,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="cmdk-bd" data-close></div>
   <div class="cmdk-box" role="dialog" aria-modal="true" aria-label="Search">
     <input id="cmdkIn" type="text" autocomplete="off" spellcheck="false"
+           aria-label="Jump to a section or search a symbol"
            placeholder="Jump to a section, or type a symbol…" aria-controls="cmdkList">
     <ul class="cmdk-list" id="cmdkList" role="listbox"></ul>
     <div class="cmdk-ft">
@@ -4188,8 +4189,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="tw rv">
     <table class="t" style="min-width:820px">
       <thead><tr>
-        <th>Symbol</th><th>Entry</th><th>Current</th><th>Target</th><th>Stop</th>
-        <th>P&amp;L</th><th>Horizon</th><th>Thesis</th><th>Added</th><th></th>
+        <th scope="col">Symbol</th><th scope="col">Entry</th><th scope="col">Current</th><th scope="col">Target</th><th scope="col">Stop</th>
+        <th scope="col">P&amp;L</th><th scope="col">Horizon</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>
       </tr></thead>
       <tbody>
         {% for s in tracker %}
@@ -4270,7 +4271,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
   </div>
   <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
-    <th>Year</th><th>Monthly</th><th>Invested</th><th>@12%</th><th>@14%</th><th>@16%</th>
+    <th scope="col">Year</th><th scope="col">Monthly</th><th scope="col">Invested</th><th scope="col">@12%</th><th scope="col">@14%</th><th scope="col">@16%</th>
   </tr></thead><tbody></tbody></table></div>
   <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
     Projections are compound arithmetic on the contribution schedule, not a forecast.
@@ -4318,8 +4319,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="tw">
       <table class="t" style="min-width:640px">
         <thead><tr>
-          <th>#</th><th>Fund</th><th class="num">3Y</th><th class="num">5Y</th>
-          <th class="num">Worst fall (3y)</th><th class="num">NAV</th><th></th>
+          <th scope="col">#</th><th scope="col">Fund</th><th scope="col" class="num">3Y</th><th scope="col" class="num">5Y</th>
+          <th scope="col" class="num">Worst fall (3y)</th><th scope="col" class="num">NAV</th><th scope="col"></th>
         </tr></thead>
         <tbody>
           {% for f in cat.funds %}
@@ -4445,7 +4446,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="tw">
       <table class="t" id="swpTbl" style="min-width:560px">
-        <thead><tr><th>Age</th><th>Year</th><th>In / Out (yr)</th><th>Closing corpus</th></tr></thead>
+        <thead><tr><th scope="col">Age</th><th scope="col">Year</th><th scope="col">In / Out (yr)</th><th scope="col">Closing corpus</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -5250,7 +5251,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   <div class="ctlbar rv" id="alertCtl" style="display:none">
-    <input type="search" id="alertSearch" placeholder="Search symbol — e.g. BAJFINANCE" autocomplete="off">
+    <input type="search" id="alertSearch" aria-label="Search the signal log by symbol"
+           placeholder="Search symbol — e.g. BAJFINANCE" autocomplete="off">
     <input type="date" id="alertFrom" aria-label="From date">
     <input type="date" id="alertTo" aria-label="To date">
     <select id="alertTfSel"><option value="">All timeframes</option></select>
@@ -5290,8 +5292,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="tw rv">
     <table class="t" id="alertTable">
       <thead><tr>
-        <th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>
-        <th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>
+        <th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>
+        <th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>
       </tr></thead>
       <tbody>
       {# Only the first rows are server-rendered. The live layer replaces this
