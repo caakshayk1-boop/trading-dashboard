@@ -15,7 +15,9 @@
 //   offset=           pagination
 import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
 
-const BASE_COLS = `date, symbol, action, timeframe, signal_type, entry, sl,
+// `id` is here so a single trade can be linked to and audited. Without it the
+// ledger was a list you could read but not point at.
+const BASE_COLS = `id, date, symbol, action, timeframe, signal_type, entry, sl,
               target1, target2, rr, score, status, lifecycle_status,
               exit_price, pnl_pct, r_multiple, closed_at, sent_at, market, asset_type`;
 
@@ -101,6 +103,17 @@ export default async function handler(req, res) {
       // factor scores from here. Probed like the rest because it arrives via
       // ALTER TABLE and naming a missing column fails the whole query.
       await optional("metadata"),
+      // Lifecycle. These columns existed and were never returned, so the site
+      // could show WHAT happened to a trade but never WHEN, or whether the
+      // outcome was assumed. exit_ambiguous in particular marks a bar that
+      // straddled both stop and target — daily data cannot say which came
+      // first, and hiding that is how an assumption becomes a fact.
+      await optional("entry_triggered_at"),
+      await optional("fill_type"),
+      await optional("exit_ambiguous"),
+      await optional("regraded_at"),
+      await optional("max_profit_pct"),
+      await optional("max_drawdown_pct"),
     ].join(", ");
 
     const sql = `SELECT ${BASE_COLS}, ${extra} FROM all_signals
@@ -128,6 +141,7 @@ export default async function handler(req, res) {
 function shape(r) {
   const pnl = num(r.pnl_pct);
   return {
+    id: num(r.id),
     date: str(r.date).slice(0, 10),
     symbol: str(r.symbol),
     // Derived, because the ledger has no currency column and the table was
@@ -148,6 +162,15 @@ function shape(r) {
     pnl_pct: pnl,
     pnl_str: pnl === null ? "—" : `${pnl > 0 ? "+" : ""}${pnl.toFixed(1)}%`,
     r_multiple: num(r.r_multiple),
+    // The audit trail: generated -> sent -> triggered -> closed, plus whether
+    // anything about the outcome was inferred rather than observed.
+    lifecycle_status: str(r.lifecycle_status),
+    entry_triggered_at: str(r.entry_triggered_at),
+    fill_type: str(r.fill_type),
+    exit_ambiguous: num(r.exit_ambiguous) === 1,
+    regraded_at: str(r.regraded_at),
+    max_profit_pct: num(r.max_profit_pct),
+    max_drawdown_pct: num(r.max_drawdown_pct),
     closed_at: str(r.closed_at).slice(0, 10) || "—",
     sent_at: str(r.sent_at),
     market: str(r.market),

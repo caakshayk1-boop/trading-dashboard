@@ -2869,6 +2869,69 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .trk:hover{background:var(--bg2)}
 .trk:hover .ti{color:var(--lime)}
 .trk:hover .pl{color:var(--lime);transform:scale(1.35)}
+/* ═══════════════════ TRADE SHEET ═══════════════════ */
+#alertTable tr.clickable{cursor:pointer}
+#alertTable tr.clickable:hover{background:var(--bg2)}
+.sheet{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);
+  display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:5vh 16px}
+.sheet[hidden]{display:none}
+.sheet-in{position:relative;background:var(--surface);border:1px solid var(--line2);
+  border-radius:16px;padding:26px;max-width:720px;width:100%;margin-bottom:5vh}
+.sheet-x{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--dim);
+  font-size:16px;cursor:pointer;width:34px;height:34px;border-radius:50%}
+.sheet-x:hover{color:var(--text);background:var(--bg2)}
+.sheet-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  flex-wrap:wrap;padding-right:38px;margin-bottom:18px}
+.sheet-sym{font-size:22px;font-weight:700;letter-spacing:-.5px}
+.sheet-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:26px}
+.sheet-kpi>div{background:var(--surface);padding:14px}
+.sheet-kpi b{display:block;font-family:var(--mono);font-size:18px}
+.sheet-kpi span{display:block;font-size:10.5px;color:var(--dim);margin-top:4px;
+  text-transform:uppercase;letter-spacing:.8px}
+/* Levels on one axis. Height is generous because the labels stagger. */
+.scale{position:relative;height:104px;margin:8px 0 4px;
+  border-bottom:1px solid var(--line2)}
+.scale .lv{position:absolute;bottom:0;transform:translateX(-50%);text-align:center;width:74px}
+/* End labels anchor inward so they cannot hang off the axis. The tick stays
+   where it belongs — only the text box moves. */
+.scale .lv.at-start{transform:translateX(-8px);text-align:left}
+.scale .lv.at-start i{margin-left:8px}
+.scale .lv.at-end{transform:translateX(calc(-100% + 8px));text-align:right}
+.scale .lv.at-end i{margin-right:8px}
+.scale .lv i{display:block;width:2px;height:34px;margin:0 auto 6px;background:var(--dim)}
+.scale .lv-l{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--dim)}
+.scale .lv-v{display:block;font-family:var(--mono);font-size:11.5px;color:var(--text)}
+.scale .lv-r{display:block;font-family:var(--mono);font-size:10px;color:var(--dim)}
+.scale .sl i{background:var(--down)} .scale .sl .lv-l{color:var(--down)}
+.scale .t1 i,.scale .t2 i{background:var(--up)} .scale .t1 .lv-l,.scale .t2 .lv-l{color:var(--up)}
+.scale .en i{background:var(--text);height:52px} .scale .en .lv-l{color:var(--text)}
+.scale .ex i{background:var(--gold);height:68px} .scale .ex .lv-l{color:var(--gold)}
+.scale-note{font-family:var(--mono);font-size:10px;color:var(--dim);margin:0 0 22px}
+.sheet-tl{border-left:2px solid var(--line2);padding-left:16px;margin-bottom:20px}
+.tl-row{display:grid;grid-template-columns:120px 150px 1fr;gap:10px;padding:7px 0;
+  font-family:var(--mono);font-size:11.5px;align-items:baseline}
+.tl-k{color:var(--text)} .tl-v{color:var(--lime)} .tl-w{color:var(--dim)}
+.sheet-flags{background:var(--bg2);border-left:2px solid var(--gold);border-radius:0 8px 8px 0;
+  padding:12px 16px;margin-bottom:20px}
+.sheet-flags p{margin:0 0 8px;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--gold)}
+.sheet-flags p:last-child{margin-bottom:0}
+@media(max-width:640px){
+  .tl-row{grid-template-columns:1fr;gap:2px}
+  .scale .lv{width:56px}
+}
+
+/* ═══════════════════ UNDERWATER ═══════════════════ */
+.uw{margin:22px 0 6px}
+.uw-h{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px}
+.uw-h .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:1.3px;
+  text-transform:uppercase;color:var(--dim)}
+.uw svg{display:block;width:100%;height:auto}
+.uw-f{display:flex;flex-wrap:wrap;gap:18px;margin-top:8px;
+  font-family:var(--mono);font-size:11px;color:var(--dim)}
+.uw-f b{color:var(--text)}
+
 /* ═══════════════════ FUND SCREEN ═══════════════════ */
 .fund-note{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--muted);
   background:var(--bg2);border-left:2px solid var(--blue);border-radius:0 8px 8px 0;
@@ -5031,6 +5094,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <p class="thin-warn rv" id="perfThin" style="display:none"></p>
 
   <div class="perf-grid rv" id="perfGrid"></div>
+  <!-- Drawdown, beside the number that sells the system. Painted by
+       paintUnderwater() from the same equity_curve the hero chart uses. -->
+  <div class="uw rv" id="perfUw"></div>
   <div class="brk rv" id="perfBrk"></div>
 </section>{% endif %}
 
@@ -6388,6 +6454,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       wireKey();
       wireTracker();
       wireAlertControls();
+      wireSheet();
       wirePerfControls();
 
       loadSignals();
@@ -6405,6 +6472,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       // Deep link: /day/2026-07-31 opens straight into that day's archive.
       var m = location.pathname.match(/^\/day\/(\d{4}-\d{2}-\d{2})/);
       if (m) selectDay(m[1]);
+
+      // ?signal=<id> opens that trade's sheet. Deferred until the rows are in
+      // memory — the sheet renders from allRows, not from a second fetch, so
+      // it cannot show a different number from the table behind it.
+      var sid = new URLSearchParams(location.search).get('signal');
+      if (sid) pendingSheet = sid;
     }
 
     /* ═══════ edit key ═══════ */
@@ -6559,7 +6632,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
           '<th>Date</th><th>Symbol</th><th>Signal</th><th>TF</th><th>Grade</th><th>Entry</th><th>SL</th>' +
           '<th>T1</th><th>T2</th><th>RR</th><th>B/E WR</th><th>Exit</th><th>P&amp;L</th><th>Closed</th><th>Status</th>' +
-        '</tr></thead><tbody></tbody></table></div>';
+        '</tr></thead><tbody></tbody></table></div>' +
+        // The trade sheet. A ledger you can read but not point at is not
+        // auditable; this is the "show me THIS trade" surface, deep-linkable
+        // via ?signal=<id> so a single row can be sent to someone.
+        '<div class="sheet" id="sheet" hidden>' +
+          '<div class="sheet-in">' +
+            '<button type="button" class="sheet-x" id="sheetX" aria-label="Close">✕</button>' +
+            '<div id="sheetBody"></div>' +
+          '</div>' +
+        '</div>';
       if (empty) empty.replaceWith(host); else sec.appendChild(host);
       reveal(host);
     }
@@ -6577,6 +6659,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         allRows = j.signals || [];
         fillTfSelect(el('alertTfSel'), allRows);
         renderAlerts();
+        if (pendingSheet){ var sid = pendingSheet; pendingSheet = null; openSheet(sid); }
       });
     }
 
@@ -6612,6 +6695,153 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
              esc(sym) + '</a>';
     }
 
+    /* ══════════ the trade sheet ══════════
+       One trade, in full: the levels drawn to scale, the R arithmetic that
+       produced the number in the table, and the lifecycle stamps.
+
+       The levels diagram is deliberately NOT a price chart. Drawing candles
+       would mean fetching OHLC per trade, and the ledger has no bar data — a
+       chart built from entry/stop/exit alone would be an illustration of four
+       numbers pretending to be a price path. The scale bar shows exactly what
+       is known: where the levels sat relative to each other, and where the
+       exit landed among them. TradingView is one click away for the real
+       chart. */
+    function sheetFor(a){
+      var cur = a.currency;
+      var risk = (a.entry !== null && a.sl !== null) ? Math.abs(a.entry - a.sl) : null;
+      var isLong = (a.action || 'BUY').toUpperCase() !== 'SELL';
+
+      function rOf(px){
+        if (px === null || !risk) return null;
+        return (isLong ? (px - a.entry) : (a.entry - px)) / risk;
+      }
+      function rTxt(px){
+        var r = rOf(px);
+        return r === null ? '' : (r > 0 ? '+' : '') + fmt(r, 2) + 'R';
+      }
+
+      // Scale every level onto one axis so the geometry is visible: a target
+      // sitting a fifth of the way to the stop LOOKS wrong here, which is the
+      // whole point — that is how the 0.19R first targets hid in plain sight.
+      var pts = [a.entry, a.sl, a.target1, a.target2, a.exit_price]
+                  .filter(function(v){ return v !== null && isFinite(v); });
+      var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts);
+      var span = (hi - lo) || 1;
+      function pos(v){ return ((v - lo) / span) * 100; }
+
+      function marker(label, v, cls){
+        if (v === null || !isFinite(v)) return '';
+        // A label is 74px wide and centred on its tick, so one sitting at 0%
+        // or 100% hangs off the axis and collides with its neighbour — EXIT
+        // and T2 overlapped at the right edge. Anchor the end labels inward
+        // instead of centring them; the tick itself stays exact.
+        var pc = pos(v), edge = pc < 8 ? ' at-start' : pc > 92 ? ' at-end' : '';
+        return '<div class="lv ' + cls + edge + '" style="left:' + pc.toFixed(1) + '%">' +
+               '<i></i><span class="lv-l">' + label + '</span>' +
+               '<span class="lv-v">' + money(v, cur) + '</span>' +
+               '<span class="lv-r">' + rTxt(v) + '</span></div>';
+      }
+
+      // Lifecycle. Only stamps that exist are shown — an empty step is a fact
+      // about the pipeline (nothing recorded it) and inventing one would be
+      // the opposite of an audit trail.
+      var steps = [
+        ['Generated', a.date, 'the engine produced it'],
+        ['Sent', (a.sent_at || '').slice(0, 16).replace('T', ' '), 'delivered to Telegram'],
+        ['Entry touched', (a.entry_triggered_at || '').slice(0, 10),
+         a.fill_type ? ('fill: ' + esc(a.fill_type)) : 'price traded through the entry'],
+        ['Closed', a.closed_at, a.status ? esc(a.status) : '']
+      ].filter(function(x){ return x[1]; });
+
+      var flags = [];
+      if (a.exit_ambiguous) flags.push('One bar touched BOTH stop and target. Daily data cannot say which came first, so the STOP was booked — the unflattering assumption, counted rather than hidden.');
+      if (a.regraded_at) flags.push('This outcome was corrected on ' + esc(a.regraded_at.slice(0, 10)) + ' by a later audit.');
+      if (a.badge === 'open') flags.push('Still open. Nothing here is a result yet.');
+
+      var tv = tvSym(a.symbol, cur);
+
+      return '<div class="sheet-h">' +
+          '<div><span class="sheet-sym">' + esc(a.symbol) + '</span> ' +
+            '<span class="badge badge-' + a.badge + '">' + esc(a.status || a.badge) + '</span></div>' +
+          '<div class="mono-dim">' + esc(a.signal_type || '') + ' · ' + esc(a.timeframe || '') +
+            (a.grade ? ' · grade ' + esc(a.grade) : '') + '</div>' +
+        '</div>' +
+
+        '<div class="sheet-kpi">' +
+          '<div><b class="' + (a.r_multiple > 0 ? 'up' : a.r_multiple < 0 ? 'dn' : '') + '">' +
+            (a.r_multiple === null ? '—' : (a.r_multiple > 0 ? '+' : '') + fmt(a.r_multiple, 2) + 'R') +
+            '</b><span>outcome</span></div>' +
+          '<div><b>' + (a.rr === null ? '—' : fmt(a.rr, 2) + 'x') + '</b><span>R:R to T2</span></div>' +
+          '<div><b>' + (risk === null ? '—' : money(risk, cur)) + '</b><span>risk / unit</span></div>' +
+          '<div><b>' + beWr(a) + '</b><span>break-even WR</span></div>' +
+        '</div>' +
+
+        '<div class="scale">' +
+          marker('Stop', a.sl, 'sl') + marker('Entry', a.entry, 'en') +
+          marker('T1', a.target1, 't1') + marker('T2', a.target2, 't2') +
+          marker('Exit', a.exit_price, 'ex') +
+        '</div>' +
+        '<p class="scale-note">Levels to scale. Not a price chart — the ledger stores levels, not bars.</p>' +
+
+        '<div class="sheet-tl">' + steps.map(function(st){
+          return '<div class="tl-row"><span class="tl-k">' + st[0] + '</span>' +
+                 '<span class="tl-v">' + esc(st[1]) + '</span>' +
+                 '<span class="tl-w">' + st[2] + '</span></div>';
+        }).join('') + '</div>' +
+
+        (flags.length ? '<div class="sheet-flags">' + flags.map(function(f){
+          return '<p>⚠ ' + f + '</p>'; }).join('') + '</div>' : '') +
+
+        (tv ? '<a class="btn btn-sm" target="_blank" rel="noopener" href="https://www.tradingview.com/chart/?symbol=' +
+              encodeURIComponent(tv) + '">Open the real chart on TradingView →</a>' : '');
+    }
+
+    function openSheet(id){
+      var a = null;
+      for (var i = 0; i < allRows.length; i++){
+        if (String(allRows[i].id) === String(id)) { a = allRows[i]; break; }
+      }
+      var box = el('sheet');
+      if (!a || !box) return;
+      el('sheetBody').innerHTML = sheetFor(a);
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      // Deep link without a navigation, so Back closes the sheet.
+      try { history.pushState({ sheet: id }, '', '?signal=' + encodeURIComponent(id)); } catch(e){}
+    }
+
+    function closeSheet(push){
+      var box = el('sheet');
+      if (!box || box.hidden) return;
+      box.hidden = true;
+      document.body.style.overflow = '';
+      if (push !== false){
+        try { history.pushState({}, '', location.pathname); } catch(e){}
+      }
+    }
+
+    function wireSheet(){
+      var tbl = el('alertTable');
+      if (tbl) tbl.addEventListener('click', function(ev){
+        var tr = ev.target.closest ? ev.target.closest('tr[data-sid]') : null;
+        // A click on the symbol's TradingView link is not a request for the
+        // sheet; let the anchor win.
+        if (!tr || !tr.dataset.sid || (ev.target.closest && ev.target.closest('a'))) return;
+        openSheet(tr.dataset.sid);
+      });
+      var x = el('sheetX'); if (x) x.addEventListener('click', function(){ closeSheet(); });
+      var sh = el('sheet');
+      if (sh) sh.addEventListener('click', function(ev){
+        if (ev.target === sh) closeSheet();     // click the backdrop
+      });
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') closeSheet();
+      });
+      window.addEventListener('popstate', function(){ closeSheet(false); });
+    }
+
+    var pendingSheet = null;
+
     function renderAlerts(){
       var tbody = document.querySelector('#alertTable tbody');
       if (!tbody) return;
@@ -6634,7 +6864,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       var html = rows.map(function(a){
         var badgeTxt = a.badge === 'win' ? '✅ Win' : a.badge === 'loss' ? '❌ Stop'
                      : a.badge === 'open' ? '🔵 Open' : (a.status || '—');
-        return '<tr data-badge="' + a.badge + '">' +
+        return '<tr data-badge="' + a.badge + '" data-sid="' + (a.id === null ? '' : a.id) +
+               '" class="' + (a.id === null ? '' : 'clickable') + '">' +
           '<td class="mono-dim">' + esc(a.date) + '</td>' +
           '<td>' + symCell(a.symbol, a.currency) + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
@@ -7125,6 +7356,60 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     // whole point of this ledger is not to claim one before it is earned.
     var MIN_N_FOR_EDGE = 30;
 
+    /* ══════════ the underwater curve ══════════
+       The equity curve alone answers "did it make money". It cannot answer the
+       question that actually decides whether an edge is tradeable: how deep
+       does it go against you, and for how long do you sit there?
+
+       A +0.2R expectancy that spends four months underwater is abandoned by
+       most people before it pays. Drawdown is the number that gets a system
+       switched off, so it belongs on the page beside the one that sells it. */
+    function paintUnderwater(j){
+      var box = el('perfUw');
+      if (!box) return;
+      var pts = (j.equity_curve || []).filter(function(p){ return isFinite(p.cum_r); });
+      if (pts.length < 5){ box.innerHTML = ''; return; }
+
+      var peak = -Infinity, dd = [], worst = 0, worstAt = null;
+      var underFrom = null, longest = 0, longestFrom = null, curRun = 0;
+      for (var i = 0; i < pts.length; i++){
+        var c = pts[i].cum_r;
+        if (c > peak){ peak = c; }
+        var d = c - peak;                       // <= 0, in R
+        dd.push(d);
+        if (d < worst){ worst = d; worstAt = pts[i].date; }
+        // Time underwater, counted in TRADES rather than days: the ledger's
+        // clock is trades, and a quiet week is not recovery.
+        if (d < 0){
+          if (underFrom === null) underFrom = pts[i].date;
+          curRun++;
+          if (curRun > longest){ longest = curRun; longestFrom = underFrom; }
+        } else { underFrom = null; curRun = 0; }
+      }
+
+      var W = 600, H = 70;
+      var lo = Math.min.apply(null, dd) || -1;
+      var x = function(i){ return (i / (dd.length - 1)) * W; };
+      var y = function(d){ return (d / lo) * H; };      // 0 at top, worst at bottom
+      var path = dd.map(function(d, i){ return x(i).toFixed(1) + ',' + y(d).toFixed(1); }).join(' ');
+
+      box.innerHTML =
+        '<div class="uw-h"><span class="eyebrow">Underwater — every closed trade</span>' +
+          '<span class="eyebrow">worst ' + fmt(worst, 2) + 'R</span></div>' +
+        '<svg viewBox="0 0 ' + W + ' ' + (H + 2) + '" width="100%" role="img" ' +
+          'aria-label="Drawdown from peak, worst ' + fmt(worst, 2) + 'R">' +
+          '<polygon points="0,0 ' + path + ' ' + W + ',0" fill="var(--down)" opacity="0.16"></polygon>' +
+          '<polyline points="' + path + '" fill="none" stroke="var(--down)" stroke-width="1.4"></polyline>' +
+          '<line x1="0" y1="0" x2="' + W + '" y2="0" stroke="var(--line2)" stroke-width="1"></line>' +
+        '</svg>' +
+        '<div class="uw-f">' +
+          '<span>Deepest <b>' + fmt(worst, 2) + 'R</b>' + (worstAt ? ' on ' + esc(worstAt) : '') + '</span>' +
+          '<span>Longest stretch underwater <b>' + longest + ' trades</b>' +
+            (longestFrom ? ' from ' + esc(longestFrom) : '') + '</span>' +
+          '<span class="mono-dim">Zero means a new equity high.</span>' +
+        '</div>';
+    }
+
     function renderStats(j){
       var h = j.headline, t = j.totals;
       el('perfBasis').textContent = t.closed + ' closed of ' + t.all + ' signals · ' +
@@ -7178,11 +7463,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
               (b.total_r === null ? '—' : (b.total_r > 0 ? '+' : '') + fmt(b.total_r, 1) + 'R') + '</span></div>';
           }).join('') + '</div>';
       }
+      // The per-engine R:R floor each engine must clear. Published because a
+      // floor nobody can see is a claim, not a control — and these are per
+      // engine on purpose: a single global floor is what let a 0.19R first
+      // target through.
+      // Each engine's MEASURED break-even R:R beside the floor actually
+      // enforced. Published because a floor nobody can see is a claim rather
+      // than a control, and because the two numbers together say the thing
+      // that matters: an engine winning 23.9% of the time needs 3.18x just to
+      // break even, so a setup at 2x is a loss with extra steps. Per engine on
+      // purpose — one global floor is exactly what let a 0.19R target through.
+      function floors(rows){
+        if (!rows || !rows.length) return '';
+        return '<div class="brk-card"><h4>Engine R:R floors</h4>' +
+          rows.slice(0, 10).map(function(f){
+            var thin = f.status && f.status !== 'active';
+            var be = f.breakeven_rr === null || f.breakeven_rr === undefined
+                   ? '—' : fmt(f.breakeven_rr, 2) + 'x';
+            return '<div class="brk-row"><span class="kk">' + esc(f.key) +
+              (thin ? ' <span class="mono-dim" style="font-size:10px">' + esc(f.status) + '</span>' : '') +
+              '</span>' +
+              '<span class="nn">' + f.trades + ' tr · wins ' + fmt(f.win_rate, 0) + '%</span>' +
+              '<span class="rr" style="color:var(--gold)">needs ' + be +
+                ' · floor ' + fmt(f.floor, 2) + 'x</span></div>';
+          }).join('') + '</div>';
+      }
+
       el('perfBrk').innerHTML =
+        table('By engine', j.by_signal_type, 'tr') +
         table('By timeframe', j.by_timeframe, 'tr') +
-        table('By signal type', j.by_signal_type, 'tr') +
         table('By month', j.by_month, 'tr') +
-        table('Top symbols · 5+ closed trades', j.by_symbol, 'tr');
+        table('Top symbols · 5+ closed trades', j.by_symbol, 'tr') +
+        floors(j.engine_floors);
+
+      paintUnderwater(j);
       reveal(el('perf'));
     }
 
