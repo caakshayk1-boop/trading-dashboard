@@ -1384,9 +1384,10 @@ var TV_ALIASES = (function () {
         // No engine switch. One engine, one record — see the note on
         // #alertVer above.
         ''  +
-        '<div class="tw rv"><table class="t" id="alertTable"><thead><tr>' +
+        '<div class="tw tw-tall rv"><table class="t" id="alertTable"><thead><tr>' +
           '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>' +
-          '<th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>' +
+          '<th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th>' +
+          '<th scope="col">Last</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>' +
         '</tr></thead><tbody></tbody></table></div>';
         // No #sheet here — it is in the static section markup. Two copies
         // would give two elements with the same id and openSheet() would fill
@@ -1407,6 +1408,7 @@ var TV_ALIASES = (function () {
         if (!j.ok) return;
         allRows = j.signals || [];
         fillTfSelect(el('alertTfSel'), allRows);
+        fillEngSelect(el('alertEngSel'), allRows);
         renderAlerts();
         paintHeat(allRows);
         if (pendingSheet){ var sid = pendingSheet; pendingSheet = null; openSheet(sid); }
@@ -1420,6 +1422,17 @@ var TV_ALIASES = (function () {
       Object.keys(seen).sort().forEach(function(tf){
         var o = document.createElement('option');
         o.value = tf; o.textContent = tf; sel.appendChild(o);
+      });
+      sel.dataset.filled = '1';
+    }
+
+    function fillEngSelect(sel, rows){
+      if (!sel || sel.dataset.filled) return;
+      var seen = {};
+      rows.forEach(function(r){ if (r.signal_type) seen[r.signal_type] = 1; });
+      Object.keys(seen).sort().forEach(function(t){
+        var o = document.createElement('option');
+        o.value = t; o.textContent = t; sel.appendChild(o);
       });
       sel.dataset.filled = '1';
     }
@@ -1781,6 +1794,12 @@ var TV_ALIASES = (function () {
 
     var pendingSheet = null;
 
+    // Called by paintTicker each time live quotes land (first load, then every
+    // 5 minutes). Repaints Last and running P&L without refetching the ledger.
+    window.__onLedgerPx = function(){
+      if (document.querySelector('#alertTable tbody')) renderAlerts();
+    };
+
     function renderAlerts(){
       var tbody = document.querySelector('#alertTable tbody');
       if (!tbody) return;
@@ -1788,6 +1807,7 @@ var TV_ALIASES = (function () {
       var from  = el('alertFrom').value;
       var to    = el('alertTo').value;
       var tf    = el('alertTfSel').value;
+      var eng   = (el('alertEngSel') || {}).value || '';
       var badge = activeBadge();
 
       var rows = allRows.filter(function(r){
@@ -1796,6 +1816,7 @@ var TV_ALIASES = (function () {
         if (from && r.date < from) return false;
         if (to   && r.date > to)   return false;
         if (tf   && r.timeframe !== tf) return false;
+        if (eng  && r.signal_type !== eng) return false;
         return true;
       });
 
@@ -1821,8 +1842,9 @@ var TV_ALIASES = (function () {
           // is obvious. v1 rows predate the stored column, so derive it from
           // R:R — those are precisely the rows worth seeing it on.
           '<td class="num mono-dim">' + beWr(a) + '</td>' +
+          '<td class="num">' + lastCell(a) + '</td>' +
           '<td class="num">' + money(a.exit_price, a.currency) + '</td>' +
-          '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') + '">' + esc(a.pnl_str) + '</td>' +
+          pnlCell(a) +
           '<td class="mono-dim">' + esc(a.closed_at) + '</td>' +
           '<td><span class="badge badge-' + a.badge + '">' + badgeTxt + '</span></td>' +
           '</tr>';
@@ -1835,7 +1857,7 @@ var TV_ALIASES = (function () {
       if (archDate){
         why = 'No signals on ' + esc(archDate) + ' for this filter. ' +
               '<a href="#" id="archClear" style="color:var(--lime)">Show all days</a> to see the rest.';
-      } else if (from || to || tf || el('alertSearch').value.trim()){
+      } else if (from || to || tf || eng || el('alertSearch').value.trim()){
         why = 'Nothing matches those filters.';
       } else if (activeVersion() === 'v2'){
         why = 'No gated signals yet. The v2 engine publishes only setups that clear ' +
@@ -1882,7 +1904,7 @@ var TV_ALIASES = (function () {
     }
 
     function wireAlertControls(){
-      ['alertSearch','alertFrom','alertTo','alertTfSel'].forEach(function(id){
+      ['alertSearch','alertFrom','alertTo','alertTfSel','alertEngSel'].forEach(function(id){
         var n = el(id); if (!n) return;
         n.addEventListener('input', renderAlerts);
         n.addEventListener('change', renderAlerts);
@@ -2182,6 +2204,56 @@ var TV_ALIASES = (function () {
        A table of twenty open setups implies twenty things you could do today;
        most have already moved past their entry or are nowhere near it. Only
        shown on OPEN rows — on a closed trade the distance is history. */
+    /* ── live price + running P&L on OPEN rows ──────────────────────────────
+       An open row showed an entry and then a dash for Last, P&L and Exit, so
+       the log said what was signalled and never what it had done since.
+
+       Two sources, in order: /api/ticker's `ledger` map (fetched live, this
+       page load) and then OPEN_CTX from today.json (the 6 AM snapshot). The
+       fallback is labelled as such in the tooltip, because a stale price
+       wearing a live label is worse than no price. */
+    /* Read through window rather than captured into a local: the ticker
+       fetch lives in a different IIFE and resolves on its own clock, before
+       or after this table first paints. A shared object plus a redraw hook
+       means neither has to know the other's timing. */
+    function lastPx(a){
+      var l = (window.__ledgerPx || {})[a.symbol];
+      if (l && isFinite(l.price)) return { price: l.price, live: true };
+      var c = OPEN_CTX[a.symbol];
+      if (c && isFinite(c.price)) return { price: c.price, live: false };
+      return null;
+    }
+
+    function lastCell(a){
+      if (a.badge !== 'open') return '—';
+      var p = lastPx(a);
+      if (!p) return '—';
+      return '<span title="' + (p.live ? 'Live quote' : '6:00 AM snapshot — no live quote for this symbol') + '"' +
+             (p.live ? '' : ' class="mono-dim"') + '>' + money(p.price, a.currency) + '</span>';
+    }
+
+    /* Realised P&L for a closed row; UNREALISED for an open one, marked so the
+       two can never be read as the same thing. The ledger's own pnl_pct is the
+       realised number and stays authoritative wherever it exists. */
+    function pnlCell(a){
+      if (a.badge !== 'open' || a.pnl_pct !== null && a.pnl_pct !== undefined){
+        return '<td class="' + (a.pnl_pct > 0 ? 'pnl-u' : a.pnl_pct < 0 ? 'pnl-d' : 'num') +
+               '">' + esc(a.pnl_str) + '</td>';
+      }
+      var p = lastPx(a);
+      if (!p || !a.entry) return '<td class="num">—</td>';
+      var d = (p.price - a.entry) / a.entry * 100;
+      // A short profits when price falls. Signing this off `action` rather
+      // than assuming long is the difference between a hedge reading +4% and
+      // -4% on the same move.
+      if ((a.action || 'BUY').toUpperCase() === 'SELL') d = -d;
+      return '<td class="' + (d > 0 ? 'pnl-u' : d < 0 ? 'pnl-d' : 'num') + '">' +
+             '<span title="Unrealised — still open' + (p.live ? '' : ', priced off the 6 AM snapshot') + '">' +
+             (d > 0 ? '+' : '') + fmt(d, 2) + '%' +
+             '<span class="mono-dim" style="font-size:9px;display:block;line-height:1">open</span>' +
+             '</span></td>';
+    }
+
     function distCell(a){
       if (a.badge !== 'open') return '';
       var c = OPEN_CTX[a.symbol];
@@ -2981,6 +3053,15 @@ var TV_ALIASES = (function () {
         adv.dataset.live = '1';
         adv.removeAttribute('data-count');
         adv.textContent = j.advancing + '/' + j.total;
+      }
+
+      // Live quotes for open ledger rows travel on this same response — see
+      // the note in api/ticker.js on why they are not their own endpoint.
+      // Published before the redraw so the table reads the new map, not the
+      // one it painted with.
+      if (j.ledger){
+        window.__ledgerPx = j.ledger;
+        if (window.__onLedgerPx) window.__onLedgerPx();
       }
     }
 
