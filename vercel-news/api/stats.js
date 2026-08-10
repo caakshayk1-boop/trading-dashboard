@@ -24,7 +24,13 @@ export default async function handler(req, res) {
   // single one resolving would land in the R-multiple statistics as though it
   // were a swing trade and move the only honest number on this site. Mirrors
   // ai_longterm.EXCLUDE_FROM_EXPECTANCY on the Python side.
-  const NON_TRADING = ["ai_longterm"];
+  //
+  // multibagger joins it for the same reason, from 2026-08-10: the Saturday
+  // weekly scan now writes to the ledger instead of only its own table, and
+  // those are 6-12 month holds off weekly bars. They appear in the Signal Log
+  // and in /api/signals?type=multibagger; they do not touch win rate,
+  // expectancy or the equity curve. Mirrors tracker.EXCLUDE_FROM_EXPECTANCY.
+  const NON_TRADING = ["ai_longterm", "multibagger"];
   where.push(`COALESCE(signal_type,'') NOT IN (${NON_TRADING.map(() => "?").join(",")})`);
   args.push(...NON_TRADING);
 

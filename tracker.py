@@ -1220,6 +1220,93 @@ def log_multibaggers(signals):
                  int(s.get("fno", False)), s.get("reason",""), s.get("tv_link","")))
         c.commit()
         _db.sync(c)
+    # Same ideas, into the ledger. Written AFTER the block above closes:
+    # log_batch_to_all_signals opens its own connection and syncs, and nesting
+    # that inside a live `with _conn()` is how you get two writers to the same
+    # Turso replica in one call.
+    _log_multibaggers_to_ledger(signals, today)
+
+
+# The multibagger scan has always written to its own `multibaggers` table and
+# nowhere else. That table is REPLACED per scan date and read by exactly one
+# consumer — the ticker's 💎 segment, which takes the top five by score. So a
+# name like TORNTPHARM or KARURVYSYA appeared on the site as a price and a
+# target, with no entry, no stop, no scan date, no outcome, and it never
+# reached the Signal Log. Nothing ever graded them; the previous week's ideas
+# were deleted rather than resolved.
+#
+# They are real signals — entry, stop, three targets, R:R and a score, same as
+# any other engine — so they belong in `all_signals` with everything else. The
+# per-table write above stays: the ticker query is fine and this is additive.
+#
+# Excluded from expectancy, for the same reason ai_longterm is: a 6–12 month
+# hold off weekly bars cannot resolve on a swing horizon, and letting it into
+# the R statistics would corrupt the only honest number on the site. See
+# EXCLUDE_FROM_EXPECTANCY below and the NON_TRADING list in api/stats.js —
+# a new non-trading engine has to be named in BOTH.
+MULTIBAGGER_SIGNAL_TYPE = "multibagger"
+MULTIBAGGER_TIMEFRAME = "1W"
+EXCLUDE_FROM_EXPECTANCY = (MULTIBAGGER_SIGNAL_TYPE,)
+
+
+def _log_multibaggers_to_ledger(signals, today):
+    """Mirror one multibagger scan into all_signals. Never raises.
+
+    Best-effort on purpose: the scan's own table is already committed by the
+    time this runs, so a ledger failure must not lose the scan or fail the
+    Saturday job. It logs loudly instead.
+    """
+    if not signals:
+        return []
+    try:
+        # Replace, don't append. The Saturday cron and a manual re-run both
+        # stamp the same date, and a second run would otherwise double every
+        # idea in the log — the same trap ai_longterm hit.
+        with _conn() as c:
+            n = c.execute(
+                "SELECT COUNT(*) FROM all_signals WHERE signal_type=? AND date=?",
+                (MULTIBAGGER_SIGNAL_TYPE, today)).fetchone()[0]
+            if n:
+                c.execute("DELETE FROM all_signals WHERE signal_type=? AND date=?",
+                          (MULTIBAGGER_SIGNAL_TYPE, today))
+                c.commit()
+                _db.sync(c)
+                log.info(f"multibagger: replaced {n} ledger row(s) already written today")
+
+        rows = [{
+            "symbol": s["symbol"], "signal_type": MULTIBAGGER_SIGNAL_TYPE,
+            "action": "BUY", "timeframe": MULTIBAGGER_TIMEFRAME,
+            "entry": s["price"], "sl": s["sl"],
+            "t1": s["target1"], "t2": s["target2"], "t3": s["target3"],
+            "rr": s["rr"], "score": int(round(s.get("score") or 0)),
+            "grade": _multibagger_grade(s.get("score") or 0),
+            "metadata": {
+                "engine": "multibagger", "horizon": "6-12 months",
+                "cadence": "weekly · Saturday 09:30 IST",
+                # Every number the scan actually gated on, so the Signal Log
+                # can answer "why is this here?" without re-running anything.
+                "range_pos": s.get("range_pos"), "wk_rsi": s.get("wk_rsi"),
+                "wk_adx": s.get("wk_adx"), "vol_ratio": s.get("vol_ratio"),
+                "high_52w": s.get("high_52w"), "low_52w": s.get("low_52w"),
+                "support1": s.get("support1"), "support2": s.get("support2"),
+                "pe": s.get("pe"), "fno": bool(s.get("fno", False)),
+                "reason": s.get("reason", ""), "tv_link": s.get("tv_link", ""),
+            },
+        } for s in signals]
+        ids = log_batch_to_all_signals(rows)
+        log.info(f"multibagger: wrote {len(ids)} row(s) to the ledger "
+                 f"({', '.join(r['symbol'] for r in rows[:8])}"
+                 f"{'…' if len(rows) > 8 else ''})")
+        return ids
+    except Exception as e:
+        log.error(f"multibagger: scan saved but NOT logged to the ledger — {e}")
+        return []
+
+
+def _multibagger_grade(score: float) -> str:
+    """Same bands ai_longterm uses, so one grade means one thing site-wide."""
+    return "A+" if score >= 80 else "A" if score >= 70 else "B" if score >= 60 else "C"
+
 
 def get_multibaggers(days=7):
     init_db()

@@ -1,0 +1,50 @@
+name: Ledger — backfill multibagger scans
+
+# One-off, manual. Every multibagger scan from the next Saturday onward reaches
+# the ledger by itself (tracker.log_multibaggers now mirrors into all_signals);
+# this is for the scans that already ran and only ever existed in the
+# `multibaggers` table.
+#
+# Idempotent: dates already present in the ledger are skipped, so an accidental
+# second run cannot double anything. Reports by default — writing needs
+# apply=true, deliberately, because it writes to the live Turso ledger.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Write the rows (false = report only)'
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: ledger-backfill-multibaggers
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Always reported first, in its own step, so the log shows what WOULD be
+      # written above whatever the apply step then does.
+      - name: Backfill (report)
+        run: python backfill_multibaggers.py
+
+      - name: Backfill (apply)
+        if: ${{ inputs.apply }}
+        run: python backfill_multibaggers.py --apply

@@ -72,7 +72,9 @@ jobs:
           if empty:
               raise SystemExit(f"empty categories: {empty}")
 
-          week = newspaper._week_key()
+          # _fund_week_key(), not _week_key(): the latter embeds PICKS_ENGINE
+          # and bumping the EQUITY picks engine would orphan this cache.
+          week = newspaper._fund_week_key()
           with newspaper._db() as con:
               con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
                   week TEXT PRIMARY KEY, payload TEXT)""")

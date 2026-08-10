@@ -1884,6 +1884,10 @@ def page_context(page: str, drop=()) -> dict:
         # error-path render is the one that would have silently dropped it —
         # which is precisely the day the log needs to still be on the page.
         "engine_changes": ENGINE_CHANGES,
+        # Supplied here for the same reason engine_changes is: three render
+        # call sites, and the provenance strip must not be the one that
+        # silently renders blank on the error path.
+        "picks_engine": PICKS_ENGINE,
         "page_title": meta["title"],
         "page_desc": meta["desc"],
         "page_path": meta["path"],
@@ -2199,20 +2203,20 @@ def get_fund_screen(build_if_missing: bool = False) -> dict:
     miss returns nothing and the section hides itself rather than hanging the
     build behind a third-party API.
     """
-    week = _week_key()
+    week = _fund_week_key()
     try:
         with _db() as con:
             row = con.execute("SELECT payload FROM newspaper_funds WHERE week=?",
                               (week,)).fetchone()
             if row:
-                return json.loads(row[0])
+                return _stamp_fund_payload(json.loads(row[0]), fallback=False)
 
             # Exact-key miss is the NORMAL state every Monday, and it used to
             # take the whole Fund Screen off the site until the weekly workflow
-            # next ran. Two ways to miss:
-            #   · the ISO week rolls over, and this screen is rebuilt weekly;
-            #   · _week_key() embeds PICKS_ENGINE, so bumping the picks engine
-            #     — nothing to do with funds — silently orphaned the cache too.
+            # next ran. The ISO week rolls over and this screen is rebuilt
+            # weekly, so Monday morning always misses.
+            # (It used to miss for a second reason too — the key embedded
+            # PICKS_ENGINE — which _fund_week_key() has now removed.)
             # Fund NAVs do not expire on a Monday, so fall back to the most
             # recent build and let the DATA decide whether it is still usable.
             row = con.execute("SELECT payload FROM newspaper_funds "
@@ -2222,7 +2226,11 @@ def get_fund_screen(build_if_missing: bool = False) -> dict:
                 age = _payload_age_days(data)
                 if age is not None and age <= MAX_FUND_CACHE_AGE_DAYS:
                     log.info(f"fund screen: serving previous build, {age:.1f}d old")
-                    return data
+                    # Serving it is right; serving it SILENTLY is not. The page
+                    # had no way to say "this is last week's screen", so an
+                    # unchanged table read as a screen that ran and found the
+                    # same funds — not one that never ran at all.
+                    return _stamp_fund_payload(data, fallback=True)
                 log.warning("fund screen: hiding it — newest build is "
                             + ("of unknown age" if age is None else f"{age:.1f}d old"))
     except Exception as e:
@@ -2240,10 +2248,27 @@ def get_fund_screen(build_if_missing: bool = False) -> dict:
             con.execute("INSERT OR REPLACE INTO newspaper_funds VALUES (?,?)",
                         (week, json.dumps(data)))
             con.commit()
-        return data
+        return _stamp_fund_payload(data, fallback=False)
     except Exception as e:
         log.warning(f"fund screen build failed: {e}")
         return {}
+
+
+def _stamp_fund_payload(data: dict, fallback: bool) -> dict:
+    """Attach provenance the template can render: when, and is it a fallback.
+
+    Every weekly artefact on this page had the same defect — it showed the
+    result and not the vintage — so "unchanged since last week" and "did not
+    run this week" looked identical to a reader. These two keys are what let
+    the section say which one it is.
+    """
+    if not data:
+        return data
+    age = _payload_age_days(data)
+    data["built_on"] = str(data.get("generated_at") or "")[:10]
+    data["age_days"] = None if age is None else round(age, 1)
+    data["is_fallback"] = bool(fallback)
+    return data
 
 
 def _week_key() -> str:
@@ -2255,6 +2280,23 @@ def _week_key() -> str:
     """
     d = datetime.now(IST).date()
     return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}-{PICKS_ENGINE}"
+
+
+def _fund_week_key() -> str:
+    """Cache key for the fund screen: ISO week only, no engine suffix.
+
+    The screen used to share _week_key() with the stock picks, which embeds
+    PICKS_ENGINE. Bumping the picks engine — a change to how EQUITIES are
+    scored, nothing whatsoever to do with mutual funds — therefore orphaned
+    the fund cache and pushed the section onto its "previous build" fallback
+    until the weekly job next ran. That happened on 2026-08-10 with the v4→v5
+    bump, and it is the second time this key has silently expired data it does
+    not own.
+
+    Two caches, two keys. Same IST-dated ISO week as everything else.
+    """
+    d = datetime.now(IST).date()
+    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
 
 def _warm_picks_cache():
     week = _week_key()
@@ -3350,6 +3392,17 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   padding:12px 16px;margin-bottom:20px}
 .sheet-flags p{margin:0 0 8px;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--gold)}
 .sheet-flags p:last-child{margin-bottom:0}
+/* "Why this fired" — the engine's own gates, rendered from metadata. */
+.sheet-why{border:1px solid var(--line2);border-radius:8px;padding:14px 16px;margin-bottom:20px}
+.sheet-why h4{margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--dim)}
+.wy-p{margin:0 0 10px;font-size:12.5px;line-height:1.65;color:var(--muted)}
+.wy-p:last-child{margin-bottom:0}
+.wy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 18px}
+.wy-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);
+  padding:5px 0;font-family:var(--mono);font-size:11px}
+.wy-k{color:var(--dim)}
+.wy-v{color:var(--fg);font-variant-numeric:tabular-nums}
 @media(max-width:640px){
   .tl-row{grid-template-columns:1fr;gap:2px}
   .scale .lv{width:56px}
@@ -3592,6 +3645,16 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .snum{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:2px;margin-bottom:12px;display:block}
 .stitle{font-size:clamp(26px,4.4vw,50px);font-weight:700;letter-spacing:-1.8px;line-height:1}
 .sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
+/* Provenance strip. Every weekly artefact on this page showed its RESULT and
+   not its VINTAGE, so "ran and found the same funds" and "did not run at all"
+   rendered identically. One strip, stated the same way in every section that
+   is rebuilt on a clock slower than the page. */
+.prov{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:12px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.6px;color:var(--dim)}
+.prov b{color:var(--muted);font-weight:500}
+.prov .pv-tag{border:1px solid var(--line2);border-radius:999px;padding:3px 9px}
+.prov.stale{color:var(--gold)}
+.prov.stale .pv-tag{border-color:var(--gold);color:var(--gold)}
 .slink{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
   border-bottom:1px solid var(--line2);padding-bottom:3px;transition:color .25s,border-color .25s}
 .slink:hover{color:var(--lime);border-color:var(--lime)}
@@ -4608,6 +4671,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
       showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
   </div>
+
+  <div class="prov{{ ' stale' if top5_week else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Ranked once per ISO week &mdash; <b>the same five all week is the design</b>, not a stalled scan</span>
+    <span>Engine <b>{{ picks_engine }}</b></span>
+    <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
+      never touch win rate or expectancy</span>
+  </div>
   {% if top5 %}
   <div class="pick-grid">
     {% for s in top5 %}
@@ -4697,6 +4768,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       Selection is arithmetic; the paragraph under each is AI. Excluded from the trading
       win rate on purpose.</p>
   </div>
+
+  <div class="prov rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Runs with the <b>Saturday 09:30 IST</b> scan</span>
+    <span id="ltProv">Logged to the ledger as <b>ai_longterm</b> &mdash; in the Signal Log,
+      excluded from expectancy</span>
+  </div>
+
   <div id="ltBody">
     <div class="empty rv">The screen runs with the Saturday scan. Five names clear the
       business filter — return on capital, growth, leverage, valuation — before the chart
@@ -4847,6 +4926,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       {{ fund_screen.source }}. Direct plans only &mdash; same portfolio, same
       manager, without the distributor commission. Returns are computed from the
       published NAV series, not copied off a factsheet.</p>
+  </div>
+
+  <!-- Vintage, not just result. This table looking identical to last week's is
+       the EXPECTED outcome of a weekly screen over multi-year returns — but it
+       is also exactly what a screen that never ran looks like, and until now
+       the page could not tell you which. -->
+  <div class="prov{{ ' stale' if fund_screen.is_fallback else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Rebuilt <b>Sundays 01:30 IST</b>, after the week&rsquo;s last NAV publish</span>
+    {% if fund_screen.built_on %}<span>Built <b>{{ fund_screen.built_on }}</b>
+      {%- if fund_screen.age_days is not none %} · {{ fund_screen.age_days }}d old{% endif %}</span>{% endif %}
+    {% if fund_screen.is_fallback %}
+    <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous build.
+      NAVs below are from that date, not today.</span>
+    {% endif %}
   </div>
 
   <div class="fund-note rv">
@@ -5830,6 +5924,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <p class="sdesc">Nothing hidden. Every Telegram alert ever sent, with entry, stop, target and outcome.</p>
       <a class="slink" href="alerts.json" target="_blank" style="display:inline-block;margin-top:10px">↓ alerts.json</a>
     </div>
+  </div>
+
+  <!-- Two engines write here on a weekly clock and neither is a swing trade.
+       Saying so beside the table is the point: they are IN the log — that is
+       the whole idea, they used to be nowhere — and they are OUT of every
+       rate the log computes. A reader who sees a 6-month hold in a table
+       headed "every signal, scored" is owed both halves of that. -->
+  <div class="prov rv">
+    <span class="pv-tag">IN THE LOG, OUT OF THE RATES</span>
+    <span><b>multibagger</b> &mdash; weekly, Saturday 09:30 IST · 6&ndash;12 month hold off weekly bars</span>
+    <span><b>ai_longterm</b> &mdash; weekly, Saturday · 2&ndash;3 year hold on a 200DMA structure stop</span>
+    <span>Both are excluded from win rate, expectancy and the equity curve. A
+      multi-month hold cannot resolve on a swing horizon, and counting it would
+      move the only honest number here.</span>
   </div>
 
   <!-- Archive strip: one tile per trading day, newest first. Live only. -->

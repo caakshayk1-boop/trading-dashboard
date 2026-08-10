@@ -1502,6 +1502,46 @@ var TV_ALIASES = (function () {
         ['Closed', a.closed_at, a.status ? esc(a.status) : '']
       ].filter(function(x){ return x[1]; });
 
+      /* Every engine already stores what it gated on, in metadata, and the
+         sheet showed none of it — so a row said WHAT fired and never WHY.
+         That was worst for the weekly multibagger scan, which reached the
+         site as a name and a target in the ticker and nothing else.
+
+         Deliberately generic: any engine that writes metadata gets this block
+         for free. LABELS maps the keys worth naming; anything else is skipped
+         rather than dumped, because a sheet full of raw JSON keys is not an
+         explanation either. */
+      var LABELS = {
+        range_pos: '% of 52w range', wk_rsi: 'Weekly RSI', wk_adx: 'Weekly ADX',
+        vol_ratio: 'Volume vs 20d', high_52w: '52w high', low_52w: '52w low',
+        support1: 'Support 1', support2: 'Support 2', pe: 'P/E',
+        horizon: 'Horizon', cadence: 'Scan cadence', sector: 'Sector',
+        fund_score: 'Fundamental score', tech_score: 'Technical score',
+        coverage: 'Data coverage'
+      };
+      function why(a){
+        var m = a.metadata || {};
+        var rows = Object.keys(LABELS).filter(function(k){
+          var v = m[k];
+          return v !== null && v !== undefined && v !== '';
+        }).map(function(k){
+          var v = m[k];
+          if (typeof v === 'number') v = fmt(v, Math.abs(v) >= 100 ? 0 : 2);
+          return '<div class="wy-row"><span class="wy-k">' + esc(LABELS[k]) +
+                 '</span><span class="wy-v">' + esc(v) + '</span></div>';
+        });
+        // reason / rationale is the engine's own sentence. It leads, because
+        // it is the part a human actually reads.
+        var prose = m.reason || m.rationale || m.thesis || '';
+        if (!rows.length && !prose) return '';
+        return '<div class="sheet-why">' +
+          '<h4>Why this fired' + (m.engine ? ' · ' + esc(m.engine) : '') + '</h4>' +
+          (prose ? '<p class="wy-p">' + esc(prose) + '</p>' : '') +
+          (rows.length ? '<div class="wy-grid">' + rows.join('') + '</div>' : '') +
+          (m.fno ? '<p class="wy-p mono-dim">In the F&amp;O segment.</p>' : '') +
+        '</div>';
+      }
+
       var flags = [];
       if (a.exit_ambiguous) flags.push('One bar touched BOTH stop and target. Daily data cannot say which came first, so the STOP was booked — the unflattering assumption, counted rather than hidden.');
       if (a.regraded_at) flags.push('This outcome was corrected on ' + esc(a.regraded_at.slice(0, 10)) + ' by a later audit.');
@@ -1540,6 +1580,8 @@ var TV_ALIASES = (function () {
 
         (flags.length ? '<div class="sheet-flags">' + flags.map(function(f){
           return '<p>⚠ ' + f + '</p>'; }).join('') + '</div>' : '') +
+
+        why(a) +
 
         // ── size it ──
         // The gap between "here is a setup" and "here is what I do" is one
