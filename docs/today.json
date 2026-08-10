@@ -1,5 +1,5 @@
 {
- "build_id": "20260810T021537",
+ "build_id": "20260810T081219",
  "date": "2026-08-10",
  "date_str": "Monday, August 10 2026",
  "picks": [
@@ -51,7 +51,7 @@
    ],
    "ema20": 289.96,
    "tv": "SNOW",
-   "thesis": "116.8% 3-month gain with price 14.0% above 20-day average."
+   "thesis": "116.8% 3-month gain with 93 composite score and +14.0% above 20-day average."
   },
   {
    "symbol": "COFORGE.NS",
@@ -101,7 +101,7 @@
    ],
    "ema20": 1641.3,
    "tv": "NSE:COFORGE",
-   "thesis": "+38.8% 3-month gain with 88 composite score."
+   "thesis": "88-score setup with +38.8% 3-month gain and +21.5% 1-month surge."
   },
   {
    "symbol": "MSFT",
@@ -151,7 +151,7 @@
    ],
    "ema20": 438.46,
    "tv": "MSFT",
-   "thesis": "86 composite score with 30.1% 1-month gain and accelerating momentum."
+   "thesis": "86 composite score with 30.1% 1-month gain and 1.09x volume."
   },
   {
    "symbol": "NET",
@@ -201,7 +201,7 @@
    ],
    "ema20": 276.85,
    "tv": "NET",
-   "thesis": "53.1% 3-month gain, with price 8.5% above 20-day average."
+   "thesis": "53.1% 3-month gain, with price 8.5% above its 20-day average."
   },
   {
    "symbol": "PAYTM.NS",
@@ -383,7 +383,7 @@
    "sector": "Industrials"
   },
   "GOLD": {
-   "price": 4399.7002,
+   "price": 4388.1001,
    "sector": ""
   },
   "GRASIM": {
@@ -423,7 +423,7 @@
    "sector": "Consumer Defensive"
   },
   "NGAS": {
-   "price": 2.662,
+   "price": 2.727,
    "sector": ""
   },
   "NMDC": {
@@ -451,7 +451,7 @@
    "sector": "Financial Services"
   },
   "SILVER": {
-   "price": 63.499,
+   "price": 63.73,
    "sector": ""
   },
   "SUNPHARMA": {
@@ -465,25 +465,25 @@
  },
  "desk": {
   "chess": {
-   "title": "Strategy: Open Files for Rooks",
-   "body": "Rooks need open files to be active. An open file has no pawns. A semi-open file has only enemy pawns. Double rooks on an open file (called 'Rooks on 7th') is a deadly battery. Strategy: open files by pawn trades, then occupy them immediately. Don't leave your rooks passive on the back rank.",
-   "index": 11,
+   "title": "Strategy: Pawn Structure",
+   "body": "Your pawn structure dictates your plan. Doubled pawns (two pawns on same file) = weakness. Isolated pawn = can't be defended by a pawn, needs piece protection. Passed pawn = no enemy pawn can stop it = future queen. Backward pawn = can't advance, target for opponent. Know your pawn structure and play accordingly.",
+   "index": 12,
    "total": 20
   },
   "wisdom": {
-   "title": "Being Present",
-   "body": "Your daughter doesn't need a perfect father. She needs a present one. Put the phone down for 20 minutes when you get home. Look her in the eyes. Play on the floor. These moments are the whole point. Work can wait. She is growing every day whether you show up or not.",
-   "index": 1,
+   "title": "The Compound Effect of Small Moments",
+   "body": "You don't build a relationship in big moments. You build it in 10,000 small ones. Morning hugs. Saying her name with warmth. Listening when she babbles even though you don't understand. These stack. In 15 years, she'll feel either deeply loved or quietly neglected. Both are built today.",
+   "index": 2,
    "total": 18
   },
   "book": {
    "book": "Never Split the Difference",
    "author": "Chris Voss",
-   "chapter": "Tactical Empathy: The Most Powerful Negotiation Tool",
-   "lesson": "FBI hostage negotiator Chris Voss's core technique: tactical empathy. Not sympathy (feeling what they feel) but empathy (understanding what they feel and why). In any negotiation, the other party has emotional needs underneath their stated position. Label those emotions: 'It seems like you're frustrated by the timeline.' 'It sounds like you feel the value isn't there.' Labelling emotions defuses them and builds trust. When people feel understood, they are more open to creative solutions. The biggest mistake in negotiation is treating it as purely rational \u2014 it is almost always emotional first.",
-   "key_quote": "The fastest path to yes in any negotiation is to make the other person feel genuinely understood first.",
-   "action": "In your next difficult conversation, try one label: 'It seems like...' or 'It sounds like...' and see what happens to the tone.",
-   "index": 37,
+   "chapter": "The Power of No and Calibrated Questions",
+   "lesson": "Voss argues that 'no' is not the opposite of 'yes' in negotiation \u2014 it's the beginning. When someone says no, they feel safe. They feel in control. A fake yes (where they agree to get you off their back) is far worse than a genuine no. His technique: ask questions that invite 'no.' 'Is now a bad time to talk?' gets a more honest response than 'Is now a good time?' His other key tool: calibrated questions \u2014 open-ended questions starting with 'what' and 'how' that force the other person to problem-solve. 'How am I supposed to do that?' puts the problem back on them without being confrontational.",
+   "key_quote": "'No' means 'I'm not comfortable yet.' Your job is to find out what would make them comfortable.",
+   "action": "In your next negotiation, replace 'Can you do X?' with 'How can we make X work?' Notice how differently people respond.",
+   "index": 38,
    "total": 48,
    "crux": [
     "Negotiation is not rational argument. It is emotional intelligence applied under pressure.",
@@ -521,102 +521,102 @@
   },
   "way": {
    "minimalism": {
-    "title": "Decision Fatigue Is The Real Cost",
-    "body": "A cluttered wardrobe costs you a decision every morning. Obama and Jobs wore the same thing daily for a reason \u2014 not style, bandwidth. Every trivial choice you delete is one more available for the choices that matter.",
-    "action": "Choose tomorrow's clothes tonight. Notice the morning it buys back.",
-    "index": 3,
+    "title": "Digital Minimalism First",
+    "body": "Physical clutter is visible and therefore self-limiting. Digital clutter is infinite. 40,000 unread emails and 200 apps cost more attention than a messy room ever did.",
+    "action": "Delete every app you have not opened in 30 days. No exceptions for 'might need'.",
+    "index": 4,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Ask One More Question",
-    "body": "Most people wait to talk. The one who asks a second follow-up is remembered as the best conversationalist in the room, having said almost nothing.",
-    "action": "Ask a second follow-up before offering your own view.",
-    "index": 9,
+    "title": "Introduce People Properly",
+    "body": "Do not just exchange names \u2014 give each person a reason to care. 'Sara, this is Ahmed, he rebuilt their close process in six weeks.' You have just made both look good.",
+    "action": "Make one introduction today with a reason attached.",
+    "index": 10,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Voluntary Discomfort",
-    "body": "The Stoics practised poverty deliberately \u2014 plain food, cold, hard beds. Not self-punishment. Rehearsal, so that losing comfort stops being frightening.",
-    "action": "Cold shower. Or skip one meal. Notice it is survivable.",
-    "index": 7,
+    "title": "The Sabbath Principle",
+    "body": "One day in seven with no optimisation, no side project, no market. Every durable tradition independently arrived at this. They were not being inefficient.",
+    "action": "Block one screen-free half-day this week. Defend it.",
+    "index": 8,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Bottleneck Theory",
-    "body": "A system moves at the speed of its slowest constraint. Optimising anything else produces zero throughput gain and feels productive, which is why it is so common.",
-    "action": "Identify the real bottleneck in your week. Work only on that.",
-    "index": 19,
+    "title": "Skin In The Game",
+    "body": "Discount any forecast from someone who bears no cost for being wrong. Advice without exposure is entertainment, however credentialed the source.",
+    "action": "For your next major input, ask what the adviser loses if they are wrong.",
+    "index": 20,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0645\u0643\u0646",
-    "translit": "mumkin",
-    "meaning": "Possible / may I",
-    "use": "Enormously useful on its own. 'Mumkin?' while gesturing covers most requests.",
-    "index": 15,
+    "script": "\u062e\u0644\u0627\u0635",
+    "translit": "khalaas",
+    "meaning": "Enough / done / finished",
+    "use": "Ends a discussion, confirms completion, or stops a child. One of the most-used words in the Gulf.",
+    "index": 16,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Recall, Don't Reread",
-    "body": "Close the material and write what you remember. Retrieval builds memory; rereading builds only the feeling of knowing, which is why students who reread do worse.",
-    "action": "Close the last thing you studied. Write everything you recall. Then check.",
-    "index": 11,
+    "title": "Sensitivity, Not Point Estimates",
+    "body": "A single number is a guess dressed up. Run it at -20%, base, and +20% and present the range. Nobody credible presents one number.",
+    "action": "Take one forecast. Build the three cases. Note which input moves it most.",
+    "index": 12,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "VO2max Is The Strongest Predictor",
-    "body": "Cardiorespiratory fitness predicts all-cause mortality better than smoking status, blood pressure, or cholesterol. Moving from the bottom quartile to merely above-average is the single largest risk reduction available to you \u2014 larger than any drug.",
-    "action": "One 20-minute session where holding a conversation is difficult.",
-    "index": 1,
+    "title": "Zone 2, Most Of The Time",
+    "body": "Roughly 80% of cardio should be easy enough to hold a conversation. It builds mitochondrial density and fat oxidation. Most people train too hard to recover and too easy to adapt \u2014 the worst of both.",
+    "action": "45 minutes at a pace where you can speak in full sentences.",
+    "index": 2,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Gary Vaynerchuk",
-   "quote": "Stop doing things for the short term. Build for where the world is going.",
-   "index": 62,
+   "quote": "Patience is the key. We overestimate what we can do in a year and underestimate what we can do in a decade.",
+   "index": 63,
    "total": 96
   },
   "lesson": {
    "tradition": "Leadership",
-   "lesson": "Management is doing things right. Leadership is doing the right things.",
-   "source": "Peter Drucker"
+   "lesson": "The function of leadership is to produce more leaders, not more followers.",
+   "source": "Ralph Nader"
   },
   "case": {
-   "title": "Zomato: Unit Economics Before Growth",
-   "story": "Zomato spent \u20b9100 to acquire a customer who spent \u20b980. They kept growing. The lesson came when investors demanded profitability. Now Zomato is profitable.",
-   "lesson": "Growth that destroys unit economics is not growth \u2014 it's subsidized revenue. Always know your LTV:CAC ratio."
+   "title": "Byju's: The EdTech Crash",
+   "story": "Byju's raised $5.5B, was valued at $22B, and collapsed. No focus on profitability, weak governance, rapid expansion into unproven markets.",
+   "lesson": "Capital is a drug. More money means more runway, but it also means you can delay facing hard truths. Profitability is always the destination."
   },
   "fpna": {
-   "title": "Power BI for FP&A",
-   "body": "Replace Excel pivots. Connect to ERP source. Saves 5+ hours/month on month-end decks.",
-   "index": 18,
+   "title": "Financial Storytelling",
+   "body": "Data without narrative is noise. Frame every number: vs budget, vs prior year, vs industry.",
+   "index": 19,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 4: ERP Ownership",
-   "body": "SAP S/4HANA or Oracle Fusion \u2014 the FC owns the finance module. Know chart of accounts design, cost centre structure, intercompany eliminations, period-end close in the system. This separates candidates. SAP certification: \u20b915K online.",
-   "index": 4,
+   "title": "FC Step 5: Treasury Basics",
+   "body": "Cash flow forecasting, FX hedging policy, bank relationship management, working capital optimisation. The jump from FP&A to FC often requires you to pick up treasury. Start with 13-week cash flow models.",
+   "index": 5,
    "total": 15
   },
   "money_hack": {
-   "title": "Credit Card Strategy",
-   "body": "Use card for all spends, pay in full before due. Earn 1\u20132% cashback. Never pay interest."
+   "title": "NPS for Tax Saving",
+   "body": "\u20b950K in NPS under 80CCD(1B) = \u20b915K saved at 30% bracket. Plus retirement corpus."
   },
   "dubai": {
-   "title": "Referral beats portal, by a lot",
-   "body": "Applications through a company portal convert at low single digits. An internal referral converts an order of magnitude better. The list of people who can refer you is smaller than you think and you already know most of them.",
-   "targets": "ICAI Dubai Chapter has roughly 4,000 members. That is the network.",
-   "action_label": "This week",
-   "action": "Message five CAs already in the UAE. Ask for a 15-minute call, not a job.",
-   "index": 11,
+   "title": "Power BI is the tiebreaker",
+   "body": "Between two CAs with identical FP&A experience, the one who can build the dashboard gets the offer. Not because the dashboard matters \u2014 because it proves you will not need an analyst.",
+   "targets": "DAX, one real model, published. A certificate without an artefact proves nothing.",
+   "action_label": "Build",
+   "action": "One dashboard on your own trading ledger. It is real data and it is defensible.",
+   "index": 12,
    "total": 30
   },
   "daughter": {
@@ -626,7 +626,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
+  "productivity": "Done > perfect. Ship at 80%, iterate on real feedback.",
   "father": [
    {
     "title": "Stop at eye contact",
