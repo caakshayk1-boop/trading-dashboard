@@ -372,7 +372,8 @@ def main() -> int:
                test_app_js_is_not_a_template,
                test_buy_band_excludes_the_bleed_zone,
                test_engine_log_copy_is_markup_safe,
-               test_fund_cache_survives_week_rollover):
+               test_fund_cache_survives_week_rollover,
+               test_alert_table_columns_match):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
@@ -383,6 +384,37 @@ def main() -> int:
     for f in FAILURES:
         print(f"  · {f}")
     return 1 if FAILURES else 0
+
+
+
+def test_alert_table_columns_match():
+    """The SSR <thead>, the SSR rows and the live renderer must agree.
+
+    The live layer replaces the tbody and never the thead, so a column added
+    to one and not the others shifts every cell after it under the wrong
+    heading — which is exactly what adding "Last" did on the first pass.
+    """
+    import re
+    tpl = open("newspaper.py", encoding="utf-8").read()
+    js = open("static/app.js", encoding="utf-8").read()
+
+    head = re.search(r'<table class="t" id="alertTable">\s*<thead><tr>(.*?)</tr></thead>',
+                     tpl, re.S)
+    check("alert table thead found in the template", head is not None)
+    n_head = head.group(1).count("<th ")
+
+    row = re.search(r'\{% for a in alerts\[:20\] %\}(.*?)\{% endfor %\}', tpl, re.S)
+    check("server-rendered alert row found", row is not None)
+    n_row = len(re.findall(r'<td[ >]', row.group(1)))
+
+    live = re.search(r"var html = rows\.map\(function\(a\)\{(.*?)\}\)\.join", js, re.S)
+    check("live alert row renderer found", live is not None)
+    body = live.group(1)
+    n_live = body.count("'<td") + body.count("pnlCell(a)")
+
+    check("alert table columns agree across all three renderers",
+          n_head == n_row == n_live,
+          f"thead={n_head} ssr={n_row} live={n_live}")
 
 
 if __name__ == "__main__":

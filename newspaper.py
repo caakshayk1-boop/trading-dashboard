@@ -6148,11 +6148,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
        not a ledger. -->
   <div class="filters rv" id="alertVer" style="margin-top:6px;display:none"></div>
 
-  <div class="tw rv">
+  <div class="tw tw-tall rv">
     <table class="t" id="alertTable">
       <thead><tr>
         <th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>
-        <th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>
+        <th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th><th scope="col">Last</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>
       </tr></thead>
       <tbody>
       {# Only the first rows are server-rendered. The live layer replaces this
@@ -6175,6 +6175,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num" style="color:var(--gold)">{{ a.rr or '—' }}{% if a.rr %}x{% endif %}</td>
           {# Break-even win rate, 1/(1+R) — the same fact as R:R, made visible. #}
           <td class="num mono-dim">{% if a.rr %}{{ "%.0f"|format(100.0 / (1.0 + a.rr)) }}%{% else %}—{% endif %}</td>
+          {# The 6 AM shell has no live quote — /api/ticker fills this in the
+             browser. A placeholder keeps the SSR header and the live rows on
+             the same 16 columns; without it the live table shifted one column
+             right of a header that never moved. #}
+          <td class="num">—</td>
           <td class="num">{% if a.exit_price %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.exit_price) }}{% else %}—{% endif %}</td>
           <td class="{{ 'pnl-u' if (a.pnl_pct or 0) > 0 else ('pnl-d' if (a.pnl_pct or 0) < 0 else 'num') }}">{{ a.pnl_str }}</td>
           <td class="mono-dim">{{ a.close_date }}</td>
