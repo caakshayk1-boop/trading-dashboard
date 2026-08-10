@@ -125,7 +125,10 @@ export default async function handler(req, res) {
       ...COMMODITIES, ...FX, ...CRYPTO,
     ];
 
-    const mb = await multibaggers();
+    // Both Turso reads in parallel. Sequential awaits put two round trips on
+    // the critical path of a cold invocation for no reason — neither query
+    // depends on the other.
+    const [mb, ledgerSyms] = await Promise.all([multibaggers(), openLedgerSymbols()]);
     for (const m of mb) defs.push([m.symbol, `${m.symbol}.NS`, "₹", 2]);
     const movers = NIFTY50.map((s) => [s, `${s}.NS`, "₹", 2]);
 
@@ -137,7 +140,6 @@ export default async function handler(req, res) {
     // blocked by connect-src 'self'. This route already batches Yahoo quotes
     // and already reads Turso, so the marginal cost is ~53 symbols on an
     // existing fetch and no new request from the page at all.
-    const ledgerSyms = await openLedgerSymbols();
     const ledgerDefs = ledgerSyms.map((s) => [s, `${s}.NS`, "₹", 2]);
 
     const quotes = await quoteAll([...defs, ...movers, ...ledgerDefs]);
@@ -325,17 +327,25 @@ const fmtNum = (v, dp) =>
 /** Distinct symbols on OPEN ledger rows. Bounded — this rides a live fetch. */
 async function openLedgerSymbols() {
   try {
+    // market/asset_type, NOT a shape test on the ticker. A regex accepted
+    // BRNUSD, XAUUSD and every other commodity and FX row, which then went to
+    // Yahoo as "BRNUSD.NS" — a symbol that cannot resolve. Each one fell
+    // through to retryMissing(), which spends up to 6s per symbol and is
+    // capped at 24, so the bogus ones both added seconds to a cold start and
+    // crowded out retries for instruments that are genuinely real. That is
+    // what took this route past the function timeout and dropped the whole
+    // rail to its /api/markets fallback. The ledger already records what each
+    // row IS; ask it instead of guessing from the string.
     const rs = await db().execute(
       `SELECT DISTINCT symbol FROM all_signals
         WHERE UPPER(COALESCE(status,'OPEN')) = 'OPEN'
+          AND UPPER(COALESCE(market,'NSE')) = 'NSE'
+          AND UPPER(COALESCE(asset_type,'EQUITY')) = 'EQUITY'
           AND symbol IS NOT NULL AND symbol != ''
-        ORDER BY symbol LIMIT 80`
+        ORDER BY symbol LIMIT 60`
     );
     return rs.rows
       .map((r) => str(r.symbol).toUpperCase())
-      // Yahoo's NSE suffix only makes sense for plain equity tickers. Anything
-      // with a dot already, or that is not ticker-shaped, is left out rather
-      // than guessed at — a wrong symbol returns someone else's price.
       .filter((s) => /^[A-Z0-9&-]{2,20}$/.test(s));
   } catch {
     return [];
