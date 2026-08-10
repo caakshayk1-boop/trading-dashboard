@@ -32,7 +32,13 @@ _CACHE_FILE = os.path.join(_DATA_DIR, "content_cache.json")
 TTL_MARKETS = 900    # 15 min — prices change
 TTL_JOBS    = 3600   # 1 hour — job listings stable
 TTL_NEWS    = 1800   # 30 min — news refreshes
+TTL_READS   = 21600  # 6h — long reads do not change by the half hour
 TTL_QUOTE   = 86400  # 24 hours — quote of the day
+
+# Several publishers answer a default feedparser/urllib agent with 404 or 403
+# rather than a useful error. Lichess does the same thing (see LICHESS_UA in
+# newspaper.py) and it cost a day to find there, so it is named once here.
+_UA = "Mozilla/5.0 (compatible; DailySignal/1.0; +https://news.askakshay.com)"
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
@@ -49,14 +55,84 @@ MARKET_TICKERS = [
     ("Sensex",    "^BSESN",   "₹", ".0f"),
 ]
 
+# Named mastheads only. The Google News aggregator that used to sit at the
+# bottom of this list is gone: it republishes whatever ranks, so the "source"
+# on a card was "Google Finance" for an article written by someone else, and
+# there was no way to tell a wire desk from a content farm.
+#
+# Every URL here was fetched and checked before being added. Ones that do NOT
+# work, so nobody re-adds them: Reuters (404 — the public feed was withdrawn),
+# Forbes /money (404), Equitymaster (403), Morningstar (302 redirect loop).
+# Forbes /business RESOLVES but its top item was a Liam Neeson film review;
+# it is a general-interest feed wearing a business label, so it is excluded
+# rather than filtered — see FINANCE_TOKENS for why filtering alone is not
+# enough to make an off-topic feed worth carrying.
 NEWS_FEEDS = [
+    # India
+    ("Economic Times",   "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms"),
+    ("ET Economy",       "https://economictimes.indiatimes.com/news/economy/rssfeeds/1373380680.cms"),
+    ("Livemint",         "https://www.livemint.com/rss/markets"),
+    ("Business Standard", "https://www.business-standard.com/rss/markets-106.rss"),
+    ("Moneycontrol",     "https://www.moneycontrol.com/rss/marketreports.xml"),
+    ("BusinessLine",     "https://www.thehindubusinessline.com/markets/feeder/default.rss"),
+    # Global
+    ("Bloomberg",        "https://feeds.bloomberg.com/markets/news.rss"),
+    ("Financial Times",  "https://www.ft.com/rss/home"),
+    ("WSJ Markets",      "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain"),
     ("BBC Business",     "http://feeds.bbci.co.uk/news/business/rss.xml"),
     ("CNBC",             "https://www.cnbc.com/id/10001147/device/rss/rss.html"),
-    ("Yahoo Finance",    "https://finance.yahoo.com/news/rssindex"),
     ("MarketWatch",      "https://feeds.content.dowjones.io/public/rss/mw_topstories"),
-    ("Investing.com",    "https://www.investing.com/rss/news.rss"),
-    ("Google Finance",   "https://news.google.com/rss/search?q=stock+market+finance+business&hl=en&gl=US&ceid=US:en"),
 ]
+
+# Longer analytical pieces rather than the wire. Same reliability bar, and the
+# same relevance filter — opinion desks carry film reviews and language
+# columns next to the money writing ("Gen ji, and the great phonological
+# divide" was the top item on ET Opinion the day this was built).
+SMART_READ_FEEDS = [
+    ("Economic Times",   "https://economictimes.indiatimes.com/wealth/rssfeeds/837555174.cms"),
+    ("ET Opinion",       "https://economictimes.indiatimes.com/opinion/rssfeeds/897228639.cms"),
+    ("Livemint",         "https://www.livemint.com/rss/money"),
+    ("Livemint Opinion", "https://www.livemint.com/rss/opinion"),
+    ("Business Standard", "https://www.business-standard.com/rss/opinion-105.rss"),
+    ("Zerodha",          "https://zerodha.com/z-connect/feed"),
+    ("The Economist",    "https://www.economist.com/finance-and-economics/rss.xml"),
+]
+
+# One word from this list has to appear in the headline or the summary. It is a
+# blunt instrument and deliberately so — the job is to keep a movie review off
+# a finance page, not to grade the writing.
+FINANCE_TOKENS = (
+    "market", "stock", "equity", "share", "index", "nifty", "sensex", "bse", "nse",
+    "fund", "sip", "mutual", "etf", "portfolio", "investor", "investment", "invest",
+    "rbi", "fed", "sebi", "inflation", "rate", "yield", "bond", "debt", "credit",
+    "rupee", "dollar", "currency", "forex", "gold", "silver", "crude", "oil",
+    "ipo", "earnings", "profit", "revenue", "margin", "valuation", "dividend",
+    "tax", "gst", "budget", "gdp", "economy", "economic", "fiscal", "trade",
+    "bank", "lender", "nbfc", "insurance", "pension", "retirement", "wealth",
+    "crypto", "bitcoin", "startup", "funding", "ipo", "merger", "acquisition",
+    "commodity", "futures", "options", "derivative", "capital", "finance",
+)
+
+
+def _finance_hits(title: str, summary: str) -> int:
+    """How many DISTINCT finance tokens appear, on word boundaries.
+
+    Substring matching is what let "Golden Rule on the silver screen" through
+    as a finance story — "Golden" contains "gold". `\\b` fixes that class of
+    false positive outright.
+    """
+    import re as _re
+    blob = f"{title} {summary}".lower()
+    return sum(1 for t in set(FINANCE_TOKENS)
+               if _re.search(rf"\b{_re.escape(t)}s?\b", blob))
+
+
+def _is_finance(title: str, summary: str, need: int = 1) -> bool:
+    """`need` is the bar. Wire feeds are already topical, so one token is
+    enough there. Opinion desks are not: they run film and language columns
+    beside the money writing, and a single incidental "market" is exactly how
+    a review of The Odyssey landed in a finance section. Reads need two."""
+    return _finance_hits(title, summary) >= need
 
 DUBAI_JOB_FEEDS = [
     ("Google Jobs", "https://news.google.com/rss/search?q=FP%26A+Finance+Manager+jobs+Dubai+hiring&hl=en&gl=AE&ceid=AE:en"),
@@ -218,7 +294,7 @@ def _fetch_news() -> list[dict]:
     import re
     for source, url in NEWS_FEEDS:
         try:
-            feed = feedparser.parse(url)
+            feed = feedparser.parse(url, agent=_UA)
             for entry in feed.entries[:5]:
                 published = None
                 if hasattr(entry, "published_parsed") and entry.published_parsed:
@@ -227,10 +303,16 @@ def _fetch_news() -> list[dict]:
                         published = _dt(*entry.published_parsed[:6], tzinfo=timezone.utc)
                     except Exception:
                         pass
-                summary = re.sub(r"<[^>]+>", "", getattr(entry, "summary", ""))[:300]
+                summary = re.sub(r"<[^>]+>", "", getattr(entry, "summary", "")).strip()[:400]
+                title = entry.get("title", "")[:140]
+                # An off-topic item on a finance page costs more than a thin
+                # section does. Wire feeds from general desks carry film,
+                # sport and politics under a "business" label.
+                if not _is_finance(title, summary):
+                    continue
                 articles.append({
                     "source":    source,
-                    "title":     entry.get("title", "")[:120],
+                    "title":     title,
                     "link":      entry.get("link", ""),
                     "summary":   summary,
                     "published": published.strftime("%b %d %H:%M") if published else "",
@@ -238,8 +320,70 @@ def _fetch_news() -> list[dict]:
                 })
         except Exception as e:
             log.warning(f"News feed {source}: {e}")
+
+    # One item per source before any source gets a second, so a feed carrying
+    # 50 entries cannot fill the page while a feed carrying 4 never appears.
+    # Twelve sources ordered by recency alone put Economic Times in nearly
+    # every slot.
     articles.sort(key=lambda x: x["recent"], reverse=True)
-    return articles[:18]
+    by_src: dict = {}
+    for a in articles:
+        by_src.setdefault(a["source"], []).append(a)
+    out, rnd = [], 0
+    while len(out) < 18:
+        wave = [v[rnd] for v in by_src.values() if len(v) > rnd]
+        if not wave:
+            break
+        out.extend(wave[:18 - len(out)])
+        rnd += 1
+    return out
+
+
+def _fetch_smart_reads() -> list[dict]:
+    """Longer analytical pieces. Same shape as news, plus a `date` field."""
+    import re
+    reads = []
+    for source, url in SMART_READ_FEEDS:
+        try:
+            feed = feedparser.parse(url, agent=_UA)
+            for entry in feed.entries[:6]:
+                summary = re.sub(r"<[^>]+>", "", getattr(entry, "summary", "")).strip()
+                title = entry.get("title", "")[:140]
+                # A card is a headline AND a summary. Without real summary text
+                # it is just a link with a border around it, so it is dropped.
+                if len(summary) < 80 or not _is_finance(title, summary, need=2):
+                    continue
+                published = None
+                if getattr(entry, "published_parsed", None):
+                    try:
+                        from datetime import datetime as _dt
+                        published = _dt(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                    except Exception:
+                        pass
+                reads.append({
+                    "source":  source,
+                    "title":   title,
+                    "link":    entry.get("link", ""),
+                    "summary": summary[:320],
+                    "date":    published.strftime("%b %d, %Y") if published else "",
+                    "_sort":   published.isoformat() if published else "",
+                })
+        except Exception as e:
+            log.warning(f"Smart read feed {source}: {e}")
+
+    reads.sort(key=lambda x: x["_sort"], reverse=True)
+    by_src: dict = {}
+    for r in reads:
+        by_src.setdefault(r["source"], []).append(r)
+    out, rnd = [], 0
+    while len(out) < 9:
+        wave = [v[rnd] for v in by_src.values() if len(v) > rnd]
+        if not wave:
+            break
+        wave.sort(key=lambda x: x["_sort"], reverse=True)
+        out.extend(wave[:9 - len(out)])
+        rnd += 1
+    return out
 
 
 def _fetch_quote() -> str:
@@ -281,6 +425,16 @@ def get_cached_news() -> list[dict]:
         return cache["news"]["data"]
     data = _fetch_news()
     cache["news"] = {"ts": time.time(), "data": data}
+    _save_cache(cache)
+    return data
+
+
+def get_cached_smart_reads() -> list[dict]:
+    cache = _load_cache()
+    if _is_fresh(cache, "smart_reads", TTL_READS):
+        return cache["smart_reads"]["data"]
+    data = _fetch_smart_reads()
+    cache["smart_reads"] = {"ts": time.time(), "data": data}
     _save_cache(cache)
     return data
 

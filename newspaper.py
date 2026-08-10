@@ -252,6 +252,11 @@ def fetch_weather() -> list[dict]:
 def fetch_global_news(max_items: int = 18) -> list[dict]:
     return get_cached_news()[:max_items]
 
+def fetch_smart_reads() -> list[dict]:
+    """Longer analytical pieces from the same named mastheads as the wire."""
+    from content_cache import get_cached_smart_reads
+    return get_cached_smart_reads()
+
 def fetch_dubai_jobs() -> list[dict]:
     return get_cached_jobs()
 
@@ -699,6 +704,12 @@ def get_fpna_tip() -> dict:
 # ─────────────────────────────────────────────────────────────
 
 LICHESS_USER = "AKK_010"
+# Lichess 404s the default python-requests User-Agent. Not 401, not 403 — a
+# flat "Not found" that is indistinguishable from a deleted account, which is
+# why this looked like a credentials problem and sent the page to its
+# "add LICHESS_TOKEN" notice for a token that was already set. Every call to
+# lichess.org must carry this.
+LICHESS_UA = {"User-Agent": "DailySignal/1.0 (+https://news.askakshay.com)"}
 MY_PUZZLE_RATING = 1646
 
 CHESS_THEME_TIPS: dict = {
@@ -733,9 +744,10 @@ def _lichess_activity_yesterday() -> tuple[dict, list]:
     try:
         r = requests.get(
             f"https://lichess.org/api/user/{LICHESS_USER.lower()}/activity",
-            headers={"Accept": "application/json"}, timeout=15,
+            headers={"Accept": "application/json", **LICHESS_UA}, timeout=15,
         )
         if r.status_code != 200:
+            log.warning(f"Lichess activity: {r.status_code} — {r.text[:120]}")
             return {}, []
         acts = r.json()
     except Exception as e:
@@ -761,39 +773,66 @@ def _lichess_activity_yesterday() -> tuple[dict, list]:
 
 
 def _lichess_export_games(since_ms: int, until_ms: int) -> list[dict]:
-    """Fetch individual games via export API. Requires LICHESS_TOKEN."""
+    """Fetch individual games via the export API.
+
+    The token is NOT required. Lichess exports public games to anonymous
+    callers; the header only raises the rate limit. Gating the whole call on
+    it meant a missing secret downgraded the section to aggregate counts for
+    no reason at all, and — worse — made every failure look like a missing
+    token when the token was sitting right there in the job env.
+    """
     token = os.environ.get("LICHESS_TOKEN", "")
-    if not token:
-        return []
-    try:
-        r = requests.get(
-            f"https://lichess.org/api/games/user/{LICHESS_USER.lower()}",
-            # evals/accuracy/division/clocks power the best-move pick, the key
-            # facts and the strength estimate. All four are only populated for
-            # games Lichess has actually analysed, so every consumer below must
-            # degrade gracefully when they are absent.
-            params={"since": since_ms, "until": until_ms,
-                    "opening": "true", "moves": "true", "max": 50,
-                    "evals": "true", "accuracy": "true",
-                    "division": "true", "clocks": "true"},
-            headers={"Accept": "application/x-ndjson",
-                     "Authorization": f"Bearer {token}"},
-            timeout=25, stream=True,
-        )
-        if r.status_code != 200:
-            log.warning(f"Lichess export: {r.status_code} — {r.text[:200]}")
+    headers = {"Accept": "application/x-ndjson", **LICHESS_UA}
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    params = {"since": since_ms, "until": until_ms,
+              # evals/accuracy/division/clocks power the best-move pick, the
+              # key facts and the strength estimate. All four are only
+              # populated for games Lichess has actually analysed, so every
+              # consumer below must degrade gracefully when they are absent.
+              "opening": "true", "moves": "true", "max": 50,
+              "evals": "true", "accuracy": "true",
+              "division": "true", "clocks": "true"}
+
+    # Two attempts. Lichess answers a concurrent export with
+    # 429 "Please only run 1 request(s) at a time", and a streamed response
+    # that was never drained keeps counting as in-flight — see the `with`
+    # below, which is what stopped this endpoint leaking connections.
+    for attempt in (1, 2):
+        try:
+            # Context-managed BECAUSE it streams. Every early return out of
+            # this function used to abandon an open connection: the non-200
+            # path returned without touching the body, and any exception
+            # mid-iteration left it dangling. Lichess then counts the next
+            # call as a second concurrent request and 429s it, so one bad
+            # response poisoned every later one in the same process.
+            with requests.get(
+                f"https://lichess.org/api/games/user/{LICHESS_USER.lower()}",
+                params=params, headers=headers, timeout=25, stream=True,
+            ) as r:
+                if r.status_code == 429 and attempt == 1:
+                    log.warning("Lichess export: 429, retrying once in 5s")
+                    time.sleep(5)
+                    continue
+                if r.status_code != 200:
+                    # Say which failure it is. A 404 here is NOT a missing
+                    # account — Lichess returns it for the default
+                    # python-requests User-Agent, which is what made this
+                    # look like a credentials problem for weeks.
+                    log.warning(f"Lichess export: {r.status_code} — {r.text[:200]}")
+                    return []
+                games = []
+                for line in r.iter_lines():
+                    if line:
+                        try:
+                            games.append(json.loads(line))
+                        except Exception:
+                            pass
+                return games
+        except Exception as e:
+            log.warning(f"Lichess export: {e}")
             return []
-        games = []
-        for line in r.iter_lines():
-            if line:
-                try:
-                    games.append(json.loads(line))
-                except Exception:
-                    pass
-        return games
-    except Exception as e:
-        log.warning(f"Lichess export: {e}")
-        return []
+    return []
 
 
 # ── Game analysis helpers ────────────────────────────────────────────────────
@@ -1067,19 +1106,41 @@ def fetch_lichess_games() -> list[dict]:
 
     yest_counts, trend = _lichess_activity_yesterday()
 
-    token = os.environ.get("LICHESS_TOKEN", "")
-    if token:
-        # Full mode — individual games
-        raw = _lichess_export_games(
-            int(day_start.timestamp() * 1000),
-            int(day_end.timestamp() * 1000),
-        )
-        if raw:
-            games = [_parse_game(g) for g in raw]
-            # Attach trend + mode marker on first game
+    # LAST SESSION, not "yesterday". Asking the export API for one fixed IST
+    # day and giving up when it came back empty is what silently downgraded
+    # this section: on 2026-08-10 the ledger had games on the 10th, the 8th
+    # and the 7th and NONE on the 9th, so "yesterday" was legitimately empty
+    # while the activity API — which buckets on its own boundary, not IST —
+    # still reported two blitz games. Aggregate stats from one day sat above
+    # a "no per-game analysis" notice caused by querying a different one.
+    #
+    # Pull a week, group by IST date, and show the most recent day that
+    # actually has games. A chess section that goes blank because you did not
+    # play on one specific date is measuring the calendar, not the chess.
+    week_start = day_end - timedelta(days=7)
+    raw = _lichess_export_games(
+        int(week_start.timestamp() * 1000),
+        int(day_end.timestamp() * 1000),
+    )
+    if raw:
+        by_day: dict[str, list] = {}
+        for g in raw:
+            ts = g.get("createdAt")
+            if not ts:
+                continue
+            d = datetime.fromtimestamp(ts / 1000, ist).strftime("%Y-%m-%d")
+            by_day.setdefault(d, []).append(g)
+        if by_day:
+            newest = max(by_day)
+            games = [_parse_game(g) for g in by_day[newest]]
             games[0]["_mode"]  = "full"
             games[0]["_trend"] = trend
             games[0]["_yest_counts"] = yest_counts
+            # Which day this actually is. The heading said "yesterday"
+            # unconditionally and was wrong every time the last session was
+            # not yesterday.
+            games[0]["_session_date"] = newest
+            games[0]["_is_yesterday"] = (newest == yest.strftime("%Y-%m-%d"))
             return games
 
     # Activity-only mode — aggregate counts per speed
@@ -1103,6 +1164,8 @@ def get_lichess_summary(games: list[dict]) -> dict:
         return {}
     mode  = games[0].get("_mode", "activity")
     trend = games[0].get("_trend", [])
+    session_date  = games[0].get("_session_date", "")
+    is_yesterday  = games[0].get("_is_yesterday", True)
 
     if mode == "full":
         wins   = sum(1 for g in games if g["result"] == "Win")
@@ -1169,6 +1232,14 @@ def get_lichess_summary(games: list[dict]) -> dict:
         "collapses": len(collapses) if mode=="full" else 0,
         "long_games": len(long_games) if mode=="full" else 0,
         "session_summary": session_summary,
+        # Which day these games are actually from, and whether that is
+        # yesterday. The section used to assert "yesterday" unconditionally.
+        "session_date": session_date,
+        "is_yesterday": is_yesterday,
+        # True only when the secret is genuinely absent. The banner keyed off
+        # "we ended up in activity mode", which is a different question — and
+        # it told you to add a token that was already set.
+        "token_missing": not bool(os.environ.get("LICHESS_TOKEN", "")),
     }
 
 def fetch_lichess_puzzle() -> dict:
@@ -1176,8 +1247,9 @@ def fetch_lichess_puzzle() -> dict:
     import re
     try:
         r = requests.get("https://lichess.org/api/puzzle/daily",
-                         headers={"Accept":"application/json"}, timeout=10)
+                         headers={"Accept": "application/json", **LICHESS_UA}, timeout=10)
         if r.status_code != 200:
+            log.warning(f"Lichess puzzle: {r.status_code} — {r.text[:120]}")
             return {}
         data   = r.json()
         puzzle = data.get("puzzle", {})
@@ -1805,6 +1877,7 @@ SECTION_MAP = [
     ("chess",       "Chess",        "desk", "Drills"),
     # Sits directly above Music — both are "what is playing this week", and
     # the nav group keeps them adjacent no matter how the page is reordered.
+    ("smartreads",  "Smart Reads",  "desk", "Reading"),
     ("podcasts",    "Podcasts",     "desk", "Drills"),
     ("music",       "Music",        "desk", "Drills"),
     ("gym",         "Mind Gym",     "desk", "Drills"),
@@ -1838,7 +1911,7 @@ PAGE_META = {
 }
 
 
-def empty_sections(fund_screen=None, podcasts=None) -> set:
+def empty_sections(fund_screen=None, podcasts=None, smart_reads=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -1851,6 +1924,8 @@ def empty_sections(fund_screen=None, podcasts=None) -> set:
         drop.add("funds")
     if not (podcasts or {}).get("episodes"):
         drop.add("podcasts")
+    if not smart_reads:
+        drop.add("smartreads")
     return drop
 
 
@@ -3722,6 +3797,30 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .prov .pv-tag{border:1px solid var(--line2);border-radius:999px;padding:3px 9px}
 .prov.stale{color:var(--gold)}
 .prov.stale .pv-tag{border-color:var(--gold);color:var(--gold)}
+/* ── read-more affordance, shared by news cards and smart reads ── */
+.readmore{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10px;
+  letter-spacing:1.1px;text-transform:uppercase;color:var(--lime);text-decoration:none;
+  border-bottom:1px solid transparent}
+.readmore:hover{border-bottom-color:var(--lime)}
+.mini-s{margin:5px 0 0;font-size:12px;line-height:1.5;color:var(--muted)}
+.ncard-f{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  margin-top:auto;padding-top:10px;flex-wrap:wrap}
+.ncard-f .readmore{margin-top:0}
+/* ── smart reads ── */
+.sr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.sr{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--bg2);
+  display:flex;flex-direction:column}
+.sr-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:9px;
+  font-family:var(--mono);font-size:9px;letter-spacing:1.1px;text-transform:uppercase}
+.sr-src{color:var(--down);font-weight:600}
+.sr-tag{color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:2px 8px}
+.sr-date{color:var(--dim);margin-left:auto}
+.sr-t{margin:0 0 8px;font-size:14.5px;line-height:1.4;font-weight:650}
+.sr-t a{color:var(--fg);text-decoration:none;border-bottom:1px solid transparent}
+.sr-t a:hover{color:var(--lime);border-bottom-color:var(--lime)}
+.sr-s{margin:0;font-size:12.5px;line-height:1.6;color:var(--muted)}
+.sr .readmore{margin-top:auto;padding-top:12px}
+@media(max-width:640px){.sr-grid{grid-template-columns:1fr}}
 /* ── podcasts ── */
 .pod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
 .pod{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--bg2);
@@ -4684,12 +4783,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span class="tag">{{ lead.source }} · LEAD</span>
         <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
         <p>{{ lead.summary }}</p>
+        {% if lead.link %}<a class="readmore" href="{{ lead.link }}" target="_blank" rel="noopener">Read the full story &rarr;</a>{% endif %}
       </div>
       <div class="lead-s">
+        {# These five carried a headline and nothing else — no summary, and the
+           only way to learn what a story said was to leave the page. Every
+           item on this page now states what happened before it asks you to
+           click. #}
         {% for item in news[1:6] %}
         <div class="mini">
           <span class="s">{{ item.source }}</span>
           {% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}<a>{{ item.title }}</a>{% endif %}
+          {% if item.summary %}<p class="mini-s">{{ item.summary[:130] }}{% if item.summary|length > 130 %}&hellip;{% endif %}</p>{% endif %}
         </div>
         {% endfor %}
       </div>
@@ -4700,8 +4805,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="ncard rv" style="--d:{{ loop.index0 * 0.05 }}s">
         <span class="s">{{ item.source }}</span>
         <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
-        <p>{{ item.summary[:150] }}</p>
-        <div class="ts">{{ item.published }}</div>
+        <p>{{ item.summary[:180] }}{% if item.summary|length > 180 %}&hellip;{% endif %}</p>
+        <div class="ncard-f">
+          <span class="ts">{{ item.published }}</span>
+          {% if item.link %}<a class="readmore" href="{{ item.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -5646,10 +5754,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
-      <h2 class="stitle">Yesterday's chess.</h2>
+      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess.{% else %}Your last session.{% endif %}</h2>
     </div>
     <div style="text-align:right">
-      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.</p>
+      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.
+        {%- if lichess_summary.session_date and not lichess_summary.is_yesterday %}
+        <br><span style="color:var(--gold)">No games yesterday &mdash; showing
+        {{ lichess_summary.session_date }}, the most recent day you played.</span>{% endif %}</p>
       <a class="slink" href="https://lichess.org/@/AKK_010" target="_blank" style="display:inline-block;margin-top:10px">Profile →</a>
     </div>
   </div>
@@ -5758,8 +5869,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endfor %}
   </div>
-  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets for per-game analysis, openings, key moves and AI coaching.
+  <!-- This used to read "Add LICHESS_TOKEN to GitHub secrets" whenever the
+       page fell back to aggregate counts — including every time the token was
+       set, which it has been since 2026-07-29. Falling back and lacking a
+       token are different questions, and conflating them sent you to create a
+       credential you already had. Each cause now says its own name. -->
+  {% if lichess_summary.token_missing %}
+  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets to raise the export rate limit and include private games.
     <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--lime)">Create token →</a></div>
+  {% else %}
+  <div class="empty rv" style="text-align:left">No individual games came back from the export API for the last seven days,
+    so this is the aggregate view. The token is set &mdash; this is not a credentials problem.</div>
+  {% endif %}
   {% endif %}
 
   {% if lichess_summary.trend %}
@@ -5811,6 +5932,46 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      one click away — a shelf you can see the whole of is a shelf you stop
      scanning. The five on top rotate daily, so the shelf reads differently
      every morning without the list changing. -->
+<!-- ══════════ SMART READS ══════════
+     The wire tells you what happened; these argue about what it means. Same
+     named mastheads, but the analysis and money desks rather than the market
+     report, and a card only ships when the publisher gave it a real summary —
+     a headline with a border round it is a link, not a read.
+
+     Filtered harder than the news feed (two distinct finance terms, not one).
+     Opinion desks run film and language columns beside the money writing, and
+     one incidental word is how a review of The Odyssey reached a finance
+     page during the build of this section. -->
+{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span>
+      <h2 class="stitle">Worth the ten minutes.</h2>
+    </div>
+    <p class="sdesc">Analysis, not headlines &mdash; Economic Times, Livemint, Business
+      Standard, The Economist and Zerodha. Every card carries the publisher&rsquo;s own
+      summary, so you know what a piece argues before you open it.</p>
+  </div>
+
+  <div class="sr-grid">
+    {% for r in smart_reads %}
+    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
+      <div class="sr-h">
+        <span class="sr-src">{{ r.source }}</span>
+        <span class="sr-tag">SMART READS</span>
+        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
+      </div>
+      <h3 class="sr-t">
+        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
+        {%- else %}{{ r.title }}{% endif -%}
+      </h3>
+      <p class="sr-s">{{ r.summary }}</p>
+      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
 <!-- ══════════ PODCASTS ══════════
      Ten long-form episodes from Indian shows, newest first, one line of what
      each is about. Everything here is the publisher's: title, date, link and

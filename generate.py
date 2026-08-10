@@ -40,6 +40,7 @@ from newspaper import (
     get_top5_picks,
     get_fund_screen,
     get_podcasts,
+    fetch_smart_reads,
     open_setup_context,
     last_known_picks,
     get_tracker_stocks,
@@ -116,6 +117,10 @@ def generate() -> None:
     # Weekly, cached, and built here when the week has rolled over. Seven feed
     # fetches — cheap next to the ~700 NAV downloads the fund screen needs, so
     # unlike that one this can build inside the daily job.
+    smart_reads = fetch_smart_reads()
+    print(f"[generate] Smart reads: {len(smart_reads)} from "
+          f"{len({r['source'] for r in smart_reads})} sources")
+
     podcasts = get_podcasts(build_if_missing=True)
     print(f"[generate] Podcasts: {len(podcasts.get('episodes', []))} episodes "
           f"from {podcasts.get('shows', 0)} shows"
@@ -315,6 +320,7 @@ def generate() -> None:
         # a failure returns {} and the section hides rather than failing the build.
         fund_screen=fund_screen,
         podcasts=podcasts,
+        smart_reads=smart_reads,
         top5_week=top5_week,
         tracker=tracker,
         lichess_games=lichess_games,
@@ -392,7 +398,7 @@ def generate() -> None:
         ctx = dict(base)
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
-        ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts)))
+        ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
