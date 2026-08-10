@@ -117,6 +117,12 @@ def init_newspaper_db():
         con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
             week TEXT PRIMARY KEY, payload TEXT
         )""")
+        # Podcasts are seven feed fetches plus an AI pass per episode — cheap,
+        # but not cheap enough to repeat on a build that already has a budget,
+        # and the ask was explicitly weekly.
+        con.execute("""CREATE TABLE IF NOT EXISTS newspaper_podcasts (
+            week TEXT PRIMARY KEY, payload TEXT
+        )""")
 
 # ─────────────────────────────────────────────────────────────
 # GROQ AI
@@ -1797,6 +1803,9 @@ SECTION_MAP = [
     ("way",         "The Way",      "desk", "Reading"),
     ("review",      "The Review",   "desk", "Reading"),
     ("chess",       "Chess",        "desk", "Drills"),
+    # Sits directly above Music — both are "what is playing this week", and
+    # the nav group keeps them adjacent no matter how the page is reordered.
+    ("podcasts",    "Podcasts",     "desk", "Drills"),
     ("music",       "Music",        "desk", "Drills"),
     ("gym",         "Mind Gym",     "desk", "Drills"),
     ("perf",        "Performance",  "main", "Track Record"),
@@ -1829,7 +1838,7 @@ PAGE_META = {
 }
 
 
-def empty_sections(fund_screen=None) -> set:
+def empty_sections(fund_screen=None, podcasts=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -1840,6 +1849,8 @@ def empty_sections(fund_screen=None) -> set:
     drop = set()
     if not (fund_screen or {}).get("categories"):
         drop.add("funds")
+    if not (podcasts or {}).get("episodes"):
+        drop.add("podcasts")
     return drop
 
 
@@ -2282,6 +2293,63 @@ def _week_key() -> str:
     return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}-{PICKS_ENGINE}"
 
 
+def get_podcasts(build_if_missing: bool = False) -> dict:
+    """This week's podcast list, cached weekly. Empty dict when unavailable.
+
+    Same shape as get_fund_screen and for the same reasons: seven feed fetches
+    plus an AI pass per episode is not work a daily build should repeat, and a
+    failure must hide the section rather than fail the build.
+
+    The AI is injected rather than imported by podcasts.py so that module stays
+    standalone-testable — `python podcasts.py` runs it against the live feeds
+    with no key and takes the deterministic path.
+    """
+    week = _iso_week()
+    try:
+        with _db() as con:
+            row = con.execute("SELECT payload FROM newspaper_podcasts WHERE week=?",
+                              (week,)).fetchone()
+            if row:
+                return _stamp_fund_payload(json.loads(row[0]), fallback=False)
+
+            # Same Monday-rollover fallback the fund screen uses. A podcast
+            # list one week old is still a real list of real episodes; an
+            # empty section is not better.
+            row = con.execute("SELECT payload FROM newspaper_podcasts "
+                              "ORDER BY week DESC LIMIT 1").fetchone()
+            if row:
+                data = json.loads(row[0])
+                age = _payload_age_days(data)
+                if age is not None and age <= 14:
+                    log.info(f"podcasts: serving previous build, {age:.1f}d old")
+                    return _stamp_fund_payload(data, fallback=True)
+    except Exception as e:
+        log.warning(f"podcast cache read: {e}")
+
+    if not build_if_missing:
+        return {}
+
+    try:
+        import podcasts as _pod
+        data = _pod.build(ai=groq_complete if GROQ_KEY else None)
+        if not data.get("ok"):
+            return {}
+        with _db() as con:
+            con.execute("INSERT OR REPLACE INTO newspaper_podcasts VALUES (?,?)",
+                        (week, json.dumps(data)))
+            con.commit()
+        return _stamp_fund_payload(data, fallback=False)
+    except Exception as e:
+        log.warning(f"podcast build failed: {e}")
+        return {}
+
+
+def _iso_week() -> str:
+    """IST-dated ISO week. The cache key for anything rebuilt weekly."""
+    d = datetime.now(IST).date()
+    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
+
+
 def _fund_week_key() -> str:
     """Cache key for the fund screen: ISO week only, no engine suffix.
 
@@ -2295,8 +2363,7 @@ def _fund_week_key() -> str:
 
     Two caches, two keys. Same IST-dated ISO week as everything else.
     """
-    d = datetime.now(IST).date()
-    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
+    return _iso_week()
 
 def _warm_picks_cache():
     week = _week_key()
@@ -3655,6 +3722,24 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .prov .pv-tag{border:1px solid var(--line2);border-radius:999px;padding:3px 9px}
 .prov.stale{color:var(--gold)}
 .prov.stale .pv-tag{border-color:var(--gold);color:var(--gold)}
+/* ── podcasts ── */
+.pod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.pod{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--bg2);
+  display:flex;flex-direction:column;gap:8px}
+.pod-h{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:1.1px;text-transform:uppercase}
+.pod-cat{color:var(--lime);border:1px solid var(--line2);border-radius:999px;padding:3px 9px}
+.pod-date{color:var(--dim)}
+.pod-t{margin:0;font-size:14.5px;line-height:1.4;font-weight:600}
+.pod-t a{color:var(--fg);text-decoration:none;border-bottom:1px solid transparent}
+.pod-t a:hover{border-bottom-color:var(--lime);color:var(--lime)}
+.pod-s{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.4px}
+.pod-s b{color:var(--fg);font-weight:500}
+.pod-k{margin:2px 0 0;padding-left:16px;display:flex;flex-direction:column;gap:6px}
+.pod-k li{font-size:12.5px;line-height:1.55;color:var(--muted)}
+.pod-k li::marker{color:var(--lime)}
+.pod-note{margin:16px 0 0;font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.6}
+@media(max-width:640px){.pod-grid{grid-template-columns:1fr}}
 .slink{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
   border-bottom:1px solid var(--line2);padding-bottom:3px;transition:color .25s,border-color .25s}
 .slink:hover{color:var(--lime);border-color:var(--lime)}
@@ -3737,6 +3822,16 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .fbtn:hover{border-color:var(--line2);color:var(--text)}
 .fbtn.on{border-color:var(--lime);color:#000;background:var(--lime);font-weight:700}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;-webkit-overflow-scrolling:touch}
+/* The signal log is 87 rows and growing, and `position:sticky` on its <th> did
+   nothing: .tw sets overflow-x, which makes overflow-y compute to auto, so .tw
+   IS the scroll container — and an unbounded container has no top edge to
+   stick to. You scrolled the PAGE, the whole table moved, and the header left
+   with it, so by row 20 the columns were unlabelled.
+   Bounding the height gives the header something to stick to and turns the
+   table into its own scroll region. Applied only here; short tables elsewhere
+   must keep growing with the page. */
+.tw-tall{max-height:min(78vh,780px);overflow-y:auto}
+.tw-tall table.t th{z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
 table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
 table.t th{position:sticky;top:0;background:#0E0F12;text-align:left;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
@@ -5716,6 +5811,59 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      one click away — a shelf you can see the whole of is a shelf you stop
      scanning. The five on top rotate daily, so the shelf reads differently
      every morning without the list changing. -->
+<!-- ══════════ PODCASTS ══════════
+     Ten long-form episodes from Indian shows, newest first, one line of what
+     each is about. Everything here is the publisher's: title, date, link and
+     a takeaway compressed from their OWN episode description. Nothing is
+     inferred from a title and nothing is written about a guest from general
+     knowledge — see the header of podcasts.py for why that line is drawn hard.
+     Round-robin by show, so a channel posting three times a day cannot own
+     the list. Rebuilt weekly. -->
+{% if 'podcasts' in secs %}<section class="sec" id="podcasts">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span>
+      <h2 class="stitle">What&rsquo;s worth listening to.</h2>
+    </div>
+    <p class="sdesc">Long-form Indian podcasts &mdash; business, philosophy, career,
+      money and health. Ten episodes, newest first, with what each one says it
+      covers. Titles, dates and takeaways come from the shows themselves.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>{{ podcasts.episodes|length }} episodes from {{ podcasts.shows }} shows</span>
+    {% if podcasts.built_on %}<span>Built <b>{{ podcasts.built_on }}</b>{% endif %}
+      {%- if podcasts.age_days is not none %} · {{ podcasts.age_days }}d old{% endif %}</span>
+    {% if podcasts.is_fallback %}<span>&#9888; This week&rsquo;s refresh has not run &mdash;
+      showing the previous list.</span>{% endif %}
+  </div>
+
+  <div class="pod-grid">
+    {% for e in podcasts.episodes %}
+    <article class="pod rv" style="--d:{{ loop.index0 * 0.05 }}s">
+      <div class="pod-h">
+        <span class="pod-cat">{{ e.category }}</span>
+        <span class="pod-date">{{ e.published }}</span>
+      </div>
+      <h3 class="pod-t">
+        {%- if e.link %}<a href="{{ e.link }}" target="_blank" rel="noopener">{{ e.title }}</a>
+        {%- else %}{{ e.title }}{% endif -%}
+      </h3>
+      <div class="pod-s">{{ e.show }}{% if e.guest %} &middot; <b>{{ e.guest }}</b>{% endif %}</div>
+      {% if e.takeaways %}
+      <ul class="pod-k">
+        {% for t in e.takeaways %}<li>{{ t }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  <p class="pod-note">Takeaways are compressed from each episode&rsquo;s own published
+    description &mdash; they are the show&rsquo;s claims about itself, not a review, and
+    not a summary of anything said in the audio.</p>
+</section>{% endif %}
+
 {% if 'music' in secs %}<section class="sec" id="music">
   <div class="shead rv">
     <div>
@@ -5959,6 +6107,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <input type="date" id="alertFrom" aria-label="From date">
     <input type="date" id="alertTo" aria-label="To date">
     <select id="alertTfSel" aria-label="Filter the signal log by timeframe"><option value="">All timeframes</option></select>
+    <!-- Engine filter. The log is sorted newest-first and now carries four
+         engines, so a weekly one whose last scan was ten days ago sits 40 rows
+         down and reads as missing — which is exactly how 56 multibagger rows
+         looked like they had never been written. Filter by engine and they are
+         one click away. -->
+    <select id="alertEngSel" aria-label="Filter the signal log by engine"><option value="">All engines</option></select>
     <span class="ghost" id="alertCount"></span>
   </div>
 

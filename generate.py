@@ -39,6 +39,7 @@ from newspaper import (
     fetch_alert_log,
     get_top5_picks,
     get_fund_screen,
+    get_podcasts,
     open_setup_context,
     last_known_picks,
     get_tracker_stocks,
@@ -112,6 +113,14 @@ def generate() -> None:
     # cancelled it, breaking the newspaper. The screen is a weekly artefact and
     # is built by its own workflow (fund_screen.yml); this build only renders
     # whatever is already cached, and hides the section when nothing is.
+    # Weekly, cached, and built here when the week has rolled over. Seven feed
+    # fetches — cheap next to the ~700 NAV downloads the fund screen needs, so
+    # unlike that one this can build inside the daily job.
+    podcasts = get_podcasts(build_if_missing=True)
+    print(f"[generate] Podcasts: {len(podcasts.get('episodes', []))} episodes "
+          f"from {podcasts.get('shows', 0)} shows"
+          f"{' (previous week)' if podcasts.get('is_fallback') else ''}")
+
     fund_screen = get_fund_screen()
     _cats = fund_screen.get("categories", [])
     print(f"[generate] Fund screen (cached): {len(_cats)} categories, "
@@ -305,6 +314,7 @@ def generate() -> None:
         # Weekly, cached. build_if_missing so a fresh week actually builds it;
         # a failure returns {} and the section hides rather than failing the build.
         fund_screen=fund_screen,
+        podcasts=podcasts,
         top5_week=top5_week,
         tracker=tracker,
         lichess_games=lichess_games,
@@ -382,7 +392,7 @@ def generate() -> None:
         ctx = dict(base)
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
-        ctx.update(page_context(pg, drop=empty_sections(fund_screen)))
+        ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

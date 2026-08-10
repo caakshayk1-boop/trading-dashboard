@@ -129,7 +129,18 @@ export default async function handler(req, res) {
     for (const m of mb) defs.push([m.symbol, `${m.symbol}.NS`, "₹", 2]);
     const movers = NIFTY50.map((s) => [s, `${s}.NS`, "₹", 2]);
 
-    const quotes = await quoteAll([...defs, ...movers]);
+    // Open ledger symbols ride the SAME batch. The signal log showed an entry
+    // and then a dash for price and P&L on every open row — 77 of them — so a
+    // reader could see what was signalled and never what it had done since.
+    // A dedicated endpoint was not an option (Hobby caps a deployment at 12
+    // functions and this project is at 12), and quoting from the browser is
+    // blocked by connect-src 'self'. This route already batches Yahoo quotes
+    // and already reads Turso, so the marginal cost is ~53 symbols on an
+    // existing fetch and no new request from the page at all.
+    const ledgerSyms = await openLedgerSymbols();
+    const ledgerDefs = ledgerSyms.map((s) => [s, `${s}.NS`, "₹", 2]);
+
+    const quotes = await quoteAll([...defs, ...movers, ...ledgerDefs]);
     const pick = (list) => list.map((d) => shape(d, quotes)).filter(Boolean);
 
     // Up-only and down-only, not "top and bottom five". On a strong day the
@@ -173,6 +184,20 @@ export default async function handler(req, res) {
       total: headline.length,
       advancing: headline.filter((m) => m.up).length,
       segments,
+      // Keyed by bare ledger symbol, not the Yahoo one, because that is what
+      // all_signals stores and what the table joins on. Symbols Yahoo could
+      // not price — commodities and FX rows like BRNUSD, which are not
+      // "SYMBOL.NS" — are simply absent, and the table falls back to a dash
+      // exactly as it does today. A missing quote must never render as 0.
+      ledger: Object.fromEntries(
+        ledgerDefs
+          .map(([name, ysym]) => [name, quotes.get(ysym)])
+          .filter(([, q]) => q && q.price !== null && q.price !== undefined)
+          .map(([name, q]) => [name, {
+            price: q.price,
+            change_pct: q.prev ? Math.round(((q.price - q.prev) / q.prev) * 10000) / 100 : null,
+          }])
+      ),
     }, 300);
   } catch (e) {
     fail(res, 500, `ticker fetch failed: ${e.message}`);
@@ -296,6 +321,26 @@ const fmtNum = (v, dp) =>
   v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
 
 // ── multibaggers ─────────────────────────────────────────────────────────────
+
+/** Distinct symbols on OPEN ledger rows. Bounded — this rides a live fetch. */
+async function openLedgerSymbols() {
+  try {
+    const rs = await db().execute(
+      `SELECT DISTINCT symbol FROM all_signals
+        WHERE UPPER(COALESCE(status,'OPEN')) = 'OPEN'
+          AND symbol IS NOT NULL AND symbol != ''
+        ORDER BY symbol LIMIT 80`
+    );
+    return rs.rows
+      .map((r) => str(r.symbol).toUpperCase())
+      // Yahoo's NSE suffix only makes sense for plain equity tickers. Anything
+      // with a dot already, or that is not ticker-shaped, is left out rather
+      // than guessed at — a wrong symbol returns someone else's price.
+      .filter((s) => /^[A-Z0-9&-]{2,20}$/.test(s));
+  } catch {
+    return [];
+  }
+}
 
 /** The most recent weekly multibagger scan, best five by score. */
 async function multibaggers() {
