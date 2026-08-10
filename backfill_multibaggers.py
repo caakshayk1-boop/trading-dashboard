@@ -82,11 +82,35 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true",
                     help="write the rows (default is report only)")
+    ap.add_argument("--reset", action="store_true",
+                    help="delete every multibagger row from the ledger first")
     args = ap.parse_args()
 
     found = scans()
     if not found:
         return 0
+
+    # --reset exists for exactly one situation: the first run of this script
+    # wrote all 56 rows stamped with the day it RAN, because
+    # log_batch_to_all_signals took today and ignored the scan date. Those rows
+    # are wrong and cannot be corrected in place — the fixed script writes to
+    # the real scan dates and would leave the mis-dated set orphaned beside it.
+    #
+    # Scoped to signal_type='multibagger' and nothing else. No other engine's
+    # rows are reachable from here, and multibagger rows are excluded from every
+    # published rate, so this cannot move a number on the site.
+    if args.reset:
+        if not args.apply:
+            log.warning("--reset needs --apply; nothing deleted")
+        else:
+            con = db.connect()
+            n = con.execute("SELECT COUNT(*) FROM all_signals WHERE signal_type=?",
+                            (tracker.MULTIBAGGER_SIGNAL_TYPE,)).fetchone()[0]
+            con.execute("DELETE FROM all_signals WHERE signal_type=?",
+                        (tracker.MULTIBAGGER_SIGNAL_TYPE,))
+            con.commit()
+            db.sync(con)
+            log.warning(f"--reset: deleted {n} multibagger row(s) from the ledger")
 
     total_new = 0
     for date, rows in found:

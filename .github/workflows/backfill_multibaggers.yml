@@ -17,6 +17,11 @@ on:
         type: boolean
         required: false
         default: false
+      reset:
+        description: 'Delete every multibagger ledger row first (needs apply)'
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: ledger-backfill-multibaggers
@@ -47,4 +52,5 @@ jobs:
 
       - name: Backfill (apply)
         if: ${{ inputs.apply }}
-        run: python backfill_multibaggers.py --apply
+        run: |
+          python backfill_multibaggers.py --apply ${{ inputs.reset && '--reset' || '' }}

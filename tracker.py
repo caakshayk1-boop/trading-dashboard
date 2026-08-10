@@ -481,7 +481,7 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
     return row_id
 
 
-def log_batch_to_all_signals(rows):
+def log_batch_to_all_signals(rows, date=None):
     """Insert many signals over ONE connection. Returns row ids in input order.
 
     log_to_all_signals() opens a connection, init_db()s and syncs per call —
@@ -489,11 +489,18 @@ def log_batch_to_all_signals(rows):
     capped at 5 signals; a 50-signal scan would add minutes to every run.
 
     `rows` are dicts with the same keys as log_to_all_signals' arguments.
+
+    `date` overrides the stamp, and exists for backfills only. Live engines
+    must leave it None and take today. Without it, a backfill of four historical
+    scans wrote all 56 rows stamped with the day the backfill RAN — four scan
+    dates collapsed into one, which is both a lie about when the engine fired
+    and a broken idempotence key: the next run finds nothing logged under the
+    real dates and writes the whole set again.
     """
     if not rows:
         return []
     init_db()
-    today = _today_ist()
+    today = date or _today_ist()
     ids = []
     with _conn() as c:
         for r in rows:
@@ -1293,7 +1300,8 @@ def _log_multibaggers_to_ledger(signals, today):
                 "reason": s.get("reason", ""), "tv_link": s.get("tv_link", ""),
             },
         } for s in signals]
-        ids = log_batch_to_all_signals(rows)
+        # `today` here is the SCAN date, which for a backfill is not today.
+        ids = log_batch_to_all_signals(rows, date=today)
         log.info(f"multibagger: wrote {len(ids)} row(s) to the ledger "
                  f"({', '.join(r['symbol'] for r in rows[:8])}"
                  f"{'…' if len(rows) > 8 else ''})")
