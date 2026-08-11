@@ -35,7 +35,10 @@ from datetime import datetime, timedelta, timezone
 
 log = logging.getLogger(__name__)
 
-NS = {"a": "http://www.w3.org/2005/Atom", "m": "http://search.yahoo.com/mrss/"}
+NS = {"a": "http://www.w3.org/2005/Atom", "m": "http://search.yahoo.com/mrss/",
+      # yt:videoId is what the Shorts check needs; the id in <a:id> is prefixed
+      # and would have to be parsed out of "yt:video:XXXX".
+      "yt": "http://www.youtube.com/xml/schemas/2015"}
 FEED = "https://www.youtube.com/feeds/videos.xml?channel_id={}"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; DailySignal/1.0)"}
 
@@ -44,20 +47,62 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; DailySignal/1.0)"}
 # resolution is what produced the Doraemon channel above, and a pinned id
 # paired with an author check fails closed instead.
 CHANNELS = [
+    # ── business ──
     ("UCzwCEE_PchiBULMnAJqhGVg", "Raj Shamani",        "Figuring Out",      "Business"),
+    ("UCKZozRVHRYsYHGEyNKuhhdA", "Think School",       "Think School",      "Business"),
+    ("UCRzYN32xtBf3Yxsx5BvJWJw", "warikoo",            "Ankur Warikoo",     "Career"),
+    # ── money and investing ──
+    ("UCqW8jxh4tH1Z1sWPbkGWL4g", "Akshat Shrivastava", "Akshat Shrivastava", "Investing"),
+    ("UCe3qdG0A_gr-sEdat5y2twQ",
+     "CA Rachana Phadke Ranade",                       "CA Rachana Ranade", "Investing"),
+    ("UCwAdQUuPT6laN-AQR17fe1g", "Pranjal Kamra",      "Pranjal Kamra",     "Investing"),
+    ("UCUUlw3anBIkbW9W44Y-eURw", "Zero1 by Zerodha",   "Zero1 by Zerodha",  "Money"),
+    ("UCwVEhEzsjLym_u1he4XWFkg", "Finance With Sharan", "Finance With Sharan", "Money"),
+    # ── society, geopolitics ──
+    ("UC-CSyyi47VX1lD9zyeABW3w", "Dhruv Rathee",       "Dhruv Rathee",      "Society"),
+    ("UC2bBsPXFWZWiBmkRiNlz8vg", "Abhijit Chavda",     "Abhijit Chavda",    "Geopolitics"),
+    ("UC7sbc0Ed3_yMu-etXVpj7cg", "Kunal Kamra",        "Shut Up Ya Kunal",  "Society"),
+    # ── mind, health, philosophy ──
     ("UCPxMZIFE856tbTfdkdjzTSQ", "BeerBiceps",         "BeerBiceps",        "Overall"),
     ("UCneyi-aYq4VIBYIAQgWmk_w", "Ranveer Allahbadia", "The Ranveer Show",  "Philosophy"),
-    ("UCRzYN32xtBf3Yxsx5BvJWJw", "warikoo",            "Ankur Warikoo",     "Career"),
     ("UCcYzLCs3zrQIBVHYA1sK2sw", "Sadhguru",           "Sadhguru",          "Philosophy"),
+    ("UCBqFKDipsnzvJdt6UT0lMIg", "Sandeep Maheshwari", "Sandeep Maheshwari", "Motivation"),
     ("UCJQeGpaGN5sR_CHA-UKu4PQ",
      "The Habit Coach | Alex Poole",                   "The Habit Coach",   "Health"),
 ]
-# Zerodha was here and is not a podcast — its channel is a daily NIFTY/BANK
-# NIFTY outlook. It posted twice a day and took two of ten slots with
-# "Analysis for Tomorrow", which is both off-topic for this section and
-# already covered by the rest of the page.
+# Zerodha's main channel was here and is not a podcast — a daily NIFTY/BANK
+# NIFTY outlook that posted twice a day and took two of ten slots with
+# "Analysis for Tomorrow". Zero1 is Zerodha's actual long-form channel and is
+# a different thing.
+#
+# HOW THIS LIST IS BUILT, and why it is shorter than the shortlist it came from.
+# Every id above was resolved from the channel's CANONICAL url, then verified
+# against the feed's own <author><name>, then eyeballed against its two most
+# recent titles. Nine candidates were rejected at that last step and it is
+# worth recording what they were, because each is a way this list goes wrong:
+#
+#   · WTF is / Nikhil Kamath — the handle resolved to a channel whose author
+#     really is "Nikhil" and which serves Deepwater Horizon trailers and
+#     "Stand by me | Doraemon (hindi)". This is the SAME channel named in the
+#     docstring above. The author check passed it, because "Nikhil" is too
+#     common a first name for a name check to be a content check.
+#   · Ranveer's @TheRanveerShow handle resolved to author "Being Akash",
+#     @AmanGupta_ to "Riddleverse", @DrVivekBindra to "Anup Singh" — handles
+#     get re-registered, and none of those are who they claim.
+#   · ANI Podcast, Raj Shamani, Think School, Shwetabh Gangwar and Abhijit
+#     Chavda all have separate "Clips"/"Shorts" channels that a naive handle
+#     lookup finds first. Pinning one would fill this section with the exact
+#     content the Shorts guard below exists to remove.
+#   · Saurabh Jain resolved to a channel whose only upload is "Snorkeling in
+#     Kauai"; Gaurav Thakur to Bhojpuri stage shows; Labour Law Advisor and
+#     Finology's resolved channels to #LLAShorts and a 3-video stub.
+#
+# Prakhar Gupta, Shwetabh Gangwar and Siddharth Warrier are genuinely wanted
+# here and are ABSENT because their handles 404'd during resolution — they are
+# not in this list rather than in it wrongly. Add them by resolving the
+# canonical id and checking two recent titles by hand, never by guessing an id.
 
-MAX_EPISODES = 10
+MAX_EPISODES = 20
 MIN_PROSE = 180        # chars of real description prose before we'll publish one
 MAX_AGE_DAYS = 90      # a "this week" list must not surface a 4-month-old upload
 
@@ -86,6 +131,18 @@ NOISE = (
     "the above link", "these links", "stream ", "listen on", "available on",
     "spotify", "apple podcast", "jiosaavn", "amazon music",
     "episodes on", "advice by", "ditto", "powered by", "brought to you",
+    # Observed on the first run of the expanded channel list. Both of these
+    # were published AS takeaways, which is the worst version of this bug —
+    # an affiliate pitch presented as the episode's key learning:
+    #   "👉 I use Vested to invest in US Stocks."
+    #   "EXCLUSIVE $10 bonus on 1st Deposit if you sign up using this link"
+    #   "👉Become the top 1% professional by learning AI today"
+    # The arrow is the reliable one: on these channels 👉 marks a call to
+    # action essentially without exception, never a point being made.
+    "👉", "sign up", "signup", "bonus on", "1st deposit", "first deposit",
+    "i use ", "become the top", "exclusive $", "get daily stock market",
+    "use this link", "using this link", "my course", "masterclass",
+    "limited seats", "early bird", "enrollment", "waitlist",
 )
 # Chapter lists ("03:27 - Why Leave Your Company") read as prose to every rule
 # above. Two or more clock stamps on one line is a table of contents.
@@ -120,6 +177,50 @@ CLIPPY = re.compile(r"#shorts|#short\b|\bshorts\b", re.I)
 def _get(url: str, timeout: int = 20) -> bytes:
     return urllib.request.urlopen(
         urllib.request.Request(url, headers=UA), timeout=timeout).read()
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Never follow — the redirect itself is the answer we want."""
+    def redirect_request(self, *a, **k):
+        return None
+
+
+_no_redirect = urllib.request.build_opener(_NoRedirect)
+
+
+def _is_short(video_id: str) -> bool | None:
+    """Is this video a YouTube Short? True / False / None when undetermined.
+
+    CLIPPY above only catches a Short that SAYS so in its title, and most do
+    not — "Power Of Dedication | Raj Shamani" is a 30-second Short and reads
+    like an episode. That is why Shorts kept appearing in this section.
+
+    The Atom feed carries no duration, so the signal comes from YouTube's own
+    routing: ask for /shorts/<id> and do not follow the redirect.
+
+        200  → the id really is a Short, YouTube served the Shorts player
+        303  → not a Short, YouTube bounced us to /watch
+
+    Verified against this exact failure: on Raj Shamani's feed the long-form
+    interviews all answered 303 and the three #Shorts all answered 200.
+
+    Returns None on a network error, and the caller KEEPS the episode in that
+    case. A transient failure should not silently empty the section — the
+    prose guard has already established this entry has a real synopsis, which
+    a 30-second Short almost never does.
+    """
+    if not video_id:
+        return None
+    url = f"https://www.youtube.com/shorts/{video_id}"
+    try:
+        r = _no_redirect.open(urllib.request.Request(url, headers=UA), timeout=12)
+        return r.status == 200
+    except urllib.error.HTTPError as e:
+        if e.code in (301, 302, 303, 307, 308):
+            return False
+        return None
+    except Exception:
+        return None
 
 
 def _prose(desc: str) -> str:
@@ -214,6 +315,15 @@ def _channel(cid: str, author: str, show: str, cat: str, ai) -> list[dict]:
         desc = grp.findtext("m:description", default="", namespaces=NS) if grp is not None else ""
         prose = _prose(desc)
         if len(prose) < MIN_PROSE:
+            continue
+
+        # Shorts guard, deliberately AFTER the cheap filters. It is one HTTP
+        # request per surviving candidate, and the prose requirement above has
+        # already removed almost every Short for free — this only pays for the
+        # handful that carry a real synopsis and are still 40 seconds long.
+        vid = e.findtext("yt:videoId", default="", namespaces=NS) or ""
+        if _is_short(vid) is True:
+            log.info(f"podcasts: {show} — dropped Short {vid} ({title[:48]!r})")
             continue
 
         pub = (e.findtext("a:published", default="", namespaces=NS) or "")[:10]

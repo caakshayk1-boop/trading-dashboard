@@ -123,6 +123,17 @@ def init_newspaper_db():
         con.execute("""CREATE TABLE IF NOT EXISTS newspaper_podcasts (
             week TEXT PRIMARY KEY, payload TEXT
         )""")
+        # The Nifty 500 research screen behind #stocks. Weekly for the same
+        # reason as the fund screen: ~500 symbols × (a quote plus two statement
+        # frames), fetched sequentially.
+        #
+        # Named `newspaper_screen` rather than the obvious "newspaper_" + stocks,
+        # which would sit one suffix away from `newspaper_stocks_picked` above —
+        # a different table holding the daily trade picks. Two table names that
+        # differ only by a suffix is how a SELECT ends up on the wrong one.
+        con.execute("""CREATE TABLE IF NOT EXISTS newspaper_screen (
+            week TEXT PRIMARY KEY, payload TEXT
+        )""")
 
 # ─────────────────────────────────────────────────────────────
 # GROQ AI
@@ -1883,6 +1894,15 @@ SECTION_MAP = [
     ("gym",         "Mind Gym",     "desk", "Drills"),
     ("perf",        "Performance",  "main", "Track Record"),
     ("rules",       "Engine Log",   "main", "Track Record"),
+    # Sits directly above the Signal Log because that is the reading order that
+    # makes sense: the screen is where a name comes FROM, the log is what
+    # happened to the ones that were acted on. Its own nav group, because a
+    # research screen is not a track record — which does mean "Track Record"
+    # prints twice in the nav, above rules and again above alerts. That is the
+    # documented behaviour of a repeated group (see the SECTION_MAP note) and
+    # the honest rendering of a fixed document order, not a bug to work around
+    # by moving the section somewhere it does not belong.
+    ("stocks",      "Stock Screen", "main", "Research"),
     ("alerts",      "Signal Log",   "main", "Track Record"),
 ]
 
@@ -1911,7 +1931,8 @@ PAGE_META = {
 }
 
 
-def empty_sections(fund_screen=None, podcasts=None, smart_reads=None) -> set:
+def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
+                   stock_screen=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -1926,6 +1947,12 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None) -> set:
         drop.add("podcasts")
     if not smart_reads:
         drop.add("smartreads")
+    # Same contract as #funds: the weekly screen has its own clock, so a build
+    # that runs before the first screen has an empty cache and the section must
+    # not be advertised. Named here rather than left to the template guard,
+    # which is the mistake #funds already made once.
+    if not (stock_screen or {}).get("rows"):
+        drop.add("stocks")
     return drop
 
 
@@ -2368,18 +2395,96 @@ def _week_key() -> str:
     return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}-{PICKS_ENGINE}"
 
 
-def get_podcasts(build_if_missing: bool = False) -> dict:
-    """This week's podcast list, cached weekly. Empty dict when unavailable.
+# A screen built on annual statements does not go stale in a week — the
+# accounts it ranks on are quarterly at best. Prices inside it DO, which is why
+# the provenance strip prints the price date separately: a three-week-old screen
+# has usable fundamentals and technical columns the reader must be told to
+# distrust. Hiding the section over a stale RSI would take the ROCE table down
+# with it.
+MAX_STOCK_CACHE_AGE_DAYS = 21
 
-    Same shape as get_fund_screen and for the same reasons: seven feed fetches
-    plus an AI pass per episode is not work a daily build should repeat, and a
-    failure must hide the section rather than fail the build.
+
+def get_stock_screen(build_if_missing: bool = False) -> dict:
+    """This week's Nifty 500 research screen, cached. Empty dict if unavailable.
+
+    Same contract as get_fund_screen, for the same reason: the build is ~11
+    minutes of sequential Yahoo fetches across 500 symbols and must never sit
+    inside the 6 AM render. The daily paper reads this cache or shows nothing.
+    """
+    week = _stock_week_key()
+    try:
+        with _db() as con:
+            row = con.execute("SELECT payload FROM newspaper_screen WHERE week=?",
+                              (week,)).fetchone()
+            if row:
+                return _stamp_fund_payload(json.loads(row[0]), fallback=False)
+
+            # Monday always misses the exact key — the ISO week rolls over
+            # before the Sunday-night build's week does. Falling back to the
+            # newest build and letting its AGE decide is the behaviour #funds
+            # had to learn; there is no reason to relearn it here.
+            row = con.execute("SELECT payload FROM newspaper_screen "
+                              "ORDER BY week DESC LIMIT 1").fetchone()
+            if row:
+                data = json.loads(row[0])
+                age = _payload_age_days(data)
+                if age is not None and age <= MAX_STOCK_CACHE_AGE_DAYS:
+                    log.info(f"stock screen: serving previous build, {age:.1f}d old")
+                    return _stamp_fund_payload(data, fallback=True)
+                log.warning("stock screen: hiding it — newest build is "
+                            + ("of unknown age" if age is None else f"{age:.1f}d old"))
+    except Exception as e:
+        log.warning(f"stock cache read: {e}")
+
+    if not build_if_missing:
+        return {}
+
+    try:
+        import stock_screen as _screen
+        # AI injected, like podcasts. Without a key the screen still builds and
+        # every row keeps its rule-based SWOT; only the prose layer is absent.
+        data = _screen.build(ai=groq_complete if GROQ_KEY else None)
+        if not data.get("ok"):
+            return {}
+        with _db() as con:
+            con.execute("CREATE TABLE IF NOT EXISTS newspaper_screen "
+                        "(week TEXT PRIMARY KEY, payload TEXT)")
+            con.execute("INSERT OR REPLACE INTO newspaper_screen VALUES (?,?)",
+                        (week, json.dumps(data)))
+            con.commit()
+        return _stamp_fund_payload(data, fallback=False)
+    except Exception as e:
+        log.warning(f"stock screen build failed: {e}")
+        return {}
+
+
+def _stock_week_key() -> str:
+    """ISO week on the IST date. No engine tag — see _fund_week_key."""
+    d = datetime.now(IST).date()
+    return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}"
+
+
+def get_podcasts(build_if_missing: bool = False) -> dict:
+    """Today's podcast list, cached DAILY. Empty dict when unavailable.
+
+    Same shape as get_fund_screen and for the same reasons: a per-channel feed
+    fetch plus an AI pass per episode is real work, and a failure must hide the
+    section rather than fail the build.
+
+    Keyed by DATE, not ISO week. It was weekly, which meant a new episode from
+    any of these channels waited up to seven days to appear — and these are
+    daily-to-every-other-day publishers, so the list was routinely showing
+    episodes several days behind while newer ones sat unlisted. Sixteen feeds
+    and a bounded AI pass is affordable in the daily build; the fund and stock
+    screens are the two that genuinely are not, and both keep their own clocks.
+    The cache column is still called `week` because renaming a primary key
+    across a live Turso table buys nothing — the VALUE is a date now.
 
     The AI is injected rather than imported by podcasts.py so that module stays
     standalone-testable — `python podcasts.py` runs it against the live feeds
     with no key and takes the deterministic path.
     """
-    week = _iso_week()
+    week = datetime.now(IST).strftime("%Y-%m-%d")
     try:
         with _db() as con:
             row = con.execute("SELECT payload FROM newspaper_podcasts WHERE week=?",
@@ -2387,15 +2492,27 @@ def get_podcasts(build_if_missing: bool = False) -> dict:
             if row:
                 return _stamp_fund_payload(json.loads(row[0]), fallback=False)
 
-            # Same Monday-rollover fallback the fund screen uses. A podcast
-            # list one week old is still a real list of real episodes; an
-            # empty section is not better.
-            row = con.execute("SELECT payload FROM newspaper_podcasts "
-                              "ORDER BY week DESC LIMIT 1").fetchone()
+            # Fallback to the newest build we have. A list a couple of days old
+            # is still a real list of real episodes and an empty section is not
+            # better — but the ceiling came down from 14 days to 4 when this
+            # went daily. At 14 the section could serve a fortnight-old list
+            # under today's date, which is precisely the "did it run?" ambiguity
+            # the provenance strip exists to remove.
+            # Date-shaped keys ONLY. This section's key format changed from ISO
+            # week ("2026-W33") to date ("2026-08-12"), and "W" sorts above every
+            # digit — so `ORDER BY week DESC` returned the stale WEEKLY row
+            # forever, it was inside the age limit, and it was served as a
+            # fallback on every build. The daily rebuild therefore never ran:
+            # the section kept showing ten episodes from the old list while
+            # reporting "previous week", and nothing errored.
+            row = con.execute(
+                "SELECT payload FROM newspaper_podcasts "
+                "WHERE week LIKE '____-__-__' AND week NOT LIKE '%W%' "
+                "ORDER BY week DESC LIMIT 1").fetchone()
             if row:
                 data = json.loads(row[0])
                 age = _payload_age_days(data)
-                if age is not None and age <= 14:
+                if age is not None and age <= 4:
                     log.info(f"podcasts: serving previous build, {age:.1f}d old")
                     return _stamp_fund_payload(data, fallback=True)
     except Exception as e:
@@ -3814,6 +3931,14 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   font-family:var(--mono);font-size:9px;letter-spacing:1.1px;text-transform:uppercase}
 .sr-src{color:var(--down);font-weight:600}
 .sr-tag{color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:2px 8px}
+/* One colour per Smart Reads category, so the mix is legible at a glance rather
+   than something you have to read nine cards to establish. Colour is never the
+   only signal — the tag carries the word too. */
+.sr-money{color:var(--lime);border-color:rgba(195,245,60,.32)}
+.sr-habits{color:var(--blue);border-color:rgba(106,168,255,.32)}
+.sr-health{color:var(--up);border-color:rgba(61,220,151,.30)}
+.sr-mind{color:var(--violet);border-color:rgba(167,139,250,.32)}
+.sr-ideas{color:var(--gold);border-color:rgba(233,196,106,.32)}
 .sr-date{color:var(--dim);margin-left:auto}
 .sr-t{margin:0 0 8px;font-size:14.5px;line-height:1.4;font-weight:650}
 .sr-t a{color:var(--fg);text-decoration:none;border-bottom:1px solid transparent}
@@ -3907,6 +4032,144 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .inval{margin-top:12px;font-size:11.5px;line-height:1.6;color:var(--muted);
   border-left:2px solid rgba(224,178,74,.45);padding-left:11px}
 .inval b{color:var(--gold);font-weight:600;letter-spacing:.3px}
+
+/* ═══════════════════ STOCK SCREEN ═══════════════════
+   Reuses .tw / .tw-tall / table.t / .ctlbar / .fbtn / .fund-note wholesale —
+   this section introduces no table, control bar or note styling of its own.
+   What is genuinely new is only the score cell (a number that has to carry its
+   own confidence) and the detail sheet's ratio grid. */
+
+/* A score with a bar behind it. The bar is not decoration: four scores across
+   fifteen columns are unreadable as bare numbers, and the eye needs to rank a
+   column at a glance without reading it. */
+.sc{position:relative;font-family:var(--mono);font-variant-numeric:tabular-nums;
+  font-size:12px;font-weight:700;min-width:52px;display:inline-block;
+  padding:3px 7px;border-radius:5px;text-align:right}
+.sc i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;z-index:0;
+  background:var(--lime-soft)}
+.sc b{position:relative;z-index:1;font-weight:700}
+.sc.s-hi b{color:var(--lime)}
+.sc.s-md b{color:var(--text)}
+.sc.s-lo b{color:var(--dim)}
+/* Confidence is a real property of every score here — one built from two of
+   five inputs must not look like one built from five. Dotted underline rather
+   than a second number, which would double the width of four columns. */
+.sc.thin{border-bottom:1px dotted var(--gold)}
+
+/* Breadth strip. Its own block rather than a .prov because it carries data, not
+   provenance — a reader should not have to distinguish "when was this built"
+   from "what does it say" by squinting at two identically styled rows. */
+.scr-breadth{background:var(--bg2);border:1px solid var(--line);border-left:2px solid var(--lime);
+  border-radius:0 10px 10px 0;padding:13px 17px;margin-bottom:18px;
+  display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline}
+.scr-breadth .sb-k{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.scr-breadth .sb-lab{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;
+  color:var(--dim);border:1px solid var(--line2);border-radius:999px;padding:3px 9px}
+.scr-breadth .sb-reg{font-family:var(--mono);font-size:13px;letter-spacing:1.2px;color:var(--lime)}
+.scr-breadth .sb-as{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.scr-breadth .sb-n{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);
+  font-size:11.5px;color:var(--muted)}
+.scr-breadth .sb-n b{color:var(--text);font-weight:700}
+
+/* AI narrative. Marked as generated, and visually subordinate to the computed
+   SWOT above it — the prose is the commentary, the numbers are the evidence. */
+.sd-ai{background:rgba(106,168,255,.05);border:1px solid rgba(106,168,255,.22);
+  border-radius:10px;padding:13px 15px}
+.sd-ai .tag{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;
+  color:var(--blue);display:block;margin-bottom:7px}
+.sd-ai p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}
+.sd-ai .fine{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;display:block}
+
+/* Peer-median column in the detail sheet's ratio grid. */
+.sd-peer{display:grid;grid-template-columns:1fr auto auto;gap:7px 14px;
+  font-family:var(--mono);font-size:12px;align-items:baseline}
+.sd-peer .h{font-size:9px;letter-spacing:1.3px;color:var(--dim);text-transform:uppercase}
+.sd-peer .k{color:var(--muted)}
+.sd-peer .v{color:var(--text);text-align:right;font-weight:700}
+.sd-peer .m{color:var(--dim);text-align:right}
+.sd-peer .v.better{color:var(--up)} .sd-peer .v.worse{color:var(--down)}
+
+.scr-tags{display:flex;flex-wrap:wrap;gap:4px}
+.scr-tag{font-family:var(--mono);font-size:9px;letter-spacing:.8px;padding:2px 6px;
+  border-radius:4px;border:1px solid var(--line2);color:var(--dim);white-space:nowrap}
+.scr-tag.t-brk{border-color:rgba(195,245,60,.35);color:var(--lime)}
+.scr-tag.t-vol{border-color:rgba(106,168,255,.35);color:var(--blue)}
+.scr-tag.t-os{border-color:rgba(255,92,92,.32);color:var(--down)}
+.scr-tag.t-rs{border-color:rgba(61,220,151,.32);color:var(--up)}
+
+table.t th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+table.t th.sortable:hover{color:var(--text)}
+table.t th.sortable[aria-sort]{color:var(--lime)}
+table.t th.sortable[aria-sort]::after{content:" ▾"}
+table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
+
+.scr-empty{font-family:var(--mono);font-size:12.5px;color:var(--dim);
+  padding:34px 18px;text-align:center}
+.scr-more{display:block;width:100%;margin:14px 0 0;padding:13px;
+  background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  font-family:var(--mono);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;min-height:44px}
+.scr-more:hover{border-color:var(--lime-line);color:var(--lime)}
+
+/* ── detail sheet ── */
+.sd-h{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;margin-bottom:4px}
+.sd-h h3{font-size:21px;margin:0;font-family:var(--mono)}
+.sd-h .co{color:var(--muted);font-size:13px}
+.sd-sub{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.6px;
+  margin-bottom:18px;display:flex;flex-wrap:wrap;gap:4px 12px}
+.sd-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+  gap:9px;margin-bottom:20px}
+.sd-sc{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.sd-sc .k{font-family:var(--mono);font-size:9px;letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--dim);display:block;margin-bottom:5px}
+.sd-sc .v{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text)}
+/* display:block is load-bearing, not tidiness. This is a <span>, and `height`
+   does not apply to an inline box — so the 3px was ignored, the inner <i> at
+   height:100% had no bound to resolve against, and each of the five score
+   tiles rendered a ~60px slab of lime that covered the heading underneath. */
+.sd-sc .bar{display:block;height:3px;border-radius:2px;background:var(--line);
+  margin-top:7px;overflow:hidden}
+.sd-sc .bar i{display:block;height:100%;background:var(--lime)}
+.sd-sc.wide{grid-column:1/-1}
+.sd-sc .conf{font-family:var(--mono);font-size:9.5px;color:var(--gold);margin-top:5px;display:block}
+
+.sd-blk{margin:0 0 20px}
+.sd-blk h4{font-family:var(--mono);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;
+  color:var(--lime);margin:0 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.sd-blk p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}
+
+.sd-swot{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sd-q{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.sd-q>span{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;
+  display:block;margin-bottom:8px}
+.sd-q.q-s>span{color:var(--up)} .sd-q.q-w>span{color:var(--down)}
+.sd-q.q-o>span{color:var(--blue)} .sd-q.q-t>span{color:var(--gold)}
+.sd-q ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.sd-q li{font-size:12.5px;line-height:1.55;color:var(--muted)}
+/* The evidence line is the point of the whole SWOT: every claim above it is
+   generated from this number, so it travels with the claim and never gets
+   collapsed away on small screens. */
+.sd-q li em{display:block;font-family:var(--mono);font-size:10.5px;color:var(--dim);
+  font-style:normal;margin-top:3px}
+.sd-q.empty{display:none}
+
+.sd-upd{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.sd-upd li{font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--muted);
+  padding-left:16px;position:relative}
+.sd-upd li::before{content:"›";position:absolute;left:0;color:var(--dim)}
+.sd-upd li.k-good::before{content:"▲";color:var(--up);font-size:8px;top:3px}
+.sd-upd li.k-bad::before{content:"▼";color:var(--down);font-size:8px;top:3px}
+.sd-upd li.k-warn::before{content:"!";color:var(--gold);font-weight:700}
+
+.sd-news{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.sd-news a{font-size:12.5px;line-height:1.5;color:var(--muted);display:block}
+.sd-news a:hover{color:var(--lime)}
+.sd-news .m{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:2px;display:block}
+
+@media(max-width:700px){
+  .sd-swot{grid-template-columns:1fr}
+  .sd-h h3{font-size:18px}
+}
 
 /* ═══════════════════ 03 SIGNAL LOG ═══════════════════ */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);
@@ -5948,9 +6211,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span>
       <h2 class="stitle">Worth the ten minutes.</h2>
     </div>
-    <p class="sdesc">Analysis, not headlines &mdash; Economic Times, Livemint, Business
-      Standard, The Economist and Zerodha. Every card carries the publisher&rsquo;s own
-      summary, so you know what a piece argues before you open it.</p>
+    <!-- Copy rewritten when this stopped being a finance-only section. It used
+         to name five money mastheads, which was accurate then and would have
+         been quietly wrong the moment the other four categories landed. -->
+    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
+      &mdash; markets and personal finance alongside habits and focus, health and
+      longevity, psychology and relationships, and the longer essays on thinking
+      and living well. Every card carries the publisher&rsquo;s own summary, so you
+      know what a piece argues before you open it.</p>
   </div>
 
   <div class="sr-grid">
@@ -5958,7 +6226,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
       <div class="sr-h">
         <span class="sr-src">{{ r.source }}</span>
-        <span class="sr-tag">SMART READS</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
+          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
+           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
         {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
       </div>
       <h3 class="sr-t">
@@ -5973,31 +6247,38 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>{% endif %}
 
 <!-- ══════════ PODCASTS ══════════
-     Ten long-form episodes from Indian shows, newest first, one line of what
+     Twenty long-form episodes from Indian shows, newest first, one line of what
      each is about. Everything here is the publisher's: title, date, link and
      a takeaway compressed from their OWN episode description. Nothing is
      inferred from a title and nothing is written about a guest from general
      knowledge — see the header of podcasts.py for why that line is drawn hard.
      Round-robin by show, so a channel posting three times a day cannot own
-     the list. Rebuilt weekly. -->
+     the list. Rebuilt DAILY — it was weekly, which left new episodes from
+     every-other-day publishers unlisted for up to a week.
+
+     Shorts are excluded by asking YouTube whether each id is one, not by
+     looking for "#shorts" in the title. Most Shorts do not say so: "This SWP
+     Mistake Can Destroy Your Retirement Plan!" reads exactly like an episode
+     and is forty seconds long. See podcasts._is_short. -->
 {% if 'podcasts' in secs %}<section class="sec" id="podcasts">
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span>
       <h2 class="stitle">What&rsquo;s worth listening to.</h2>
     </div>
-    <p class="sdesc">Long-form Indian podcasts &mdash; business, philosophy, career,
-      money and health. Ten episodes, newest first, with what each one says it
-      covers. Titles, dates and takeaways come from the shows themselves.</p>
+    <p class="sdesc">Long-form Indian podcasts &mdash; business, investing, money,
+      society, geopolitics, health and philosophy. Up to twenty episodes, newest
+      first, with what each one says it covers. Titles, dates and takeaways come
+      from the shows themselves. Shorts are excluded.</p>
   </div>
 
   <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
-    <span class="pv-tag">WEEKLY</span>
+    <span class="pv-tag">DAILY</span>
     <span>{{ podcasts.episodes|length }} episodes from {{ podcasts.shows }} shows</span>
     {% if podcasts.built_on %}<span>Built <b>{{ podcasts.built_on }}</b>{% endif %}
       {%- if podcasts.age_days is not none %} · {{ podcasts.age_days }}d old{% endif %}</span>
-    {% if podcasts.is_fallback %}<span>&#9888; This week&rsquo;s refresh has not run &mdash;
-      showing the previous list.</span>{% endif %}
+    {% if podcasts.is_fallback %}<span>&#9888; Today&rsquo;s refresh has not run &mdash;
+      showing the most recent list.</span>{% endif %}
   </div>
 
   <div class="pod-grid">
@@ -6221,6 +6502,225 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% endfor %}
   </ol>
 </section>{% endif %}
+
+<!-- ══════════ STOCK SCREEN ══════════
+     Five hundred companies ranked on published annual statements, sitting
+     directly above the Signal Log because that is the reading order: this is
+     where a name comes FROM, the log is what happened to the ones acted on.
+
+     Two things about how this renders, both deliberate:
+
+       1. The first 25 rows are server-rendered into the HTML and the remaining
+          ~475 arrive from screen.json on demand. Rendering all 500 server-side
+          adds ~300KB to a page that is already 220KB, and rendering none
+          leaves a section that is blank without JS and invisible to a crawler.
+          The table therefore works with JavaScript off — it just does not
+          sort, filter or open.
+       2. Every score column is decomposable. The four scores are never added
+          into one without also showing the four, because "82" tells a reader
+          nothing they can disagree with and "quality 91, valuation 38" tells
+          them exactly where to argue. -->
+{% if 'stocks' in secs %}
+<section class="sec" id="stocks">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['stocks'] }} / {{ seclabel['stocks'] }}</span>
+      <h2 class="stitle">Which five hundred, and why.</h2>
+    </div>
+    <div style="text-align:right">
+      <p class="sdesc">The Nifty 500 ranked on published annual statements &mdash;
+        return on capital, three-year compounding, leverage, and what the chart is
+        doing. Every score breaks down into the numbers that made it.</p>
+      <!-- Absolute, like /today.json and /edition.json. A relative href breaks
+           on /day/:date, which Vercel rewrites to this same index.html — the
+           link would resolve to /day/screen.json and 404. -->
+      <a class="slink" href="/screen.json" target="_blank"
+         style="display:inline-block;margin-top:10px">&darr; screen.json</a>
+    </div>
+  </div>
+
+  <!-- Vintage first, like every other weekly artefact here. The price date is
+       printed SEPARATELY from the build date because they age differently: a
+       three-week-old screen still has usable ROCE and a useless RSI, and a
+       reader who is not told which columns went stale will trust both. -->
+  <div class="prov{{ ' stale' if stock_screen.is_fallback else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Rebuilt <b>Sundays 02:30 IST</b></span>
+    {% if stock_screen.built_on %}<span>Built <b>{{ stock_screen.built_on }}</b>
+      {%- if stock_screen.age_days is not none %} · {{ stock_screen.age_days }}d old{% endif %}</span>{% endif %}
+    {% if stock_screen.price_date %}<span>Prices to <b>{{ stock_screen.price_date }}</b></span>{% endif %}
+    {% if stock_screen.coverage %}
+    <span>Statements for <b>{{ stock_screen.coverage.statements }}</b> of
+      {{ stock_screen.coverage.priced }} · ROCE for <b>{{ stock_screen.coverage.roce }}</b></span>
+    {% endif %}
+    {% if stock_screen.is_fallback %}
+    <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous
+      build. The technical columns below are from that date, not today.</span>
+    {% endif %}
+  </div>
+
+  <!-- Breadth, measured across these same five hundred companies rather than
+       inferred from an index. It is the only market-wide reading on the page
+       that counts businesses instead of instruments, and it is deliberately not
+       an input to any score — see stock_screen.breadth(). -->
+  {% if stock_screen.breadth and stock_screen.breadth.above50 is not none %}
+  {% set b = stock_screen.breadth %}
+  <div class="scr-breadth rv">
+    <div class="sb-k">
+      <span class="sb-lab">BREADTH</span>
+      {% if b.label %}<b class="sb-reg">{{ b.label }}</b>{% endif %}
+      <span class="sb-as">across {{ stock_screen.count }} companies{% if b.as_of %},
+        {{ b.as_of }}{% endif %}</span>
+    </div>
+    <div class="sb-n">
+      {% if b.above20 is not none %}<span>Above 20DMA <b>{{ b.above20 }}%</b></span>{% endif %}
+      <span>Above 50DMA <b>{{ b.above50 }}%</b></span>
+      {% if b.above200 is not none %}<span>Above 200DMA <b>{{ b.above200 }}%</b></span>{% endif %}
+      {% if b.counted %}<span>{{ b.advancing }} up / {{ b.declining }} down on the week</span>{% endif %}
+      {% if b.median_1m is not none %}<span>Median 1M <b
+        class="{{ 'up' if b.median_1m > 0 else 'dn' }}">{{ b.median_1m }}%</b></span>{% endif %}
+      {% if b.at_52w_high %}<span><b>{{ b.at_52w_high }}</b> at a 52-week high</span>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="fund-note rv">
+    <strong>Four scores, deliberately not one.</strong> A company can be excellent
+    and expensive; a chart can be strong while the business degrades. Collapsing
+    that into a single number destroys the only thing you need in order to
+    disagree with it. So <b>Quality</b> is return on capital, margins and
+    leverage; <b>Growth</b> is three-year compounding of revenue and EBITDA;
+    <b>Value</b> is how the stock is priced against its own industry peers, not
+    against the market; <b>Tech</b> is the chart alone, with no fundamental input.
+    The composite is a declared weighted blend of those four
+    {%- if stock_screen.weights %} ({{ (stock_screen.weights.quality * 100)|round|int }}/{{ (stock_screen.weights.growth * 100)|round|int }}/{{ (stock_screen.weights.technical * 100)|round|int }}/{{ (stock_screen.weights.valuation * 100)|round|int }}){%- endif %},
+    renormalised over whichever of them exist for that company.
+    <br><br>
+    <strong>On ROCE.</strong> It is computed here from the published income
+    statement and balance sheet &mdash; operating profit over capital employed
+    &mdash; not read off a field, because the data source does not publish one.
+    For lenders it is left blank rather than approximated: a bank&rsquo;s capital
+    employed is its deposit base, so the ratio means nothing there and a number
+    would be worse than a dash. Where the accounts do not support a figure, the
+    cell is empty and the score it feeds is computed from fewer inputs, marked
+    with a dotted underline.
+    <br><br>
+    <strong>What this is not.</strong> A ranking of public data, not advice, and
+    not a prediction &mdash; there is no probability, target or forecast anywhere
+    in it, because nothing here has been validated as predictive. I am not a
+    SEBI-registered adviser.
+  </div>
+
+  <div class="ctlbar rv" id="scrPresets" role="group" aria-label="Preset screens">
+    <span class="ghost" style="margin-left:0">SCREENS</span>
+    <button type="button" class="fbtn on" data-preset="all">All</button>
+    <button type="button" class="fbtn" data-preset="compounders">Quality compounders</button>
+    <button type="button" class="fbtn" data-preset="cheapquality">Cheap &amp; good</button>
+    <button type="button" class="fbtn" data-preset="growth">High growth</button>
+    <button type="button" class="fbtn" data-preset="breakout">Breakouts</button>
+    <button type="button" class="fbtn" data-preset="rs">RS leaders</button>
+    <button type="button" class="fbtn" data-preset="oversold">Oversold</button>
+    <button type="button" class="fbtn" data-preset="debtfree">Debt-free</button>
+  </div>
+
+  <div class="ctlbar rv" id="scrCtl">
+    <input type="search" id="scrSearch" placeholder="Symbol, company or ISIN"
+           aria-label="Search the screen by symbol, company name or ISIN" autocomplete="off">
+    <select id="scrSector" aria-label="Filter by industry"><option value="">All industries</option></select>
+    <select id="scrCap" aria-label="Filter by market capitalisation">
+      <option value="">Any size</option>
+      <option value="l">Large (&gt; ₹50,000cr)</option>
+      <option value="m">Mid (₹15,000&ndash;50,000cr)</option>
+      <option value="s">Small (&lt; ₹15,000cr)</option>
+    </select>
+    <select id="scrSort" aria-label="Sort by">
+      <option value="comp">Composite</option>
+      <option value="q">Quality</option>
+      <option value="g">Growth</option>
+      <option value="v">Value</option>
+      <option value="tech">Technical</option>
+      <option value="roce">ROCE</option>
+      <option value="rev_cagr">Revenue CAGR</option>
+      <option value="r1y">1-year return</option>
+      <option value="mcap_cr">Market cap</option>
+    </select>
+    <button type="button" class="fbtn" id="scrReset">Reset</button>
+    <span class="ghost" id="scrCount">{{ stock_screen.count or 0 }} companies</span>
+  </div>
+
+  <div class="tw tw-tall rv">
+    <table class="t" id="scrTable" style="min-width:1180px">
+      <thead><tr>
+        <th scope="col" class="sortable" data-k="sym">Company</th>
+        <th scope="col" class="num sortable" data-k="price">Price</th>
+        <th scope="col" class="num sortable" data-k="r1y">1Y</th>
+        <th scope="col" class="num sortable" data-k="comp" aria-sort="descending">Comp</th>
+        <th scope="col" class="num sortable" data-k="q">Qual</th>
+        <th scope="col" class="num sortable" data-k="g">Grow</th>
+        <th scope="col" class="num sortable" data-k="v">Value</th>
+        <th scope="col" class="num sortable" data-k="tech">Tech</th>
+        <th scope="col" class="num sortable" data-k="roce">ROCE</th>
+        <th scope="col" class="num sortable" data-k="roe">ROE</th>
+        <th scope="col" class="num sortable" data-k="rev_cagr">Rev CAGR</th>
+        <th scope="col" class="num sortable" data-k="de">D/E</th>
+        <th scope="col" class="num sortable" data-k="pe">PE</th>
+        <th scope="col" class="num sortable" data-k="rsi">RSI</th>
+        <th scope="col">Setup</th>
+      </tr></thead>
+      <!-- Seeded with the top 25 so the section is never blank and never
+           depends on JS to exist. app.js replaces this wholesale once
+           screen.json lands.
+
+           Every cell reads s.get(KEY), never s.KEY. The payload has its null
+           keys STRIPPED for transport, and a missing key in Jinja is Undefined
+           rather than None — `Undefined is not none` is TRUE, so `s.roce ~ '%'`
+           on a bank would render a bare "%" where a dash belongs. .get() gives
+           a real None and the macro can then do its job. -->
+      {% macro n(v, suf='') %}{{ (v ~ suf) if v is not none else '—' }}{% endmacro %}
+      <tbody id="scrBody">
+        {% for s in stock_screen.rows[:25] %}
+        {% set r1y = s.get('r1y') %}
+        <tr data-sym="{{ s.sym }}">
+          <td><strong class="sym">{{ s.sym }}</strong><br>
+              <span class="mono-dim">{{ s.get('name', '')[:34] }}</span></td>
+          <td class="num">{{ n(s.get('price')) }}</td>
+          <td class="num {{ 'up' if (r1y or 0) > 0 else 'dn' if (r1y or 0) < 0 else '' }}">{{ n(r1y, '%') }}</td>
+          <td class="num"><span class="sc s-hi"><b>{{ n(s.get('comp')) }}</b></span></td>
+          <td class="num">{{ n(s.get('q')) }}</td>
+          <td class="num">{{ n(s.get('g')) }}</td>
+          <td class="num">{{ n(s.get('v')) }}</td>
+          <td class="num">{{ n(s.get('tech')) }}</td>
+          <td class="num">{{ n(s.get('roce'), '%') }}</td>
+          <td class="num">{{ n(s.get('roe'), '%') }}</td>
+          <td class="num">{{ n(s.get('rev_cagr'), '%') }}</td>
+          <td class="num">{{ n(s.get('de')) }}</td>
+          <td class="num">{{ n(s.get('pe')) }}</td>
+          <td class="num">{{ n(s.get('rsi')) }}</td>
+          <td><span class="mono-dim">{{ (s.get('setup') or {}).get('tags', [])[:2]|join(' · ') or '—' }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="scr-more" id="scrMore" hidden>Show more</button>
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Ratios are computed from the annual statements the data source publishes, which
+    are consolidated where available and occasionally absent altogether &mdash;
+    {{ stock_screen.coverage.priced - stock_screen.coverage.statements if stock_screen.coverage else 0 }}
+    of the {{ stock_screen.coverage.priced if stock_screen.coverage else 0 }} companies
+    priced here have no statements at all. Those carry no composite and cannot be
+    ranked: they are in the table, searchable, with their chart and their caveat,
+    but a company that reports nothing must not outrank one that does. Per-share
+    growth is withheld wherever the share count moved structurally inside the
+    history, because an EPS CAGR across a merger or bonus is not a growth rate.
+    Returns are total returns off a split- and dividend-adjusted close.
+    <br><br>
+    Screen rebuilt weekly. A high score means &ldquo;ranked well on published
+    numbers&rdquo; and nothing more.
+  </p>
+</section>
+{% endif %}
 
 <!-- ══════════ 10 SIGNAL LOG ══════════ -->
 {% if 'alerts' in secs %}<section class="sec" id="alerts">

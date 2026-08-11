@@ -135,6 +135,22 @@ def main() -> int:
                          "(a fallback to /api/markets looks like this)")
         if not PRE and path == "/" and r["mapPainted"] < 10000:
             fails.append(f"/: world map painted {r['mapPainted']} px, expected 10000+")
+
+        # The stock screen is a CONDITIONAL section — it is dropped whenever the
+        # weekly cache is empty, exactly like #funds — so its absence is not a
+        # failure and it must never join `must`. What IS a failure is the
+        # section rendering while the payload behind it does not resolve: that
+        # is the three-place allow-list trap (written by generate.py, named in
+        # .vercelignore, copied by build.js), whose only other symptom is a
+        # console warning nobody reads and a table stuck at 25 rows.
+        if path == "/" and "stocks" in r["sections"]:
+            print(f"    screen.json     {r.get('screenRows', '?')} rows")
+            if not r.get("screenOk"):
+                fails.append("/: #stocks renders but /screen.json did not load "
+                             f"({r.get('screenError') or 'no rows'}) — check it is "
+                             "allow-listed in .vercelignore AND copied in build.js")
+            elif r.get("screenRows", 0) < 100:
+                fails.append(f"/: /screen.json returned only {r.get('screenRows')} rows")
         print()
 
     if fails:

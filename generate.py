@@ -39,6 +39,7 @@ from newspaper import (
     fetch_alert_log,
     get_top5_picks,
     get_fund_screen,
+    get_stock_screen,
     get_podcasts,
     fetch_smart_reads,
     open_setup_context,
@@ -130,6 +131,16 @@ def generate() -> None:
     _cats = fund_screen.get("categories", [])
     print(f"[generate] Fund screen (cached): {len(_cats)} categories, "
           f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
+
+    # READ ONLY, for exactly the reason above it. The Nifty 500 screen is ~11
+    # minutes of sequential Yahoo fetches — two frames plus a quote per symbol —
+    # so building it here would repeat the fund screen's mistake with a bigger
+    # number. stock_screen.yml owns its clock.
+    stock_screen = get_stock_screen()
+    _cov = stock_screen.get("coverage") or {}
+    print(f"[generate] Stock screen (cached): {stock_screen.get('count', 0)} companies, "
+          f"statements for {_cov.get('statements', 0)}, ROCE for {_cov.get('roce', 0)}"
+          f"{' (previous build)' if stock_screen.get('is_fallback') else ''}")
 
     # Picks are keyed by ISO week. Nothing warms that cache on a static build —
     # under Flask a startup thread did it — so every Monday the section
@@ -319,6 +330,7 @@ def generate() -> None:
         # Weekly, cached. build_if_missing so a fresh week actually builds it;
         # a failure returns {} and the section hides rather than failing the build.
         fund_screen=fund_screen,
+        stock_screen=stock_screen,
         podcasts=podcasts,
         smart_reads=smart_reads,
         top5_week=top5_week,
@@ -398,7 +410,8 @@ def generate() -> None:
         ctx = dict(base)
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
-        ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads)))
+        ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
+                                                        stock_screen)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
@@ -419,6 +432,22 @@ def generate() -> None:
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
     )
+    # screen.json — the ~500 rows #stocks fetches lazily. Written compact, not
+    # indented: it is machine-read only and indent=2 adds ~400KB of whitespace.
+    #
+    # THREE places or it 404s: written here, named in .vercelignore, and copied
+    # in vercel-news/build.js. today.json had two of the three and silently
+    # served nothing for days.
+    if stock_screen.get("rows"):
+        (out_dir / "screen.json").write_text(
+            json.dumps(stock_screen, default=str, separators=(",", ":")), encoding="utf-8")
+        _sz = (out_dir / "screen.json").stat().st_size / 1024
+        print(f"[generate] ✅ screen.json ({len(stock_screen['rows'])} companies, {_sz:.0f}KB)")
+    else:
+        # Leave any previous file in place. A build with an empty cache should
+        # not delete a working screen — the section hides itself via
+        # empty_sections either way, and the next weekly run restores it.
+        print("[generate] ⚠ screen.json not written — stock screen cache is empty")
     # Social card, rendered from the same numbers the hero shows. Best-effort:
     # a failed card must never fail the daily build.
     try:

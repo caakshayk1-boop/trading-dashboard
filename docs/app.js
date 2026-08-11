@@ -3431,6 +3431,612 @@ var TV_ALIASES = (function () {
     function loadNews(){ get('/news?limit=14').then(paintNews); }
   })();
 
+  /* ══════════ stock screen ══════════
+     The browser half of #stocks. Sorting, filtering and the detail sheet for
+     ~500 companies out of /screen.json.
+
+     Three decisions worth knowing before editing:
+
+       1. The payload is fetched LAZILY, on the section scrolling into view.
+          It is ~300KB gzipped, which is more than the rest of this page put
+          together, and a reader who never scrolls to the screen should never
+          pay for it. The server-rendered top 25 is what they see until then,
+          so the section is never blank while it waits.
+
+       2. Rows arrive with null keys STRIPPED (stock_screen._compact). A
+          missing key and a null key mean the same thing here — "the accounts
+          do not support this number" — so every read goes through num()
+          rather than touching r.roce directly. Reading it directly is how a
+          bank with no ROCE ends up sorted as if it had 0%.
+
+       3. It reuses the existing #sheet element rather than adding a second
+          modal. That element lives outside <main> for stacking reasons and
+          already has Escape, backdrop-click and popstate wired to it; a second
+          modal would have to relearn all three. */
+  (function(){
+    var sec = document.getElementById('stocks');
+    if (!sec) return;
+    var body = document.getElementById('scrBody');
+    var table = document.getElementById('scrTable');
+    if (!body || !table) return;
+
+    var PAGE = 60;
+    var ROWS = [], view = [], shown = 0;
+    var sortKey = 'comp', sortDir = -1, preset = 'all', loaded = false, loading = false;
+
+    function el(id){ return document.getElementById(id); }
+
+    /* A stripped key and a null one are the same fact. Everything below reads
+       numbers through here so "missing" can never sort as zero. */
+    function num(r, k){
+      var v = r[k];
+      return (v === null || v === undefined || v === '') ? null : v;
+    }
+    function fmt(v, suf){
+      return (v === null || v === undefined) ? '—' : (v + (suf || ''));
+    }
+    function esc(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+      });
+    }
+    function signCls(v){ return v === null ? '' : (v > 0 ? 'up' : v < 0 ? 'dn' : ''); }
+
+    /* Score cell. The bar width IS the score, so a column can be ranked
+       without reading it. `thin` marks a score built from a minority of its
+       inputs — see the dotted underline in the CSS. */
+    function scoreCell(v, conf){
+      if (v === null || v === undefined) return '<td class="num">—</td>';
+      var band = v >= 70 ? 's-hi' : v >= 45 ? 's-md' : 's-lo';
+      var thin = (conf !== null && conf !== undefined && conf < 0.6) ? ' thin' : '';
+      var title = thin ? ' title="Computed from a minority of its inputs — '
+                       + Math.round((conf || 0) * 100) + '% present"' : '';
+      return '<td class="num"><span class="sc ' + band + thin + '"' + title + '>'
+           + '<i style="width:' + Math.max(2, Math.min(100, v)) + '%"></i>'
+           + '<b>' + v + '</b></span></td>';
+    }
+
+    function tagCls(t){
+      if (t.indexOf('BREAKOUT') >= 0) return 't-brk';
+      if (t === 'VOLUME') return 't-vol';
+      if (t === 'OVERSOLD') return 't-os';
+      if (t === 'RS LEADER') return 't-rs';
+      return '';
+    }
+
+    function rowHtml(r){
+      var tags = (r.setup && r.setup.tags) || [];
+      var tagHtml = tags.length
+        ? '<div class="scr-tags">' + tags.slice(0, 3).map(function(t){
+            return '<span class="scr-tag ' + tagCls(t) + '">' + esc(t) + '</span>';
+          }).join('') + '</div>'
+        : '<span class="mono-dim">—</span>';
+      var r1y = num(r, 'r1y');
+      return '<tr data-sym="' + esc(r.sym) + '" tabindex="0">'
+        + '<td><strong class="sym">' + esc(r.sym) + '</strong><br>'
+        + '<span class="mono-dim">' + esc((r.name || '').slice(0, 34)) + '</span></td>'
+        + '<td class="num">' + fmt(num(r, 'price')) + '</td>'
+        + '<td class="num ' + signCls(r1y) + '">' + fmt(r1y, '%') + '</td>'
+        + scoreCell(num(r, 'comp'), null)
+        + scoreCell(num(r, 'q'), num(r, 'q_conf'))
+        + scoreCell(num(r, 'g'), num(r, 'g_conf'))
+        + scoreCell(num(r, 'v'), num(r, 'v_conf'))
+        + scoreCell(num(r, 'tech'), num(r, 'tech_conf'))
+        + '<td class="num">' + fmt(num(r, 'roce'), '%') + '</td>'
+        + '<td class="num">' + fmt(num(r, 'roe'), '%') + '</td>'
+        + '<td class="num ' + signCls(num(r, 'rev_cagr')) + '">' + fmt(num(r, 'rev_cagr'), '%') + '</td>'
+        + '<td class="num">' + fmt(num(r, 'de')) + '</td>'
+        + '<td class="num">' + fmt(num(r, 'pe')) + '</td>'
+        + '<td class="num">' + fmt(num(r, 'rsi')) + '</td>'
+        + '<td>' + tagHtml + '</td>'
+        + '</tr>';
+    }
+
+    /* ── presets ──
+       Each is a plain predicate over published numbers, named after what it
+       actually selects rather than after a promise. "Cheap & good" is quality
+       above 60 AND cheaper than 60% of its industry — not "undervalued", which
+       would be a claim this cannot make. */
+    var PRESETS = {
+      all:          function(){ return true; },
+      compounders:  function(r){ return num(r, 'q') >= 65 && num(r, 'rev_cagr') >= 10; },
+      cheapquality: function(r){ return num(r, 'q') >= 60 && num(r, 'pe_pctile') >= 60; },
+      growth:       function(r){ return num(r, 'rev_cagr') >= 20; },
+      breakout:     function(r){ return r.brk20 === true || r.brk50 === true || r.brk52w === true; },
+      rs:           function(r){ return num(r, 'rs1y') >= 15; },
+      oversold:     function(r){ var x = num(r, 'rsi'); return x !== null && x < 35; },
+      // `d >= 0` matters: a NEGATIVE D/E means equity has gone negative, which
+      // is insolvency, not a clean balance sheet. Vodafone Idea listed under
+      // "Debt-free" before this guard.
+      debtfree:     function(r){ var d = num(r, 'de'); return d !== null && d >= 0 && d <= 0.1; }
+    };
+
+    function capBand(mc){
+      if (mc === null) return null;
+      return mc > 50000 ? 'l' : mc >= 15000 ? 'm' : 's';
+    }
+
+    function passes(r){
+      if (!PRESETS[preset](r)) return false;
+      var q = (el('scrSearch').value || '').trim().toLowerCase();
+      if (q && (r.sym + ' ' + (r.name || '') + ' ' + (r.isin || '')).toLowerCase().indexOf(q) < 0) return false;
+      var ind = el('scrSector').value;
+      if (ind && r.ind !== ind) return false;
+      var cap = el('scrCap').value;
+      if (cap && capBand(num(r, 'mcap_cr')) !== cap) return false;
+      return true;
+    }
+
+    /* Nulls sort to the bottom in BOTH directions. A company with no ROCE has
+       not got a low ROCE, and letting it float to the top of an ascending sort
+       would put every bank above every business that reports one. */
+    function cmp(a, b){
+      var x = num(a, sortKey), y = num(b, sortKey);
+      if (x === null && y === null) return a.sym < b.sym ? -1 : 1;
+      if (x === null) return 1;
+      if (y === null) return -1;
+      if (typeof x === 'string' || typeof y === 'string'){
+        return String(x) < String(y) ? -sortDir : String(x) > String(y) ? sortDir : 0;
+      }
+      return (x - y) * sortDir;
+    }
+
+    function paint(append){
+      if (!append){
+        view = ROWS.filter(passes).sort(cmp);
+        shown = 0;
+        body.innerHTML = '';
+      }
+      var slice = view.slice(shown, shown + PAGE);
+      if (!view.length){
+        body.innerHTML = '<tr><td colspan="15" class="scr-empty">'
+          + 'No company in the screen matches that. Try clearing a filter.</td></tr>';
+      } else {
+        body.insertAdjacentHTML('beforeend', slice.map(rowHtml).join(''));
+      }
+      shown += slice.length;
+      var more = el('scrMore');
+      if (more){
+        more.hidden = shown >= view.length;
+        more.textContent = 'Show more — ' + (view.length - shown) + ' left';
+      }
+      var c = el('scrCount');
+      if (c){
+        c.textContent = view.length === ROWS.length
+          ? ROWS.length + ' companies'
+          : view.length + ' of ' + ROWS.length;
+      }
+      syncSortHeaders();
+    }
+
+    function syncSortHeaders(){
+      var ths = table.querySelectorAll('th.sortable');
+      for (var i = 0; i < ths.length; i++){
+        var th = ths[i];
+        if (th.dataset.k === sortKey){
+          th.setAttribute('aria-sort', sortDir < 0 ? 'descending' : 'ascending');
+        } else {
+          th.removeAttribute('aria-sort');
+        }
+      }
+    }
+
+    /* ── detail sheet ── */
+    function yearsTable(r){
+      var ys = r.years || [];
+      if (!ys.length){
+        return '<p class="mono-dim">No annual statements published for this symbol '
+             + 'by the data source — the technical columns are all there is.</p>';
+      }
+      var head = ['', 'Revenue ₹cr', 'EBITDA ₹cr', 'PAT ₹cr', 'EPS', 'ROCE', 'ROE', 'EBIT margin', 'D/E'];
+      var h = '<div class="tw"><table class="t" style="min-width:620px"><thead><tr>'
+            + head.map(function(t, i){
+                return '<th scope="col"' + (i ? ' class="num"' : '') + '>' + t + '</th>';
+              }).join('') + '</tr></thead><tbody>';
+      // Oldest first here — a history reads left to right, and the CAGR the
+      // score uses runs from the first column to the last.
+      var ordered = ys.slice().reverse();
+      h += ordered.map(function(y){
+        return '<tr><td><strong>' + esc(y.fy) + '</strong><br>'
+          + '<span class="mono-dim">' + esc(y.end) + '</span></td>'
+          + '<td class="num">' + fmt(y.rev_cr) + '</td>'
+          + '<td class="num">' + fmt(y.ebitda_cr) + '</td>'
+          + '<td class="num">' + fmt(y.pat_cr) + '</td>'
+          + '<td class="num">' + fmt(y.eps) + '</td>'
+          + '<td class="num">' + fmt(y.roce, '%') + '</td>'
+          + '<td class="num">' + fmt(y.roe, '%') + '</td>'
+          + '<td class="num">' + fmt(y.ebit_margin, '%') + '</td>'
+          + '<td class="num">' + fmt(y.de) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+      return h;
+    }
+
+    function scoreBlock(r){
+      var defs = [
+        ['Composite', num(r, 'comp'), null],
+        ['Quality', num(r, 'q'), num(r, 'q_conf')],
+        ['Growth', num(r, 'g'), num(r, 'g_conf')],
+        ['Value', num(r, 'v'), num(r, 'v_conf')],
+        ['Technical', num(r, 'tech'), num(r, 'tech_conf')]
+      ];
+      return '<div class="sd-scores">' + defs.map(function(d){
+        var v = d[1], conf = d[2];
+        return '<div class="sd-sc"><span class="k">' + d[0] + '</span>'
+          + '<span class="v">' + (v === null ? '—' : v) + '</span>'
+          + '<span class="bar"><i style="width:' + (v === null ? 0 : Math.min(100, v)) + '%"></i></span>'
+          + (conf !== null && conf !== undefined && conf < 1
+              ? '<span class="conf">' + Math.round(conf * 100) + '% of inputs present</span>'
+              : '')
+          + '</div>';
+      }).join('') + '</div>';
+    }
+
+    function swotBlock(r){
+      var sw = r.swot || {};
+      var map = [['s', 'Strengths', 'q-s'], ['w', 'Weaknesses', 'q-w'],
+                 ['o', 'Opportunities', 'q-o'], ['t', 'Risks', 'q-t']];
+      var any = false;
+      var h = map.map(function(m){
+        var items = sw[m[0]] || [];
+        if (!items.length) return '';
+        any = true;
+        return '<div class="sd-q ' + m[2] + '"><span>' + m[1] + '</span><ul>'
+          + items.map(function(i){
+              return '<li>' + esc(i.t) + (i.k ? '<em>' + esc(i.k) + '</em>' : '') + '</li>';
+            }).join('') + '</ul></div>';
+      }).join('');
+      if (!any) return '';
+      return '<div class="sd-blk"><h4>What the numbers say</h4>'
+           + '<div class="sd-swot">' + h + '</div></div>';
+    }
+
+    /* Every ratio beside its industry median. 18% ROCE is excellent in cement
+       and mediocre in software, and without the peer column the reader has no
+       way to know which they are looking at. `better` is direction-aware:
+       lower is better for debt and for PE, higher for everything else. */
+    function peerBlock(r){
+      var m = r.ind_med;
+      if (!m) return '';
+      var rows = [
+        ['ROCE',         num(r, 'roce'),        m.roce,        '%', true],
+        ['ROE',          num(r, 'roe'),         m.roe,         '%', true],
+        ['EBIT margin',  num(r, 'ebit_margin'), m.ebit_margin, '%', true],
+        ['Revenue CAGR', num(r, 'rev_cagr'),    m.rev_cagr,    '%', true],
+        ['Debt/equity',  num(r, 'de'),          m.de,          '',  false],
+        ['PE',           num(r, 'pe'),          m.pe,          '',  false]
+      ].filter(function(x){ return x[1] !== null && x[2] !== null && x[2] !== undefined; });
+      if (!rows.length) return '';
+      return '<div class="sd-blk"><h4>Against its industry</h4><div class="sd-peer">'
+        + '<span class="h">Ratio</span><span class="h" style="text-align:right">This</span>'
+        + '<span class="h" style="text-align:right">' + esc(m.n) + ' peers</span>'
+        + rows.map(function(x){
+            var mine = x[1], med = x[2], higherBetter = x[4];
+            var cls = mine === med ? '' :
+              ((mine > med) === higherBetter ? ' better' : ' worse');
+            return '<span class="k">' + x[0] + '</span>'
+                 + '<span class="v' + cls + '">' + mine + x[3] + '</span>'
+                 + '<span class="m">' + med + x[3] + '</span>';
+          }).join('')
+        + '</div><p class="mono-dim" style="margin-top:9px;font-size:10.5px">'
+        + 'Median of ' + esc(m.n) + ' ' + esc(r.ind || 'industry') + ' companies in this screen. '
+        + 'Green means better than the median on that measure — lower for debt and PE, '
+        + 'higher for the rest.</p></div>';
+    }
+
+    function aiBlock(r){
+      if (!r.ai_view) return '';
+      return '<div class="sd-blk"><h4>Analyst view</h4><div class="sd-ai">'
+        + '<span class="tag">AI-GENERATED FROM THE NUMBERS ABOVE</span>'
+        + '<p>' + esc(r.ai_view) + '</p>'
+        + '<span class="fine">Written by a language model from this page’s own computed '
+        + 'figures and rejected automatically if it introduced a number that was not among '
+        + 'them. Commentary, not advice — the ratios and the SWOT above are the evidence.</span>'
+        + '</div></div>';
+    }
+
+    function ratioLine(r){
+      var bits = [];
+      function push(label, v, suf){
+        if (v !== null && v !== undefined) bits.push(label + ' ' + v + (suf || ''));
+      }
+      push('PE', num(r, 'pe'));
+      push('P/B', num(r, 'pb'));
+      push('Div', num(r, 'div_yield'), '%');
+      push('Interest cover', num(r, 'icover'), 'x');
+      push('Current ratio', num(r, 'curr'));
+      push('Eff. tax', num(r, 'tax'), '%');
+      push('Net margin', num(r, 'net_margin'), '%');
+      push('Insider held', num(r, 'insiders'), '%');
+      push('Institutions', num(r, 'instis'), '%');
+      return bits.length
+        ? '<div class="sd-blk"><h4>Other ratios</h4><p class="mono-dim" style="line-height:1.9">'
+          + bits.map(esc).join(' &nbsp;·&nbsp; ') + '</p></div>'
+        : '';
+    }
+
+    function techBlock(r){
+      var bits = [];
+      function push(label, v, suf){
+        if (v !== null && v !== undefined) bits.push(label + ' ' + v + (suf || ''));
+      }
+      push('RSI(14)', num(r, 'rsi'));
+      push('SMA20', num(r, 'sma20'));
+      push('SMA50', num(r, 'sma50'));
+      push('SMA200', num(r, 'sma200'));
+      push('MACD hist', num(r, 'macd_h'));
+      push('ATR', num(r, 'atr_pct'), '% of price');
+      push('Vol vs 20d', num(r, 'vol_spike'), 'x');
+      push('52w high', num(r, 'high52'));
+      push('52w low', num(r, 'low52'));
+      push('From high', num(r, 'from_high'), '%');
+      push('Turnover', num(r, 'turnover_cr'), 'cr/day');
+      var rets = [['1W', 'r1w'], ['1M', 'r1m'], ['3M', 'r3m'], ['6M', 'r6m'],
+                  ['1Y', 'r1y'], ['3Y', 'r3y']].filter(function(p){
+        return num(r, p[1]) !== null;
+      });
+      var retHtml = rets.length
+        ? '<p style="margin-top:9px">' + rets.map(function(p){
+            var v = num(r, p[1]);
+            return '<span class="' + signCls(v) + '" style="font-family:var(--mono);font-size:12px">'
+                 + p[0] + ' ' + v + '%</span>';
+          }).join(' &nbsp;·&nbsp; ') + '</p>'
+        : '';
+      var rs = [];
+      if (num(r, 'rs3m') !== null) rs.push('3M ' + num(r, 'rs3m') + '%');
+      if (num(r, 'rs1y') !== null) rs.push('1Y ' + num(r, 'rs1y') + '%');
+      return '<div class="sd-blk"><h4>Chart</h4>'
+        + '<p class="mono-dim" style="line-height:1.9">' + bits.map(esc).join(' &nbsp;·&nbsp; ') + '</p>'
+        + retHtml
+        + (rs.length ? '<p class="mono-dim" style="margin-top:7px">Excess return vs Nifty — '
+                     + esc(rs.join(' · ')) + '</p>' : '')
+        + '</div>';
+    }
+
+    function sheetFor(r){
+      var tv = 'https://www.tradingview.com/chart/?symbol=NSE%3A' + encodeURIComponent(r.sym);
+      var sub = [];
+      if (num(r, 'price') !== null) sub.push('₹' + num(r, 'price'));
+      if (r.ind) sub.push(r.ind);
+      if (num(r, 'mcap_cr') !== null) sub.push('₹' + Math.round(num(r, 'mcap_cr')).toLocaleString('en-IN') + 'cr');
+      if (r.fy) sub.push('accounts to ' + r.fy);
+      if (r.roce_basis) sub.push('ROCE on ' + r.roce_basis);
+      if (r.last_date) sub.push('priced ' + r.last_date);
+
+      var horizons = (r.setup && r.setup.horizons) || [];
+      var tags = (r.setup && r.setup.tags) || [];
+
+      return '<div class="sd-h"><h3>' + esc(r.sym) + '</h3>'
+        + '<span class="co">' + esc(r.name || '') + '</span></div>'
+        + '<div class="sd-sub">' + sub.map(function(s){ return esc(s); }).join('<span>·</span>') + '</div>'
+        + (tags.length ? '<div class="scr-tags" style="margin-bottom:16px">'
+            + tags.map(function(t){ return '<span class="scr-tag ' + tagCls(t) + '">' + esc(t) + '</span>'; }).join('')
+            + (horizons.length ? '<span class="scr-tag">EVIDENCE: ' + esc(horizons.join(', ')) + '</span>' : '')
+            + '</div>' : '')
+        + scoreBlock(r)
+        + (r.business ? '<div class="sd-blk"><h4>The business</h4><p>' + esc(r.business) + '</p>'
+            + (r.website ? '<p class="mono-dim" style="margin-top:7px"><a href="' + esc(r.website)
+              + '" target="_blank" rel="noopener">' + esc(r.website) + '</a></p>' : '')
+            + '</div>' : '')
+        + '<div class="sd-blk"><h4>Reported, last ' + ((r.years || []).length) + ' fiscal years</h4>'
+        + yearsTable(r)
+        + (r.shares_changed ? '<p class="mono-dim" style="margin-top:9px">⚠ The share count moved '
+            + 'structurally inside this history, so the EPS column is not comparable across it and '
+            + 'no per-share growth rate is published for this company.</p>' : '')
+        + '</div>'
+        + swotBlock(r)
+        + aiBlock(r)
+        + peerBlock(r)
+        + ((r.updates || []).length ? '<div class="sd-blk"><h4>What changed</h4><ul class="sd-upd">'
+            + r.updates.map(function(u){
+                return '<li class="k-' + esc(u.k || 'info') + '">' + esc(u.t) + '</li>';
+              }).join('') + '</ul></div>' : '')
+        + ((r.news || []).length ? '<div class="sd-blk"><h4>Headlines</h4><ul class="sd-news">'
+            + r.news.map(function(n){
+                return '<li>' + (n.u ? '<a href="' + esc(n.u) + '" target="_blank" rel="noopener">' : '<span>')
+                  + esc(n.t) + (n.u ? '</a>' : '</span>')
+                  + '<span class="m">' + esc([n.src, n.p].filter(Boolean).join(' · ')) + '</span></li>';
+              }).join('') + '</ul></div>' : '')
+        + techBlock(r)
+        + ratioLine(r)
+        + '<div class="sd-blk"><h4>Provenance</h4><p class="mono-dim" style="line-height:1.8">'
+        + 'Ratios computed from the annual income statement and balance sheet as published by the '
+        + 'data source. Scores are arithmetic on those numbers — see the note above the table for '
+        + 'the weights. Nothing here is a forecast, a target or advice.'
+        + (num(r, 'peers') ? ' Valuation percentile is against ' + num(r, 'peers') + ' '
+            + esc(r.val_scope || 'industry') + ' peers.' : '')
+        + '</p><p style="margin-top:10px"><a class="slink" href="' + tv + '" target="_blank" '
+        + 'rel="noopener">Chart on TradingView ↗</a></p></div>';
+    }
+
+    function openStock(sym){
+      var r = null;
+      for (var i = 0; i < ROWS.length; i++){
+        if (ROWS[i].sym === sym){ r = ROWS[i]; break; }
+      }
+      var box = document.getElementById('sheet');
+      var sbody = document.getElementById('sheetBody');
+      if (!r || !box || !sbody) return;
+      sbody.innerHTML = sheetFor(r);
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+      try { history.pushState({ stock: sym }, '', '?stock=' + encodeURIComponent(sym)); } catch(e){}
+    }
+
+    /* This block closes its OWN sheet.
+       The #sheet element is shared with the ledger's trade sheet, and that one
+       already wires ✕, backdrop, Escape and popstate — but it wires them inside
+       wireSheet(), which only runs once the live /api layer has answered. On a
+       static host, or during an API outage, none of those listeners exist. The
+       screen's sheet opens regardless (its data is a flat file), so depending on
+       them meant the panel opened with body scroll locked and NO way out: no
+       Escape, no backdrop, and not even the ✕, which is wired there too.
+       Registering here is idempotent in practice — both handlers just set
+       hidden = true. */
+    function closeStock(push){
+      var box = document.getElementById('sheet');
+      if (!box || box.hidden) return;
+      box.hidden = true;
+      document.body.style.overflow = '';
+      if (push !== false){
+        try { history.pushState({}, '', location.pathname); } catch(e){}
+      }
+    }
+
+    function wireSheetClose(){
+      var box = document.getElementById('sheet');
+      if (!box) return;
+      var x = document.getElementById('sheetX');
+      if (x) x.addEventListener('click', function(){ closeStock(); });
+      box.addEventListener('click', function(ev){
+        if (ev.target === box) closeStock();          // backdrop
+      });
+      document.addEventListener('keydown', function(ev){
+        if (ev.key === 'Escape') closeStock();
+      });
+      window.addEventListener('popstate', function(){ closeStock(false); });
+    }
+
+    /* ── wiring ── */
+    function debounce(fn, ms){
+      var t;
+      return function(){
+        clearTimeout(t);
+        t = setTimeout(fn, ms);
+      };
+    }
+
+    function fillSectors(){
+      var sel = el('scrSector');
+      if (!sel) return;
+      var seen = {};
+      var inds = [];
+      for (var i = 0; i < ROWS.length; i++){
+        var k = ROWS[i].ind;
+        if (k && !seen[k]){ seen[k] = 1; inds.push(k); }
+      }
+      inds.sort();
+      sel.insertAdjacentHTML('beforeend', inds.map(function(k){
+        return '<option value="' + esc(k) + '">' + esc(k) + '</option>';
+      }).join(''));
+    }
+
+    function wire(){
+      var rerender = debounce(function(){ paint(false); }, 180);
+      el('scrSearch').addEventListener('input', rerender);
+      el('scrSector').addEventListener('change', function(){ paint(false); });
+      el('scrCap').addEventListener('change', function(){ paint(false); });
+      el('scrSort').addEventListener('change', function(){
+        sortKey = this.value; sortDir = -1; paint(false);
+      });
+      el('scrReset').addEventListener('click', function(){
+        el('scrSearch').value = ''; el('scrSector').value = ''; el('scrCap').value = '';
+        el('scrSort').value = 'comp';
+        sortKey = 'comp'; sortDir = -1; preset = 'all';
+        var bs = document.querySelectorAll('#scrPresets .fbtn');
+        for (var i = 0; i < bs.length; i++){
+          bs[i].classList.toggle('on', bs[i].dataset.preset === 'all');
+        }
+        paint(false);
+      });
+      var more = el('scrMore');
+      if (more) more.addEventListener('click', function(){ paint(true); });
+
+      document.getElementById('scrPresets').addEventListener('click', function(ev){
+        var b = ev.target.closest ? ev.target.closest('.fbtn') : null;
+        if (!b || !b.dataset.preset) return;
+        preset = b.dataset.preset;
+        var bs = this.querySelectorAll('.fbtn');
+        for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i] === b);
+        paint(false);
+      });
+
+      table.addEventListener('click', function(ev){
+        var th = ev.target.closest ? ev.target.closest('th.sortable') : null;
+        if (th && th.dataset.k){
+          if (sortKey === th.dataset.k){
+            sortDir = -sortDir;
+          } else {
+            sortKey = th.dataset.k;
+            // Names read A→Z, numbers read best-first. Defaulting everything
+            // to descending puts Z at the top of a company column.
+            sortDir = th.dataset.k === 'sym' ? 1 : -1;
+          }
+          var s = el('scrSort');
+          if (s) s.value = sortKey;
+          paint(false);
+          return;
+        }
+        var tr = ev.target.closest ? ev.target.closest('tr[data-sym]') : null;
+        if (tr && tr.dataset.sym && !(ev.target.closest && ev.target.closest('a'))){
+          openStock(tr.dataset.sym);
+        }
+      });
+      // Keyboard parity: the rows are focusable, so Enter must open them.
+      table.addEventListener('keydown', function(ev){
+        if (ev.key !== 'Enter') return;
+        var tr = ev.target.closest ? ev.target.closest('tr[data-sym]') : null;
+        if (tr && tr.dataset.sym) openStock(tr.dataset.sym);
+      });
+    }
+
+    function load(){
+      if (loaded || loading) return;
+      loading = true;
+      fetch('/screen.json', { cache: 'default' })
+        .then(function(res){
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function(j){
+          if (!j || !j.rows || !j.rows.length) throw new Error('empty payload');
+          ROWS = j.rows;
+          loaded = true;
+          loading = false;
+          fillSectors();
+          wire();
+          paint(false);
+          // Deep link support, once the rows it needs are actually here.
+          try {
+            var q = new URLSearchParams(location.search).get('stock');
+            if (q) openStock(q.toUpperCase());
+          } catch(e){}
+        })
+        .catch(function(err){
+          loading = false;
+          // The server-rendered top 25 stays on screen and stays readable. Say
+          // what is missing rather than blanking a section that still works.
+          var c = el('scrCount');
+          if (c) c.textContent = 'showing the top 25 — full screen unavailable';
+          var ctl = el('scrCtl');
+          if (ctl) ctl.style.display = 'none';
+          var pre = el('scrPresets');
+          if (pre) pre.style.display = 'none';
+          console.warn('screen.json unavailable, keeping the server-rendered rows:', err);
+        });
+    }
+
+    // Wired at init, not inside the fetch callback: the close affordances must
+    // exist before anything can open the sheet, and they cost nothing.
+    wireSheetClose();
+
+    // Lazy: the payload is bigger than the rest of the page, so it waits until
+    // the section is close to the viewport. rootMargin starts the fetch a
+    // screen early so the rows are usually there before the reader arrives.
+    if ('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        for (var i = 0; i < entries.length; i++){
+          if (entries[i].isIntersecting){ io.disconnect(); load(); return; }
+        }
+      }, { rootMargin: '600px 0px' });
+      io.observe(sec);
+    } else {
+      load();
+    }
+    // A reader who lands on ?stock=… or #stocks did not scroll, so nothing
+    // above would have triggered the fetch.
+    if (location.hash === '#stocks' || /[?&]stock=/.test(location.search)) load();
+  })();
+
   /* No whole-page reload. The clock ticks, markets and news refresh on their
      own timers, and the ledger sections pull on demand — reloading every five
      minutes would only throw away scroll position and any game in progress. */

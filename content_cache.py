@@ -88,15 +88,95 @@ NEWS_FEEDS = [
 # same relevance filter — opinion desks carry film reviews and language
 # columns next to the money writing ("Gen ji, and the great phonological
 # divide" was the top item on ET Opinion the day this was built).
+# (source, url, category). The category drives BOTH the relevance gate applied
+# to the feed and the mix at the end.
+#
+# This section used to be finance-only — seven money feeds behind one finance
+# token gate — which made it a second markets section on a page that already
+# has several. The ask was to read in order to get better, not only richer, so
+# the money feeds are now one category of five and cannot take more than their
+# share of the slots. Nothing about the finance path changed; it was joined.
 SMART_READ_FEEDS = [
-    ("Economic Times",   "https://economictimes.indiatimes.com/wealth/rssfeeds/837555174.cms"),
-    ("ET Opinion",       "https://economictimes.indiatimes.com/opinion/rssfeeds/897228639.cms"),
-    ("Livemint",         "https://www.livemint.com/rss/money"),
-    ("Livemint Opinion", "https://www.livemint.com/rss/opinion"),
-    ("Business Standard", "https://www.business-standard.com/rss/opinion-105.rss"),
-    ("Zerodha",          "https://zerodha.com/z-connect/feed"),
-    ("The Economist",    "https://www.economist.com/finance-and-economics/rss.xml"),
+    # ── money ──
+    ("Economic Times",    "https://economictimes.indiatimes.com/wealth/rssfeeds/837555174.cms", "money"),
+    ("ET Opinion",        "https://economictimes.indiatimes.com/opinion/rssfeeds/897228639.cms", "money"),
+    ("Livemint",          "https://www.livemint.com/rss/money", "money"),
+    ("Livemint Opinion",  "https://www.livemint.com/rss/opinion", "money"),
+    ("Business Standard", "https://www.business-standard.com/rss/opinion-105.rss", "money"),
+    ("Zerodha",           "https://zerodha.com/z-connect/feed", "money"),
+    ("The Economist",     "https://www.economist.com/finance-and-economics/rss.xml", "money"),
+    # ── habits, discipline, getting better at things ──
+    ("Farnam Street",     "https://fs.blog/feed/", "habits"),
+    ("James Clear",       "https://jamesclear.com/feed", "habits"),
+    ("Ness Labs",         "https://nesslabs.com/feed", "habits"),
+    ("Scott Young",       "https://www.scotthyoung.com/blog/feed/", "habits"),
+    # ── health and longevity ──
+    ("Peter Attia",       "https://peterattiamd.com/feed/", "health"),
+    ("Harvard Health",    "https://www.health.harvard.edu/blog/feed", "health"),
+    ("NYT Well",          "https://rss.nytimes.com/services/xml/rss/nyt/Well.xml", "health"),
+    # ── mind, relationships, how to be a better person ──
+    ("Psyche",            "https://psyche.co/feed", "mind"),
+    ("Greater Good",      "https://greatergood.berkeley.edu/feeds/entries.rss", "mind"),
+    ("Mark Manson",       "https://markmanson.net/feed", "mind"),
+    # ── thinking, philosophy, life lessons ──
+    ("Aeon",              "https://aeon.co/feed.rss", "ideas"),
+    ("Paul Graham",       "http://www.aaronsw.com/2002/feeds/pgessays.rss", "ideas"),
+    ("The Marginalian",   "https://www.themarginalian.org/feed/", "ideas"),
 ]
+
+# One token per category, same blunt-instrument principle as FINANCE_TOKENS: the
+# job is to keep a product launch off a health card, not to grade the writing.
+CATEGORY_TOKENS = {
+    "habits": (
+        "habit", "routine", "discipline", "focus", "attention", "procrastinat",
+        "productiv", "consistency", "practice", "learn", "learning", "skill",
+        "mastery", "improve", "better", "goal", "system", "decision", "thinking",
+        "mental model", "clarity", "deep work", "distraction", "willpower",
+        "motivation", "identity", "compound", "small step", "process",
+    ),
+    "health": (
+        "health", "sleep", "exercise", "training", "strength", "cardio", "vo2",
+        "nutrition", "diet", "protein", "fasting", "longevity", "lifespan",
+        "muscle", "metabolic", "cholesterol", "blood", "heart", "brain",
+        "stress", "cortisol", "walking", "steps", "weight", "fitness",
+        "doctor", "medicine", "disease", "risk", "prevent", "recovery",
+    ),
+    "mind": (
+        "emotion", "anxiety", "anger", "grief", "loneliness", "relationship",
+        "friendship", "marriage", "parent", "child", "empathy", "kindness",
+        "compassion", "gratitude", "generous", "help", "helping", "trust",
+        "forgive", "conflict", "boundaries", "self", "identity", "therapy",
+        "psychology", "mental health", "happiness", "meaning", "purpose",
+        "regret", "shame", "confidence", "listen", "conversation",
+    ),
+    # Narrower than it first was. "society", "culture", "technology", "future"
+    # and "life" are broad enough to match essentially any general-interest
+    # essay, and they did: an Aeon piece on the sexual revolution qualified for
+    # a section whose brief is "read in order to get better". The tokens left
+    # here select for philosophy, thinking and craft rather than for commentary.
+    "ideas": (
+        "philosoph", "ethic", "moral", "wisdom", "virtue", "stoic", "buddhis",
+        "meaning", "purpose", "character", "integrity", "humility",
+        "argument", "reason", "logic", "fallacy", "bias", "judgment",
+        "decision", "mental model", "first principles", "curiosity",
+        "knowledge", "understand", "learn", "craft", "mastery", "discipline",
+        "attention", "time", "mortality", "regret", "legacy",
+    ),
+}
+
+# Off-brief for a self-improvement section regardless of how well written the
+# piece is. Deliberately short and about SUBJECT, not viewpoint — this is not a
+# quality filter, it is a "does this belong under Smart Reads" filter, and the
+# section sits on a personal site under a real name.
+SMART_READ_BLOCK = (
+    "sexual", "sex life", "porn", "dating app", "celebrity", "box office",
+    "royal family", "horoscope", "astrolog", "weight loss pill", "miracle cure",
+)
+
+# How many slots each category may take. Money is capped at three of nine
+# because on raw recency it would take all nine — those feeds publish dozens of
+# items a day and the reflective ones publish weekly.
+CATEGORY_SLOTS = {"money": 3, "habits": 2, "health": 2, "mind": 1, "ideas": 1}
 
 # One word from this list has to appear in the headline or the summary. It is a
 # blunt instrument and deliberately so — the job is to keep a movie review off
@@ -339,11 +419,31 @@ def _fetch_news() -> list[dict]:
     return out
 
 
+def _is_relevant(cat: str, title: str, summary: str) -> bool:
+    """Does this entry belong to the category its feed was listed under?
+
+    Money keeps its own two-token bar — those are general opinion desks that run
+    film and language columns beside the money writing. The other four are
+    single-subject publications, so one token is the right bar there: raising it
+    to two threw away good pieces for using a synonym this list happens not to
+    carry, which is a worse failure than an occasional off-topic card.
+    """
+    blob = f"{title} {summary}".lower()
+    if any(b in blob for b in SMART_READ_BLOCK):
+        return False
+    if cat == "money":
+        return _is_finance(title, summary, need=2)
+    toks = CATEGORY_TOKENS.get(cat)
+    if not toks:
+        return True
+    return any(t in blob for t in toks)
+
+
 def _fetch_smart_reads() -> list[dict]:
-    """Longer analytical pieces. Same shape as news, plus a `date` field."""
+    """Longer analytical pieces. Same shape as news, plus `date` and `cat`."""
     import re
     reads = []
-    for source, url in SMART_READ_FEEDS:
+    for source, url, cat in SMART_READ_FEEDS:
         try:
             feed = feedparser.parse(url, agent=_UA)
             for entry in feed.entries[:6]:
@@ -351,7 +451,7 @@ def _fetch_smart_reads() -> list[dict]:
                 title = entry.get("title", "")[:140]
                 # A card is a headline AND a summary. Without real summary text
                 # it is just a link with a border around it, so it is dropped.
-                if len(summary) < 80 or not _is_finance(title, summary, need=2):
+                if len(summary) < 80 or not _is_relevant(cat, title, summary):
                     continue
                 published = None
                 if getattr(entry, "published_parsed", None):
@@ -362,6 +462,7 @@ def _fetch_smart_reads() -> list[dict]:
                         pass
                 reads.append({
                     "source":  source,
+                    "cat":     cat,
                     "title":   title,
                     "link":    entry.get("link", ""),
                     "summary": summary[:320],
@@ -372,18 +473,52 @@ def _fetch_smart_reads() -> list[dict]:
             log.warning(f"Smart read feed {source}: {e}")
 
     reads.sort(key=lambda x: x["_sort"], reverse=True)
-    by_src: dict = {}
-    for r in reads:
-        by_src.setdefault(r["source"], []).append(r)
-    out, rnd = [], 0
-    while len(out) < 9:
-        wave = [v[rnd] for v in by_src.values() if len(v) > rnd]
-        if not wave:
-            break
-        wave.sort(key=lambda x: x["_sort"], reverse=True)
-        out.extend(wave[:9 - len(out)])
-        rnd += 1
-    return out
+
+    # Fill each category up to its own quota, newest first, one item per source
+    # within a category so a single prolific blog cannot own its slice.
+    #
+    # Quota FIRST, recency second. Sorting nine slots purely by date is how this
+    # section became finance-only in practice even before it was finance-only by
+    # configuration: ET and Mint publish continuously, so every reflective piece
+    # was older than every money piece and never made the cut.
+    out: list[dict] = []
+    for cat, quota in CATEGORY_SLOTS.items():
+        pool = [r for r in reads if r["cat"] == cat]
+        seen_src: set = set()
+        picked = []
+        for r in pool:                          # already newest-first
+            if r["source"] in seen_src:
+                continue
+            seen_src.add(r["source"])
+            picked.append(r)
+            if len(picked) >= quota:
+                break
+        # A category short of its quota gives its remaining slots up rather than
+        # padding with a second item from one source.
+        out.extend(picked)
+
+    # Backfill when a category came up short — a dead feed must cost the section
+    # a card, not leave a hole in the grid.
+    #
+    # Non-money first, money only as a last resort. Backfilling purely by
+    # recency handed the spare slots straight back to money (4 of 9 on the first
+    # run) because those feeds publish continuously, which quietly undid the
+    # quota it had just respected.
+    if len(out) < 9:
+        have = {r["link"] for r in out}
+        for pref in (lambda r: r["cat"] != "money", lambda r: True):
+            for r in reads:
+                if len(out) >= 9:
+                    break
+                if r["link"] in have or not pref(r):
+                    continue
+                out.append(r)
+                have.add(r["link"])
+            if len(out) >= 9:
+                break
+
+    out.sort(key=lambda x: x["_sort"], reverse=True)
+    return out[:9]
 
 
 def _fetch_quote() -> str:

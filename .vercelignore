@@ -20,6 +20,10 @@
 # Allow-listed BY NAME like every other file here — omit it and the bot's
 # section commands silently 404 with no error anywhere.
 !docs/today.json
+# The Nifty 500 research screen #stocks fetches lazily. Same by-name rule: omit
+# it and the section falls back to its server-rendered top 25 forever, with the
+# only symptom a console warning nobody reads.
+!docs/screen.json
 # The page script. Without this the site renders and does nothing.
 !docs/app.js
 !docs/robots.txt

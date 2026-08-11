@@ -30,6 +30,10 @@ export default [
         localStorage: "readonly",
         sessionStorage: "readonly",
         setTimeout: "readonly",
+        // Used by the stock screen's debounced search. Added when that landed —
+        // the list is explicit precisely so a new global is a deliberate entry
+        // rather than a silent pass.
+        clearTimeout: "readonly",
         setInterval: "readonly",
         requestAnimationFrame: "readonly",
         IntersectionObserver: "readonly",

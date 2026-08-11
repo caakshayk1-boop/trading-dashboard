@@ -74,6 +74,25 @@ const { chromium } = require('playwright');
       return { checked: ids.length, mismatched: bad };
     });
 
+    // The stock screen's payload, checked over the SAME origin the page uses
+    // rather than by waiting on its IntersectionObserver. Timing-independent on
+    // purpose: this is asserting that /screen.json is reachable and parses,
+    // which is the one thing three separate allow-lists can silently break.
+    if (r.sections.includes('stocks')) {
+      Object.assign(r, await page.evaluate(async () => {
+        try {
+          const res = await fetch('/screen.json', { cache: 'no-store' });
+          if (!res.ok) return { screenOk: false, screenError: 'HTTP ' + res.status };
+          const j = await res.json();
+          const n = (j && j.rows && j.rows.length) || 0;
+          return { screenOk: n > 0, screenRows: n,
+                   screenError: n ? '' : 'payload has no rows' };
+        } catch (e) {
+          return { screenOk: false, screenError: String(e.message || e).slice(0, 120) };
+        }
+      }));
+    }
+
     r.errors = errors;
     r.want = want;
     out.pages[path] = r;

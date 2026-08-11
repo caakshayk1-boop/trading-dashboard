@@ -1,0 +1,139 @@
+name: Stock Screen — weekly Nifty 500 research screen
+
+# Builds the Nifty 500 research screen and caches it in Turso
+# (newspaper_screen, keyed by ISO week). The daily newspaper only READS that
+# cache and writes docs/screen.json from it.
+#
+# Its own workflow for the same reason fund_screen.yml has one: this is ~500
+# symbols × (one quote + two statement frames), fetched sequentially because
+# Yahoo throttles an IP that bursts. That is roughly 11 minutes on a cold cache
+# and it does not belong anywhere near the 6 AM job's 15-minute budget.
+#
+# Runs AFTER the fund screen (01:30 IST) rather than alongside it — two jobs
+# hammering Yahoo from the same runner IP is how both end up rate-limited.
+
+on:
+  schedule:
+    - cron: '0 21 * * 6'      # Sunday 02:30 IST — after the fund screen
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Cap the universe (blank = all ~500; use 50 for a smoke run)'
+        required: false
+        default: ''
+      news_top:
+        description: 'Fetch headlines for the top N by composite'
+        required: false
+        default: '150'
+
+concurrency:
+  group: stock-screen
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+  # Optional. Absent means the narrative layer is skipped and every row keeps
+  # its rule-based SWOT — the section does not depend on this key.
+  GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    # Generous on purpose, like the fund screen: this is a job that is ALLOWED
+    # to be slow. A cold statements cache is the long case; a warm one (30-day
+    # TTL) finishes in a couple of minutes.
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # The statements cache is the whole reason this job is usually fast.
+      # Restoring it across runs means a weekly build re-fetches only what has
+      # aged past the 30-day TTL instead of all 500 symbols every Sunday.
+      - name: Restore fundamentals caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            cache/fundamentals.json
+            cache/statements.json
+          key: fundamentals-${{ github.run_id }}
+          restore-keys: |
+            fundamentals-
+
+      - name: Build and cache the screen
+        env:
+          SCREEN_LIMIT: ${{ inputs.limit }}
+          NEWS_TOP: ${{ inputs.news_top || '150' }}
+        run: |
+          python - <<'PY'
+          import os, json, logging
+          logging.basicConfig(level=logging.INFO, format="%(message)s")
+          import stock_screen, newspaper
+
+          limit = int(os.environ.get("SCREEN_LIMIT") or 0) or None
+          news = int(os.environ.get("NEWS_TOP") or 150)
+          # Narrative is injected, not imported — no key means no prose and
+          # every row still carries its rule-based SWOT.
+          ai = newspaper.groq_complete if newspaper.GROQ_KEY else None
+          data = stock_screen.build(limit=limit, news_top=news, ai=ai)
+          if not data.get("ok"):
+              raise SystemExit(f"screen failed: {data.get('error')}")
+
+          cov = data["coverage"]
+          print(f"\n{data['count']} companies of {data['attempted']} attempted "
+                f"in {data['build_secs']}s")
+          print(f"  statements  {cov['statements']:3} ({cov['statements_pct']}%)")
+          print(f"  ROCE        {cov['roce']:3} ({cov['roce_pct']}%)")
+          print(f"  prices to   {data['price_date']}")
+          print("\ntop 10 by composite:")
+          for r in data["rows"][:10]:
+              print(f"  {r['sym']:<12} comp {r.get('comp')}  Q {r.get('q')}  "
+                    f"G {r.get('g')}  V {r.get('v')}  T {r.get('tech')}  "
+                    f"ROCE {r.get('roce')}")
+
+          # Coverage floors. A run that technically succeeds while Yahoo returns
+          # nothing would cache a price-only screen with every ratio column
+          # blank, and the section would render for a week looking like the
+          # accounts simply do not exist. Fail instead — the reader keeps last
+          # week's screen, which is stamped with its own date.
+          if data["count"] < 300:
+              raise SystemExit(f"only {data['count']} companies priced — refusing to cache")
+          if cov["statements_pct"] < 70:
+              raise SystemExit(f"statements for only {cov['statements_pct']}% — refusing to cache")
+
+          week = newspaper._stock_week_key()
+          with newspaper._db() as con:
+              con.execute("""CREATE TABLE IF NOT EXISTS newspaper_screen (
+                  week TEXT PRIMARY KEY, payload TEXT)""")
+              con.execute("INSERT OR REPLACE INTO newspaper_screen VALUES (?,?)",
+                          (week, json.dumps(data)))
+              con.commit()
+          print(f"\ncached for week {week}")
+          PY
+
+      # The caches are the expensive part of this job, and they only persist if
+      # the run gets far enough to save them. Committing them is deliberate:
+      # the daily newspaper build reads cache/fundamentals.json too, and a
+      # warm cache there keeps other jobs off Yahoo.
+      - name: Commit refreshed caches
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add cache/fundamentals.json cache/statements.json || true
+          if git diff --cached --quiet; then
+            echo "caches unchanged"
+          else
+            git commit -m "chore: refresh fundamentals + statements cache"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
