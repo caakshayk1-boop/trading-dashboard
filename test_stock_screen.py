@@ -1127,6 +1127,93 @@ def test_deltas_separate_unchanged_from_never_seen() -> None:
           .index("out = [_compact(r) for r in out]"))
 
 
+def test_no_text_builder_raises_on_sparse_data() -> None:
+    """Every text-producing function, over every combination of missing fields.
+
+    Written after `or 0` coercion killed a completed 35-minute build at row ~400:
+
+        if (r.get("ebitda_cagr3") or 0) > (r.get("rev_cagr3") or 0) + 0.05:
+            add(..., f"EBITDA CAGR {r['ebitda_cagr3']:.1%} vs {r['rev_cagr3']:.1%}")
+
+    `(0.20 or 0) > (None or 0) + 0.05` is TRUE, so a company with EBITDA growth
+    and no revenue figure passed the guard and then formatted None. The guard and
+    the formatter disagreed about which fields were present.
+
+    Real rows are sparse in every imaginable combination — 750 companies
+    guarantee it — so this brute-forces the sparsity rather than trusting each
+    guard to have been written correctly.
+    """
+    import itertools
+    numeric = ["roce", "roce_med", "roe", "roe_med", "ebit_margin",
+               "ebit_margin_med", "debt_to_equity", "interest_cover",
+               "current_ratio", "rev_cagr3", "ebitda_cagr3", "eps_cagr3",
+               "rev_growth_latest", "pe", "pb", "cfo_pat", "fcf_pat",
+               "fcf_margin", "margin_one_off"]
+    tech_keys = ["price", "rsi14", "sma20", "sma50", "sma200", "atr14",
+                 "atr_pct", "vol_spike", "high52", "low52", "from_high52",
+                 "rs_1y", "rs_3m", "above_mas", "turnover_cr"]
+
+    full_r = {k: 0.2 for k in numeric}
+    full_r.update({"sector": "Industrials", "industry": "Capital Goods",
+                   "has_statements": True, "cagr_span": 3, "fy_count": 4,
+                   "roce_basis": "invested capital", "shares_changed": False,
+                   "roce_trend": "rising", "ebit_margin_trend": "flat",
+                   "years": [{"fy": "FY26", "rev_cr": 100, "ebitda_cr": 20,
+                              "pat_cr": 10, "eps": 5, "ebit_margin": 20.0,
+                              "roce": 20.0, "de": 0.3},
+                             {"fy": "FY25", "rev_cr": 90, "ebitda_cr": 17,
+                              "pat_cr": 9, "eps": 4.5, "ebit_margin": 19.0,
+                              "roce": 19.0, "de": 0.3},
+                             {"fy": "FY24", "rev_cr": 80, "ebitda_cr": 15,
+                              "pat_cr": 8, "eps": 4, "ebit_margin": 18.5,
+                              "roce": 18.0, "de": 0.3}]})
+    full_t = {k: 1.0 for k in tech_keys}
+    full_t.update({"price": 100.0, "rsi14": 60.0, "sma200": 80.0, "sma50": 90.0,
+                   "sma20": 95.0, "high52": 105.0, "above_mas": 3,
+                   "ma_stack": True, "liquid": True, "brk20": True,
+                   "brk50": False, "brk52w": False, "hist": 0.5,
+                   "hist_prev": 0.2, "from_high52": -0.05, "turnover_cr": 20.0})
+
+    failures = []
+    # One field missing at a time — this is where the guard/formatter mismatches
+    # live, and it is exhaustive over the fields that feed a format string.
+    for key in numeric + tech_keys:
+        r = dict(full_r)
+        t = dict(full_t)
+        r.pop(key, None)
+        t.pop(key, None)
+        for name, fn in (("swot", lambda: S.swot(r, t, {"pe_pctile": 50, "peers": 20})),
+                         ("why_now", lambda: S.why_now(r, t, {"pe_pctile": 80, "peers": 20})),
+                         ("risk_flags", lambda: S.risk_flags(r, t, {"pe_pctile": 10})),
+                         ("updates", lambda: S.updates(r, t)),
+                         ("setup_label", lambda: S.setup_label(t, r)),
+                         ("price_location", lambda: S.price_location(t)),
+                         ("earnings_momentum", lambda: S.earnings_momentum(r.get("years") or [])),
+                         ("score_cashflow", lambda: S.score_cashflow(r)),
+                         ("score_quality", lambda: S.score_quality(r)),
+                         ("score_technical", lambda: S.score_technical(t))):
+            try:
+                fn()
+            except Exception as e:                       # noqa: BLE001
+                failures.append(f"{name} missing={key}: {type(e).__name__}: {e}")
+
+    # And the fully-empty case, which is what a no-statements row really is.
+    for name, fn in (("swot", lambda: S.swot({}, {}, {})),
+                     ("why_now", lambda: S.why_now({}, {}, {})),
+                     ("risk_flags", lambda: S.risk_flags({}, {}, {})),
+                     ("updates", lambda: S.updates({}, {})),
+                     ("setup_label", lambda: S.setup_label({}, {})),
+                     ("price_location", lambda: S.price_location({}))):
+        try:
+            fn()
+        except Exception as e:                           # noqa: BLE001
+            failures.append(f"{name} on empty dicts: {type(e).__name__}: {e}")
+
+    check(f"no text builder raises on any single missing field "
+          f"({len(numeric + tech_keys)} fields x 10 builders)",
+          not failures, "; ".join(failures[:4]))
+
+
 def test_universe_excludes_nse_dummy_constituents() -> None:
     """NSE's own Nifty 500 CSV ships four placeholder 'Dummy Vedanta' rows."""
     if not pathlib.Path(S.UNIVERSE_CSV).exists():
@@ -1305,6 +1392,7 @@ def main() -> int:
                test_earnings_momentum_measures_direction_not_level,
                test_cash_flow_catches_accounting_earnings,
                test_deltas_separate_unchanged_from_never_seen,
+               test_no_text_builder_raises_on_sparse_data,
                test_universe_excludes_nse_dummy_constituents,
                test_screen_table_columns_match,
                test_the_screen_sheet_can_always_be_closed,

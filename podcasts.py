@@ -47,10 +47,11 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; DailySignal/1.0)"}
 # resolution is what produced the Doraemon channel above, and a pinned id
 # paired with an author check fails closed instead.
 CHANNELS = [
-    # ── business ──
+    # ── business and career ──
     ("UCzwCEE_PchiBULMnAJqhGVg", "Raj Shamani",        "Figuring Out",      "Business"),
     ("UCKZozRVHRYsYHGEyNKuhhdA", "Think School",       "Think School",      "Business"),
     ("UCRzYN32xtBf3Yxsx5BvJWJw", "warikoo",            "Ankur Warikoo",     "Career"),
+    ("UCRv4waLxgUN0Z-yb2I1Fq4A", "Nikhil Kamath Clips", "WTF is (clips)",   "Business"),
     # ── money and investing ──
     ("UCqW8jxh4tH1Z1sWPbkGWL4g", "Akshat Shrivastava", "Akshat Shrivastava", "Investing"),
     ("UCe3qdG0A_gr-sEdat5y2twQ",
@@ -58,49 +59,86 @@ CHANNELS = [
     ("UCwAdQUuPT6laN-AQR17fe1g", "Pranjal Kamra",      "Pranjal Kamra",     "Investing"),
     ("UCUUlw3anBIkbW9W44Y-eURw", "Zero1 by Zerodha",   "Zero1 by Zerodha",  "Money"),
     ("UCwVEhEzsjLym_u1he4XWFkg", "Finance With Sharan", "Finance With Sharan", "Money"),
-    # ── society, geopolitics ──
+    ("UCUNLEWzMd_JpC-D1VVz9Bcw", "Finology",           "Finology",          "Investing"),
+    ("UCQXwgooTlP6tk2a-u6vgyUA", "Zerodha Varsity",    "Zerodha Varsity",   "Investing"),
+    ("UCw5TLrz3qADabwezTEcOmgQ", "Groww",              "Groww",             "Investing"),
+    ("UCVOTBwF0vnSxMRIbfSE_K_g", "Labour Law Advisor", "Labour Law Advisor", "Money"),
+    # ── society, politics, geopolitics ──
     ("UC-CSyyi47VX1lD9zyeABW3w", "Dhruv Rathee",       "Dhruv Rathee",      "Society"),
     ("UC2bBsPXFWZWiBmkRiNlz8vg", "Abhijit Chavda",     "Abhijit Chavda",    "Geopolitics"),
     ("UC7sbc0Ed3_yMu-etXVpj7cg", "Kunal Kamra",        "Shut Up Ya Kunal",  "Society"),
+    ("UCOtQWL2z-tFbI-mgy_Rpdgg",
+     "Unfiltered by Samdish (and a fantastic team)",   "Unfiltered by Samdish", "Society"),
+    ("UCmTM_hPCeckqN3cPWtYZZcg", "The Deshbhakt",      "The Deshbhakt",     "Society"),
+    ("UCaULrJ-T1vRf94daP5JSxpw",
+     "Ravish Kumar Officialf",                         "Ravish Kumar",      "Society"),
+    ("UChWtJey46brNr7qHQpN6KLQ", "The Wire",           "The Wire",          "Politics"),
+    ("UCxSnwVRM4Ax5HTj3zNRl3zw",
+     "ANI Podcast with Smita Prakash Clips",           "ANI Podcast (clips)", "Politics"),
+    ("UCgi1OB2LWG5nMAd_0QaIMOA",
+     "Everything Is Everything",                       "Everything is Everything", "Economics"),
     # ── mind, health, philosophy ──
     ("UCPxMZIFE856tbTfdkdjzTSQ", "BeerBiceps",         "BeerBiceps",        "Overall"),
     ("UCneyi-aYq4VIBYIAQgWmk_w", "Ranveer Allahbadia", "The Ranveer Show",  "Philosophy"),
     ("UCcYzLCs3zrQIBVHYA1sK2sw", "Sadhguru",           "Sadhguru",          "Philosophy"),
     ("UCBqFKDipsnzvJdt6UT0lMIg", "Sandeep Maheshwari", "Sandeep Maheshwari", "Motivation"),
+    ("UCmY1vQ5KcszMs4hA9Kk0yCg", "Prakhar Gupta",      "Prakhar Ke Pravachan", "Psychology"),
+    ("UCR_Tzu1r5M9uoNB3CF4Zg3g", "Dr Sid Warrier",     "Sid Warrier",       "Health"),
     ("UCJQeGpaGN5sR_CHA-UKu4PQ",
      "The Habit Coach | Alex Poole",                   "The Habit Coach",   "Health"),
+    # ── culture and entertainment ──
+    ("UC0rE2qq81of4fojo-KhO5rg", "Tanmay Bhat",        "Tanmay Bhat",       "Culture"),
+    ("UC416XOyyxYBEspfqPH95yjQ", "Rohan Joshi",        "Rohan Joshi",       "Culture"),
+    ("UCDvqWOVFT-SYppIfpZ6pUqg", "Aakash Gupta comedy", "Aakash Gupta",     "Culture"),
+    ("UC7eHZXheF8nVOfwB2PEslMw",
+     "ashish chanchlani vines",                        "Ashish Chanchlani", "Entertainment"),
+    # ── education ──
+    ("UCzLqOSZPtUKrmSEnlH4LAvw", "Drishti IAS",        "Drishti IAS",       "Education"),
 ]
 # Zerodha's main channel was here and is not a podcast — a daily NIFTY/BANK
 # NIFTY outlook that posted twice a day and took two of ten slots with
 # "Analysis for Tomorrow". Zero1 is Zerodha's actual long-form channel and is
 # a different thing.
 #
-# HOW THIS LIST IS BUILT, and why it is shorter than the shortlist it came from.
-# Every id above was resolved from the channel's CANONICAL url, then verified
-# against the feed's own <author><name>, then eyeballed against its two most
-# recent titles. Nine candidates were rejected at that last step and it is
-# worth recording what they were, because each is a way this list goes wrong:
+# HOW THIS LIST IS BUILT
 #
-#   · WTF is / Nikhil Kamath — the handle resolved to a channel whose author
-#     really is "Nikhil" and which serves Deepwater Horizon trailers and
-#     "Stand by me | Doraemon (hindi)". This is the SAME channel named in the
-#     docstring above. The author check passed it, because "Nikhil" is too
-#     common a first name for a name check to be a content check.
-#   · Ranveer's @TheRanveerShow handle resolved to author "Being Akash",
-#     @AmanGupta_ to "Riddleverse", @DrVivekBindra to "Anup Singh" — handles
-#     get re-registered, and none of those are who they claim.
-#   · ANI Podcast, Raj Shamani, Think School, Shwetabh Gangwar and Abhijit
-#     Chavda all have separate "Clips"/"Shorts" channels that a naive handle
-#     lookup finds first. Pinning one would fill this section with the exact
-#     content the Shorts guard below exists to remove.
-#   · Saurabh Jain resolved to a channel whose only upload is "Snorkeling in
-#     Kauai"; Gaurav Thakur to Bhojpuri stage shows; Labour Law Advisor and
-#     Finology's resolved channels to #LLAShorts and a 3-video stub.
+# The brief is "all sorts of podcasts, exclude nothing", so the categories run
+# from investing to comedy on purpose. What is NOT negotiable is that a pinned id
+# actually belongs to the show it claims to. Every id above was resolved from the
+# channel's CANONICAL url, verified against the feed's own <author><name>, and
+# then read against its two most recent titles by hand.
 #
-# Prakhar Gupta, Shwetabh Gangwar and Siddharth Warrier are genuinely wanted
-# here and are ABSENT because their handles 404'd during resolution — they are
-# not in this list rather than in it wrongly. Add them by resolving the
-# canonical id and checking two recent titles by hand, never by guessing an id.
+# The first pass produced only 16 channels because it allowed ONE handle guess
+# per creator, and creators routinely run main + clips + shorts + hindi channels
+# under near-identical handles — so one guess meant one chance to hit the real
+# one. Trying several candidates per creator doubled the list.
+#
+# EXCLUSIONS, and each is a wrong CHANNEL rather than an unwanted topic:
+#
+#   · @nikhilkamathcio resolves to a channel whose author really is "Nikhil"
+#     and which serves Deepwater Horizon trailers and "Stand by me | Doraemon
+#     (hindi)" — the exact channel this module's docstring was written about.
+#     The author check passed it because "Nikhil" is too common a first name for
+#     a name check to also be a content check. WTF is therefore represented by
+#     its clips channel, which is labelled as clips rather than passed off as
+#     full episodes.
+#   · @TheRanveerShow resolves to "Being Akash", @AmanGupta_ to "Riddleverse",
+#     @DrVivekBindra to "Anup Singh". Handles get re-registered and none of
+#     those are who they claim. Ranveer is pinned via his real channel id.
+#   · "Saurabh Jain 3.0BT" posts Bhojpuri comedy and is a different Saurabh
+#     Jain; the @AmanGupta_ hit is a software-engineering educator, not the boAt
+#     founder. Both dropped — publishing the wrong person under a name is worse
+#     than omitting them.
+#   · Mint resolves fine but is a rolling news livestream channel, which would
+#     take every slot with "War News LIVE" and is already covered by the wire.
+#   · "Shwetabh Gangwar Shorts" is the only resolvable channel for him and is
+#     literally a Shorts feed. Every item would be dropped by _is_short below,
+#     so pinning it would only burn fetches.
+#
+# STILL WANTED, genuinely unresolvable today: Vivek Bindra, Sanjeev Sanyal,
+# Sahil Khattar, Varun Duggirala, Yashraj Mukhate, Bhuvan Bam, Kusha Kapila,
+# Monika Halan, Sahil Bloom, The Internet Said So (empty feed). Add one by
+# resolving its canonical id and reading two recent titles — never by guessing.
 
 MAX_EPISODES = 20
 MIN_PROSE = 180        # chars of real description prose before we'll publish one

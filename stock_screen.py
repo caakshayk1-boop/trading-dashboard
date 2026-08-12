@@ -1347,10 +1347,15 @@ def why_now(r: dict, t: dict, val: dict) -> list[dict]:
         if rc >= 0.20:
             add(f"Revenue compounding at {rc:.0%} a year",
                 f"{r.get('cagr_span', 3)}Y revenue CAGR {rc:.1%}")
-    if (r.get("ebitda_cagr3") or 0) > (r.get("rev_cagr3") or 0) + 0.05 \
-            and not r.get("margin_one_off"):
+    # BOTH sides explicitly checked, never `or 0`. `(None or 0) > 0 + 0.05` is
+    # False, but `(0.20 or 0) > (None or 0) + 0.05` is TRUE — so a company with
+    # EBITDA growth and no revenue figure passed the guard and then raised
+    # TypeError formatting None. That killed a 35-minute build at row ~400.
+    eb, rv = r.get("ebitda_cagr3"), r.get("rev_cagr3")
+    if (eb is not None and rv is not None and eb > rv + 0.05
+            and not r.get("margin_one_off")):
         add("Profit growing faster than sales",
-            f"EBITDA CAGR {r['ebitda_cagr3']:.1%} vs revenue {r['rev_cagr3']:.1%}")
+            f"EBITDA CAGR {eb:.1%} vs revenue {rv:.1%}")
     if val.get("pe_pctile") is not None and val["pe_pctile"] >= 70:
         add(f"Cheaper than {val['pe_pctile']:.0f}% of its industry peers",
             f"PE {r.get('pe')} vs {val.get('peers')} peers")

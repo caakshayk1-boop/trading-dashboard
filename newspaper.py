@@ -6335,10 +6335,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span>
       <h2 class="stitle">What&rsquo;s worth listening to.</h2>
     </div>
-    <p class="sdesc">Long-form Indian podcasts &mdash; business, investing, money,
-      society, geopolitics, health and philosophy. Up to twenty episodes, newest
-      first, with what each one says it covers. Titles, dates and takeaways come
-      from the shows themselves. Shorts are excluded.</p>
+    <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
+      investing and money, society, politics and geopolitics, health, psychology,
+      philosophy, education, comedy and culture. Thirty-four channels, up to twenty
+      episodes, newest first, with what each one says it covers. Titles, dates and
+      takeaways come from the shows themselves. Shorts are excluded per video, not
+      per channel.</p>
   </div>
 
   <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">

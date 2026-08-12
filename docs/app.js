@@ -3464,6 +3464,17 @@ var TV_ALIASES = (function () {
     var ROWS = [], view = [], shown = 0;
     var sortKey = 'comp', sortDir = -1, preset = 'all', loaded = false, loading = false;
 
+    /* Ranking mode. `mode` names which composite the Rank column shows and
+       sorts by — the components are identical, only the weights differ. See
+       MODES in stock_screen.py for the weight sets and why they exist. */
+    var mode = 'comp';
+    var MODE_NOTE = {
+      comp:     'business quality, growth, price and chart',
+      m_inv:    'quality and price dominate — is this worth owning for years',
+      m_pos:    'growth and trend together — compounding AND working now',
+      m_swing:  'almost entirely the chart — actionable in weeks, not years'
+    };
+
     function el(id){ return document.getElementById(id); }
 
     /* A stripped key and a null one are the same fact. Everything below reads
@@ -3485,7 +3496,18 @@ var TV_ALIASES = (function () {
     /* Score cell. The bar width IS the score, so a column can be ranked
        without reading it. `thin` marks a score built from a minority of its
        inputs — see the dotted underline in the CSS. */
-    function scoreCell(v, conf){
+    /* Movement since the previous build, shown on the Rank cell. A 91 that was
+       a 91 last month is already priced; a 78 that was a 61 is a change, and
+       that is the more interesting row. */
+    function deltaTag(r, key){
+      if (r.is_new) return '<i class="dl dl-new">NEW</i>';
+      var d = (r.delta || {})[key];
+      if (!d) return '';
+      return '<i class="dl ' + (d > 0 ? 'dl-up' : 'dl-dn') + '">'
+           + (d > 0 ? '▲' : '▼') + Math.abs(d).toFixed(1) + '</i>';
+    }
+
+    function scoreCell(v, conf, delta){
       if (v === null || v === undefined) return '<td class="num">—</td>';
       var band = v >= 70 ? 's-hi' : v >= 45 ? 's-md' : 's-lo';
       var thin = (conf !== null && conf !== undefined && conf < 0.6) ? ' thin' : '';
@@ -3493,7 +3515,19 @@ var TV_ALIASES = (function () {
                        + Math.round((conf || 0) * 100) + '% present"' : '';
       return '<td class="num"><span class="sc ' + band + thin + '"' + title + '>'
            + '<i style="width:' + Math.max(2, Math.min(100, v)) + '%"></i>'
-           + '<b>' + v + '</b></span></td>';
+           + '<b>' + v + '</b></span>' + (delta || '') + '</td>';
+    }
+
+    /* LOW / MEDIUM / HIGH, never a 0-100. An arbitrary "risk 62" is unreadable
+       without also knowing which direction is better. The count of flags rides
+       alongside so the level is checkable at a glance. */
+    function riskCell(r){
+      var k = r.risk;
+      if (!k || !k.level) return '<span class="mono-dim">—</span>';
+      var n = (k.flags || []).length;
+      return '<span class="rk rk-' + esc(k.level.toLowerCase()) + '" title="'
+           + n + ' flag' + (n === 1 ? '' : 's') + '">' + esc(k.level) + '</span>'
+           + (n ? '<span class="rk-n">' + n + '</span>' : '');
     }
 
     function tagCls(t){
@@ -3517,7 +3551,7 @@ var TV_ALIASES = (function () {
         + '<span class="mono-dim">' + esc((r.name || '').slice(0, 34)) + '</span></td>'
         + '<td class="num">' + fmt(num(r, 'price')) + '</td>'
         + '<td class="num ' + signCls(r1y) + '">' + fmt(r1y, '%') + '</td>'
-        + scoreCell(num(r, 'comp'), null)
+        + scoreCell(num(r, mode), null, deltaTag(r, mode))
         + scoreCell(num(r, 'q'), num(r, 'q_conf'))
         + scoreCell(num(r, 'g'), num(r, 'g_conf'))
         + scoreCell(num(r, 'v'), num(r, 'v_conf'))
@@ -3528,6 +3562,7 @@ var TV_ALIASES = (function () {
         + '<td class="num">' + fmt(num(r, 'de')) + '</td>'
         + '<td class="num">' + fmt(num(r, 'pe')) + '</td>'
         + '<td class="num">' + fmt(num(r, 'rsi')) + '</td>'
+        + '<td>' + riskCell(r) + '</td>'
         + '<td>' + tagHtml + '</td>'
         + '</tr>';
     }
@@ -3589,7 +3624,7 @@ var TV_ALIASES = (function () {
       }
       var slice = view.slice(shown, shown + PAGE);
       if (!view.length){
-        body.innerHTML = '<tr><td colspan="15" class="scr-empty">'
+        body.innerHTML = '<tr><td colspan="16" class="scr-empty">'
           + 'No company in the screen matches that. Try clearing a filter.</td></tr>';
       } else {
         body.insertAdjacentHTML('beforeend', slice.map(rowHtml).join(''));
@@ -3651,11 +3686,93 @@ var TV_ALIASES = (function () {
       return h;
     }
 
+    /* All four rankings together. This is the block that makes the point: a
+       stock that is 53 to an investor and 83 to a swing trader is not
+       "a 68" — it is two different answers to two different questions, and
+       averaging them into one number is what this whole section is trying to
+       stop doing. */
+    function modeBlock(r){
+      var defs = [['Balanced', 'comp'], ['Investor', 'm_inv'],
+                  ['Positional', 'm_pos'], ['Swing', 'm_swing']];
+      var have = defs.filter(function(d){ return num(r, d[1]) !== null; });
+      if (have.length < 2) return '';
+      var vals = have.map(function(d){ return num(r, d[1]); });
+      var spread = Math.max.apply(null, vals) - Math.min.apply(null, vals);
+      var best = have[vals.indexOf(Math.max.apply(null, vals))][0];
+      return '<div class="sd-blk"><h4>Ranked for</h4><div class="sd-scores">'
+        + have.map(function(d){
+            var v = num(r, d[1]);
+            return '<div class="sd-sc"><span class="k">' + d[0] + '</span>'
+              + '<span class="v">' + v + '</span>'
+              + '<span class="bar"><i style="width:' + Math.min(100, v) + '%"></i></span>'
+              + '</div>';
+          }).join('')
+        + '</div><p class="mono-dim" style="margin-top:9px;font-size:11px">'
+        + (spread >= 20
+            ? 'Best as a <b>' + esc(best.toLowerCase()) + '</b> candidate — a '
+              + spread.toFixed(0) + '-point spread across the four questions, so '
+              + 'this is much more suited to one horizon than the others.'
+            : 'Scores agree within ' + spread.toFixed(0) + ' points, so the '
+              + 'business case and the setup are pointing the same way.')
+        + ' Same components throughout; only the weights differ.</p></div>';
+    }
+
+    /* Is the business speeding up or slowing down right now? The four-year table
+       says what happened; this says whether the latest year beat the trajectory
+       that produced it. A 25% compounder decelerating to 8% and a 12% one
+       accelerating to 20% have the same CAGR column. */
+    function momentumBlock(r){
+      var lab = r.em_label;
+      var rows = [
+        ['Revenue YoY',   num(r, 'rev_yoy'),    '%'],
+        ['EBITDA YoY',    num(r, 'ebitda_yoy'), '%'],
+        ['Profit YoY',    num(r, 'pat_yoy'),    '%'],
+        ['EPS YoY',       num(r, 'eps_yoy'),    '%'],
+        ['EBIT margin',   num(r, 'margin_delta'), 'pt']
+      ].filter(function(x){ return x[1] !== null; });
+      var cash = [
+        ['Cash conversion (CFO/PAT)', num(r, 'cfo_pat'), 'x'],
+        ['Free cash / profit',        num(r, 'fcf_pat'), 'x'],
+        ['FCF margin',               num(r, 'fcf_margin'), '%']
+      ].filter(function(x){ return x[1] !== null; });
+      if (!rows.length && !cash.length) return '';
+      var badge = lab
+        ? '<b class="em em-' + esc(lab) + '">' + esc(lab.toUpperCase()) + '</b>' : '';
+      var out = '<div class="sd-blk"><h4>Momentum and cash &nbsp;' + badge + '</h4>';
+      if (rows.length){
+        out += '<div class="sd-peer" style="grid-template-columns:1fr auto">'
+          + '<span class="h">Latest year on year</span><span class="h"></span>'
+          + rows.map(function(x){
+              var cls = x[1] > 0 ? ' better' : x[1] < 0 ? ' worse' : '';
+              return '<span class="k">' + x[0] + '</span>'
+                   + '<span class="v' + cls + '">' + (x[1] > 0 ? '+' : '') + x[1] + x[2] + '</span>';
+            }).join('') + '</div>';
+      }
+      if (cash.length){
+        out += '<div class="sd-peer" style="grid-template-columns:1fr auto;margin-top:11px">'
+          + '<span class="h">Cash quality</span><span class="h"></span>'
+          + cash.map(function(x){
+              // 1.0x conversion is the reference: the profit actually arrived.
+              var good = (x[2] === 'x') ? x[1] >= 0.9 : x[1] >= 8;
+              return '<span class="k">' + x[0] + '</span>'
+                   + '<span class="v' + (good ? ' better' : ' worse') + '">'
+                   + x[1] + x[2] + '</span>';
+            }).join('') + '</div>'
+          + '<p class="mono-dim" style="margin-top:9px;font-size:10.5px">'
+          + 'Cash conversion is the one number the other scores cannot see: ROCE '
+          + 'and margins both come off the income statement, and this is whether '
+          + 'the money arrived. Medians across the statement history.</p>';
+      }
+      return out + '</div>';
+    }
+
     function scoreBlock(r){
       var defs = [
         ['Composite', num(r, 'comp'), null],
         ['Quality', num(r, 'q'), num(r, 'q_conf')],
         ['Growth', num(r, 'g'), num(r, 'g_conf')],
+        ['Earnings mom.', num(r, 'em'), num(r, 'em_conf')],
+        ['Cash flow', num(r, 'cf'), num(r, 'cf_conf')],
         ['Value', num(r, 'v'), num(r, 'v_conf')],
         ['Technical', num(r, 'tech'), num(r, 'tech_conf')]
       ];
@@ -3669,6 +3786,69 @@ var TV_ALIASES = (function () {
               : '')
           + '</div>';
       }).join('') + '</div>';
+    }
+
+    /* Why look at this TODAY, and what would go wrong. Deliberately above the
+       SWOT in the sheet: the SWOT describes the business over years, these two
+       answer "why is this on the screen this week" and "what breaks it". */
+    function whyNowBlock(r){
+      var w = r.why_now || [];
+      var risk = r.risk || {};
+      var flags = risk.flags || [];
+      if (!w.length && !flags.length) return '';
+      var sev = { high: 'f-high', med: 'f-med', low: 'f-low' };
+      var out = '<div class="sd-blk"><h4>Why now, and what breaks it</h4><div class="sd-why">';
+      if (w.length){
+        out += '<div class="wn-col wn-for"><span>Why now</span><ul>'
+          + w.map(function(i){
+              return '<li>' + esc(i.t) + (i.k ? '<em>' + esc(i.k) + '</em>' : '') + '</li>';
+            }).join('') + '</ul></div>';
+      }
+      if (flags.length){
+        out += '<div class="wn-col wn-against"><span>What can go wrong &nbsp;'
+          + '<b class="rk rk-' + esc((risk.level || '').toLowerCase()) + '">'
+          + esc(risk.level || '') + '</b></span><ul>'
+          + flags.map(function(f){
+              return '<li class="' + (sev[f.s] || '') + '">' + esc(f.t)
+                   + (f.k ? '<em>' + esc(f.k) + '</em>' : '') + '</li>';
+            }).join('') + '</ul></div>';
+      }
+      out += '</div>';
+      if (!w.length){
+        out += '<p class="mono-dim" style="margin-top:9px;font-size:11px">'
+             + 'Nothing here is a reason to look at it <em>today</em> — the '
+             + 'business case may still be sound, but the setup is not making one.</p>';
+      }
+      return out + '</div>';
+    }
+
+    /* Price against its own structure. Levels, never a target: this section has
+       no validated predictive model, so "BUY 1183 / TARGET 1275" would be
+       fabricated precision. Every number below is already on the chart. */
+    function locationBlock(r){
+      var L = r.loc;
+      if (!L || L.price === undefined) return '';
+      var bits = [];
+      if (L.zone_lo && L.zone_hi)
+        bits.push(['Preferred zone', '₹' + L.zone_lo + ' – ₹' + L.zone_hi,
+                   'the 20/50-day band — an ordinary pullback area']);
+      if (L.confirm)
+        bits.push(['Confirmation above', '₹' + L.confirm, 'one ATR beyond the recent high']);
+      if (L.invalidation)
+        bits.push(['Invalidation below', '₹' + L.invalidation,
+                   'the ' + esc(L.invalidation_basis || 'trend average')]);
+      if (!bits.length) return '';
+      return '<div class="sd-blk"><h4>Price location</h4>'
+        + '<p class="mono-dim" style="margin-bottom:9px">Currently ₹' + L.price + '</p>'
+        + '<div class="sd-peer" style="grid-template-columns:auto auto 1fr">'
+        + bits.map(function(b){
+            return '<span class="k">' + b[0] + '</span>'
+                 + '<span class="v">' + b[1] + '</span>'
+                 + '<span class="m" style="text-align:left">' + b[2] + '</span>';
+          }).join('')
+        + '</div><p class="mono-dim" style="margin-top:9px;font-size:10.5px">'
+        + 'Observed levels, not a target or a recommendation. Nothing here '
+        + 'predicts a price.</p></div>';
     }
 
     function swotBlock(r){
@@ -3813,6 +3993,10 @@ var TV_ALIASES = (function () {
             + (horizons.length ? '<span class="scr-tag">EVIDENCE: ' + esc(horizons.join(', ')) + '</span>' : '')
             + '</div>' : '')
         + scoreBlock(r)
+        + whyNowBlock(r)
+        + momentumBlock(r)
+        + modeBlock(r)
+        + locationBlock(r)
         + (r.business ? '<div class="sd-blk"><h4>The business</h4><p>' + esc(r.business) + '</p>'
             + (r.website ? '<p class="mono-dim" style="margin-top:7px"><a href="' + esc(r.website)
               + '" target="_blank" rel="noopener">' + esc(r.website) + '</a></p>' : '')
@@ -3941,6 +4125,29 @@ var TV_ALIASES = (function () {
       var more = el('scrMore');
       if (more) more.addEventListener('click', function(){ paint(true); });
 
+      var modeBar = document.getElementById('scrModes');
+      if (modeBar) modeBar.addEventListener('click', function(ev){
+        var b = ev.target.closest ? ev.target.closest('.fbtn') : null;
+        if (!b || !b.dataset.mode) return;
+        mode = b.dataset.mode;
+        var bs = this.querySelectorAll('.fbtn');
+        for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i] === b);
+        var note = el('scrModeNote');
+        if (note) note.textContent = MODE_NOTE[mode] || '';
+        // Re-sort by the new mode unless the reader has explicitly sorted by
+        // some other column — switching the question should reorder the answer.
+        if (sortKey === 'comp' || sortKey.indexOf('m_') === 0){
+          sortKey = mode;
+          sortDir = -1;
+          var s = el('scrSort');
+          if (s) s.value = 'comp';
+        }
+        var th = table.querySelector('th[data-k="comp"]');
+        if (th) th.textContent = { comp: 'Rank', m_inv: 'Investor',
+                                   m_pos: 'Positional', m_swing: 'Swing' }[mode] || 'Rank';
+        paint(false);
+      });
+
       document.getElementById('scrPresets').addEventListener('click', function(ev){
         var b = ev.target.closest ? ev.target.closest('.fbtn') : null;
         if (!b || !b.dataset.preset) return;
@@ -3953,10 +4160,13 @@ var TV_ALIASES = (function () {
       table.addEventListener('click', function(ev){
         var th = ev.target.closest ? ev.target.closest('th.sortable') : null;
         if (th && th.dataset.k){
-          if (sortKey === th.dataset.k){
+          // The Rank column shows whichever mode is active, so its header must
+          // sort by that mode's key rather than the literal 'comp'.
+          var want = (th.dataset.k === 'comp') ? mode : th.dataset.k;
+          if (sortKey === want){
             sortDir = -sortDir;
           } else {
-            sortKey = th.dataset.k;
+            sortKey = want;
             // Names read A→Z, numbers read best-first. Defaulting everything
             // to descending puts Z at the top of a company column.
             sortDir = th.dataset.k === 'sym' ? 1 : -1;
