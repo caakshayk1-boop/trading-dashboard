@@ -24,6 +24,10 @@
 # it and the section falls back to its server-rendered top 25 forever, with the
 # only symptom a console warning nobody reads.
 !docs/screen.json
+# The detail half of the screen, fetched only when a reader opens a company.
+# Same by-name rule: omit it and every detail sheet renders its table row and
+# nothing else, with only a console warning to say why.
+!docs/screen-detail.json
 # The page script. Without this the site renders and does nothing.
 !docs/app.js
 !docs/robots.txt

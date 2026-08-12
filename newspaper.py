@@ -4135,6 +4135,11 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .dl-up{color:var(--up)} .dl-dn{color:var(--down)}
 .dl-new{color:var(--lime);border:1px solid rgba(195,245,60,.3);border-radius:3px;
   padding:0 4px;display:inline-block}
+/* Capital allocation, out of 10 rather than 100 — it is a judgement over six
+   coarse inputs, and two significant figures would imply a precision it does
+   not have. */
+.ca{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:.5px;
+  border:1px solid rgba(195,245,60,.28);border-radius:4px;padding:1px 7px;margin-left:4px}
 
 /* Why now / what can go wrong, side by side. The two columns exist so the case
    for and the case against are read together rather than one scrolled past. */

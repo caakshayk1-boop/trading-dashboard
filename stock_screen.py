@@ -479,6 +479,9 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                     "h": [float(x) for x in series.get("High", series["Close"]).reindex(idx).ffill().tolist()],
                     "l": [float(x) for x in series.get("Low", series["Close"]).reindex(idx).ffill().tolist()],
                     "v": [float(x) for x in series.get("Volume", series["Close"] * 0).reindex(idx).fillna(0).tolist()],
+                    # Dates alongside the closes so valuation_history can price a
+                    # fiscal year end. Transient — never shipped in the payload.
+                    "dates": [str(d)[:10] for d in idx],
                     "last_date": str(idx[-1])[:10],
                 }
                 out[sym] = rec
@@ -712,6 +715,14 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         "roce": _pct(y.get("roce_ic") if _finite(y.get("roce_ic")) is not None else y.get("roce")),
         "ebit_margin": _pct(y.get("ebit_margin")),
         "de": _round(_finite(y.get("debt_to_equity")), 1, 2),
+        "cfo_cr": _round(_finite(y.get("cfo")), 1e7, 0),
+        "fcf_cr": _round(_finite(y.get("fcf")), 1e7, 0),
+        "cfo_pat": _round(_finite(y.get("cfo_pat")), 1, 2),
+        # Signed as reported: both arrive NEGATIVE on the cash-flow statement
+        # because they are outflows. capital_allocation takes abs().
+        "dividends_cr": _round(_finite(y.get("dividends")), 1e7, 0),
+        "buyback_cr": _round(_finite(y.get("buyback")), 1e7, 0),
+        "shares_out": _finite(y.get("shares_out")),
     } for y in ys]
     return r
 
@@ -919,6 +930,119 @@ def score_quality(r: dict) -> dict:
     }
     v, conf = _blend(parts)
     return {"score": v, "conf": conf, "parts": {k: _pct(x) for k, x in parts.items()}}
+
+
+def capital_allocation(ys: list[dict], r: dict) -> dict:
+    """What management DID with the money, not just what it earned.
+
+    ROCE says how well capital is being used today. This asks the prior
+    question: where did the capital go, and did the returns hold as it grew.
+    A company reinvesting heavily at a rising ROCE is compounding; one
+    reinvesting at a falling ROCE is destroying value while looking busy, and
+    the two are indistinguishable on ROCE alone.
+
+    Returns a 0-10 score with the notes that produced it. Scored on what the
+    statements support — a company with no cash-flow statement gets None rather
+    than a number built on two of six inputs.
+    """
+    notes, pts, possible = [], 0.0, 0.0
+
+    def add(ok, weight, good, bad):
+        nonlocal pts, possible
+        possible += weight
+        if ok:
+            pts += weight
+            notes.append({"t": good, "k": "", "good": True})
+        else:
+            notes.append({"t": bad, "k": "", "good": False})
+
+    # 1. Returns held or improved as capital grew — the whole question.
+    trend = r.get("roce_trend")
+    if trend:
+        add(trend in ("rising", "flat"), 3.0,
+            f"Return on capital {trend} while the business grew",
+            f"Return on capital {trend} — capital added at a worse rate than before")
+
+    # 2. Did the profit turn into cash to allocate at all?
+    cp = r.get("cfo_pat")
+    if cp is not None:
+        add(cp >= 0.8, 2.0,
+            f"{cp:.0%} of profit converts to cash available to allocate",
+            f"Only {cp:.0%} of profit converts to cash — little of it is actually allocable")
+
+    # 3. Returned to owners, or at least not quietly diluted away.
+    div = _finite((ys[0] if ys else {}).get("dividends_cr"))
+    buy = _finite((ys[0] if ys else {}).get("buyback_cr"))
+    if div is not None or buy is not None:
+        returned = abs(div or 0) + abs(buy or 0)
+        add(returned > 0, 1.5,
+            "Returns cash to owners through dividends or buybacks",
+            "No dividend or buyback in the latest year")
+
+    # 4. Dilution. A rising share count without matching growth is the owner
+    #    paying for the growth twice.
+    counts = [y.get("shares_out") for y in ys if y.get("shares_out")]
+    if len(counts) >= 2 and counts[-1]:
+        drift = (counts[0] - counts[-1]) / counts[-1]
+        add(drift <= 0.05, 1.5,
+            "Share count broadly stable — growth was not funded by dilution",
+            f"Share count up {drift:.0%} over the history — growth partly funded by dilution")
+
+    # 5. Leverage direction.
+    des = [y.get("de") for y in ys if y.get("de") is not None]
+    if len(des) >= 2:
+        add(des[0] <= des[-1] + 0.05, 2.0,
+            "Debt flat or reducing across the history",
+            f"Debt/equity rose from {des[-1]:.2f} to {des[0]:.2f}")
+
+    if possible < 5.0:            # too few inputs to call it
+        return {"score": None, "notes": notes, "inputs": round(possible, 1)}
+    return {"score": round(10.0 * pts / possible, 1), "notes": notes,
+            "inputs": round(possible, 1)}
+
+
+def valuation_history(ys: list[dict], px: dict, pe_now: float | None) -> dict:
+    """PE at each fiscal year end, so "cheap" can mean cheap for THIS company.
+
+    The peer percentile already on the page answers "cheap against its
+    industry". It cannot answer "cheap against its own record", and those
+    disagree constantly — a stock can be the cheapest in an expensive sector
+    and still be at the top of its own ten-year range.
+
+    Computed from the EPS series and the daily close on each fiscal year end,
+    both of which are already fetched. Returns {} when either side is missing;
+    a PE history built on a guessed price is worse than none.
+    """
+    if not ys or not px or not px.get("c"):
+        return {}
+    closes, dates = px["c"], px.get("dates") or []
+    if len(dates) != len(closes):
+        return {}
+    hist = []
+    for y in ys:
+        eps, end = _finite(y.get("eps")), y.get("end")
+        if not eps or eps <= 0 or not end:
+            continue
+        # Last close on or before the fiscal year end.
+        price = None
+        for d, c in zip(reversed(dates), reversed(closes)):
+            if d <= end:
+                price = c
+                break
+        if price:
+            hist.append({"fy": y.get("fy"), "pe": round(price / eps, 1)})
+    if len(hist) < 3:
+        return {}
+    pes = [h["pe"] for h in hist]
+    med = statistics.median(pes)
+    out = {"history": hist, "median": round(med, 1),
+           "low": round(min(pes), 1), "high": round(max(pes), 1)}
+    if pe_now and med:
+        out["vs_own_median"] = round((pe_now / med - 1) * 100, 1)
+        # Percentile of its own range, 100 = cheapest it has been.
+        below = sum(1 for p in pes if pe_now < p)
+        out["own_pctile"] = round(100.0 * below / len(pes), 0)
+    return out
 
 
 def score_cashflow(r: dict) -> dict:
@@ -1650,6 +1774,11 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         comp = _composite(scores, has_stmts=has)
         modes = mode_scores(scores, has_stmts=has)
         rk = risk_flags(r, t, row["val"])
+        # What management DID with the capital, and how the price compares
+        # with this company's OWN record rather than only its peers.
+        capalloc = capital_allocation(r.get("years") or [], r)
+        valhist = valuation_history(r.get("years") or [],
+                                    prices.get(u["symbol"]) or {}, r.get("pe"))
         out.append({
             "sym": u["symbol"],
             "name": u["name"] or u["symbol"],
@@ -1743,6 +1872,9 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             # Industry medians for the same ratios the row carries, so the
             # detail sheet can put a peer benchmark beside every number.
             "ind_med": row.get("ind_med"),
+            "capalloc": capalloc.get("score"),
+            "capalloc_notes": capalloc.get("notes"),
+            "val_hist": valhist,
             # Narrative blocks
             "business": (r.get("business") or "")[:600],
             "website": r.get("website") or "",
@@ -1962,6 +2094,44 @@ def attach_deltas(rows: list[dict], prev_payload: dict | None) -> dict:
             # backwards, so it is stored as places gained.
             r["rank_move"] = pr - nr
     return {"compared_with": prev_on, "new": new_count, "moved": moved}
+
+
+# Fields the TABLE never reads. They exist only for the detail sheet, they are
+# 74% of the payload by size, and only a reader who actually opens a company
+# needs them.
+#
+# Measured at 750 rows: the whole payload is 4.3MB raw / 860KB gzipped, and
+# years+swot+business+parts+capalloc_notes alone are 2.3MB of that. Shipping it
+# as one file meant everyone who scrolled to the section downloaded the full
+# research report for all 750 companies in order to read a 16-column table.
+#
+# Split rather than trimmed, because none of it is waste — it is just not needed
+# YET. Two static files, no new serverless route (Hobby caps this project at 12
+# functions and it is at 12).
+DETAIL_FIELDS = (
+    "years", "swot", "business", "parts", "capalloc_notes", "why_now",
+    "updates", "val_hist", "ind_med", "news", "ai_view", "loc", "website",
+    "roce_basis", "val_scope", "peers", "capalloc",
+)
+
+
+def split_payload(data: dict) -> tuple[dict, dict]:
+    """(table payload, detail payload keyed by symbol).
+
+    The table keeps every scalar it sorts, filters or renders — including
+    `risk` and `setup`, which are small and drive visible columns. Everything
+    else moves.
+    """
+    table_rows, detail = [], {}
+    for r in data.get("rows") or []:
+        d = {k: r[k] for k in DETAIL_FIELDS if k in r}
+        if d:
+            detail[r["sym"]] = d
+        table_rows.append({k: v for k, v in r.items() if k not in DETAIL_FIELDS})
+    table = {k: v for k, v in data.items() if k != "rows"}
+    table["rows"] = table_rows
+    table["has_detail"] = True
+    return table, {"built_on": data.get("built_on"), "detail": detail}
 
 
 def _compact(row: dict) -> dict:

@@ -439,10 +439,22 @@ def generate() -> None:
     # in vercel-news/build.js. today.json had two of the three and silently
     # served nothing for days.
     if stock_screen.get("rows"):
+        # SPLIT into table + detail. 74% of the payload is fields only the detail
+        # sheet reads, and at 750 rows the combined file reached 4.3MB raw /
+        # 860KB gzipped — everyone who scrolled to the section downloaded the
+        # full research report for all 750 companies to read a 16-column table.
+        # Two static files rather than a per-symbol route: Hobby caps this
+        # project at 12 functions and it is at 12.
+        import stock_screen as _ss
+        _table, _detail = _ss.split_payload(stock_screen)
         (out_dir / "screen.json").write_text(
-            json.dumps(stock_screen, default=str, separators=(",", ":")), encoding="utf-8")
+            json.dumps(_table, default=str, separators=(",", ":")), encoding="utf-8")
+        (out_dir / "screen-detail.json").write_text(
+            json.dumps(_detail, default=str, separators=(",", ":")), encoding="utf-8")
         _sz = (out_dir / "screen.json").stat().st_size / 1024
-        print(f"[generate] ✅ screen.json ({len(stock_screen['rows'])} companies, {_sz:.0f}KB)")
+        _dz = (out_dir / "screen-detail.json").stat().st_size / 1024
+        print(f"[generate] ✅ screen.json ({len(_table['rows'])} companies, {_sz:.0f}KB) "
+              f"+ screen-detail.json ({_dz:.0f}KB, fetched only when a sheet opens)")
     else:
         # Leave any previous file in place. A build with an empty cache should
         # not delete a working screen — the section hides itself via

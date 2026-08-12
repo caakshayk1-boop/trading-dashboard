@@ -1,5 +1,5 @@
 {
- "build_id": "20260812T195145",
+ "build_id": "20260812T230538",
  "date": "2026-08-12",
  "date_str": "Wednesday, August 12 2026",
  "picks": [
@@ -348,157 +348,158 @@
  "open_context": {},
  "desk": {
   "chess": {
-   "title": "Calculation: The LPDO Rule",
-   "body": "LPDO = Loose Pieces Drop Off. Before every move, scan the board: which of my pieces are undefended? Which of my opponent's pieces are undefended? Undefended pieces are targets for tactics. A simple habit: after finding your move, ask 'does this leave anything undefended?' This alone prevents most blunders.",
-   "index": 14,
+   "title": "Time Management",
+   "body": "Chess is a timed game. Use 70-80% of your clock in complex positions, blitz transitions and endgames you know. Common mistake: spending 15 minutes in the opening, then rushing in the critical middlegame. Rule: if a position is complicated and you see candidate moves, spend the time here \u2014 not in simple positions. Clock is a resource, not just a constraint.",
+   "index": 15,
    "total": 20
   },
   "wisdom": {
-   "title": "Stoic Parenting",
-   "body": "Marcus Aurelius raised children while running an empire. His journal shows he constantly asked: am I reacting or responding? Reacting is automatic. Responding is chosen. The next time your baby cries at 2am, ask yourself: how do I want to respond to this? You always have a choice in the gap between stimulus and response.",
-   "index": 4,
+   "title": "Simplicity is the Path to Happiness",
+   "body": "Happiness research consistently shows: strong relationships + meaningful work + enough (not excessive) money = high life satisfaction. You're already building all three. Don't confuse complexity for progress. The man who simplifies wins. Less decisions, less noise, less comparison.",
+   "index": 5,
    "total": 18
   },
   "book": {
-   "book": "Made in America",
-   "author": "Sam Walton",
-   "chapter": "The 10 Rules That Built Walmart",
-   "lesson": "Sam Walton built the world's largest retailer from a small Arkansas five-and-dime store. His rules: commit to your business; share profits with employees; energise your associates; communicate everything; appreciate associates; celebrate successes; listen to everyone in your company; exceed customers' expectations; control expenses; swim upstream (do the opposite of what everyone else does). The most counterintuitive: Walmart succeeded by treating employees as partners and sharing information and profits broadly, while competitors treated labour as a cost to minimise. Also: Walton flew his own plane to personally visit stores until he was 70.",
-   "key_quote": "The best business intelligence comes from people closest to the customer. Go there yourself and listen.",
-   "action": "Identify someone in your team or organisation who is closest to the customer/problem. Ask them what they're seeing that leadership doesn't know about.",
-   "index": 40,
+   "book": "High Output Management",
+   "author": "Andy Grove",
+   "chapter": "The Most Valuable Output of a Manager",
+   "lesson": "Andy Grove, Intel CEO, wrote the definitive book on management. His central insight: the output of a manager is the output of their team and the teams they influence. You are not paid to do your own work well \u2014 you are paid to maximise the output of those around you. The most leveraged activity for a manager: training and coaching. One hour of coaching that makes 10 people 10% more effective is worth 10 times more than 10 hours of personal output. His concept of 'managerial leverage' \u2014 activities that multiply the output of many \u2014 is the framework for deciding how to spend every hour.",
+   "key_quote": "A manager's productivity is measured by the productivity they enable in others, not by their own output.",
+   "action": "As a future financial controller: identify one skill you could teach someone on your team that would multiply your collective output.",
+   "index": 41,
    "total": 48,
    "crux": [
-    "Walton's obsession was the customer's price, and everything else followed from it.",
-    "Buy low, stack it high, sell it cheap. Volume compensates for margin.",
-    "Rural small towns were dismissed by competitors. That was the opening.",
-    "Control costs better than anyone. Cost advantage forgives many mistakes.",
-    "Distribution centres came before the stores they served. Logistics was the real business.",
-    "Invest early in information systems. Walmart's data infrastructure preceded everyone's.",
-    "Share profits with associates and they behave like owners.",
-    "Listen to the people on the floor. They talk to customers; you don't.",
-    "Swim upstream. Go the other way when everyone agrees.",
-    "Every store must be visited. Management by walking around, constantly.",
-    "Copy shamelessly from competitors. Walton toured rivals' stores relentlessly.",
-    "Exceed expectations, celebrate success, and keep the culture unembarrassed.",
-    "Frugality is cultural, not cosmetic \u2014 shared hotel rooms while running a Fortune 500 company."
+    "A manager's output is the output of their organisation plus the organisations they influence.",
+    "Managerial leverage = output \u00f7 time spent. Optimise for leverage, not effort.",
+    "Highest-leverage activities: training, and setting direction that many people then act on.",
+    "Production has three constraints everywhere: quality, cost, delivery time.",
+    "Inspect at the earliest, cheapest stage. Fixing at the end costs orders of magnitude more.",
+    "Indicators must come in pairs \u2014 one for output, one for the quality you might sacrifice for it.",
+    "Meetings are the medium of managerial work. A bad meeting is a process failure, not a waste of time in general.",
+    "One-on-ones are the highest-leverage meeting. The subordinate sets the agenda.",
+    "Decisions should be made at the lowest level with both knowledge and responsibility.",
+    "Aim for peer decision-making, then clear commitment even from dissenters.",
+    "Task-relevant maturity determines management style: low TRM needs structure, high TRM needs delegation.",
+    "Delegation without follow-through is abdication.",
+    "Performance reviews exist to improve performance, not to rank people.",
+    "Three motivators when money is sufficient: competence, achievement, and self-actualisation."
    ],
    "learnings": [
-    "A cost advantage is a strategy, not an accounting detail.",
-    "Infrastructure before expansion, or expansion breaks you.",
-    "Frontline staff hold the information leadership needs.",
-    "Copying well is faster than inventing badly."
+    "Leverage is the only useful lens on how a manager spends an hour.",
+    "Paired indicators stop you optimising one number into a disaster.",
+    "Training your team is not overhead. It is the highest-return activity available.",
+    "Catch problems at the cheapest stage \u2014 the value-add curve is brutal."
    ],
    "examples": [
-    "Walmart's hub-and-spoke DCs let it saturate regions competitors couldn't serve profitably.",
-    "Walton flew his own plane over towns scouting sites, personally, for years.",
-    "Profit-sharing from 1971 turned shelf-stackers into shareholders and cut shrinkage."
+    "Grove's breakfast-factory model teaches limiting-step scheduling, quality gates, and capacity planning with eggs and toast.",
+    "Intel's move out of memory into microprocessors was executed through middle managers reallocating capacity before senior leadership formally decided.",
+    "Grove taught a class himself for years \u2014 one lecture, hundreds of managers, permanent leverage."
    ],
    "adapt": [
-    "Your cost advantage is the whole stack running on GitHub Actions and Vercel free tiers. Protect it.",
-    "Infrastructure before features: fix the position lifecycle before adding another scanner.",
-    "Copy shamelessly \u2014 study what the good finance pages do, then do it in your voice.",
-    "Swim upstream: everyone posts motivational finance. Post the actual numbers, including the losses."
+    "FP&A leverage: build the model once so 20 people read it right, instead of answering 20 questions.",
+    "Pair every metric: signals sent AND measured expectancy. One alone produced 180 alerts.",
+    "Inspect early \u2014 type-check and lint before commit, not after deploy.",
+    "In the Dubai role, one-on-ones with the business owners will be the highest-leverage hour of the week."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Buy Once, Cry Once",
-    "body": "Minimalism is not cheapness. One well-made pair of shoes at 4x the price that lasts 10x as long is both cheaper and lighter. Fewer, better beats more, adequate.",
-    "action": "List three things you have replaced more than twice. Buy the good version once.",
-    "index": 6,
+    "title": "The Box Test",
+    "body": "Pack a category into a box and seal it. If you have not opened it in a month, you do not need what is inside. Most people cannot name the contents a week later.",
+    "action": "Box one category \u2014 cables, kitchen gadgets, old chargers. Date the box.",
+    "index": 7,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Never Discuss What Someone Earns",
-    "body": "Not theirs, not yours, not a third party's. It creates comparison where none existed and it always travels. Especially in the Gulf, where packages vary enormously by nationality and contract.",
-    "action": "Deflect the next compensation question with warmth, not information.",
-    "index": 12,
+    "title": "Say The Difficult Thing Kindly And Once",
+    "body": "Softening it into unrecognisability is not kindness \u2014 it guarantees you say it again, worse, later. Direct and warm. Once.",
+    "action": "Name one thing you have been avoiding saying. Say it plainly today.",
+    "index": 13,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Desire Is The Contract",
-    "body": "Every want you accept is a contract to be unhappy until it is satisfied. Most were installed by advertising, not chosen. Audit the source before signing.",
-    "action": "Name one want. Trace where it came from. Decide if it is yours.",
-    "index": 10,
+    "title": "Do One Thing At A Time",
+    "body": "The monastic instruction is: when walking, walk; when eating, eat. Multitasking is the belief that attention divides without loss. It does not.",
+    "action": "Do the next task with nothing else open.",
+    "index": 11,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Second-Order Thinking",
-    "body": "And then what? Most bad decisions are first-order correct. Price caps look like they help until supply disappears. Ask 'and then what?' three times before committing.",
-    "action": "Take today's main decision three steps forward.",
-    "index": 2,
+    "title": "Opportunity Cost",
+    "body": "The real cost of anything is the best alternative you gave up. Cash sitting idle has a cost. So does a meeting. So does a project you keep alive out of habit.",
+    "action": "Name what your largest time commitment is displacing.",
+    "index": 3,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u062d\u0628\u064a\u0628\u064a",
-    "translit": "habeebi",
-    "meaning": "My dear",
-    "use": "habeebti to a woman. Used constantly between friends and colleagues. Read the relationship before using it.",
-    "index": 18,
+    "script": "\u0645\u0628\u0631\u0648\u0643",
+    "translit": "mabrook",
+    "meaning": "Congratulations",
+    "use": "Promotions, weddings, new car, new baby. Reply: Allah yibaarik feek.",
+    "index": 19,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Speak For 60 Seconds, No Filler",
-    "body": "Record yourself explaining something for a minute with no 'um', 'like', or 'basically'. Silence between sentences reads as authority. Filler reads as uncertainty.",
-    "action": "Record 60 seconds. Count the filler words. Repeat until zero.",
-    "index": 14,
+    "title": "Reverse-Engineer A Good Model",
+    "body": "Take a model you admire and rebuild its structure from scratch. Copying output teaches nothing; reconstructing the logic teaches everything.",
+    "action": "Rebuild one section of a model you did not write.",
+    "index": 15,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Protein: 1.6g Per Kg, Minimum",
-    "body": "At 75kg that is 120g daily \u2014 far above most intakes. Protein is the one macro where the deficiency is common and the consequence is muscle you cannot easily get back.",
-    "action": "Compute your target. Hit it for one day and see how hard it actually is.",
-    "index": 4,
+    "title": "Sleep Is The Performance Lever",
+    "body": "Under 7 hours measurably degrades reaction time, glucose control, immune function, and emotional regulation. One night at 4 hours drops next-day insulin sensitivity by around 25%. You cannot out-discipline this.",
+    "action": "Fixed lights-out tonight. Same time tomorrow.",
+    "index": 5,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Elon Musk",
-   "quote": "I think it is possible for ordinary people to choose to be extraordinary.",
-   "index": 65,
+   "name": "Jeff Bezos",
+   "quote": "I knew that if I failed I wouldn't regret that, but I knew the one thing I might regret is not trying.",
+   "index": 66,
    "total": 96
   },
   "lesson": {
    "tradition": "Resilience",
-   "lesson": "Our greatest glory is not in never falling, but in rising every time we fall.",
-   "source": "Confucius"
+   "lesson": "Hardships often prepare ordinary people for an extraordinary destiny.",
+   "source": "C.S. Lewis"
   },
   "case": {
-   "title": "Zoho: The Anti-VC Playbook",
-   "story": "Zoho has never taken VC money. Sridhar Vembu built a $1B+ business on profitability, not funding. Employees in rural India, $0 in advertising spend.",
-   "lesson": "You don't need venture capital to build a great company. Profitable growth beats loss-funded growth in the long run."
+   "title": "Facebook's Instagram Acquisition (2012)",
+   "story": "Facebook bought Instagram for $1B when it had 13 employees and $0 revenue. Zuckerberg saw mobile first. Instagram is now worth $100B+.",
+   "lesson": "Buy what threatens you before it kills you. The best M&A is strategic, not defensive."
   },
   "fpna": {
-   "title": "Zero-Based Budgeting",
-   "body": "Start every budget from \u20b90. Justify every line. Cuts 15\u201330% bloat in most orgs.",
-   "index": 1,
+   "title": "Driver-Based Forecasting",
+   "body": "Build forecasts on business drivers (units, headcount, utilization), not historical % growth.",
+   "index": 2,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 2: Investor Relations",
-   "body": "Listed company CFOs speak to markets quarterly. Practice presenting results: 'Revenue grew 18% YoY driven by X. EBITDA margin expanded 200bps due to Y. FY26 guidance: Z.' Short, precise, numbers-first. Record yourself.",
-   "index": 7,
+   "title": "CFO Step 3: M&A Fundamentals",
+   "body": "Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions.",
+   "index": 8,
    "total": 15
   },
   "money_hack": {
-   "title": "Term Insurance First",
-   "body": "\u20b91Cr term insurance (\u20b910\u201315K/year at 25). Non-negotiable. Buy this before any investment."
+   "title": "ELSS Lock-in Trick",
+   "body": "ELSS 3-year lock-in: SIP each month \u2192 each instalment unlocks separately. Best 80C option."
   },
   "dubai": {
-   "title": "The cost side nobody models",
-   "body": "Housing is paid annually up front in Dubai, or quarterly at a premium. Schooling runs AED 25\u201360K per child per year. Health insurance is mandatory and usually covered. Add a AED 40\u201360K first-year setup cost before the savings maths works.",
-   "targets": "Sharjah rent is roughly half of Dubai's. The commute costs you 90 minutes a day.",
-   "action_label": "Model it",
-   "action": "Year-one net savings, not monthly salary. They are very different numbers.",
-   "index": 14,
+   "title": "Arabic is not required. Reading it helps.",
+   "body": "No finance role in the Gulf requires Arabic. But invoices, government portals and trade licences arrive in it, and being able to read a heading rather than forwarding it is a visible edge.",
+   "targets": "Numbers, months, and twenty document words. That is the whole ask.",
+   "action_label": "Ten minutes",
+   "action": "Learn the Arabic numerals and the words for invoice, tax, and licence.",
+   "index": 15,
    "total": 30
   },
   "daughter": {
@@ -508,7 +509,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Batch similar tasks. Answer all messages in one sitting.",
+  "productivity": "Phone in another room during deep work. Physical distance reduces urge 60%.",
   "father": [
    {
     "title": "Narrate what you are doing",

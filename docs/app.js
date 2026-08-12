@@ -3914,6 +3914,53 @@ var TV_ALIASES = (function () {
         + '</div></div>';
     }
 
+    /* What management DID with the money. ROCE says how well capital is used
+       today; this asks where it went and whether the returns held as it grew —
+       a company reinvesting hard at a FALLING ROCE looks busy and destroys
+       value, and ROCE alone cannot tell you which one you are looking at. */
+    function capAllocBlock(r){
+      var s = num(r, 'capalloc');
+      var notes = r.capalloc_notes || [];
+      if (s === null || !notes.length) return '';
+      return '<div class="sd-blk"><h4>Capital allocation &nbsp;<b class="ca">'
+        + s + ' / 10</b></h4><ul class="sd-upd">'
+        + notes.map(function(n){
+            return '<li class="' + (n.good ? 'k-good' : 'k-bad') + '">' + esc(n.t) + '</li>';
+          }).join('')
+        + '</ul></div>';
+    }
+
+    /* Cheap against its OWN record, which is a different question from cheap
+       against its peers — a stock can be the cheapest name in an expensive
+       sector and still sit at the top of its own range. */
+    function valHistBlock(r){
+      var v = r.val_hist;
+      if (!v || !v.history || v.history.length < 3) return '';
+      var vs = v.vs_own_median;
+      var verdict = vs === undefined || vs === null ? '' :
+        (vs <= -15 ? 'cheaper than its own record'
+         : vs >= 15 ? 'more expensive than its own record'
+         : 'in line with its own record');
+      return '<div class="sd-blk"><h4>Valuation vs its own history</h4>'
+        + '<div class="sd-peer" style="grid-template-columns:auto auto 1fr">'
+        + v.history.map(function(h){
+            return '<span class="k">PE at ' + esc(h.fy) + '</span>'
+                 + '<span class="v">' + h.pe + '</span><span class="m"></span>';
+          }).join('')
+        + '<span class="k">Own median</span><span class="v">' + v.median + '</span>'
+        + '<span class="m" style="text-align:left">range ' + v.low + '–' + v.high + '</span>'
+        + (vs === undefined || vs === null ? '' :
+            '<span class="k">Now vs that median</span>'
+            + '<span class="v' + (vs > 0 ? ' worse' : ' better') + '">'
+            + (vs > 0 ? '+' : '') + vs + '%</span>'
+            + '<span class="m" style="text-align:left">' + esc(verdict) + '</span>')
+        + '</div><p class="mono-dim" style="margin-top:9px;font-size:10.5px">'
+        + 'PE at each fiscal year end, from the reported EPS and the close on that '
+        + 'date. Only ' + v.history.length + ' years of statements are published, so '
+        + 'this is a coarse range rather than a long-run band — it says whether the '
+        + 'stock is dear for itself, not what it is worth.</p></div>';
+    }
+
     function ratioLine(r){
       var bits = [];
       function push(label, v, suf){
@@ -4010,6 +4057,8 @@ var TV_ALIASES = (function () {
         + swotBlock(r)
         + aiBlock(r)
         + peerBlock(r)
+        + valHistBlock(r)
+        + capAllocBlock(r)
         + ((r.updates || []).length ? '<div class="sd-blk"><h4>What changed</h4><ul class="sd-upd">'
             + r.updates.map(function(u){
                 return '<li class="k-' + esc(u.k || 'info') + '">' + esc(u.t) + '</li>';
@@ -4032,6 +4081,38 @@ var TV_ALIASES = (function () {
         + 'rel="noopener">Chart on TradingView ↗</a></p></div>';
     }
 
+    /* The detail half of the payload, fetched ONCE and only when a reader
+       actually opens a company.
+
+       screen.json is the table; screen-detail.json carries the year tables,
+       SWOT, business descriptions, capital-allocation notes and the rest — 74%
+       of the data by size. Shipping both as one file meant everyone who
+       scrolled to the section downloaded the full research report for all 750
+       companies to read a 16-column table (4.3MB raw, 860KB gzipped). Now the
+       table costs a fraction of that and the detail is only paid for on a
+       click. Two static files rather than a per-symbol route because Hobby caps
+       this project at 12 functions and it is at 12. */
+    var DETAIL = null, detailPromise = null;
+
+    function loadDetail(){
+      if (DETAIL) return Promise.resolve(DETAIL);
+      if (detailPromise) return detailPromise;
+      detailPromise = fetch('/screen-detail.json', { cache: 'default' })
+        .then(function(res){
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function(j){ DETAIL = (j && j.detail) || {}; return DETAIL; })
+        .catch(function(err){
+          // The sheet still opens on the table row alone. Degrading to fewer
+          // blocks beats refusing to open, and this says which happened.
+          console.warn('screen-detail.json unavailable — sheet shows table data only:', err);
+          DETAIL = {};
+          return DETAIL;
+        });
+      return detailPromise;
+    }
+
     function openStock(sym){
       var r = null;
       for (var i = 0; i < ROWS.length; i++){
@@ -4040,7 +4121,28 @@ var TV_ALIASES = (function () {
       var box = document.getElementById('sheet');
       var sbody = document.getElementById('sheetBody');
       if (!r || !box || !sbody) return;
-      sbody.innerHTML = sheetFor(r);
+
+      // Open immediately with what the table already has, then fill in the rest
+      // when the detail payload lands. A spinner-free open matters more than a
+      // complete first paint — the header, scores and tags are all in `r`.
+      if (!DETAIL){
+        sbody.innerHTML = sheetFor(r);
+        loadDetail().then(function(d){
+          var extra = d[sym];
+          if (!extra) return;
+          for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) r[k] = extra[k];
+          // Only repaint if this is still the company on screen.
+          var open = document.getElementById('sheet');
+          if (open && !open.hidden && sbody.dataset.sym === sym){
+            sbody.innerHTML = sheetFor(r);
+          }
+        });
+      } else {
+        var extra = DETAIL[sym];
+        if (extra) for (var k2 in extra) if (Object.prototype.hasOwnProperty.call(extra, k2)) r[k2] = extra[k2];
+        sbody.innerHTML = sheetFor(r);
+      }
+      sbody.dataset.sym = sym;
       box.hidden = false;
       document.body.style.overflow = 'hidden';
       try { history.pushState({ stock: sym }, '', '?stock=' + encodeURIComponent(sym)); } catch(e){}
@@ -4186,6 +4288,18 @@ var TV_ALIASES = (function () {
         if (ev.key !== 'Enter') return;
         var tr = ev.target.closest ? ev.target.closest('tr[data-sym]') : null;
         if (tr && tr.dataset.sym) openStock(tr.dataset.sym);
+      });
+
+      // Warm the detail payload on the first sign of INTENT, not on the section
+      // becoming visible — the whole point of splitting it is that a reader who
+      // only scrolls past never pays for it. Hovering a row is a good enough
+      // signal, and it makes the first click feel instant. Mobile has no hover
+      // and does not need this: openStock already opens immediately and fills
+      // the extra blocks in when they land.
+      table.addEventListener('mouseover', function warm(ev){
+        if (!ev.target.closest || !ev.target.closest('tr[data-sym]')) return;
+        table.removeEventListener('mouseover', warm);
+        loadDetail();
       });
     }
 
