@@ -240,6 +240,8 @@ _SCREEN_HELP = (
     "`/screen oversold` — RSI under 35\n"
     "`/screen debtfree` — D/E at or below 0.1\n"
     "`/screen micro` — Microcap 250 only\n\n"
+    "*Rank for a horizon* (same data, different weights):\n"
+    "`/screen investor` · `/screen positional` · `/screen swing`\n\n"
     "Rebuilt weekly from published annual statements. "
     "A ranking of public data, not advice."
 )
@@ -260,6 +262,11 @@ _SCREEN_PRESETS = {
     "mid":       lambda r: r.get("tier") == "mid",
     "large":     lambda r: r.get("tier") == "large",
 }
+
+# Ranking modes, same weight sets as the site. `/screen investor` answers a
+# different question from `/screen swing` over the SAME components — see
+# MODES in stock_screen.py.
+_SCREEN_MODES = {"investor": "m_inv", "positional": "m_pos", "swing": "m_swing"}
 
 
 def _screen_payload():
@@ -340,6 +347,19 @@ def _screen_reply(text: str) -> str:
                      f"ROCE {_n(r.get('roce'),'%')} · "
                      f"rev {_n(r.get('rev_cagr'),'%')} · PE {_n(r.get('pe'))}")
         L += ["", "`/screen SYMBOL` for one company · `/screenhelp` for presets"]
+        return "\n".join(L)
+
+    if arg in _SCREEN_MODES:
+        key = _SCREEN_MODES[arg]
+        sel = [r for r in rows if r.get(key) is not None]
+        sel.sort(key=lambda r: -r[key])
+        L = [f"🔎 *Top 10 ranked for {arg}*", f"_{uni} · built {built}_", ""]
+        for i, r in enumerate(sel[:10], 1):
+            L.append(f"{i}. *{r['sym']}* {_n(r.get(key))} "
+                     f"_(balanced {_n(r.get('comp'))})_ · "
+                     f"ROCE {_n(r.get('roce'),'%')} · RSI {_n(r.get('rsi'))}")
+        L += ["", "_Same components, different weights. A name can rank high "
+                  "here and low elsewhere — that is the point._"]
         return "\n".join(L)
 
     if arg in _SCREEN_PRESETS:

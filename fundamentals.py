@@ -311,6 +311,21 @@ _INCOME_ROWS = {
     "shares":      ("Diluted Average Shares", "Basic Average Shares"),
 }
 
+# Cash flow. The line that separates a real compounder from an accounting one:
+# a company can report excellent PAT while collecting very little of it, and
+# nothing in the income statement or balance sheet says so on its own.
+_CASHFLOW_ROWS = {
+    "cfo":        ("Operating Cash Flow", "Total Cash From Operating Activities",
+                   "Cash Flow From Continuing Operating Activities"),
+    "capex":      ("Capital Expenditure", "Capital Expenditure Reported",
+                   "Net PPE Purchase And Sale"),
+    "fcf":        ("Free Cash Flow",),
+    "dividends":  ("Cash Dividends Paid", "Common Stock Dividend Paid"),
+    "buyback":    ("Repurchase Of Capital Stock",),
+    "debt_issued": ("Issuance Of Debt", "Long Term Debt Issuance"),
+    "debt_repaid": ("Repayment Of Debt", "Long Term Debt Payments"),
+}
+
 _BALANCE_ROWS = {
     "equity":              ("Stockholders Equity", "Common Stock Equity",
                             "Total Equity Gross Minority Interest"),
@@ -429,6 +444,13 @@ def fetch_statements(symbol: str) -> dict | None:
         tkr = yf.Ticker(to_yahoo(symbol))
         income = tkr.financials
         balance = tkr.balance_sheet
+        # Third frame, and the one that catches earnings that never became cash.
+        # A missing cash-flow statement is not fatal — the row simply carries no
+        # cash quality — so it is fetched defensively rather than gating the rest.
+        try:
+            cashflow = tkr.cashflow
+        except Exception:
+            cashflow = None
     except Exception as e:
         log.warning(f"statements: {symbol} fetch failed — {e}")
         return None
@@ -438,6 +460,7 @@ def fetch_statements(symbol: str) -> dict | None:
 
     inc = {k: _pick(income, names) for k, names in _INCOME_ROWS.items()}
     bal = {k: _pick(balance, names) for k, names in _BALANCE_ROWS.items()}
+    cfs = {k: _pick(cashflow, names) for k, names in _CASHFLOW_ROWS.items()}
 
     years = []
     for col in list(income.columns)[:4]:
@@ -445,6 +468,13 @@ def fetch_statements(symbol: str) -> dict | None:
         # Balance-sheet columns are the same period ends, but not always the
         # same set — a symbol can have 4 income years and 3 balance years.
         b = {k: _at(s, col) for k, s in bal.items()}
+        cf = {k: _at(s, col) for k, s in cfs.items()}
+        # Yahoo publishes Free Cash Flow directly on most names; where it does
+        # not, CFO + capex is the definition (capex arrives NEGATIVE, so this is
+        # a subtraction written as an addition).
+        fcf = cf.get("fcf")
+        if fcf is None and cf.get("cfo") is not None and cf.get("capex") is not None:
+            fcf = cf["cfo"] + cf["capex"]
 
         equity = b["equity"]
         assets = b["total_assets"]
@@ -488,6 +518,18 @@ def fetch_statements(symbol: str) -> dict | None:
             "current_ratio": _safe_div(b["current_assets"], cur_liab),
             "interest_cover": _safe_div(ebit, abs(v["interest"]) if v["interest"] else None),
             "effective_tax": _safe_div(v["tax"], v["pretax"]),
+            # ── cash ──
+            "cfo": cf.get("cfo"),
+            "capex": cf.get("capex"),
+            "fcf": fcf,
+            "dividends": cf.get("dividends"),
+            "buyback": cf.get("buyback"),
+            # Cash conversion. CFO/PAT near or above 1 means the profit is real;
+            # persistently below ~0.8 means it is sitting in receivables or
+            # inventory, and no income-statement ratio reveals that.
+            "cfo_pat": _safe_div(cf.get("cfo"), v["net_income"]),
+            "fcf_pat": _safe_div(fcf, v["net_income"]),
+            "fcf_margin": _safe_div(fcf, v["revenue"]),
         })
 
     if not years:
@@ -511,12 +553,29 @@ def fetch_statements(symbol: str) -> dict | None:
     }
 
 
+# Per-YEAR keys that fetch_statements promises. Same discipline as _SCHEMA_KEYS
+# for the `.info` cache, and added for the same reason: `cfo_pat` shipped after
+# 750 symbols were already sitting in a fresh 30-day cache, so without this every
+# one of them would have served cash-flow-less rows for a month with nothing to
+# say why the column was empty.
+_STMT_SCHEMA_KEYS = frozenset({"cfo", "fcf", "cfo_pat"})
+
+
+def _stmt_schema_ok(entry: dict) -> bool:
+    if entry.get("_miss"):
+        return True
+    years = entry.get("years") or []
+    if not years:
+        return False
+    return _STMT_SCHEMA_KEYS.issubset(years[0].keys())
+
+
 def statements(symbol: str, allow_fetch: bool = True) -> dict | None:
     """Cached statements lookup. Mirrors get() — misses are cached too."""
     key = symbol.replace(".NS", "").upper()
     cache = _load_stmt_cache()
     entry = cache.get(key)
-    if entry and _fresh(entry, STMT_CACHE_TTL_DAYS):
+    if entry and _fresh(entry, STMT_CACHE_TTL_DAYS) and _stmt_schema_ok(entry):
         return None if entry.get("_miss") else entry
     if not allow_fetch:
         return None
@@ -542,7 +601,8 @@ def prefetch_statements(symbols, pause: float = 0.4, checkpoint: int = 20) -> tu
     cache = _load_stmt_cache()
     wanted = [s.replace(".NS", "").upper() for s in symbols]
     stale = [s for s in wanted
-             if not (cache.get(s) and _fresh(cache[s], STMT_CACHE_TTL_DAYS))]
+             if not (cache.get(s) and _fresh(cache[s], STMT_CACHE_TTL_DAYS)
+                     and _stmt_schema_ok(cache[s]))]
     if not stale:
         return len(wanted), len(wanted)
 

@@ -110,6 +110,40 @@ WEIGHTS = {
     "valuation": 0.15,
 }
 
+# ── ranking modes ───────────────────────────────────────────────────────────
+#
+# THE POINT: a good company and a good thing to buy today are different
+# questions, and one composite cannot answer both. The same business can be
+# excellent and fully priced, or mediocre and setting up well. Ranking everything
+# by one blend forces those two facts through one number and loses whichever one
+# the reader cared about.
+#
+# So the weights become a MODE, and the mode is the reader's declared question:
+#
+#   investor    "is this a business worth owning for years"
+#               → quality and price dominate; the chart barely matters
+#   positional  "is this compounding AND working right now"
+#               → growth and trend carry it, quality still gates it
+#   swing       "is this technically actionable in the next few weeks"
+#               → almost entirely the chart; fundamentals only as a floor
+#
+# Declared as weight sets over the SAME component registry rather than as three
+# separate scoring functions, which is what keeps them honest: a component added
+# later (cash flow, earnings momentum) appears in every mode that names it, and
+# no mode can quietly use a metric the others cannot see.
+#
+# Weights within a mode do not need to sum to 1 — _composite renormalises over
+# whichever components actually resolved for that company.
+MODES = {
+    "investor":   {"quality": 0.40, "growth": 0.20, "valuation": 0.25,
+                   "technical": 0.05, "cashflow": 0.10},
+    "positional": {"quality": 0.25, "growth": 0.25, "valuation": 0.10,
+                   "technical": 0.25, "earnings_momentum": 0.15},
+    "swing":      {"technical": 0.60, "growth": 0.10, "quality": 0.10,
+                   "valuation": 0.05, "earnings_momentum": 0.15},
+}
+DEFAULT_MODE = "balanced"      # the WEIGHTS blend above, kept as the headline
+
 # Bars needed before an indicator is allowed to produce a number. A 200-day
 # average of 60 bars is not a 200-day average, and a newly listed stock is the
 # case that exposes it.
@@ -563,6 +597,8 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         "rev_growth_latest": None, "roce_basis": None,
         "shares_changed": False, "has_statements": False, "fy_count": 0,
         "margin_one_off": None,
+        "cfo_pat": None, "cfo_pat_latest": None, "fcf_pat": None,
+        "fcf_margin": None, "cfo": None, "fcf": None, "capex": None,
     }
 
     if info:
@@ -614,6 +650,18 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
 
     for k in ("net_margin", "interest_cover", "current_ratio", "effective_tax"):
         r[k] = _finite(latest.get(k))
+
+    # ── cash quality ──
+    # The median across years, not the latest: one good collection year proves
+    # nothing, and one bad one can be a timing artefact. A business that
+    # persistently converts profit to cash shows it across the whole span.
+    r["cfo_pat"] = _median([_finite(y.get("cfo_pat")) for y in ys])
+    r["cfo_pat_latest"] = _finite(latest.get("cfo_pat"))
+    r["fcf_pat"] = _median([_finite(y.get("fcf_pat")) for y in ys])
+    r["fcf_margin"] = _finite(latest.get("fcf_margin"))
+    r["cfo"] = _finite(latest.get("cfo"))
+    r["fcf"] = _finite(latest.get("fcf"))
+    r["capex"] = _finite(latest.get("capex"))
     # Statement leverage beats the `.info` figure when both exist: it is the
     # audited balance sheet rather than a derived field, and it is the same
     # vintage as every other number in this row.
@@ -666,6 +714,97 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         "de": _round(_finite(y.get("debt_to_equity")), 1, 2),
     } for y in ys]
     return r
+
+
+def earnings_momentum(ys: list[dict]) -> dict:
+    """Is the business speeding up or slowing down RIGHT NOW?
+
+    The four-year table says what happened. It cannot say whether the latest year
+    is better or worse than the trajectory that produced it, and that is usually
+    the more actionable question — a 25% compounder decelerating to 8% and a 12%
+    compounder accelerating to 20% look identical on a CAGR column.
+
+    Works off the same statements already fetched, so it costs nothing. Compares
+    the LATEST year-on-year growth against the growth of the years before it:
+
+        accelerating   latest YoY meaningfully above the earlier pace
+        decelerating   meaningfully below
+        stable         within the dead band
+        None           fewer than three years, or the numbers do not support it
+
+    `ys` is the rounded per-year block, newest first.
+    """
+    out = {"label": None, "rev_yoy": None, "ebitda_yoy": None, "pat_yoy": None,
+           "eps_yoy": None, "margin_delta": None, "prior_rev_yoy": None}
+    if not ys or len(ys) < 3:
+        return out
+
+    def yoy(key, i):
+        """Growth of year i over year i+1, as a fraction."""
+        try:
+            cur, prev = ys[i].get(key), ys[i + 1].get(key)
+        except IndexError:
+            return None
+        if cur is None or prev is None or prev == 0:
+            return None
+        # A sign flip has no meaningful growth rate, same reason cagr() refuses.
+        if prev < 0 or cur < 0:
+            return None
+        return cur / prev - 1.0
+
+    out["rev_yoy"] = yoy("rev_cr", 0)
+    out["ebitda_yoy"] = yoy("ebitda_cr", 0)
+    out["pat_yoy"] = yoy("pat_cr", 0)
+    out["eps_yoy"] = yoy("eps", 0)
+    out["prior_rev_yoy"] = yoy("rev_cr", 1)
+
+    m0, m1 = ys[0].get("ebit_margin"), ys[1].get("ebit_margin")
+    if m0 is not None and m1 is not None:
+        out["margin_delta"] = round(m0 - m1, 1)      # already percentage points
+
+    # Direction from revenue first — it is the least manipulable line — with
+    # EBITDA as the confirming vote. Both must exist to call it.
+    latest, prior = out["rev_yoy"], out["prior_rev_yoy"]
+    if latest is None or prior is None:
+        return out
+    gap = latest - prior
+    BAND = 0.05                                   # 5pt of growth, not 5%
+    votes = 0
+    if gap > BAND:
+        votes += 1
+    elif gap < -BAND:
+        votes -= 1
+    eb, prior_eb = out["ebitda_yoy"], yoy("ebitda_cr", 1)
+    if eb is not None and prior_eb is not None:
+        if eb - prior_eb > BAND:
+            votes += 1
+        elif eb - prior_eb < -BAND:
+            votes -= 1
+    out["label"] = ("accelerating" if votes > 0 else
+                    "decelerating" if votes < 0 else "stable")
+    return out
+
+
+def score_earnings_momentum(em: dict) -> dict:
+    """Momentum of the accounts, as a component the modes can weight.
+
+    Separate from `growth`, which measures the LEVEL of compounding. A company
+    can compound at 25% and be slowing; those are different facts and the modes
+    weight them differently — positional and swing care about the change,
+    investor mostly about the level.
+    """
+    parts = {
+        "revenue": _band(em.get("rev_yoy"), 0.0, 0.30),
+        "ebitda": _band(em.get("ebitda_yoy"), 0.0, 0.35),
+        "profit": _band(em.get("pat_yoy"), 0.0, 0.35),
+        # Direction, not level. This is the part `growth` cannot express.
+        "direction": (None if em.get("label") is None else
+                      1.0 if em["label"] == "accelerating" else
+                      0.5 if em["label"] == "stable" else 0.0),
+        "margin": _band(em.get("margin_delta"), -3.0, 3.0),
+    }
+    v, conf = _blend(parts)
+    return {"score": v, "conf": conf, "parts": {k: _pct(x) for k, x in parts.items()}}
 
 
 def _trend(series: list) -> str | None:
@@ -777,6 +916,31 @@ def score_quality(r: dict) -> dict:
                      0.0 if de < 0 else
                      1.0 - _band(de, 0.0, 2.0)),
         "cover": _band(r.get("interest_cover"), 2.0, 15.0),
+    }
+    v, conf = _blend(parts)
+    return {"score": v, "conf": conf, "parts": {k: _pct(x) for k, x in parts.items()}}
+
+
+def score_cashflow(r: dict) -> dict:
+    """Does the reported profit actually arrive as cash?
+
+    A separate component from quality on purpose. ROCE and margins are computed
+    from the income statement and balance sheet, and a company can look excellent
+    on both while collecting very little of what it books — the profit sits in
+    receivables or inventory instead. Nothing in the other three scores can see
+    that, which is why this is the component the investor mode weights and the
+    swing mode ignores.
+
+    1.0x conversion is the reference point, not a stretch target: a business
+    converting all of its profit to operating cash is doing what it should.
+    """
+    parts = {
+        # 0.6x is poor, 1.1x is excellent. Below 0.6 the earnings are largely
+        # accounting; above ~1.1 there is usually real depreciation shielding.
+        "conversion": _band(r.get("cfo_pat"), 0.6, 1.1),
+        # Free cash after capex — the money actually available to owners.
+        "free_cash": _band(r.get("fcf_pat"), 0.2, 0.9),
+        "fcf_margin": _band(r.get("fcf_margin"), 0.0, 0.20),
     }
     v, conf = _blend(parts)
     return {"score": v, "conf": conf, "parts": {k: _pct(x) for k, x in parts.items()}}
@@ -911,6 +1075,29 @@ def swot(r: dict, t: dict, val: dict) -> dict:
                "a bad year puts the debt service at risk",
             f"EBIT/interest {ic:.1f}x")
 
+    # Cash conversion, both directions. The strength here is the one that
+    # separates a compounder from a company that merely reports like one.
+    cp = r.get("cfo_pat")
+    if cp is not None and not _is_financial(r):
+        if cp >= 0.95:
+            add(S, f"Converts {cp:.0%} of reported profit into operating cash",
+                f"CFO/PAT {cp:.2f}x (median)")
+        elif cp < 0:
+            # "Only -30% arrives as cash, the rest is in receivables" is
+            # nonsense — a negative ratio means operations BURNED cash, which is
+            # a different statement, not a smaller version of the same one.
+            add(W, "Operations consumed cash over the statement history despite "
+                   "reported profits",
+                f"CFO/PAT {cp:.2f}x (median)")
+        elif cp < 0.7:
+            add(W, f"Only {cp:.0%} of profit arrives as cash — the rest is sitting "
+                   "in receivables or inventory",
+                f"CFO/PAT {cp:.2f}x (median)")
+    fm = r.get("fcf_margin")
+    if fm is not None and fm >= 0.12 and not _is_financial(r):
+        add(S, f"Generates {fm:.0%} of revenue as free cash after capex",
+            f"FCF margin {fm:.1%}")
+
     if r.get("ebit_margin_trend") == "falling":
         add(W, "Operating margin has compressed over the statement history",
             f"EBIT margin {_pct(r.get('ebit_margin'))}% latest vs "
@@ -989,6 +1176,227 @@ def swot(r: dict, t: dict, val: dict) -> dict:
             f"{r.get('fy_count')} statement years")
 
     return {"s": S, "w": W, "o": O, "t": T}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RISK, WHY NOW, WHAT CAN GO WRONG
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Deliberately NOT another 0-100 score. A "risk score of 62" tells a reader
+# nothing unless they also know which direction is better, and every extra
+# arbitrary index on this page is one more number nobody can act on. Risk is
+# LOW / MEDIUM / HIGH, derived by counting flags that each name a real number.
+#
+# The severities are about CONSEQUENCE, not probability — nothing here has been
+# validated as predictive and none of it is a forecast. "high" means the flag
+# would materially change what a position is worth if it matters at all.
+
+RISK_WEIGHT = {"high": 3, "med": 2, "low": 1}
+# Two high flags, or a high plus two mediums, reads HIGH. Tuned to the flag set
+# rather than fitted to anything.
+RISK_BANDS = ((6, "HIGH"), (3, "MEDIUM"), (0, "LOW"))
+
+
+def risk_flags(r: dict, t: dict, val: dict) -> dict:
+    """Named risks, each carrying the figure that raised it.
+
+    Returns {"level": "LOW|MEDIUM|HIGH", "score": n, "flags": [...]}. `score` is
+    an internal tally, published only so the banding can be checked — the LEVEL
+    is what the page shows.
+    """
+    flags = []
+
+    def flag(sev, text, evidence):
+        flags.append({"s": sev, "t": text, "k": evidence})
+
+    # ── balance sheet ──
+    de = r.get("debt_to_equity")
+    if de is not None and not _is_financial(r):
+        if de < 0:
+            flag("high", "Negative shareholders' equity — technically insolvent "
+                         "on a book basis", f"D/E {de:.2f} on negative net worth")
+        elif de >= 2.0:
+            flag("high", f"Carries {de:.1f}x debt to equity", f"D/E {de:.2f}")
+        elif de >= 1.0:
+            flag("med", f"Leverage above 1x equity", f"D/E {de:.2f}")
+    ic = r.get("interest_cover")
+    if ic is not None:
+        if ic < 1.5:
+            flag("high", "Operating profit barely covers interest",
+                 f"EBIT/interest {ic:.1f}x")
+        elif ic < 3.0:
+            flag("med", "Thin interest cover", f"EBIT/interest {ic:.1f}x")
+    cr = r.get("current_ratio")
+    if cr is not None and cr < 1.0 and not _is_financial(r):
+        flag("med", "Current liabilities exceed current assets",
+             f"current ratio {cr:.2f}")
+
+    # ── the business ──
+    if r.get("roce_trend") == "falling":
+        flag("high", "Return on capital falling across the statement history",
+             f"ROCE {_pct(r.get('roce'))}% vs {_pct(r.get('roce_med'))}% median")
+    elif r.get("roce_trend") == "peaked":
+        flag("med", "Return on capital off its peak",
+             f"ROCE {_pct(r.get('roce'))}% vs {_pct(r.get('roce_med'))}% median")
+    if r.get("ebit_margin_trend") == "falling":
+        flag("med", "Operating margin compressing", f"EBIT margin {_pct(r.get('ebit_margin'))}%")
+    if r.get("margin_one_off"):
+        flag("med", "Latest year contains a margin discontinuity, so its headline "
+                    "ratios are not a run rate",
+             f"EBIT margin moved {r['margin_one_off']:.0f}pt year on year")
+    rc = r.get("rev_cagr3")
+    if rc is not None and rc < 0:
+        flag("high", "Revenue shrinking over the statement history",
+             f"{r.get('cagr_span', 3)}Y revenue CAGR {rc:.1%}")
+
+    # ── cash quality ──
+    # The flag that catches an accounting-driven earnings story. Nothing in
+    # ROCE, margins or growth can see this: those are all computed from the
+    # income statement, and this is whether the money arrived.
+    cp = r.get("cfo_pat")
+    if cp is not None and not _is_financial(r):
+        if cp < 0:
+            flag("high", "Operations consumed cash while the company reported a "
+                         "profit", f"CFO/PAT {cp:.2f}x (median)")
+        elif cp < 0.6:
+            flag("high", f"Only {cp:.0%} of reported profit arrived as operating "
+                         f"cash — the earnings are largely on paper",
+                 f"CFO/PAT {cp:.2f}x (median across the statement history)")
+        elif cp < 0.8:
+            flag("med", f"Cash conversion of {cp:.0%} lags the reported profit",
+                 f"CFO/PAT {cp:.2f}x (median)")
+    fp = r.get("fcf_pat")
+    if fp is not None and fp < 0 and not _is_financial(r):
+        flag("med", "No free cash flow after capex", f"FCF/PAT {fp:.2f}x")
+    if r.get("shares_changed"):
+        flag("med", "Share count moved structurally, so per-share history is not "
+                    "comparable", "share count moved >2% year on year")
+    if not r.get("has_statements"):
+        flag("high", "No annual statements published for this symbol",
+             "price-only row, carries no composite")
+
+    # ── price and valuation ──
+    if val.get("pe_pctile") is not None and val["pe_pctile"] <= 15:
+        flag("med", f"More expensive than {100 - val['pe_pctile']:.0f}% of its "
+                    f"industry peers", f"PE percentile {val['pe_pctile']:.0f}")
+    rsi_v = t.get("rsi14")
+    if rsi_v is not None and rsi_v > 75:
+        flag("med", f"Extended at RSI {rsi_v:.0f} — a poor level to start a position",
+             f"RSI(14) {rsi_v:.1f}")
+    if t.get("sma200") and t.get("price"):
+        ext = t["price"] / t["sma200"] - 1
+        if ext >= 0.40:
+            flag("med", f"Trading {ext:.0%} above its 200-day average",
+                 f"₹{t['price']} vs SMA200 ₹{t['sma200']:.0f}")
+    if t.get("atr_pct") is not None and t["atr_pct"] >= 0.05:
+        flag("med", f"Moves {t['atr_pct']:.1%} a day on average",
+             f"ATR {t['atr_pct']:.2%} of price")
+    if not t.get("liquid", True):
+        flag("high", "Thinly traded — an exit may move the price",
+             f"20d turnover ₹{t.get('turnover_cr', 0):.1f}cr/day")
+    if t.get("from_high52") is not None and t["from_high52"] <= -0.40:
+        flag("med", f"Down {abs(t['from_high52']):.0%} from its 52-week high",
+             f"₹{t.get('price')} vs 52w high ₹{t['high52']:.0f}")
+
+    score = sum(RISK_WEIGHT[f["s"]] for f in flags)
+    level = next(lab for cut, lab in RISK_BANDS if score >= cut)
+    order = {"high": 0, "med": 1, "low": 2}
+    flags.sort(key=lambda f: order[f["s"]])
+    return {"level": level, "score": score, "flags": flags}
+
+
+def why_now(r: dict, t: dict, val: dict) -> list[dict]:
+    """The case FOR looking at this today, each line naming its number.
+
+    Separate from the SWOT on purpose: the SWOT describes the business over
+    years, this answers "why is this on the screen this week". A high-quality
+    company that has done nothing for two years has plenty of strengths and no
+    why-now at all, and the page should be able to say that.
+    """
+    out = []
+
+    def add(text, evidence):
+        out.append({"t": text, "k": evidence})
+
+    if t.get("brk52w"):
+        add("At a 52-week high", f"₹{t.get('price')} vs 52w high ₹{t['high52']:.0f}"
+            if t.get("high52") else "52-week breakout")
+    elif t.get("brk50"):
+        add("Broke its 50-day high", "close above the prior 50-day range")
+    elif t.get("brk20"):
+        add("Broke its 20-day high", "close above the prior 20-day range")
+
+    vs = t.get("vol_spike")
+    if vs and vs >= 1.5:
+        add(f"Volume {vs:.1f}x its 20-day average — the move is being paid for",
+            f"{vs:.2f}x avg volume")
+
+    rs = t.get("rs_1y")
+    if rs is not None and rs >= 0.15:
+        add(f"Outperforming the Nifty by {rs:.0%} over a year", f"1Y excess {rs:+.1%}")
+
+    if t.get("ma_stack") and t.get("above_mas") == 3:
+        add("Above the 20, 50 and 200-day averages with the stack in order",
+            "3 of 3 MAs held, 20 > 50 > 200")
+
+    roce = r.get("roce_med") if r.get("roce_med") is not None else r.get("roce")
+    if roce is not None and roce >= 0.20:
+        add(f"Earns {roce:.0%} on capital employed",
+            f"ROCE {roce:.1%} ({r.get('roce_basis') or 'capital employed'})")
+    if rc := r.get("rev_cagr3"):
+        if rc >= 0.20:
+            add(f"Revenue compounding at {rc:.0%} a year",
+                f"{r.get('cagr_span', 3)}Y revenue CAGR {rc:.1%}")
+    if (r.get("ebitda_cagr3") or 0) > (r.get("rev_cagr3") or 0) + 0.05 \
+            and not r.get("margin_one_off"):
+        add("Profit growing faster than sales",
+            f"EBITDA CAGR {r['ebitda_cagr3']:.1%} vs revenue {r['rev_cagr3']:.1%}")
+    if val.get("pe_pctile") is not None and val["pe_pctile"] >= 70:
+        add(f"Cheaper than {val['pe_pctile']:.0f}% of its industry peers",
+            f"PE {r.get('pe')} vs {val.get('peers')} peers")
+    de = r.get("debt_to_equity")
+    if de is not None and 0 <= de <= 0.1 and not _is_financial(r):
+        add("Effectively debt-free", f"D/E {de:.2f}")
+
+    rsi_v = t.get("rsi14")
+    if rsi_v is not None and rsi_v < 35 and (roce or 0) >= 0.15:
+        add(f"Oversold at RSI {rsi_v:.0f} while still earning {roce:.0%} on capital",
+            f"RSI(14) {rsi_v:.1f}, ROCE {roce:.1%}")
+    return out
+
+
+def price_location(t: dict) -> dict:
+    """Where price sits against its own structure. NOT a target or a call.
+
+    Deliberately zones and levels rather than "BUY ₹1,183 / TARGET ₹1,275". This
+    section has no validated predictive model, so a precise entry and target
+    would be fabricated precision dressed as analysis. Every number here is an
+    observable level already on the chart.
+    """
+    price, s20, s50, s200 = (t.get("price"), t.get("sma20"),
+                             t.get("sma50"), t.get("sma200"))
+    if price is None:
+        return {}
+    atr = t.get("atr14")
+    out = {"price": _round(price, 1, 2)}
+    # Preferred zone: between the 20 and 50-day averages when price is above
+    # both — that is the ordinary pullback area, not a prediction.
+    lo = min([x for x in (s20, s50) if x] or [0]) or None
+    hi = max([x for x in (s20, s50) if x] or [0]) or None
+    if lo and hi and price > hi:
+        out["zone_lo"], out["zone_hi"] = _round(lo, 1, 1), _round(hi, 1, 1)
+    if atr and price:
+        # Confirmation is one ATR above the recent high, which is a level, not a
+        # forecast of reaching it.
+        ref = t.get("high52") if t.get("brk52w") else price
+        out["confirm"] = _round(ref + atr, 1, 1)
+    if s200:
+        out["invalidation"] = _round(s200, 1, 1)
+        out["invalidation_basis"] = "200-day average"
+    elif s50:
+        out["invalidation"] = _round(s50, 1, 1)
+        out["invalidation_basis"] = "50-day average"
+    return out
 
 
 def setup_label(t: dict, r: dict) -> dict:
@@ -1097,7 +1505,8 @@ def _valuation_pass(rows: list[dict]) -> None:
         row["ind_med"] = ind_medians.get(row.get("industry") or "—")
 
 
-def _composite(scores: dict, has_stmts: bool = True) -> float | None:
+def _composite(scores: dict, has_stmts: bool = True,
+               weights: dict | None = None) -> float | None:
     """Declared weighted blend, renormalised over the scores that exist.
 
     Renormalising rather than treating a missing score as zero: a bank with no
@@ -1127,7 +1536,7 @@ def _composite(scores: dict, has_stmts: bool = True) -> float | None:
     if not has_stmts:
         return None
     num = den = 0.0
-    for k, w in WEIGHTS.items():
+    for k, w in (weights or WEIGHTS).items():
         s = scores.get(k, {}).get("score")
         if s is None:
             continue
@@ -1136,8 +1545,23 @@ def _composite(scores: dict, has_stmts: bool = True) -> float | None:
     return round(num / den, 1) if den > 0 else None
 
 
+def mode_scores(scores: dict, has_stmts: bool = True) -> dict:
+    """The same components ranked under each mode's question.
+
+    Returns {"balanced": x, "investor": y, "positional": z, "swing": w}. A mode
+    whose components are all missing returns None for that mode rather than a
+    number built on nothing — a swing score for a company with no price history
+    would be an opinion, not a measurement.
+    """
+    out = {"balanced": _composite(scores, has_stmts)}
+    for name, w in MODES.items():
+        out[name] = _composite(scores, has_stmts, weights=w)
+    return out
+
+
 def build(limit: int | None = None, allow_fetch: bool = True,
-          news_top: int = 150, narrate_top: int = 40, ai=None) -> dict:
+          news_top: int = 150, narrate_top: int = 40, ai=None,
+          prev: dict | None = None) -> dict:
     """Build the whole screen. Returns the publishable payload.
 
     `limit` truncates the universe for a fast local run. `news_top` and
@@ -1154,6 +1578,11 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     uni = universe(refresh=allow_fetch, tiers=allow_fetch)
     if not uni:
         return {"ok": False, "error": "universe unavailable"}
+    # Captured BEFORE `limit` truncates, because the universe LABEL is derived
+    # from it. Reading it after meant a `limit=120` smoke run reported
+    # "Total Market unavailable — fell back to Nifty 500", which was false and
+    # would have been published as provenance.
+    universe_size = len(uni)
     if limit:
         uni = uni[:limit]
     syms = [u["symbol"] for u in uni]
@@ -1195,9 +1624,12 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     out = []
     for row in rows:
         r, t, u = row["r"], row["t"], row["u"]
+        em = earnings_momentum(r.get("years") or [])
         scores = {
             "quality": score_quality(r),
             "growth": score_growth(r),
+            "earnings_momentum": score_earnings_momentum(em),
+            "cashflow": score_cashflow(r),
             "technical": score_technical(t),
             "valuation": {"score": row["val"]["score"], "conf": row["val"]["conf"],
                           "parts": {"pe": row["val"]["pe_pctile"],
@@ -1207,9 +1639,12 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         # of — CHENNPETRO's 91.2 was one `.info` leverage field wearing the word
         # "quality". Blank them rather than publish a number built on scraps.
         if not r.get("has_statements"):
-            for k in ("quality", "growth"):
+            for k in ("quality", "growth", "earnings_momentum", "cashflow"):
                 scores[k] = {"score": None, "conf": 0.0, "parts": scores[k]["parts"]}
-        comp = _composite(scores, has_stmts=bool(r.get("has_statements")))
+        has = bool(r.get("has_statements"))
+        comp = _composite(scores, has_stmts=has)
+        modes = mode_scores(scores, has_stmts=has)
+        rk = risk_flags(r, t, row["val"])
         out.append({
             "sym": u["symbol"],
             "name": u["name"] or u["symbol"],
@@ -1267,11 +1702,35 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "r3y_cagr": _pct(t.get("r3y_cagr")),
             "rs3m": _pct(t.get("rs_3m")), "rs1y": _pct(t.get("rs_1y")),
             # Scores, always with their parts
+            # Earnings momentum: the DIRECTION of the accounts, which the growth
+            # score (a level) cannot express. A 25% compounder slowing to 8% and
+            # a 12% compounder speeding to 20% have the same CAGR column.
+            "em": scores["earnings_momentum"]["score"],
+            "em_conf": scores["earnings_momentum"]["conf"],
+            "em_label": em.get("label"),
+            "rev_yoy": _pct(em.get("rev_yoy")),
+            "ebitda_yoy": _pct(em.get("ebitda_yoy")),
+            "pat_yoy": _pct(em.get("pat_yoy")),
+            "eps_yoy": _pct(em.get("eps_yoy")),
+            "margin_delta": em.get("margin_delta"),
+            "cf": scores["cashflow"]["score"],
+            "cf_conf": scores["cashflow"]["conf"],
+            "cfo_pat": _round(r.get("cfo_pat"), 1, 2),
+            "fcf_pat": _round(r.get("fcf_pat"), 1, 2),
+            "fcf_margin": _pct(r.get("fcf_margin")),
+            "cfo_cr": _round(r.get("cfo"), 1e7, 0),
+            "fcf_cr": _round(r.get("fcf"), 1e7, 0),
             "q": scores["quality"]["score"], "q_conf": scores["quality"]["conf"],
             "g": scores["growth"]["score"], "g_conf": scores["growth"]["conf"],
             "v": scores["valuation"]["score"], "v_conf": scores["valuation"]["conf"],
             "tech": scores["technical"]["score"], "tech_conf": scores["technical"]["conf"],
             "comp": comp,
+            # The same components under each mode's question. A stock can be an
+            # 82 to an investor and a 96 to a swing trader, and that difference
+            # is the most useful thing on the row.
+            "m_inv": modes.get("investor"),
+            "m_pos": modes.get("positional"),
+            "m_swing": modes.get("swing"),
             "parts": {k: scores[k]["parts"] for k in scores},
             "pe_pctile": row["val"]["pe_pctile"],
             "val_scope": row["val"]["scope"],
@@ -1284,6 +1743,16 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "website": r.get("website") or "",
             "years": r.get("years") or [],
             "swot": swot(r, t, row["val"]),
+            # Why look at this today, what would go wrong, and where price sits.
+            # Kept separate from the SWOT: the SWOT describes the business over
+            # years, why_now answers "why is this on the screen this week".
+            "why_now": why_now(r, t, row["val"]),
+            "risk": rk,
+            # Flat numeric alongside the nested block, purely so the table can
+            # SORT on it — the browser's comparator reads scalar keys, and a
+            # column that cannot be sorted is a column that gets ignored.
+            "risk_lvl": {"LOW": 0, "MEDIUM": 1, "HIGH": 2}.get(rk["level"]),
+            "loc": price_location(t),
             "setup": setup_label(t, r),
             "updates": updates(r, t),
             "has_stmts": r.get("has_statements"),
@@ -1295,6 +1764,9 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         })
 
     out.sort(key=lambda x: (x["comp"] is None, -(x["comp"] or 0)))
+    # Deltas BEFORE compaction: _compact strips nulls, and a delta needs
+    # both sides present to be computed at all.
+    delta_meta = attach_deltas(out, prev)
     out = [_compact(r) for r in out]
 
     # 5) Headlines for the top slice only.
@@ -1318,12 +1790,14 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         "generated_at": now.isoformat(),
         # Named from what was ACTUALLY read, not from what was intended. If NSE
         # refused and the run fell back to the 500 list, the page says so.
-        "universe": ("NSE Nifty Total Market" if len(uni) > 600
-                     else f"NSE Nifty 500 (fallback — Total Market unavailable)"),
+        "universe": ("NSE Nifty Total Market" if universe_size > 600
+                     else "NSE Nifty 500 (fallback — Total Market unavailable)"),
+        "universe_size": universe_size,
         "count": len(out),
         "attempted": len(uni),
         "weights": WEIGHTS,
         "coverage": cov,
+        "changes": delta_meta,
         # Real breadth across the screened universe, not a proxy. Dated, and
         # deliberately not an input to any score — see breadth().
         "breadth": breadth(out, bench),
@@ -1417,6 +1891,72 @@ def coverage(rows: list[dict]) -> dict:
         "statements_pct": round(100.0 * stmts / n, 1) if n else 0,
         "roce_pct": round(100.0 * roce / n, 1) if n else 0,
     }
+
+
+# Components whose movement between builds is worth recording. Kept short on
+# purpose: a delta on every field would double the payload to say very little.
+DELTA_KEYS = ("comp", "q", "g", "v", "tech", "em", "cf",
+              "m_inv", "m_pos", "m_swing", "roce", "rev_cagr", "pe", "rsi")
+
+
+def attach_deltas(rows: list[dict], prev_payload: dict | None) -> dict:
+    """Movement since the previous build. Mutates `rows`, returns a summary.
+
+    Finding stocks whose numbers are IMPROVING matters more than finding ones
+    that are already high — a 91 that was a 91 last month is priced, a 78 that
+    was a 61 is a change. That is what this makes visible.
+
+    Implemented as a diff against the previous cached payload rather than a new
+    history table: the payload is already stored per week in Turso, so the
+    previous build is already durable and a second store would be two sources of
+    truth for the same numbers.
+
+    A symbol absent from the previous build is NEW — recorded as such rather than
+    given a delta of zero, because "unchanged" and "never seen" are different
+    facts and zero would hide the more interesting one.
+    """
+    prev_rows = (prev_payload or {}).get("rows") or []
+    prev = {r.get("sym"): r for r in prev_rows if r.get("sym")}
+    prev_on = (prev_payload or {}).get("built_on")
+    if not prev:
+        return {"compared_with": None, "new": len(rows), "moved": 0}
+
+    # Rank position, not just score — a stock can gain 2 points and lose 40
+    # places if everything else gained more.
+    prev_rank = {}
+    ranked = [r for r in prev_rows if r.get("comp") is not None]
+    ranked.sort(key=lambda r: -r["comp"])
+    for i, r in enumerate(ranked, 1):
+        prev_rank[r["sym"]] = i
+
+    now_ranked = [r for r in rows if r.get("comp") is not None]
+    now_ranked.sort(key=lambda r: -(r.get("comp") or 0))
+    now_rank = {r["sym"]: i for i, r in enumerate(now_ranked, 1)}
+
+    new_count = moved = 0
+    for r in rows:
+        p = prev.get(r["sym"])
+        if not p:
+            r["is_new"] = True
+            new_count += 1
+            continue
+        d = {}
+        for k in DELTA_KEYS:
+            a, b = r.get(k), p.get(k)
+            if a is None or b is None:
+                continue
+            diff = round(a - b, 1)
+            if diff:
+                d[k] = diff
+        if d:
+            r["delta"] = d
+            moved += 1
+        pr, nr = prev_rank.get(r["sym"]), now_rank.get(r["sym"])
+        if pr and nr and pr != nr:
+            # Negative means it CLIMBED (rank 40 -> 12 is -28), which reads
+            # backwards, so it is stored as places gained.
+            r["rank_move"] = pr - nr
+    return {"compared_with": prev_on, "new": new_count, "moved": moved}
 
 
 def _compact(row: dict) -> dict:

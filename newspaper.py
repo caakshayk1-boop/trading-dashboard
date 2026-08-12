@@ -2443,7 +2443,18 @@ def get_stock_screen(build_if_missing: bool = False) -> dict:
         import stock_screen as _screen
         # AI injected, like podcasts. Without a key the screen still builds and
         # every row keeps its rule-based SWOT; only the prose layer is absent.
-        data = _screen.build(ai=groq_complete if GROQ_KEY else None)
+        # Previous build, so the new one can carry deltas. Finding numbers
+        # that are IMPROVING matters more than finding ones already high.
+        _prev = None
+        try:
+            with _db() as con:
+                _row = con.execute("SELECT payload FROM newspaper_screen "
+                                   "ORDER BY week DESC LIMIT 1").fetchone()
+            if _row:
+                _prev = json.loads(_row[0])
+        except Exception as e:
+            log.info(f"stock screen: no previous build to diff against ({e})")
+        data = _screen.build(ai=groq_complete if GROQ_KEY else None, prev=_prev)
         if not data.get("ok"):
             return {}
         with _db() as con:
@@ -4099,6 +4110,53 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sd-peer .v{color:var(--text);text-align:right;font-weight:700}
 .sd-peer .m{color:var(--dim);text-align:right}
 .sd-peer .v.better{color:var(--up)} .sd-peer .v.worse{color:var(--down)}
+
+/* Risk level. LOW/MEDIUM/HIGH, never a 0-100 — an arbitrary "risk 62" is
+   unreadable without also knowing which direction is better. Colour is never the
+   only signal: the word is always there. */
+.rk{font-family:var(--mono);font-size:9.5px;letter-spacing:1px;font-weight:700;
+  border-radius:4px;padding:2px 7px;border:1px solid}
+.rk-low{color:var(--up);border-color:rgba(61,220,151,.32);background:rgba(61,220,151,.07)}
+.rk-medium{color:var(--gold);border-color:rgba(233,196,106,.34);background:rgba(233,196,106,.07)}
+.rk-high{color:var(--down);border-color:rgba(255,92,92,.34);background:rgba(255,92,92,.08)}
+.rk-n{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-left:5px}
+/* Earnings momentum: the DIRECTION of the accounts. A level and a direction
+   are different facts — a 25% compounder that is slowing and a 12% one that
+   is speeding up have the same CAGR column. */
+.em{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;font-weight:700;
+  border-radius:4px;padding:2px 7px;border:1px solid;margin-left:4px}
+.em-accelerating{color:var(--up);border-color:rgba(61,220,151,.34);background:rgba(61,220,151,.07)}
+.em-stable{color:var(--dim);border-color:var(--line2)}
+.em-decelerating{color:var(--down);border-color:rgba(255,92,92,.34);background:rgba(255,92,92,.07)}
+/* Movement since the previous build. A 91 that was a 91 is priced; a 78 that
+   was a 61 is a change, and the change is the interesting part. */
+.dl{display:block;font-family:var(--mono);font-size:9px;font-style:normal;
+  letter-spacing:.4px;margin-top:2px}
+.dl-up{color:var(--up)} .dl-dn{color:var(--down)}
+.dl-new{color:var(--lime);border:1px solid rgba(195,245,60,.3);border-radius:3px;
+  padding:0 4px;display:inline-block}
+
+/* Why now / what can go wrong, side by side. The two columns exist so the case
+   for and the case against are read together rather than one scrolled past. */
+.sd-why{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wn-col{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.wn-col>span{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;
+  text-transform:uppercase;display:block;margin-bottom:9px}
+.wn-for>span{color:var(--up)} .wn-against>span{color:var(--gold)}
+.wn-col ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.wn-col li{font-size:12.5px;line-height:1.5;color:var(--muted);padding-left:13px;position:relative}
+.wn-for li::before{content:"+";position:absolute;left:0;color:var(--up);font-weight:700}
+.wn-col li em{display:block;font-family:var(--mono);font-size:10.5px;color:var(--dim);
+  font-style:normal;margin-top:3px}
+/* Severity on the against side, so a solvency flag does not read like a wide
+   spread. Prefix character AND colour, never colour alone. */
+.wn-against li{padding-left:15px}
+.wn-against li.f-high::before{content:"!!";position:absolute;left:0;color:var(--down);
+  font-family:var(--mono);font-size:10px;font-weight:700}
+.wn-against li.f-med::before{content:"!";position:absolute;left:0;color:var(--gold);
+  font-family:var(--mono);font-weight:700}
+.wn-against li.f-low::before{content:"·";position:absolute;left:0;color:var(--dim)}
+@media(max-width:700px){.sd-why{grid-template-columns:1fr}}
 
 .scr-tags{display:flex;flex-wrap:wrap;gap:4px}
 .scr-tag{font-family:var(--mono);font-size:9px;letter-spacing:.8px;padding:2px 6px;
@@ -6539,9 +6597,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <h2 class="stitle">Which five hundred, and why.</h2>
     </div>
     <div style="text-align:right">
-      <p class="sdesc">The Nifty 500 ranked on published annual statements &mdash;
-        return on capital, three-year compounding, leverage, and what the chart is
-        doing. Every score breaks down into the numbers that made it.</p>
+      <p class="sdesc">The NSE Total Market &mdash; every listed name of any size
+        &mdash; ranked on published annual statements: return on capital,
+        three-year compounding, leverage, and what the chart is doing. Pick the
+        question you are actually asking and the ranking changes, because a good
+        company and a good thing to buy today are not the same thing.</p>
       <!-- Absolute, like /today.json and /edition.json. A relative href breaks
            on /day/:date, which Vercel rewrites to this same index.html — the
            link would resolve to /day/screen.json and 404. -->
@@ -6596,6 +6656,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 
   <div class="fund-note rv">
+    <strong>A good company is not the same as a good buy today.</strong> That is
+    what <b>Rank for</b> is: the four component scores below never change, but each
+    mode weights them for a different question. <b>Investor</b> leans on business
+    quality and price and almost ignores the chart. <b>Positional</b> wants
+    compounding that is also working now. <b>Swing</b> is the chart with the
+    fundamentals only as a floor. The same name can be a 53 to an investor and an
+    83 to a swing trader &mdash; that gap is the useful part, and averaging it into
+    one number is what this section is trying to stop doing.
+    <br><br>
     <strong>Four scores, deliberately not one.</strong> A company can be excellent
     and expensive; a chart can be strong while the business degrades. Collapsing
     that into a single number destroys the only thing you need in order to
@@ -6634,6 +6703,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button type="button" class="fbtn" data-preset="debtfree">Debt-free</button>
   </div>
 
+  <!-- Ranking mode. The single most important control here: a good company and
+       a good thing to buy today are different questions, and one composite
+       cannot answer both. Switching mode re-weights the SAME components and
+       re-sorts, so the same stock can be an 82 to an investor and a 96 to a
+       swing trader — and that gap is the useful part. -->
+  <div class="ctlbar rv" id="scrModes" role="group" aria-label="Ranking mode">
+    <span class="ghost" style="margin-left:0">RANK FOR</span>
+    <button type="button" class="fbtn on" data-mode="comp">Balanced</button>
+    <button type="button" class="fbtn" data-mode="m_inv">Investor</button>
+    <button type="button" class="fbtn" data-mode="m_pos">Positional</button>
+    <button type="button" class="fbtn" data-mode="m_swing">Swing</button>
+    <span class="ghost" id="scrModeNote">business quality, growth, price and chart</span>
+  </div>
+
   <div class="ctlbar rv" id="scrCtl">
     <input type="search" id="scrSearch" placeholder="Symbol, company or ISIN"
            aria-label="Search the screen by symbol, company name or ISIN" autocomplete="off">
@@ -6645,7 +6728,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <option value="s">Small (&lt; ₹15,000cr)</option>
     </select>
     <select id="scrSort" aria-label="Sort by">
-      <option value="comp">Composite</option>
+      <option value="comp">Rank (current mode)</option>
+      <option value="m_inv">Investor score</option>
+      <option value="m_pos">Positional score</option>
+      <option value="m_swing">Swing score</option>
       <option value="q">Quality</option>
       <option value="g">Growth</option>
       <option value="v">Value</option>
@@ -6676,6 +6762,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <th scope="col" class="num sortable" data-k="de">D/E</th>
         <th scope="col" class="num sortable" data-k="pe">PE</th>
         <th scope="col" class="num sortable" data-k="rsi">RSI</th>
+        <th scope="col" class="sortable" data-k="risk_lvl">Risk</th>
         <th scope="col">Setup</th>
       </tr></thead>
       <!-- Seeded with the top 25 so the section is never blank and never
@@ -6707,6 +6794,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num">{{ n(s.get('de')) }}</td>
           <td class="num">{{ n(s.get('pe')) }}</td>
           <td class="num">{{ n(s.get('rsi')) }}</td>
+          <td><span class="mono-dim">{{ (s.get('risk') or {}).get('level') or '—' }}</span></td>
           <td><span class="mono-dim">{{ (s.get('setup') or {}).get('tags', [])[:2]|join(' · ') or '—' }}</span></td>
         </tr>
         {% endfor %}

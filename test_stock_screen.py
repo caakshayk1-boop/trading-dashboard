@@ -853,6 +853,280 @@ def test_telegram_screen_command_matches_the_browser_presets() -> None:
           isinstance(TB._screen_reply("/screen ZZZNOTREAL"), str))
 
 
+def test_ranking_modes_actually_reorder_the_table() -> None:
+    """A good company and a good thing to buy today are different questions.
+
+    The whole point of modes: if investor and swing produce the same ordering
+    then they are decoration, not a feature. This asserts the ORDER FLIPS for a
+    pair chosen to separate them — an excellent, fully-priced business with a
+    weak chart against a mediocre one breaking out.
+    """
+    quality_expensive = {"quality": {"score": 95.0}, "growth": {"score": 30.0},
+                        "valuation": {"score": 10.0}, "technical": {"score": 25.0}}
+    weak_hot = {"quality": {"score": 35.0}, "growth": {"score": 55.0},
+                "valuation": {"score": 50.0}, "technical": {"score": 98.0}}
+    a, b = S.mode_scores(quality_expensive), S.mode_scores(weak_hot)
+
+    check("investor prefers the quality business", a["investor"] > b["investor"],
+          f"{a['investor']} vs {b['investor']}")
+    check("swing prefers the breakout", b["swing"] > a["swing"],
+          f"{b['swing']} vs {a['swing']}")
+    check("so the ranking ORDER genuinely flips between modes",
+          (a["investor"] > b["investor"]) and (b["swing"] > a["swing"]))
+    check("every mode is present", set(a) == {"balanced", "investor", "positional", "swing"})
+    check("no statements means no mode score at all",
+          all(v is None for v in S.mode_scores(quality_expensive, has_stmts=False).values()))
+
+    # Weights are declared in ONE place over a shared component set, so a
+    # component added later appears in every mode that names it.
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    # The invariant is that no MODE has its own scoring function — components
+    # may be added freely, which is the whole point of a registry. An earlier
+    # version of this counted `def score_` and capped it at 4, which failed the
+    # moment cash flow and earnings momentum landed: it was testing that the
+    # design was never extended rather than that it was respected.
+    check("modes are weight sets over shared components", "MODES = {" in src)
+    check("every mode weight set is a dict of component names",
+          all(isinstance(w, dict) and w for w in S.MODES.values()))
+    for m in S.MODES:
+        check(f"mode '{m}' has no scoring function of its own",
+              f"def score_{m}(" not in src)
+    check("every weighted component has exactly one scoring function",
+          all(f"def score_{c}(" in src or c in ("valuation",)
+              for w in S.MODES.values() for c in w),
+          str([c for w in S.MODES.values() for c in w
+               if f"def score_{c}(" not in src and c != "valuation"]))
+    for comp in ("quality", "growth", "valuation", "technical"):
+        check(f"'{comp}' is weighted by at least one mode",
+              any(comp in w for w in S.MODES.values()))
+    # These two are declared now and land with items 2 and 1; the modes must
+    # already name them so nothing needs rewiring when they arrive.
+    check("cashflow is already reserved by the investor mode",
+          "cashflow" in S.MODES["investor"])
+    check("earnings_momentum is already reserved by positional and swing",
+          "earnings_momentum" in S.MODES["positional"]
+          and "earnings_momentum" in S.MODES["swing"])
+
+    # The browser must offer the same modes, keyed the same way.
+    js = APP_JS.read_text(encoding="utf-8")
+    for key in ("m_inv", "m_pos", "m_swing"):
+        check(f"the browser knows '{key}'", key in js)
+    import telegram_bot as TB
+    check("the bot offers the same three modes",
+          set(TB._SCREEN_MODES.values()) == {"m_inv", "m_pos", "m_swing"})
+
+
+def test_universe_label_is_read_before_the_limit_truncates() -> None:
+    """A `limit=120` smoke run reported "Total Market unavailable" and was wrong.
+
+    The label was derived from len(uni) AFTER the limit sliced it, so any capped
+    run published provenance claiming NSE had refused. Provenance that lies
+    under a smoke test is worse than no provenance.
+    """
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    i_size = src.index("universe_size = len(uni)")
+    i_trim = src.index("uni = uni[:limit]")
+    check("universe_size is captured BEFORE the limit truncates", i_size < i_trim)
+    check("the label is computed from universe_size, not len(uni)",
+          'if universe_size > 600' in src)
+    check("the payload also carries the raw size", '"universe_size": universe_size' in src)
+
+
+def test_risk_is_a_level_not_another_arbitrary_score() -> None:
+    """LOW/MEDIUM/HIGH, and every flag names the number that raised it.
+
+    A "risk score of 62" is unreadable without also knowing which direction is
+    better, and every extra arbitrary index is one more number nobody can act
+    on. The tally is internal; the LEVEL is what the page shows.
+    """
+    distressed = {"sector": "Industrials", "industry": "Capital Goods",
+                  "debt_to_equity": 2.4, "interest_cover": 1.2, "current_ratio": 0.8,
+                  "roce_trend": "falling", "roce": 0.06, "roce_med": 0.14,
+                  "ebit_margin_trend": "falling", "rev_cagr3": -0.03,
+                  "has_statements": True, "cagr_span": 3}
+    t_bad = {"rsi14": 80, "price": 300.0, "sma200": 200.0, "atr_pct": 0.06,
+             "liquid": False, "turnover_cr": 0.4, "from_high52": -0.45,
+             "high52": 545.0, "sma20": 290.0, "sma50": 280.0, "atr14": 18.0}
+    rk = S.risk_flags(distressed, t_bad, {"pe_pctile": 10})
+    check("a distressed name reads HIGH", rk["level"] == "HIGH", rk["level"])
+    check("its flags are enumerated", len(rk["flags"]) >= 8, str(len(rk["flags"])))
+    check("EVERY flag carries the number that raised it",
+          all(f.get("k") for f in rk["flags"]),
+          str([f["t"][:30] for f in rk["flags"] if not f.get("k")]))
+    check("the worst flags sort first", rk["flags"][0]["s"] == "high")
+    check("insolvency and thin trading are both caught",
+          any("interest" in f["t"] for f in rk["flags"])
+          and any("Thinly traded" in f["t"] for f in rk["flags"]))
+
+    healthy = {"sector": "Healthcare", "industry": "Pharma", "debt_to_equity": 0.05,
+               "interest_cover": 40.0, "current_ratio": 2.4, "roce_trend": "rising",
+               "roce": 0.30, "roce_med": 0.28, "rev_cagr3": 0.24,
+               "ebitda_cagr3": 0.33, "has_statements": True, "cagr_span": 3,
+               "pe": 24.0}
+    t_good = {"rsi14": 62, "price": 100.0, "sma200": 80.0, "sma20": 95.0,
+              "sma50": 90.0, "atr_pct": 0.02, "liquid": True, "turnover_cr": 30.0,
+              "from_high52": -0.02, "high52": 102.0, "atr14": 2.0,
+              "vol_spike": 1.8, "above_mas": 3, "ma_stack": True, "rs_1y": 0.28,
+              "brk50": True}
+    ok = S.risk_flags(healthy, t_good, {"pe_pctile": 75})
+    check("a clean name reads LOW with no flags",
+          ok["level"] == "LOW" and not ok["flags"], f"{ok['level']} {len(ok['flags'])}")
+    check("negative equity is the single worst balance-sheet flag",
+          any(f["s"] == "high" and "insolvent" in f["t"]
+              for f in S.risk_flags(dict(healthy, debt_to_equity=-2.0),
+                                    t_good, {})["flags"]))
+    check("a company with no statements is flagged high for it",
+          any("No annual statements" in f["t"]
+              for f in S.risk_flags(dict(healthy, has_statements=False),
+                                    t_good, {})["flags"]))
+
+    # WHY NOW is separate from the SWOT on purpose.
+    w = S.why_now(healthy, t_good, {"pe_pctile": 75, "peers": 30})
+    check("why-now produces lines for a genuine setup", len(w) >= 5, str(len(w)))
+    check("every why-now line carries its evidence too", all(i.get("k") for i in w))
+    quiet = S.why_now(healthy, {"price": 100.0, "rsi14": 50}, {})
+    check("a company doing nothing this week gets FEWER why-now lines",
+          len(quiet) < len(w), f"{len(quiet)} vs {len(w)}")
+
+
+def test_price_location_gives_levels_not_a_target() -> None:
+    """No target price, ever. There is no validated predictive model here.
+
+    "BUY 1183 / TARGET 1275" would be fabricated precision dressed as analysis.
+    Every number returned must be a level already visible on the chart.
+    """
+    t = {"price": 100.0, "sma20": 95.0, "sma50": 90.0, "sma200": 80.0,
+         "atr14": 2.0, "high52": 102.0}
+    L = S.price_location(t)
+    check("a preferred ZONE, not a price", L.get("zone_lo") == 90.0 and L.get("zone_hi") == 95.0,
+          str(L))
+    check("invalidation is an actual moving average", L.get("invalidation") == 80.0)
+    check("and it says which one", L.get("invalidation_basis") == "200-day average")
+    check("confirmation is one ATR beyond, from real levels", L.get("confirm") == 102.0)
+    check("no 'target' key exists at all", "target" not in L and "buy" not in L)
+    check("no price means no location block", S.price_location({}) == {})
+    # A stock below its averages has no pullback zone to offer.
+    below = S.price_location({"price": 70.0, "sma20": 95.0, "sma50": 90.0,
+                              "sma200": 80.0, "atr14": 2.0})
+    check("a broken chart offers no preferred zone", "zone_lo" not in below, str(below))
+
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    strings = re.findall(r'"([^"\\\n]{10,})"', src)
+    banned = [s for s in strings if re.search(r"\btarget price\b|\bbuy at\b", s, re.I)]
+    check("no target-price language in any published string", not banned, str(banned[:2]))
+
+
+def test_earnings_momentum_measures_direction_not_level() -> None:
+    """A 25% compounder slowing and a 12% one speeding up have the same CAGR.
+
+    That is the gap this fills: `growth` scores the LEVEL of compounding, and the
+    four-year table shows what happened, but neither can say whether the latest
+    year beat the trajectory that produced it.
+    """
+    accel = [{"fy": "FY26", "rev_cr": 1250, "ebitda_cr": 300, "pat_cr": 200,
+              "eps": 20, "ebit_margin": 22.0},
+             {"fy": "FY25", "rev_cr": 1000, "ebitda_cr": 230, "pat_cr": 150,
+              "eps": 15, "ebit_margin": 20.5},
+             {"fy": "FY24", "rev_cr": 900, "ebitda_cr": 200, "pat_cr": 130,
+              "eps": 13, "ebit_margin": 20.0},
+             {"fy": "FY23", "rev_cr": 850, "ebitda_cr": 185, "pat_cr": 120,
+              "eps": 12, "ebit_margin": 19.8}]
+    decel = [{"fy": "FY26", "rev_cr": 1030, "ebitda_cr": 205, "pat_cr": 130,
+              "eps": 13, "ebit_margin": 18.0},
+             {"fy": "FY25", "rev_cr": 1000, "ebitda_cr": 230, "pat_cr": 150,
+              "eps": 15, "ebit_margin": 20.5},
+             {"fy": "FY24", "rev_cr": 800, "ebitda_cr": 180, "pat_cr": 115,
+              "eps": 11, "ebit_margin": 20.0},
+             {"fy": "FY23", "rev_cr": 650, "ebitda_cr": 140, "pat_cr": 90,
+              "eps": 9, "ebit_margin": 19.5}]
+    a, d = S.earnings_momentum(accel), S.earnings_momentum(decel)
+    check("speeding up is labelled accelerating", a["label"] == "accelerating", a["label"])
+    check("slowing down is labelled decelerating", d["label"] == "decelerating", d["label"])
+    check("the decelerating one grew 25% LAST year", near(d["prior_rev_yoy"], 0.25, 0.01))
+    check("...and only 3% this year", near(d["rev_yoy"], 0.03, 0.01))
+    check("margin delta is in percentage points", near(a["margin_delta"], 1.5, 0.01))
+    check("a slowing compounder scores BELOW an accelerating slower one",
+          S.score_earnings_momentum(d)["score"] < S.score_earnings_momentum(a)["score"])
+    check("fewer than three years produces no label",
+          S.earnings_momentum(accel[:2])["label"] is None)
+    check("no years at all is safe", S.earnings_momentum([])["label"] is None)
+    check("a sign flip yields no growth rate, same as cagr()",
+          S.earnings_momentum([{"rev_cr": 100, "ebitda_cr": -10},
+                               {"rev_cr": 90, "ebitda_cr": -20},
+                               {"rev_cr": 80, "ebitda_cr": 5}])["ebitda_yoy"] is None)
+
+
+def test_cash_flow_catches_accounting_earnings() -> None:
+    """ROCE and margins both come off the income statement. This is the money.
+
+    A company can look excellent on every other component while collecting very
+    little of what it books, and no ratio in quality/growth/valuation can see it.
+    """
+    base = {"sector": "Industrials", "industry": "Capital Goods",
+            "has_statements": True, "roce": 0.22, "roce_med": 0.22,
+            "rev_cagr3": 0.18, "debt_to_equity": 0.3, "interest_cover": 12.0,
+            "cagr_span": 3}
+    t = {"price": 100.0, "rsi14": 60, "liquid": True, "turnover_cr": 20.0,
+         "sma200": 85.0, "atr_pct": 0.02}
+    real = dict(base, cfo_pat=1.05, fcf_pat=0.75, fcf_margin=0.16)
+    paper = dict(base, cfo_pat=0.42, fcf_pat=0.05, fcf_margin=0.01)
+    burn = dict(base, cfo_pat=-0.30, fcf_pat=-0.5, fcf_margin=-0.05)
+
+    check("a real compounder scores high on cash",
+          S.score_cashflow(real)["score"] > 70, str(S.score_cashflow(real)["score"]))
+    check("paper earnings score near zero",
+          S.score_cashflow(paper)["score"] < 15, str(S.score_cashflow(paper)["score"]))
+    check("paper earnings raise a HIGH flag",
+          any(f["s"] == "high" and "on paper" in f["t"]
+              for f in S.risk_flags(paper, t, {})["flags"]))
+    check("cash-burning operations raise their own flag",
+          any("consumed cash" in f["t"] for f in S.risk_flags(burn, t, {})["flags"]))
+    check("good conversion is a stated strength",
+          any("operating cash" in i["t"] for i in S.swot(real, t, {})["s"]))
+    # "Only -30% of profit arrives as cash, the rest is in receivables" is
+    # nonsense: a negative ratio means cash was BURNED, a different statement.
+    burn_w = " ".join(i["t"] for i in S.swot(burn, t, {})["w"])
+    check("a negative ratio is described as burning cash, not as a small share",
+          "consumed cash" in burn_w and "the rest is sitting" not in burn_w, burn_w[:120])
+    check("lenders are exempt from the cash flags",
+          not [f for f in S.risk_flags(dict(base, sector="Financial Services",
+                                            industry="Banks", cfo_pat=0.3),
+                                       t, {})["flags"] if "cash" in f["t"].lower()])
+    check("cashflow is the component the investor mode weights",
+          "cashflow" in S.MODES["investor"] and "cashflow" not in S.MODES["swing"])
+
+
+def test_deltas_separate_unchanged_from_never_seen() -> None:
+    """"Unchanged" and "new" are different facts and zero would hide the better one."""
+    prev = {"built_on": "2026-08-04", "rows": [
+        {"sym": "AAA", "comp": 61.0, "q": 70.0, "roce": 18.0},
+        {"sym": "BBB", "comp": 80.0, "q": 85.0, "roce": 30.0},
+        {"sym": "CCC", "comp": 50.0, "q": 40.0, "roce": 10.0}]}
+    rows = [{"sym": "BBB", "comp": 81.0, "q": 85.0, "roce": 31.0},
+            {"sym": "AAA", "comp": 78.0, "q": 76.0, "roce": 21.0},
+            {"sym": "DDD", "comp": 70.0, "q": 72.0, "roce": 25.0},
+            {"sym": "CCC", "comp": 50.0, "q": 40.0, "roce": 10.0}]
+    meta = S.attach_deltas(rows, prev)
+    by = {r["sym"]: r for r in rows}
+    check("the summary names the build it compared against",
+          meta["compared_with"] == "2026-08-04")
+    check("a 17-point gain is recorded", by["AAA"]["delta"]["comp"] == 17.0,
+          str(by["AAA"].get("delta")))
+    check("only components that MOVED get a delta", "q" not in by["BBB"]["delta"])
+    check("a genuinely unchanged row carries no delta at all", "delta" not in by["CCC"])
+    check("a symbol not in the previous build is NEW, not a zero delta",
+          by["DDD"].get("is_new") is True and "delta" not in by["DDD"])
+    check("rank movement is stored as places GAINED",
+          by["CCC"].get("rank_move") == -1, str(by["CCC"].get("rank_move")))
+    check("no previous build means everything is new",
+          S.attach_deltas([{"sym": "X", "comp": 1}], None)["new"] == 1)
+    check("deltas are computed BEFORE compaction strips the nulls",
+          pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+          .index("attach_deltas(out, prev)")
+          < pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+          .index("out = [_compact(r) for r in out]"))
+
+
 def test_universe_excludes_nse_dummy_constituents() -> None:
     """NSE's own Nifty 500 CSV ships four placeholder 'Dummy Vedanta' rows."""
     if not pathlib.Path(S.UNIVERSE_CSV).exists():
@@ -1024,6 +1298,13 @@ def main() -> int:
                test_trend_names_a_peak_instead_of_calling_it_rising,
                test_universe_is_the_official_total_market_list,
                test_telegram_screen_command_matches_the_browser_presets,
+               test_ranking_modes_actually_reorder_the_table,
+               test_universe_label_is_read_before_the_limit_truncates,
+               test_risk_is_a_level_not_another_arbitrary_score,
+               test_price_location_gives_levels_not_a_target,
+               test_earnings_momentum_measures_direction_not_level,
+               test_cash_flow_catches_accounting_earnings,
+               test_deltas_separate_unchanged_from_never_seen,
                test_universe_excludes_nse_dummy_constituents,
                test_screen_table_columns_match,
                test_the_screen_sheet_can_always_be_closed,

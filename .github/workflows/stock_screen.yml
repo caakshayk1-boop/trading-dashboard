@@ -89,7 +89,18 @@ jobs:
           # Narrative is injected, not imported — no key means no prose and
           # every row still carries its rule-based SWOT.
           ai = newspaper.groq_complete if newspaper.GROQ_KEY else None
-          data = stock_screen.build(limit=limit, news_top=news, ai=ai)
+          # Previous build for the delta columns.
+          prev = None
+          try:
+              with newspaper._db() as con:
+                  row = con.execute("SELECT payload FROM newspaper_screen "
+                                    "ORDER BY week DESC LIMIT 1").fetchone()
+              if row:
+                  prev = json.loads(row[0])
+                  print(f"diffing against the build of {prev.get('built_on')}")
+          except Exception as e:
+              print(f"no previous build to diff against: {e}")
+          data = stock_screen.build(limit=limit, news_top=news, ai=ai, prev=prev)
           if not data.get("ok"):
               raise SystemExit(f"screen failed: {data.get('error')}")
 
