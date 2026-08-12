@@ -638,6 +638,110 @@ def test_narrative_guard_rejects_invented_numbers() -> None:
     check("a company with no accounts gets no narrative", "ai_view" not in nostmt)
 
 
+def test_explicit_gate_blocks_and_is_applied_everywhere() -> None:
+    """One gate, every ingestion path. Fails closed.
+
+    Broadening the content sources is what made this necessary: seven finance
+    feeds could not surface adult or graphic material, and twenty YouTube
+    channels plus general-interest essay publishers can. A topical gate is not a
+    safety gate — "sex scandal wipes 20% off the share price" clears every
+    finance token test there is.
+    """
+    from content_cache import is_explicit
+    must_block = [
+        "The OnlyFans economy explained",
+        "A second sexual revolution",
+        "Sex scandal wipes 20% off the share price",   # clears the finance gate
+        "Nude photos leaked in the breach",
+        "Satta matka betting tips for today",
+        "Double your money guaranteed profit",
+        "Report on underage exploitation",
+        "Graphic footage of the beheading",
+    ]
+    for t in must_block:
+        check(f"blocked: {t[:38]}", is_explicit(t), "LEAKED")
+
+    # Short words are word-boundary matched, so these must NOT trip it.
+    must_pass = [
+        "Essex County pension fund returns",
+        "A unisex clothing brand files for IPO",
+        "Grape harvest hits a record in Nashik",
+        "Sextant navigation and the history of longitude",
+        "Protein restriction in modern kidney care",
+        "Why UPI MDR affects your monthly SIP costs",
+    ]
+    for t in must_pass:
+        check(f"passed:  {t[:38]}", not is_explicit(t), "FALSE POSITIVE")
+
+    check("the gate reads every field it is given, not just the title",
+          is_explicit("Quarterly market update", "the CEO's sex tape leaked"))
+
+    # And it is actually WIRED IN at all three ingestion points.
+    cc = pathlib.Path("content_cache.py").read_text(encoding="utf-8")
+    pod = pathlib.Path("podcasts.py").read_text(encoding="utf-8")
+    check("smart reads apply the gate", "if is_explicit(title, summary)" in cc)
+    check("the news wire applies the gate",
+          cc.count("is_explicit(title, summary)") >= 2, str(cc.count("is_explicit(title, summary)")))
+    check("podcasts apply it to the title", "_explicit(title)" in pod)
+    check("podcasts apply it to the description too", "_explicit(prose)" in pod)
+    check("podcasts keep a working fallback if the import fails",
+          "def _explicit(" in pod and "onlyfans" in pod.lower())
+
+
+def test_time_stop_horizon_comes_from_the_signal() -> None:
+    """29 multibagger ideas were force-closed after 32-60 days of a 365-day hold.
+
+    MAX_HOLD_HOURS was keyed by timeframe and had no "1W" entry, so every
+    weekly-bar signal fell through to a 20-day default. GLAND was filed
+    2026-07-11 with metadata {"engine":"multibagger","horizon":"6-12 months"}
+    and booked EXPIRED on 2026-08-11 at +14.86%. The row stated its horizon
+    twice and the time stop read a lookup table instead.
+    """
+    import standalone_scan as SS
+    f = SS._max_hold_hours
+
+    check("multibagger on 1W gets a year, not 20 days",
+          f("1W", engine="multibagger") == 365 * 24, str(f("1W", engine="multibagger")))
+    check("ai_longterm on 1W gets three years",
+          f("1W", engine="ai_longterm") == 3 * 365 * 24)
+    check("the engine outranks the timeframe",
+          f("15m", engine="multibagger") == 365 * 24)
+    check("a stated horizon is parsed at its UPPER bound",
+          f("1W", horizon="6-12 months") == 12 * 30 * 24,
+          str(f("1W", horizon="6-12 months")))
+    check("'2-3 years' parses to three years", f("1W", horizon="2-3 years") == 3 * 365 * 24)
+
+    # The two spellings that were missing entirely.
+    check("'1W' now resolves at all", f("1W") == 20 * 24 * 7, str(f("1W")))
+    check("an unknown timeframe REFUSES to expire rather than defaulting to 20d",
+          f("LONG") is None and f("banana") is None and f("") is None)
+
+    # And the horizons that feed the measured edge are untouched.
+    check("1H still 48h", f("1H") == 48)
+    check("4H still 8 days", f("4H") == 48 * 4)
+    check("SWING still 20 days", f("SWING") == 20 * 24)
+    check("15m still 6h", f("15m") == 6)
+    check("Monthly still 180 days", f("Monthly") == 180 * 24)
+
+    # The repair only ever targets EXPIRED rows closed early.
+    import fix_horizons as FH
+    rows = [
+        {"id": 1, "symbol": "GLAND", "status": "EXPIRED", "signal_type": "multibagger",
+         "timeframe": "1W", "metadata": '{"engine":"multibagger","horizon":"6-12 months"}',
+         "date": "2026-07-11", "closed_at": "2026-08-11T13:09:57+05:30", "pnl_pct": 14.86},
+        {"id": 2, "symbol": "FOO", "status": "EXPIRED", "signal_type": "cf_1h",
+         "timeframe": "1H", "metadata": "{}",
+         "date": "2026-08-01", "closed_at": "2026-08-11T00:00:00+05:30", "pnl_pct": -1.0},
+        {"id": 3, "symbol": "BAR", "status": "SL_HIT", "signal_type": "multibagger",
+         "timeframe": "1W", "metadata": '{"engine":"multibagger"}',
+         "date": "2026-07-11", "closed_at": "2026-08-11T00:00:00+05:30", "pnl_pct": -9.0},
+    ]
+    ids = {w["id"] for w in FH.audit(rows)}
+    check("the early-closed multibagger is flagged", 1 in ids)
+    check("a legitimately expired 1H trade is NOT flagged", 2 not in ids)
+    check("a row that HIT ITS STOP is never touched", 3 not in ids, str(ids))
+
+
 def test_universe_excludes_nse_dummy_constituents() -> None:
     """NSE's own Nifty 500 CSV ships four placeholder 'Dummy Vedanta' rows."""
     if not pathlib.Path(S.UNIVERSE_CSV).exists():
@@ -804,6 +908,8 @@ def main() -> int:
                test_breadth_is_not_an_input_to_any_score,
                test_narrative_guard_rejects_invented_numbers,
                test_a_new_cached_field_invalidates_old_entries,
+               test_explicit_gate_blocks_and_is_applied_everywhere,
+               test_time_stop_horizon_comes_from_the_signal,
                test_universe_excludes_nse_dummy_constituents,
                test_screen_table_columns_match,
                test_the_screen_sheet_can_always_be_closed,

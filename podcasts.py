@@ -179,6 +179,28 @@ def _is_noise(text: str) -> bool:
 CLIPPY = re.compile(r"#shorts|#short\b|\bshorts\b|\bvlog\b|\bvlogs\b|\bteaser\b|\btrailer\b", re.I)
 
 
+def _explicit(*texts) -> bool:
+    """The shared explicit gate, imported lazily.
+
+    Lazy because content_cache pulls in feedparser and requests, and this module
+    is deliberately runnable on its own with nothing but the standard library —
+    `python podcasts.py` is its whole test harness. If the import fails the gate
+    still has to WORK, so it falls back to its own copy of the terms rather than
+    letting everything through, which is the failure mode that matters here.
+    """
+    try:
+        from content_cache import is_explicit
+        return is_explicit(*texts)
+    except Exception:
+        blob = " ".join(str(t or "") for t in texts).lower()
+        return any(b in blob for b in (
+            "porn", "onlyfans", "nsfw", "xxx", "erotic", "sexual", "sex tape",
+            "nude", "nudity", "orgasm", "masturbat", "fetish", "bdsm",
+            "escort service", "brothel", "strip club", "prostitut", "hentai",
+            "gore", "beheading", "mutilat", "suicide method", "csam",
+            "child abuse", "underage", "satta", "matka", "betting tips"))
+
+
 def _get(url: str, timeout: int = 20) -> bytes:
     return urllib.request.urlopen(
         urllib.request.Request(url, headers=UA), timeout=timeout).read()
@@ -316,10 +338,23 @@ def _channel(cid: str, author: str, show: str, cat: str, ai) -> list[dict]:
         title = (e.findtext("a:title", default="", namespaces=NS) or "").strip()
         if not title or CLIPPY.search(title):
             continue
+        # Explicit gate, shared with Smart Reads and the news wire so there is
+        # one list and one decision. Twenty long-form channels covering
+        # relationships, health and culture will eventually publish an episode
+        # that does not belong on this page; this is what stops it, and it is
+        # checked again on the description below because a clean title over
+        # explicit content is the common shape.
+        if _explicit(title):
+            log.info(f"podcasts: {show} — dropped on the explicit gate ({title[:44]!r})")
+            continue
         grp = e.find("m:group", NS)
         desc = grp.findtext("m:description", default="", namespaces=NS) if grp is not None else ""
         prose = _prose(desc)
         if len(prose) < MIN_PROSE:
+            continue
+        if _explicit(prose):
+            log.info(f"podcasts: {show} — dropped on the explicit gate in its "
+                     f"description ({title[:40]!r})")
             continue
 
         # Shorts guard, deliberately AFTER the cheap filters. It is one HTTP

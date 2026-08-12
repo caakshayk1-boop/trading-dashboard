@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import time
 from datetime import datetime, timezone, timedelta
 from typing import Optional
@@ -164,13 +165,80 @@ CATEGORY_TOKENS = {
     ),
 }
 
+# ── explicit / adult / graphic content gate ──────────────────────────────────
+#
+# Applied to EVERY ingestion path on the site — Smart Reads, podcasts, the news
+# wire — not just to the section it was first written for. Broadening the
+# content sources is what makes this necessary: a finance-only feed list could
+# not surface this material, and a list that includes general-interest essays,
+# health publishers and twenty YouTube channels certainly can.
+#
+# It fails CLOSED and it is absolute: a match is dropped, never softened,
+# never summarised, never "included with a warning". There is no editorial
+# judgement to make here and no threshold to tune.
+#
+# Substring matching on purpose, unlike the token gates which use word
+# boundaries. A word-boundary match on "sex" would pass "sexting"; here the
+# false-positive cost (losing an article about sexual harassment law) is
+# acceptable and the false-negative cost is not.
+EXPLICIT_BLOCK = (
+    # adult industry / sexual content
+    "porn", "pornhub", "onlyfans", "nsfw", "xxx", "erotic", "erotica",
+    "sexual", "sex life", "sex tape", "sexting", "nude", "nudity", "naked",
+    "orgasm", "masturbat", "fetish", "bdsm", "kink", "escort service",
+    "brothel", "strip club", "camgirl", "sex work", "prostitut", "aphrodisiac",
+    "libido", "viagra", "penis", "vagina", "genital", "incest", "hentai",
+    # graphic violence / gore
+    "gore", "beheading", "decapitat", "mutilat", "dismember", "snuff",
+    "graphic footage", "graphic video", "disturbing footage",
+    # self-harm, handled with the same absoluteness
+    "suicide method", "how to kill yourself", "self-harm tutorial",
+    "pro-ana", "thinspo",
+    # illegal drugs how-to, gambling and scam bait
+    "how to make meth", "buy cocaine", "dark web market", "silk road market",
+    "betting tips", "matka", "satta", "casino bonus", "free spins",
+    "guaranteed profit", "double your money", "get rich quick",
+    # child-safety terms, absolute
+    "child abuse", "csam", "underage",
+)
+
+
+# Short words that cannot be matched as substrings without absurd collisions —
+# a bare "sex" hits Essex, unisex, sextant and sexagenarian; "rape" hits grape
+# and drape. Matched on word boundaries instead, which still catches the case
+# the substring list missed: "Sex scandal wipes 20% off the share price" clears
+# every topical finance gate and is not going on this page.
+_EXPLICIT_WORDS = re.compile(
+    r"\b(sex|sexed|nude|nudes|rape|raped|rapist|incest|molest|molested|"
+    r"orgy|orgies|slut|whore|obscene|lewd|lascivious)\b", re.I)
+
+
+def is_explicit(*texts) -> bool:
+    """True if any supplied text trips the explicit gate. Fails closed.
+
+    One function, used by every content path, so a new ingestion point cannot
+    quietly skip the check by forgetting to copy a blocklist.
+
+    Two tiers: unambiguous substrings, plus short words matched on word
+    boundaries. Deliberately over-blocks — losing a piece about sexual
+    harassment law is an acceptable cost and passing the alternative is not.
+    """
+    blob = " ".join(str(t or "") for t in texts).lower()
+    if any(b in blob for b in EXPLICIT_BLOCK):
+        return True
+    return bool(_EXPLICIT_WORDS.search(blob))
+
+
 # Off-brief for a self-improvement section regardless of how well written the
 # piece is. Deliberately short and about SUBJECT, not viewpoint — this is not a
 # quality filter, it is a "does this belong under Smart Reads" filter, and the
 # section sits on a personal site under a real name.
+#
+# Distinct from EXPLICIT_BLOCK above: these are merely off-topic here and could
+# reasonably appear elsewhere on a site like this. Explicit material could not.
 SMART_READ_BLOCK = (
-    "sexual", "sex life", "porn", "dating app", "celebrity", "box office",
-    "royal family", "horoscope", "astrolog", "weight loss pill", "miracle cure",
+    "dating app", "celebrity", "box office", "royal family",
+    "horoscope", "astrolog", "weight loss pill", "miracle cure",
 )
 
 # How many slots each category may take. Money is capped at three of nine
@@ -385,6 +453,11 @@ def _fetch_news() -> list[dict]:
                         pass
                 summary = re.sub(r"<[^>]+>", "", getattr(entry, "summary", "")).strip()[:400]
                 title = entry.get("title", "")[:140]
+                # Explicit gate first, and separately from the topical one. A
+                # finance token is not a safety check: "sex scandal wipes 20% off
+                # the share price" clears _is_finance comfortably.
+                if is_explicit(title, summary):
+                    continue
                 # An off-topic item on a finance page costs more than a thin
                 # section does. Wire feeds from general desks carry film,
                 # sport and politics under a "business" label.
@@ -428,6 +501,8 @@ def _is_relevant(cat: str, title: str, summary: str) -> bool:
     to two threw away good pieces for using a synonym this list happens not to
     carry, which is a worse failure than an occasional off-topic card.
     """
+    if is_explicit(title, summary):
+        return False
     blob = f"{title} {summary}".lower()
     if any(b in blob for b in SMART_READ_BLOCK):
         return False

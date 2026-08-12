@@ -1,0 +1,65 @@
+name: Ledger Integrity — reopen positions expired before their horizon
+
+# The time stop was keyed by TIMEFRAME and the table had no "1W" entry, so every
+# weekly-bar signal fell through to a 20-day default. 29 multibagger ideas with a
+# documented 6-12 month horizon were force-closed after 32-60 days.
+#
+# Turso is the source of truth, so this has to run here — a local --apply is
+# overwritten by the next sync. Same reason fix_phantoms.yml runs here.
+#
+# Dry run by default. Nothing is written unless apply=true.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Write corrections (leave false for a dry run)'
+        required: false
+        default: 'false'
+
+concurrency:
+  group: ledger-writes        # shared with regrade / fix_phantoms — never interleave
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Audit and repair
+        run: |
+          if [ "${{ inputs.apply }}" = "true" ]; then
+            python fix_horizons.py --apply
+          else
+            python fix_horizons.py
+          fi
+
+      # The backup is the whole safety net for a ledger write. Commit it.
+      - name: Commit the backup
+        if: ${{ inputs.apply == 'true' }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/backups/ || true
+          if git diff --cached --quiet; then
+            echo "no backup produced"
+          else
+            git commit -m "chore: backup before horizon fix"
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

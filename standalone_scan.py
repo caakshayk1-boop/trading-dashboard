@@ -16,7 +16,12 @@ NSE holidays: scan skipped automatically.
 
 All results logged to signals.db + exported to data/*.json for Streamlit Cloud.
 """
-import sys, logging, os, math
+# 3.9 compat, same reason fundamentals.py carries it: CI runs 3.11 where
+# `int | None` in an annotation is fine, and this repo is still developed
+# against the system 3.9 where it raises at import time.
+from __future__ import annotations
+
+import sys, logging, os, math, re
 from datetime import datetime, date
 import pytz
 from symbols import to_yahoo
@@ -51,9 +56,36 @@ MAX_HOLD_HOURS = {
     "DAILY": 20 * 24,
     "SWING": 20 * 24,
     "WEEKLY": 20 * 24 * 7,
+    # "1W" and "LONG" were MISSING from this table while the ledger wrote both:
+    # 56 rows at "1W" and 15 at "LONG". Every one of them fell through to the
+    # 20-day default and got time-stopped, which is how 6-to-12-month
+    # multibagger ideas ended up EXPIRED after three weeks. GLAND was filed
+    # 2026-07-11 as a 6-12 month hold and force-closed 2026-08-11.
+    "1W": 20 * 24 * 7,
+    "1WK": 20 * 24 * 7,
+    "W": 20 * 24 * 7,
     "MONTHLY": 180 * 24,   # hard ceiling — nothing is a live position past 6mo
 }
-_DEFAULT_MAX_HOLD_HOURS = 20 * 24
+
+# Horizon by ENGINE, checked BEFORE the timeframe table.
+#
+# This is the actual fix, and the timeframe aliases above are only the patch to
+# the symptom. A hold horizon is a property of the STRATEGY, not of the bar
+# interval it was measured on: a multibagger idea and a swing setup can both be
+# filed off weekly bars and have nothing in common about how long they live.
+# Every one of these rows already declared its own horizon in
+# metadata.horizon ("6-12 months") and in signal_type, and the time stop
+# ignored both in favour of a lookup on "1W".
+ENGINE_MAX_HOLD_HOURS = {
+    "multibagger": 365 * 24,        # documented 6-12 month hold; ceiling at 12mo
+    "ai_longterm": 3 * 365 * 24,    # documented 2-3 year hold, 200DMA structure stop
+}
+
+# Deliberately NOT a number any more. An unknown timeframe used to resolve to
+# 20 days, which is why a missing key closed positions instead of raising —
+# the failure was silent, wrong and published. Unknown now means "do not time
+# stop this", and the run says so once per signal.
+_DEFAULT_MAX_HOLD_HOURS = None
 
 # How far through its own stop a fill may be booked before the number is
 # treated as a data artifact rather than a real overnight gap. A liquid NSE
@@ -107,7 +139,40 @@ def _fmt(symbol: str, v: float) -> str:
     return f"{_unit(symbol)}{v:,.{dp}f}"
 
 
-def _max_hold_hours(timeframe: str) -> int:
+def _max_hold_hours(timeframe: str, engine: str = "", horizon: str = "") -> int | None:
+    """Hours a signal may stay open. None means "horizon unknown, never expire".
+
+    Resolution order, most specific first:
+      1. the ENGINE, which is what actually owns the horizon
+      2. a horizon string the signal carries about itself ("6-12 months")
+      3. the timeframe table
+      4. None — refuse to close something whose horizon cannot be established
+
+    Step 4 is the important one. This used to return 20 days for anything it did
+    not recognise, so a timeframe spelled "1W" instead of "WEEKLY" silently
+    force-closed 6-to-12-month positions and published the result.
+    """
+    eng = (engine or "").strip().lower()
+    if eng in ENGINE_MAX_HOLD_HOURS:
+        return ENGINE_MAX_HOLD_HOURS[eng]
+
+    # The record often states its own horizon in prose. Parse the upper bound —
+    # "6-12 months" is twelve months, not six, and being generous here only ever
+    # keeps a position open longer, which is the safe direction to be wrong in.
+    h = (horizon or "").strip().lower()
+    if h:
+        nums = [int(n) for n in re.findall(r"\d+", h)]
+        if nums:
+            n = max(nums)
+            if "year" in h:
+                return n * 365 * 24
+            if "month" in h:
+                return n * 30 * 24
+            if "week" in h:
+                return n * 7 * 24
+            if "day" in h:
+                return n * 24
+
     return MAX_HOLD_HOURS.get((timeframe or "").upper(), _DEFAULT_MAX_HOLD_HOURS)
 
 # ── NSE Holiday Calendar 2025 ─────────────────────────────────────────────────
@@ -361,11 +426,28 @@ def run_price_alerts(time_str: str):
             risk   = abs(entry - sl) or 1.0
 
             opened_at = _opened_at(row)
+            # Horizon from the signal itself — engine first, then its own stated
+            # horizon, then the timeframe. See _max_hold_hours.
+            limit_h = _max_hold_hours(tf,
+                                      engine=str(row.get("signal_type") or "")
+                                             or str(meta.get("engine") or ""),
+                                      horizon=str(meta.get("horizon") or ""))
+            if limit_h is None:
+                # Unknown horizon: manage the levels, never time-stop it. The old
+                # code defaulted to 20 days here and closed real positions.
+                logging.warning(f"price_alerts {sym}: no horizon for tf={tf!r} "
+                                f"engine={row.get('signal_type')!r} — levels only, "
+                                f"no time stop")
+            # An unknown open time used to be treated as "past the limit", i.e.
+            # expire it immediately. With no limit that is meaningless, so an
+            # undated signal is simply not aged.
             age_h = ((now - opened_at).total_seconds() / 3600.0
-                     if opened_at else _max_hold_hours(tf) + 1)
-            limit_h = _max_hold_hours(tf)
+                     if opened_at else (0.0 if limit_h is None else limit_h + 1))
 
-            period, interval = _bar_window(tf, min(age_h, limit_h))
+            # limit_h None means no time stop, so the bar window is sized on age
+            # alone. min(x, None) is a TypeError in py3.
+            period, interval = _bar_window(
+                tf, age_h if limit_h is None else min(age_h, limit_h))
             tick = yf.download(to_yahoo(sym), period=period, interval=interval,
                                progress=False, auto_adjust=True, timeout=8)
             if tick is None or tick.empty:
@@ -378,7 +460,7 @@ def run_price_alerts(time_str: str):
             # Book the real R at the last close, exactly as backtest.py does.
             # Dropping unresolved trades instead would bias the ledger toward
             # fast movers and inflate the measured edge.
-            if age_h > limit_h:
+            if limit_h is not None and age_h > limit_h:
                 r_m = ((last_close - entry) / risk) if buy else ((entry - last_close) / risk)
                 pnl = ((last_close - entry) / entry * 100) * (1 if buy else -1)
                 updates.append(("EXPIRED", round(last_close, 4), round(pnl, 2),
