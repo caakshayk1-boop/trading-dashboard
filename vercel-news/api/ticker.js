@@ -142,7 +142,10 @@ export default async function handler(req, res) {
     // existing fetch and no new request from the page at all.
     const ledgerDefs = ledgerSyms.map((s) => [s, `${s}.NS`, "₹", 2]);
 
-    const quotes = await quoteAll([...defs, ...movers, ...ledgerDefs]);
+    const quotes = await quoteAll(
+      [...defs, ...movers, ...ledgerDefs],
+      ledgerDefs.map((d) => d[1])        // ledger quotes retry first
+    );
     const pick = (list) => list.map((d) => shape(d, quotes)).filter(Boolean);
 
     // Up-only and down-only, not "top and bottom five". On a strong day the
@@ -213,7 +216,9 @@ function seg(key, label, icon, items) {
 // ── quotes ───────────────────────────────────────────────────────────────────
 
 /** symbol → {price, prev} for every symbol in `defs`, batched 20 at a time. */
-async function quoteAll(defs) {
+// `priority` holds the Yahoo symbols whose absence is VISIBLE to a reader —
+// the open ledger rows. They get the retry budget before decorative movers.
+async function quoteAll(defs, priority = []) {
   const symbols = [...new Set(defs.map((d) => d[1]))];
   const chunks = [];
   for (let i = 0; i < symbols.length; i += CHUNK) {
@@ -223,7 +228,7 @@ async function quoteAll(defs) {
   const out = new Map();
   const results = await Promise.all(chunks.map(spark));
   for (const r of results) for (const [k, v] of r) out.set(k, v);
-  await retryMissing(symbols, out);
+  await retryMissing(symbols, out, priority);
 
   // Metals last: overwrite the futures price with spot, keeping the futures
   // previous close because the spot feed carries no history.
@@ -277,21 +282,57 @@ function readMeta(meta) {
 // Spark silently omits a symbol now and then — USD/MYR dropped out of an
 // otherwise healthy batch during testing. One retry each on the single-symbol
 // chart endpoint, which does not have that habit.
-async function retryMissing(symbols, out) {
+// Retry budget and wave size. Spark silently drops symbols from a 20-symbol
+// batch — it answers 200 with fewer results than asked for — so the retry path
+// is not an edge case, it is load-bearing.
+//
+// It used to be `missing.slice(0, 24)`, one flat wave, ordered by whatever the
+// caller happened to pass. That was survivable while the ledger held ~55 open
+// rows. Reopening 29 wrongly-expired multibagger positions (see
+// fix_horizons.py) pushed the batch past ~115 symbols, spark dropped more than
+// 24, and everything past the 24th silently rendered "—" in the Last column.
+// The reported symptom was "live price not coming for all".
+//
+// Two changes: a bigger budget spread over bounded waves so concurrency against
+// Yahoo stays sane, and PRIORITY, because a missing ledger quote is a visible
+// hole in the signal log while a missing mover is one absent decoration.
+const RETRY_BUDGET = 48;
+const RETRY_WAVE = 16;
+
+async function retryMissing(symbols, out, priority = []) {
   const missing = symbols.filter((s) => !out.has(s));
   if (!missing.length) return;
-  await Promise.all(missing.slice(0, 24).map(async (s) => {
+
+  // Ledger symbols first, then everything else, then truncate to the budget.
+  const pri = new Set(priority);
+  const queue = [
+    ...missing.filter((s) => pri.has(s)),
+    ...missing.filter((s) => !pri.has(s)),
+  ].slice(0, RETRY_BUDGET);
+
+  const one = async (s) => {
     try {
       const r = await fetch(
         `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(s)}?${RANGE}`,
-        { headers: UA, signal: AbortSignal.timeout(6000) }
+        { headers: UA, signal: AbortSignal.timeout(4500) }
       );
       if (!r.ok) return;
       const meta = (await r.json())?.chart?.result?.[0]?.meta;
       const q = meta && readMeta(meta);
       if (q) out.set(s, q);
     } catch { /* genuinely unavailable — segment renders without it */ }
-  }));
+  };
+
+  // Waves rather than one Promise.all over 48: the per-symbol timeout is 4.5s
+  // and the whole route has 15s, so three waves is the most that can run before
+  // the budget has to matter. Later waves are simply skipped if time is short,
+  // which degrades the least important symbols first because of the ordering
+  // above.
+  const started = Date.now();
+  for (let i = 0; i < queue.length; i += RETRY_WAVE) {
+    if (Date.now() - started > 9000) break;      // leave room for the response
+    await Promise.all(queue.slice(i, i + RETRY_WAVE).map(one));
+  }
 }
 
 async function spot(code) {
@@ -337,12 +378,23 @@ async function openLedgerSymbols() {
     // rail to its /api/markets fallback. The ledger already records what each
     // row IS; ask it instead of guessing from the string.
     const rs = await db().execute(
-      `SELECT DISTINCT symbol FROM all_signals
+      // GROUP BY, not SELECT DISTINCT: ordering a DISTINCT by a column that is
+      // not in the select list is invalid, and this query throwing would drop
+      // the whole rail to its /api/markets fallback. MAX(date) gives the most
+      // recent signal per symbol, which is what "degrade by recency" needs.
+      `SELECT symbol FROM all_signals
         WHERE UPPER(COALESCE(status,'OPEN')) = 'OPEN'
           AND UPPER(COALESCE(market,'NSE')) = 'NSE'
           AND UPPER(COALESCE(asset_type,'EQUITY')) = 'EQUITY'
           AND symbol IS NOT NULL AND symbol != ''
-        ORDER BY symbol LIMIT 60`
+        -- date DESC, not symbol: the cap has to degrade by RECENCY. Ordered
+        -- alphabetically it would silently drop the tail of the alphabet, so
+        -- every open position in S-Z loses its price the moment the ledger
+        -- outgrows the cap. 120 because the open set reached 84 after 29
+        -- wrongly-expired positions were reopened, and spark chunks are fetched
+        -- in parallel so the marginal cost of a higher cap is one round trip.
+        GROUP BY symbol
+        ORDER BY MAX(date) DESC, symbol LIMIT 120`
     );
     return rs.rows
       .map((r) => str(r.symbol).toUpperCase())
