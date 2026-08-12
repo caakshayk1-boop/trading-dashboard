@@ -121,19 +121,13 @@ jobs:
           print(f"\ncached for week {week}")
           PY
 
-      # The caches are the expensive part of this job, and they only persist if
-      # the run gets far enough to save them. Committing them is deliberate:
-      # the daily newspaper build reads cache/fundamentals.json too, and a
-      # warm cache there keeps other jobs off Yahoo.
-      - name: Commit refreshed caches
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cache/fundamentals.json cache/statements.json || true
-          if git diff --cached --quiet; then
-            echo "caches unchanged"
-          else
-            git commit -m "chore: refresh fundamentals + statements cache"
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
+      # NO commit step for the caches, deliberately. There was one and it could
+      # never have worked: cache/ is gitignored, so `git add cache/*.json` errored
+      # into its own `|| true` and printed "caches unchanged" on every run — dead
+      # machinery that looked like a working safety net. They are also the wrong
+      # size to commit daily (fundamentals 660KB, statements 1.6MB).
+      #
+      # actions/cache above IS the persistence, and it is enough: the statements
+      # TTL is 30 days, so a warm restore turns a ~11-minute cold build into
+      # about two minutes. cache/nifty500.csv is the one file here that IS
+      # committed, because it is an input rather than a cache — see .gitignore.

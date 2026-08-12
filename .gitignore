@@ -3,7 +3,15 @@ signals.db
 signals.db-shm
 signals.db-wal
 content_cache.json
-cache/
+# `cache/*`, NOT `cache/` — a file cannot be re-included if its PARENT
+# DIRECTORY is excluded, so `cache/` followed by `!cache/nifty500.csv` silently
+# does nothing. Same gitignore semantics the .vercelignore header documents.
+cache/*
+# The Nifty 500 constituent list is an INPUT, not a cache: stock_screen reads it
+# and refuses to run without it. It was ignored along with everything else in
+# cache/, so the workflow checked out a tree with no universe file and died on
+# its first line with "universe unavailable". 33KB, changes when NSE rebalances.
+!cache/nifty500.csv
 logs/
 __pycache__/
 *.pyc
