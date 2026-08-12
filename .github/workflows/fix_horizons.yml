@@ -1,4 +1,4 @@
-name: Ledger Integrity — reopen positions expired before their horizon
+name: Ledger Integrity — horizons + duplicate open positions
 
 # The time stop was keyed by TIMEFRAME and the table had no "1W" entry, so every
 # weekly-bar signal fell through to a 20-day default. 29 multibagger ideas with a
@@ -6,6 +6,12 @@ name: Ledger Integrity — reopen positions expired before their horizon
 #
 # Turso is the source of truth, so this has to run here — a local --apply is
 # overwritten by the next sync. Same reason fix_phantoms.yml runs here.
+#
+# Also collapses duplicate open positions. `tracker.duplicate_symbols` skipped a
+# symbol only if it had an OPEN row filed within FIVE DAYS, while multibagger
+# rescans weekly and holds 6-12 months — so every re-detection landed outside the
+# window and opened another position. 84 open rows across 59 symbols; OFSS had 5.
+# Both causes are fixed at source; these scripts repair what was already written.
 #
 # Dry run by default. Nothing is written unless apply=true.
 
@@ -41,12 +47,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Audit and repair
+      # ORDER MATTERS. fix_horizons reopens positions that were force-closed
+      # before their horizon; dedupe then collapses the duplicates among all
+      # open rows. Running dedupe first would leave the reopened rows
+      # un-deduplicated, and they are exactly the ones the weekly re-file bug
+      # multiplied — GLAND, EXIDEIND and VIJAYA each had three.
+      - name: Reopen positions expired before their horizon
         run: |
           if [ "${{ inputs.apply }}" = "true" ]; then
             python fix_horizons.py --apply
           else
             python fix_horizons.py
+          fi
+
+      - name: Collapse duplicate open positions
+        run: |
+          if [ "${{ inputs.apply }}" = "true" ]; then
+            python dedupe_positions.py --apply
+          else
+            python dedupe_positions.py
           fi
 
       # The backup is the whole safety net for a ledger write. Commit it.
@@ -59,7 +78,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "no backup produced"
           else
-            git commit -m "chore: backup before horizon fix"
+            git commit -m "chore: backup before ledger horizon + dedupe repair"
             git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi

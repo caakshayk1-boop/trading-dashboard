@@ -1347,6 +1347,110 @@ def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     check("build.js copies screen.json into public/", '"screen.json"' in bld)
 
 
+
+def test_duplicate_open_positions_collapse_per_engine() -> None:
+    """One open position per symbol per ENGINE, keeping the earliest.
+
+    The ledger held 84 OPEN rows across 59 symbols — OFSS five, GLAND, VIJAYA,
+    EXIDEIND, LUPIN and SHRIRAMFIN three each. Two causes, both now fixed at
+    source: same-day exact double-writes, and weekly re-files slipping past a
+    FIVE-DAY duplicate window while the engine holds for 6-12 months.
+    """
+    import dedupe_positions as D
+
+    rows = [
+        # Two engines on one symbol — genuinely different theses, both stay.
+        {"id": 1, "symbol": "OFSS", "signal_type": "multibagger", "timeframe": "1W",
+         "status": "OPEN", "date": "2026-07-25", "entry": 10652, "metadata": "{}"},
+        {"id": 2, "symbol": "OFSS", "signal_type": "ai_longterm", "timeframe": "LONG",
+         "status": "OPEN", "date": "2026-08-05", "entry": 11759, "metadata": "{}"},
+        # A weekly re-file of the SAME engine — superseded.
+        {"id": 3, "symbol": "OFSS", "signal_type": "multibagger", "timeframe": "1W",
+         "status": "OPEN", "date": "2026-08-01", "entry": 11186, "metadata": "{}"},
+        # A same-day exact double-write — superseded.
+        {"id": 4, "symbol": "LUPIN", "signal_type": "ai_longterm", "timeframe": "LONG",
+         "status": "OPEN", "date": "2026-08-05", "entry": 2388, "metadata": "{}"},
+        {"id": 5, "symbol": "LUPIN", "signal_type": "ai_longterm", "timeframe": "LONG",
+         "status": "OPEN", "date": "2026-08-05", "entry": 2388, "metadata": "{}"},
+        # A closed row must never be touched.
+        {"id": 6, "symbol": "OFSS", "signal_type": "multibagger", "timeframe": "1W",
+         "status": "T2_HIT", "date": "2026-05-01", "entry": 9000, "metadata": "{}"},
+    ]
+    keep, void = D.plan(rows)
+    kept_ids = sorted(r["id"] for r in keep)
+    void_ids = sorted(r["id"] for r in void)
+
+    check("both ENGINES on one symbol survive — different theses, different stops",
+          1 in kept_ids and 2 in kept_ids, str(kept_ids))
+    check("the weekly re-file of the same engine is superseded", 3 in void_ids, str(void_ids))
+    check("the same-day double-write is superseded", 5 in void_ids, str(void_ids))
+    check("the EARLIEST row is the one kept", 4 in kept_ids, str(kept_ids))
+    check("a CLOSED row is never considered", 6 not in kept_ids and 6 not in void_ids)
+    check("no symbol+engine pair appears twice in the survivors",
+          len({(r["symbol"], r["signal_type"]) for r in keep}) == len(keep))
+    for r in void:
+        check(f"superseded id={r['id']} records what replaced it",
+              r.get("_superseded_by") in kept_ids, str(r.get("_superseded_by")))
+
+    # The horizon guard: keeping the earliest is WRONG when the earliest is only
+    # open because it should already have been time-stopped.
+    stale = [
+        {"id": 10, "symbol": "X", "signal_type": "equity_measured", "timeframe": "1D",
+         "status": "OPEN", "date": "2026-06-01", "entry": 100, "metadata": "{}"},
+        {"id": 11, "symbol": "X", "signal_type": "equity_measured", "timeframe": "1D",
+         "status": "OPEN", "date": "2026-08-12", "entry": 110, "metadata": "{}"},
+    ]
+    k2, v2 = D.plan(stale)
+    check("a row past its horizon does not outrank a live one",
+          k2[0]["id"] == 11, str(k2[0]["id"]))
+    check("...and that is flagged as keeping the later row", v2[0].get("_kept_later") is True)
+
+
+def test_open_duplicate_check_has_no_date_window() -> None:
+    """The five-day window is why long-horizon engines re-filed forever.
+
+    multibagger rescans weekly and holds 6-12 months, so every re-detection
+    landed 7 days later — outside a 5-day window — and passed the guard. An open
+    position is open; how long ago it was filed changes nothing.
+    """
+    src = pathlib.Path("tracker.py").read_text(encoding="utf-8")
+
+    # The invariant is about all_signals — the engine-aware table. Both the
+    # batch form and the single-symbol form must be windowless there.
+    check("no all_signals OPEN check still filters by date",
+          "signal_type=? AND status='OPEN' AND date>=?" not in src,
+          "a windowed engine-aware OPEN check remains")
+    # Both call sites, checked structurally rather than by counting a substring —
+    # the single-symbol form splits its SQL across concatenated lines with a
+    # comment in between, so it never matches the batch form's exact string.
+    for fn in ("def is_duplicate", "def duplicate_symbols"):
+        body = src[src.index(fn):]
+        body = body[:body.index("\ndef ", 1)]
+        allsig = [ln for ln in body.splitlines() if "all_signals" in ln]
+        check(f"{fn.split()[1]} queries all_signals at all", bool(allsig))
+        # The OPEN branch of that function must not carry a date bound.
+        open_branch = body[:body.index("SL_HIT")] if "SL_HIT" in body else body
+        check(f"{fn.split()[1]}'s OPEN check is windowless",
+              "status='OPEN' AND date>=?" not in open_branch,
+              "still windowed")
+
+    # The LEGACY `signals` table keeps its window ON PURPOSE. That table is not
+    # signal_type aware, so a windowless check there would block a symbol across
+    # every engine at once — an open swing row would suppress a multibagger. The
+    # window is what bounds the blast radius of a check that cannot tell engines
+    # apart, so it is correct there and wrong in all_signals.
+    check("the legacy signals-table check keeps its window deliberately",
+          "FROM signals WHERE symbol=? AND status='OPEN' AND date>=?" in src)
+    # The SL_HIT cooldown is a different thing and must stay.
+    check("the 7-day stop-out cooldown is untouched",
+          "status='SL_HIT' AND date>=?" in src)
+
+    # And the grader must resolve horizons per engine, or it re-expires the rows
+    # fix_horizons just reopened.
+    check("tracker._max_hold_hours forwards engine and horizon",
+          "_impl(timeframe, engine=engine, horizon=horizon)" in src)
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
     for fn in (test_rsi_matches_hand_arithmetic,
@@ -1393,6 +1497,8 @@ def main() -> int:
                test_cash_flow_catches_accounting_earnings,
                test_deltas_separate_unchanged_from_never_seen,
                test_no_text_builder_raises_on_sparse_data,
+               test_duplicate_open_positions_collapse_per_engine,
+               test_open_duplicate_check_has_no_date_window,
                test_universe_excludes_nse_dummy_constituents,
                test_screen_table_columns_match,
                test_the_screen_sheet_can_always_be_closed,

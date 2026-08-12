@@ -10,15 +10,24 @@ from symbols import to_yahoo
 _IST = timezone(timedelta(hours=5, minutes=30))
 
 
-def _max_hold_hours(timeframe: str) -> int:
+def _max_hold_hours(timeframe: str, engine: str = "", horizon: str = ""):
     """
-    Holding limit for a timeframe. Imported from standalone_scan so the grader
+    Holding limit for a signal. Imported from standalone_scan so the grader
     and the live scanner cannot drift apart — a second copy of this table is how
     the ledger ends up measuring a horizon the engine never traded.
+
+    Takes engine and horizon, not just timeframe. Forwarding only the timeframe
+    was itself a drift: standalone_scan resolves the horizon from the ENGINE
+    first (multibagger 12 months, ai_longterm 3 years) and falls back to the
+    timeframe table, so a grader passing "1W" alone would have re-applied the
+    20-day default to exactly the positions fix_horizons.py had just reopened.
+
+    Returns None when the horizon cannot be established — callers must treat
+    that as "do not time-stop this", never as a number.
     """
     try:
         from standalone_scan import _max_hold_hours as _impl
-        return _impl(timeframe)
+        return _impl(timeframe, engine=engine, horizon=horizon)
     except Exception:
         return 20 * 24
 
@@ -395,8 +404,11 @@ def is_duplicate(symbol, signal_type="swing"):
         # Check unified all_signals first (covers all signal types)
         row = c.execute(
             "SELECT id FROM all_signals WHERE symbol=? AND signal_type=? "
-            "AND status='OPEN' AND date>=?",
-            (sym_clean, signal_type, cutoff_5d)
+            # No date window — see the note in duplicate_symbols(). An open
+            # position blocks a new one whether it was filed last week or last
+            # quarter, which is what the long-horizon engines need.
+            "AND status='OPEN'",
+            (sym_clean, signal_type)
         ).fetchone()
         if row:
             log.debug(f"Duplicate skip: {sym_clean} ({signal_type}) already OPEN")
@@ -438,9 +450,23 @@ def duplicate_symbols(symbols, signal_type="swing"):
     dupes = set()
     with _conn() as c:
         for sql, params in (
+            # NO date window on the OPEN check. It used to carry cutoff_5d, and
+            # that is why the long-horizon engines filed the same name over and
+            # over: multibagger rescans WEEKLY and holds for 6-12 months, so
+            # every re-detection landed 7 days later — outside a 5-day window —
+            # and passed the guard. GLAND ended up with three open positions
+            # (2026-06-13, 07-11, 07-25) and OFSS with five, which triples a
+            # name's weight in the ledger when a reader holds one.
+            #
+            # An open position is open. Whether it was filed five days ago or
+            # five months ago changes nothing about whether a second one should
+            # exist. The window was only ever needed because before the time
+            # stop worked, rows stayed OPEN forever and a windowless check would
+            # have blocked a symbol permanently — that is no longer true (see
+            # standalone_scan._max_hold_hours, now horizon-aware per engine).
             (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "
-             f"AND signal_type=? AND status='OPEN' AND date>=?",
-             tuple(ordered) + (signal_type, cutoff_5d)),
+             f"AND signal_type=? AND status='OPEN'",
+             tuple(ordered) + (signal_type,)),
             (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "
              f"AND signal_type=? AND status='SL_HIT' AND date>=?",
              tuple(ordered) + (signal_type, cutoff_7d)),
@@ -686,8 +712,19 @@ def update_all_outcomes():
 
             # Bound the window. Calendar days are ~1.45x sessions; the extra
             # margin is trimmed by the session counter in the walk below.
-            hold_h = _max_hold_hours(str(row.get("timeframe", "")))
-            end_d = min(today, start_d + timedelta(days=int(hold_h / 24) + 4))
+            # Engine and its own stated horizon, not just the timeframe — see
+            # _max_hold_hours above. A None means the horizon is unknown, and
+            # the walk is then bounded by today rather than by a guessed limit.
+            try:
+                _meta = json.loads(row.get("metadata") or "{}")
+            except (TypeError, ValueError):
+                _meta = {}
+            hold_h = _max_hold_hours(
+                str(row.get("timeframe", "")),
+                engine=str(row.get("signal_type") or _meta.get("engine") or ""),
+                horizon=str(_meta.get("horizon") or ""))
+            end_d = (today if hold_h is None
+                     else min(today, start_d + timedelta(days=int(hold_h / 24) + 4)))
 
             df = yf.download(sym, start=start_d.isoformat(),
                              end=(end_d + timedelta(days=1)).isoformat(),
