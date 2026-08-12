@@ -2485,6 +2485,7 @@ def get_podcasts(build_if_missing: bool = False) -> dict:
     with no key and takes the deterministic path.
     """
     week = datetime.now(IST).strftime("%Y-%m-%d")
+    stale = None          # newest date-keyed row, used only if the build fails
     try:
         with _db() as con:
             row = con.execute("SELECT payload FROM newspaper_podcasts WHERE week=?",
@@ -2510,30 +2511,40 @@ def get_podcasts(build_if_missing: bool = False) -> dict:
                 "WHERE week LIKE '____-__-__' AND week NOT LIKE '%W%' "
                 "ORDER BY week DESC LIMIT 1").fetchone()
             if row:
-                data = json.loads(row[0])
-                age = _payload_age_days(data)
-                if age is not None and age <= 4:
-                    log.info(f"podcasts: serving previous build, {age:.1f}d old")
-                    return _stamp_fund_payload(data, fallback=True)
+                stale = json.loads(row[0])
     except Exception as e:
         log.warning(f"podcast cache read: {e}")
 
-    if not build_if_missing:
-        return {}
+    # BUILD BEFORE FALLING BACK. The fund screen returns its stale payload here
+    # and never builds, which is right for a section whose builder is a separate
+    # weekly workflow. This one builds inline and is supposed to refresh every
+    # day — so returning the fallback first meant a ≤4-day-old row pre-empted
+    # the rebuild entirely, and "daily" silently became "whenever the cache aged
+    # past four days". The date key had already rolled over and the section was
+    # serving yesterday's list under today's date.
+    if build_if_missing:
+        try:
+            import podcasts as _pod
+            data = _pod.build(ai=groq_complete if GROQ_KEY else None)
+            if data.get("ok"):
+                with _db() as con:
+                    con.execute("INSERT OR REPLACE INTO newspaper_podcasts VALUES (?,?)",
+                                (week, json.dumps(data)))
+                    con.commit()
+                return _stamp_fund_payload(data, fallback=False)
+            log.warning("podcasts: build produced nothing")
+        except Exception as e:
+            log.warning(f"podcast build failed: {e}")
 
-    try:
-        import podcasts as _pod
-        data = _pod.build(ai=groq_complete if GROQ_KEY else None)
-        if not data.get("ok"):
-            return {}
-        with _db() as con:
-            con.execute("INSERT OR REPLACE INTO newspaper_podcasts VALUES (?,?)",
-                        (week, json.dumps(data)))
-            con.commit()
-        return _stamp_fund_payload(data, fallback=False)
-    except Exception as e:
-        log.warning(f"podcast build failed: {e}")
-        return {}
+    # Only now: yesterday's list beats an empty section, and the strip says so.
+    if stale:
+        age = _payload_age_days(stale)
+        if age is not None and age <= 4:
+            log.info(f"podcasts: serving previous build, {age:.1f}d old")
+            return _stamp_fund_payload(stale, fallback=True)
+        log.warning("podcasts: newest build is "
+                    + ("of unknown age" if age is None else f"{age:.1f}d old") + " — hidden")
+    return {}
 
 
 def _iso_week() -> str:

@@ -1,20 +1,120 @@
 {
- "build_id": "20260811T080617",
- "date": "2026-08-11",
- "date_str": "Tuesday, August 11 2026",
+ "build_id": "20260812T065353",
+ "date": "2026-08-12",
+ "date_str": "Wednesday, August 12 2026",
  "picks": [
+  {
+   "symbol": "PAYTM.NS",
+   "name": "PAYTM",
+   "ext20": 15.87,
+   "vol_ratio": 1.54,
+   "price": 1584.1,
+   "change_1d": 9.88,
+   "mom_1m": 18.1,
+   "mom_3m": 32.4,
+   "score": 96,
+   "target": 1980.12,
+   "stop_loss": 1457.37,
+   "timeframe": "2\u20133 months",
+   "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 9.3
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 7.2
+    }
+   ],
+   "ema20": 1367.1,
+   "tv": "NSE:PAYTM",
+   "thesis": "1.5x normal volume behind a +18% month \u2014 participation is confirming the move."
+  },
+  {
+   "symbol": "NET",
+   "name": "NET",
+   "ext20": 8.77,
+   "vol_ratio": 1.49,
+   "price": 303.96,
+   "change_1d": 1.23,
+   "mom_1m": 13.3,
+   "mom_3m": 57.1,
+   "score": 93,
+   "target": 379.96,
+   "stop_loss": 279.65,
+   "timeframe": "2\u20133 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 19.8
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 13.9
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 17.7
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 6.5
+    }
+   ],
+   "ema20": 279.45,
+   "tv": "NET",
+   "thesis": "1.5x normal volume behind a +13% month \u2014 participation is confirming the move."
+  },
   {
    "symbol": "SNOW",
    "name": "SNOW",
-   "ext20": 13.98,
-   "vol_ratio": 1.19,
-   "price": 330.49,
-   "change_1d": 3.93,
-   "mom_1m": 23.6,
-   "mom_3m": 116.8,
-   "score": 93,
-   "target": 413.11,
-   "stop_loss": 304.05,
+   "ext20": 13.29,
+   "vol_ratio": 0.97,
+   "price": 333.19,
+   "change_1d": 0.82,
+   "mom_1m": 27.4,
+   "mom_3m": 119.9,
+   "score": 91,
+   "target": 416.49,
+   "stop_loss": 306.53,
    "timeframe": "2\u20133 months",
    "currency": "$",
    "factors": [
@@ -46,25 +146,25 @@
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 3.2
+     "e": 0.7
     }
    ],
-   "ema20": 289.96,
+   "ema20": 294.11,
    "tv": "SNOW",
-   "thesis": "116.8% 3-month gain with 93 composite score and +14.0% above 20-day average."
+   "thesis": "+120% three-month trend, +13.3% above the 20-day, volume 0.97x normal."
   },
   {
    "symbol": "COFORGE.NS",
    "name": "COFORGE",
-   "ext20": 8.21,
-   "vol_ratio": 0.57,
-   "price": 1776.0,
-   "change_1d": 0.18,
-   "mom_1m": 21.5,
-   "mom_3m": 38.8,
-   "score": 88,
-   "target": 2220.0,
-   "stop_loss": 1633.92,
+   "ext20": 9.2,
+   "vol_ratio": 0.61,
+   "price": 1810.0,
+   "change_1d": 1.91,
+   "mom_1m": 20.9,
+   "mom_3m": 32.2,
+   "score": 89,
+   "target": 2262.5,
+   "stop_loss": 1665.2,
    "timeframe": "2\u20133 months",
    "currency": "\u20b9",
    "factors": [
@@ -76,12 +176,62 @@
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 19.2
+     "e": 20.0
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 14.1
+     "e": 14.7
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 9.2
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 1657.47,
+   "tv": "NSE:COFORGE",
+   "thesis": "+21% in a month against +32% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "PANW",
+   "name": "PANW",
+   "ext20": 9.95,
+   "vol_ratio": 0.87,
+   "price": 378.47,
+   "change_1d": 4.02,
+   "mom_1m": 16.1,
+   "mom_3m": 77.1,
+   "score": 88,
+   "target": 473.09,
+   "stop_loss": 348.19,
+   "timeframe": "2\u20133 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 13.2
     },
     {
      "k": "1-month thrust",
@@ -99,159 +249,9 @@
      "e": 0.0
     }
    ],
-   "ema20": 1641.3,
-   "tv": "NSE:COFORGE",
-   "thesis": "88-score setup with +38.8% 3-month gain and +21.5% 1-month surge."
-  },
-  {
-   "symbol": "MSFT",
-   "name": "MSFT",
-   "ext20": 14.03,
-   "vol_ratio": 1.09,
-   "price": 499.99,
-   "change_1d": 0.03,
-   "mom_1m": 30.1,
-   "mom_3m": 20.7,
-   "score": 86,
-   "target": 624.99,
-   "stop_loss": 459.99,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 12.8
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.9
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 2.1
-    }
-   ],
-   "ema20": 438.46,
-   "tv": "MSFT",
-   "thesis": "86 composite score with 30.1% 1-month gain and 1.09x volume."
-  },
-  {
-   "symbol": "NET",
-   "name": "NET",
-   "ext20": 8.46,
-   "vol_ratio": 1.52,
-   "price": 300.27,
-   "change_1d": 5.57,
-   "mom_1m": 8.9,
-   "mom_3m": 53.1,
-   "score": 86,
-   "target": 375.34,
-   "stop_loss": 276.25,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 19.1
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 13.4
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 11.8
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 6.9
-    }
-   ],
-   "ema20": 276.85,
-   "tv": "NET",
-   "thesis": "53.1% 3-month gain, with price 8.5% above its 20-day average."
-  },
-  {
-   "symbol": "PAYTM.NS",
-   "name": "PAYTM",
-   "ext20": 7.25,
-   "vol_ratio": 1.23,
-   "price": 1441.6,
-   "change_1d": -0.03,
-   "mom_1m": 14.1,
-   "mom_3m": 20.4,
-   "score": 84,
-   "target": 1802.0,
-   "stop_loss": 1326.27,
-   "timeframe": "2\u20133 months",
-   "currency": "\u20b9",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 23.1
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 18.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 14.1
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 18.9
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.8
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 3.6
-    }
-   ],
-   "ema20": 1344.18,
-   "tv": "NSE:PAYTM",
-   "thesis": "84 composite score with 20.4% 3-month gain and 1.23x volume."
+   "ema20": 344.23,
+   "tv": "PANW",
+   "thesis": "+77% three-month trend, +9.9% above the 20-day, volume 0.87x normal."
   }
  ],
  "engine": [
@@ -345,417 +345,257 @@
   }
  ],
  "picks_week": null,
- "open_context": {
-  "ABCAPITAL": {
-   "price": 407.75,
-   "sector": "Financial Services"
-  },
-  "ABDL": {
-   "price": 599.25,
-   "sector": "Consumer Defensive"
-  },
-  "ADANIENT": {
-   "price": 3010.0,
-   "sector": "Energy"
-  },
-  "AEGISVOPAK": {
-   "price": 276.55,
-   "sector": "Energy"
-  },
-  "AIAENG": {
-   "price": 4776.0,
-   "sector": "Industrials"
-  },
-  "ANTHEM": {
-   "price": 853.0,
-   "sector": "Healthcare"
-  },
-  "BRNUSD": {
-   "price": 87.87,
-   "sector": ""
-  },
-  "CGCL": {
-   "price": 232.39,
-   "sector": "Financial Services"
-  },
-  "CHOICEIN": {
-   "price": 844.75,
-   "sector": "Financial Services"
-  },
-  "CHOLAFIN": {
-   "price": 1920.0,
-   "sector": "Financial Services"
-  },
-  "CIPLA": {
-   "price": 1463.8,
-   "sector": "Healthcare"
-  },
-  "EICHERMOT": {
-   "price": 8020.0,
-   "sector": "Consumer Cyclical"
-  },
-  "EXIDEIND": {
-   "price": 485.4,
-   "sector": "Consumer Cyclical"
-  },
-  "FLUOROCHEM": {
-   "price": 4518.1001,
-   "sector": "Basic Materials"
-  },
-  "GABRIEL": {
-   "price": 1469.8,
-   "sector": "Consumer Cyclical"
-  },
-  "GLAND": {
-   "price": 2647.3,
-   "sector": "Healthcare"
-  },
-  "GRASIM": {
-   "price": 3380.5,
-   "sector": "Basic Materials"
-  },
-  "HEG": {
-   "price": 674.0,
-   "sector": "Industrials"
-  },
-  "HINDALCO": {
-   "price": 1054.05,
-   "sector": "Basic Materials"
-  },
-  "HINDCOPPER": {
-   "price": 526.25,
-   "sector": "Basic Materials"
-  },
-  "JSWINFRA": {
-   "price": 342.0,
-   "sector": "Industrials"
-  },
-  "KARURVYSYA": {
-   "price": 335.55,
-   "sector": "Financial Services"
-  },
-  "LAURUSLABS": {
-   "price": 1854.0,
-   "sector": "Healthcare"
-  },
-  "LTF": {
-   "price": 312.85,
-   "sector": "Financial Services"
-  },
-  "LUPIN": {
-   "price": 2300.0,
-   "sector": "Healthcare"
-  },
-  "M&MFIN": {
-   "price": 412.3,
-   "sector": "Financial Services"
-  },
-  "MARICO": {
-   "price": 863.5,
-   "sector": "Consumer Defensive"
-  },
-  "NESTLEIND": {
-   "price": 1528.6,
-   "sector": "Consumer Defensive"
-  },
-  "NGAS": {
-   "price": 2.768,
-   "sector": ""
-  },
-  "NMDC": {
-   "price": 85.48,
-   "sector": "Basic Materials"
-  },
-  "OFSS": {
-   "price": 11890.0,
-   "sector": "Technology"
-  },
-  "PAYTM": {
-   "price": 1584.1,
-   "sector": "Technology"
-  },
-  "POLYCAB": {
-   "price": 9218.0,
-   "sector": "Industrials"
-  },
-  "PVRINOX": {
-   "price": 1156.0,
-   "sector": "Communication Services"
-  },
-  "REDINGTON": {
-   "price": 353.2,
-   "sector": "Technology"
-  },
-  "SHRIRAMFIN": {
-   "price": 1137.8,
-   "sector": "Financial Services"
-  },
-  "SUNPHARMA": {
-   "price": 1945.0,
-   "sector": "Healthcare"
-  },
-  "TORNTPHARM": {
-   "price": 4924.0,
-   "sector": "Healthcare"
-  },
-  "TRIDENT": {
-   "price": 24.81,
-   "sector": "Consumer Cyclical"
-  },
-  "VIJAYA": {
-   "price": 1351.1,
-   "sector": "Healthcare"
-  }
- },
+ "open_context": {},
  "desk": {
   "chess": {
-   "title": "Middlegame: Piece Coordination",
-   "body": "Good chess is about all your pieces working together. Ask: which of my pieces is worst placed? Improve it. A knight on the rim is dim (a1, h1 etc). A bishop blocked by its own pawns is a 'tall pawn.' Rooks need open files. Queen needs safety. Coordinate: every piece pointing at the same sector = overwhelming attack.",
-   "index": 13,
+   "title": "Calculation: The LPDO Rule",
+   "body": "LPDO = Loose Pieces Drop Off. Before every move, scan the board: which of my pieces are undefended? Which of my opponent's pieces are undefended? Undefended pieces are targets for tactics. A simple habit: after finding your move, ask 'does this leave anything undefended?' This alone prevents most blunders.",
+   "index": 14,
    "total": 20
   },
   "wisdom": {
-   "title": "Regulate Yourself First",
-   "body": "You cannot be a calm parent if you're running on stress, sleep debt, and financial anxiety. Your regulation is their regulation \u2014 babies co-regulate with caregivers. Deep breath before you pick her up. Shoulders down. Slow exhale. Your nervous system sets the tone for the room.",
-   "index": 3,
+   "title": "Stoic Parenting",
+   "body": "Marcus Aurelius raised children while running an empire. His journal shows he constantly asked: am I reacting or responding? Reacting is automatic. Responding is chosen. The next time your baby cries at 2am, ask yourself: how do I want to respond to this? You always have a choice in the gap between stimulus and response.",
+   "index": 4,
    "total": 18
   },
   "book": {
-   "book": "The Innovator's Dilemma",
-   "author": "Clayton Christensen",
-   "chapter": "Why Great Companies Fail at Exactly the Right Moment",
-   "lesson": "Christensen's paradox: the best-managed companies, doing everything right \u2014 listening to customers, investing in quality, maximising margins \u2014 are the most vulnerable to disruption. Disruptive technologies start at the bottom of the market (cheaper, simpler, worse performance) serving customers who don't exist yet. They improve over time until they're good enough for mainstream customers. By then, it's too late for incumbents to respond. Nokia had better technology than Apple in 2007. Blockbuster had better retail locations than Netflix. They failed not despite their excellence but because of it \u2014 their success made them unable to cannibalise themselves.",
-   "key_quote": "Excellence in executing today's business model can blind you to the business model that will replace it.",
-   "action": "Ask about your industry: what is the simpler, cheaper, 'worse' solution that currently serves the bottom of the market? Could it eventually serve everyone?",
-   "index": 39,
+   "book": "Made in America",
+   "author": "Sam Walton",
+   "chapter": "The 10 Rules That Built Walmart",
+   "lesson": "Sam Walton built the world's largest retailer from a small Arkansas five-and-dime store. His rules: commit to your business; share profits with employees; energise your associates; communicate everything; appreciate associates; celebrate successes; listen to everyone in your company; exceed customers' expectations; control expenses; swim upstream (do the opposite of what everyone else does). The most counterintuitive: Walmart succeeded by treating employees as partners and sharing information and profits broadly, while competitors treated labour as a cost to minimise. Also: Walton flew his own plane to personally visit stores until he was 70.",
+   "key_quote": "The best business intelligence comes from people closest to the customer. Go there yourself and listen.",
+   "action": "Identify someone in your team or organisation who is closest to the customer/problem. Ask them what they're seeing that leadership doesn't know about.",
+   "index": 40,
    "total": 48,
    "crux": [
-    "Well-managed companies fail precisely by doing what good management prescribes.",
-    "Sustaining innovations improve products for existing customers. Incumbents win these reliably.",
-    "Disruptive innovations start worse on the metrics incumbents value, and win anyway.",
-    "Disruption enters at the low end or in a new market, where incumbent margins look unattractive.",
-    "Listening closely to your best customers pushes you away from disruptive bets. Rationally.",
-    "Resource dependence: customers and investors, not managers, effectively allocate the resources.",
-    "Small markets cannot solve the growth needs of large companies, so large companies skip them.",
-    "Technology supply often outruns demand \u2014 products overshoot what users need, opening the low end.",
-    "The basis of competition shifts over time: function \u2192 reliability \u2192 convenience \u2192 price.",
-    "You cannot analyse markets that do not yet exist. Discovery-driven planning, not forecasting.",
-    "Disruption must be housed in an independent organisation small enough to be excited by a small win.",
-    "Failure early and cheaply is the plan, because the first strategy will be wrong."
+    "Walton's obsession was the customer's price, and everything else followed from it.",
+    "Buy low, stack it high, sell it cheap. Volume compensates for margin.",
+    "Rural small towns were dismissed by competitors. That was the opening.",
+    "Control costs better than anyone. Cost advantage forgives many mistakes.",
+    "Distribution centres came before the stores they served. Logistics was the real business.",
+    "Invest early in information systems. Walmart's data infrastructure preceded everyone's.",
+    "Share profits with associates and they behave like owners.",
+    "Listen to the people on the floor. They talk to customers; you don't.",
+    "Swim upstream. Go the other way when everyone agrees.",
+    "Every store must be visited. Management by walking around, constantly.",
+    "Copy shamelessly from competitors. Walton toured rivals' stores relentlessly.",
+    "Exceed expectations, celebrate success, and keep the culture unembarrassed.",
+    "Frugality is cultural, not cosmetic \u2014 shared hotel rooms while running a Fortune 500 company."
    ],
    "learnings": [
-    "Doing everything right is not protection when the game changes underneath.",
-    "The customers who fund you today are the reason you miss tomorrow.",
-    "A market too small to matter now is the only place disruption can start.",
-    "Cost structure determines which opportunities look attractive. It is destiny."
+    "A cost advantage is a strategy, not an accounting detail.",
+    "Infrastructure before expansion, or expansion breaks you.",
+    "Frontline staff hold the information leadership needs.",
+    "Copying well is faster than inventing badly."
    ],
    "examples": [
-    "Disk drives: every generational shift from 14-inch to 1.8-inch killed the leader, though each new size was initially worse on capacity.",
-    "Kodak invented the digital camera in 1975 and could not commit to it without cannibalising film margins.",
-    "Mini-mills started with low-grade rebar that integrated steel mills were happy to abandon, then moved up until they took the whole market."
+    "Walmart's hub-and-spoke DCs let it saturate regions competitors couldn't serve profitably.",
+    "Walton flew his own plane over towns scouting sites, personally, for years.",
+    "Profit-sharing from 1971 turned shelf-stackers into shareholders and cut shrinkage."
    ],
    "adapt": [
-    "A free Telegram bot is the low-end disruption of paid research. That is the position to hold, not apologise for.",
-    "Codex at $47 looks unattractive next to consulting rates. That is exactly why it has room.",
-    "Don't let existing dashboard users dictate the roadmap if the measured edge points elsewhere.",
-    "Keep experiments in separate ledgers \u2014 the APEX poly engine on its own books, so a small bet stays a small bet."
+    "Your cost advantage is the whole stack running on GitHub Actions and Vercel free tiers. Protect it.",
+    "Infrastructure before features: fix the position lifecycle before adding another scanner.",
+    "Copy shamelessly \u2014 study what the good finance pages do, then do it in your voice.",
+    "Swim upstream: everyone posts motivational finance. Post the actual numbers, including the losses."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "The Empty Surface",
-    "body": "Keep one surface in your home completely empty. A desk, a counter, a shelf. It becomes a visual reference point \u2014 the moment things start accumulating elsewhere, you notice.",
-    "action": "Clear one surface fully. Keep it clear for a week.",
-    "index": 5,
+    "title": "Buy Once, Cry Once",
+    "body": "Minimalism is not cheapness. One well-made pair of shoes at 4x the price that lasts 10x as long is both cheaper and lighter. Fewer, better beats more, adequate.",
+    "action": "List three things you have replaced more than twice. Buy the good version once.",
+    "index": 6,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Dress One Notch Above The Room",
-    "body": "Not two \u2014 two reads as trying. One notch signals you took the occasion seriously. In the Gulf, conservative beats fashionable in every professional setting.",
-    "action": "Check tomorrow's outfit against the room you will be in.",
-    "index": 11,
+    "title": "Never Discuss What Someone Earns",
+    "body": "Not theirs, not yours, not a third party's. It creates comparison where none existed and it always travels. Especially in the Gulf, where packages vary enormously by nationality and contract.",
+    "action": "Deflect the next compensation question with warmth, not information.",
+    "index": 12,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Silence Is A Position",
-    "body": "You are not required to have an opinion on everything you encounter. 'I don't know enough about that' is a complete and unusually strong answer.",
-    "action": "Decline to have an opinion on one thing today.",
-    "index": 9,
+    "title": "Desire Is The Contract",
+    "body": "Every want you accept is a contract to be unhappy until it is satisfied. Most were installed by advertising, not chosen. Audit the source before signing.",
+    "action": "Name one want. Trace where it came from. Decide if it is yours.",
+    "index": 10,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Inversion",
-    "body": "Solve the problem backwards. Instead of 'how do I succeed?', ask 'how would I guarantee failure?' \u2014 then avoid that. The failure list is concrete and short; the success list is vague and infinite.",
-    "action": "Invert your biggest current goal. Write the three surest ways to fail it.",
-    "index": 1,
+    "title": "Second-Order Thinking",
+    "body": "And then what? Most bad decisions are first-order correct. Price caps look like they help until supply disappears. Ask 'and then what?' three times before committing.",
+    "action": "Take today's main decision three steps forward.",
+    "index": 2,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u064a\u0644\u0627",
-    "translit": "yalla",
-    "meaning": "Let's go / come on",
-    "use": "Universal. Starting a meeting, leaving a room, urging someone along.",
-    "index": 17,
+    "script": "\u062d\u0628\u064a\u0628\u064a",
+    "translit": "habeebi",
+    "meaning": "My dear",
+    "use": "habeebti to a woman. Used constantly between friends and colleagues. Read the relationship before using it.",
+    "index": 18,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Name The Assumption",
-    "body": "Every model rests on two or three assumptions doing all the work. Find them. The rest is arithmetic and does not deserve your review time.",
-    "action": "Find the two assumptions carrying your current model.",
-    "index": 13,
+    "title": "Speak For 60 Seconds, No Filler",
+    "body": "Record yourself explaining something for a minute with no 'um', 'like', or 'basically'. Silence between sentences reads as authority. Filler reads as uncertainty.",
+    "action": "Record 60 seconds. Count the filler words. Repeat until zero.",
+    "index": 14,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Strength Is Longevity, Not Vanity",
-    "body": "Muscle mass and grip strength both independently predict lifespan. After 30 you lose 3\u20138% of muscle per decade unless you resist it, and the decline accelerates. Sarcopenia is what puts people in care homes.",
-    "action": "Two sets of a compound lift. Squat, hinge, push, or pull.",
-    "index": 3,
+    "title": "Protein: 1.6g Per Kg, Minimum",
+    "body": "At 75kg that is 120g daily \u2014 far above most intakes. Protein is the one macro where the deficiency is common and the consequence is muscle you cannot easily get back.",
+    "action": "Compute your target. Hit it for one day and see how hard it actually is.",
+    "index": 4,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Tim Ferriss",
-   "quote": "Focus on being productive instead of busy.",
-   "index": 64,
+   "name": "Elon Musk",
+   "quote": "I think it is possible for ordinary people to choose to be extraordinary.",
+   "index": 65,
    "total": 96
   },
   "lesson": {
    "tradition": "Resilience",
-   "lesson": "It does not matter how slowly you go as long as you do not stop.",
+   "lesson": "Our greatest glory is not in never falling, but in rising every time we fall.",
    "source": "Confucius"
   },
   "case": {
-   "title": "Tesla: Make the Most Expensive Car First",
-   "story": "Tesla launched with a $100K Roadster. Then $70K Model S. Then $35K Model 3. They used premium pricing to fund mass-market production.",
-   "lesson": "Start expensive to build the brand, fund R&D, and attract early adopters. Then scale down. Starting cheap makes it hard to go premium."
+   "title": "Zoho: The Anti-VC Playbook",
+   "story": "Zoho has never taken VC money. Sridhar Vembu built a $1B+ business on profitability, not funding. Employees in rural India, $0 in advertising spend.",
+   "lesson": "You don't need venture capital to build a great company. Profitable growth beats loss-funded growth in the long run."
   },
   "fpna": {
-   "title": "Sensitivity Analysis",
-   "body": "Which assumption, if wrong, blows up your model? Identify it. Test it. Present the range.",
-   "index": 20,
+   "title": "Zero-Based Budgeting",
+   "body": "Start every budget from \u20b90. Justify every line. Cuts 15\u201330% bloat in most orgs.",
+   "index": 1,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 1: Strategy + Finance",
-   "body": "CFOs translate business strategy into financial reality. They ask: what's the ROI, what's the IRR, what's the payback period? Practice building business cases. Every investment decision has a financial model behind it.",
-   "index": 6,
+   "title": "CFO Step 2: Investor Relations",
+   "body": "Listed company CFOs speak to markets quarterly. Practice presenting results: 'Revenue grew 18% YoY driven by X. EBITDA margin expanded 200bps due to Y. FY26 guidance: Z.' Short, precise, numbers-first. Record yourself.",
+   "index": 7,
    "total": 15
   },
   "money_hack": {
-   "title": "Index Funds over Active",
-   "body": "85% of large-cap active funds underperform Nifty over 10 years. Index at 0.1% expense ratio."
+   "title": "Term Insurance First",
+   "body": "\u20b91Cr term insurance (\u20b910\u201315K/year at 25). Non-negotiable. Buy this before any investment."
   },
   "dubai": {
-   "title": "What the counter-offer is really for",
-   "body": "First offers in the Gulf come in 10\u201315% below the band because everybody counters. Not countering does not read as humble; it reads as someone who did not check.",
-   "targets": "Counter once, with a number and a reason. Then stop.",
-   "action_label": "Script",
-   "action": "\"Based on the band for this role and my IFRS 16 experience, I was targeting AED X.\"",
-   "index": 13,
+   "title": "The cost side nobody models",
+   "body": "Housing is paid annually up front in Dubai, or quarterly at a premium. Schooling runs AED 25\u201360K per child per year. Health insurance is mandatory and usually covered. Add a AED 40\u201360K first-year setup cost before the savings maths works.",
+   "targets": "Sharjah rent is roughly half of Dubai's. The commute costs you 90 minutes a day.",
+   "action_label": "Model it",
+   "action": "Year-one net savings, not monthly salary. They are very different numbers.",
+   "index": 14,
    "total": 30
   },
   "daughter": {
    "months": 7,
-   "days": 229,
+   "days": 230,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Weekly review: 15 min every Sunday. What worked, what's next week's #1.",
+  "productivity": "Batch similar tasks. Answer all messages in one sitting.",
   "father": [
    {
-    "title": "Take a photo of the ordinary",
-    "do": "Photograph something unremarkable \u2014 her on the floor, mid-task \u2014 rather than a milestone.",
-    "why": "You will have hundreds of milestone photos and almost none of the texture of daily life at seven months, which is what you will actually want later."
+    "title": "Narrate what you are doing",
+    "do": "Talk through ordinary actions out loud while she watches \u2014 'I am pouring the water, now it is warm.'",
+    "why": "At 7 months she is mapping sound to meaning long before she can speak. Volume of directed speech is the single best-evidenced predictor of later vocabulary. Passive audio does not count; it has to be you, to her."
    },
    {
-    "title": "Say goodbye properly",
-    "do": "Never slip out unseen. Say you are leaving, say you will be back, then go \u2014 even if she cries.",
-    "why": "Disappearing without warning teaches vigilance. A predictable goodbye, repeated, teaches that departures end in returns. The crying is not the failure; it is the process."
+    "title": "Read the same book again",
+    "do": "Read one board book daily, the same one, for a week. Point at the same picture each time.",
+    "why": "Repetition is how infants build prediction. The boredom is yours, not hers \u2014 she is learning that symbols hold steady meaning."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Trishna",
-    "translation": "Craving, thirst",
-    "teaching": "The endless wanting that survives every acquisition. Jain and Buddhist thought agree closely here \u2014 the object changes, the wanting does not.",
-    "apply": "Notice the next thing you tell yourself you will be satisfied after getting. Write it down. Check in six months whether the satisfaction arrived."
+    "term": "Anekantavada",
+    "translation": "Many-sidedness",
+    "teaching": "Reality has more facets than any single viewpoint can hold. The classic image is blind men describing an elephant \u2014 each is accurate and each is incomplete.",
+    "apply": "In a disagreement, state the other person's position better than they did before you argue against it. If you cannot, you have not understood it yet."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Intention",
-    "translation": "The direction before the act",
-    "teaching": "The second element of the path, sitting between right view and right speech \u2014 the resolve that shapes what follows.",
-    "apply": "Before a difficult conversation, name your intention in one sentence. If it is 'to be proved right', the conversation will fail regardless of your evidence."
+    "term": "Dukkha",
+    "translation": "Unsatisfactoriness",
+    "teaching": "The first noble truth is not 'life is suffering' but that conditioned things do not stay satisfying. The promotion satisfies briefly, then resets.",
+    "apply": "Before chasing the next milestone, name honestly what the last one actually changed and for how long. Then decide if you still want it."
    }
   ],
   "spanish": [
    {
-    "word": "el riesgo",
-    "meaning": "the risk",
-    "es": "Ese riesgo es demasiado alto.",
-    "en": "That risk is too high.",
+    "word": "a tiempo",
+    "meaning": "on time",
+    "es": "Nunca entrega a tiempo.",
+    "en": "He never delivers on time.",
     "tag": "Business"
    },
    {
-    "word": "jugar",
-    "meaning": "to play",
-    "es": "Me gusta jugar con ella por la tarde.",
-    "en": "I like to play with her in the afternoon.",
+    "word": "el pa\u00f1al",
+    "meaning": "the nappy / diaper",
+    "es": "Hay que cambiar el pa\u00f1al.",
+    "en": "The nappy needs changing.",
     "tag": "Family"
    }
   ],
   "vocab": [
    {
-    "word": "Incremental",
-    "say": "in-kruh-MEN-tuhl",
-    "meaning": "Additional, over and above the existing base.",
-    "example": "Only AED 3M of that is incremental revenue.",
-    "note": "The single most important word in investment appraisal. Everything hinges on the baseline."
+    "word": "Cursory",
+    "say": "KUR-suh-ree",
+    "meaning": "Hasty and not thorough.",
+    "example": "A cursory review would not have caught this.",
+    "note": "Useful for defending the depth of your own work, or flagging the shallowness of someone else's."
    },
    {
-    "word": "Purview",
-    "say": "PUR-vyoo",
-    "meaning": "The scope of someone's responsibility or authority.",
-    "example": "Treasury policy falls within the CFO's purview.",
-    "note": "Cleaner than 'remit' or 'area' when you mean formal authority."
+    "word": "Corroborate",
+    "say": "kuh-ROB-uh-rayt",
+    "meaning": "To confirm with independent evidence.",
+    "example": "The stock count corroborates the system balance.",
+    "note": "Independence is the point. Two reports from the same system do not corroborate anything."
    }
   ],
   "speaking": {
-   "title": "Explain it to a seven-year-old",
-   "drill": "Explain IFRS 16 or working capital with no jargon, in under 40 seconds, out loud.",
-   "why": "The constraint exposes whether you understand it or have memorised it."
+   "title": "Answer, then stop",
+   "drill": "Ask yourself an interview question, answer it, and physically close your mouth. Count three seconds before adding anything.",
+   "why": "Over-explaining after a complete answer is the most common interview mistake at senior level. The silence is theirs to fill."
   },
   "interview_tech": [
    {
-    "q": "Online returns are 30% versus 8% in store. How does that change unit economics?",
-    "a": "It can invert them. Model the full return cost: outbound delivery, return shipping, inspection labour, repackaging, markdown on anything not resaleable as new, and the working capital locked in goods in transit. At 30% returns a nominally profitable online order can land negative. Fixes: better size guidance and imagery to cut the cause; charge for returns where the market allows; route returns to stores so the item re-enters saleable stock nearest demand. Report online contribution after returns, never before.",
-    "who": "Zara \u00b7 ASOS \u00b7 Namshi"
+    "q": "Sales per square foot is falling but total sales are rising. Diagnose it.",
+    "a": "You are adding space faster than sales. That is not automatically wrong \u2014 new stores ramp, so a growth phase depresses the average mechanically. Split the estate: stores open more than 24 months versus less. If mature-store density is also falling, you have a genuine productivity problem \u2014 likely range, pricing, or footfall. If mature density is flat or up and only the blended number falls, it is a mix effect and it corrects as the new stores mature. Never let a board see the blended number alone.",
+    "who": "IKEA \u00b7 Marks & Spencer \u00b7 Max Fashion"
    },
    {
-    "q": "How would you hedge FX exposure for a retailer buying in USD and selling in MYR?",
-    "a": "First separate transaction exposure (committed purchase orders) from translation exposure (consolidating a foreign subsidiary). Hedge transaction exposure with forwards matched to the payment dates on the buying calendar \u2014 typically rolling 6\u201312 months, hedging a declining percentage the further out you go. Do not hedge translation exposure with derivatives; it is an accounting effect, not a cash one. State the policy in a treasury mandate with limits, so hedging never becomes speculation with a different name.",
-    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
+    "q": "Describe the difference between a cash flow forecast and a liquidity plan.",
+    "a": "The forecast is your best estimate of receipts and payments. The liquidity plan is what you do if the forecast is wrong \u2014 committed facilities, uncommitted lines, the order in which you would draw them, what you would stop spending, and how quickly you could release working capital. Boards ask for the forecast; the CFO's real job is the plan. Stress it: what happens to cash if sales fall 20% for two quarters while committed rent and payroll continue.",
+    "who": "Every treasurer since 2020"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you give feedback to someone more senior than you?",
-    "a": "Ask permission, be specific, and stay on observable behaviour and its effect. 'Can I give you a reaction to how the numbers landed in that meeting? When the forecast changed without the bridge, the room stopped trusting the rest of the pack.' No adjectives about them, one concrete instance, and a suggestion. Then stop talking. Most people either avoid this entirely or overcorrect into confrontation.",
-    "who": "Any senior finance role"
+    "q": "Why do you want to be a CFO, and why in retail?",
+    "a": "Structure: motive, evidence, specificity. Weak answers say 'growth' and 'leadership'. Strong answer names the work: 'I want the seat where capital allocation is decided, not just reported. In FP&A I model the store investment case; the CFO decides which twelve of thirty get built. Retail because the feedback loop is daily \u2014 you see whether the decision worked in the sales line the next week, which is not true in most industries.' Then one proof point with a number attached.",
+    "who": "Standard opener, every CFO search"
    },
    {
-    "q": "How do you influence people who do not report to you?",
-    "a": "Retail finance is almost entirely this \u2014 Buying, Operations and Retail Heads do not report to you. The answer is currency: work out what each function is measured on and frame your ask in their terms. A buyer cares about sell-through and margin, not about your working capital target \u2014 so bring them the SKU-level analysis showing which lines tie up cash without turning. Give people the analysis they cannot build themselves, and influence follows. Name a specific instance and the outcome.",
-    "who": "Landmark Group \u00b7 Alshaya \u00b7 Carrefour"
+    "q": "How do you build a finance team, and how do you handle an underperformer?",
+    "a": "Building: hire for one clear gap, not a generalist; define what good looks like in writing before the first review, not after. Underperformance: the honest answer is that you probably waited too long once, and learned from it. Structure \u2014 early specific feedback with examples, an agreed plan with dates, documented check-ins, and a decision at the end of it either way. The failure mode they are probing for is a manager who avoids the conversation and lets the team carry someone for a year.",
+    "who": "GE \u00b7 Unilever \u00b7 Al-Futtaim"
    }
   ]
  }

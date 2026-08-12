@@ -125,7 +125,7 @@ def generate() -> None:
     podcasts = get_podcasts(build_if_missing=True)
     print(f"[generate] Podcasts: {len(podcasts.get('episodes', []))} episodes "
           f"from {podcasts.get('shows', 0)} shows"
-          f"{' (previous week)' if podcasts.get('is_fallback') else ''}")
+          f"{' (previous build)' if podcasts.get('is_fallback') else ''}")
 
     fund_screen = get_fund_screen()
     _cats = fund_screen.get("categories", [])
