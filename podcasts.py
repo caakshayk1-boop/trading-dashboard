@@ -171,7 +171,12 @@ def _is_noise(text: str) -> bool:
 # Clip-style uploads. These channels post 60-second cuts from an episode with
 # the same "ft. Guest" shape as the episode itself; they are not episodes and
 # padding the list with them is how ten slots become three real ones.
-CLIPPY = re.compile(r"#shorts|#short\b|\bshorts\b", re.I)
+# Titles that announce themselves as something other than an episode. "vlog"
+# earns its place here: BeerBiceps published "Flirting in Ladakh - Vlog" and it
+# reached the live section, because it is long-form, carries a real synopsis and
+# is not a Short — every guard passed and it still is not a podcast. Ranveer's
+# actual interview show is pinned separately as The Ranveer Show.
+CLIPPY = re.compile(r"#shorts|#short\b|\bshorts\b|\bvlog\b|\bvlogs\b|\bteaser\b|\btrailer\b", re.I)
 
 
 def _get(url: str, timeout: int = 20) -> bytes:
