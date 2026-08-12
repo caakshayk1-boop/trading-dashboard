@@ -1401,12 +1401,47 @@ var TV_ALIASES = (function () {
       return on ? on.dataset.v : 'v2';
     }
 
+    /* Engines that are IN the log but carry no engine_version the default
+       filter would match, so they have to be asked for by name.
+
+       The version filter exists to keep v1 and v2 TRADE engines comparable, and
+       these two are not trade engines at all: magic and magicmagic write
+       action=WATCH rows with no stop, no target and no R:R. They were therefore
+       invisible — `activeVersion()` reads a [data-v] button that does not exist
+       in the markup, so the log was hard-locked to v2 and 24 real rows could not
+       be reached from the page at any setting.
+
+       Same treatment as multibagger and ai_longterm: in the log, out of the
+       rates (see NON_TRADING in api/stats.js). */
+    var WATCH_ENGINES = ['magic', 'magicmagic'];
+
     function loadSignals(){
       var qs = archDate ? '?date=' + archDate + '&limit=2000' : '?limit=800';
       qs += '&version=' + activeVersion();
-      api('/signals' + qs).then(function(j){
-        if (!j.ok) return;
-        allRows = j.signals || [];
+      // The watch engines ride along as extra requests rather than by widening
+      // the version filter, which would drag in the entire 575-row v1 backlog.
+      var extras = WATCH_ENGINES.map(function(t){
+        return api('/signals?type=' + t + '&version=all&limit=200')
+          .then(function(j){ return (j && j.ok && j.signals) || []; })
+          .catch(function(){ return []; });
+      });
+      Promise.all([api('/signals' + qs)].concat(extras)).then(function(res){
+        var j = res[0];
+        if (!j || !j.ok) return;
+        var watch = [];
+        for (var i = 1; i < res.length; i++) watch = watch.concat(res[i] || []);
+        // De-duplicate by id in case a watch engine ever becomes version-tagged
+        // and arrives in both responses.
+        var seenId = {};
+        allRows = (j.signals || []).concat(watch).filter(function(r){
+          if (seenId[r.id]) return false;
+          seenId[r.id] = 1;
+          return true;
+        });
+        allRows.sort(function(a, b){
+          return String(b.date || '').localeCompare(String(a.date || '')) ||
+                 (b.id - a.id);
+        });
         fillTfSelect(el('alertTfSel'), allRows);
         fillEngSelect(el('alertEngSel'), allRows);
         renderAlerts();

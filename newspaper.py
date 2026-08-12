@@ -6850,9 +6850,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="pv-tag">IN THE LOG, OUT OF THE RATES</span>
     <span><b>multibagger</b> &mdash; weekly, Saturday 09:30 IST · 6&ndash;12 month hold off weekly bars</span>
     <span><b>ai_longterm</b> &mdash; weekly, Saturday · 2&ndash;3 year hold on a 200DMA structure stop</span>
-    <span>Both are excluded from win rate, expectancy and the equity curve. A
+    <span><b>magic</b> and <b>magicmagic</b> &mdash; weekly Investtech-style screens,
+      logged as <b>WATCH</b> with no stop, no target and no R:R</span>
+    <span>All four are excluded from win rate, expectancy and the equity curve. A
       multi-month hold cannot resolve on a swing horizon, and counting it would
-      move the only honest number here.</span>
+      move the only honest number here. The two watch screens carry no levels at
+      all, so there is nothing about them that could ever resolve &mdash; they are
+      a shortlist that happens to live in the same table, and their SL, target
+      and P&amp;L columns are empty because those numbers do not exist, not
+      because they are missing.</span>
   </div>
 
   <!-- Archive strip: one tile per trading day, newest first. Live only. -->

@@ -81,7 +81,14 @@ export default async function handler(req, res) {
 
     // Default to the current engine. Older rows stay queryable with
     // ?version=v1 or ?version=all — nothing is hidden, just not the default.
-    const version = String(q.version || CURRENT_VERSION).toLowerCase();
+    // An EXPLICIT type bypasses the version default. The version filter exists
+    // to keep v1 and v2 TRADE engines comparable; asking for `magic` by name is
+    // asking for magic whatever version it carries. Without this, /api/signals
+    // ?type=magic returned 0 rows while 12 existed — the engine was queryable
+    // in theory and invisible in practice, which is how it came to look like
+    // the magic screener was never logged at all.
+    const explicitType = Boolean(q.type);
+    const version = String(q.version || (explicitType ? "all" : CURRENT_VERSION)).toLowerCase();
     if (versioned && version !== "all") {
       // Rows written before the column existed carry the 'v1' backfill
       // default, but a NULL can still appear if a writer predates the

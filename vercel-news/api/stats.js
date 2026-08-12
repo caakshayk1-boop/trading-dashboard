@@ -30,7 +30,12 @@ export default async function handler(req, res) {
   // those are 6-12 month holds off weekly bars. They appear in the Signal Log
   // and in /api/signals?type=multibagger; they do not touch win rate,
   // expectancy or the equity curve. Mirrors tracker.EXCLUDE_FROM_EXPECTANCY.
-  const NON_TRADING = ["ai_longterm", "multibagger"];
+  // magic and magicmagic join them, and for a stronger reason than horizon:
+  // those rows are action=WATCH with no stop, no target and no R:R. They are a
+  // screener's watchlist, not positions. Left in, 24 rows that can never
+  // resolve would sit OPEN forever and drag the open count and any
+  // participation rate with them, while contributing no outcome either way.
+  const NON_TRADING = ["ai_longterm", "multibagger", "magic", "magicmagic"];
   where.push(`COALESCE(signal_type,'') NOT IN (${NON_TRADING.map(() => "?").join(",")})`);
   args.push(...NON_TRADING);
 
