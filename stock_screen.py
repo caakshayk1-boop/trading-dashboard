@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-stock_screen.py — the Nifty 500 research screen behind #stocks on the paper.
+stock_screen.py — the NSE Total Market research screen behind #stocks.
 
 What this is
 ------------
 Every other engine in this repo answers "what should I trade this week". This
-one answers a slower question: "of 500 listed companies, which few are worth
+one answers a slower question: "of 750 listed companies, which few are worth
 an hour of reading, and why". So it is built on annual statements rather than
 on 15-minute candles, and it runs weekly rather than daily.
 
@@ -62,8 +62,42 @@ log = logging.getLogger(__name__)
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
-UNIVERSE_CSV = "cache/nifty500.csv"
-UNIVERSE_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv"
+# ── universe ────────────────────────────────────────────────────────────────
+#
+# There is no such thing as a "Nifty 1000". NSE's widest published equity index
+# is NIFTY TOTAL MARKET at 752 constituents, and it is exactly Nifty 500 plus
+# Nifty Microcap 250 — verified: the 500 and the 250 are both strict subsets and
+# their union is the 752 to the symbol. Two of those 752 are DUMMY placeholders,
+# so 750 names are real.
+#
+# Using the official list rather than composing one, because a hand-composed
+# universe drifts from the index it claims to be the moment NSE rebalances, and
+# then every breadth number on the page is measured against something that does
+# not exist.
+UNIVERSE_CSV = "cache/nifty_total_market.csv"
+UNIVERSE_URL = ("https://nsearchives.nseindia.com/content/indices/"
+                "ind_niftytotalmarket_list.csv")
+# Fallback only. scanner.py maintains this one, so it is guaranteed to be there
+# even when NSE refuses us — a 500-name screen is a smaller screen, not a broken
+# one, and it is a much better outcome than no section at all.
+UNIVERSE_FALLBACK_CSV = "cache/nifty500.csv"
+UNIVERSE_MAX_AGE_DAYS = 14      # NSE rebalances semi-annually; this is generous
+# Which sub-index each name belongs to, for the tier label. Fetched only to
+# annotate — membership never decides whether a symbol is screened.
+TIER_LISTS = [
+    ("large", "ind_nifty100list.csv"),
+    ("mid",   "ind_niftymidcap150list.csv"),
+    ("small", "ind_niftysmallcap250list.csv"),
+    ("micro", "ind_niftymicrocap250_list.csv"),
+]
+NSE_HEADERS = {
+    # NSE answers a bare urllib agent with a 403. Same reason content_cache
+    # carries its own _UA.
+    "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                   "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"),
+    "Accept": "text/csv,*/*",
+    "Accept-Language": "en-US,en;q=0.9",
+}
 BENCHMARK = "^NSEI"
 
 # Composite weights. One home, on purpose — these were four magic numbers
@@ -97,14 +131,100 @@ ONE_OFF_MARGIN_PT = 15.0
 # UNIVERSE
 # ─────────────────────────────────────────────────────────────────────────────
 
-def universe(path: str = UNIVERSE_CSV) -> list[dict]:
-    """The Nifty 500 constituents from NSE's own published list.
+def _fetch_index_csv(filename: str) -> list[dict] | None:
+    """One NSE index CSV as rows, or None. Never raises."""
+    import urllib.request
+    url = ("https://nsearchives.nseindia.com/content/indices/" + filename)
+    try:
+        req = urllib.request.Request(url, headers=NSE_HEADERS)
+        raw = urllib.request.urlopen(req, timeout=30).read().decode("utf-8-sig")
+    except Exception as e:
+        log.warning(f"screen: NSE {filename} unavailable — {e}")
+        return None
+    import io
+    rows = [r for r in csv.DictReader(io.StringIO(raw)) if (r.get("Symbol") or "").strip()]
+    return rows or None
 
-    Read from the cached CSV rather than fetched, because NSE blocks
-    unfriendly clients and a screen that cannot run without a live NSE
-    handshake is a screen that stops running. scanner.py already refreshes
-    this file; this module is a reader.
+
+def refresh_universe(path: str = UNIVERSE_CSV, max_age_days: int = UNIVERSE_MAX_AGE_DAYS) -> bool:
+    """Refresh the cached constituent list if it is missing or stale.
+
+    Returns True if a usable file is in place afterwards. A refresh failure with
+    a stale-but-present file is NOT an error: an out-of-date index membership
+    costs a handful of names at the edges, while refusing to run costs the whole
+    section. NSE is the least reliable dependency this repo has.
     """
+    try:
+        age_days = (time.time() - os.path.getmtime(path)) / 86400
+        if age_days < max_age_days:
+            return True
+    except OSError:
+        age_days = None
+
+    rows = _fetch_index_csv(os.path.basename(UNIVERSE_URL))
+    if not rows:
+        have = os.path.exists(path)
+        log.warning("screen: universe refresh failed — "
+                    + (f"using the cached list ({age_days:.0f}d old)" if have
+                       else "and there is no cached list"))
+        return have
+
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    tmp = path + ".tmp"
+    try:
+        with open(tmp, "w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+            w.writeheader()
+            w.writerows(rows)
+        os.replace(tmp, path)
+    except OSError as e:
+        log.warning(f"screen: universe write failed — {e}")
+        return os.path.exists(path)
+    log.info(f"screen: universe refreshed — {len(rows)} constituents")
+    return True
+
+
+def _tier_map() -> dict:
+    """symbol -> large/mid/small/micro, from NSE's own sub-indices.
+
+    Annotation only. A market-cap band computed from a market-cap number is
+    already in the payload; this is the INDEX membership, which is what a reader
+    actually means by "smallcap" in an Indian context and is not always what a
+    rupee threshold says.
+    """
+    out: dict = {}
+    for tier, fname in TIER_LISTS:
+        rows = _fetch_index_csv(fname)
+        if not rows:
+            continue
+        for r in rows:
+            out.setdefault((r.get("Symbol") or "").strip().upper(), tier)
+    return out
+
+
+def universe(path: str = UNIVERSE_CSV, refresh: bool = False,
+             tiers: bool = False) -> list[dict]:
+    """NSE Nifty Total Market constituents — 752 listed, 750 real.
+
+    Read from a cached CSV rather than fetched on every call, because NSE blocks
+    unfriendly clients and a screen that cannot run without a live NSE handshake
+    is a screen that stops running. `refresh=True` (the weekly build) updates the
+    cache first and degrades to the stale copy on failure.
+    """
+    if refresh:
+        refresh_universe(path)
+    if not os.path.exists(path):
+        # scanner.py maintains the 500 list, so it is the one that is always
+        # there. Half a universe beats none — but it must never be QUIET. A run
+        # that screens 500 names while the page says 750 is the kind of silent
+        # shrink this repo keeps getting caught by, so it is logged as an error
+        # and the payload records which list was actually used.
+        log.error(f"screen: {path} missing — FALLING BACK to "
+                  f"{UNIVERSE_FALLBACK_CSV}; the universe is smaller than the "
+                  f"section claims")
+        path = UNIVERSE_FALLBACK_CSV
+
+    tier_of = _tier_map() if tiers else {}
     rows = []
     try:
         with open(path, newline="", encoding="utf-8-sig") as fh:
@@ -112,11 +232,11 @@ def universe(path: str = UNIVERSE_CSV) -> list[dict]:
                 sym = (r.get("Symbol") or "").strip().upper()
                 if not sym:
                     continue
-                # NSE's own list carries placeholder constituents — four
-                # "Dummy Vedanta Ltd." rows (DUMMYVEDL1..4, ISINs DU1…DU4),
-                # scaffolding for the demerger. They are not tradeable, they
-                # 404 on every data call, and left in they would burn four
-                # symbols of fetch budget per run to produce empty rows.
+                # NSE's own list carries placeholder constituents — the 500 list
+                # has four "Dummy Vedanta Ltd." rows (DUMMYVEDL1..4, ISINs
+                # DU1…DU4) and Total Market adds DUMMYINXGN and DUMMYTRVN. They
+                # are not tradeable, they 404 on every data call, and left in they
+                # burn fetch budget to produce empty rows.
                 if sym.startswith("DUMMY") or (r.get("ISIN Code") or "").startswith("DU"):
                     continue
                 rows.append({
@@ -124,6 +244,7 @@ def universe(path: str = UNIVERSE_CSV) -> list[dict]:
                     "name": (r.get("Company Name") or "").strip(),
                     "industry": (r.get("Industry") or "").strip(),
                     "isin": (r.get("ISIN Code") or "").strip(),
+                    "tier": tier_of.get(sym, ""),
                 })
     except OSError as e:
         log.warning(f"screen: universe read failed — {e}")
@@ -548,10 +669,19 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
 
 
 def _trend(series: list) -> str | None:
-    """'rising' / 'falling' / 'flat' over a newest-first series.
+    """'rising' / 'falling' / 'flat' / 'peaked' over a newest-first series.
 
-    Compares the latest against the oldest available value with a 10% relative
-    dead band, so ordinary year-to-year wobble is not reported as a direction.
+    'peaked' exists because the first version of this produced a real
+    contradiction on the page. Zydus ROCE runs FY23 14.5% → FY26 18.0% with a
+    3-year median of 20.3%: latest-vs-oldest says RISING, so the SWOT printed
+    "return on capital is improving year on year" — directly above an analyst
+    view that correctly said 18.0% is below the median and capital efficiency is
+    weakening. Both statements were arithmetically true and together they were
+    nonsense.
+
+    A series that is above where it started but below its own median has PEAKED,
+    and that is the honest word for it. Reporting only the endpoints hides the
+    shape in between, which for a capital-return ratio is the whole story.
     """
     vals = [v for v in series if v is not None]
     if len(vals) < 3:
@@ -560,10 +690,18 @@ def _trend(series: list) -> str | None:
     if abs(oldest) < 1e-9:
         return None
     move = (latest - oldest) / abs(oldest)
+    med = statistics.median(vals)
+
     if move > 0.10:
+        # Up over the span — but off its own peak? Say so instead.
+        if med and latest < med * 0.95:
+            return "peaked"
         return "rising"
     if move < -0.10:
         return "falling"
+    # Flat endpoints can still hide a round trip.
+    if med and latest < med * 0.90:
+        return "peaked"
     return "flat"
 
 
@@ -731,13 +869,23 @@ def swot(r: dict, t: dict, val: dict) -> dict:
                "so judge this one on ROE and asset quality instead",
             "no current/non-current split published")
 
-    if r.get("roce_trend") == "falling":
+    rt = r.get("roce_trend")
+    if rt == "falling":
         add(W, "Return on capital has fallen across the statement history — "
                "the business is getting less efficient, not more",
             f"ROCE trend falling over {r.get('fy_count', 0)} years")
-    elif r.get("roce_trend") == "rising":
+    elif rt == "rising":
         add(S, "Return on capital is improving year on year",
             f"ROCE trend rising over {r.get('fy_count', 0)} years")
+    elif rt == "peaked":
+        # Deliberately a WEAKNESS, not a strength. Higher than it started and
+        # below its own median means the improvement already happened and is now
+        # reversing — which is the opposite of the "improving year on year" line
+        # this used to print for exactly this shape.
+        add(W, "Return on capital is off its peak — higher than four years ago, "
+               "but below its own multi-year median, so the improvement has "
+               "started to reverse",
+            f"ROCE {_pct(r.get('roce'))}% latest vs {_pct(r.get('roce_med'))}% median")
 
     roe = r.get("roe_med") if r.get("roe_med") is not None else r.get("roe")
     if roe is not None and roe < 0.08:
@@ -1001,7 +1149,9 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     import fundamentals as F
 
     t0 = time.time()
-    uni = universe()
+    # refresh=True: the weekly build is the right place to pull a fresh
+    # constituent list, and it degrades to the cached copy if NSE refuses.
+    uni = universe(refresh=allow_fetch, tiers=allow_fetch)
     if not uni:
         return {"ok": False, "error": "universe unavailable"}
     if limit:
@@ -1066,6 +1216,10 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "ind": u["industry"],
             "sector": r.get("sector") or "",
             "isin": u["isin"],
+            # NSE index membership, not a rupee threshold. In an Indian context
+            # "smallcap" means the Smallcap 250, and that is not always what a
+            # market-cap cutoff says.
+            "tier": u.get("tier") or "",
             "mcap_cr": _round(r.get("market_cap_cr"), 1, 0),
             "price": t.get("price"),
             "fy": r.get("fy"),
@@ -1162,7 +1316,10 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         # reads that key to decide whether a cached payload is too old to
         # publish. One vintage field, shared by every weekly artefact here.
         "generated_at": now.isoformat(),
-        "universe": "Nifty 500",
+        # Named from what was ACTUALLY read, not from what was intended. If NSE
+        # refused and the run fell back to the 500 list, the page says so.
+        "universe": ("NSE Nifty Total Market" if len(uni) > 600
+                     else f"NSE Nifty 500 (fallback — Total Market unavailable)"),
         "count": len(out),
         "attempted": len(uni),
         "weights": WEIGHTS,

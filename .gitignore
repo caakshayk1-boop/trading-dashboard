@@ -12,6 +12,12 @@ cache/*
 # cache/, so the workflow checked out a tree with no universe file and died on
 # its first line with "universe unavailable". 33KB, changes when NSE rebalances.
 !cache/nifty500.csv
+# Same reasoning for the Total Market list, and the stakes are higher: NSE
+# routinely 403s datacenter IPs, so a CI run that cannot fetch it falls back
+# to the 500 list and silently screens 500 names instead of 750 with nothing
+# in the log to say the universe shrank. Committing it makes the fetch an
+# optimisation rather than a dependency.
+!cache/nifty_total_market.csv
 logs/
 __pycache__/
 *.pyc

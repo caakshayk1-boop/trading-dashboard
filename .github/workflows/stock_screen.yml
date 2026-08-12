@@ -1,12 +1,12 @@
-name: Stock Screen — weekly Nifty 500 research screen
+name: Stock Screen — weekly NSE Total Market research screen
 
-# Builds the Nifty 500 research screen and caches it in Turso
+# Builds the NSE Total Market (750 names) research screen and caches it in Turso
 # (newspaper_screen, keyed by ISO week). The daily newspaper only READS that
 # cache and writes docs/screen.json from it.
 #
-# Its own workflow for the same reason fund_screen.yml has one: this is ~500
+# Its own workflow for the same reason fund_screen.yml has one: this is ~750
 # symbols × (one quote + two statement frames), fetched sequentially because
-# Yahoo throttles an IP that bursts. That is roughly 11 minutes on a cold cache
+# Yahoo throttles an IP that bursts. That is roughly 29 minutes on a cold cache
 # and it does not belong anywhere near the 6 AM job's 15-minute budget.
 #
 # Runs AFTER the fund screen (01:30 IST) rather than alongside it — two jobs
@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: 'Cap the universe (blank = all ~500; use 50 for a smoke run)'
+        description: 'Cap the universe (blank = all ~750; use 50 for a smoke run)'
         required: false
         default: ''
       news_top:
@@ -46,7 +46,11 @@ jobs:
     # Generous on purpose, like the fund screen: this is a job that is ALLOWED
     # to be slow. A cold statements cache is the long case; a warm one (30-day
     # TTL) finishes in a couple of minutes.
-    timeout-minutes: 45
+    # 750 symbols on a COLD statements cache is ~29 min of sequential fetches
+    # (500 took 19.4 min measured), plus prices, 150 news calls and a paced
+    # narrative pass. That lands near 35 min, so 45 was too close to the edge
+    # once the universe widened from 500. A warm cache finishes in minutes.
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -59,7 +63,7 @@ jobs:
 
       # The statements cache is the whole reason this job is usually fast.
       # Restoring it across runs means a weekly build re-fetches only what has
-      # aged past the 30-day TTL instead of all 500 symbols every Sunday.
+      # aged past the 30-day TTL instead of all 750 symbols every Sunday.
       - name: Restore fundamentals caches
         uses: actions/cache@v4
         with:
@@ -106,7 +110,9 @@ jobs:
           # blank, and the section would render for a week looking like the
           # accounts simply do not exist. Fail instead — the reader keeps last
           # week's screen, which is stamped with its own date.
-          if data["count"] < 300:
+          # Floor scaled with the universe: 750 names, so 450 is the same
+          # 60% bar the 500-name screen had at 300.
+          if data["count"] < 450:
               raise SystemExit(f"only {data['count']} companies priced — refusing to cache")
           if cov["statements_pct"] < 70:
               raise SystemExit(f"statements for only {cov['statements_pct']}% — refusing to cache")

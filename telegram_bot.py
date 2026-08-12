@@ -228,6 +228,144 @@ def send_summary(signals):
     _post("\n".join(lines))
 
 
+_SCREEN_HELP = (
+    "🔎 *Stock Screen* — NSE Total Market, ~750 names\n\n"
+    "`/screen` — top 10 by composite\n"
+    "`/screen TCS` — one company in full\n"
+    "`/screen quality` — high ROCE, real growth\n"
+    "`/screen cheap` — good and cheap vs its own industry\n"
+    "`/screen growth` — revenue CAGR above 20%\n"
+    "`/screen breakout` — breaking 20/50/52w highs\n"
+    "`/screen rs` — outperforming the Nifty\n"
+    "`/screen oversold` — RSI under 35\n"
+    "`/screen debtfree` — D/E at or below 0.1\n"
+    "`/screen micro` — Microcap 250 only\n\n"
+    "Rebuilt weekly from published annual statements. "
+    "A ranking of public data, not advice."
+)
+
+# Preset name → predicate over a payload row. Mirrors the browser presets in
+# static/app.js on purpose: the same word must select the same companies in both
+# places, or the bot and the site disagree about what "cheap" means.
+_SCREEN_PRESETS = {
+    "quality":   lambda r: (r.get("q") or 0) >= 65 and (r.get("rev_cagr") or 0) >= 10,
+    "cheap":     lambda r: (r.get("q") or 0) >= 60 and (r.get("pe_pctile") or 0) >= 60,
+    "growth":    lambda r: (r.get("rev_cagr") or 0) >= 20,
+    "breakout":  lambda r: bool(r.get("brk20") or r.get("brk50") or r.get("brk52w")),
+    "rs":        lambda r: (r.get("rs1y") or 0) >= 15,
+    "oversold":  lambda r: r.get("rsi") is not None and r["rsi"] < 35,
+    "debtfree":  lambda r: r.get("de") is not None and 0 <= r["de"] <= 0.1,
+    "micro":     lambda r: r.get("tier") == "micro",
+    "small":     lambda r: r.get("tier") == "small",
+    "mid":       lambda r: r.get("tier") == "mid",
+    "large":     lambda r: r.get("tier") == "large",
+}
+
+
+def _screen_payload():
+    """The cached screen, or None. Never builds — see newspaper.get_stock_screen.
+
+    Reading the cache rather than building is the whole point: the build is ~29
+    minutes of sequential Yahoo fetches and a Telegram command has to answer in
+    seconds.
+    """
+    try:
+        import newspaper
+        d = newspaper.get_stock_screen()
+        return d if d.get("rows") else None
+    except Exception as e:
+        logging.warning(f"/screen: cache read failed — {e}")
+        return None
+
+
+def _n(v, suf=""):
+    return "—" if v is None else f"{v}{suf}"
+
+
+def _screen_one(r: dict) -> str:
+    """One company, in full. The mobile version of the detail sheet."""
+    L = [f"*{r['sym']}* — {r.get('name','')}",
+         f"_{r.get('ind','')}_" + (f" · {r['tier']}cap" if r.get("tier") else "")]
+    L.append("")
+    L.append(f"₹{_n(r.get('price'))}   1Y {_n(r.get('r1y'),'%')}   "
+             f"RSI {_n(r.get('rsi'))}")
+    L.append(f"*Composite {_n(r.get('comp'))}*  ·  Q {_n(r.get('q'))} "
+             f"G {_n(r.get('g'))} V {_n(r.get('v'))} T {_n(r.get('tech'))}")
+    L.append("")
+    L.append(f"ROCE {_n(r.get('roce'),'%')} (3Y med {_n(r.get('roce_med'),'%')})")
+    L.append(f"ROE {_n(r.get('roe'),'%')}   EBIT margin {_n(r.get('ebit_margin'),'%')}")
+    L.append(f"Revenue CAGR {_n(r.get('rev_cagr'),'%')}   "
+             f"EBITDA CAGR {_n(r.get('ebitda_cagr'),'%')}")
+    L.append(f"D/E {_n(r.get('de'))}   PE {_n(r.get('pe'))}"
+             + (f"   cheaper than {r['pe_pctile']:.0f}% of peers"
+                if r.get("pe_pctile") is not None else ""))
+    tags = (r.get("setup") or {}).get("tags") or []
+    if tags:
+        L += ["", "· " + " · ".join(tags[:4])]
+    sw = r.get("swot") or {}
+    for key, head in (("s", "Strengths"), ("w", "Weaknesses"), ("t", "Risks")):
+        items = sw.get(key) or []
+        if not items:
+            continue
+        L += ["", f"*{head}*"]
+        # The evidence line travels with the claim here too — it is the whole
+        # reason these lines are trustworthy.
+        L += [f"• {i['t']}\n  _{i.get('k','')}_" for i in items[:3]]
+    if r.get("ai_view"):
+        L += ["", "*Analyst view* (AI, from the figures above)", f"_{r['ai_view']}_"]
+    if not r.get("has_stmts"):
+        L += ["", "⚠ No annual statements published for this symbol — "
+                  "price-only, and it carries no composite."]
+    return "\n".join(L)
+
+
+def _screen_reply(text: str) -> str:
+    """`/screen`, `/screen SYMBOL`, `/screen PRESET`."""
+    d = _screen_payload()
+    if not d:
+        return ("The screen has not been built yet. It runs weekly — "
+                "Sunday 02:30 IST.")
+    rows = d["rows"]
+    parts = text.split()
+    arg = parts[1].lower() if len(parts) > 1 else ""
+    built = d.get("built_on") or "?"
+    uni = d.get("universe") or "NSE"
+
+    if not arg:
+        top = [r for r in rows if r.get("comp") is not None][:10]
+        L = [f"🔎 *Top 10 by composite* — {uni}",
+             f"_{len(rows)} companies · built {built}_", ""]
+        for i, r in enumerate(top, 1):
+            L.append(f"{i}. *{r['sym']}* {_n(r.get('comp'))} · "
+                     f"ROCE {_n(r.get('roce'),'%')} · "
+                     f"rev {_n(r.get('rev_cagr'),'%')} · PE {_n(r.get('pe'))}")
+        L += ["", "`/screen SYMBOL` for one company · `/screenhelp` for presets"]
+        return "\n".join(L)
+
+    if arg in _SCREEN_PRESETS:
+        sel = [r for r in rows if _SCREEN_PRESETS[arg](r)]
+        sel.sort(key=lambda r: (r.get("comp") is None, -(r.get("comp") or 0)))
+        if not sel:
+            return f"Nothing in the screen matches *{arg}* this week."
+        L = [f"🔎 *{arg}* — {len(sel)} of {len(rows)}", f"_built {built}_", ""]
+        for i, r in enumerate(sel[:12], 1):
+            L.append(f"{i}. *{r['sym']}* {_n(r.get('comp'))} · "
+                     f"ROCE {_n(r.get('roce'),'%')} · rev {_n(r.get('rev_cagr'),'%')}")
+        if len(sel) > 12:
+            L.append(f"_…and {len(sel)-12} more_")
+        return "\n".join(L)
+
+    want = arg.upper()
+    hit = next((r for r in rows if r["sym"] == want), None)
+    if not hit:
+        near = [r["sym"] for r in rows if want in r["sym"]
+                or want in (r.get("name", "").upper())][:6]
+        return (f"*{want}* is not in the screen."
+                + (f"\nDid you mean: {', '.join(near)}?" if near else
+                   f"\nIt covers {uni} — try `/screen` for the top 10."))
+    return _screen_one(hit)
+
+
 def handle_command(text, chat_id):
     """Handle bot commands — called by polling loop or webhook."""
     from tracker import get_active_signals, get_performance, mute_asset
@@ -246,7 +384,10 @@ def handle_command(text, chat_id):
         _post(msg, chat_id)
         return
 
-    if text.startswith("/start"):
+    if text.startswith("/screenhelp"):
+        _post(_SCREEN_HELP, chat_id)
+
+    elif text.startswith("/start"):
         _post(
             "👋 *Nifty 500 Swing Scanner*\n\n"
             "Commands:\n"
@@ -287,6 +428,9 @@ def handle_command(text, chat_id):
                 f"Best: +{p['best']}% | Worst: {p['worst']}%",
                 chat_id
             )
+
+    elif text.startswith("/screen"):
+        _post(_screen_reply(text), chat_id)
 
     elif text.startswith("/mute"):
         parts = text.split()

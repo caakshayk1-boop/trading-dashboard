@@ -742,6 +742,117 @@ def test_time_stop_horizon_comes_from_the_signal() -> None:
     check("a row that HIT ITS STOP is never touched", 3 not in ids, str(ids))
 
 
+def test_trend_names_a_peak_instead_of_calling_it_rising() -> None:
+    """The SWOT and the AI view contradicted each other on the live page.
+
+    Zydus ROCE runs FY23 14.5 -> FY26 18.0 with a median of 19.15. Comparing
+    only the endpoints said RISING, so the SWOT printed "return on capital is
+    improving year on year" directly above an analyst view that correctly said
+    18.0% is below the 3-year median and capital efficiency is weakening. Both
+    were arithmetically true and together they were nonsense.
+    """
+    zydus = [18.0, 22.6, 20.3, 14.5]          # newest first
+    check("a series above its start but below its median reads 'peaked'",
+          S._trend(zydus) == "peaked", str(S._trend(zydus)))
+    check("a steadily rising series still reads 'rising'",
+          S._trend([30, 25, 20, 15]) == "rising")
+    check("a steadily falling series still reads 'falling'",
+          S._trend([15, 20, 25, 30]) == "falling")
+    check("a genuinely flat series still reads 'flat'",
+          S._trend([20, 20.5, 19.8, 20.1]) == "flat")
+    check("a full round trip reads 'peaked', not 'flat'",
+          S._trend([15, 25, 24, 14.5]) == "peaked")
+    check("too few points is still None", S._trend([18, 20]) is None)
+
+    # And a peaked ROCE must be a WEAKNESS, never the "improving" strength.
+    stmts = {"years": [
+        {"fy": "FY26", "period_end": "2026-03-31", "roce_ic": 0.180, "revenue": 100.0},
+        {"fy": "FY25", "period_end": "2025-03-31", "roce_ic": 0.226, "revenue": 95.0},
+        {"fy": "FY24", "period_end": "2024-03-31", "roce_ic": 0.203, "revenue": 90.0},
+        {"fy": "FY23", "period_end": "2023-03-31", "roce_ic": 0.145, "revenue": 85.0},
+    ], "shares_changed": False}
+    r = S.ratios(stmts, None)
+    r["industry"] = "Pharmaceuticals"
+    check("the ratio block reports the peak", r["roce_trend"] == "peaked",
+          str(r["roce_trend"]))
+    sw = S.swot(r, S.technicals(_px(300), None), {})
+    strengths = " ".join(i["t"] for i in sw["s"]).lower()
+    weaknesses = " ".join(i["t"] for i in sw["w"]).lower()
+    check("'improving year on year' is NOT claimed on a peaked series",
+          "improving year on year" not in strengths, strengths[:120])
+    check("being off the peak is reported as a weakness",
+          "off its peak" in weaknesses, weaknesses[:140])
+
+
+def test_universe_is_the_official_total_market_list() -> None:
+    """750 real names, and a shrink must never be silent.
+
+    There is no "Nifty 1000". NSE's widest published equity index is Total
+    Market at 752, which is exactly Nifty 500 + Microcap 250 and carries two
+    DUMMY placeholders. Composing a universe by hand instead would drift from
+    the index it claims to be at the next rebalance, and then every breadth
+    number is measured against something that does not exist.
+    """
+    p = pathlib.Path(S.UNIVERSE_CSV)
+    check("the Total Market list is the configured universe",
+          "totalmarket" in S.UNIVERSE_URL)
+    check("a 500-name fallback exists for when NSE refuses",
+          S.UNIVERSE_FALLBACK_CSV.endswith("nifty500.csv"))
+    if not p.exists():
+        check("universe CSV present (skipped — not in checkout)", True)
+        return
+    uni = S.universe()                        # no refresh: offline test
+    check("the universe is ~750 names", 700 < len(uni) <= 760, f"{len(uni)}")
+    check("no DUMMY placeholder survives",
+          not [u for u in uni if u["symbol"].startswith("DUMMY")])
+    check("no duplicate symbols", len({u["symbol"] for u in uni}) == len(uni))
+
+    # The universe file must be COMMITTED, not gitignored. NSE 403s datacenter
+    # IPs, so a CI run that cannot fetch it would silently screen 500 instead of
+    # 750 with nothing in the log to say the universe shrank.
+    ign = pathlib.Path(".gitignore").read_text(encoding="utf-8")
+    check("the universe file is un-ignored so CI actually gets it",
+          "!cache/nifty_total_market.csv" in ign)
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    check("a fallback to the 500 list is logged as an ERROR, not a warning",
+          "log.error(f\"screen: {path} missing" in src)
+    check("the payload names the list actually read, not the one intended",
+          "fallback — Total Market unavailable" in src)
+
+
+def test_telegram_screen_command_matches_the_browser_presets() -> None:
+    """The same preset word must select the same companies in both places.
+
+    Otherwise /screen cheap and the website's "Cheap & good" button disagree
+    about what cheap means, and the bot quietly becomes a second, different
+    product.
+    """
+    import telegram_bot as TB
+    js = APP_JS.read_text(encoding="utf-8")
+    block = js[js.index("var PRESETS = {"):js.index("function capBand(")]
+    for name in ("quality", "cheap", "growth", "breakout", "rs", "oversold", "debtfree"):
+        # the browser calls it cheapquality; the bot shortens it for typing
+        js_name = "cheapquality" if name == "cheap" else name
+        check(f"preset '{name}' exists in the browser too", js_name + ":" in block)
+        check(f"preset '{name}' exists in the bot", name in TB._SCREEN_PRESETS)
+
+    rows = [
+        {"sym": "A", "q": 70, "rev_cagr": 15, "de": 0.05, "rsi": 30, "tier": "micro",
+         "pe_pctile": 80, "rs1y": 20, "brk20": True, "comp": 70},
+        {"sym": "B", "q": 40, "rev_cagr": 2, "de": -5.0, "rsi": 60, "tier": "large",
+         "pe_pctile": 10, "rs1y": -20, "comp": 30},
+    ]
+    P = TB._SCREEN_PRESETS
+    check("quality selects the good one", [r["sym"] for r in rows if P["quality"](r)] == ["A"])
+    check("debtfree excludes NEGATIVE equity, same as the browser",
+          [r["sym"] for r in rows if P["debtfree"](r)] == ["A"])
+    check("oversold selects RSI under 35", [r["sym"] for r in rows if P["oversold"](r)] == ["A"])
+    check("micro selects on NSE index membership",
+          [r["sym"] for r in rows if P["micro"](r)] == ["A"])
+    check("an unknown symbol reply does not raise",
+          isinstance(TB._screen_reply("/screen ZZZNOTREAL"), str))
+
+
 def test_universe_excludes_nse_dummy_constituents() -> None:
     """NSE's own Nifty 500 CSV ships four placeholder 'Dummy Vedanta' rows."""
     if not pathlib.Path(S.UNIVERSE_CSV).exists():
@@ -910,6 +1021,9 @@ def main() -> int:
                test_a_new_cached_field_invalidates_old_entries,
                test_explicit_gate_blocks_and_is_applied_everywhere,
                test_time_stop_horizon_comes_from_the_signal,
+               test_trend_names_a_peak_instead_of_calling_it_rising,
+               test_universe_is_the_official_total_market_list,
+               test_telegram_screen_command_matches_the_browser_presets,
                test_universe_excludes_nse_dummy_constituents,
                test_screen_table_columns_match,
                test_the_screen_sheet_can_always_be_closed,
