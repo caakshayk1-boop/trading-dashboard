@@ -8,7 +8,16 @@ import {
   validateStopTarget,
   nextAction,
   classifyFreshness,
+  computeATR,
+  computeEMA,
+  computeSwingLow,
+  computeSwingHigh,
+  computeTrailingStop,
 } from "../api/_positions.js";
+
+function flatBars(n, { high, low, close }) {
+  return Array.from({ length: n }, () => ({ high, low, close }));
+}
 
 function pos(overrides = {}) {
   return {
@@ -152,6 +161,69 @@ test("classifyFreshness: LIVE within 90s, DELAYED to 5min, STALE beyond, OFFLINE
   assert.equal(classifyFreshness(null), "OFFLINE");
   assert.equal(classifyFreshness(undefined), "OFFLINE");
   assert.equal(classifyFreshness(Infinity), "OFFLINE");
+});
+
+test("computeATR: constant high-low range gives an exact, stable ATR", () => {
+  // TR = max(H-L, |H-prevClose|, |L-prevClose|) = max(2,1,1) = 2 for every
+  // bar after the first, regardless of period smoothing — a flat series
+  // never has a bar taller than its own H-L, so ATR settles at exactly 2.
+  const bars = flatBars(30, { high: 102, low: 100, close: 101 });
+  assert.equal(computeATR(bars, 14), 2);
+});
+
+test("computeATR: too few bars returns null rather than a bad number", () => {
+  const bars = flatBars(10, { high: 102, low: 100, close: 101 });
+  assert.equal(computeATR(bars, 14), null);
+});
+
+test("computeEMA: constant series converges to the constant", () => {
+  const closes = flatBars(30, { high: 0, low: 0, close: 100 }).map((b) => b.close);
+  assert.equal(computeEMA(closes, 20), 100);
+});
+
+test("computeSwingLow/High: min/max over the lookback window only", () => {
+  const bars = [
+    ...flatBars(40, { high: 110, low: 90, close: 100 }),   // outside a 10-bar lookback
+    ...flatBars(10, { high: 105, low: 95, close: 100 }),   // inside it
+  ];
+  assert.equal(computeSwingLow(bars, 10), 95);   // not 90 — that bar is outside the window
+  assert.equal(computeSwingHigh(bars, 10), 105); // not 110
+});
+
+test("computeTrailingStop: unavailable with too little history — never invents a value", () => {
+  const bars = flatBars(10, { high: 102, low: 100, close: 101 });
+  const r = computeTrailingStop(pos(), bars);
+  assert.equal(r.available, false);
+  assert.equal(r.stop, null);
+});
+
+test("computeTrailingStop LONG: moves the stop UP when the computed level beats the previous stop", () => {
+  const bars = flatBars(60, { high: 102, low: 99, close: 100 });
+  // candidate = max(swing_low=99, ema20(100) - 1.5*atr(2)) = max(99, 97) = 99
+  const r = computeTrailingStop(pos({ stop_loss: 50 }), bars);
+  assert.equal(r.available, true);
+  assert.equal(r.stop, 99);
+});
+
+test("computeTrailingStop LONG: never lowers the stop below what it already was", () => {
+  const bars = flatBars(60, { high: 102, low: 99, close: 100 });
+  // Same candidate (99) as above, but previous_stop (105) is already higher.
+  const r = computeTrailingStop(pos({ stop_loss: 105 }), bars);
+  assert.equal(r.stop, 105);
+});
+
+test("computeTrailingStop SHORT: never raises the stop above what it already was", () => {
+  const bars = flatBars(60, { high: 101, low: 98, close: 100 });
+  // candidate = min(swing_high=101, ema20(100) + 1.5*atr(2)) = min(101, 103) = 101
+  const r = computeTrailingStop(pos({ side: "SHORT", stop_loss: 95 }), bars);
+  assert.equal(r.available, true);
+  assert.equal(r.stop, 95); // 95 already tighter (lower) than the 101 candidate
+});
+
+test("computeTrailingStop SHORT: moves the stop DOWN when the computed level is tighter", () => {
+  const bars = flatBars(60, { high: 101, low: 98, close: 100 });
+  const r = computeTrailingStop(pos({ side: "SHORT", stop_loss: 150 }), bars);
+  assert.equal(r.stop, 101);
 });
 
 // Documented gap: everything above proves the pure ladder/P&L math. It does

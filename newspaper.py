@@ -6915,6 +6915,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
          looked like they had never been written. Filter by engine and they are
          one click away. -->
     <select id="alertEngSel" aria-label="Filter the signal log by engine"><option value="">All engines</option></select>
+    <input type="number" step="0.1" id="alertPnlMin" aria-label="Minimum P&amp;L percent" placeholder="Min P&amp;L %" style="width:90px">
+    <input type="number" step="0.1" id="alertPnlMax" aria-label="Maximum P&amp;L percent" placeholder="Max P&amp;L %" style="width:90px">
     <span class="ghost" id="alertCount"></span>
   </div>
 

@@ -21,6 +21,7 @@ import {
   sizePosition,
   validateStopTarget,
   classifyFreshness,
+  computeTrailingStop,
   round,
 } from "./_positions.js";
 
@@ -233,6 +234,7 @@ async function list(req, res) {
     await refreshPrices(rows);
     fired = await loadFiredMilestones(rows.map((r) => r.id));
     await applyLadders(rows, fired);
+    await applyTrailingStops(rows);
   }
 
   const out = rows.map((r) => {
@@ -350,6 +352,43 @@ async function applyLadders(rows, fired) {
       await applyLadderPlan(r, plan, set);
       fired.set(r.id, set);
     }
+  }
+}
+
+// Trailing protection activates once the ladder reaches COMPOUNDING
+// (milestone_50 fired) — the remaining ~40% is riding the trend per the
+// ladder's own lifecycle, and nothing protected it before this. Gated to
+// the SAME refresh window as price/ladder (r.updated_at wasn't touched
+// in-memory by refreshPrices, so this reads the pre-refresh age — the same
+// "was this row due" check, not a separate cadence) because a bars fetch is
+// heavier than a quote and COMPOUNDING is rare enough that this stays cheap
+// regardless. Never invents a stop: if bars can't be fetched or there isn't
+// enough history, the row is marked "unavailable" and stop_loss is left
+// exactly as it was.
+async function applyTrailingStops(rows) {
+  const eligible = rows.filter(
+    (r) => r.status === "active" && r.battle_status === "COMPOUNDING" && ageMs(r.updated_at) > MIN_REFRESH_AGE_SECONDS * 1000
+  );
+  for (const r of eligible) {
+    const bars = await fetchDailyBars(r.symbol);
+    const result = computeTrailingStop(r, bars);
+    r.trailing_status = result.available ? "active" : "unavailable";
+    if (!result.available || result.stop === r.stop_loss) continue;
+
+    const now = istNow();
+    const stopBefore = r.stop_loss;
+    r.stop_loss = result.stop;
+    console.log(`tracker: trailing stop moved — ${r.symbol} #${r.id} ${stopBefore} -> ${result.stop}`);
+    await db().execute({
+      sql: "UPDATE stock_tracker SET stop_loss=?, updated_at=? WHERE id=?",
+      args: [result.stop, now, r.id],
+    });
+    await db().execute({
+      sql: `INSERT INTO stock_tracker_events
+            (position_id, event_type, event_time, stop_before, stop_after, reason, created_at)
+            VALUES (?,?,?,?,?,?,?)`,
+      args: [r.id, "STOP_MOVE", now, stopBefore, result.stop, "trailing", now],
+    });
   }
 }
 
@@ -617,6 +656,34 @@ async function quoteAll(symbols) {
     Array.from({ length: Math.min(QUOTE_CONCURRENCY, queue.length) }, worker)
   );
   return out;
+}
+
+// Daily OHLC for the trailing-stop calculation — a heavier fetch than
+// quoteAll's single price, only ever called for the (rare) COMPOUNDING
+// subset of the book. 6mo comfortably clears the 50-bar swing lookback plus
+// the 14/20-period ATR/EMA warmup with room to spare for holidays/gaps.
+const BARS_DEADLINE_MS = 5000;
+
+async function fetchDailyBars(symbol) {
+  try {
+    const r = await fetch(
+      `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=6mo&interval=1d`,
+      { headers: { "User-Agent": "Mozilla/5.0" }, signal: AbortSignal.timeout(BARS_DEADLINE_MS) }
+    );
+    if (!r.ok) return null;
+    const j = await r.json();
+    const quote = j?.chart?.result?.[0]?.indicators?.quote?.[0];
+    if (!quote?.high || !quote?.low || !quote?.close) return null;
+    const bars = [];
+    for (let i = 0; i < quote.close.length; i++) {
+      const high = num(quote.high[i]), low = num(quote.low[i]), close = num(quote.close[i]);
+      if (high === null || low === null || close === null) continue; // holidays/gaps in the aligned index
+      bars.push({ high, low, close });
+    }
+    return bars;
+  } catch {
+    return null; // caller treats this exactly like "not enough history"
+  }
 }
 
 function istNow() {

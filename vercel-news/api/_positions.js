@@ -220,6 +220,95 @@ export function classifyFreshness(ageSeconds) {
   return "STALE";
 }
 
+// ── Trailing stop ──────────────────────────────────────────────────────
+// Activates once the ladder reaches COMPOUNDING (milestone_50 fired) — the
+// remaining ~40% is "riding the trend" per the ladder's own lifecycle, and
+// until now nothing protected it. Formula from the spec's trailing-stop
+// section, simplified to one daily-bar-based version for both SWING and
+// LONG_TERM (the spec's fuller version uses weekly bars for LONG_TERM
+// specifically — a further refinement, not built here; flagged, not
+// silently substituted).
+//
+//   LONG:  max(swing_low, EMA20 - ATR_BUFFER_MULT*ATR, previous_stop)
+//   SHORT: min(swing_high, EMA20 + ATR_BUFFER_MULT*ATR, previous_stop)
+//
+// The previous_stop term makes this self-enforcing monotonic — a LONG stop
+// can only ever move up, a SHORT stop only ever down, without a separate
+// clamp. If ATR/EMA/swing can't be computed (too little history, a bad
+// fetch), this returns {available:false} and the caller must preserve the
+// last valid stop rather than inventing one.
+export const TRAILING_ATR_PERIOD = 14;
+export const TRAILING_EMA_PERIOD = 20;
+export const TRAILING_SWING_LOOKBACK = 50;
+export const TRAILING_ATR_BUFFER_MULT = 1.5;
+const TRAILING_MIN_BARS = 30; // well under EMA20/ATR14/swing50's true minimums as a fast reject
+
+function trueRange(high, low, prevClose) {
+  if (prevClose === null || prevClose === undefined) return high - low;
+  return Math.max(high - low, Math.abs(high - prevClose), Math.abs(low - prevClose));
+}
+
+// bars: [{high, low, close}, ...] oldest first. Wilder's smoothing (seed =
+// simple average of the first `period` true ranges, then recursively
+// smoothed) — matches signals/indicators.py's atr() (ta.volatility.
+// AverageTrueRange), so a position's trailing stop and the scanner's own
+// initial stop are computed the same way.
+export function computeATR(bars, period = TRAILING_ATR_PERIOD) {
+  if (!bars || bars.length < period + 1) return null;
+  const trs = [];
+  for (let i = 1; i < bars.length; i++) {
+    trs.push(trueRange(bars[i].high, bars[i].low, bars[i - 1].close));
+  }
+  let atr = trs.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  for (let i = period; i < trs.length; i++) {
+    atr = (atr * (period - 1) + trs[i]) / period;
+  }
+  return atr;
+}
+
+export function computeEMA(values, period) {
+  if (!values || values.length < period) return null;
+  const k = 2 / (period + 1);
+  let ema = values.slice(0, period).reduce((a, b) => a + b, 0) / period;
+  for (let i = period; i < values.length; i++) {
+    ema = values[i] * k + ema * (1 - k);
+  }
+  return ema;
+}
+
+export function computeSwingLow(bars, lookback = TRAILING_SWING_LOOKBACK) {
+  if (!bars || bars.length < lookback) return null;
+  return Math.min(...bars.slice(-lookback).map((b) => b.low));
+}
+
+export function computeSwingHigh(bars, lookback = TRAILING_SWING_LOOKBACK) {
+  if (!bars || bars.length < lookback) return null;
+  return Math.max(...bars.slice(-lookback).map((b) => b.high));
+}
+
+// Pure — never touches the DB, never fetches. `bars` must already be daily
+// OHLC, oldest first, ending at (or near) the current price.
+export function computeTrailingStop(position, bars) {
+  if (!bars || bars.length < TRAILING_MIN_BARS) return { stop: null, available: false };
+  const atr = computeATR(bars, TRAILING_ATR_PERIOD);
+  const ema20 = computeEMA(bars.map((b) => b.close), TRAILING_EMA_PERIOD);
+  if (atr === null || ema20 === null || !(atr > 0)) return { stop: null, available: false };
+
+  const prevStop = position.stop_loss;
+  if (position.side === "SHORT") {
+    const swingHigh = computeSwingHigh(bars);
+    if (swingHigh === null) return { stop: null, available: false };
+    const candidate = Math.min(swingHigh, ema20 + TRAILING_ATR_BUFFER_MULT * atr);
+    const stop = prevStop === null || prevStop === undefined ? candidate : Math.min(candidate, prevStop);
+    return { stop: round(stop, 2), available: true };
+  }
+  const swingLow = computeSwingLow(bars);
+  if (swingLow === null) return { stop: null, available: false };
+  const candidate = Math.max(swingLow, ema20 - TRAILING_ATR_BUFFER_MULT * atr);
+  const stop = prevStop === null || prevStop === undefined ? candidate : Math.max(candidate, prevStop);
+  return { stop: round(stop, 2), available: true };
+}
+
 // Risk-based sizing calculator. Decision support only — does not place or
 // record a trade.
 export function sizePosition({ capital, riskPct, entry, stop, side }) {

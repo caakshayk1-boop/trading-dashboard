@@ -1277,6 +1277,24 @@ var TV_ALIASES = (function () {
     // call-out otherwise — the ladder itself already executed automatically
     // server-side, so this pill explains what just happened or what's still
     // outstanding, not a button to click.
+    // Never let a stale price look indistinguishable from a live one.
+    // Mirrors classifyFreshness() in _positions.js — LIVE up to 90s old,
+    // DELAYED to 5min, STALE beyond, OFFLINE when there's no price at all.
+    function ageLabel(seconds){
+      if (seconds === null || seconds === undefined) return '';
+      if (seconds < 60) return seconds + 's ago';
+      if (seconds < 3600) return Math.round(seconds / 60) + 'm ago';
+      return Math.round(seconds / 3600) + 'h ago';
+    }
+    function freshnessTag(r){
+      var f = r.freshness;
+      if (!f) return '';
+      if (f === 'OFFLINE') return '<span class="mono-dim" title="No live price on record">OFFLINE</span>';
+      var cls = f === 'LIVE' ? 'up' : (f === 'STALE' ? 'dn' : 'mono-dim');
+      return '<span class="' + cls + '" style="font-size:10px" title="Price last refreshed ' + ageLabel(r.data_age_seconds) + '">' +
+        f + ' · ' + ageLabel(r.data_age_seconds) + '</span>';
+    }
+
     function actionPill(na){
       if (!na || !na.action || na.action === 'HOLD' || na.action === 'NO_ACTION' || na.action === 'WAIT_FOR_DATA'){
         return '<span class="next-action act-wait">' + esc((na && na.reason) || 'Hold') + '</span>';
@@ -1324,12 +1342,16 @@ var TV_ALIASES = (function () {
             (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(r.side || 'LONG') + '</td>' +
           '<td class="num">' + cur + fmt(r.entry_price) + '</td>' +
-          '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) + '</td>' +
+          '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) +
+            '<br>' + freshnessTag(r) + '</td>' +
           '<td class="num mono-dim">' + qtyLabel + '</td>' +
           '<td>' + battleBadge(r.battle_status) + '</td>' +
           '<td class="num up">' + (r.target_price ? cur + fmt(r.target_price) : '—') + '</td>' +
           '<td class="num dn">' + (r.stop_loss ? cur + fmt(r.stop_loss) : '—') +
-            (r.stop_moved_to_breakeven ? '<span class="mono-dim" title="Stop moved to breakeven after the first milestone"> (BE)</span>' : '') + '</td>' +
+            (r.stop_moved_to_breakeven ? '<span class="mono-dim" title="Stop moved to breakeven after the first milestone"> (BE)</span>' : '') +
+            (r.trailing_status === 'active' ? '<span class="up" style="font-size:10px" title="Structure/ATR trailing stop is active"> · trailing</span>' : '') +
+            (r.trailing_status === 'unavailable' ? '<span class="mono-dim" style="font-size:10px" title="Not enough price history to compute a trailing stop — the stored stop is unchanged, nothing was invented"> · trailing protection unavailable</span>' : '') +
+            '</td>' +
           '<td class="' + (unrealized === null ? '' : (unrealized >= 0 ? 'pnl-u' : 'pnl-d')) + '">' +
             (unrealized === null ? '—' : money(unrealized, cur)) +
             (r.pnl_pct === null ? '' : ' <span class="mono-dim">(' + (r.pnl_pct > 0 ? '+' : '') + fmt(r.pnl_pct, 2) + '%)</span>') + '</td>' +
@@ -1904,6 +1926,9 @@ var TV_ALIASES = (function () {
       var tf    = el('alertTfSel').value;
       var eng   = (el('alertEngSel') || {}).value || '';
       var badge = activeBadge();
+      var pnlMinEl = el('alertPnlMin'), pnlMaxEl = el('alertPnlMax');
+      var pnlMin = pnlMinEl && pnlMinEl.value !== '' ? Number(pnlMinEl.value) : null;
+      var pnlMax = pnlMaxEl && pnlMaxEl.value !== '' ? Number(pnlMaxEl.value) : null;
 
       var rows = allRows.filter(function(r){
         if (badge !== 'all' && r.badge !== badge) return false;
@@ -1912,6 +1937,10 @@ var TV_ALIASES = (function () {
         if (to   && r.date > to)   return false;
         if (tf   && r.timeframe !== tf) return false;
         if (eng  && r.signal_type !== eng) return false;
+        // A trade with no P&L yet (still open) doesn't match either bound —
+        // "≥5%" should mean "closed at 5% or better", not "unknown counts".
+        if (pnlMin !== null && (r.pnl_pct === null || r.pnl_pct === undefined || r.pnl_pct < pnlMin)) return false;
+        if (pnlMax !== null && (r.pnl_pct === null || r.pnl_pct === undefined || r.pnl_pct > pnlMax)) return false;
         return true;
       });
 
@@ -1952,7 +1981,7 @@ var TV_ALIASES = (function () {
       if (archDate){
         why = 'No signals on ' + esc(archDate) + ' for this filter. ' +
               '<a href="#" id="archClear" style="color:var(--lime)">Show all days</a> to see the rest.';
-      } else if (from || to || tf || eng || el('alertSearch').value.trim()){
+      } else if (from || to || tf || eng || pnlMin !== null || pnlMax !== null || el('alertSearch').value.trim()){
         why = 'Nothing matches those filters.';
       } else if (activeVersion() === 'v2'){
         why = 'No gated signals yet. The v2 engine publishes only setups that clear ' +
@@ -1999,7 +2028,7 @@ var TV_ALIASES = (function () {
     }
 
     function wireAlertControls(){
-      ['alertSearch','alertFrom','alertTo','alertTfSel','alertEngSel'].forEach(function(id){
+      ['alertSearch','alertFrom','alertTo','alertTfSel','alertEngSel','alertPnlMin','alertPnlMax'].forEach(function(id){
         var n = el(id); if (!n) return;
         n.addEventListener('input', renderAlerts);
         n.addEventListener('change', renderAlerts);
