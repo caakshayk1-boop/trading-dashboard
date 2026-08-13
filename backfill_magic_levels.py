@@ -38,15 +38,16 @@ Usage
 from __future__ import annotations
 
 import argparse
-import logging
 from datetime import datetime, timedelta
 
 import tracker
 from scanner import magic_levels
 from symbols import to_yahoo
 
-logging.basicConfig(level=logging.INFO, format="%(message)s")
-log = logging.getLogger("backfill_magic")
+# print(), not logging — scanner/config configure the root logger on import
+# (logging.basicConfig() is a no-op after the first call in a process), which
+# silently swallowed every line here the first time this ran. print() has no
+# such dependency. Matches generate.py's own convention for script output.
 
 
 def _f(v):
@@ -70,10 +71,10 @@ def levels_as_of(symbol: str, sig_date: str, price: float) -> dict | None:
         df1y = yf.download(to_yahoo(symbol), start=start.isoformat(), end=end.isoformat(),
                             interval="1d", progress=False, auto_adjust=True)
     except Exception as e:
-        log.warning(f"{symbol}: fetch failed — {e}")
+        print(f"{symbol}: fetch failed — {e}")
         return None
     if df1y is None or df1y.empty or len(df1y) < 50:
-        log.warning(f"{symbol}: insufficient history as of {sig_date} ({0 if df1y is None else len(df1y)} bars)")
+        print(f"{symbol}: insufficient history as of {sig_date} ({0 if df1y is None else len(df1y)} bars)")
         return None
     if hasattr(df1y.columns, "get_level_values"):
         df1y.columns = df1y.columns.get_level_values(0)
@@ -102,7 +103,7 @@ def main() -> int:
     if args.limit:
         rows = rows[: args.limit]
 
-    log.info(f"{len(rows)} magic/magicmagic rows with no levels\n")
+    print(f"{len(rows)} magic/magicmagic rows with no levels\n")
     if not rows:
         return 0
 
@@ -120,25 +121,25 @@ def main() -> int:
             continue
         filled.append((s, lv))
 
-    log.info(f"── result ──────────────────────────────────────")
-    log.info(f"  fillable          : {len(filled)}")
-    log.info(f"  rejected (no valid setup as of that date, or unfetchable) : {len(rejected)}")
-    log.info(f"  skipped (no entry price on record) : {skipped}")
-    log.info("")
+    print(f"── result ──────────────────────────────────────")
+    print(f"  fillable          : {len(filled)}")
+    print(f"  rejected (no valid setup as of that date, or unfetchable) : {len(rejected)}")
+    print(f"  skipped (no entry price on record) : {skipped}")
+    print("")
     for s, lv in filled:
-        log.info(
+        print(
             f"  #{s['id']:>5} {s['symbol']:<14} {s['date'][:10]}  "
             f"entry {s['entry']:>8}  "
             f"SL {lv['sl']:>8}  T1 {lv['target1']:>8}  T2 {lv['target2']:>8}  T3 {lv['target3']:>8}  "
             f"RR {lv['rr']}"
         )
     if rejected:
-        log.info("\n  rejected (left NULL, not fabricated):")
+        print("\n  rejected (left NULL, not fabricated):")
         for s in rejected:
-            log.info(f"  #{s['id']:>5} {s['symbol']:<14} {s['date'][:10]}")
+            print(f"  #{s['id']:>5} {s['symbol']:<14} {s['date'][:10]}")
 
     if not args.apply:
-        log.info("\nreport only — pass --apply to write")
+        print("\nreport only — pass --apply to write")
         return 0
 
     with tracker._conn() as c:
@@ -151,7 +152,7 @@ def main() -> int:
             )
         c.commit()
         tracker._db.sync(c)
-    log.info(f"\nwrote levels to {len(filled)} rows")
+    print(f"\nwrote levels to {len(filled)} rows")
     return 0
 
 
