@@ -29,8 +29,13 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  TURSO_URL:   ${{ secrets.TURSO_URL }}
-  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+  TURSO_URL:        ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN:      ${{ secrets.TURSO_TOKEN }}
+  # config.py requires these at import time (scanner.py -> config.py), even
+  # though this script never sends a Telegram message or calls Groq.
+  TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  GROQ_API_KEY:     ${{ secrets.GROQ_API_KEY }}
 
 jobs:
   backfill:
