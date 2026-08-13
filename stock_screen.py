@@ -579,6 +579,88 @@ def technicals(px: dict, bench: dict | None) -> dict:
 # FUNDAMENTAL SHAPE
 # ─────────────────────────────────────────────────────────────────────────────
 
+def piotroski(ys: list[dict]) -> dict:
+    """Piotroski F-score: the standard 9-point YoY financial-quality checklist.
+
+    Strictly latest-vs-prior-year — this is what the score is defined as, not
+    the 3-4yr _trend() used for margin trends elsewhere in this file. Each
+    criterion earns 1 point when it is both computable AND true. A criterion
+    that cannot be computed (a missing field for this symbol) is excluded
+    from the denominator rather than counted as failed — `piotroski_of`
+    reports how many of the 9 were actually evaluable, so a "5" built on 9/9
+    reads differently from a "5" built on 6/9. Never present a bare score
+    without checking `piotroski_of` first.
+
+    Criterion 5 substitutes total-debt/total-assets for the textbook
+    long-term-debt/total-assets — only total_debt is extracted from the
+    balance sheet today (see fundamentals.py's _BALANCE_ROWS). Stated here
+    rather than silently approximated as "the" Piotroski score.
+    """
+    out = {"piotroski": None, "piotroski_of": None}
+    if not ys or len(ys) < 2:
+        return out
+
+    cur, prev = ys[0], ys[1]
+    score = 0
+    computable = 0
+
+    def yoy_up(key):
+        nonlocal score, computable
+        a, b = _finite(cur.get(key)), _finite(prev.get(key))
+        if a is None or b is None:
+            return
+        computable += 1
+        if a > b:
+            score += 1
+
+    # 1. ROA > 0
+    roa = _finite(cur.get("roa"))
+    if roa is not None:
+        computable += 1
+        if roa > 0:
+            score += 1
+    # 2. CFO > 0
+    cfo = _finite(cur.get("cfo"))
+    if cfo is not None:
+        computable += 1
+        if cfo > 0:
+            score += 1
+    # 3. ROA increased YoY
+    yoy_up("roa")
+    # 4. CFO > net income (accrual quality — the profit is real cash, not
+    # sitting in receivables/inventory)
+    net_income = _finite(cur.get("net_income"))
+    if cfo is not None and net_income is not None:
+        computable += 1
+        if cfo > net_income:
+            score += 1
+    # 5. Debt ratio decreased YoY (total_debt/total_assets — see docstring)
+    cur_assets, prev_assets = _finite(cur.get("total_assets")), _finite(prev.get("total_assets"))
+    cur_debt, prev_debt = _finite(cur.get("total_debt")), _finite(prev.get("total_debt"))
+    cur_dr = cur_debt / cur_assets if cur_debt is not None and cur_assets else None
+    prev_dr = prev_debt / prev_assets if prev_debt is not None and prev_assets else None
+    if cur_dr is not None and prev_dr is not None:
+        computable += 1
+        if cur_dr < prev_dr:
+            score += 1
+    # 6. Current ratio increased YoY
+    yoy_up("current_ratio")
+    # 7. Shares outstanding did not increase YoY (no dilution)
+    cur_shares, prev_shares = _finite(cur.get("shares_out")), _finite(prev.get("shares_out"))
+    if cur_shares is not None and prev_shares is not None:
+        computable += 1
+        if cur_shares <= prev_shares:
+            score += 1
+    # 8. Gross margin increased YoY
+    yoy_up("gross_margin")
+    # 9. Asset turnover increased YoY
+    yoy_up("asset_turnover")
+
+    out["piotroski"] = score
+    out["piotroski_of"] = computable
+    return out
+
+
 def ratios(stmts: dict | None, info: dict | None) -> dict:
     """Multi-year ratio shape for one symbol.
 
@@ -602,6 +684,7 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         "margin_one_off": None,
         "cfo_pat": None, "cfo_pat_latest": None, "fcf_pat": None,
         "fcf_margin": None, "cfo": None, "fcf": None, "capex": None,
+        "piotroski": None, "piotroski_of": None,
     }
 
     if info:
@@ -700,6 +783,9 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         m0, m1 = _finite(latest.get("ebit_margin")), _finite(ys[1].get("ebit_margin"))
         if m0 is not None and m1 is not None and abs(m0 - m1) * 100 >= ONE_OFF_MARGIN_PT:
             r["margin_one_off"] = (m0 - m1) * 100
+        pt = piotroski(ys)
+        r["piotroski"] = pt["piotroski"]
+        r["piotroski_of"] = pt["piotroski_of"]
 
     # Compact per-year block for the detail view. Rounded here so the payload
     # does not ship 14 decimal places 500 times over.
@@ -1814,6 +1900,11 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "div_yield": _pct(r.get("dividend_yield")),
             "insiders": _pct(r.get("held_insiders")),
             "instis": _pct(r.get("held_institutions")),
+            # Piotroski F-score, 0-9. Check piotroski_of before trusting the
+            # score — a "5" computed from 9/9 criteria and one computed from
+            # 6/9 are not the same claim.
+            "piotroski": r.get("piotroski"),
+            "piotroski_of": r.get("piotroski_of"),
             # Technicals
             "rsi": _round(t.get("rsi14"), 1, 1),
             "sma20": _round(t.get("sma20"), 1, 1),

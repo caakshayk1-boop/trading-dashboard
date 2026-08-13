@@ -3654,6 +3654,16 @@ var TV_ALIASES = (function () {
            + (n ? '<span class="rk-n">' + n + '</span>' : '');
     }
 
+    // piotroski_of matters as much as the score: a 6 built on 9/9 criteria
+    // and a 6 built on 5/9 are not the same claim, so the tooltip always
+    // says which. No statement history at all (both null) reads as "—", not
+    // "0" — a company that cannot be scored is not the same as a bad score.
+    function piotroskiCell(r){
+      var p = r.piotroski, of = r.piotroski_of;
+      if (p === null || p === undefined || !of) return '<span class="mono-dim">—</span>';
+      return '<span title="' + of + ' of 9 criteria computable">' + p + '/' + of + '</span>';
+    }
+
     function tagCls(t){
       if (t.indexOf('BREAKOUT') >= 0) return 't-brk';
       if (t === 'VOLUME') return 't-vol';
@@ -3682,6 +3692,7 @@ var TV_ALIASES = (function () {
         + scoreCell(num(r, 'tech'), num(r, 'tech_conf'))
         + '<td class="num">' + fmt(num(r, 'roce'), '%') + '</td>'
         + '<td class="num">' + fmt(num(r, 'roe'), '%') + '</td>'
+        + '<td class="num">' + piotroskiCell(r) + '</td>'
         + '<td class="num ' + signCls(num(r, 'rev_cagr')) + '">' + fmt(num(r, 'rev_cagr'), '%') + '</td>'
         + '<td class="num">' + fmt(num(r, 'de')) + '</td>'
         + '<td class="num">' + fmt(num(r, 'pe')) + '</td>'
@@ -3707,7 +3718,30 @@ var TV_ALIASES = (function () {
       // `d >= 0` matters: a NEGATIVE D/E means equity has gone negative, which
       // is insolvency, not a clean balance sheet. Vodafone Idea listed under
       // "Debt-free" before this guard.
-      debtfree:     function(r){ var d = num(r, 'de'); return d !== null && d >= 0 && d <= 0.1; }
+      debtfree:     function(r){ var d = num(r, 'de'); return d !== null && d >= 0 && d <= 0.1; },
+      // RSI buckets — same edges as the standard 30/50/70 reading. `rsi` (not
+      // `rev_cagr`-style fundamentals) is the 14-day daily RSI already on
+      // every row.
+      rsi_oversold:    function(r){ var x = num(r, 'rsi'); return x !== null && x < 30; },
+      rsi_neutral:     function(r){ var x = num(r, 'rsi'); return x !== null && x >= 30 && x < 50; },
+      rsi_bullish:     function(r){ var x = num(r, 'rsi'); return x !== null && x >= 50 && x < 70; },
+      rsi_overbought:  function(r){ var x = num(r, 'rsi'); return x !== null && x >= 70; },
+      // `r3y_cagr` is the 3-year PRICE CAGR (percentage points, e.g. 20 not
+      // 0.20) — distinct from `rev_cagr` above, which is revenue growth. Kept
+      // separate on purpose: "the stock ran" and "the business grew" are
+      // different claims, and `compounders`/`growth` already own the latter.
+      cagr_10: function(r){ var x = num(r, 'r3y_cagr'); return x !== null && x > 10; },
+      cagr_15: function(r){ var x = num(r, 'r3y_cagr'); return x !== null && x > 15; },
+      cagr_20: function(r){ var x = num(r, 'r3y_cagr'); return x !== null && x > 20; },
+      cagr_30: function(r){ var x = num(r, 'r3y_cagr'); return x !== null && x > 30; },
+      // Matches the >7 threshold from the Piotroski screens this was ported
+      // from. Requires at least 6/9 criteria computable — a "7" built on
+      // 6 or 7 evaluable legs is a real, if thinner, quality signal; fewer
+      // than that is too little data to call it high-quality on.
+      piotroski_high: function(r){
+        var p = num(r, 'piotroski'), of = num(r, 'piotroski_of');
+        return p !== null && of !== null && of >= 6 && p >= 7;
+      }
     };
 
     function capBand(mc){
@@ -3748,7 +3782,7 @@ var TV_ALIASES = (function () {
       }
       var slice = view.slice(shown, shown + PAGE);
       if (!view.length){
-        body.innerHTML = '<tr><td colspan="16" class="scr-empty">'
+        body.innerHTML = '<tr><td colspan="17" class="scr-empty">'
           + 'No company in the screen matches that. Try clearing a filter.</td></tr>';
       } else {
         body.insertAdjacentHTML('beforeend', slice.map(rowHtml).join(''));

@@ -302,6 +302,7 @@ _INCOME_ROWS = {
     "revenue":     ("Total Revenue", "Operating Revenue"),
     "ebitda":      ("EBITDA", "Normalized EBITDA"),
     "ebit":        ("EBIT", "Operating Income"),
+    "gross_profit": ("Gross Profit",),  # Piotroski criterion 8 — same frame, no new fetch
     "net_income":  ("Net Income Common Stockholders", "Net Income",
                     "Net Income Continuous Operations"),
     "eps":         ("Diluted EPS", "Basic EPS"),
@@ -514,6 +515,12 @@ def fetch_statements(symbol: str) -> dict | None:
             "ebit_margin": _safe_div(ebit, v["revenue"]),
             "ebitda_margin": _safe_div(v["ebitda"], v["revenue"]),
             "net_margin": _safe_div(v["net_income"], v["revenue"]),
+            # Piotroski F-score inputs (fundamentals.py adds the raw ratios;
+            # the 9-point checklist itself is stock_screen.piotroski()).
+            "gross_profit": v["gross_profit"],
+            "gross_margin": _safe_div(v["gross_profit"], v["revenue"]),
+            "roa": _safe_div(v["net_income"], assets),
+            "asset_turnover": _safe_div(v["revenue"], assets),
             "debt_to_equity": _safe_div(b["total_debt"], equity),
             "current_ratio": _safe_div(b["current_assets"], cur_liab),
             "interest_cover": _safe_div(ebit, abs(v["interest"]) if v["interest"] else None),
@@ -558,7 +565,7 @@ def fetch_statements(symbol: str) -> dict | None:
 # 750 symbols were already sitting in a fresh 30-day cache, so without this every
 # one of them would have served cash-flow-less rows for a month with nothing to
 # say why the column was empty.
-_STMT_SCHEMA_KEYS = frozenset({"cfo", "fcf", "cfo_pat"})
+_STMT_SCHEMA_KEYS = frozenset({"cfo", "fcf", "cfo_pat", "gross_margin", "roa", "asset_turnover"})
 
 
 def _stmt_schema_ok(entry: dict) -> bool:

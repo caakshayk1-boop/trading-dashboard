@@ -6737,6 +6737,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button type="button" class="fbtn" data-preset="rs">RS leaders</button>
     <button type="button" class="fbtn" data-preset="oversold">Oversold</button>
     <button type="button" class="fbtn" data-preset="debtfree">Debt-free</button>
+    <button type="button" class="fbtn" data-preset="piotroski_high" title="Piotroski F-score 7+ on at least 6 of 9 computable criteria">High F-Score</button>
+    <button type="button" class="fbtn" data-preset="rsi_oversold">RSI &lt;30</button>
+    <button type="button" class="fbtn" data-preset="rsi_neutral">RSI 30-50</button>
+    <button type="button" class="fbtn" data-preset="rsi_bullish">RSI 50-70</button>
+    <button type="button" class="fbtn" data-preset="rsi_overbought">RSI &gt;70</button>
+    <button type="button" class="fbtn" data-preset="cagr_10">3Y CAGR &gt;10%</button>
+    <button type="button" class="fbtn" data-preset="cagr_15">3Y CAGR &gt;15%</button>
+    <button type="button" class="fbtn" data-preset="cagr_20">3Y CAGR &gt;20%</button>
+    <button type="button" class="fbtn" data-preset="cagr_30">3Y CAGR &gt;30%</button>
   </div>
 
   <!-- Ranking mode. The single most important control here: a good company and
@@ -6773,6 +6782,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <option value="v">Value</option>
       <option value="tech">Technical</option>
       <option value="roce">ROCE</option>
+      <option value="piotroski">Piotroski F-score</option>
       <option value="rev_cagr">Revenue CAGR</option>
       <option value="r1y">1-year return</option>
       <option value="mcap_cr">Market cap</option>
@@ -6794,6 +6804,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <th scope="col" class="num sortable" data-k="tech">Tech</th>
         <th scope="col" class="num sortable" data-k="roce">ROCE</th>
         <th scope="col" class="num sortable" data-k="roe">ROE</th>
+        <th scope="col" class="num sortable" data-k="piotroski" title="Piotroski F-score — 9-point YoY financial-quality checklist">F-Score</th>
         <th scope="col" class="num sortable" data-k="rev_cagr">Rev CAGR</th>
         <th scope="col" class="num sortable" data-k="de">D/E</th>
         <th scope="col" class="num sortable" data-k="pe">PE</th>
@@ -6826,6 +6837,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td class="num">{{ n(s.get('tech')) }}</td>
           <td class="num">{{ n(s.get('roce'), '%') }}</td>
           <td class="num">{{ n(s.get('roe'), '%') }}</td>
+          <td class="num">{{ (s.get('piotroski') ~ '/' ~ s.get('piotroski_of')) if s.get('piotroski') is not none else '—' }}</td>
           <td class="num">{{ n(s.get('rev_cagr'), '%') }}</td>
           <td class="num">{{ n(s.get('de')) }}</td>
           <td class="num">{{ n(s.get('pe')) }}</td>
