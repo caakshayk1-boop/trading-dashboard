@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "description": "THE DAILY SIGNAL — live layer over the Turso signal ledger",
+  "scripts": {
+    "test": "node --test"
+  },
   "dependencies": {
     "@libsql/client": "^0.15.7"
   }

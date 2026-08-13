@@ -30,11 +30,14 @@ export default async function handler(req, res) {
   // those are 6-12 month holds off weekly bars. They appear in the Signal Log
   // and in /api/signals?type=multibagger; they do not touch win rate,
   // expectancy or the equity curve. Mirrors tracker.EXCLUDE_FROM_EXPECTANCY.
-  // magic and magicmagic join them, and for a stronger reason than horizon:
-  // those rows are action=WATCH with no stop, no target and no R:R. They are a
-  // screener's watchlist, not positions. Left in, 24 rows that can never
-  // resolve would sit OPEN forever and drag the open count and any
-  // participation rate with them, while contributing no outcome either way.
+  // magic and magicmagic join them. The reason CHANGED once and the distinction
+  // matters: they used to be action=WATCH with no stop and no targets, so they
+  // literally could not resolve. They now carry levels from
+  // scanner.magic_levels and are gradeable — so the exclusion is no longer
+  // structural, it is that a brand-new engine has no measured sample and a
+  // handful of closes would set the published win rate on noise. Remove them
+  // from here (and from signal_report) once there are enough closed trades to
+  // mean something, not before.
   const NON_TRADING = ["ai_longterm", "multibagger", "magic", "magicmagic"];
   where.push(`COALESCE(signal_type,'') NOT IN (${NON_TRADING.map(() => "?").join(",")})`);
   args.push(...NON_TRADING);

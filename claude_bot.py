@@ -971,6 +971,16 @@ def _run_magic_scan():
                 se = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","NEUTRAL":"⚪"}.get(r.get("short",""),"⚪")
                 we = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","NEUTRAL":"⚪"}.get(r.get("swing",""),"⚪")
                 le = {"BUY":"🟢","WATCH":"🟡","AVOID":"🔴","NEUTRAL":"⚪"}.get(r.get("long",""),"⚪")
+                # Levels, when the candidate has them. The alert used to print
+                # the three Investtech reads and no stop, so a reader could see
+                # the thesis and never what would invalidate it or where it was
+                # aiming. T3 is the 52-week high — the thesis completed.
+                lv = ""
+                if r.get("sl") is not None:
+                    lv = (f"\nEntry `₹{r['price']}` · SL `₹{r['sl']}` "
+                          f"(`-{100*(r['price']-r['sl'])/r['price']:.1f}%`)\n"
+                          f"T1 `₹{r['target1']}` · T2 `₹{r['target2']}` · "
+                          f"T3 `₹{r['target3']}` _(52WH)_ · RR `{r.get('rr','—')}x`")
                 lines.append(
                     f"━━━━━━━━━━\n"
                     f"*{r['symbol']}* ₹{r['price']} · Score `{r['score']}`\n"
@@ -978,6 +988,7 @@ def _run_magic_scan():
                     f"{se} Short: _{r.get('short_note','—')}_\n"
                     f"{we} Swing: _{r.get('swing_note','—')}_\n"
                     f"{le} Long:  _{r.get('long_note','—')}_"
+                    f"{lv}"
                 )
             return "\n".join(lines)
 
@@ -987,26 +998,25 @@ def _run_magic_scan():
         msg += "\n_Investtech-style · Not SEBI advice · @askakshayfinance_"
         _post(msg)
 
-        # Log to DB
+        # Log to the ledger with LEVELS.
+        #
+        # This used to write action=WATCH with sl/t1/t2/t3 all None, one
+        # connection per row, swallowing every failure at log.debug. Three
+        # consequences, all of which shipped: 24 rows sat OPEN forever because
+        # nothing about them could resolve; the Signal Log showed a price and
+        # four empty columns; and a second run in the same day doubled every
+        # row instead of replacing it.
+        #
+        # _log_magic_to_ledger writes over ONE connection, replaces same-day
+        # rows rather than appending, and carries the stop and three targets
+        # scanner.magic_levels derives from the screen's own thesis.
         today = datetime.now(IST).strftime("%Y-%m-%d")
-        for r in magic_results:
-            try:
-                log_to_all_signals(
-                    r["symbol"], "magic", "WATCH",
-                    r["price"], None, None, None, None,
-                    None, timeframe="Weekly", score=r["score"]
-                )
-            except Exception as e:
-                logging.debug(f"Magic DB log {r['symbol']}: {e}")
-        for r in magicmagic_results:
-            try:
-                log_to_all_signals(
-                    r["symbol"], "magicmagic", "WATCH",
-                    r["price"], None, None, None, None,
-                    None, timeframe="Weekly", score=r["score"]
-                )
-            except Exception as e:
-                logging.debug(f"MagicMagic DB log {r['symbol']}: {e}")
+        try:
+            from tracker import _log_magic_to_ledger
+            _log_magic_to_ledger(magic_results, "magic", today)
+            _log_magic_to_ledger(magicmagic_results, "magicmagic", today)
+        except Exception as e:
+            logging.error(f"[MAGIC] ledger write failed: {e}")
 
         _push_signals_to_github()
         logging.info(f"[MAGIC] Done — Magic:{len(magic_results)} MagicMagic:{len(magicmagic_results)}")

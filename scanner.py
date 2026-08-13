@@ -12,10 +12,17 @@ Grouped by destination module:
   → signals/universe.py    : is_trading_day, FNO_ELIGIBLE, load_nifty500/200, _next_thursday, _smart_expiry
   → signals/commodities.py : fetch_forex_comm, _comm_weekly_bias, scan_4h
 """
+# 3.9 compat, same reason fundamentals.py and standalone_scan.py carry it:
+# CI runs 3.11 where `dict | None` in an annotation is fine, and this repo is
+# still developed against the system 3.9 where it raises at import time.
+from __future__ import annotations
+
 import yfinance as yf
 import ta as ta_lib
 import pandas as pd
 import numpy as np
+import math
+import threading
 import requests, os, time, logging, functools
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -435,13 +442,36 @@ def with_retry(max_retries=3):
     return decorator
 
 
+# yf.download() IS NOT THREAD SAFE, and the failure is silent and severe.
+#
+# Measured on yfinance 1.2.0 with max_workers=8: eight concurrent single-symbol
+# calls returned SEVEN frames belonging to CARTRADE.NS. BPCL, BIKAJI,
+# BHARTIHEXA, CEATLTD, BEML, BANKINDIA and BAJAJ-AUTO each asked for themselves
+# and received CARTRADE's OHLCV. Nothing raised. `df["Close"].squeeze()` then
+# produced a real, plausible price for the wrong company, and a magic scan
+# published BPCL at 176.70 while BPCL was 317.00 — with a stop and three
+# targets computed off the wrong number.
+#
+# Every scan in this file uses a ThreadPoolExecutor over per-symbol downloads,
+# so this was reachable from all of them.
+#
+# The lock serialises the DOWNLOAD only. The thread pools still parallelise the
+# indicator work around it, which is where most of the CPU time goes, and a
+# weekly 500-symbol scan can afford serialised network calls. _own_frame() is
+# the second line of defence: it verifies the frame actually belongs to the
+# ticker asked for, so a future regression here fails closed instead of
+# publishing a neighbour's price.
+_YF_LOCK = threading.Lock()
+
+
 def _yf_download(symbols, **kwargs):
     """
-    yf.download wrapper with crumb-refresh retry.
+    yf.download wrapper with crumb-refresh retry, serialised.
     Yahoo Finance 401 "Invalid Crumb" → drop session cache and retry once.
     """
     try:
-        return yf.download(symbols, **kwargs)
+        with _YF_LOCK:
+            return yf.download(symbols, **kwargs)
     except Exception as e:
         if "401" in str(e) or "crumb" in str(e).lower() or "Unauthorized" in str(e):
             logging.warning(f"yf crumb error — refreshing session and retrying: {e}")
@@ -450,8 +480,55 @@ def _yf_download(symbols, **kwargs):
             except Exception:
                 pass
             time.sleep(2)
-            return yf.download(symbols, **kwargs)
+            with _YF_LOCK:
+                return yf.download(symbols, **kwargs)
         raise
+
+
+def _own_frame(df, ticker_sym: str):
+    """The rows and columns that actually belong to `ticker_sym`, NaNs dropped.
+
+    Two real failures this exists to stop, both of which published wrong numbers:
+
+    1. WRONG SYMBOL'S PRICE. yfinance returns MultiIndex columns —
+       ('Close', 'BPCL.NS') — even for a single ticker, and under a
+       ThreadPoolExecutor concurrent yf.download calls interleave and can hand
+       back a frame containing OTHER symbols. `df["Close"].squeeze()` then
+       silently returns whichever column it likes. Measured: a magic scan
+       reported BPCL at 176.70 when BPCL was 317.00, and gave BHARTIHEXA and
+       BIKAJI that same 176.70 — three different companies quoted at one price,
+       each with a stop and three targets computed off it.
+
+    2. NaN LAST CLOSE. The final daily bar is often partial, so
+       `float(close.iloc[-1])` is nan. Every downstream gate then passes,
+       because `nan < 15.0` is False — the comparison does not raise, it just
+       answers no. A NaN price sails through the filters and reaches the ledger.
+
+    Returns None when the frame does not contain this ticker at all, which is
+    the honest answer rather than picking a neighbour's column.
+    """
+    if df is None or len(df) == 0:
+        return None
+    try:
+        if isinstance(df.columns, pd.MultiIndex):
+            names = set(df.columns.get_level_values(-1))
+            if ticker_sym not in names:
+                # Single-ticker frames sometimes carry an empty second level.
+                if len(names) == 1 and next(iter(names)) in ("", None):
+                    df = df.droplevel(-1, axis=1)
+                else:
+                    logging.debug(f"_own_frame: {ticker_sym} not in {sorted(names)[:4]}")
+                    return None
+            else:
+                df = df.xs(ticker_sym, axis=1, level=-1)
+        need = [c for c in ("Open", "High", "Low", "Close") if c in df.columns]
+        if "Close" not in need:
+            return None
+        out = df.dropna(subset=need)
+        return out if len(out) else None
+    except Exception as e:
+        logging.debug(f"_own_frame {ticker_sym}: {e}")
+        return None
 
 
 def _load_nse_csv(url, cache_path):
@@ -2693,6 +2770,93 @@ def _investtech_signals(ticker_sym: str) -> dict:
     return result
 
 
+# ── magic screener levels ────────────────────────────────────────────────────
+#
+# The screen's own thesis sets the targets. It selects "quality stocks in a dip,
+# RSI recovering, room to run back to 52W highs" — so the 52-week high IS the
+# target, not an ATR multiple invented on top. T1/T2 are staged points on that
+# recovery, T3 is the thesis completed.
+#
+# Same SHAPE as signals/indicators._tight_sl and _structure_targets (structure
+# stop, floored and capped; targets snapped to a real level) but scaled to this
+# engine's horizon. Those two are tuned for swing trades: a 6% cap and ATR×4
+# targets are wrong for a multi-month recovery whose target sits 15-40% away.
+#
+# The T1 >= 1R rule is enforced here because this repo already paid for it once:
+# a signal shipped a T1 worth 0.19R against its own stop while printing an R:R
+# of 2.41 quoted off T2. A target that cannot repay the risk is not a target.
+MAGIC_SL_MAX_PCT = 0.15      # a recovery trade cannot carry a tighter stop
+MAGIC_SL_MIN_PCT = 0.04      # nor a meaninglessly tight one
+MAGIC_MIN_T1_R   = 1.0       # T1 must repay the risk
+
+
+def magic_levels(df1y, price: float, hi52: float) -> dict | None:
+    """SL / T1 / T2 / T3 / RR for one magic candidate. None when there is no room.
+
+    Returns None rather than a bad setup: if the 52-week high does not clear the
+    stop by at least 1R, the recovery on offer does not pay for the risk and the
+    candidate is dropped. That is a rejection, not a level to fudge.
+    """
+    try:
+        from signals.indicators import atr as _atr
+        h = df1y["High"].squeeze()
+        l = df1y["Low"].squeeze()
+        c = df1y["Close"].squeeze()
+        cur_atr = float(_atr(h, l, c, 14).iloc[-1])
+        if not (cur_atr > 0):
+            return None
+
+        # Structure: the swing low of the last ~10 weeks is what breaking the
+        # recovery looks like. Widened by a fraction of ATR so ordinary noise at
+        # the low does not trip it.
+        swing_low = float(l.rolling(50).min().iloc[-1])
+        sl_struct = swing_low - 0.5 * cur_atr
+        sl_atr    = price - 3.0 * cur_atr
+        sl_raw    = max(sl_struct, sl_atr)          # the tighter of the two
+        sl        = max(sl_raw, price * (1 - MAGIC_SL_MAX_PCT))
+        sl        = min(sl,     price * (1 - MAGIC_SL_MIN_PCT))
+        risk      = price - sl
+        if risk <= 0:
+            return None
+
+        room = hi52 - price
+        if room <= 0:
+            return None                              # already at the high
+
+        # Staged recovery. T3 is the 52-week high itself.
+        t1 = price + 0.40 * room
+        t2 = price + 0.70 * room
+        t3 = hi52
+
+        # T1 must repay the risk. Lift it if the 40% mark does not.
+        min_t1 = price + MAGIC_MIN_T1_R * risk
+        if t1 < min_t1:
+            t1 = min_t1
+        # ...but never past T2, and the whole thing is void if even the 52-week
+        # high cannot clear 1R.
+        if t3 < min_t1:
+            return None
+        if t1 >= t2:
+            t2 = (t1 + t3) / 2.0
+        if t2 >= t3:
+            return None
+
+        return {
+            "sl": round(sl, 2),
+            "target1": round(t1, 2),
+            "target2": round(t2, 2),
+            "target3": round(t3, 2),
+            # Quoted off T2, matching the other weekly engine.
+            "rr": round((t2 - price) / risk, 2),
+            "rr_t1": round((t1 - price) / risk, 2),
+            "atr": round(cur_atr, 2),
+            "swing_low": round(swing_low, 2),
+        }
+    except Exception as e:
+        logging.debug(f"magic_levels: {e}")
+        return None
+
+
 def scan_magic(universe=None, top_n=15) -> list:
     """
     Magic Screener: 3YR CAGR+ × Weekly RSI 46+ × 15%+ from 52W High
@@ -2714,13 +2878,21 @@ def scan_magic(universe=None, top_n=15) -> list:
             # 1. Fetch 1yr daily for price, 52WH, RSI daily
             df1y = _yf_download(ticker_sym, period="1y", interval="1d",
                                progress=False, auto_adjust=True)
+            # Ownership + NaN check in one place. Concurrent yf.download calls
+            # can return a frame holding OTHER symbols, and .squeeze() would
+            # then quote this candidate at a neighbour's price; the last daily
+            # bar is also often partial, and a NaN price passes every gate below
+            # because `nan < 15.0` is False rather than an error. See _own_frame.
+            df1y = _own_frame(df1y, ticker_sym)
             if df1y is None or len(df1y) < 50:
                 return None
 
-            c    = df1y["Close"].squeeze()
-            h    = df1y["High"].squeeze()
+            c    = df1y["Close"]
+            h    = df1y["High"]
             price = float(c.iloc[-1])
             hi52  = float(h.max())
+            if not (math.isfinite(price) and math.isfinite(hi52) and price > 0 and hi52 > 0):
+                return None
             dist_from_hi = (hi52 - price) / hi52 * 100  # % below 52W high
 
             # 2. Weekly RSI — MUST be 46+
@@ -2759,7 +2931,15 @@ def scan_magic(universe=None, top_n=15) -> list:
             # Bonus: bigger dip = more room to recover
             score += min(int(dist_from_hi * 0.3), 10)
 
-            return {
+            # 7. Levels. A candidate with no room to repay its own risk is
+            #    dropped here rather than published without a stop — these rows
+            #    used to reach the ledger as action=WATCH with sl/t1/t2/t3 all
+            #    NULL, which meant nothing about them could ever resolve.
+            lv = magic_levels(df1y, price, hi52)
+            if not lv:
+                return None
+
+            out = {
                 "symbol":        sym_clean,
                 "price":         round(price, 2),
                 "cagr_3yr":      cagr,
@@ -2767,6 +2947,7 @@ def scan_magic(universe=None, top_n=15) -> list:
                 "dist_52wh":     round(dist_from_hi, 1),
                 "dist_52wl":     round(dist_from_lo, 1),
                 "hi52":          round(hi52, 2),
+                "lo52":          round(lo52, 2),
                 "score":         score,
                 "short":         it["short"],
                 "short_note":    it["short_note"],
@@ -2775,6 +2956,8 @@ def scan_magic(universe=None, top_n=15) -> list:
                 "long":          it["long"],
                 "long_note":     it["long_note"],
             }
+            out.update(lv)
+            return out
         except Exception as e:
             logging.debug(f"Magic scan {ticker_sym}: {e}")
             return None
@@ -2809,13 +2992,20 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
         try:
             df1y = _yf_download(ticker_sym, period="1y", interval="1d",
                                progress=False, auto_adjust=True)
+            # Same guard as _analyze_magic — see _own_frame. Without it a
+            # concurrent fetch can quote this candidate at another symbol's
+            # price, and a partial final bar gives a NaN that passes every
+            # gate below rather than failing one.
+            df1y = _own_frame(df1y, ticker_sym)
             if df1y is None or len(df1y) < 50:
                 return None
 
-            c     = df1y["Close"].squeeze()
-            h     = df1y["High"].squeeze()
+            c     = df1y["Close"]
+            h     = df1y["High"]
             price = float(c.iloc[-1])
             hi52  = float(h.max())
+            if not (math.isfinite(price) and math.isfinite(hi52) and price > 0 and hi52 > 0):
+                return None
             dist_from_hi = (hi52 - price) / hi52 * 100
 
             # MagicMagic filter: MUST be 20–40% below 52W high
@@ -2847,7 +3037,15 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
             score += min(int((rsi_w - 46) * 1.5), 20)
             score += min(int(dist_from_hi * 0.3), 12)   # slightly more bonus for deeper dip
 
-            return {
+            # 7. Levels. A candidate with no room to repay its own risk is
+            #    dropped here rather than published without a stop — these rows
+            #    used to reach the ledger as action=WATCH with sl/t1/t2/t3 all
+            #    NULL, which meant nothing about them could ever resolve.
+            lv = magic_levels(df1y, price, hi52)
+            if not lv:
+                return None
+
+            out = {
                 "symbol":        sym_clean,
                 "price":         round(price, 2),
                 "cagr_3yr":      cagr,
@@ -2855,6 +3053,7 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
                 "dist_52wh":     round(dist_from_hi, 1),
                 "dist_52wl":     round(dist_from_lo, 1),
                 "hi52":          round(hi52, 2),
+                "lo52":          round(lo52, 2),
                 "score":         score,
                 "short":         it["short"],
                 "short_note":    it["short_note"],
@@ -2863,6 +3062,8 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
                 "long":          it["long"],
                 "long_note":     it["long_note"],
             }
+            out.update(lv)
+            return out
         except Exception as e:
             logging.debug(f"MagicMagic scan {ticker_sym}: {e}")
             return None

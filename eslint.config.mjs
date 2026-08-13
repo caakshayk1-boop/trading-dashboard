@@ -41,6 +41,7 @@ export default [
         FormData: "readonly",
         Event: "readonly",
         confirm: "readonly",
+        prompt: "readonly",
       },
     },
     rules: {

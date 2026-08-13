@@ -1261,6 +1261,30 @@ var TV_ALIASES = (function () {
       });
     }
 
+    // Battle status -> badge class + label. Mirrors the ladder's own states
+    // (see _positions.js deriveBattleStatus): a position accumulates until
+    // +30% harvests 20% and protects the stop, then +50% harvests half the
+    // remainder and starts compounding, unless the stop is close/hit first.
+    var BATTLE_LABEL = {
+      accumulation: 'Accumulation', protected: 'Protected',
+      compounding: 'Compounding', threatened: 'Threatened', closed: 'Closed'
+    };
+    function battleBadge(status){
+      var key = String(status || 'accumulation').toLowerCase();
+      return '<span class="badge badge-' + key + '">' + (BATTLE_LABEL[key] || key) + '</span>';
+    }
+    // next_action is advisory text for HOLD/WAIT states, and an exit/sell
+    // call-out otherwise — the ladder itself already executed automatically
+    // server-side, so this pill explains what just happened or what's still
+    // outstanding, not a button to click.
+    function actionPill(na){
+      if (!na || !na.action || na.action === 'HOLD' || na.action === 'NO_ACTION' || na.action === 'WAIT_FOR_DATA'){
+        return '<span class="next-action act-wait">' + esc((na && na.reason) || 'Hold') + '</span>';
+      }
+      var cls = na.action === 'EXIT' ? 'act-exit' : 'act-sell';
+      return '<span class="next-action ' + cls + '">' + esc(na.action.replace('_',' ')) + ' — ' + esc(na.reason) + '</span>';
+    }
+
     function renderPositions(j){
       var box = el('posLive');
       var rows = j.positions || [];
@@ -1282,27 +1306,42 @@ var TV_ALIASES = (function () {
                 esc(warn.map(function(r){ return r.symbol + ' (' + r.alert.replace('-',' ') + ')'; }).join(', ')) +
                 '</span></div>';
       }
-      html += '<div class="tw"><table class="t" style="min-width:880px"><thead><tr>' +
-              '<th scope="col">Symbol</th><th scope="col">Entry</th><th scope="col">Current</th><th scope="col">Target</th><th scope="col">Stop</th>' +
-              '<th scope="col">P&amp;L</th><th scope="col">R</th><th scope="col">Horizon</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>' +
+      html += '<div class="tw"><table class="t" style="min-width:1080px"><thead><tr>' +
+              '<th scope="col">Symbol</th><th scope="col">Side</th><th scope="col">Entry</th><th scope="col">Current</th>' +
+              '<th scope="col">Qty</th><th scope="col">Status</th><th scope="col">Target</th><th scope="col">Stop</th>' +
+              '<th scope="col">Unrealized</th><th scope="col">Realized</th><th scope="col">R</th>' +
+              '<th scope="col">Next action</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>' +
               '</tr></thead><tbody>';
       rows.forEach(function(r){
         var cur = r.currency || '₹';
+        var remaining = r.remaining_quantity, original = r.original_quantity;
+        var qtyLabel = (remaining === null || remaining === undefined) ? '—'
+          : (original && original !== remaining ? fmt(remaining, 0) + ' / ' + fmt(original, 0) : fmt(remaining, 0));
+        var unrealized = (r.pnl_pct === null || remaining === null || remaining === undefined) ? null
+          : (r.side === 'SHORT' ? (r.entry_price - r.current_price) : (r.current_price - r.entry_price)) * remaining;
         html += '<tr>' +
           '<td><strong class="sym">' + esc(r.symbol) + '</strong>' +
             (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') + '</td>' +
+          '<td class="mono-dim">' + esc(r.side || 'LONG') + '</td>' +
           '<td class="num">' + cur + fmt(r.entry_price) + '</td>' +
           '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) + '</td>' +
+          '<td class="num mono-dim">' + qtyLabel + '</td>' +
+          '<td>' + battleBadge(r.battle_status) + '</td>' +
           '<td class="num up">' + (r.target_price ? cur + fmt(r.target_price) : '—') + '</td>' +
-          '<td class="num dn">' + (r.stop_loss ? cur + fmt(r.stop_loss) : '—') + '</td>' +
-          '<td class="' + (r.winning ? 'pnl-u' : 'pnl-d') + '">' +
-            (r.pnl_pct === null ? '—' : (r.pnl_pct > 0 ? '+' : '') + fmt(r.pnl_pct, 2) + '%') + '</td>' +
+          '<td class="num dn">' + (r.stop_loss ? cur + fmt(r.stop_loss) : '—') +
+            (r.stop_moved_to_breakeven ? '<span class="mono-dim" title="Stop moved to breakeven after the first milestone"> (BE)</span>' : '') + '</td>' +
+          '<td class="' + (unrealized === null ? '' : (unrealized >= 0 ? 'pnl-u' : 'pnl-d')) + '">' +
+            (unrealized === null ? '—' : money(unrealized, cur)) +
+            (r.pnl_pct === null ? '' : ' <span class="mono-dim">(' + (r.pnl_pct > 0 ? '+' : '') + fmt(r.pnl_pct, 2) + '%)</span>') + '</td>' +
+          '<td class="' + (r.realized_pnl > 0 ? 'pnl-u' : (r.realized_pnl < 0 ? 'pnl-d' : 'mono-dim')) + '">' +
+            money(r.realized_pnl || 0, cur) + '</td>' +
           '<td class="num">' + (r.r_multiple === null ? '—' : fmt(r.r_multiple, 2) + 'R') + '</td>' +
-          '<td class="mono-dim">' + esc(r.timeframe) + '</td>' +
-          '<td style="font-size:12px;color:var(--muted);max-width:220px">' + esc((r.thesis || '').slice(0, 70)) + '</td>' +
+          '<td>' + (showingHistory ? '<span class="mono-dim">' + esc(r.status) + '</span>' : actionPill(r.next_action)) + '</td>' +
+          '<td style="font-size:12px;color:var(--muted);max-width:200px">' + esc((r.thesis || '').slice(0, 70)) + '</td>' +
           '<td class="mono-dim">' + esc(r.added_date) + '</td>' +
-          '<td>' + (showingHistory ? '<span class="mono-dim">' + esc(r.status) + '</span>'
-                                   : '<button type="button" class="btn-gh" data-exit="' + r.id + '">Exit</button>') + '</td>' +
+          '<td>' + (showingHistory ? '' :
+            '<button type="button" class="btn-gh" data-partial="' + r.id + '" title="Record a partial exit outside the ladder">Partial</button> ' +
+            '<button type="button" class="btn-gh" data-exit="' + r.id + '">Exit</button>') + '</td>' +
           '</tr>';
       });
       html += '</tbody></table></div>';
@@ -1318,6 +1357,27 @@ var TV_ALIASES = (function () {
               if (!r.ok){ b.disabled = false; b.textContent = 'Exit'; keyError(r.error); return; }
               loadPositions();
             });
+        });
+      });
+
+      // Records a sale the ladder itself didn't make — the admin sold a
+      // custom amount for a reason the 30%/50% milestones don't capture.
+      // remaining_quantity stays authoritative either way.
+      box.querySelectorAll('[data-partial]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var qty = prompt('Quantity sold:');
+          if (!qty) return;
+          var price = prompt('Execution price:');
+          if (!price) return;
+          b.disabled = true;
+          api('/tracker', { method:'POST', body: JSON.stringify({
+            action: 'manual_exit', id: Number(b.dataset.partial),
+            quantity: Number(qty), execution_price: Number(price)
+          }) }).then(function(r){
+            b.disabled = false;
+            if (!r.ok){ keyError(r.error); return; }
+            loadPositions();
+          });
         });
       });
     }

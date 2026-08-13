@@ -1348,6 +1348,101 @@ def _log_multibaggers_to_ledger(signals, today):
         return []
 
 
+# ── magic / magicmagic ───────────────────────────────────────────────────────
+MAGIC_TIMEFRAME = "1W"
+# Same shape as the multibagger writer below, and for the same reasons. The one
+# real difference: these rows used to be written as action=WATCH with sl, t1, t2
+# and t3 all NULL, which meant 24 of them sat OPEN forever with nothing that
+# could ever resolve. They now carry levels from scanner.magic_levels, so they
+# are gradeable signals rather than a shortlist.
+#
+# Still excluded from headline expectancy. The reason has CHANGED, though, and
+# the distinction matters: it used to be "no levels exist", it is now "a new
+# engine with no measured sample". Flip it by removing them from
+# api/stats.js NON_TRADING and signal_report once there are enough closed trades
+# to mean something — not before, because a handful of closes would set the
+# published win rate on noise.
+MAGIC_HORIZONS = {
+    # The Investtech read this screen is built on is a 1-4 week short, 1-3 month
+    # swing and 3-12 month long view. The position is managed on the swing/long
+    # thesis (recovery to the 52-week high), so the horizon is the long one.
+    "magic": "3-12 months",
+    "magicmagic": "3-12 months",
+}
+
+
+def _log_magic_to_ledger(signals, engine, today):
+    """Mirror one magic/magicmagic scan into all_signals. Never raises.
+
+    Best-effort like the multibagger writer: the scan's own output is already
+    delivered by the time this runs, so a ledger failure must not fail the
+    Saturday job.
+    """
+    if not signals:
+        return []
+    if engine not in MAGIC_HORIZONS:
+        log.error(f"_log_magic_to_ledger: unknown engine {engine!r}")
+        return []
+    try:
+        # Replace, don't append — the Saturday cron and a manual re-run both
+        # stamp the same date. The same trap multibagger and ai_longterm hit.
+        with _conn() as c:
+            n = c.execute(
+                "SELECT COUNT(*) FROM all_signals WHERE signal_type=? AND date=?",
+                (engine, today)).fetchone()[0]
+            if n:
+                c.execute("DELETE FROM all_signals WHERE signal_type=? AND date=?",
+                          (engine, today))
+                c.commit()
+                _db.sync(c)
+                log.info(f"{engine}: replaced {n} ledger row(s) already written today")
+
+        rows = []
+        for s in signals:
+            # A candidate without levels is not written. scanner.magic_levels
+            # returns None when the 52-week high cannot clear the stop by 1R, and
+            # such a row would be another permanently-unresolvable OPEN.
+            if not all(s.get(k) is not None for k in ("sl", "target1", "target2", "target3")):
+                log.warning(f"{engine}: {s.get('symbol')} has no levels — not logged")
+                continue
+            rows.append({
+                "symbol": s["symbol"], "signal_type": engine,
+                "action": "BUY", "timeframe": MAGIC_TIMEFRAME,
+                "entry": s["price"], "sl": s["sl"],
+                "t1": s["target1"], "t2": s["target2"], "t3": s["target3"],
+                "rr": s.get("rr"), "score": int(round(s.get("score") or 0)),
+                "grade": _multibagger_grade(s.get("score") or 0),
+                "metadata": {
+                    "engine": engine, "horizon": MAGIC_HORIZONS[engine],
+                    "cadence": "weekly · Saturday 09:30 IST",
+                    # Every gate the screen actually applied, so the Signal Log
+                    # can answer "why is this here?" without re-running anything.
+                    "cagr_3yr": s.get("cagr_3yr"), "weekly_rsi": s.get("weekly_rsi"),
+                    "dist_52wh": s.get("dist_52wh"), "dist_52wl": s.get("dist_52wl"),
+                    "high_52w": s.get("hi52"), "low_52w": s.get("lo52"),
+                    "atr": s.get("atr"), "swing_low": s.get("swing_low"),
+                    "rr_t1": s.get("rr_t1"),
+                    # The three Investtech reads, verbatim, because they are the
+                    # thesis and a reader will want the same words the alert used.
+                    "short": s.get("short"), "short_note": s.get("short_note"),
+                    "swing": s.get("swing"), "swing_note": s.get("swing_note"),
+                    "long": s.get("long"), "long_note": s.get("long_note"),
+                    "target_basis": "52-week high; T1/T2 staged on the recovery",
+                },
+            })
+        if not rows:
+            log.warning(f"{engine}: nothing had levels — nothing written")
+            return []
+        ids = log_batch_to_all_signals(rows, date=today)
+        log.info(f"{engine}: wrote {len(ids)} row(s) to the ledger "
+                 f"({', '.join(r['symbol'] for r in rows[:8])}"
+                 f"{'…' if len(rows) > 8 else ''})")
+        return ids
+    except Exception as e:
+        log.error(f"{engine}: ledger write failed — {e}")
+        return []
+
+
 def _multibagger_grade(score: float) -> str:
     """Same bands ai_longterm uses, so one grade means one thing site-wide."""
     return "A+" if score >= 80 else "A" if score >= 70 else "B" if score >= 60 else "C"

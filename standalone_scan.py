@@ -10,7 +10,8 @@ Schedule (IST):
     16:30 — EOD: Breakouts (daily candle closed) + AI daily + commodities
 
   SATURDAY 09:30:
-    Full routine scan (all of above) + Potential Multibaggers list
+    Full routine scan (all of above) + Potential Multibaggers
+    + ai_longterm + magic / magicmagic recovery screens
 
 NSE holidays: scan skipped automatically.
 
@@ -79,6 +80,11 @@ MAX_HOLD_HOURS = {
 ENGINE_MAX_HOLD_HOURS = {
     "multibagger": 365 * 24,        # documented 6-12 month hold; ceiling at 12mo
     "ai_longterm": 3 * 365 * 24,    # documented 2-3 year hold, 200DMA structure stop
+    # The Investtech recovery screens. Pinned here rather than left to the
+    # metadata.horizon parse, so the horizon survives a row written without
+    # metadata — the whole point of resolving by engine first.
+    "magic": 365 * 24,              # 3-12 month recovery toward the 52-week high
+    "magicmagic": 365 * 24,
 }
 
 # Deliberately NOT a number any more. An unknown timeframe used to resolve to
@@ -1106,6 +1112,60 @@ def run_multibagger_scan(time_str):
     return mbs
 
 
+def run_magic_scan(time_str):
+    """Weekly Investtech-style recovery screens — Saturday only.
+
+    Two passes over the same logic, split only by how far below the 52-week high
+    a candidate sits: magic takes anything >15% below, magicmagic narrows to the
+    20-40% band. Both now carry a stop and three targets from
+    scanner.magic_levels; a candidate whose 52-week high cannot clear its stop by
+    1R is dropped by that function rather than published without levels.
+
+    Previously reachable only through the /magic bot command, so it ran when
+    someone remembered to ask. It belongs on the same Saturday clock as the other
+    two weekly engines.
+    """
+    from scanner import scan_magic, scan_magicmagic
+    from tracker import _log_magic_to_ledger
+    logging.info("Running magic + magicmagic screens (weekly)...")
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    out = []
+    for engine, fn, label, emoji, band in (
+            ("magic", scan_magic, "Magic Screener", "🔮", ">15% from 52WH"),
+            ("magicmagic", scan_magicmagic, "MagicMagic", "✨", "20–40% from 52WH")):
+        try:
+            res = fn(top_n=12)
+        except Exception as e:
+            logging.error(f"{engine} scan failed: {e}")
+            continue
+        logging.info(f"{engine}: {len(res)} candidates")
+        if not res:
+            continue
+        _log_magic_to_ledger(res, engine, today)
+        blocks = []
+        for i, r in enumerate(res, 1):
+            se = {"BUY": "🟢", "WATCH": "🟡", "AVOID": "🔴"}.get(r.get("short", ""), "⚪")
+            we = {"BUY": "🟢", "WATCH": "🟡", "AVOID": "🔴"}.get(r.get("swing", ""), "⚪")
+            le = {"BUY": "🟢", "WATCH": "🟡", "AVOID": "🔴"}.get(r.get("long", ""), "⚪")
+            blocks.append(
+                f"{i}. *{r['symbol']}* ₹{r['price']} · Score `{r['score']}`\n"
+                f"   CAGR `{r['cagr_3yr']}%` · RSI(W) `{r['weekly_rsi']}`"
+                f" · `{r['dist_52wh']}%` from 52WH\n"
+                f"   SL ₹{r['sl']} | T1 ₹{r['target1']} | T2 ₹{r['target2']}"
+                f" | T3 ₹{r['target3']} _(52WH)_ | RR {r.get('rr')}x\n"
+                f"   {se} short · {we} swing · {le} long\n"
+                f"   _{r.get('long_note', '')}_"
+            )
+        _send_chunked(
+            f"{emoji} *{label}* ({len(res)}) — {band}\n_{time_str}_\n"
+            f"_(3Y CAGR+ · weekly RSI 46+ · recovering toward the 52-week high)_\n",
+            blocks,
+            footer="\n_Horizon: 3–12 months · T3 is the 52-week high · "
+                   "Investtech-style · Not SEBI advice_")
+        out.extend(res)
+    return out
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
@@ -1202,11 +1262,16 @@ def main():
             comms     = _safe("commodity_scan",run_commodity_scan, time_str)
             mbs       = _safe("multibagger",   run_multibagger_scan, time_str)
             lt        = _safe("ai_longterm",   run_ai_longterm_scan, time_str)
+            # Third weekly engine on the same Saturday clock. It was only ever
+            # reachable through the /magic bot command, so it ran when someone
+            # remembered to ask rather than every week.
+            mgc       = _safe("magic",         run_magic_scan,       time_str)
             counts    = {
                 "4h": len(sigs_4h), "ai_4h": len(tlm_4h),
                 "swing": len(signals), "breakouts": len(breakouts),
                 "ai_daily": len(tlm_daily), "commodities": len(comms),
                 "multibaggers": len(mbs), "longterm": len(lt),
+                "magic": len(mgc),
             }
 
         elif slot == "holiday":

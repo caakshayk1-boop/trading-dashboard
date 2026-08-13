@@ -1451,6 +1451,180 @@ def test_open_duplicate_check_has_no_date_window() -> None:
           "_impl(timeframe, engine=engine, horizon=horizon)" in src)
 
 
+
+def test_magic_levels_are_anchored_to_the_screen_thesis() -> None:
+    """T3 is the 52-week high, and T1 must repay the risk.
+
+    The magic screen selects "quality stocks in a dip, RSI recovering, room to
+    run back to 52W highs", so the 52-week high IS the target rather than an ATR
+    multiple invented on top of it. These rows previously reached the ledger as
+    action=WATCH with sl/t1/t2/t3 all NULL — 24 of them sat OPEN forever because
+    nothing about them could ever resolve.
+
+    The T1 >= 1R rule is enforced because this repo already paid for it: a signal
+    shipped a T1 worth 0.19R against its own stop while printing an R:R of 2.41
+    quoted off T2.
+    """
+    import pandas as pd
+    from scanner import magic_levels
+
+    # A clean recovery candidate: 20% below its high, orderly range.
+    n = 260
+    price = 100.0
+    hi52 = 125.0
+    df = pd.DataFrame({
+        "High":  [hi52] + [price * 1.01] * (n - 1),
+        "Low":   [price * 0.90] * n,
+        "Close": [price] * n,
+    })
+    lv = magic_levels(df, price, hi52)
+    check("levels are produced for a normal candidate", lv is not None)
+    if not lv:
+        return
+    check("T3 IS the 52-week high, not an ATR multiple", lv["target3"] == hi52,
+          str(lv["target3"]))
+    check("levels are strictly ordered",
+          lv["sl"] < price < lv["target1"] < lv["target2"] <= lv["target3"],
+          str(lv))
+    check("T1 repays at least 1R", lv["rr_t1"] >= 1.0 - 1e-9, str(lv["rr_t1"]))
+    risk = price - lv["sl"]
+    check("the stop is capped at 15% for a recovery horizon",
+          risk / price <= 0.15 + 1e-9, f"{risk / price:.3f}")
+    check("...and floored at 4% so it is not meaninglessly tight",
+          risk / price >= 0.04 - 1e-9, f"{risk / price:.3f}")
+    check("RR is quoted off T2, like the other weekly engine",
+          abs(lv["rr"] - (lv["target2"] - price) / risk) < 0.02, str(lv["rr"]))
+
+    # Already at the high — no room, no signal.
+    check("a stock at its 52-week high is rejected",
+          magic_levels(df, hi52, hi52) is None)
+    # A high only just above price cannot clear 1R, so it must be REJECTED
+    # rather than published with a target inside its own stop.
+    check("no room to repay the risk is a rejection, not a fudged level",
+          magic_levels(df, 100.0, 100.5) is None)
+
+
+def test_magic_writes_gradeable_rows_on_a_saturday_clock() -> None:
+    """The engine was reachable only via a bot command, and wrote WATCH rows."""
+    scan = pathlib.Path("standalone_scan.py").read_text(encoding="utf-8")
+    bot = pathlib.Path("claude_bot.py").read_text(encoding="utf-8")
+    trk = pathlib.Path("tracker.py").read_text(encoding="utf-8")
+
+    check("there is a weekly runner", "def run_magic_scan(" in scan)
+    check("it is wired into the Saturday weekend slot",
+          'run_magic_scan' in scan[scan.index('elif slot == "weekend"'):
+                                   scan.index('elif slot == "holiday"')])
+    check("the scan count is reported", '"magic": len(mgc)' in scan)
+    check("both engines have a pinned horizon, not a parsed one",
+          '"magic": 365 * 24' in scan and '"magicmagic": 365 * 24' in scan)
+
+    check("the bot no longer writes action=WATCH with no levels",
+          '"magic", "WATCH"' not in bot and '"magicmagic", "WATCH"' not in bot)
+    check("the bot uses the batch ledger writer", "_log_magic_to_ledger" in bot)
+    check("the alert carries the stop and targets", "T3 `₹{r['target3']}`" in bot)
+
+    check("the writer replaces same-day rows rather than appending",
+          "DELETE FROM all_signals WHERE signal_type=? AND date=?" in trk)
+    check("a candidate with no levels is refused, not written with NULLs",
+          'has no levels — not logged' in trk)
+
+
+def test_a_frame_belonging_to_another_symbol_is_refused() -> None:
+    """The worst bug this repo has had, pinned so it cannot return quietly.
+
+    yf.download() is not thread safe. Measured on yfinance 1.2.0 at
+    max_workers=8, eight concurrent single-symbol calls returned SEVEN frames
+    belonging to CARTRADE.NS: BPCL asked for itself and got CARTRADE's OHLCV.
+    Nothing raised, nothing logged. `df["Close"].squeeze()` then yielded a real,
+    plausible number for the wrong company, and a magic scan published BPCL at
+    176.70 (Ashok Leyland's price) with a stop and three targets derived from it.
+
+    Two defences, and this test holds both:
+      1. _YF_LOCK serialises the download so the mix-up cannot happen.
+      2. _own_frame() verifies ownership so that if defence 1 ever regresses,
+         the scan returns nothing instead of publishing a neighbour's price.
+    Defence 2 is the one that matters: it fails closed.
+    """
+    import pandas as pd
+    import scanner as SC
+
+    idx = pd.date_range("2026-01-01", periods=60, freq="D")
+
+    def frame(sym: str, base: float) -> pd.DataFrame:
+        cols = pd.MultiIndex.from_product(
+            [["Open", "High", "Low", "Close", "Volume"], [sym]])
+        vals = [[base, base + 2, base - 2, base + 1, 1000] for _ in range(60)]
+        return pd.DataFrame(vals, index=idx, columns=cols)
+
+    own = SC._own_frame(frame("BPCL.NS", 317.0), "BPCL.NS")
+    check("a frame that does own the ticker is accepted",
+          own is not None and len(own) == 60)
+    check("the accepted frame carries that ticker's own price",
+          own is not None and abs(float(own["Close"].iloc[-1]) - 318.0) < 0.01)
+
+    foreign = SC._own_frame(frame("CARTRADE.NS", 2763.6), "BPCL.NS")
+    check("a frame belonging to a DIFFERENT symbol is refused, not used",
+          foreign is None)
+
+    # The contaminated frames seen in the wild held several symbols at once.
+    cols = pd.MultiIndex.from_product(
+        [["Open", "High", "Low", "Close", "Volume"], ["CARTRADE.NS", "BIKAJI.NS"]])
+    multi = pd.DataFrame([[1.0] * 10 for _ in range(60)], index=idx, columns=cols)
+    check("a multi-symbol frame is not silently squeezed into one price",
+          SC._own_frame(multi, "BPCL.NS") is None)
+    picked = SC._own_frame(multi, "BIKAJI.NS")
+    check("a multi-symbol frame yields the requested symbol's own columns",
+          picked is not None and "Close" in picked.columns)
+
+    src = pathlib.Path("scanner.py").read_text(encoding="utf-8")
+    check("_yf_download serialises the download behind a lock",
+          "with _YF_LOCK:" in src)
+    check("both the first attempt and the crumb retry hold the lock",
+          src.count("with _YF_LOCK:") >= 2)
+    check("both magic analysers verify frame ownership before pricing",
+          src.count("_own_frame(df1y, ticker_sym)") >= 2)
+
+
+def test_magic_levels_never_publish_a_setup_that_cannot_pay_for_itself() -> None:
+    """T1 must repay 1R, T3 must be the 52-week high, and the stop must stay in
+    band. A candidate that cannot satisfy all three is dropped — the screen has
+    no mechanism for widening a stop to make a bad setup look acceptable."""
+    import pandas as pd
+    import scanner as SC
+
+    idx = pd.date_range("2025-08-01", periods=250, freq="D")
+
+    def df_for(prices: list[float]) -> pd.DataFrame:
+        return pd.DataFrame({"High": [p * 1.01 for p in prices],
+                             "Low": [p * 0.99 for p in prices],
+                             "Close": prices}, index=idx)
+
+        # A stock well below a high it once made: real room, real levels.
+    prices = [100.0 + i * 0.4 for i in range(200)] + [180.0 - i * 0.6 for i in range(50)]
+    lv = SC.magic_levels(df_for(prices), price=150.0, hi52=180.0)
+    check("a candidate with room gets levels", lv is not None)
+    if lv:
+        risk = 150.0 - lv["sl"]
+        check("the stop sits below the price", lv["sl"] < 150.0)
+        check("the stop stays inside the 4–15% band",
+              0.0399 <= risk / 150.0 <= 0.1501, f"{risk / 150.0:.3%}")
+        check("T1 repays at least 1R", (lv["target1"] - 150.0) / risk >= 0.999)
+        check("the targets are strictly ordered",
+              lv["target1"] < lv["target2"] < lv["target3"])
+        check("T3 is the 52-week high itself, not an invented number",
+              abs(lv["target3"] - 180.0) < 0.011)
+
+    # A stock already at its high has no recovery to sell.
+    check("a stock at its 52-week high is refused",
+          SC.magic_levels(df_for(prices), price=180.0, hi52=180.0) is None)
+    check("a price above the stated high is refused",
+          SC.magic_levels(df_for(prices), price=181.0, hi52=180.0) is None)
+
+    # A high only a hair above the price cannot clear the minimum stop by 1R.
+    check("a high too close to pay for the risk is refused, not fudged",
+          SC.magic_levels(df_for(prices), price=150.0, hi52=150.5) is None)
+
+
 def main() -> int:
     print("stock screen — indicator arithmetic and honesty invariants\n")
     for fn in (test_rsi_matches_hand_arithmetic,
@@ -1480,6 +1654,8 @@ def main() -> int:
                test_no_forecast_language_anywhere_in_the_output,
                test_compact_strips_nulls_but_keeps_falsey_numbers,
                test_coverage_survives_compaction,
+               test_a_frame_belonging_to_another_symbol_is_refused,
+               test_magic_levels_never_publish_a_setup_that_cannot_pay_for_itself,
                test_breadth_refuses_a_thin_sample,
                test_breadth_is_not_an_input_to_any_score,
                test_narrative_guard_rejects_invented_numbers,
@@ -1499,6 +1675,8 @@ def main() -> int:
                test_no_text_builder_raises_on_sparse_data,
                test_duplicate_open_positions_collapse_per_engine,
                test_open_duplicate_check_has_no_date_window,
+               test_magic_levels_are_anchored_to_the_screen_thesis,
+               test_magic_writes_gradeable_rows_on_a_saturday_clock,
                test_universe_excludes_nse_dummy_constituents,
                test_screen_table_columns_match,
                test_the_screen_sheet_can_always_be_closed,

@@ -4281,6 +4281,11 @@ table.t tbody tr:last-child td{border-bottom:none}
 .badge-loss{background:rgba(255,92,92,.1);color:var(--down);border:1px solid rgba(255,92,92,.28)}
 .badge-open{background:rgba(106,168,255,.1);color:var(--blue);border:1px solid rgba(106,168,255,.28)}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
+/* Position battle status — where a tracked position sits in the profit-protection ladder. */
+.badge-accumulation{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
+.badge-protected{background:rgba(184,239,67,.12);color:var(--lime);border:1px solid rgba(184,239,67,.3)}
+.badge-compounding{background:rgba(167,139,250,.12);color:var(--violet);border:1px solid rgba(167,139,250,.3)}
+.badge-threatened{background:rgba(232,197,71,.12);color:var(--gold);border:1px solid rgba(232,197,71,.3)}
 .sym{font-family:var(--mono);font-weight:700;color:#E6EAF0;transition:color .2s}
 .sym:hover{color:var(--lime)}
 .mono-dim{font-family:var(--mono);color:var(--dim);font-size:11.5px}
@@ -4296,6 +4301,10 @@ table.t tbody tr:last-child td{border-bottom:none}
   font-size:13px;flex:1;min-width:130px;border-radius:9px;font-family:var(--sans);transition:border-color .25s}
 .frow input::placeholder{color:var(--dim)}
 .frow input:focus{outline:none;border-color:var(--lime)}
+.frow select{background:var(--bg);border:1px solid var(--line);color:var(--text);padding:10px 13px;
+  font-size:13px;flex:1;min-width:130px;border-radius:9px;font-family:var(--sans);transition:border-color .25s}
+.frow select:focus{outline:none;border-color:var(--lime)}
+.fnote{font-size:11px;color:var(--dim);margin:2px 0 12px}
 .btn{background:var(--lime);color:#000;border:none;padding:10px 20px;font-size:11.5px;font-weight:700;
   cursor:pointer;letter-spacing:1.2px;border-radius:100px;font-family:var(--sans);text-transform:uppercase;
   transition:transform .25s var(--ease),box-shadow .25s}
@@ -4628,6 +4637,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .pos-alert.stop-hit{background:var(--down);color:#000;font-weight:700}
 .pos-alert.near-target{background:rgba(61,220,151,.14);color:var(--up)}
 .pos-alert.target-hit{background:var(--up);color:#000;font-weight:700}
+/* Next-action pill — what the ladder/decision layer recommends right now. */
+.next-action{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.6px;
+  text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.next-action.act-sell{background:rgba(184,239,67,.14);color:var(--lime)}
+.next-action.act-exit{background:rgba(255,92,92,.14);color:var(--down)}
+.next-action.act-wait{background:rgba(255,255,255,.04);color:var(--dim)}
 
 .keybox{display:none;gap:9px;flex-wrap:wrap;align-items:center;margin:0 0 16px;padding:14px;
   background:var(--surface);border:1px dashed var(--line2);border-radius:14px;font-size:12.5px;color:var(--muted)}
@@ -5387,13 +5402,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <input type="text" name="symbol" aria-label="Symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
         <input type="text" name="name" aria-label="Company name" placeholder="Name">
         <input type="number" step="0.01" name="entry_price" aria-label="Entry price" placeholder="Entry price" required>
-        <input type="number" step="0.01" name="target_price" aria-label="Target price" placeholder="Target price" required>
+        <input type="number" step="1" min="1" name="quantity" aria-label="Quantity" placeholder="Quantity" required>
       </div>
       <div class="frow">
+        <select name="side" aria-label="Side">
+          <option value="LONG" selected>LONG</option>
+          <option value="SHORT">SHORT</option>
+        </select>
+        <select name="trade_type" aria-label="Trade type">
+          <option value="SWING" selected>SWING</option>
+          <option value="LONG_TERM">LONG_TERM</option>
+          <option value="INTRADAY">INTRADAY</option>
+          <option value="INVESTMENT">INVESTMENT</option>
+        </select>
+        <input type="number" step="0.01" name="target_price" aria-label="Target price" placeholder="Target price" required>
         <input type="number" step="0.01" name="stop_loss" aria-label="Stop loss" placeholder="Stop loss">
+      </div>
+      <div class="frow">
         <input type="text" name="timeframe" aria-label="Timeframe" placeholder="Timeframe" value="2-3 months">
         <input type="text" name="thesis" aria-label="Thesis" placeholder="Why this stock?" style="flex:3">
       </div>
+      <p class="fnote">SWING/LONG_TERM auto-run the 20%-at-+30% / 50%-of-remainder-at-+50% profit ladder. INTRADAY and INVESTMENT don't.</p>
       <button type="submit" class="btn">Add to book</button>
     </form>
   </div>
