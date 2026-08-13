@@ -34,6 +34,10 @@ const MIN_REFRESH_AGE_SECONDS = 60;
 const AUTH_LOCKOUT_THRESHOLD = 5;
 const AUTH_LOCKOUT_MINUTES = 15;
 
+// How long a retried add-position POST is treated as the same request rather
+// than a genuine second position in the same stock.
+const DEDUPE_WINDOW_SECONDS = 10;
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "GET" && req.method !== "POST") {
@@ -501,6 +505,25 @@ async function addPosition(body, res) {
   const validation = validateStopTarget({ side, entry, stop, target });
   if (!validation.valid) return fail(res, 400, validation.error);
 
+  // A double-click or a retried POST (browser retry, flaky connection) must
+  // not create a second row for the same trade. Heuristic, not a true
+  // idempotency key: a matching active position for this exact
+  // symbol/side/entry/quantity added in the last DEDUPE_WINDOW_SECONDS is
+  // treated as the same request and its id is returned instead of inserting
+  // again. Outside that window, an identical add is assumed to be a genuine
+  // second position (e.g. re-entering the same stock later) and is allowed.
+  const cutoff = istSecondsAgo(DEDUPE_WINDOW_SECONDS);
+  const dupe = await db().execute({
+    sql: `SELECT id FROM stock_tracker
+          WHERE symbol=? AND side=? AND entry_price=? AND original_quantity=?
+          AND status='active' AND updated_at >= ?
+          ORDER BY id DESC LIMIT 1`,
+    args: [symbol, side, entry, quantity, cutoff],
+  });
+  if (dupe.rows.length) {
+    return json(res, 200, { ok: true, added: symbol, id: Number(dupe.rows[0].id), deduped: true });
+  }
+
   const now = istNow();
   const ins = await db().execute({
     sql: `INSERT INTO stock_tracker
@@ -574,4 +597,8 @@ function istNow() {
 
 function istPlusMinutes(mins) {
   return new Date(Date.now() + (IST_OFFSET_MIN + mins) * 60_000).toISOString().replace("Z", "+05:30");
+}
+
+function istSecondsAgo(seconds) {
+  return new Date(Date.now() + IST_OFFSET_MIN * 60_000 - seconds * 1000).toISOString().replace("Z", "+05:30");
 }

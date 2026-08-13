@@ -47,6 +47,13 @@ jobs:
           node --check static/app.js
           npx --yes eslint@9 static/app.js
 
+      # Pure ladder/P&L logic for the position tracker — no Turso connection
+      # needed, _positions.js has zero external imports, so this runs without
+      # an npm install. Catches a broken 30%/50% milestone or a LONG/SHORT
+      # sign flip before it reaches the live book instead of after.
+      - name: Position tracker tests
+        run: cd vercel-news && node --test
+
       # Installed before generate so BOTH the pre-publish gate and the
       # post-deploy check can use it. smoke_runner.cjs is Node, not Python —
       # `pip install playwright` gets you a package the runner cannot import.
