@@ -18,7 +18,7 @@ import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from
 // `id` is here so a single trade can be linked to and audited. Without it the
 // ledger was a list you could read but not point at.
 const BASE_COLS = `id, date, symbol, action, timeframe, signal_type, entry, sl,
-              target1, target2, rr, score, status, lifecycle_status,
+              target1, target2, target3, rr, score, status, lifecycle_status,
               exit_price, pnl_pct, r_multiple, closed_at, sent_at, market, asset_type`;
 
 // Signals generated before the quality gate landed (2026-08-02) are tagged v1
@@ -161,6 +161,7 @@ function shape(r) {
     sl: num(r.sl),
     target1: num(r.target1),
     target2: num(r.target2),
+    target3: num(r.target3),
     rr: num(r.rr),
     score: num(r.score),
     status: str(r.status),

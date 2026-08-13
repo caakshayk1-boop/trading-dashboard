@@ -20,6 +20,7 @@ import {
   deriveBattleStatus,
   sizePosition,
   validateStopTarget,
+  classifyFreshness,
   round,
 } from "./_positions.js";
 
@@ -180,16 +181,24 @@ async function checkAuthLockout() {
 async function recordAuthFailure() {
   const now = istNow();
   const lockUntil = istPlusMinutes(AUTH_LOCKOUT_MINUTES);
-  await db().execute({
+  const rs = await db().execute({
     sql: `INSERT INTO stock_tracker_auth (id, fail_count, locked_until, updated_at)
           VALUES (1, 1, NULL, ?)
           ON CONFLICT(id) DO UPDATE SET
             fail_count = stock_tracker_auth.fail_count + 1,
             locked_until = CASE WHEN stock_tracker_auth.fail_count + 1 >= ?
                                  THEN ? ELSE stock_tracker_auth.locked_until END,
-            updated_at = ?`,
+            updated_at = ?
+          RETURNING fail_count, locked_until`,
     args: [now, AUTH_LOCKOUT_THRESHOLD, lockUntil, now],
   });
+  const row = rs.rows[0];
+  // Log only the transition into lockout, not every failed attempt — a
+  // wrong-key GET/POST is noisy on its own and the fail_count itself is
+  // already durable in the table for anyone who goes looking.
+  if (row && str(row.locked_until) === lockUntil) {
+    console.warn(`tracker: EDIT_KEY lockout activated after ${row.fail_count} failed attempts, until ${lockUntil}`);
+  }
 }
 
 async function recordAuthSuccess() {
@@ -230,6 +239,11 @@ async function list(req, res) {
     r.currency = /\.(NS|BO)$/i.test(r.symbol) ? "₹" : "$";
     const decorated = decoratePosition(r);
     decorated.next_action = history ? null : nextAction(decorated, { firedMilestones: fired.get(r.id) || new Set() });
+    // Never claim a price is fresher than it actually is — a stale quote must
+    // not render as indistinguishable from a live one.
+    const ageSeconds = history ? null : ageMs(r.updated_at) / 1000;
+    decorated.data_age_seconds = Number.isFinite(ageSeconds) ? Math.round(ageSeconds) : null;
+    decorated.freshness = history ? null : classifyFreshness(ageSeconds);
     return decorated;
   });
 
@@ -359,6 +373,11 @@ async function applyLadderPlan(row, plan, firedSet) {
     // else won the race, so skip applying the quantity/P&L delta again.
     if (Number(ins.rowsAffected || 0) === 0) continue;
 
+    console.log(
+      `tracker: ladder fired — ${row.symbol} #${row.id} ${step.reason} ` +
+      `sold ${step.quantity} @ ${step.execution_price} (trigger ${step.trigger_price}), ` +
+      `remaining ${round(row.remaining_quantity - step.quantity, 6)}`
+    );
     row.remaining_quantity = round(row.remaining_quantity - step.quantity, 6);
     row.realized_pnl = round((row.realized_pnl || 0) + step.realized_pnl_delta, 2);
     if (step.stop_after !== step.stop_before) {
@@ -421,6 +440,15 @@ async function exitPosition(body, res) {
   const side = str(row.side) || "LONG";
   const remaining = num(row.remaining_quantity) || 0;
   const exitPrice = num(body.exit_price) ?? num(row.current_price);
+
+  // Real shares are closing but there's no price anywhere — not even a
+  // stale cached one. Recording realized_pnl=0 here would silently claim a
+  // breakeven exit that never happened. Require an explicit price instead
+  // of guessing.
+  if (remaining > 0 && exitPrice === null) {
+    return fail(res, 400, "Execution price unavailable — no price on record. Provide exit_price explicitly.");
+  }
+
   const realizedDelta =
     remaining > 0 && exitPrice !== null && entry !== null
       ? round(side === "SHORT" ? (entry - exitPrice) * remaining : (exitPrice - entry) * remaining, 2)

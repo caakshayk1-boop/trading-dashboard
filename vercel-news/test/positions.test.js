@@ -7,6 +7,7 @@ import {
   sizePosition,
   validateStopTarget,
   nextAction,
+  classifyFreshness,
 } from "../api/_positions.js";
 
 function pos(overrides = {}) {
@@ -140,6 +141,17 @@ test("nextAction: a truly closed position is NO_ACTION regardless of quantity", 
   const p = pos({ status: "exited" });
   const result = nextAction(p, { firedMilestones: new Set() });
   assert.equal(result.action, "NO_ACTION");
+});
+
+test("classifyFreshness: LIVE within 90s, DELAYED to 5min, STALE beyond, OFFLINE when unknown", () => {
+  assert.equal(classifyFreshness(0), "LIVE");
+  assert.equal(classifyFreshness(90), "LIVE");
+  assert.equal(classifyFreshness(91), "DELAYED");
+  assert.equal(classifyFreshness(300), "DELAYED");
+  assert.equal(classifyFreshness(301), "STALE");
+  assert.equal(classifyFreshness(null), "OFFLINE");
+  assert.equal(classifyFreshness(undefined), "OFFLINE");
+  assert.equal(classifyFreshness(Infinity), "OFFLINE");
 });
 
 // Documented gap: everything above proves the pure ladder/P&L math. It does

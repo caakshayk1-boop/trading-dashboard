@@ -1,0 +1,56 @@
+name: Ledger — backfill magic/magicmagic levels
+
+# One-off, manual. scanner.magic_levels() now computes SL/T1/T2/T3 at scan
+# time (tracker._log_magic_to_ledger) — every magic/magicmagic row generated
+# from here on already carries real levels. This is only for the rows
+# written before that fix landed, which sat as action=WATCH with every level
+# NULL.
+#
+# Idempotent: only rows where sl/target1/target2/target3 are ALL NULL are
+# selected, so an accidental second run touches nothing. Reports by default;
+# writing needs apply=true, deliberately, because it writes to the live
+# Turso ledger. Levels are re-derived using price history bounded to each
+# row's own signal date — never today's data — so a backfilled row gets the
+# same numbers the original scan would have produced, not a hindsight-biased
+# one. A candidate magic_levels() itself would have rejected (52-week high as
+# of that date couldn't clear the stop by 1R) is left NULL, not fabricated.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Write the rows (false = report only)'
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: ledger-backfill-magic-levels
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # Always reported first, in its own step, so the log shows exactly what
+      # WOULD be written above whatever the apply step then does.
+      - name: Backfill (report)
+        run: python backfill_magic_levels.py
+
+      - name: Backfill (apply)
+        if: ${{ inputs.apply }}
+        run: python backfill_magic_levels.py --apply

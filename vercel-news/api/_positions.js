@@ -208,6 +208,18 @@ export function deriveBattleStatus(position, { firedMilestones = new Set() } = {
   return "ACCUMULATION";
 }
 
+// LIVE/DELAYED/STALE/OFFLINE from how long ago a price was last refreshed.
+// Thresholds are deliberately looser than MIN_REFRESH_AGE_SECONDS (60s) in
+// tracker.js — that constant bounds how OFTEN a refresh is attempted, this
+// classifies how OLD the price actually on hand is, which can lag further
+// behind if Yahoo failed on the last attempt or the deploy has no traffic.
+export function classifyFreshness(ageSeconds) {
+  if (ageSeconds === null || ageSeconds === undefined || !Number.isFinite(ageSeconds)) return "OFFLINE";
+  if (ageSeconds <= 90) return "LIVE";
+  if (ageSeconds <= 300) return "DELAYED";
+  return "STALE";
+}
+
 // Risk-based sizing calculator. Decision support only — does not place or
 // record a trade.
 export function sizePosition({ capital, riskPct, entry, stop, side }) {

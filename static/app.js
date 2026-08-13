@@ -1277,6 +1277,24 @@ var TV_ALIASES = (function () {
     // call-out otherwise — the ladder itself already executed automatically
     // server-side, so this pill explains what just happened or what's still
     // outstanding, not a button to click.
+    // Never let a stale price look indistinguishable from a live one.
+    // Mirrors classifyFreshness() in _positions.js — LIVE up to 90s old,
+    // DELAYED to 5min, STALE beyond, OFFLINE when there's no price at all.
+    function ageLabel(seconds){
+      if (seconds === null || seconds === undefined) return '';
+      if (seconds < 60) return seconds + 's ago';
+      if (seconds < 3600) return Math.round(seconds / 60) + 'm ago';
+      return Math.round(seconds / 3600) + 'h ago';
+    }
+    function freshnessTag(r){
+      var f = r.freshness;
+      if (!f) return '';
+      if (f === 'OFFLINE') return '<span class="mono-dim" title="No live price on record">OFFLINE</span>';
+      var cls = f === 'LIVE' ? 'up' : (f === 'STALE' ? 'dn' : 'mono-dim');
+      return '<span class="' + cls + '" style="font-size:10px" title="Price last refreshed ' + ageLabel(r.data_age_seconds) + '">' +
+        f + ' · ' + ageLabel(r.data_age_seconds) + '</span>';
+    }
+
     function actionPill(na){
       if (!na || !na.action || na.action === 'HOLD' || na.action === 'NO_ACTION' || na.action === 'WAIT_FOR_DATA'){
         return '<span class="next-action act-wait">' + esc((na && na.reason) || 'Hold') + '</span>';
@@ -1324,7 +1342,8 @@ var TV_ALIASES = (function () {
             (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(r.side || 'LONG') + '</td>' +
           '<td class="num">' + cur + fmt(r.entry_price) + '</td>' +
-          '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) + '</td>' +
+          '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) +
+            '<br>' + freshnessTag(r) + '</td>' +
           '<td class="num mono-dim">' + qtyLabel + '</td>' +
           '<td>' + battleBadge(r.battle_status) + '</td>' +
           '<td class="num up">' + (r.target_price ? cur + fmt(r.target_price) : '—') + '</td>' +
