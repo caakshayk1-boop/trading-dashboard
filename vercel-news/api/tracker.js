@@ -12,7 +12,10 @@
 //                                 record a partial exit outside the ladder (requires x-edit-key)
 //
 // Reads are public. Writes are gated on EDIT_KEY and fail closed.
-import { db, num, str, json, fail, authorized, readBody, columns } from "./_db.js";
+import {
+  db, num, str, json, fail, authorized, readBody, columns,
+  keyMatches, setSessionCookie, clearSessionCookie,
+} from "./_db.js";
 import {
   decoratePosition,
   computeLadderPlan,
@@ -22,6 +25,9 @@ import {
   validateStopTarget,
   classifyFreshness,
   computeTrailingStop,
+  aggregatePortfolioRisk,
+  detectSplitRatio,
+  adjustForSplit,
   round,
 } from "./_positions.js";
 
@@ -58,6 +64,36 @@ export default async function handler(req, res) {
         return fail(res, 401, "Writes are disabled — EDIT_KEY is not set on this deployment.");
       }
       await ensureMigrated();
+      // Body is read here, once, before any auth branch — login validates
+      // against body.key, not a header/cookie, so the auth check can no
+      // longer gate the parse the way it did when every action came in via
+      // the same header-only path.
+      const body = await readBody(req);
+      const action = str(body.action);
+
+      if (action === "logout") {
+        clearSessionCookie(res);
+        return json(res, 200, { ok: true });
+      }
+
+      if (action === "login") {
+        // Same lockout table as every other write — a login attempt is a
+        // credential guess exactly like a wrong header, and if lockout only
+        // gated ONE of the two entry points a distributed guesser would
+        // just use the other.
+        const lock = await checkAuthLockout();
+        if (lock.locked) {
+          return fail(res, 429, `Too many failed attempts. Try again after ${lock.until}.`);
+        }
+        if (!keyMatches(str(body.key))) {
+          await recordAuthFailure();
+          return fail(res, 401, "Wrong edit key.");
+        }
+        await recordAuthSuccess();
+        setSessionCookie(res);
+        return json(res, 200, { ok: true });
+      }
+
       // Checked BEFORE comparing the key: if lockout only gated the failure
       // path, a lucky Nth guess after N-1 failures would still succeed and
       // the lockout would protect nothing. It has to block the comparison
@@ -71,7 +107,7 @@ export default async function handler(req, res) {
         return fail(res, 401, "Wrong edit key.");
       }
       await recordAuthSuccess();
-      return await write(req, res);
+      return await write(body, res);
     }
 
     await ensureMigrated();
@@ -160,6 +196,17 @@ async function ensureAuthTable() {
     locked_until TEXT,
     updated_at TEXT
   )`);
+  // Reuses the existing single-row settings table rather than adding a
+  // second one just for this — same established pattern, one fewer migration.
+  const existing = await columns("stock_tracker_auth");
+  if (!existing.has("capital")) {
+    await db().execute("ALTER TABLE stock_tracker_auth ADD COLUMN capital REAL");
+  }
+}
+
+async function getCapital() {
+  const rs = await db().execute("SELECT capital FROM stock_tracker_auth WHERE id = 1");
+  return num(rs.rows[0] ? rs.rows[0].capital : null);
 }
 
 // ── auth lockout ────────────────────────────────────────────────────────
@@ -249,12 +296,17 @@ async function list(req, res) {
     return decorated;
   });
 
+  // Portfolio-level view, not per-position — meaningless against a closed-
+  // positions history, so only computed for the open book.
+  const portfolio = history ? null : aggregatePortfolioRisk(out, await getCapital());
+
   json(res, 200, {
     ok: true,
     generated_at: new Date().toISOString(),
     can_edit: authorized(req),
     count: out.length,
     positions: out,
+    portfolio,
   });
 }
 
@@ -301,6 +353,22 @@ async function refreshPrices(rows) {
   for (const r of stale) {
     const q = quotes[r.symbol];
     if (q === null || q === undefined) continue;
+
+    // A real split/bonus changes price and share count together; this quote
+    // only ever reports the new price. Applying it as-is would make
+    // entry_price (pre-split) vs current_price (post-split) read as a
+    // fabricated huge gain or loss, and the ladder/trailing-stop would then
+    // act on that corrupted number. Detect and hold instead of guessing:
+    // current_price stays at its last known-good value, the row is flagged
+    // for the admin to resolve with an explicit adjust_split call, and it's
+    // excluded from ladder/trailing-stop processing this cycle (below).
+    const ratio = detectSplitRatio(r.current_price, q);
+    if (ratio !== null) {
+      r.corporate_action_suspected = { ratio, detected_at: now };
+      console.warn(`tracker: possible split — ${r.symbol} #${r.id} ${r.current_price} -> ${q} (ratio ${ratio})`);
+      continue;
+    }
+
     r.current_price = q;
     r.highest_price = r.highest_price === null ? q : Math.max(r.highest_price, q);
     r.lowest_price = r.lowest_price === null ? q : Math.min(r.lowest_price, q);
@@ -346,6 +414,9 @@ async function loadFiredMilestones(ids) {
 // only bounds the Yahoo fetch + price-cache write, not this.
 async function applyLadders(rows, fired) {
   for (const r of rows) {
+    // A suspected split means current_price wasn't updated this cycle — the
+    // ladder must not evaluate against a price it knows might be wrong.
+    if (r.corporate_action_suspected) continue;
     const set = fired.get(r.id) || new Set();
     const plan = computeLadderPlan(r, r.current_price, set);
     if (plan.length) {
@@ -367,7 +438,8 @@ async function applyLadders(rows, fired) {
 // exactly as it was.
 async function applyTrailingStops(rows) {
   const eligible = rows.filter(
-    (r) => r.status === "active" && r.battle_status === "COMPOUNDING" && ageMs(r.updated_at) > MIN_REFRESH_AGE_SECONDS * 1000
+    (r) => r.status === "active" && r.battle_status === "COMPOUNDING" && !r.corporate_action_suspected
+      && ageMs(r.updated_at) > MIN_REFRESH_AGE_SECONDS * 1000
   );
   for (const r of eligible) {
     const bars = await fetchDailyBars(r.symbol);
@@ -456,14 +528,68 @@ function sizeCalc(req, res) {
 
 // ── writes ──────────────────────────────────────────────────────────────
 
-async function write(req, res) {
-  await ensureMigrated();
-  const body = await readBody(req);
+async function write(body, res) {
   const action = str(body.action);
 
   if (action === "exit") return exitPosition(body, res);
   if (action === "manual_exit") return manualExit(body, res);
+  if (action === "set_capital") return setCapital(body, res);
+  if (action === "adjust_split") return adjustSplit(body, res);
   return addPosition(body, res);
+}
+
+// Deliberate admin action, never automatic — refreshPrices() only detects
+// and flags a suspected split (corporate_action_suspected), it never
+// guesses the ratio was right. This is where that guess becomes a
+// confirmed fact, and the SPLIT_ADJUSTMENT event exists precisely for it.
+async function adjustSplit(body, res) {
+  const id = parseInt(body.id, 10);
+  if (!id) return fail(res, 400, "id required");
+  const ratio = num(body.ratio);
+  if (ratio === null || ratio <= 0) return fail(res, 400, "ratio must be a positive number");
+
+  const rs = await db().execute({ sql: "SELECT * FROM stock_tracker WHERE id=?", args: [id] });
+  const row = rs.rows[0];
+  if (!row) return fail(res, 404, "position not found");
+  if (str(row.status) !== "active") return fail(res, 400, "position already closed");
+
+  const before = {
+    entry_price: num(row.entry_price), stop_loss: num(row.stop_loss), target_price: num(row.target_price),
+    original_quantity: num(row.original_quantity), remaining_quantity: num(row.remaining_quantity),
+  };
+  const after = adjustForSplit(before, ratio);
+  const now = istNow();
+
+  await db().execute({
+    sql: `UPDATE stock_tracker
+          SET entry_price=?, stop_loss=?, target_price=?, original_quantity=?, remaining_quantity=?,
+              current_price=NULL, updated_at=?
+          WHERE id=?`,
+    // current_price is cleared, not adjusted — the suspected-split quote
+    // that triggered this is exactly the number this action exists to not
+    // trust; the next refresh fetches a fresh one against the new basis.
+    args: [after.entry_price, after.stop_loss, after.target_price, after.original_quantity, after.remaining_quantity, now, id],
+  });
+  await db().execute({
+    sql: `INSERT INTO stock_tracker_events
+          (position_id, event_type, event_time, quantity, stop_before, stop_after, reason, created_at)
+          VALUES (?,?,?,?,?,?,?,?)`,
+    args: [id, "SPLIT_ADJUSTMENT", now, after.remaining_quantity, before.stop_loss, after.stop_loss, `ratio=${ratio}`, now],
+  });
+  return json(res, 200, { ok: true, id, ...after });
+}
+
+async function setCapital(body, res) {
+  const capital = num(body.capital);
+  if (capital === null || capital <= 0) return fail(res, 400, "capital must be a positive number");
+  const now = istNow();
+  await db().execute({
+    sql: `INSERT INTO stock_tracker_auth (id, capital, updated_at)
+          VALUES (1, ?, ?)
+          ON CONFLICT(id) DO UPDATE SET capital = ?, updated_at = ?`,
+    args: [capital, now, capital, now],
+  });
+  return json(res, 200, { ok: true, capital });
 }
 
 async function exitPosition(body, res) {

@@ -4644,6 +4644,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .next-action.act-exit{background:rgba(255,92,92,.14);color:var(--down)}
 .next-action.act-wait{background:rgba(255,255,255,.04);color:var(--dim)}
 
+/* Tracker mobile cards — first table-to-card switch on this page (every
+   other wide table just horizontal-scrolls via .tw). Pure media-query
+   toggle, no JS/matchMedia, matching how every other responsive rule here
+   works. Reuses .card/.badge/.pos-alert/.next-action wholesale — no new
+   visual system for one section. */
+.tracker-cards{display:none}
+@media(max-width:640px){
+  .tracker-cards{display:grid;gap:12px}
+  #posLive .tw{display:none}
+}
+.tcard{padding:16px}
+.tcard-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.tcard-sym{font-family:var(--mono);font-weight:700;font-size:14px}
+.tcard-sub{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.4px;margin-top:2px}
+.tcard-px{text-align:right}
+.tcard-px .now{font-family:var(--mono);font-weight:700;font-size:15px}
+.tcard-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:12.5px;margin-bottom:10px}
+.tcard-grid .k{color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.tcard-grid .v{font-family:var(--mono);margin-top:1px}
+.tcard-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
 .keybox{display:none;gap:9px;flex-wrap:wrap;align-items:center;margin:0 0 16px;padding:14px;
   background:var(--surface);border:1px dashed var(--line2);border-radius:14px;font-size:12.5px;color:var(--muted)}
 .keybox.on{display:flex}
@@ -5351,6 +5372,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </form>
       <a class="slink" href="/tracker/history" target="_blank">Exit history →</a>
       <button type="button" class="btn-gh" id="posHistBtn" style="display:none">Closed positions</button>
+      <button type="button" class="btn-gh" id="keyLogout" style="display:none">Log out</button>
     </div>
   </div>
 
@@ -5359,7 +5381,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div id="posLive" style="display:none"></div>
 
   <div class="keybox" id="keybox">
-    <span>Editing the book needs your key. Stored in this browser only.</span>
+    <span>Editing the book needs your key. Signed in for 48 hours, on this device only — nothing is stored in the browser.</span>
     <input type="password" id="keyInput" placeholder="Edit key" autocomplete="off">
     <button type="button" class="btn btn-sm" id="keySave">Unlock</button>
   </div>

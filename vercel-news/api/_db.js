@@ -2,7 +2,7 @@
 // TURSO_URL / TURSO_TOKEN are the same secrets the GitHub Actions scanner uses,
 // so the site reads the exact ledger the bot writes — no copy, no drift.
 import { createClient } from "@libsql/client";
-import { timingSafeEqual } from "node:crypto";
+import { timingSafeEqual, createHmac } from "node:crypto";
 
 let _client = null;
 
@@ -110,20 +110,109 @@ export function fail(res, status, message) {
   json(res, status, { ok: false, error: message });
 }
 
+// timingSafeEqual throws on mismatched buffer lengths, so every caller here
+// length-checks first — the length itself is not worth protecting via
+// constant time, only the byte-for-byte comparison is.
+function constantTimeEqual(a, b) {
+  if (typeof a !== "string" || typeof b !== "string" || a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
+
+// ── session cookie ──────────────────────────────────────────────────────
+// Replaces sending EDIT_KEY as a header on every write (previously stored in
+// the browser's localStorage, in plaintext, indefinitely). A stateless
+// HMAC-signed cookie instead: log in once with the key, get a signed
+// session token back, the raw key never sits in browser storage again.
+//
+// Signed with EDIT_KEY itself rather than a second secret — HMAC doesn't
+// leak the key from its output, and a solo admin has one fewer required env
+// var to remember to set. The real cost of this choice: revoking a leaked
+// cookie early means rotating EDIT_KEY (which also kills header auth, same
+// secret) — there is no server-side session store to revoke against
+// individually. Mitigated with a short TTL (48h) instead of building
+// epoch-based revocation, which would need a DB read on every authorized()
+// call — and authorized() runs on every GET to set can_edit, which has to
+// stay synchronous/zero-DB (that's the whole point of the refresh-gating
+// fix elsewhere in this file's caller).
+export const SESSION_COOKIE = "ds_session";
+const SESSION_TTL_MS = 48 * 60 * 60 * 1000;
+
+function signSession() {
+  const key = process.env.EDIT_KEY;
+  const payload = Buffer.from(JSON.stringify({ exp: Date.now() + SESSION_TTL_MS })).toString("base64url");
+  const sig = createHmac("sha256", key).update(payload).digest("hex");
+  return `${payload}.${sig}`;
+}
+
+function verifySession(token) {
+  const key = process.env.EDIT_KEY;
+  if (!key || typeof token !== "string") return false;
+  const dot = token.indexOf(".");
+  if (dot < 0) return false;
+  const payload = token.slice(0, dot);
+  const sig = token.slice(dot + 1);
+  const expected = createHmac("sha256", key).update(payload).digest("hex");
+  if (!constantTimeEqual(sig, expected)) return false;
+  try {
+    const { exp } = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    return typeof exp === "number" && exp > Date.now();
+  } catch {
+    return false;
+  }
+}
+
+// Manual parse — this deployment has no framework (@vercel/node bare
+// functions), so req.cookies is never populated. Split on "; ", split each
+// pair on the FIRST "=" only (a token can itself contain "="), last
+// duplicate name wins.
+function parseCookies(req) {
+  const header = req.headers.cookie;
+  const out = {};
+  if (typeof header !== "string" || !header) return out;
+  for (const part of header.split("; ")) {
+    const eq = part.indexOf("=");
+    if (eq < 0) continue;
+    out[part.slice(0, eq).trim()] = part.slice(eq + 1).trim();
+  }
+  return out;
+}
+
+export function setSessionCookie(res) {
+  res.setHeader(
+    "Set-Cookie",
+    `${SESSION_COOKIE}=${signSession()}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}`
+  );
+}
+
+export function clearSessionCookie(res) {
+  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`);
+}
+
 // Writes are gated on a shared key. Fails closed: no EDIT_KEY set means the
 // public internet cannot touch the ledger, which is the safe default for a
 // public site sitting on top of a live trading database.
 //
-// timingSafeEqual, because `===` on strings short-circuits at the first
-// differing byte and leaks the key a character at a time to anyone willing to
-// measure. The length is compared separately since timingSafeEqual throws on
-// mismatched buffers — length alone is not worth protecting.
+// Tries the session cookie first, falls back to the legacy x-edit-key
+// header (still useful for curl/testing) — the fallback doesn't weaken
+// anything, both paths require the same secret, and a custom header can't
+// be attached by a cross-site request the way a cookie can, so it doesn't
+// reopen CSRF either.
 export function authorized(req) {
   const key = process.env.EDIT_KEY;
   if (!key) return false;
+  const cookies = parseCookies(req);
+  if (cookies[SESSION_COOKIE] && verifySession(cookies[SESSION_COOKIE])) return true;
   const sent = req.headers["x-edit-key"];
-  if (typeof sent !== "string" || sent.length !== key.length) return false;
-  return timingSafeEqual(Buffer.from(sent), Buffer.from(key));
+  return constantTimeEqual(sent, key);
+}
+
+// Login only — validates the raw key directly (constant-time), independent
+// of authorized()'s cookie/header lookup. Exported so tracker.js's login
+// action doesn't need its own copy of the comparison.
+export function keyMatches(candidate) {
+  const key = process.env.EDIT_KEY;
+  if (!key) return false;
+  return constantTimeEqual(candidate, key);
 }
 
 export async function readBody(req) {

@@ -13,6 +13,10 @@ import {
   computeSwingLow,
   computeSwingHigh,
   computeTrailingStop,
+  aggregatePortfolioRisk,
+  detectSplitRatio,
+  adjustForSplit,
+  round,
 } from "../api/_positions.js";
 
 function flatBars(n, { high, low, close }) {
@@ -224,6 +228,118 @@ test("computeTrailingStop SHORT: moves the stop DOWN when the computed level is 
   const bars = flatBars(60, { high: 101, low: 98, close: 100 });
   const r = computeTrailingStop(pos({ side: "SHORT", stop_loss: 150 }), bars);
   assert.equal(r.stop, 101);
+});
+
+test("aggregatePortfolioRisk: a null stop_loss is EXCLUDED, not coerced to 0-risk", () => {
+  // If null coerced to 0 in arithmetic (JS does this), this position would
+  // silently contribute nothing to open risk instead of being flagged as
+  // unmeasurable — the exact bug a design review caught before this shipped.
+  const noStop = pos({ stop_loss: null, current_price: 130, remaining_quantity: 100 });
+  const r = aggregatePortfolioRisk([noStop], 500000);
+  assert.equal(r.open_risk_amount, 0);
+  assert.equal(r.risk_excluded_count, 1);
+  assert.equal(r.total_positions, 1);
+});
+
+test("aggregatePortfolioRisk: null current_price and null/zero remaining_quantity are also excluded", () => {
+  const noPrice = pos({ current_price: null });
+  const noQty = pos({ remaining_quantity: null });
+  const zeroQty = pos({ remaining_quantity: 0 });
+  const r = aggregatePortfolioRisk([noPrice, noQty, zeroQty], 500000);
+  assert.equal(r.open_risk_amount, 0);
+  assert.equal(r.risk_excluded_count, 3);
+});
+
+test("aggregatePortfolioRisk: sums current-price-to-stop risk across measurable positions", () => {
+  const a = pos({ entry_price: 100, stop_loss: 90, current_price: 110, remaining_quantity: 100 }); // risk 20*100=2000
+  const b = pos({ entry_price: 50, stop_loss: 45, current_price: 55, remaining_quantity: 200 });   // risk 10*200=2000
+  const r = aggregatePortfolioRisk([a, b], 500000);
+  assert.equal(r.open_risk_amount, 4000);
+  assert.equal(r.risk_excluded_count, 0);
+  assert.equal(r.open_risk_pct, round(4000 / 500000 * 100, 2));
+});
+
+test("aggregatePortfolioRisk: risk bands are GREEN <10%, AMBER 10-15%, RED >15%", () => {
+  const mk = (riskAmt) => pos({ entry_price: 100, stop_loss: 100 - riskAmt, current_price: 100, remaining_quantity: 1 });
+  assert.equal(aggregatePortfolioRisk([mk(9)], 100).risk_level, "GREEN");
+  assert.equal(aggregatePortfolioRisk([mk(10)], 100).risk_level, "AMBER");
+  assert.equal(aggregatePortfolioRisk([mk(15)], 100).risk_level, "AMBER");
+  assert.equal(aggregatePortfolioRisk([mk(16)], 100).risk_level, "RED");
+});
+
+test("aggregatePortfolioRisk: no capital set means no fake percentage, not a guess", () => {
+  const a = pos({ current_price: 110, remaining_quantity: 100 });
+  const r = aggregatePortfolioRisk([a], null);
+  assert.equal(r.open_risk_pct, null);
+  assert.equal(r.risk_level, null);
+  assert.equal(r.capital, null);
+  assert.ok(r.open_risk_amount > 0); // absolute amount still reported
+});
+
+test("aggregatePortfolioRisk: largest_position_risk_pct guards divide-by-zero when nothing is measurable", () => {
+  const r = aggregatePortfolioRisk([pos({ stop_loss: null })], 500000);
+  assert.equal(r.largest_position_risk_pct, null);
+});
+
+test("aggregatePortfolioRisk: closed positions don't count toward totals or risk", () => {
+  const closed = pos({ status: "exited", current_price: 200, remaining_quantity: 100, stop_loss: 100 });
+  const r = aggregatePortfolioRisk([closed], 500000);
+  assert.equal(r.total_positions, 0);
+  assert.equal(r.open_risk_amount, 0);
+});
+
+test("aggregatePortfolioRisk: protected_capital sums realized_pnl only for PROTECTED/COMPOUNDING", () => {
+  const protectedPos = pos({ battle_status: "PROTECTED", realized_pnl: 500 });
+  const compounding = pos({ battle_status: "COMPOUNDING", realized_pnl: 300 });
+  const accumulating = pos({ battle_status: "ACCUMULATION", realized_pnl: 999 }); // not counted
+  const r = aggregatePortfolioRisk([protectedPos, compounding, accumulating], 500000);
+  assert.equal(r.protected_capital, 800);
+  assert.equal(r.protected_positions, 1);
+  assert.equal(r.compounding_positions, 1);
+});
+
+test("detectSplitRatio: a clean 2:1 forward split (price halves) is detected as ratio=2", () => {
+  assert.equal(detectSplitRatio(200, 100), 2);
+});
+
+test("detectSplitRatio: a 1:2 reverse split (price doubles) is detected as ratio=0.5", () => {
+  assert.equal(detectSplitRatio(100, 200), 0.5);
+});
+
+test("detectSplitRatio: within tolerance of a factor still matches (real quotes aren't exact)", () => {
+  assert.equal(detectSplitRatio(200, 102), 2); // 200/102 = 1.96, within 3% of 2
+});
+
+test("detectSplitRatio: an ordinary large trading move is NOT flagged as a split", () => {
+  assert.equal(detectSplitRatio(100, 80), null); // -20%, below the 35% magnitude floor
+});
+
+test("detectSplitRatio: a big move that doesn't land near any common factor is NOT flagged", () => {
+  assert.equal(detectSplitRatio(100, 57), null); // -43%, but 100/57=1.75, not near 2, 1.5, or 3
+});
+
+test("detectSplitRatio: null/zero/missing prices never fabricate a ratio", () => {
+  assert.equal(detectSplitRatio(null, 100), null);
+  assert.equal(detectSplitRatio(100, null), null);
+  assert.equal(detectSplitRatio(0, 100), null);
+});
+
+test("adjustForSplit: preserves economic equivalence (qty*price unchanged) for a 2:1 split", () => {
+  const p = pos({ entry_price: 200, stop_loss: 180, target_price: 260, original_quantity: 50, remaining_quantity: 50 });
+  const adj = adjustForSplit(p, 2);
+  assert.equal(adj.entry_price, 100);
+  assert.equal(adj.stop_loss, 90);
+  assert.equal(adj.target_price, 130);
+  assert.equal(adj.original_quantity, 100);
+  assert.equal(adj.remaining_quantity, 100);
+  assert.equal(adj.entry_price * adj.original_quantity, p.entry_price * p.original_quantity);
+});
+
+test("adjustForSplit: a null stop/target stays null, not coerced to 0", () => {
+  const p = pos({ stop_loss: null, target_price: null, original_quantity: 10, remaining_quantity: 10 });
+  const adj = adjustForSplit(p, 3);
+  assert.equal(adj.stop_loss, null);
+  assert.equal(adj.target_price, null);
 });
 
 // Documented gap: everything above proves the pure ladder/P&L math. It does

@@ -536,8 +536,13 @@ var TV_ALIASES = (function () {
     var liked = Object.create(null);             // "title artist" -> true
 
     function key(t, a){ return (t || '') + ' ' + (a || ''); }
-    function editKey(){
-      try { return localStorage.getItem('ds_edit_key') || ''; } catch(e){ return ''; }
+    // Shared with the Portfolio section's login flow — same localStorage key
+    // (ds_logged_in), same meaning: a UI hint only, not a credential. The
+    // actual write is authorized by an HttpOnly session cookie the browser
+    // attaches automatically; logging in once from Portfolio is what lets
+    // this feature write too.
+    function loggedIn(){
+      try { return localStorage.getItem('ds_logged_in') === '1'; } catch(e){ return false; }
     }
     function esc(s){
       return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
@@ -716,15 +721,16 @@ var TV_ALIASES = (function () {
       var title = li.dataset.title || '', artist = li.dataset.artist || '';
       var on = btn.getAttribute('aria-pressed') === 'true';
 
-      if (!editKey()){
-        say('Set your edit key in the Portfolio section to save songs.', true);
+      if (!loggedIn()){
+        say('Log in from the Portfolio section to save songs.', true);
         return;
       }
 
       btn.classList.add('busy');
       fetch('/api/music', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-edit-key': editKey() },
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: on ? 'unlike' : 'like',
           title: title, artist: artist,
@@ -1019,7 +1025,12 @@ var TV_ALIASES = (function () {
      ═══════════════════════════════════════════════════════════════════ */
   (function(){
     var API      = '/api';
-    var KEY_LS   = 'ds_edit_key';
+    // Not a secret — the real credential lives only in an HttpOnly session
+    // cookie the browser controls and JS can never read. This is a UI hint
+    // ("show the logged-in state without waiting on a round trip"), nothing
+    // more; every write is still enforced server-side by the cookie alone,
+    // so a tampered value here grants nothing.
+    var LOGIN_LS = 'ds_logged_in';
     var live     = false;
     var allRows  = [];      // last signal set pulled from /api/signals
     var archDate = null;    // when set, we are looking at one archived day
@@ -1060,16 +1071,18 @@ var TV_ALIASES = (function () {
       if (v === null || v === undefined) return '—';
       return (cur === undefined || cur === null ? '₹' : cur) + fmt(v, 2);
     }
-    function editKey(){ try { return localStorage.getItem(KEY_LS) || ''; } catch(e){ return ''; } }
+    function isLoggedIn(){ try { return localStorage.getItem(LOGIN_LS) === '1'; } catch(e){ return false; } }
+    function setLoggedIn(v){ try { if (v) localStorage.setItem(LOGIN_LS, '1'); else localStorage.removeItem(LOGIN_LS); } catch(e){} }
 
     function api(path, opts){
       opts = opts || {};
       var h = opts.headers || {};
-      if (opts.method === 'POST'){
-        h['Content-Type'] = 'application/json';
-        h['x-edit-key'] = editKey();
-      }
+      if (opts.method === 'POST') h['Content-Type'] = 'application/json';
       opts.headers = h;
+      // The session cookie is what actually authorizes a write; fetch sends
+      // same-origin cookies by default, but this is made explicit rather
+      // than relied on implicitly now that a cookie carries the credential.
+      opts.credentials = 'same-origin';
       return fetch(API + path, opts).then(function(r){
         return r.json().catch(function(){ return { ok:false, error:'bad response' }; })
                 .then(function(j){ if (!r.ok && j.ok === undefined) j.ok = false; return j; });
@@ -1194,7 +1207,8 @@ var TV_ALIASES = (function () {
       show('posStatic', 'none');
       show('posLive', '');
       show('posHistBtn', '');
-      var kb = el('keybox'); if (kb) kb.classList.toggle('on', !editKey());
+      var kb = el('keybox'); if (kb) kb.classList.toggle('on', !isLoggedIn());
+      var lo = el('keyLogout'); if (lo) lo.style.display = isLoggedIn() ? '' : 'none';
 
       // Flask-only controls. There is no /tracker/* on the serverless host, so
       // rather than leave buttons that 404, hide them — "Closed positions"
@@ -1235,17 +1249,38 @@ var TV_ALIASES = (function () {
       if (sid) pendingSheet = sid;
     }
 
-    /* ═══════ edit key ═══════ */
+    /* ═══════ login / logout ═══════
+       The key itself is sent once, over the login request, and never stored
+       anywhere in the browser afterward — the server exchanges it for an
+       HttpOnly session cookie the page cannot read or leak. */
     function wireKey(){
+      var btn = el('keySave');
       el('keySave').addEventListener('click', function(){
         var v = el('keyInput').value.trim();
         if (!v) return;
-        try { localStorage.setItem(KEY_LS, v); } catch(e){}
-        el('keybox').classList.remove('on');
-        loadPositions();
+        btn.disabled = true; btn.textContent = '…';
+        api('/tracker', { method: 'POST', body: JSON.stringify({ action: 'login', key: v }) })
+          .then(function(r){
+            btn.disabled = false; btn.textContent = 'Unlock';
+            if (!r.ok){ keyError(r.error); return; }
+            el('keyInput').value = '';
+            setLoggedIn(true);
+            el('keybox').classList.remove('on');
+            var lo = el('keyLogout'); if (lo) lo.style.display = '';
+            loadPositions();
+          });
       });
       el('keyInput').addEventListener('keydown', function(ev){
         if (ev.key === 'Enter') el('keySave').click();
+      });
+      var logout = el('keyLogout');
+      if (logout) logout.addEventListener('click', function(){
+        api('/tracker', { method: 'POST', body: JSON.stringify({ action: 'logout' }) }).then(function(){
+          setLoggedIn(false);
+          logout.style.display = 'none';
+          el('keybox').classList.add('on');
+          loadPositions();
+        });
       });
     }
 
@@ -1257,6 +1292,14 @@ var TV_ALIASES = (function () {
       box.innerHTML = '<div class="empty">Loading the book…</div>';
       api('/tracker' + (showingHistory ? '?history=1' : '')).then(function(j){
         if (!j.ok) { box.innerHTML = '<div class="empty">Could not load positions: ' + esc(j.error) + '</div>'; return; }
+        // Server truth, not just the local hint — corrects it either way: a
+        // cookie that expired since the last load, or a session that is
+        // still valid even though localStorage was cleared some other way.
+        if (typeof j.can_edit === 'boolean' && j.can_edit !== isLoggedIn()){
+          setLoggedIn(j.can_edit);
+          var kb = el('keybox'); if (kb) kb.classList.toggle('on', !j.can_edit);
+          var lo = el('keyLogout'); if (lo) lo.style.display = j.can_edit ? '' : 'none';
+        }
         renderPositions(j);
       });
     }
@@ -1303,6 +1346,31 @@ var TV_ALIASES = (function () {
       return '<span class="next-action ' + cls + '">' + esc(na.action.replace('_',' ')) + ' — ' + esc(na.reason) + '</span>';
     }
 
+    // Sums, not a claim about currency correctness beyond a single-currency
+    // book (see aggregatePortfolioRisk's own comment on the backend) — this
+    // just renders whatever the server already computed.
+    function renderPortfolioSummary(p){
+      if (!p || !p.total_positions) return '';
+      var riskCell = p.capital === null
+        ? '<span class="mono-dim">no capital set</span> · ' +
+          '<a href="#" id="setCapitalLink" style="color:var(--lime)">set capital</a>'
+        : money(p.open_risk_amount) + ' <span class="' +
+          (p.risk_level === 'GREEN' ? 'up' : p.risk_level === 'RED' ? 'dn' : '') + '">(' +
+          fmt(p.open_risk_pct, 1) + '% · ' + p.risk_level + ')</span>';
+      return '<div class="kpi-row rv" style="margin-bottom:14px">' +
+        '<div class="kpi"><div class="v" style="font-size:15px">' + riskCell + '</div><div class="k">Open risk</div></div>' +
+        '<div class="kpi"><div class="v up">' + money(p.protected_capital) + '</div><div class="k">Protected capital</div></div>' +
+        '<div class="kpi"><div class="v">' + p.total_positions + '</div><div class="k">Positions</div></div>' +
+        '<div class="kpi"><div class="v" style="color:var(--lime)">' + p.protected_positions + '</div><div class="k">Protected</div></div>' +
+        '<div class="kpi"><div class="v" style="color:var(--violet)">' + p.compounding_positions + '</div><div class="k">Compounding</div></div>' +
+        '<div class="kpi"><div class="v ' + (p.threatened_positions ? 'dn' : '') + '">' + p.threatened_positions + '</div><div class="k">Threatened</div></div>' +
+        (p.risk_excluded_count
+          ? '<div class="kpi"><div class="v mono-dim" title="Missing a stop, price or quantity — excluded from open risk, not counted as zero">' +
+            p.risk_excluded_count + '</div><div class="k">Unmeasurable</div></div>'
+          : '') +
+        '</div>';
+    }
+
     function renderPositions(j){
       var box = el('posLive');
       var rows = j.positions || [];
@@ -1317,9 +1385,12 @@ var TV_ALIASES = (function () {
         return;
       }
       var warn = rows.filter(function(r){ return r.alert; });
-      var html = '';
+      var html = showingHistory ? '' : renderPortfolioSummary(j.portfolio);
       if (warn.length && !showingHistory){
-        html += '<div class="ctlbar"><span class="ghost" style="margin-left:0;color:var(--gold)">⚠ ' +
+        // role=status + aria-live so a screen-reader hears this appear or
+        // change on refresh, matching the pattern #likeNote/.sub-msg already
+        // use elsewhere on the page — this bar had neither before.
+        html += '<div class="ctlbar" role="status" aria-live="polite"><span class="ghost" style="margin-left:0;color:var(--gold)">⚠ ' +
                 warn.length + ' position' + (warn.length > 1 ? 's need' : ' needs') + ' attention — ' +
                 esc(warn.map(function(r){ return r.symbol + ' (' + r.alert.replace('-',' ') + ')'; }).join(', ')) +
                 '</span></div>';
@@ -1330,6 +1401,13 @@ var TV_ALIASES = (function () {
               '<th scope="col">Unrealized</th><th scope="col">Realized</th><th scope="col">R</th>' +
               '<th scope="col">Next action</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>' +
               '</tr></thead><tbody>';
+      // Built alongside the table, from the same computed fields, so the
+      // two views can never disagree — one loop, one source of numbers.
+      // Action buttons below reuse the identical data-exit/data-partial/
+      // data-split attributes the table uses, so the existing delegated
+      // click wiring (querySelectorAll over the whole box) covers both
+      // without any separate wiring.
+      var cardsHtml = '';
       rows.forEach(function(r){
         var cur = r.currency || '₹';
         var remaining = r.remaining_quantity, original = r.original_quantity;
@@ -1337,9 +1415,46 @@ var TV_ALIASES = (function () {
           : (original && original !== remaining ? fmt(remaining, 0) + ' / ' + fmt(original, 0) : fmt(remaining, 0));
         var unrealized = (r.pnl_pct === null || remaining === null || remaining === undefined) ? null
           : (r.side === 'SHORT' ? (r.entry_price - r.current_price) : (r.current_price - r.entry_price)) * remaining;
+        var actionBtns = showingHistory ? '' :
+          (r.corporate_action_suspected
+            ? '<button type="button" class="btn-gh" data-split="' + r.id + '" data-ratio="' + r.corporate_action_suspected.ratio +
+              '" title="Confirm the detected ratio and adjust price/quantity, or dismiss if this wasn\'t a split">Confirm split</button> '
+            : '') +
+          '<button type="button" class="btn-gh" data-partial="' + r.id + '" title="Record a partial exit outside the ladder">Partial</button> ' +
+          '<button type="button" class="btn-gh" data-exit="' + r.id + '">Exit</button>';
+        cardsHtml += '<div class="card tcard">' +
+          '<div class="tcard-head">' +
+            '<div><span class="tcard-sym">' + esc(r.symbol) + '</span>' +
+              (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') +
+              (r.corporate_action_suspected ? '<span class="pos-alert stop-hit">possible split</span>' : '') +
+              '<div class="tcard-sub">' + esc(r.side || 'LONG') + ' · ' + esc(r.trade_type || '') + '</div></div>' +
+            '<div class="tcard-px"><div class="now ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) + '</div>' +
+              '<div class="tcard-sub">' + freshnessTag(r) + '</div></div>' +
+          '</div>' +
+          '<div>' + battleBadge(r.battle_status) + ' ' +
+            (showingHistory ? '<span class="mono-dim">' + esc(r.status) + '</span>' : actionPill(r.next_action)) + '</div>' +
+          '<div class="tcard-grid" style="margin-top:10px">' +
+            '<div><div class="k">Entry</div><div class="v">' + cur + fmt(r.entry_price) + '</div></div>' +
+            '<div><div class="k">Qty</div><div class="v">' + qtyLabel + '</div></div>' +
+            '<div><div class="k">Target</div><div class="v">' + (r.target_price ? cur + fmt(r.target_price) : '—') + '</div></div>' +
+            '<div><div class="k">Stop</div><div class="v">' + (r.stop_loss ? cur + fmt(r.stop_loss) : '—') +
+              (r.stop_moved_to_breakeven ? ' <span class="mono-dim">(BE)</span>' : '') +
+              (r.trailing_status === 'active' ? ' <span class="up">trailing</span>' : '') + '</div></div>' +
+            '<div><div class="k">Unrealized</div><div class="v ' + (unrealized === null ? '' : (unrealized >= 0 ? 'pnl-u' : 'pnl-d')) + '">' +
+              (unrealized === null ? '—' : money(unrealized, cur)) +
+              (r.pnl_pct === null ? '' : ' (' + (r.pnl_pct > 0 ? '+' : '') + fmt(r.pnl_pct, 1) + '%)') + '</div></div>' +
+            '<div><div class="k">Realized</div><div class="v ' + (r.realized_pnl > 0 ? 'pnl-u' : (r.realized_pnl < 0 ? 'pnl-d' : '')) + '">' +
+              money(r.realized_pnl || 0, cur) + '</div></div>' +
+          '</div>' +
+          (r.thesis ? '<div class="tcard-sub" style="color:var(--muted);font-size:12px">' + esc(r.thesis.slice(0, 90)) + '</div>' : '') +
+          (actionBtns ? '<div class="tcard-actions">' + actionBtns + '</div>' : '') +
+        '</div>';
         html += '<tr>' +
           '<td><strong class="sym">' + esc(r.symbol) + '</strong>' +
-            (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') + '</td>' +
+            (r.alert ? '<span class="pos-alert ' + r.alert + '">' + r.alert.replace('-',' ') + '</span>' : '') +
+            (r.corporate_action_suspected ? '<span class="pos-alert stop-hit" title="Price moved close to a ' +
+              r.corporate_action_suspected.ratio + 'x split/bonus ratio — held, not applied. Confirm or dismiss below.">possible split</span>' : '') +
+            '</td>' +
           '<td class="mono-dim">' + esc(r.side || 'LONG') + '</td>' +
           '<td class="num">' + cur + fmt(r.entry_price) + '</td>' +
           '<td class="num ' + (r.winning ? 'up' : 'dn') + '">' + cur + fmt(r.current_price) +
@@ -1361,12 +1476,11 @@ var TV_ALIASES = (function () {
           '<td>' + (showingHistory ? '<span class="mono-dim">' + esc(r.status) + '</span>' : actionPill(r.next_action)) + '</td>' +
           '<td style="font-size:12px;color:var(--muted);max-width:200px">' + esc((r.thesis || '').slice(0, 70)) + '</td>' +
           '<td class="mono-dim">' + esc(r.added_date) + '</td>' +
-          '<td>' + (showingHistory ? '' :
-            '<button type="button" class="btn-gh" data-partial="' + r.id + '" title="Record a partial exit outside the ladder">Partial</button> ' +
-            '<button type="button" class="btn-gh" data-exit="' + r.id + '">Exit</button>') + '</td>' +
+          '<td>' + actionBtns + '</td>' +
           '</tr>';
       });
       html += '</tbody></table></div>';
+      html += '<div class="tracker-cards">' + cardsHtml + '</div>';
       box.innerHTML = html;
       reveal(box);
 
@@ -1402,9 +1516,50 @@ var TV_ALIASES = (function () {
           });
         });
       });
+
+      // ratio=1 is the dismiss path: it's a no-op on price/quantity but
+      // still clears the stored current_price server-side, which is what
+      // actually unsticks the position — otherwise the same stale price
+      // keeps comparing against fresh quotes and re-flags forever.
+      box.querySelectorAll('[data-split]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var v = prompt(
+            'Detected ratio: ' + b.dataset.ratio + 'x. Confirm to adjust price and quantity, ' +
+            'or enter 1 to dismiss (if this wasn\'t actually a split):',
+            b.dataset.ratio
+          );
+          if (!v) return;
+          b.disabled = true;
+          api('/tracker', { method:'POST', body: JSON.stringify({
+            action: 'adjust_split', id: Number(b.dataset.split), ratio: Number(v)
+          }) }).then(function(r){
+            b.disabled = false;
+            if (!r.ok){ keyError(r.error); return; }
+            loadPositions();
+          });
+        });
+      });
+
+      var setCap = document.getElementById('setCapitalLink');
+      if (setCap) setCap.addEventListener('click', function(ev){
+        ev.preventDefault();
+        var v = prompt('Total trading capital (used only to compute open risk %):');
+        if (!v) return;
+        api('/tracker', { method:'POST', body: JSON.stringify({ action:'set_capital', capital: Number(v) }) })
+          .then(function(r){
+            if (!r.ok){ keyError(r.error); return; }
+            loadPositions();
+          });
+      });
     }
 
+    // Also called when a WRITE (not just login) 401s — the session cookie
+    // may simply have expired (48h TTL). Clearing the UI hint here keeps it
+    // honest with what the server actually thinks, rather than leaving a
+    // stale "logged in" state that fails on every subsequent action.
     function keyError(msg){
+      setLoggedIn(false);
+      var lo = el('keyLogout'); if (lo) lo.style.display = 'none';
       el('keybox').classList.add('on');
       el('keybox').querySelector('span').textContent = msg || 'Write refused.';
     }

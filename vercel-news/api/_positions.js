@@ -332,3 +332,118 @@ export function sizePosition({ capital, riskPct, entry, stop, side }) {
     max_loss: maxLoss,
   };
 }
+
+// ── portfolio risk ─────────────────────────────────────────────────────
+// Bands are the spec's own thresholds, not invented: GREEN <10%, AMBER
+// 10-15%, RED >15% of capital at open risk.
+//
+// Assumes a single-currency book. decoratePosition() already infers a
+// display currency per row (₹ for a .NS symbol, $ otherwise) for the rare
+// commodity/FX position — this function sums raw current_price/stop_loss
+// amounts with no currency awareness, so a portfolio actually mixing ₹ and
+// $ positions would sum them as if equal. Not fixed here: real multi-
+// currency support needs FX rates and per-currency risk pools, out of
+// proportion to a solo-admin tool whose tracked book is, in practice, NSE
+// equities. Stated so it isn't a silent surprise if that ever changes.
+//
+// A position is only counted toward open_risk_amount when current_price,
+// stop_loss AND remaining_quantity are all present and remaining_quantity
+// is positive — excluded, not coerced. A null stop_loss (allowed at
+// creation by validateStopTarget) would otherwise become 0 in JS arithmetic
+// and the position would silently contribute its full notional value as
+// "risk" instead of being left out. risk_excluded_count reports how many
+// active positions couldn't be measured, so the total is never presented
+// as more complete than it is.
+export function aggregatePortfolioRisk(positions, capital) {
+  let openRiskAmount = 0;
+  let excludedCount = 0;
+  let protectedCapital = 0;
+  let totalPositions = 0;
+  let protectedPositions = 0;
+  let compoundingPositions = 0;
+  let threatenedPositions = 0;
+  let largestRisk = 0;
+
+  for (const p of positions || []) {
+    if (p.status !== "active") continue;
+    totalPositions++;
+    if (p.battle_status === "PROTECTED") protectedPositions++;
+    if (p.battle_status === "COMPOUNDING") compoundingPositions++;
+    if (p.battle_status === "THREATENED") threatenedPositions++;
+    if (p.battle_status === "PROTECTED" || p.battle_status === "COMPOUNDING") {
+      protectedCapital += p.realized_pnl || 0;
+    }
+
+    const cur = p.current_price, stop = p.stop_loss, qty = p.remaining_quantity;
+    if (cur === null || cur === undefined || stop === null || stop === undefined
+        || qty === null || qty === undefined || qty <= 0) {
+      excludedCount++;
+      continue;
+    }
+    const risk = Math.abs(cur - stop) * qty;
+    openRiskAmount += risk;
+    if (risk > largestRisk) largestRisk = risk;
+  }
+
+  const hasCapital = typeof capital === "number" && capital > 0;
+  const openRiskPct = hasCapital ? round((openRiskAmount / capital) * 100, 2) : null;
+  const riskLevel = openRiskPct === null ? null
+    : openRiskPct < 10 ? "GREEN" : openRiskPct <= 15 ? "AMBER" : "RED";
+  const largestPositionRiskPct = openRiskAmount > 0 ? round((largestRisk / openRiskAmount) * 100, 2) : null;
+
+  return {
+    capital: hasCapital ? capital : null,
+    open_risk_amount: round(openRiskAmount, 2),
+    open_risk_pct: openRiskPct,
+    risk_level: riskLevel,
+    protected_capital: round(protectedCapital, 2),
+    total_positions: totalPositions,
+    protected_positions: protectedPositions,
+    compounding_positions: compoundingPositions,
+    threatened_positions: threatenedPositions,
+    largest_position_risk_pct: largestPositionRiskPct,
+    risk_excluded_count: excludedCount,
+  };
+}
+
+// ── corporate-action detection ──────────────────────────────────────────
+// A real split/bonus changes price and share count together; the quote
+// endpoint this tracker uses only ever reports the new price. Left
+// unguarded, entry_price (pre-split) vs current_price (post-split) reads as
+// a fabricated huge gain or loss, and the ladder/trailing-stop would then
+// act on that corrupted number. This only DETECTS the pattern — actually
+// adjusting a position's quantity/prices is a deliberate admin action
+// (adjustForSplit below), never automatic, because a detected ratio is a
+// guess about WHY the price moved, not a fact.
+//
+// ratio convention: new_quantity = old_quantity * ratio,
+// new_price = old_price / ratio. A forward 2:1 split (shares double, price
+// halves) is ratio=2; a 1:2 reverse split (shares halve, price doubles) is
+// ratio=0.5 — both directions are covered by the same factor list.
+const SPLIT_FACTORS = [2, 3, 1.5, 5, 10, 4, 0.5, 1 / 3, 1 / 1.5, 0.2, 0.1, 0.25];
+const SPLIT_TOLERANCE = 0.03; // within 3% of a common factor
+const SPLIT_MIN_MAGNITUDE = 0.35; // below this, it's just an ordinary trading move
+
+export function detectSplitRatio(oldPrice, newPrice) {
+  if (!oldPrice || !newPrice || oldPrice <= 0 || newPrice <= 0) return null;
+  const change = Math.abs(newPrice - oldPrice) / oldPrice;
+  if (change < SPLIT_MIN_MAGNITUDE) return null;
+  const observed = oldPrice / newPrice;
+  for (const factor of SPLIT_FACTORS) {
+    if (Math.abs(observed - factor) / factor <= SPLIT_TOLERANCE) return factor;
+  }
+  return null;
+}
+
+// Pure — computes the adjusted fields, does not touch the DB. Preserves
+// economic equivalence: original_quantity*entry_price is unchanged by a
+// forward split (more/fewer shares at proportionally less/more each).
+export function adjustForSplit(position, ratio) {
+  return {
+    entry_price: round(position.entry_price / ratio, 4),
+    stop_loss: position.stop_loss === null ? null : round(position.stop_loss / ratio, 4),
+    target_price: position.target_price === null ? null : round(position.target_price / ratio, 4),
+    original_quantity: round(position.original_quantity * ratio, 6),
+    remaining_quantity: round(position.remaining_quantity * ratio, 6),
+  };
+}
