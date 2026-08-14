@@ -4257,7 +4257,14 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
   transition:all .25s var(--ease)}
 .fbtn:hover{border-color:var(--line2);color:var(--text)}
 .fbtn.on{border-color:var(--lime);color:#000;background:var(--lime);font-weight:700}
-.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;-webkit-overflow-scrolling:touch}
+/* No -webkit-overflow-scrolling:touch: that's a pre-iOS-13 property for
+   momentum scroll on an overflow container, which modern WebKit already
+   does natively. Left on, it's a known cause of exactly the bug it caused
+   here — position:sticky descendants (table.t th below) losing their
+   stuck offset specifically on scroll-direction reversal, because the
+   legacy property forces its own compositing path that doesn't always
+   resync the sticky offset on fling/scroll-up. */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
 /* The signal log is 87 rows and growing, and `position:sticky` on its <th> did
    nothing: .tw sets overflow-x, which makes overflow-y compute to auto, so .tw
    IS the scroll container — and an unbounded container has no top edge to

@@ -41,10 +41,21 @@ export default async function handler(req, res) {
     // Split by engine. The header said "38 open setups" directly above a table
     // showing 3, because the header counted every engine and the table defaults
     // to the gated one. Both were right; only one was labelled.
+    // magic/magicmagic never set engine_version (they predate the v1/v2
+    // gate entirely), so a bare COALESCE(engine_version,'v1') silently
+    // dropped them into the same bucket as legacy pre-gate v1 signals —
+    // which the header deliberately hides by default. That's a mislabel,
+    // not an intentional exclusion: both engines carry real levels now
+    // (scanner.magic_levels) and are exactly as "current" as v2. Reclassify
+    // them into v2 for counting purposes here, at query time, so this is
+    // correct for the rows already in the ledger too, not just future ones.
+    const VERSION_CASE = `CASE WHEN signal_type IN ('magic','magicmagic') THEN 'v2'
+                                ELSE COALESCE(engine_version,'v1') END`;
+
     const cols0 = await columns();
     if (cols0.has("engine_version")) {
       const ov = await db().execute(
-        `SELECT COALESCE(engine_version,'v1') AS v, COUNT(*) AS n
+        `SELECT ${VERSION_CASE} AS v, COUNT(*) AS n
          FROM all_signals WHERE upper(COALESCE(status,''))='OPEN' GROUP BY 1`
       ).catch(() => ({ rows: [] }));
       out.open_by_version = Object.fromEntries(
@@ -55,7 +66,7 @@ export default async function handler(req, res) {
     const cols = await columns();
     if (cols.has("engine_version")) {
       const vr = await db().execute(
-        `SELECT COALESCE(engine_version,'v1') AS v, COUNT(*) AS n
+        `SELECT ${VERSION_CASE} AS v, COUNT(*) AS n
          FROM all_signals GROUP BY 1`
       ).catch(() => ({ rows: [] }));
       out.by_version = Object.fromEntries(
