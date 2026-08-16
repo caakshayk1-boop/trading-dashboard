@@ -3780,6 +3780,11 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fundcat-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .fundcat-h h3{font-size:17px;margin:0}
 .fundcat-b{color:var(--muted);font-size:13px;margin:4px 0 12px;max-width:74ch}
+.fund-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.fund-card{padding:16px}
+.fund-card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.fund-card-h strong{font-size:14px}
+.fund-card-f{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12px}
 
 /* Small-sample warning on the performance section. Gold, not red: this is not
    an error, it is a true statement about how little data there is. */
@@ -5594,28 +5599,61 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="ghost">{{ cat.screened }} screened</span>
     </div>
     <p class="fundcat-b">{{ cat.blurb }}</p>
-    <div class="tw">
-      <table class="t" style="min-width:640px">
-        <thead><tr>
-          <th scope="col">#</th><th scope="col">Fund</th><th scope="col" class="num">3Y</th><th scope="col" class="num">5Y</th>
-          <th scope="col" class="num">Worst fall (3y)</th><th scope="col" class="num">NAV</th><th scope="col"></th>
-        </tr></thead>
-        <tbody>
-          {% for f in cat.funds %}
-          <tr>
-            <td class="mono-dim">{{ loop.index }}</td>
-            <td><strong>{{ f.name }}</strong><br>
-                <span class="mono-dim" style="font-size:11px">{{ f.house }}</span></td>
-            <td class="num up">{{ f.r3 }}%</td>
-            <td class="num">{{ f.r5 if f.r5 is not none else '—' }}{{ '%' if f.r5 is not none else '' }}</td>
-            <td class="num dn">{{ f.dd3 if f.dd3 is not none else '—' }}{{ '%' if f.dd3 is not none else '' }}</td>
-            <td class="num mono-dim">{{ f.nav }}</td>
-            <td><a href="{{ f.url }}" target="_blank" rel="noopener"
-                   class="btn-gh" title="The NAV series this ranking was computed from">Data</a></td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+
+    {% if cat.facts %}
+    <div class="fund-note rv" style="margin:12px 0">
+      <strong>{{ cat.facts.best_5y.name }}</strong> leads the full screened set on 5-year return
+      ({{ cat.facts.best_5y.r5 }}%) &mdash; not always the same fund as the 3-year leader above.
+      The category spans {{ cat.facts.dispersion_5y }} points between best and worst 5-year performer
+      ({{ cat.facts.worst_5y.name }}, {{ cat.facts.worst_5y.r5 }}%).
+      {% if cat.facts.steadiest_top_quartile %}
+      Steadiest top-quartile fund: <strong>{{ cat.facts.steadiest_top_quartile.name }}</strong>
+      &mdash; {{ cat.facts.steadiest_top_quartile.volatility }}% volatility at a
+      {{ cat.facts.steadiest_top_quartile.r3 }}% 3-year return, the smoothest ride among funds that
+      still beat most of the category.
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Card grid, not a table — each fund is its own unit at this point,
+         with three CAGR bars (1Y/3Y/5Y, same .sd-sc/.bar component the trade
+         sheet already uses) rather than one same-shaped row among six. -->
+    <div class="fund-grid rv">
+      {% for f in cat.funds %}
+      <div class="card fund-card">
+        <div class="fund-card-h">
+          <div>
+            <strong>{{ f.name }}</strong><br>
+            <span class="mono-dim" style="font-size:11px">{{ f.house }}</span>
+          </div>
+          <a href="{{ f.url }}" target="_blank" rel="noopener" class="btn-gh"
+             title="The NAV series this ranking was computed from">Data</a>
+        </div>
+        <div class="sd-scores">
+          <div class="sd-sc">
+            <span class="k">1Y</span>
+            <span class="v">{{ f.r1 if f.r1 is not none else '—' }}{{ '%' if f.r1 is not none else '' }}</span>
+            <span class="bar"><i style="width:{{ f.bar_r1 }}%"></i></span>
+          </div>
+          <div class="sd-sc">
+            <span class="k">3Y</span>
+            <span class="v">{{ f.r3 }}%</span>
+            <span class="bar"><i style="width:{{ f.bar_r3 }}%"></i></span>
+          </div>
+          <div class="sd-sc">
+            <span class="k">5Y</span>
+            <span class="v">{{ f.r5 if f.r5 is not none else '—' }}{{ '%' if f.r5 is not none else '' }}</span>
+            <span class="bar"><i style="width:{{ f.bar_r5 }}%"></i></span>
+          </div>
+        </div>
+        <div class="fund-card-f">
+          <span class="mono-dim">Volatility <b style="color:var(--text)">{{ f.volatility if f.volatility is not none else '—' }}{{ '%' if f.volatility is not none else '' }}</b></span>
+          <span class="mono-dim">Worst fall (3y) <b class="dn">{{ f.dd3 if f.dd3 is not none else '—' }}{{ '%' if f.dd3 is not none else '' }}</b></span>
+          <span class="mono-dim">{% if f.percentile_r3 is not none %}Top {{ 100 - f.percentile_r3 }}% of category{% endif %}</span>
+          <span class="mono-dim">NAV {{ f.nav }}</span>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
   {% endif %}

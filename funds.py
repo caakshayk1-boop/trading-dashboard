@@ -160,6 +160,87 @@ def _cagr(series: list[tuple[date, float]], years: int):
     return round(((end_v / start) ** (1 / years) - 1) * 100, 2)
 
 
+def _volatility(series: list[tuple[date, float]], years: int = 3):
+    """Annualized stdev of monthly returns over the window — the ride behind
+    the CAGR number. Two funds can post the same 3Y return while compounding
+    completely differently; drawdown already shows one side of that (the
+    worst single stretch), this shows the other (how bumpy the whole ride
+    was). One NAV per calendar month (last observation in that month), not
+    daily — daily NAV noise from the fund's own valuation cycle would inflate
+    this past what an investor actually experiences holding month to month.
+    """
+    if not series:
+        return None
+    cutoff = series[-1][0] - timedelta(days=365 * years)
+    windowed = [(d, v) for d, v in series if d >= cutoff]
+    if len(windowed) < 60:
+        return None
+    monthly: dict[tuple[int, int], float] = {}
+    for d, v in windowed:
+        monthly[(d.year, d.month)] = v  # later date in the same month wins
+    vals = [monthly[k] for k in sorted(monthly.keys())]
+    if len(vals) < 12:
+        return None
+    rets = [(vals[i] / vals[i - 1] - 1) for i in range(1, len(vals)) if vals[i - 1] > 0]
+    if len(rets) < 11:
+        return None
+    mean = sum(rets) / len(rets)
+    var = sum((r - mean) ** 2 for r in rets) / (len(rets) - 1)
+    return round((var ** 0.5) * (12 ** 0.5) * 100, 1)
+
+
+def _bar_pct(cagr, cap: float = 30.0):
+    """Fill width for a CAGR bar, 0-100. 30% is the cap because it is a rare,
+    exceptional annual equity return — a fund at or above it shows a full
+    bar rather than the scale being stretched to accommodate one outlier and
+    making every ordinary 12-15% return look empty."""
+    if cagr is None:
+        return 0
+    return round(min(100.0, max(0.0, cagr / cap * 100)))
+
+
+def _percentile(value, population: list[float]):
+    """Where `value` sits among `population` — 100 means nothing in the
+    category's own screened set beat it, 0 means everything did. Turns an
+    isolated "14.2%" into "top of 23 screened," which is the actual context
+    a return number needs."""
+    if value is None or not population:
+        return None
+    below = sum(1 for x in population if x < value)
+    return round(below / len(population) * 100)
+
+
+def _category_facts(scored: list[dict]):
+    """Real, derived facts from the category's FULL screened population, not
+    just the top 3 published — a fund with the best 5Y return is not always
+    the top 3Y performer, and that gap is itself worth surfacing rather than
+    hidden by only ever showing the current-ranking-metric leaders."""
+    with_r5 = [f for f in scored if f.get("r5") is not None]
+    if not with_r5:
+        return None
+    best = max(with_r5, key=lambda f: f["r5"])
+    worst = min(with_r5, key=lambda f: f["r5"])
+
+    steadiest = None
+    with_vol = [f for f in scored if f.get("volatility") is not None and f.get("r3") is not None]
+    if with_vol:
+        r3_desc = sorted((f["r3"] for f in with_vol), reverse=True)
+        cut = r3_desc[max(0, len(r3_desc) // 4 - 1)]
+        top_quartile = [f for f in with_vol if f["r3"] >= cut]
+        if top_quartile:
+            steadiest = min(top_quartile, key=lambda f: f["volatility"])
+
+    return {
+        "best_5y":  {"name": best["name"],  "r5": best["r5"]},
+        "worst_5y": {"name": worst["name"], "r5": worst["r5"]},
+        "dispersion_5y": round(best["r5"] - worst["r5"], 2),
+        "steadiest_top_quartile": (
+            {"name": steadiest["name"], "volatility": steadiest["volatility"], "r3": steadiest["r3"]}
+            if steadiest else None
+        ),
+    }
+
+
 def _max_drawdown(series: list[tuple[date, float]], years: int = 3):
     """Worst peak-to-trough over the window. A 3-year CAGR with no drawdown
     beside it tells you the return and hides the ride."""
@@ -247,18 +328,33 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
                 "category": meta.get("scheme_category", label),
                 "nav": round(series[-1][1], 4),
                 "nav_date": series[-1][0].isoformat(),
+                "r1": (r1 := _cagr(series, 1)),
                 "r3": r3,
-                "r5": _cagr(series, 5),
+                "r5": (r5 := _cagr(series, 5)),
                 "dd3": _max_drawdown(series, 3),
+                "volatility": _volatility(series, 3),
+                "bar_r1": _bar_pct(r1),
+                "bar_r3": _bar_pct(r3),
+                "bar_r5": _bar_pct(r5),
                 # Deep link to the scheme's own AMFI-coded page. mfapi is the
                 # data source, so it is also the honest place to send someone
                 # to check the series this ranking was computed from.
                 "url": f"https://api.mfapi.in/mf/{f['schemeCode']}",
             })
         scored.sort(key=lambda x: x["r3"], reverse=True)
+
+        # Percentile against the category's OWN full screened population —
+        # computed before truncating to the top 3, and category_facts too,
+        # so a fund that's #1 on 5Y but not top-3 on 3Y still surfaces.
+        r3_population = [f["r3"] for f in scored]
+        for f in scored:
+            f["percentile_r3"] = _percentile(f["r3"], r3_population)
+        facts = _category_facts(scored)
+
         out.append({
             "key": key, "label": label, "blurb": blurb,
             "screened": len(scored), "funds": scored[:TOP_N],
+            "facts": facts,
         })
         log.info(f"{label}: {len(scored)} screened, top r3={scored[0]['r3'] if scored else '—'}")
 
