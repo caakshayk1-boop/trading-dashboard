@@ -5600,16 +5600,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <p class="fundcat-b">{{ cat.blurb }}</p>
 
-    {% if cat.facts %}
+    {% set facts = cat.get('facts') %}
+    {% if facts %}
     <div class="fund-note rv" style="margin:12px 0">
-      <strong>{{ cat.facts.best_5y.name }}</strong> leads the full screened set on 5-year return
-      ({{ cat.facts.best_5y.r5 }}%) &mdash; not always the same fund as the 3-year leader above.
-      The category spans {{ cat.facts.dispersion_5y }} points between best and worst 5-year performer
-      ({{ cat.facts.worst_5y.name }}, {{ cat.facts.worst_5y.r5 }}%).
-      {% if cat.facts.steadiest_top_quartile %}
-      Steadiest top-quartile fund: <strong>{{ cat.facts.steadiest_top_quartile.name }}</strong>
-      &mdash; {{ cat.facts.steadiest_top_quartile.volatility }}% volatility at a
-      {{ cat.facts.steadiest_top_quartile.r3 }}% 3-year return, the smoothest ride among funds that
+      <strong>{{ facts.best_5y.name }}</strong> leads the full screened set on 5-year return
+      ({{ facts.best_5y.r5 }}%) &mdash; not always the same fund as the 3-year leader above.
+      The category spans {{ facts.dispersion_5y }} points between best and worst 5-year performer
+      ({{ facts.worst_5y.name }}, {{ facts.worst_5y.r5 }}%).
+      {% if facts.get('steadiest_top_quartile') %}
+      Steadiest top-quartile fund: <strong>{{ facts.steadiest_top_quartile.name }}</strong>
+      &mdash; {{ facts.steadiest_top_quartile.volatility }}% volatility at a
+      {{ facts.steadiest_top_quartile.r3 }}% 3-year return, the smoothest ride among funds that
       still beat most of the category.
       {% endif %}
     </div>
@@ -5617,9 +5618,24 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
     <!-- Card grid, not a table — each fund is its own unit at this point,
          with three CAGR bars (1Y/3Y/5Y, same .sd-sc/.bar component the trade
-         sheet already uses) rather than one same-shaped row among six. -->
+         sheet already uses) rather than one same-shaped row among six.
+
+         Every NEW field (r1/volatility/bar_*/percentile_r3/facts) is read
+         via .get() — dict.get(), not Jinja attribute lookup — because this
+         environment uses StrictUndefined and the fund cache refreshes
+         weekly (fund_screen.yml): a payload cached by an OLDER build of
+         funds.py genuinely lacks these keys until its next rebuild, and
+         `f.r1 is not none` still raises on a truly MISSING key — only a
+         key that exists with value None passes that check silently. This
+         crashed the entire page build once already (2026-08-16, prod
+         cache still had the pre-upgrade 6-field schema) before this fix. -->
     <div class="fund-grid rv">
       {% for f in cat.funds %}
+      {% set r1 = f.get('r1') %}
+      {% set r5 = f.get('r5') %}
+      {% set dd3 = f.get('dd3') %}
+      {% set vol = f.get('volatility') %}
+      {% set pct = f.get('percentile_r3') %}
       <div class="card fund-card">
         <div class="fund-card-h">
           <div>
@@ -5632,24 +5648,24 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div class="sd-scores">
           <div class="sd-sc">
             <span class="k">1Y</span>
-            <span class="v">{{ f.r1 if f.r1 is not none else '—' }}{{ '%' if f.r1 is not none else '' }}</span>
-            <span class="bar"><i style="width:{{ f.bar_r1 }}%"></i></span>
+            <span class="v">{{ r1 if r1 is not none else '—' }}{{ '%' if r1 is not none else '' }}</span>
+            <span class="bar"><i style="width:{{ f.get('bar_r1', 0) }}%"></i></span>
           </div>
           <div class="sd-sc">
             <span class="k">3Y</span>
             <span class="v">{{ f.r3 }}%</span>
-            <span class="bar"><i style="width:{{ f.bar_r3 }}%"></i></span>
+            <span class="bar"><i style="width:{{ f.get('bar_r3', 0) }}%"></i></span>
           </div>
           <div class="sd-sc">
             <span class="k">5Y</span>
-            <span class="v">{{ f.r5 if f.r5 is not none else '—' }}{{ '%' if f.r5 is not none else '' }}</span>
-            <span class="bar"><i style="width:{{ f.bar_r5 }}%"></i></span>
+            <span class="v">{{ r5 if r5 is not none else '—' }}{{ '%' if r5 is not none else '' }}</span>
+            <span class="bar"><i style="width:{{ f.get('bar_r5', 0) }}%"></i></span>
           </div>
         </div>
         <div class="fund-card-f">
-          <span class="mono-dim">Volatility <b style="color:var(--text)">{{ f.volatility if f.volatility is not none else '—' }}{{ '%' if f.volatility is not none else '' }}</b></span>
-          <span class="mono-dim">Worst fall (3y) <b class="dn">{{ f.dd3 if f.dd3 is not none else '—' }}{{ '%' if f.dd3 is not none else '' }}</b></span>
-          <span class="mono-dim">{% if f.percentile_r3 is not none %}Top {{ 100 - f.percentile_r3 }}% of category{% endif %}</span>
+          {% if vol is not none %}<span class="mono-dim">Volatility <b style="color:var(--text)">{{ vol }}%</b></span>{% endif %}
+          <span class="mono-dim">Worst fall (3y) <b class="dn">{{ dd3 if dd3 is not none else '—' }}{{ '%' if dd3 is not none else '' }}</b></span>
+          {% if pct is not none %}<span class="mono-dim">Top {{ 100 - pct }}% of category</span>{% endif %}
           <span class="mono-dim">NAV {{ f.nav }}</span>
         </div>
       </div>
