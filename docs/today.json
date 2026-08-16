@@ -1,7 +1,7 @@
 {
- "build_id": "20260815T072745",
- "date": "2026-08-15",
- "date_str": "Saturday, August 15 2026",
+ "build_id": "20260816T073702",
+ "date": "2026-08-16",
+ "date_str": "Sunday, August 16 2026",
  "picks": [
   {
    "symbol": "SNOW",
@@ -350,14 +350,6 @@
    "price": 401.0,
    "sector": "Financial Services"
   },
-  "ABDL": {
-   "price": 627.7,
-   "sector": "Consumer Defensive"
-  },
-  "AEGISVOPAK": {
-   "price": 269.1,
-   "sector": "Energy"
-  },
   "AIAENG": {
    "price": 4482.7998,
    "sector": "Industrials"
@@ -366,6 +358,14 @@
    "price": 890.1,
    "sector": "Healthcare"
   },
+  "ASAHIINDIA": {
+   "price": 939.2,
+   "sector": "Consumer Cyclical"
+  },
+  "ASHOKLEY": {
+   "price": 171.64,
+   "sector": "Industrials"
+  },
   "BANKBARODA": {
    "price": 248.22,
    "sector": "Financial Services"
@@ -373,6 +373,10 @@
   "BANKINDIA": {
    "price": 144.1,
    "sector": "Financial Services"
+  },
+  "BDL": {
+   "price": 1398.0,
+   "sector": "Industrials"
   },
   "BHARTIARTL": {
    "price": 1992.1,
@@ -383,7 +387,7 @@
    "sector": "Real Estate"
   },
   "BRNUSD": {
-   "price": 88.59,
+   "price": 88.52,
    "sector": ""
   },
   "CANBK": {
@@ -391,24 +395,16 @@
    "sector": "Financial Services"
   },
   "CDSL": {
-   "price": 1350.0,
+   "price": 1344.4,
    "sector": "Financial Services"
   },
   "CEATLTD": {
-   "price": 3696.5,
+   "price": 3688.8,
    "sector": "Consumer Cyclical"
   },
   "CEMPRO": {
-   "price": 1237.0,
+   "price": 1298.8,
    "sector": "Industrials"
-  },
-  "CGCL": {
-   "price": 231.12,
-   "sector": "Financial Services"
-  },
-  "CHOICEIN": {
-   "price": 810.25,
-   "sector": "Financial Services"
   },
   "CHOLAFIN": {
    "price": 1894.4,
@@ -423,39 +419,47 @@
    "sector": "Basic Materials"
   },
   "CRISIL": {
-   "price": 4466.3999,
+   "price": 4475.8999,
    "sector": "Financial Services"
   },
   "DEEPAKNTR": {
    "price": 1723.2,
    "sector": "Basic Materials"
   },
+  "DIXON": {
+   "price": 14130.0,
+   "sector": "Technology"
+  },
+  "DLF": {
+   "price": 665.0,
+   "sector": "Real Estate"
+  },
+  "ECLERX": {
+   "price": 1897.0,
+   "sector": "Technology"
+  },
   "EICHERMOT": {
-   "price": 8100.0,
+   "price": 8066.5,
    "sector": "Consumer Cyclical"
   },
   "ESCORTS": {
-   "price": 3093.3999,
+   "price": 3113.7,
    "sector": "Industrials"
   },
   "FLUOROCHEM": {
    "price": 4737.7998,
    "sector": "Basic Materials"
   },
-  "GABRIEL": {
-   "price": 1447.9,
-   "sector": "Consumer Cyclical"
-  },
   "GRASIM": {
    "price": 3248.7,
    "sector": "Basic Materials"
   },
   "GVT&D": {
-   "price": 4304.7002,
+   "price": 4350.0,
    "sector": "Industrials"
   },
   "HCLTECH": {
-   "price": 1370.0,
+   "price": 1360.0,
    "sector": "Technology"
   },
   "HEG": {
@@ -474,28 +478,32 @@
    "price": 76.94,
    "sector": "Financial Services"
   },
+  "IPCALAB": {
+   "price": 1734.2,
+   "sector": "Healthcare"
+  },
+  "J&KBANK": {
+   "price": 155.48,
+   "sector": "Financial Services"
+  },
   "JSWDULUX": {
    "price": 3167.3999,
    "sector": ""
   },
-  "KARURVYSYA": {
-   "price": 331.75,
-   "sector": "Financial Services"
-  },
   "KIRLOSENG": {
-   "price": 2059.8999,
+   "price": 2100.1001,
    "sector": "Industrials"
+  },
+  "KPRMILL": {
+   "price": 1110.0,
+   "sector": "Consumer Cyclical"
   },
   "LAURUSLABS": {
    "price": 1787.3,
    "sector": "Healthcare"
   },
-  "LTF": {
-   "price": 306.3,
-   "sector": "Financial Services"
-  },
   "LUPIN": {
-   "price": 2235.0,
+   "price": 2250.3,
    "sector": "Healthcare"
   },
   "M&MFIN": {
@@ -503,7 +511,7 @@
    "sector": "Financial Services"
   },
   "MARICO": {
-   "price": 865.2,
+   "price": 864.45,
    "sector": "Consumer Defensive"
   },
   "MRPL": {
@@ -511,15 +519,15 @@
    "sector": "Energy"
   },
   "NATIONALUM": {
-   "price": 376.0,
+   "price": 400.5,
    "sector": "Basic Materials"
   },
   "NESTLEIND": {
-   "price": 1506.9,
+   "price": 1499.1,
    "sector": "Consumer Defensive"
   },
   "NGAS": {
-   "price": 2.715,
+   "price": 2.733,
    "sector": ""
   },
   "NIACL": {
@@ -543,7 +551,7 @@
    "sector": "Industrials"
   },
   "REDINGTON": {
-   "price": 346.0,
+   "price": 334.05,
    "sector": "Technology"
   },
   "SBIN": {
@@ -551,11 +559,11 @@
    "sector": "Financial Services"
   },
   "SHRIRAMFIN": {
-   "price": 1122.0,
+   "price": 1132.3,
    "sector": "Financial Services"
   },
   "SILVER": {
-   "price": 64.825,
+   "price": 64.988,
    "sector": ""
   },
   "SONACOMS": {
@@ -563,7 +571,7 @@
    "sector": "Consumer Cyclical"
   },
   "SPLPETRO": {
-   "price": 716.65,
+   "price": 726.55,
    "sector": "Basic Materials"
   },
   "SUNPHARMA": {
@@ -574,267 +582,262 @@
    "price": 1703.8,
    "sector": "Industrials"
   },
-  "TORNTPHARM": {
-   "price": 4914.5,
-   "sector": "Healthcare"
-  },
   "WOCKPHARMA": {
-   "price": 1912.9,
+   "price": 1932.7,
    "sector": "Healthcare"
   }
  },
  "desk": {
   "chess": {
-   "title": "Opening: Italian Game Basics",
-   "body": "1.e4 e5 2.Nf3 Nc6 3.Bc4. White targets f7, the weakest square in Black's position. Giuoco Piano (3...Bc5) leads to rich middlegame. Learn: castle early, play d3, develop bishop to e3, then push d4 for centre control. Safe, instructive, good for learning. Magnus Carlsen played this at the top level.",
-   "index": 17,
+   "title": "Thinking Process",
+   "body": "Every move: 1. What did my opponent just do? (threats?) 2. What are my candidate moves? (at least 2-3) 3. Calculate each candidate 2-3 moves deep. 4. Use LPDO check. 5. Make the move. Don't play on impulse. Even 30 seconds of structured thinking eliminates 80% of blunders. This process is the difference between 800 and 1200 Elo.",
+   "index": 18,
    "total": 20
   },
   "wisdom": {
-   "title": "Being a Better Husband",
-   "body": "The best fathers are also good partners. Your daughter watches how you treat her mother. That becomes her template for relationships. Simple acts: say thank you. Notice when your partner is tired. Take something off her plate without being asked. Ask about her day and actually listen. Small but it compounds.",
-   "index": 7,
+   "title": "On Anger",
+   "body": "Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive.",
+   "index": 8,
    "total": 18
   },
   "book": {
-   "book": "The 4-Hour Work Week",
-   "author": "Tim Ferriss",
-   "chapter": "The 80/20 of Everything: Most Effort Is Wasted",
-   "lesson": "Ferriss's most useful contribution: ruthless application of Pareto's 80/20 principle to everything. 20% of customers generate 80% of revenue \u2014 and usually 120% of headaches. 20% of tasks generate 80% of results. 20% of foods cause 80% of health problems for a given person. The exercise: list every customer, task, and activity. Identify the 20% producing 80% of value. Do more of that. Then identify the 20% consuming 80% of your time and energy with minimal value. Eliminate, automate, or delegate it. Most knowledge workers are busy with the bottom 80% and neglect the top 20%.",
-   "key_quote": "Being busy is not the same as being productive. Most of what we do doesn't matter nearly as much as we think it does.",
-   "action": "List your 10 most frequent work activities. Rank by impact. The bottom 3 \u2014 can any be eliminated, automated, or delegated?",
-   "index": 43,
+   "book": "Poor Charlie's Almanack",
+   "author": "Charlie Munger",
+   "chapter": "Mental Models: Think in Multiple Frameworks",
+   "lesson": "Charlie Munger's approach to decision-making: build a 'latticework of mental models' from multiple disciplines. The person who only knows accounting sees every problem through accounting. The person who knows psychology, economics, biology, physics, and history sees the problem in full. Munger's rule: you need 80-90 mental models to think well. The key ones: compound interest (mathematics), evolution (biology), supply and demand (economics), confirmation bias (psychology), systems thinking (engineering). His most important: 'I never allow myself to have an opinion I can't defend with the strongest arguments on the other side.'",
+   "key_quote": "The person with one framework is fragile. The person with many frameworks is antifragile \u2014 they see what others miss.",
+   "action": "Pick one field outside finance to study this month: psychology, history, or biology. Look for one principle that applies directly to your FP&A work.",
+   "index": 44,
    "total": 48,
    "crux": [
-    "DEAL: Definition, Elimination, Automation, Liberation.",
-    "The New Rich optimise for time and mobility, not for accumulation then retirement.",
-    "Deferred-life planning is the default and it is a bad plan.",
-    "Dreamlining: cost out the specific life you want. It is usually cheaper than assumed.",
-    "Relative income (per hour) beats absolute income.",
-    "Pareto: 80% of results come from 20% of inputs. Find and cut the rest.",
-    "Parkinson's Law: work expands to fill the time available. Short deadlines force focus.",
-    "Use both together \u2014 do only the important, and give it very little time.",
-    "Selective ignorance: a low-information diet is a productivity intervention.",
-    "Batch everything. Email, calls, errands. Context switching is the tax.",
-    "Automate with clear rules and delegated authority, or you've just added coordination work.",
-    "Build a muse: a product with recurring revenue that doesn't need your presence.",
-    "Test demand before building anything. Cheap ads before inventory.",
-    "Mini-retirements beat one long retirement at the end.",
-    "Fear-setting: define the worst case in detail and it usually shrinks."
+    "Build a latticework of mental models from many disciplines. One-model thinking distorts every problem.",
+    "To the man with a hammer, every problem looks like a nail. Most professionals are that man.",
+    "Invert, always invert. Ask how to fail, then avoid that.",
+    "Know your circle of competence and stay inside it. The edge is knowing where the edge ends.",
+    "Incentives explain most behaviour. Look at the incentive before assuming intent.",
+    "The psychology of misjudgement runs about 25 standard biases. Learn them as a checklist.",
+    "Opportunity cost is the correct filter for every decision.",
+    "Sit on your hands. Great opportunities are rare; act rarely and heavily.",
+    "Avoid the three big destroyers: alcohol, leverage, and envy. Envy is the stupidest.",
+    "Multiply models: compound interest, scale, backup systems, breakpoints, critical mass.",
+    "A great business at a fair price beats a fair business at a great price.",
+    "Read constantly. Neither Munger nor Buffett knows a wise person who doesn't read all the time.",
+    "Be reliable. Unreliability cancels every virtue you have.",
+    "Take a simple idea and take it seriously. That is the whole method."
    ],
    "learnings": [
-    "Being busy is often a form of avoidance.",
-    "Cutting the wrong work beats optimising it.",
-    "Deadlines are a focus tool, not just a commitment.",
-    "Automation without decision rules just moves the work."
+    "Avoiding stupidity beats seeking brilliance, and it is far more achievable.",
+    "Inversion surfaces risks that forward thinking never reaches.",
+    "Most bad decisions come from one model applied where it doesn't fit.",
+    "Patience is a strategy, not a personality trait."
    ],
    "examples": [
-    "Ferriss cut 98% of his client list, kept the top 5, and income rose while hours dropped from 80 to 15.",
-    "BrainQUICKEN was validated with small Google Ads spends before stock was ordered.",
-    "Fear-setting a trip to London: worst case listed, all reversible. He went."
+    "Munger's Costco analysis combines scale economics, incentive design, and psychology at once \u2014 no single-discipline read explains it.",
+    "See's Candies: Berkshire paid up for brand pricing power in 1972 and it returned over $2bn on a $25m outlay.",
+    "Munger rebuilt from a divorce, no money, and the death of his 9-year-old son to become a billionaire. Reliability compounded."
    ],
    "adapt": [
-    "The bots are the muse infrastructure \u2014 they run whether you're interviewing or asleep.",
-    "80/20 the content: which posts actually drive followers? Cut the rest.",
-    "Batch Telegram and email into two windows. This is the same fix Deep Work prescribes.",
-    "Fear-set the Dubai move: worst case is a return to KL with more experience. Reversible."
+    "Invert the Dubai plan: what guarantees no offer by mid-2026? Then remove those causes.",
+    "Circle of competence: Indian equities and FP&A. Polymarket stays paper-only until 200 trades say otherwise.",
+    "Check incentives before trusting any financial content, including your own.",
+    "Sit on your hands when the regime filter says no. Not trading is a position."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Space Is A Feature",
-    "body": "Empty space in a room is not wasted space, the same way white space on a page is not wasted paper. Both exist so the things that matter can be seen.",
-    "action": "Remove one item from your most crowded shelf. Add nothing back.",
-    "index": 9,
+    "title": "The Someday Pile",
+    "body": "'I'll fix it someday.' 'I'll read it someday.' Someday is not a date. The pile is not a to-do list, it is a monument to intentions you have already declined.",
+    "action": "Give every someday item a date this month, or let it go today.",
+    "index": 10,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Remember The Detail",
-    "body": "Their daughter's exam. Their father's surgery. Ask next time. This is the single highest-return social habit and almost nobody keeps notes.",
-    "action": "Write down one personal detail after your next conversation.",
-    "index": 15,
+    "title": "Ramadan Awareness",
+    "body": "Do not eat, drink, or smoke in public during fasting hours. Schedule meetings earlier. Expect shortened hours. Wishing colleagues Ramadan Kareem costs nothing and is noticed.",
+    "action": "Check the Islamic calendar. Know what month it is.",
+    "index": 16,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Enough Is A Number",
-    "body": "Without a defined 'enough', more is the only direction and the target moves with every increment. AED 30K/month is a number. Undefined ambition is not a goal, it is a treadmill.",
-    "action": "Write your 'enough' figure. Date it. Revisit in a year.",
-    "index": 13,
+    "title": "Attention Is The Life",
+    "body": "What you pay attention to is, quite literally, your experience of being alive. Spend it on what you would choose to have lived through.",
+    "action": "Audit yesterday's screen time. That number is a portion of your life.",
+    "index": 14,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Circle Of Competence",
-    "body": "The boundary matters more than the size. Knowing precisely where your knowledge ends is worth more than extending it slightly. Most large losses happen just outside the edge.",
-    "action": "Draw your circle. Name one thing just outside it you have been treating as inside.",
-    "index": 5,
+    "title": "Margin Of Safety",
+    "body": "Build the bridge for 30 tonnes and drive 10 across it. Applies to leverage, deadlines, cash buffers, and assumptions in a model. The error is always in the direction you did not plan for.",
+    "action": "Add 50% buffer to your next estimate. Do not tell yourself it is padding.",
+    "index": 6,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0627 \u0623\u0639\u0631\u0641",
-    "translit": "maa a'rif",
-    "meaning": "I don't know",
-    "use": "Say it plainly. Pretending to know is worse in every culture, and obvious in all of them.",
-    "index": 21,
+    "script": "\u0623\u062a\u0643\u0644\u0645 \u0639\u0631\u0628\u064a \u0634\u0648\u064a",
+    "translit": "atakallam 'arabi shwaya",
+    "meaning": "I speak a little Arabic",
+    "use": "Disarming and appreciated. The effort matters far more than the fluency.",
+    "index": 22,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Number Sense: Orders Of Magnitude",
-    "body": "Is that number plausible? A company with 200 staff and AED 4bn revenue implies AED 20m per head \u2014 almost certainly wrong. This check catches more errors than any other.",
-    "action": "Sanity-check five figures by per-unit magnitude.",
-    "index": 17,
+    "title": "Write The Email In Three Lines",
+    "body": "Context, ask, deadline. Long emails do not get read, they get postponed. Brevity is a service to the reader and it gets you answers faster.",
+    "action": "Rewrite your longest pending email in three lines.",
+    "index": 18,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Walking Is Underrated",
-    "body": "8,000 steps a day is associated with a large mortality reduction versus 4,000, and the curve is steepest at the low end. The gains come from moving more, not from moving harder.",
-    "action": "Add one 15-minute walk. After a meal is best for glucose.",
-    "index": 7,
+    "title": "Sitting Is Not The New Smoking, But",
+    "body": "Prolonged uninterrupted sitting impairs glucose handling regardless of whether you exercised that day. The fix is frequency of interruption, not total exercise volume.",
+    "action": "Stand or walk 2 minutes every 30. Set a timer for one work block.",
+    "index": 8,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Warren Buffett",
-   "quote": "Rule No.1: Never lose money. Rule No.2: Never forget Rule No.1.",
-   "index": 68,
+   "name": "Bill Gates",
+   "quote": "If you can't make it good, at least make it look good.",
+   "index": 69,
    "total": 96
   },
   "lesson": {
-   "tradition": "Focus",
-   "lesson": "Beware the barrenness of a busy life.",
-   "source": "Socrates"
+   "tradition": "Time",
+   "lesson": "Time is the most valuable thing a man can spend.",
+   "source": "Theophrastus"
   },
   "case": {
-   "title": "Flipkart vs Amazon India",
-   "story": "Flipkart was winning India. Then Amazon entered with $5B, same-day delivery, and superior tech. Walmart bought Flipkart for $16B \u2014 a defensive acquisition.",
-   "lesson": "Speed of execution beats being first. Amazon wasn't first in India, but they executed faster. Being early means nothing if you don't keep innovating."
+   "title": "Berkshire Hathaway: Float as a Business Model",
+   "story": "Buffett uses insurance float \u2014 money collected in premiums before claims \u2014 as free capital to invest. $160B float generates investment returns at zero cost.",
+   "lesson": "The best business models create free capital. Study how your industry's best companies actually make money \u2014 it's rarely where you think."
   },
   "fpna": {
-   "title": "Variance Analysis",
-   "body": "Volume variance + Price/Rate variance + Mix variance = Total variance. Always decompose before presenting.",
-   "index": 4,
+   "title": "Working Capital",
+   "body": "DSO + DIO \u2013 DPO = Cash Conversion Cycle. Cutting CCC by 5 days can free millions.",
+   "index": 5,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 5: Culture + People",
-   "body": "The best CFOs build finance teams that the business trusts. Hire people better than you. Create a learning culture. A CFO who hoards information creates a bottleneck. One who shares insight creates leverage.",
-   "index": 10,
+   "title": "Dubai FC Reality",
+   "body": "AED 30K+ FC roles at ADNOC, Emirates, MAF, DP World: they want Big 4 background OR 8+ years in a listed company + CA/ACCA + ERP experience. Your edge: FP&A depth + IFRS knowledge + Power BI automation. Highlight cost savings you drove.",
+   "index": 11,
    "total": 15
   },
   "money_hack": {
-   "title": "Auto-Sweep FD",
-   "body": "Link savings to sweep FD. Idle cash earns FD rates automatically."
+   "title": "Direct Funds Only",
+   "body": "Regular mutual funds cost 1\u20131.5% more per year. Over 20 years = 30% of corpus gone."
   },
   "dubai": {
-   "title": "Free zone vs mainland, in one line",
-   "body": "A free-zone entity is 100% foreign-owned, tax-advantaged and restricted to trading within its zone or abroad. A mainland entity can trade anywhere in the UAE and pays the 9%. Groups run both, and the intercompany between them is where the FP&A work lives.",
-   "targets": "If you can explain this cleanly, you are ahead of most candidates.",
-   "action_label": "Say it",
-   "action": "Practise the explanation in 30 seconds. It comes up constantly.",
-   "index": 17,
+   "title": "Six weeks, not six months",
+   "body": "Government-linked groups take three to six months from application to offer. Private groups take four to eight weeks. Applying only to the first kind and then reading the silence as rejection is the most common way this search dies.",
+   "targets": "Run both pipelines at once. The fast one funds the patience for the slow one.",
+   "action_label": "Track it",
+   "action": "One sheet: company, date applied, stage, next action, date of next action.",
+   "index": 18,
    "total": 30
   },
   "daughter": {
    "months": 7,
-   "days": 233,
+   "days": 234,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Read 10 pages of non-fiction daily. 10 \u00d7 365 = 12 books/year.",
+  "productivity": "Respond to messages at set times. Real-time response is a myth.",
   "father": [
    {
-    "title": "Get down on the floor",
-    "do": "Ten minutes of tummy-adjacent floor time where you are lying at her eye level, not looming above.",
-    "why": "Physical perspective changes the interaction from supervision to companionship. It also builds the core strength that precedes crawling and sitting unsupported."
+    "title": "Introduce one new texture",
+    "do": "Let her touch something unfamiliar and safe \u2014 a cold spoon, a rough towel, wet cloth.",
+    "why": "Sensory variety builds neural discrimination. At this age the mouth is a primary sense organ, so expect it to be tasted; choose accordingly."
    },
    {
-    "title": "Name the feeling, not the behaviour",
-    "do": "When she cries, say what she is feeling: 'you are tired' or 'that frightened you.'",
-    "why": "She cannot parse it yet. You are building the habit in yourself \u2014 parents who label emotions early keep doing it at three and at thirteen, which is when it matters."
+    "title": "Sing badly and often",
+    "do": "One song, daily, the same one. Tune is irrelevant.",
+    "why": "Melody carries language patterns \u2014 rhythm, stress, phrase boundaries \u2014 more clearly than speech. She is not judging the singing."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Syadvada",
-    "translation": "Conditioned assertion \u2014 'in some respect'",
-    "teaching": "Every claim is true only under stated conditions. Jain logic prefixes assertions with 'in some respect' to keep the conditions visible.",
-    "apply": "Attach the assumption to the forecast, out loud: 'growth is 12% \u2014 in the respect that the two new stores open in Q3.' Half of forecasting disputes are actually undeclared conditions."
+    "term": "Kshama",
+    "translation": "Forgiveness, asked and given",
+    "teaching": "Once a year, at Michchhami Dukkadam, Jains ask forgiveness of everyone they may have harmed \u2014 regardless of whether they feel at fault.",
+    "apply": "The ritual removes the negotiation over who was more wrong. Do not wait for the annual version: close a grudge this week without settling the scoreboard first."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Speech",
-    "translation": "Truthful, useful, timely, kind",
-    "teaching": "The test has four parts, and speech must pass all of them. True but cruel fails. True and kind but badly timed also fails.",
-    "apply": "Before delivering hard feedback, run all four. Most feedback that lands badly is true and useful but fails on timing."
+    "term": "Beginner's Mind",
+    "translation": "Shoshin",
+    "teaching": "'In the beginner's mind there are many possibilities; in the expert's there are few.' Expertise narrows the field of what you consider.",
+    "apply": "In your area of deepest expertise, ask the question you would find embarrassing to ask. Ten years in one industry is where assumptions calcify."
    }
   ],
   "spanish": [
    {
-    "word": "el beb\u00e9",
-    "meaning": "the baby",
-    "es": "El beb\u00e9 est\u00e1 aprendiendo a sentarse.",
-    "en": "The baby is learning to sit up.",
+    "word": "comer",
+    "meaning": "to eat",
+    "es": "Ya empieza a comer s\u00f3lidos.",
+    "en": "She is starting to eat solids.",
     "tag": "Family"
    },
    {
-    "word": "la cuenta",
-    "meaning": "the bill / account",
-    "es": "La cuenta, por favor.",
-    "en": "The bill, please.",
+    "word": "todav\u00eda no",
+    "meaning": "not yet",
+    "es": "Todav\u00eda no he terminado.",
+    "en": "I have not finished yet.",
     "tag": "Everyday"
    }
   ],
   "vocab": [
    {
-    "word": "Tantamount",
-    "say": "TAN-tuh-mownt",
-    "meaning": "Equivalent in effect to.",
-    "example": "Approving that is tantamount to reopening the budget.",
-    "note": "Names the real consequence of a decision people are framing as minor."
+    "word": "Salience",
+    "say": "SAY-lee-uhns",
+    "meaning": "The quality of being most noticeable or important.",
+    "example": "The salience of the cash line rose sharply after the covenant test.",
+    "note": "Noun form of salient. Useful when describing shifting board attention."
    },
    {
-    "word": "Obviate",
-    "say": "OB-vee-ayt",
-    "meaning": "To remove the need for.",
-    "example": "Automating the match obviates the manual review.",
-    "note": "Stronger and more precise than 'reduces'. It means the need disappears entirely."
+    "word": "Tenuous",
+    "say": "TEN-yoo-uhs",
+    "meaning": "Weak; barely holding together.",
+    "example": "The link between the campaign and the sales lift is tenuous.",
+    "note": "Precise way to challenge a claim without calling it wrong."
    }
   ],
   "speaking": {
-   "title": "Lose the apology",
-   "drill": "Speak for two minutes without 'sorry', 'just', or 'I might be wrong but'.",
-   "why": "Hedging language before a fact invites challenge to the fact. Reserve qualifiers for genuine uncertainty."
+   "title": "Record and listen back",
+   "drill": "Record 60 seconds answering 'why do you want to be a CFO?'. Listen once for content, once for delivery only.",
+   "why": "Almost nobody does this, and it is the single fastest improvement available. You will hear things no one will tell you."
   },
   "interview_tech": [
    {
-    "q": "What is your WACC and how would you set the hurdle rate for a new store?",
-    "a": "WACC = cost of equity \u00d7 equity weight + after-tax cost of debt \u00d7 debt weight. Cost of equity via CAPM: risk-free rate plus beta times equity risk premium, with a country risk premium for emerging markets. But do not use group WACC as the store hurdle \u2014 a new store in a new market is riskier than the average of the existing business. Add a premium and be explicit about it. The common error is a single group hurdle applied to everything, which systematically over-invests in risky projects and under-invests in safe ones.",
-    "who": "Emaar \u00b7 Majid Al Futtaim \u00b7 IKEA"
+    "q": "How do you evaluate a capex request for store refurbishment versus a new store?",
+    "a": "Both need incremental cash flow, but the counterfactual differs. For a new store, the baseline is zero. For a refurbishment, the baseline is the store's declining trajectory without investment \u2014 so the benefit is the uplift over that decline, not over today. People systematically overstate refurbishment returns by comparing post-refit sales to pre-refit sales, which double-counts the natural trend and any category resets. Ask for the do-nothing case in writing.",
+    "who": "Marks & Spencer \u00b7 Landmark Group"
    },
    {
-    "q": "Your ERP implementation is running three months late. What do you tell the steering committee?",
-    "a": "The date, the cause, the options with costs, and your recommendation. Be specific about which workstream is late and why \u2014 usually data migration or the volume of unresolved customisation requests, not the software. Present the real choice: go live late and clean, or on time with manual workarounds and a defined remediation plan. Quantify the workaround cost in FTE months. Having led D365 across two countries, the credible line is that data quality determines the date more than configuration does.",
-    "who": "Your own D365 experience"
+    "q": "What is the one number you would put on a retail CEO's daily dashboard?",
+    "a": "Like-for-like sales versus plan, with gross margin rate alongside it. One without the other is dangerous \u2014 sales up on margin collapse is a discount habit forming, and margin up on sales collapse is a range problem. If forced to a single figure, gross profit versus plan, because it moves only when something real happens. Everything else \u2014 footfall, conversion, basket, density \u2014 is diagnostic detail you reach for once that number moves.",
+    "who": "Retail CEOs everywhere"
    }
   ],
   "interview_soft": [
    {
-    "q": "The board pushes back hard on your numbers in front of everyone. What do you do?",
-    "a": "Do not defend and do not fold. Separate the challenge into fact and judgement. If they have spotted a factual error, concede immediately and precisely \u2014 'you are right, that is the restated base, I will recirculate by Thursday.' Credibility survives errors; it does not survive defensiveness. If it is a judgement call, state your assumption, the sensitivity, and offer the alternative case. Never argue methodology in the room; take it offline with the one director who raised it.",
-    "who": "Any listed board"
+    "q": "Describe a time you had to deliver bad news to senior stakeholders.",
+    "a": "Lead with the structure you used, because that is the skill. Bad news goes: the number, the cause, the impact, the plan, the ask. No preamble. Deliver it early even when incomplete \u2014 'here is what I know now and what I will know Friday' beats a complete answer a week late. Give a specific example with the actual figure and what you did next. The tell they look for: did you surface it or did someone else find it.",
+    "who": "Amazon \u00b7 Emaar \u00b7 Nestl\u00e9"
    },
    {
-    "q": "An employee asks you to approve an expense that is within policy but clearly wrong. What now?",
-    "a": "They are testing whether you hide behind rules. Policy is a floor, not a ceiling. Approve or reject on the substance, explain the reasoning to the person directly, and then fix the policy so the next person is not in the same position. If it involves a senior person, the answer does not change \u2014 that is precisely when it counts. Say plainly that you would escalate to the audit committee if pressured to approve something you believe is wrong.",
-    "who": "Any group with a code of conduct"
+    "q": "Why should we hire you over a candidate with Big Four and listed-company experience?",
+    "a": "Do not disparage the alternative. Frame the trade: audit teaches you to verify what happened; operating finance teaches you to change what happens next. Then be specific about what you own that they do not \u2014 a live multi-country P&L, an ERP implementation you led rather than advised on, and store-level decisions you made and were held to. End with the honest gap and how you would close it. Confidence with a named weakness beats confidence alone.",
+    "who": "Every shortlist"
    }
   ]
  }
