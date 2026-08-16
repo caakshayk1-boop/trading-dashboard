@@ -1,7 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { simulateWallet, tierFor, gradeMultiplier, CAPITAL, TIERS } from "../api/_paper_wallet.js";
-import { badgeOf } from "../api/_db.js";
+// From _badge.js specifically, not _db.js — this test runs via plain
+// `node --test` with no npm install in newspaper.yml's "Position tracker
+// tests" CI step, and _db.js's top-level @libsql/client import would fail
+// there with ERR_MODULE_NOT_FOUND. See _badge.js's own comment.
+import { badgeOf } from "../api/_badge.js";
 
 function row(overrides) {
   return {

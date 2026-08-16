@@ -60,26 +60,11 @@ export async function optional(col, table = "all_signals") {
   return cols.has(col) ? col : `NULL AS ${col}`;
 }
 
-const WIN = new Set(["TARGET_HIT", "T1_HIT", "T2_HIT", "TP1_HIT", "TP2_HIT", "PROFIT"]);
-const LOSS = new Set(["SL_HIT", "STOPPED", "STOP_HIT", "LOSS"]);
-// A trade that ran its course and exited on a time-based rule, or a signal
-// that simply never triggered before its window closed — a real, resolved
-// outcome, not a withdrawal. Was previously falling through to "cancelled"
-// alongside VOID/CANCELLED (genuinely-withdrawn signals), which hid 136 real
-// trade outcomes behind the same label as 53 signals that never happened.
-const EXPIRED = new Set(["TIME_STOP", "EXPIRED"]);
-
-// Mirrors fetch_alert_log() in newspaper.py so the live layer and the daily
-// static build never disagree about what counts as a win.
-export function badgeOf(status, lifecycle) {
-  const s = str(status).toUpperCase();
-  const lc = str(lifecycle).toUpperCase();
-  if (WIN.has(s) || WIN.has(lc)) return "win";
-  if (LOSS.has(s) || LOSS.has(lc)) return "loss";
-  if (s === "OPEN" || lc === "OPEN") return "open";
-  if (EXPIRED.has(s) || EXPIRED.has(lc)) return "expired";
-  return "cancelled"; // VOID, CANCELLED, and any unrecognized status
-}
+// Moved to _badge.js (zero imports, needed by vercel-news/test/*.test.js —
+// see that file's own comment for why). Re-exported here so every existing
+// `import { badgeOf } from "./_db.js"` across the API routes keeps working
+// unchanged.
+export { badgeOf } from "./_badge.js";
 
 // Mirrors _unit() in standalone_scan.py. The ledger holds NSE equities in
 // rupees alongside commodities and FX quoted in dollars, and the table rendered
