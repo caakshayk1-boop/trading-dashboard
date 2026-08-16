@@ -1232,10 +1232,11 @@ var TV_ALIASES = (function () {
       loadPositions();
       loadSip();
       loadLongTerm();
+      loadPaperWallet();
 
       var lr = el('liverefresh');
       if (lr) lr.addEventListener('click', function(){
-        loadSignals(); loadStats(); loadPositions(); loadSip();
+        loadSignals(); loadStats(); loadPositions(); loadSip(); loadPaperWallet();
       });
 
       // Deep link: /day/2026-07-31 opens straight into that day's archive.
@@ -1551,6 +1552,112 @@ var TV_ALIASES = (function () {
             loadPositions();
           });
       });
+    }
+
+    /* ═══════ paper wallet ═══════
+       Lives on /api/signals?wallet=1, not its own route file — see the
+       comment in vercel-news/api/signals.js: this Vercel project sits
+       exactly at the free-plan's 12-function cap, and a 13th route file
+       silently broke the whole deployment with no visible error. */
+    function loadPaperWallet(){
+      var box = el('paperWalletLive');
+      if (!box) return;
+      api('/signals?wallet=1').then(function(j){
+        if (!j.ok){ box.innerHTML = '<div class="empty">Could not load the wallet: ' + esc(j.error) + '</div>'; return; }
+        renderPaperWallet(j);
+      });
+    }
+
+    // How full a tier is relative to ITS OWN cap, not the global one — a
+    // tier sitting at 90% of its 20% category cap is genuinely stretched
+    // even though that is only 18% of the whole wallet.
+    function tierRiskClass(deployedPct, capPct){
+      if (!capPct) return 'rk-low';
+      var ratio = deployedPct / (capPct * 100);
+      if (ratio >= 0.9) return 'rk-high';
+      if (ratio >= 0.6) return 'rk-medium';
+      return 'rk-low';
+    }
+
+    var WALLET_TIER_ORDER = ['long', 'swing', 'hf'];
+
+    function renderPaperWallet(j){
+      var box = el('paperWalletLive');
+      var w = j.wallet, cats = j.categories;
+
+      var kpi = '<div class="kpi-row rv" style="margin-bottom:16px">' +
+        '<div class="kpi"><div class="v">' + money(w.deployed_amount) + '</div><div class="k">Deployed (' + fmt(w.deployed_pct, 1) + '%)</div></div>' +
+        '<div class="kpi"><div class="v">' + money(w.cash_amount) + '</div><div class="k">Cash (' + fmt(w.cash_pct, 1) + '%)</div></div>' +
+        '<div class="kpi"><div class="v ' + (w.realized_pnl > 0 ? 'up' : w.realized_pnl < 0 ? 'dn' : '') + '">' +
+          (w.realized_pnl > 0 ? '+' : '') + money(w.realized_pnl) + '</div><div class="k">Realized P&amp;L</div></div>' +
+        '<div class="kpi"><div class="v">' + (w.win_rate === null ? '—' : fmt(w.win_rate, 1) + '%') +
+          '</div><div class="k">Win rate (' + w.closed_trades + ' closed)</div></div>' +
+        '<div class="kpi"><div class="v">' + j.trades.length + '</div><div class="k">Trades sized</div></div>' +
+        '</div>';
+
+      var catBars = WALLET_TIER_ORDER.map(function(k){
+        var c = cats[k];
+        if (!c) return '';
+        return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">' +
+          '<span class="rk ' + tierRiskClass(c.deployed_pct, c.cap_pct) + '" style="min-width:130px;text-align:center">' +
+            esc(c.label) + '</span>' +
+          '<span class="mono-dim" style="font-size:12px">' + money(c.deployed_amount) + ' / ' + money(c.cap_amount) +
+          ' &middot; ' + fmt(c.deployed_pct, 1) + '% of wallet (cap ' + fmt(c.cap_pct * 100, 0) + '%)</span>' +
+          '</div>';
+      }).join('');
+
+      // The rule table itself, rendered from the SAME numbers the backend
+      // just enforced — not a second hardcoded copy that could drift.
+      var rulesElog = '<ol class="elog rv" style="margin-top:18px">' +
+        WALLET_TIER_ORDER.map(function(k){
+          var c = cats[k];
+          if (!c) return '';
+          return '<li class="elog-i"><div class="elog-m"><span class="elog-t">' + esc(c.label) + '</span>' +
+            '<span class="elog-v adopted">' + fmt(c.max_pct * 100, 1) + '%/trade</span></div>' +
+            '<div class="elog-b"><p class="elog-p">' + esc(c.engines.join(', ')) + ' — up to ' +
+            fmt(c.max_pct * 100, 1) + '% of the wallet per trade (scaled down for grade B/C signals), ' +
+            'capped at ' + fmt(c.cap_pct * 100, 0) + '% combined across this tier.</p></div></li>';
+        }).join('') +
+        '<li class="elog-i"><div class="elog-m"><span class="elog-t">Global</span>' +
+        '<span class="elog-v adopted">' + fmt(j.global_cap_pct * 100, 0) + '% max deployed</span></div>' +
+        '<div class="elog-b"><p class="elog-p">Whatever headroom any single tier has left, total deployed capital ' +
+        'never exceeds ' + fmt(j.global_cap_pct * 100, 0) + '% of the wallet (' + money(j.global_cap_amount) +
+        ') — the real binding constraint, so no one tier can consume the whole book.</p></div></li>' +
+        '</ol>';
+
+      var tableHtml;
+      if (!j.trades.length){
+        tableHtml = '<div class="empty" style="margin-top:14px">No signals sized yet — forward-only from ' +
+          esc(j.start_date) + '. Fills as new signals land.</div>';
+      } else {
+        var badgeTxt = function(b){
+          return b === 'win' ? '✅ Win' : b === 'loss' ? '❌ Stop' : b === 'open' ? '🔵 Open'
+               : b === 'expired' ? '⏱ Expired' : b;
+        };
+        var rows = j.trades.map(function(t){
+          var pnlCell = t.realized_pnl === null ? '—' :
+            '<span class="' + (t.realized_pnl > 0 ? 'pnl-u' : t.realized_pnl < 0 ? 'pnl-d' : '') + '">' +
+            (t.realized_pnl > 0 ? '+' : '') + money(t.realized_pnl) + '</span>';
+          return '<tr>' +
+            '<td class="mono-dim">' + esc(t.date) + '</td>' +
+            '<td><strong class="sym">' + esc(t.symbol) + '</strong></td>' +
+            '<td class="mono-dim">' + esc(t.signal_type) + '</td>' +
+            '<td class="mono-dim">' + esc(t.grade || '—') + '</td>' +
+            '<td class="num">' + money(t.allocated_amount) +
+              (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
+              '</td>' +
+            '<td class="num">' + (t.allocated_qty === null ? '—' : t.allocated_qty) + '</td>' +
+            '<td><span class="badge badge-' + t.badge + '">' + badgeTxt(t.badge) + '</span></td>' +
+            '<td class="num">' + pnlCell + '</td>' +
+            '</tr>';
+        }).join('');
+        tableHtml = '<div class="tw rv" style="margin-top:14px"><table class="t"><thead><tr>' +
+          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Engine</th><th scope="col">Grade</th>' +
+          '<th scope="col">Allocated</th><th scope="col">Qty</th><th scope="col">Status</th><th scope="col">P&amp;L</th>' +
+          '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+      }
+
+      box.innerHTML = kpi + catBars + rulesElog + tableHtml;
     }
 
     // Also called when a WRITE (not just login) 401s — the session cookie

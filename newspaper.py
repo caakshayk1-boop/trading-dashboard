@@ -1932,6 +1932,13 @@ SECTION_MAP = [
     # the honest rendering of a fixed document order, not a bug to work around
     # by moving the section somewhere it does not belong.
     ("stocks",      "Stock Screen", "main", "Research"),
+    # Sits between the screen and the log for the same reading-order reason
+    # #stocks itself sits above #alerts: this is what a name FROM the screen
+    # or the log turns into once it's sized — before the outcome the log
+    # records. Forward-only from launch, so it starts empty and fills as new
+    # signals land; that is the honest state of a track record on day one,
+    # not a bug to paper over with fabricated history.
+    ("paperwallet", "Paper Wallet", "main", "Track Record"),
     ("alerts",      "Signal Log",   "main", "Track Record"),
 ]
 
@@ -6925,6 +6932,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     Screen rebuilt weekly. A high score means &ldquo;ranked well on published
     numbers&rdquo; and nothing more.
   </p>
+</section>
+{% endif %}
+
+<!-- ══════════ PAPER WALLET ══════════
+     ₹50,00,000, sized mechanically against every signal by horizon tier —
+     forward-only from launch (2026-08-17), no fabricated history. Entirely
+     JS-rendered from GET /api/signals?wallet=1 (see paperWallet.js in
+     static/app.js): the tier percentages, category caps and grade rules
+     live in ONE place — _paper_wallet.js on the backend — and this section
+     reads them back from the live response rather than hardcoding a second
+     copy here that could drift out of sync with the code actually enforcing
+     it. No server-rendered fallback: a static 6am snapshot of a forward-only
+     wallet would show the same "just started" state live JS already shows
+     honestly, so a fallback would add a second code path for no real gain. -->
+{% if 'paperwallet' in secs %}<section class="sec" id="paperwallet">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['paperwallet'] }} / {{ seclabel['paperwallet'] }}</span>
+      <h2 class="stitle">₹50,00,000, sized by the rules below.</h2>
+    </div>
+    <p class="sdesc">A mechanical capital allocator, not a recommendation — every signal this
+      ledger produces from here on gets sized by its horizon and grade, nothing more. Started
+      2026-08-17; no history before that date is replayed in.</p>
+  </div>
+
+  <div id="paperWalletLive"><div class="empty">Loading the wallet…</div></div>
 </section>
 {% endif %}
 
