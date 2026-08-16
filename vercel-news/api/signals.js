@@ -14,6 +14,16 @@
 //   limit=            default 300, max 2000
 //   offset=           pagination
 import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
+import { simulateWallet, START_DATE as WALLET_START_DATE } from "./_paper_wallet.js";
+
+// The ₹50L paper wallet (?wallet=1) lives in this file rather than its own
+// api/paper_wallet.js — Vercel's free Hobby plan caps a deployment at 12
+// serverless functions, and this repo was already at exactly 12. A 13th
+// route file silently failed the whole deployment (old routes kept serving
+// their last good build; the new one 404'd with no build-log access to even
+// see why — see 2026-08-17). The simulation itself stays in _paper_wallet.js
+// (underscore-prefixed, not a route, doesn't count against the limit, still
+// independently unit-tested), so this is a routing consolidation only.
 
 // `id` is here so a single trade can be linked to and audited. Without it the
 // ledger was a list you could read but not point at.
@@ -56,6 +66,9 @@ export default async function handler(req, res) {
   if (req.method !== "GET") return fail(res, 405, "GET only");
 
   const q = req.query || {};
+
+  if (q.wallet) return handleWallet(res);
+
   const where = [];
   const args = [];
 
@@ -156,6 +169,30 @@ export default async function handler(req, res) {
     }, 60);
   } catch (e) {
     fail(res, 500, `signals query failed: ${e.message}`);
+  }
+}
+
+async function handleWallet(res) {
+  try {
+    const gradeCol = await optional("grade");
+    const sql = `SELECT id, date, symbol, signal_type, entry, status, lifecycle_status,
+                        exit_price, pnl_pct, closed_at, ${gradeCol}
+                 FROM all_signals
+                 WHERE substr(date,1,10) >= ?
+                 ORDER BY date ASC, id ASC`;
+    const rs = await db().execute({ sql, args: [WALLET_START_DATE] });
+    const rows = rs.rows.map((r) => ({
+      ...r,
+      date: str(r.date),
+      symbol: str(r.symbol),
+      closed_at: str(r.closed_at) || null,
+      grade: str(r.grade) || null,
+    }));
+
+    const result = simulateWallet(rows, badgeOf);
+    json(res, 200, { ok: true, generated_at: new Date().toISOString(), ...result }, 60);
+  } catch (e) {
+    fail(res, 500, `paper_wallet query failed: ${e.message}`);
   }
 }
 
