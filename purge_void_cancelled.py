@@ -79,7 +79,11 @@ def main() -> int:
         print("Dry run — no rows deleted. Re-run with --apply to delete.")
         return 0
 
-    ids = [r["id"] for r in rows]
+    # libsql_experimental's execute() requires a tuple for parameters, not a
+    # list — the SELECT above worked because STATUSES already is one; this
+    # crashed with "'list' object cannot be converted to 'PyTuple'" before
+    # any row was touched (caught by this same dry-run-first workflow).
+    ids = tuple(r["id"] for r in rows)
     id_placeholders = ",".join("?" * len(ids))
     with _db.connect() as c:
         c.execute(f"DELETE FROM all_signals WHERE id IN ({id_placeholders})", ids)
