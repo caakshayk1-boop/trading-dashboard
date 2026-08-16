@@ -1568,6 +1568,17 @@ var TV_ALIASES = (function () {
       });
     }
 
+    // money() is for per-share prices (₹83.59) and reads badly at wallet
+    // scale — "₹5000000" with no grouping. Every amount in this section is
+    // a rounded allocation, not a price, so whole rupees with Indian digit
+    // grouping (matching the sizer widget and SIP plan display elsewhere on
+    // this page) is both more correct and more legible here.
+    function rupees(v){
+      if (v === null || v === undefined) return '—';
+      var n = Math.round(v);
+      return (n < 0 ? '-₹' : '₹') + Math.abs(n).toLocaleString('en-IN');
+    }
+
     // How full a tier is relative to ITS OWN cap, not the global one — a
     // tier sitting at 90% of its 20% category cap is genuinely stretched
     // even though that is only 18% of the whole wallet.
@@ -1586,10 +1597,10 @@ var TV_ALIASES = (function () {
       var w = j.wallet, cats = j.categories;
 
       var kpi = '<div class="kpi-row rv" style="margin-bottom:16px">' +
-        '<div class="kpi"><div class="v">' + money(w.deployed_amount) + '</div><div class="k">Deployed (' + fmt(w.deployed_pct, 1) + '%)</div></div>' +
-        '<div class="kpi"><div class="v">' + money(w.cash_amount) + '</div><div class="k">Cash (' + fmt(w.cash_pct, 1) + '%)</div></div>' +
+        '<div class="kpi"><div class="v">' + rupees(w.deployed_amount) + '</div><div class="k">Deployed (' + fmt(w.deployed_pct, 1) + '%)</div></div>' +
+        '<div class="kpi"><div class="v">' + rupees(w.cash_amount) + '</div><div class="k">Cash (' + fmt(w.cash_pct, 1) + '%)</div></div>' +
         '<div class="kpi"><div class="v ' + (w.realized_pnl > 0 ? 'up' : w.realized_pnl < 0 ? 'dn' : '') + '">' +
-          (w.realized_pnl > 0 ? '+' : '') + money(w.realized_pnl) + '</div><div class="k">Realized P&amp;L</div></div>' +
+          (w.realized_pnl > 0 ? '+' : '') + rupees(w.realized_pnl) + '</div><div class="k">Realized P&amp;L</div></div>' +
         '<div class="kpi"><div class="v">' + (w.win_rate === null ? '—' : fmt(w.win_rate, 1) + '%') +
           '</div><div class="k">Win rate (' + w.closed_trades + ' closed)</div></div>' +
         '<div class="kpi"><div class="v">' + j.trades.length + '</div><div class="k">Trades sized</div></div>' +
@@ -1601,7 +1612,7 @@ var TV_ALIASES = (function () {
         return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">' +
           '<span class="rk ' + tierRiskClass(c.deployed_pct, c.cap_pct) + '" style="min-width:130px;text-align:center">' +
             esc(c.label) + '</span>' +
-          '<span class="mono-dim" style="font-size:12px">' + money(c.deployed_amount) + ' / ' + money(c.cap_amount) +
+          '<span class="mono-dim" style="font-size:12px">' + rupees(c.deployed_amount) + ' / ' + rupees(c.cap_amount) +
           ' &middot; ' + fmt(c.deployed_pct, 1) + '% of wallet (cap ' + fmt(c.cap_pct * 100, 0) + '%)</span>' +
           '</div>';
       }).join('');
@@ -1621,7 +1632,7 @@ var TV_ALIASES = (function () {
         '<li class="elog-i"><div class="elog-m"><span class="elog-t">Global</span>' +
         '<span class="elog-v adopted">' + fmt(j.global_cap_pct * 100, 0) + '% max deployed</span></div>' +
         '<div class="elog-b"><p class="elog-p">Whatever headroom any single tier has left, total deployed capital ' +
-        'never exceeds ' + fmt(j.global_cap_pct * 100, 0) + '% of the wallet (' + money(j.global_cap_amount) +
+        'never exceeds ' + fmt(j.global_cap_pct * 100, 0) + '% of the wallet (' + rupees(j.global_cap_amount) +
         ') — the real binding constraint, so no one tier can consume the whole book.</p></div></li>' +
         '</ol>';
 
@@ -1637,13 +1648,13 @@ var TV_ALIASES = (function () {
         var rows = j.trades.map(function(t){
           var pnlCell = t.realized_pnl === null ? '—' :
             '<span class="' + (t.realized_pnl > 0 ? 'pnl-u' : t.realized_pnl < 0 ? 'pnl-d' : '') + '">' +
-            (t.realized_pnl > 0 ? '+' : '') + money(t.realized_pnl) + '</span>';
+            (t.realized_pnl > 0 ? '+' : '') + rupees(t.realized_pnl) + '</span>';
           return '<tr>' +
             '<td class="mono-dim">' + esc(t.date) + '</td>' +
             '<td><strong class="sym">' + esc(t.symbol) + '</strong></td>' +
             '<td class="mono-dim">' + esc(t.signal_type) + '</td>' +
             '<td class="mono-dim">' + esc(t.grade || '—') + '</td>' +
-            '<td class="num">' + money(t.allocated_amount) +
+            '<td class="num">' + rupees(t.allocated_amount) +
               (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
               '</td>' +
             '<td class="num">' + (t.allocated_qty === null ? '—' : t.allocated_qty) + '</td>' +
