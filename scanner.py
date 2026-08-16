@@ -1161,7 +1161,7 @@ def scan_all(min_score=None):
             continue
         if sym_clean in SIGNAL_BLACKLIST:
             continue
-        if is_duplicate(sym_clean, "swing"):
+        if is_duplicate(sig, "swing"):
             continue
         sig["scanned_at"] = scan_ts
         results.append(sig)

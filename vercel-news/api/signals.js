@@ -130,6 +130,11 @@ export default async function handler(req, res) {
       await optional("regraded_at"),
       await optional("max_profit_pct"),
       await optional("max_drawdown_pct"),
+      // Set when this symbol+engine re-fired while this row was still OPEN.
+      // duplicate_symbols()/is_duplicate() (tracker.py) drop the new signal
+      // rather than log it as a second row — that would double-count one
+      // real position in every expectancy figure — and leave this instead.
+      await optional("duplicate_note"),
     ].join(", ");
 
     const sql = `SELECT ${BASE_COLS}, ${extra} FROM all_signals
@@ -199,6 +204,7 @@ function shape(r) {
     // Engine-specific payload — thesis, sector, rationale, factor scores.
     // Stored as a JSON string; a malformed blob must not take down the feed.
     metadata: parseMeta(r.metadata),
+    duplicate_note: str(r.duplicate_note) || null,
   };
 }
 

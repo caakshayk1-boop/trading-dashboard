@@ -1,0 +1,61 @@
+name: Ledger — Purge VOID/CANCELLED signals
+
+# One-off cleanup: VOID and CANCELLED rows in all_signals are withdrawn or
+# never-valid setups, already excluded from every win/loss/expectancy figure.
+# Akshay asked for them removed from the ledger entirely (2026-08-16), not
+# just hidden from the site's default view. Turso is the source of truth, so
+# like regrade.yml this has to run here with the real production secrets.
+#
+# Defaults to a dry run. Applying is an explicit, deliberate choice, and every
+# deleted row is backed up to data/backups/ first and committed before the
+# delete runs.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Delete after backing up (leave false for a dry run)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+  GH_PAT:      ${{ secrets.GH_PAT }}
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install libsql-experimental || true
+
+      - name: Purge (dry run / apply)
+        run: |
+          python purge_void_cancelled.py ${{ inputs.apply && '--apply' || '' }}
+
+      - name: Commit backup
+        if: inputs.apply
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/backups/
+          git diff --staged --quiet || git commit -m "chore: back up + purge VOID/CANCELLED signals"
+          git push

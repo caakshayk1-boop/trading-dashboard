@@ -80,7 +80,7 @@ def main():
 
     try:
         sigs = scan_intraday_momentum()
-        new_sigs = [s for s in sigs if not is_duplicate(s["symbol"], "intraday")]
+        new_sigs = [s for s in sigs if not is_duplicate(s, "intraday")]
         logging.info(f"Intraday: {len(new_sigs)} new signals (from {len(sigs)} raw)")
 
         if new_sigs:

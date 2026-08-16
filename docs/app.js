@@ -1616,6 +1616,7 @@ var TV_ALIASES = (function () {
           '<button class="fbtn" data-f="open">Open</button>' +
           '<button class="fbtn" data-f="win">Target Hit</button>' +
           '<button class="fbtn" data-f="loss">Stop Hit</button>' +
+          '<button class="fbtn" data-f="expired">Expired</button>' +
           '<button class="fbtn" data-f="cancelled">Cancelled</button>' +
         '</div>' +
         // No engine switch. One engine, one record — see the note on
@@ -2087,6 +2088,11 @@ var TV_ALIASES = (function () {
 
       var rows = allRows.filter(function(r){
         if (badge !== 'all' && r.badge !== badge) return false;
+        // "All" means every real outcome — it deliberately does not include
+        // VOID/CANCELLED (signals withdrawn or never valid, not trades that
+        // happened). Explicitly click "Cancelled" to see them; they stay in
+        // the database and in that filter, never deleted.
+        if (badge === 'all' && r.badge === 'cancelled') return false;
         if (q && r.symbol.toUpperCase().indexOf(q) === -1) return false;
         if (from && r.date < from) return false;
         if (to   && r.date > to)   return false;
@@ -2102,11 +2108,14 @@ var TV_ALIASES = (function () {
       // 800 rows of innerHTML is fine; building them one node at a time is not.
       var html = rows.map(function(a){
         var badgeTxt = a.badge === 'win' ? '✅ Win' : a.badge === 'loss' ? '❌ Stop'
-                     : a.badge === 'open' ? '🔵 Open' : (a.status || '—');
+                     : a.badge === 'open' ? '🔵 Open' : a.badge === 'expired' ? '⏱ Expired'
+                     : (a.status || '—');
         return '<tr data-badge="' + a.badge + '" data-sid="' + (a.id === null ? '' : a.id) +
                '" class="' + (a.id === null ? '' : 'clickable') + '">' +
           '<td class="mono-dim">' + esc(a.date) + '</td>' +
-          '<td>' + symCell(a.symbol, a.currency) + '</td>' +
+          '<td>' + symCell(a.symbol, a.currency) +
+              (a.duplicate_note ? ' <span class="mono-dim" title="' + esc(a.duplicate_note) +
+                '" style="cursor:help">🔁</span>' : '') + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +

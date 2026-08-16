@@ -297,6 +297,14 @@ def init_db(force: bool = False):
             ("confirmed_at",        "ALTER TABLE all_signals ADD COLUMN confirmed_at TEXT"),
             ("confirmed_qty",       "ALTER TABLE all_signals ADD COLUMN confirmed_qty INTEGER"),
             ("confirmed_price",     "ALTER TABLE all_signals ADD COLUMN confirmed_price REAL"),
+            # duplicate_symbols() drops a candidate whose symbol+engine already
+            # has an OPEN row (dedupe_positions.py exists because letting a
+            # second row through once gave GLAND 3 open positions and OFSS 5,
+            # multiplying one real outcome's weight in every expectancy figure).
+            # The row it was dropped for used to just log a debug line nobody
+            # reads; this makes the re-fire visible on the still-open row
+            # instead of vanishing — same invariant, no silent information loss.
+            ("duplicate_note",      "ALTER TABLE all_signals ADD COLUMN duplicate_note TEXT"),
         ]
         for col, sql in as_migrations:
             if col not in as_existing:
@@ -395,11 +403,16 @@ def is_duplicate(symbol, signal_type="swing"):
     - Active open signal for same symbol+type in last 5 days, OR
     - SL hit for same symbol+type in last 7 days.
     Sticks to existing trade plan — no new entry until trade closes.
+
+    `symbol` may be a plain string or the candidate dict itself — pass the
+    dict to get a remark left on the still-open row when this returns True
+    for the OPEN case. See _note_resignal().
     """
+    cand = symbol if isinstance(symbol, dict) else None
+    sym_clean = str(cand.get("symbol", "") if cand else symbol).replace(".NS", "")
     init_db()
     cutoff_5d = str(_date_ist() - timedelta(days=5))
     cutoff_7d = str(_date_ist() - timedelta(days=7))
-    sym_clean = symbol.replace(".NS", "")
     with _conn() as c:
         # Check unified all_signals first (covers all signal types)
         row = c.execute(
@@ -412,6 +425,14 @@ def is_duplicate(symbol, signal_type="swing"):
         ).fetchone()
         if row:
             log.debug(f"Duplicate skip: {sym_clean} ({signal_type}) already OPEN")
+            if cand:
+                entry = cand.get("entry", cand.get("price"))
+                if entry is not None:
+                    _note_resignal(c, row[0], sym_clean, entry,
+                                    cand.get("action", "BUY"),
+                                    cand.get("reasons") or cand.get("reason"))
+                    c.commit()
+                    _db.sync(c)
             return True
         # SL hit recently — avoid re-entry
         row = c.execute(
@@ -432,14 +453,46 @@ def is_duplicate(symbol, signal_type="swing"):
     return False
 
 
-def duplicate_symbols(symbols, signal_type="swing"):
+def _note_resignal(c, existing_id, symbol, new_entry, new_action, reason=None):
+    """Append a short remark to the still-open row a candidate was just
+    dropped for, so the re-fire is visible instead of a debug line nobody
+    reads. Appends rather than overwrites — a position can legitimately
+    re-fire more than once over its life, and each occurrence is real
+    information, not noise to replace.
+    """
+    note = f"{_today_ist()}: re-fired ({new_action} @ {new_entry})"
+    if reason:
+        note += f" — {reason}"
+    note += ". Not logged as a separate row; this one stays the single open record."
+    c.execute(
+        "UPDATE all_signals SET duplicate_note = "
+        "CASE WHEN duplicate_note IS NULL OR duplicate_note = '' THEN ? "
+        "ELSE duplicate_note || char(10) || ? END WHERE id = ?",
+        (note, note, existing_id)
+    )
+
+
+def duplicate_symbols(candidates, signal_type="swing"):
     """Batch form of is_duplicate — returns the set of symbols to skip.
+
+    `candidates` may be plain symbol strings (old call sites still work) or
+    the candidate dicts themselves (symbol + entry/price + action + an
+    optional reason/reasons string). Pass the dicts to get a remark left on
+    the still-open row for an OPEN-duplicate — see _note_resignal().
 
     Same three rules, resolved in one connection instead of one per symbol.
     Scanning 53 breakouts through is_duplicate() opened 106 connections; under
     Turso each of those does a replica sync.
     """
-    clean = {str(s).replace(".NS", "") for s in symbols if s}
+    cand_by_symbol = {}
+    for item in candidates:
+        if isinstance(item, dict):
+            sym = str(item.get("symbol", "")).replace(".NS", "")
+        else:
+            sym = str(item or "").replace(".NS", "")
+        if sym:
+            cand_by_symbol.setdefault(sym, item if isinstance(item, dict) else None)
+    clean = set(cand_by_symbol)
     if not clean:
         return set()
     init_db()
@@ -448,25 +501,45 @@ def duplicate_symbols(symbols, signal_type="swing"):
     ordered = sorted(clean)
     ph = ",".join("?" for _ in ordered)
     dupes = set()
+    wrote_note = False
     with _conn() as c:
+        # NO date window on the OPEN check. It used to carry cutoff_5d, and
+        # that is why the long-horizon engines filed the same name over and
+        # over: multibagger rescans WEEKLY and holds for 6-12 months, so
+        # every re-detection landed 7 days later — outside a 5-day window —
+        # and passed the guard. GLAND ended up with three open positions
+        # (2026-06-13, 07-11, 07-25) and OFSS with five, which triples a
+        # name's weight in the ledger when a reader holds one.
+        #
+        # An open position is open. Whether it was filed five days ago or
+        # five months ago changes nothing about whether a second one should
+        # exist. The window was only ever needed because before the time
+        # stop worked, rows stayed OPEN forever and a windowless check would
+        # have blocked a symbol permanently — that is no longer true (see
+        # standalone_scan._max_hold_hours, now horizon-aware per engine).
+        #
+        # Fetched separately from the other two rules (below) because this is
+        # the one case that also leaves a remark, which needs the row id, not
+        # just the symbol DISTINCT gives the other two.
+        open_rows = c.execute(
+            f"SELECT id, symbol FROM all_signals WHERE symbol IN ({ph}) "
+            f"AND signal_type=? AND status='OPEN'",
+            tuple(ordered) + (signal_type,)
+        ).fetchall()
+        for row_id, sym in open_rows:
+            dupes.add(sym)
+            cand = cand_by_symbol.get(sym)
+            if not cand:
+                continue
+            entry = cand.get("entry", cand.get("price"))
+            if entry is None:
+                continue
+            action = cand.get("action", "BUY")
+            reason = cand.get("reasons") or cand.get("reason")
+            _note_resignal(c, row_id, sym, entry, action, reason)
+            wrote_note = True
+
         for sql, params in (
-            # NO date window on the OPEN check. It used to carry cutoff_5d, and
-            # that is why the long-horizon engines filed the same name over and
-            # over: multibagger rescans WEEKLY and holds for 6-12 months, so
-            # every re-detection landed 7 days later — outside a 5-day window —
-            # and passed the guard. GLAND ended up with three open positions
-            # (2026-06-13, 07-11, 07-25) and OFSS with five, which triples a
-            # name's weight in the ledger when a reader holds one.
-            #
-            # An open position is open. Whether it was filed five days ago or
-            # five months ago changes nothing about whether a second one should
-            # exist. The window was only ever needed because before the time
-            # stop worked, rows stayed OPEN forever and a windowless check would
-            # have blocked a symbol permanently — that is no longer true (see
-            # standalone_scan._max_hold_hours, now horizon-aware per engine).
-            (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "
-             f"AND signal_type=? AND status='OPEN'",
-             tuple(ordered) + (signal_type,)),
             (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "
              f"AND signal_type=? AND status='SL_HIT' AND date>=?",
              tuple(ordered) + (signal_type, cutoff_7d)),
@@ -476,6 +549,10 @@ def duplicate_symbols(symbols, signal_type="swing"):
              tuple(ordered) + (cutoff_5d,)),
         ):
             dupes.update(r[0] for r in c.execute(sql, params).fetchall())
+
+        if wrote_note:
+            c.commit()
+            _db.sync(c)
     if dupes:
         log.info(f"Duplicate skip ({signal_type}): {len(dupes)} symbol(s) — "
                  f"{', '.join(sorted(dupes)[:10])}{'…' if len(dupes) > 10 else ''}")

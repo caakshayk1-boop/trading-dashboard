@@ -2113,7 +2113,9 @@ var TV_ALIASES = (function () {
         return '<tr data-badge="' + a.badge + '" data-sid="' + (a.id === null ? '' : a.id) +
                '" class="' + (a.id === null ? '' : 'clickable') + '">' +
           '<td class="mono-dim">' + esc(a.date) + '</td>' +
-          '<td>' + symCell(a.symbol, a.currency) + '</td>' +
+          '<td>' + symCell(a.symbol, a.currency) +
+              (a.duplicate_note ? ' <span class="mono-dim" title="' + esc(a.duplicate_note) +
+                '" style="cursor:help">🔁</span>' : '') + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +

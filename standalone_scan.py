@@ -752,7 +752,7 @@ def run_4h_scan(time_str):
     logging.info("Running 4H RSI-55 scan...")
     raw = scan_4h()
     # Dedup: skip already-alerted symbols
-    dupes = duplicate_symbols([s["symbol"] for s in raw], "4h")
+    dupes = duplicate_symbols(raw, "4h")
     sigs = [s for s in raw if str(s["symbol"]).replace(".NS", "") not in dupes]
     logging.info(f"4H scan: {len(sigs)} to alert ({len(raw)} raw → {len(dupes)} deduped out)")
     if sigs:
@@ -786,7 +786,7 @@ def run_commodity_scan(time_str):
     # Conflict filter: remove opposing signals for same commodity group
     filtered = _filter_commodity_conflicts(raw_sigs)
     # Dedup per symbol
-    dupes = duplicate_symbols([s["symbol"] for s in filtered], "commodity")
+    dupes = duplicate_symbols(filtered, "commodity")
     sigs = [s for s in filtered if str(s["symbol"]).replace(".NS", "") not in dupes]
     logging.info(f"Commodity scan: {len(sigs)} to alert ({len(raw_sigs)} raw → "
                  f"{len(raw_sigs) - len(filtered)} conflicts → {len(dupes)} deduped out)")
@@ -948,7 +948,7 @@ def run_breakout_scan(time_str):
         bad = [b.get("symbol", "?") for b in raw_bos if not _valid(b)]
         logging.warning(f"Breakouts: dropped {len(bad)} with NaN/missing prices — "
                         f"{', '.join(bad[:10])}{'…' if len(bad) > 10 else ''}")
-    dupes = duplicate_symbols([b["symbol"] for b in all_bos], "breakout")
+    dupes = duplicate_symbols(all_bos, "breakout")
     breakouts = [b for b in all_bos if str(b["symbol"]).replace(".NS", "") not in dupes]
     logging.info(f"Breakouts: {len(breakouts)} to alert "
                  f"({len(raw_bos)} raw → {len(all_bos)} valid → {len(dupes)} deduped out)")
@@ -989,7 +989,7 @@ def run_tlm_scan(time_str, interval="4h"):
     sig_type = f"ai_{tf_label.lower()}"
     logging.info(f"Running AI channel breakout scan ({tf_label})...")
     all_sigs = scan_tlm_breakouts(interval=interval)
-    dupes = duplicate_symbols([s["symbol"] for s in all_sigs], sig_type)
+    dupes = duplicate_symbols(all_sigs, sig_type)
     tlm_sigs = [s for s in all_sigs if str(s["symbol"]).replace(".NS", "") not in dupes]
     logging.info(f"AI scan ({tf_label}): {len(tlm_sigs)} to alert "
                  f"({len(all_sigs)} raw → {len(dupes)} deduped out)")
@@ -1040,7 +1040,7 @@ def run_intraday_scan(time_str):
     from tracker import (log_batch_to_all_signals, duplicate_symbols, mark_alerts_sent)
     logging.info("Running intraday momentum scan (15m)...")
     raw = scan_intraday_momentum()
-    dupes = duplicate_symbols([s["symbol"] for s in raw], "intraday")
+    dupes = duplicate_symbols(raw, "intraday")
     sigs = [s for s in raw if str(s["symbol"]).replace(".NS", "") not in dupes]
     logging.info(f"Intraday: {len(sigs)} to alert ({len(raw)} raw → {len(dupes)} deduped out)")
     if sigs:

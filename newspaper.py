@@ -48,15 +48,38 @@ def _price_unit(symbol) -> str:
         return "₹"
 
 
+_ALL_SIGNALS_COLS: set | None = None
+
+
+def _all_signals_columns() -> set:
+    """Probed once per process, like vercel-news's optional() does for the
+    same table. newspaper.yml runs on its own schedule, independent of the
+    scanner that actually applies tracker.py's ALTER TABLE migrations — a
+    column added there is not guaranteed to exist yet the first time this
+    runs, and naming a missing column fails the whole query, taking the
+    daily edition down with it.
+    """
+    global _ALL_SIGNALS_COLS
+    if _ALL_SIGNALS_COLS is None:
+        try:
+            with _db() as con:
+                _ALL_SIGNALS_COLS = {r[1] for r in con.execute("PRAGMA table_info(all_signals)").fetchall()}
+        except Exception:
+            _ALL_SIGNALS_COLS = set()
+    return _ALL_SIGNALS_COLS
+
+
 def fetch_alert_log(limit: int = 200) -> list[dict]:
     """Read Telegram alert history from all_signals table (signals.db / Turso)."""
     try:
+        has_dup_note = "duplicate_note" in _all_signals_columns()
+        dup_select = ", duplicate_note" if has_dup_note else ""
         with _db() as con:
-            rows = con.execute("""
+            rows = con.execute(f"""
                 SELECT date, symbol, action, timeframe, signal_type,
                        entry, sl, target1, target2, rr, score,
                        status, lifecycle_status, exit_price, pnl_pct,
-                       closed_at, sent_at
+                       closed_at, sent_at{dup_select}
                 FROM all_signals
                 ORDER BY date DESC, id DESC
                 LIMIT ?
@@ -64,7 +87,7 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
         cols = ["date","symbol","action","timeframe","signal_type",
                 "entry","sl","target1","target2","rr","score",
                 "status","lifecycle_status","exit_price","pnl_pct",
-                "closed_at","sent_at"]
+                "closed_at","sent_at"] + (["duplicate_note"] if has_dup_note else [])
         result = []
         for r in rows:
             r = dict(zip(cols, r))
