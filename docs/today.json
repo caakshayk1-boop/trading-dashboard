@@ -1,20 +1,120 @@
 {
- "build_id": "20260816T073702",
- "date": "2026-08-16",
- "date_str": "Sunday, August 16 2026",
+ "build_id": "20260817T000052",
+ "date": "2026-08-17",
+ "date_str": "Monday, August 17 2026",
  "picks": [
   {
-   "symbol": "SNOW",
-   "name": "SNOW",
-   "ext20": 13.98,
+   "symbol": "PAYTM.NS",
+   "name": "PAYTM",
+   "ext20": 10.73,
+   "vol_ratio": 1.54,
+   "price": 1603.0,
+   "change_1d": -2.82,
+   "mom_1m": 16.0,
+   "mom_3m": 40.0,
+   "score": 97,
+   "target": 2003.75,
+   "stop_loss": 1474.76,
+   "timeframe": "2\u20133 months",
+   "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 7.1
+    }
+   ],
+   "ema20": 1447.66,
+   "tv": "NSE:PAYTM",
+   "thesis": "97 composite score with 40% 3-month gain and 1.54x volume."
+  },
+  {
+   "symbol": "NET",
+   "name": "NET",
+   "ext20": 8.04,
+   "vol_ratio": 1.25,
+   "price": 315.78,
+   "change_1d": -4.55,
+   "mom_1m": 15.9,
+   "mom_3m": 59.8,
+   "score": 94,
+   "target": 394.72,
+   "stop_loss": 290.52,
+   "timeframe": "2\u20133 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 3.9
+    }
+   ],
+   "ema20": 292.27,
+   "tv": "NET",
+   "thesis": "+60% three-month trend, +8.0% above the 20-day, volume 1.25x normal."
+  },
+  {
+   "symbol": "MDB",
+   "name": "MDB",
+   "ext20": 19.32,
    "vol_ratio": 1.19,
-   "price": 330.49,
-   "change_1d": 3.93,
-   "mom_1m": 23.6,
-   "mom_3m": 116.8,
+   "price": 460.33,
+   "change_1d": -2.53,
+   "mom_1m": 40.1,
+   "mom_3m": 47.5,
    "score": 93,
-   "target": 413.11,
-   "stop_loss": 304.05,
+   "target": 575.41,
+   "stop_loss": 423.5,
    "timeframe": "2\u20133 months",
    "currency": "$",
    "factors": [
@@ -49,39 +149,39 @@
      "e": 3.2
     }
    ],
-   "ema20": 289.96,
-   "tv": "SNOW",
-   "thesis": "116.8% 3-month gain with 93 composite score and +14.0% above 20-day average."
+   "ema20": 385.8,
+   "tv": "MDB",
+   "thesis": "+40% in a month against +48% over three \u2014 the trend is accelerating, not maturing."
   },
   {
-   "symbol": "COFORGE.NS",
-   "name": "COFORGE",
-   "ext20": 8.21,
-   "vol_ratio": 0.57,
-   "price": 1776.0,
-   "change_1d": 0.18,
-   "mom_1m": 21.5,
-   "mom_3m": 38.8,
+   "symbol": "SNOW",
+   "name": "SNOW",
+   "ext20": 7.09,
+   "vol_ratio": 0.74,
+   "price": 328.92,
+   "change_1d": -2.51,
+   "mom_1m": 21.8,
+   "mom_3m": 108.9,
    "score": 88,
-   "target": 2220.0,
-   "stop_loss": 1633.92,
+   "target": 411.15,
+   "stop_loss": 302.61,
    "timeframe": "2\u20133 months",
-   "currency": "\u20b9",
+   "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
+     "e": 22.7
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 19.2
+     "e": 20.0
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 14.1
+     "e": 15.0
     },
     {
      "k": "1-month thrust",
@@ -99,22 +199,22 @@
      "e": 0.0
     }
    ],
-   "ema20": 1641.3,
-   "tv": "NSE:COFORGE",
-   "thesis": "88-score setup with +38.8% 3-month gain and +21.5% 1-month surge."
+   "ema20": 307.16,
+   "tv": "SNOW",
+   "thesis": "+109% three-month trend, +7.1% above the 20-day, volume 0.74x normal."
   },
   {
-   "symbol": "MSFT",
-   "name": "MSFT",
-   "ext20": 14.03,
-   "vol_ratio": 1.09,
-   "price": 499.99,
-   "change_1d": 0.03,
-   "mom_1m": 30.1,
-   "mom_3m": 20.7,
-   "score": 86,
-   "target": 624.99,
-   "stop_loss": 459.99,
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 24.54,
+   "vol_ratio": 1.62,
+   "price": 39.84,
+   "change_1d": 1.74,
+   "mom_1m": 61.4,
+   "mom_3m": 28.4,
+   "score": 87,
+   "target": 49.8,
+   "stop_loss": 36.65,
    "timeframe": "2\u20133 months",
    "currency": "$",
    "factors": [
@@ -131,127 +231,27 @@
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 12.8
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
      "e": 5.9
     },
     {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 2.1
-    }
-   ],
-   "ema20": 438.46,
-   "tv": "MSFT",
-   "thesis": "86 composite score with 30.1% 1-month gain and 1.09x volume."
-  },
-  {
-   "symbol": "NET",
-   "name": "NET",
-   "ext20": 8.46,
-   "vol_ratio": 1.52,
-   "price": 300.27,
-   "change_1d": 5.57,
-   "mom_1m": 8.9,
-   "mom_3m": 53.1,
-   "score": 86,
-   "target": 375.34,
-   "stop_loss": 276.25,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 19.1
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 13.4
-    },
-    {
      "k": "1-month thrust",
      "w": 20,
-     "e": 11.8
+     "e": 20.0
     },
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 10.0
+     "e": 8.1
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 6.9
+     "e": 8.0
     }
    ],
-   "ema20": 276.85,
-   "tv": "NET",
-   "thesis": "53.1% 3-month gain, with price 8.5% above its 20-day average."
-  },
-  {
-   "symbol": "PAYTM.NS",
-   "name": "PAYTM",
-   "ext20": 7.25,
-   "vol_ratio": 1.23,
-   "price": 1441.6,
-   "change_1d": -0.03,
-   "mom_1m": 14.1,
-   "mom_3m": 20.4,
-   "score": 84,
-   "target": 1802.0,
-   "stop_loss": 1326.27,
-   "timeframe": "2\u20133 months",
-   "currency": "\u20b9",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 23.1
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 18.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 14.1
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 18.9
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.8
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 3.6
-    }
-   ],
-   "ema20": 1344.18,
-   "tv": "NSE:PAYTM",
-   "thesis": "84 composite score with 20.4% 3-month gain and 1.23x volume."
+   "ema20": 31.99,
+   "tv": "SMCI",
+   "thesis": "1.6x normal volume behind a +61% month \u2014 participation is confirming the move."
   }
  ],
  "engine": [
@@ -350,6 +350,14 @@
    "price": 401.0,
    "sector": "Financial Services"
   },
+  "ABDL": {
+   "price": 599.45,
+   "sector": "Consumer Defensive"
+  },
+  "AEGISVOPAK": {
+   "price": 269.1,
+   "sector": "Energy"
+  },
   "AIAENG": {
    "price": 4482.7998,
    "sector": "Industrials"
@@ -406,6 +414,14 @@
    "price": 1298.8,
    "sector": "Industrials"
   },
+  "CGCL": {
+   "price": 226.52,
+   "sector": "Financial Services"
+  },
+  "CHOICEIN": {
+   "price": 804.35,
+   "sector": "Financial Services"
+  },
   "CHOLAFIN": {
    "price": 1894.4,
    "sector": "Financial Services"
@@ -450,6 +466,10 @@
    "price": 4737.7998,
    "sector": "Basic Materials"
   },
+  "GABRIEL": {
+   "price": 1459.0,
+   "sector": "Consumer Cyclical"
+  },
   "GRASIM": {
    "price": 3248.7,
    "sector": "Basic Materials"
@@ -490,6 +510,10 @@
    "price": 3167.3999,
    "sector": ""
   },
+  "KARURVYSYA": {
+   "price": 331.75,
+   "sector": "Financial Services"
+  },
   "KIRLOSENG": {
    "price": 2100.1001,
    "sector": "Industrials"
@@ -502,8 +526,12 @@
    "price": 1787.3,
    "sector": "Healthcare"
   },
+  "LTF": {
+   "price": 306.3,
+   "sector": "Financial Services"
+  },
   "LUPIN": {
-   "price": 2250.3,
+   "price": 2235.0,
    "sector": "Healthcare"
   },
   "M&MFIN": {
@@ -519,7 +547,7 @@
    "sector": "Energy"
   },
   "NATIONALUM": {
-   "price": 400.5,
+   "price": 376.0,
    "sector": "Basic Materials"
   },
   "NESTLEIND": {
@@ -557,34 +585,6 @@
   "SBIN": {
    "price": 1067.7,
    "sector": "Financial Services"
-  },
-  "SHRIRAMFIN": {
-   "price": 1132.3,
-   "sector": "Financial Services"
-  },
-  "SILVER": {
-   "price": 64.988,
-   "sector": ""
-  },
-  "SONACOMS": {
-   "price": 792.0,
-   "sector": "Consumer Cyclical"
-  },
-  "SPLPETRO": {
-   "price": 726.55,
-   "sector": "Basic Materials"
-  },
-  "SUNPHARMA": {
-   "price": 1930.0,
-   "sector": "Healthcare"
-  },
-  "TEGA": {
-   "price": 1703.8,
-   "sector": "Industrials"
-  },
-  "WOCKPHARMA": {
-   "price": 1932.7,
-   "sector": "Healthcare"
   }
  },
  "desk": {
@@ -745,7 +745,7 @@
   },
   "daughter": {
    "months": 7,
-   "days": 234,
+   "days": 235,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -753,91 +753,91 @@
   "productivity": "Respond to messages at set times. Real-time response is a myth.",
   "father": [
    {
-    "title": "Introduce one new texture",
-    "do": "Let her touch something unfamiliar and safe \u2014 a cold spoon, a rough towel, wet cloth.",
-    "why": "Sensory variety builds neural discrimination. At this age the mouth is a primary sense organ, so expect it to be tasted; choose accordingly."
+    "title": "Mirror her expressions",
+    "do": "Copy her face \u2014 surprise, frown, smile \u2014 and hold it so she sees it.",
+    "why": "Facial mirroring is how infants learn that internal states have external signals. It is the earliest form of emotional literacy."
    },
    {
-    "title": "Sing badly and often",
-    "do": "One song, daily, the same one. Tune is irrelevant.",
-    "why": "Melody carries language patterns \u2014 rhythm, stress, phrase boundaries \u2014 more clearly than speech. She is not judging the singing."
+    "title": "Take her outside daily",
+    "do": "Fifteen minutes outdoors, describing what you both see.",
+    "why": "Daylight anchors circadian rhythm, which is the practical route to better night sleep. The narration doubles as vocabulary exposure in a changing environment."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Kshama",
-    "translation": "Forgiveness, asked and given",
-    "teaching": "Once a year, at Michchhami Dukkadam, Jains ask forgiveness of everyone they may have harmed \u2014 regardless of whether they feel at fault.",
-    "apply": "The ritual removes the negotiation over who was more wrong. Do not wait for the annual version: close a grudge this week without settling the scoreboard first."
+    "term": "Samyak Darshana",
+    "translation": "Right perception",
+    "teaching": "Seeing things as they are, before preference distorts them. The first of the three jewels, and deliberately placed before right conduct.",
+    "apply": "Separate the number from what you want the number to be. Write the actual result before writing the explanation \u2014 the order changes the explanation."
    },
    {
     "tradition": "Buddhism",
-    "term": "Beginner's Mind",
-    "translation": "Shoshin",
-    "teaching": "'In the beginner's mind there are many possibilities; in the expert's there are few.' Expertise narrows the field of what you consider.",
-    "apply": "In your area of deepest expertise, ask the question you would find embarrassing to ask. Ten years in one industry is where assumptions calcify."
+    "term": "Middle Way",
+    "translation": "Avoiding both extremes",
+    "teaching": "The Buddha rejected both indulgence and severe asceticism after trying each. The insight came from testing both, not theorising.",
+    "apply": "Applied to risk: neither all-cash nor all-in. Applied to work: neither burnout nor coasting. The middle is a position you have to keep adjusting, not one you find once."
    }
   ],
   "spanish": [
    {
-    "word": "comer",
-    "meaning": "to eat",
-    "es": "Ya empieza a comer s\u00f3lidos.",
-    "en": "She is starting to eat solids.",
+    "word": "crecer r\u00e1pido",
+    "meaning": "to grow fast",
+    "es": "Crece muy r\u00e1pido.",
+    "en": "She is growing very fast.",
     "tag": "Family"
    },
    {
-    "word": "todav\u00eda no",
-    "meaning": "not yet",
-    "es": "Todav\u00eda no he terminado.",
-    "en": "I have not finished yet.",
+    "word": "tal vez",
+    "meaning": "maybe",
+    "es": "Tal vez ma\u00f1ana.",
+    "en": "Maybe tomorrow.",
     "tag": "Everyday"
    }
   ],
   "vocab": [
    {
-    "word": "Salience",
-    "say": "SAY-lee-uhns",
-    "meaning": "The quality of being most noticeable or important.",
-    "example": "The salience of the cash line rose sharply after the covenant test.",
-    "note": "Noun form of salient. Useful when describing shifting board attention."
+    "word": "Salient",
+    "say": "SAY-lee-uhnt",
+    "meaning": "Most noticeable or important.",
+    "example": "The salient point is that margin fell before volume did.",
+    "note": "Use instead of 'main' when you want to signal you have filtered the noise."
    },
    {
-    "word": "Tenuous",
-    "say": "TEN-yoo-uhs",
-    "meaning": "Weak; barely holding together.",
-    "example": "The link between the campaign and the sales lift is tenuous.",
-    "note": "Precise way to challenge a claim without calling it wrong."
+    "word": "Material",
+    "say": "muh-TEER-ee-uhl",
+    "meaning": "Large enough to change a decision.",
+    "example": "The variance is real but not material to the group result.",
+    "note": "In finance this is a technical word \u2014 use it only when you mean the threshold."
    }
   ],
   "speaking": {
-   "title": "Record and listen back",
-   "drill": "Record 60 seconds answering 'why do you want to be a CFO?'. Listen once for content, once for delivery only.",
-   "why": "Almost nobody does this, and it is the single fastest improvement available. You will hear things no one will tell you."
+   "title": "The hostile question",
+   "drill": "Rehearse: 'That is a fair challenge \u2014 here is the assumption behind it.' Say it five times until it is automatic.",
+   "why": "Having a rehearsed opening for a hostile question buys three seconds of thinking without looking rattled."
   },
   "interview_tech": [
    {
-    "q": "How do you evaluate a capex request for store refurbishment versus a new store?",
-    "a": "Both need incremental cash flow, but the counterfactual differs. For a new store, the baseline is zero. For a refurbishment, the baseline is the store's declining trajectory without investment \u2014 so the benefit is the uplift over that decline, not over today. People systematically overstate refurbishment returns by comparing post-refit sales to pre-refit sales, which double-counts the natural trend and any category resets. Ask for the do-nothing case in writing.",
-    "who": "Marks & Spencer \u00b7 Landmark Group"
+    "q": "You suspect fraud in a store's cash handling. What is your first move?",
+    "a": "Do not confront and do not alert. Preserve evidence first \u2014 secure the system logs, till data, CCTV and reconciliations before anyone knows there is a question. Then escalate per policy: internal audit, legal, and whoever the fraud policy names, usually the audit committee chair for anything material or involving management. Only then investigate. The most common and most costly mistake is a well-meaning manager asking questions locally, which destroys evidence and tips off the person involved.",
+    "who": "Any group with an audit committee"
    },
    {
-    "q": "What is the one number you would put on a retail CEO's daily dashboard?",
-    "a": "Like-for-like sales versus plan, with gross margin rate alongside it. One without the other is dangerous \u2014 sales up on margin collapse is a discount habit forming, and margin up on sales collapse is a range problem. If forced to a single figure, gross profit versus plan, because it moves only when something real happens. Everything else \u2014 footfall, conversion, basket, density \u2014 is diagnostic detail you reach for once that number moves.",
-    "who": "Retail CEOs everywhere"
+    "q": "How would you build the finance case for entering Saudi Arabia?",
+    "a": "Model it as an option, not a certainty. Entry costs: legal structure and Saudisation obligations under Nitaqat, which drive a materially different payroll cost curve; local content and CITC/ZATCA compliance; e-invoicing (FATOORA) from day one. Revenue: a much larger population than the UAE with different mall economics and a younger consumer. Build the base case on 3\u20135 stores, not the full ambition, with an explicit go/no-go gate after 24 months and a costed exit. The board decision you want is a staged commitment.",
+    "who": "Alshaya \u00b7 Landmark \u00b7 Americana"
    }
   ],
   "interview_soft": [
    {
-    "q": "Describe a time you had to deliver bad news to senior stakeholders.",
-    "a": "Lead with the structure you used, because that is the skill. Bad news goes: the number, the cause, the impact, the plan, the ask. No preamble. Deliver it early even when incomplete \u2014 'here is what I know now and what I will know Friday' beats a complete answer a week late. Give a specific example with the actual figure and what you did next. The tell they look for: did you surface it or did someone else find it.",
-    "who": "Amazon \u00b7 Emaar \u00b7 Nestl\u00e9"
+    "q": "What would your last manager say is your weakness?",
+    "a": "Name a real one with a boundary. The pattern that works: a genuine weakness, evidence you know its cost, and the specific mechanism you use to contain it. 'I go too deep into detail before surfacing a view \u2014 it has cost me time on low-stakes analysis. I now set a decision deadline before starting and present at that point regardless of how complete it feels.' Avoid perfectionism, avoid anything that would disqualify you for the role itself.",
+    "who": "Universal"
    },
    {
-    "q": "Why should we hire you over a candidate with Big Four and listed-company experience?",
-    "a": "Do not disparage the alternative. Frame the trade: audit teaches you to verify what happened; operating finance teaches you to change what happens next. Then be specific about what you own that they do not \u2014 a live multi-country P&L, an ERP implementation you led rather than advised on, and store-level decisions you made and were held to. End with the honest gap and how you would close it. Confidence with a named weakness beats confidence alone.",
-    "who": "Every shortlist"
+    "q": "What is the hardest decision you have made in your career?",
+    "a": "Hard means genuinely two-sided, not merely unpleasant. Redundancies, closing a site, overruling someone you respected, or choosing between two people for one role. Structure: the trade-off, the information you had and did not have, how you decided, what it cost, and what you would do differently. Interviewers discount any answer where the right choice was obvious in hindsight \u2014 say what made it genuinely close.",
+    "who": "Majid Al Futtaim \u00b7 GE \u00b7 Unilever"
    }
   ]
  }
