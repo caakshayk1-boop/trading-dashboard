@@ -15,9 +15,16 @@ export default async function handler(req, res) {
     return json(res, 503, out);
   }
 
+  // Withdrawn or never-valid signals — the Signal Log's default "All" view
+  // excludes these too (badgeOf() in this file classifies them "cancelled"),
+  // so this header count has to exclude them the same way or the two numbers
+  // on the same page disagree again, the exact bug this endpoint was already
+  // fixed for once this session over magic/magicmagic's engine_version.
+  const NOT_CANCELLED = "upper(COALESCE(status,'')) NOT IN ('VOID','CANCELLED')";
+
   try {
     const rs = await db().execute(
-      "SELECT COUNT(*) AS n, MAX(date) AS latest FROM all_signals"
+      `SELECT COUNT(*) AS n, MAX(date) AS latest FROM all_signals WHERE ${NOT_CANCELLED}`
     );
     const row = rs.rows[0] || {};
     out.ok = true;
@@ -67,7 +74,7 @@ export default async function handler(req, res) {
     if (cols.has("engine_version")) {
       const vr = await db().execute(
         `SELECT ${VERSION_CASE} AS v, COUNT(*) AS n
-         FROM all_signals GROUP BY 1`
+         FROM all_signals WHERE ${NOT_CANCELLED} GROUP BY 1`
       ).catch(() => ({ rows: [] }));
       out.by_version = Object.fromEntries(
         vr.rows.map((r) => [str(r.v) || "v1", Number(r.n || 0)])

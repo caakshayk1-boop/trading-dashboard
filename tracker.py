@@ -482,15 +482,62 @@ def duplicate_symbols(symbols, signal_type="swing"):
     return dupes
 
 
+def _validate_signal_ordering(action, entry, sl, t1, t2, t3=None):
+    """Hard invariant gate — every signal type writes through
+    log_to_all_signals()/log_batch_to_all_signals(), the only two places
+    that INSERT INTO all_signals anywhere in this codebase (verified by
+    grep), so this is the one place that guarantees no signal with
+    inconsistent price levels reaches the ledger regardless of which
+    engine produced it or whether that engine's own formula gets broken by
+    a future change. A generator bug becomes a rejected-and-logged row
+    here, not a published SONACOMS with target1 == target2.
+
+    LONG:  sl < entry < t1 < t2 (< t3 if present)
+    SHORT: (t3 <) t2 < t1 < entry < sl
+
+    Returns (True, None) or (False, reason-string).
+    """
+    required = {"entry": entry, "sl": sl, "target1": t1, "target2": t2}
+    missing = [k for k, v in required.items() if v is None]
+    if missing:
+        return False, f"missing {', '.join(missing)}"
+    for name, v in (("entry", entry), ("sl", sl), ("target1", t1), ("target2", t2), ("target3", t3)):
+        if v is None:
+            continue
+        if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0:
+            return False, f"{name}={v!r} is not a finite positive number"
+    if t1 == t2:
+        return False, f"target1 == target2 ({t1})"
+    is_short = str(action or "").upper() == "SELL"
+    if is_short:
+        if not (t2 < t1 < entry < sl):
+            return False, f"SHORT ordering violated: target2={t2} target1={t1} entry={entry} sl={sl}"
+        if t3 is not None and not (t3 < t2):
+            return False, f"SHORT target3 ordering violated: target3={t3} target2={t2}"
+    else:
+        if not (sl < entry < t1 < t2):
+            return False, f"LONG ordering violated: sl={sl} entry={entry} target1={t1} target2={t2}"
+        if t3 is not None and not (t2 < t3):
+            return False, f"LONG target3 ordering violated: target2={t2} target3={t3}"
+    return True, None
+
+
 def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
                         timeframe="SWING", score=0, metadata=None):
-    """Unified signal logger — returns the new row id.
+    """Unified signal logger — returns the new row id, or None if the
+    signal was rejected by _validate_signal_ordering() (logged, not raised —
+    a bad signal from one symbol must not crash the rest of the scan).
 
     The row is written with sent_at NULL. Delivery is recorded separately by
     mark_alerts_sent() once Telegram has actually accepted the message. The
     ledger must record every signal the scanner produced whether or not
     Telegram was reachable, so this deliberately does not depend on the send.
     """
+    ok, reason = _validate_signal_ordering(action, entry, sl, t1, t2, t3)
+    if not ok:
+        log.error(f"all_signals REJECTED: {symbol} {signal_type} {action} — {reason} "
+                  f"(entry={entry} sl={sl} t1={t1} t2={t2} t3={t3})")
+        return None
     init_db()
     today = _today_ist()
     with _conn() as c:
@@ -528,8 +575,17 @@ def log_batch_to_all_signals(rows, date=None):
     init_db()
     today = date or _today_ist()
     ids = []
+    rejected = 0
     with _conn() as c:
         for r in rows:
+            ok, reason = _validate_signal_ordering(
+                r.get("action", "BUY"), r["entry"], r["sl"], r["t1"], r["t2"], r.get("t3"))
+            if not ok:
+                log.error(f"all_signals batch REJECTED: {r['symbol']} {r.get('signal_type')} — {reason} "
+                          f"(entry={r['entry']} sl={r['sl']} t1={r['t1']} t2={r['t2']} t3={r.get('t3')})")
+                ids.append(None)  # keeps ids aligned with the input list's order/length
+                rejected += 1
+                continue
             c.execute("""INSERT INTO all_signals
                 (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
                  rr,score,status,sent_at,metadata,engine_version,grade,breakeven_wr,turnover_cr)
@@ -542,7 +598,10 @@ def log_batch_to_all_signals(rows, date=None):
             ids.append(c.execute("SELECT last_insert_rowid()").fetchone()[0])
         c.commit()
         _db.sync(c)
-    log.info(f"all_signals batch logged: {len(ids)} row(s) "
+    if rejected:
+        log.warning(f"all_signals batch: {rejected}/{len(rows)} row(s) rejected by ordering validation")
+    written = len(ids) - rejected
+    log.info(f"all_signals batch logged: {written}/{len(rows)} row(s) "
              f"({', '.join(r['symbol'] for r in rows[:8])}"
              f"{'…' if len(rows) > 8 else ''})")
     return ids

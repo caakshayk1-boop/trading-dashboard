@@ -73,14 +73,20 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
             lc = (r.get("lifecycle_status") or "").upper()
             WIN_STATUSES  = {"TARGET_HIT", "T1_HIT", "T2_HIT", "TP1_HIT", "TP2_HIT", "PROFIT"}
             LOSS_STATUSES = {"SL_HIT", "STOPPED", "STOP_HIT", "LOSS"}
+            # A real, resolved outcome (ran its course, exited on a time rule,
+            # or never triggered before its window closed) — not a withdrawal.
+            # Mirrors _db.js's badgeOf(); keep both in sync.
+            EXPIRED_STATUSES = {"TIME_STOP", "EXPIRED"}
             if s in WIN_STATUSES or lc in WIN_STATUSES:
                 badge = "win"
             elif s in LOSS_STATUSES or lc in LOSS_STATUSES:
                 badge = "loss"
             elif s == "OPEN" or lc == "OPEN":
                 badge = "open"
+            elif s in EXPIRED_STATUSES or lc in EXPIRED_STATUSES:
+                badge = "expired"
             else:
-                badge = "cancelled"
+                badge = "cancelled"  # VOID, CANCELLED, and anything unrecognized
             r["badge"] = badge
             # Same symbol → currency rule the alerts and the API use. Without
             # it the 6 AM snapshot renders dollar-quoted commodities in rupees.
@@ -4288,6 +4294,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 .badge-loss{background:rgba(255,92,92,.1);color:var(--down);border:1px solid rgba(255,92,92,.28)}
 .badge-open{background:rgba(106,168,255,.1);color:var(--blue);border:1px solid rgba(106,168,255,.28)}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
+.badge-expired{background:rgba(232,197,71,.1);color:var(--gold);border:1px solid rgba(232,197,71,.25)}
 /* Position battle status — where a tracked position sits in the profit-protection ladder. */
 .badge-accumulation{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
 .badge-protected{background:rgba(184,239,67,.12);color:var(--lime);border:1px solid rgba(184,239,67,.3)}
@@ -6977,7 +6984,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button class="fbtn" data-f="open">Open</button>
     <button class="fbtn" data-f="win">Target Hit</button>
     <button class="fbtn" data-f="loss">Stop Hit</button>
-    <button class="fbtn" data-f="cancelled">Cancelled</button>
+    <button class="fbtn" data-f="expired">Expired</button>
+    <button class="fbtn" data-f="cancelled" title="Withdrawn or never-valid signals — hidden from All by default, never deleted">Cancelled</button>
   </div>
 
   <!-- Engine generation. ensureAlertTable() returns early when this
