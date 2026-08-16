@@ -46,12 +46,17 @@ def main() -> int:
     placeholders = ",".join("?" * len(STATUSES))
 
     with _db.connect() as c:
-        c.row_factory = _db.Row
-        rows = c.execute(
+        cur = c.execute(
             f"SELECT * FROM all_signals WHERE upper(COALESCE(status,'')) IN ({placeholders})",
             STATUSES,
-        ).fetchall()
-        rows = [dict(r) for r in rows]
+        )
+        # Not dict(row) — libsql's row type under Turso doesn't support the
+        # mapping protocol sqlite3.Row does locally, so that only ever worked
+        # against the local-fallback DB and TypeErrors against production.
+        # Same cursor.description + zip pattern dedupe_positions.py already
+        # uses for exactly this reason.
+        cols = [d[0] for d in cur.description]
+        rows = [dict(zip(cols, v)) for v in cur.fetchall()]
 
     by_status = {}
     for r in rows:
