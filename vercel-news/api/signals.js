@@ -6,7 +6,7 @@
 //   date=YYYY-MM-DD   one day only (archive view)
 //   from=, to=        date range
 //   symbol=           substring match
-//   status=win|loss|open|cancelled
+//   status=win|loss|open|expired|cancelled
 //   tf=               timeframe exact match
 //   type=             signal_type exact match (e.g. ai_longterm)
 //   exclude_type=     signal_type to omit
@@ -32,6 +32,7 @@ const CURRENT_VERSION = "v2";
 // SQL so the filter applies to the whole ledger and pagination stays honest.
 const WIN_LIST = "'TARGET_HIT','T1_HIT','T2_HIT','TP1_HIT','TP2_HIT','PROFIT'";
 const LOSS_LIST = "'SL_HIT','STOPPED','STOP_HIT','LOSS'";
+const EXPIRED_LIST = "'TIME_STOP','EXPIRED'";
 const BADGE_SQL = {
   win: `(upper(coalesce(status,'')) IN (${WIN_LIST}) OR upper(coalesce(lifecycle_status,'')) IN (${WIN_LIST}))`,
   loss: `(upper(coalesce(status,'')) NOT IN (${WIN_LIST})
@@ -41,7 +42,15 @@ const BADGE_SQL = {
           AND upper(coalesce(lifecycle_status,'')) NOT IN (${WIN_LIST},${LOSS_LIST})
           AND (upper(coalesce(status,'')) = 'OPEN' OR upper(coalesce(lifecycle_status,'')) = 'OPEN'))`,
 };
-BADGE_SQL.cancelled = `(NOT ${BADGE_SQL.win} AND NOT ${BADGE_SQL.loss} AND NOT ${BADGE_SQL.open})`;
+// Mirrors the win/loss/open/expired split in badgeOf() (_db.js) — this file
+// keeps its own SQL copy so ?status= filtering stays honest across the whole
+// ledger, not just the current page (see comment above). Missing this split
+// left ?status=cancelled silently including TIME_STOP/EXPIRED rows even
+// though each row's own `badge` field (from badgeOf()) already called them
+// "expired" — the filter and the row disagreed with each other.
+BADGE_SQL.expired = `(NOT ${BADGE_SQL.win} AND NOT ${BADGE_SQL.loss} AND NOT ${BADGE_SQL.open}
+          AND (upper(coalesce(status,'')) IN (${EXPIRED_LIST}) OR upper(coalesce(lifecycle_status,'')) IN (${EXPIRED_LIST})))`;
+BADGE_SQL.cancelled = `(NOT ${BADGE_SQL.win} AND NOT ${BADGE_SQL.loss} AND NOT ${BADGE_SQL.open} AND NOT ${BADGE_SQL.expired})`;
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return fail(res, 405, "GET only");
@@ -68,7 +77,7 @@ export default async function handler(req, res) {
   else if (q.exclude_type) { where.push("COALESCE(signal_type,'') != ?"); args.push(String(q.exclude_type)); }
   if (q.status) {
     const clause = BADGE_SQL[String(q.status).toLowerCase()];
-    if (!clause) return fail(res, 400, "status must be one of: win, loss, open, cancelled");
+    if (!clause) return fail(res, 400, "status must be one of: win, loss, open, expired, cancelled");
     where.push(clause);
   }
 
