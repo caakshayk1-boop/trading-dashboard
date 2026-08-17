@@ -151,6 +151,26 @@ def sync(conn) -> None:
         log.warning(f"db.sync error: {e}")
 
 
+def reset_replica() -> None:
+    """Delete the local embedded-replica file so the next connect() must pull
+    fresh from Turso instead of reusing whatever this process already wrote.
+
+    Every connect() in a process reuses the same REPLICA_DB path, so a
+    "fresh connection" opened later in the same run is NOT independent proof
+    that a write reached the remote database — it can still see the write
+    purely from local replica state even if the push to Turso silently
+    failed. Callers that need to verify a write actually landed on the
+    remote (e.g. a publish job's read-back check) must call this first.
+    """
+    import glob
+    for path in [REPLICA_DB] + glob.glob(REPLICA_DB + "-*"):
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+        except Exception as e:
+            log.warning(f"reset_replica: could not remove {path}: {e}")
+
+
 # Row factory — works for both libsql and sqlite3
 Row = sqlite3.Row
 

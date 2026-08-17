@@ -2438,6 +2438,68 @@ def _stamp_fund_payload(data: dict, fallback: bool) -> dict:
     return data
 
 
+def record_job_status(job: str, status: str, detail: str = "") -> None:
+    """Record the outcome of a publish attempt — success or failure — keyed
+    by job name, one row per job.
+
+    Before this, a FAILED weekly build left no trace anywhere the site could
+    read: it just didn't write a new payload, and the page kept showing the
+    last successful one with no way to tell "unchanged this week" apart from
+    "tried and failed this week". This table is deliberately separate from
+    the payload tables (newspaper_screen / newspaper_funds /
+    newspaper_market_intel) so a failed attempt is queryable even when it
+    produced no payload at all.
+    """
+    try:
+        with _db() as con:
+            con.execute("""CREATE TABLE IF NOT EXISTS job_runs (
+                job TEXT PRIMARY KEY, run_at TEXT, status TEXT, detail TEXT)""")
+            con.execute(
+                "INSERT OR REPLACE INTO job_runs VALUES (?,?,?,?)",
+                (job, datetime.now(timezone.utc).isoformat(), status, detail[:500]))
+            con.commit()
+    except Exception as e:
+        log.warning(f"record_job_status({job}): {e}")
+
+
+def get_job_status(job: str, served_generated_at: str | None = None) -> dict:
+    """Latest recorded attempt for a job, or {} if none exists yet.
+
+    When served_generated_at is given (the vintage of the payload currently
+    on the page), also sets "attempted_after_serve": True when the latest
+    attempt is BOTH failed and happened after that payload was built — i.e.
+    the site is showing old data not because nothing changed, but because a
+    newer attempt existed and failed. That distinction used to be invisible;
+    a stale screen and a broken one looked identical to a reader.
+
+    Timestamps come from two different clocks (job_runs is always UTC;
+    payload generated_at is UTC for funds/market-intel but IST for the
+    stock screen), so this parses both with fromisoformat() rather than
+    comparing the raw strings — a naive string compare would misorder an
+    IST-stamped payload against a UTC attempt by up to 5.5 hours.
+    """
+    try:
+        with _db() as con:
+            row = con.execute(
+                "SELECT run_at, status, detail FROM job_runs WHERE job=?",
+                (job,)).fetchone()
+        if not row:
+            return {}
+        out = {"run_at": row[0], "status": row[1], "detail": row[2],
+               "attempted_after_serve": False}
+        if row[1] == "failed" and served_generated_at:
+            try:
+                attempt_ts = datetime.fromisoformat(str(row[0]).replace("Z", "+00:00"))
+                served_ts = datetime.fromisoformat(str(served_generated_at).replace("Z", "+00:00"))
+                out["attempted_after_serve"] = attempt_ts > served_ts
+            except ValueError:
+                pass
+        return out
+    except Exception as e:
+        log.warning(f"get_job_status({job}): {e}")
+        return {}
+
+
 def _week_key() -> str:
     """Cache key: ISO week plus the engine that produced the picks.
 
@@ -5372,6 +5434,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% if market_intel.get('is_fallback') %}
     <span>&#9888; Today's build has not run &mdash; showing the previous day's.</span>
     {% endif %}
+    {% if market_intel.get('job_status', {}).get('attempted_after_serve') %}
+    <span style="color:var(--gold)">&#9888; The most recent attempt
+      ({{ market_intel.job_status.run_at[:16] }} UTC) failed &mdash;
+      {{ market_intel.job_status.detail[:120] }}</span>
+    {% endif %}
   </div>
 
   {% set heat = market_intel.get('market_heat') or [] %}
@@ -5773,6 +5840,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% if fund_screen.is_fallback %}
     <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous build.
       NAVs below are from that date, not today.</span>
+    {% endif %}
+    {% if fund_screen.get('job_status', {}).get('attempted_after_serve') %}
+    <span style="color:var(--gold)">&#9888; The most recent rebuild attempt
+      ({{ fund_screen.job_status.run_at[:16] }} UTC) failed &mdash;
+      {{ fund_screen.job_status.detail[:120] }}</span>
     {% endif %}
   </div>
 
@@ -6990,6 +7062,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       this run &mdash; NSE's Total Market feed was unavailable, so this week
       screens a smaller universe than usual.</span>
     {% endif %}
+    {% if stock_screen.get('job_status', {}).get('attempted_after_serve') %}
+    <span style="color:var(--gold)">&#9888; The most recent rebuild attempt
+      ({{ stock_screen.job_status.run_at[:16] }} UTC) failed &mdash;
+      {{ stock_screen.job_status.detail[:120] }}</span>
+    {% endif %}
   </div>
 
   <!-- Breadth, measured across this same screened universe (stock_screen.count
@@ -7522,6 +7599,9 @@ def index():
         lichess_summary = get_lichess_summary(lichess_games)
         lichess_puzzle  = fetch_lichess_puzzle()
         alerts         = fetch_alert_log()
+        fund_screen    = get_fund_screen()
+        if fund_screen:
+            fund_screen["job_status"] = get_job_status("fund_screen", fund_screen.get("generated_at"))
 
         return render_template_string(TEMPLATE,
             tv_aliases=TV_ALIASES,
@@ -7530,7 +7610,7 @@ def index():
             markets=markets, news=news, fpna=fpna, cfo=cfo,
             chess=chess, wisdom=wisdom, book=book, way=way_ctx, review=review_ctx,
             top5=top5, tracker=tracker, money_hack=money, dubai=dubai, daughter=daughter, music=music_lib,
-            fund_screen=get_fund_screen(),
+            fund_screen=fund_screen,
             productivity_tip=prod,
             quote=quote, lesson=lesson, case=case,
             lichess_games=lichess_games, lichess_summary=lichess_summary, lichess_puzzle=lichess_puzzle,

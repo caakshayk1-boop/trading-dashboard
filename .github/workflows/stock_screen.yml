@@ -84,77 +84,93 @@ jobs:
           logging.basicConfig(level=logging.INFO, format="%(message)s")
           import stock_screen, newspaper
 
-          limit = int(os.environ.get("SCREEN_LIMIT") or 0) or None
-          news = int(os.environ.get("NEWS_TOP") or 150)
-          # Narrative is injected, not imported — no key means no prose and
-          # every row still carries its rule-based SWOT.
-          ai = newspaper.groq_complete if newspaper.GROQ_KEY else None
-          # Previous build for the delta columns.
-          prev = None
+          JOB = "stock_screen"
           try:
+              limit = int(os.environ.get("SCREEN_LIMIT") or 0) or None
+              news = int(os.environ.get("NEWS_TOP") or 150)
+              # Narrative is injected, not imported — no key means no prose and
+              # every row still carries its rule-based SWOT.
+              ai = newspaper.groq_complete if newspaper.GROQ_KEY else None
+              # Previous build for the delta columns.
+              prev = None
+              try:
+                  with newspaper._db() as con:
+                      row = con.execute("SELECT payload FROM newspaper_screen "
+                                        "ORDER BY week DESC LIMIT 1").fetchone()
+                  if row:
+                      prev = json.loads(row[0])
+                      print(f"diffing against the build of {prev.get('built_on')}")
+              except Exception as e:
+                  print(f"no previous build to diff against: {e}")
+              data = stock_screen.build(limit=limit, news_top=news, ai=ai, prev=prev)
+              if not data.get("ok"):
+                  raise SystemExit(f"screen failed: {data.get('error')}")
+
+              cov = data["coverage"]
+              print(f"\n{data['count']} companies of {data['attempted']} attempted "
+                    f"in {data['build_secs']}s")
+              print(f"  statements  {cov['statements']:3} ({cov['statements_pct']}%)")
+              print(f"  ROCE        {cov['roce']:3} ({cov['roce_pct']}%)")
+              print(f"  prices to   {data['price_date']}")
+              print("\ntop 10 by composite:")
+              for r in data["rows"][:10]:
+                  print(f"  {r['sym']:<12} comp {r.get('comp')}  Q {r.get('q')}  "
+                        f"G {r.get('g')}  V {r.get('v')}  T {r.get('tech')}  "
+                        f"ROCE {r.get('roce')}")
+
+              # Coverage floors. A run that technically succeeds while Yahoo returns
+              # nothing would cache a price-only screen with every ratio column
+              # blank, and the section would render for a week looking like the
+              # accounts simply do not exist. Fail instead — the reader keeps last
+              # week's screen, which is stamped with its own date.
+              # Floor scaled with the universe: 750 names, so 450 is the same
+              # 60% bar the 500-name screen had at 300.
+              if data["count"] < 450:
+                  raise SystemExit(f"only {data['count']} companies priced — refusing to cache")
+              if cov["statements_pct"] < 70:
+                  raise SystemExit(f"statements for only {cov['statements_pct']}% — refusing to cache")
+
+              week = newspaper._stock_week_key()
               with newspaper._db() as con:
-                  row = con.execute("SELECT payload FROM newspaper_screen "
-                                    "ORDER BY week DESC LIMIT 1").fetchone()
-              if row:
-                  prev = json.loads(row[0])
-                  print(f"diffing against the build of {prev.get('built_on')}")
-          except Exception as e:
-              print(f"no previous build to diff against: {e}")
-          data = stock_screen.build(limit=limit, news_top=news, ai=ai, prev=prev)
-          if not data.get("ok"):
-              raise SystemExit(f"screen failed: {data.get('error')}")
+                  con.execute("""CREATE TABLE IF NOT EXISTS newspaper_screen (
+                      week TEXT PRIMARY KEY, payload TEXT)""")
+                  con.execute("INSERT OR REPLACE INTO newspaper_screen VALUES (?,?)",
+                              (week, json.dumps(data)))
+                  con.commit()
 
-          cov = data["coverage"]
-          print(f"\n{data['count']} companies of {data['attempted']} attempted "
-                f"in {data['build_secs']}s")
-          print(f"  statements  {cov['statements']:3} ({cov['statements_pct']}%)")
-          print(f"  ROCE        {cov['roce']:3} ({cov['roce_pct']}%)")
-          print(f"  prices to   {data['price_date']}")
-          print("\ntop 10 by composite:")
-          for r in data["rows"][:10]:
-              print(f"  {r['sym']:<12} comp {r.get('comp')}  Q {r.get('q')}  "
-                    f"G {r.get('g')}  V {r.get('v')}  T {r.get('tech')}  "
-                    f"ROCE {r.get('roce')}")
-
-          # Coverage floors. A run that technically succeeds while Yahoo returns
-          # nothing would cache a price-only screen with every ratio column
-          # blank, and the section would render for a week looking like the
-          # accounts simply do not exist. Fail instead — the reader keeps last
-          # week's screen, which is stamped with its own date.
-          # Floor scaled with the universe: 750 names, so 450 is the same
-          # 60% bar the 500-name screen had at 300.
-          if data["count"] < 450:
-              raise SystemExit(f"only {data['count']} companies priced — refusing to cache")
-          if cov["statements_pct"] < 70:
-              raise SystemExit(f"statements for only {cov['statements_pct']}% — refusing to cache")
-
-          week = newspaper._stock_week_key()
-          with newspaper._db() as con:
-              con.execute("""CREATE TABLE IF NOT EXISTS newspaper_screen (
-                  week TEXT PRIMARY KEY, payload TEXT)""")
-              con.execute("INSERT OR REPLACE INTO newspaper_screen VALUES (?,?)",
-                          (week, json.dumps(data)))
-              con.commit()
-
-          # Verify the write actually reached Turso, not just the local
-          # embedded replica. On 2026-08-15 this exact job built a fresh
-          # screen (BLS top-5, prices to 2026-08-14), printed "cached", and
-          # exited 0 — but db.py's sync() failed silently on __exit__, so the
-          # remote DB never got it and the site kept serving 2026-08-12 for
-          # 5 days with no error anywhere. A fresh connection forces a pull
-          # from Turso (db.connect() syncs before any query), so re-reading
-          # the row here proves the write is actually durable, not just local.
-          with newspaper._db() as verify_con:
-              row = verify_con.execute(
-                  "SELECT payload FROM newspaper_screen WHERE week=?", (week,)
-              ).fetchone()
-          if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
-              raise SystemExit(
-                  f"publish verification failed — week {week} was written locally "
-                  f"but does not read back correctly from Turso. The remote DB "
-                  f"still has last week's build. Not safe to report success."
-              )
-          print(f"\ncached for week {week} — verified on Turso")
+              # Verify the write actually reached Turso, not just the local
+              # embedded replica. On 2026-08-15 this exact job built a fresh
+              # screen (BLS top-5, prices to 2026-08-14), printed "cached", and
+              # exited 0 — but the remote DB never got it and the site kept
+              # serving 2026-08-12 for 5 days with no error anywhere.
+              #
+              # A same-process "fresh" connection is NOT a real check: every
+              # connect() in this job reuses the same local replica file, so
+              # it would still see the write even if the push to Turso failed
+              # (confirmed 2026-08-17 — that exact check passed here and the
+              # live site still served 2026-08-12 afterward). reset_replica()
+              # deletes the local file first, so this connect() has nothing
+              # to fall back on but a genuine pull from Turso.
+              newspaper._db_mod.reset_replica()
+              with newspaper._db() as verify_con:
+                  row = verify_con.execute(
+                      "SELECT payload FROM newspaper_screen WHERE week=?", (week,)
+                  ).fetchone()
+              if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
+                  raise SystemExit(
+                      f"publish verification failed — week {week} was written locally "
+                      f"but does not read back correctly from Turso. The remote DB "
+                      f"still has last week's build. Not safe to report success."
+                  )
+              print(f"\ncached for week {week} — verified on Turso")
+              newspaper.record_job_status(JOB, "success", f"week {week}, {data['count']} companies")
+          except BaseException as e:
+              # Recorded even for a SystemExit floor-trip, not just an unhandled
+              # crash — a refused publish ("only 200 companies priced") is exactly
+              # the kind of failure the site should be able to say "last attempt
+              # failed, N hours ago" about, not just silently keep last week's data.
+              newspaper.record_job_status(JOB, "failed", str(e))
+              raise
           PY
 
       # NO commit step for the caches, deliberately. There was one and it could

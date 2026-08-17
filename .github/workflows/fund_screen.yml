@@ -53,48 +53,58 @@ jobs:
           logging.basicConfig(level=logging.INFO, format="%(message)s")
           import funds, newspaper
 
-          n = int(os.environ.get("PER_CAT", "45"))
-          data = funds.build(limit_per_cat=n)
-          if not data.get("ok"):
-              raise SystemExit(f"screen failed: {data.get('error')}")
+          JOB = "fund_screen"
+          try:
+              n = int(os.environ.get("PER_CAT", "45"))
+              data = funds.build(limit_per_cat=n)
+              if not data.get("ok"):
+                  raise SystemExit(f"screen failed: {data.get('error')}")
 
-          cats = data["categories"]
-          total = sum(len(c["funds"]) for c in cats)
-          print(f"\n{len(cats)} categories, {total} funds published")
-          for c in cats:
-              top = c["funds"][0]["r3"] if c["funds"] else None
-              print(f"  {c['label']:22} {c['screened']:3} screened  top {top}%")
+              cats = data["categories"]
+              total = sum(len(c["funds"]) for c in cats)
+              print(f"\n{len(cats)} categories, {total} funds published")
+              for c in cats:
+                  top = c["funds"][0]["r3"] if c["funds"] else None
+                  print(f"  {c['label']:22} {c['screened']:3} screened  top {top}%")
 
-          # Empty categories mean the AMFI category string moved or every
-          # candidate went stale. Fail loudly rather than caching a blank
-          # section that then renders as "nothing here" for a week.
-          empty = [c["label"] for c in cats if not c["funds"]]
-          if empty:
-              raise SystemExit(f"empty categories: {empty}")
+              # Empty categories mean the AMFI category string moved or every
+              # candidate went stale. Fail loudly rather than caching a blank
+              # section that then renders as "nothing here" for a week.
+              empty = [c["label"] for c in cats if not c["funds"]]
+              if empty:
+                  raise SystemExit(f"empty categories: {empty}")
 
-          # _fund_week_key(), not _week_key(): the latter embeds PICKS_ENGINE
-          # and bumping the EQUITY picks engine would orphan this cache.
-          week = newspaper._fund_week_key()
-          with newspaper._db() as con:
-              con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
-                  week TEXT PRIMARY KEY, payload TEXT)""")
-              con.execute("INSERT OR REPLACE INTO newspaper_funds VALUES (?,?)",
-                          (week, json.dumps(data)))
-              con.commit()
+              # _fund_week_key(), not _week_key(): the latter embeds PICKS_ENGINE
+              # and bumping the EQUITY picks engine would orphan this cache.
+              week = newspaper._fund_week_key()
+              with newspaper._db() as con:
+                  con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
+                      week TEXT PRIMARY KEY, payload TEXT)""")
+                  con.execute("INSERT OR REPLACE INTO newspaper_funds VALUES (?,?)",
+                              (week, json.dumps(data)))
+                  con.commit()
 
-          # Verify the write reached Turso, not just the local embedded
-          # replica — db.py's sync() on __exit__ can fail silently (see
-          # stock_screen.yml for the incident this pattern caused there). A
-          # fresh connection forces a pull from Turso before querying.
-          with newspaper._db() as verify_con:
-              row = verify_con.execute(
-                  "SELECT payload FROM newspaper_funds WHERE week=?", (week,)
-              ).fetchone()
-          if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
-              raise SystemExit(
-                  f"publish verification failed — week {week} was written locally "
-                  f"but does not read back correctly from Turso. Not safe to "
-                  f"report success."
-              )
-          print(f"\ncached for week {week} — verified on Turso")
+              # Verify the write reached Turso, not just the local embedded
+              # replica. A same-process "fresh" connection is NOT proof by
+              # itself — every connect() here reuses the same local replica
+              # file, so it would still see the write even if the push to
+              # Turso failed (see stock_screen.yml for the incident this
+              # exact gap caused). reset_replica() deletes the local file
+              # first, so this connect() must pull genuinely fresh from Turso.
+              newspaper._db_mod.reset_replica()
+              with newspaper._db() as verify_con:
+                  row = verify_con.execute(
+                      "SELECT payload FROM newspaper_funds WHERE week=?", (week,)
+                  ).fetchone()
+              if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
+                  raise SystemExit(
+                      f"publish verification failed — week {week} was written locally "
+                      f"but does not read back correctly from Turso. Not safe to "
+                      f"report success."
+                  )
+              print(f"\ncached for week {week} — verified on Turso")
+              newspaper.record_job_status(JOB, "success", f"week {week}, {total} funds")
+          except BaseException as e:
+              newspaper.record_job_status(JOB, "failed", str(e))
+              raise
           PY

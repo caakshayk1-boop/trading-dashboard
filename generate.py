@@ -41,6 +41,7 @@ from newspaper import (
     get_fund_screen,
     get_market_intel,
     get_stock_screen,
+    get_job_status,
     get_podcasts,
     fetch_smart_reads,
     open_setup_context,
@@ -129,6 +130,8 @@ def generate() -> None:
           f"{' (previous build)' if podcasts.get('is_fallback') else ''}")
 
     fund_screen = get_fund_screen()
+    if fund_screen:
+        fund_screen["job_status"] = get_job_status("fund_screen", fund_screen.get("generated_at"))
     _cats = fund_screen.get("categories", [])
     print(f"[generate] Fund screen (cached): {len(_cats)} categories, "
           f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
@@ -137,6 +140,8 @@ def generate() -> None:
     # hang or rate-limit, and that must never sit inside the 6 AM build.
     # market_intel.yml owns this clock.
     market_intel = get_market_intel()
+    if market_intel:
+        market_intel["job_status"] = get_job_status("market_intel", market_intel.get("generated_at"))
     print(f"[generate] Market intel (cached): "
           f"{len(market_intel.get('corporate_actions', []))} corporate actions, "
           f"{len(market_intel.get('market_heat', []))} sectors"
@@ -147,6 +152,8 @@ def generate() -> None:
     # so building it here would repeat the fund screen's mistake with a bigger
     # number. stock_screen.yml owns its clock.
     stock_screen = get_stock_screen()
+    if stock_screen:
+        stock_screen["job_status"] = get_job_status("stock_screen", stock_screen.get("generated_at"))
     _cov = stock_screen.get("coverage") or {}
     print(f"[generate] Stock screen (cached): {stock_screen.get('count', 0)} companies, "
           f"statements for {_cov.get('statements', 0)}, ROCE for {_cov.get('roce', 0)}"
