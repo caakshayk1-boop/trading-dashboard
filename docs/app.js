@@ -4837,6 +4837,66 @@ var TV_ALIASES = (function () {
     if (location.hash === '#stocks' || /[?&]stock=/.test(location.search)) load();
   })();
 
+  /* ═══════ finance careers — filtering ═══════
+     Filters server-rendered cards in place. The section renders complete from
+     docs/jobs.json at build time, so with JS off every card simply stays
+     visible — the correct degraded state for a job list. Nothing here reads or
+     recomputes a score; it only toggles [hidden] on cards the server already
+     scored and labelled. */
+  (function(){
+    var bar = document.getElementById('jFilters');
+    if (!bar) return;                       /* not on this page */
+    var cards = [].slice.call(document.querySelectorAll('#careers .jcard'));
+    var out = document.getElementById('jCount');
+    var state = { loc: '', tier: '', fresh: '' };
+
+    function matches(card){
+      if (state.loc && card.dataset.country !== state.loc) return false;
+      if (state.tier === 'S' && card.dataset.tier !== 'S') return false;
+      if (state.tier === 'SA' && card.dataset.tier !== 'S' && card.dataset.tier !== 'A') return false;
+      if (state.fresh === 'NEW' && card.dataset.status !== 'NEW') return false;
+      /* "Hide stale" drops only the genuinely dead states, not everything old:
+         an AGING role with a working application link is still worth seeing. */
+      if (state.fresh === 'OPEN' && /^(STALE|CLOSED|REMOVED|LINK_BROKEN)$/.test(card.dataset.status)) return false;
+      return true;
+    }
+
+    function apply(){
+      var shown = 0;
+      cards.forEach(function(c){
+        var ok = matches(c);
+        c.hidden = !ok;
+        if (ok) shown++;
+      });
+      /* Hide a group heading whose whole grid filtered away, so the section
+         never shows a title over nothing. */
+      ['jTop','jRest'].forEach(function(id){
+        var g = document.getElementById(id);
+        if (!g) return;
+        var any = [].slice.call(g.querySelectorAll('.jcard')).some(function(c){ return !c.hidden; });
+        g.hidden = !any;
+        var h = g.previousElementSibling;
+        while (h && h.tagName !== 'H3') h = h.previousElementSibling;
+      });
+      if (out) out.textContent = shown === cards.length
+        ? cards.length + ' roles'
+        : shown + ' of ' + cards.length + ' roles';
+    }
+
+    bar.addEventListener('click', function(ev){
+      var b = ev.target.closest('[data-jf]');
+      if (!b) return;
+      var key = b.dataset.jf;
+      state[key] = b.dataset.v;
+      bar.querySelectorAll('[data-jf="' + key + '"]').forEach(function(n){
+        n.classList.toggle('on', n === b);
+      });
+      apply();
+    });
+
+    apply();
+  })();
+
   /* No whole-page reload. The clock ticks, markets and news refresh on their
      own timers, and the ledger sections pull on demand — reloading every five
      minutes would only throw away scroll position and any game in progress. */
