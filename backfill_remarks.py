@@ -28,15 +28,26 @@ import sys
 from collections import Counter
 
 import db as _db
+import tracker
 from tracker import REMARKS
 
 
 def main() -> int:
     apply = "--apply" in sys.argv
+
+    # Apply pending migrations first. `remarks` is added by tracker.init_db()'s
+    # ALTER TABLE list, and on the FIRST run nothing has called init_db()
+    # against Turso yet — so this script would report "no remarks column" and
+    # fail, waiting on a scan that runs on its own schedule. A backfill that
+    # depends on another job having run first is a backfill that silently does
+    # not happen.
+    tracker.init_db()
+
     with _db.connect() as c:
         cols = {r[1] for r in c.execute("PRAGMA table_info(all_signals)").fetchall()}
         if "remarks" not in cols:
-            print("all_signals has no `remarks` column — run the app once to migrate")
+            print("all_signals still has no `remarks` column after init_db() — "
+                  "the migration did not apply")
             return 1
 
         rows = c.execute(
