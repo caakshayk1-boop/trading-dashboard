@@ -815,7 +815,18 @@ var TV_ALIASES = (function () {
     // section ahead of the reader.
     // A few px past the header so a section counts as current the moment its
     // heading clears the chrome, not when its top edge does.
-    var y = window.scrollY + headH() + 12;
+    //
+    // Math.round + SPY_SLACK, and both matter. An anchor click lands a section
+    // at `scroll-margin-top: calc(var(--headh) + 12px)`, and --headh is written
+    // as Math.round(headH()) — while this comparison used the RAW headH(). With
+    // a header measuring 199.6px the section lands 212px down and the threshold
+    // sat at 211.6, so the clicked section failed its own test by 0.4px and the
+    // highlight stayed on the previous one: clicking Engine Log lit Performance.
+    // Rounding identically removes the mismatch; the slack absorbs the
+    // fractional getBoundingClientRect values and browser scroll quantisation
+    // that Math.round alone does not.
+    var SPY_SLACK = 3;
+    var y = window.scrollY + Math.round(headH()) + 12 + SPY_SLACK;
     secs.forEach(function(s, i){
       // Sections stay display:none until the live API confirms there is
       // anything to put in them. A hidden section reports top 0, which
@@ -2263,6 +2274,13 @@ var TV_ALIASES = (function () {
                 '" style="cursor:help">🔁</span>' : '') + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
+          /* "Relates to". Third of the three renderers that must agree
+             column-for-column — <thead> and the server-rendered row are in
+             newspaper.py. This one replaces the tbody only, so a column added
+             here alone shifts every later cell under the wrong heading the
+             instant /api/signals resolves. test_alert_table_columns_match
+             asserts all three counts are equal. */
+          '<td class="rmk">' + esc(a.remarks || '—') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
           '<td class="mono-dim">' + gradeCell(a) + '</td>' +
           '<td class="num">' + money(a.entry, a.currency) + distCell(a) + '</td>' +
@@ -2651,9 +2669,13 @@ var TV_ALIASES = (function () {
        means neither has to know the other's timing. */
     function lastPx(a){
       var l = (window.__ledgerPx || {})[a.symbol];
-      if (l && isFinite(l.price)) return { price: l.price, live: true };
+      /* ccy comes from the quote, not the row. all_signals.market/asset_type
+         were never written by any producer, so every commodity row claimed to
+         be an NSE equity and a.currency reads ₹ for a dollar instrument. The
+         quote knows which ticker it actually priced. */
+      if (l && isFinite(l.price)) return { price: l.price, live: true, ccy: l.ccy };
       var c = OPEN_CTX[a.symbol];
-      if (c && isFinite(c.price)) return { price: c.price, live: false };
+      if (c && isFinite(c.price)) return { price: c.price, live: false, ccy: c.currency };
       return null;
     }
 
@@ -2662,7 +2684,7 @@ var TV_ALIASES = (function () {
       var p = lastPx(a);
       if (!p) return '—';
       return '<span title="' + (p.live ? 'Live quote' : '6:00 AM snapshot — no live quote for this symbol') + '"' +
-             (p.live ? '' : ' class="mono-dim"') + '>' + money(p.price, a.currency) + '</span>';
+             (p.live ? '' : ' class="mono-dim"') + '>' + money(p.price, p.ccy || a.currency) + '</span>';
     }
 
     /* Realised P&L for a closed row; UNREALISED for an open one, marked so the
@@ -3268,7 +3290,10 @@ var TV_ALIASES = (function () {
         if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); advance(); }
       };
       document.getElementById('gymNextQ').addEventListener('click', advance);
-      document.getElementById('gymNextQ').focus();
+      // preventScroll for the same reason as wireInput: this is user-initiated
+      // so the reader is already here, but focus() moving the viewport is
+      // never what is wanted mid-drill.
+      document.getElementById('gymNextQ').focus({ preventScroll: true });
       // Bind on the next tick. Answering with Enter is still dispatching that
       // keydown when this runs, and a listener added mid-dispatch on an
       // ancestor still receives it — so binding synchronously would skip the
@@ -3351,7 +3376,19 @@ var TV_ALIASES = (function () {
     function wireInput(check){
       var inp = document.getElementById('gymIn'), go = document.getElementById('gymGo');
       if (!inp || !go) return;
-      inp.focus();
+      /* focus() SCROLLS the element into view, and this runs on the gym's
+         first render — which happens at page load. Mind Gym is one of the
+         last sections on /desk, so the page opened ~80,000px down, at the
+         bottom, every single time. It reads as a broken page, not as a
+         focused input.
+
+         preventScroll keeps the caret ready without moving the viewport, and
+         the visibility test stops a mobile keyboard springing open over a
+         section the reader has not reached. Once they ARE at the gym, every
+         subsequent question still focuses normally. */
+      var r = inp.getBoundingClientRect();
+      var visible = r.top < window.innerHeight && r.bottom > 0;
+      if (visible) inp.focus({ preventScroll: true });
       var fired = false;
       var submit = function(){
         if (fired) return; fired = true;
