@@ -1601,7 +1601,11 @@ def log_sip_bucket(allocations, month_key: str, date=None) -> list:
                             + (f" · {pct}% of bucket" if pct else "")),
                 "metadata": {"engine": "sip", "month": month_key,
                              "cadence": "monthly", "allocation_pct": pct,
-                             "bucket": a.get("bucket") or a.get("category")},
+                             "bucket": a.get("bucket") or a.get("category"),
+                             # Which column the price came from. "decided at"
+                             # and "worth now" are different claims and the log
+                             # must not present one as the other.
+                             "price_basis": a.get("price_basis") or "ref_price"},
             })
         return log_batch_to_all_signals(rows, date=today) if rows else []
     except Exception as e:                                   # noqa: BLE001

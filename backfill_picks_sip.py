@@ -89,20 +89,36 @@ def backfill_sip(apply: bool) -> int:
             return 0
         holdings = {}
         for bname, _amt in buckets:
+            # ref_price is what build_bucket() records at proposal time, but a
+            # bucket that was actually bought carries buy_price, and one that
+            # has only been marked-to-market carries last_price. Take whichever
+            # exists, most-authoritative first, and SAY which one was used —
+            # "the price the allocation was decided at" and "what it is worth
+            # now" are different claims and must not be silently interchanged.
             holdings[bname] = c.execute(
-                "SELECT symbol, allocated, ref_price, score, rank, rationale "
+                "SELECT symbol, allocated, ref_price, buy_price, last_price, rank "
                 "FROM sip_holdings WHERE bucket=? ORDER BY rank", (bname,)).fetchall()
 
     total = 0
     for bname, amount in buckets:
         hs = holdings.get(bname) or []
-        allocs = [{
-            "symbol": h[0],
-            "price": h[2],
-            "pct": (round((h[1] or 0) / amount * 100, 1) if amount else None),
-            "bucket": bname,
-        } for h in hs if h[2]]
-        print(f"  {bname:16} {len(hs):2} holdings, {len(allocs):2} with a reference price")
+        allocs, basis = [], {}
+        for h in hs:
+            symbol, allocated, ref, buy, last = h[0], h[1], h[2], h[3], h[4]
+            price = ref or buy or last
+            if not price:
+                continue
+            which = "ref_price" if ref else ("buy_price" if buy else "last_price")
+            basis[which] = basis.get(which, 0) + 1
+            allocs.append({
+                "symbol": symbol,
+                "price": price,
+                "pct": (round((allocated or 0) / amount * 100, 1) if amount else None),
+                "bucket": bname,
+                "price_basis": which,
+            })
+        detail = ", ".join(f"{k}×{v}" for k, v in basis.items()) or "no usable price"
+        print(f"  {bname:16} {len(hs):2} holdings, {len(allocs):2} priced ({detail})")
         if apply and allocs:
             ids = tracker.log_sip_bucket(allocs, bname)
             total += len([i for i in ids if i])
