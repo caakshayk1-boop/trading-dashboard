@@ -65,3 +65,12 @@ jobs:
       - name: Backfill remarks (dry run / apply)
         run: |
           python backfill_remarks.py ${{ inputs.apply && '--apply' || '' }}
+
+      # Top 5 picks and SIP allocations are mirrored at the point they are
+      # CREATED — a new ISO week, a new monthly bucket — so the ledger would
+      # hold neither until the next Monday and the next month. Both histories
+      # already exist in newspaper_stocks_picked and sip_buckets/sip_holdings,
+      # so this replays them rather than waiting.
+      - name: Backfill Top 5 picks + SIP allocations (dry run / apply)
+        run: |
+          python backfill_picks_sip.py ${{ inputs.apply && '--apply' || '' }}
