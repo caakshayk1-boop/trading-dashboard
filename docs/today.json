@@ -1,5 +1,5 @@
 {
- "build_id": "20260817T001321",
+ "build_id": "20260817T073433",
  "date": "2026-08-17",
  "date_str": "Monday, August 17 2026",
  "picks": [
@@ -395,7 +395,7 @@
    "sector": "Real Estate"
   },
   "BRNUSD": {
-   "price": 88.52,
+   "price": 88.87,
    "sector": ""
   },
   "CANBK": {
@@ -555,7 +555,7 @@
    "sector": "Consumer Defensive"
   },
   "NGAS": {
-   "price": 2.733,
+   "price": 2.659,
    "sector": ""
   },
   "NIACL": {
@@ -589,25 +589,25 @@
  },
  "desk": {
   "chess": {
-   "title": "Thinking Process",
-   "body": "Every move: 1. What did my opponent just do? (threats?) 2. What are my candidate moves? (at least 2-3) 3. Calculate each candidate 2-3 moves deep. 4. Use LPDO check. 5. Make the move. Don't play on impulse. Even 30 seconds of structured thinking eliminates 80% of blunders. This process is the difference between 800 and 1200 Elo.",
-   "index": 18,
+   "title": "Study Plan: 15 Min/Day",
+   "body": "15 minutes daily beats 3 hours once a week. Split: 5 min puzzles (Chess.com/Lichess tactics trainer) + 5 min play (1 game, 10+0 or 15+10) + 5 min review (analyse your game, find the turning point). After 30 days: you'll feel patterns automatically. Tactics + play + review = the triangle of improvement.",
+   "index": 19,
    "total": 20
   },
   "wisdom": {
-   "title": "On Anger",
-   "body": "Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive.",
-   "index": 8,
+   "title": "Financial Peace = Emotional Peace",
+   "body": "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition \u2014 it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.",
+   "index": 9,
    "total": 18
   },
   "book": {
    "book": "Poor Charlie's Almanack",
    "author": "Charlie Munger",
-   "chapter": "Mental Models: Think in Multiple Frameworks",
-   "lesson": "Charlie Munger's approach to decision-making: build a 'latticework of mental models' from multiple disciplines. The person who only knows accounting sees every problem through accounting. The person who knows psychology, economics, biology, physics, and history sees the problem in full. Munger's rule: you need 80-90 mental models to think well. The key ones: compound interest (mathematics), evolution (biology), supply and demand (economics), confirmation bias (psychology), systems thinking (engineering). His most important: 'I never allow myself to have an opinion I can't defend with the strongest arguments on the other side.'",
-   "key_quote": "The person with one framework is fragile. The person with many frameworks is antifragile \u2014 they see what others miss.",
-   "action": "Pick one field outside finance to study this month: psychology, history, or biology. Look for one principle that applies directly to your FP&A work.",
-   "index": 44,
+   "chapter": "Inversion: Solve Problems Backwards",
+   "lesson": "Munger's most powerful thinking tool: inversion. Instead of asking 'how do I succeed?' ask 'what would guarantee failure, and how do I avoid that?' The great German mathematician Jacobi said: 'Invert, always invert.' Applied to business: instead of 'how do we grow revenue?' ask 'what is destroying our revenue and how do we eliminate it?' Applied to life: instead of 'how do I be happy?' ask 'what makes people miserable and how do I avoid those things?' Avoiding stupidity is often more important than pursuing brilliance.",
+   "key_quote": "The most reliable path to success is to identify and systematically avoid the most common causes of failure.",
+   "action": "Think of your biggest current goal. List the top 5 things that would guarantee you fail at it. Now focus on eliminating those.",
+   "index": 45,
    "total": 48,
    "crux": [
     "Build a latticework of mental models from many disciplines. One-model thinking distorts every problem.",
@@ -645,102 +645,102 @@
   },
   "way": {
    "minimalism": {
-    "title": "The Someday Pile",
-    "body": "'I'll fix it someday.' 'I'll read it someday.' Someday is not a date. The pile is not a to-do list, it is a monument to intentions you have already declined.",
-    "action": "Give every someday item a date this month, or let it go today.",
-    "index": 10,
+    "title": "Sentimental \u2260 Storage",
+    "body": "You are keeping the object to keep the memory. The memory is not in the object. Photograph it, write one line about why it mattered, and release the thing.",
+    "action": "Photograph one sentimental item you have not looked at in a year.",
+    "index": 11,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Ramadan Awareness",
-    "body": "Do not eat, drink, or smoke in public during fasting hours. Schedule meetings earlier. Expect shortened hours. Wishing colleagues Ramadan Kareem costs nothing and is noticed.",
-    "action": "Check the Islamic calendar. Know what month it is.",
-    "index": 16,
+    "title": "Thank The Invisible People",
+    "body": "The security guard, the cleaner, the driver, the tea boy. How you treat people who cannot advance your career is the only honest read on your character \u2014 and senior people watch for it specifically.",
+    "action": "Learn the name of one person whose name you have never asked.",
+    "index": 17,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Attention Is The Life",
-    "body": "What you pay attention to is, quite literally, your experience of being alive. Spend it on what you would choose to have lived through.",
-    "action": "Audit yesterday's screen time. That number is a portion of your life.",
-    "index": 14,
+    "title": "The Half-Smile",
+    "body": "Thich Nhat Hanh's practice: a slight smile, held, changes state faster than most reasoning about your mood. The body leads the mind more often than the reverse.",
+    "action": "Half-smile for one full minute. Notice the shift.",
+    "index": 15,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Margin Of Safety",
-    "body": "Build the bridge for 30 tonnes and drive 10 across it. Applies to leverage, deadlines, cash buffers, and assumptions in a model. The error is always in the direction you did not plan for.",
-    "action": "Add 50% buffer to your next estimate. Do not tell yourself it is padding.",
-    "index": 6,
+    "title": "Incentives",
+    "body": "Show me the incentive and I will show you the outcome. Never explain by malice or stupidity what the incentive structure fully predicts. Ask who gets paid for this to happen.",
+    "action": "For one recommendation you received, map who benefits from you following it.",
+    "index": 7,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0623\u062a\u0643\u0644\u0645 \u0639\u0631\u0628\u064a \u0634\u0648\u064a",
-    "translit": "atakallam 'arabi shwaya",
-    "meaning": "I speak a little Arabic",
-    "use": "Disarming and appreciated. The effort matters far more than the fluency.",
-    "index": 22,
+    "script": "\u0639\u0644\u0649 \u0641\u0643\u0631\u0629",
+    "translit": "'ala fikra",
+    "meaning": "By the way",
+    "use": "Introduces a point mid-conversation without hijacking it.",
+    "index": 23,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Write The Email In Three Lines",
-    "body": "Context, ask, deadline. Long emails do not get read, they get postponed. Brevity is a service to the reader and it gets you answers faster.",
-    "action": "Rewrite your longest pending email in three lines.",
-    "index": 18,
+    "title": "Teach One Thing",
+    "body": "Explaining to another person exposes every gap instantly. Teaching is the highest-return study method measured, and it costs ten minutes.",
+    "action": "Teach one concept to someone today. Note where you stumbled.",
+    "index": 19,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Sitting Is Not The New Smoking, But",
-    "body": "Prolonged uninterrupted sitting impairs glucose handling regardless of whether you exercised that day. The fix is frequency of interruption, not total exercise volume.",
-    "action": "Stand or walk 2 minutes every 30. Set a timer for one work block.",
-    "index": 8,
+    "title": "Grip Strength As A Biomarker",
+    "body": "It correlates with cardiovascular mortality and cognitive decline, and it is trivially measurable. It is a proxy for total-body strength and neuromuscular health.",
+    "action": "Two sets of dead hangs or farmer's carries to failure.",
+    "index": 9,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Bill Gates",
-   "quote": "If you can't make it good, at least make it look good.",
-   "index": 69,
+   "name": "Coco Chanel",
+   "quote": "In order to be irreplaceable, one must always be different.",
+   "index": 70,
    "total": 96
   },
   "lesson": {
    "tradition": "Time",
-   "lesson": "Time is the most valuable thing a man can spend.",
-   "source": "Theophrastus"
+   "lesson": "The two most powerful warriors are patience and time.",
+   "source": "Leo Tolstoy"
   },
   "case": {
-   "title": "Berkshire Hathaway: Float as a Business Model",
-   "story": "Buffett uses insurance float \u2014 money collected in premiums before claims \u2014 as free capital to invest. $160B float generates investment returns at zero cost.",
-   "lesson": "The best business models create free capital. Study how your industry's best companies actually make money \u2014 it's rarely where you think."
+   "title": "Paytm's IPO Disaster",
+   "story": "Paytm IPO at \u20b92,150. Fell 27% on listing day. Problem: no clear path to profitability, high cash burn, and no moat in payments. Stock fell 75% from peak.",
+   "lesson": "A business model that relies on subsidized transactions is not a business \u2014 it's a bet on market share. Investors eventually ask: where's the profit?"
   },
   "fpna": {
-   "title": "Working Capital",
-   "body": "DSO + DIO \u2013 DPO = Cash Conversion Cycle. Cutting CCC by 5 days can free millions.",
-   "index": 5,
+   "title": "EBITDA Bridge",
+   "body": "Walk from prior period: Revenue \u00b1, COGS \u00b1, SG&A \u00b1, Other \u00b1. Bridges tell the story behind the number.",
+   "index": 6,
    "total": 20
   },
   "cfo": {
-   "title": "Dubai FC Reality",
-   "body": "AED 30K+ FC roles at ADNOC, Emirates, MAF, DP World: they want Big 4 background OR 8+ years in a listed company + CA/ACCA + ERP experience. Your edge: FP&A depth + IFRS knowledge + Power BI automation. Highlight cost savings you drove.",
-   "index": 11,
+   "title": "The CA\u2192FC\u2192CFO Timeline",
+   "body": "CA qualified \u2192 2-3 years Big 4/audit \u2192 Senior FP&A \u2192 Finance Manager \u2192 Financial Controller (5-8 years post-qualification) \u2192 CFO (10-15 years). Dubai compresses this by 2-3 years if you hit the right company at the right growth stage.",
+   "index": 12,
    "total": 15
   },
   "money_hack": {
-   "title": "Direct Funds Only",
-   "body": "Regular mutual funds cost 1\u20131.5% more per year. Over 20 years = 30% of corpus gone."
+   "title": "The 50-30-20 Rule",
+   "body": "50% needs \u00b7 30% wants \u00b7 20% savings. Automate the 20% on salary day."
   },
   "dubai": {
-   "title": "Six weeks, not six months",
-   "body": "Government-linked groups take three to six months from application to offer. Private groups take four to eight weeks. Applying only to the first kind and then reading the silence as rejection is the most common way this search dies.",
-   "targets": "Run both pipelines at once. The fast one funds the patience for the slow one.",
-   "action_label": "Track it",
-   "action": "One sheet: company, date applied, stage, next action, date of next action.",
-   "index": 18,
+   "title": "The LinkedIn setting that matters most",
+   "body": "Set location to Dubai, United Arab Emirates and turn on Open to Work for recruiters only. Gulf recruiters filter by location before they read anything, and a Mumbai location excludes you from the search entirely.",
+   "targets": "This is a two-minute change that decides whether you are visible at all.",
+   "action_label": "Now",
+   "action": "Location, headline with the target title, and the About section rewritten in numbers.",
+   "index": 19,
    "total": 30
   },
   "daughter": {
@@ -750,7 +750,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Respond to messages at set times. Real-time response is a myth.",
+  "productivity": "Track energy, not just time. Hard work when energy is highest.",
   "father": [
    {
     "title": "Mirror her expressions",
