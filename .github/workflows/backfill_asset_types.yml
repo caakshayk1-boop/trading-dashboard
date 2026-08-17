@@ -1,0 +1,59 @@
+name: Ledger — Backfill market / asset_type
+
+# all_signals.market and .asset_type were declared with schema defaults
+# ('NSE' / 'Equity') and NO writer ever set them, so every commodity and forex
+# row claimed to be an NSE equity.
+#
+# /api/ticker selects open rows with `market='NSE' AND asset_type='Equity'` and
+# appends ".NS" to quote them, so a SILVER row was quoted as SILVER.NS — a
+# real, unrelated NSE company at ₹233 — while silver traded at $66/oz. The site
+# published ₹233 as the last price of a silver trade. GOLD.NS and CRUDE.NS
+# merely 404, which is why only silver was visibly wrong; the tagging was
+# equally broken for every non-equity.
+#
+# tracker.py now classifies at write time, so this is a one-off for rows
+# already in the ledger. Turso is the source of truth, so like regrade.yml and
+# purge_void.yml it has to run here with the real production secrets.
+#
+# Defaults to a dry run. Idempotent — it only touches rows whose stored pair
+# differs from the computed one, so re-running is a no-op.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Write the corrected market/asset_type (leave false for a dry run)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install libsql-experimental || true
+
+      - name: Backfill (dry run / apply)
+        run: |
+          python backfill_asset_types.py ${{ inputs.apply && '--apply' || '' }}

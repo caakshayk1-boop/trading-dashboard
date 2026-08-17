@@ -3,7 +3,7 @@ import pandas as pd
 import yfinance as yf
 from datetime import date, datetime, timedelta, timezone
 import db as _db
-from symbols import to_yahoo
+from symbols import to_yahoo, classify as _classify
 
 # Signals are dated in IST; runners execute in UTC. Compare against IST or a
 # signal filed this evening IST looks like it belongs to "tomorrow".
@@ -630,12 +630,17 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
     init_db()
     today = _today_ist()
     with _conn() as c:
+        # market/asset_type are written HERE, not left to the schema defaults.
+        # See symbols.classify: no writer ever set them, so commodities and FX
+        # were stored as NSE equities and /api/ticker quoted SILVER as
+        # SILVER.NS — a different company, at ₹233.
+        _mkt, _atype = _classify(symbol)
         c.execute("""INSERT INTO all_signals
             (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
-             rr,score,status,sent_at,metadata,engine_version)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?)""",
+             rr,score,status,sent_at,metadata,engine_version,market,asset_type)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?)""",
             (today, signal_type, symbol, action, timeframe, entry, sl, t1, t2, t3,
-             rr, score, json.dumps(metadata or {}), ENGINE_VERSION))
+             rr, score, json.dumps(metadata or {}), ENGINE_VERSION, _mkt, _atype))
         row_id = c.execute("SELECT last_insert_rowid()").fetchone()[0]
         c.commit()
         _db.sync(c)
@@ -675,15 +680,20 @@ def log_batch_to_all_signals(rows, date=None):
                 ids.append(None)  # keeps ids aligned with the input list's order/length
                 rejected += 1
                 continue
+            # Same as log_to_all_signals: classify rather than inherit the
+            # 'NSE'/'Equity' schema defaults. See symbols.classify.
+            _mkt, _atype = _classify(r["symbol"])
             c.execute("""INSERT INTO all_signals
                 (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
-                 rr,score,status,sent_at,metadata,engine_version,grade,breakeven_wr,turnover_cr)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?,?)""",
+                 rr,score,status,sent_at,metadata,engine_version,grade,breakeven_wr,turnover_cr,
+                 market,asset_type)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?,?,?,?)""",
                 (today, r["signal_type"], r["symbol"], r.get("action", "BUY"),
                  r.get("timeframe", "SWING"), r["entry"], r["sl"],
                  r["t1"], r["t2"], r["t3"], r["rr"], r.get("score", 0),
                  json.dumps(r.get("metadata") or {}), ENGINE_VERSION,
-                 r.get("grade"), r.get("breakeven_wr"), r.get("turnover_cr")))
+                 r.get("grade"), r.get("breakeven_wr"), r.get("turnover_cr"),
+                 _mkt, _atype))
             ids.append(c.execute("SELECT last_insert_rowid()").fetchone()[0])
         c.commit()
         _db.sync(c)

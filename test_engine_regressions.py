@@ -374,7 +374,8 @@ def main() -> int:
                test_engine_log_copy_is_markup_safe,
                test_fund_cache_survives_week_rollover,
                test_alert_table_columns_match,
-               test_docs_files_have_all_four_allow_lists):
+               test_docs_files_have_all_four_allow_lists,
+               test_scan_crons_match_their_slot_arms):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
@@ -469,6 +470,53 @@ def test_docs_files_have_all_four_allow_lists():
 
     check("every file generate.py writes is in all four allow-lists",
           not missing, "; ".join(missing))
+
+
+def test_scan_crons_match_their_slot_arms():
+    """Every `cron:` in daily_scan.yml must have a matching case arm.
+
+    The schedule is stored TWICE — once as `cron:` and once as a shell `case`
+    on github.event.schedule — because the slot has to come from the cron that
+    fired, not the wall clock (drift of 1.5-3h puts every run outside its own
+    IST window). That duplication is the trap: moving a cron without moving its
+    arm does not fail the workflow, it falls through to SLOT="" and quietly
+    runs the clock-based fallback — the wrong scan, or none.
+
+    Also asserts the actionable weekday scan is early enough to be tradeable:
+    NSE closes at 15:30 IST, so a cron plus a full 3h drift must still land
+    with at least an hour of session left.
+    """
+    import re
+    wf = open(".github/workflows/daily_scan.yml", encoding="utf-8").read()
+
+    crons = re.findall(r"^\s*-\s*cron:\s*'([^']+)'", wf, re.M)
+    check("daily_scan.yml declares crons", bool(crons), f"found {crons}")
+
+    case_block = re.search(r"case \"\$SCHEDULE\" in(.*?)esac", wf, re.S)
+    check("slot case block found", case_block is not None)
+    arms = re.findall(r'"([^"]+)"\)\s*SLOT=', case_block.group(1))
+
+    missing = [c for c in crons if c not in arms]
+    check("every cron has a slot arm", not missing,
+          f"crons with no arm: {missing} (arms present: {arms})")
+
+    orphan = [a for a in arms if a not in crons]
+    check("no slot arm points at a removed cron", not orphan, f"orphans: {orphan}")
+
+    # Tradeable-window check on the weekday intraday scan.
+    CLOSE_IST_MIN = 15 * 60 + 30
+    MAX_DRIFT_MIN = 3 * 60
+    for c in crons:
+        parts = c.split()
+        if len(parts) != 5 or parts[4] != "1-5":
+            continue                       # weekend / EOD slots are exempt
+        ist = int(parts[1]) * 60 + int(parts[0]) + 330      # UTC -> IST
+        if ist >= CLOSE_IST_MIN:
+            continue                       # after the close by design (EOD)
+        check(f"weekday cron '{c}' survives 3h drift with time to execute",
+              ist + MAX_DRIFT_MIN <= CLOSE_IST_MIN - 60,
+              f"lands {(ist + MAX_DRIFT_MIN) // 60:02d}:{(ist + MAX_DRIFT_MIN) % 60:02d} IST "
+              f"worst case, close is 15:30")
 
 
 if __name__ == "__main__":

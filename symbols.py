@@ -63,3 +63,37 @@ def to_yahoo(symbol: str) -> str:
 def is_equity(symbol: str) -> bool:
     """True if the symbol resolves to an NSE equity."""
     return to_yahoo(symbol).endswith(".NS")
+
+
+def classify(symbol: str) -> tuple[str, str]:
+    """(market, asset_type) for the ledger's own columns.
+
+    `all_signals.market` and `.asset_type` exist so consumers never have to
+    guess an instrument's type from its ticker string — and then no writer in
+    the codebase ever set them, so every row took the schema defaults 'NSE' /
+    'Equity'. Commodities and forex therefore looked like NSE equities to
+    every consumer that trusted the columns.
+
+    That is not cosmetic. /api/ticker selects open rows with
+    `market='NSE' AND asset_type='Equity'` and appends ".NS" to quote them, so
+    a mistagged SILVER row was quoted as **SILVER.NS — a real, unrelated NSE
+    company trading at ₹233** while silver itself was $66/oz. The ledger
+    published ₹233 as the last price of a silver trade. GOLD.NS and CRUDE.NS
+    merely 404, which is why only silver was visibly wrong; the tagging was
+    equally broken for all of them.
+
+    A wrong mark is dangerous, not just untidy — a placeholder mark price has
+    already closed metals longs at their stop once (see the APEX phantom
+    stop-out forensics). Derived from the same NON_EQUITY map that to_yahoo()
+    uses, so the two can never disagree.
+    """
+    y = to_yahoo(symbol)
+    if y.endswith("=F"):
+        return "COMEX", "Commodity"
+    if y.endswith("=X"):
+        return "FX", "Currency"
+    if y.startswith("^"):
+        return "NSE", "Index"
+    if y.endswith((".BO", ".BSE")):
+        return "BSE", "Equity"
+    return "NSE", "Equity"

@@ -142,6 +142,18 @@ export default async function handler(req, res) {
     // existing fetch and no new request from the page at all.
     const ledgerDefs = ledgerSyms.map((s) => [s, `${s}.NS`, "₹", 2]);
 
+    // Non-equity ledger rows (commodities, FX) resolved to their REAL ticker
+    // instead of "SYMBOL.NS". Excluding them stopped the bogus fetches, but it
+    // also meant an open silver trade showed a dash forever. Worse, while they
+    // were mistagged as NSE equities the row was quoted as SILVER.NS — a real,
+    // unrelated NSE company at ₹233 — and the page published that as the last
+    // price of a silver trade at $66/oz.
+    //
+    // These tickers are ALREADY in the batch above for the commodity and FX
+    // rail, so mapping the ledger onto them costs no extra fetch: quoteAll is
+    // keyed by Yahoo symbol and de-duplicates.
+    const ledgerNonEq = await openLedgerNonEquities();
+
     const quotes = await quoteAll(
       [...defs, ...movers, ...ledgerDefs],
       ledgerDefs.map((d) => d[1])        // ledger quotes retry first
@@ -195,12 +207,17 @@ export default async function handler(req, res) {
       // "SYMBOL.NS" — are simply absent, and the table falls back to a dash
       // exactly as it does today. A missing quote must never render as 0.
       ledger: Object.fromEntries(
-        ledgerDefs
-          .map(([name, ysym]) => [name, quotes.get(ysym)])
+        [...ledgerDefs, ...ledgerNonEq]
+          // The currency marker comes from the DEF, not the quote — quoteAll
+          // returns {price, prev, basis} and carries no currency. The page
+          // renders ₹ by default because the ledger is overwhelmingly NSE, so
+          // a dollar-quoted commodity has to say so or $66 silver reads as ₹66.
+          .map(([name, ysym, prefix]) => [name, quotes.get(ysym), prefix])
           .filter(([, q]) => q && q.price !== null && q.price !== undefined)
-          .map(([name, q]) => [name, {
+          .map(([name, q, prefix]) => [name, {
             price: q.price,
             change_pct: q.prev ? Math.round(((q.price - q.prev) / q.prev) * 10000) / 100 : null,
+            ccy: prefix || "₹",
           }])
       ),
     }, 300);
@@ -364,6 +381,58 @@ const fmtNum = (v, dp) =>
   v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
 
 // ── multibaggers ─────────────────────────────────────────────────────────────
+
+// Canonical symbol → real Yahoo ticker for everything that is NOT an NSE
+// equity. Mirrors symbols.py's NON_EQUITY map — the Python side is the source
+// of truth and writes all_signals.market/.asset_type from it; this is the read
+// side. Keep the two in step: a symbol missing here is simply not priced,
+// which is the safe failure (a dash), never a wrong number.
+const LEDGER_NON_EQUITY = {
+  GOLD: ["GC=F", "$"], XAUUSD: ["GC=F", "$"], GC: ["GC=F", "$"],
+  SILVER: ["SI=F", "$"], XAGUSD: ["SI=F", "$"], SI: ["SI=F", "$"],
+  CRUDE: ["CL=F", "$"], WTIUSD: ["CL=F", "$"], WTI: ["CL=F", "$"],
+  BRENT: ["BZ=F", "$"], BRNUSD: ["BZ=F", "$"],
+  NATGAS: ["NG=F", "$"], NGAS: ["NG=F", "$"],
+  COPPER: ["HG=F", "$"],
+  USDINR: ["INR=X", "₹"], EURUSD: ["EURUSD=X", "$"], GBPUSD: ["GBPUSD=X", "$"],
+  NIFTY: ["^NSEI", ""], NIFTY50: ["^NSEI", ""], BANKNIFTY: ["^NSEBANK", ""],
+  SENSEX: ["^BSESN", ""],
+};
+
+/**
+ * Open ledger rows that are NOT NSE equities, mapped to their real ticker.
+ *
+ * Deliberately selects the complement of openLedgerSymbols() rather than
+ * pattern-matching the symbol string: the ledger records what each row IS.
+ * Rows still carrying the old default tagging are caught by the symbol-map
+ * lookup, so this is correct both before and after the backfill.
+ */
+async function openLedgerNonEquities() {
+  try {
+    const rs = await db().execute(
+      `SELECT symbol FROM all_signals
+        WHERE UPPER(COALESCE(status,'OPEN')) = 'OPEN'
+          AND symbol IS NOT NULL AND symbol != ''
+        GROUP BY symbol
+        ORDER BY MAX(date) DESC, symbol LIMIT 120`
+    );
+    const out = [];
+    const seen = new Set();
+    for (const r of rs.rows) {
+      const s = str(r.symbol).toUpperCase();
+      const hit = LEDGER_NON_EQUITY[s];
+      if (!hit || seen.has(s)) continue;
+      seen.add(s);
+      out.push([s, hit[0], hit[1], 2]);
+    }
+    return out;
+  } catch (e) {
+    // Never let this take the rail down — it is an enhancement over the
+    // equity path, which has its own try/catch and its own fallback.
+    console.warn("openLedgerNonEquities:", e && e.message);
+    return [];
+  }
+}
 
 /** Distinct symbols on OPEN ledger rows. Bounded — this rides a live fetch. */
 async function openLedgerSymbols() {

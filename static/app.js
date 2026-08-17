@@ -2651,9 +2651,13 @@ var TV_ALIASES = (function () {
        means neither has to know the other's timing. */
     function lastPx(a){
       var l = (window.__ledgerPx || {})[a.symbol];
-      if (l && isFinite(l.price)) return { price: l.price, live: true };
+      /* ccy comes from the quote, not the row. all_signals.market/asset_type
+         were never written by any producer, so every commodity row claimed to
+         be an NSE equity and a.currency reads ₹ for a dollar instrument. The
+         quote knows which ticker it actually priced. */
+      if (l && isFinite(l.price)) return { price: l.price, live: true, ccy: l.ccy };
       var c = OPEN_CTX[a.symbol];
-      if (c && isFinite(c.price)) return { price: c.price, live: false };
+      if (c && isFinite(c.price)) return { price: c.price, live: false, ccy: c.currency };
       return null;
     }
 
@@ -2662,7 +2666,7 @@ var TV_ALIASES = (function () {
       var p = lastPx(a);
       if (!p) return '—';
       return '<span title="' + (p.live ? 'Live quote' : '6:00 AM snapshot — no live quote for this symbol') + '"' +
-             (p.live ? '' : ' class="mono-dim"') + '>' + money(p.price, a.currency) + '</span>';
+             (p.live ? '' : ' class="mono-dim"') + '>' + money(p.price, p.ccy || a.currency) + '</span>';
     }
 
     /* Realised P&L for a closed row; UNREALISED for an open one, marked so the

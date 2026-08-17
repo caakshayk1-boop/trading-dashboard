@@ -2,7 +2,7 @@ name: SwingDesk Pro — Auto Scan
 
 # IST = UTC+5:30
 # 09:20 IST = 03:50 UTC  → morning: 4H + AI + commodities
-# 11:45 IST = 06:15 UTC  → midday: swing + F&O + 4H + AI + commodities
+# 10:30 IST = 05:00 UTC  → midday: swing + F&O + 4H + AI + commodities
 # 16:30 IST = 11:00 UTC  → EOD: breakouts + swing + AI daily + commodities
 # 09:30 IST SAT = 04:00 UTC  → Saturday: full + multibaggers
 # 10:00–14:30 IST (every 30 min) → intraday momentum tier
@@ -11,8 +11,23 @@ on:
     # 09:20 IST removed 2026-07-30 — it fired five minutes after the open,
     # before any position had moved enough for a price alert to mean anything,
     # and its signal scans were already stripped as unmeasured.
-    - cron: '15 6 * * 1-5'       # 11:45 IST — midday position check (Mon-Fri)
+    # ── Scheduled EARLY so worst-case drift still leaves time to execute. ──
+    # NSE trades 09:15–15:30 IST and scheduled runs on this repo land 1.5–3h
+    # late (memory: project_gh_actions_cron_drift). The midday slot used to be
+    # cron'd at 11:45 IST, which on a bad day surfaces at 14:45 with 45 minutes
+    # of session left — and this is the ONLY actionable in-hours scan, so when
+    # it lands late there is no second chance that day.
+    #
+    # 10:30 IST leaves a 5h buffer to the close: even a full 3h drift surfaces
+    # signals by 13:30, two hours before the bell.
+    #
+    # NOTE: this MOVES the existing slot, it does not add scans. The 30-minute
+    # intraday tier was removed on 2026-07-30 for a measured reason (see below)
+    # and re-adding actionable slots needs a backtest, not a schedule edit.
+    - cron: '0 5 * * 1-5'        # 10:30 IST — midday position check (Mon-Fri)
     - cron: '0 11 * * 1-5'       # 16:30 IST — EOD + measured equity + ledger
+                                 # After the close BY DESIGN: measurement and
+                                 # ledger settlement, not tradeable alerts.
     - cron: '0 4 * * 6'          # 09:30 IST — Saturday full + multibaggers
     #
     # The 30-minute intraday tier (10:00–14:30 IST, 9 runs/day) was removed on
@@ -93,8 +108,12 @@ jobs:
         env:
           SCHEDULE: ${{ github.event.schedule }}
         run: |
+          # These strings must match the `cron:` values above EXACTLY. They are
+          # a second copy of the schedule, so moving a cron without moving its
+          # arm here falls through to SLOT="" — which does not fail, it quietly
+          # runs the clock-based fallback, i.e. the wrong scan or none at all.
           case "$SCHEDULE" in
-            "15 6 * * 1-5") SLOT=midday  ;;
+            "0 5 * * 1-5")  SLOT=midday  ;;
             "0 11 * * 1-5") SLOT=eod     ;;
             "0 4 * * 6")    SLOT=weekend ;;
             *)              SLOT=""      ;;
