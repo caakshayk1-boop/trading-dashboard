@@ -569,8 +569,20 @@ def _validate_signal_ordering(action, entry, sl, t1, t2, t3=None):
     a future change. A generator bug becomes a rejected-and-logged row
     here, not a published SONACOMS with target1 == target2.
 
-    LONG:  sl < entry < t1 < t2 (< t3 if present)
-    SHORT: (t3 <) t2 < t1 < entry < sl
+    LONG:  sl < entry < t1 < t2 (<= t3 if present)
+    SHORT: (t3 <=) t2 < t1 < entry < sl
+
+    target3 allows EQUAL to target2 on purpose — engines with only two real
+    target levels (run_4h_scan and others) pass t3=t2 as their established
+    "no distinct third target" convention (see standalone_scan.py, e.g.
+    "t3": b.get("target2", b["target1"])), not a bug. A STRICT t2<t3 here
+    rejected every one of those rows and took down the whole daily scan on
+    2026-08-17 — test_alert_pipeline.py's synthetic fixtures use the same
+    t3=t2 convention, caught it in 28 seconds, but that pre-flight check
+    running BEFORE the real scan meant zero real signals fired that day.
+    Only a target3 that is actually WORSE than target2 (closer to entry,
+    or on the wrong side) is rejected now — that's still a real bug, just
+    not this one.
 
     Returns (True, None) or (False, reason-string).
     """
@@ -589,12 +601,12 @@ def _validate_signal_ordering(action, entry, sl, t1, t2, t3=None):
     if is_short:
         if not (t2 < t1 < entry < sl):
             return False, f"SHORT ordering violated: target2={t2} target1={t1} entry={entry} sl={sl}"
-        if t3 is not None and not (t3 < t2):
+        if t3 is not None and not (t3 <= t2):
             return False, f"SHORT target3 ordering violated: target3={t3} target2={t2}"
     else:
         if not (sl < entry < t1 < t2):
             return False, f"LONG ordering violated: sl={sl} entry={entry} target1={t1} target2={t2}"
-        if t3 is not None and not (t2 < t3):
+        if t3 is not None and not (t2 <= t3):
             return False, f"LONG target3 ordering violated: target2={t2} target3={t3}"
     return True, None
 

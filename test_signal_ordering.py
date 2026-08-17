@@ -33,10 +33,21 @@ CASES = [
     ("inverted LONG: target1 below entry", ("BUY", 100, 90, 95, 120), False),
     ("inverted SHORT: stop below entry", ("SELL", 100, 95, 90, 80), False),
     ("LONG with valid target3", ("BUY", 100, 90, 110, 120, 130), True),
-    ("LONG target3 not beyond target2 (rejected, not silently accepted)",
+    # target3 == target2 is the established "no distinct third target"
+    # convention (run_4h_scan and others pass t3=t2 on purpose) — MUST be
+    # accepted. A strict t2<t3 here broke this on 2026-08-17: it rejected
+    # every 4h/intraday signal and, because this validator is exercised by
+    # test_alert_pipeline.py's pre-flight fixtures BEFORE the real scan
+    # runs, took down the entire day's signal generation.
+    ("LONG target3 == target2 is the documented no-third-target convention, not a bug",
+     ("BUY", 100, 90, 110, 120, 120), True),
+    ("LONG target3 strictly worse than target2 IS still a real bug — stays rejected",
      ("BUY", 100, 90, 110, 120, 115), False),
     ("SHORT with valid target3", ("SELL", 100, 110, 90, 80, 70), True),
-    ("SHORT target3 not beyond target2", ("SELL", 100, 110, 90, 80, 85), False),
+    ("SHORT target3 == target2 is also the no-third-target convention, not a bug",
+     ("SELL", 100, 110, 90, 80, 80), True),
+    ("SHORT target3 strictly worse than target2 IS still a real bug — stays rejected",
+     ("SELL", 100, 110, 90, 80, 85), False),
     ("boundary: target1 one paisa below target2 (should pass, not equal)",
      ("BUY", 100, 90, 110.00, 110.01), True),
 ]

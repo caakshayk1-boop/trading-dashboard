@@ -774,6 +774,7 @@ def run_4h_scan(time_str):
         ids  = log_batch_to_all_signals(rows)
         sent = _send_chunked(f"⚡ *4H Signals* ({len(sigs)}) — {time_str}\n", blocks)
         _record_delivery(ids, sent, mark_alerts_sent)
+    return sigs
 
 
 def run_ohl_scan(time_str):
