@@ -488,7 +488,7 @@ def do_brief(ticker: str) -> str:
         f"Mkt Cap: ₹{d['mcap_cr']:.0f} Cr | P/E: {d['pe']}x | P/B: {d['pb']}x | Div: {d['div_yield']}%\n"
         f"Revenue: ₹{d['revenue']:.0f} Cr | PAT: ₹{d['pat']:.0f} Cr | Sector: {d['sector']}"
     ) if d else f"Symbol: {sym}"
-    return _ask(f"""CA and equity analyst @askakshayfinance. 1-page stock brief for *{sym}* (NSE) for Telegram.
+    return _ask(f"""CA and equity analyst. 1-page stock brief for *{sym}* (NSE) for Telegram.
 
 Live data: {live}
 
@@ -526,8 +526,6 @@ Revenue CAGR 3Y: ~[x]%
 🎯 *VERDICT*
 [1-2 lines, specific]
 
-_@askakshayfinance_
-
 Rules: specific numbers, no fluff, max 400 words.""")
 
 
@@ -556,7 +554,7 @@ Format (Telegram Markdown):
 
 ⚠️ *Invalidation:* [level + reason]
 
-_@askakshayfinance | Not SEBI advice_""", max_tokens=600)
+_Not SEBI advice_""", max_tokens=600)
 
 
 def _send_document(chat_id: str, filename: str, content: str, caption: str = ""):
@@ -570,7 +568,7 @@ def _send_document(chat_id: str, filename: str, content: str, caption: str = "")
 
 def do_carousel(topic: str, chat_id: str):
     _post(f"🎨 Generating carousel: *{topic}*...", chat_id)
-    html = _ask(f"""Brutalist dark Instagram carousel for @askakshayfinance (CA/FP&A).
+    html = _ask(f"""Brutalist dark Instagram carousel (CA/FP&A).
 Topic: "{topic}"
 
 SPEC: Canvas 1080×1350px | bg #0A0A0A | accent #FF5F1F | text #FFFFFF #6E6E6E
@@ -579,7 +577,7 @@ Fonts (Google): Oswald 700 (numbers) | Playfair Display 900 italic (insight) | S
 Rules: ONE insight/slide. Specific numbers (₹16,309 not ₹16K). Orange = alarm only.
 
 HTML: single file, all CSS inline, slides as 1080×1350 divs stacked vertically.
-Slide number bottom-right gray. @askakshayfinance bottom-left small gray.
+Slide number bottom-right gray.
 
 Return ONLY complete HTML.""", max_tokens=4000)
     slug = topic.lower().replace(" ", "_")[:30]
@@ -598,7 +596,7 @@ def _format_scan_msg(signals, slot="Manual"):
             f"SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']} | RR {s['rr']}:1\n"
             f"[Chart]({s['tv_link']})"
         )
-    lines.append("\n_@askakshayfinance | Not SEBI advice_")
+    lines.append("\n_Not SEBI advice_")
     return "\n".join(lines)
 
 
@@ -882,7 +880,7 @@ def _scan_commodity_forex(ts: str, chat_id=None):
             "_1H entry \u00b7 4H regime \u00b7 structural targets_\n"]
     for s in signals:
         body.append(cf_engine.format_alert(s))
-    body.append("\n_Not SEBI advice \u00b7 @askakshayfinance_")
+    body.append("\n_Not SEBI advice_")
     _post("\n".join(body), chat_id=chat_id)
     logging.info(f"CF scan: {len(signals)} signal(s) sent")
     return signals
@@ -995,7 +993,7 @@ def _run_magic_scan():
         msg = _fmt_block(magic_results, "Magic Screener (>15% from 52WH)", "🔮")
         msg += "\n\n"
         msg += _fmt_block(magicmagic_results, "MagicMagic (20–40% from 52WH)", "✨")
-        msg += "\n_Investtech-style · Not SEBI advice · @askakshayfinance_"
+        msg += "\n_Investtech-style · Not SEBI advice_"
         _post(msg)
 
         # Log to the ledger with LEVELS.
@@ -1081,7 +1079,7 @@ def _run_morning_brief():
 def _run_content_calendar():
     """
     Monday 7:00 AM IST — push weekly content calendar to Obsidian 04-CONTENT/.
-    Creates the week's 5-post schedule for @askakshayfinance.
+    Creates the week's 5-post content schedule.
     Skips if calendar for this week already exists.
     """
     ts = datetime.now(IST).strftime("%d %b %Y")
@@ -1170,8 +1168,7 @@ HELP_TEXT = """🤖 *Claude AI Trading Bot*
 
 _Position checks: 11:45 AM IST_
 _Signals + ledger: 4:30 PM IST_
-_Commodities: 10 AM · 2 · 6 · 10 PM_
-_@askakshayfinance_"""
+_Commodities: 10 AM · 2 · 6 · 10 PM_"""
 
 
 def route(text: str, chat_id: str):

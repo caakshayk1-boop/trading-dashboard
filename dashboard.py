@@ -1675,7 +1675,7 @@ _md(f"""
   <div>
     <div style="font-size:11px;color:#6b7280;line-height:1.7">
       ⚠ Not SEBI-registered · Not financial advice<br>
-      Built by <a href="https://www.instagram.com/askakshayfinance" target="_blank" style="color:#00d09c;text-decoration:none">@askakshayfinance</a>
+      Built by Akshay Kothari
     </div>
   </div>
 </div>

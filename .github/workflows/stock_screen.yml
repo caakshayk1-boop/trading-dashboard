@@ -135,7 +135,26 @@ jobs:
               con.execute("INSERT OR REPLACE INTO newspaper_screen VALUES (?,?)",
                           (week, json.dumps(data)))
               con.commit()
-          print(f"\ncached for week {week}")
+
+          # Verify the write actually reached Turso, not just the local
+          # embedded replica. On 2026-08-15 this exact job built a fresh
+          # screen (BLS top-5, prices to 2026-08-14), printed "cached", and
+          # exited 0 — but db.py's sync() failed silently on __exit__, so the
+          # remote DB never got it and the site kept serving 2026-08-12 for
+          # 5 days with no error anywhere. A fresh connection forces a pull
+          # from Turso (db.connect() syncs before any query), so re-reading
+          # the row here proves the write is actually durable, not just local.
+          with newspaper._db() as verify_con:
+              row = verify_con.execute(
+                  "SELECT payload FROM newspaper_screen WHERE week=?", (week,)
+              ).fetchone()
+          if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
+              raise SystemExit(
+                  f"publish verification failed — week {week} was written locally "
+                  f"but does not read back correctly from Turso. The remote DB "
+                  f"still has last week's build. Not safe to report success."
+              )
+          print(f"\ncached for week {week} — verified on Turso")
           PY
 
       # NO commit step for the caches, deliberately. There was one and it could

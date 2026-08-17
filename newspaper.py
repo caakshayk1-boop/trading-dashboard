@@ -5472,7 +5472,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <a href="https://askakshay.com" target="_blank" rel="noopener">askakshay.com &nearr;</a>
         <a href="https://terminal.askakshay.com" target="_blank" rel="noopener">Dhruvedge terminal &nearr;</a>
         <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn &nearr;</a>
-        <a href="https://www.instagram.com/askakshayfinance" target="_blank" rel="noopener">@askakshayfinance &nearr;</a>
       </div>
     </div>
   </div>
@@ -6944,7 +6943,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['stocks'] }} / {{ seclabel['stocks'] }}</span>
-      <h2 class="stitle">Which five hundred, and why.</h2>
+      <h2 class="stitle">Which {{ stock_screen.count or '—' }}, and why.</h2>
     </div>
     <div style="text-align:right">
       <p class="sdesc">The NSE Total Market &mdash; every listed name of any size
@@ -6978,12 +6977,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous
       build. The technical columns below are from that date, not today.</span>
     {% endif %}
+    {# universe/universe_size: already computed by stock_screen.build() (named
+       from what was ACTUALLY read, not what was intended — its own comment),
+       just never rendered until now. A prior week where NSE's Total Market
+       feed failed and the run fell back to plain Nifty 500 looked identical
+       to a normal week — this is the second, DIFFERENT kind of fallback from
+       is_fallback above (stale BUILD vs. smaller UNIVERSE this run), and a
+       reader needs to be told which one, if either, applies. .get() throughout:
+       older cached payloads may predate these keys. #}
+    {% if stock_screen.get('universe_size') and stock_screen.get('universe_size', 9999) <= 600 %}
+    <span style="color:var(--gold)">&#9888; Fell back to <b>{{ stock_screen.get('universe', 'Nifty 500') }}</b>
+      this run &mdash; NSE's Total Market feed was unavailable, so this week
+      screens a smaller universe than usual.</span>
+    {% endif %}
   </div>
 
-  <!-- Breadth, measured across these same five hundred companies rather than
-       inferred from an index. It is the only market-wide reading on the page
-       that counts businesses instead of instruments, and it is deliberately not
-       an input to any score — see stock_screen.breadth(). -->
+  <!-- Breadth, measured across this same screened universe (stock_screen.count
+       companies — the headline above pulls the same field, so the two numbers
+       can never disagree) rather than inferred from an index. It is the only
+       market-wide reading on the page that counts businesses instead of
+       instruments, and it is deliberately not an input to any score — see
+       stock_screen.breadth(). -->
   {% if stock_screen.breadth and stock_screen.breadth.above50 is not none %}
   {% set b = stock_screen.breadth %}
   <div class="scr-breadth rv">
@@ -7400,7 +7414,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         Built by Akshay Kothari. Rebuilt every morning at 6 AM IST by a machine that does not sleep.</p>
     </div>
     <div class="m">
-      <a href="https://instagram.com/askakshayfinance" target="_blank" style="color:var(--lime)">@askakshayfinance</a><br>
       news.askakshay.com<br>
       {{ date_str }} · {{ updated_at }} IST
     </div>

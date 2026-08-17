@@ -94,8 +94,17 @@ class _ConnWrapper:
             if self._turso:
                 try:
                     self._conn.sync()
-                except Exception:
-                    pass
+                except Exception as e:
+                    # A failed push here used to vanish with zero trace: the
+                    # local replica commit still succeeds, so a caller with no
+                    # explicit db.sync() check sees no exception and logs
+                    # nothing either — a workflow can print "done" and exit 0
+                    # while the write never reaches Turso at all (this is what
+                    # happened to stock_screen.yml's 2026-08-15 run: it built
+                    # fresh data, "cached" it locally, and the remote DB never
+                    # saw it — the site kept serving 2026-08-12 for 5 days).
+                    log.error(f"db sync failed on __exit__ — write may not have "
+                              f"reached Turso: {e}")
         return False  # don't suppress exceptions
 
     # Proxy all other attribute access to the real connection

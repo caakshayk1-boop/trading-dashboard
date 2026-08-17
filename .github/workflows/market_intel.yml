@@ -69,5 +69,20 @@ jobs:
               con.execute("INSERT OR REPLACE INTO newspaper_market_intel VALUES (?,?)",
                           (today, json.dumps(data)))
               con.commit()
-          print(f"\ncached for {today}")
+
+          # Verify the write reached Turso, not just the local embedded
+          # replica — db.py's sync() on __exit__ can fail silently (see
+          # stock_screen.yml for the incident this pattern caused there). A
+          # fresh connection forces a pull from Turso before querying.
+          with newspaper._db() as verify_con:
+              row = verify_con.execute(
+                  "SELECT payload FROM newspaper_market_intel WHERE date=?", (today,)
+              ).fetchone()
+          if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
+              raise SystemExit(
+                  f"publish verification failed — {today} was written locally but "
+                  f"does not read back correctly from Turso. Not safe to report "
+                  f"success."
+              )
+          print(f"\ncached for {today} — verified on Turso")
           PY

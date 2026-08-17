@@ -226,7 +226,6 @@ def generate() -> None:
                 "sameAs": [
                     "https://askakshay.com",
                     "https://www.linkedin.com/in/akkothari",
-                    "https://www.instagram.com/askakshayfinance",
                     "https://terminal.askakshay.com",
                 ],
             },

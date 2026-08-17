@@ -195,7 +195,7 @@ def run_cf_scan():
     for s in fresh:
         body.append(cf_engine.format_alert(s))
         cf_mark_sent(s["name"], s["bias"])
-    body.append("\n_Not SEBI advice · @askakshayfinance_")
+    body.append("\n_Not SEBI advice_")
     sent_ok = post("\n".join(body))
     log.info(f"CF scan: {len(fresh)} signal(s), telegram_ok={sent_ok}")
 

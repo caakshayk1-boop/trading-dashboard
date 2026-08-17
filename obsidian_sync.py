@@ -464,7 +464,7 @@ def write_morning_brief(market: dict, open_signals: list) -> bool:
 
 # ── Content Calendar ───────────────────────────────────────────────────────────
 
-# @askakshayfinance content pillars — rotate weekly
+# Content pillars — rotate weekly
 _CONTENT_PILLARS = [
     ("💰 Finance Tip",      "FP&A / CA insight — one number, one truth"),
     ("📈 Trade Setup",      "Week's best swing setup — entry, SL, target"),
@@ -506,7 +506,7 @@ def write_content_calendar(week_offset: int = 0) -> bool:
     days   = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     lines  = [
         f"# Content Calendar — W{wk} · {year}\n",
-        f"_Generated {ts} · @askakshayfinance_\n\n",
+        f"_Generated {ts}_\n\n",
         f"**Goal:** 5 posts this week · Run score_caption.py before every post · Reply within 1hr of posting\n\n",
         f"---\n",
     ]

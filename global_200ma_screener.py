@@ -166,7 +166,7 @@ def run():
     for i in range(0, len(lines), chunk):
         batch = lines[i:i+chunk]
         msg   = (header if i == 0 else f"_(continued {i+1}–{min(i+chunk,len(lines))})_\n\n") + "\n\n".join(batch)
-        msg  += "\n\n_Not SEBI/financial advice · @askakshayfinance_"
+        msg  += "\n\n_Not SEBI/financial advice_"
         _post(msg)
         time.sleep(1)
 
