@@ -373,7 +373,8 @@ def main() -> int:
                test_buy_band_excludes_the_bleed_zone,
                test_engine_log_copy_is_markup_safe,
                test_fund_cache_survives_week_rollover,
-               test_alert_table_columns_match):
+               test_alert_table_columns_match,
+               test_docs_files_have_all_four_allow_lists):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
@@ -415,6 +416,59 @@ def test_alert_table_columns_match():
     check("alert table columns agree across all three renderers",
           n_head == n_row == n_live,
           f"thead={n_head} ssr={n_row} live={n_live}")
+
+
+def test_docs_files_have_all_four_allow_lists():
+    """Every docs/ artefact must be named in ALL FOUR places or it rots.
+
+    A file under docs/ reaches production only if it is (1) written by
+    generate.py, (2) `git add`ed by name in newspaper.yml, (3) named in
+    .vercelignore and (4) copied by name in vercel-news/build.js. Miss any one
+    and the build log still says the file was written, so it reads as a
+    publishing problem rather than a missing filename.
+
+    This has now bitten twice in opposite directions. today.json had 1+3+4 and
+    404'd outright. screen.json/screen-detail.json had 1+3+4 and served STALE
+    data instead — the runner rebuilt them, the rebase autostash restored them,
+    and the runner was destroyed with the fresh file uncommitted, so production
+    served whatever a human last committed by hand: a payload built 2026-08-12,
+    predating the Piotroski field. The F-Score column was therefore populated
+    in the server-rendered top 25 and empty across all 750 rows the instant the
+    table lazy-loaded. Nothing errored anywhere.
+    """
+    import re
+    gen = open("generate.py", encoding="utf-8").read()
+    wf = open(".github/workflows/newspaper.yml", encoding="utf-8").read()
+    vi = open(".vercelignore", encoding="utf-8").read()
+    bj = open("vercel-news/build.js", encoding="utf-8").read()
+
+    # What generate.py actually writes into the output directory.
+    # index.html/desk.html go through a different writer, so anchor the sanity
+    # check on the lazy-loaded JSON this test exists to protect.
+    written = set(re.findall(r'out_dir\s*/\s*"([^"]+)"', gen))
+    check("generate.py writes the lazy-loaded screen artefacts",
+          {"screen.json", "screen-detail.json"} <= written,
+          f"found {sorted(written)}")
+
+    # The git add list is one shell command spanning escaped newlines.
+    add = re.search(r"git add (.*?)\n\s*git diff", wf, re.S)
+    check("newspaper.yml git add block found", add is not None)
+    added = set(re.findall(r"docs/([^\s\\]+)", add.group(1)))
+
+    missing = []
+    for name in sorted(written):
+        where = []
+        if name not in added:
+            where.append("newspaper.yml git add")
+        if f"!docs/{name}" not in vi:
+            where.append(".vercelignore")
+        if f'"{name}"' not in bj:
+            where.append("build.js")
+        if where:
+            missing.append(f"{name} -> missing from {', '.join(where)}")
+
+    check("every file generate.py writes is in all four allow-lists",
+          not missing, "; ".join(missing))
 
 
 if __name__ == "__main__":

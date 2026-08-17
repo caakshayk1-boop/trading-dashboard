@@ -11,7 +11,16 @@ name: Market Intel — daily corporate actions / FII-DII / sector heat
 
 on:
   schedule:
-    - cron: '0 23 * * 0-4'    # 04:30 IST Mon-Fri — before 6 AM newspaper.yml
+    # 01:30 IST Mon-Fri. newspaper.yml fires at 00:30 UTC, so this leaves a
+    # 4.5h head start rather than the 90 minutes it had at 23:00 UTC.
+    # Scheduled runs on this repo land 1.5-3h late (see
+    # memory: project_gh_actions_cron_drift), which is WIDER than 90 minutes —
+    # on 2026-08-17 this workflow finished 45 minutes after the paper had
+    # already built and shipped, so the section rendered empty and was dropped
+    # from the nav. generate.py now also builds this inline if the cache is
+    # still empty at build time; the wider gap is what stops that being the
+    # normal path.
+    - cron: '0 20 * * 0-4'    # 01:30 IST Mon-Fri — 4.5h before newspaper.yml
   workflow_dispatch:
 
 concurrency:

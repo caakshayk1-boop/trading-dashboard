@@ -34,6 +34,31 @@ var TV_ALIASES = (function () {
 (function(){
   var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ── scroll restoration ──
+     The server ships a skeleton and the live layer paints the rest, so the
+     document grows from ~23,500px to ~89,800px after /api/* resolves —
+     nearly 4x, measured. The browser's automatic restore runs against the
+     SHORT version, so a reload puts the reader at an offset that means
+     something completely different once the content lands, which reads as
+     "the site opens at the bottom of the page".
+
+     Manual restoration, then honour an explicit #hash once the content that
+     hash refers to actually exists. A bare URL always opens at the top. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('load', function(){
+    var h = location.hash;
+    if (!h || h.length < 2) { window.scrollTo(0, 0); return; }
+    /* The target may not be painted yet — retry briefly, then give up rather
+       than scrolling to a stale position. */
+    var tries = 0;
+    (function seek(){
+      var t = null;
+      try { t = document.querySelector(h); } catch (e) { return; }
+      if (t) { t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); return; }
+      if (++tries < 20) setTimeout(seek, 150);
+    })();
+  });
+
   /* ── scroll progress + fab ── */
   var prog = document.getElementById('prog'), fab = document.getElementById('fab'), ticking = false;
   function onScroll(){
@@ -1240,8 +1265,10 @@ var TV_ALIASES = (function () {
       });
 
       // Deep link: /day/2026-07-31 opens straight into that day's archive.
+      // Filter the table, but do NOT scroll — see selectDay. Arriving at a URL
+      // is not the same gesture as clicking a day in the strip.
       var m = location.pathname.match(/^\/day\/(\d{4}-\d{2}-\d{2})/);
-      if (m) selectDay(m[1]);
+      if (m) selectDay(m[1], false);
 
       // ?signal=<id> opens that trade's sheet. Deferred until the rows are in
       // memory — the sheet renders from allRows, not from a second fetch, so
@@ -2743,7 +2770,14 @@ var TV_ALIASES = (function () {
       el('archAll').addEventListener('click', function(){ selectDay(null); });
     }
 
-    function selectDay(date){
+    /* `scroll` defaults to true because every CLICK that reaches here wants the
+       table brought into view. The init deep-link must pass false: #alerts is
+       the LAST section on the page (measured: 81,780px into an 89,798px
+       document, 91% down), so scrolling to it on load drops the reader at the
+       bottom of the paper having seen none of it. And because this function
+       replaceState()s the URL to /day/<date>, one archive click made every
+       later reload of that URL land at the bottom too. */
+    function selectDay(date, scroll){
       archDate = date;
       document.querySelectorAll('.arch-day').forEach(function(n){
         n.classList.toggle('on', !!date && n.dataset.date === date);
@@ -2757,7 +2791,9 @@ var TV_ALIASES = (function () {
       if (date && history.replaceState) history.replaceState({}, '', '/day/' + date);
       else if (history.replaceState) history.replaceState({}, '', '/');
       loadSignals();
-      document.getElementById('alerts').scrollIntoView({ behavior:'smooth', block:'start' });
+      if (scroll !== false) {
+        document.getElementById('alerts').scrollIntoView({ behavior:'smooth', block:'start' });
+      }
     }
 
     /* ═══════ performance ═══════ */

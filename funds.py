@@ -258,6 +258,95 @@ def _max_drawdown(series: list[tuple[date, float]], years: int = 3):
     return round(worst, 1)
 
 
+def _calendar_years(series: list[tuple[date, float]], n: int = 5):
+    """Return per completed calendar year, newest first.
+
+    A single point-to-point CAGR hides the path completely: a fund that made
+    +55% in one year and lost money in the other two can post the same 3Y
+    number as one that ground out +14% three times. Only whole years the
+    series actually covers are reported — a fund that launched in June does
+    not get a partial first year dressed up as an annual return.
+    """
+    if not series:
+        return []
+    by_year: dict[int, list[tuple[date, float]]] = {}
+    for d, v in series:
+        by_year.setdefault(d.year, []).append((d, v))
+    out = []
+    last_year = series[-1][0].year
+    for y in sorted(by_year, reverse=True):
+        if y >= last_year:
+            continue                      # current year is incomplete
+        prev = by_year.get(y - 1)
+        if not prev:
+            continue                      # no opening mark — cannot measure
+        start, end = prev[-1][1], by_year[y][-1][1]
+        if start <= 0:
+            continue
+        out.append({"year": y, "ret": round((end / start - 1) * 100, 1)})
+        if len(out) >= n:
+            break
+    return out
+
+
+def _rolling_3y(series: list[tuple[date, float]]):
+    """Best / worst / median 3-year CAGR across every month-end start point.
+
+    This is the honest version of "3Y return". The headline 3Y CAGR is one
+    arbitrary window ending today, and it moves a lot with where that window
+    happens to start. The spread across all available start dates is what
+    tells you whether a fund is consistently good or was rescued by one entry
+    point. Needs at least 6 distinct windows to be worth reporting.
+    """
+    if not series or (series[-1][0] - series[0][0]).days < 365 * 4:
+        return None
+    month_ends: dict[tuple[int, int], tuple[date, float]] = {}
+    for d, v in series:
+        month_ends[(d.year, d.month)] = (d, v)
+    marks = [month_ends[k] for k in sorted(month_ends)]
+    rets = []
+    for i, (d0, v0) in enumerate(marks):
+        if v0 <= 0:
+            continue
+        target = d0 + timedelta(days=365 * 3)
+        if target > series[-1][0]:
+            break
+        v1 = _nav_on_or_before(series, target)
+        if not v1 or v1 <= 0:
+            continue
+        rets.append(((v1 / v0) ** (1 / 3) - 1) * 100)
+    if len(rets) < 6:
+        return None
+    rets.sort()
+    mid = len(rets) // 2
+    median = rets[mid] if len(rets) % 2 else (rets[mid - 1] + rets[mid]) / 2
+    return {
+        "best": round(rets[-1], 1),
+        "worst": round(rets[0], 1),
+        "median": round(median, 1),
+        "windows": len(rets),
+        # The number that actually matters to someone choosing a fund: how
+        # often a 3-year hold beat a fixed deposit rather than how often it
+        # merely avoided a loss.
+        "above_7pct": round(sum(1 for r in rets if r >= 7.0) / len(rets) * 100),
+    }
+
+
+def _spark(series: list[tuple[date, float]], points: int = 48):
+    """Month-end NAV, downsampled, normalised to 100 at the start — enough to
+    draw the shape of the ride without shipping 3,000 daily points per fund
+    into the page."""
+    if len(series) < 24:
+        return []
+    month_ends: dict[tuple[int, int], float] = {}
+    for d, v in series:
+        month_ends[(d.year, d.month)] = v
+    vals = [month_ends[k] for k in sorted(month_ends)][-points:]
+    if not vals or vals[0] <= 0:
+        return []
+    return [round(v / vals[0] * 100, 1) for v in vals]
+
+
 def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
     """Screen every category. Returns the payload the site and bot render."""
     try:
@@ -336,9 +425,23 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
                 "bar_r1": _bar_pct(r1),
                 "bar_r3": _bar_pct(r3),
                 "bar_r5": _bar_pct(r5),
-                # Deep link to the scheme's own AMFI-coded page. mfapi is the
-                # data source, so it is also the honest place to send someone
-                # to check the series this ranking was computed from.
+                # ── advanced detail, all derived from the SAME series already
+                # fetched above: no extra request, no second source to
+                # disagree with, and nothing here that isn't in the NAV
+                # history this ranking was computed from.
+                "isin": (meta.get("isin_growth") or "").strip().upper() or None,
+                "scheme_type": meta.get("scheme_type") or None,
+                "inception": series[0][0].isoformat(),
+                "history_years": round((series[-1][0] - series[0][0]).days / 365.25, 1),
+                "since_inception": _cagr(
+                    series, max(1, int((series[-1][0] - series[0][0]).days // 365))),
+                "calendar": _calendar_years(series),
+                "rolling3y": _rolling_3y(series),
+                "spark": _spark(series),
+                # The data source, so also the honest place to send someone to
+                # check the series behind the ranking. It is raw JSON, not a
+                # fund page — labelled as such at the call site rather than
+                # dressed up as somewhere to go and read about the fund.
                 "url": f"https://api.mfapi.in/mf/{f['schemeCode']}",
             })
         scored.sort(key=lambda x: x["r3"], reverse=True)

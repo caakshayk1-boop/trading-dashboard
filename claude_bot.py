@@ -463,9 +463,14 @@ def _ask(prompt: str, max_tokens: int = 900) -> str:
                 headers={"Authorization": f"Bearer {GROQ_API_KEY}",
                          "Content-Type": "application/json"},
                 json={
-                    "model": "llama-3.3-70b-versatile",
+                    # See newspaper.GROQ_MODEL. llama-3.3-70b-versatile is
+                    # decommissioned (404); gpt-oss reasons before it answers,
+                    # so max_tokens must cover reasoning or a 200 comes back
+                    # carrying an empty string.
+                    "model": os.environ.get("GROQ_MODEL") or "openai/gpt-oss-120b",
                     "messages": [{"role": "user", "content": prompt}],
-                    "max_tokens": max_tokens,
+                    "max_tokens": max_tokens + 320,
+                    "reasoning_effort": "low",
                     "temperature": 0.3,
                 },
                 timeout=30,

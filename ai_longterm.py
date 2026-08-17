@@ -360,13 +360,19 @@ def _thesis(c: dict) -> str:
         return facts
     try:
         from groq import Groq
+        # See newspaper.GROQ_MODEL: llama-3.3-70b-versatile was decommissioned
+        # (404) and gpt-oss is a reasoning model, so max_tokens has to cover the
+        # reasoning tokens too or the content comes back empty with a 200.
         r = Groq(api_key=key).chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=os.environ.get("GROQ_MODEL") or "openai/gpt-oss-120b",
             messages=[{"role": "user", "content": _THESIS_PROMPT.format(
                 sym=c["symbol"], sector=c["sector"], facts=facts)}],
-            max_tokens=110, temperature=0.4,
+            max_tokens=110 + 320, reasoning_effort="low", temperature=0.4,
         )
         txt = (r.choices[0].message.content or "").strip()
+        if not txt:
+            log.warning(f"ai_longterm thesis {c['symbol']}: empty completion "
+                        f"(finish={r.choices[0].finish_reason}) — using facts")
         return txt or facts
     except Exception as e:
         log.warning(f"ai_longterm thesis {c['symbol']}: {e}")

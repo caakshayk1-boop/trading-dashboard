@@ -91,8 +91,19 @@ jobs:
           # copied by vercel-news/build.js. today.json had three of the four
           # and 404'd; the build log said it was written, which made it look
           # like anything but a missing filename.
+          # screen.json / screen-detail.json were the fourth-allow-list bug in
+          # its other direction: written by generate.py every build, named in
+          # .vercelignore, copied by build.js — and never added HERE, so the
+          # runner rebuilt them, `git pull --rebase --autostash` stashed and
+          # restored them, and the runner was then destroyed with the fresh
+          # file still uncommitted. Production therefore served whatever a
+          # human had last committed by hand. On 2026-08-17 that was a payload
+          # built on 2026-08-12, which predated the Piotroski field, so the
+          # F-Score column was populated in the server-rendered top 25 and
+          # empty for all 750 rows the moment the table lazy-loaded.
           git add docs/index.html docs/desk.html docs/alerts.json docs/edition.json \
                   docs/today.json docs/app.js \
+                  docs/screen.json docs/screen-detail.json \
                   docs/robots.txt docs/sitemap.xml docs/manifest.webmanifest \
                   docs/icon.svg docs/og.png docs/fonts
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"

@@ -176,6 +176,22 @@ def init_newspaper_db():
 # GROQ AI
 # ─────────────────────────────────────────────────────────────
 
+# Groq has now decommissioned a model out from under this code TWICE:
+# llama3-8b-8192 first, then llama-3.3-70b-versatile (404 "does not exist",
+# observed 2026-08-17 — 40 stock narratives asked, 0 written, and every caller
+# silently fell back to its canned string). Env-overridable so the next one is a
+# secret change, not a code deploy.
+GROQ_MODEL = os.environ.get("GROQ_MODEL") or "openai/gpt-oss-120b"
+
+# gpt-oss is a REASONING model, and that is a live trap here. Verified against
+# the API: at max_tokens=120 it spent 118 tokens reasoning, returned an empty
+# string, and reported finish_reason="length" — a 200 OK carrying nothing,
+# which fails more quietly than the 404 it replaced. reasoning_effort="low"
+# cuts it to ~9 tokens, and REASONING_HEADROOM keeps the visible answer from
+# being starved by tokens the caller never sees or asked for.
+GROQ_REASONING_HEADROOM = 320
+
+
 def groq_complete(prompt: str, max_tokens: int = 120) -> str:
     if not GROQ_KEY:
         return ""
@@ -183,17 +199,27 @@ def groq_complete(prompt: str, max_tokens: int = 120) -> str:
         r = requests.post(
             "https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-            # llama3-8b-8192 was decommissioned by Groq. Every call 400'd and
-            # every caller silently used its fallback string — which is exactly
-            # how five different stocks ended up with the same one-line thesis.
-            json={"model": "llama-3.3-70b-versatile",
+            json={"model": GROQ_MODEL,
                   "messages": [{"role": "user", "content": prompt}],
-                  "max_tokens": max_tokens, "temperature": 0.7},
+                  "max_tokens": max_tokens + GROQ_REASONING_HEADROOM,
+                  "reasoning_effort": "low",
+                  "temperature": 0.7},
             timeout=15,
         )
         if r.status_code == 200:
-            return r.json()["choices"][0]["message"]["content"].strip()
-        # Log the body, not just the code. A decommissioned model returns a 400
+            body = r.json()
+            choice = (body.get("choices") or [{}])[0]
+            txt = (choice.get("message", {}).get("content") or "").strip()
+            if not txt:
+                # Empty 200. Say so out loud — this is the failure mode that
+                # cost 40 narratives while every log line read "success".
+                log.warning(
+                    f"Groq {GROQ_MODEL}: empty completion "
+                    f"(finish_reason={choice.get('finish_reason')}, "
+                    f"reasoning_tokens="
+                    f"{body.get('usage', {}).get('completion_tokens_details', {}).get('reasoning_tokens')})")
+            return txt
+        # Log the body, not just the code. A decommissioned model returns a 404
         # that says so in plain English, and nobody ever saw it.
         log.warning(f"Groq {r.status_code}: {r.text[:200]}")
     except Exception as e:
@@ -2715,17 +2741,31 @@ def get_market_intel(build_if_missing: bool = False) -> dict:
     latest day's provisional figures (confirmed directly), so a real 7-day
     trend has to accumulate one cached day at a time, same as this section
     genuinely will over its first week live rather than faking a backfill.
+
+    `build_if_missing` is safe HERE in a way it is not for the fund or stock
+    screens: this payload is three bounded fetches (~30s measured on the
+    runner), not 11-15 minutes. It exists because market_intel.yml and
+    newspaper.yml race. Scheduled runs on this repo land 1.5-3h late, and the
+    gap between the two crons is smaller than that drift, so on 2026-08-17 the
+    paper built at 14:47 UTC and the cache was not written until 15:33 —
+    "0 corporate actions, 0 sectors", section silently dropped from the nav.
+    Widening the cron gap narrows that window; only building inline closes it.
     """
     today = datetime.now(IST).strftime("%Y-%m-%d")
+    stale: dict | None = None
     try:
         with _db() as con:
             row = con.execute(
                 "SELECT payload FROM newspaper_market_intel WHERE date=?",
                 (today,)).fetchone()
             if row:
-                data = _stamp_fund_payload(json.loads(row[0]), fallback=False)
-                data["fii_dii_trend"] = _fii_dii_trend(con, today)
-                return data
+                data = json.loads(row[0])
+                # An empty row still counts as today's answer when we are not
+                # allowed to build — but never let it mask a good previous day.
+                if _has_market_intel(data) or not build_if_missing:
+                    data = _stamp_fund_payload(data, fallback=False)
+                    data["fii_dii_trend"] = _fii_dii_trend(con, today)
+                    return data
 
             row = con.execute(
                 "SELECT payload FROM newspaper_market_intel "
@@ -2734,13 +2774,16 @@ def get_market_intel(build_if_missing: bool = False) -> dict:
                 data = json.loads(row[0])
                 age = _payload_age_days(data)
                 if age is not None and age <= MAX_MARKET_INTEL_CACHE_AGE_DAYS:
-                    log.info(f"market intel: serving previous build, {age:.1f}d old")
                     data = _stamp_fund_payload(data, fallback=True)
                     data["fii_dii_trend"] = _fii_dii_trend(con, today)
-                    return data
-                log.warning("market intel: newest build is "
-                            + ("of unknown age" if age is None else f"{age:.1f}d old")
-                            + " — hidden")
+                    if not build_if_missing:
+                        log.info(f"market intel: serving previous build, {age:.1f}d old")
+                        return data
+                    stale = data
+                else:
+                    log.warning("market intel: newest build is "
+                                + ("of unknown age" if age is None else f"{age:.1f}d old")
+                                + " — hidden")
     except Exception as e:
         log.warning(f"market intel cache read: {e}")
 
@@ -2749,18 +2792,33 @@ def get_market_intel(build_if_missing: bool = False) -> dict:
     try:
         import market_intel as _mi
         data = _mi.build()
-        if not data.get("ok"):
-            return {}
+        # build() reports ok=True even when every fetch came back empty — it
+        # deliberately does not paper over a gap. Caching that would pin an
+        # empty row to today's date and hide the previous day's real data for
+        # the rest of the day, so an empty build is treated as no build.
+        if not data.get("ok") or not _has_market_intel(data):
+            log.warning("market intel: inline build returned nothing"
+                        + (" — serving previous build" if stale else ""))
+            return stale or {}
         with _db() as con:
             con.execute("INSERT OR REPLACE INTO newspaper_market_intel VALUES (?,?)",
                         (today, json.dumps(data)))
             con.commit()
             data = _stamp_fund_payload(data, fallback=False)
             data["fii_dii_trend"] = _fii_dii_trend(con, today)
+        log.info("market intel: built inline (cache was missing for today)")
         return data
     except Exception as e:
         log.warning(f"market intel build failed: {e}")
-        return {}
+        return stale or {}
+
+
+def _has_market_intel(data: dict) -> bool:
+    """Whether a payload carries anything worth rendering. Mirrors the guard
+    in _sections_present() — a payload with all three pieces empty drops the
+    section, so it must not be cached as today's answer either."""
+    d = data or {}
+    return bool(d.get("corporate_actions") or d.get("market_heat") or d.get("fii_dii"))
 
 
 def _fii_dii_trend(con, before_date: str, days: int = 7) -> list[dict]:
@@ -3952,6 +4010,39 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fund-card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
 .fund-card-h strong{font-size:14px}
 .fund-card-f{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12px}
+.fund-isin{font-family:var(--mono);font-size:10px;letter-spacing:.04em;
+  white-space:nowrap;padding-top:2px}
+
+/* Advanced detail. A native <details> on purpose: no z-index, no stacking
+   context to escape (see the modal note above), works with JS disabled, and
+   two funds can be open at once to compare. */
+.fund-more{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.fund-more>summary{cursor:pointer;font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
+  list-style:none;display:flex;align-items:center;gap:6px}
+.fund-more>summary::-webkit-details-marker{display:none}
+.fund-more>summary::before{content:"+";font-size:13px;line-height:1}
+.fund-more[open]>summary::before{content:"\2212"}
+.fund-more>summary:hover{color:var(--text)}
+.fund-more>summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.fund-more-b{margin-top:12px}
+.fm-block{margin-bottom:14px}
+.fm-h{font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.fm-note{color:var(--dim);font-size:11.5px;line-height:1.55;margin:0 0 8px;max-width:52ch}
+.fm-row{display:flex;justify-content:space-between;gap:12px;font-size:12px;
+  padding:3px 0;border-bottom:1px dotted var(--line)}
+.fm-row:last-child{border-bottom:0}
+.fm-row span{color:var(--dim)}
+.fm-row b{font-family:var(--mono);color:var(--text);font-weight:600}
+.fm-cal{display:flex;flex-wrap:wrap;gap:6px}
+.fm-cy{flex:1 1 58px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:6px;padding:6px 8px;text-align:center}
+.fm-cy-y{display:block;font-family:var(--mono);font-size:10px;color:var(--dim)}
+.fm-cy-v{display:block;font-family:var(--mono);font-size:12.5px;font-weight:600;margin-top:2px}
+.fm-src{color:var(--dim);font-size:11px;line-height:1.55;margin:0;
+  padding-top:8px;border-top:1px solid var(--line)}
+.fm-src a{color:var(--blue)}
 
 /* Small-sample warning on the performance section. Gold, not red: this is not
    an error, it is a true statement about how little data there is. */
@@ -5907,8 +5998,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
             <strong>{{ f.name }}</strong><br>
             <span class="mono-dim" style="font-size:11px">{{ f.house }}</span>
           </div>
-          <a href="{{ f.url }}" target="_blank" rel="noopener" class="btn-gh"
-             title="The NAV series this ranking was computed from">Data</a>
+          {% if f.get('isin') %}<span class="fund-isin mono-dim" title="ISIN — paste this into any broker or platform to find the exact scheme">{{ f.isin }}</span>{% endif %}
         </div>
         <div class="sd-scores">
           <div class="sd-sc">
@@ -5933,6 +6023,65 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           {% if pct is not none %}<span class="mono-dim">Top {{ 100 - pct }}% of category</span>{% endif %}
           <span class="mono-dim">NAV {{ f.nav }}</span>
         </div>
+
+        {# Advanced detail as a native <details>, deliberately not a modal.
+           Overlays in this template have to live outside <main> to escape its
+           stacking context, and an inline panel also lets two funds be opened
+           side by side to compare — which is the whole point of a screen.
+           Everything below comes from the same NAV series as the headline
+           numbers; nothing is fetched and nothing is estimated. #}
+        {% set cal = f.get('calendar') or [] %}
+        {% set roll = f.get('rolling3y') %}
+        {% if cal or roll or f.get('inception') %}
+        <details class="fund-more">
+          <summary>Advanced detail</summary>
+          <div class="fund-more-b">
+            {% if roll %}
+            <div class="fm-block">
+              <div class="fm-h">Rolling 3-year return &mdash; {{ roll.windows }} start dates</div>
+              <p class="fm-note">The headline 3Y figure is one window ending today. This is every
+                3-year hold this fund has ever offered, so you can see the range rather than
+                the one number the calendar happens to produce.</p>
+              <div class="fm-row"><span>Best</span><b class="up">{{ roll.best }}%</b></div>
+              <div class="fm-row"><span>Median</span><b>{{ roll.median }}%</b></div>
+              <div class="fm-row"><span>Worst</span><b class="{{ 'dn' if roll.worst < 0 else '' }}">{{ roll.worst }}%</b></div>
+              <div class="fm-row"><span>Beat 7% a year</span><b>{{ roll.above_7pct }}% of windows</b></div>
+            </div>
+            {% endif %}
+
+            {% if cal %}
+            <div class="fm-block">
+              <div class="fm-h">Calendar year returns</div>
+              <p class="fm-note">Completed years only &mdash; a part-year is never annualised here.</p>
+              <div class="fm-cal">
+                {% for c in cal %}
+                <div class="fm-cy">
+                  <span class="fm-cy-y">{{ c.year }}</span>
+                  <span class="fm-cy-v {{ 'up' if c.ret >= 0 else 'dn' }}">{{ '%+.1f'|format(c.ret) }}%</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="fm-block">
+              <div class="fm-h">Scheme</div>
+              {% if f.get('inception') %}<div class="fm-row"><span>NAV history from</span><b>{{ f.inception }}</b></div>{% endif %}
+              {% if f.get('history_years') %}<div class="fm-row"><span>Track record</span><b>{{ f.history_years }} years</b></div>{% endif %}
+              {% if f.get('since_inception') is not none %}<div class="fm-row"><span>Since inception</span><b>{{ f.since_inception }}% a year</b></div>{% endif %}
+              {% if f.get('scheme_type') %}<div class="fm-row"><span>Type</span><b>{{ f.scheme_type }}</b></div>{% endif %}
+              {% if f.get('isin') %}<div class="fm-row"><span>ISIN</span><b class="mono">{{ f.isin }}</b></div>{% endif %}
+              <div class="fm-row"><span>NAV on {{ f.nav_date }}</span><b>{{ f.nav }}</b></div>
+            </div>
+
+            <p class="fm-src">
+              Computed from the full published NAV series, not copied off a factsheet.
+              <a href="{{ f.url }}" target="_blank" rel="noopener">Open the raw NAV series (JSON)</a>
+              &mdash; this is the data source, not a fund page.
+            </p>
+          </div>
+        </details>
+        {% endif %}
       </div>
       {% endfor %}
     </div>

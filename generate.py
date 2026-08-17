@@ -136,10 +136,12 @@ def generate() -> None:
     print(f"[generate] Fund screen (cached): {len(_cats)} categories, "
           f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
 
-    # READ ONLY, same reason as the fund screen above: NSE's endpoints can
-    # hang or rate-limit, and that must never sit inside the 6 AM build.
-    # market_intel.yml owns this clock.
-    market_intel = get_market_intel()
+    # market_intel.yml owns this clock, but unlike the fund screen this one
+    # builds inline when the cache has nothing for today: the payload is three
+    # bounded fetches (~30s), and the two workflows race. Scheduled runs land
+    # 1.5-3h late, so on 2026-08-17 the paper built 45 minutes BEFORE the cache
+    # was written and shipped without the section at all. See get_market_intel.
+    market_intel = get_market_intel(build_if_missing=True)
     if market_intel:
         market_intel["job_status"] = get_job_status("market_intel", market_intel.get("generated_at"))
     print(f"[generate] Market intel (cached): "
