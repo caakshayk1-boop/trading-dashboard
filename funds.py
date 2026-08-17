@@ -461,10 +461,28 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
         })
         log.info(f"{label}: {len(scored)} screened, top r3={scored[0]['r3'] if scored else '—'}")
 
+    # What each published fund actually HOLDS. Separate module and separate
+    # source (ET Money's server-rendered portfolio table) because AMFI's feed
+    # is NAV-only — it can rank funds but cannot say what is inside them, and
+    # two funds with the same 3Y CAGR can own completely different markets.
+    #
+    # Best-effort by design: this runs AFTER the screen is fully built, so a
+    # slow or unreachable portfolio source costs the section its composition
+    # block and nothing else. The ranking above never depends on it.
+    try:
+        import fund_portfolio
+        n = fund_portfolio.enrich(out)
+        log.info(f"portfolio composition attached to {n} fund(s)")
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"portfolio enrichment skipped: {e}")
+
     return {
         "ok": True,
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "source": "AMFI daily NAV via api.mfapi.in",
+        "portfolio_source": ("Holdings, sector weights and the portfolio date come from "
+                             "ET Money's published scheme portfolio. Sector weights are "
+                             "summed from the individual holdings, not read off a chart."),
         "basis": ("Direct + Growth plans only. Returns are CAGR computed from the "
                   "published NAV series, not taken from any factsheet."),
         "ter_note": ("Per-scheme expense ratio is not in the free AMFI feed. Direct "

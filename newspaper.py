@@ -4024,6 +4024,17 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fund-isin{font-family:var(--mono);font-size:10px;letter-spacing:.04em;
   white-space:nowrap;padding-top:2px}
 
+/* Portfolio composition — what the fund owns. */
+.fpf{margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
+.fpf-r{display:flex;gap:8px;align-items:baseline;margin-bottom:6px}
+.fpf-k{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--dim);flex:none;width:64px;padding-top:2px}
+.fpf-v{display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.fpf-c{font-size:11px;color:var(--muted);background:var(--bg2);
+  border:1px solid var(--line);border-radius:5px;padding:2px 6px;white-space:nowrap}
+.fpf-c b{font-family:var(--mono);color:var(--text);font-weight:600}
+.fpf-m{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:7px}
+
 /* Advanced detail. A native <details> on purpose: no z-index, no stacking
    context to escape (see the modal note above), works with JS disabled, and
    two funds can be open at once to compare. */
@@ -6112,8 +6123,47 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           {% if vol is not none %}<span class="mono-dim">Volatility <b style="color:var(--text)">{{ vol }}%</b></span>{% endif %}
           <span class="mono-dim">Worst fall (3y) <b class="dn">{{ dd3 if dd3 is not none else '—' }}{{ '%' if dd3 is not none else '' }}</b></span>
           {% if pct is not none %}<span class="mono-dim">Top {{ 100 - pct }}% of category</span>{% endif %}
+          {# Fund age sits with the other headline facts, not buried in the
+             detail panel: a 3Y CAGR from a fund with 3.2 years of history is a
+             different claim from the same number over 12 years. #}
+          {% if f.get('history_years') %}<span class="mono-dim">Age <b style="color:var(--text)">{{ f.history_years }}y</b></span>{% endif %}
           <span class="mono-dim">NAV {{ f.nav }}</span>
         </div>
+
+        {# ── What it actually owns ──
+           Always rendered when the data exists, not hidden behind the detail
+           toggle: the NAV series ranks these funds but says nothing about what
+           is inside them, and two funds with the same 3Y CAGR can be a
+           banks-and-IT portfolio and a smallcap-industrials one. That is the
+           difference that decides whether adding one diversifies anything.
+           Absent entirely when the portfolio could not be resolved — never a
+           placeholder, never a guess. #}
+        {% set pf = f.get('portfolio') %}
+        {% if pf and (pf.get('top_sectors') or pf.get('top_stocks')) %}
+        <div class="fpf">
+          {% if pf.get('top_sectors') %}
+          <div class="fpf-r">
+            <span class="fpf-k">Sectors</span>
+            <span class="fpf-v">
+              {% for s in pf.top_sectors %}<span class="fpf-c">{{ s.name }} <b>{{ s.pct }}%</b></span>{% endfor %}
+            </span>
+          </div>
+          {% endif %}
+          {% if pf.get('top_stocks') %}
+          <div class="fpf-r">
+            <span class="fpf-k">Top holdings</span>
+            <span class="fpf-v">
+              {% for s in pf.top_stocks %}<span class="fpf-c">{{ s.name|replace(' Ltd.','')|replace(' Limited','') }} <b>{{ s.pct }}%</b></span>{% endfor %}
+            </span>
+          </div>
+          {% endif %}
+          <div class="fpf-m">
+            {% if pf.get('holdings_count') %}{{ pf.holdings_count }} holdings{% endif %}
+            {%- if pf.get('equity_pct') %} · {{ pf.equity_pct }}% in equity{% endif %}
+            {%- if pf.get('as_on') %} · as on {{ pf.as_on }}{% endif %}
+          </div>
+        </div>
+        {% endif %}
 
         {# Advanced detail as a native <details>, deliberately not a modal.
            Overlays in this template have to live outside <main> to escape its
