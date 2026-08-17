@@ -4987,7 +4987,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    that returned a negative, which is the point of publishing it. */
 .elog-v.rejected{color:var(--muted)}
 .elog-b{min-width:0}
+/* The rule stays visible; the evidence is one click away. Marker suppressed
+   and rebuilt so the whole title row is the hit target, not a 10px triangle. */
+.elog-sum{cursor:pointer;list-style:none;display:flex;align-items:baseline;
+  justify-content:space-between;gap:16px}
+.elog-sum::-webkit-details-marker{display:none}
+.elog-sum:focus-visible{outline:2px solid var(--blue);outline-offset:4px;border-radius:4px}
+.elog-more{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--dim);white-space:nowrap;flex:none}
+.elog-sum:hover .elog-more{color:var(--text)}
+.elog-more::after{content:" +"}
+.elog-b[open] .elog-more::after{content:" \2212"}
+.elog-b[open] .elog-more{color:var(--muted)}
+.elog-d2{margin-top:10px}
 .elog-h{font-size:19px;font-weight:600;letter-spacing:-.3px;text-wrap:balance;margin-bottom:8px}
+.elog-sum .elog-h{margin-bottom:0}
 .elog-p{color:var(--muted);font-size:14px;max-width:62ch}
 .elog-e{width:100%;border-collapse:collapse;margin:14px 0 0;font-size:12.5px}
 .elog-e th{text-align:left;font-weight:500;color:var(--text);padding:6px 12px 6px 0}
@@ -7365,25 +7379,36 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span class="elog-t">{{ c.tag }}</span>
         <span class="elog-v {{ c.verdict }}">{{ c.verdict }}</span>
       </div>
-      <div class="elog-b">
-        <h3 class="elog-h">{{ c.title }}</h3>
-        <p class="elog-p">{{ c.body }}</p>
-        {% if c.evidence %}
-        <table class="elog-e">
-          <tbody>
-          {% for label, val, n, sig in c.evidence %}
-            <tr>
-              <th scope="row">{{ label }}</th>
-              <td class="num">{{ val }}</td>
-              <td class="num elog-n">{{ n }}</td>
-              <td class="num elog-s">{{ sig }}</td>
-            </tr>
-          {% endfor %}
-          </tbody>
-        </table>
-        {% endif %}
-        {% if c.note %}<p class="elog-c">{{ c.note }}</p>{% endif %}
-      </div>
+      {# Collapsed by default. The log runs to every rule the engine has ever
+         adopted or rejected, each with a body paragraph, an evidence table and
+         a caveat — fully expanded it buried the section and made the list
+         impossible to scan. The RULE stays visible; the reasoning is one click
+         away. Native <details> for the same reasons as the fund screen: no
+         stacking context, and it still reads fully with JS off. #}
+      <details class="elog-b">
+        <summary class="elog-sum">
+          <h3 class="elog-h">{{ c.title }}</h3>
+          <span class="elog-more">Evidence</span>
+        </summary>
+        <div class="elog-d2">
+          <p class="elog-p">{{ c.body }}</p>
+          {% if c.evidence %}
+          <table class="elog-e">
+            <tbody>
+            {% for label, val, n, sig in c.evidence %}
+              <tr>
+                <th scope="row">{{ label }}</th>
+                <td class="num">{{ val }}</td>
+                <td class="num elog-n">{{ n }}</td>
+                <td class="num elog-s">{{ sig }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+          {% if c.note %}<p class="elog-c">{{ c.note }}</p>{% endif %}
+        </div>
+      </details>
     </li>
     {% endfor %}
   </ol>
