@@ -146,6 +146,14 @@ def init_newspaper_db():
         con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
             week TEXT PRIMARY KEY, payload TEXT
         )""")
+        # Corporate actions / FII-DII / sector heat. Daily, keyed by date —
+        # a separate workflow (market_intel.yml) populates it, same
+        # separation-of-concerns as newspaper_funds: NSE's endpoints are
+        # third-party calls that can hang or rate-limit, and that must
+        # never take the daily paper down with it.
+        con.execute("""CREATE TABLE IF NOT EXISTS newspaper_market_intel (
+            date TEXT PRIMARY KEY, payload TEXT
+        )""")
         # Podcasts are seven feed fetches plus an AI pass per episode — cheap,
         # but not cheap enough to repeat on a build that already has a budget,
         # and the ask was explicitly weekly.
@@ -1897,6 +1905,9 @@ ENGINE_CHANGES = [
 SECTION_MAP = [
     # (id,          nav label,      page,   nav group)
     ("world",       "World",        "main", "Markets"),
+    # Same nav group as #world on purpose — this is market context a reader
+    # wants before the trade ideas, not buried after the signal log.
+    ("marketintel", "Market Intel", "main", "Markets"),
     ("who",         "Who",          "main", "About"),
     ("picks",       "Trade Ideas",  "main", "Ideas"),
     ("longterm",    "Long-Term",    "main", "Ideas"),
@@ -1968,7 +1979,7 @@ PAGE_META = {
 
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
-                   stock_screen=None) -> set:
+                   stock_screen=None, market_intel=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -1989,6 +2000,13 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     # which is the mistake #funds already made once.
     if not (stock_screen or {}).get("rows"):
         drop.add("stocks")
+    # All three sub-blocks come from independent NSE/Yahoo fetches inside
+    # the same daily build — any one can legitimately be empty on its own
+    # (e.g. NSE hasn't published today's FII/DII yet), so only hide the
+    # whole section when there is truly nothing across all three.
+    mi = market_intel or {}
+    if not (mi.get("corporate_actions") or mi.get("market_heat") or mi.get("fii_dii")):
+        drop.add("marketintel")
     return drop
 
 
@@ -2614,6 +2632,93 @@ def _fund_week_key() -> str:
     Two caches, two keys. Same IST-dated ISO week as everything else.
     """
     return _iso_week()
+
+
+# A day old is still today's picture for slow-moving context (which sector
+# led yesterday is still informative), but corporate-action ex-dates and
+# FII/DII flow are date-specific facts — showing them under the wrong date
+# is actively misleading, not just stale. Shorter ceiling than funds (15d)
+# or podcasts (4d) for that reason.
+MAX_MARKET_INTEL_CACHE_AGE_DAYS = 3
+
+
+def get_market_intel(build_if_missing: bool = False) -> dict:
+    """Today's corporate actions / FII-DII / sector heat, cached daily by a
+    separate workflow (market_intel.yml) — same contract as get_fund_screen:
+    NSE's endpoints are third-party calls that can hang, so the daily paper
+    only ever READS this cache, never builds it inline.
+
+    Also assembles fii_dii_trend from the last 7 CACHED rows, not from a
+    single API call — NSE's fiidiiTradeReact endpoint returns only the
+    latest day's provisional figures (confirmed directly), so a real 7-day
+    trend has to accumulate one cached day at a time, same as this section
+    genuinely will over its first week live rather than faking a backfill.
+    """
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    try:
+        with _db() as con:
+            row = con.execute(
+                "SELECT payload FROM newspaper_market_intel WHERE date=?",
+                (today,)).fetchone()
+            if row:
+                data = _stamp_fund_payload(json.loads(row[0]), fallback=False)
+                data["fii_dii_trend"] = _fii_dii_trend(con, today)
+                return data
+
+            row = con.execute(
+                "SELECT payload FROM newspaper_market_intel "
+                "ORDER BY date DESC LIMIT 1").fetchone()
+            if row:
+                data = json.loads(row[0])
+                age = _payload_age_days(data)
+                if age is not None and age <= MAX_MARKET_INTEL_CACHE_AGE_DAYS:
+                    log.info(f"market intel: serving previous build, {age:.1f}d old")
+                    data = _stamp_fund_payload(data, fallback=True)
+                    data["fii_dii_trend"] = _fii_dii_trend(con, today)
+                    return data
+                log.warning("market intel: newest build is "
+                            + ("of unknown age" if age is None else f"{age:.1f}d old")
+                            + " — hidden")
+    except Exception as e:
+        log.warning(f"market intel cache read: {e}")
+
+    if not build_if_missing:
+        return {}
+    try:
+        import market_intel as _mi
+        data = _mi.build()
+        if not data.get("ok"):
+            return {}
+        with _db() as con:
+            con.execute("INSERT OR REPLACE INTO newspaper_market_intel VALUES (?,?)",
+                        (today, json.dumps(data)))
+            con.commit()
+            data = _stamp_fund_payload(data, fallback=False)
+            data["fii_dii_trend"] = _fii_dii_trend(con, today)
+        return data
+    except Exception as e:
+        log.warning(f"market intel build failed: {e}")
+        return {}
+
+
+def _fii_dii_trend(con, before_date: str, days: int = 7) -> list[dict]:
+    """Last N cached days' fii_dii figures, oldest first — built from
+    accumulated daily cache rows, see get_market_intel()'s own docstring."""
+    rows = con.execute(
+        "SELECT date, payload FROM newspaper_market_intel "
+        "WHERE date <= ? ORDER BY date DESC LIMIT ?",
+        (before_date, days)).fetchall()
+    out = []
+    for d, payload in rows:
+        try:
+            fd = (json.loads(payload) or {}).get("fii_dii")
+        except (json.JSONDecodeError, TypeError):
+            fd = None
+        if fd:
+            out.append({"date": d, **fd})
+    out.reverse()
+    return out
+
 
 def _warm_picks_cache():
     week = _week_key()
@@ -5240,6 +5345,95 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 </section>{% endif %}
 
+<!-- ══════════ MARKET INTEL ══════════
+     Corporate actions, FII/DII net flow, sector heat — three independent
+     NSE/Yahoo fetches (market_intel.py), cached daily by its own workflow
+     (market_intel.yml) for the same reason the fund screen is separate
+     from the daily build: a hung third-party call must never take the
+     paper down with it. Every field goes through .get() from the start —
+     the Fund Screen crash this session (StrictUndefined + a schema an
+     older cached payload didn't have) is the lesson applied here up
+     front rather than retrofitted after the same crash recurs. -->
+{% if 'marketintel' in secs %}<section class="sec" id="marketintel">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['marketintel'] }} / {{ seclabel['marketintel'] }}</span>
+      <h2 class="stitle">What moved the tape today.</h2>
+    </div>
+    <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
+      straight from NSE's and Yahoo's own feeds, no ranking or "top N by importance" applied.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if market_intel.get('is_fallback') else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>Rebuilt <b>~04:30 IST</b>, before the 6 AM edition</span>
+    {% if market_intel.get('built_on') %}<span>Built <b>{{ market_intel.built_on }}</b>
+      {%- if market_intel.get('age_days') is not none %} · {{ market_intel.age_days }}d old{% endif %}</span>{% endif %}
+    {% if market_intel.get('is_fallback') %}
+    <span>&#9888; Today's build has not run &mdash; showing the previous day's.</span>
+    {% endif %}
+  </div>
+
+  {% set heat = market_intel.get('market_heat') or [] %}
+  {% if heat %}
+  <h3 style="font-size:15px;margin:20px 0 10px">Sector heat</h3>
+  <div class="fund-grid rv">
+    {% for s in heat|selectattr('chg_pct', 'defined')|sort(attribute='chg_pct', reverse=True) %}
+    {% set chg = s.get('chg_pct', 0) %}
+    <div class="card fund-card" style="padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>{{ s.get('label', '—') }}</strong>
+        <span class="rk {{ 'rk-low' if chg >= 0.3 else 'rk-high' if chg <= -0.3 else 'rk-medium' }}">
+          {{ '+' if chg > 0 else '' }}{{ chg }}%
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% set fd = market_intel.get('fii_dii') %}
+  {% if fd and fd.get('fii_cr') is not none and fd.get('dii_cr') is not none %}
+  <h3 style="font-size:15px;margin:20px 0 10px">FII / DII net flow</h3>
+  <div class="kpi-row rv" style="margin-bottom:10px">
+    <div class="kpi"><div class="v {{ 'up' if fd.get('fii_cr', 0) >= 0 else 'dn' }}">
+      &#8377;{{ '{:,.0f}'.format(fd.get('fii_cr', 0)) }} Cr</div><div class="k">FII net</div></div>
+    <div class="kpi"><div class="v {{ 'up' if fd.get('dii_cr', 0) >= 0 else 'dn' }}">
+      &#8377;{{ '{:,.0f}'.format(fd.get('dii_cr', 0)) }} Cr</div><div class="k">DII net</div></div>
+    <div class="kpi"><div class="v {{ 'up' if fd.get('net_cr', 0) >= 0 else 'dn' }}">
+      &#8377;{{ '{:,.0f}'.format(fd.get('net_cr', 0)) }} Cr</div><div class="k">Combined</div></div>
+  </div>
+  {% set trend = market_intel.get('fii_dii_trend') or [] %}
+  {% if trend|length > 1 %}
+  <p class="mono-dim" style="font-size:11px">
+    {% for t in trend %}{{ t.get('date', '—') }}: FII {{ '{:+,.0f}'.format(t.get('fii_cr', 0)) }} / DII {{ '{:+,.0f}'.format(t.get('dii_cr', 0)) }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
+  </p>
+  {% endif %}
+  {% endif %}
+
+  {% set ca = market_intel.get('corporate_actions') or [] %}
+  {% if ca %}
+  <h3 style="font-size:15px;margin:20px 0 10px">Corporate actions</h3>
+  <div class="tw rv">
+    <table class="t">
+      <thead><tr>
+        <th scope="col">Symbol</th><th scope="col">Action</th><th scope="col">Ex-date</th><th scope="col">Record date</th>
+      </tr></thead>
+      <tbody>
+        {% for r in ca %}
+        <tr>
+          <td><strong>{{ r.get('symbol', '—') }}</strong></td>
+          <td style="font-size:12.5px;color:var(--muted)">{{ r.get('subject', '—') }}</td>
+          <td class="mono-dim">{{ r.get('ex_date', '—') }}</td>
+          <td class="mono-dim">{{ r.get('record_date', '—') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
 
 <!-- Capture. There is exactly ONE subscribe box on this page, and it sits at
      the bottom (id="subEnd") after the ledger. A second copy used to sit here,

@@ -39,6 +39,7 @@ from newspaper import (
     fetch_alert_log,
     get_top5_picks,
     get_fund_screen,
+    get_market_intel,
     get_stock_screen,
     get_podcasts,
     fetch_smart_reads,
@@ -131,6 +132,15 @@ def generate() -> None:
     _cats = fund_screen.get("categories", [])
     print(f"[generate] Fund screen (cached): {len(_cats)} categories, "
           f"{sum(len(c.get('funds', [])) for c in _cats)} funds")
+
+    # READ ONLY, same reason as the fund screen above: NSE's endpoints can
+    # hang or rate-limit, and that must never sit inside the 6 AM build.
+    # market_intel.yml owns this clock.
+    market_intel = get_market_intel()
+    print(f"[generate] Market intel (cached): "
+          f"{len(market_intel.get('corporate_actions', []))} corporate actions, "
+          f"{len(market_intel.get('market_heat', []))} sectors"
+          f"{' (previous build)' if market_intel.get('is_fallback') else ''}")
 
     # READ ONLY, for exactly the reason above it. The Nifty 500 screen is ~11
     # minutes of sequential Yahoo fetches — two frames plus a quote per symbol —
@@ -330,6 +340,7 @@ def generate() -> None:
         # Weekly, cached. build_if_missing so a fresh week actually builds it;
         # a failure returns {} and the section hides rather than failing the build.
         fund_screen=fund_screen,
+        market_intel=market_intel,
         stock_screen=stock_screen,
         podcasts=podcasts,
         smart_reads=smart_reads,
@@ -411,7 +422,7 @@ def generate() -> None:
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
-                                                        stock_screen)))
+                                                        stock_screen, market_intel)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

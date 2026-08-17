@@ -1575,6 +1575,109 @@ def scan_4h(universe=None):
     return gated
 
 
+def analyze_ohl(symbol):
+    """OHL/OLL pattern — today's open sits within 0.5% of today's high (OHL,
+    bearish) or today's low (OLL, bullish). Ported from trade.askakshay.com's
+    Streamlit OHL scanner (a sibling project, ~/Workspace/AI/Trading/
+    tradeflow-pro/src/app/api/streamlit/ohl/route.ts — a pure pattern
+    screener with no SL/target logic of its own), sized here the same way
+    every other engine in this file is: _tight_sl/_structure_targets.
+
+    Only OLL (bullish) is published. OHL (bearish) is detected below but
+    withheld — _tight_sl/_structure_targets are LONG-only helpers (stop
+    below price, targets above), and mirroring them correctly for a SHORT
+    setup deserves its own careful pass, not a same-day formula tacked onto
+    this one. Same shape as analyze_4h()/analyze_breakout() otherwise.
+    """
+    try:
+        sym_yf = to_yahoo(symbol)
+        df_d = _yf_download(sym_yf, period="3mo", interval="1d", progress=False, auto_adjust=True)
+        if df_d.empty or len(df_d) < 30:
+            return None
+
+        today_open = float(df_d["Open"].squeeze().iloc[-1])
+        today_high = float(df_d["High"].squeeze().iloc[-1])
+        today_low  = float(df_d["Low"].squeeze().iloc[-1])
+        close      = float(df_d["Close"].squeeze().iloc[-1])
+        if any(np.isnan(x) or x <= 0 for x in (today_open, today_high, today_low, close)):
+            return None
+
+        TOL = 0.005
+        is_oll = abs(today_open - today_low) / today_low <= TOL
+        # is_ohl computed for completeness/future use, not published — see
+        # docstring. Left as a named variable rather than omitted so the
+        # bearish detection itself is proven working, ready for a SHORT-side
+        # pass without re-deriving the tolerance check.
+        is_ohl = abs(today_open - today_high) / today_high <= TOL  # noqa: F841
+        if not is_oll:
+            return None
+
+        atr_s = ta_lib.volatility.AverageTrueRange(
+            df_d["High"].squeeze(), df_d["Low"].squeeze(),
+            df_d["Close"].squeeze(), window=14
+        ).average_true_range()
+        atr = float(atr_s.iloc[-1]) if not atr_s.empty else close * 0.02
+        if np.isnan(atr) or atr <= 0:
+            atr = close * 0.02
+
+        vol   = df_d["Volume"].squeeze()
+        avg_v = float(vol.rolling(20).mean().iloc[-1]) or 1
+        vol_r = round(float(vol.iloc[-1]) / avg_v, 1)
+        turnover_cr = _avg_turnover_cr(df_d["Close"].squeeze(), vol)
+
+        sym_clean = symbol.replace(".NS", "")
+        _d_low  = df_d["Low"].squeeze()
+        _d_high = df_d["High"].squeeze()
+        sl = _tight_sl(close, _d_low, atr, max_pct=0.06)
+        t1, t2, t3 = _structure_targets(close, atr, _d_high,
+                                        r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+        rr = round((t1 - close) / max(close - sl, 0.01), 1)
+
+        return {
+            "symbol":      sym_clean,
+            "action":      "BUY",
+            "price":       round(close, 1),
+            "pattern":     "OLL",
+            "vol_ratio":   vol_r,
+            "turnover_cr": turnover_cr,
+            "sl":          sl,
+            "target1":     t1,
+            "target2":     t2,
+            "target3":     t3,
+            "rr":          rr,
+            "fno":         sym_clean in FNO_ELIGIBLE,
+            "tv_link":     f"https://in.tradingview.com/chart/?symbol=NSE:{sym_clean}",
+        }
+    except Exception as e:
+        logging.warning(f"OHL/OLL {symbol}: {e}")
+        return None
+
+
+def scan_ohl(universe=None):
+    """OLL (Open≈Low, bullish) pattern scan — the published half of the
+    OHL/OLL engine. See analyze_ohl()'s docstring for why the bearish OHL
+    half is detected but withheld. Universe: same F&O-eligible Nifty 500
+    slice scan_4h() uses — a same-day, liquidity-sensitive pattern, not a
+    small-cap one.
+    """
+    if universe is None:
+        raw_uni = load_nifty500()
+        universe = [s for s in raw_uni if s.replace(".NS", "") in FNO_ELIGIBLE]
+
+    results = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_ohl, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            r = f.result()
+            if r and r.get("symbol", "").replace(".NS", "") not in SIGNAL_BLACKLIST:
+                results.append(r)
+
+    gated = _apply_quality_gate(results, rank_key="vol_ratio", engine="ohl",
+                                limit=MAX_SIGNALS_PER_SCAN, label="ohl")
+    logging.info(f"OHL/OLL scan: {len(gated)} signals (from {len(results)} raw)")
+    return gated
+
+
 # Metals quote SPOT, and take their percentage from a continuous ETF, not from
 # the futures contract.
 #

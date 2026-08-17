@@ -34,6 +34,7 @@ test("tierFor maps the real signal_type taxonomy correctly", () => {
   assert.equal(tierFor("ai_4h"), "swing");
   assert.equal(tierFor("ai_daily"), "swing");
   assert.equal(tierFor("equity_measured"), "swing");
+  assert.equal(tierFor("ohl"), "swing");
   assert.equal(tierFor("cf_1h"), "hf");
   assert.equal(tierFor("intraday"), "hf");
   assert.equal(tierFor("commodity"), "hf");

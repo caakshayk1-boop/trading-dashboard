@@ -18,7 +18,10 @@ export const TIERS = {
   },
   swing: {
     label: "Swing/medium",
-    engines: new Set(["breakout", "4h", "ai_4h", "ai_daily", "equity_measured"]),
+    // ohl (added 2026-08-17): same-day pattern signal on the F&O-eligible
+    // universe, same classification as breakout — liquid names, pattern-
+    // based, not a multi-month thesis or a high-frequency intraday churn.
+    engines: new Set(["breakout", "4h", "ai_4h", "ai_daily", "equity_measured", "ohl"]),
     maxPct: 0.03,
     capPct: 0.30,
   },

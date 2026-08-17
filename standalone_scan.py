@@ -774,6 +774,38 @@ def run_4h_scan(time_str):
         ids  = log_batch_to_all_signals(rows)
         sent = _send_chunked(f"⚡ *4H Signals* ({len(sigs)}) — {time_str}\n", blocks)
         _record_delivery(ids, sent, mark_alerts_sent)
+
+
+def run_ohl_scan(time_str):
+    """OLL (Open≈Low, bullish) pattern — ported from trade.askakshay.com's
+    OHL/OLL scanner (see scanner.analyze_ohl's docstring for why only the
+    bullish half is published). Same shape as run_4h_scan() — a same-day
+    pattern, so it belongs in the daily cron, not its own workflow."""
+    from scanner import scan_ohl
+    from tracker import (log_batch_to_all_signals, duplicate_symbols, mark_alerts_sent)
+    logging.info("Running OHL/OLL scan...")
+    raw = scan_ohl()
+    dupes = duplicate_symbols(raw, "ohl")
+    sigs = [s for s in raw if str(s["symbol"]).replace(".NS", "") not in dupes]
+    logging.info(f"OHL/OLL scan: {len(sigs)} to alert ({len(raw)} raw → {len(dupes)} deduped out)")
+    if sigs:
+        blocks, rows = [], []
+        for b in sigs:
+            fno_tag = " `F&O`" if b.get("fno") else ""
+            blocks.append(
+                f"• *{b['symbol']}*{fno_tag} | OLL | BUY ₹{b['price']}\n"
+                f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b['target2']} | RR {b['rr']}"
+            )
+            rows.append({
+                "symbol": b["symbol"], "signal_type": "ohl", "action": "BUY",
+                "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
+                "t2": b["target2"], "t3": b.get("target3", b["target2"]),
+                "rr": b["rr"], "timeframe": "1D", "score": 0,
+                **_quality_fields(b),
+            })
+        ids  = log_batch_to_all_signals(rows)
+        sent = _send_chunked(f"📐 *OLL Signals* ({len(sigs)}) — {time_str}\n", blocks)
+        _record_delivery(ids, sent, mark_alerts_sent)
     return sigs
 
 
@@ -1245,12 +1277,17 @@ def main():
             comms     = _safe("commodity_scan",run_commodity_scan, time_str)
             # Backtested engine — runs on the completed daily bar, as tested.
             measured  = _safe("measured_equity", run_measured_equity_scan, time_str)
+            # OHL/OLL reads today's Open/High/Low off the DAILY bar
+            # (interval="1d"), which is only stable once the session has
+            # closed — the same reason measured_equity runs here and not
+            # at midday.
+            ohl       = _safe("ohl_scan",      run_ohl_scan,       time_str)
             # Ledger last: every alert and its outcome, to Telegram + Obsidian.
             # Runs after the scans so today's signals are already logged.
             _safe("signal_ledger", run_signal_ledger, time_str)
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
                          "swing": len(signals), "commodities": len(comms),
-                         "measured": len(measured)}
+                         "measured": len(measured), "ohl": len(ohl)}
 
         elif slot == "weekend":
             sigs_4h   = _safe("4h_scan",       run_4h_scan,        time_str)

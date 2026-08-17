@@ -1,0 +1,73 @@
+name: Market Intel — daily corporate actions / FII-DII / sector heat
+
+# Builds the market intel payload (NSE corporate actions, FII/DII net flow,
+# sector heat) and caches it in Turso (newspaper_market_intel, keyed by
+# date). The daily newspaper only READS that cache.
+#
+# Its own workflow for the same reason fund_screen.yml is separate from
+# daily_scan.yml: NSE's endpoints are third-party calls that can hang or
+# rate-limit, and that must never sit inside the 6 AM build and take the
+# whole daily paper down with it.
+
+on:
+  schedule:
+    - cron: '0 23 * * 0-4'    # 04:30 IST Mon-Fri — before 6 AM newspaper.yml
+  workflow_dispatch:
+
+concurrency:
+  group: market-intel
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build and cache today's market intel
+        run: |
+          python - <<'PY'
+          import json, logging
+          logging.basicConfig(level=logging.INFO, format="%(message)s")
+          import market_intel, newspaper
+          from datetime import datetime
+
+          data = market_intel.build()
+          ca = len(data.get("corporate_actions", []))
+          heat = len(data.get("market_heat", []))
+          fd = data.get("fii_dii")
+          print(f"corporate actions: {ca}")
+          print(f"market heat: {heat} sectors")
+          print(f"FII/DII: {fd}")
+
+          # All three sources are independent — one being empty (e.g. NSE
+          # hasn't published FII/DII yet) is real, not a failure. Only fail
+          # loudly if EVERYTHING came back empty, which means the whole
+          # fetch layer broke rather than one source having nothing today.
+          if not (ca or heat or fd):
+              raise SystemExit("all three sources empty — fetch layer likely broken")
+
+          today = datetime.now(newspaper.IST).strftime("%Y-%m-%d")
+          with newspaper._db() as con:
+              con.execute("""CREATE TABLE IF NOT EXISTS newspaper_market_intel (
+                  date TEXT PRIMARY KEY, payload TEXT)""")
+              con.execute("INSERT OR REPLACE INTO newspaper_market_intel VALUES (?,?)",
+                          (today, json.dumps(data)))
+              con.commit()
+          print(f"\ncached for {today}")
+          PY
