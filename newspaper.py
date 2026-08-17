@@ -72,14 +72,20 @@ def _all_signals_columns() -> set:
 def fetch_alert_log(limit: int = 200) -> list[dict]:
     """Read Telegram alert history from all_signals table (signals.db / Turso)."""
     try:
-        has_dup_note = "duplicate_note" in _all_signals_columns()
+        _cols_present = _all_signals_columns()
+        has_dup_note = "duplicate_note" in _cols_present
         dup_select = ", duplicate_note" if has_dup_note else ""
+        # Probed, not assumed: `remarks` arrives via ALTER TABLE and naming a
+        # column that does not exist yet fails the whole query, which would
+        # blank the entire signal log rather than one cell.
+        has_remarks = "remarks" in _cols_present
+        rmk_select = ", remarks" if has_remarks else ""
         with _db() as con:
             rows = con.execute(f"""
                 SELECT date, symbol, action, timeframe, signal_type,
                        entry, sl, target1, target2, rr, score,
                        status, lifecycle_status, exit_price, pnl_pct,
-                       closed_at, sent_at{dup_select}
+                       closed_at, sent_at{dup_select}{rmk_select}
                 FROM all_signals
                 ORDER BY date DESC, id DESC
                 LIMIT ?
@@ -87,7 +93,8 @@ def fetch_alert_log(limit: int = 200) -> list[dict]:
         cols = ["date","symbol","action","timeframe","signal_type",
                 "entry","sl","target1","target2","rr","score",
                 "status","lifecycle_status","exit_price","pnl_pct",
-                "closed_at","sent_at"] + (["duplicate_note"] if has_dup_note else [])
+                "closed_at","sent_at"] + (["duplicate_note"] if has_dup_note else []) \
+               + (["remarks"] if has_remarks else [])
         result = []
         for r in rows:
             r = dict(zip(cols, r))
@@ -2868,6 +2875,23 @@ def _warm_picks_cache():
         _picks_cache[week] = picks
     log.info(f"picks: cached {len(picks)} top picks for {week}")
 
+    # Mirror into the ledger. These are the paper's front-page ideas and until
+    # now they existed ONLY in this cache — chosen weekly, shown to the reader
+    # as the week's picks, and never recorded anywhere that could later say
+    # whether they worked. Every scan engine was accountable; the most
+    # prominent ideas on the page were not.
+    #
+    # Written here, at the moment a week's picks are FIRST built, so it fires
+    # exactly once per week rather than on every page build. Best-effort: the
+    # picks are already committed above, so a ledger failure must not cost the
+    # reader the section.
+    try:
+        import tracker
+        ids = tracker.log_top5_picks(picks, week)
+        log.info(f"picks: mirrored {len([i for i in ids if i])} to the ledger")
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"picks: ledger mirror failed: {e}")
+
 def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
     """This week's five ideas.
 
@@ -4023,6 +4047,11 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fund-card-f{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12px}
 .fund-isin{font-family:var(--mono);font-size:10px;letter-spacing:.04em;
   white-space:nowrap;padding-top:2px}
+
+/* "Relates to" in the signal log. Constrained and wrapped: it is a sentence in
+   a table of numbers, and left free it would set the width of every column. */
+.rmk{font-size:11px;color:var(--dim);max-width:210px;min-width:150px;
+  white-space:normal;line-height:1.4}
 
 /* Portfolio composition — what the fund owns. */
 .fpf{margin-top:11px;padding-top:10px;border-top:1px solid var(--line)}
@@ -7870,7 +7899,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="tw tw-tall rv">
     <table class="t" id="alertTable">
       <thead><tr>
-        <th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>
+        <th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col" title="What this row relates to — which product or engine produced it, and on what horizon">Relates to</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>
         <th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th><th scope="col">Last</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>
       </tr></thead>
       <tbody>
@@ -7885,6 +7914,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <td>{% if a.tv %}<a class="sym" href="https://www.tradingview.com/chart/?symbol={{ a.tv }}"
             target="_blank" rel="noopener">{{ a.symbol }}</a>{% else %}{{ a.symbol }}{% endif %}</td>
           <td class="{{ 'up' if a.action == 'BUY' else 'dn' }}" style="font-weight:600">{{ a.action }}{% if a.signal_type %}<span class="mono-dim" style="font-size:10px"> · {{ a.signal_type }}</span>{% endif %}</td>
+          {# signal_type is an engine name; this is what the row MEANS. Same
+             column exists in the live renderer in app.js and in the <thead> —
+             all three must move together or every cell after this one shifts
+             under the wrong heading the moment /api/signals resolves. #}
+          <td class="rmk">{{ a.remarks or '—' }}</td>
           <td class="mono-dim">{{ a.timeframe or '—' }}</td>
           <td class="mono-dim">{{ a.grade or '—' }}</td>
           <td class="num">{% if a.entry %}{{ a.currency or "₹" }}{{ "%.2f"|format(a.entry) }}{% else %}—{% endif %}</td>

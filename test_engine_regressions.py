@@ -375,7 +375,8 @@ def main() -> int:
                test_fund_cache_survives_week_rollover,
                test_alert_table_columns_match,
                test_docs_files_have_all_four_allow_lists,
-               test_scan_crons_match_their_slot_arms):
+               test_scan_crons_match_their_slot_arms,
+               test_non_trading_types_agree_across_python_and_js):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001
@@ -517,6 +518,43 @@ def test_scan_crons_match_their_slot_arms():
               ist + MAX_DRIFT_MIN <= CLOSE_IST_MIN - 60,
               f"lands {(ist + MAX_DRIFT_MIN) // 60:02d}:{(ist + MAX_DRIFT_MIN) % 60:02d} IST "
               f"worst case, close is 15:30")
+
+
+def test_non_trading_types_agree_across_python_and_js():
+    """tracker.EXCLUDE_FROM_EXPECTANCY and stats.js NON_TRADING must match.
+
+    Two independent lists decide which signal types are research/allocation
+    artefacts rather than trades. A type named in one and not the other means
+    the site and the Telegram bot publish DIFFERENT track records from the same
+    ledger — and the failure is silent, because both numbers look plausible.
+
+    A SIP allocation has no stop and no target; if it reaches the win rate it
+    counts as a trade that always wins by a hair.
+    """
+    import re
+    js = open("vercel-news/api/stats.js", encoding="utf-8").read()
+    m = re.search(r"const NON_TRADING = \[(.*?)\];", js, re.S)
+    check("stats.js NON_TRADING found", m is not None)
+    js_types = set(re.findall(r'"([^"]+)"', m.group(1)))
+
+    src = open("tracker.py", encoding="utf-8").read()
+    pm = re.search(r"EXCLUDE_FROM_EXPECTANCY = \((.*?)\)", src, re.S)
+    check("tracker EXCLUDE_FROM_EXPECTANCY found", pm is not None)
+    # Constants, not literals — resolve them from their own assignments.
+    py_types = set()
+    for name in re.findall(r"\b([A-Z_]+)\b", pm.group(1)):
+        cm = re.search(rf'^{name} = "([^"]+)"', src, re.M)
+        if cm:
+            py_types.add(cm.group(1))
+    py_types |= set(re.findall(r'"([^"]+)"', pm.group(1)))
+
+    # stats.js legitimately also excludes screener types the Python tuple does
+    # not name, so the assertion is one-directional: everything Python calls
+    # non-trading must ALSO be excluded by the API.
+    missing = py_types - js_types
+    check("every Python non-trading type is excluded by stats.js",
+          not missing,
+          f"in tracker but not stats.js: {sorted(missing)}")
 
 
 if __name__ == "__main__":

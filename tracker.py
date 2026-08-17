@@ -95,6 +95,26 @@ log = logging.getLogger(__name__)
 # base this system has, and the control group the new gate is measured against.
 ENGINE_VERSION = "v2"
 
+# What each engine's rows RELATE TO, in plain words. signal_type is an engine
+# name ('magic', 'ohl', 'cf_1h') — useful to the code, meaningless in a log a
+# human reads. The ledger mixes a 1h commodity scalp, a weekly research pick, a
+# monthly SIP allocation and a multi-year compounding idea in one table, and
+# without this there is no way to tell which product a row came from or why it
+# exists. Applied as a DEFAULT: any caller can pass its own `remarks=` for
+# something more specific (which the weekly and monthly loggers do).
+REMARKS = {
+    "cf_1h":            "Commodity 1h channel scan — intraday horizon",
+    "commodity":        "Commodity scan — intraday/swing horizon",
+    "breakout":         "Breakout scan — swing horizon",
+    "equity_measured":  "Daily-close equity engine — the measured swing edge",
+    "magic":            "Magic-levels screen — daily-close swing",
+    "ohl":              "Open-High-Low intraday engine",
+    "multibagger":      "Weekly multibagger scan — research idea, not a trade",
+    "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop",
+    "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks",
+    "sip_bucket":       "Monthly SIP allocation — what the SIP was told to buy",
+}
+
 
 def _conn():
     return _db.connect()
@@ -262,6 +282,14 @@ def init_db(force: bool = False):
             # only by mark_alerts_sent() after Telegram returns OK, and the
             # failure reason lands here. sent_at IS NULL now means "never sent".
             ("send_error",          "ALTER TABLE all_signals ADD COLUMN send_error TEXT"),
+            # What this row RELATES TO, in words. The ledger mixes engines with
+            # completely different intents — a 1h commodity scalp, a weekly
+            # research pick, a monthly SIP allocation and a multi-year
+            # compounding idea all land in the same table, and signal_type
+            # ('magic', 'ohl', 'cf_1h') is an engine name, not an explanation.
+            # Without this the log cannot be read: there is no way to tell why
+            # a row exists or which product it came from.
+            ("remarks",             "ALTER TABLE all_signals ADD COLUMN remarks TEXT"),
             # SQLite backfills existing rows with the DEFAULT on ADD COLUMN, so
             # this tags all 575 pre-existing signals as v1 in one statement
             # without touching a single row of data.
@@ -612,7 +640,7 @@ def _validate_signal_ordering(action, entry, sl, t1, t2, t3=None):
 
 
 def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
-                        timeframe="SWING", score=0, metadata=None):
+                        timeframe="SWING", score=0, metadata=None, remarks=None):
     """Unified signal logger — returns the new row id, or None if the
     signal was rejected by _validate_signal_ordering() (logged, not raised —
     a bad signal from one symbol must not crash the rest of the scan).
@@ -637,10 +665,11 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
         _mkt, _atype = _classify(symbol)
         c.execute("""INSERT INTO all_signals
             (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
-             rr,score,status,sent_at,metadata,engine_version,market,asset_type)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?)""",
+             rr,score,status,sent_at,metadata,engine_version,market,asset_type,remarks)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?,?)""",
             (today, signal_type, symbol, action, timeframe, entry, sl, t1, t2, t3,
-             rr, score, json.dumps(metadata or {}), ENGINE_VERSION, _mkt, _atype))
+             rr, score, json.dumps(metadata or {}), ENGINE_VERSION, _mkt, _atype,
+             remarks or REMARKS.get(signal_type)))
         row_id = c.execute("SELECT last_insert_rowid()").fetchone()[0]
         c.commit()
         _db.sync(c)
@@ -686,14 +715,14 @@ def log_batch_to_all_signals(rows, date=None):
             c.execute("""INSERT INTO all_signals
                 (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
                  rr,score,status,sent_at,metadata,engine_version,grade,breakeven_wr,turnover_cr,
-                 market,asset_type)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?,?,?,?)""",
+                 market,asset_type,remarks)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'OPEN',NULL,?,?,?,?,?,?,?,?)""",
                 (today, r["signal_type"], r["symbol"], r.get("action", "BUY"),
                  r.get("timeframe", "SWING"), r["entry"], r["sl"],
                  r["t1"], r["t2"], r["t3"], r["rr"], r.get("score", 0),
                  json.dumps(r.get("metadata") or {}), ENGINE_VERSION,
                  r.get("grade"), r.get("breakeven_wr"), r.get("turnover_cr"),
-                 _mkt, _atype))
+                 _mkt, _atype, r.get("remarks") or REMARKS.get(r["signal_type"])))
             ids.append(c.execute("SELECT last_insert_rowid()").fetchone()[0])
         c.commit()
         _db.sync(c)
@@ -1448,7 +1477,126 @@ def log_multibaggers(signals):
 # a new non-trading engine has to be named in BOTH.
 MULTIBAGGER_SIGNAL_TYPE = "multibagger"
 MULTIBAGGER_TIMEFRAME = "1W"
-EXCLUDE_FROM_EXPECTANCY = (MULTIBAGGER_SIGNAL_TYPE,)
+
+TOP5_SIGNAL_TYPE = "top5_pick"
+SIP_SIGNAL_TYPE = "sip_bucket"
+
+# Research and allocation artefacts, NOT traded setups. They must never reach
+# an expectancy number — and a new one has to be named in BOTH this tuple and
+# NON_TRADING in vercel-news/api/stats.js, or the two disagree and the site
+# publishes a different track record from the bot.
+EXCLUDE_FROM_EXPECTANCY = (MULTIBAGGER_SIGNAL_TYPE, TOP5_SIGNAL_TYPE, SIP_SIGNAL_TYPE)
+
+
+def log_top5_picks(picks, week_key: str, date=None) -> list:
+    """Mirror the weekly Top 5 trade ideas into all_signals.
+
+    These are the paper's front-page picks and until now they lived ONLY in the
+    newspaper cache — chosen every ISO week, shown to a reader as the week's
+    ideas, and never recorded anywhere that could later say whether they
+    worked. The scan engines were all accountable; the most prominent ideas on
+    the page were not.
+
+    Idempotent per week, like the multibagger mirror: the weekly build and any
+    manual re-run both stamp the same week, and appending would double the log.
+    Never raises — the picks are already cached and rendered by the time this
+    runs, so a ledger failure must not cost the reader the section.
+    """
+    if not picks:
+        return []
+    today = date or _today_ist()
+    try:
+        with _conn() as c:
+            n = c.execute(
+                "SELECT COUNT(*) FROM all_signals WHERE signal_type=? AND date=?",
+                (TOP5_SIGNAL_TYPE, today)).fetchone()[0]
+            if n:
+                c.execute("DELETE FROM all_signals WHERE signal_type=? AND date=?",
+                          (TOP5_SIGNAL_TYPE, today))
+                c.commit()
+                _db.sync(c)
+                log.info(f"top5: replaced {n} ledger row(s) already written today")
+
+        rows = []
+        for p in picks:
+            entry = p.get("price") or p.get("entry")
+            sl, t1 = p.get("stop_loss") or p.get("sl"), p.get("target") or p.get("t1")
+            if not (entry and sl and t1):
+                continue           # incomplete idea — logged as nothing, never guessed
+            t2 = p.get("target2") or round(entry + (t1 - entry) * 1.6, 2)
+            rows.append({
+                "symbol": p["symbol"], "signal_type": TOP5_SIGNAL_TYPE,
+                "action": "BUY", "timeframe": "1W",
+                "entry": entry, "sl": sl, "t1": t1, "t2": t2, "t3": t2,
+                "rr": p.get("rr") or (round((t1 - entry) / (entry - sl), 2)
+                                      if entry > sl else None),
+                "score": int(round(p.get("score") or 0)),
+                "remarks": f"Weekly Top 5 trade idea · {week_key}",
+                "metadata": {"engine": "top5", "week": week_key,
+                             "cadence": "weekly · ISO week",
+                             "thesis": p.get("thesis") or p.get("why")},
+            })
+        return log_batch_to_all_signals(rows, date=today) if rows else []
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"top5 ledger mirror failed: {e}")
+        return []
+
+
+def log_sip_bucket(allocations, month_key: str, date=None) -> list:
+    """Mirror the monthly SIP allocation into all_signals.
+
+    What the SIP was told to buy, and when. The bucket is rebuilt monthly and
+    was previously visible only as the current month's allocation — there was
+    no record of what it said in June, so no way to see how the allocation
+    drifted or whether it followed the screen.
+
+    These are allocations, not trades: no stop, no target, and they are named
+    in EXCLUDE_FROM_EXPECTANCY so they can never contaminate a win rate. Entry
+    is the NAV/price the allocation was decided at, which is the only honest
+    reference point for it.
+    """
+    if not allocations:
+        return []
+    today = date or _today_ist()
+    try:
+        with _conn() as c:
+            n = c.execute(
+                "SELECT COUNT(*) FROM all_signals WHERE signal_type=? AND date LIKE ?",
+                (SIP_SIGNAL_TYPE, f"{month_key}%")).fetchone()[0]
+            if n:
+                c.execute("DELETE FROM all_signals WHERE signal_type=? AND date LIKE ?",
+                          (SIP_SIGNAL_TYPE, f"{month_key}%"))
+                c.commit()
+                _db.sync(c)
+                log.info(f"sip: replaced {n} ledger row(s) already written for {month_key}")
+
+        rows = []
+        for a in allocations:
+            price = a.get("nav") or a.get("price") or a.get("entry")
+            if not price:
+                continue
+            pct = a.get("pct") or a.get("weight")
+            rows.append({
+                "symbol": (a.get("symbol") or a.get("name") or "")[:64],
+                "signal_type": SIP_SIGNAL_TYPE,
+                "action": "BUY", "timeframe": "1M",
+                # An allocation has no stop or target. The ordering gate needs
+                # a consistent set, so the levels are the price itself — and
+                # EXCLUDE_FROM_EXPECTANCY keeps that out of every statistic.
+                "entry": price, "sl": round(price * 0.999, 4),
+                "t1": round(price * 1.001, 4), "t2": round(price * 1.002, 4),
+                "t3": round(price * 1.002, 4),
+                "rr": None, "score": 0,
+                "remarks": (f"Monthly SIP allocation · {month_key}"
+                            + (f" · {pct}% of bucket" if pct else "")),
+                "metadata": {"engine": "sip", "month": month_key,
+                             "cadence": "monthly", "allocation_pct": pct,
+                             "bucket": a.get("bucket") or a.get("category")},
+            })
+        return log_batch_to_all_signals(rows, date=today) if rows else []
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"sip ledger mirror failed: {e}")
+        return []
 
 
 def _log_multibaggers_to_ledger(signals, today):

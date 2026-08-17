@@ -2274,6 +2274,13 @@ var TV_ALIASES = (function () {
                 '" style="cursor:help">🔁</span>' : '') + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
               (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
+          /* "Relates to". Third of the three renderers that must agree
+             column-for-column — <thead> and the server-rendered row are in
+             newspaper.py. This one replaces the tbody only, so a column added
+             here alone shifts every later cell under the wrong heading the
+             instant /api/signals resolves. test_alert_table_columns_match
+             asserts all three counts are equal. */
+          '<td class="rmk">' + esc(a.remarks || '—') + '</td>' +
           '<td class="mono-dim">' + esc(a.timeframe || '—') + '</td>' +
           '<td class="mono-dim">' + gradeCell(a) + '</td>' +
           '<td class="num">' + money(a.entry, a.currency) + distCell(a) + '</td>' +

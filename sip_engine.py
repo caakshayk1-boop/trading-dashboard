@@ -503,6 +503,28 @@ def build_bucket(on: date | None = None, names: int = NAMES_PER_BUCKET,
     log.info(f"sip: bucket {bname} created — ₹{amount:,.0f} across {len(picks)} names ("
              + ", ".join(f"{p['symbol']}×{p['proposed_qty']}" for p in picks)
              + f"), ₹{proposal['cash_left']:,.0f} unspent")
+
+    # Mirror the allocation into the signal log. The bucket is rebuilt monthly
+    # and was previously visible only as the CURRENT month's allocation —
+    # there was no record of what it said in June, so no way to see how the
+    # allocation drifted or whether it followed the screen.
+    #
+    # Allocations, not trades: they carry no stop or target and are named in
+    # tracker.EXCLUDE_FROM_EXPECTANCY (and stats.js NON_TRADING) so they can
+    # never enter a win rate. Best-effort — the bucket is committed above and
+    # a ledger failure must not fail the monthly job.
+    try:
+        import tracker
+        ids = tracker.log_sip_bucket([
+            {"symbol": h["symbol"], "price": h["ref_price"],
+             "pct": (round(h["allocated"] / amount * 100, 1) if amount else None),
+             "bucket": bname}
+            for h in proposal["holdings"] if h.get("ref_price")
+        ], bname)
+        log.info(f"sip: mirrored {len([i for i in ids if i])} allocation(s) to the ledger")
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"sip: ledger mirror failed: {e}")
+
     return get_bucket(bname)
 
 

@@ -125,6 +125,12 @@ export default async function handler(req, res) {
 
     const extra = [
       await optional("engine_version"),
+      // What the row RELATES TO, in words. signal_type is an engine name and
+      // the log mixes a 1h scalp, a weekly research pick, a monthly SIP
+      // allocation and a multi-year idea in one table. Probed like the rest —
+      // it arrives via ALTER TABLE and naming a missing column fails the
+      // whole query, taking the entire signal log down with it.
+      await optional("remarks"),
       await optional("grade"),
       await optional("breakeven_wr"),
       await optional("turnover_cr"),
@@ -235,6 +241,7 @@ function shape(r) {
     market: str(r.market),
     asset_type: str(r.asset_type),
     engine_version: str(r.engine_version) || "v1",
+    remarks: str(r.remarks) || null,
     grade: str(r.grade) || null,
     breakeven_wr: num(r.breakeven_wr),
     turnover_cr: num(r.turnover_cr),

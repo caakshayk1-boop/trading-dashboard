@@ -38,7 +38,14 @@ export default async function handler(req, res) {
   // handful of closes would set the published win rate on noise. Remove them
   // from here (and from signal_report) once there are enough closed trades to
   // mean something, not before.
-  const NON_TRADING = ["ai_longterm", "multibagger", "magic", "magicmagic"];
+  // Research and allocation artefacts, never traded setups. MUST stay in step
+  // with tracker.EXCLUDE_FROM_EXPECTANCY — a type named in one and not the
+  // other means the site and the bot publish different track records for the
+  // same ledger. top5_pick and sip_bucket were added when those two artefacts
+  // started being logged; a SIP allocation has no stop or target and would
+  // otherwise enter the win rate as a trade.
+  const NON_TRADING = ["ai_longterm", "multibagger", "magic", "magicmagic",
+                       "top5_pick", "sip_bucket"];
   where.push(`COALESCE(signal_type,'') NOT IN (${NON_TRADING.map(() => "?").join(",")})`);
   args.push(...NON_TRADING);
 
