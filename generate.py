@@ -65,6 +65,82 @@ from newspaper import (
 
 IST = timezone(timedelta(hours=5, minutes=30))
 
+# Countries this search is actually for. Anything else scored by the engine is
+# real, but it is not what he asked for, so it is grouped separately rather
+# than ranked alongside Dubai — a Nairobi role outranking a Dubai one on raw
+# score would make the section useless for the question it exists to answer.
+CAREER_TARGET_COUNTRIES = ("UAE", "Saudi Arabia", "Malaysia", "Oman")
+
+
+def load_careers(path) -> dict:
+    """docs/jobs.json → what the Careers section renders.
+
+    READ ONLY and presentation only. Every score, tier, freshness label and
+    apply URL is taken verbatim from the file; nothing is recomputed here, so
+    the page and the engine cannot drift into disagreeing about a number.
+
+    Fails soft in every direction — missing file, unreadable JSON, wrong shape,
+    no renderable rows — because this runs inside the daily paper and a career
+    scrape must never be able to take the newspaper down. Each failure returns
+    a `why` the build log prints and `empty_sections` uses to drop the nav
+    entry, rather than raising.
+    """
+    try:
+        raw = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {"visible": [], "why": "docs/jobs.json not found — jobs.yml has not run yet"}
+    except Exception as e:                                   # noqa: BLE001
+        return {"visible": [], "why": f"docs/jobs.json unreadable: {e}"}
+
+    if not isinstance(raw, dict) or not isinstance(raw.get("jobs"), list):
+        return {"visible": [], "why": "docs/jobs.json is not the expected shape"}
+
+    stats = raw.get("stats") or {}
+    # D-tier and excluded rows never reach the primary feed (brief §16).
+    rows = [j for j in raw["jobs"]
+            if isinstance(j, dict) and not j.get("is_excluded") and j.get("tier") != "D"]
+    rows.sort(key=lambda j: (-(j.get("opportunity_score") or 0),
+                             (j.get("company") or "")))
+
+    target = [j for j in rows if j.get("country") in CAREER_TARGET_COUNTRIES]
+    other = [j for j in rows if j.get("country") not in CAREER_TARGET_COUNTRIES]
+
+    by_country = {}
+    for j in target:
+        by_country.setdefault(j["country"], []).append(j)
+
+    # Counted from the rendered set, never copied from stats — the file's
+    # totals include excluded rows, and a headline that disagrees with the
+    # list under it is worse than no headline (brief §23: do not manufacture).
+    return {
+        "visible": rows,
+        "target": target,
+        "other": other,
+        "top": rows[:10],
+        "fresh": [j for j in rows if j.get("status") == "NEW"],
+        "by_country": by_country,
+        "countries": [c for c in CAREER_TARGET_COUNTRIES if by_country.get(c)],
+        "counts": {
+            "total": len(rows),
+            "s_tier": sum(1 for j in rows if j.get("tier") == "S"),
+            "a_tier": sum(1 for j in rows if j.get("tier") == "A"),
+            "new": sum(1 for j in rows if j.get("status") == "NEW"),
+            "stale": sum(1 for j in rows if j.get("status") == "STALE"),
+            "direct": sum(1 for j in rows if j.get("is_direct_apply")
+                          and j.get("application_url_verified")),
+            "by_country": {c: len(v) for c, v in by_country.items()},
+            "other": len(other),
+        },
+        "stats": stats,
+        "sources": raw.get("sources") or [],
+        "sources_failed": [s for s in (raw.get("sources") or [])
+                           if s.get("status") not in ("ok", None)],
+        "generated_at": raw.get("generated_at"),
+        "next_refresh": raw.get("next_refresh"),
+        "why": "",
+    }
+
+
 def generate() -> None:
     now = datetime.now(IST)
     print(f"[generate] Running at {now.strftime('%Y-%m-%d %H:%M IST')}")
@@ -148,6 +224,20 @@ def generate() -> None:
           f"{len(market_intel.get('corporate_actions', []))} corporate actions, "
           f"{len(market_intel.get('market_heat', []))} sectors"
           f"{' (previous build)' if market_intel.get('is_fallback') else ''}")
+
+    # Careers. READ ONLY from docs/jobs.json, which jobs.yml writes on its own
+    # clock — the daily paper must never sit inside a 20-source scrape. The
+    # file is the contract (JOBS_CONTRACT.md); everything below is presentation
+    # over numbers jobs.py already computed, so the page can never disagree
+    # with the engine about a score or a freshness label.
+    careers = load_careers(pathlib.Path(__file__).parent / "docs" / "jobs.json")
+    if careers.get("visible"):
+        print(f"[generate] Careers: {len(careers['visible'])} roles "
+              f"({careers['stats'].get('s_tier', 0)} S-tier, "
+              f"{careers['stats'].get('sources_ok', 0)}/"
+              f"{careers['stats'].get('sources_attempted', 0)} sources ok)")
+    else:
+        print(f"[generate] Careers: nothing renderable — {careers.get('why', 'no jobs.json')}")
 
     # READ ONLY, for exactly the reason above it. The Nifty 500 screen is ~11
     # minutes of sequential Yahoo fetches — two frames plus a quote per symbol —
@@ -349,6 +439,7 @@ def generate() -> None:
         # a failure returns {} and the section hides rather than failing the build.
         fund_screen=fund_screen,
         market_intel=market_intel,
+        careers=careers,
         stock_screen=stock_screen,
         podcasts=podcasts,
         smart_reads=smart_reads,
@@ -430,7 +521,7 @@ def generate() -> None:
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
-                                                        stock_screen, market_intel)))
+                                                        stock_screen, market_intel, careers)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

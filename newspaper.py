@@ -1943,6 +1943,9 @@ SECTION_MAP = [
     # Pure client-side arithmetic — no API, no ledger. It therefore works
     # identically on the static host, and unlike #sip it must NOT start hidden.
     ("swp",         "SWP",          "main", "Invest"),
+    # Sits above Interview on purpose: find the role first, prepare for it
+    # second. Both belong to the same "Work" run in the nav.
+    ("careers",     "Finance Careers", "desk", "Work"),
     ("interview",   "Interview",    "desk", "Work"),
     ("language",    "Language",     "desk", "Practice"),
     ("father",      "Father",       "desk", "Practice"),
@@ -2005,7 +2008,7 @@ PAGE_META = {
 
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
-                   stock_screen=None, market_intel=None) -> set:
+                   stock_screen=None, market_intel=None, careers=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2033,6 +2036,14 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     mi = market_intel or {}
     if not (mi.get("corporate_actions") or mi.get("market_heat") or mi.get("fii_dii")):
         drop.add("marketintel")
+    # Careers renders from docs/jobs.json, written by its own workflow on its
+    # own clock. Same contract as #funds and #stocks: a build that runs before
+    # the first scrape has nothing, and the nav must not advertise it. Counted
+    # on the RENDERABLE rows, not the raw file — a file of 86 rows that are all
+    # excluded is an empty section, and the nav would otherwise point at a
+    # heading with nothing under it.
+    if not (careers or {}).get("visible"):
+        drop.add("careers")
     return drop
 
 
@@ -4043,6 +4054,72 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fm-src{color:var(--dim);font-size:11px;line-height:1.55;margin:0;
   padding-top:8px;border-top:1px solid var(--line)}
 .fm-src a{color:var(--blue)}
+
+/* ═══════════════════ FINANCE CAREERS ═══════════════════ */
+.jsnap{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;
+  overflow:hidden;margin:14px 0}
+.jsnap-i{background:var(--bg2);padding:12px 10px;text-align:center}
+.jsnap-i b{display:block;font-family:var(--mono);font-size:20px;color:var(--text);line-height:1.1}
+.jsnap-i span{display:block;font-size:10.5px;color:var(--dim);margin-top:3px;letter-spacing:.02em}
+.jfail{font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--gold);
+  background:var(--bg2);border-left:2px solid var(--gold);border-radius:0 8px 8px 0;
+  padding:10px 14px;margin:0 0 14px;max-width:80ch}
+.jfilters{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:14px 0}
+.jf-grp{display:flex;flex-wrap:wrap;gap:6px}
+.jf-count{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:auto}
+.jsub{font-size:15px;margin:22px 0 2px;letter-spacing:-.01em}
+.jsub-n{color:var(--dim);font-size:12px;line-height:1.6;margin:0 0 12px;max-width:76ch}
+.jgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+.jgrid-quiet{opacity:.72}
+.jcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.jcard-top{border-color:rgba(61,220,151,.34)}
+.jcard[hidden]{display:none}
+.jc-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.jc-id{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.jc-rank{font-family:var(--mono);font-size:11px;color:var(--dim);padding-top:3px}
+.jc-t{font-size:14.5px;line-height:1.35;margin:0;letter-spacing:-.01em}
+.jc-co{font-size:12px;color:var(--muted);margin-top:3px}
+.jc-loc{color:var(--dim)}
+.jc-tier{text-align:center;border-radius:7px;padding:5px 9px;min-width:46px;
+  border:1px solid var(--line2);flex:none}
+.jc-tier b{display:block;font-family:var(--mono);font-size:14px;line-height:1}
+.jc-tier span{display:block;font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:2px}
+.jc-tier-s{background:rgba(61,220,151,.14);border-color:rgba(61,220,151,.45)}
+.jc-tier-s b{color:var(--up)}
+.jc-tier-a{background:rgba(106,168,255,.12);border-color:rgba(106,168,255,.4)}
+.jc-tier-a b{color:var(--blue)}
+.jc-tier-b b{color:var(--text)}
+.jc-tier-c b,.jc-tier-d b{color:var(--dim)}
+.jc-meta{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:11.5px;color:var(--muted);
+  align-items:center}
+.jc-meta .jm b{font-family:var(--mono);color:var(--text)}
+.jc-meta .dimmed{color:var(--dim)}
+.jbadge{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;padding:2px 6px;
+  border-radius:4px;border:1px solid var(--line2);color:var(--dim)}
+.jb-new{color:var(--up);border-color:rgba(61,220,151,.45);background:rgba(61,220,151,.1)}
+.jb-active{color:var(--blue);border-color:rgba(106,168,255,.4)}
+.jb-aging{color:var(--gold);border-color:rgba(232,197,71,.4)}
+.jb-stale{color:var(--dim)}
+.jb-closed,.jb-removed,.jb-link_broken{color:var(--down);border-color:rgba(255,92,92,.4)}
+.jc-why,.jc-warn{margin:0;padding-left:15px;font-size:12px;line-height:1.55}
+.jc-why{color:var(--muted)}
+.jc-why li{margin-bottom:3px}
+.jc-warn{color:var(--dim)}
+.jc-warn li::marker{color:var(--gold)}
+.jc-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;padding-top:4px}
+.jc-apply{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 13px;border-radius:6px;background:var(--up);color:#06251A;font-weight:600;
+  text-decoration:none;border:1px solid transparent}
+.jc-apply:hover{filter:brightness(1.08)}
+.jc-apply-unv{background:transparent;color:var(--gold);border-color:rgba(232,197,71,.5)}
+.jc-apply-none{background:transparent;color:var(--dim);border-color:var(--line);cursor:default}
+.jc-view{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--muted);
+  text-decoration:none;border-bottom:1px solid var(--line2);padding-bottom:1px}
+.jc-view:hover{color:var(--text)}
+.jc-src{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto}
+@media (max-width:560px){.jgrid{grid-template-columns:1fr}.jc-src{margin-left:0}}
 
 /* Small-sample warning on the performance section. Gold, not red: this is not
    an error, it is a true statement about how little data there is. */
@@ -6210,6 +6287,176 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>{% endif %}
 
 <!-- ══════════ 05 INTERVIEW PREP ══════════ -->
+{# ══════════ FINANCE CAREERS ══════════
+   Renders docs/jobs.json, written by jobs.yml on its own clock. Presentation
+   only: every score, tier, freshness label and apply URL is printed verbatim
+   from the file. Nothing is recomputed here and nothing is invented — an
+   absent salary prints "Not disclosed", an unproven link prints "Unverified".
+   generate.load_careers does the grouping; empty_sections drops the nav entry
+   when there is nothing renderable. #}
+{% if 'careers' in secs %}<section class="sec" id="careers">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['careers'] }} / {{ seclabel['careers'] }}</span>
+      <h2 class="stitle">Where the next role is.</h2>
+    </div>
+    <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
+      the actual CV &mdash; multi-country retail P&amp;L, IFRS/MPERS consolidation, D365, Board
+      reporting. Ranked by whether it is worth applying to, not by how recently it was posted.</p>
+  </div>
+
+  <div class="prov rv">
+    <span class="pv-tag">DAILY</span>
+    {% if careers.generated_at %}<span>Last verified <b>{{ careers.generated_at[:16]|replace('T',' ') }} UTC</b></span>{% endif %}
+    {% if careers.next_refresh %}<span>Next refresh <b>{{ careers.next_refresh[:16]|replace('T',' ') }} UTC</b></span>{% endif %}
+    <span><b>{{ careers.stats.get('sources_ok', 0) }}</b> of
+      <b>{{ careers.stats.get('sources_attempted', 0) }}</b> sources responded</span>
+  </div>
+
+  {# Market snapshot — every figure counted from the rendered list, never
+     copied from the file's own totals, which include excluded rows. #}
+  {% set c = careers.counts %}
+  <div class="jsnap rv">
+    <div class="jsnap-i"><b>{{ c.total }}</b><span>roles worth seeing</span></div>
+    <div class="jsnap-i"><b>{{ c.s_tier + c.a_tier }}</b><span>high fit (S/A)</span></div>
+    <div class="jsnap-i"><b>{{ c.new }}</b><span>new this week</span></div>
+    <div class="jsnap-i"><b>{{ c.direct }}</b><span>verified direct apply</span></div>
+    {% for country in careers.countries %}
+    <div class="jsnap-i"><b>{{ c.by_country[country] }}</b><span>{{ country }}</span></div>
+    {% endfor %}
+  </div>
+
+  {% if careers.sources_failed %}
+  <p class="jfail rv">
+    Not reached this run:
+    {% for s in careers.sources_failed %}{{ s.name }} ({{ s.status }}){% if not loop.last %} &middot; {% endif %}{% endfor %}.
+    Previous results for those sources are kept rather than deleted, so a blocked
+    scraper shows as missing coverage, never as an empty market.
+  </p>
+  {% endif %}
+
+  {# ── filters. Operate on the server-rendered cards; with JS off every card
+       simply stays visible, which is the correct degraded state. ── #}
+  <div class="jfilters rv" id="jFilters">
+    <div class="jf-grp" role="group" aria-label="Filter by location">
+      <button type="button" class="fbtn on" data-jf="loc" data-v="">All</button>
+      {% for country in careers.countries %}
+      <button type="button" class="fbtn" data-jf="loc" data-v="{{ country }}">{{ country }}</button>
+      {% endfor %}
+    </div>
+    <div class="jf-grp" role="group" aria-label="Filter by tier">
+      <button type="button" class="fbtn on" data-jf="tier" data-v="">Any tier</button>
+      <button type="button" class="fbtn" data-jf="tier" data-v="S">S only</button>
+      <button type="button" class="fbtn" data-jf="tier" data-v="SA">S + A</button>
+    </div>
+    <div class="jf-grp" role="group" aria-label="Filter by freshness">
+      <button type="button" class="fbtn on" data-jf="fresh" data-v="">Any age</button>
+      <button type="button" class="fbtn" data-jf="fresh" data-v="NEW">New</button>
+      <button type="button" class="fbtn" data-jf="fresh" data-v="OPEN">Hide stale</button>
+    </div>
+    <span class="jf-count" id="jCount"></span>
+  </div>
+
+  {% macro jobcard(j, rank) %}
+  <article class="jcard{{ ' jcard-top' if j.tier == 'S' }}"
+           data-country="{{ j.country or '' }}" data-tier="{{ j.tier }}"
+           data-status="{{ j.status }}" data-score="{{ j.opportunity_score }}">
+    <div class="jc-h">
+      <div class="jc-id">
+        {% if rank %}<span class="jc-rank">{{ '%02d'|format(rank) }}</span>{% endif %}
+        <div>
+          <h3 class="jc-t">{{ j.title }}</h3>
+          <div class="jc-co">{{ j.company }}
+            <span class="jc-loc">&middot; {{ j.location or j.country or 'Location not stated' }}{% if j.location and j.country %}, {{ j.country }}{% endif %}</span>
+          </div>
+        </div>
+      </div>
+      <div class="jc-tier jc-tier-{{ j.tier|lower }}" title="Opportunity score {{ j.opportunity_score }}/100">
+        <b>{{ j.tier }}</b><span>{{ j.opportunity_score }}</span>
+      </div>
+    </div>
+
+    <div class="jc-meta">
+      <span class="jbadge jb-{{ j.status|lower }}">{{ j.status }}</span>
+      {% if j.posted_date %}<span class="jm">Posted {{ j.posted_date }}</span>
+      {% else %}<span class="jm dimmed">Posting date not published</span>{% endif %}
+      <span class="jm">Fit <b>{{ j.candidate_fit_score }}</b></span>
+      <span class="jm">Employer <b>{{ j.employer_score }}</b></span>
+      {% if j.experience_min %}<span class="jm">{{ j.experience_min }}+ yrs</span>{% endif %}
+      {% if j.salary_min and j.salary_currency %}
+        <span class="jm">{{ j.salary_currency }} {{ j.salary_min }}{% if j.salary_max %}&ndash;{{ j.salary_max }}{% endif %}</span>
+      {% else %}<span class="jm dimmed">Salary not disclosed</span>{% endif %}
+    </div>
+
+    {% if j.why_fit %}
+    <ul class="jc-why">
+      {% for w in j.why_fit[:3] %}<li>{{ w }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% if j.watch_out %}
+    <ul class="jc-warn">
+      {% for w in j.watch_out[:2] %}<li>{{ w }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="jc-f">
+      {% if j.application_url and j.application_url_verified %}
+        <a class="jc-apply" href="{{ j.application_url }}" target="_blank" rel="noopener">Apply direct</a>
+      {% elif j.application_url %}
+        <a class="jc-apply jc-apply-unv" href="{{ j.application_url }}" target="_blank" rel="noopener"
+           title="This link was not confirmed to resolve on the last check">Apply &mdash; unverified</a>
+      {% else %}
+        <span class="jc-apply jc-apply-none">No application link found</span>
+      {% endif %}
+      {% if j.source_url and j.source_url != j.application_url %}
+        <a class="jc-view" href="{{ j.source_url }}" target="_blank" rel="noopener">View posting</a>
+      {% endif %}
+      <span class="jc-src" title="Source confidence: {{ j.source_confidence }}">
+        {% if j.sources and j.sources|length > 1 %}{{ j.sources|length }} sources{% else %}{{ j.source }}{% endif %}
+      </span>
+    </div>
+  </article>
+  {% endmacro %}
+
+  <h3 class="jsub rv">Top opportunities</h3>
+  <p class="jsub-n rv">Ranked on fit, employer quality and how reachable the application is &mdash;
+    not on recency. Everything below carries a verified direct application link unless it says otherwise.</p>
+  <div class="jgrid rv" id="jTop">
+    {% for j in careers.top %}{{ jobcard(j, loop.index) }}{% endfor %}
+  </div>
+
+  {# Compared on id, not on the dict itself: `j not in careers.top` makes Jinja
+     deep-compare every field of every row against ten others. #}
+  {% set top_ids = careers.top | map(attribute='id') | list %}
+  {% set rest = careers.target | rejectattr('id', 'in', top_ids) | list %}
+  {% if rest %}
+  <h3 class="jsub rv">Everything else in {{ careers.countries|join(', ') }}</h3>
+  <div class="jgrid rv" id="jRest">
+    {% for j in rest %}{{ jobcard(j, 0) }}{% endfor %}
+  </div>
+  {% endif %}
+
+  {% set other_rest = careers.other | rejectattr('id', 'in', top_ids) | list %}
+  {% if other_rest %}
+  <h3 class="jsub rv">Outside the target markets</h3>
+  <p class="jsub-n rv">Same employers, different countries. Kept separate rather than ranked
+    against Dubai &mdash; these are not what the search is for, but they are real openings at
+    groups worth knowing. Every one is rendered rather than truncated, so the count above
+    and the list below cannot disagree.</p>
+  <div class="jgrid rv jgrid-quiet">
+    {% for j in other_rest %}{{ jobcard(j, 0) }}{% endfor %}
+  </div>
+  {% endif %}
+
+  <p class="note rv" style="margin-top:16px;color:var(--dim);font-size:12px">
+    Scores are a reading of the posted description against the CV, not a prediction of
+    whether an application succeeds. Freshness comes from the employer's own posted date
+    where they publish one; where they do not, the card says so rather than guessing.
+    Nothing here is invented &mdash; an unknown salary is blank, an unproven link is
+    labelled unverified.
+  </p>
+</section>{% endif %}
+
 {% if 'interview' in secs %}<section class="sec" id="interview">
   <div class="shead rv">
     <div>

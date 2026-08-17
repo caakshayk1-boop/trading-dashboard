@@ -28,6 +28,10 @@
 # Same by-name rule: omit it and every detail sheet renders its table row and
 # nothing else, with only a console warning to say why.
 !docs/screen-detail.json
+# The senior-finance job feed, written daily by jobs.py. Same by-name rule:
+# omit it and the careers section fetches a 404 and renders empty, with only a
+# console warning to say why.
+!docs/jobs.json
 # The page script. Without this the site renders and does nothing.
 !docs/app.js
 !docs/robots.txt

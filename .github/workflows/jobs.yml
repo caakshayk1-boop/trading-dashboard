@@ -1,0 +1,176 @@
+name: Jobs — daily senior-finance discovery
+
+# Scrapes employer career sites (Oracle HCM, Phenom, Teamtailor,
+# SuccessFactors, Lever) plus aggregators, scores every posting against the
+# candidate profile in JOBS_CONTRACT.md, and commits docs/jobs.json.
+# newspaper.py only READS that file.
+#
+# Its own workflow for the same reason fund_screen.yml and market_intel.yml
+# are separate from daily_scan.yml: these are ~20 third-party sites that can
+# hang, rate-limit or block, and that must never sit inside the 6 AM build and
+# take the whole daily paper down with it.
+#
+# SCHEDULING — this is the part that has bitten this repo before.
+# Scheduled runs on this repo land 1.5-3 HOURS LATE, repeatedly observed
+# (memory/project_gh_actions_cron_drift.md). newspaper.yml is cron'd at
+# 00:30 UTC. If this job is scheduled too close before that, drift pushes it
+# past the paper build and the careers section renders empty — exactly the bug
+# currently breaking the Market Intel section, whose 23:00 UTC cron leaves only
+# 90 minutes of headroom.
+#
+# So: 18:00 UTC, a 6h30m nominal gap ahead of newspaper.yml.
+#   worst case  18:00 + 3h drift = 21:00 start, ~21:20 finish
+#   paper       00:30 UTC at the earliest
+#   spare       3h10m AFTER the full 3h drift is already absorbed
+# Do not move this later without redoing that arithmetic.
+
+on:
+  schedule:
+    - cron: '0 18 * * *'      # 23:30 IST — 6h30m before newspaper.yml (00:30 UTC)
+  workflow_dispatch:
+
+concurrency:
+  group: jobs
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+  # Optional. Alshaya, GulfTalent, Bayt and Indeed all return 403 to plain
+  # requests and are routed through the Firecrawl HTTP API instead (MCP is not
+  # available in Actions). When this secret is absent jobs.py marks those four
+  # sources status "error" / "FIRECRAWL_API_KEY not set" and still publishes a
+  # valid file from the sources that do work. Adding the secret turns them on
+  # with no code change.
+  FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Unit tests
+        run: python test_jobs.py
+
+      - name: Build docs/jobs.json
+        run: |
+          python - <<'PY'
+          import json, logging, os
+          logging.basicConfig(level=logging.INFO, format="%(message)s")
+          import jobs, newspaper
+
+          JOB = "jobs"
+          try:
+              data = jobs.build(write=True)
+              st = data["stats"]
+
+              print()
+              for s in data["sources"]:
+                  print(f"  {s['status']:<8} {s['name']:<24} {s['jobs_found']:>3}  "
+                        f"{s['detail'][:70]}")
+              print()
+              print(f"active {st['total_active']} | high-fit {st['high_fit']} | "
+                    f"S-tier {st['s_tier']} | sources {st['sources_ok']}/"
+                    f"{st['sources_attempted']} ok")
+              print(f"urls: {st['urls_verified']} verified, "
+                    f"{st['urls_unverified']} unverified, {st['urls_broken']} broken")
+
+              # Individual sources blocking is EXPECTED, not a failure — several
+              # of these sites refuse automated access by design and jobs.py
+              # records that honestly. Only fail loudly when EVERY source came
+              # back empty, which means the fetch layer itself broke rather than
+              # a handful of sites saying no.
+              if st["sources_ok"] == 0:
+                  raise SystemExit(
+                      "every source failed — fetch layer likely broken, not "
+                      "individual sites blocking")
+
+              # A run that produced no jobs at all must not overwrite a good
+              # file with an empty one. jobs.build() already carries previous
+              # rows forward for failed sources, so reaching zero here means
+              # something is wrong upstream.
+              if not data["jobs"]:
+                  raise SystemExit("zero jobs after merge — refusing to publish")
+
+              newspaper.record_job_status(
+                  JOB, "success",
+                  f"{st['total_active']} active, {st['s_tier']} S-tier, "
+                  f"{st['sources_ok']}/{st['sources_attempted']} sources")
+          except BaseException as e:
+              newspaper.record_job_status(JOB, "failed", str(e))
+              raise
+          PY
+
+      - name: Validate the published file against the contract
+        run: |
+          python - <<'PY'
+          import json, sys
+          d = json.load(open("docs/jobs.json"))
+          for k in ("generated_at", "next_refresh", "sources", "stats", "jobs"):
+              assert k in d, f"top-level key missing: {k}"
+          required = {
+              "id","company","company_group","title","normalized_title","location",
+              "country","region","department","employment_type","posted_date",
+              "closing_date","scraped_at","last_verified_at","status","source",
+              "sources","source_url","application_url","is_direct_apply",
+              "application_url_verified","source_confidence","salary_min",
+              "salary_max","salary_currency","experience_min","experience_max",
+              "description","responsibilities","requirements","skills",
+              "nationality_requirement","work_authorization_requirement",
+              "emiratisation_requirement","saudization_requirement",
+              "candidate_fit_score","employer_score","career_upside_score",
+              "opportunity_score","score_breakdown","tier","application_priority",
+              "why_fit","watch_out","resume_match","duplicate_group",
+              "is_excluded","exclusion_reason"}
+          bad = []
+          for j in d["jobs"]:
+              missing = required - set(j)
+              if missing:
+                  bad.append(f"{j.get('id')}: missing {sorted(missing)}")
+              if sum(j["score_breakdown"].values()) != j["candidate_fit_score"]:
+                  bad.append(f"{j.get('id')}: score_breakdown does not sum to "
+                             f"candidate_fit_score")
+              if j["tier"] in ("S", "A") and j["resume_match"] is None:
+                  bad.append(f"{j.get('id')}: tier {j['tier']} without resume_match")
+          if bad:
+              print("\n".join(bad[:20]))
+              sys.exit(f"{len(bad)} contract violations")
+          print(f"contract OK — {len(d['jobs'])} jobs, "
+                f"{d['stats']['total_active']} active")
+          PY
+
+      - name: Commit docs/jobs.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # BY EXPLICIT FILENAME. A docs/ file reaches production only if it is
+          # named in all four allow-lists — written by jobs.py, added here,
+          # listed in .vercelignore, and copied by vercel-news/build.js. Miss
+          # one and the URL 404s with a green build log (JOBS_CONTRACT.md,
+          # memory/project_daily_signal_site.md). `git add docs/` would also
+          # sweep up whatever the scanner left behind, so it stays explicit.
+          git add docs/jobs.json
+          git diff --staged --quiet || git commit -m "chore: jobs $(date -u +'%Y-%m-%d %H:%M UTC')"
+          # Rebase before pushing — this races the scanner's data commit and any
+          # hand push, and a losing race would mean the section silently did not
+          # refresh that day. Only a generated file is touched here, so a rebase
+          # cannot conflict with source changes.
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            echo "push attempt $i lost a race — retrying"
+            sleep 5
+          done
+          echo "::error::could not push docs/jobs.json after 3 attempts"
+          exit 1

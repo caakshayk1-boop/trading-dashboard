@@ -1,0 +1,40 @@
+{
+  "Al Tayer": {
+    "adapter": "oracle",
+    "endpoint": {
+      "host": "https://hchx.fa.em2.oraclecloud.com",
+      "site": "CX_1"
+    },
+    "resolved_at": "2026-08-17T17:10:58.591233+00:00"
+  },
+  "Aldar": {
+    "adapter": "lever",
+    "endpoint": {
+      "slug": "aldar"
+    },
+    "resolved_at": "2026-08-17T17:11:01.547215+00:00"
+  },
+  "Apparel Group": {
+    "adapter": "oracle",
+    "endpoint": {
+      "host": "https://ediu.fa.em2.oraclecloud.com",
+      "site": "CX_1"
+    },
+    "resolved_at": "2026-08-17T17:11:00.027600+00:00"
+  },
+  "Emaar": {
+    "adapter": "oracle",
+    "endpoint": {
+      "host": "https://emhm.fa.em2.oraclecloud.com",
+      "site": "CX_1001"
+    },
+    "resolved_at": "2026-08-17T17:11:00.127500+00:00"
+  },
+  "GMG": {
+    "adapter": "teamtailor",
+    "endpoint": {
+      "host": "https://careers.gmg.com"
+    },
+    "resolved_at": "2026-08-17T17:10:56.980234+00:00"
+  }
+}
