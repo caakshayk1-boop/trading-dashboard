@@ -4048,6 +4048,20 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fund-isin{font-family:var(--mono);font-size:10px;letter-spacing:.04em;
   white-space:nowrap;padding-top:2px}
 
+/* Standing methodology notes — long, unchanging, and previously sitting
+   between the reader and the thing they came for. Collapsed by default. */
+.fund-note-d{margin:14px 0}
+.fund-note-d>summary{cursor:pointer;list-style:none;display:inline-flex;
+  align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--line);border-radius:7px;padding:7px 12px}
+.fund-note-d>summary::-webkit-details-marker{display:none}
+.fund-note-d>summary::before{content:"+";font-size:13px;line-height:1}
+.fund-note-d[open]>summary::before{content:"\2212"}
+.fund-note-d>summary:hover{color:var(--text);border-color:var(--line2)}
+.fund-note-d>summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.fund-note-d .fund-note{margin-top:12px}
+
 /* "Relates to" in the signal log. Constrained and wrapped: it is a sentence in
    a table of numbers, and left free it would set the width of every column. */
 .rmk{font-size:11px;color:var(--dim);max-width:210px;min-width:150px;
@@ -6070,13 +6084,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% endif %}
   </div>
 
-  <div class="fund-note rv">
+  {# Collapsed for the same reason as the stock screen's methodology block:
+     it is a standing caveat, not today's news, and it sat above every fund
+     card on every visit. The per-category `facts` note below stays open —
+     that one changes weekly and is about these specific funds. #}
+  <details class="fund-note-d rv">
+    <summary>On expense ratio &mdash; why this screen is Direct-only</summary>
+  <div class="fund-note">
     <strong>On expense ratio.</strong> Per-scheme TER is not published in the free
     AMFI feed, so this screen does not claim to know it. The cost lever that
     <em>is</em> visible is Direct versus Regular, and it is the big one: a Regular
     plan carries the distributor commission inside its TER, typically 0.5&ndash;1.2%
     a year more for the same portfolio. Everything below is Direct.
   </div>
+  </details>
 
   {% for cat in fund_screen.categories %}
   {% if cat.funds %}
@@ -7596,7 +7617,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
   {% endif %}
 
-  <div class="fund-note rv">
+  {# Methodology, collapsed. Four dense paragraphs explaining Rank-for, the
+     four component scores, how ROCE is computed and what the screen is not —
+     ~1,300px of prose sitting between the reader and the actual 750-name
+     table. It is the answer to a question, not the headline, and it reads
+     identically one click in. Same <details> pattern as the fund screen and
+     the engine log. #}
+  <details class="fund-note-d rv">
+    <summary>How this screen works &mdash; and what it is not</summary>
+  <div class="fund-note">
     <strong>A good company is not the same as a good buy today.</strong> That is
     what <b>Rank for</b> is: the four component scores below never change, but each
     mode weights them for a different question. <b>Investor</b> leans on business
@@ -7631,6 +7660,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     in it, because nothing here has been validated as predictive. I am not a
     SEBI-registered adviser.
   </div>
+  </details>
 
   <div class="ctlbar rv" id="scrPresets" role="group" aria-label="Preset screens">
     <span class="ghost" style="margin-left:0">SCREENS</span>

@@ -54,6 +54,14 @@ jobs:
           pip install -r requirements.txt
           pip install libsql-experimental || true
 
-      - name: Backfill (dry run / apply)
+      - name: Backfill market/asset_type (dry run / apply)
         run: |
           python backfill_asset_types.py ${{ inputs.apply && '--apply' || '' }}
+
+      # Same class of problem, same one-off shape: `remarks` was added and the
+      # writers taught to populate it, which only helps rows written AFTER the
+      # change. Every row already in the ledger kept NULL, so the "Relates to"
+      # column shipped rendering a dash on every line.
+      - name: Backfill remarks (dry run / apply)
+        run: |
+          python backfill_remarks.py ${{ inputs.apply && '--apply' || '' }}

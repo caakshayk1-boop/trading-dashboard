@@ -108,6 +108,9 @@ REMARKS = {
     "breakout":         "Breakout scan — swing horizon",
     "equity_measured":  "Daily-close equity engine — the measured swing edge",
     "magic":            "Magic-levels screen — daily-close swing",
+    # Present in the live ledger (24 rows) and absent from the first draft of
+    # this map, which is exactly how a row ends up with a blank "Relates to".
+    "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing",
     "ohl":              "Open-High-Low intraday engine",
     "multibagger":      "Weekly multibagger scan — research idea, not a trade",
     "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop",
