@@ -1,16 +1,16 @@
 {
- "build_id": "20260817T172700",
+ "build_id": "20260817T182108",
  "date": "2026-08-17",
  "date_str": "Monday, August 17 2026",
  "picks": [
   {
    "symbol": "PAYTM.NS",
    "name": "PAYTM",
-   "ext20": 10.63,
-   "vol_ratio": 1.53,
+   "ext20": 10.73,
+   "vol_ratio": 1.54,
    "price": 1603.0,
    "change_1d": -2.82,
-   "mom_1m": 17.8,
+   "mom_1m": 16.0,
    "mom_3m": 40.0,
    "score": 97,
    "target": 2003.75,
@@ -46,12 +46,12 @@
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 6.9
+     "e": 7.1
     }
    ],
-   "ema20": 1448.99,
+   "ema20": 1447.66,
    "tv": "NSE:PAYTM",
-   "thesis": "1.5x normal volume behind a +18% month \u2014 participation is confirming the move."
+   "thesis": "97 composite score with 40% 3-month gain and 1.54x volume."
   },
   {
    "symbol": "NET",
@@ -154,56 +154,6 @@
    "thesis": "+40% in a month against +48% over three \u2014 the trend is accelerating, not maturing."
   },
   {
-   "symbol": "SE",
-   "name": "SE",
-   "ext20": 6.98,
-   "vol_ratio": 1.53,
-   "price": 121.94,
-   "change_1d": -1.12,
-   "mom_1m": 14.8,
-   "mom_3m": 38.2,
-   "score": 93,
-   "target": 152.43,
-   "stop_loss": 112.18,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 22.4
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 18.8
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 19.7
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 7.0
-    }
-   ],
-   "ema20": 113.99,
-   "tv": "SE",
-   "thesis": "1.5x normal volume behind a +15% month \u2014 participation is confirming the move."
-  },
-  {
    "symbol": "SNOW",
    "name": "SNOW",
    "ext20": 7.09,
@@ -252,6 +202,56 @@
    "ema20": 307.16,
    "tv": "SNOW",
    "thesis": "+109% three-month trend, +7.1% above the 20-day, volume 0.74x normal."
+  },
+  {
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 24.54,
+   "vol_ratio": 1.62,
+   "price": 39.84,
+   "change_1d": 1.74,
+   "mom_1m": 61.4,
+   "mom_3m": 28.4,
+   "score": 87,
+   "target": 49.8,
+   "stop_loss": 36.65,
+   "timeframe": "2\u20133 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 5.9
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 8.1
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 8.0
+    }
+   ],
+   "ema20": 31.99,
+   "tv": "SMCI",
+   "thesis": "1.6x normal volume behind a +61% month \u2014 participation is confirming the move."
   }
  ],
  "engine": [
@@ -345,7 +345,248 @@
   }
  ],
  "picks_week": null,
- "open_context": {},
+ "open_context": {
+  "ABCAPITAL": {
+   "price": 398.7,
+   "sector": "Financial Services"
+  },
+  "ABDL": {
+   "price": 610.65,
+   "sector": "Consumer Defensive"
+  },
+  "AEGISVOPAK": {
+   "price": 269.5,
+   "sector": "Energy"
+  },
+  "AIAENG": {
+   "price": 4383.6001,
+   "sector": "Industrials"
+  },
+  "ANTHEM": {
+   "price": 898.0,
+   "sector": "Healthcare"
+  },
+  "ASAHIINDIA": {
+   "price": 931.2,
+   "sector": "Consumer Cyclical"
+  },
+  "ASHOKLEY": {
+   "price": 177.1,
+   "sector": "Industrials"
+  },
+  "ASIANPAINT": {
+   "price": 2687.5,
+   "sector": "Basic Materials"
+  },
+  "BAJAJFINSV": {
+   "price": 2005.0,
+   "sector": "Financial Services"
+  },
+  "BANKBARODA": {
+   "price": 246.55,
+   "sector": "Financial Services"
+  },
+  "BANKINDIA": {
+   "price": 143.75,
+   "sector": "Financial Services"
+  },
+  "BDL": {
+   "price": 1380.0,
+   "sector": "Industrials"
+  },
+  "BHARTIARTL": {
+   "price": 1969.3,
+   "sector": "Communication Services"
+  },
+  "BRIGADE": {
+   "price": 593.7,
+   "sector": "Real Estate"
+  },
+  "BRNUSD": {
+   "price": 89.32,
+   "sector": ""
+  },
+  "CANBK": {
+   "price": 131.1,
+   "sector": "Financial Services"
+  },
+  "CDSL": {
+   "price": 1356.8,
+   "sector": "Financial Services"
+  },
+  "CEATLTD": {
+   "price": 3608.5,
+   "sector": "Consumer Cyclical"
+  },
+  "CEMPRO": {
+   "price": 1321.8,
+   "sector": "Industrials"
+  },
+  "CGCL": {
+   "price": 226.24,
+   "sector": "Financial Services"
+  },
+  "CHOICEIN": {
+   "price": 803.8,
+   "sector": "Financial Services"
+  },
+  "CHOLAFIN": {
+   "price": 1884.7,
+   "sector": "Financial Services"
+  },
+  "CIPLA": {
+   "price": 1431.5,
+   "sector": "Healthcare"
+  },
+  "COROMANDEL": {
+   "price": 2097.8999,
+   "sector": "Basic Materials"
+  },
+  "CRISIL": {
+   "price": 4488.2998,
+   "sector": "Financial Services"
+  },
+  "DEEPAKNTR": {
+   "price": 1780.5,
+   "sector": "Basic Materials"
+  },
+  "DIXON": {
+   "price": 14025.0,
+   "sector": "Technology"
+  },
+  "DLF": {
+   "price": 671.0,
+   "sector": "Real Estate"
+  },
+  "ECLERX": {
+   "price": 1848.9,
+   "sector": "Technology"
+  },
+  "EICHERMOT": {
+   "price": 8050.0,
+   "sector": "Consumer Cyclical"
+  },
+  "ESCORTS": {
+   "price": 3133.6001,
+   "sector": "Industrials"
+  },
+  "FLUOROCHEM": {
+   "price": 4707.5,
+   "sector": "Basic Materials"
+  },
+  "GABRIEL": {
+   "price": 1442.5,
+   "sector": "Consumer Cyclical"
+  },
+  "GRASIM": {
+   "price": 3250.5,
+   "sector": "Basic Materials"
+  },
+  "GVT&D": {
+   "price": 4290.0,
+   "sector": "Industrials"
+  },
+  "HCLTECH": {
+   "price": 1325.0,
+   "sector": "Technology"
+  },
+  "HDFCBANK": {
+   "price": 729.0,
+   "sector": "Financial Services"
+  },
+  "HEG": {
+   "price": 698.3,
+   "sector": "Industrials"
+  },
+  "HINDALCO": {
+   "price": 1049.9,
+   "sector": "Basic Materials"
+  },
+  "HINDCOPPER": {
+   "price": 572.65,
+   "sector": "Basic Materials"
+  },
+  "IFCI": {
+   "price": 78.93,
+   "sector": "Financial Services"
+  },
+  "IPCALAB": {
+   "price": 1884.6,
+   "sector": "Healthcare"
+  },
+  "J&KBANK": {
+   "price": 147.97,
+   "sector": "Financial Services"
+  },
+  "JSWDULUX": {
+   "price": 3139.8,
+   "sector": ""
+  },
+  "KARURVYSYA": {
+   "price": 334.0,
+   "sector": "Financial Services"
+  },
+  "KIRLOSENG": {
+   "price": 2101.6001,
+   "sector": "Industrials"
+  },
+  "KPRMILL": {
+   "price": 1135.6,
+   "sector": "Consumer Cyclical"
+  },
+  "LAURUSLABS": {
+   "price": 1809.7,
+   "sector": "Healthcare"
+  },
+  "LTF": {
+   "price": 315.0,
+   "sector": "Financial Services"
+  },
+  "LUPIN": {
+   "price": 2259.0,
+   "sector": "Healthcare"
+  },
+  "M&MFIN": {
+   "price": 388.9,
+   "sector": "Financial Services"
+  },
+  "MARICO": {
+   "price": 852.05,
+   "sector": "Consumer Defensive"
+  },
+  "MOTHERSON": {
+   "price": 168.06,
+   "sector": "Consumer Cyclical"
+  },
+  "MRPL": {
+   "price": 177.15,
+   "sector": "Energy"
+  },
+  "NATIONALUM": {
+   "price": 387.55,
+   "sector": "Basic Materials"
+  },
+  "NESTLEIND": {
+   "price": 1470.0,
+   "sector": "Consumer Defensive"
+  },
+  "NGAS": {
+   "price": 2.668,
+   "sector": ""
+  },
+  "NIACL": {
+   "price": 183.64,
+   "sector": "Financial Services"
+  },
+  "NMDC": {
+   "price": 85.5,
+   "sector": "Basic Materials"
+  },
+  "OFSS": {
+   "price": 11789.0,
+   "sector": "Technology"
+  }
+ },
  "desk": {
   "chess": {
    "title": "Study Plan: 15 Min/Day",
