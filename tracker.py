@@ -116,6 +116,13 @@ REMARKS = {
     "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop",
     "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks",
     "sip_bucket":       "Monthly SIP allocation — what the SIP was told to buy",
+    # Older engine names still present in the ledger. Found by the backfill
+    # reporting them as unmapped rather than filling them with something
+    # generic — 60 rows across these four.
+    "4h":               "4-hour channel scan — intraday/swing horizon",
+    "ai_4h":            "AI channel breakout scan (4H) — intraday/swing horizon",
+    "ai_daily":         "AI channel breakout scan (daily close)",
+    "intraday":         "Intraday momentum tier — retired 2026-07-30, unmeasured",
 }
 
 
