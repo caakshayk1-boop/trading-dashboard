@@ -1983,27 +1983,39 @@ SECTION_MAP = [
     ("stocks",      "Stock Screen", "main", "Research"),
 
     # ── /desk — the personal page ───────────────────────────────────────────
-    # Sits above Interview on purpose: find the role first, prepare for it
-    # second. Both belong to the same "Work" run.
+    # Reordered 2026-08-18 to the reading order Akshay actually wants:
+    # the role first, then the track toward it, then the daily practice,
+    # then the day's reading, then the drills, then the library.
+
+    # WORK — find the role, then close the gap to it.
     ("careers",     "Finance Careers", "desk", "Work"),
-    ("interview",   "Interview",    "desk", "Work"),
+    # Renamed from "Interview". This section is the FP&A -> CFO track, not
+    # interview prep alone, and it sits directly under Careers because that
+    # is the order the two are used in.
+    ("interview",   "CFO Track",    "desk", "Work"),
+
+    # PRACTICE — the daily reps.
     ("language",    "Language",     "desk", "Practice"),
     ("father",      "Father",       "desk", "Practice"),
     ("wisdom",      "Wisdom",       "desk", "Practice"),
-    ("desk",        "The Desk",     "desk", "Reading"),
-    ("mind",        "The Mind",     "desk", "Reading"),
-    ("way",         "The Way",      "desk", "Reading"),
-    ("review",      "The Review",   "desk", "Reading"),
-    # The Daily Brief sits directly ABOVE Smart Reads and shares its run: the
-    # wire compressed into events, then the longer reading.
+
+    # READING — the wire compressed into events, then the longer reading.
     ("brief",       "Daily Brief",  "desk", "Reading"),
     ("smartreads",  "Smart Reads",  "desk", "Reading"),
-    # Chess moved down into Drills on 2026-08-18. It used to sit between The
-    # Review and the Daily Brief, which split Reading into two runs and printed
-    # that heading twice for no reason a reader could see.
-    ("chess",       "Chess",        "desk", "Drills"),
+
+    # DRILLS — listen, then play.
     ("podcasts",    "Podcasts",     "desk", "Drills"),
-    ("gym",         "Mind Gym",     "desk", "Drills"),
+    ("chess",       "Chess",        "desk", "Drills"),
+
+    # LIBRARY — everything that keeps rather than expires. Mind Gym sits with
+    # The Mind rather than with the drills: a group must be one contiguous run
+    # (test_page_structure.py), and splitting Drills to move it would print
+    # that heading twice for no reason a reader can see.
+    ("review",      "The Review",   "desk", "Library"),
+    ("desk",        "The Desk",     "desk", "Library"),
+    ("mind",        "The Mind",     "desk", "Library"),
+    ("way",         "The Way",      "desk", "Library"),
+    ("gym",         "Mind Gym",     "desk", "Library"),
 
     # ── TRADE ───────────────────────────────────────────────────────────────
     # The reading order the ledger actually has: the idea, what it was sized
@@ -6813,6 +6825,428 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 
 
+<!-- ══════════ SMART READS ══════════
+     The wire tells you what happened; these argue about what it means. Same
+     named mastheads, but the analysis and money desks rather than the market
+     report, and a card only ships when the publisher gave it a real summary —
+     a headline with a border round it is a link, not a read.
+
+     Filtered harder than the news feed (two distinct finance terms, not one).
+     Opinion desks run film and language columns beside the money writing, and
+     one incidental word is how a review of The Odyssey reached a finance
+     page during the build of this section. -->
+{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
+   The wire compressed into EVENTS. Sits directly above Smart Reads: what
+   happened, then the longer reading. Every number and name in the generated
+   prose has been checked against the source articles by brief_engine.qa_reject
+   before it reaches here; anything that failed fell back to a summary built
+   from the headlines themselves and is marked as such. #}
+{% if 'brief' in secs %}<section class="sec" id="brief">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span> {{ dh('Daily Brief') }}
+      <h2 class="stitle">Everything important today.</h2>
+    </div>
+    <p class="sdesc">{{ brief.stats.articles }} articles from
+      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
+      ranked by what actually matters &mdash; not by how many outlets syndicated it.
+      Sources kept on every one.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>~{{ brief.stats.read_minutes }} min read</span>
+    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
+      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
+    {% if brief.get('is_fallback') %}
+      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
+    {% endif %}
+    <span>{{ brief.stats.ai_written }} written up
+      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
+  </div>
+
+  {% macro ev_card(e, top) %}
+  <article class="ev{{ ' ev-top' if top }}">
+    <div class="ev-h">
+      <span class="ev-cat">{{ e.category }}</span>
+      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
+        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
+      </span>
+    </div>
+    <h3 class="ev-t">{{ e.headline }}</h3>
+    <div class="ev-m">
+      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
+      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
+      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
+    </div>
+    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    {% if e.whyItMatters %}
+    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
+    {% endif %}
+    {% if e.marketImpact %}
+    <div class="ev-mi">
+      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
+    <div class="ev-s">
+      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
+    </div>
+  </article>
+  {% endmacro %}
+
+  <h3 class="jsub rv">Top stories</h3>
+  <div class="ev-grid rv">
+    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
+  </div>
+
+  {# Everything past the top five, collapsed. The whole point is a ten-minute
+     read; the rest is there for the day you want it. #}
+  {% set rest = brief.events[brief.top|length:] %}
+  {% if rest %}
+  <details class="fund-note-d rv">
+    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
+    <div class="ev-grid" style="margin-top:14px">
+      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
+    </div>
+  </details>
+  {% endif %}
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Summaries are written from the linked reporting and nothing else &mdash; every figure and
+    name is checked against the source articles before publishing, and an event that fails
+    that check falls back to the outlets' own headlines rather than to invented copy.
+    Read the originals for the full story.
+  </p>
+</section>{% endif %}
+
+{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span> {{ dh('Smart Reads') }}
+      <h2 class="stitle">Worth the ten minutes.</h2>
+    </div>
+    <!-- Copy rewritten when this stopped being a finance-only section. It used
+         to name five money mastheads, which was accurate then and would have
+         been quietly wrong the moment the other four categories landed. -->
+    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
+      &mdash; markets and personal finance alongside habits and focus, health and
+      longevity, psychology and relationships, and the longer essays on thinking
+      and living well. Every card carries the publisher&rsquo;s own summary, so you
+      know what a piece argues before you open it.</p>
+  </div>
+
+  <div class="sr-grid">
+    {% for r in smart_reads %}
+    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
+      <div class="sr-h">
+        <span class="sr-src">{{ r.source }}</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
+          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
+           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
+        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
+      </div>
+      <h3 class="sr-t">
+        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
+        {%- else %}{{ r.title }}{% endif -%}
+      </h3>
+      <p class="sr-s">{{ r.summary }}</p>
+      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ MUSIC ══════════
+     Three crates. Two are yours (edit music.py to add a line; the 6 AM build
+     picks it up), the third is a fixed all-time canon. Five show, the rest are
+     one click away — a shelf you can see the whole of is a shelf you stop
+     scanning. The five on top rotate daily, so the shelf reads differently
+     every morning without the list changing. -->
+{% if 'podcasts' in secs %}<section class="sec" id="podcasts">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
+      <h2 class="stitle">What&rsquo;s worth listening to.</h2>
+    </div>
+    <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
+      investing and money, society, politics and geopolitics, health, psychology,
+      philosophy, education, comedy and culture. Thirty-four channels, up to twenty
+      episodes, newest first, with what each one says it covers. Titles, dates and
+      takeaways come from the shows themselves. Shorts are excluded per video, not
+      per channel.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>{{ podcasts.episodes|length }} episodes from {{ podcasts.shows }} shows</span>
+    {% if podcasts.built_on %}<span>Built <b>{{ podcasts.built_on }}</b>{% endif %}
+      {%- if podcasts.age_days is not none %} · {{ podcasts.age_days }}d old{% endif %}</span>
+    {% if podcasts.is_fallback %}<span>&#9888; Today&rsquo;s refresh has not run &mdash;
+      showing the most recent list.</span>{% endif %}
+  </div>
+
+  <div class="pod-grid">
+    {% for e in podcasts.episodes %}
+    <article class="pod rv" style="--d:{{ loop.index0 * 0.05 }}s">
+      <div class="pod-h">
+        <span class="pod-cat">{{ e.category }}</span>
+        <span class="pod-date">{{ e.published }}</span>
+      </div>
+      <h3 class="pod-t">
+        {%- if e.link %}<a href="{{ e.link }}" target="_blank" rel="noopener">{{ e.title }}</a>
+        {%- else %}{{ e.title }}{% endif -%}
+      </h3>
+      <div class="pod-s">{{ e.show }}{% if e.guest %} &middot; <b>{{ e.guest }}</b>{% endif %}</div>
+      {% if e.takeaways %}
+      <ul class="pod-k">
+        {% for t in e.takeaways %}<li>{{ t }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  <p class="pod-note">Takeaways are compressed from each episode&rsquo;s own published
+    description &mdash; they are the show&rsquo;s claims about itself, not a review, and
+    not a summary of anything said in the audio.</p>
+</section>{% endif %}
+
+<!-- ══════════ 09 CHESS ══════════ -->
+{% if 'chess' in secs %}<section class="sec" id="chess">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
+      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess.{% else %}Your last session.{% endif %}</h2>
+    </div>
+    <div style="text-align:right">
+      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.
+        {%- if lichess_summary.session_date and not lichess_summary.is_yesterday %}
+        <br><span style="color:var(--gold)">No games yesterday &mdash; showing
+        {{ lichess_summary.session_date }}, the most recent day you played.</span>{% endif %}</p>
+      <a class="slink" href="https://lichess.org/@/AKK_010" target="_blank" style="display:inline-block;margin-top:10px">Profile →</a>
+    </div>
+  </div>
+
+  {% if lichess_games %}
+  <div class="chess-kpi rv">
+    <div class="ck"><div class="v up">{{ lichess_summary.wins }}</div><div class="k">Wins</div></div>
+    <div class="ck"><div class="v dn">{{ lichess_summary.losses }}</div><div class="k">Losses</div></div>
+    <div class="ck"><div class="v" style="color:var(--dim)">{{ lichess_summary.draws }}</div><div class="k">Draws</div></div>
+    <div class="ck"><div class="v" style="color:var(--lime)">{{ lichess_summary.pct }}%</div><div class="k">Win Rate</div></div>
+    <div class="ck"><div class="v">{{ lichess_summary.total }}</div><div class="k">Games</div></div>
+    {% if lichess_summary.mode == "full" %}
+    <div class="ck"><div class="v" style="color:var(--blue)">{{ lichess_summary.upsets }}</div><div class="k">Upsets</div></div>
+    <div class="ck"><div class="v dn">{{ lichess_summary.collapses }}</div><div class="k">Collapses</div></div>
+    {% endif %}
+  </div>
+
+  {% if lichess_summary.session_summary %}
+  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>{{ lichess_summary.session_summary }}</div>
+  {% else %}
+  <div class="verdict rv" style="background:rgba(255,255,255,.03);border-color:var(--line)">
+    {{ lichess_summary.icon }}
+    {% if lichess_summary.pct >= 55 %} Good session — {{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review the wins and lock in the patterns.
+    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
+    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before the next game. Pattern beats volume.{% endif %}
+  </div>
+  {% endif %}
+
+  {% if lichess_summary.mode == "full" and (lichess_summary.weak_op or lichess_summary.best_op) %}
+  <div class="two rv" style="margin-bottom:18px">
+    {% if lichess_summary.weak_op %}
+    <div class="card" style="border-color:rgba(255,92,92,.25)">
+      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--down);margin-bottom:6px">📚 Study this opening</div>
+      <div style="font-size:14px;color:#FFA0A0">{{ lichess_summary.weak_op }}</div>
+    </div>
+    {% endif %}
+    {% if lichess_summary.best_op %}
+    <div class="card" style="border-color:rgba(61,220,151,.25)">
+      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--up);margin-bottom:6px">💪 Strongest opening</div>
+      <div style="font-size:14px;color:#9BEFC9">{{ lichess_summary.best_op }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if lichess_summary.mode == "full" %}
+  <div class="rv">
+    {% for g in lichess_games %}
+    <div class="game {{ g.cls }}">
+      <div class="hdr">
+        <span style="font-size:17px">{{ g.icon }}</span>
+        <span class="res {{ 'up' if g.cls == 'win' else ('dn' if g.cls == 'loss' else '') }}"
+              {% if g.cls == 'draw' %}style="color:var(--dim)"{% endif %}>{{ g.result }}</span>
+        <span class="pill">as {{ g.my_side }}</span>
+        <span class="pill">{{ g.speed }}</span>
+        {% if g.is_upset %}<span class="pill" style="background:rgba(106,168,255,.14);color:var(--blue)">Upset ⚡</span>{% endif %}
+        {% if g.is_collapse %}<span class="pill" style="background:rgba(255,92,92,.13);color:var(--down)">Collapse ⚠</span>{% endif %}
+        {% if g.is_long %}<span class="pill">{{ g.moves }}M Epic</span>{% endif %}
+        <a href="{{ g.url }}" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+      </div>
+      <div class="op">{% if g.eco %}<span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">{{ g.eco }}</span>{% endif %}{{ g.opening }}</div>
+      <div class="meta">
+        vs <strong style="color:var(--text)">{{ g.opponent }}</strong> <span style="color:var(--dim)">({{ g.opp_rating }})</span>
+        · me {{ g.my_rating }} · {{ g.moves }} moves · {{ g.termination }}
+        {% if g.me_diff is not none %}· <span class="{{ 'up' if g.me_diff > 0 else 'dn' }}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>{% endif %}
+      </div>
+      {% if g.best_move %}
+      <div class="bestmv">
+        <div class="bmlab">Best move of the game</div>
+        <div class="bmrow">
+          <span class="bmsan">{{ g.best_move.move_no }}. {{ g.best_move.san }}</span>
+          <span class="bmgain">+{{ (g.best_move.gain_cp / 100) | round(1) }} pawns</span>
+          <span class="bmeval">eval after {{ "%+.2f"|format(g.best_move.eval_after) }}</span>
+        </div>
+      </div>
+      {% endif %}
+      {% if g.standout %}<div class="uniq"><b>What made it different</b>{{ g.standout }}</div>{% endif %}
+      {% if g.key_facts %}
+      <div class="kfacts">
+        {% for f in g.key_facts %}<span class="kf">{{ f }}</span>{% endfor %}
+      </div>
+      {% endif %}
+      {% if g.game_strength or g.est_fide %}
+      <div class="ratings">
+        {% if g.game_strength %}<span class="rt"><i>Played at</i><b>~{{ g.game_strength }}</b></span>{% endif %}
+        {% if g.est_fide %}<span class="rt"><i>Est. FIDE equiv.</i><b>~{{ g.est_fide }}</b></span>{% endif %}
+        <span class="rtnote">estimates from Lichess {{ g.speed|lower }} rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      {% endif %}
+      {% if not g.analysed %}<div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>{% endif %}
+      {% if g.analysis %}<div class="an">💡 {{ g.analysis }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="two rv" style="margin-bottom:16px">
+    {% for g in lichess_games %}
+    <div class="card">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-bottom:8px">{{ g.speed }}</div>
+      <div class="num" style="font-size:30px;font-weight:700;letter-spacing:-1.4px;color:{% if g.pct >= 55 %}var(--up){% elif g.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}">{{ g.pct }}%</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:7px">
+        <span class="up">W{{ g.wins }}</span> · <span class="dn">L{{ g.losses }}</span> ·
+        <span style="color:var(--dim)">D{{ g.draws }}</span> · {{ g.total }} games
+      </div>
+      <a href="{{ g.profile_url }}" target="_blank" class="slink" style="display:inline-block;margin-top:11px">Lichess →</a>
+    </div>
+    {% endfor %}
+  </div>
+  <!-- This used to read "Add LICHESS_TOKEN to GitHub secrets" whenever the
+       page fell back to aggregate counts — including every time the token was
+       set, which it has been since 2026-07-29. Falling back and lacking a
+       token are different questions, and conflating them sent you to create a
+       credential you already had. Each cause now says its own name. -->
+  {% if lichess_summary.token_missing %}
+  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets to raise the export rate limit and include private games.
+    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--lime)">Create token →</a></div>
+  {% else %}
+  <div class="empty rv" style="text-align:left">No individual games came back from the export API for the last seven days,
+    so this is the aggregate view. The token is set &mdash; this is not a credentials problem.</div>
+  {% endif %}
+  {% endif %}
+
+  {% if lichess_summary.trend %}
+  <div class="rv" style="margin-top:18px">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">📈 7-day win rate</div>
+    <div class="trend">
+      {% for t in lichess_summary.trend | reverse %}
+      <div>
+        <div class="bar" style="--h:{{ [t.pct * 70 // 100, 4] | max }}px;--d:{{ loop.index0 * 0.07 }}s;background:{% if t.pct >= 55 %}var(--up){% elif t.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}"></div>
+        <div class="lb">{{ t.day }}</div>
+        <div class="lb" style="color:var(--muted)">{{ t.pct }}%</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty rv">No games played yesterday · <a href="https://lichess.org/@/AKK_010" target="_blank" style="color:var(--lime)">Play on Lichess →</a></div>
+  {% endif %}
+
+  <div class="two rv" style="margin-top:18px">
+    <div class="essay" style="--ac:var(--gold)">
+      <div class="meta">Chess Tutor · Lesson {{ chess.index }}/{{ chess.total }}</div>
+      <h3>{{ chess.title }}</h3>
+      <p>{{ chess.body }}</p>
+      <p style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:14px">
+        Practise: <a href="https://lichess.org/study" target="_blank" style="color:var(--lime)">Lichess Study</a> ·
+        <a href="https://chess.com/puzzles" target="_blank" style="color:var(--lime)">Chess.com Puzzles</a></p>
+    </div>
+    {% if lichess_puzzle %}
+    <div class="essay" style="--ac:var(--gold);--d:.08s">
+      <div class="meta">🧩 Today's puzzle</div>
+      <h3>Rating {{ lichess_puzzle.rating }} · {{ lichess_puzzle.level }}</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">{{ lichess_puzzle.themes }}</p>
+      <div class="q">💡 {{ lichess_puzzle.tip }}</div>
+      <a href="{{ lichess_puzzle.url }}" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+    </div>
+    {% endif %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 10 MIND GYM ══════════
+     Pure client-side: deterministic daily seed, scores in localStorage. No
+     API, so it works identically on the static host. -->
+<!-- ══════════ 08 THE REVIEW ══════════ -->
+{% if 'review' in secs %}<section class="sec" id="review">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['review'] }} / {{ seclabel['review'] }}</span>
+      <h2 class="stitle">Look back, or none of it compounds.</h2>
+    </div>
+    <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
+      {% if review.is_review_day %}Review day — do it now.{% else %}{{ review.days_left }} day{{ '' if review.days_left == 1 else 's' }} until the weekend review.{% endif %}
+      Answers save in this browser, keyed to the week.</p>
+  </div>
+
+  <div class="rv">
+    <div class="deep-q">
+      <div class="dq-lab">This week's question · {{ review.index }}/{{ review.total }}</div>
+      <h3>{{ review.prompt }}</h3>
+      <p>{{ review.why }}</p>
+    </div>
+
+    <div class="rv-grid" id="reviewGrid" data-week="{{ review.key }}">
+      <div class="rv-card">
+        <label for="rvNumbers">The numbers</label>
+        <div class="rv-hint">What moved, by how much, and did you cause it?</div>
+        <textarea id="rvNumbers" rows="4" placeholder="e.g. 12 applications sent · SIP ₹10,000 · expectancy +0.14R over 22 signals"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvWins">Wins</label>
+        <div class="rv-hint">Only things that finished. Not things that progressed.</div>
+        <textarea id="rvWins" rows="4" placeholder="What actually shipped or closed"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvMisses">Misses</label>
+        <div class="rv-hint">What slipped, and the cause — not the excuse.</div>
+        <textarea id="rvMisses" rows="4" placeholder="What did not happen, and why"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvAnswer">Answer to this week's question</label>
+        <div class="rv-hint">{{ review.prompt }}</div>
+        <textarea id="rvAnswer" rows="4" placeholder="Be specific. Vague answers are avoidance."></textarea>
+      </div>
+      <div class="rv-card wide">
+        <label for="rvChange">One change for next week</label>
+        <div class="rv-hint">Exactly one. A list of five is a list of none.</div>
+        <textarea id="rvChange" rows="3" placeholder="One change. Specific enough to verify next Sunday."></textarea>
+      </div>
+    </div>
+
+    <div class="rv-bar">
+      <span class="rv-status" id="rvStatus">Not started</span>
+      <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
+    </div>
+  </div>
+</section>{% endif %}
+
 <!-- ══════════ 05 THE DESK ══════════ -->
 {% if 'desk' in secs %}<section class="sec" id="desk">
   <div class="shead rv">
@@ -7071,428 +7505,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="stk-strip" id="stkStrip" title="Last 30 days"></div>
     <div class="stk-foot">A day counts once you tick anything. Streak breaks on a fully empty day.</div>
   </div>
-</section>{% endif %}
-
-<!-- ══════════ 08 THE REVIEW ══════════ -->
-{% if 'review' in secs %}<section class="sec" id="review">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['review'] }} / {{ seclabel['review'] }}</span>
-      <h2 class="stitle">Look back, or none of it compounds.</h2>
-    </div>
-    <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
-      {% if review.is_review_day %}Review day — do it now.{% else %}{{ review.days_left }} day{{ '' if review.days_left == 1 else 's' }} until the weekend review.{% endif %}
-      Answers save in this browser, keyed to the week.</p>
-  </div>
-
-  <div class="rv">
-    <div class="deep-q">
-      <div class="dq-lab">This week's question · {{ review.index }}/{{ review.total }}</div>
-      <h3>{{ review.prompt }}</h3>
-      <p>{{ review.why }}</p>
-    </div>
-
-    <div class="rv-grid" id="reviewGrid" data-week="{{ review.key }}">
-      <div class="rv-card">
-        <label for="rvNumbers">The numbers</label>
-        <div class="rv-hint">What moved, by how much, and did you cause it?</div>
-        <textarea id="rvNumbers" rows="4" placeholder="e.g. 12 applications sent · SIP ₹10,000 · expectancy +0.14R over 22 signals"></textarea>
-      </div>
-      <div class="rv-card">
-        <label for="rvWins">Wins</label>
-        <div class="rv-hint">Only things that finished. Not things that progressed.</div>
-        <textarea id="rvWins" rows="4" placeholder="What actually shipped or closed"></textarea>
-      </div>
-      <div class="rv-card">
-        <label for="rvMisses">Misses</label>
-        <div class="rv-hint">What slipped, and the cause — not the excuse.</div>
-        <textarea id="rvMisses" rows="4" placeholder="What did not happen, and why"></textarea>
-      </div>
-      <div class="rv-card">
-        <label for="rvAnswer">Answer to this week's question</label>
-        <div class="rv-hint">{{ review.prompt }}</div>
-        <textarea id="rvAnswer" rows="4" placeholder="Be specific. Vague answers are avoidance."></textarea>
-      </div>
-      <div class="rv-card wide">
-        <label for="rvChange">One change for next week</label>
-        <div class="rv-hint">Exactly one. A list of five is a list of none.</div>
-        <textarea id="rvChange" rows="3" placeholder="One change. Specific enough to verify next Sunday."></textarea>
-      </div>
-    </div>
-
-    <div class="rv-bar">
-      <span class="rv-status" id="rvStatus">Not started</span>
-      <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
-    </div>
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ SMART READS ══════════
-     The wire tells you what happened; these argue about what it means. Same
-     named mastheads, but the analysis and money desks rather than the market
-     report, and a card only ships when the publisher gave it a real summary —
-     a headline with a border round it is a link, not a read.
-
-     Filtered harder than the news feed (two distinct finance terms, not one).
-     Opinion desks run film and language columns beside the money writing, and
-     one incidental word is how a review of The Odyssey reached a finance
-     page during the build of this section. -->
-{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
-   The wire compressed into EVENTS. Sits directly above Smart Reads: what
-   happened, then the longer reading. Every number and name in the generated
-   prose has been checked against the source articles by brief_engine.qa_reject
-   before it reaches here; anything that failed fell back to a summary built
-   from the headlines themselves and is marked as such. #}
-{% if 'brief' in secs %}<section class="sec" id="brief">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span> {{ dh('Daily Brief') }}
-      <h2 class="stitle">Everything important today.</h2>
-    </div>
-    <p class="sdesc">{{ brief.stats.articles }} articles from
-      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
-      ranked by what actually matters &mdash; not by how many outlets syndicated it.
-      Sources kept on every one.</p>
-  </div>
-
-  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
-    <span class="pv-tag">DAILY</span>
-    <span>~{{ brief.stats.read_minutes }} min read</span>
-    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
-      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
-    {% if brief.get('is_fallback') %}
-      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
-    {% endif %}
-    <span>{{ brief.stats.ai_written }} written up
-      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
-  </div>
-
-  {% macro ev_card(e, top) %}
-  <article class="ev{{ ' ev-top' if top }}">
-    <div class="ev-h">
-      <span class="ev-cat">{{ e.category }}</span>
-      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
-        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
-      </span>
-    </div>
-    <h3 class="ev-t">{{ e.headline }}</h3>
-    <div class="ev-m">
-      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
-      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
-      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
-    </div>
-    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
-    {% if e.whyItMatters %}
-    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
-    {% endif %}
-    {% if e.marketImpact %}
-    <div class="ev-mi">
-      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
-    </div>
-    {% endif %}
-    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
-    <div class="ev-s">
-      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
-    </div>
-  </article>
-  {% endmacro %}
-
-  <h3 class="jsub rv">Top stories</h3>
-  <div class="ev-grid rv">
-    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
-  </div>
-
-  {# Everything past the top five, collapsed. The whole point is a ten-minute
-     read; the rest is there for the day you want it. #}
-  {% set rest = brief.events[brief.top|length:] %}
-  {% if rest %}
-  <details class="fund-note-d rv">
-    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
-    <div class="ev-grid" style="margin-top:14px">
-      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
-    </div>
-  </details>
-  {% endif %}
-
-  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
-    Summaries are written from the linked reporting and nothing else &mdash; every figure and
-    name is checked against the source articles before publishing, and an event that fails
-    that check falls back to the outlets' own headlines rather than to invented copy.
-    Read the originals for the full story.
-  </p>
-</section>{% endif %}
-
-{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span> {{ dh('Smart Reads') }}
-      <h2 class="stitle">Worth the ten minutes.</h2>
-    </div>
-    <!-- Copy rewritten when this stopped being a finance-only section. It used
-         to name five money mastheads, which was accurate then and would have
-         been quietly wrong the moment the other four categories landed. -->
-    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
-      &mdash; markets and personal finance alongside habits and focus, health and
-      longevity, psychology and relationships, and the longer essays on thinking
-      and living well. Every card carries the publisher&rsquo;s own summary, so you
-      know what a piece argues before you open it.</p>
-  </div>
-
-  <div class="sr-grid">
-    {% for r in smart_reads %}
-    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
-      <div class="sr-h">
-        <span class="sr-src">{{ r.source }}</span>
-        <!-- The category, not a constant "SMART READS" label. The point of the
-             mix is that a reader can see at a glance it is not nine money
-             pieces, and a tag that says the same thing on every card cannot
-             show that. -->
-        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
-          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
-           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
-        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
-      </div>
-      <h3 class="sr-t">
-        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
-        {%- else %}{{ r.title }}{% endif -%}
-      </h3>
-      <p class="sr-s">{{ r.summary }}</p>
-      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
-    </article>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 09 CHESS ══════════ -->
-{% if 'chess' in secs %}<section class="sec" id="chess">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
-      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess.{% else %}Your last session.{% endif %}</h2>
-    </div>
-    <div style="text-align:right">
-      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.
-        {%- if lichess_summary.session_date and not lichess_summary.is_yesterday %}
-        <br><span style="color:var(--gold)">No games yesterday &mdash; showing
-        {{ lichess_summary.session_date }}, the most recent day you played.</span>{% endif %}</p>
-      <a class="slink" href="https://lichess.org/@/AKK_010" target="_blank" style="display:inline-block;margin-top:10px">Profile →</a>
-    </div>
-  </div>
-
-  {% if lichess_games %}
-  <div class="chess-kpi rv">
-    <div class="ck"><div class="v up">{{ lichess_summary.wins }}</div><div class="k">Wins</div></div>
-    <div class="ck"><div class="v dn">{{ lichess_summary.losses }}</div><div class="k">Losses</div></div>
-    <div class="ck"><div class="v" style="color:var(--dim)">{{ lichess_summary.draws }}</div><div class="k">Draws</div></div>
-    <div class="ck"><div class="v" style="color:var(--lime)">{{ lichess_summary.pct }}%</div><div class="k">Win Rate</div></div>
-    <div class="ck"><div class="v">{{ lichess_summary.total }}</div><div class="k">Games</div></div>
-    {% if lichess_summary.mode == "full" %}
-    <div class="ck"><div class="v" style="color:var(--blue)">{{ lichess_summary.upsets }}</div><div class="k">Upsets</div></div>
-    <div class="ck"><div class="v dn">{{ lichess_summary.collapses }}</div><div class="k">Collapses</div></div>
-    {% endif %}
-  </div>
-
-  {% if lichess_summary.session_summary %}
-  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>{{ lichess_summary.session_summary }}</div>
-  {% else %}
-  <div class="verdict rv" style="background:rgba(255,255,255,.03);border-color:var(--line)">
-    {{ lichess_summary.icon }}
-    {% if lichess_summary.pct >= 55 %} Good session — {{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review the wins and lock in the patterns.
-    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
-    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before the next game. Pattern beats volume.{% endif %}
-  </div>
-  {% endif %}
-
-  {% if lichess_summary.mode == "full" and (lichess_summary.weak_op or lichess_summary.best_op) %}
-  <div class="two rv" style="margin-bottom:18px">
-    {% if lichess_summary.weak_op %}
-    <div class="card" style="border-color:rgba(255,92,92,.25)">
-      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--down);margin-bottom:6px">📚 Study this opening</div>
-      <div style="font-size:14px;color:#FFA0A0">{{ lichess_summary.weak_op }}</div>
-    </div>
-    {% endif %}
-    {% if lichess_summary.best_op %}
-    <div class="card" style="border-color:rgba(61,220,151,.25)">
-      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--up);margin-bottom:6px">💪 Strongest opening</div>
-      <div style="font-size:14px;color:#9BEFC9">{{ lichess_summary.best_op }}</div>
-    </div>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  {% if lichess_summary.mode == "full" %}
-  <div class="rv">
-    {% for g in lichess_games %}
-    <div class="game {{ g.cls }}">
-      <div class="hdr">
-        <span style="font-size:17px">{{ g.icon }}</span>
-        <span class="res {{ 'up' if g.cls == 'win' else ('dn' if g.cls == 'loss' else '') }}"
-              {% if g.cls == 'draw' %}style="color:var(--dim)"{% endif %}>{{ g.result }}</span>
-        <span class="pill">as {{ g.my_side }}</span>
-        <span class="pill">{{ g.speed }}</span>
-        {% if g.is_upset %}<span class="pill" style="background:rgba(106,168,255,.14);color:var(--blue)">Upset ⚡</span>{% endif %}
-        {% if g.is_collapse %}<span class="pill" style="background:rgba(255,92,92,.13);color:var(--down)">Collapse ⚠</span>{% endif %}
-        {% if g.is_long %}<span class="pill">{{ g.moves }}M Epic</span>{% endif %}
-        <a href="{{ g.url }}" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
-      </div>
-      <div class="op">{% if g.eco %}<span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">{{ g.eco }}</span>{% endif %}{{ g.opening }}</div>
-      <div class="meta">
-        vs <strong style="color:var(--text)">{{ g.opponent }}</strong> <span style="color:var(--dim)">({{ g.opp_rating }})</span>
-        · me {{ g.my_rating }} · {{ g.moves }} moves · {{ g.termination }}
-        {% if g.me_diff is not none %}· <span class="{{ 'up' if g.me_diff > 0 else 'dn' }}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>{% endif %}
-      </div>
-      {% if g.best_move %}
-      <div class="bestmv">
-        <div class="bmlab">Best move of the game</div>
-        <div class="bmrow">
-          <span class="bmsan">{{ g.best_move.move_no }}. {{ g.best_move.san }}</span>
-          <span class="bmgain">+{{ (g.best_move.gain_cp / 100) | round(1) }} pawns</span>
-          <span class="bmeval">eval after {{ "%+.2f"|format(g.best_move.eval_after) }}</span>
-        </div>
-      </div>
-      {% endif %}
-      {% if g.standout %}<div class="uniq"><b>What made it different</b>{{ g.standout }}</div>{% endif %}
-      {% if g.key_facts %}
-      <div class="kfacts">
-        {% for f in g.key_facts %}<span class="kf">{{ f }}</span>{% endfor %}
-      </div>
-      {% endif %}
-      {% if g.game_strength or g.est_fide %}
-      <div class="ratings">
-        {% if g.game_strength %}<span class="rt"><i>Played at</i><b>~{{ g.game_strength }}</b></span>{% endif %}
-        {% if g.est_fide %}<span class="rt"><i>Est. FIDE equiv.</i><b>~{{ g.est_fide }}</b></span>{% endif %}
-        <span class="rtnote">estimates from Lichess {{ g.speed|lower }} rating &amp; centipawn loss — not official FIDE</span>
-      </div>
-      {% endif %}
-      {% if not g.analysed %}<div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>{% endif %}
-      {% if g.analysis %}<div class="an">💡 {{ g.analysis }}</div>{% endif %}
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="two rv" style="margin-bottom:16px">
-    {% for g in lichess_games %}
-    <div class="card">
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-bottom:8px">{{ g.speed }}</div>
-      <div class="num" style="font-size:30px;font-weight:700;letter-spacing:-1.4px;color:{% if g.pct >= 55 %}var(--up){% elif g.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}">{{ g.pct }}%</div>
-      <div style="font-size:12.5px;color:var(--muted);margin-top:7px">
-        <span class="up">W{{ g.wins }}</span> · <span class="dn">L{{ g.losses }}</span> ·
-        <span style="color:var(--dim)">D{{ g.draws }}</span> · {{ g.total }} games
-      </div>
-      <a href="{{ g.profile_url }}" target="_blank" class="slink" style="display:inline-block;margin-top:11px">Lichess →</a>
-    </div>
-    {% endfor %}
-  </div>
-  <!-- This used to read "Add LICHESS_TOKEN to GitHub secrets" whenever the
-       page fell back to aggregate counts — including every time the token was
-       set, which it has been since 2026-07-29. Falling back and lacking a
-       token are different questions, and conflating them sent you to create a
-       credential you already had. Each cause now says its own name. -->
-  {% if lichess_summary.token_missing %}
-  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets to raise the export rate limit and include private games.
-    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--lime)">Create token →</a></div>
-  {% else %}
-  <div class="empty rv" style="text-align:left">No individual games came back from the export API for the last seven days,
-    so this is the aggregate view. The token is set &mdash; this is not a credentials problem.</div>
-  {% endif %}
-  {% endif %}
-
-  {% if lichess_summary.trend %}
-  <div class="rv" style="margin-top:18px">
-    <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">📈 7-day win rate</div>
-    <div class="trend">
-      {% for t in lichess_summary.trend | reverse %}
-      <div>
-        <div class="bar" style="--h:{{ [t.pct * 70 // 100, 4] | max }}px;--d:{{ loop.index0 * 0.07 }}s;background:{% if t.pct >= 55 %}var(--up){% elif t.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}"></div>
-        <div class="lb">{{ t.day }}</div>
-        <div class="lb" style="color:var(--muted)">{{ t.pct }}%</div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% else %}
-  <div class="empty rv">No games played yesterday · <a href="https://lichess.org/@/AKK_010" target="_blank" style="color:var(--lime)">Play on Lichess →</a></div>
-  {% endif %}
-
-  <div class="two rv" style="margin-top:18px">
-    <div class="essay" style="--ac:var(--gold)">
-      <div class="meta">Chess Tutor · Lesson {{ chess.index }}/{{ chess.total }}</div>
-      <h3>{{ chess.title }}</h3>
-      <p>{{ chess.body }}</p>
-      <p style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:14px">
-        Practise: <a href="https://lichess.org/study" target="_blank" style="color:var(--lime)">Lichess Study</a> ·
-        <a href="https://chess.com/puzzles" target="_blank" style="color:var(--lime)">Chess.com Puzzles</a></p>
-    </div>
-    {% if lichess_puzzle %}
-    <div class="essay" style="--ac:var(--gold);--d:.08s">
-      <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating {{ lichess_puzzle.rating }} · {{ lichess_puzzle.level }}</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">{{ lichess_puzzle.themes }}</p>
-      <div class="q">💡 {{ lichess_puzzle.tip }}</div>
-      <a href="{{ lichess_puzzle.url }}" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
-    </div>
-    {% endif %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 10 MIND GYM ══════════
-     Pure client-side: deterministic daily seed, scores in localStorage. No
-     API, so it works identically on the static host. -->
-<!-- ══════════ MUSIC ══════════
-     Three crates. Two are yours (edit music.py to add a line; the 6 AM build
-     picks it up), the third is a fixed all-time canon. Five show, the rest are
-     one click away — a shelf you can see the whole of is a shelf you stop
-     scanning. The five on top rotate daily, so the shelf reads differently
-     every morning without the list changing. -->
-{% if 'podcasts' in secs %}<section class="sec" id="podcasts">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
-      <h2 class="stitle">What&rsquo;s worth listening to.</h2>
-    </div>
-    <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
-      investing and money, society, politics and geopolitics, health, psychology,
-      philosophy, education, comedy and culture. Thirty-four channels, up to twenty
-      episodes, newest first, with what each one says it covers. Titles, dates and
-      takeaways come from the shows themselves. Shorts are excluded per video, not
-      per channel.</p>
-  </div>
-
-  <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
-    <span class="pv-tag">DAILY</span>
-    <span>{{ podcasts.episodes|length }} episodes from {{ podcasts.shows }} shows</span>
-    {% if podcasts.built_on %}<span>Built <b>{{ podcasts.built_on }}</b>{% endif %}
-      {%- if podcasts.age_days is not none %} · {{ podcasts.age_days }}d old{% endif %}</span>
-    {% if podcasts.is_fallback %}<span>&#9888; Today&rsquo;s refresh has not run &mdash;
-      showing the most recent list.</span>{% endif %}
-  </div>
-
-  <div class="pod-grid">
-    {% for e in podcasts.episodes %}
-    <article class="pod rv" style="--d:{{ loop.index0 * 0.05 }}s">
-      <div class="pod-h">
-        <span class="pod-cat">{{ e.category }}</span>
-        <span class="pod-date">{{ e.published }}</span>
-      </div>
-      <h3 class="pod-t">
-        {%- if e.link %}<a href="{{ e.link }}" target="_blank" rel="noopener">{{ e.title }}</a>
-        {%- else %}{{ e.title }}{% endif -%}
-      </h3>
-      <div class="pod-s">{{ e.show }}{% if e.guest %} &middot; <b>{{ e.guest }}</b>{% endif %}</div>
-      {% if e.takeaways %}
-      <ul class="pod-k">
-        {% for t in e.takeaways %}<li>{{ t }}</li>{% endfor %}
-      </ul>
-      {% endif %}
-    </article>
-    {% endfor %}
-  </div>
-  <p class="pod-note">Takeaways are compressed from each episode&rsquo;s own published
-    description &mdash; they are the show&rsquo;s claims about itself, not a review, and
-    not a summary of anything said in the audio.</p>
 </section>{% endif %}
 
 {% if 'gym' in secs %}<section class="sec" id="gym">
