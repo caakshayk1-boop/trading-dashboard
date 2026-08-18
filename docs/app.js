@@ -1617,6 +1617,19 @@ var TV_ALIASES = (function () {
       return (n < 0 ? '-₹' : '₹') + Math.abs(n).toLocaleString('en-IN');
     }
 
+    // Per-share PRICES, not allocations. rupees() is wrong for these twice
+    // over: it rounds to whole units (₹137 for a ₹137.80 entry) and it
+    // hardcodes ₹, which would print a US equity's dollar entry in rupees —
+    // the exact bug fixed in currencyOf() on 2026-08-18. The unit travels
+    // with the trade so the allocation can stay ₹ while the price is $.
+    function tradePrice(v, cur){
+      if (v === null || v === undefined) return '—';
+      var u = (cur === undefined || cur === null) ? '\u20b9' : cur;
+      var n = Number(v);
+      if (!isFinite(n)) return '—';
+      return u + n.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
     // How full a tier is relative to ITS OWN cap, not the global one — a
     // tier sitting at 90% of its 20% category cap is genuinely stretched
     // even though that is only 18% of the whole wallet.
@@ -1692,6 +1705,8 @@ var TV_ALIASES = (function () {
             '<td><strong class="sym">' + esc(t.symbol) + '</strong></td>' +
             '<td class="mono-dim">' + esc(t.signal_type) + '</td>' +
             '<td class="mono-dim">' + esc(t.grade || '—') + '</td>' +
+            '<td class="num">' + tradePrice(t.entry, t.currency) + '</td>' +
+            '<td class="num">' + tradePrice(t.exit, t.currency) + '</td>' +
             '<td class="num">' + rupees(t.allocated_amount) +
               (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
               '</td>' +
@@ -1702,6 +1717,7 @@ var TV_ALIASES = (function () {
         }).join('');
         tableHtml = '<div class="tw rv" style="margin-top:14px"><table class="t"><thead><tr>' +
           '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Engine</th><th scope="col">Grade</th>' +
+          '<th scope="col">Entry</th><th scope="col">Exit</th>' +
           '<th scope="col">Allocated</th><th scope="col">Qty</th><th scope="col">Status</th><th scope="col">P&amp;L</th>' +
           '</tr></thead><tbody>' + rows + '</tbody></table></div>';
       }
