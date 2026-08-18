@@ -242,3 +242,43 @@ test("currencyOf is optional — omitting it defaults to rupees, never undefined
   );
   assert.equal(trades[0].currency, "₹");
 });
+
+// ── Collapsed target ladders ────────────────────────────────────────────────
+import { distinctTargets } from "../api/_db.js";
+
+test("the TECHM ladder drops the duplicate target instead of rewriting it", () => {
+  // entry 1592, stop 1568.12, T1 1673.09, T2 1678.17 — 0.2R apart. Ten of 157
+  // open signals had this. The stored row is left alone; the display blanks
+  // the one that was never distinct.
+  assert.deepEqual(
+    distinctTargets(1592, 1568.12, 1673.09, 1678.17, 1744.57),
+    [1673.09, null, 1744.57]
+  );
+});
+
+test("the INNER target survives — it is the one anchored to resistance", () => {
+  const [t1] = distinctTargets(1592, 1568.12, 1673.09, 1678.17, 1744.57);
+  assert.equal(t1, 1673.09);
+});
+
+test("a healthy ladder is left completely alone", () => {
+  assert.deepEqual(distinctTargets(100, 90, 110, 125, 140), [110, 125, 140]);
+});
+
+test("a target exactly at the floor is kept, not dropped", () => {
+  // risk 10, floor 5. T2 at 115 is exactly 5 away from T1.
+  assert.deepEqual(distinctTargets(100, 90, 110, 115, 130), [110, 115, 130]);
+});
+
+test("no stop-loss means no risk to measure against — nothing is dropped", () => {
+  // Inventing a floor from a missing stop would blank real targets.
+  assert.deepEqual(distinctTargets(100, null, 110, 111, 112), [110, 111, 112]);
+});
+
+test("a null target stays null and does not shift the ones after it", () => {
+  assert.deepEqual(distinctTargets(100, 90, 110, null, 140), [110, null, 140]);
+});
+
+test("three collapsed targets leave exactly one", () => {
+  assert.deepEqual(distinctTargets(100, 90, 110, 110.5, 111), [110, null, null]);
+});

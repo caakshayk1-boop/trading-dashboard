@@ -1983,21 +1983,15 @@ SECTION_MAP = [
     ("stocks",      "Stock Screen", "main", "Research"),
 
     # ── /desk — the personal page ───────────────────────────────────────────
-    # Reordered 2026-08-18 to the reading order Akshay actually wants:
-    # the role first, then the track toward it, then the daily practice,
-    # then the day's reading, then the drills, then the library.
+    # Reordered again 2026-08-18: the practice run (Spanish, the daughter,
+    # Jainism and Buddhism) now sits AFTER chess rather than before the
+    # reading. Work first, then the day's reading, then the drills, then the
+    # personal practice, then the library.
 
     # WORK — find the role, then close the gap to it.
     ("careers",     "Finance Careers", "desk", "Work"),
-    # Renamed from "Interview". This section is the FP&A -> CFO track, not
-    # interview prep alone, and it sits directly under Careers because that
-    # is the order the two are used in.
+    # The FP&A -> CFO track, not interview prep alone.
     ("interview",   "CFO Track",    "desk", "Work"),
-
-    # PRACTICE — the daily reps.
-    ("language",    "Language",     "desk", "Practice"),
-    ("father",      "Father",       "desk", "Practice"),
-    ("wisdom",      "Wisdom",       "desk", "Practice"),
 
     # READING — the wire compressed into events, then the longer reading.
     ("brief",       "Daily Brief",  "desk", "Reading"),
@@ -2007,10 +2001,14 @@ SECTION_MAP = [
     ("podcasts",    "Podcasts",     "desk", "Drills"),
     ("chess",       "Chess",        "desk", "Drills"),
 
-    # LIBRARY — everything that keeps rather than expires. Mind Gym sits with
-    # The Mind rather than with the drills: a group must be one contiguous run
-    # (test_page_structure.py), and splitting Drills to move it would print
-    # that heading twice for no reason a reader can see.
+    # PRACTICE — the daily reps, moved below chess on request.
+    ("language",    "Language",     "desk", "Practice"),
+    ("father",      "Father",       "desk", "Practice"),
+    ("wisdom",      "Wisdom",       "desk", "Practice"),
+
+    # LIBRARY — everything that keeps rather than expires. Mind Gym sits here
+    # rather than with the drills because a nav group must be one contiguous
+    # run (test_page_structure.py).
     ("review",      "The Review",   "desk", "Library"),
     ("desk",        "The Desk",     "desk", "Library"),
     ("mind",        "The Mind",     "desk", "Library"),
@@ -5961,8 +5959,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   {% set fd = market_intel.get('fii_dii') %}
   {% if fd and fd.get('fii_cr') is not none and fd.get('dii_cr') is not none %}
-  <h3 style="font-size:15px;margin:20px 0 10px">FII / DII net flow</h3>
-  <div class="kpi-row rv" style="margin-bottom:10px">
+  {# Same treatment as the sector map: the server-rendered figures below are
+     the build-time cache, and app.js replaces them from /api/markets?heat=1
+     with the flow's own TRADE date. FII is not a live number — NSE publishes
+     it once after the close — so what the live path buys is not freshness but
+     an honest date on it. #}
+  <h3 style="font-size:15px;margin:20px 0 10px">FII / DII net flow
+    <span id="fiiAsOf" class="dh dh-STALE" style="margin-left:8px">6 AM SNAPSHOT</span></h3>
+  <div class="kpi-row rv" style="margin-bottom:10px" id="fiiGrid">
     <div class="kpi"><div class="v {{ 'up' if fd.get('fii_cr', 0) >= 0 else 'dn' }}">
       &#8377;{{ '{:,.0f}'.format(fd.get('fii_cr', 0)) }} Cr</div><div class="k">FII net</div></div>
     <div class="kpi"><div class="v {{ 'up' if fd.get('dii_cr', 0) >= 0 else 'dn' }}">
@@ -6756,99 +6760,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 </section>{% endif %}
 
-<!-- ══════════ 06 LANGUAGE ══════════ -->
-{% if 'language' in secs %}<section class="sec" id="language">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['language'] }} / {{ seclabel['language'] }}</span>
-      <h2 class="stitle">Two tongues, sharper.</h2>
-    </div>
-    <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
-      one delivery drill. Say them out loud — reading them does nothing.</p>
-  </div>
-
-  <div class="lrn-head rv"><span class="lrn-kicker">🇪🇸 Español</span></div>
-  <div class="two rv">
-    {% for w in spanish %}
-    <div class="lrn-card">
-      <div class="lrn-tag">{{ w.tag }}</div>
-      <div class="lrn-word">{{ w.word }}</div>
-      <div class="lrn-mean">{{ w.meaning }}</div>
-      <div class="lrn-ex"><span class="es">{{ w.es }}</span><span class="en">{{ w.en }}</span></div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ Vocabulary</span></div>
-  <div class="two rv">
-    {% for v in vocab %}
-    <div class="lrn-card">
-      <div class="lrn-tag">{{ v.say }}</div>
-      <div class="lrn-word">{{ v.word }}</div>
-      <div class="lrn-mean">{{ v.meaning }}</div>
-      <div class="lrn-ex"><span class="es">{{ v.example }}</span><span class="en">{{ v.note }}</span></div>
-    </div>
-    {% endfor %}
-  </div>
-
-  {% if speaking %}
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ Speaking drill</span></div>
-  <div class="drill rv">
-    <div class="drill-t">{{ speaking.title }}</div>
-    <div class="drill-d">{{ speaking.drill }}</div>
-    <div class="drill-w">{{ speaking.why }}</div>
-  </div>
-  {% endif %}
-</section>{% endif %}
-
-<!-- ══════════ 07 FATHERHOOD ══════════ -->
-{% if 'father' in secs %}<section class="sec" id="father">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['father'] }} / {{ seclabel['father'] }}</span>
-      <h2 class="stitle">{{ daughter.heading }}</h2>
-    </div>
-    <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
-      is presence rather than technique — but the technique is not nothing.<br>
-      <span class="mono-dim" style="font-size:11px">Born 25 December 2025 &middot;
-        day {{ "{:,}".format(daughter.days) }}</span></p>
-  </div>
-  <div class="two rv">
-    {% for f in father %}
-    <div class="lrn-card tall">
-      <div class="lrn-tag">Today</div>
-      <div class="lrn-word sm">{{ f.title }}</div>
-      <div class="lrn-do">{{ f.do }}</div>
-      <div class="lrn-why"><b>Why</b> {{ f.why }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 08 WISDOM ══════════ -->
-{% if 'wisdom' in secs %}<section class="sec" id="wisdom">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['wisdom'] }} / {{ seclabel['wisdom'] }}</span>
-      <h2 class="stitle">Jainism and Buddhism.</h2>
-    </div>
-    <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
-      the thing to do with it today.</p>
-  </div>
-  <div class="two rv">
-    {% for w in life_wisdom %}
-    <div class="lrn-card tall {{ 'jain' if w.tradition == 'Jainism' else 'budd' }}">
-      <div class="lrn-tag">{{ w.tradition }}</div>
-      <div class="lrn-word sm">{{ w.term }} <span class="tr">· {{ w.translation }}</span></div>
-      <div class="lrn-do">{{ w.teaching }}</div>
-      <div class="lrn-why"><b>Today</b> {{ w.apply }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-
-
 <!-- ══════════ SMART READS ══════════
      The wire tells you what happened; these argue about what it means. Same
      named mastheads, but the analysis and money desks rather than the market
@@ -7217,6 +7128,99 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <!-- ══════════ 10 MIND GYM ══════════
      Pure client-side: deterministic daily seed, scores in localStorage. No
      API, so it works identically on the static host. -->
+<!-- ══════════ 06 LANGUAGE ══════════ -->
+{% if 'language' in secs %}<section class="sec" id="language">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['language'] }} / {{ seclabel['language'] }}</span>
+      <h2 class="stitle">Two tongues, sharper.</h2>
+    </div>
+    <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
+      one delivery drill. Say them out loud — reading them does nothing.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">🇪🇸 Español</span></div>
+  <div class="two rv">
+    {% for w in spanish %}
+    <div class="lrn-card">
+      <div class="lrn-tag">{{ w.tag }}</div>
+      <div class="lrn-word">{{ w.word }}</div>
+      <div class="lrn-mean">{{ w.meaning }}</div>
+      <div class="lrn-ex"><span class="es">{{ w.es }}</span><span class="en">{{ w.en }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Vocabulary</span></div>
+  <div class="two rv">
+    {% for v in vocab %}
+    <div class="lrn-card">
+      <div class="lrn-tag">{{ v.say }}</div>
+      <div class="lrn-word">{{ v.word }}</div>
+      <div class="lrn-mean">{{ v.meaning }}</div>
+      <div class="lrn-ex"><span class="es">{{ v.example }}</span><span class="en">{{ v.note }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if speaking %}
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Speaking drill</span></div>
+  <div class="drill rv">
+    <div class="drill-t">{{ speaking.title }}</div>
+    <div class="drill-d">{{ speaking.drill }}</div>
+    <div class="drill-w">{{ speaking.why }}</div>
+  </div>
+  {% endif %}
+</section>{% endif %}
+
+<!-- ══════════ 07 FATHERHOOD ══════════ -->
+{% if 'father' in secs %}<section class="sec" id="father">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['father'] }} / {{ seclabel['father'] }}</span>
+      <h2 class="stitle">{{ daughter.heading }}</h2>
+    </div>
+    <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
+      is presence rather than technique — but the technique is not nothing.<br>
+      <span class="mono-dim" style="font-size:11px">Born 25 December 2025 &middot;
+        day {{ "{:,}".format(daughter.days) }}</span></p>
+  </div>
+  <div class="two rv">
+    {% for f in father %}
+    <div class="lrn-card tall">
+      <div class="lrn-tag">Today</div>
+      <div class="lrn-word sm">{{ f.title }}</div>
+      <div class="lrn-do">{{ f.do }}</div>
+      <div class="lrn-why"><b>Why</b> {{ f.why }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 08 WISDOM ══════════ -->
+{% if 'wisdom' in secs %}<section class="sec" id="wisdom">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['wisdom'] }} / {{ seclabel['wisdom'] }}</span>
+      <h2 class="stitle">Jainism and Buddhism.</h2>
+    </div>
+    <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
+      the thing to do with it today.</p>
+  </div>
+  <div class="two rv">
+    {% for w in life_wisdom %}
+    <div class="lrn-card tall {{ 'jain' if w.tradition == 'Jainism' else 'budd' }}">
+      <div class="lrn-tag">{{ w.tradition }}</div>
+      <div class="lrn-word sm">{{ w.term }} <span class="tr">· {{ w.translation }}</span></div>
+      <div class="lrn-do">{{ w.teaching }}</div>
+      <div class="lrn-why"><b>Today</b> {{ w.apply }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+
+
 <!-- ══════════ 08 THE REVIEW ══════════ -->
 {% if 'review' in secs %}<section class="sec" id="review">
   <div class="shead rv">

@@ -1626,7 +1626,37 @@ var TV_ALIASES = (function () {
           tag.className = 'dh dh-LIVE';
           tag.textContent = 'LIVE · ' + j.heat_live + '/' + j.heat_total + ' sectors';
         }
+        renderFii(j);
       }).catch(function(){ /* keep the 6 AM map, keep its label */ });
+    }
+
+    /* FII/DII from the same response. NOT a freshness upgrade — NSE publishes
+       provisional flow once, after the 15:30 IST close. What this buys is the
+       flow's own TRADE date on the label, so a figure from yesterday's session
+       stops sitting silently under today's dateline. */
+    function renderFii(j){
+      var grid = el('fiiGrid');
+      var f = j && j.fii;
+      if (!grid || !f || typeof f !== 'object') return;
+      var cr = function(v){
+        var n = Number(v);
+        if (!isFinite(n)) return null;
+        return '<div class="kpi"><div class="v ' + (n >= 0 ? 'up' : 'dn') + '">₹' +
+          Math.round(n).toLocaleString('en-IN') + ' Cr</div>';
+      };
+      var parts = [[f.fii_cr, 'FII net'], [f.dii_cr, 'DII net'], [f.net_cr, 'Combined']];
+      var html = '';
+      for (var i = 0; i < parts.length; i++){
+        var cell = cr(parts[i][0]);
+        if (!cell) return;              // a missing leg leaves the 6 AM block alone
+        html += cell + '<div class="k">' + parts[i][1] + '</div></div>';
+      }
+      grid.innerHTML = html;
+      var tag = el('fiiAsOf');
+      if (tag && j.fii_as_of){
+        tag.className = 'dh dh-FRESH';
+        tag.textContent = String(j.fii_as_of).slice(0, 11);
+      }
     }
 
     /* ═══════ paper wallet ═══════

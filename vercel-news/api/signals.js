@@ -13,7 +13,7 @@
 //   version=          engine_version: v2 (default), v1, or "all"
 //   limit=            default 300, max 2000
 //   offset=           pagination
-import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
+import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf, distinctTargets } from "./_db.js";
 import { simulateWallet, START_DATE as WALLET_START_DATE } from "./_paper_wallet.js";
 
 // The ₹50L paper wallet (?wallet=1) lives in this file rather than its own
@@ -204,6 +204,7 @@ async function handleWallet(res) {
 
 function shape(r) {
   const pnl = num(r.pnl_pct);
+  const _t = distinctTargets(r.entry, r.sl, r.target1, r.target2, r.target3);
   return {
     id: num(r.id),
     date: str(r.date).slice(0, 10),
@@ -216,9 +217,10 @@ function shape(r) {
     signal_type: str(r.signal_type),
     entry: num(r.entry),
     sl: num(r.sl),
-    target1: num(r.target1),
-    target2: num(r.target2),
-    target3: num(r.target3),
+    // Collapsed pairs are blanked, never rewritten — see distinctTargets.
+    target1: _t[0],
+    target2: _t[1],
+    target3: _t[2],
     rr: num(r.rr),
     score: num(r.score),
     status: str(r.status),
