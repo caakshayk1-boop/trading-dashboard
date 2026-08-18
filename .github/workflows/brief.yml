@@ -1,0 +1,88 @@
+name: Daily Brief — cluster the wire into events
+
+# Builds the Daily Intelligence Brief (brief_engine.py) and caches it in Turso
+# (newspaper_brief, keyed by IST date). The daily paper only READS that cache.
+#
+# Its own workflow for the same reason market_intel.yml is separate: this makes
+# ~12 RSS fetches and up to 8 paced model calls, and neither a hung feed nor a
+# rate-limited model may sit inside the 6 AM build and take the paper down.
+#
+# SCHEDULING — newspaper.yml fires at 00:30 UTC and scheduled runs on this repo
+# land 1.5-3h late (memory: project_gh_actions_cron_drift). 19:00 UTC leaves
+# 5h30m of nominal margin, so even a full 3h drift finishes well before the
+# paper starts. Market Intel's old 23:00 UTC cron left only 90 minutes and lost
+# that race repeatedly, shipping a section with no data.
+#
+# A midday refresh picks up anything that broke after the morning edition; it
+# rebuilds the same date row in place rather than appending.
+
+on:
+  schedule:
+    - cron: '0 19 * * *'      # 00:30 IST — the morning edition
+    - cron: '0 7 * * *'       # 12:30 IST — intraday refresh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-brief
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:      ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN:    ${{ secrets.TURSO_TOKEN }}
+  GROQ_API_KEY:   ${{ secrets.GROQ_API_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install libsql-experimental || true
+
+      - name: Unit tests (no network)
+        run: python test_brief_engine.py
+
+      - name: Build and cache today's brief
+        run: |
+          python - <<'PY'
+          import json, logging
+          logging.basicConfig(level=logging.INFO, format="%(message)s")
+          import newspaper, brief_engine
+          from datetime import datetime
+
+          newspaper.init_newspaper_db()
+          data = brief_engine.build()
+          s = data.get("stats", {})
+          print(f"events: {s.get('events')} from {s.get('articles')} articles "
+                f"/ {s.get('sources')} wires")
+          print(f"AI: {s.get('ai_written')} written, {s.get('ai_rejected')} QA-rejected, "
+                f"{s.get('ai_unavailable')} unavailable")
+
+          # An empty brief is a real outcome (feeds down, nothing cleared the
+          # floor) and must NOT overwrite a good earlier edition with nothing.
+          if not data.get("events"):
+              newspaper.record_job_status("brief", "empty", "no events cleared the floor")
+              raise SystemExit("no events — leaving the previous edition in place")
+
+          today = datetime.now(newspaper.IST).strftime("%Y-%m-%d")
+          with newspaper._db() as con:
+              con.execute("INSERT OR REPLACE INTO newspaper_brief VALUES (?,?)",
+                          (today, json.dumps(data)))
+              con.commit()
+          newspaper.record_job_status(
+              "brief", "success",
+              f"{s.get('events')} events, {s.get('ai_written')} written")
+          print(f"cached for {today} — verified on Turso")
+          PY

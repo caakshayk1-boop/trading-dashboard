@@ -40,6 +40,7 @@ from newspaper import (
     get_top5_picks,
     get_fund_screen,
     get_market_intel,
+    get_brief,
     get_stock_screen,
     get_job_status,
     get_podcasts,
@@ -70,6 +71,17 @@ IST = timezone(timedelta(hours=5, minutes=30))
 # than ranked alongside Dubai — a Nairobi role outranking a Dubai one on raw
 # score would make the section useless for the question it exists to answer.
 CAREER_TARGET_COUNTRIES = ("UAE", "Saudi Arabia", "Malaysia", "Oman")
+
+
+def _resources_grouped() -> list:
+    """The curated resource shelf. Never fatal — a missing module costs the
+    section, not the paper."""
+    try:
+        import resources
+        return resources.grouped()
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] Resources unavailable: {e}")
+        return []
 
 
 def load_careers(path) -> dict:
@@ -238,6 +250,22 @@ def generate() -> None:
               f"{careers['stats'].get('sources_attempted', 0)} sources ok)")
     else:
         print(f"[generate] Careers: nothing renderable — {careers.get('why', 'no jobs.json')}")
+
+    # Daily Intelligence Brief. build_if_missing for the same reason as market
+    # intel: brief.yml owns the clock but the two workflows drift
+    # independently, and a paper that builds first would ship without the
+    # section entirely. Wrapped — a wire outage or a model outage must never
+    # take the paper down, and get_brief already falls back to the previous
+    # edition before it falls back to nothing.
+    brief = get_brief(build_if_missing=True)
+    if brief.get("events"):
+        _bs = brief.get("stats", {})
+        print(f"[generate] Brief: {_bs.get('events')} events from "
+              f"{_bs.get('articles')} articles / {_bs.get('sources')} wires "
+              f"({_bs.get('ai_written')} written, {_bs.get('ai_rejected')} QA-rejected)"
+              f"{' (previous edition)' if brief.get('is_fallback') else ''}")
+    else:
+        print("[generate] Brief: no events — section hidden")
 
     # READ ONLY, for exactly the reason above it. The Nifty 500 screen is ~11
     # minutes of sequential Yahoo fetches — two frames plus a quote per symbol —
@@ -440,6 +468,8 @@ def generate() -> None:
         fund_screen=fund_screen,
         market_intel=market_intel,
         careers=careers,
+        brief=brief,
+        resources=_resources_grouped(),
         stock_screen=stock_screen,
         podcasts=podcasts,
         smart_reads=smart_reads,
@@ -521,7 +551,7 @@ def generate() -> None:
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
-                                                        stock_screen, market_intel, careers)))
+                                                        stock_screen, market_intel, careers, brief)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

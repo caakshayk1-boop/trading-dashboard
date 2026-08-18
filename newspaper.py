@@ -150,6 +150,11 @@ def init_newspaper_db():
         )""")
         # The fund screen is ~700 NAV downloads, so it is cached weekly like
         # the stock picks rather than recomputed per build.
+        # The Daily Intelligence Brief. Keyed by IST date — one edition a day,
+        # rebuilt in place by an intraday refresh rather than appended to.
+        con.execute("""CREATE TABLE IF NOT EXISTS newspaper_brief (
+            date TEXT PRIMARY KEY, payload TEXT
+        )""")
         con.execute("""CREATE TABLE IF NOT EXISTS newspaper_funds (
             week TEXT PRIMARY KEY, payload TEXT
         )""")
@@ -1964,7 +1969,12 @@ SECTION_MAP = [
     ("chess",       "Chess",        "desk", "Drills"),
     # Sits directly above Music — both are "what is playing this week", and
     # the nav group keeps them adjacent no matter how the page is reordered.
+    # The Daily Brief sits directly ABOVE Smart Reads and shares its nav group:
+    # the wire compressed into events, then the longer reading. Order in this
+    # list IS document order, so this is the whole placement.
+    ("brief",       "Daily Brief",  "desk", "Reading"),
     ("smartreads",  "Smart Reads",  "desk", "Reading"),
+    ("resources",   "Resources",    "desk", "Reading"),
     ("podcasts",    "Podcasts",     "desk", "Drills"),
     ("music",       "Music",        "desk", "Drills"),
     ("gym",         "Mind Gym",     "desk", "Drills"),
@@ -2015,7 +2025,8 @@ PAGE_META = {
 
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
-                   stock_screen=None, market_intel=None, careers=None) -> set:
+                   stock_screen=None, market_intel=None, careers=None,
+                   brief=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2051,6 +2062,11 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     # heading with nothing under it.
     if not (careers or {}).get("visible"):
         drop.add("careers")
+    # A briefing with no events is not a briefing. Same contract as the rest:
+    # named here rather than left to a template guard, so the nav can never
+    # advertise a section the document does not contain.
+    if not (brief or {}).get("events"):
+        drop.add("brief")
     return drop
 
 
@@ -2747,6 +2763,10 @@ def _fund_week_key() -> str:
 # or podcasts (4d) for that reason.
 MAX_MARKET_INTEL_CACHE_AGE_DAYS = 3
 
+# A briefing is a claim about TODAY. One day stale, clearly labelled, still
+# beats an empty section; a week stale is a different product and is hidden.
+MAX_BRIEF_AGE_DAYS = 2
+
 
 def get_market_intel(build_if_missing: bool = False) -> dict:
     """Today's corporate actions / FII-DII / sector heat, cached daily by a
@@ -2828,6 +2848,63 @@ def get_market_intel(build_if_missing: bool = False) -> dict:
         return data
     except Exception as e:
         log.warning(f"market intel build failed: {e}")
+        return stale or {}
+
+
+def get_brief(build_if_missing: bool = False) -> dict:
+    """Today's Daily Intelligence Brief, cached by IST date.
+
+    Same contract as get_market_intel: the daily paper READS this cache, and
+    brief.yml owns the clock. `build_if_missing` closes the same race — the
+    two workflows drift independently and a paper that builds first would ship
+    without the section entirely.
+
+    Falls back to the most recent edition within MAX_BRIEF_AGE_DAYS and marks
+    it stale. A day-old briefing clearly labelled beats an empty section; a
+    week-old one does not, so it is hidden rather than dressed up as today.
+    """
+    today = datetime.now(IST).strftime("%Y-%m-%d")
+    stale = None
+    try:
+        with _db() as con:
+            row = con.execute("SELECT payload FROM newspaper_brief WHERE date=?",
+                              (today,)).fetchone()
+            if row:
+                data = json.loads(row[0])
+                if data.get("events"):
+                    return _stamp_fund_payload(data, fallback=False)
+
+            row = con.execute("SELECT payload FROM newspaper_brief "
+                              "ORDER BY date DESC LIMIT 1").fetchone()
+            if row:
+                data = json.loads(row[0])
+                age = _payload_age_days(data)
+                if data.get("events") and age is not None and age <= MAX_BRIEF_AGE_DAYS:
+                    data = _stamp_fund_payload(data, fallback=True)
+                    if not build_if_missing:
+                        log.info(f"brief: serving previous edition, {age:.1f}d old")
+                        return data
+                    stale = data
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"brief cache read: {e}")
+
+    if not build_if_missing:
+        return {}
+    try:
+        import brief_engine
+        data = brief_engine.build()
+        if not data.get("events"):
+            log.warning("brief: inline build produced no events"
+                        + (" — serving previous edition" if stale else ""))
+            return stale or {}
+        with _db() as con:
+            con.execute("INSERT OR REPLACE INTO newspaper_brief VALUES (?,?)",
+                        (today, json.dumps(data)))
+            con.commit()
+        log.info("brief: built inline (cache was empty for today)")
+        return _stamp_fund_payload(data, fallback=False)
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"brief build failed: {e}")
         return stale or {}
 
 
@@ -4047,6 +4124,52 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fund-card-f{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:12px}
 .fund-isin{font-family:var(--mono);font-size:10px;letter-spacing:.04em;
   white-space:nowrap;padding-top:2px}
+
+/* ═══════════ DAILY BRIEF ═══════════ */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.ev{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:15px 17px;
+  display:flex;flex-direction:column;gap:9px}
+.ev-top{background:var(--surface2);border-top:2px solid var(--lime)}
+.ev-h{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ev-cat{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--lime)}
+.ev-dots{display:flex;gap:3px;flex:none}
+.ev-dots i{width:5px;height:5px;border-radius:50%;background:var(--line2);display:inline-block}
+.ev-dots i.on{background:var(--lime)}
+.ev-t{font-size:16px;font-weight:600;line-height:1.32;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.ev-m{display:flex;flex-wrap:wrap;gap:5px;font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.ev-raw{color:var(--gold);cursor:help}
+.ev-b{margin:0;padding-left:15px;font-size:13px;line-height:1.55;color:var(--muted)}
+.ev-b li{margin-bottom:4px}
+.ev-why{background:var(--bg2);border-left:2px solid var(--lime);border-radius:0 6px 6px 0;
+  padding:8px 12px}
+.ev-why span{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--lime)}
+.ev-why p{margin:3px 0 0;font-size:12.5px;line-height:1.5;color:var(--text)}
+.ev-mi{display:flex;flex-wrap:wrap;gap:5px}
+.ev-chip{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:20px;
+  border:1px solid var(--line2);color:var(--dim)}
+.ev-positive{color:var(--up);border-color:rgba(61,220,151,.45)}
+.ev-negative{color:var(--down);border-color:rgba(255,92,92,.45)}
+.ev-mixed,.ev-neutral,.ev-unclear{color:var(--muted)}
+.ev-w{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ev-s{display:flex;flex-wrap:wrap;gap:9px;padding-top:8px;border-top:1px dashed var(--line);
+  margin-top:auto}
+.ev-s a{font-family:var(--mono);font-size:10.5px;color:var(--dim);text-decoration:none}
+.ev-s a:hover{color:var(--blue)}
+.pv-warn{color:var(--gold)}
+
+/* ═══════════ RESOURCES ═══════════ */
+.res-g{margin-bottom:18px}
+.res-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.res-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px}
+.res-i{display:block;background:var(--bg2);border:1px solid var(--line);border-radius:8px;
+  padding:10px 13px;text-decoration:none;transition:border-color .15s}
+.res-i:hover{border-color:var(--line2)}
+.res-t{display:block;font-size:13.5px;font-weight:600;color:var(--text)}
+.res-i:hover .res-t{color:var(--lime)}
+.res-n{display:block;font-size:11.5px;line-height:1.5;color:var(--dim);margin-top:3px}
 
 /* Standing methodology notes — long, unchanging, and previously sitting
    between the reader and the thing they came for. Collapsed by default. */
@@ -7203,6 +7326,92 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Opinion desks run film and language columns beside the money writing, and
      one incidental word is how a review of The Odyssey reached a finance
      page during the build of this section. -->
+{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
+   The wire compressed into EVENTS. Sits directly above Smart Reads: what
+   happened, then the longer reading. Every number and name in the generated
+   prose has been checked against the source articles by brief_engine.qa_reject
+   before it reaches here; anything that failed fell back to a summary built
+   from the headlines themselves and is marked as such. #}
+{% if 'brief' in secs %}<section class="sec" id="brief">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span>
+      <h2 class="stitle">Everything important today.</h2>
+    </div>
+    <p class="sdesc">{{ brief.stats.articles }} articles from
+      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
+      ranked by what actually matters &mdash; not by how many outlets syndicated it.
+      Sources kept on every one.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>~{{ brief.stats.read_minutes }} min read</span>
+    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
+      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
+    {% if brief.get('is_fallback') %}
+      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
+    {% endif %}
+    <span>{{ brief.stats.ai_written }} written up
+      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
+  </div>
+
+  {% macro ev_card(e, top) %}
+  <article class="ev{{ ' ev-top' if top }}">
+    <div class="ev-h">
+      <span class="ev-cat">{{ e.category }}</span>
+      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
+        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
+      </span>
+    </div>
+    <h3 class="ev-t">{{ e.headline }}</h3>
+    <div class="ev-m">
+      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
+      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
+      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
+    </div>
+    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    {% if e.whyItMatters %}
+    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
+    {% endif %}
+    {% if e.marketImpact %}
+    <div class="ev-mi">
+      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
+    <div class="ev-s">
+      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
+    </div>
+  </article>
+  {% endmacro %}
+
+  <h3 class="jsub rv">Top stories</h3>
+  <div class="ev-grid rv">
+    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
+  </div>
+
+  {# Everything past the top five, collapsed. The whole point is a ten-minute
+     read; the rest is there for the day you want it. #}
+  {% set rest = brief.events[brief.top|length:] %}
+  {% if rest %}
+  <details class="fund-note-d rv">
+    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
+    <div class="ev-grid" style="margin-top:14px">
+      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
+    </div>
+  </details>
+  {% endif %}
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Summaries are written from the linked reporting and nothing else &mdash; every figure and
+    name is checked against the source articles before publishing, and an event that fails
+    that check falls back to the outlets' own headlines rather than to invented copy.
+    Read the originals for the full story.
+  </p>
+</section>{% endif %}
+
 {% if 'smartreads' in secs %}<section class="sec" id="smartreads">
   <div class="shead rv">
     <div>
@@ -7258,6 +7467,42 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      looking for "#shorts" in the title. Most Shorts do not say so: "This SWP
      Mistake Can Destroy Your Retirement Plan!" reads exactly like an episode
      and is forty seconds long. See podcasts._is_short. -->
+{# ══════════ RESOURCES ══════════
+   A curated shelf, not a scrape — these live in resources.py where they can be
+   reviewed. Every URL was checked live before shipping; three from the original
+   list 404'd or paywalled and are absent rather than published broken. #}
+{% if 'resources' in secs %}<section class="sec" id="resources">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['resources'] }} / {{ seclabel['resources'] }}</span>
+      <h2 class="stitle">How the tools work.</h2>
+    </div>
+    <p class="sdesc">The documentation, repositories and papers behind the systems on this
+      site. Ordered so the official material comes first and the research last &mdash; read
+      ReAct before the rest, everything else extends it.</p>
+  </div>
+
+  {% for g in resources %}
+  <div class="res-g rv">
+    <h3 class="res-h">{{ g.group }}</h3>
+    <div class="res-l">
+      {% for r in g['items'] %}
+      <a class="res-i" href="{{ r.url }}" target="_blank" rel="noopener">
+        <span class="res-t">{{ r.title }}</span>
+        <span class="res-n">{{ r.note }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  <p class="note rv" style="margin-top:12px;color:var(--dim);font-size:12px">
+    Every link here returned 200 when this page was built. If one rots, it is dropped
+    rather than left in place &mdash; a resource list you have to test yourself is worse
+    than no list.
+  </p>
+</section>{% endif %}
+
 {% if 'podcasts' in secs %}<section class="sec" id="podcasts">
   <div class="shead rv">
     <div>
