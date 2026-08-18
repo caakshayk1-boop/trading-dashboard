@@ -2003,7 +2003,6 @@ SECTION_MAP = [
     # that heading twice for no reason a reader could see.
     ("chess",       "Chess",        "desk", "Drills"),
     ("podcasts",    "Podcasts",     "desk", "Drills"),
-    ("music",       "Music",        "desk", "Drills"),
     ("gym",         "Mind Gym",     "desk", "Drills"),
 
     # ── TRADE ───────────────────────────────────────────────────────────────
@@ -2036,7 +2035,7 @@ PAGE_META = {
         "path": "/",
         "other_label": "The Desk",
         "other_path": "/desk",
-        "other_hint": "languages, fatherhood, chess, music, drills",
+        "other_hint": "languages, fatherhood, chess, drills",
     },
     "desk": {
         "title": "The Desk — languages, fatherhood, chess and the daily drills",
@@ -7494,105 +7493,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <p class="pod-note">Takeaways are compressed from each episode&rsquo;s own published
     description &mdash; they are the show&rsquo;s claims about itself, not a review, and
     not a summary of anything said in the audio.</p>
-</section>{% endif %}
-
-{% if 'music' in secs %}<section class="sec" id="music">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['music'] }} / {{ seclabel['music'] }}</span>
-      <h2 class="stitle">What&rsquo;s playing.</h2>
-    </div>
-    <p class="sdesc">{{ music.total }} tracks across three crates &mdash; mine,
-      bhakti, and the all-time canon. The top five rotate every morning. Tap a
-      title and it plays here &mdash; full length, free, no account needed.
-      {% if music.playable < music.total %}<br><span style="color:var(--dim)">{{ music.total - music.playable }} of
-      them isn&rsquo;t pinned yet and still opens a search.</span>{% endif %}</p>
-  </div>
-
-  <div class="crates rv">
-    {% for crate in [{'key':'songs','icon':'🎧','name':'Anything','items':music.songs},
-                     {'key':'bhakti','icon':'🪔','name':'Bhakti','items':music.bhakti},
-                     {'key':'global','icon':'🌍','name':'All time','items':music['global']}] %}
-    <div class="crate" data-crate="{{ crate.key }}">
-      <div class="crate-h">
-        <span class="ic">{{ crate.icon }}</span>
-        <span class="nm">{{ crate.name }}</span>
-        <span class="ct">{{ crate['items']|length }}</span>
-      </div>
-      <ol class="crate-l">
-        {% for t in crate['items'] %}
-        <li class="trk{% if loop.index > music.top_n %} more{% endif %}"
-            data-title="{{ t.title }}" data-artist="{{ t.artist }}" data-url="{{ t.url }}"
-            data-vid="{{ t.vid }}" data-embed="{{ t.embed }}" data-apple="{{ t.apple_url }}">
-          <span class="no">{{ "%02d"|format(loop.index) }}</span>
-          <!-- Still a real anchor to YouTube. It is the no-JS path and the
-               middle-click/"open in new tab" path, and the click handler
-               calls preventDefault only when it can actually play in-page. -->
-          <a href="{{ t.url }}" target="_blank" rel="noopener">
-            <span class="ti">{{ t.title }}</span>
-            <span class="ar">{{ t.artist }}</span>
-          </a>
-          <button type="button" class="pl" title="Play here"
-                  aria-label="Play {{ t.title }} on this page">▶</button>
-          <!-- A real <button>, not a span with a click handler: this is a
-               control, so it needs to be tabbable and to announce its state.
-               aria-pressed carries "liked" to a screen reader; the heart glyph
-               alone carries it to everyone else. -->
-          <button type="button" class="lk" aria-pressed="false"
-                  title="Save to my songs" aria-label="Save {{ t.title }} to my songs">♥</button>
-        </li>
-        {% endfor %}
-      </ol>
-      {% if crate['items']|length > music.top_n %}
-      <button type="button" class="crate-more" aria-expanded="false">
-        Show all {{ crate['items']|length }} &darr;
-      </button>
-      {% endif %}
-    </div>
-    {% endfor %}
-
-    <!-- The fourth crate. Empty in the 6 AM build and filled by /api/music on
-         load, because likes arrive through the day and the page is static.
-         Hidden until it has something in it — an empty shelf next to three
-         full ones reads like a bug. -->
-    <div class="crate" data-crate="liked" id="likedCrate" style="display:none">
-      <div class="crate-h">
-        <span class="ic">♥</span>
-        <span class="nm">Liked</span>
-        <span class="ct" id="likedCt">0</span>
-      </div>
-      <ol class="crate-l" id="likedList"></ol>
-      <button type="button" class="crate-more" aria-expanded="false" id="likedMore"
-              style="display:none">Show all &darr;</button>
-    </div>
-  </div>
-  <div class="crate-note" id="likeNote" role="status" aria-live="polite"></div>
-
-  <!-- Docked player. Audio only — this is the Apple Music widget, not a video
-       embed, so pressing play gives sound and nothing to watch.
-
-       Deliberately NOT one iframe per row: a row-level embed stops the moment
-       you scroll to another crate, and forty idle iframes is forty
-       third-party connections. One player, created on first play and reused,
-       keeps the music running while you read the rest of the page. It is
-       built in JS rather than sitting here with a src, so the page contacts
-       Apple only once you actually press play.
-
-       Full length, free, no account. YouTube's embed terms require the player
-       stay visible, so the dock is kept small and pinned out of the way rather
-       than collapsed to an audio bar — the honest version of "audio only" when
-       no free full-length audio-only source exists. -->
-  <div class="player" id="player" hidden>
-    <div class="player-h">
-      <span class="player-t" id="playerT">—</span>
-      <a class="player-a" id="playerA" href="#" target="_blank" rel="noopener"
-         title="Open this track in Apple Music" style="display:none">&#63743;</a>
-      <a class="player-y" id="playerY" href="#" target="_blank" rel="noopener"
-         title="Open this track on YouTube">Open ↗</a>
-      <button type="button" class="player-x" id="playerX" aria-label="Close player">✕</button>
-    </div>
-    <div class="player-f" id="playerF"></div>
-  </div>
 </section>{% endif %}
 
 {% if 'gym' in secs %}<section class="sec" id="gym">

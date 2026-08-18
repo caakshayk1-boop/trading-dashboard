@@ -53,6 +53,120 @@ CASES = [
 ]
 
 
+# ── Target SPACING, not just target ORDER ────────────────────────────────────
+# The validator above rejects targets that are equal or inverted. It cannot
+# see the failure found live on 2026-08-18: TECHM published T1 1673.09 and
+# T2 1678.17 against 23.88 of risk — correctly ordered, strictly increasing,
+# and 0.2R apart. Ten of 157 open signals had it.
+#
+# Two targets 0.2R apart are one target printed twice. _structure_targets
+# snaps T1 and T2 to nearby resistance independently, and nothing stopped both
+# snapping onto the same wall.
+
+import pandas as pd
+
+from signals.indicators import MIN_TARGET_GAP_ATR, _structure_targets
+
+TARGET_CHECKS = []
+
+
+def tcheck(name):
+    def deco(fn):
+        TARGET_CHECKS.append((name, fn))
+        return fn
+    return deco
+
+
+def highs(*peaks, base=1600.0, n=21):
+    """A high series with resistance peaks planted where the snap will find
+    them — rolling(20).max() and rolling(10).max().iloc[-2]."""
+    ser = [base] * n
+    for i, p in enumerate(peaks):
+        ser[9 + i * 10] = p
+    return pd.Series(ser)
+
+
+@tcheck("the TECHM shape no longer collapses T1 and T2")
+def _():
+    # Two resistances five rupees apart, which is what produced 1673/1678.
+    t1, t2, t3 = _structure_targets(1592.0, 54.0, highs(1681.5, 1686.6))
+    risk = 1592.0 - 1568.12
+    assert (t2 - t1) / risk >= 0.5, f"T1 {t1} T2 {t2} are {(t2 - t1) / risk:.2f}R apart"
+
+
+@tcheck("consecutive targets are always at least the ATR floor apart")
+def _():
+    for atr in (5.0, 22.5, 54.0, 180.0):
+        for peaks in ((1681.5, 1686.6), (1650.0, 1652.0), (1700.0, 1701.0)):
+            t1, t2, t3 = _structure_targets(1592.0, atr, highs(*peaks))
+            gap = MIN_TARGET_GAP_ATR * atr
+            assert t2 - t1 >= gap - 0.01, f"atr={atr} peaks={peaks}: T1 {t1} T2 {t2}"
+            assert t3 - t2 >= gap - 0.01, f"atr={atr} peaks={peaks}: T2 {t2} T3 {t3}"
+
+
+@tcheck("targets stay strictly increasing — the existing invariant survives")
+def _():
+    for atr in (5.0, 54.0, 180.0):
+        t1, t2, t3 = _structure_targets(1592.0, atr, highs(1681.5, 1686.6))
+        assert 1592.0 < t1 < t2 < t3, (t1, t2, t3)
+
+
+@tcheck("a clean structure is left alone — the floor only binds when it must")
+def _():
+    # No resistance anywhere near the raw R-multiples, so nothing snaps and
+    # the 1.5 / 2.5 / 4.0 ATR ladder must come through untouched.
+    t1, t2, t3 = _structure_targets(1000.0, 20.0, highs(3000.0, 3100.0))
+    assert (t1, t2, t3) == (1030.0, 1050.0, 1080.0), (t1, t2, t3)
+
+
+@tcheck("the floor pushes the OUTER target out, never pulls the inner one in")
+def _():
+    # T1 is anchored to the nearest real resistance and is the target most
+    # likely to fill. Widening the gap must not move it.
+    peaks = (1681.5, 1686.6)
+    t1, _t2, _t3 = _structure_targets(1592.0, 54.0, highs(*peaks))
+    assert abs(t1 - 1678.17) < 0.02, t1
+
+
+@tcheck("a zero ATR cannot produce three identical targets")
+def _():
+    # Degenerate but reachable on a halted or untraded name. The floor is
+    # zero here, so this pins that the result is still ordered, not equal.
+    t1, t2, t3 = _structure_targets(100.0, 0.0, highs(500.0, 510.0))
+    assert t1 <= t2 <= t3
+
+
+# ── Allocations are not trades ───────────────────────────────────────────────
+
+@tcheck("SIP allocations are exempt from the ordering gate")
+def _():
+    from tracker import ALLOCATION_TYPES, SIP_SIGNAL_TYPE
+    assert SIP_SIGNAL_TYPE in ALLOCATION_TYPES
+
+
+@tcheck("the SIP mirror writes NULL levels, not a manufactured ±0.1% ladder")
+def _():
+    """COALINDIA went into the ledger at entry 407.10, stop 406.69, T1 407.51.
+
+    Numbers nobody decided, shaped like a trade plan so the ordering gate
+    would accept them. A reader could not tell them from a real plan.
+    """
+    src = (__import__("pathlib").Path(__file__).parent / "tracker.py").read_text()
+    block = src[src.index("An allocation has no stop or target"):]
+    block = block[:block.index('"rr": None')]
+    assert '"sl": None' in block, "the SIP mirror still writes a stop"
+    for frag in ("0.999", "1.001", "1.002"):
+        assert frag not in block, f"the ±0.1% placeholder {frag} is still there"
+
+
+@tcheck("the gate still applies in full to anything that IS a trade")
+def _():
+    # The exemption must be narrow. A breakout with a missing stop stays
+    # rejected — that is the SONACOMS-class bug this file exists for.
+    ok, _ = v("BUY", 100, None, 110, 120)
+    assert not ok
+
+
 def main() -> int:
     passed = failed = 0
     for name, args, expect_ok in CASES:
@@ -64,6 +178,16 @@ def main() -> int:
         else:
             print(f"  FAIL  {name}  (expected ok={expect_ok}, got ok={got_ok}, reason={reason!r})")
             failed += 1
+
+    for name, fn in TARGET_CHECKS:
+        try:
+            fn()
+        except AssertionError as e:
+            print(f"  FAIL  {name}  ({e})"); failed += 1
+        except Exception as e:
+            print(f"  ERROR {name}  ({type(e).__name__}: {e})"); failed += 1
+        else:
+            print(f"  PASS  {name}"); passed += 1
 
     print(f"\n{passed} passed · {failed} failed")
     return 1 if failed else 0

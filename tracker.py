@@ -711,8 +711,13 @@ def log_batch_to_all_signals(rows, date=None):
     rejected = 0
     with _conn() as c:
         for r in rows:
-            ok, reason = _validate_signal_ordering(
-                r.get("action", "BUY"), r["entry"], r["sl"], r["t1"], r["t2"], r.get("t3"))
+            # An allocation has no levels to order. Validating one means
+            # inventing the levels first, which is the fiction this avoids.
+            if r.get("signal_type") in ALLOCATION_TYPES:
+                ok, reason = True, ""
+            else:
+                ok, reason = _validate_signal_ordering(
+                    r.get("action", "BUY"), r["entry"], r["sl"], r["t1"], r["t2"], r.get("t3"))
             if not ok:
                 log.error(f"all_signals batch REJECTED: {r['symbol']} {r.get('signal_type')} — {reason} "
                           f"(entry={r['entry']} sl={r['sl']} t1={r['t1']} t2={r['t2']} t3={r.get('t3')})")
@@ -1497,6 +1502,21 @@ SIP_SIGNAL_TYPE = "sip_bucket"
 # publishes a different track record from the bot.
 EXCLUDE_FROM_EXPECTANCY = (MULTIBAGGER_SIGNAL_TYPE, TOP5_SIGNAL_TYPE, SIP_SIGNAL_TYPE)
 
+# Types that are ALLOCATIONS, not trades. They have no stop and no target,
+# because nothing about them is a bet with an exit — a monthly SIP instalment
+# is money going in on a schedule.
+#
+# They used to carry levels anyway. The ordering gate below requires a
+# complete, correctly ordered set, so the SIP mirror manufactured one at
+# ±0.1% of price: COALINDIA went into the ledger at entry 407.10, stop 406.69,
+# T1 407.51, T2 407.91 (live until 2026-08-18). Those numbers were never
+# decided by anything. They were shaped like a trade plan so a validator would
+# accept them, and a reader had no way to tell them from a real one.
+#
+# NULL is the honest value, so these skip the gate instead of feeding it
+# fiction. The gate still applies in full to everything that IS a trade.
+ALLOCATION_TYPES = (SIP_SIGNAL_TYPE,)
+
 
 def log_top5_picks(picks, week_key: str, date=None) -> list:
     """Mirror the weekly Top 5 trade ideas into all_signals.
@@ -1590,12 +1610,13 @@ def log_sip_bucket(allocations, month_key: str, date=None) -> list:
                 "symbol": (a.get("symbol") or a.get("name") or "")[:64],
                 "signal_type": SIP_SIGNAL_TYPE,
                 "action": "BUY", "timeframe": "1M",
-                # An allocation has no stop or target. The ordering gate needs
-                # a consistent set, so the levels are the price itself — and
-                # EXCLUDE_FROM_EXPECTANCY keeps that out of every statistic.
-                "entry": price, "sl": round(price * 0.999, 4),
-                "t1": round(price * 1.001, 4), "t2": round(price * 1.002, 4),
-                "t3": round(price * 1.002, 4),
+                # An allocation has no stop or target, so it carries none.
+                # This used to write ±0.1% of price to satisfy the ordering
+                # gate; allocations now skip that gate (see ALLOCATION_TYPES)
+                # and the columns stay NULL, which is what the page renders
+                # as a blank rather than as a plan nobody made.
+                "entry": price, "sl": None,
+                "t1": None, "t2": None, "t3": None,
                 "rr": None, "score": 0,
                 "remarks": (f"Monthly SIP allocation · {month_key}"
                             + (f" · {pct}% of bucket" if pct else "")),

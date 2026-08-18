@@ -38,6 +38,11 @@ def _tight_sl(price: float, low_series, cur_atr: float,
     return round(sl_floored, 2)
 
 
+# Minimum spacing between consecutive targets, in ATR. Below this they are not
+# distinguishable as separate exits — see the note inside _structure_targets.
+MIN_TARGET_GAP_ATR = 0.5
+
+
 def _structure_targets(price: float, cur_atr: float, high_series,
                        r1_mult: float = 1.5, r2_mult: float = 2.5, r3_mult: float = 4.0):
     """Targets anchored to price structure + R-multiples, snapped to resistance."""
@@ -52,6 +57,30 @@ def _structure_targets(price: float, cur_atr: float, high_series,
             break
     if t2_raw * 0.985 <= res20 <= t2_raw * 1.03:
         t2_raw = round(res20 * 0.995, 2)
+
+    # Keep the targets far enough apart to BE separate targets.
+    #
+    # The two snaps above run independently, and nothing stopped them landing
+    # on the same wall. Live on 2026-08-18: TECHM published entry 1592, stop
+    # 1568.12, T1 1673.09 and T2 1678.17 — five rupees apart on 24 rupees of
+    # risk, or 0.2R. Ten of 157 open signals had the same collapse.
+    #
+    # Two targets 0.2R apart are one target printed twice. The reader books
+    # partial profit at T1 and the "second" target is already hit, so the
+    # ladder the signal claims to offer does not exist.
+    #
+    # The floor is in ATR, not percent, because ATR is what the R-multiples
+    # above are built from — a half-ATR is a real move on this instrument,
+    # while "1%" means something different for a ₹90 stock and a ₹9,000 one.
+    #
+    # Pushing the outer target OUT rather than pulling the inner one in: T1 is
+    # the one anchored to the nearest real resistance, and it is the target
+    # most likely to actually fill.
+    gap = MIN_TARGET_GAP_ATR * cur_atr
+    if t2_raw - t1_raw < gap:
+        t2_raw = round(t1_raw + gap, 2)
+    if t3_raw - t2_raw < gap:
+        t3_raw = round(t2_raw + gap, 2)
     return t1_raw, t2_raw, t3_raw
 
 

@@ -269,8 +269,6 @@ def generate() -> None:
     money   = get_money_hack()
     dubai   = get_dubai_note()
     daughter = daughter_age()
-    import music as _music
-    music_lib = _music.library()
     prod    = get_productivity_tip()
 
     # READ ONLY. build_if_missing=True here cost the daily job its 15-minute
@@ -548,7 +546,6 @@ def generate() -> None:
         money_hack=money,
         dubai=dubai,
         daughter=daughter,
-        music=music_lib,
         productivity_tip=prod,
         top5=top5,
         # Weekly, cached. build_if_missing so a fresh week actually builds it;
