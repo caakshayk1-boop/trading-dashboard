@@ -85,6 +85,11 @@ jobs:
           import stock_screen, newspaper
 
           JOB = "stock_screen"
+          # Initialised before the try, not inside it. An exception raised
+          # before the build — a bad SCREEN_LIMIT, an import failure — would
+          # otherwise hit NameError inside the failure handler and lose the
+          # failure record itself, which is the one thing that must survive.
+          attempt_records = attempt_expected = None
           try:
               limit = int(os.environ.get("SCREEN_LIMIT") or 0) or None
               news = int(os.environ.get("NEWS_TOP") or 150)
@@ -107,6 +112,12 @@ jobs:
                   raise SystemExit(f"screen failed: {data.get('error')}")
 
               cov = data["coverage"]
+              # Held outside the try/except so a REFUSED publish can still say
+              # how much it managed to price. Without this the site could only
+              # report the served dataset's size, which is how a 750-row table
+              # ended up sitting above a "only 50 companies priced" warning
+              # with nothing tying the two numbers together (audit 2026-08-18).
+              attempt_records, attempt_expected = data["count"], data["attempted"]
               print(f"\n{data['count']} companies of {data['attempted']} attempted "
                     f"in {data['build_secs']}s")
               print(f"  statements  {cov['statements']:3} ({cov['statements_pct']}%)")
@@ -163,13 +174,15 @@ jobs:
                       f"still has last week's build. Not safe to report success."
                   )
               print(f"\ncached for week {week} — verified on Turso")
-              newspaper.record_job_status(JOB, "success", f"week {week}, {data['count']} companies")
+              newspaper.record_job_status(JOB, "success", f"week {week}, {data['count']} companies",
+                                          records=attempt_records, expected=attempt_expected)
           except BaseException as e:
               # Recorded even for a SystemExit floor-trip, not just an unhandled
               # crash — a refused publish ("only 200 companies priced") is exactly
               # the kind of failure the site should be able to say "last attempt
               # failed, N hours ago" about, not just silently keep last week's data.
-              newspaper.record_job_status(JOB, "failed", str(e))
+              newspaper.record_job_status(JOB, "failed", str(e),
+                                          records=attempt_records, expected=attempt_expected)
               raise
           PY
 

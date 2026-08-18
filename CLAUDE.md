@@ -53,6 +53,43 @@ Honesty rules the screen must keep (all pinned by tests):
 - EPS growth is withheld entirely when the share count moved structurally.
 - Nothing predicts. No probability, target or forecast anywhere.
 
+## Data Health (`#datahealth` on news.askakshay.com)
+The honesty layer. One vocabulary for how current every dataset is, so no
+section can look more current than its data.
+
+- `data_health.py` — the whole abstraction. Six statuses, ordered by severity
+  (LIVE < FRESH < STALE < DEGRADED < FAILED < UNAVAILABLE). `assess()` collects
+  every condition that fires and reports the WORST, so a new rule can only make
+  a status worse — never quietly upgrade a broken dataset to FRESH.
+- `generate.py::_register_health()` files every dataset once, before anything
+  renders. The page badges and the health table read that ONE snapshot, so
+  they cannot disagree about the same build.
+- The badge is a Jinja macro, `{{ dh('Dataset name') }}`. A section must never
+  phrase its own freshness — that is how "0.5d old" and "12h old" ended up on
+  one page describing the same number.
+- `job_runs` carries `records`/`expected` — the ATTEMPT's coverage, kept
+  separate from the served payload's. A free-text detail like "only 50 priced"
+  is unparseable, so no badge, test or API could ever act on it.
+- `python3 test_data_health.py` — 44 checks, offline, no pytest.
+
+Rules the layer must keep (all pinned by tests):
+- A failed newer attempt behind valid data is DEGRADED, never STALE. The data
+  is fine; the pipeline is not, and those are different sentences.
+- A partial build is DEGRADED, never presented as a complete one.
+- An unreadable build timestamp is DEGRADED, never FRESH.
+- `expected_records` comes from the ATTEMPT, never the served payload —
+  dividing a dataset by its own length always yields 100%.
+- No denominator, no ratio. A made-up universe size is worse than none.
+
+## Page structure
+`SECTION_MAP` order IS document order, and the nav is generated from it.
+`python3 test_page_structure.py` fails the build if the two drift, and requires
+every nav group to be CONTIGUOUS — a group that stops and restarts prints its
+heading twice and stops being navigation.
+
+Main page runs, in order: **Read · Research · Trade · Trust**. Moving a section
+means moving its template block AND its SECTION_MAP row; the test checks both.
+
 ## Rules
 - NEVER read or modify `config.py` (contains API keys)
 - All market data: fetch live, never hardcode prices

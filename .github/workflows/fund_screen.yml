@@ -54,6 +54,7 @@ jobs:
           import funds, newspaper
 
           JOB = "fund_screen"
+          fund_records = None
           try:
               n = int(os.environ.get("PER_CAT", "45"))
               data = funds.build(limit_per_cat=n)
@@ -61,7 +62,7 @@ jobs:
                   raise SystemExit(f"screen failed: {data.get('error')}")
 
               cats = data["categories"]
-              total = sum(len(c["funds"]) for c in cats)
+              total = fund_records = sum(len(c["funds"]) for c in cats)
               print(f"\n{len(cats)} categories, {total} funds published")
               for c in cats:
                   top = c["funds"][0]["r3"] if c["funds"] else None
@@ -103,8 +104,14 @@ jobs:
                       f"report success."
                   )
               print(f"\ncached for week {week} — verified on Turso")
-              newspaper.record_job_status(JOB, "success", f"week {week}, {total} funds")
+              newspaper.record_job_status(JOB, "success", f"week {week}, {total} funds",
+                                          records=total)
           except BaseException as e:
-              newspaper.record_job_status(JOB, "failed", str(e))
+              # No `expected` for funds: the NAV universe is whatever AMFI
+              # published that day, so there is no fixed denominator to
+              # divide by. Recording a made-up one would be worse than
+              # recording none — the health layer prints no coverage ratio
+              # rather than a confident wrong one.
+              newspaper.record_job_status(JOB, "failed", str(e), records=fund_records)
               raise
           PY
