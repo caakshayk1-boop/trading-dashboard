@@ -75,16 +75,6 @@ IST = timezone(timedelta(hours=5, minutes=30))
 CAREER_TARGET_COUNTRIES = ("UAE", "Saudi Arabia", "Malaysia", "Oman")
 
 
-def _resources_grouped() -> list:
-    """The curated resource shelf. Never fatal — a missing module costs the
-    section, not the paper."""
-    try:
-        import resources
-        return resources.grouped()
-    except Exception as e:                                   # noqa: BLE001
-        print(f"[generate] Resources unavailable: {e}")
-        return []
-
 
 
 def _register_health(*, now, news, markets, regime, smart_reads, brief, market_intel,
@@ -567,7 +557,6 @@ def generate() -> None:
         market_intel=market_intel,
         careers=careers,
         brief=brief,
-        resources=_resources_grouped(),
         stock_screen=stock_screen,
         podcasts=podcasts,
         smart_reads=smart_reads,

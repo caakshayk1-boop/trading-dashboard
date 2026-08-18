@@ -1998,7 +1998,6 @@ SECTION_MAP = [
     # wire compressed into events, then the longer reading.
     ("brief",       "Daily Brief",  "desk", "Reading"),
     ("smartreads",  "Smart Reads",  "desk", "Reading"),
-    ("resources",   "Resources",    "desk", "Reading"),
     # Chess moved down into Drills on 2026-08-18. It used to sit between The
     # Review and the Daily Brief, which split Reading into two runs and printed
     # that heading twice for no reason a reader could see.
@@ -6561,14 +6560,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% endfor %}
   </div>
 
-  {% if careers.sources_failed %}
-  <p class="jfail rv">
-    Not reached this run:
-    {% for s in careers.sources_failed %}{{ s.name }} ({{ s.status }}){% if not loop.last %} &middot; {% endif %}{% endfor %}.
-    Previous results for those sources are kept rather than deleted, so a blocked
-    scraper shows as missing coverage, never as an empty market.
-  </p>
-  {% endif %}
+  {# The failed-source roll call used to print here — ten scraper names and
+     their error states, in the reader's face, every day. Removed 2026-08-18:
+     it is operational detail, not a job. The information is NOT lost — source
+     coverage is now a Data Health dataset ("Careers feed", 11/21 -> DEGRADED),
+     which is where a reader goes to ask whether to trust a section rather than
+     having the answer pushed at them mid-scan. #}
 
   {# ── filters. Operate on the server-rendered cards; with JS off every card
        simply stays visible, which is the correct degraded state. ── #}
@@ -7266,56 +7263,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </article>
     {% endfor %}
   </div>
-</section>{% endif %}
-
-<!-- ══════════ PODCASTS ══════════
-     Twenty long-form episodes from Indian shows, newest first, one line of what
-     each is about. Everything here is the publisher's: title, date, link and
-     a takeaway compressed from their OWN episode description. Nothing is
-     inferred from a title and nothing is written about a guest from general
-     knowledge — see the header of podcasts.py for why that line is drawn hard.
-     Round-robin by show, so a channel posting three times a day cannot own
-     the list. Rebuilt DAILY — it was weekly, which left new episodes from
-     every-other-day publishers unlisted for up to a week.
-
-     Shorts are excluded by asking YouTube whether each id is one, not by
-     looking for "#shorts" in the title. Most Shorts do not say so: "This SWP
-     Mistake Can Destroy Your Retirement Plan!" reads exactly like an episode
-     and is forty seconds long. See podcasts._is_short. -->
-{# ══════════ RESOURCES ══════════
-   A curated shelf, not a scrape — these live in resources.py where they can be
-   reviewed. Every URL was checked live before shipping; three from the original
-   list 404'd or paywalled and are absent rather than published broken. #}
-{% if 'resources' in secs %}<section class="sec" id="resources">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['resources'] }} / {{ seclabel['resources'] }}</span>
-      <h2 class="stitle">How the tools work.</h2>
-    </div>
-    <p class="sdesc">The documentation, repositories and papers behind the systems on this
-      site. Ordered so the official material comes first and the research last &mdash; read
-      ReAct before the rest, everything else extends it.</p>
-  </div>
-
-  {% for g in resources %}
-  <div class="res-g rv">
-    <h3 class="res-h">{{ g.group }}</h3>
-    <div class="res-l">
-      {% for r in g['items'] %}
-      <a class="res-i" href="{{ r.url }}" target="_blank" rel="noopener">
-        <span class="res-t">{{ r.title }}</span>
-        <span class="res-n">{{ r.note }}</span>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-
-  <p class="note rv" style="margin-top:12px;color:var(--dim);font-size:12px">
-    Every link here returned 200 when this page was built. If one rots, it is dropped
-    rather than left in place &mdash; a resource list you have to test yourself is worse
-    than no list.
-  </p>
 </section>{% endif %}
 
 <!-- ══════════ 09 CHESS ══════════ -->

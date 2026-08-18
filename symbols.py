@@ -39,6 +39,38 @@ NON_EQUITY = {
     "SENSEX":    "^BSESN",
 }
 
+# US-listed equities and ADRs. Bare tickers with no exchange suffix, which is
+# exactly what made them invisible to to_yahoo(): "SNOW" looks identical to a
+# suffix-stripped NSE symbol like "DMART", so every one of these was being
+# quoted as SNOW.NS — a ticker that does not exist.
+#
+# The damage was not cosmetic. A dead ticker never prices, so these signals sat
+# OPEN with entry_price NULL indefinitely, and the ledger labelled them
+# market=NSE / currency=₹ because those are the column defaults. A US equity
+# was being shown to the reader in rupees at a price that had never resolved.
+#
+# Registered HERE rather than inferred, because there is no rule that separates
+# "SNOW" from "DMART" by shape. test_symbols.py asserts this set covers every
+# bare ticker in newspaper.WATCHLIST, so adding a US name to the watchlist
+# without registering it fails the build instead of silently quoting SYM.NS.
+US_EQUITY = frozenset({
+    # Mega cap
+    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA", "AVGO",
+    "BRK-B", "JPM", "LLY", "V", "UNH", "XOM", "MA", "JNJ",
+    "HD", "PG", "MRK", "ABBV", "COST", "WMT", "KO", "PEP",
+    "BAC", "ORCL", "CRM", "ACN", "AMD", "NFLX",
+    # Growth / tech
+    "CRWD", "SNOW", "DDOG", "NET", "MDB", "PANW", "ZS", "FTNT",
+    "AXON", "CELH", "DUOL", "APP", "APLD", "HOOD", "COIN",
+    "SMCI", "ARM", "TSM", "ASML", "NVO",
+    # ADRs
+    "SAP", "SIEGY", "BAYRY", "LVMUY", "IDEXY", "BNPQY", "SHEL", "AZN",
+    "BABA", "JD", "PDD", "BIDU", "SE", "GRAB",
+    # Energy / miners / financials
+    "CVX", "COP", "SLB", "EOG", "NEM", "FCX", "RIO", "BHP",
+    "GS", "MS", "C", "WFC",
+})
+
 # Suffixes that already identify a market — never append to these.
 _EXPLICIT = ("=F", "=X", ".NS", ".BO", ".BSE")
 
@@ -57,6 +89,11 @@ def to_yahoo(symbol: str) -> str:
         return s
     if s in NON_EQUITY:
         return NON_EQUITY[s]
+    # NON_EQUITY is checked FIRST on purpose. "GOLD" is both a COMEX contract
+    # and Barrick Gold on the NYSE, and every engine here means the metal.
+    # Commodity wins; the equity is simply not in the US set.
+    if s in US_EQUITY:
+        return s                       # already a valid Yahoo ticker
     return s + ".NS"
 
 
@@ -96,4 +133,43 @@ def classify(symbol: str) -> tuple[str, str]:
         return "NSE", "Index"
     if y.endswith((".BO", ".BSE")):
         return "BSE", "Equity"
+    # US listings resolve to a BARE ticker, which is indistinguishable from a
+    # suffix-stripped NSE symbol by shape alone — so this asks the registry
+    # rather than the string. Without it every US name fell through to the
+    # NSE/Equity default below, which is how SNOW and SMCI were published in
+    # rupees at a price that had never resolved (fixed 2026-08-18).
+    if y.upper() in US_EQUITY:
+        return "US", "Equity"
     return "NSE", "Equity"
+
+
+# ── Currency ─────────────────────────────────────────────────────────────────
+# Deliberately thin. classify() is the authority on what an instrument IS;
+# these only translate that into the unit a price is printed in. Two functions
+# that could each decide a market independently is precisely how
+# standalone_scan._unit() and the ledger's columns came to disagree.
+
+def market_of(symbol: str) -> str:
+    """Exchange family — NSE / BSE / US / COMEX / FX."""
+    return classify(symbol)[0]
+
+
+def asset_type_of(symbol: str) -> str:
+    """Equity / Commodity / Currency / Index."""
+    return classify(symbol)[1]
+
+
+def currency_of(symbol: str) -> str:
+    """The unit a price in this symbol is denominated in.
+
+    "" for an FX pair, because a rate is not a money amount — printing
+    "$1.0842" for EURUSD states the wrong thing twice.
+    """
+    market, atype = classify(symbol)
+    if atype == "Currency":
+        s = (symbol or "").strip().upper().replace("/", "")
+        # USDINR quotes rupees per dollar, so the AMOUNT is in rupees.
+        return "\u20b9" if s.endswith("INR") else ""
+    if market in ("US", "COMEX"):
+        return "$"
+    return "\u20b9"

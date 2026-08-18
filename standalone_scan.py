@@ -126,12 +126,24 @@ _FX_PAIRS   = {"USDJPY", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD", "USDCHF",
 
 
 def _unit(symbol: str) -> str:
-    s = (symbol or "").upper()
-    if s in _USD_QUOTED:
-        return "$"
-    if s in _FX_PAIRS:
-        return ""          # a rate, not a money amount
-    return "₹"             # NSE equities and the INR pairs (USDINR = ₹/USD)
+    """Currency for a symbol. Delegates to symbols.py — the single source.
+
+    This function used to own the answer via _USD_QUOTED, a set containing
+    only commodities and FX. Every US equity therefore fell through to the ₹
+    default: SNOW, SMCI and MSFT were all printed in rupees (live, until
+    2026-08-18). The sets below are kept as a fallback for the case where
+    symbols.py cannot be imported, but they are no longer the authority.
+    """
+    try:
+        from symbols import currency_of
+        return currency_of(symbol)
+    except Exception:
+        s = (symbol or "").upper()
+        if s in _USD_QUOTED:
+            return "$"
+        if s in _FX_PAIRS:
+            return ""      # a rate, not a money amount
+        return "₹"
 
 
 def _fmt(symbol: str, v: float) -> str:

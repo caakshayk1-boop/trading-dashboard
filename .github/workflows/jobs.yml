@@ -18,15 +18,26 @@ name: Jobs — daily senior-finance discovery
 # currently breaking the Market Intel section, whose 23:00 UTC cron leaves only
 # 90 minutes of headroom.
 #
-# So: 18:00 UTC, a 6h30m nominal gap ahead of newspaper.yml.
-#   worst case  18:00 + 3h drift = 21:00 start, ~21:20 finish
-#   paper       00:30 UTC at the earliest
-#   spare       3h10m AFTER the full 3h drift is already absorbed
-# Do not move this later without redoing that arithmetic.
+# Moved 2026-08-18 to 08:00 UTC = 16:00 MYT, on request: Akshay is in Malaysia
+# and wants the day's roles discovered at 4 PM local, not at 02:00.
+#
+# Redoing the arithmetic the old comment demanded — this move is EARLIER, so
+# the headroom grows rather than shrinks:
+#   worst case  08:00 + 3h drift = 11:00 start, ~11:20 finish
+#   paper       00:30 UTC the NEXT day
+#   spare       13h10m AFTER the full 3h drift is already absorbed
+#
+# One consequence worth stating plainly: the careers section is SERVER-rendered
+# from docs/jobs.json at paper-build time (newspaper.py only reads the file).
+# So roles found at 16:00 MYT reach the page at the following 06:00 IST build,
+# not immediately. Making them appear at 16:00 would mean rebuilding the whole
+# paper mid-session — a 13:30 IST rebuild, with the Indian market still open —
+# which changes what "the 6 AM edition" means. Not done without asking.
+# Do not move this LATER without redoing the arithmetic above.
 
 on:
   schedule:
-    - cron: '0 18 * * *'      # 23:30 IST — 6h30m before newspaper.yml (00:30 UTC)
+    - cron: '0 8 * * *'       # 16:00 MYT / 13:30 IST — 16h30m before newspaper.yml
   workflow_dispatch:
 
 concurrency:
