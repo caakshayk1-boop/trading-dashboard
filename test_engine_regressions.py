@@ -361,6 +361,51 @@ def test_fund_cache_survives_week_rollover() -> None:
           "funds" not in newspaper.empty_sections({"categories": [{"name": "Flexi Cap"}]}))
 
 
+import pathlib
+
+
+def _js_imports(path):
+    """Real import statements only — the string "./_db.js" also appears inside
+    comments explaining why NOT to import it."""
+    import re as _re
+    return _re.findall(r'^\s*import\s[^;]*?from\s+"([^"]+)"',
+                       path.read_text(encoding="utf-8"), _re.M)
+
+
+def check_node_tests_pull_no_packages():
+    """newspaper.yml runs `cd vercel-news && node --test` with NO npm install.
+
+    Anything reachable from a test file must therefore import zero packages.
+    This has broken the build twice: bdca63b (which is why _badge.js exists at
+    all) and again on 2026-08-18 when distinctTargets was put in _db.js. Both
+    times the symptom was ERR_MODULE_NOT_FOUND on @libsql/client, and both
+    times every test passed locally, because node_modules exists locally.
+
+    Walks the import graph from each test file and fails on any bare specifier
+    that is not a node: builtin.
+    """
+    root = pathlib.Path("vercel-news")
+    if not root.is_dir():
+        return []
+    problems, seen = [], set()
+
+    def walk(f, chain):
+        if f in seen or not f.is_file():
+            return
+        seen.add(f)
+        for spec in _js_imports(f):
+            if spec.startswith("node:"):
+                continue
+            if spec.startswith("."):
+                walk((f.parent / spec).resolve(), chain + [f.name])
+            else:
+                problems.append(f"{' -> '.join(chain + [f.name])} imports package {spec!r}")
+
+    for t in sorted((root / "test").glob("*.test.js")):
+        walk(t.resolve(), [])
+    return problems
+
+
 def main() -> int:
     print("engine regressions — every case here shipped to production once\n")
     for fn in (test_band_rejects_nan,
@@ -555,6 +600,12 @@ def test_non_trading_types_agree_across_python_and_js():
     check("every Python non-trading type is excluded by stats.js",
           not missing,
           f"in tracker but not stats.js: {sorted(missing)}")
+
+    # newspaper.yml runs the node tests with NO npm install. Anything a test
+    # file reaches must import zero packages. This broke the build twice.
+    pkg_problems = check_node_tests_pull_no_packages()
+    check("no vercel-news test reaches a package import",
+          not pkg_problems, "; ".join(pkg_problems))
 
 
 if __name__ == "__main__":

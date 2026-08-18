@@ -181,3 +181,19 @@
 2026-08-13 13:49:15,147 INFO Scheduler: daily refresh at 06:00 IST (00:30 UTC)
 2026-08-13 13:49:15,147 INFO THE DAILY SIGNAL — news.askakshay.com — started
 2026-08-13 13:49:15,147 INFO picks: loaded from DB cache (2026-W33-v5)
+2026-08-19 00:26:43,797 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-08-19 00:26:43,797 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-08-19 00:26:43,797 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-08-19 00:26:43,797 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-08-19 00:26:43,797 INFO screen: narrative for TCS rejected — advice language
+2026-08-19 00:26:43,798 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-08-19 00:26:43,798 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-08-19 00:26:43,798 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-08-19 00:26:43,911 INFO Startup: content cache invalidated
+2026-08-19 00:26:43,911 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-08-19 00:26:43,911 INFO Added job "_daily_6am_refresh" to job store "default"
+2026-08-19 00:26:43,911 INFO Scheduler started
+2026-08-19 00:26:43,911 INFO Scheduler: daily refresh at 06:00 IST (00:30 UTC)
+2026-08-19 00:26:43,911 INFO THE DAILY SIGNAL — news.askakshay.com — started
+2026-08-19 00:26:43,911 INFO picks: loaded from DB cache (2026-W34-v5)
+2026-08-19 00:26:43,961 INFO stock screen: serving previous build, 6.1d old

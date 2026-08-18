@@ -107,40 +107,6 @@ export function currencyOf(symbol) {
   return "₹";   // NSE equities, and the INR pairs where ₹ is correct
 }
 
-// Targets closer together than this fraction of RISK are not separate exits.
-// Matches MIN_TARGET_GAP_ATR in signals/indicators.py, which now stops the
-// generator producing them — this is the read side, for rows already written.
-export const MIN_TARGET_GAP_R = 0.5;
-
-// Drop targets that are not far enough from the previous one to BE a target.
-//
-// TECHM published entry 1592, stop 1568.12, T1 1673.09, T2 1678.17 — five
-// rupees apart on 24 rupees of risk, 0.2R. Ten of 157 open signals had it.
-// The generator was fixed on 2026-08-18, but rows already written still carry
-// the collapsed pair and rewriting an issued signal's levels would be
-// falsifying what the engine actually said.
-//
-// So the stored row is left exactly as it is and the DISPLAY drops the
-// duplicate. Nothing is invented: the inner target is kept, because it is the
-// one anchored to real resistance, and the one that was never distinct is
-// returned as null. The page renders a null target as a blank, which is the
-// honest statement — there was only ever one target there.
-export function distinctTargets(entry, sl, t1, t2, t3) {
-  const e = num(entry), s = num(sl);
-  const risk = e !== null && s !== null ? Math.abs(e - s) : null;
-  if (!risk) return [num(t1), num(t2), num(t3)];
-  const floor = MIN_TARGET_GAP_R * risk;
-  const out = [];
-  let last = null;
-  for (const raw of [num(t1), num(t2), num(t3)]) {
-    if (raw === null) { out.push(null); continue; }
-    if (last !== null && Math.abs(raw - last) < floor) { out.push(null); continue; }
-    out.push(raw);
-    last = raw;
-  }
-  return out;
-}
-
 export function json(res, status, body, cacheSeconds = 0) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader(

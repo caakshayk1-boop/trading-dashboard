@@ -13,7 +13,8 @@
 //   version=          engine_version: v2 (default), v1, or "all"
 //   limit=            default 300, max 2000
 //   offset=           pagination
-import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf, distinctTargets } from "./_db.js";
+import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
+import { distinctTargets } from "./_levels.js";
 import { simulateWallet, START_DATE as WALLET_START_DATE } from "./_paper_wallet.js";
 
 // The ₹50L paper wallet (?wallet=1) lives in this file rather than its own

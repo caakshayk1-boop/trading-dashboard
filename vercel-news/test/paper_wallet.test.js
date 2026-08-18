@@ -244,7 +244,7 @@ test("currencyOf is optional — omitting it defaults to rupees, never undefined
 });
 
 // ── Collapsed target ladders ────────────────────────────────────────────────
-import { distinctTargets } from "../api/_db.js";
+import { distinctTargets } from "../api/_levels.js";
 
 test("the TECHM ladder drops the duplicate target instead of rewriting it", () => {
   // entry 1592, stop 1568.12, T1 1673.09, T2 1678.17 — 0.2R apart. Ten of 157
