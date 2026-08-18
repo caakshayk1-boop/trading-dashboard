@@ -42,6 +42,16 @@ jobs:
       - name: Engine regressions
         run: python test_engine_regressions.py
 
+      # Everything below guards a number the page PUBLISHES, so each one runs
+      # before the paper is built rather than on its own schedule. A suite that
+      # only runs when someone remembers is not a gate.
+      - name: Page structure, data health, symbols and SIP maths
+        run: |
+          python test_page_structure.py
+          python test_data_health.py
+          python test_symbols.py
+          python test_sip_engine.py
+
       - name: Lint the page script
         run: |
           node --check static/app.js
