@@ -20,7 +20,17 @@ on:
     # from the nav. generate.py now also builds this inline if the cache is
     # still empty at build time; the wider gap is what stops that being the
     # normal path.
-    - cron: '0 20 * * 0-4'    # 01:30 IST Mon-Fri — 4.5h before newspaper.yml
+    #
+    # Moved 2026-08-18 from 20:00 to 13:30 UTC. The old slot ran at 01:30 IST,
+    # which is AFTER midnight — so the FII/DII figure NSE publishes following
+    # the 15:30 IST close was only cached in the early hours of the NEXT day,
+    # and the section spent every working day showing the previous session's
+    # flow. Moving it to 19:00 IST puts the cache write after NSE publishes
+    # and inside the same trading day.
+    #
+    # Headroom improves too: 13:30 + 3h drift = 16:30 UTC, which is 8 hours
+    # clear of the 00:30 UTC paper rather than 4.5.
+    - cron: '30 13 * * 1-5'   # 19:00 IST Mon-Fri — after the close, same day
   workflow_dispatch:
 
 concurrency:

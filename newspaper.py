@@ -5937,8 +5937,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   {% set heat = market_intel.get('market_heat') or [] %}
   {% if heat %}
-  <h3 style="font-size:15px;margin:20px 0 10px">Sector heat</h3>
-  <div class="fund-grid rv">
+  {# The 6 AM snapshot. app.js replaces the grid below with a live one from
+     /api/markets?heat=1 (15-minute edge cache) and flips the label — but the
+     server-rendered version stays because it must read correctly with JS off
+     and for a crawler. The id is what the live path targets; the label is
+     what stops a stale map claiming to be current. #}
+  <h3 style="font-size:15px;margin:20px 0 10px">Sector heat
+    <span id="heatAsOf" class="dh dh-STALE" style="margin-left:8px">6 AM SNAPSHOT</span></h3>
+  <div class="fund-grid rv" id="heatGrid">
     {% for s in heat|selectattr('chg_pct', 'defined')|sort(attribute='chg_pct', reverse=True) %}
     {% set chg = s.get('chg_pct', 0) %}
     <div class="card fund-card" style="padding:14px 16px">
@@ -6706,9 +6712,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="snum">{{ secnum['interview'] }} / {{ seclabel['interview'] }}</span>
       <h2 class="stitle">CFO in three years.</h2>
     </div>
-    <p class="sdesc">Four questions a day — two technical, two not. Weighted to retail, the Gulf,
-      and the controller-to-CFO jump. The non-technical ones decide the offer more often than the
-      technical ones do.</p>
+    <p class="sdesc">Four questions a day — two technical, two not — plus two field notes.
+      Weighted to retail, the Gulf, and the controller-to-CFO jump. The non-technical ones
+      decide the offer more often than the technical ones do; the field notes are the things
+      nobody asks you and everybody assumes you already know.</p>
   </div>
 
   <div class="lrn-head rv"><span class="lrn-kicker">◆ Technical</span></div>
@@ -6730,6 +6737,23 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </details>
     {% endfor %}
   </div>
+
+  {# Not questions. The things nobody asks in an interview and everybody
+     assumes you already know once you are in the chair — the working-capital
+     arithmetic, the lease standard, what actually decides the offer. Same
+     <details> shape as the two banks above so the section reads as one thing
+     and still works with JS off. #}
+  {% if cfo_field %}
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ From the field</span></div>
+  <div class="qa-grid rv">
+    {% for q in cfo_field %}
+    <details class="qa">
+      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
+      <div class="qa-a">{{ q.a }}</div>
+    </details>
+    {% endfor %}
+  </div>
+  {% endif %}
 </section>{% endif %}
 
 <!-- ══════════ 06 LANGUAGE ══════════ -->
@@ -8411,12 +8435,13 @@ def _learning_ctx() -> dict:
         d = daily_learning.get_all()
         return {
             "interview_tech": d["interview_tech"], "interview_soft": d["interview_soft"],
+            "cfo_field": d["cfo_field"],
             "spanish": d["spanish"], "vocab": d["vocab"], "speaking": d["speaking"],
             "father": d["father"], "life_wisdom": d["wisdom"],
         }
     except Exception as e:
         log.warning(f"learning tracks: {e}")
-        return {"interview_tech": [], "interview_soft": [], "spanish": [],
+        return {"interview_tech": [], "interview_soft": [], "cfo_field": [], "spanish": [],
                 "vocab": [], "speaking": {}, "father": [], "life_wisdom": []}
 
 

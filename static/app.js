@@ -1269,10 +1269,12 @@ var TV_ALIASES = (function () {
       loadSip();
       loadLongTerm();
       loadPaperWallet();
+      loadSectorHeat();
 
       var lr = el('liverefresh');
       if (lr) lr.addEventListener('click', function(){
         loadSignals(); loadStats(); loadPositions(); loadSip(); loadPaperWallet();
+        loadSectorHeat();
       });
 
       // Deep link: /day/2026-07-31 opens straight into that day's archive.
@@ -1590,6 +1592,41 @@ var TV_ALIASES = (function () {
             loadPositions();
           });
       });
+    }
+
+    /* ═══════ live sector heat ═══════
+       The daily shell bakes a 6 AM snapshot of the sector map, which then
+       reads the same all day — the same defect /api/markets already fixed for
+       the price rail (gold stuck at 4093).
+
+       Served by /api/markets?heat=1 rather than its own route: this Vercel
+       project sits exactly at the free plan's 12-function cap.
+
+       The server-rendered grid stays in the HTML and is only REPLACED on a
+       good response. A failed fetch therefore leaves the 6 AM map in place,
+       still labelled as a 6 AM map — degrading to correct-but-old rather
+       than to blank. */
+    function loadSectorHeat(){
+      var grid = el('heatGrid');
+      if (!grid) return;
+      api('/markets?heat=1').then(function(j){
+        if (!j || !j.ok || !Array.isArray(j.heat) || !j.heat.length) return;
+        grid.innerHTML = j.heat.map(function(s){
+          var pct = Number(s.pct) || 0;
+          var cls = pct >= 0.3 ? 'rk-low' : pct <= -0.3 ? 'rk-high' : 'rk-medium';
+          return '<div class="card fund-card" style="padding:14px 16px">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
+            '<strong>' + esc(s.name) + '</strong>' +
+            '<span class="rk ' + cls + '">' + (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%</span>' +
+            '</div></div>';
+        }).join('');
+        var tag = el('heatAsOf');
+        if (tag){
+          // Only claims LIVE once real quotes have actually landed.
+          tag.className = 'dh dh-LIVE';
+          tag.textContent = 'LIVE · ' + j.heat_live + '/' + j.heat_total + ' sectors';
+        }
+      }).catch(function(){ /* keep the 6 AM map, keep its label */ });
     }
 
     /* ═══════ paper wallet ═══════

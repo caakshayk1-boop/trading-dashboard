@@ -1282,6 +1282,12 @@ def get_interview_tech(day: date | None = None) -> list[dict]:
             for q, a, w in _pick(INTERVIEW_TECH, 2, 7, day)]
 
 
+def get_cfo_field(day: date | None = None) -> list[dict]:
+    """Two field notes a day. Stride 5 like the soft bank — a stride sharing a
+    factor with the bank length would revisit the same pairs."""
+    return [{"q": h, "a": b, "who": t} for h, b, t in _pick(CFO_FIELD, 2, 5, day)]
+
+
 def get_interview_soft(day: date | None = None) -> list[dict]:
     return [{"q": q, "a": a, "who": w}
             for q, a, w in _pick(INTERVIEW_SOFT, 2, 5, day)]
@@ -1322,10 +1328,124 @@ def get_wisdom(day: date | None = None) -> list[dict]:
             for tr, tm, tl, te, ap in picked]
 
 
+
+# ═══════════════════════════════════════════════════════════════════════
+# CFO TRACK — FIELD NOTES
+# Not questions. The things nobody asks you in an interview and everybody
+# assumes you already know by the time you are in the chair.
+#
+# (headline, body, tag). Same three-field shape as the interview banks so
+# validate() covers it identically. Weighted the same way: retail, the Gulf,
+# and the controller -> CFO jump.
+#
+# Rule for anything added here: it must be a NUMBER, a MECHANISM or a
+# CONSEQUENCE. "Communicate well with stakeholders" is not a field note.
+# ═══════════════════════════════════════════════════════════════════════
+
+CFO_FIELD = [
+    ("The controller who never leaves the close never becomes CFO.",
+     "The job you are promoted out of is 'the person who produces the numbers'. The job you are "
+     "promoted into is 'the person who decides what to do about them'. If your calendar is 70% "
+     "close, reconciliation and audit prep, you are demonstrating that you are excellent at the "
+     "job you already have. Push the close down: a well-run retail group closes in 5 working "
+     "days, and every day you shave buys back roughly 12 days a year of capacity to spend on "
+     "decisions instead of production.",
+     "The single most common plateau"),
+
+    ("Working capital is where a retail CFO is actually judged.",
+     "EBITDA gets the headline; the cash conversion cycle gets the board's attention. "
+     "DIO + DSO − DPO. Retail is inventory-heavy and often near-zero DSO, so the fight is DIO "
+     "against DPO. Cutting DIO from 95 to 80 days on AED 400M COGS releases roughly AED 16.4M of "
+     "cash — permanently, without selling a single extra unit. That is a bigger number than most "
+     "cost programmes deliver, and it does not need a headcount conversation.",
+     "Landmark · Alshaya · GMG"),
+
+    ("Learn the lease standard properly. In the Gulf it is not a footnote.",
+     "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease "
+     "liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, "
+     "because rent that used to sit in operating costs is split into depreciation and interest; "
+     "and leverage ratios move even though nothing about the business changed. If your covenant "
+     "is set on a pre-IFRS-16 basis, know it before the bank asks.",
+     "Every leased-store business"),
+
+    ("A forecast that is never wrong is a forecast nobody is using.",
+     "Track forecast accuracy as a metric in its own right — absolute percentage error by month, "
+     "by category. Under 5% at group level is good in retail; over 15% and the business has "
+     "stopped believing you. But an FP&A team that is never wrong is sandbagging, and sandbagging "
+     "is more expensive than error: it prices in a buffer everyone plans around, and the buffer "
+     "compounds up the hierarchy.",
+     "What separates FP&A from reporting"),
+
+    ("Know your break-even by store, not by chain.",
+     "A chain at group-level profitability can be carrying a quarter of its estate below "
+     "contribution. Compute store contribution — gross profit less rent, staff and directly "
+     "attributable fixed cost — and rank it. Then, before closing anything: is the lease "
+     "committed, what does the store contribute to online fulfilment in its catchment, and what "
+     "is the exit cost. A negative-contribution store with four years left on a non-cancellable "
+     "lease is usually cheaper to run than to close.",
+     "The analysis that gets you noticed"),
+
+    ("The Gulf pays for scarcity, not for years.",
+     "Salary in the region tracks the intersection of skills, not the length of the CV. "
+     "CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination "
+     "than any one of them is deep. If you are negotiating, the leverage is in naming the "
+     "intersection, not in listing the years. And check the structure: basic versus allowances "
+     "changes gratuity, which is calculated on basic salary alone.",
+     "Compensation structure"),
+
+    ("Read the cash flow statement first. Always.",
+     "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, "
+     "compare operating cash flow to EBITDA over three years, and look at the gap. A business "
+     "converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit "
+     "sitting in working capital or is capitalising something it should be expensing. That one "
+     "ratio finds more problems than any variance pack.",
+     "The first thing to check, every time"),
+
+    ("Automation without a control map is how a finance function loses its audit trail.",
+     "Before automating a process, write down: who can initiate, who approves, what the system "
+     "does without a human, and where the exception report goes. Automation does not remove "
+     "controls; it moves them from people to configuration, and configuration drifts silently. "
+     "The question 'what breaks if this runs wrong for a month before anyone notices' is the one "
+     "that separates a finance automation from a finance incident.",
+     "Every CFO agenda, 2024 onward"),
+
+    ("Explain a variance in one sentence or you do not understand it yet.",
+     "'Margin is down 180bps: 120 from promotional depth in electronics, 40 from freight, 20 mix.' "
+     "That is a CFO answer. A table of forty lines is a controller answer. The discipline is to "
+     "decompose until the drivers are additive and then name the largest two. If you cannot make "
+     "the bridge add up, you have a data problem, not a communication problem.",
+     "The board-meeting test"),
+
+    ("VAT in the GCC is a cash-flow instrument, not just a compliance task.",
+     "Registration thresholds, filing frequency and the timing of input recovery all move working "
+     "capital. A group filing quarterly rather than monthly holds recoverable input VAT longer "
+     "than it needs to. Know the filing calendar in every jurisdiction the group trades in, and "
+     "know which entity holds the recoverable balance — a refund stuck in the wrong entity is "
+     "cash you own and cannot use.",
+     "UAE · KSA · Oman"),
+
+    ("The offer is decided by the non-technical questions.",
+     "Everyone shortlisted can do the technical work — that is why they were shortlisted. What "
+     "separates the offer is whether the panel believes you can hold a room, disagree with a CEO "
+     "without theatre, and be trusted with bad news. Prepare the failure story properly: what you "
+     "decided, what it cost, what you changed afterwards. A candidate with no failure story reads "
+     "as someone who has never owned a decision.",
+     "Why strong CVs lose"),
+
+    ("Scenario planning beats a single budget, and costs less than it sounds.",
+     "Three cases — base, downside, upside — with the two or three variables that actually move "
+     "the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and "
+     "rent renewals. The value is not the numbers; it is that the board has already discussed the "
+     "downside before it arrives, so the conversation when it does is about the response rather "
+     "than about whether it is happening.",
+     "What a board actually wants"),
+]
+
 def get_all(day: date | None = None) -> dict:
     return {
         "interview_tech": get_interview_tech(day),
         "interview_soft": get_interview_soft(day),
+        "cfo_field": get_cfo_field(day),
         "spanish": get_spanish(day),
         "vocab": get_vocab(day),
         "speaking": get_speaking(day),
@@ -1333,6 +1453,7 @@ def get_all(day: date | None = None) -> dict:
         "wisdom": get_wisdom(day),
         "counts": {
             "interview_tech": len(INTERVIEW_TECH), "interview_soft": len(INTERVIEW_SOFT),
+            "cfo_field": len(CFO_FIELD),
             "spanish": len(SPANISH), "vocab": len(VOCAB), "speaking": len(SPEAKING_DRILLS),
             "father": len(FATHER), "wisdom": len(WISDOM),
         },
@@ -1347,6 +1468,7 @@ def validate() -> list[str]:
     problems = []
     expected = [
         ("INTERVIEW_TECH", INTERVIEW_TECH, 3), ("INTERVIEW_SOFT", INTERVIEW_SOFT, 3),
+        ("CFO_FIELD", CFO_FIELD, 3),
         ("SPANISH", SPANISH, 5), ("VOCAB", VOCAB, 5),
         ("SPEAKING_DRILLS", SPEAKING_DRILLS, 3), ("FATHER", FATHER, 3), ("WISDOM", WISDOM, 5),
     ]
