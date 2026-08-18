@@ -195,7 +195,7 @@ async function handleWallet(res) {
       grade: str(r.grade) || null,
     }));
 
-    const result = simulateWallet(rows, badgeOf);
+    const result = simulateWallet(rows, badgeOf, currencyOf);
     json(res, 200, { ok: true, generated_at: new Date().toISOString(), ...result }, 60);
   } catch (e) {
     fail(res, 500, `paper_wallet query failed: ${e.message}`);

@@ -55,7 +55,9 @@ export function gradeMultiplier(grade) {
 // entry, status, lifecycle_status, exit_price, pnl_pct, closed_at, grade.
 // `badgeOf(status, lifecycle)` classifies win/loss/open/expired/cancelled —
 // injected rather than imported so this stays DB-free and directly testable.
-export function simulateWallet(rows, badgeOf) {
+// `currencyOf(symbol)` is injected for the same reason. It defaults to ₹ so
+// existing callers and the test fixtures keep working unchanged.
+export function simulateWallet(rows, badgeOf, currencyOf = () => "\u20b9") {
   const events = [];
   const untieredTypes = new Set();
   const trades = [];
@@ -80,6 +82,12 @@ export function simulateWallet(rows, badgeOf) {
       badge,
       grade: r.grade ? String(r.grade) : null,
       entry: r.entry === null || r.entry === undefined ? null : Number(r.entry),
+      exit: r.exit_price === null || r.exit_price === undefined ? null : Number(r.exit_price),
+      // The wallet is a ₹50L book, but the INSTRUMENT may not be rupee-priced
+      // — a US equity or a COMEX contract is sized in rupees and QUOTED in
+      // dollars. Carrying the unit per trade is what lets the table print the
+      // allocation in ₹ and the entry price in $ without either being a lie.
+      currency: currencyOf(r.symbol),
       pnl_pct: r.pnl_pct === null || r.pnl_pct === undefined ? null : Number(r.pnl_pct),
       closed_at: r.closed_at ? String(r.closed_at).slice(0, 10) : null,
       allocated_amount: 0,

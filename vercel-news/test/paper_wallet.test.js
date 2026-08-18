@@ -190,3 +190,55 @@ test("deployed + cash always sum to capital", () => {
   const out = simulateWallet(rows, badgeOf);
   assert.equal(out.wallet.deployed_amount + out.wallet.cash_amount, CAPITAL);
 });
+
+// ── Currency and price disclosure ───────────────────────────────────────────
+// The wallet section published utilisation, tier caps and rule text, but never
+// the one thing a reader wants from a ledger: which stock, at what price.
+// `entry` was already computed and simply never surfaced (found 2026-08-18).
+test("a trade carries the price it was entered at", () => {
+  const { trades } = simulateWallet(
+    [{ id: 1, date: "2026-08-18", symbol: "IOC", signal_type: "ohl",
+       entry: 137.8, status: "OPEN", lifecycle_status: null,
+       exit_price: null, pnl_pct: null, closed_at: null, grade: "B" }],
+    () => "open"
+  );
+  assert.equal(trades[0].entry, 137.8);
+});
+
+test("a closed trade carries its exit price too", () => {
+  const { trades } = simulateWallet(
+    [{ id: 2, date: "2026-08-17", symbol: "IOC", signal_type: "ohl",
+       entry: 100, status: "CLOSED", lifecycle_status: null,
+       exit_price: 112.5, pnl_pct: 12.5, closed_at: "2026-08-18", grade: "A" }],
+    () => "win"
+  );
+  assert.equal(trades[0].exit, 112.5);
+});
+
+test("the instrument's currency travels with the trade, not the book's", () => {
+  // The wallet is a ₹50L book. A US equity inside it is SIZED in rupees and
+  // QUOTED in dollars; printing the entry as ₹ would restate a $ price as an
+  // INR one, which is the bug currencyOf() was fixed for.
+  const { trades } = simulateWallet(
+    [{ id: 3, date: "2026-08-18", symbol: "SNOW", signal_type: "ohl",
+       entry: 214.3, status: "OPEN", lifecycle_status: null,
+       exit_price: null, pnl_pct: null, closed_at: null, grade: "A" },
+     { id: 4, date: "2026-08-18", symbol: "IOC", signal_type: "ohl",
+       entry: 137.8, status: "OPEN", lifecycle_status: null,
+       exit_price: null, pnl_pct: null, closed_at: null, grade: "A" }],
+    () => "open",
+    (sym) => (sym === "SNOW" ? "$" : "₹")
+  );
+  assert.equal(trades.find((t) => t.symbol === "SNOW").currency, "$");
+  assert.equal(trades.find((t) => t.symbol === "IOC").currency, "₹");
+});
+
+test("currencyOf is optional — omitting it defaults to rupees, never undefined", () => {
+  const { trades } = simulateWallet(
+    [{ id: 5, date: "2026-08-18", symbol: "IOC", signal_type: "ohl",
+       entry: 1, status: "OPEN", lifecycle_status: null,
+       exit_price: null, pnl_pct: null, closed_at: null, grade: "A" }],
+    () => "open"
+  );
+  assert.equal(trades[0].currency, "₹");
+});
