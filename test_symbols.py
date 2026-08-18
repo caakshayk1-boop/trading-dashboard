@@ -23,7 +23,12 @@ import sys
 
 logging.basicConfig(level=logging.ERROR)
 
+import re
+from pathlib import Path
+
 import symbols as sy
+
+ROOT = Path(__file__).resolve().parent
 
 CHECKS = []
 
@@ -148,6 +153,32 @@ def _():
     # NSE company called SILVER. A mistagged US row is the same failure.
     assert sy.classify("SNOW") == ("US", "Equity")
     assert sy.classify("DMART") == ("NSE", "Equity")
+
+
+@check("the JavaScript API agrees with symbols.py about the US universe")
+def _():
+    """The half that actually reaches the reader.
+
+    signals.js does `currency: currencyOf(r.symbol)` — the ledger has no
+    currency column, so the LIVE value is computed in JavaScript. Fixing only
+    the Python side would have fixed nothing a visitor can see. Two languages
+    holding the same registry can drift, so this compares them.
+    """
+    js = (ROOT / "vercel-news" / "api" / "_db.js").read_text()
+    block = js[js.index("const US_EQUITY = new Set(["):js.index("])", js.index("const US_EQUITY"))]
+    in_js = set(re.findall(r'"([A-Z0-9.\-]+)"', block))
+    assert in_js == set(sy.US_EQUITY), (
+        f"drift — only in Python: {sorted(set(sy.US_EQUITY) - in_js)}; "
+        f"only in JS: {sorted(in_js - set(sy.US_EQUITY))}")
+
+
+@check("the JS currency precedence matches Python's — commodity beats equity")
+def _():
+    js = (ROOT / "vercel-news" / "api" / "_db.js").read_text()
+    body = js[js.index("export function currencyOf"):]
+    body = body[:body.index("}")]
+    # NYSE:GOLD is Barrick; every engine here means the metal.
+    assert body.index("USD_SYMBOLS.has") < body.index("US_EQUITY.has")
 
 
 @check("an unknown symbol still defaults to NSE rather than raising")

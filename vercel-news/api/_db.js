@@ -74,6 +74,23 @@ const USD_SYMBOLS = new Set([
   "GOLD", "SILVER", "CRUDE", "NATGAS", "NGAS", "COPPER",
   "XAUUSD", "XAGUSD", "WTI", "WTIUSD", "BRENT", "BRNUSD",
 ]);
+// US-listed equities and ADRs. MUST stay in sync with symbols.py's US_EQUITY —
+// test_symbols.py compares the two sets and fails the build if they drift.
+//
+// Without this, currencyOf() fell through to its ₹ default for every US name,
+// and SNOW, SMCI and MSFT were served to the page priced in rupees. The Python
+// side had the identical hole; fixing only one language would have fixed
+// nothing, because THIS is the function the live API actually calls.
+const US_EQUITY = new Set([
+  "AAPL", "ABBV", "ACN", "AMD", "AMZN", "APLD", "APP", "ARM", "ASML",
+  "AVGO", "AXON", "AZN", "BABA", "BAC", "BAYRY", "BHP", "BIDU", "BNPQY",
+  "BRK-B", "C", "CELH", "COIN", "COP", "COST", "CRM", "CRWD", "CVX",
+  "DDOG", "DUOL", "EOG", "FCX", "FTNT", "GOOGL", "GRAB", "GS", "HD",
+  "HOOD", "IDEXY", "JD", "JNJ", "JPM", "KO", "LLY", "LVMUY", "MA", "MDB",
+  "META", "MRK", "MS", "MSFT", "NEM", "NET", "NFLX", "NVDA", "NVO", "ORCL",
+  "PANW", "PDD", "PEP", "PG", "RIO", "SAP", "SE", "SHEL", "SIEGY", "SLB",
+  "SMCI", "SNOW", "TSLA", "TSM", "UNH", "V", "WFC", "WMT", "XOM", "ZS"
+]);
 // Rates, not money amounts: "1.1517", not "$1.1517".
 const FX_PAIRS = new Set([
   "USDJPY", "EURUSD", "GBPUSD", "AUDUSD", "NZDUSD",
@@ -82,8 +99,11 @@ const FX_PAIRS = new Set([
 
 export function currencyOf(symbol) {
   const s = str(symbol).toUpperCase().replace(/\.(NS|BO)$/, "");
+  // USD_SYMBOLS first: NYSE:GOLD is Barrick, but every engine here means the
+  // COMEX contract. Same precedence as symbols.py.
   if (USD_SYMBOLS.has(s)) return "$";
   if (FX_PAIRS.has(s)) return "";
+  if (US_EQUITY.has(s)) return "$";
   return "₹";   // NSE equities, and the INR pairs where ₹ is correct
 }
 
