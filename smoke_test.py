@@ -46,7 +46,10 @@ BASE = _args[0].rstrip("/") if _args else "https://news.askakshay.com"
 # broken, which is invisible in the HTML diff but obvious here.
 PAGES = {
     "/": {"min_sections": 8, "must": ["world", "picks", "alerts"]},
-    "/desk": {"min_sections": 11, "must": ["chess", "music", "gym"]},
+    # "music" was in this list until 2026-08-18, when the section was removed
+    # on request. The gate did its job: it refused to publish a page missing a
+    # section it had been told to expect, and nothing reached production.
+    "/desk": {"min_sections": 11, "must": ["chess", "gym"]},
 }
 
 # python -m http.server has no extensionless routing, so /desk is a 404 there
