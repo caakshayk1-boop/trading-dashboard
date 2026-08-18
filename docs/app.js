@@ -1125,6 +1125,37 @@ var TV_ALIASES = (function () {
       });
     }
 
+    /* ═══════ section states ═══════
+       Every live section has four outcomes and until now most had two. The
+       common shape was `if (!j.ok) return;` — which leaves whatever was on
+       screen, so a dead API and an empty dataset look identical, and a
+       section that failed silently reads as a section with nothing in it.
+
+       One notice, using the same six-word status vocabulary as the Data
+       Health badges, so "FAILED" means the same thing everywhere on the page.
+
+       Rules, matching the rest of the site:
+         · never render a zero in place of a number that did not arrive
+         · never blank a section that already has valid older content
+         · always say WHICH state it is, not just that something went wrong */
+    function sectionNotice(target, status, msg){
+      var box = typeof target === 'string' ? el(target) : target;
+      if (!box) return;
+      box.innerHTML = '<div class="empty" style="display:flex;align-items:center;' +
+        'gap:10px;flex-wrap:wrap"><span class="dh dh-' + status + '">' + status +
+        '</span><span>' + esc(msg) + '</span></div>';
+    }
+
+    /* Wraps a loader so a rejected fetch cannot vanish. A network error used
+       to reject the promise with nothing attached — no console entry the
+       reader sees, no change on screen, and the section simply stayed as it
+       was with no indication anything had been attempted. */
+    function guard(target, msg){
+      return function(e){
+        sectionNotice(target, 'FAILED', msg + (e && e.message ? ' — ' + e.message : ''));
+      };
+    }
+
     function bar(state, msg){
       var b = el('livebar'); if (!b) return;
       b.classList.add('on');
@@ -1670,7 +1701,7 @@ var TV_ALIASES = (function () {
       api('/signals?wallet=1').then(function(j){
         if (!j.ok){ box.innerHTML = '<div class="empty">Could not load the wallet: ' + esc(j.error) + '</div>'; return; }
         renderPaperWallet(j);
-      });
+      }).catch(guard('paperWalletLive', 'The wallet could not be loaded'));
     }
 
     // money() is for per-share prices (₹83.59) and reads badly at wallet
@@ -2918,11 +2949,18 @@ var TV_ALIASES = (function () {
         qs.push('from=' + d.toISOString().slice(0, 10));
       }
       api('/stats' + (qs.length ? '?' + qs.join('&') : '')).then(function(j){
-        if (!j.ok) return;
+        // Was `if (!j.ok) return;` — which left the previous numbers on screen
+        // under a fresh dateline with nothing to say they had not refreshed.
+        if (!j.ok){
+          sectionNotice('perfNotice', 'FAILED',
+            'Performance could not be loaded' + (j.error ? ': ' + j.error : '.') +
+            ' No figure is shown rather than a stale one.');
+          return;
+        }
         paintHeroCurve(j);
         fillTfSelect(el('perfTf'), (j.by_timeframe || []).map(function(b){ return { timeframe: b.key }; }));
         renderStats(j);
-      });
+      }).catch(guard('perfNotice', 'Performance could not be loaded'));
     }
 
     // Below this many closed trades, an expectancy figure is noise wearing a

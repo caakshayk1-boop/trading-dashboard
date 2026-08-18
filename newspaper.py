@@ -8154,6 +8154,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </select>
     <span class="ghost" id="perfBasis"></span>
   </div>
+  {# Where a failed /api/stats says so. Its own node rather than reusing a
+     content container, so a failure notice can never overwrite figures that
+     did load — and an empty div renders as nothing when all is well. #}
+  <div id="perfNotice"></div>
 
   <!-- Shown by renderStats() while the closed count is below MIN_N_FOR_EDGE.
        The record restarted on the gated engine, so it will be visible for a

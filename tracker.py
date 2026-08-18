@@ -347,6 +347,7 @@ def init_db(force: bool = False):
         for col, sql in as_migrations:
             if col not in as_existing:
                 c.execute(sql)
+        _ensure_signal_versions(c)
         _ensure_multibagger_table(c)
         c.commit()
         _db.sync(c)
@@ -1420,6 +1421,93 @@ def export_signals_json():
 
 
 # ── Multibagger Signals (Weekly — Saturday) ───────────────────────────────────
+
+# ── Signal history ───────────────────────────────────────────────────────────
+# Material fields. A change to any of these changes what the engine SAID about
+# a position, so the previous statement is archived before it is overwritten.
+#
+# Deliberately excludes sent_at, send_error, alert_flags and duplicate_note:
+# those record what happened to the MESSAGE, not what the engine claimed about
+# the trade, and versioning them would bury the real changes in noise.
+VERSIONED_COLUMNS = ("entry", "sl", "target1", "target2", "target3", "rr",
+                     "status", "exit_price", "pnl_pct", "r_multiple", "grade",
+                     "score", "lifecycle_status")
+
+
+def _ensure_signal_versions(c) -> None:
+    """Append-only history of every material change to a signal.
+
+    WHY A TRIGGER, NOT A FUNCTION CALL
+
+    Sixteen separate places update all_signals, across twelve files — regrade,
+    the phantom-exit fix, the horizon fix, dedupe, reconcile, the scanner, the
+    bot, four backfills. Requiring each to remember to snapshot first means the
+    history is only as good as the least careful writer, and a new writer added
+    next month starts out silently broken.
+
+    A BEFORE UPDATE trigger cannot be forgotten and cannot be bypassed. Every
+    writer, including ones that do not exist yet, is covered the moment it
+    executes an UPDATE.
+
+    WHAT IT GUARANTEES
+
+    The ledger already publishes corrections openly — expectancy went +0.090R
+    to -0.182R on a re-grade and the site said so. What it could not do was
+    show what a signal looked like BEFORE the correction, because the row was
+    overwritten in place. This makes that recoverable: for any signal, the
+    exact levels and status the engine published at the time, and every
+    revision since, with the reason implicit in what changed.
+
+    The WHEN clause keeps it honest AND cheap — a re-run that writes identical
+    values produces no version, so the history contains changes, not activity.
+    """
+    c.execute("""CREATE TABLE IF NOT EXISTS signal_versions (
+        version_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+        signal_id   INTEGER NOT NULL,
+        captured_at TEXT    NOT NULL,
+        entry REAL, sl REAL, target1 REAL, target2 REAL, target3 REAL, rr REAL,
+        status TEXT, exit_price REAL, pnl_pct REAL, r_multiple REAL,
+        grade TEXT, score REAL, lifecycle_status TEXT,
+        engine_version TEXT)""")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_sigver_signal "
+              "ON signal_versions(signal_id, version_id)")
+
+    changed = " OR ".join(
+        f"IFNULL(OLD.{col},'~') IS NOT IFNULL(NEW.{col},'~')" for col in VERSIONED_COLUMNS)
+    c.execute(f"""
+        CREATE TRIGGER IF NOT EXISTS all_signals_version
+        BEFORE UPDATE ON all_signals
+        WHEN {changed}
+        BEGIN
+            INSERT INTO signal_versions
+                (signal_id, captured_at, entry, sl, target1, target2, target3, rr,
+                 status, exit_price, pnl_pct, r_multiple, grade, score,
+                 lifecycle_status, engine_version)
+            VALUES
+                (OLD.id, datetime('now'), OLD.entry, OLD.sl, OLD.target1, OLD.target2,
+                 OLD.target3, OLD.rr, OLD.status, OLD.exit_price, OLD.pnl_pct,
+                 OLD.r_multiple, OLD.grade, OLD.score, OLD.lifecycle_status,
+                 OLD.engine_version);
+        END""")
+
+
+def signal_history(signal_id: int) -> list[dict]:
+    """Every archived version of one signal, oldest first.
+
+    The CURRENT state is not in here — it is the row in all_signals. This is
+    what the engine said before each change.
+    """
+    try:
+        with _conn() as c:
+            rows = c.execute(
+                "SELECT * FROM signal_versions WHERE signal_id=? ORDER BY version_id",
+                (signal_id,)).fetchall()
+        return [dict(r) for r in rows]
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"signal_history({signal_id}): {e}")
+        return []
+
+
 def _ensure_multibagger_table(c):
     c.execute("""CREATE TABLE IF NOT EXISTS multibaggers (
         id        INTEGER PRIMARY KEY AUTOINCREMENT,
