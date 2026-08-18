@@ -1942,21 +1942,49 @@ ENGINE_CHANGES = [
 # a page whose order is fixed.
 SECTION_MAP = [
     # (id,          nav label,      page,   nav group)
-    ("world",       "World",        "main", "Markets"),
-    # Same nav group as #world on purpose — this is market context a reader
-    # wants before the trade ideas, not buried after the signal log.
-    ("marketintel", "Market Intel", "main", "Markets"),
-    ("who",         "Who",          "main", "About"),
-    ("picks",       "Trade Ideas",  "main", "Ideas"),
-    ("longterm",    "Long-Term",    "main", "Ideas"),
-    ("tracker",     "Portfolio",    "main", "The Book"),
-    ("sip",         "SIP Buckets",  "main", "Invest"),
-    ("funds",       "Fund Screen",  "main", "Invest"),
+    #
+    # The four groups below are the product's information architecture, and
+    # the ORDER of this list is the document order (see page_context and
+    # test_page_structure.py, which fails the build if the two drift).
+    #
+    # Before 2026-08-18 the main page ran fourteen equally-weighted sections in
+    # the order they were built, and "Track Record" appeared twice because the
+    # Stock Screen sat in the middle of it. The audit's finding was that the
+    # site had become a financial operating system presented as one long page:
+    # a reader could not tell what kind of thing they were looking at.
+    #
+    # Four runs, each answering one question:
+    #
+    #   READ      what happened
+    #   RESEARCH  what is worth owning
+    #   TRADE     what the engine did about it, and how that turned out
+    #   TRUST     why any of the above should be believed
+    #
+    # A group must be CONTIGUOUS. A group that stops and restarts prints its
+    # heading twice and stops being navigation.
+
+    # ── READ ────────────────────────────────────────────────────────────────
+    ("world",       "World",        "main", "Read"),
+    # Same run as #world on purpose — this is market context a reader wants
+    # before anything else, not something buried after the signal log.
+    ("marketintel", "Market Intel", "main", "Read"),
+
+    # ── RESEARCH ────────────────────────────────────────────────────────────
+    # Conviction first, then the vehicles, then the screen a name comes from.
+    # #stocks ends the run so it sits directly above Trade Ideas: the screen is
+    # where a name comes FROM, the ideas are what was done with it.
+    ("longterm",    "Long-Term",    "main", "Research"),
+    ("tracker",     "Portfolio",    "main", "Research"),
+    ("sip",         "SIP Buckets",  "main", "Research"),
+    ("funds",       "Fund Screen",  "main", "Research"),
     # Pure client-side arithmetic — no API, no ledger. It therefore works
     # identically on the static host, and unlike #sip it must NOT start hidden.
-    ("swp",         "SWP",          "main", "Invest"),
+    ("swp",         "SWP",          "main", "Research"),
+    ("stocks",      "Stock Screen", "main", "Research"),
+
+    # ── /desk — the personal page ───────────────────────────────────────────
     # Sits above Interview on purpose: find the role first, prepare for it
-    # second. Both belong to the same "Work" run in the nav.
+    # second. Both belong to the same "Work" run.
     ("careers",     "Finance Careers", "desk", "Work"),
     ("interview",   "Interview",    "desk", "Work"),
     ("language",    "Language",     "desk", "Practice"),
@@ -1966,37 +1994,37 @@ SECTION_MAP = [
     ("mind",        "The Mind",     "desk", "Reading"),
     ("way",         "The Way",      "desk", "Reading"),
     ("review",      "The Review",   "desk", "Reading"),
-    ("chess",       "Chess",        "desk", "Drills"),
-    # Sits directly above Music — both are "what is playing this week", and
-    # the nav group keeps them adjacent no matter how the page is reordered.
-    # The Daily Brief sits directly ABOVE Smart Reads and shares its nav group:
-    # the wire compressed into events, then the longer reading. Order in this
-    # list IS document order, so this is the whole placement.
+    # The Daily Brief sits directly ABOVE Smart Reads and shares its run: the
+    # wire compressed into events, then the longer reading.
     ("brief",       "Daily Brief",  "desk", "Reading"),
     ("smartreads",  "Smart Reads",  "desk", "Reading"),
     ("resources",   "Resources",    "desk", "Reading"),
+    # Chess moved down into Drills on 2026-08-18. It used to sit between The
+    # Review and the Daily Brief, which split Reading into two runs and printed
+    # that heading twice for no reason a reader could see.
+    ("chess",       "Chess",        "desk", "Drills"),
     ("podcasts",    "Podcasts",     "desk", "Drills"),
     ("music",       "Music",        "desk", "Drills"),
     ("gym",         "Mind Gym",     "desk", "Drills"),
-    ("perf",        "Performance",  "main", "Track Record"),
-    ("rules",       "Engine Log",   "main", "Track Record"),
-    # Sits directly above the Signal Log because that is the reading order that
-    # makes sense: the screen is where a name comes FROM, the log is what
-    # happened to the ones that were acted on. Its own nav group, because a
-    # research screen is not a track record — which does mean "Track Record"
-    # prints twice in the nav, above rules and again above alerts. That is the
-    # documented behaviour of a repeated group (see the SECTION_MAP note) and
-    # the honest rendering of a fixed document order, not a bug to work around
-    # by moving the section somewhere it does not belong.
-    ("stocks",      "Stock Screen", "main", "Research"),
-    # Sits between the screen and the log for the same reading-order reason
-    # #stocks itself sits above #alerts: this is what a name FROM the screen
-    # or the log turns into once it's sized — before the outcome the log
-    # records. Forward-only from launch, so it starts empty and fills as new
-    # signals land; that is the honest state of a track record on day one,
-    # not a bug to paper over with fabricated history.
-    ("paperwallet", "Paper Wallet", "main", "Track Record"),
-    ("alerts",      "Signal Log",   "main", "Track Record"),
+
+    # ── TRADE ───────────────────────────────────────────────────────────────
+    # The reading order the ledger actually has: the idea, what it was sized
+    # to, what happened to it, and what that adds up to.
+    ("picks",       "Trade Ideas",  "main", "Trade"),
+    # Forward-only from launch, so it starts empty and fills as new signals
+    # land; that is the honest state of a track record on day one, not a bug
+    # to paper over with fabricated history.
+    ("paperwallet", "Paper Wallet", "main", "Trade"),
+    ("alerts",      "Signal Log",   "main", "Trade"),
+    ("perf",        "Performance",  "main", "Trade"),
+
+    # ── TRUST ───────────────────────────────────────────────────────────────
+    # Why believe any of the above. The Engine Log says what the record forced
+    # the engine to change; Data Health says whether today's numbers are
+    # actually current; Who says who is accountable for both.
+    ("rules",       "Engine Log",   "main", "Trust"),
+    ("datahealth",  "Data Health",  "main", "Trust"),
+    ("who",         "Who",          "main", "Trust"),
 ]
 
 PAGE_META = {
@@ -2026,7 +2054,7 @@ PAGE_META = {
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
                    stock_screen=None, market_intel=None, careers=None,
-                   brief=None) -> set:
+                   brief=None, health=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2067,6 +2095,13 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     # advertise a section the document does not contain.
     if not (brief or {}).get("events"):
         drop.add("brief")
+    # #datahealth renders from the health snapshot and nothing else. The Flask
+    # routes render this template without one, and a nav link to a section the
+    # document does not contain is the exact failure this helper exists to
+    # prevent — the same one #funds caused when its extra render condition was
+    # left to a template guard.
+    if not (health or {}).get("datasets"):
+        drop.add("datahealth")
     return drop
 
 
@@ -2498,7 +2533,27 @@ def _stamp_fund_payload(data: dict, fallback: bool) -> dict:
     return data
 
 
-def record_job_status(job: str, status: str, detail: str = "") -> None:
+def _migrate_job_runs(con) -> None:
+    """job_runs, plus the two columns that make a partial build legible.
+
+    ALTER per column inside its own try because SQLite has no ADD COLUMN IF
+    NOT EXISTS and this runs on every write. Idempotent by construction: the
+    second call raises "duplicate column name" and is swallowed, which is the
+    established migration shape in tracker.py.
+    """
+    con.execute("""CREATE TABLE IF NOT EXISTS job_runs (
+        job TEXT PRIMARY KEY, run_at TEXT, status TEXT, detail TEXT)""")
+    for ddl in ("ALTER TABLE job_runs ADD COLUMN records INTEGER",
+                "ALTER TABLE job_runs ADD COLUMN expected INTEGER"):
+        try:
+            con.execute(ddl)
+        except Exception:
+            pass
+
+
+def record_job_status(job: str, status: str, detail: str = "",
+                      records: int | None = None,
+                      expected: int | None = None) -> None:
     """Record the outcome of a publish attempt — success or failure — keyed
     by job name, one row per job.
 
@@ -2509,14 +2564,26 @@ def record_job_status(job: str, status: str, detail: str = "") -> None:
     the payload tables (newspaper_screen / newspaper_funds /
     newspaper_market_intel) so a failed attempt is queryable even when it
     produced no payload at all.
+
+    `records` and `expected` are how many rows the ATTEMPT produced against
+    how many a complete build has. They are not decoration. The 2026-08-18
+    audit found the site showing a 750-company table while simultaneously
+    warning that the newest rebuild had priced only 50 — the two numbers
+    lived in different places and nothing could state them side by side.
+    Recorded here, the health layer can say "published 750 / latest attempt
+    50 of 750 / FAILED" as one sentence instead of two contradictory ones.
+
+    A free-text detail string could never do this: "only 50 companies priced"
+    is unparseable, so no badge, test or API could act on it.
     """
     try:
         with _db() as con:
-            con.execute("""CREATE TABLE IF NOT EXISTS job_runs (
-                job TEXT PRIMARY KEY, run_at TEXT, status TEXT, detail TEXT)""")
+            _migrate_job_runs(con)
             con.execute(
-                "INSERT OR REPLACE INTO job_runs VALUES (?,?,?,?)",
-                (job, datetime.now(timezone.utc).isoformat(), status, detail[:500]))
+                "INSERT OR REPLACE INTO job_runs "
+                "(job, run_at, status, detail, records, expected) VALUES (?,?,?,?,?,?)",
+                (job, datetime.now(timezone.utc).isoformat(), status, detail[:500],
+                 records, expected))
             con.commit()
     except Exception as e:
         log.warning(f"record_job_status({job}): {e}")
@@ -2540,13 +2607,20 @@ def get_job_status(job: str, served_generated_at: str | None = None) -> dict:
     """
     try:
         with _db() as con:
+            _migrate_job_runs(con)
             row = con.execute(
-                "SELECT run_at, status, detail FROM job_runs WHERE job=?",
-                (job,)).fetchone()
+                "SELECT run_at, status, detail, records, expected "
+                "FROM job_runs WHERE job=?", (job,)).fetchone()
         if not row:
             return {}
         out = {"run_at": row[0], "status": row[1], "detail": row[2],
+               "records": row[3], "expected": row[4],
                "attempted_after_serve": False}
+        # The attempt's own coverage, kept separate from the SERVED payload's
+        # coverage on purpose. Collapsing them is exactly the contradiction
+        # the audit found: one number describing two different builds.
+        out["attempt_coverage"] = (f"{row[3]}/{row[4]}"
+                                   if row[3] is not None and row[4] else None)
         if row[1] == "failed" and served_generated_at:
             try:
                 attempt_ts = datetime.fromisoformat(str(row[0]).replace("Z", "+00:00"))
@@ -4479,6 +4553,46 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .snum{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:2px;margin-bottom:12px;display:block}
 .stitle{font-size:clamp(26px,4.4vw,50px);font-weight:700;letter-spacing:-1.8px;line-height:1}
 .sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
+/* ── Data health ─────────────────────────────────────────────────────────
+   One badge, six statuses, every section. Before it, #funds said "0.5d old",
+   #stocks printed a coverage count and the brief said nothing — a reader had
+   no way to tell which section was oldest.
+
+   Colour is deliberately NOT the only signal. The status WORD is always
+   printed next to the dot, because a green dot over stale data is precisely
+   the misleading "live" presentation the 2026-08-18 audit named. It also
+   means the badge survives a colour-blind reader and a greyscale print. */
+.dh{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
+  padding:3px 8px;border-radius:3px;border:1px solid var(--line2);
+  color:var(--muted);white-space:nowrap;vertical-align:middle}
+.dh::before{content:"";width:6px;height:6px;border-radius:50%;
+  background:currentColor;flex:none}
+.dh-LIVE{color:var(--up);border-color:rgba(61,220,151,.35)}
+.dh-FRESH{color:var(--lime);border-color:var(--lime-line)}
+.dh-STALE{color:var(--gold);border-color:rgba(232,197,71,.35)}
+.dh-DEGRADED{color:var(--gold);border-color:rgba(232,197,71,.55);background:rgba(232,197,71,.07)}
+.dh-FAILED{color:var(--down);border-color:rgba(255,92,92,.45);background:rgba(255,92,92,.07)}
+.dh-UNAVAILABLE{color:var(--dim)}
+.dh-age{color:var(--dim);letter-spacing:.4px;text-transform:none;font-size:10px}
+/* The health table. Grid rather than <table> so it can reflow to stacked
+   cards on a phone without a horizontal scroller — the audit's mobile note
+   was specifically that dense tables must be redesigned, not shrunk. */
+.dh-list{list-style:none;display:grid;gap:10px;margin-top:20px}
+.dh-row{border:1px solid var(--line);border-left:2px solid var(--line2);
+  border-radius:4px;padding:14px 16px;background:var(--surface)}
+.dh-row.bad{border-left-color:var(--gold);background:var(--surface2)}
+.dh-row.dead{border-left-color:var(--down);background:var(--surface2)}
+.dh-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dh-name{font-weight:500;font-size:14px}
+.dh-src{color:var(--dim);font-size:12px;margin-left:auto}
+.dh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px 18px;margin-top:12px;font-size:12px}
+.dh-grid dt{color:var(--dim);font-family:var(--mono);font-size:10px;
+  letter-spacing:1px;text-transform:uppercase}
+.dh-grid dd{color:var(--muted);font-family:var(--mono);margin-top:2px}
+.dh-note{margin-top:10px;font-size:12px;color:var(--gold);line-height:1.5}
+@media(max-width:560px){.dh-src{margin-left:0;width:100%}}
 /* Provenance strip. Every weekly artefact on this page showed its RESULT and
    not its VINTAGE, so "ran and found the same funds" and "did not run at all"
    rendered identically. One strip, stated the same way in every section that
@@ -5679,11 +5793,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <main>
 
+{# ── The one freshness badge ────────────────────────────────────────────────
+   Every section that renders data calls this and nothing else. A section that
+   phrases its own freshness is a section that can disagree with the health
+   page about the same build, which is the state the audit found the site in.
+
+   Guarded on `health` because the Flask routes render this same template
+   without it — an undefined lookup there renders nothing rather than raising,
+   so the badge is additive and can never take a page down. #}
+{% macro dh(name) %}{% if health and health.by_name.get(name) %}{% set d = health.by_name[name] %}
+<span class="dh dh-{{ d.status }}" title="{{ d.headline }}">{{ d.status }}<span class="dh-age">{{ d.freshness_age }}</span></span>{% endif %}{% endmacro %}
+
 <!-- ══════════ 04 WORLD ══════════ -->
 {% if 'world' in secs %}<section class="sec" id="world">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['world'] }} / {{ seclabel['world'] }}</span>
+      <span class="snum">{{ secnum['world'] }} / {{ seclabel['world'] }}</span> {{ dh('World news') }}
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
@@ -5778,7 +5903,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'marketintel' in secs %}<section class="sec" id="marketintel">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['marketintel'] }} / {{ seclabel['marketintel'] }}</span>
+      <span class="snum">{{ secnum['marketintel'] }} / {{ seclabel['marketintel'] }}</span> {{ dh('Market Intelligence') }}
       <h2 class="stitle">What moved the tape today.</h2>
     </div>
     <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
@@ -5868,133 +5993,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      back to. The claim that earns the address is the losing month printed in
      public further down, so the ask belongs after it, not before.
      The submit handler binds to every .sub-form, so it needs no change. -->
-
-<!-- ══════════ WHO ══════════
-     Wording lifted from askakshay.com so the two sites say the same thing.
-     Sits between the world and the trade ideas: a reader who arrived from a
-     Telegram link should know whose ledger they are reading before they read
-     the numbers. -->
-{% if 'who' in secs %}<section class="sec" id="who">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['who'] }} / {{ seclabel['who'] }}</span>
-      <h2 class="stitle">Who is publishing this.</h2>
-    </div>
-    <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
-      can&rsquo;t build. Both, here.</p>
-  </div>
-
-  <div class="who rv">
-    <div class="who-m">
-      <div class="who-name">Akshay K Kothari</div>
-      <div class="who-role">Chartered Accountant &middot; FP&amp;A &middot; AI builder</div>
-      <p>CA with 10 years in corporate finance. $100M+ P&amp;L managed. I build AI tools
-        finance teams actually pay for &mdash; and write the essays, models and calculators
-        behind them.</p>
-      <p class="who-sub">This page is one of those tools. Every signal below is logged the
-        moment it fires, scored when it closes, and left on the record either way.
-        Wins and losses both. Nothing hidden.</p>
-      <div class="who-links">
-        <a href="https://askakshay.com" target="_blank" rel="noopener">askakshay.com &nearr;</a>
-        <a href="https://terminal.askakshay.com" target="_blank" rel="noopener">Dhruvedge terminal &nearr;</a>
-        <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn &nearr;</a>
-      </div>
-    </div>
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 01 TRADE IDEAS ══════════ -->
-{% if 'picks' in secs %}<section class="sec" id="picks">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span>
-      <h2 class="stitle">Top 5 trade ideas.</h2>
-    </div>
-    <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
-      Target 20–30%. Every idea carries a stop.
-      {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
-      showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
-  </div>
-
-  <div class="prov{{ ' stale' if top5_week else '' }} rv">
-    <span class="pv-tag">WEEKLY</span>
-    <span>Ranked once per ISO week &mdash; <b>the same five all week is the design</b>, not a stalled scan</span>
-    <span>Engine <b>{{ picks_engine }}</b></span>
-    <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
-      never touch win rate or expectancy</span>
-  </div>
-  {% if top5 %}
-  <div class="pick-grid">
-    {% for s in top5 %}
-    <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
-      <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-        <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
-             target="_blank" rel="noopener"
-             title="Open {{ s.name }} on TradingView">{{ s.name }}</a></div>
-        <span class="tag">{{ s.score }}/100</span>
-      </div>
-      <div class="px">{{ s.currency }}{{ s.price }}</div>
-      <div class="mom">
-        <span class="{{ 'up' if s.change_1d >= 0 else 'dn' }}">1D <b>{{ '+' if s.change_1d >= 0 else '' }}{{ s.change_1d | round(2) }}%</b></span>
-        <span class="{{ 'up' if s.mom_1m >= 0 else 'dn' }}">1M <b>{{ '+' if s.mom_1m >= 0 else '' }}{{ s.mom_1m | round(2) }}%</b></span>
-        <span class="{{ 'up' if s.mom_3m >= 0 else 'dn' }}">3M <b>{{ '+' if s.mom_3m >= 0 else '' }}{{ s.mom_3m | round(2) }}%</b></span>
-      </div>
-      <div class="scorebar" style="--w:{{ s.score }}%"><i></i></div>
-      {% if s.thesis %}<div class="th">{{ s.thesis }}</div>{% endif %}
-
-      {# Where the score came from. A composite with no breakdown is a number
-         the reader has to take on trust, and the whole argument of this site
-         is that nothing here should be taken on trust. Collapsed by default —
-         it is the answer to a question, not the headline. #}
-      {% if s.factors %}
-      <details class="why">
-        <summary>Why {{ s.score }}<span>/100</span></summary>
-        <div class="why-b">
-          {% for f in s.factors %}
-          <div class="why-r">
-            <span class="wk">{{ f.k }}</span>
-            <span class="wb" style="--w:{{ (f.e / f.w * 100) | round(0) | int }}%"><i></i></span>
-            <span class="wn">{{ f.e }}<em>/{{ f.w }}</em></span>
-          </div>
-          {% endfor %}
-        </div>
-      </details>
-      {% endif %}
-
-      {# The level that ends the idea, stated before it is reached. An idea
-         with a target and a stop but no invalidation only tells you where you
-         are wrong on price, never where you are wrong on the reason. #}
-      {% if s.ema20 %}
-      <div class="inval">
-        <b>Wrong if</b> {{ s.name }} closes below {{ s.currency }}{{ s.ema20 }} — its 20-day
-        average, and the single biggest component of that score.
-      </div>
-      {% endif %}
-
-      <div class="lvl">
-        <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
-        <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
-        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">{{ s.timeframe }}</div></div>
-      </div>
-      <form action="/tracker/add" method="post" style="margin-top:14px">
-        <input type="hidden" name="symbol" value="{{ s.symbol }}">
-        <input type="hidden" name="name" value="{{ s.name }}">
-        <input type="hidden" name="entry_price" value="{{ s.price }}">
-        <input type="hidden" name="target_price" value="{{ s.target }}">
-        <input type="hidden" name="stop_loss" value="{{ s.stop_loss }}">
-        <input type="hidden" name="thesis" value="{{ s.thesis }}">
-        <input type="hidden" name="timeframe" value="{{ s.timeframe }}">
-        <button type="submit" class="btn btn-sm">+ Track</button>
-      </form>
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
-    if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
-  {% endif %}
-</section>{% endif %}
 
 <!-- ══════════ LONG-TERM CONVICTION ══════════
      Written by ai_longterm.py, which screens the business before the chart.
@@ -6178,7 +6176,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="funds">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['funds'] }} / {{ seclabel['funds'] }}</span>
+      <span class="snum">{{ secnum['funds'] }} / {{ seclabel['funds'] }}</span> {{ dh('Fund screen') }}
       <h2 class="stitle">Where the SIP goes.</h2>
     </div>
     <p class="sdesc">Top three by three-year return in each category, from
@@ -6534,7 +6532,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'careers' in secs %}<section class="sec" id="careers">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['careers'] }} / {{ seclabel['careers'] }}</span>
+      <span class="snum">{{ secnum['careers'] }} / {{ seclabel['careers'] }}</span> {{ dh('Careers feed') }}
       <h2 class="stitle">Where the next role is.</h2>
     </div>
     <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
@@ -7133,6 +7131,193 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </section>{% endif %}
 
+<!-- ══════════ SMART READS ══════════
+     The wire tells you what happened; these argue about what it means. Same
+     named mastheads, but the analysis and money desks rather than the market
+     report, and a card only ships when the publisher gave it a real summary —
+     a headline with a border round it is a link, not a read.
+
+     Filtered harder than the news feed (two distinct finance terms, not one).
+     Opinion desks run film and language columns beside the money writing, and
+     one incidental word is how a review of The Odyssey reached a finance
+     page during the build of this section. -->
+{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
+   The wire compressed into EVENTS. Sits directly above Smart Reads: what
+   happened, then the longer reading. Every number and name in the generated
+   prose has been checked against the source articles by brief_engine.qa_reject
+   before it reaches here; anything that failed fell back to a summary built
+   from the headlines themselves and is marked as such. #}
+{% if 'brief' in secs %}<section class="sec" id="brief">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span> {{ dh('Daily Brief') }}
+      <h2 class="stitle">Everything important today.</h2>
+    </div>
+    <p class="sdesc">{{ brief.stats.articles }} articles from
+      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
+      ranked by what actually matters &mdash; not by how many outlets syndicated it.
+      Sources kept on every one.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>~{{ brief.stats.read_minutes }} min read</span>
+    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
+      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
+    {% if brief.get('is_fallback') %}
+      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
+    {% endif %}
+    <span>{{ brief.stats.ai_written }} written up
+      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
+  </div>
+
+  {% macro ev_card(e, top) %}
+  <article class="ev{{ ' ev-top' if top }}">
+    <div class="ev-h">
+      <span class="ev-cat">{{ e.category }}</span>
+      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
+        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
+      </span>
+    </div>
+    <h3 class="ev-t">{{ e.headline }}</h3>
+    <div class="ev-m">
+      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
+      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
+      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
+    </div>
+    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    {% if e.whyItMatters %}
+    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
+    {% endif %}
+    {% if e.marketImpact %}
+    <div class="ev-mi">
+      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
+    <div class="ev-s">
+      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
+    </div>
+  </article>
+  {% endmacro %}
+
+  <h3 class="jsub rv">Top stories</h3>
+  <div class="ev-grid rv">
+    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
+  </div>
+
+  {# Everything past the top five, collapsed. The whole point is a ten-minute
+     read; the rest is there for the day you want it. #}
+  {% set rest = brief.events[brief.top|length:] %}
+  {% if rest %}
+  <details class="fund-note-d rv">
+    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
+    <div class="ev-grid" style="margin-top:14px">
+      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
+    </div>
+  </details>
+  {% endif %}
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Summaries are written from the linked reporting and nothing else &mdash; every figure and
+    name is checked against the source articles before publishing, and an event that fails
+    that check falls back to the outlets' own headlines rather than to invented copy.
+    Read the originals for the full story.
+  </p>
+</section>{% endif %}
+
+{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span> {{ dh('Smart Reads') }}
+      <h2 class="stitle">Worth the ten minutes.</h2>
+    </div>
+    <!-- Copy rewritten when this stopped being a finance-only section. It used
+         to name five money mastheads, which was accurate then and would have
+         been quietly wrong the moment the other four categories landed. -->
+    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
+      &mdash; markets and personal finance alongside habits and focus, health and
+      longevity, psychology and relationships, and the longer essays on thinking
+      and living well. Every card carries the publisher&rsquo;s own summary, so you
+      know what a piece argues before you open it.</p>
+  </div>
+
+  <div class="sr-grid">
+    {% for r in smart_reads %}
+    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
+      <div class="sr-h">
+        <span class="sr-src">{{ r.source }}</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
+          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
+           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
+        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
+      </div>
+      <h3 class="sr-t">
+        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
+        {%- else %}{{ r.title }}{% endif -%}
+      </h3>
+      <p class="sr-s">{{ r.summary }}</p>
+      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ PODCASTS ══════════
+     Twenty long-form episodes from Indian shows, newest first, one line of what
+     each is about. Everything here is the publisher's: title, date, link and
+     a takeaway compressed from their OWN episode description. Nothing is
+     inferred from a title and nothing is written about a guest from general
+     knowledge — see the header of podcasts.py for why that line is drawn hard.
+     Round-robin by show, so a channel posting three times a day cannot own
+     the list. Rebuilt DAILY — it was weekly, which left new episodes from
+     every-other-day publishers unlisted for up to a week.
+
+     Shorts are excluded by asking YouTube whether each id is one, not by
+     looking for "#shorts" in the title. Most Shorts do not say so: "This SWP
+     Mistake Can Destroy Your Retirement Plan!" reads exactly like an episode
+     and is forty seconds long. See podcasts._is_short. -->
+{# ══════════ RESOURCES ══════════
+   A curated shelf, not a scrape — these live in resources.py where they can be
+   reviewed. Every URL was checked live before shipping; three from the original
+   list 404'd or paywalled and are absent rather than published broken. #}
+{% if 'resources' in secs %}<section class="sec" id="resources">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['resources'] }} / {{ seclabel['resources'] }}</span>
+      <h2 class="stitle">How the tools work.</h2>
+    </div>
+    <p class="sdesc">The documentation, repositories and papers behind the systems on this
+      site. Ordered so the official material comes first and the research last &mdash; read
+      ReAct before the rest, everything else extends it.</p>
+  </div>
+
+  {% for g in resources %}
+  <div class="res-g rv">
+    <h3 class="res-h">{{ g.group }}</h3>
+    <div class="res-l">
+      {% for r in g['items'] %}
+      <a class="res-i" href="{{ r.url }}" target="_blank" rel="noopener">
+        <span class="res-t">{{ r.title }}</span>
+        <span class="res-n">{{ r.note }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+
+  <p class="note rv" style="margin-top:12px;color:var(--dim);font-size:12px">
+    Every link here returned 200 when this page was built. If one rots, it is dropped
+    rather than left in place &mdash; a resource list you have to test yourself is worse
+    than no list.
+  </p>
+</section>{% endif %}
+
 <!-- ══════════ 09 CHESS ══════════ -->
 {% if 'chess' in secs %}<section class="sec" id="chess">
   <div class="shead rv">
@@ -7316,197 +7501,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      one click away — a shelf you can see the whole of is a shelf you stop
      scanning. The five on top rotate daily, so the shelf reads differently
      every morning without the list changing. -->
-<!-- ══════════ SMART READS ══════════
-     The wire tells you what happened; these argue about what it means. Same
-     named mastheads, but the analysis and money desks rather than the market
-     report, and a card only ships when the publisher gave it a real summary —
-     a headline with a border round it is a link, not a read.
-
-     Filtered harder than the news feed (two distinct finance terms, not one).
-     Opinion desks run film and language columns beside the money writing, and
-     one incidental word is how a review of The Odyssey reached a finance
-     page during the build of this section. -->
-{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
-   The wire compressed into EVENTS. Sits directly above Smart Reads: what
-   happened, then the longer reading. Every number and name in the generated
-   prose has been checked against the source articles by brief_engine.qa_reject
-   before it reaches here; anything that failed fell back to a summary built
-   from the headlines themselves and is marked as such. #}
-{% if 'brief' in secs %}<section class="sec" id="brief">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span>
-      <h2 class="stitle">Everything important today.</h2>
-    </div>
-    <p class="sdesc">{{ brief.stats.articles }} articles from
-      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
-      ranked by what actually matters &mdash; not by how many outlets syndicated it.
-      Sources kept on every one.</p>
-  </div>
-
-  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
-    <span class="pv-tag">DAILY</span>
-    <span>~{{ brief.stats.read_minutes }} min read</span>
-    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
-      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
-    {% if brief.get('is_fallback') %}
-      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
-    {% endif %}
-    <span>{{ brief.stats.ai_written }} written up
-      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
-  </div>
-
-  {% macro ev_card(e, top) %}
-  <article class="ev{{ ' ev-top' if top }}">
-    <div class="ev-h">
-      <span class="ev-cat">{{ e.category }}</span>
-      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
-        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
-      </span>
-    </div>
-    <h3 class="ev-t">{{ e.headline }}</h3>
-    <div class="ev-m">
-      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
-      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
-      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
-    </div>
-    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
-    {% if e.whyItMatters %}
-    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
-    {% endif %}
-    {% if e.marketImpact %}
-    <div class="ev-mi">
-      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
-    </div>
-    {% endif %}
-    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
-    <div class="ev-s">
-      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
-    </div>
-  </article>
-  {% endmacro %}
-
-  <h3 class="jsub rv">Top stories</h3>
-  <div class="ev-grid rv">
-    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
-  </div>
-
-  {# Everything past the top five, collapsed. The whole point is a ten-minute
-     read; the rest is there for the day you want it. #}
-  {% set rest = brief.events[brief.top|length:] %}
-  {% if rest %}
-  <details class="fund-note-d rv">
-    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
-    <div class="ev-grid" style="margin-top:14px">
-      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
-    </div>
-  </details>
-  {% endif %}
-
-  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
-    Summaries are written from the linked reporting and nothing else &mdash; every figure and
-    name is checked against the source articles before publishing, and an event that fails
-    that check falls back to the outlets' own headlines rather than to invented copy.
-    Read the originals for the full story.
-  </p>
-</section>{% endif %}
-
-{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span>
-      <h2 class="stitle">Worth the ten minutes.</h2>
-    </div>
-    <!-- Copy rewritten when this stopped being a finance-only section. It used
-         to name five money mastheads, which was accurate then and would have
-         been quietly wrong the moment the other four categories landed. -->
-    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
-      &mdash; markets and personal finance alongside habits and focus, health and
-      longevity, psychology and relationships, and the longer essays on thinking
-      and living well. Every card carries the publisher&rsquo;s own summary, so you
-      know what a piece argues before you open it.</p>
-  </div>
-
-  <div class="sr-grid">
-    {% for r in smart_reads %}
-    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
-      <div class="sr-h">
-        <span class="sr-src">{{ r.source }}</span>
-        <!-- The category, not a constant "SMART READS" label. The point of the
-             mix is that a reader can see at a glance it is not nine money
-             pieces, and a tag that says the same thing on every card cannot
-             show that. -->
-        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
-          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
-           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
-        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
-      </div>
-      <h3 class="sr-t">
-        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
-        {%- else %}{{ r.title }}{% endif -%}
-      </h3>
-      <p class="sr-s">{{ r.summary }}</p>
-      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
-    </article>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ PODCASTS ══════════
-     Twenty long-form episodes from Indian shows, newest first, one line of what
-     each is about. Everything here is the publisher's: title, date, link and
-     a takeaway compressed from their OWN episode description. Nothing is
-     inferred from a title and nothing is written about a guest from general
-     knowledge — see the header of podcasts.py for why that line is drawn hard.
-     Round-robin by show, so a channel posting three times a day cannot own
-     the list. Rebuilt DAILY — it was weekly, which left new episodes from
-     every-other-day publishers unlisted for up to a week.
-
-     Shorts are excluded by asking YouTube whether each id is one, not by
-     looking for "#shorts" in the title. Most Shorts do not say so: "This SWP
-     Mistake Can Destroy Your Retirement Plan!" reads exactly like an episode
-     and is forty seconds long. See podcasts._is_short. -->
-{# ══════════ RESOURCES ══════════
-   A curated shelf, not a scrape — these live in resources.py where they can be
-   reviewed. Every URL was checked live before shipping; three from the original
-   list 404'd or paywalled and are absent rather than published broken. #}
-{% if 'resources' in secs %}<section class="sec" id="resources">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['resources'] }} / {{ seclabel['resources'] }}</span>
-      <h2 class="stitle">How the tools work.</h2>
-    </div>
-    <p class="sdesc">The documentation, repositories and papers behind the systems on this
-      site. Ordered so the official material comes first and the research last &mdash; read
-      ReAct before the rest, everything else extends it.</p>
-  </div>
-
-  {% for g in resources %}
-  <div class="res-g rv">
-    <h3 class="res-h">{{ g.group }}</h3>
-    <div class="res-l">
-      {% for r in g['items'] %}
-      <a class="res-i" href="{{ r.url }}" target="_blank" rel="noopener">
-        <span class="res-t">{{ r.title }}</span>
-        <span class="res-n">{{ r.note }}</span>
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-
-  <p class="note rv" style="margin-top:12px;color:var(--dim);font-size:12px">
-    Every link here returned 200 when this page was built. If one rots, it is dropped
-    rather than left in place &mdash; a resource list you have to test yourself is worse
-    than no list.
-  </p>
-</section>{% endif %}
-
 {% if 'podcasts' in secs %}<section class="sec" id="podcasts">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span>
+      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
       <h2 class="stitle">What&rsquo;s worth listening to.</h2>
     </div>
     <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
@@ -7666,99 +7664,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="gym-score rv" id="gymScore"></div>
 </section>{% endif %}
 
-<!-- ══════════ 11 PERFORMANCE ══════════
-     Entirely live. Hidden on a static host, where there is no ledger to
-     compute an edge from. -->
-{% if 'perf' in secs %}<section class="sec" id="perf" style="display:none">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['perf'] }} / {{ seclabel['perf'] }}</span>
-      <h2 class="stitle">Does this actually work?</h2>
-    </div>
-    <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
-      Open signals are excluded, because counting them is how a 50% system starts looking like an 80% one.</p>
-  </div>
-
-  <div class="ctlbar rv">
-    <select id="perfTf" aria-label="Filter performance by timeframe"><option value="">All timeframes</option></select>
-    <select id="perfRange" aria-label="Filter performance by date range">
-      <option value="">All time</option>
-      <option value="30">Last 30 days</option>
-      <option value="90">Last 90 days</option>
-      <option value="365">Last 12 months</option>
-    </select>
-    <span class="ghost" id="perfBasis"></span>
-  </div>
-
-  <!-- Shown by renderStats() while the closed count is below MIN_N_FOR_EDGE.
-       The record restarted on the gated engine, so it will be visible for a
-       while — that is the honest state of a ledger that has just begun. -->
-  <p class="thin-warn rv" id="perfThin" style="display:none"></p>
-
-  <div class="perf-grid rv" id="perfGrid"></div>
-  <!-- Drawdown, beside the number that sells the system. Painted by
-       paintUnderwater() from the same equity_curve the hero chart uses. -->
-  <div class="uw rv" id="perfUw"></div>
-  <div class="brk rv" id="perfBrk"></div>
-</section>{% endif %}
-
-<!-- ══════════ ENGINE LOG ══════════
-     Server-rendered and always visible — no API, no display:none. It has to
-     survive the static snapshot, because the whole point is that a reader can
-     see what changed in the rules even on a day the ledger is unreachable. -->
-{% if 'rules' in secs %}<section class="sec" id="rules">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['rules'] }} / {{ seclabel['rules'] }}</span>
-      <h2 class="stitle">What the ledger changed.</h2>
-    </div>
-    <p class="sdesc">Every rule the engine follows because the record forced it — with the number
-      that forced it. Including the ideas that were tested and thrown away.</p>
-  </div>
-
-  <ol class="elog rv">
-    {% for c in engine_changes %}
-    <li class="elog-i">
-      <div class="elog-m">
-        <time class="elog-d">{{ c.date }}</time>
-        <span class="elog-t">{{ c.tag }}</span>
-        <span class="elog-v {{ c.verdict }}">{{ c.verdict }}</span>
-      </div>
-      {# Collapsed by default. The log runs to every rule the engine has ever
-         adopted or rejected, each with a body paragraph, an evidence table and
-         a caveat — fully expanded it buried the section and made the list
-         impossible to scan. The RULE stays visible; the reasoning is one click
-         away. Native <details> for the same reasons as the fund screen: no
-         stacking context, and it still reads fully with JS off. #}
-      <details class="elog-b">
-        <summary class="elog-sum">
-          <h3 class="elog-h">{{ c.title }}</h3>
-          <span class="elog-more">Evidence</span>
-        </summary>
-        <div class="elog-d2">
-          <p class="elog-p">{{ c.body }}</p>
-          {% if c.evidence %}
-          <table class="elog-e">
-            <tbody>
-            {% for label, val, n, sig in c.evidence %}
-              <tr>
-                <th scope="row">{{ label }}</th>
-                <td class="num">{{ val }}</td>
-                <td class="num elog-n">{{ n }}</td>
-                <td class="num elog-s">{{ sig }}</td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-          {% endif %}
-          {% if c.note %}<p class="elog-c">{{ c.note }}</p>{% endif %}
-        </div>
-      </details>
-    </li>
-    {% endfor %}
-  </ol>
-</section>{% endif %}
-
 <!-- ══════════ STOCK SCREEN ══════════
      Five hundred companies ranked on published annual statements, sitting
      directly above the Signal Log because that is the reading order: this is
@@ -7780,7 +7685,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="stocks">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['stocks'] }} / {{ seclabel['stocks'] }}</span>
+      <span class="snum">{{ secnum['stocks'] }} / {{ seclabel['stocks'] }}</span> {{ dh('Stock screen') }}
       <h2 class="stitle">Which {{ stock_screen.count or '—' }}, and why.</h2>
     </div>
     <div style="text-align:right">
@@ -8049,6 +7954,99 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>
 {% endif %}
 
+<!-- ══════════ 01 TRADE IDEAS ══════════ -->
+{% if 'picks' in secs %}<section class="sec" id="picks">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span> {{ dh('Trade ideas') }}
+      <h2 class="stitle">Top 5 trade ideas.</h2>
+    </div>
+    <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
+      Target 20–30%. Every idea carries a stop.
+      {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
+      showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
+  </div>
+
+  <div class="prov{{ ' stale' if top5_week else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Ranked once per ISO week &mdash; <b>the same five all week is the design</b>, not a stalled scan</span>
+    <span>Engine <b>{{ picks_engine }}</b></span>
+    <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
+      never touch win rate or expectancy</span>
+  </div>
+  {% if top5 %}
+  <div class="pick-grid">
+    {% for s in top5 %}
+    <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
+      <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
+             target="_blank" rel="noopener"
+             title="Open {{ s.name }} on TradingView">{{ s.name }}</a></div>
+        <span class="tag">{{ s.score }}/100</span>
+      </div>
+      <div class="px">{{ s.currency }}{{ s.price }}</div>
+      <div class="mom">
+        <span class="{{ 'up' if s.change_1d >= 0 else 'dn' }}">1D <b>{{ '+' if s.change_1d >= 0 else '' }}{{ s.change_1d | round(2) }}%</b></span>
+        <span class="{{ 'up' if s.mom_1m >= 0 else 'dn' }}">1M <b>{{ '+' if s.mom_1m >= 0 else '' }}{{ s.mom_1m | round(2) }}%</b></span>
+        <span class="{{ 'up' if s.mom_3m >= 0 else 'dn' }}">3M <b>{{ '+' if s.mom_3m >= 0 else '' }}{{ s.mom_3m | round(2) }}%</b></span>
+      </div>
+      <div class="scorebar" style="--w:{{ s.score }}%"><i></i></div>
+      {% if s.thesis %}<div class="th">{{ s.thesis }}</div>{% endif %}
+
+      {# Where the score came from. A composite with no breakdown is a number
+         the reader has to take on trust, and the whole argument of this site
+         is that nothing here should be taken on trust. Collapsed by default —
+         it is the answer to a question, not the headline. #}
+      {% if s.factors %}
+      <details class="why">
+        <summary>Why {{ s.score }}<span>/100</span></summary>
+        <div class="why-b">
+          {% for f in s.factors %}
+          <div class="why-r">
+            <span class="wk">{{ f.k }}</span>
+            <span class="wb" style="--w:{{ (f.e / f.w * 100) | round(0) | int }}%"><i></i></span>
+            <span class="wn">{{ f.e }}<em>/{{ f.w }}</em></span>
+          </div>
+          {% endfor %}
+        </div>
+      </details>
+      {% endif %}
+
+      {# The level that ends the idea, stated before it is reached. An idea
+         with a target and a stop but no invalidation only tells you where you
+         are wrong on price, never where you are wrong on the reason. #}
+      {% if s.ema20 %}
+      <div class="inval">
+        <b>Wrong if</b> {{ s.name }} closes below {{ s.currency }}{{ s.ema20 }} — its 20-day
+        average, and the single biggest component of that score.
+      </div>
+      {% endif %}
+
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">{{ s.timeframe }}</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="{{ s.symbol }}">
+        <input type="hidden" name="name" value="{{ s.name }}">
+        <input type="hidden" name="entry_price" value="{{ s.price }}">
+        <input type="hidden" name="target_price" value="{{ s.target }}">
+        <input type="hidden" name="stop_loss" value="{{ s.stop_loss }}">
+        <input type="hidden" name="thesis" value="{{ s.thesis }}">
+        <input type="hidden" name="timeframe" value="{{ s.timeframe }}">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
+    if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
+  {% endif %}
+</section>{% endif %}
+
 <!-- ══════════ PAPER WALLET ══════════
      ₹50,00,000, sized mechanically against every signal by horizon tier —
      forward-only from launch (2026-08-17), no fabricated history. Entirely
@@ -8079,7 +8077,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% if 'alerts' in secs %}<section class="sec" id="alerts">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['alerts'] }} / {{ seclabel['alerts'] }}</span>
+      <span class="snum">{{ secnum['alerts'] }} / {{ seclabel['alerts'] }}</span> {{ dh('Signal ledger') }}
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -8246,6 +8244,216 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 </div>
 
+<!-- ══════════ 11 PERFORMANCE ══════════
+     Entirely live. Hidden on a static host, where there is no ledger to
+     compute an edge from. -->
+{% if 'perf' in secs %}<section class="sec" id="perf" style="display:none">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['perf'] }} / {{ seclabel['perf'] }}</span>
+      <h2 class="stitle">Does this actually work?</h2>
+    </div>
+    <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
+      Open signals are excluded, because counting them is how a 50% system starts looking like an 80% one.</p>
+  </div>
+
+  <div class="ctlbar rv">
+    <select id="perfTf" aria-label="Filter performance by timeframe"><option value="">All timeframes</option></select>
+    <select id="perfRange" aria-label="Filter performance by date range">
+      <option value="">All time</option>
+      <option value="30">Last 30 days</option>
+      <option value="90">Last 90 days</option>
+      <option value="365">Last 12 months</option>
+    </select>
+    <span class="ghost" id="perfBasis"></span>
+  </div>
+
+  <!-- Shown by renderStats() while the closed count is below MIN_N_FOR_EDGE.
+       The record restarted on the gated engine, so it will be visible for a
+       while — that is the honest state of a ledger that has just begun. -->
+  <p class="thin-warn rv" id="perfThin" style="display:none"></p>
+
+  <div class="perf-grid rv" id="perfGrid"></div>
+  <!-- Drawdown, beside the number that sells the system. Painted by
+       paintUnderwater() from the same equity_curve the hero chart uses. -->
+  <div class="uw rv" id="perfUw"></div>
+  <div class="brk rv" id="perfBrk"></div>
+</section>{% endif %}
+
+<!-- ══════════ ENGINE LOG ══════════
+     Server-rendered and always visible — no API, no display:none. It has to
+     survive the static snapshot, because the whole point is that a reader can
+     see what changed in the rules even on a day the ledger is unreachable. -->
+{% if 'rules' in secs %}<section class="sec" id="rules">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['rules'] }} / {{ seclabel['rules'] }}</span>
+      <h2 class="stitle">What the ledger changed.</h2>
+    </div>
+    <p class="sdesc">Every rule the engine follows because the record forced it — with the number
+      that forced it. Including the ideas that were tested and thrown away.</p>
+  </div>
+
+  <ol class="elog rv">
+    {% for c in engine_changes %}
+    <li class="elog-i">
+      <div class="elog-m">
+        <time class="elog-d">{{ c.date }}</time>
+        <span class="elog-t">{{ c.tag }}</span>
+        <span class="elog-v {{ c.verdict }}">{{ c.verdict }}</span>
+      </div>
+      {# Collapsed by default. The log runs to every rule the engine has ever
+         adopted or rejected, each with a body paragraph, an evidence table and
+         a caveat — fully expanded it buried the section and made the list
+         impossible to scan. The RULE stays visible; the reasoning is one click
+         away. Native <details> for the same reasons as the fund screen: no
+         stacking context, and it still reads fully with JS off. #}
+      <details class="elog-b">
+        <summary class="elog-sum">
+          <h3 class="elog-h">{{ c.title }}</h3>
+          <span class="elog-more">Evidence</span>
+        </summary>
+        <div class="elog-d2">
+          <p class="elog-p">{{ c.body }}</p>
+          {% if c.evidence %}
+          <table class="elog-e">
+            <tbody>
+            {% for label, val, n, sig in c.evidence %}
+              <tr>
+                <th scope="row">{{ label }}</th>
+                <td class="num">{{ val }}</td>
+                <td class="num elog-n">{{ n }}</td>
+                <td class="num elog-s">{{ sig }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+          {% if c.note %}<p class="elog-c">{{ c.note }}</p>{% endif %}
+        </div>
+      </details>
+    </li>
+    {% endfor %}
+  </ol>
+</section>{% endif %}
+
+<!-- ══════════ DATA HEALTH ══════════
+     Every dataset on the site, with the four facts that decide whether to
+     trust the section above it: when it last succeeded, when it was last
+     attempted, how much of its universe it covers, and what its status is.
+
+     Sits directly under the Engine Log because they answer the same question
+     from two ends — the log says what the engine changed and why, this says
+     whether today's numbers are actually current. Both are the reason to
+     believe anything else on the page.
+
+     Sorted worst-first, never alphabetically. The only reason to open this
+     section is to find what is broken, and a list sorted by name buries it.
+
+     Renders from the SAME snapshot every badge above reads, so a section
+     badge and this table cannot disagree about the same build. That was the
+     whole finding of the 2026-08-18 audit: the site could show a 750-company
+     table above a warning that the newest build had priced 50. -->
+{% if 'datahealth' in secs and health %}
+<section class="sec" id="datahealth">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['datahealth'] }} / {{ seclabel['datahealth'] }}</span>
+      <h2 class="stitle">
+        {% if health.degraded %}{{ health.degraded }} of {{ health.total }} datasets are not current.
+        {% else %}All {{ health.total }} datasets are current.{% endif %}
+      </h2>
+    </div>
+    <p class="sdesc">Nothing on this page is allowed to look more current than the data
+      behind it. Every section carries the same badge this table explains, from the same
+      build. Machine-readable at
+      <a href="/data-health.json" class="lnk">/data-health.json</a>.</p>
+  </div>
+
+  <ul class="dh-list rv">
+    {% for d in health.datasets %}
+    <li class="dh-row{% if d.severity >= 4 %} dead{% elif not d.is_current %} bad{% endif %}">
+      <div class="dh-top">
+        <span class="dh dh-{{ d.status }}">{{ d.status }}</span>
+        <span class="dh-name">{{ d.dataset }}</span>
+        <span class="dh-src">{{ d.source }}</span>
+      </div>
+      <dl class="dh-grid">
+        <div><dt>Last successful</dt>
+          <dd>{{ d.last_successful_update[:16].replace('T',' ') if d.last_successful_update else '—' }}</dd></div>
+        <div><dt>Last attempt</dt>
+          <dd>{{ d.last_attempted_update[:16].replace('T',' ') if d.last_attempted_update else '—' }}
+            {% if d.attempt_status %}· {{ d.attempt_status }}{% endif %}</dd></div>
+        <div><dt>Age</dt><dd>{{ d.freshness_age }}</dd></div>
+        <div><dt>Expected</dt><dd>{{ d.expected_refresh }}</dd></div>
+        {# Two coverage figures, never merged. The published dataset's size and
+           the latest ATTEMPT's size are different numbers about different
+           builds, and printing one of them as though it were both is exactly
+           how "750 companies" ended up above "only 50 priced". #}
+        {% if d.coverage %}<div><dt>Published coverage</dt>
+          <dd>{{ d.coverage }} · {{ d.coverage_pct }}%</dd></div>
+        {% elif d.record_count is not none %}<div><dt>Records</dt>
+          <dd>{{ d.record_count }}</dd></div>{% endif %}
+        {% if d.attempt_coverage %}<div><dt>Latest attempt coverage</dt>
+          <dd>{{ d.attempt_coverage }}</dd></div>{% endif %}
+        {% if d.fallback_used %}<div><dt>Serving</dt><dd>previous build</dd></div>{% endif %}
+      </dl>
+      {% if d.notes %}<p class="dh-note">{{ d.notes | join(' · ') }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <p class="sdesc" style="margin-top:22px;max-width:70ch">
+    <b>LIVE</b> built within a quarter of its refresh interval ·
+    <b>FRESH</b> built within its refresh interval ·
+    <b>STALE</b> older than its refresh interval, still valid ·
+    <b>DEGRADED</b> valid data behind a known problem — a failed newer attempt,
+    thin coverage, or a vintage that cannot be read ·
+    <b>FAILED</b> the build broke and there is nothing valid to fall back on ·
+    <b>UNAVAILABLE</b> never published.
+    <br><br>
+    A failed rebuild never overwrites the last dataset that passed validation, and a
+    partial rebuild is never published as a complete one. When a newer attempt fails,
+    the section keeps serving the last good build and says so here — it does not go
+    blank, and it does not pretend the failure did not happen.
+  </p>
+</section>
+{% endif %}
+
+<!-- ══════════ WHO ══════════
+     Wording lifted from askakshay.com so the two sites say the same thing.
+     Sits between the world and the trade ideas: a reader who arrived from a
+     Telegram link should know whose ledger they are reading before they read
+     the numbers. -->
+{% if 'who' in secs %}<section class="sec" id="who">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['who'] }} / {{ seclabel['who'] }}</span>
+      <h2 class="stitle">Who is publishing this.</h2>
+    </div>
+    <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
+      can&rsquo;t build. Both, here.</p>
+  </div>
+
+  <div class="who rv">
+    <div class="who-m">
+      <div class="who-name">Akshay K Kothari</div>
+      <div class="who-role">Chartered Accountant &middot; FP&amp;A &middot; AI builder</div>
+      <p>CA with 10 years in corporate finance. $100M+ P&amp;L managed. I build AI tools
+        finance teams actually pay for &mdash; and write the essays, models and calculators
+        behind them.</p>
+      <p class="who-sub">This page is one of those tools. Every signal below is logged the
+        moment it fires, scored when it closes, and left on the record either way.
+        Wins and losses both. Nothing hidden.</p>
+      <div class="who-links">
+        <a href="https://askakshay.com" target="_blank" rel="noopener">askakshay.com &nearr;</a>
+        <a href="https://terminal.askakshay.com" target="_blank" rel="noopener">Dhruvedge terminal &nearr;</a>
+        <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn &nearr;</a>
+      </div>
+    </div>
+  </div>
+</section>{% endif %}
+
 </main>
 
 <!-- The trade sheet sits OUTSIDE <main> deliberately. main is
@@ -8312,7 +8520,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <script type="application/json" id="tv-aliases" nonce="{{ nonce }}">{{ tv_aliases|tojson }}</script>
 <script nonce="{{ nonce }}" src="/app.js?v={{ build_id }}" defer></script>
 </body>
-</html>"""
+</html>
+"""
 
 # ─────────────────────────────────────────────────────────────
 # FLASK ROUTES

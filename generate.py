@@ -64,6 +64,8 @@ from newspaper import (
     _learning_ctx,
 )
 
+import data_health as dh
+
 IST = timezone(timedelta(hours=5, minutes=30))
 
 # Countries this search is actually for. Anything else scored by the engine is
@@ -82,6 +84,87 @@ def _resources_grouped() -> list:
     except Exception as e:                                   # noqa: BLE001
         print(f"[generate] Resources unavailable: {e}")
         return []
+
+
+
+def _register_health(*, now, news, markets, regime, smart_reads, brief, market_intel,
+                     fund_screen, stock_screen, podcasts, careers, alerts, top5) -> dict:
+    """File every dataset the page renders with the health layer, once.
+
+    This is the audit's central fix. Before it, each section answered "is this
+    current?" in its own words and none of them could be compared: #funds said
+    "0.5d old", #stocks printed a coverage count, the brief said nothing at
+    all. A reader could not tell which section was oldest and neither could a
+    test.
+
+    Two rules govern everything below.
+
+    ONE: a section fetched live in THIS build is stamped `now` only when it
+    actually returned rows. Stamping an empty fetch with the build time is how
+    a dead feed comes to look like a fresh one — the exact failure the audit
+    named. Empty means no timestamp, which the layer reports as UNAVAILABLE.
+
+    TWO: `expected_records` is passed only where a real denominator exists.
+    The stock screen has one (its attempted universe) and careers has one
+    (sources attempted). Funds do not — AMFI publishes whatever it publishes —
+    so no ratio is printed rather than a confident wrong one.
+    """
+    dh.reset()
+    stamp = now.isoformat()
+
+    def live(name, source, rows, hours, **kw):
+        """A section built inside this run. No rows → no timestamp."""
+        n = len(rows) if rows is not None else 0
+        return dh.track(name, source=source, expected_refresh_hours=hours,
+                        generated_at=stamp if n else None, record_count=n, **kw)
+
+    def cached(name, source, payload, hours, **kw):
+        """A section read from cache, carrying its own vintage and job row."""
+        payload = payload or {}
+        return dh.track(name, source=source, expected_refresh_hours=hours,
+                        generated_at=payload.get("generated_at"),
+                        job=payload.get("job_status") or {},
+                        fallback=bool(payload.get("is_fallback")),
+                        build_version=payload.get("engine") or payload.get("version"),
+                        **kw)
+
+    live("World news", "RSS wires", news, 24)
+    # Markets carry their own honesty flag: regime.thin means under half the
+    # board priced, which is a degraded reading, not a fresh one.
+    live("Markets", "Yahoo Finance", markets, 24,
+         error="under half the board priced" if (regime or {}).get("thin") else None)
+    live("Smart Reads", "RSS wires", smart_reads, 24)
+    live("Signal ledger", "Dhruvedge engine", alerts, 24)
+    live("Trade ideas", "Dhruvedge picks engine", top5, 168)
+
+    cached("Daily Brief", "wire clustering + Groq", brief, 24)
+    cached("Market Intelligence", "NSE / Yahoo", market_intel, 24)
+    cached("Podcasts", "podcast feeds", podcasts, 24)
+    cached("Fund screen", "AMFI NAV", fund_screen, 168,
+           record_count=sum(len(c.get("funds", []))
+                            for c in (fund_screen or {}).get("categories", [])) or None)
+
+    # The one the audit called out by name. `expected` comes from the ATTEMPT
+    # (how many symbols the last build tried), never from the served payload —
+    # dividing a dataset by its own length always yields 100% and would report
+    # a 50-row screen as complete coverage of a 50-row universe.
+    _job = (stock_screen or {}).get("job_status") or {}
+    cached("Stock screen", "Yahoo Finance + statements", stock_screen, 168,
+           record_count=(stock_screen or {}).get("count"),
+           expected_records=_job.get("expected") or (stock_screen or {}).get("attempted"))
+
+    # Careers has the cleanest denominator on the site: sources_ok of
+    # sources_attempted. 11/21 is a DEGRADED feed and should say so.
+    _cs = (careers or {}).get("stats") or {}
+    dh.track("Careers feed", source="21 employer / aggregator sources",
+             expected_refresh_hours=24,
+             generated_at=(careers or {}).get("generated_at"),
+             record_count=_cs.get("sources_ok"),
+             expected_records=_cs.get("sources_attempted"),
+             coverage_floor=0.8,
+             error=(careers or {}).get("why"))
+
+    return dh.snapshot(now=now)
 
 
 def load_careers(path) -> dict:
@@ -435,7 +518,22 @@ def generate() -> None:
     _lc = _learning_ctx()
     print("[generate] Rendering HTML...")
     tpl = Template(TEMPLATE)
+    # ── Data health ─────────────────────────────────────────────────────────
+    # Runs after every dataset is resolved and before anything renders, so the
+    # page and the health page cannot disagree: both read this one snapshot.
+    health = _register_health(
+        now=now, news=news, markets=markets, regime=regime, smart_reads=smart_reads,
+        brief=brief, market_intel=market_intel, fund_screen=fund_screen,
+        stock_screen=stock_screen, podcasts=podcasts, careers=careers,
+        alerts=alerts, top5=top5)
+    print(f"[generate] Data health: {health['current']}/{health['total']} current, "
+          f"worst={health['worst']}"
+          + (" — " + ", ".join(f"{d['dataset']}:{d['status']}"
+                               for d in health["datasets"] if not d["is_current"])
+             if health["degraded"] else ""))
+
     base = dict(
+        health=health,
         tv_aliases=TV_ALIASES,
         date_str=now.strftime("%A, %B %d %Y"),
         updated_at=now.strftime("%H:%M"),
@@ -551,7 +649,8 @@ def generate() -> None:
         # Sections with nothing to render are dropped from the nav too,
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
-                                                        stock_screen, market_intel, careers, brief)))
+                                                        stock_screen, market_intel, careers,
+                                                        brief, health)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
@@ -572,6 +671,19 @@ def generate() -> None:
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
     )
+    # data-health.json — the machine-readable half of the honesty layer, and
+    # the one artefact that must publish even when everything else is broken.
+    # Small enough to indent; it is meant to be read by a human with curl when
+    # the page itself is the thing under suspicion.
+    #
+    # FOUR places or it 404s: written here, committed by newspaper.yml's git
+    # add, named in .vercelignore, and copied in vercel-news/build.js. Three of
+    # the four is the documented failure mode — today.json had two and served
+    # nothing for days. test_engine_regressions.py checks all four.
+    (out_dir / "data-health.json").write_text(
+        json.dumps(health, default=str, indent=1), encoding="utf-8")
+    print(f"[generate] ✅ data-health.json ({health['total']} datasets, "
+          f"worst={health['worst']})")
     # screen.json — the ~500 rows #stocks fetches lazily. Written compact, not
     # indented: it is machine-read only and indent=2 adds ~400KB of whitespace.
     #
