@@ -98,7 +98,10 @@ async function heat(res) {
   );
   const live = sectors.filter(Boolean).sort((a, b) => b.pct - a.pct);
 
-  let fii = [];
+  // An OBJECT — {fii_cr, dii_cr, net_cr} — not a list. fetch_fii_dii_today()
+  // returns one day's provisional net figures, because that is all NSE's
+  // endpoint gives: exactly two rows for today, never a rolling window.
+  let fii = null;
   let fii_date = null;
   try {
     const rs = await db().execute({
@@ -107,8 +110,12 @@ async function heat(res) {
     });
     if (rs.rows.length) {
       const p = JSON.parse(String(rs.rows[0].payload));
-      fii = Array.isArray(p.fii_dii) ? p.fii_dii : [];
-      fii_date = p.generated_at || null;
+      fii = p.fii_dii && typeof p.fii_dii === "object" ? p.fii_dii : null;
+      // The TRADE date, which fetch_fii_dii_today() puts inside the fii_dii
+      // object itself — not generated_at. The build can run hours after the
+      // session it describes, and stamping the flow with the build time is
+      // how yesterday's numbers end up presented under today's date.
+      fii_date = (fii && fii.date) || p.generated_at || null;
     }
   } catch {
     // The map is still worth serving without the flow numbers.
