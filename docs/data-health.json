@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-18T15:34:40.767806+00:00",
+ "generated_at": "2026-08-18T16:31:32.370388+00:00",
  "datasets": [
   {
    "dataset": "Careers feed",
@@ -8,8 +8,8 @@
    "last_attempted_update": "2026-08-18T14:59:37+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "36 min old",
-   "freshness_age_hours": 0.61,
+   "freshness_age": "2h old",
+   "freshness_age_hours": 1.55,
    "status": "DEGRADED",
    "severity": 3,
    "record_count": 11,
@@ -25,7 +25,7 @@
    "notes": [
     "partial coverage \u2014 11/21 records"
    ],
-   "headline": "Careers feed \u00b7 36 min old \u2014 partial coverage \u2014 11/21 records.",
+   "headline": "Careers feed \u00b7 2h old \u2014 partial coverage \u2014 11/21 records.",
    "is_current": false
   },
   {
@@ -35,8 +35,8 @@
    "last_attempted_update": "2026-08-17T14:41:41.334182+00:00",
    "expected_refresh": "weekly",
    "expected_refresh_hours": 168,
-   "freshness_age": "25h old",
-   "freshness_age_hours": 25.39,
+   "freshness_age": "26h old",
+   "freshness_age_hours": 26.33,
    "status": "DEGRADED",
    "severity": 3,
    "record_count": 750,
@@ -52,7 +52,7 @@
    "notes": [
     "latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache"
    ],
-   "headline": "Stock screen \u00b7 25h old \u2014 latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache.",
+   "headline": "Stock screen \u00b7 26h old \u2014 latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache.",
    "is_current": false
   },
   {
@@ -62,8 +62,8 @@
    "last_attempted_update": "2026-08-18T07:47:07+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "8h old",
-   "freshness_age_hours": 7.82,
+   "freshness_age": "9h old",
+   "freshness_age_hours": 8.76,
    "status": "FRESH",
    "severity": 1,
    "record_count": null,
@@ -77,7 +77,7 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Daily Brief \u00b7 8h old.",
+   "headline": "Daily Brief \u00b7 9h old.",
    "is_current": true
   },
   {
@@ -87,8 +87,8 @@
    "last_attempted_update": "2026-08-17T20:26:25.779905+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "19h old",
-   "freshness_age_hours": 19.16,
+   "freshness_age": "20h old",
+   "freshness_age_hours": 20.11,
    "status": "FRESH",
    "severity": 1,
    "record_count": null,
@@ -102,7 +102,7 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Market Intelligence \u00b7 19h old.",
+   "headline": "Market Intelligence \u00b7 20h old.",
    "is_current": true
   },
   {
@@ -112,8 +112,8 @@
    "last_attempted_update": "2026-08-17T18:59:34.681742+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "21h old",
-   "freshness_age_hours": 20.61,
+   "freshness_age": "22h old",
+   "freshness_age_hours": 21.55,
    "status": "FRESH",
    "severity": 1,
    "record_count": null,
@@ -127,7 +127,7 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Podcasts \u00b7 21h old.",
+   "headline": "Podcasts \u00b7 22h old.",
    "is_current": true
   },
   {
@@ -137,8 +137,8 @@
    "last_attempted_update": "2026-08-17T18:23:21.328141+00:00",
    "expected_refresh": "weekly",
    "expected_refresh_hours": 168,
-   "freshness_age": "21h old",
-   "freshness_age_hours": 21.22,
+   "freshness_age": "22h old",
+   "freshness_age_hours": 22.16,
    "status": "LIVE",
    "severity": 0,
    "record_count": 24,
@@ -152,14 +152,14 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Fund screen \u00b7 21h old.",
+   "headline": "Fund screen \u00b7 22h old.",
    "is_current": true
   },
   {
    "dataset": "Markets",
    "source": "Yahoo Finance",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -183,8 +183,8 @@
   {
    "dataset": "Signal ledger",
    "source": "Dhruvedge engine",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -208,8 +208,8 @@
   {
    "dataset": "Smart Reads",
    "source": "RSS wires",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -233,8 +233,8 @@
   {
    "dataset": "Trade ideas",
    "source": "Dhruvedge picks engine",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "weekly",
    "expected_refresh_hours": 168,
    "freshness_age": "just built",
@@ -258,8 +258,8 @@
   {
    "dataset": "World news",
    "source": "RSS wires",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -289,8 +289,8 @@
    "last_attempted_update": "2026-08-18T14:59:37+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "36 min old",
-   "freshness_age_hours": 0.61,
+   "freshness_age": "2h old",
+   "freshness_age_hours": 1.55,
    "status": "DEGRADED",
    "severity": 3,
    "record_count": 11,
@@ -306,7 +306,7 @@
    "notes": [
     "partial coverage \u2014 11/21 records"
    ],
-   "headline": "Careers feed \u00b7 36 min old \u2014 partial coverage \u2014 11/21 records.",
+   "headline": "Careers feed \u00b7 2h old \u2014 partial coverage \u2014 11/21 records.",
    "is_current": false
   },
   "Stock screen": {
@@ -316,8 +316,8 @@
    "last_attempted_update": "2026-08-17T14:41:41.334182+00:00",
    "expected_refresh": "weekly",
    "expected_refresh_hours": 168,
-   "freshness_age": "25h old",
-   "freshness_age_hours": 25.39,
+   "freshness_age": "26h old",
+   "freshness_age_hours": 26.33,
    "status": "DEGRADED",
    "severity": 3,
    "record_count": 750,
@@ -333,7 +333,7 @@
    "notes": [
     "latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache"
    ],
-   "headline": "Stock screen \u00b7 25h old \u2014 latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache.",
+   "headline": "Stock screen \u00b7 26h old \u2014 latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache.",
    "is_current": false
   },
   "Daily Brief": {
@@ -343,8 +343,8 @@
    "last_attempted_update": "2026-08-18T07:47:07+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "8h old",
-   "freshness_age_hours": 7.82,
+   "freshness_age": "9h old",
+   "freshness_age_hours": 8.76,
    "status": "FRESH",
    "severity": 1,
    "record_count": null,
@@ -358,7 +358,7 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Daily Brief \u00b7 8h old.",
+   "headline": "Daily Brief \u00b7 9h old.",
    "is_current": true
   },
   "Market Intelligence": {
@@ -368,8 +368,8 @@
    "last_attempted_update": "2026-08-17T20:26:25.779905+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "19h old",
-   "freshness_age_hours": 19.16,
+   "freshness_age": "20h old",
+   "freshness_age_hours": 20.11,
    "status": "FRESH",
    "severity": 1,
    "record_count": null,
@@ -383,7 +383,7 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Market Intelligence \u00b7 19h old.",
+   "headline": "Market Intelligence \u00b7 20h old.",
    "is_current": true
   },
   "Podcasts": {
@@ -393,8 +393,8 @@
    "last_attempted_update": "2026-08-17T18:59:34.681742+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
-   "freshness_age": "21h old",
-   "freshness_age_hours": 20.61,
+   "freshness_age": "22h old",
+   "freshness_age_hours": 21.55,
    "status": "FRESH",
    "severity": 1,
    "record_count": null,
@@ -408,7 +408,7 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Podcasts \u00b7 21h old.",
+   "headline": "Podcasts \u00b7 22h old.",
    "is_current": true
   },
   "Fund screen": {
@@ -418,8 +418,8 @@
    "last_attempted_update": "2026-08-17T18:23:21.328141+00:00",
    "expected_refresh": "weekly",
    "expected_refresh_hours": 168,
-   "freshness_age": "21h old",
-   "freshness_age_hours": 21.22,
+   "freshness_age": "22h old",
+   "freshness_age_hours": 22.16,
    "status": "LIVE",
    "severity": 0,
    "record_count": 24,
@@ -433,14 +433,14 @@
    "fallback_used": false,
    "build_version": null,
    "notes": [],
-   "headline": "Fund screen \u00b7 21h old.",
+   "headline": "Fund screen \u00b7 22h old.",
    "is_current": true
   },
   "Markets": {
    "dataset": "Markets",
    "source": "Yahoo Finance",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -464,8 +464,8 @@
   "Signal ledger": {
    "dataset": "Signal ledger",
    "source": "Dhruvedge engine",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -489,8 +489,8 @@
   "Smart Reads": {
    "dataset": "Smart Reads",
    "source": "RSS wires",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
@@ -514,8 +514,8 @@
   "Trade ideas": {
    "dataset": "Trade ideas",
    "source": "Dhruvedge picks engine",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "weekly",
    "expected_refresh_hours": 168,
    "freshness_age": "just built",
@@ -539,8 +539,8 @@
   "World news": {
    "dataset": "World news",
    "source": "RSS wires",
-   "last_successful_update": "2026-08-18T15:34:40.767806+00:00",
-   "last_attempted_update": "2026-08-18T15:34:40.767806+00:00",
+   "last_successful_update": "2026-08-18T16:31:32.370388+00:00",
+   "last_attempted_update": "2026-08-18T16:31:32.370388+00:00",
    "expected_refresh": "daily",
    "expected_refresh_hours": 24,
    "freshness_age": "just built",
