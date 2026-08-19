@@ -42,6 +42,7 @@ from newspaper import (
     get_market_intel,
     get_brief,
     get_stock_screen,
+    get_ipos,
     get_job_status,
     get_podcasts,
     fetch_smart_reads,
@@ -78,7 +79,8 @@ CAREER_TARGET_COUNTRIES = ("UAE", "Saudi Arabia", "Malaysia", "Oman")
 
 
 def _register_health(*, now, news, markets, regime, smart_reads, brief, market_intel,
-                     fund_screen, stock_screen, podcasts, careers, alerts, top5) -> dict:
+                     fund_screen, stock_screen, podcasts, careers, alerts, top5,
+                     ipos=None) -> dict:
     """File every dataset the page renders with the health layer, once.
 
     This is the audit's central fix. Before it, each section answered "is this
@@ -142,6 +144,17 @@ def _register_health(*, now, news, markets, regime, smart_reads, brief, market_i
     cached("Stock screen", "Yahoo Finance + statements", stock_screen, 168,
            record_count=(stock_screen or {}).get("count"),
            expected_records=_job.get("expected") or (stock_screen or {}).get("attempted"))
+
+    # Probed, not published: the denominator is how many of the universe the
+    # run could actually READ, which is the number that decides whether a
+    # small cohort means few listings or a broken fetch.
+    dh.track("New listings", source="Yahoo firstTradeDate",
+             expected_refresh_hours=168,
+             generated_at=(ipos or {}).get("generated_at"),
+             record_count=(ipos or {}).get("probed"),
+             expected_records=(ipos or {}).get("attempted"),
+             job=(ipos or {}).get("job_status") or {},
+             fallback=bool((ipos or {}).get("is_fallback")))
 
     # Careers has the cleanest denominator on the site: sources_ok of
     # sources_attempted. 11/21 is a DEGRADED feed and should say so.
@@ -350,6 +363,16 @@ def generate() -> None:
           f"statements for {_cov.get('statements', 0)}, ROCE for {_cov.get('roce', 0)}"
           f"{' (previous build)' if stock_screen.get('is_fallback') else ''}")
 
+    # READ ONLY, same rule as the screens above: establishing which of 750
+    # names listed recently is two passes of network per symbol.
+    # ipo_tracker.yml owns that clock.
+    ipos = get_ipos()
+    if ipos:
+        ipos["job_status"] = get_job_status("ipos", ipos.get("generated_at"))
+    print(f"[generate] New listings (cached): {ipos.get('count', 0)} in "
+          f"{ipos.get('months', 0)} months"
+          f"{' (previous build)' if ipos.get('is_fallback') else ''}")
+
     # Picks are keyed by ISO week. Nothing warms that cache on a static build —
     # under Flask a startup thread did it — so every Monday the section
     # rendered "check back Monday". Build it here, and fall back to the last
@@ -513,7 +536,7 @@ def generate() -> None:
         now=now, news=news, markets=markets, regime=regime, smart_reads=smart_reads,
         brief=brief, market_intel=market_intel, fund_screen=fund_screen,
         stock_screen=stock_screen, podcasts=podcasts, careers=careers,
-        alerts=alerts, top5=top5)
+        alerts=alerts, top5=top5, ipos=ipos)
     print(f"[generate] Data health: {health['current']}/{health['total']} current, "
           f"worst={health['worst']}"
           + (" — " + ", ".join(f"{d['dataset']}:{d['status']}"
@@ -555,6 +578,7 @@ def generate() -> None:
         careers=careers,
         brief=brief,
         stock_screen=stock_screen,
+        ipos=ipos,
         podcasts=podcasts,
         smart_reads=smart_reads,
         top5_week=top5_week,
@@ -636,7 +660,7 @@ def generate() -> None:
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
                                                         stock_screen, market_intel, careers,
-                                                        brief, health)))
+                                                        brief, health, ipos)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

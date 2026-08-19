@@ -1981,6 +1981,10 @@ SECTION_MAP = [
     # identically on the static host, and unlike #sip it must NOT start hidden.
     ("swp",         "SWP",          "main", "Research"),
     ("stocks",      "Stock Screen", "main", "Research"),
+    # Directly under the screen because it answers the question the screen
+    # cannot: a company listed four months ago has no annual statements to
+    # rank, so it sits unranked at the bottom there and is invisible.
+    ("ipos",        "New Listings", "main", "Research"),
 
     # ── /desk — the personal page ───────────────────────────────────────────
     # Reordered again 2026-08-18: the practice run (Spanish, the daughter,
@@ -2062,7 +2066,7 @@ PAGE_META = {
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
                    stock_screen=None, market_intel=None, careers=None,
-                   brief=None, health=None) -> set:
+                   brief=None, health=None, ipos=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2110,6 +2114,8 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     # left to a template guard.
     if not (health or {}).get("datasets"):
         drop.add("datahealth")
+    if not (ipos or {}).get("rows"):
+        drop.add("ipos")
     return drop
 
 
@@ -2724,6 +2730,63 @@ def get_stock_screen(build_if_missing: bool = False) -> dict:
         return _stamp_fund_payload(data, fallback=False)
     except Exception as e:
         log.warning(f"stock screen build failed: {e}")
+        return {}
+
+
+# A listings table is a weekly artefact like the screens. Its prices go stale
+# faster than its membership does — a name listed in March is still a March
+# listing next week — so the ceiling is generous and the provenance strip
+# carries the build date.
+MAX_IPO_CACHE_AGE_DAYS = 21
+
+
+def get_ipos(build_if_missing: bool = False) -> dict:
+    """Recent NSE listings and what they have done. Empty dict if unavailable.
+
+    Same contract as get_stock_screen and for the same reason: establishing
+    which of 750 names listed recently is two passes of network per symbol,
+    which must never sit inside the 6 AM render. ipo_tracker.yml owns the
+    clock; this reads the cache and the section hides itself when there is
+    nothing to read.
+    """
+    week = _stock_week_key()
+    try:
+        with _db() as con:
+            con.execute("CREATE TABLE IF NOT EXISTS newspaper_ipos "
+                        "(week TEXT PRIMARY KEY, payload TEXT)")
+            row = con.execute("SELECT payload FROM newspaper_ipos WHERE week=?",
+                              (week,)).fetchone()
+            if row:
+                return _stamp_fund_payload(json.loads(row[0]), fallback=False)
+            row = con.execute("SELECT payload FROM newspaper_ipos "
+                              "ORDER BY week DESC LIMIT 1").fetchone()
+            if row:
+                data = json.loads(row[0])
+                age = _payload_age_days(data)
+                if age is not None and age <= MAX_IPO_CACHE_AGE_DAYS:
+                    log.info(f"ipos: serving previous build, {age:.1f}d old")
+                    return _stamp_fund_payload(data, fallback=True)
+                log.warning("ipos: hiding it — newest build is "
+                            + ("of unknown age" if age is None else f"{age:.1f}d old"))
+    except Exception as e:
+        log.warning(f"ipo cache read: {e}")
+
+    if not build_if_missing:
+        return {}
+    try:
+        import ipo_tracker as _ipo
+        data = _ipo.build()
+        if not data.get("ok"):
+            return {}
+        with _db() as con:
+            con.execute("CREATE TABLE IF NOT EXISTS newspaper_ipos "
+                        "(week TEXT PRIMARY KEY, payload TEXT)")
+            con.execute("INSERT OR REPLACE INTO newspaper_ipos VALUES (?,?)",
+                        (week, json.dumps(data)))
+            con.commit()
+        return _stamp_fund_payload(data, fallback=False)
+    except Exception as e:
+        log.warning(f"ipo build failed: {e}")
         return {}
 
 
@@ -7837,6 +7900,87 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <br><br>
     Screen rebuilt weekly. A high score means &ldquo;ranked well on published
     numbers&rdquo; and nothing more.
+  </p>
+</section>
+{% endif %}
+
+<!-- ══════════ NEW LISTINGS ══════════
+     Every NSE name that listed inside the window, and what it has done since.
+
+     Sits directly under the Stock Screen because it answers the question that
+     screen structurally cannot: a company listed four months ago has no annual
+     statements to rank on, so it scores None on almost everything and sits
+     unranked at the bottom — correct for that screen, useless as an answer to
+     "how have this year's listings actually done".
+
+     Two things this deliberately does NOT show:
+
+       1. Issue price, and therefore listing gain. NSE's issue-price data is
+          not reliably reachable, and a listing gain computed off a guessed
+          issue price is a fabricated number on a page whose entire argument is
+          that it does not fabricate. Every figure here is measured from the
+          FIRST TRADED CLOSE and the column says so.
+       2. Any view on what to do about it. Same rule as the screen. -->
+{% if 'ipos' in secs and ipos.get('rows') %}
+<section class="sec" id="ipos">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['ipos'] }} / {{ seclabel['ipos'] }}</span> {{ dh('New listings') }}
+      <h2 class="stitle">{{ ipos.count }} listed in {{ ipos.months }} months.</h2>
+    </div>
+    <p class="sdesc">Every NSE listing inside the window, measured from its first traded
+      close — not from an issue price, which is not reliably available and would be a
+      guess wearing a decimal point. {{ ipos.summary.up }} are above that close,
+      {{ ipos.summary.down }} below.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if ipos.get('is_fallback') else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Built {{ ipos.built_on }}{% if ipos.age_days is not none %} &middot; {{ ipos.age_days }}d old{% endif %}</span>
+    <span>Probed {{ ipos.probed }} of {{ ipos.attempted }} listed names</span>
+    {% if ipos.summary.median_pct is not none %}
+    <span>Median since listing {{ '{:+.1f}'.format(ipos.summary.median_pct) }}%</span>
+    {% endif %}
+  </div>
+
+  {# Median, never mean. One 300% listing should not be allowed to describe
+     the cohort, and a mean is the first figure that gets quoted out of it. #}
+  <div class="tw rv" style="margin-top:14px">
+    <table class="t">
+      <thead><tr>
+        <th scope="col">Symbol</th><th scope="col">Listed</th><th scope="col">Age</th>
+        <th scope="col">First close</th><th scope="col">Now</th>
+        <th scope="col">Since listing</th><th scope="col">From high</th>
+        <th scope="col">Sessions</th>
+      </tr></thead>
+      <tbody>
+        {% for r in ipos.rows %}
+        <tr>
+          <td><strong class="sym">{{ r.sym }}</strong></td>
+          <td class="mono-dim">{{ r.listed_on }}</td>
+          <td class="mono-dim">{{ r.months_listed }}m</td>
+          <td class="num mono-dim">&#8377;{{ '{:,.2f}'.format(r.first_close) }}</td>
+          <td class="num">&#8377;{{ '{:,.2f}'.format(r.last_close) }}</td>
+          <td class="num"><span class="{{ 'pnl-u' if r.since_listing_pct > 0 else 'pnl-d' if r.since_listing_pct < 0 else '' }}">
+            {{ '{:+.1f}'.format(r.since_listing_pct) }}%</span></td>
+          <td class="num mono-dim">{{ '{:+.1f}'.format(r.from_high_pct) }}%</td>
+          <td class="num mono-dim">{{ r.sessions }}{% if not r.below_first_ever %}
+            <span title="Has never closed below its first traded close">&#9733;</span>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="sdesc" style="margin-top:18px;max-width:70ch">
+    <b>Since listing</b> is measured from the first traded close, not from an issue
+    price &mdash; so it is not the return an allottee saw. <b>From high</b> is the
+    distance from the highest close since listing, which is the number most often
+    left out of a new-listing table and usually the most useful one in it.
+    A &#9733; marks a name that has never closed below its first close.
+    <br><br>
+    Nothing here is ranked, scored or recommended. A recent listing has no annual
+    statements to judge, which is exactly why it is not in the screen above.
   </p>
 </section>
 {% endif %}

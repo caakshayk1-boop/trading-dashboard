@@ -51,6 +51,8 @@ jobs:
           python test_data_health.py
           python test_symbols.py
           python test_sip_engine.py
+          python test_ipo_tracker.py
+          python test_signal_history.py
 
       - name: Lint the page script
         run: |

@@ -1,0 +1,111 @@
+name: IPO tracker — recent NSE listings
+
+# Establishes which of the ~750 listed names came to market inside the window
+# and what each has done since. Two passes of network per symbol (see
+# ipo_tracker.py), so it is its own workflow for exactly the reason
+# stock_screen.yml and fund_screen.yml are: it must never sit inside the 6 AM
+# build and take the daily paper down with it.
+#
+# SCHEDULING — Sunday 03:30 IST, an hour after stock_screen.yml. Scheduled runs
+# on this repo land 1.5-3h late (memory: project_gh_actions_cron_drift), and
+# both jobs read the same universe CSV, so they are spaced rather than raced.
+# Even at the full 3h drift this finishes many hours before Monday's paper.
+
+on:
+  schedule:
+    - cron: '0 22 * * 6'      # 03:30 IST Sunday
+  workflow_dispatch:
+    inputs:
+      months:
+        description: "Listing window in months"
+        required: false
+        default: "12"
+
+concurrency:
+  group: ipo-tracker
+  cancel-in-progress: false
+
+jobs:
+  ipos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Arithmetic gate
+        # The table's numbers before its network. A build that publishes a
+        # return measured off the wrong base is worse than one that does not
+        # publish, so this runs first and fails the job.
+        run: python test_ipo_tracker.py
+
+      - name: Build and cache
+        env:
+          TURSO_URL: ${{ secrets.TURSO_URL }}
+          TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+          IPO_MONTHS: ${{ inputs.months || '12' }}
+        run: |
+          python - <<'PY'
+          import json, logging, os
+          logging.basicConfig(level=logging.INFO, format="%(message)s")
+          import ipo_tracker, newspaper
+
+          JOB = "ipos"
+          probed = attempted = None
+          try:
+              months = int(os.environ.get("IPO_MONTHS") or 12)
+              data = ipo_tracker.build(months=months)
+              if not data.get("ok"):
+                  raise SystemExit(f"ipo build failed: {data.get('error')}")
+              probed, attempted = data["probed"], data["attempted"]
+              print(f"\nprobed {probed} of {attempted} · {data['count']} listed "
+                    f"inside {months} months")
+              print("summary:", data["summary"])
+              for r in data["rows"][:15]:
+                  print(f"  {r['sym']:<12} {r['listed_on']}  "
+                        f"{r['since_listing_pct']:+7.1f}%  from high {r['from_high_pct']:+6.1f}%")
+
+              # Coverage floor. A run that could only read a fraction of the
+              # universe has not established which names are recent — it has
+              # established which names it managed to reach. Publishing that as
+              # "the listings of the last year" is the 50/750 mistake with a
+              # different table, so it refuses and last week's build stands.
+              if attempted and probed < attempted * 0.8:
+                  raise SystemExit(f"only probed {probed}/{attempted} — refusing to cache")
+
+              week = newspaper._stock_week_key()
+              with newspaper._db() as con:
+                  con.execute("CREATE TABLE IF NOT EXISTS newspaper_ipos "
+                              "(week TEXT PRIMARY KEY, payload TEXT)")
+                  con.execute("INSERT OR REPLACE INTO newspaper_ipos VALUES (?,?)",
+                              (week, json.dumps(data)))
+                  con.commit()
+
+              # Verify it reached Turso, not just the local replica — the same
+              # check stock_screen.yml needs, for the same reason: a write that
+              # only lands locally reports success and serves last week for days.
+              newspaper._db_mod.reset_replica()
+              with newspaper._db() as v:
+                  row = v.execute("SELECT payload FROM newspaper_ipos WHERE week=?",
+                                  (week,)).fetchone()
+              if not row or json.loads(row[0]).get("generated_at") != data.get("generated_at"):
+                  raise SystemExit("publish verification failed — not on Turso")
+              print(f"\ncached for week {week} — verified on Turso")
+              newspaper.record_job_status(JOB, "success",
+                                          f"{data['count']} listings, {probed}/{attempted} probed",
+                                          records=probed, expected=attempted)
+          except BaseException as e:
+              newspaper.record_job_status(JOB, "failed", str(e),
+                                          records=probed, expected=attempted)
+              raise
+          PY
