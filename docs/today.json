@@ -1,5 +1,5 @@
 {
- "build_id": "20260819T174303",
+ "build_id": "20260819T181301",
  "date": "2026-08-19",
  "date_str": "Wednesday, August 19 2026",
  "picks": [
@@ -559,7 +559,7 @@
    "sector": ""
   },
   "NGAS": {
-   "price": 2.839,
+   "price": 2.849,
    "sector": ""
   },
   "NIACL": {
@@ -586,6 +586,145 @@
    "price": 9140.0,
    "sector": "Industrials"
   }
+ },
+ "ipos": {
+  "count": 32,
+  "months": 12,
+  "built_on": "2026-08-19",
+  "summary": {
+   "count": 32,
+   "up": 20,
+   "down": 12,
+   "up_pct": 62.5,
+   "median_pct": 13.0
+  },
+  "rows": [
+   {
+    "sym": "RUBICON",
+    "months_listed": 10.1,
+    "first_close": 628.2,
+    "last_close": 1798.7,
+    "since_listing_pct": 186.3,
+    "high": 1798.7,
+    "low": 577.25,
+    "from_high_pct": 0.0,
+    "below_first_ever": true,
+    "sessions": 206,
+    "listed_on": "2025-10-16"
+   },
+   {
+    "sym": "UTLSOLAR",
+    "months_listed": 8.9,
+    "first_close": 208.44,
+    "last_close": 468.3,
+    "since_listing_pct": 124.7,
+    "high": 468.3,
+    "low": 174.83,
+    "from_high_pct": 0.0,
+    "below_first_ever": true,
+    "sessions": 186,
+    "listed_on": "2025-11-20"
+   },
+   {
+    "sym": "ATLANTAELE",
+    "months_listed": 10.6,
+    "first_close": 823.35,
+    "last_close": 1774.4,
+    "since_listing_pct": 115.5,
+    "high": 2151.5,
+    "low": 726.3,
+    "from_high_pct": -17.5,
+    "below_first_ever": true,
+    "sessions": 220,
+    "listed_on": "2025-09-29"
+   },
+   {
+    "sym": "PARKHOSPS",
+    "months_listed": 8.0,
+    "first_close": 147.95,
+    "last_close": 276.65,
+    "since_listing_pct": 87.0,
+    "high": 299.3,
+    "low": 143.92,
+    "from_high_pct": -7.6,
+    "below_first_ever": true,
+    "sessions": 167,
+    "listed_on": "2025-12-17"
+   },
+   {
+    "sym": "AEQUS",
+    "months_listed": 8.2,
+    "first_close": 151.29,
+    "last_close": 259.85,
+    "since_listing_pct": 71.8,
+    "high": 259.85,
+    "low": 115.11,
+    "from_high_pct": 0.0,
+    "below_first_ever": true,
+    "sessions": 172,
+    "listed_on": "2025-12-10"
+   }
+  ],
+  "worst": [
+   {
+    "sym": "VIKRAMSOLR",
+    "months_listed": 11.7,
+    "first_close": 356.4,
+    "last_close": 177.11,
+    "since_listing_pct": -50.3,
+    "high": 378.8,
+    "low": 156.8,
+    "from_high_pct": -53.2,
+    "below_first_ever": true,
+    "sessions": 244,
+    "listed_on": "2025-08-26"
+   },
+   {
+    "sym": "PINELABS",
+    "months_listed": 9.1,
+    "first_close": 250.89,
+    "last_close": 160.32,
+    "since_listing_pct": -36.1,
+    "high": 250.89,
+    "low": 137.94,
+    "from_high_pct": -36.1,
+    "below_first_ever": true,
+    "sessions": 191,
+    "listed_on": "2025-11-14"
+   },
+   {
+    "sym": "WAKEFIT",
+    "months_listed": 8.1,
+    "first_close": 192.29,
+    "last_close": 131.52,
+    "since_listing_pct": -31.6,
+    "high": 215.8,
+    "low": 113.04,
+    "from_high_pct": -39.1,
+    "below_first_ever": true,
+    "sessions": 168,
+    "listed_on": "2025-12-15"
+   }
+  ]
+ },
+ "data_health": {
+  "worst": "DEGRADED",
+  "current": 10,
+  "total": 12,
+  "degraded": [
+   {
+    "dataset": "Careers feed",
+    "status": "DEGRADED",
+    "age": "35 min old",
+    "note": "partial coverage \u2014 11/22 records"
+   },
+   {
+    "dataset": "Stock screen",
+    "status": "DEGRADED",
+    "age": "47h old",
+    "note": "latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache"
+   }
+  ]
  },
  "desk": {
   "chess": {
