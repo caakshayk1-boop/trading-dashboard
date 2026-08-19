@@ -193,6 +193,37 @@ def _():
         assert field in sec, f"{field} did not survive the move out of #desk"
 
 
+@check("the four pillars exist, and nothing lives outside one")
+def _():
+    """The rebuild's core promise, as an assertion.
+
+    32 sections before the restructure, 32 after. A section that drifts into a
+    group outside the four pillars is orphaned functionality — reachable by
+    scrolling, invisible in navigation.
+    """
+    PILLARS = {"Signal", "Research", "Desk"}          # the / page
+    LIFE = {"Career", "Learning", "Practice", "Mind", "Drills"}   # the /desk page
+    for _i, _l, page, group in SECTION_MAP:
+        allowed = PILLARS if page == "main" else LIFE
+        assert group in allowed, f"{_i} is in {group!r}, which is no pillar"
+    assert len(SECTION_MAP) == 32, f"section count changed: {len(SECTION_MAP)}"
+
+
+@check("every section that existed before the rebuild still exists")
+def _():
+    """Named one by one rather than counted, so a swap cannot pass."""
+    expected = {
+        "world", "marketintel", "findings", "longterm", "tracker", "sip",
+        "funds", "swp", "stocks", "ipos", "picks", "paperwallet", "alerts",
+        "perf", "rules", "datahealth", "who",
+        "careers", "interview", "brief", "smartreads", "podcasts", "chess",
+        "language", "father", "wisdom", "book", "review", "desk", "mind",
+        "way", "gym",
+    }
+    have = {i for i, _l, _p, _g in SECTION_MAP}
+    assert not (expected - have), f"DELETED: {sorted(expected - have)}"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

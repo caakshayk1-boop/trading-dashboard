@@ -1943,104 +1943,84 @@ ENGINE_CHANGES = [
 SECTION_MAP = [
     # (id,          nav label,      page,   nav group)
     #
-    # The four groups below are the product's information architecture, and
-    # the ORDER of this list is the document order (see page_context and
-    # test_page_structure.py, which fails the build if the two drift).
+    # FOUR PILLARS. The order of this list IS document order — page_context
+    # builds the nav from it and test_page_structure.py fails the build if the
+    # template drifts out of step.
     #
-    # Before 2026-08-18 the main page ran fourteen equally-weighted sections in
-    # the order they were built, and "Track Record" appeared twice because the
-    # Stock Screen sat in the middle of it. The audit's finding was that the
-    # site had become a financial operating system presented as one long page:
-    # a reader could not tell what kind of thing they were looking at.
+    #   SIGNAL    what is happening now
+    #   RESEARCH  what is worth understanding
+    #   DESK      what you operate and own
+    #   LIFE      what you are improving      (the whole /desk page)
     #
-    # Four runs, each answering one question:
+    # Every group must be a CONTIGUOUS run — a group that stops and restarts
+    # prints its heading twice and stops being navigation.
     #
-    #   READ      what happened
-    #   RESEARCH  what is worth owning
-    #   TRADE     what the engine did about it, and how that turned out
-    #   TRUST     why any of the above should be believed
-    #
-    # A group must be CONTIGUOUS. A group that stops and restarts prints its
-    # heading twice and stops being navigation.
+    # Nothing was deleted to build this. 32 sections before, 32 after; the
+    # mapping is proved section by section in AUDIT/SECTION-MIGRATION.md, and
+    # v1.0-pre-4pillar is the restore point.
 
-    # ── READ ────────────────────────────────────────────────────────────────
-    ("world",       "World",        "main", "Read"),
-    # Same run as #world on purpose — this is market context a reader wants
-    # before anything else, not something buried after the signal log.
-    ("marketintel", "Market Intel", "main", "Read"),
+    # ── SIGNAL ──────────────────────────────────────────────────────────────
+    # What moved the tape, and what the engine wants to do about it.
+    # Market Intel sits here rather than in Research: FII/DII, sector heat and
+    # corporate actions are the day's market state, not a research artefact.
+    ("marketintel", "Market Intel", "main", "Signal"),
+    ("picks",       "Trade Ideas",  "main", "Signal"),
 
     # ── RESEARCH ────────────────────────────────────────────────────────────
-    # Conviction first, then the vehicles, then the screen a name comes from.
-    # #stocks ends the run so it sits directly above Trade Ideas: the screen is
-    # where a name comes FROM, the ideas are what was done with it.
-    # First in Research because it answers the question the ranked tables
-    # cannot: what is unusual here that I would never have scrolled to?
+    # Context first, then what is unusual in it, then the instruments.
+    # Findings sits second because it answers the question the ranked tables
+    # underneath it cannot: what here would I never have scrolled to?
+    ("world",       "World",        "main", "Research"),
     ("findings",    "Findings",     "main", "Research"),
     ("longterm",    "Long-Term",    "main", "Research"),
-    ("tracker",     "Portfolio",    "main", "Research"),
-    ("sip",         "SIP Buckets",  "main", "Research"),
-    ("funds",       "Fund Screen",  "main", "Research"),
-    # Pure client-side arithmetic — no API, no ledger. It therefore works
-    # identically on the static host, and unlike #sip it must NOT start hidden.
-    ("swp",         "SWP",          "main", "Research"),
     ("stocks",      "Stock Screen", "main", "Research"),
-    # Directly under the screen because it answers the question the screen
-    # cannot: a company listed four months ago has no annual statements to
-    # rank, so it sits unranked at the bottom there and is invisible.
     ("ipos",        "New Listings", "main", "Research"),
+    ("funds",       "Fund Screen",  "main", "Research"),
+    ("sip",         "SIP Buckets",  "main", "Research"),
+    ("swp",         "SWP",          "main", "Research"),
 
-    # ── /desk — the personal page ───────────────────────────────────────────
-    # Reordered again 2026-08-18: the practice run (Spanish, the daughter,
-    # Jainism and Buddhism) now sits AFTER chess rather than before the
-    # reading. Work first, then the day's reading, then the drills, then the
-    # personal practice, then the library.
+    # ── DESK ────────────────────────────────────────────────────────────────
+    # What is held, what it was sized to, what happened, what that adds up to,
+    # and — last — whether any of it can be trusted today.
+    ("tracker",     "Portfolio",    "main", "Desk"),
+    ("paperwallet", "Paper Wallet", "main", "Desk"),
+    ("alerts",      "Signal Log",   "main", "Desk"),
+    ("perf",        "Performance",  "main", "Desk"),
+    # Engine Log and Data Health are the System Health pair the brief asks for.
+    # Kept as two sections rather than merged into one: they answer different
+    # questions (what the engine CHANGED vs whether today's data is CURRENT),
+    # and collapsing them would bury the second inside the first.
+    ("rules",       "Engine Log",   "main", "Desk"),
+    ("datahealth",  "Data Health",  "main", "Desk"),
+    ("who",         "Who",          "main", "Desk"),
 
-    # WORK — find the role, then close the gap to it.
-    ("careers",     "Finance Careers", "desk", "Work"),
-    # The FP&A -> CFO track, not interview prep alone.
-    ("interview",   "CFO Track",    "desk", "Work"),
+    # ── LIFE — the whole /desk page ─────────────────────────────────────────
+    # The page is the pillar; these groups are its secondary navigation.
 
-    # READING — the wire compressed into events, then the longer reading.
-    ("brief",       "Daily Brief",  "desk", "Reading"),
-    ("smartreads",  "Smart Reads",  "desk", "Reading"),
+    # CAREER — find the role, then close the gap to it.
+    ("careers",     "Finance Careers", "desk", "Career"),
+    ("interview",   "CFO Track",    "desk", "Career"),
 
-    # DRILLS — listen, then play.
-    ("podcasts",    "Podcasts",     "desk", "Drills"),
-    ("chess",       "Chess",        "desk", "Drills"),
+    # LEARNING — the day's wire, the longer reading, the book, the listening.
+    ("brief",       "Daily Brief",  "desk", "Learning"),
+    ("smartreads",  "Smart Reads",  "desk", "Learning"),
+    ("book",        "Book",         "desk", "Learning"),
+    ("podcasts",    "Podcasts",     "desk", "Learning"),
 
-    # PRACTICE — the daily reps, moved below chess on request.
+    # PRACTICE — the daily reps.
     ("language",    "Language",     "desk", "Practice"),
     ("father",      "Father",       "desk", "Practice"),
-    ("wisdom",      "Wisdom",       "desk", "Practice"),
 
-    # LIBRARY — everything that keeps rather than expires. Mind Gym sits here
-    # rather than with the drills because a nav group must be one contiguous
-    # run (test_page_structure.py).
-    ("book",        "Book",         "desk", "Library"),
-    ("review",      "The Review",   "desk", "Library"),
-    ("desk",        "The Desk",     "desk", "Library"),
-    ("mind",        "The Mind",     "desk", "Library"),
-    ("way",         "The Way",      "desk", "Library"),
-    ("gym",         "Mind Gym",     "desk", "Library"),
+    # MIND — how to think, and what thinking has already been done.
+    ("wisdom",      "Wisdom",       "desk", "Mind"),
+    ("mind",        "The Mind",     "desk", "Mind"),
+    ("way",         "The Way",      "desk", "Mind"),
+    ("review",      "The Review",   "desk", "Mind"),
+    ("desk",        "The Desk",     "desk", "Mind"),
 
-    # ── TRADE ───────────────────────────────────────────────────────────────
-    # The reading order the ledger actually has: the idea, what it was sized
-    # to, what happened to it, and what that adds up to.
-    ("picks",       "Trade Ideas",  "main", "Trade"),
-    # Forward-only from launch, so it starts empty and fills as new signals
-    # land; that is the honest state of a track record on day one, not a bug
-    # to paper over with fabricated history.
-    ("paperwallet", "Paper Wallet", "main", "Trade"),
-    ("alerts",      "Signal Log",   "main", "Trade"),
-    ("perf",        "Performance",  "main", "Trade"),
-
-    # ── TRUST ───────────────────────────────────────────────────────────────
-    # Why believe any of the above. The Engine Log says what the record forced
-    # the engine to change; Data Health says whether today's numbers are
-    # actually current; Who says who is accountable for both.
-    ("rules",       "Engine Log",   "main", "Trust"),
-    ("datahealth",  "Data Health",  "main", "Trust"),
-    ("who",         "Who",          "main", "Trust"),
+    # DRILLS — the things scored against a board.
+    ("chess",       "Chess",        "desk", "Drills"),
+    ("gym",         "Mind Gym",     "desk", "Drills"),
 ]
 
 PAGE_META = {
@@ -2051,19 +2031,22 @@ PAGE_META = {
                  "long-term conviction picks and the last 24 hours of world news, "
                  "rebuilt at 6 AM IST daily by Akshay Kothari, CA."),
         "path": "/",
-        "other_label": "The Desk",
+        # The other page IS the fourth pillar, so the link says so. "The Desk"
+        # was ambiguous once DESK became a pillar name on this page.
+        "other_label": "Life",
         "other_path": "/desk",
-        "other_hint": "languages, fatherhood, chess, drills",
+        "other_hint": "career, learning, practice, mind, drills",
     },
     "desk": {
-        "title": "The Desk — languages, fatherhood, chess and the daily drills",
-        "desc": ("The practice behind the ledger: Spanish and Arabic drills, one thing "
-                 "to do with a seven-month-old, chess from yesterday's games, the "
-                 "reading, and six minutes of mental arithmetic. Rebuilt daily."),
+        "title": "Life — career, learning, practice, mind and the daily drills",
+        "desc": ("The fourth pillar: the Gulf finance search and the CFO track, the "
+                 "day's reading and the book underneath it, Spanish, one thing to do "
+                 "with a seven-month-old, the thinking, and chess from yesterday's "
+                 "games. Rebuilt daily alongside the ledger."),
         "path": "/desk",
-        "other_label": "The Signal",
+        "other_label": "Signal · Research · Desk",
         "other_path": "/",
-        "other_hint": "markets, trade ideas, the live ledger",
+        "other_hint": "markets, findings, the ledger and what it is worth",
     },
 }
 
@@ -5960,93 +5943,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 {% macro dh(name) %}{% if health and health.by_name.get(name) %}{% set d = health.by_name[name] %}
 <span class="dh dh-{{ d.status }}" title="{{ d.headline }}">{{ d.status }}<span class="dh-age">{{ d.freshness_age }}</span></span>{% endif %}{% endmacro %}
 
-<!-- ══════════ 04 WORLD ══════════ -->
-{% if 'world' in secs %}<section class="sec" id="world">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['world'] }} / {{ seclabel['world'] }}</span> {{ dh('World news') }}
-      <h2 class="stitle">The world, last 24h.</h2>
-    </div>
-    <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
-      actually changes a decision.</p>
-  </div>
-
-  <!-- Live incident map.
-       Land is a 156x66 dot grid rasterised once from Natural Earth (public
-       domain) and run-length encoded into the string below — no external asset,
-       no runtime fetch, nothing for a CSP to block. Blue is the baseline
-       everywhere; a country lights red or green when the last 24 hours of wires
-       say something is happening there. Filled from /api/world. -->
-  <div class="wmap-wrap rv">
-    <div class="wmap-head">
-      <span class="wm-t">Live incident map · rolling 24h</span>
-      <span class="wm-legend">
-        <i class="dot red"></i>escalation
-        <i class="dot green"></i>good news
-        <i class="dot blue"></i>quiet
-      </span>
-    </div>
-    <div class="wmap" id="worldMap" data-mask="2a.8.8.a.7d.2.1.8.1.16.1b.2.12.2.41.1.3.1.1.1.2.7.2.16.e.3.23.3.39.2.3.1.3.2.1.2.1.1.1.1.5.15.24.3.d.6.35.3.1a.10.21.1.c.a.36.a.1.2.3.7.8.e.20.2.6.1.1.18.4.5.14.a.4.2.4.7.1.1.1.1.4.1.1.5.5.e.12.5.10.28.5.2.2.2.5.24.3.4.5.9.14.c.1.1.1.39.1.2.2.23.6.3.1.1.4.6.7.4.b.4.2.4.2.3d.4.1.2.20.8.3.6.4.15.5.1.45.6.1f.7.4.9.2.15.6.1.3b.1.1.1.4.c.3.6.13.7.4.1.2.1d.2.1.3.2.34.7.2.10.1.a.14.5.6.18.2.6.2.2.33.8.3.1c.15.1.a.15.4.7.1.1.32.8.3.1f.14.1.a.14.1.1.3.1.3c.6.1.1f.1b.2.1.1.1.19.3c.29.1a.2.3.15.3e.2a.1c.19.e.3.2c.2a.18.1.1.18.1.2.4.1.2.1.5.5.2a.2.2.27.17.1b.5.4.2.1.4.2.2.2.26.2e.16.1c.4.9.1.1.29.2.1.30.14.1d.3.7.1.2.1.2.29.2.1.4.1.2b.13.1e.8.9.1.1.24.3.1.1.4.2c.10.1f.a.3.1.5.25.4.1.32.e.1f.39.37.6.6.1.1e.1a.1.1f.36.1.1.5.8.1.1b.15.1.6.3.1b.3a.4.23.16.2.8.4.16.1.1.39.4.7.1.1b.17.1.9.4.9.1.9.27.1.15.4.3.1.6.2.17.17.2.7.7.5.4.5.1.1.40.6.1f.18.1.6.8.4.5.5.6.1.3f.4.1d.18.2.3.a.3.7.5.5.1.41.2.1d.19.1.1.c.3.9.3.5.2.41.1.3.3.18.19.1.2.b.2.a.2.6.1.42.1.2.7.14.1c.b.1.14.1.43.9.14.1a.16.1.6.1.47.c.1a.11.15.1.1.1.4.2.47.c.1a.10.17.2.3.3.46.d.1a.f.18.2.2.4.46.10.17.e.1a.1.3.3.1.1.4.1.1.1.3d.13.15.c.1c.1.d.4.3a.14.14.c.1d.1.d.4.3.1.36.13.15.b.22.2.1.1.6.1.1.1.3a.12.16.c.69.10.17.c.3.1.22.3.2.1.3d.10.16.d.2.2.20.5.2.2.3e.e.16.b.3.2.20.7.1.2.3f.d.17.9.4.2.1f.c.3e.c.18.9.4.2.1d.f.3c.b.1a.9.4.2.1c.11.3b.a.1c.7.23.11.3b.a.1c.7.24.11.3a.9.1e.5.25.10.3b.8.1f.4.26.4.4.8.3b.6.4b.1.8.6.3b.7.56.4.3b.5.66.2.2f.4.5b.1.b.1.30.4.65.2.31.3.65.2.31.4.98.3.9a.2.9b.2.1a3">
-      <!-- Landmass on canvas, events on SVG. The land used to be 3,091
-           individual <rect> nodes — 55% of the entire page DOM and a 223ms
-           paint task — for something that never changes and is never
-           interactive. Canvas draws it in one node. The 30-odd event bubbles
-           stay as SVG because they need hit-testing, tooltips and a11y. -->
-      <canvas id="wmCanvas" width="624" height="264" aria-hidden="true"></canvas>
-      <svg viewBox="0 0 156 66" preserveAspectRatio="xMidYMid meet" role="img"
-           aria-label="World map of the last 24 hours of news">
-        <g id="wmDots"></g>
-      </svg>
-      <div class="wm-night" id="wmNight" aria-hidden="true"></div>
-      <div class="wm-night" id="wmNight2" aria-hidden="true" style="display:none"></div>
-      <div class="wm-sweep" aria-hidden="true"></div>
-      <div class="wm-tip" id="wmTip" hidden></div>
-    </div>
-    <div class="wm-foot" id="wmFoot">Reading the wires…</div>
-  </div>
-
-  {% if news %}
-    {% set lead = news[0] %}
-    <div class="lead rv">
-      <div class="lead-m">
-        <span class="tag">{{ lead.source }} · LEAD</span>
-        <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
-        <p>{{ lead.summary }}</p>
-        {% if lead.link %}<a class="readmore" href="{{ lead.link }}" target="_blank" rel="noopener">Read the full story &rarr;</a>{% endif %}
-      </div>
-      <div class="lead-s">
-        {# These five carried a headline and nothing else — no summary, and the
-           only way to learn what a story said was to leave the page. Every
-           item on this page now states what happened before it asks you to
-           click. #}
-        {% for item in news[1:6] %}
-        <div class="mini">
-          <span class="s">{{ item.source }}</span>
-          {% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}<a>{{ item.title }}</a>{% endif %}
-          {% if item.summary %}<p class="mini-s">{{ item.summary[:130] }}{% if item.summary|length > 130 %}&hellip;{% endif %}</p>{% endif %}
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-    <div class="news-grid">
-      {% for item in news[6:15] %}
-      <div class="ncard rv" style="--d:{{ loop.index0 * 0.05 }}s">
-        <span class="s">{{ item.source }}</span>
-        <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
-        <p>{{ item.summary[:180] }}{% if item.summary|length > 180 %}&hellip;{% endif %}</p>
-        <div class="ncard-f">
-          <span class="ts">{{ item.published }}</span>
-          {% if item.link %}<a class="readmore" href="{{ item.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <div class="empty rv">Loading feeds…</div>
-  {% endif %}
-</section>{% endif %}
-
 <!-- ══════════ MARKET INTEL ══════════
      Corporate actions, FII/DII net flow, sector heat — three independent
      NSE/Yahoo fetches (market_intel.py), cached daily by its own workflow
@@ -6162,6 +6058,186 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      public further down, so the ask belongs after it, not before.
      The submit handler binds to every .sub-form, so it needs no change. -->
 
+<!-- ══════════ 01 TRADE IDEAS ══════════ -->
+{% if 'picks' in secs %}<section class="sec" id="picks">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span> {{ dh('Trade ideas') }}
+      <h2 class="stitle">Top 5 trade ideas.</h2>
+    </div>
+    <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
+      Target 20–30%. Every idea carries a stop.
+      {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
+      showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
+  </div>
+
+  <div class="prov{{ ' stale' if top5_week else '' }} rv">
+    <span class="pv-tag">WEEKLY</span>
+    <span>Ranked once per ISO week &mdash; <b>the same five all week is the design</b>, not a stalled scan</span>
+    <span>Engine <b>{{ picks_engine }}</b></span>
+    <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
+      never touch win rate or expectancy</span>
+  </div>
+  {% if top5 %}
+  <div class="pick-grid">
+    {% for s in top5 %}
+    <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
+      <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
+             target="_blank" rel="noopener"
+             title="Open {{ s.name }} on TradingView">{{ s.name }}</a></div>
+        <span class="tag">{{ s.score }}/100</span>
+      </div>
+      <div class="px">{{ s.currency }}{{ s.price }}</div>
+      <div class="mom">
+        <span class="{{ 'up' if s.change_1d >= 0 else 'dn' }}">1D <b>{{ '+' if s.change_1d >= 0 else '' }}{{ s.change_1d | round(2) }}%</b></span>
+        <span class="{{ 'up' if s.mom_1m >= 0 else 'dn' }}">1M <b>{{ '+' if s.mom_1m >= 0 else '' }}{{ s.mom_1m | round(2) }}%</b></span>
+        <span class="{{ 'up' if s.mom_3m >= 0 else 'dn' }}">3M <b>{{ '+' if s.mom_3m >= 0 else '' }}{{ s.mom_3m | round(2) }}%</b></span>
+      </div>
+      <div class="scorebar" style="--w:{{ s.score }}%"><i></i></div>
+      {% if s.thesis %}<div class="th">{{ s.thesis }}</div>{% endif %}
+
+      {# Where the score came from. A composite with no breakdown is a number
+         the reader has to take on trust, and the whole argument of this site
+         is that nothing here should be taken on trust. Collapsed by default —
+         it is the answer to a question, not the headline. #}
+      {% if s.factors %}
+      <details class="why">
+        <summary>Why {{ s.score }}<span>/100</span></summary>
+        <div class="why-b">
+          {% for f in s.factors %}
+          <div class="why-r">
+            <span class="wk">{{ f.k }}</span>
+            <span class="wb" style="--w:{{ (f.e / f.w * 100) | round(0) | int }}%"><i></i></span>
+            <span class="wn">{{ f.e }}<em>/{{ f.w }}</em></span>
+          </div>
+          {% endfor %}
+        </div>
+      </details>
+      {% endif %}
+
+      {# The level that ends the idea, stated before it is reached. An idea
+         with a target and a stop but no invalidation only tells you where you
+         are wrong on price, never where you are wrong on the reason. #}
+      {% if s.ema20 %}
+      <div class="inval">
+        <b>Wrong if</b> {{ s.name }} closes below {{ s.currency }}{{ s.ema20 }} — its 20-day
+        average, and the single biggest component of that score.
+      </div>
+      {% endif %}
+
+      <div class="lvl">
+        <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">{{ s.timeframe }}</div></div>
+      </div>
+      <form action="/tracker/add" method="post" style="margin-top:14px">
+        <input type="hidden" name="symbol" value="{{ s.symbol }}">
+        <input type="hidden" name="name" value="{{ s.name }}">
+        <input type="hidden" name="entry_price" value="{{ s.price }}">
+        <input type="hidden" name="target_price" value="{{ s.target }}">
+        <input type="hidden" name="stop_loss" value="{{ s.stop_loss }}">
+        <input type="hidden" name="thesis" value="{{ s.thesis }}">
+        <input type="hidden" name="timeframe" value="{{ s.timeframe }}">
+        <button type="submit" class="btn btn-sm">+ Track</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
+    if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
+  {% endif %}
+</section>{% endif %}
+
+<!-- ══════════ 04 WORLD ══════════ -->
+{% if 'world' in secs %}<section class="sec" id="world">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['world'] }} / {{ seclabel['world'] }}</span> {{ dh('World news') }}
+      <h2 class="stitle">The world, last 24h.</h2>
+    </div>
+    <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
+      actually changes a decision.</p>
+  </div>
+
+  <!-- Live incident map.
+       Land is a 156x66 dot grid rasterised once from Natural Earth (public
+       domain) and run-length encoded into the string below — no external asset,
+       no runtime fetch, nothing for a CSP to block. Blue is the baseline
+       everywhere; a country lights red or green when the last 24 hours of wires
+       say something is happening there. Filled from /api/world. -->
+  <div class="wmap-wrap rv">
+    <div class="wmap-head">
+      <span class="wm-t">Live incident map · rolling 24h</span>
+      <span class="wm-legend">
+        <i class="dot red"></i>escalation
+        <i class="dot green"></i>good news
+        <i class="dot blue"></i>quiet
+      </span>
+    </div>
+    <div class="wmap" id="worldMap" data-mask="2a.8.8.a.7d.2.1.8.1.16.1b.2.12.2.41.1.3.1.1.1.2.7.2.16.e.3.23.3.39.2.3.1.3.2.1.2.1.1.1.1.5.15.24.3.d.6.35.3.1a.10.21.1.c.a.36.a.1.2.3.7.8.e.20.2.6.1.1.18.4.5.14.a.4.2.4.7.1.1.1.1.4.1.1.5.5.e.12.5.10.28.5.2.2.2.5.24.3.4.5.9.14.c.1.1.1.39.1.2.2.23.6.3.1.1.4.6.7.4.b.4.2.4.2.3d.4.1.2.20.8.3.6.4.15.5.1.45.6.1f.7.4.9.2.15.6.1.3b.1.1.1.4.c.3.6.13.7.4.1.2.1d.2.1.3.2.34.7.2.10.1.a.14.5.6.18.2.6.2.2.33.8.3.1c.15.1.a.15.4.7.1.1.32.8.3.1f.14.1.a.14.1.1.3.1.3c.6.1.1f.1b.2.1.1.1.19.3c.29.1a.2.3.15.3e.2a.1c.19.e.3.2c.2a.18.1.1.18.1.2.4.1.2.1.5.5.2a.2.2.27.17.1b.5.4.2.1.4.2.2.2.26.2e.16.1c.4.9.1.1.29.2.1.30.14.1d.3.7.1.2.1.2.29.2.1.4.1.2b.13.1e.8.9.1.1.24.3.1.1.4.2c.10.1f.a.3.1.5.25.4.1.32.e.1f.39.37.6.6.1.1e.1a.1.1f.36.1.1.5.8.1.1b.15.1.6.3.1b.3a.4.23.16.2.8.4.16.1.1.39.4.7.1.1b.17.1.9.4.9.1.9.27.1.15.4.3.1.6.2.17.17.2.7.7.5.4.5.1.1.40.6.1f.18.1.6.8.4.5.5.6.1.3f.4.1d.18.2.3.a.3.7.5.5.1.41.2.1d.19.1.1.c.3.9.3.5.2.41.1.3.3.18.19.1.2.b.2.a.2.6.1.42.1.2.7.14.1c.b.1.14.1.43.9.14.1a.16.1.6.1.47.c.1a.11.15.1.1.1.4.2.47.c.1a.10.17.2.3.3.46.d.1a.f.18.2.2.4.46.10.17.e.1a.1.3.3.1.1.4.1.1.1.3d.13.15.c.1c.1.d.4.3a.14.14.c.1d.1.d.4.3.1.36.13.15.b.22.2.1.1.6.1.1.1.3a.12.16.c.69.10.17.c.3.1.22.3.2.1.3d.10.16.d.2.2.20.5.2.2.3e.e.16.b.3.2.20.7.1.2.3f.d.17.9.4.2.1f.c.3e.c.18.9.4.2.1d.f.3c.b.1a.9.4.2.1c.11.3b.a.1c.7.23.11.3b.a.1c.7.24.11.3a.9.1e.5.25.10.3b.8.1f.4.26.4.4.8.3b.6.4b.1.8.6.3b.7.56.4.3b.5.66.2.2f.4.5b.1.b.1.30.4.65.2.31.3.65.2.31.4.98.3.9a.2.9b.2.1a3">
+      <!-- Landmass on canvas, events on SVG. The land used to be 3,091
+           individual <rect> nodes — 55% of the entire page DOM and a 223ms
+           paint task — for something that never changes and is never
+           interactive. Canvas draws it in one node. The 30-odd event bubbles
+           stay as SVG because they need hit-testing, tooltips and a11y. -->
+      <canvas id="wmCanvas" width="624" height="264" aria-hidden="true"></canvas>
+      <svg viewBox="0 0 156 66" preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="World map of the last 24 hours of news">
+        <g id="wmDots"></g>
+      </svg>
+      <div class="wm-night" id="wmNight" aria-hidden="true"></div>
+      <div class="wm-night" id="wmNight2" aria-hidden="true" style="display:none"></div>
+      <div class="wm-sweep" aria-hidden="true"></div>
+      <div class="wm-tip" id="wmTip" hidden></div>
+    </div>
+    <div class="wm-foot" id="wmFoot">Reading the wires…</div>
+  </div>
+
+  {% if news %}
+    {% set lead = news[0] %}
+    <div class="lead rv">
+      <div class="lead-m">
+        <span class="tag">{{ lead.source }} · LEAD</span>
+        <h2>{% if lead.link %}<a href="{{ lead.link }}" target="_blank">{{ lead.title }}</a>{% else %}{{ lead.title }}{% endif %}</h2>
+        <p>{{ lead.summary }}</p>
+        {% if lead.link %}<a class="readmore" href="{{ lead.link }}" target="_blank" rel="noopener">Read the full story &rarr;</a>{% endif %}
+      </div>
+      <div class="lead-s">
+        {# These five carried a headline and nothing else — no summary, and the
+           only way to learn what a story said was to leave the page. Every
+           item on this page now states what happened before it asks you to
+           click. #}
+        {% for item in news[1:6] %}
+        <div class="mini">
+          <span class="s">{{ item.source }}</span>
+          {% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}<a>{{ item.title }}</a>{% endif %}
+          {% if item.summary %}<p class="mini-s">{{ item.summary[:130] }}{% if item.summary|length > 130 %}&hellip;{% endif %}</p>{% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="news-grid">
+      {% for item in news[6:15] %}
+      <div class="ncard rv" style="--d:{{ loop.index0 * 0.05 }}s">
+        <span class="s">{{ item.source }}</span>
+        <h3>{% if item.link %}<a href="{{ item.link }}" target="_blank">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</h3>
+        <p>{{ item.summary[:180] }}{% if item.summary|length > 180 %}&hellip;{% endif %}</p>
+        <div class="ncard-f">
+          <span class="ts">{{ item.published }}</span>
+          {% if item.link %}<a class="readmore" href="{{ item.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty rv">Loading feeds…</div>
+  {% endif %}
+</section>{% endif %}
+
 <!-- ══════════ FINDINGS ══════════
      What the datasets already contain and nobody was reading.
 
@@ -6269,1562 +6345,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       business filter — return on capital, growth, leverage, valuation — before the chart
       gets a vote, and it publishes fewer than five rather than pad the list.</div>
   </div>
-</section>{% endif %}
-
-<!-- ══════════ 03 PORTFOLIO ══════════ -->
-{% if 'tracker' in secs %}<section class="sec" id="tracker">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['tracker'] }} / {{ seclabel['tracker'] }}</span>
-      <h2 class="stitle">The book.</h2>
-    </div>
-    <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
-      <form action="/tracker/obsidian" method="post" style="display:inline">
-        <button type="submit" class="btn-gh v">Sync Obsidian</button>
-      </form>
-      <a class="slink" href="/tracker/history" target="_blank">Exit history →</a>
-      <button type="button" class="btn-gh" id="posHistBtn" style="display:none">Closed positions</button>
-      <button type="button" class="btn-gh" id="keyLogout" style="display:none">Log out</button>
-    </div>
-  </div>
-
-  <!-- Live book. Filled from /api/tracker; the server-rendered block below is
-       the fallback for the static build. -->
-  <div id="posLive" style="display:none"></div>
-
-  <div class="keybox" id="keybox">
-    <span>Editing the book needs your key. Signed in for 48 hours, on this device only — nothing is stored in the browser.</span>
-    <label for="keyInput" class="hp">Edit key</label>
-    <input type="password" id="keyInput" placeholder="Edit key" autocomplete="off">
-    <button type="button" class="btn btn-sm" id="keySave">Unlock</button>
-  </div>
-
-  <div id="posStatic">
-  {% if tracker %}
-  <div class="tw rv">
-    <table class="t" style="min-width:820px">
-      <thead><tr>
-        <th scope="col">Symbol</th><th scope="col">Entry</th><th scope="col">Current</th><th scope="col">Target</th><th scope="col">Stop</th>
-        <th scope="col">P&amp;L</th><th scope="col">Horizon</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>
-      </tr></thead>
-      <tbody>
-        {% for s in tracker %}
-        <tr>
-          <td><strong class="sym">{{ s.symbol }}</strong></td>
-          <td class="num">{{ s.currency }}{{ s.entry_price }}</td>
-          <td class="num {{ 'up' if s.winning else 'dn' }}">{{ s.currency }}{{ s.current_price }}</td>
-          <td class="num up">{{ s.currency }}{{ s.target_price }}</td>
-          <td class="num dn">{{ s.currency }}{{ s.stop_loss }}</td>
-          <td class="{{ 'pnl-u' if s.winning else 'pnl-d' }}">{{ '+' if s.winning else '' }}{{ s.pnl_pct }}%</td>
-          <td class="mono-dim">{{ s.timeframe }}</td>
-          <td style="font-size:12px;color:var(--muted);max-width:220px">{{ s.thesis[:60] }}</td>
-          <td class="mono-dim">{{ s.added_date }}</td>
-          <td><form action="/tracker/exit/{{ s.id }}" method="post"><button type="submit" class="btn-gh">Exit</button></form></td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% else %}
-  <div class="empty rv">No open positions. Hit <strong style="color:var(--lime)">+ Track</strong> on any trade idea, or add one below.</div>
-  {% endif %}
-  </div>
-
-  <div class="formbox rv">
-    <h3 class="fh4">+ Add position manually</h3>
-    <form action="/tracker/add" method="post" id="posAddForm">
-      <div class="frow">
-        <input type="text" name="symbol" aria-label="Symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
-        <input type="text" name="name" aria-label="Company name" placeholder="Name">
-        <input type="number" step="0.01" name="entry_price" aria-label="Entry price" placeholder="Entry price" required>
-        <input type="number" step="1" min="1" name="quantity" aria-label="Quantity" placeholder="Quantity" required>
-      </div>
-      <div class="frow">
-        <select name="side" aria-label="Side">
-          <option value="LONG" selected>LONG</option>
-          <option value="SHORT">SHORT</option>
-        </select>
-        <select name="trade_type" aria-label="Trade type">
-          <option value="SWING" selected>SWING</option>
-          <option value="LONG_TERM">LONG_TERM</option>
-          <option value="INTRADAY">INTRADAY</option>
-          <option value="INVESTMENT">INVESTMENT</option>
-        </select>
-        <input type="number" step="0.01" name="target_price" aria-label="Target price" placeholder="Target price" required>
-        <input type="number" step="0.01" name="stop_loss" aria-label="Stop loss" placeholder="Stop loss">
-      </div>
-      <div class="frow">
-        <input type="text" name="timeframe" aria-label="Timeframe" placeholder="Timeframe" value="2-3 months">
-        <input type="text" name="thesis" aria-label="Thesis" placeholder="Why this stock?" style="flex:3">
-      </div>
-      <p class="fnote">SWING/LONG_TERM auto-run the 20%-at-+30% / 50%-of-remainder-at-+50% profit ladder. INTRADAY and INVESTMENT don't.</p>
-      <button type="submit" class="btn">Add to book</button>
-    </form>
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 04 SIP BUCKETS ══════════
-     ₹10,000/month, stepped up 10% each SIP year, one bucket per month, four
-     names per bucket. Every bucket keeps its own cost basis and its own XIRR —
-     a blended portfolio number would hide which months' picks actually worked,
-     which is the only feedback the ranking engine gets.
-     Filled from /api/sip; the whole section hides itself on a static build. -->
-{% if 'sip' in secs %}<section class="sec" id="sip" style="display:none">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['sip'] }} / {{ seclabel['sip'] }}</span>
-      <h2 class="stitle">One bucket a month.</h2>
-    </div>
-    <div style="text-align:right">
-      <span class="slink" id="sipPlan">—</span>
-      <p class="sdesc" style="margin-top:8px">Whole shares only — every name in a bucket
-        is priced so at least one share fits its slice. Buckets are never blended; the
-        month that worked and the month that did not stay visible as separate lines.</p>
-    </div>
-  </div>
-
-  <div class="kpi-row rv">
-    <div class="kpi"><div class="v" id="sipMonthly">—</div><div class="k">This month</div></div>
-    <div class="kpi"><div class="v" id="sipBuckets">0</div><div class="k">Buckets</div></div>
-    <div class="kpi"><div class="v" id="sipInvested">—</div><div class="k">Invested</div></div>
-    <div class="kpi"><div class="v" id="sipValue">—</div><div class="k">Value</div></div>
-    <div class="kpi"><div class="v" id="sipPnl">—</div><div class="k">Unrealised</div></div>
-  </div>
-
-  <div id="sipBody"></div>
-
-  <div class="shead rv" style="margin-top:34px;border-top:1px solid var(--line);padding-top:22px">
-    <div>
-      <span class="snum">THE ARITHMETIC</span>
-      <h2 class="stitle" style="font-size:24px">Where the step-up takes it.</h2>
-    </div>
-  </div>
-  <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
-    <th scope="col">Year</th><th scope="col">Monthly</th><th scope="col">Invested</th><th scope="col">@12%</th><th scope="col">@14%</th><th scope="col">@16%</th>
-  </tr></thead><tbody></tbody></table></div>
-  <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
-    Projections are compound arithmetic on the contribution schedule, not a forecast.
-    They assume the return shown is achieved every year with no gaps in contribution.
-    Actual equity returns arrive in a very different order, and sequence matters.
-  </p>
-</section>{% endif %}
-
-<!-- ══════════ FUND SCREEN ══════════
-     A ranking of public data, not a recommendation. Direct + Growth plans
-     only, ranked on CAGR computed here from AMFI's own NAV series.
-
-     Deliberately shows the drawdown next to the return: a 3-year CAGR on its
-     own tells you the reward and hides the ride, and the small-cap column is
-     where that gap is widest. -->
-{# Guard is `secs` alone. The extra `fund_screen.get('categories')` test that
-   used to live here is what let the section vanish while the nav still linked
-   to it — see page_context(drop=...), which now decides this once. #}
-{% if 'funds' in secs %}
-<section class="sec" id="funds">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['funds'] }} / {{ seclabel['funds'] }}</span> {{ dh('Fund screen') }}
-      <h2 class="stitle">Where the SIP goes.</h2>
-    </div>
-    <p class="sdesc">Top three by three-year return in each category, from
-      {{ fund_screen.source }}. Direct plans only &mdash; same portfolio, same
-      manager, without the distributor commission. Returns are computed from the
-      published NAV series, not copied off a factsheet.</p>
-  </div>
-
-  <!-- Vintage, not just result. This table looking identical to last week's is
-       the EXPECTED outcome of a weekly screen over multi-year returns — but it
-       is also exactly what a screen that never ran looks like, and until now
-       the page could not tell you which. -->
-  <div class="prov{{ ' stale' if fund_screen.is_fallback else '' }} rv">
-    <span class="pv-tag">WEEKLY</span>
-    <span>Rebuilt <b>Sundays 01:30 IST</b>, after the week&rsquo;s last NAV publish</span>
-    {% if fund_screen.built_on %}<span>Built <b>{{ fund_screen.built_on }}</b>
-      {%- if fund_screen.age_days is not none %} · {{ fund_screen.age_days }}d old{% endif %}</span>{% endif %}
-    {% if fund_screen.is_fallback %}
-    <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous build.
-      NAVs below are from that date, not today.</span>
-    {% endif %}
-    {% if fund_screen.get('job_status', {}).get('attempted_after_serve') %}
-    <span style="color:var(--gold)">&#9888; The most recent rebuild attempt
-      ({{ fund_screen.job_status.run_at[:16] }} UTC) failed &mdash;
-      {{ fund_screen.job_status.detail[:120] }}</span>
-    {% endif %}
-  </div>
-
-  {# Collapsed for the same reason as the stock screen's methodology block:
-     it is a standing caveat, not today's news, and it sat above every fund
-     card on every visit. The per-category `facts` note below stays open —
-     that one changes weekly and is about these specific funds. #}
-  <details class="fund-note-d rv">
-    <summary>On expense ratio &mdash; why this screen is Direct-only</summary>
-  <div class="fund-note">
-    <strong>On expense ratio.</strong> Per-scheme TER is not published in the free
-    AMFI feed, so this screen does not claim to know it. The cost lever that
-    <em>is</em> visible is Direct versus Regular, and it is the big one: a Regular
-    plan carries the distributor commission inside its TER, typically 0.5&ndash;1.2%
-    a year more for the same portfolio. Everything below is Direct.
-  </div>
-  </details>
-
-  {% for cat in fund_screen.categories %}
-  {% if cat.funds %}
-  <div class="fundcat rv">
-    <div class="fundcat-h">
-      <h3>{{ cat.label }}</h3>
-      <span class="ghost">{{ cat.screened }} screened</span>
-    </div>
-    <p class="fundcat-b">{{ cat.blurb }}</p>
-
-    {% set facts = cat.get('facts') %}
-    {% if facts %}
-    <div class="fund-note rv" style="margin:12px 0">
-      <strong>{{ facts.best_5y.name }}</strong> leads the full screened set on 5-year return
-      ({{ facts.best_5y.r5 }}%) &mdash; not always the same fund as the 3-year leader above.
-      The category spans {{ facts.dispersion_5y }} points between best and worst 5-year performer
-      ({{ facts.worst_5y.name }}, {{ facts.worst_5y.r5 }}%).
-      {% if facts.get('steadiest_top_quartile') %}
-      Steadiest top-quartile fund: <strong>{{ facts.steadiest_top_quartile.name }}</strong>
-      &mdash; {{ facts.steadiest_top_quartile.volatility }}% volatility at a
-      {{ facts.steadiest_top_quartile.r3 }}% 3-year return, the smoothest ride among funds that
-      still beat most of the category.
-      {% endif %}
-    </div>
-    {% endif %}
-
-    <!-- Card grid, not a table — each fund is its own unit at this point,
-         with three CAGR bars (1Y/3Y/5Y, same .sd-sc/.bar component the trade
-         sheet already uses) rather than one same-shaped row among six.
-
-         Every NEW field (r1/volatility/bar_*/percentile_r3/facts) is read
-         via .get() — dict.get(), not Jinja attribute lookup — because this
-         environment uses StrictUndefined and the fund cache refreshes
-         weekly (fund_screen.yml): a payload cached by an OLDER build of
-         funds.py genuinely lacks these keys until its next rebuild, and
-         `f.r1 is not none` still raises on a truly MISSING key — only a
-         key that exists with value None passes that check silently. This
-         crashed the entire page build once already (2026-08-16, prod
-         cache still had the pre-upgrade 6-field schema) before this fix. -->
-    <div class="fund-grid rv">
-      {% for f in cat.funds %}
-      {% set r1 = f.get('r1') %}
-      {% set r5 = f.get('r5') %}
-      {% set dd3 = f.get('dd3') %}
-      {% set vol = f.get('volatility') %}
-      {% set pct = f.get('percentile_r3') %}
-      <div class="card fund-card">
-        <div class="fund-card-h">
-          <div>
-            <strong>{{ f.name }}</strong><br>
-            <span class="mono-dim" style="font-size:11px">{{ f.house }}</span>
-          </div>
-          {% if f.get('isin') %}<span class="fund-isin mono-dim" title="ISIN — paste this into any broker or platform to find the exact scheme">{{ f.isin }}</span>{% endif %}
-        </div>
-        <div class="sd-scores">
-          <div class="sd-sc">
-            <span class="k">1Y</span>
-            <span class="v">{{ r1 if r1 is not none else '—' }}{{ '%' if r1 is not none else '' }}</span>
-            <span class="bar"><i style="width:{{ f.get('bar_r1', 0) }}%"></i></span>
-          </div>
-          <div class="sd-sc">
-            <span class="k">3Y</span>
-            <span class="v">{{ f.r3 }}%</span>
-            <span class="bar"><i style="width:{{ f.get('bar_r3', 0) }}%"></i></span>
-          </div>
-          <div class="sd-sc">
-            <span class="k">5Y</span>
-            <span class="v">{{ r5 if r5 is not none else '—' }}{{ '%' if r5 is not none else '' }}</span>
-            <span class="bar"><i style="width:{{ f.get('bar_r5', 0) }}%"></i></span>
-          </div>
-        </div>
-        <div class="fund-card-f">
-          {% if vol is not none %}<span class="mono-dim">Volatility <b style="color:var(--text)">{{ vol }}%</b></span>{% endif %}
-          <span class="mono-dim">Worst fall (3y) <b class="dn">{{ dd3 if dd3 is not none else '—' }}{{ '%' if dd3 is not none else '' }}</b></span>
-          {% if pct is not none %}<span class="mono-dim">Top {{ 100 - pct }}% of category</span>{% endif %}
-          {# Fund age sits with the other headline facts, not buried in the
-             detail panel: a 3Y CAGR from a fund with 3.2 years of history is a
-             different claim from the same number over 12 years. #}
-          {% if f.get('history_years') %}<span class="mono-dim">Age <b style="color:var(--text)">{{ f.history_years }}y</b></span>{% endif %}
-          <span class="mono-dim">NAV {{ f.nav }}</span>
-        </div>
-
-        {# ── What it actually owns ──
-           Always rendered when the data exists, not hidden behind the detail
-           toggle: the NAV series ranks these funds but says nothing about what
-           is inside them, and two funds with the same 3Y CAGR can be a
-           banks-and-IT portfolio and a smallcap-industrials one. That is the
-           difference that decides whether adding one diversifies anything.
-           Absent entirely when the portfolio could not be resolved — never a
-           placeholder, never a guess. #}
-        {% set pf = f.get('portfolio') %}
-        {% if pf and (pf.get('top_sectors') or pf.get('top_stocks')) %}
-        <div class="fpf">
-          {% if pf.get('top_sectors') %}
-          <div class="fpf-r">
-            <span class="fpf-k">Sectors</span>
-            <span class="fpf-v">
-              {% for s in pf.top_sectors %}<span class="fpf-c">{{ s.name }} <b>{{ s.pct }}%</b></span>{% endfor %}
-            </span>
-          </div>
-          {% endif %}
-          {% if pf.get('top_stocks') %}
-          <div class="fpf-r">
-            <span class="fpf-k">Top holdings</span>
-            <span class="fpf-v">
-              {% for s in pf.top_stocks %}<span class="fpf-c">{{ s.name|replace(' Ltd.','')|replace(' Limited','') }} <b>{{ s.pct }}%</b></span>{% endfor %}
-            </span>
-          </div>
-          {% endif %}
-          <div class="fpf-m">
-            {% if pf.get('holdings_count') %}{{ pf.holdings_count }} holdings{% endif %}
-            {%- if pf.get('equity_pct') %} · {{ pf.equity_pct }}% in equity{% endif %}
-            {%- if pf.get('as_on') %} · as on {{ pf.as_on }}{% endif %}
-          </div>
-        </div>
-        {% endif %}
-
-        {# Advanced detail as a native <details>, deliberately not a modal.
-           Overlays in this template have to live outside <main> to escape its
-           stacking context, and an inline panel also lets two funds be opened
-           side by side to compare — which is the whole point of a screen.
-           Everything below comes from the same NAV series as the headline
-           numbers; nothing is fetched and nothing is estimated. #}
-        {% set cal = f.get('calendar') or [] %}
-        {% set roll = f.get('rolling3y') %}
-        {% if cal or roll or f.get('inception') %}
-        <details class="fund-more">
-          <summary>Advanced detail</summary>
-          <div class="fund-more-b">
-            {% if roll %}
-            <div class="fm-block">
-              <div class="fm-h">Rolling 3-year return &mdash; {{ roll.windows }} start dates</div>
-              <p class="fm-note">The headline 3Y figure is one window ending today. This is every
-                3-year hold this fund has ever offered, so you can see the range rather than
-                the one number the calendar happens to produce.</p>
-              <div class="fm-row"><span>Best</span><b class="up">{{ roll.best }}%</b></div>
-              <div class="fm-row"><span>Median</span><b>{{ roll.median }}%</b></div>
-              <div class="fm-row"><span>Worst</span><b class="{{ 'dn' if roll.worst < 0 else '' }}">{{ roll.worst }}%</b></div>
-              <div class="fm-row"><span>Beat 7% a year</span><b>{{ roll.above_7pct }}% of windows</b></div>
-            </div>
-            {% endif %}
-
-            {% if cal %}
-            <div class="fm-block">
-              <div class="fm-h">Calendar year returns</div>
-              <p class="fm-note">Completed years only &mdash; a part-year is never annualised here.</p>
-              <div class="fm-cal">
-                {% for c in cal %}
-                <div class="fm-cy">
-                  <span class="fm-cy-y">{{ c.year }}</span>
-                  <span class="fm-cy-v {{ 'up' if c.ret >= 0 else 'dn' }}">{{ '%+.1f'|format(c.ret) }}%</span>
-                </div>
-                {% endfor %}
-              </div>
-            </div>
-            {% endif %}
-
-            <div class="fm-block">
-              <div class="fm-h">Scheme</div>
-              {% if f.get('inception') %}<div class="fm-row"><span>NAV history from</span><b>{{ f.inception }}</b></div>{% endif %}
-              {% if f.get('history_years') %}<div class="fm-row"><span>Track record</span><b>{{ f.history_years }} years</b></div>{% endif %}
-              {% if f.get('since_inception') is not none %}<div class="fm-row"><span>Since inception</span><b>{{ f.since_inception }}% a year</b></div>{% endif %}
-              {% if f.get('scheme_type') %}<div class="fm-row"><span>Type</span><b>{{ f.scheme_type }}</b></div>{% endif %}
-              {% if f.get('isin') %}<div class="fm-row"><span>ISIN</span><b class="mono">{{ f.isin }}</b></div>{% endif %}
-              <div class="fm-row"><span>NAV on {{ f.nav_date }}</span><b>{{ f.nav }}</b></div>
-            </div>
-
-            <p class="fm-src">
-              Computed from the full published NAV series, not copied off a factsheet.
-              <a href="{{ f.url }}" target="_blank" rel="noopener">Open the raw NAV series (JSON)</a>
-              &mdash; this is the data source, not a fund page.
-            </p>
-          </div>
-        </details>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-  {% endfor %}
-
-  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
-    Past return is the only thing a NAV series can tell you, and it is the weakest
-    predictor of the next three years there is. A fund at the top of a three-year
-    table is often there because its style was in favour, not because it will stay
-    there. This is a screen, not advice &mdash; I am not a SEBI-registered adviser.
-    <br><br>
-    NAV as of {{ fund_screen.categories[0].funds[0].nav_date if fund_screen.categories[0].funds else '—' }}.
-    Screen rebuilt weekly.
-  </p>
-</section>
-{% endif %}
-
-<!-- ══════════ SWP ══════════
-     The other half of the SIP section: buckets say what goes in, this says
-     what comes out and for how long. Entirely client-side arithmetic — no API,
-     no ledger — so it behaves the same on the static host and needs no
-     display:none/reveal dance.
-
-     Two things here are not the usual calculator arithmetic and are the whole
-     reason it is worth having:
-       1. Withdrawals are grossed up for capital gains tax using proportional
-          cost-basis depletion, so the number entered is what actually reaches
-          the bank. A calculator that ignores tax overstates how long the
-          corpus lasts, which is the one thing it exists to tell you.
-       2. The corpus is shown in nominal AND today's rupees. ₹2 Cr at 60 is not
-          ₹2 Cr of groceries at 60, and the nominal line is the flattering one. -->
-{% if 'swp' in secs %}<section class="sec" id="swp">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['swp'] }} / {{ seclabel['swp'] }}</span>
-      <h2 class="stitle">And what it pays out.</h2>
-    </div>
-    <p class="sdesc">Accumulate to retirement, then draw down. Withdrawals are grossed up
-      for capital gains tax, so the monthly figure is what lands in the bank, not what
-      leaves the fund. The dashed line is the same corpus in today&rsquo;s rupees.</p>
-  </div>
-
-  <!-- Collapsed by default. The eleven inputs and a 35-row table are for the
-       sittings where you actually re-plan; the rest of the time the four
-       numbers in the summary are the whole point, and the section should not
-       push Performance and the Signal Log a screen and a half down the page.
-       The summary strip below stays visible in BOTH states, so collapsing
-       hides the controls, never the answer. -->
-  <div class="swp-sum rv" id="swpSum">
-    <div class="swp-sum-k">
-      <span><b id="swpSumCorpus">—</b> at <span id="swpSumAge">—</span></span>
-      <span class="sep">·</span>
-      <span><b id="swpSumDraw">—</b>/month</span>
-      <span class="sep">·</span>
-      <span id="swpSumLast">—</span>
-    </div>
-    <button type="button" class="swp-toggle-all" id="swpExpand" aria-expanded="false"
-            aria-controls="swpBody">Adjust the plan &darr;</button>
-  </div>
-
-  <div id="swpBody" class="swp-body" hidden>
-  <div class="swp-in rv">
-    <label>Age now<input type="number" id="swpCurAge" value="34" min="18" max="75" step="1"></label>
-    <label>Retire at<input type="number" id="swpRetAge" value="55" min="35" max="80" step="1"></label>
-    <label>Plan till<input type="number" id="swpEndAge" value="90" min="60" max="105" step="1"></label>
-    <label>Corpus today<input type="number" id="swpCorpus" value="500000" min="0" step="10000"></label>
-    <label>SIP / month<input type="number" id="swpSip" value="30000" min="0" step="1000"></label>
-    <label>Step-up % / yr<input type="number" id="swpStep" value="10" min="0" max="25" step="1"></label>
-    <label>Return pre %<input type="number" id="swpRetPre" value="12" min="0" max="30" step="0.5"></label>
-    <label>Return post %<input type="number" id="swpRetPost" value="8" min="0" max="30" step="0.5"></label>
-    <label>Inflation %<input type="number" id="swpInfl" value="6" min="0" max="15" step="0.5"></label>
-    <label>Withdraw / mth<input type="number" id="swpDraw" value="100000" min="0" step="5000"></label>
-    <label>LTCG tax %<input type="number" id="swpTax" value="12.5" min="0" max="40" step="0.5"></label>
-  </div>
-
-  <div class="kpi-row rv">
-    <div class="kpi"><div class="v" id="swpKCorpus">—</div><div class="k">Corpus at retirement</div></div>
-    <div class="kpi"><div class="v" id="swpKNeed">—</div><div class="k">Corpus required</div></div>
-    <div class="kpi"><div class="v" id="swpKDraw">—</div><div class="k">First withdrawal / month</div></div>
-    <div class="kpi"><div class="v" id="swpKLast">—</div><div class="k">Money lasts till</div></div>
-  </div>
-
-  <div class="swp-verdict rv" id="swpVerdict"></div>
-
-  <div class="card rv">
-    <div class="cardhead">
-      <span class="eyebrow">Corpus path</span>
-      <span class="eyebrow" id="swpPeak">&nbsp;</span>
-    </div>
-    <svg id="swpChart" viewBox="0 0 760 214" width="100%" role="img" aria-labelledby="swpChartT">
-      <title id="swpChartT">Corpus rises to retirement age, then declines</title>
-    </svg>
-    <div class="legend">
-      <span><i class="sw" style="background:var(--blue)"></i>Corpus (nominal)</span>
-      <span><i class="sw" style="background:var(--dim)"></i>Same corpus in today&rsquo;s rupees</span>
-    </div>
-  </div>
-
-  <div class="card rv">
-    <div class="cardhead">
-      <span class="eyebrow">Year by year</span>
-      <div class="swp-toggle">
-        <button type="button" data-mode="nominal" class="on">Nominal &#8377;</button>
-        <button type="button" data-mode="real">Today&rsquo;s &#8377;</button>
-      </div>
-    </div>
-    <div class="tw">
-      <table class="t" id="swpTbl" style="min-width:560px">
-        <thead><tr><th scope="col">Age</th><th scope="col">Year</th><th scope="col">In / Out (yr)</th><th scope="col">Closing corpus</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <p class="note" style="margin-top:12px;color:var(--dim);font-size:12px">
-      Withdrawals are grossed up so the figure shown is what reaches your bank after capital
-      gains tax, using proportional cost-basis depletion. Returns compound monthly off the
-      effective annual rate.
-      <br><br>
-      The model assumes a smooth return every single year &mdash; real markets do not, and a bad
-      first five years of retirement destroys a corpus that the average return says is safe.
-      Treat the required-corpus number as a floor, not a target.
-    </p>
-  </div>
-  </div><!-- /#swpBody -->
-</section>{% endif %}
-
-<!-- ══════════ 05 INTERVIEW PREP ══════════ -->
-{# ══════════ FINANCE CAREERS ══════════
-   Renders docs/jobs.json, written by jobs.yml on its own clock. Presentation
-   only: every score, tier, freshness label and apply URL is printed verbatim
-   from the file. Nothing is recomputed here and nothing is invented — an
-   absent salary prints "Not disclosed", an unproven link prints "Unverified".
-   generate.load_careers does the grouping; empty_sections drops the nav entry
-   when there is nothing renderable. #}
-{% if 'careers' in secs %}<section class="sec" id="careers">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['careers'] }} / {{ seclabel['careers'] }}</span> {{ dh('Careers feed') }}
-      <h2 class="stitle">Where the next role is.</h2>
-    </div>
-    <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
-      the actual CV &mdash; multi-country retail P&amp;L, IFRS/MPERS consolidation, D365, Board
-      reporting. Ranked by whether it is worth applying to, not by how recently it was posted.</p>
-  </div>
-
-  <div class="prov rv">
-    <span class="pv-tag">DAILY</span>
-    {% if careers.generated_at %}<span>Last verified <b>{{ careers.generated_at[:16]|replace('T',' ') }} UTC</b></span>{% endif %}
-    {% if careers.next_refresh %}<span>Next refresh <b>{{ careers.next_refresh[:16]|replace('T',' ') }} UTC</b></span>{% endif %}
-    <span><b>{{ careers.stats.get('sources_ok', 0) }}</b> of
-      <b>{{ careers.stats.get('sources_attempted', 0) }}</b> sources responded</span>
-  </div>
-
-  {# Market snapshot — every figure counted from the rendered list, never
-     copied from the file's own totals, which include excluded rows. #}
-  {% set c = careers.counts %}
-  <div class="jsnap rv">
-    <div class="jsnap-i"><b>{{ c.total }}</b><span>roles worth seeing</span></div>
-    <div class="jsnap-i"><b>{{ c.s_tier + c.a_tier }}</b><span>high fit (S/A)</span></div>
-    <div class="jsnap-i"><b>{{ c.new }}</b><span>new this week</span></div>
-    <div class="jsnap-i"><b>{{ c.direct }}</b><span>verified direct apply</span></div>
-    {% for country in careers.countries %}
-    <div class="jsnap-i"><b>{{ c.by_country[country] }}</b><span>{{ country }}</span></div>
-    {% endfor %}
-  </div>
-
-  {# The failed-source roll call used to print here — ten scraper names and
-     their error states, in the reader's face, every day. Removed 2026-08-18:
-     it is operational detail, not a job. The information is NOT lost — source
-     coverage is now a Data Health dataset ("Careers feed", 11/21 -> DEGRADED),
-     which is where a reader goes to ask whether to trust a section rather than
-     having the answer pushed at them mid-scan. #}
-
-  {# ── filters. Operate on the server-rendered cards; with JS off every card
-       simply stays visible, which is the correct degraded state. ── #}
-  <div class="jfilters rv" id="jFilters">
-    <div class="jf-grp" role="group" aria-label="Filter by location">
-      <button type="button" class="fbtn on" data-jf="loc" data-v="">All</button>
-      {% for country in careers.countries %}
-      <button type="button" class="fbtn" data-jf="loc" data-v="{{ country }}">{{ country }}</button>
-      {% endfor %}
-    </div>
-    <div class="jf-grp" role="group" aria-label="Filter by tier">
-      <button type="button" class="fbtn on" data-jf="tier" data-v="">Any tier</button>
-      <button type="button" class="fbtn" data-jf="tier" data-v="S">S only</button>
-      <button type="button" class="fbtn" data-jf="tier" data-v="SA">S + A</button>
-    </div>
-    <div class="jf-grp" role="group" aria-label="Filter by freshness">
-      <button type="button" class="fbtn on" data-jf="fresh" data-v="">Any age</button>
-      <button type="button" class="fbtn" data-jf="fresh" data-v="NEW">New</button>
-      <button type="button" class="fbtn" data-jf="fresh" data-v="OPEN">Hide stale</button>
-    </div>
-    <span class="jf-count" id="jCount"></span>
-  </div>
-
-  {% macro jobcard(j, rank) %}
-  <article class="jcard{{ ' jcard-top' if j.tier == 'S' }}"
-           data-country="{{ j.country or '' }}" data-tier="{{ j.tier }}"
-           data-status="{{ j.status }}" data-score="{{ j.opportunity_score }}">
-    <div class="jc-h">
-      <div class="jc-id">
-        {% if rank %}<span class="jc-rank">{{ '%02d'|format(rank) }}</span>{% endif %}
-        <div>
-          <h3 class="jc-t">{{ j.title }}</h3>
-          <div class="jc-co">{{ j.company }}
-            <span class="jc-loc">&middot; {{ j.location or j.country or 'Location not stated' }}{% if j.location and j.country %}, {{ j.country }}{% endif %}</span>
-          </div>
-        </div>
-      </div>
-      <div class="jc-tier jc-tier-{{ j.tier|lower }}" title="Opportunity score {{ j.opportunity_score }}/100">
-        <b>{{ j.tier }}</b><span>{{ j.opportunity_score }}</span>
-      </div>
-    </div>
-
-    <div class="jc-meta">
-      <span class="jbadge jb-{{ j.status|lower }}">{{ j.status }}</span>
-      {% if j.posted_date %}<span class="jm">Posted {{ j.posted_date }}</span>
-      {% else %}<span class="jm dimmed">Posting date not published</span>{% endif %}
-      <span class="jm">Fit <b>{{ j.candidate_fit_score }}</b></span>
-      <span class="jm">Employer <b>{{ j.employer_score }}</b></span>
-      {% if j.experience_min %}<span class="jm">{{ j.experience_min }}+ yrs</span>{% endif %}
-      {% if j.salary_min and j.salary_currency %}
-        <span class="jm">{{ j.salary_currency }} {{ j.salary_min }}{% if j.salary_max %}&ndash;{{ j.salary_max }}{% endif %}</span>
-      {% else %}<span class="jm dimmed">Salary not disclosed</span>{% endif %}
-    </div>
-
-    {% if j.why_fit %}
-    <ul class="jc-why">
-      {% for w in j.why_fit[:3] %}<li>{{ w }}</li>{% endfor %}
-    </ul>
-    {% endif %}
-    {% if j.watch_out %}
-    <ul class="jc-warn">
-      {% for w in j.watch_out[:2] %}<li>{{ w }}</li>{% endfor %}
-    </ul>
-    {% endif %}
-
-    <div class="jc-f">
-      {% if j.application_url and j.application_url_verified %}
-        <a class="jc-apply" href="{{ j.application_url }}" target="_blank" rel="noopener">Apply direct</a>
-      {% elif j.application_url %}
-        <a class="jc-apply jc-apply-unv" href="{{ j.application_url }}" target="_blank" rel="noopener"
-           title="This link was not confirmed to resolve on the last check">Apply &mdash; unverified</a>
-      {% else %}
-        <span class="jc-apply jc-apply-none">No application link found</span>
-      {% endif %}
-      {% if j.source_url and j.source_url != j.application_url %}
-        <a class="jc-view" href="{{ j.source_url }}" target="_blank" rel="noopener">View posting</a>
-      {% endif %}
-      <span class="jc-src" title="Source confidence: {{ j.source_confidence }}">
-        {% if j.sources and j.sources|length > 1 %}{{ j.sources|length }} sources{% else %}{{ j.source }}{% endif %}
-      </span>
-    </div>
-  </article>
-  {% endmacro %}
-
-  <h3 class="jsub rv">Top opportunities</h3>
-  <p class="jsub-n rv">Ranked on fit, employer quality and how reachable the application is &mdash;
-    not on recency. Everything below carries a verified direct application link unless it says otherwise.</p>
-  <div class="jgrid rv" id="jTop">
-    {% for j in careers.top %}{{ jobcard(j, loop.index) }}{% endfor %}
-  </div>
-
-  {# Compared on id, not on the dict itself: `j not in careers.top` makes Jinja
-     deep-compare every field of every row against ten others. #}
-  {% set top_ids = careers.top | map(attribute='id') | list %}
-  {% set rest = careers.target | rejectattr('id', 'in', top_ids) | list %}
-  {% if rest %}
-  <h3 class="jsub rv">Everything else in {{ careers.countries|join(', ') }}</h3>
-  <div class="jgrid rv" id="jRest">
-    {% for j in rest %}{{ jobcard(j, 0) }}{% endfor %}
-  </div>
-  {% endif %}
-
-  {% set other_rest = careers.other | rejectattr('id', 'in', top_ids) | list %}
-  {% if other_rest %}
-  <h3 class="jsub rv">Outside the target markets</h3>
-  <p class="jsub-n rv">Same employers, different countries. Kept separate rather than ranked
-    against Dubai &mdash; these are not what the search is for, but they are real openings at
-    groups worth knowing. Every one is rendered rather than truncated, so the count above
-    and the list below cannot disagree.</p>
-  <div class="jgrid rv jgrid-quiet">
-    {% for j in other_rest %}{{ jobcard(j, 0) }}{% endfor %}
-  </div>
-  {% endif %}
-
-  <p class="note rv" style="margin-top:16px;color:var(--dim);font-size:12px">
-    Scores are a reading of the posted description against the CV, not a prediction of
-    whether an application succeeds. Freshness comes from the employer's own posted date
-    where they publish one; where they do not, the card says so rather than guessing.
-    Nothing here is invented &mdash; an unknown salary is blank, an unproven link is
-    labelled unverified.
-  </p>
-</section>{% endif %}
-
-{% if 'interview' in secs %}<section class="sec" id="interview">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['interview'] }} / {{ seclabel['interview'] }}</span>
-      <h2 class="stitle">CFO in three years.</h2>
-    </div>
-    <p class="sdesc">Four questions a day — two technical, two not — plus two field notes.
-      Weighted to retail, the Gulf, and the controller-to-CFO jump. The non-technical ones
-      decide the offer more often than the technical ones do; the field notes are the things
-      nobody asks you and everybody assumes you already know.</p>
-  </div>
-
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ Technical</span></div>
-  <div class="qa-grid rv">
-    {% for q in interview_tech %}
-    <details class="qa">
-      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
-      <div class="qa-a">{{ q.a }}</div>
-    </details>
-    {% endfor %}
-  </div>
-
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ Everything else</span></div>
-  <div class="qa-grid rv">
-    {% for q in interview_soft %}
-    <details class="qa">
-      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
-      <div class="qa-a">{{ q.a }}</div>
-    </details>
-    {% endfor %}
-  </div>
-
-  {# Not questions. The things nobody asks in an interview and everybody
-     assumes you already know once you are in the chair — the working-capital
-     arithmetic, the lease standard, what actually decides the offer. Same
-     <details> shape as the two banks above so the section reads as one thing
-     and still works with JS off. #}
-  {% if cfo_field %}
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ From the field</span></div>
-  <div class="qa-grid rv">
-    {% for q in cfo_field %}
-    <details class="qa">
-      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
-      <div class="qa-a">{{ q.a }}</div>
-    </details>
-    {% endfor %}
-  </div>
-  {% endif %}
-</section>{% endif %}
-
-<!-- ══════════ SMART READS ══════════
-     The wire tells you what happened; these argue about what it means. Same
-     named mastheads, but the analysis and money desks rather than the market
-     report, and a card only ships when the publisher gave it a real summary —
-     a headline with a border round it is a link, not a read.
-
-     Filtered harder than the news feed (two distinct finance terms, not one).
-     Opinion desks run film and language columns beside the money writing, and
-     one incidental word is how a review of The Odyssey reached a finance
-     page during the build of this section. -->
-{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
-   The wire compressed into EVENTS. Sits directly above Smart Reads: what
-   happened, then the longer reading. Every number and name in the generated
-   prose has been checked against the source articles by brief_engine.qa_reject
-   before it reaches here; anything that failed fell back to a summary built
-   from the headlines themselves and is marked as such. #}
-{% if 'brief' in secs %}<section class="sec" id="brief">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span> {{ dh('Daily Brief') }}
-      <h2 class="stitle">Everything important today.</h2>
-    </div>
-    <p class="sdesc">{{ brief.stats.articles }} articles from
-      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
-      ranked by what actually matters &mdash; not by how many outlets syndicated it.
-      Sources kept on every one.</p>
-  </div>
-
-  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
-    <span class="pv-tag">DAILY</span>
-    <span>~{{ brief.stats.read_minutes }} min read</span>
-    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
-      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
-    {% if brief.get('is_fallback') %}
-      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
-    {% endif %}
-    <span>{{ brief.stats.ai_written }} written up
-      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
-  </div>
-
-  {% macro ev_card(e, top) %}
-  <article class="ev{{ ' ev-top' if top }}">
-    <div class="ev-h">
-      <span class="ev-cat">{{ e.category }}</span>
-      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
-        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
-      </span>
-    </div>
-    <h3 class="ev-t">{{ e.headline }}</h3>
-    <div class="ev-m">
-      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
-      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
-      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
-    </div>
-    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
-    {% if e.whyItMatters %}
-    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
-    {% endif %}
-    {% if e.marketImpact %}
-    <div class="ev-mi">
-      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
-    </div>
-    {% endif %}
-    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
-    <div class="ev-s">
-      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
-    </div>
-  </article>
-  {% endmacro %}
-
-  <h3 class="jsub rv">Top stories</h3>
-  <div class="ev-grid rv">
-    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
-  </div>
-
-  {# Everything past the top five, collapsed. The whole point is a ten-minute
-     read; the rest is there for the day you want it. #}
-  {% set rest = brief.events[brief.top|length:] %}
-  {% if rest %}
-  <details class="fund-note-d rv">
-    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
-    <div class="ev-grid" style="margin-top:14px">
-      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
-    </div>
-  </details>
-  {% endif %}
-
-  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
-    Summaries are written from the linked reporting and nothing else &mdash; every figure and
-    name is checked against the source articles before publishing, and an event that fails
-    that check falls back to the outlets' own headlines rather than to invented copy.
-    Read the originals for the full story.
-  </p>
-</section>{% endif %}
-
-{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span> {{ dh('Smart Reads') }}
-      <h2 class="stitle">Worth the ten minutes.</h2>
-    </div>
-    <!-- Copy rewritten when this stopped being a finance-only section. It used
-         to name five money mastheads, which was accurate then and would have
-         been quietly wrong the moment the other four categories landed. -->
-    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
-      &mdash; markets and personal finance alongside habits and focus, health and
-      longevity, psychology and relationships, and the longer essays on thinking
-      and living well. Every card carries the publisher&rsquo;s own summary, so you
-      know what a piece argues before you open it.</p>
-  </div>
-
-  <div class="sr-grid">
-    {% for r in smart_reads %}
-    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
-      <div class="sr-h">
-        <span class="sr-src">{{ r.source }}</span>
-        <!-- The category, not a constant "SMART READS" label. The point of the
-             mix is that a reader can see at a glance it is not nine money
-             pieces, and a tag that says the same thing on every card cannot
-             show that. -->
-        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
-          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
-           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
-        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
-      </div>
-      <h3 class="sr-t">
-        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
-        {%- else %}{{ r.title }}{% endif -%}
-      </h3>
-      <p class="sr-s">{{ r.summary }}</p>
-
-      {# Present only on reads that passed BOTH gates — the shared truthfulness
-         gate in brief_engine (no number or name absent from the source) and
-         the recommendation gate in smart_reads.py. A read that failed either
-         renders exactly as it always did, so a rejection costs its prose and
-         nothing else. #}
-      {% if r.smart %}
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          {% for b in r.smart.what_happened %}<li>{{ b }}</li>{% endfor %}
-        </ul></dd>
-        {% if r.smart.why_it_matters %}
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">{{ r.smart.why_it_matters }}</dd>
-        </div>
-        {% endif %}
-        {% if r.smart.what_to_watch %}
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">{{ r.smart.what_to_watch }}</dd>
-        {% endif %}
-      </dl>
-      <p class="sr-read">{{ r.smart.read_seconds }} sec read &middot; no recommendation, by design</p>
-      {% endif %}
-
-      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
-    </article>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ MUSIC ══════════
-     Three crates. Two are yours (edit music.py to add a line; the 6 AM build
-     picks it up), the third is a fixed all-time canon. Five show, the rest are
-     one click away — a shelf you can see the whole of is a shelf you stop
-     scanning. The five on top rotate daily, so the shelf reads differently
-     every morning without the list changing. -->
-{% if 'podcasts' in secs %}<section class="sec" id="podcasts">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
-      <h2 class="stitle">What&rsquo;s worth listening to.</h2>
-    </div>
-    <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
-      investing and money, society, politics and geopolitics, health, psychology,
-      philosophy, education, comedy and culture. Thirty-four channels, up to twenty
-      episodes, newest first, with what each one says it covers. Titles, dates and
-      takeaways come from the shows themselves. Shorts are excluded per video, not
-      per channel.</p>
-  </div>
-
-  <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
-    <span class="pv-tag">DAILY</span>
-    <span>{{ podcasts.episodes|length }} episodes from {{ podcasts.shows }} shows</span>
-    {% if podcasts.built_on %}<span>Built <b>{{ podcasts.built_on }}</b>{% endif %}
-      {%- if podcasts.age_days is not none %} · {{ podcasts.age_days }}d old{% endif %}</span>
-    {% if podcasts.is_fallback %}<span>&#9888; Today&rsquo;s refresh has not run &mdash;
-      showing the most recent list.</span>{% endif %}
-  </div>
-
-  <div class="pod-grid">
-    {% for e in podcasts.episodes %}
-    <article class="pod rv" style="--d:{{ loop.index0 * 0.05 }}s">
-      <div class="pod-h">
-        <span class="pod-cat">{{ e.category }}</span>
-        <span class="pod-date">{{ e.published }}</span>
-      </div>
-      <h3 class="pod-t">
-        {%- if e.link %}<a href="{{ e.link }}" target="_blank" rel="noopener">{{ e.title }}</a>
-        {%- else %}{{ e.title }}{% endif -%}
-      </h3>
-      <div class="pod-s">{{ e.show }}{% if e.guest %} &middot; <b>{{ e.guest }}</b>{% endif %}</div>
-      {% if e.takeaways %}
-      <ul class="pod-k">
-        {% for t in e.takeaways %}<li>{{ t }}</li>{% endfor %}
-      </ul>
-      {% endif %}
-    </article>
-    {% endfor %}
-  </div>
-  <p class="pod-note">Takeaways are compressed from each episode&rsquo;s own published
-    description &mdash; they are the show&rsquo;s claims about itself, not a review, and
-    not a summary of anything said in the audio.</p>
-</section>{% endif %}
-
-<!-- ══════════ 09 CHESS ══════════ -->
-{% if 'chess' in secs %}<section class="sec" id="chess">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
-      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess.{% else %}Your last session.{% endif %}</h2>
-    </div>
-    <div style="text-align:right">
-      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.
-        {%- if lichess_summary.session_date and not lichess_summary.is_yesterday %}
-        <br><span style="color:var(--gold)">No games yesterday &mdash; showing
-        {{ lichess_summary.session_date }}, the most recent day you played.</span>{% endif %}</p>
-      <a class="slink" href="https://lichess.org/@/AKK_010" target="_blank" style="display:inline-block;margin-top:10px">Profile →</a>
-    </div>
-  </div>
-
-  {% if lichess_games %}
-  <div class="chess-kpi rv">
-    <div class="ck"><div class="v up">{{ lichess_summary.wins }}</div><div class="k">Wins</div></div>
-    <div class="ck"><div class="v dn">{{ lichess_summary.losses }}</div><div class="k">Losses</div></div>
-    <div class="ck"><div class="v" style="color:var(--dim)">{{ lichess_summary.draws }}</div><div class="k">Draws</div></div>
-    <div class="ck"><div class="v" style="color:var(--lime)">{{ lichess_summary.pct }}%</div><div class="k">Win Rate</div></div>
-    <div class="ck"><div class="v">{{ lichess_summary.total }}</div><div class="k">Games</div></div>
-    {% if lichess_summary.mode == "full" %}
-    <div class="ck"><div class="v" style="color:var(--blue)">{{ lichess_summary.upsets }}</div><div class="k">Upsets</div></div>
-    <div class="ck"><div class="v dn">{{ lichess_summary.collapses }}</div><div class="k">Collapses</div></div>
-    {% endif %}
-  </div>
-
-  {% if lichess_summary.session_summary %}
-  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>{{ lichess_summary.session_summary }}</div>
-  {% else %}
-  <div class="verdict rv" style="background:rgba(255,255,255,.03);border-color:var(--line)">
-    {{ lichess_summary.icon }}
-    {% if lichess_summary.pct >= 55 %} Good session — {{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review the wins and lock in the patterns.
-    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
-    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before the next game. Pattern beats volume.{% endif %}
-  </div>
-  {% endif %}
-
-  {% if lichess_summary.mode == "full" and (lichess_summary.weak_op or lichess_summary.best_op) %}
-  <div class="two rv" style="margin-bottom:18px">
-    {% if lichess_summary.weak_op %}
-    <div class="card" style="border-color:rgba(255,92,92,.25)">
-      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--down);margin-bottom:6px">📚 Study this opening</div>
-      <div style="font-size:14px;color:#FFA0A0">{{ lichess_summary.weak_op }}</div>
-    </div>
-    {% endif %}
-    {% if lichess_summary.best_op %}
-    <div class="card" style="border-color:rgba(61,220,151,.25)">
-      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--up);margin-bottom:6px">💪 Strongest opening</div>
-      <div style="font-size:14px;color:#9BEFC9">{{ lichess_summary.best_op }}</div>
-    </div>
-    {% endif %}
-  </div>
-  {% endif %}
-
-  {% if lichess_summary.mode == "full" %}
-  <div class="rv">
-    {% for g in lichess_games %}
-    <div class="game {{ g.cls }}">
-      <div class="hdr">
-        <span style="font-size:17px">{{ g.icon }}</span>
-        <span class="res {{ 'up' if g.cls == 'win' else ('dn' if g.cls == 'loss' else '') }}"
-              {% if g.cls == 'draw' %}style="color:var(--dim)"{% endif %}>{{ g.result }}</span>
-        <span class="pill">as {{ g.my_side }}</span>
-        <span class="pill">{{ g.speed }}</span>
-        {% if g.is_upset %}<span class="pill" style="background:rgba(106,168,255,.14);color:var(--blue)">Upset ⚡</span>{% endif %}
-        {% if g.is_collapse %}<span class="pill" style="background:rgba(255,92,92,.13);color:var(--down)">Collapse ⚠</span>{% endif %}
-        {% if g.is_long %}<span class="pill">{{ g.moves }}M Epic</span>{% endif %}
-        <a href="{{ g.url }}" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
-      </div>
-      <div class="op">{% if g.eco %}<span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">{{ g.eco }}</span>{% endif %}{{ g.opening }}</div>
-      <div class="meta">
-        vs <strong style="color:var(--text)">{{ g.opponent }}</strong> <span style="color:var(--dim)">({{ g.opp_rating }})</span>
-        · me {{ g.my_rating }} · {{ g.moves }} moves · {{ g.termination }}
-        {% if g.me_diff is not none %}· <span class="{{ 'up' if g.me_diff > 0 else 'dn' }}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>{% endif %}
-      </div>
-      {% if g.best_move %}
-      <div class="bestmv">
-        <div class="bmlab">Best move of the game</div>
-        <div class="bmrow">
-          <span class="bmsan">{{ g.best_move.move_no }}. {{ g.best_move.san }}</span>
-          <span class="bmgain">+{{ (g.best_move.gain_cp / 100) | round(1) }} pawns</span>
-          <span class="bmeval">eval after {{ "%+.2f"|format(g.best_move.eval_after) }}</span>
-        </div>
-      </div>
-      {% endif %}
-      {% if g.standout %}<div class="uniq"><b>What made it different</b>{{ g.standout }}</div>{% endif %}
-      {% if g.key_facts %}
-      <div class="kfacts">
-        {% for f in g.key_facts %}<span class="kf">{{ f }}</span>{% endfor %}
-      </div>
-      {% endif %}
-      {% if g.game_strength or g.est_fide %}
-      <div class="ratings">
-        {% if g.game_strength %}<span class="rt"><i>Played at</i><b>~{{ g.game_strength }}</b></span>{% endif %}
-        {% if g.est_fide %}<span class="rt"><i>Est. FIDE equiv.</i><b>~{{ g.est_fide }}</b></span>{% endif %}
-        <span class="rtnote">estimates from Lichess {{ g.speed|lower }} rating &amp; centipawn loss — not official FIDE</span>
-      </div>
-      {% endif %}
-      {% if not g.analysed %}<div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>{% endif %}
-      {% if g.analysis %}<div class="an">💡 {{ g.analysis }}</div>{% endif %}
-    </div>
-    {% endfor %}
-  </div>
-  {% else %}
-  <div class="two rv" style="margin-bottom:16px">
-    {% for g in lichess_games %}
-    <div class="card">
-      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-bottom:8px">{{ g.speed }}</div>
-      <div class="num" style="font-size:30px;font-weight:700;letter-spacing:-1.4px;color:{% if g.pct >= 55 %}var(--up){% elif g.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}">{{ g.pct }}%</div>
-      <div style="font-size:12.5px;color:var(--muted);margin-top:7px">
-        <span class="up">W{{ g.wins }}</span> · <span class="dn">L{{ g.losses }}</span> ·
-        <span style="color:var(--dim)">D{{ g.draws }}</span> · {{ g.total }} games
-      </div>
-      <a href="{{ g.profile_url }}" target="_blank" class="slink" style="display:inline-block;margin-top:11px">Lichess →</a>
-    </div>
-    {% endfor %}
-  </div>
-  <!-- This used to read "Add LICHESS_TOKEN to GitHub secrets" whenever the
-       page fell back to aggregate counts — including every time the token was
-       set, which it has been since 2026-07-29. Falling back and lacking a
-       token are different questions, and conflating them sent you to create a
-       credential you already had. Each cause now says its own name. -->
-  {% if lichess_summary.token_missing %}
-  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets to raise the export rate limit and include private games.
-    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--lime)">Create token →</a></div>
-  {% else %}
-  <div class="empty rv" style="text-align:left">No individual games came back from the export API for the last seven days,
-    so this is the aggregate view. The token is set &mdash; this is not a credentials problem.</div>
-  {% endif %}
-  {% endif %}
-
-  {% if lichess_summary.trend %}
-  <div class="rv" style="margin-top:18px">
-    <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">📈 7-day win rate</div>
-    <div class="trend">
-      {% for t in lichess_summary.trend | reverse %}
-      <div>
-        <div class="bar" style="--h:{{ [t.pct * 70 // 100, 4] | max }}px;--d:{{ loop.index0 * 0.07 }}s;background:{% if t.pct >= 55 %}var(--up){% elif t.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}"></div>
-        <div class="lb">{{ t.day }}</div>
-        <div class="lb" style="color:var(--muted)">{{ t.pct }}%</div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-
-  {% else %}
-  <div class="empty rv">No games played yesterday · <a href="https://lichess.org/@/AKK_010" target="_blank" style="color:var(--lime)">Play on Lichess →</a></div>
-  {% endif %}
-
-  <div class="two rv" style="margin-top:18px">
-    <div class="essay" style="--ac:var(--gold)">
-      <div class="meta">Chess Tutor · Lesson {{ chess.index }}/{{ chess.total }}</div>
-      <h3>{{ chess.title }}</h3>
-      <p>{{ chess.body }}</p>
-      <p style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:14px">
-        Practise: <a href="https://lichess.org/study" target="_blank" style="color:var(--lime)">Lichess Study</a> ·
-        <a href="https://chess.com/puzzles" target="_blank" style="color:var(--lime)">Chess.com Puzzles</a></p>
-    </div>
-    {% if lichess_puzzle %}
-    <div class="essay" style="--ac:var(--gold);--d:.08s">
-      <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating {{ lichess_puzzle.rating }} · {{ lichess_puzzle.level }}</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">{{ lichess_puzzle.themes }}</p>
-      <div class="q">💡 {{ lichess_puzzle.tip }}</div>
-      <a href="{{ lichess_puzzle.url }}" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
-    </div>
-    {% endif %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 10 MIND GYM ══════════
-     Pure client-side: deterministic daily seed, scores in localStorage. No
-     API, so it works identically on the static host. -->
-<!-- ══════════ 06 LANGUAGE ══════════ -->
-{% if 'language' in secs %}<section class="sec" id="language">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['language'] }} / {{ seclabel['language'] }}</span>
-      <h2 class="stitle">Two tongues, sharper.</h2>
-    </div>
-    <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
-      one delivery drill. Say them out loud — reading them does nothing.</p>
-  </div>
-
-  <div class="lrn-head rv"><span class="lrn-kicker">🇪🇸 Español</span></div>
-  <div class="two rv">
-    {% for w in spanish %}
-    <div class="lrn-card">
-      <div class="lrn-tag">{{ w.tag }}</div>
-      <div class="lrn-word">{{ w.word }}</div>
-      <div class="lrn-mean">{{ w.meaning }}</div>
-      <div class="lrn-ex"><span class="es">{{ w.es }}</span><span class="en">{{ w.en }}</span></div>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ Vocabulary</span></div>
-  <div class="two rv">
-    {% for v in vocab %}
-    <div class="lrn-card">
-      <div class="lrn-tag">{{ v.say }}</div>
-      <div class="lrn-word">{{ v.word }}</div>
-      <div class="lrn-mean">{{ v.meaning }}</div>
-      <div class="lrn-ex"><span class="es">{{ v.example }}</span><span class="en">{{ v.note }}</span></div>
-    </div>
-    {% endfor %}
-  </div>
-
-  {% if speaking %}
-  <div class="lrn-head rv"><span class="lrn-kicker">◆ Speaking drill</span></div>
-  <div class="drill rv">
-    <div class="drill-t">{{ speaking.title }}</div>
-    <div class="drill-d">{{ speaking.drill }}</div>
-    <div class="drill-w">{{ speaking.why }}</div>
-  </div>
-  {% endif %}
-</section>{% endif %}
-
-<!-- ══════════ 07 FATHERHOOD ══════════ -->
-{% if 'father' in secs %}<section class="sec" id="father">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['father'] }} / {{ seclabel['father'] }}</span>
-      <h2 class="stitle">{{ daughter.heading }}</h2>
-    </div>
-    <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
-      is presence rather than technique — but the technique is not nothing.<br>
-      <span class="mono-dim" style="font-size:11px">Born 25 December 2025 &middot;
-        day {{ "{:,}".format(daughter.days) }}</span></p>
-  </div>
-  <div class="two rv">
-    {% for f in father %}
-    <div class="lrn-card tall">
-      <div class="lrn-tag">Today</div>
-      <div class="lrn-word sm">{{ f.title }}</div>
-      <div class="lrn-do">{{ f.do }}</div>
-      <div class="lrn-why"><b>Why</b> {{ f.why }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 08 WISDOM ══════════ -->
-{% if 'wisdom' in secs %}<section class="sec" id="wisdom">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['wisdom'] }} / {{ seclabel['wisdom'] }}</span>
-      <h2 class="stitle">Jainism and Buddhism.</h2>
-    </div>
-    <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
-      the thing to do with it today.</p>
-  </div>
-  <div class="two rv">
-    {% for w in life_wisdom %}
-    <div class="lrn-card tall {{ 'jain' if w.tradition == 'Jainism' else 'budd' }}">
-      <div class="lrn-tag">{{ w.tradition }}</div>
-      <div class="lrn-word sm">{{ w.term }} <span class="tr">· {{ w.translation }}</span></div>
-      <div class="lrn-do">{{ w.teaching }}</div>
-      <div class="lrn-why"><b>Today</b> {{ w.apply }}</div>
-    </div>
-    {% endfor %}
-  </div>
-</section>{% endif %}
-
-
-
-<!-- ══════════ BOOK ══════════
-     One chapter a day out of 48, and — for the 29 books that have one — the
-     whole book underneath it: the crux in a dozen points, what actually
-     changes in your head, worked examples, and how it lands in this life.
-
-     This was a TAB inside The Desk, fifth of seven, which meant the deepest
-     writing on the site was two clicks from being seen and never was. Nothing
-     about the content changed on 2026-08-19; it was simply given its own
-     section, because a book summary buried behind a tab strip is a book
-     summary nobody reads. -->
-{% if 'book' in secs and book %}
-<section class="sec" id="book">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['book'] }} / {{ seclabel['book'] }}</span>
-      <h2 class="stitle">{{ book.book }}.</h2>
-    </div>
-    <p class="sdesc">{{ book.author }} &middot; chapter {{ book.index }} of {{ book.total }}.
-      One chapter a day, and where the book has been read properly, the whole thing
-      underneath it &mdash; the argument in a dozen points, what changes in your head
-      after reading it, and how it lands on an FP&amp;A desk rather than in general.</p>
-  </div>
-
-  <div class="essay rv" style="--ac:var(--violet)">
-
-        <div class="meta">{{ book.book }} · {{ book.author }} · {{ book.index }}/{{ book.total }}</div>
-        <h3>{{ book.chapter }}</h3>
-        <p>{{ book.lesson }}</p>
-        <div class="q">{{ book.key_quote }}</div>
-        <div class="act"><b>Today's action</b>{{ book.action }}</div>
-
-        {% if book.crux %}
-        <div class="bookdeep">
-          <div class="bdhead">The whole book · {{ book.crux|length }} points</div>
-          <ol class="crux">
-            {% for c in book.crux %}<li>{{ c }}</li>{% endfor %}
-          </ol>
-        </div>
-        {% endif %}
-
-        {% if book.learnings %}
-        <div class="bookdeep">
-          <div class="bdhead">What actually changes in your head</div>
-          <ul class="bdlist">
-            {% for l in book.learnings %}<li>{{ l }}</li>{% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-
-        {% if book.examples %}
-        <div class="bookdeep">
-          <div class="bdhead">Examples</div>
-          <ul class="bdlist eg">
-            {% for e in book.examples %}<li>{{ e }}</li>{% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-
-        {% if book.adapt %}
-        <div class="bookdeep adapt">
-          <div class="bdhead">How to adapt it into your life</div>
-          <ul class="bdlist">
-            {% for a in book.adapt %}<li>{{ a }}</li>{% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-        </div>
-</section>
-{% endif %}
-
-<!-- ══════════ 08 THE REVIEW ══════════ -->
-{% if 'review' in secs %}<section class="sec" id="review">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['review'] }} / {{ seclabel['review'] }}</span>
-      <h2 class="stitle">Look back, or none of it compounds.</h2>
-    </div>
-    <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
-      {% if review.is_review_day %}Review day — do it now.{% else %}{{ review.days_left }} day{{ '' if review.days_left == 1 else 's' }} until the weekend review.{% endif %}
-      Answers save in this browser, keyed to the week.</p>
-  </div>
-
-  <div class="rv">
-    <div class="deep-q">
-      <div class="dq-lab">This week's question · {{ review.index }}/{{ review.total }}</div>
-      <h3>{{ review.prompt }}</h3>
-      <p>{{ review.why }}</p>
-    </div>
-
-    <div class="rv-grid" id="reviewGrid" data-week="{{ review.key }}">
-      <div class="rv-card">
-        <label for="rvNumbers">The numbers</label>
-        <div class="rv-hint">What moved, by how much, and did you cause it?</div>
-        <textarea id="rvNumbers" rows="4" placeholder="e.g. 12 applications sent · SIP ₹10,000 · expectancy +0.14R over 22 signals"></textarea>
-      </div>
-      <div class="rv-card">
-        <label for="rvWins">Wins</label>
-        <div class="rv-hint">Only things that finished. Not things that progressed.</div>
-        <textarea id="rvWins" rows="4" placeholder="What actually shipped or closed"></textarea>
-      </div>
-      <div class="rv-card">
-        <label for="rvMisses">Misses</label>
-        <div class="rv-hint">What slipped, and the cause — not the excuse.</div>
-        <textarea id="rvMisses" rows="4" placeholder="What did not happen, and why"></textarea>
-      </div>
-      <div class="rv-card">
-        <label for="rvAnswer">Answer to this week's question</label>
-        <div class="rv-hint">{{ review.prompt }}</div>
-        <textarea id="rvAnswer" rows="4" placeholder="Be specific. Vague answers are avoidance."></textarea>
-      </div>
-      <div class="rv-card wide">
-        <label for="rvChange">One change for next week</label>
-        <div class="rv-hint">Exactly one. A list of five is a list of none.</div>
-        <textarea id="rvChange" rows="3" placeholder="One change. Specific enough to verify next Sunday."></textarea>
-      </div>
-    </div>
-
-    <div class="rv-bar">
-      <span class="rv-status" id="rvStatus">Not started</span>
-      <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
-    </div>
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 05 THE DESK ══════════ -->
-{% if 'desk' in secs %}<section class="sec" id="desk">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['desk'] }} / {{ seclabel['desk'] }}</span>
-      <h2 class="stitle">Compound the skill.</h2>
-    </div>
-    <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
-      Seven tabs, one discipline.</p>
-  </div>
-
-  <div class="tabs rv" id="deskTabs">
-    <button class="tab on" data-p="d1">🎓 FP&amp;A · {{ fpna.index }}/{{ fpna.total }}</button>
-    <button class="tab" data-p="d2">🇦🇪 Dubai · {{ dubai.index }}/{{ dubai.total }}</button>
-    <button class="tab" data-p="d3">🏆 FC → CFO · {{ cfo.index }}/{{ cfo.total }}</button>
-    <button class="tab" data-p="d4">📊 Case Study</button>
-    <button class="tab" data-p="d6">💰 Money</button>
-    <button class="tab" data-p="d7">⚡ Execution</button>
-  </div>
-
-  <div class="rv">
-    <div class="pane on" id="d1">
-      <div class="essay">
-        <div class="meta">FP&amp;A Learn · Lesson {{ fpna.index }} of {{ fpna.total }}</div>
-        <h3>{{ fpna.title }}</h3>
-        <p>{{ fpna.body }}</p>
-      </div>
-    </div>
-
-    <div class="pane" id="d2">
-      <div class="essay" style="--ac:var(--violet)">
-        <div class="meta">Dubai Corner · AED 30K+ Track · {{ dubai.index }}/{{ dubai.total }}</div>
-        <h3>{{ dubai.title }}</h3>
-        <p>{{ dubai.body }}</p>
-        <div class="q">{{ dubai.targets }}</div>
-        <div class="act"><b>{{ dubai.action_label }}</b>{{ dubai.action }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="d3">
-      <div class="essay" style="--ac:var(--gold)">
-        <div class="meta">Financial Controller → CFO · Step {{ cfo.index }} of {{ cfo.total }}</div>
-        <h3>{{ cfo.title }}</h3>
-        <p>{{ cfo.body }}</p>
-      </div>
-    </div>
-
-    <div class="pane" id="d4">
-      <div class="essay" style="--ac:var(--blue)">
-        <div class="meta">Business Case Study</div>
-        <h3>{{ case.title }}</h3>
-        <p>{{ case.story }}</p>
-        <div class="act"><b>💡 The lesson</b>{{ case.lesson }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="d6">
-      <div class="essay" style="--ac:var(--lime)">
-        <div class="meta">Money Hack</div>
-        <h3>{{ money_hack.title }}</h3>
-        <p>{{ money_hack.body }}</p>
-      </div>
-    </div>
-
-    <div class="pane" id="d7">
-      <div class="essay" style="--ac:var(--up)">
-        <div class="meta">Today's Rule</div>
-        <h3>Execution beats intention</h3>
-        <p>{{ productivity_tip }}</p>
-      </div>
-    </div>
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 06 THE MIND ══════════ -->
-{% if 'mind' in secs %}<section class="sec" id="mind">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['mind'] }} / {{ seclabel['mind'] }}</span>
-      <h2 class="stitle">Sharpen the operator.</h2>
-    </div>
-    <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
-  </div>
-
-  <div class="quote-hero rv">
-    <div class="mark" aria-hidden="true">&ldquo;</div>
-    <blockquote>{{ quote.quote }}</blockquote>
-    <cite>— {{ quote.name }}</cite>
-    <div class="idx">Quote {{ quote.index }} of {{ quote.total }} · rotates daily</div>
-  </div>
-
-  <div class="two" style="margin-top:14px">
-    <div class="essay rv" style="--ac:var(--up)">
-      <div class="meta">Daily Wisdom · {{ wisdom.index }}/{{ wisdom.total }} · Better person · Better dad</div>
-      <h3>{{ wisdom.title }}</h3>
-      <p>{{ wisdom.body }}</p>
-    </div>
-    <div class="essay rv" style="--ac:var(--blue);--d:.08s">
-      <div class="meta">{{ lesson.tradition }}</div>
-      <h3 style="font-style:italic;font-weight:500;letter-spacing:-.5px">{{ lesson.lesson }}</h3>
-      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">— {{ lesson.source }}</p>
-    </div>
-  </div>
-</section>{% endif %}
-
-<!-- ══════════ 07 THE WAY ══════════ -->
-{% if 'way' in secs %}<section class="sec" id="way">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['way'] }} / {{ seclabel['way'] }}</span>
-      <h2 class="stitle">Simple living. High thinking.</h2>
-    </div>
-    <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
-      one honest rep. Six tracks, rotating daily on different cycles — the combination never repeats.</p>
-  </div>
-
-  <div class="tabs rv" id="wayTabs">
-    <button class="tab on" data-p="w1">🪶 Minimalism · {{ way.minimalism.index }}/{{ way.minimalism.total }}</button>
-    <button class="tab" data-p="w2">🤝 Etiquette · {{ way.etiquette.index }}/{{ way.etiquette.total }}</button>
-    <button class="tab" data-p="w3">🧘 Stillness · {{ way.stillness.index }}/{{ way.stillness.total }}</button>
-    <button class="tab" data-p="w4">⚙️ Model · {{ way.model.index }}/{{ way.model.total }}</button>
-    <button class="tab" data-p="w5">🇦🇪 Arabic · {{ way.arabic.index }}/{{ way.arabic.total }}</button>
-    <button class="tab" data-p="w6">🎯 Drill · {{ way.drill.index }}/{{ way.drill.total }}</button>
-    <button class="tab" data-p="w7">💪 Health · {{ way.health.index }}/{{ way.health.total }}</button>
-  </div>
-
-  <div class="rv">
-    <div class="pane on" id="w1">
-      <div class="essay" style="--ac:var(--lime)">
-        <div class="meta">Minimalism · {{ way.minimalism.index }}/{{ way.minimalism.total }} · own less, decide less</div>
-        <h3>{{ way.minimalism.title }}</h3>
-        <p>{{ way.minimalism.body }}</p>
-        <div class="act"><b>Do this today</b>{{ way.minimalism.action }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="w2">
-      <div class="essay" style="--ac:var(--gold)">
-        <div class="meta">Etiquette · {{ way.etiquette.index }}/{{ way.etiquette.total }} · trust compounds</div>
-        <h3>{{ way.etiquette.title }}</h3>
-        <p>{{ way.etiquette.body }}</p>
-        <div class="act"><b>Do this today</b>{{ way.etiquette.action }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="w3">
-      <div class="essay" style="--ac:var(--blue)">
-        <div class="meta">Stillness · {{ way.stillness.index }}/{{ way.stillness.total }} · monk practice, modern life</div>
-        <h3>{{ way.stillness.title }}</h3>
-        <p>{{ way.stillness.body }}</p>
-        <div class="act"><b>Do this today</b>{{ way.stillness.action }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="w4">
-      <div class="essay" style="--ac:var(--violet)">
-        <div class="meta">Mental Model · {{ way.model.index }}/{{ way.model.total }} · the latticework</div>
-        <h3>{{ way.model.title }}</h3>
-        <p>{{ way.model.body }}</p>
-        <div class="act"><b>Apply it today</b>{{ way.model.action }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="w5">
-      <div class="essay" style="--ac:var(--up)">
-        <div class="meta">Arabic · {{ way.arabic.index }}/{{ way.arabic.total }} · for the Dubai move</div>
-        <div class="arabic-hero">
-          <div class="ar-script" dir="rtl" lang="ar">{{ way.arabic.script }}</div>
-          <div class="ar-translit">{{ way.arabic.translit }}</div>
-          <div class="ar-meaning">{{ way.arabic.meaning }}</div>
-        </div>
-        <div class="act"><b>When to use it</b>{{ way.arabic.use }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="w6">
-      <div class="essay" style="--ac:var(--down)">
-        <div class="meta">Drill · {{ way.drill.index }}/{{ way.drill.total }} · ~10 minutes, deliberate</div>
-        <h3>{{ way.drill.title }}</h3>
-        <p>{{ way.drill.body }}</p>
-        <div class="act"><b>The rep</b>{{ way.drill.action }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="w7">
-      <div class="essay" style="--ac:var(--pink,#FF7AA2)">
-        <div class="meta">Health · {{ way.health.index }}/{{ way.health.total }} · the asset with no substitute</div>
-        <h3>{{ way.health.title }}</h3>
-        <p>{{ way.health.body }}</p>
-        <div class="act"><b>Today's lever</b>{{ way.health.action }}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- streak tracker: localStorage only, no server -->
-  <div class="streak rv" id="streakBox" hidden>
-    <div class="stk-head">
-      <div>
-        <div class="stk-lab">Today's practice</div>
-        <div class="stk-sub">Tick what you actually did. Stored in this browser only.</div>
-      </div>
-      <div class="stk-nums">
-        <div class="stk-n"><b id="stkCur">0</b><i>current</i></div>
-        <div class="stk-n"><b id="stkBest">0</b><i>best</i></div>
-        <div class="stk-n"><b id="stkRate">0%</b><i>30d</i></div>
-      </div>
-    </div>
-    <div class="stk-checks" id="stkChecks"></div>
-    <div class="stk-strip" id="stkStrip" title="Last 30 days"></div>
-    <div class="stk-foot">A day counts once you tick anything. Streak breaks on a fully empty day.</div>
-  </div>
-</section>{% endif %}
-
-{% if 'gym' in secs %}<section class="sec" id="gym">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['gym'] }} / {{ seclabel['gym'] }}</span>
-      <h2 class="stitle">Six minutes. Sharper.</h2>
-    </div>
-    <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
-      pressure, estimation, recall, and the two calculations a trading desk actually runs.
-      Scores stay in this browser.</p>
-  </div>
-
-  <div class="gym-tabs rv" id="gymTabs"></div>
-  <div class="gym-stage rv" id="gymStage"></div>
-  <div class="gym-score rv" id="gymScore"></div>
 </section>{% endif %}
 
 <!-- ══════════ STOCK SCREEN ══════════
@@ -8198,97 +6718,501 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>
 {% endif %}
 
-<!-- ══════════ 01 TRADE IDEAS ══════════ -->
-{% if 'picks' in secs %}<section class="sec" id="picks">
+<!-- ══════════ FUND SCREEN ══════════
+     A ranking of public data, not a recommendation. Direct + Growth plans
+     only, ranked on CAGR computed here from AMFI's own NAV series.
+
+     Deliberately shows the drawdown next to the return: a 3-year CAGR on its
+     own tells you the reward and hides the ride, and the small-cap column is
+     where that gap is widest. -->
+{# Guard is `secs` alone. The extra `fund_screen.get('categories')` test that
+   used to live here is what let the section vanish while the nav still linked
+   to it — see page_context(drop=...), which now decides this once. #}
+{% if 'funds' in secs %}
+<section class="sec" id="funds">
   <div class="shead rv">
     <div>
-      <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span> {{ dh('Trade ideas') }}
-      <h2 class="stitle">Top 5 trade ideas.</h2>
+      <span class="snum">{{ secnum['funds'] }} / {{ seclabel['funds'] }}</span> {{ dh('Fund screen') }}
+      <h2 class="stitle">Where the SIP goes.</h2>
     </div>
-    <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
-      Target 20–30%. Every idea carries a stop.
-      {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
-      showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
+    <p class="sdesc">Top three by three-year return in each category, from
+      {{ fund_screen.source }}. Direct plans only &mdash; same portfolio, same
+      manager, without the distributor commission. Returns are computed from the
+      published NAV series, not copied off a factsheet.</p>
   </div>
 
-  <div class="prov{{ ' stale' if top5_week else '' }} rv">
+  <!-- Vintage, not just result. This table looking identical to last week's is
+       the EXPECTED outcome of a weekly screen over multi-year returns — but it
+       is also exactly what a screen that never ran looks like, and until now
+       the page could not tell you which. -->
+  <div class="prov{{ ' stale' if fund_screen.is_fallback else '' }} rv">
     <span class="pv-tag">WEEKLY</span>
-    <span>Ranked once per ISO week &mdash; <b>the same five all week is the design</b>, not a stalled scan</span>
-    <span>Engine <b>{{ picks_engine }}</b></span>
-    <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
-      never touch win rate or expectancy</span>
+    <span>Rebuilt <b>Sundays 01:30 IST</b>, after the week&rsquo;s last NAV publish</span>
+    {% if fund_screen.built_on %}<span>Built <b>{{ fund_screen.built_on }}</b>
+      {%- if fund_screen.age_days is not none %} · {{ fund_screen.age_days }}d old{% endif %}</span>{% endif %}
+    {% if fund_screen.is_fallback %}
+    <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous build.
+      NAVs below are from that date, not today.</span>
+    {% endif %}
+    {% if fund_screen.get('job_status', {}).get('attempted_after_serve') %}
+    <span style="color:var(--gold)">&#9888; The most recent rebuild attempt
+      ({{ fund_screen.job_status.run_at[:16] }} UTC) failed &mdash;
+      {{ fund_screen.job_status.detail[:120] }}</span>
+    {% endif %}
   </div>
-  {% if top5 %}
-  <div class="pick-grid">
-    {% for s in top5 %}
-    <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
-      <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-        <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
-             target="_blank" rel="noopener"
-             title="Open {{ s.name }} on TradingView">{{ s.name }}</a></div>
-        <span class="tag">{{ s.score }}/100</span>
-      </div>
-      <div class="px">{{ s.currency }}{{ s.price }}</div>
-      <div class="mom">
-        <span class="{{ 'up' if s.change_1d >= 0 else 'dn' }}">1D <b>{{ '+' if s.change_1d >= 0 else '' }}{{ s.change_1d | round(2) }}%</b></span>
-        <span class="{{ 'up' if s.mom_1m >= 0 else 'dn' }}">1M <b>{{ '+' if s.mom_1m >= 0 else '' }}{{ s.mom_1m | round(2) }}%</b></span>
-        <span class="{{ 'up' if s.mom_3m >= 0 else 'dn' }}">3M <b>{{ '+' if s.mom_3m >= 0 else '' }}{{ s.mom_3m | round(2) }}%</b></span>
-      </div>
-      <div class="scorebar" style="--w:{{ s.score }}%"><i></i></div>
-      {% if s.thesis %}<div class="th">{{ s.thesis }}</div>{% endif %}
 
-      {# Where the score came from. A composite with no breakdown is a number
-         the reader has to take on trust, and the whole argument of this site
-         is that nothing here should be taken on trust. Collapsed by default —
-         it is the answer to a question, not the headline. #}
-      {% if s.factors %}
-      <details class="why">
-        <summary>Why {{ s.score }}<span>/100</span></summary>
-        <div class="why-b">
-          {% for f in s.factors %}
-          <div class="why-r">
-            <span class="wk">{{ f.k }}</span>
-            <span class="wb" style="--w:{{ (f.e / f.w * 100) | round(0) | int }}%"><i></i></span>
-            <span class="wn">{{ f.e }}<em>/{{ f.w }}</em></span>
-          </div>
-          {% endfor %}
-        </div>
-      </details>
-      {% endif %}
+  {# Collapsed for the same reason as the stock screen's methodology block:
+     it is a standing caveat, not today's news, and it sat above every fund
+     card on every visit. The per-category `facts` note below stays open —
+     that one changes weekly and is about these specific funds. #}
+  <details class="fund-note-d rv">
+    <summary>On expense ratio &mdash; why this screen is Direct-only</summary>
+  <div class="fund-note">
+    <strong>On expense ratio.</strong> Per-scheme TER is not published in the free
+    AMFI feed, so this screen does not claim to know it. The cost lever that
+    <em>is</em> visible is Direct versus Regular, and it is the big one: a Regular
+    plan carries the distributor commission inside its TER, typically 0.5&ndash;1.2%
+    a year more for the same portfolio. Everything below is Direct.
+  </div>
+  </details>
 
-      {# The level that ends the idea, stated before it is reached. An idea
-         with a target and a stop but no invalidation only tells you where you
-         are wrong on price, never where you are wrong on the reason. #}
-      {% if s.ema20 %}
-      <div class="inval">
-        <b>Wrong if</b> {{ s.name }} closes below {{ s.currency }}{{ s.ema20 }} — its 20-day
-        average, and the single biggest component of that score.
-      </div>
-      {% endif %}
-
-      <div class="lvl">
-        <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
-        <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
-        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">{{ s.timeframe }}</div></div>
-      </div>
-      <form action="/tracker/add" method="post" style="margin-top:14px">
-        <input type="hidden" name="symbol" value="{{ s.symbol }}">
-        <input type="hidden" name="name" value="{{ s.name }}">
-        <input type="hidden" name="entry_price" value="{{ s.price }}">
-        <input type="hidden" name="target_price" value="{{ s.target }}">
-        <input type="hidden" name="stop_loss" value="{{ s.stop_loss }}">
-        <input type="hidden" name="thesis" value="{{ s.thesis }}">
-        <input type="hidden" name="timeframe" value="{{ s.timeframe }}">
-        <button type="submit" class="btn btn-sm">+ Track</button>
-      </form>
+  {% for cat in fund_screen.categories %}
+  {% if cat.funds %}
+  <div class="fundcat rv">
+    <div class="fundcat-h">
+      <h3>{{ cat.label }}</h3>
+      <span class="ghost">{{ cat.screened }} screened</span>
     </div>
-    {% endfor %}
+    <p class="fundcat-b">{{ cat.blurb }}</p>
+
+    {% set facts = cat.get('facts') %}
+    {% if facts %}
+    <div class="fund-note rv" style="margin:12px 0">
+      <strong>{{ facts.best_5y.name }}</strong> leads the full screened set on 5-year return
+      ({{ facts.best_5y.r5 }}%) &mdash; not always the same fund as the 3-year leader above.
+      The category spans {{ facts.dispersion_5y }} points between best and worst 5-year performer
+      ({{ facts.worst_5y.name }}, {{ facts.worst_5y.r5 }}%).
+      {% if facts.get('steadiest_top_quartile') %}
+      Steadiest top-quartile fund: <strong>{{ facts.steadiest_top_quartile.name }}</strong>
+      &mdash; {{ facts.steadiest_top_quartile.volatility }}% volatility at a
+      {{ facts.steadiest_top_quartile.r3 }}% 3-year return, the smoothest ride among funds that
+      still beat most of the category.
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Card grid, not a table — each fund is its own unit at this point,
+         with three CAGR bars (1Y/3Y/5Y, same .sd-sc/.bar component the trade
+         sheet already uses) rather than one same-shaped row among six.
+
+         Every NEW field (r1/volatility/bar_*/percentile_r3/facts) is read
+         via .get() — dict.get(), not Jinja attribute lookup — because this
+         environment uses StrictUndefined and the fund cache refreshes
+         weekly (fund_screen.yml): a payload cached by an OLDER build of
+         funds.py genuinely lacks these keys until its next rebuild, and
+         `f.r1 is not none` still raises on a truly MISSING key — only a
+         key that exists with value None passes that check silently. This
+         crashed the entire page build once already (2026-08-16, prod
+         cache still had the pre-upgrade 6-field schema) before this fix. -->
+    <div class="fund-grid rv">
+      {% for f in cat.funds %}
+      {% set r1 = f.get('r1') %}
+      {% set r5 = f.get('r5') %}
+      {% set dd3 = f.get('dd3') %}
+      {% set vol = f.get('volatility') %}
+      {% set pct = f.get('percentile_r3') %}
+      <div class="card fund-card">
+        <div class="fund-card-h">
+          <div>
+            <strong>{{ f.name }}</strong><br>
+            <span class="mono-dim" style="font-size:11px">{{ f.house }}</span>
+          </div>
+          {% if f.get('isin') %}<span class="fund-isin mono-dim" title="ISIN — paste this into any broker or platform to find the exact scheme">{{ f.isin }}</span>{% endif %}
+        </div>
+        <div class="sd-scores">
+          <div class="sd-sc">
+            <span class="k">1Y</span>
+            <span class="v">{{ r1 if r1 is not none else '—' }}{{ '%' if r1 is not none else '' }}</span>
+            <span class="bar"><i style="width:{{ f.get('bar_r1', 0) }}%"></i></span>
+          </div>
+          <div class="sd-sc">
+            <span class="k">3Y</span>
+            <span class="v">{{ f.r3 }}%</span>
+            <span class="bar"><i style="width:{{ f.get('bar_r3', 0) }}%"></i></span>
+          </div>
+          <div class="sd-sc">
+            <span class="k">5Y</span>
+            <span class="v">{{ r5 if r5 is not none else '—' }}{{ '%' if r5 is not none else '' }}</span>
+            <span class="bar"><i style="width:{{ f.get('bar_r5', 0) }}%"></i></span>
+          </div>
+        </div>
+        <div class="fund-card-f">
+          {% if vol is not none %}<span class="mono-dim">Volatility <b style="color:var(--text)">{{ vol }}%</b></span>{% endif %}
+          <span class="mono-dim">Worst fall (3y) <b class="dn">{{ dd3 if dd3 is not none else '—' }}{{ '%' if dd3 is not none else '' }}</b></span>
+          {% if pct is not none %}<span class="mono-dim">Top {{ 100 - pct }}% of category</span>{% endif %}
+          {# Fund age sits with the other headline facts, not buried in the
+             detail panel: a 3Y CAGR from a fund with 3.2 years of history is a
+             different claim from the same number over 12 years. #}
+          {% if f.get('history_years') %}<span class="mono-dim">Age <b style="color:var(--text)">{{ f.history_years }}y</b></span>{% endif %}
+          <span class="mono-dim">NAV {{ f.nav }}</span>
+        </div>
+
+        {# ── What it actually owns ──
+           Always rendered when the data exists, not hidden behind the detail
+           toggle: the NAV series ranks these funds but says nothing about what
+           is inside them, and two funds with the same 3Y CAGR can be a
+           banks-and-IT portfolio and a smallcap-industrials one. That is the
+           difference that decides whether adding one diversifies anything.
+           Absent entirely when the portfolio could not be resolved — never a
+           placeholder, never a guess. #}
+        {% set pf = f.get('portfolio') %}
+        {% if pf and (pf.get('top_sectors') or pf.get('top_stocks')) %}
+        <div class="fpf">
+          {% if pf.get('top_sectors') %}
+          <div class="fpf-r">
+            <span class="fpf-k">Sectors</span>
+            <span class="fpf-v">
+              {% for s in pf.top_sectors %}<span class="fpf-c">{{ s.name }} <b>{{ s.pct }}%</b></span>{% endfor %}
+            </span>
+          </div>
+          {% endif %}
+          {% if pf.get('top_stocks') %}
+          <div class="fpf-r">
+            <span class="fpf-k">Top holdings</span>
+            <span class="fpf-v">
+              {% for s in pf.top_stocks %}<span class="fpf-c">{{ s.name|replace(' Ltd.','')|replace(' Limited','') }} <b>{{ s.pct }}%</b></span>{% endfor %}
+            </span>
+          </div>
+          {% endif %}
+          <div class="fpf-m">
+            {% if pf.get('holdings_count') %}{{ pf.holdings_count }} holdings{% endif %}
+            {%- if pf.get('equity_pct') %} · {{ pf.equity_pct }}% in equity{% endif %}
+            {%- if pf.get('as_on') %} · as on {{ pf.as_on }}{% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        {# Advanced detail as a native <details>, deliberately not a modal.
+           Overlays in this template have to live outside <main> to escape its
+           stacking context, and an inline panel also lets two funds be opened
+           side by side to compare — which is the whole point of a screen.
+           Everything below comes from the same NAV series as the headline
+           numbers; nothing is fetched and nothing is estimated. #}
+        {% set cal = f.get('calendar') or [] %}
+        {% set roll = f.get('rolling3y') %}
+        {% if cal or roll or f.get('inception') %}
+        <details class="fund-more">
+          <summary>Advanced detail</summary>
+          <div class="fund-more-b">
+            {% if roll %}
+            <div class="fm-block">
+              <div class="fm-h">Rolling 3-year return &mdash; {{ roll.windows }} start dates</div>
+              <p class="fm-note">The headline 3Y figure is one window ending today. This is every
+                3-year hold this fund has ever offered, so you can see the range rather than
+                the one number the calendar happens to produce.</p>
+              <div class="fm-row"><span>Best</span><b class="up">{{ roll.best }}%</b></div>
+              <div class="fm-row"><span>Median</span><b>{{ roll.median }}%</b></div>
+              <div class="fm-row"><span>Worst</span><b class="{{ 'dn' if roll.worst < 0 else '' }}">{{ roll.worst }}%</b></div>
+              <div class="fm-row"><span>Beat 7% a year</span><b>{{ roll.above_7pct }}% of windows</b></div>
+            </div>
+            {% endif %}
+
+            {% if cal %}
+            <div class="fm-block">
+              <div class="fm-h">Calendar year returns</div>
+              <p class="fm-note">Completed years only &mdash; a part-year is never annualised here.</p>
+              <div class="fm-cal">
+                {% for c in cal %}
+                <div class="fm-cy">
+                  <span class="fm-cy-y">{{ c.year }}</span>
+                  <span class="fm-cy-v {{ 'up' if c.ret >= 0 else 'dn' }}">{{ '%+.1f'|format(c.ret) }}%</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="fm-block">
+              <div class="fm-h">Scheme</div>
+              {% if f.get('inception') %}<div class="fm-row"><span>NAV history from</span><b>{{ f.inception }}</b></div>{% endif %}
+              {% if f.get('history_years') %}<div class="fm-row"><span>Track record</span><b>{{ f.history_years }} years</b></div>{% endif %}
+              {% if f.get('since_inception') is not none %}<div class="fm-row"><span>Since inception</span><b>{{ f.since_inception }}% a year</b></div>{% endif %}
+              {% if f.get('scheme_type') %}<div class="fm-row"><span>Type</span><b>{{ f.scheme_type }}</b></div>{% endif %}
+              {% if f.get('isin') %}<div class="fm-row"><span>ISIN</span><b class="mono">{{ f.isin }}</b></div>{% endif %}
+              <div class="fm-row"><span>NAV on {{ f.nav_date }}</span><b>{{ f.nav }}</b></div>
+            </div>
+
+            <p class="fm-src">
+              Computed from the full published NAV series, not copied off a factsheet.
+              <a href="{{ f.url }}" target="_blank" rel="noopener">Open the raw NAV series (JSON)</a>
+              &mdash; this is the data source, not a fund page.
+            </p>
+          </div>
+        </details>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Past return is the only thing a NAV series can tell you, and it is the weakest
+    predictor of the next three years there is. A fund at the top of a three-year
+    table is often there because its style was in favour, not because it will stay
+    there. This is a screen, not advice &mdash; I am not a SEBI-registered adviser.
+    <br><br>
+    NAV as of {{ fund_screen.categories[0].funds[0].nav_date if fund_screen.categories[0].funds else '—' }}.
+    Screen rebuilt weekly.
+  </p>
+</section>
+{% endif %}
+
+<!-- ══════════ 04 SIP BUCKETS ══════════
+     ₹10,000/month, stepped up 10% each SIP year, one bucket per month, four
+     names per bucket. Every bucket keeps its own cost basis and its own XIRR —
+     a blended portfolio number would hide which months' picks actually worked,
+     which is the only feedback the ranking engine gets.
+     Filled from /api/sip; the whole section hides itself on a static build. -->
+{% if 'sip' in secs %}<section class="sec" id="sip" style="display:none">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['sip'] }} / {{ seclabel['sip'] }}</span>
+      <h2 class="stitle">One bucket a month.</h2>
+    </div>
+    <div style="text-align:right">
+      <span class="slink" id="sipPlan">—</span>
+      <p class="sdesc" style="margin-top:8px">Whole shares only — every name in a bucket
+        is priced so at least one share fits its slice. Buckets are never blended; the
+        month that worked and the month that did not stay visible as separate lines.</p>
+    </div>
+  </div>
+
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v" id="sipMonthly">—</div><div class="k">This month</div></div>
+    <div class="kpi"><div class="v" id="sipBuckets">0</div><div class="k">Buckets</div></div>
+    <div class="kpi"><div class="v" id="sipInvested">—</div><div class="k">Invested</div></div>
+    <div class="kpi"><div class="v" id="sipValue">—</div><div class="k">Value</div></div>
+    <div class="kpi"><div class="v" id="sipPnl">—</div><div class="k">Unrealised</div></div>
+  </div>
+
+  <div id="sipBody"></div>
+
+  <div class="shead rv" style="margin-top:34px;border-top:1px solid var(--line);padding-top:22px">
+    <div>
+      <span class="snum">THE ARITHMETIC</span>
+      <h2 class="stitle" style="font-size:24px">Where the step-up takes it.</h2>
+    </div>
+  </div>
+  <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
+    <th scope="col">Year</th><th scope="col">Monthly</th><th scope="col">Invested</th><th scope="col">@12%</th><th scope="col">@14%</th><th scope="col">@16%</th>
+  </tr></thead><tbody></tbody></table></div>
+  <p class="note rv" style="margin-top:10px;color:var(--dim);font-size:12px">
+    Projections are compound arithmetic on the contribution schedule, not a forecast.
+    They assume the return shown is achieved every year with no gaps in contribution.
+    Actual equity returns arrive in a very different order, and sequence matters.
+  </p>
+</section>{% endif %}
+
+<!-- ══════════ SWP ══════════
+     The other half of the SIP section: buckets say what goes in, this says
+     what comes out and for how long. Entirely client-side arithmetic — no API,
+     no ledger — so it behaves the same on the static host and needs no
+     display:none/reveal dance.
+
+     Two things here are not the usual calculator arithmetic and are the whole
+     reason it is worth having:
+       1. Withdrawals are grossed up for capital gains tax using proportional
+          cost-basis depletion, so the number entered is what actually reaches
+          the bank. A calculator that ignores tax overstates how long the
+          corpus lasts, which is the one thing it exists to tell you.
+       2. The corpus is shown in nominal AND today's rupees. ₹2 Cr at 60 is not
+          ₹2 Cr of groceries at 60, and the nominal line is the flattering one. -->
+{% if 'swp' in secs %}<section class="sec" id="swp">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['swp'] }} / {{ seclabel['swp'] }}</span>
+      <h2 class="stitle">And what it pays out.</h2>
+    </div>
+    <p class="sdesc">Accumulate to retirement, then draw down. Withdrawals are grossed up
+      for capital gains tax, so the monthly figure is what lands in the bank, not what
+      leaves the fund. The dashed line is the same corpus in today&rsquo;s rupees.</p>
+  </div>
+
+  <!-- Collapsed by default. The eleven inputs and a 35-row table are for the
+       sittings where you actually re-plan; the rest of the time the four
+       numbers in the summary are the whole point, and the section should not
+       push Performance and the Signal Log a screen and a half down the page.
+       The summary strip below stays visible in BOTH states, so collapsing
+       hides the controls, never the answer. -->
+  <div class="swp-sum rv" id="swpSum">
+    <div class="swp-sum-k">
+      <span><b id="swpSumCorpus">—</b> at <span id="swpSumAge">—</span></span>
+      <span class="sep">·</span>
+      <span><b id="swpSumDraw">—</b>/month</span>
+      <span class="sep">·</span>
+      <span id="swpSumLast">—</span>
+    </div>
+    <button type="button" class="swp-toggle-all" id="swpExpand" aria-expanded="false"
+            aria-controls="swpBody">Adjust the plan &darr;</button>
+  </div>
+
+  <div id="swpBody" class="swp-body" hidden>
+  <div class="swp-in rv">
+    <label>Age now<input type="number" id="swpCurAge" value="34" min="18" max="75" step="1"></label>
+    <label>Retire at<input type="number" id="swpRetAge" value="55" min="35" max="80" step="1"></label>
+    <label>Plan till<input type="number" id="swpEndAge" value="90" min="60" max="105" step="1"></label>
+    <label>Corpus today<input type="number" id="swpCorpus" value="500000" min="0" step="10000"></label>
+    <label>SIP / month<input type="number" id="swpSip" value="30000" min="0" step="1000"></label>
+    <label>Step-up % / yr<input type="number" id="swpStep" value="10" min="0" max="25" step="1"></label>
+    <label>Return pre %<input type="number" id="swpRetPre" value="12" min="0" max="30" step="0.5"></label>
+    <label>Return post %<input type="number" id="swpRetPost" value="8" min="0" max="30" step="0.5"></label>
+    <label>Inflation %<input type="number" id="swpInfl" value="6" min="0" max="15" step="0.5"></label>
+    <label>Withdraw / mth<input type="number" id="swpDraw" value="100000" min="0" step="5000"></label>
+    <label>LTCG tax %<input type="number" id="swpTax" value="12.5" min="0" max="40" step="0.5"></label>
+  </div>
+
+  <div class="kpi-row rv">
+    <div class="kpi"><div class="v" id="swpKCorpus">—</div><div class="k">Corpus at retirement</div></div>
+    <div class="kpi"><div class="v" id="swpKNeed">—</div><div class="k">Corpus required</div></div>
+    <div class="kpi"><div class="v" id="swpKDraw">—</div><div class="k">First withdrawal / month</div></div>
+    <div class="kpi"><div class="v" id="swpKLast">—</div><div class="k">Money lasts till</div></div>
+  </div>
+
+  <div class="swp-verdict rv" id="swpVerdict"></div>
+
+  <div class="card rv">
+    <div class="cardhead">
+      <span class="eyebrow">Corpus path</span>
+      <span class="eyebrow" id="swpPeak">&nbsp;</span>
+    </div>
+    <svg id="swpChart" viewBox="0 0 760 214" width="100%" role="img" aria-labelledby="swpChartT">
+      <title id="swpChartT">Corpus rises to retirement age, then declines</title>
+    </svg>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--blue)"></i>Corpus (nominal)</span>
+      <span><i class="sw" style="background:var(--dim)"></i>Same corpus in today&rsquo;s rupees</span>
+    </div>
+  </div>
+
+  <div class="card rv">
+    <div class="cardhead">
+      <span class="eyebrow">Year by year</span>
+      <div class="swp-toggle">
+        <button type="button" data-mode="nominal" class="on">Nominal &#8377;</button>
+        <button type="button" data-mode="real">Today&rsquo;s &#8377;</button>
+      </div>
+    </div>
+    <div class="tw">
+      <table class="t" id="swpTbl" style="min-width:560px">
+        <thead><tr><th scope="col">Age</th><th scope="col">Year</th><th scope="col">In / Out (yr)</th><th scope="col">Closing corpus</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:12px;color:var(--dim);font-size:12px">
+      Withdrawals are grossed up so the figure shown is what reaches your bank after capital
+      gains tax, using proportional cost-basis depletion. Returns compound monthly off the
+      effective annual rate.
+      <br><br>
+      The model assumes a smooth return every single year &mdash; real markets do not, and a bad
+      first five years of retirement destroys a corpus that the average return says is safe.
+      Treat the required-corpus number as a floor, not a target.
+    </p>
+  </div>
+  </div><!-- /#swpBody -->
+</section>{% endif %}
+
+<!-- ══════════ 03 PORTFOLIO ══════════ -->
+{% if 'tracker' in secs %}<section class="sec" id="tracker">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['tracker'] }} / {{ seclabel['tracker'] }}</span>
+      <h2 class="stitle">The book.</h2>
+    </div>
+    <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+      <form action="/tracker/obsidian" method="post" style="display:inline">
+        <button type="submit" class="btn-gh v">Sync Obsidian</button>
+      </form>
+      <a class="slink" href="/tracker/history" target="_blank">Exit history →</a>
+      <button type="button" class="btn-gh" id="posHistBtn" style="display:none">Closed positions</button>
+      <button type="button" class="btn-gh" id="keyLogout" style="display:none">Log out</button>
+    </div>
+  </div>
+
+  <!-- Live book. Filled from /api/tracker; the server-rendered block below is
+       the fallback for the static build. -->
+  <div id="posLive" style="display:none"></div>
+
+  <div class="keybox" id="keybox">
+    <span>Editing the book needs your key. Signed in for 48 hours, on this device only — nothing is stored in the browser.</span>
+    <label for="keyInput" class="hp">Edit key</label>
+    <input type="password" id="keyInput" placeholder="Edit key" autocomplete="off">
+    <button type="button" class="btn btn-sm" id="keySave">Unlock</button>
+  </div>
+
+  <div id="posStatic">
+  {% if tracker %}
+  <div class="tw rv">
+    <table class="t" style="min-width:820px">
+      <thead><tr>
+        <th scope="col">Symbol</th><th scope="col">Entry</th><th scope="col">Current</th><th scope="col">Target</th><th scope="col">Stop</th>
+        <th scope="col">P&amp;L</th><th scope="col">Horizon</th><th scope="col">Thesis</th><th scope="col">Added</th><th scope="col"></th>
+      </tr></thead>
+      <tbody>
+        {% for s in tracker %}
+        <tr>
+          <td><strong class="sym">{{ s.symbol }}</strong></td>
+          <td class="num">{{ s.currency }}{{ s.entry_price }}</td>
+          <td class="num {{ 'up' if s.winning else 'dn' }}">{{ s.currency }}{{ s.current_price }}</td>
+          <td class="num up">{{ s.currency }}{{ s.target_price }}</td>
+          <td class="num dn">{{ s.currency }}{{ s.stop_loss }}</td>
+          <td class="{{ 'pnl-u' if s.winning else 'pnl-d' }}">{{ '+' if s.winning else '' }}{{ s.pnl_pct }}%</td>
+          <td class="mono-dim">{{ s.timeframe }}</td>
+          <td style="font-size:12px;color:var(--muted);max-width:220px">{{ s.thesis[:60] }}</td>
+          <td class="mono-dim">{{ s.added_date }}</td>
+          <td><form action="/tracker/exit/{{ s.id }}" method="post"><button type="submit" class="btn-gh">Exit</button></form></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
   {% else %}
-  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
-    if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
+  <div class="empty rv">No open positions. Hit <strong style="color:var(--lime)">+ Track</strong> on any trade idea, or add one below.</div>
   {% endif %}
+  </div>
+
+  <div class="formbox rv">
+    <h3 class="fh4">+ Add position manually</h3>
+    <form action="/tracker/add" method="post" id="posAddForm">
+      <div class="frow">
+        <input type="text" name="symbol" aria-label="Symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
+        <input type="text" name="name" aria-label="Company name" placeholder="Name">
+        <input type="number" step="0.01" name="entry_price" aria-label="Entry price" placeholder="Entry price" required>
+        <input type="number" step="1" min="1" name="quantity" aria-label="Quantity" placeholder="Quantity" required>
+      </div>
+      <div class="frow">
+        <select name="side" aria-label="Side">
+          <option value="LONG" selected>LONG</option>
+          <option value="SHORT">SHORT</option>
+        </select>
+        <select name="trade_type" aria-label="Trade type">
+          <option value="SWING" selected>SWING</option>
+          <option value="LONG_TERM">LONG_TERM</option>
+          <option value="INTRADAY">INTRADAY</option>
+          <option value="INVESTMENT">INVESTMENT</option>
+        </select>
+        <input type="number" step="0.01" name="target_price" aria-label="Target price" placeholder="Target price" required>
+        <input type="number" step="0.01" name="stop_loss" aria-label="Stop loss" placeholder="Stop loss">
+      </div>
+      <div class="frow">
+        <input type="text" name="timeframe" aria-label="Timeframe" placeholder="Timeframe" value="2-3 months">
+        <input type="text" name="thesis" aria-label="Thesis" placeholder="Why this stock?" style="flex:3">
+      </div>
+      <p class="fnote">SWING/LONG_TERM auto-run the 20%-at-+30% / 50%-of-remainder-at-+50% profit ladder. INTRADAY and INVESTMENT don't.</p>
+      <button type="submit" class="btn">Add to book</button>
+    </form>
+  </div>
 </section>{% endif %}
 
 <!-- ══════════ PAPER WALLET ══════════
@@ -8700,6 +7624,1065 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
     </div>
   </div>
+</section>{% endif %}
+
+<!-- ══════════ 05 INTERVIEW PREP ══════════ -->
+{# ══════════ FINANCE CAREERS ══════════
+   Renders docs/jobs.json, written by jobs.yml on its own clock. Presentation
+   only: every score, tier, freshness label and apply URL is printed verbatim
+   from the file. Nothing is recomputed here and nothing is invented — an
+   absent salary prints "Not disclosed", an unproven link prints "Unverified".
+   generate.load_careers does the grouping; empty_sections drops the nav entry
+   when there is nothing renderable. #}
+{% if 'careers' in secs %}<section class="sec" id="careers">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['careers'] }} / {{ seclabel['careers'] }}</span> {{ dh('Careers feed') }}
+      <h2 class="stitle">Where the next role is.</h2>
+    </div>
+    <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
+      the actual CV &mdash; multi-country retail P&amp;L, IFRS/MPERS consolidation, D365, Board
+      reporting. Ranked by whether it is worth applying to, not by how recently it was posted.</p>
+  </div>
+
+  <div class="prov rv">
+    <span class="pv-tag">DAILY</span>
+    {% if careers.generated_at %}<span>Last verified <b>{{ careers.generated_at[:16]|replace('T',' ') }} UTC</b></span>{% endif %}
+    {% if careers.next_refresh %}<span>Next refresh <b>{{ careers.next_refresh[:16]|replace('T',' ') }} UTC</b></span>{% endif %}
+    <span><b>{{ careers.stats.get('sources_ok', 0) }}</b> of
+      <b>{{ careers.stats.get('sources_attempted', 0) }}</b> sources responded</span>
+  </div>
+
+  {# Market snapshot — every figure counted from the rendered list, never
+     copied from the file's own totals, which include excluded rows. #}
+  {% set c = careers.counts %}
+  <div class="jsnap rv">
+    <div class="jsnap-i"><b>{{ c.total }}</b><span>roles worth seeing</span></div>
+    <div class="jsnap-i"><b>{{ c.s_tier + c.a_tier }}</b><span>high fit (S/A)</span></div>
+    <div class="jsnap-i"><b>{{ c.new }}</b><span>new this week</span></div>
+    <div class="jsnap-i"><b>{{ c.direct }}</b><span>verified direct apply</span></div>
+    {% for country in careers.countries %}
+    <div class="jsnap-i"><b>{{ c.by_country[country] }}</b><span>{{ country }}</span></div>
+    {% endfor %}
+  </div>
+
+  {# The failed-source roll call used to print here — ten scraper names and
+     their error states, in the reader's face, every day. Removed 2026-08-18:
+     it is operational detail, not a job. The information is NOT lost — source
+     coverage is now a Data Health dataset ("Careers feed", 11/21 -> DEGRADED),
+     which is where a reader goes to ask whether to trust a section rather than
+     having the answer pushed at them mid-scan. #}
+
+  {# ── filters. Operate on the server-rendered cards; with JS off every card
+       simply stays visible, which is the correct degraded state. ── #}
+  <div class="jfilters rv" id="jFilters">
+    <div class="jf-grp" role="group" aria-label="Filter by location">
+      <button type="button" class="fbtn on" data-jf="loc" data-v="">All</button>
+      {% for country in careers.countries %}
+      <button type="button" class="fbtn" data-jf="loc" data-v="{{ country }}">{{ country }}</button>
+      {% endfor %}
+    </div>
+    <div class="jf-grp" role="group" aria-label="Filter by tier">
+      <button type="button" class="fbtn on" data-jf="tier" data-v="">Any tier</button>
+      <button type="button" class="fbtn" data-jf="tier" data-v="S">S only</button>
+      <button type="button" class="fbtn" data-jf="tier" data-v="SA">S + A</button>
+    </div>
+    <div class="jf-grp" role="group" aria-label="Filter by freshness">
+      <button type="button" class="fbtn on" data-jf="fresh" data-v="">Any age</button>
+      <button type="button" class="fbtn" data-jf="fresh" data-v="NEW">New</button>
+      <button type="button" class="fbtn" data-jf="fresh" data-v="OPEN">Hide stale</button>
+    </div>
+    <span class="jf-count" id="jCount"></span>
+  </div>
+
+  {% macro jobcard(j, rank) %}
+  <article class="jcard{{ ' jcard-top' if j.tier == 'S' }}"
+           data-country="{{ j.country or '' }}" data-tier="{{ j.tier }}"
+           data-status="{{ j.status }}" data-score="{{ j.opportunity_score }}">
+    <div class="jc-h">
+      <div class="jc-id">
+        {% if rank %}<span class="jc-rank">{{ '%02d'|format(rank) }}</span>{% endif %}
+        <div>
+          <h3 class="jc-t">{{ j.title }}</h3>
+          <div class="jc-co">{{ j.company }}
+            <span class="jc-loc">&middot; {{ j.location or j.country or 'Location not stated' }}{% if j.location and j.country %}, {{ j.country }}{% endif %}</span>
+          </div>
+        </div>
+      </div>
+      <div class="jc-tier jc-tier-{{ j.tier|lower }}" title="Opportunity score {{ j.opportunity_score }}/100">
+        <b>{{ j.tier }}</b><span>{{ j.opportunity_score }}</span>
+      </div>
+    </div>
+
+    <div class="jc-meta">
+      <span class="jbadge jb-{{ j.status|lower }}">{{ j.status }}</span>
+      {% if j.posted_date %}<span class="jm">Posted {{ j.posted_date }}</span>
+      {% else %}<span class="jm dimmed">Posting date not published</span>{% endif %}
+      <span class="jm">Fit <b>{{ j.candidate_fit_score }}</b></span>
+      <span class="jm">Employer <b>{{ j.employer_score }}</b></span>
+      {% if j.experience_min %}<span class="jm">{{ j.experience_min }}+ yrs</span>{% endif %}
+      {% if j.salary_min and j.salary_currency %}
+        <span class="jm">{{ j.salary_currency }} {{ j.salary_min }}{% if j.salary_max %}&ndash;{{ j.salary_max }}{% endif %}</span>
+      {% else %}<span class="jm dimmed">Salary not disclosed</span>{% endif %}
+    </div>
+
+    {% if j.why_fit %}
+    <ul class="jc-why">
+      {% for w in j.why_fit[:3] %}<li>{{ w }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+    {% if j.watch_out %}
+    <ul class="jc-warn">
+      {% for w in j.watch_out[:2] %}<li>{{ w }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="jc-f">
+      {% if j.application_url and j.application_url_verified %}
+        <a class="jc-apply" href="{{ j.application_url }}" target="_blank" rel="noopener">Apply direct</a>
+      {% elif j.application_url %}
+        <a class="jc-apply jc-apply-unv" href="{{ j.application_url }}" target="_blank" rel="noopener"
+           title="This link was not confirmed to resolve on the last check">Apply &mdash; unverified</a>
+      {% else %}
+        <span class="jc-apply jc-apply-none">No application link found</span>
+      {% endif %}
+      {% if j.source_url and j.source_url != j.application_url %}
+        <a class="jc-view" href="{{ j.source_url }}" target="_blank" rel="noopener">View posting</a>
+      {% endif %}
+      <span class="jc-src" title="Source confidence: {{ j.source_confidence }}">
+        {% if j.sources and j.sources|length > 1 %}{{ j.sources|length }} sources{% else %}{{ j.source }}{% endif %}
+      </span>
+    </div>
+  </article>
+  {% endmacro %}
+
+  <h3 class="jsub rv">Top opportunities</h3>
+  <p class="jsub-n rv">Ranked on fit, employer quality and how reachable the application is &mdash;
+    not on recency. Everything below carries a verified direct application link unless it says otherwise.</p>
+  <div class="jgrid rv" id="jTop">
+    {% for j in careers.top %}{{ jobcard(j, loop.index) }}{% endfor %}
+  </div>
+
+  {# Compared on id, not on the dict itself: `j not in careers.top` makes Jinja
+     deep-compare every field of every row against ten others. #}
+  {% set top_ids = careers.top | map(attribute='id') | list %}
+  {% set rest = careers.target | rejectattr('id', 'in', top_ids) | list %}
+  {% if rest %}
+  <h3 class="jsub rv">Everything else in {{ careers.countries|join(', ') }}</h3>
+  <div class="jgrid rv" id="jRest">
+    {% for j in rest %}{{ jobcard(j, 0) }}{% endfor %}
+  </div>
+  {% endif %}
+
+  {% set other_rest = careers.other | rejectattr('id', 'in', top_ids) | list %}
+  {% if other_rest %}
+  <h3 class="jsub rv">Outside the target markets</h3>
+  <p class="jsub-n rv">Same employers, different countries. Kept separate rather than ranked
+    against Dubai &mdash; these are not what the search is for, but they are real openings at
+    groups worth knowing. Every one is rendered rather than truncated, so the count above
+    and the list below cannot disagree.</p>
+  <div class="jgrid rv jgrid-quiet">
+    {% for j in other_rest %}{{ jobcard(j, 0) }}{% endfor %}
+  </div>
+  {% endif %}
+
+  <p class="note rv" style="margin-top:16px;color:var(--dim);font-size:12px">
+    Scores are a reading of the posted description against the CV, not a prediction of
+    whether an application succeeds. Freshness comes from the employer's own posted date
+    where they publish one; where they do not, the card says so rather than guessing.
+    Nothing here is invented &mdash; an unknown salary is blank, an unproven link is
+    labelled unverified.
+  </p>
+</section>{% endif %}
+
+{% if 'interview' in secs %}<section class="sec" id="interview">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['interview'] }} / {{ seclabel['interview'] }}</span>
+      <h2 class="stitle">CFO in three years.</h2>
+    </div>
+    <p class="sdesc">Four questions a day — two technical, two not — plus two field notes.
+      Weighted to retail, the Gulf, and the controller-to-CFO jump. The non-technical ones
+      decide the offer more often than the technical ones do; the field notes are the things
+      nobody asks you and everybody assumes you already know.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Technical</span></div>
+  <div class="qa-grid rv">
+    {% for q in interview_tech %}
+    <details class="qa">
+      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
+      <div class="qa-a">{{ q.a }}</div>
+    </details>
+    {% endfor %}
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Everything else</span></div>
+  <div class="qa-grid rv">
+    {% for q in interview_soft %}
+    <details class="qa">
+      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
+      <div class="qa-a">{{ q.a }}</div>
+    </details>
+    {% endfor %}
+  </div>
+
+  {# Not questions. The things nobody asks in an interview and everybody
+     assumes you already know once you are in the chair — the working-capital
+     arithmetic, the lease standard, what actually decides the offer. Same
+     <details> shape as the two banks above so the section reads as one thing
+     and still works with JS off. #}
+  {% if cfo_field %}
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ From the field</span></div>
+  <div class="qa-grid rv">
+    {% for q in cfo_field %}
+    <details class="qa">
+      <summary><span class="qa-q">{{ q.q }}</span><span class="qa-who">{{ q.who }}</span></summary>
+      <div class="qa-a">{{ q.a }}</div>
+    </details>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>{% endif %}
+
+<!-- ══════════ SMART READS ══════════
+     The wire tells you what happened; these argue about what it means. Same
+     named mastheads, but the analysis and money desks rather than the market
+     report, and a card only ships when the publisher gave it a real summary —
+     a headline with a border round it is a link, not a read.
+
+     Filtered harder than the news feed (two distinct finance terms, not one).
+     Opinion desks run film and language columns beside the money writing, and
+     one incidental word is how a review of The Odyssey reached a finance
+     page during the build of this section. -->
+{# ══════════ DAILY INTELLIGENCE BRIEF ══════════
+   The wire compressed into EVENTS. Sits directly above Smart Reads: what
+   happened, then the longer reading. Every number and name in the generated
+   prose has been checked against the source articles by brief_engine.qa_reject
+   before it reaches here; anything that failed fell back to a summary built
+   from the headlines themselves and is marked as such. #}
+{% if 'brief' in secs %}<section class="sec" id="brief">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span> {{ dh('Daily Brief') }}
+      <h2 class="stitle">Everything important today.</h2>
+    </div>
+    <p class="sdesc">{{ brief.stats.articles }} articles from
+      {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
+      ranked by what actually matters &mdash; not by how many outlets syndicated it.
+      Sources kept on every one.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if brief.get('is_fallback') else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>~{{ brief.stats.read_minutes }} min read</span>
+    {% if brief.get('built_on') %}<span>Built <b>{{ brief.built_on }}</b>
+      {%- if brief.get('age_days') is not none and brief.age_days >= 1 %} &middot; {{ brief.age_days }}d old{% endif %}</span>{% endif %}
+    {% if brief.get('is_fallback') %}
+      <span class="pv-warn">Showing the last edition &mdash; today's has not been built yet.</span>
+    {% endif %}
+    <span>{{ brief.stats.ai_written }} written up
+      {%- if brief.stats.ai_rejected %}, {{ brief.stats.ai_rejected }} rejected by the fact check{% endif %}</span>
+  </div>
+
+  {% macro ev_card(e, top) %}
+  <article class="ev{{ ' ev-top' if top }}">
+    <div class="ev-h">
+      <span class="ev-cat">{{ e.category }}</span>
+      <span class="ev-dots" title="Importance {{ e.importance }} of 5">
+        {%- for i in range(1,6) %}<i class="{{ 'on' if i <= e.importance }}"></i>{% endfor -%}
+      </span>
+    </div>
+    <h3 class="ev-t">{{ e.headline }}</h3>
+    <div class="ev-m">
+      <span>{{ e.source_count }} source{{ '' if e.source_count == 1 else 's' }}</span>
+      <span>&middot;</span><span>{{ e.confidence }} confidence</span>
+      {% if not e.ai_generated %}<span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>{% endif %}
+    </div>
+    <ul class="ev-b">{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    {% if e.whyItMatters %}
+    <div class="ev-why"><span>Why it matters</span><p>{{ e.whyItMatters }}</p></div>
+    {% endif %}
+    {% if e.marketImpact %}
+    <div class="ev-mi">
+      {% for m in e.marketImpact %}<span class="ev-chip ev-{{ m.direction|lower }}">{{ m.asset }} &middot; {{ m.direction }}</span>{% endfor %}
+    </div>
+    {% endif %}
+    {% if e.watchNext %}<div class="ev-w">Watch next: {{ e.watchNext }}</div>{% endif %}
+    <div class="ev-s">
+      {% for s in e.sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% endfor %}
+    </div>
+  </article>
+  {% endmacro %}
+
+  <h3 class="jsub rv">Top stories</h3>
+  <div class="ev-grid rv">
+    {% for e in brief.top %}{{ ev_card(e, true) }}{% endfor %}
+  </div>
+
+  {# Everything past the top five, collapsed. The whole point is a ten-minute
+     read; the rest is there for the day you want it. #}
+  {% set rest = brief.events[brief.top|length:] %}
+  {% if rest %}
+  <details class="fund-note-d rv">
+    <summary>The rest of the day &mdash; {{ rest|length }} more</summary>
+    <div class="ev-grid" style="margin-top:14px">
+      {% for e in rest %}{{ ev_card(e, false) }}{% endfor %}
+    </div>
+  </details>
+  {% endif %}
+
+  <p class="note rv" style="margin-top:14px;color:var(--dim);font-size:12px">
+    Summaries are written from the linked reporting and nothing else &mdash; every figure and
+    name is checked against the source articles before publishing, and an event that fails
+    that check falls back to the outlets' own headlines rather than to invented copy.
+    Read the originals for the full story.
+  </p>
+</section>{% endif %}
+
+{% if 'smartreads' in secs %}<section class="sec" id="smartreads">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span> {{ dh('Smart Reads') }}
+      <h2 class="stitle">Worth the ten minutes.</h2>
+    </div>
+    <!-- Copy rewritten when this stopped being a finance-only section. It used
+         to name five money mastheads, which was accurate then and would have
+         been quietly wrong the moment the other four categories landed. -->
+    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
+      &mdash; markets and personal finance alongside habits and focus, health and
+      longevity, psychology and relationships, and the longer essays on thinking
+      and living well. Every card carries the publisher&rsquo;s own summary, so you
+      know what a piece argues before you open it.</p>
+  </div>
+
+  <div class="sr-grid">
+    {% for r in smart_reads %}
+    <article class="sr rv" style="--d:{{ loop.index0 * 0.04 }}s">
+      <div class="sr-h">
+        <span class="sr-src">{{ r.source }}</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-{{ r.cat or 'money' }}">{{
+          {'money':'MONEY','habits':'HABITS','health':'HEALTH',
+           'mind':'MIND','ideas':'IDEAS'}.get(r.cat, 'READ') }}</span>
+        {% if r.date %}<span class="sr-date">{{ r.date }}</span>{% endif %}
+      </div>
+      <h3 class="sr-t">
+        {%- if r.link %}<a href="{{ r.link }}" target="_blank" rel="noopener">{{ r.title }}</a>
+        {%- else %}{{ r.title }}{% endif -%}
+      </h3>
+      <p class="sr-s">{{ r.summary }}</p>
+
+      {# Present only on reads that passed BOTH gates — the shared truthfulness
+         gate in brief_engine (no number or name absent from the source) and
+         the recommendation gate in smart_reads.py. A read that failed either
+         renders exactly as it always did, so a rejection costs its prose and
+         nothing else. #}
+      {% if r.smart %}
+      <dl class="sr-x">
+        <dt>What happened &middot; from the article</dt>
+        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
+          {% for b in r.smart.what_happened %}<li>{{ b }}</li>{% endfor %}
+        </ul></dd>
+        {% if r.smart.why_it_matters %}
+        <div class="sr-why">
+          <dt>Why it matters &middot; interpretation</dt>
+          <dd class="sr-interp">{{ r.smart.why_it_matters }}</dd>
+        </div>
+        {% endif %}
+        {% if r.smart.what_to_watch %}
+        <dt>What to watch &middot; interpretation</dt>
+        <dd class="sr-interp">{{ r.smart.what_to_watch }}</dd>
+        {% endif %}
+      </dl>
+      <p class="sr-read">{{ r.smart.read_seconds }} sec read &middot; no recommendation, by design</p>
+      {% endif %}
+
+      {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ BOOK ══════════
+     One chapter a day out of 48, and — for the 29 books that have one — the
+     whole book underneath it: the crux in a dozen points, what actually
+     changes in your head, worked examples, and how it lands in this life.
+
+     This was a TAB inside The Desk, fifth of seven, which meant the deepest
+     writing on the site was two clicks from being seen and never was. Nothing
+     about the content changed on 2026-08-19; it was simply given its own
+     section, because a book summary buried behind a tab strip is a book
+     summary nobody reads. -->
+{% if 'book' in secs and book %}
+<section class="sec" id="book">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['book'] }} / {{ seclabel['book'] }}</span>
+      <h2 class="stitle">{{ book.book }}.</h2>
+    </div>
+    <p class="sdesc">{{ book.author }} &middot; chapter {{ book.index }} of {{ book.total }}.
+      One chapter a day, and where the book has been read properly, the whole thing
+      underneath it &mdash; the argument in a dozen points, what changes in your head
+      after reading it, and how it lands on an FP&amp;A desk rather than in general.</p>
+  </div>
+
+  <div class="essay rv" style="--ac:var(--violet)">
+
+        <div class="meta">{{ book.book }} · {{ book.author }} · {{ book.index }}/{{ book.total }}</div>
+        <h3>{{ book.chapter }}</h3>
+        <p>{{ book.lesson }}</p>
+        <div class="q">{{ book.key_quote }}</div>
+        <div class="act"><b>Today's action</b>{{ book.action }}</div>
+
+        {% if book.crux %}
+        <div class="bookdeep">
+          <div class="bdhead">The whole book · {{ book.crux|length }} points</div>
+          <ol class="crux">
+            {% for c in book.crux %}<li>{{ c }}</li>{% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+
+        {% if book.learnings %}
+        <div class="bookdeep">
+          <div class="bdhead">What actually changes in your head</div>
+          <ul class="bdlist">
+            {% for l in book.learnings %}<li>{{ l }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if book.examples %}
+        <div class="bookdeep">
+          <div class="bdhead">Examples</div>
+          <ul class="bdlist eg">
+            {% for e in book.examples %}<li>{{ e }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if book.adapt %}
+        <div class="bookdeep adapt">
+          <div class="bdhead">How to adapt it into your life</div>
+          <ul class="bdlist">
+            {% for a in book.adapt %}<li>{{ a }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        </div>
+</section>
+{% endif %}
+
+<!-- ══════════ MUSIC ══════════
+     Three crates. Two are yours (edit music.py to add a line; the 6 AM build
+     picks it up), the third is a fixed all-time canon. Five show, the rest are
+     one click away — a shelf you can see the whole of is a shelf you stop
+     scanning. The five on top rotate daily, so the shelf reads differently
+     every morning without the list changing. -->
+{% if 'podcasts' in secs %}<section class="sec" id="podcasts">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
+      <h2 class="stitle">What&rsquo;s worth listening to.</h2>
+    </div>
+    <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
+      investing and money, society, politics and geopolitics, health, psychology,
+      philosophy, education, comedy and culture. Thirty-four channels, up to twenty
+      episodes, newest first, with what each one says it covers. Titles, dates and
+      takeaways come from the shows themselves. Shorts are excluded per video, not
+      per channel.</p>
+  </div>
+
+  <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
+    <span class="pv-tag">DAILY</span>
+    <span>{{ podcasts.episodes|length }} episodes from {{ podcasts.shows }} shows</span>
+    {% if podcasts.built_on %}<span>Built <b>{{ podcasts.built_on }}</b>{% endif %}
+      {%- if podcasts.age_days is not none %} · {{ podcasts.age_days }}d old{% endif %}</span>
+    {% if podcasts.is_fallback %}<span>&#9888; Today&rsquo;s refresh has not run &mdash;
+      showing the most recent list.</span>{% endif %}
+  </div>
+
+  <div class="pod-grid">
+    {% for e in podcasts.episodes %}
+    <article class="pod rv" style="--d:{{ loop.index0 * 0.05 }}s">
+      <div class="pod-h">
+        <span class="pod-cat">{{ e.category }}</span>
+        <span class="pod-date">{{ e.published }}</span>
+      </div>
+      <h3 class="pod-t">
+        {%- if e.link %}<a href="{{ e.link }}" target="_blank" rel="noopener">{{ e.title }}</a>
+        {%- else %}{{ e.title }}{% endif -%}
+      </h3>
+      <div class="pod-s">{{ e.show }}{% if e.guest %} &middot; <b>{{ e.guest }}</b>{% endif %}</div>
+      {% if e.takeaways %}
+      <ul class="pod-k">
+        {% for t in e.takeaways %}<li>{{ t }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  <p class="pod-note">Takeaways are compressed from each episode&rsquo;s own published
+    description &mdash; they are the show&rsquo;s claims about itself, not a review, and
+    not a summary of anything said in the audio.</p>
+</section>{% endif %}
+
+<!-- ══════════ 06 LANGUAGE ══════════ -->
+{% if 'language' in secs %}<section class="sec" id="language">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['language'] }} / {{ seclabel['language'] }}</span>
+      <h2 class="stitle">Two tongues, sharper.</h2>
+    </div>
+    <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
+      one delivery drill. Say them out loud — reading them does nothing.</p>
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">🇪🇸 Español</span></div>
+  <div class="two rv">
+    {% for w in spanish %}
+    <div class="lrn-card">
+      <div class="lrn-tag">{{ w.tag }}</div>
+      <div class="lrn-word">{{ w.word }}</div>
+      <div class="lrn-mean">{{ w.meaning }}</div>
+      <div class="lrn-ex"><span class="es">{{ w.es }}</span><span class="en">{{ w.en }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Vocabulary</span></div>
+  <div class="two rv">
+    {% for v in vocab %}
+    <div class="lrn-card">
+      <div class="lrn-tag">{{ v.say }}</div>
+      <div class="lrn-word">{{ v.word }}</div>
+      <div class="lrn-mean">{{ v.meaning }}</div>
+      <div class="lrn-ex"><span class="es">{{ v.example }}</span><span class="en">{{ v.note }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if speaking %}
+  <div class="lrn-head rv"><span class="lrn-kicker">◆ Speaking drill</span></div>
+  <div class="drill rv">
+    <div class="drill-t">{{ speaking.title }}</div>
+    <div class="drill-d">{{ speaking.drill }}</div>
+    <div class="drill-w">{{ speaking.why }}</div>
+  </div>
+  {% endif %}
+</section>{% endif %}
+
+<!-- ══════════ 07 FATHERHOOD ══════════ -->
+{% if 'father' in secs %}<section class="sec" id="father">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['father'] }} / {{ seclabel['father'] }}</span>
+      <h2 class="stitle">{{ daughter.heading }}</h2>
+    </div>
+    <p class="sdesc">Two things to actually do today, and the reason each one matters. Most of it
+      is presence rather than technique — but the technique is not nothing.<br>
+      <span class="mono-dim" style="font-size:11px">Born 25 December 2025 &middot;
+        day {{ "{:,}".format(daughter.days) }}</span></p>
+  </div>
+  <div class="two rv">
+    {% for f in father %}
+    <div class="lrn-card tall">
+      <div class="lrn-tag">Today</div>
+      <div class="lrn-word sm">{{ f.title }}</div>
+      <div class="lrn-do">{{ f.do }}</div>
+      <div class="lrn-why"><b>Why</b> {{ f.why }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 08 WISDOM ══════════ -->
+{% if 'wisdom' in secs %}<section class="sec" id="wisdom">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['wisdom'] }} / {{ seclabel['wisdom'] }}</span>
+      <h2 class="stitle">Jainism and Buddhism.</h2>
+    </div>
+    <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
+      the thing to do with it today.</p>
+  </div>
+  <div class="two rv">
+    {% for w in life_wisdom %}
+    <div class="lrn-card tall {{ 'jain' if w.tradition == 'Jainism' else 'budd' }}">
+      <div class="lrn-tag">{{ w.tradition }}</div>
+      <div class="lrn-word sm">{{ w.term }} <span class="tr">· {{ w.translation }}</span></div>
+      <div class="lrn-do">{{ w.teaching }}</div>
+      <div class="lrn-why"><b>Today</b> {{ w.apply }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>{% endif %}
+
+
+
+<!-- ══════════ 06 THE MIND ══════════ -->
+{% if 'mind' in secs %}<section class="sec" id="mind">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['mind'] }} / {{ seclabel['mind'] }}</span>
+      <h2 class="stitle">Sharpen the operator.</h2>
+    </div>
+    <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
+  </div>
+
+  <div class="quote-hero rv">
+    <div class="mark" aria-hidden="true">&ldquo;</div>
+    <blockquote>{{ quote.quote }}</blockquote>
+    <cite>— {{ quote.name }}</cite>
+    <div class="idx">Quote {{ quote.index }} of {{ quote.total }} · rotates daily</div>
+  </div>
+
+  <div class="two" style="margin-top:14px">
+    <div class="essay rv" style="--ac:var(--up)">
+      <div class="meta">Daily Wisdom · {{ wisdom.index }}/{{ wisdom.total }} · Better person · Better dad</div>
+      <h3>{{ wisdom.title }}</h3>
+      <p>{{ wisdom.body }}</p>
+    </div>
+    <div class="essay rv" style="--ac:var(--blue);--d:.08s">
+      <div class="meta">{{ lesson.tradition }}</div>
+      <h3 style="font-style:italic;font-weight:500;letter-spacing:-.5px">{{ lesson.lesson }}</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">— {{ lesson.source }}</p>
+    </div>
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 07 THE WAY ══════════ -->
+{% if 'way' in secs %}<section class="sec" id="way">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['way'] }} / {{ seclabel['way'] }}</span>
+      <h2 class="stitle">Simple living. High thinking.</h2>
+    </div>
+    <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
+      one honest rep. Six tracks, rotating daily on different cycles — the combination never repeats.</p>
+  </div>
+
+  <div class="tabs rv" id="wayTabs">
+    <button class="tab on" data-p="w1">🪶 Minimalism · {{ way.minimalism.index }}/{{ way.minimalism.total }}</button>
+    <button class="tab" data-p="w2">🤝 Etiquette · {{ way.etiquette.index }}/{{ way.etiquette.total }}</button>
+    <button class="tab" data-p="w3">🧘 Stillness · {{ way.stillness.index }}/{{ way.stillness.total }}</button>
+    <button class="tab" data-p="w4">⚙️ Model · {{ way.model.index }}/{{ way.model.total }}</button>
+    <button class="tab" data-p="w5">🇦🇪 Arabic · {{ way.arabic.index }}/{{ way.arabic.total }}</button>
+    <button class="tab" data-p="w6">🎯 Drill · {{ way.drill.index }}/{{ way.drill.total }}</button>
+    <button class="tab" data-p="w7">💪 Health · {{ way.health.index }}/{{ way.health.total }}</button>
+  </div>
+
+  <div class="rv">
+    <div class="pane on" id="w1">
+      <div class="essay" style="--ac:var(--lime)">
+        <div class="meta">Minimalism · {{ way.minimalism.index }}/{{ way.minimalism.total }} · own less, decide less</div>
+        <h3>{{ way.minimalism.title }}</h3>
+        <p>{{ way.minimalism.body }}</p>
+        <div class="act"><b>Do this today</b>{{ way.minimalism.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w2">
+      <div class="essay" style="--ac:var(--gold)">
+        <div class="meta">Etiquette · {{ way.etiquette.index }}/{{ way.etiquette.total }} · trust compounds</div>
+        <h3>{{ way.etiquette.title }}</h3>
+        <p>{{ way.etiquette.body }}</p>
+        <div class="act"><b>Do this today</b>{{ way.etiquette.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w3">
+      <div class="essay" style="--ac:var(--blue)">
+        <div class="meta">Stillness · {{ way.stillness.index }}/{{ way.stillness.total }} · monk practice, modern life</div>
+        <h3>{{ way.stillness.title }}</h3>
+        <p>{{ way.stillness.body }}</p>
+        <div class="act"><b>Do this today</b>{{ way.stillness.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w4">
+      <div class="essay" style="--ac:var(--violet)">
+        <div class="meta">Mental Model · {{ way.model.index }}/{{ way.model.total }} · the latticework</div>
+        <h3>{{ way.model.title }}</h3>
+        <p>{{ way.model.body }}</p>
+        <div class="act"><b>Apply it today</b>{{ way.model.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w5">
+      <div class="essay" style="--ac:var(--up)">
+        <div class="meta">Arabic · {{ way.arabic.index }}/{{ way.arabic.total }} · for the Dubai move</div>
+        <div class="arabic-hero">
+          <div class="ar-script" dir="rtl" lang="ar">{{ way.arabic.script }}</div>
+          <div class="ar-translit">{{ way.arabic.translit }}</div>
+          <div class="ar-meaning">{{ way.arabic.meaning }}</div>
+        </div>
+        <div class="act"><b>When to use it</b>{{ way.arabic.use }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w6">
+      <div class="essay" style="--ac:var(--down)">
+        <div class="meta">Drill · {{ way.drill.index }}/{{ way.drill.total }} · ~10 minutes, deliberate</div>
+        <h3>{{ way.drill.title }}</h3>
+        <p>{{ way.drill.body }}</p>
+        <div class="act"><b>The rep</b>{{ way.drill.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="w7">
+      <div class="essay" style="--ac:var(--pink,#FF7AA2)">
+        <div class="meta">Health · {{ way.health.index }}/{{ way.health.total }} · the asset with no substitute</div>
+        <h3>{{ way.health.title }}</h3>
+        <p>{{ way.health.body }}</p>
+        <div class="act"><b>Today's lever</b>{{ way.health.action }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- streak tracker: localStorage only, no server -->
+  <div class="streak rv" id="streakBox" hidden>
+    <div class="stk-head">
+      <div>
+        <div class="stk-lab">Today's practice</div>
+        <div class="stk-sub">Tick what you actually did. Stored in this browser only.</div>
+      </div>
+      <div class="stk-nums">
+        <div class="stk-n"><b id="stkCur">0</b><i>current</i></div>
+        <div class="stk-n"><b id="stkBest">0</b><i>best</i></div>
+        <div class="stk-n"><b id="stkRate">0%</b><i>30d</i></div>
+      </div>
+    </div>
+    <div class="stk-checks" id="stkChecks"></div>
+    <div class="stk-strip" id="stkStrip" title="Last 30 days"></div>
+    <div class="stk-foot">A day counts once you tick anything. Streak breaks on a fully empty day.</div>
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 08 THE REVIEW ══════════ -->
+{% if 'review' in secs %}<section class="sec" id="review">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['review'] }} / {{ seclabel['review'] }}</span>
+      <h2 class="stitle">Look back, or none of it compounds.</h2>
+    </div>
+    <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
+      {% if review.is_review_day %}Review day — do it now.{% else %}{{ review.days_left }} day{{ '' if review.days_left == 1 else 's' }} until the weekend review.{% endif %}
+      Answers save in this browser, keyed to the week.</p>
+  </div>
+
+  <div class="rv">
+    <div class="deep-q">
+      <div class="dq-lab">This week's question · {{ review.index }}/{{ review.total }}</div>
+      <h3>{{ review.prompt }}</h3>
+      <p>{{ review.why }}</p>
+    </div>
+
+    <div class="rv-grid" id="reviewGrid" data-week="{{ review.key }}">
+      <div class="rv-card">
+        <label for="rvNumbers">The numbers</label>
+        <div class="rv-hint">What moved, by how much, and did you cause it?</div>
+        <textarea id="rvNumbers" rows="4" placeholder="e.g. 12 applications sent · SIP ₹10,000 · expectancy +0.14R over 22 signals"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvWins">Wins</label>
+        <div class="rv-hint">Only things that finished. Not things that progressed.</div>
+        <textarea id="rvWins" rows="4" placeholder="What actually shipped or closed"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvMisses">Misses</label>
+        <div class="rv-hint">What slipped, and the cause — not the excuse.</div>
+        <textarea id="rvMisses" rows="4" placeholder="What did not happen, and why"></textarea>
+      </div>
+      <div class="rv-card">
+        <label for="rvAnswer">Answer to this week's question</label>
+        <div class="rv-hint">{{ review.prompt }}</div>
+        <textarea id="rvAnswer" rows="4" placeholder="Be specific. Vague answers are avoidance."></textarea>
+      </div>
+      <div class="rv-card wide">
+        <label for="rvChange">One change for next week</label>
+        <div class="rv-hint">Exactly one. A list of five is a list of none.</div>
+        <textarea id="rvChange" rows="3" placeholder="One change. Specific enough to verify next Sunday."></textarea>
+      </div>
+    </div>
+
+    <div class="rv-bar">
+      <span class="rv-status" id="rvStatus">Not started</span>
+      <button type="button" class="rv-btn" id="rvCopy">Copy week as Markdown</button>
+    </div>
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 05 THE DESK ══════════ -->
+{% if 'desk' in secs %}<section class="sec" id="desk">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['desk'] }} / {{ seclabel['desk'] }}</span>
+      <h2 class="stitle">Compound the skill.</h2>
+    </div>
+    <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
+      Seven tabs, one discipline.</p>
+  </div>
+
+  <div class="tabs rv" id="deskTabs">
+    <button class="tab on" data-p="d1">🎓 FP&amp;A · {{ fpna.index }}/{{ fpna.total }}</button>
+    <button class="tab" data-p="d2">🇦🇪 Dubai · {{ dubai.index }}/{{ dubai.total }}</button>
+    <button class="tab" data-p="d3">🏆 FC → CFO · {{ cfo.index }}/{{ cfo.total }}</button>
+    <button class="tab" data-p="d4">📊 Case Study</button>
+    <button class="tab" data-p="d6">💰 Money</button>
+    <button class="tab" data-p="d7">⚡ Execution</button>
+  </div>
+
+  <div class="rv">
+    <div class="pane on" id="d1">
+      <div class="essay">
+        <div class="meta">FP&amp;A Learn · Lesson {{ fpna.index }} of {{ fpna.total }}</div>
+        <h3>{{ fpna.title }}</h3>
+        <p>{{ fpna.body }}</p>
+      </div>
+    </div>
+
+    <div class="pane" id="d2">
+      <div class="essay" style="--ac:var(--violet)">
+        <div class="meta">Dubai Corner · AED 30K+ Track · {{ dubai.index }}/{{ dubai.total }}</div>
+        <h3>{{ dubai.title }}</h3>
+        <p>{{ dubai.body }}</p>
+        <div class="q">{{ dubai.targets }}</div>
+        <div class="act"><b>{{ dubai.action_label }}</b>{{ dubai.action }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="d3">
+      <div class="essay" style="--ac:var(--gold)">
+        <div class="meta">Financial Controller → CFO · Step {{ cfo.index }} of {{ cfo.total }}</div>
+        <h3>{{ cfo.title }}</h3>
+        <p>{{ cfo.body }}</p>
+      </div>
+    </div>
+
+    <div class="pane" id="d4">
+      <div class="essay" style="--ac:var(--blue)">
+        <div class="meta">Business Case Study</div>
+        <h3>{{ case.title }}</h3>
+        <p>{{ case.story }}</p>
+        <div class="act"><b>💡 The lesson</b>{{ case.lesson }}</div>
+      </div>
+    </div>
+
+    <div class="pane" id="d6">
+      <div class="essay" style="--ac:var(--lime)">
+        <div class="meta">Money Hack</div>
+        <h3>{{ money_hack.title }}</h3>
+        <p>{{ money_hack.body }}</p>
+      </div>
+    </div>
+
+    <div class="pane" id="d7">
+      <div class="essay" style="--ac:var(--up)">
+        <div class="meta">Today's Rule</div>
+        <h3>Execution beats intention</h3>
+        <p>{{ productivity_tip }}</p>
+      </div>
+    </div>
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 09 CHESS ══════════ -->
+{% if 'chess' in secs %}<section class="sec" id="chess">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
+      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess.{% else %}Your last session.{% endif %}</h2>
+    </div>
+    <div style="text-align:right">
+      <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.
+        {%- if lichess_summary.session_date and not lichess_summary.is_yesterday %}
+        <br><span style="color:var(--gold)">No games yesterday &mdash; showing
+        {{ lichess_summary.session_date }}, the most recent day you played.</span>{% endif %}</p>
+      <a class="slink" href="https://lichess.org/@/AKK_010" target="_blank" style="display:inline-block;margin-top:10px">Profile →</a>
+    </div>
+  </div>
+
+  {% if lichess_games %}
+  <div class="chess-kpi rv">
+    <div class="ck"><div class="v up">{{ lichess_summary.wins }}</div><div class="k">Wins</div></div>
+    <div class="ck"><div class="v dn">{{ lichess_summary.losses }}</div><div class="k">Losses</div></div>
+    <div class="ck"><div class="v" style="color:var(--dim)">{{ lichess_summary.draws }}</div><div class="k">Draws</div></div>
+    <div class="ck"><div class="v" style="color:var(--lime)">{{ lichess_summary.pct }}%</div><div class="k">Win Rate</div></div>
+    <div class="ck"><div class="v">{{ lichess_summary.total }}</div><div class="k">Games</div></div>
+    {% if lichess_summary.mode == "full" %}
+    <div class="ck"><div class="v" style="color:var(--blue)">{{ lichess_summary.upsets }}</div><div class="k">Upsets</div></div>
+    <div class="ck"><div class="v dn">{{ lichess_summary.collapses }}</div><div class="k">Collapses</div></div>
+    {% endif %}
+  </div>
+
+  {% if lichess_summary.session_summary %}
+  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>{{ lichess_summary.session_summary }}</div>
+  {% else %}
+  <div class="verdict rv" style="background:rgba(255,255,255,.03);border-color:var(--line)">
+    {{ lichess_summary.icon }}
+    {% if lichess_summary.pct >= 55 %} Good session — {{ lichess_summary.wins }}/{{ lichess_summary.total }}. Review the wins and lock in the patterns.
+    {% elif lichess_summary.pct >= 45 %} Balanced. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Find the turning point in each loss.
+    {% else %} Rough session. W{{ lichess_summary.wins }} L{{ lichess_summary.losses }}. Review losses before the next game. Pattern beats volume.{% endif %}
+  </div>
+  {% endif %}
+
+  {% if lichess_summary.mode == "full" and (lichess_summary.weak_op or lichess_summary.best_op) %}
+  <div class="two rv" style="margin-bottom:18px">
+    {% if lichess_summary.weak_op %}
+    <div class="card" style="border-color:rgba(255,92,92,.25)">
+      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--down);margin-bottom:6px">📚 Study this opening</div>
+      <div style="font-size:14px;color:#FFA0A0">{{ lichess_summary.weak_op }}</div>
+    </div>
+    {% endif %}
+    {% if lichess_summary.best_op %}
+    <div class="card" style="border-color:rgba(61,220,151,.25)">
+      <div class="meta" style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--up);margin-bottom:6px">💪 Strongest opening</div>
+      <div style="font-size:14px;color:#9BEFC9">{{ lichess_summary.best_op }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if lichess_summary.mode == "full" %}
+  <div class="rv">
+    {% for g in lichess_games %}
+    <div class="game {{ g.cls }}">
+      <div class="hdr">
+        <span style="font-size:17px">{{ g.icon }}</span>
+        <span class="res {{ 'up' if g.cls == 'win' else ('dn' if g.cls == 'loss' else '') }}"
+              {% if g.cls == 'draw' %}style="color:var(--dim)"{% endif %}>{{ g.result }}</span>
+        <span class="pill">as {{ g.my_side }}</span>
+        <span class="pill">{{ g.speed }}</span>
+        {% if g.is_upset %}<span class="pill" style="background:rgba(106,168,255,.14);color:var(--blue)">Upset ⚡</span>{% endif %}
+        {% if g.is_collapse %}<span class="pill" style="background:rgba(255,92,92,.13);color:var(--down)">Collapse ⚠</span>{% endif %}
+        {% if g.is_long %}<span class="pill">{{ g.moves }}M Epic</span>{% endif %}
+        <a href="{{ g.url }}" target="_blank" class="slink" style="margin-left:auto">▶ Review</a>
+      </div>
+      <div class="op">{% if g.eco %}<span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:7px">{{ g.eco }}</span>{% endif %}{{ g.opening }}</div>
+      <div class="meta">
+        vs <strong style="color:var(--text)">{{ g.opponent }}</strong> <span style="color:var(--dim)">({{ g.opp_rating }})</span>
+        · me {{ g.my_rating }} · {{ g.moves }} moves · {{ g.termination }}
+        {% if g.me_diff is not none %}· <span class="{{ 'up' if g.me_diff > 0 else 'dn' }}">{{ "+" if g.me_diff > 0 else "" }}{{ g.me_diff }} pts</span>{% endif %}
+      </div>
+      {% if g.best_move %}
+      <div class="bestmv">
+        <div class="bmlab">Best move of the game</div>
+        <div class="bmrow">
+          <span class="bmsan">{{ g.best_move.move_no }}. {{ g.best_move.san }}</span>
+          <span class="bmgain">+{{ (g.best_move.gain_cp / 100) | round(1) }} pawns</span>
+          <span class="bmeval">eval after {{ "%+.2f"|format(g.best_move.eval_after) }}</span>
+        </div>
+      </div>
+      {% endif %}
+      {% if g.standout %}<div class="uniq"><b>What made it different</b>{{ g.standout }}</div>{% endif %}
+      {% if g.key_facts %}
+      <div class="kfacts">
+        {% for f in g.key_facts %}<span class="kf">{{ f }}</span>{% endfor %}
+      </div>
+      {% endif %}
+      {% if g.game_strength or g.est_fide %}
+      <div class="ratings">
+        {% if g.game_strength %}<span class="rt"><i>Played at</i><b>~{{ g.game_strength }}</b></span>{% endif %}
+        {% if g.est_fide %}<span class="rt"><i>Est. FIDE equiv.</i><b>~{{ g.est_fide }}</b></span>{% endif %}
+        <span class="rtnote">estimates from Lichess {{ g.speed|lower }} rating &amp; centipawn loss — not official FIDE</span>
+      </div>
+      {% endif %}
+      {% if not g.analysed %}<div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>{% endif %}
+      {% if g.analysis %}<div class="an">💡 {{ g.analysis }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="two rv" style="margin-bottom:16px">
+    {% for g in lichess_games %}
+    <div class="card">
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-bottom:8px">{{ g.speed }}</div>
+      <div class="num" style="font-size:30px;font-weight:700;letter-spacing:-1.4px;color:{% if g.pct >= 55 %}var(--up){% elif g.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}">{{ g.pct }}%</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:7px">
+        <span class="up">W{{ g.wins }}</span> · <span class="dn">L{{ g.losses }}</span> ·
+        <span style="color:var(--dim)">D{{ g.draws }}</span> · {{ g.total }} games
+      </div>
+      <a href="{{ g.profile_url }}" target="_blank" class="slink" style="display:inline-block;margin-top:11px">Lichess →</a>
+    </div>
+    {% endfor %}
+  </div>
+  <!-- This used to read "Add LICHESS_TOKEN to GitHub secrets" whenever the
+       page fell back to aggregate counts — including every time the token was
+       set, which it has been since 2026-07-29. Falling back and lacking a
+       token are different questions, and conflating them sent you to create a
+       credential you already had. Each cause now says its own name. -->
+  {% if lichess_summary.token_missing %}
+  <div class="empty rv" style="text-align:left">⚡ Add <code style="color:var(--lime);font-family:var(--mono)">LICHESS_TOKEN</code> to GitHub secrets to raise the export rate limit and include private games.
+    <a href="https://lichess.org/account/oauth/token/create" target="_blank" style="color:var(--lime)">Create token →</a></div>
+  {% else %}
+  <div class="empty rv" style="text-align:left">No individual games came back from the export API for the last seven days,
+    so this is the aggregate view. The token is set &mdash; this is not a credentials problem.</div>
+  {% endif %}
+  {% endif %}
+
+  {% if lichess_summary.trend %}
+  <div class="rv" style="margin-top:18px">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">📈 7-day win rate</div>
+    <div class="trend">
+      {% for t in lichess_summary.trend | reverse %}
+      <div>
+        <div class="bar" style="--h:{{ [t.pct * 70 // 100, 4] | max }}px;--d:{{ loop.index0 * 0.07 }}s;background:{% if t.pct >= 55 %}var(--up){% elif t.pct >= 45 %}var(--gold){% else %}var(--down){% endif %}"></div>
+        <div class="lb">{{ t.day }}</div>
+        <div class="lb" style="color:var(--muted)">{{ t.pct }}%</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+  <div class="empty rv">No games played yesterday · <a href="https://lichess.org/@/AKK_010" target="_blank" style="color:var(--lime)">Play on Lichess →</a></div>
+  {% endif %}
+
+  <div class="two rv" style="margin-top:18px">
+    <div class="essay" style="--ac:var(--gold)">
+      <div class="meta">Chess Tutor · Lesson {{ chess.index }}/{{ chess.total }}</div>
+      <h3>{{ chess.title }}</h3>
+      <p>{{ chess.body }}</p>
+      <p style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:14px">
+        Practise: <a href="https://lichess.org/study" target="_blank" style="color:var(--lime)">Lichess Study</a> ·
+        <a href="https://chess.com/puzzles" target="_blank" style="color:var(--lime)">Chess.com Puzzles</a></p>
+    </div>
+    {% if lichess_puzzle %}
+    <div class="essay" style="--ac:var(--gold);--d:.08s">
+      <div class="meta">🧩 Today's puzzle</div>
+      <h3>Rating {{ lichess_puzzle.rating }} · {{ lichess_puzzle.level }}</h3>
+      <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">{{ lichess_puzzle.themes }}</p>
+      <div class="q">💡 {{ lichess_puzzle.tip }}</div>
+      <a href="{{ lichess_puzzle.url }}" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
+    </div>
+    {% endif %}
+  </div>
+</section>{% endif %}
+
+<!-- ══════════ 10 MIND GYM ══════════
+     Pure client-side: deterministic daily seed, scores in localStorage. No
+     API, so it works identically on the static host. -->
+{% if 'gym' in secs %}<section class="sec" id="gym">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['gym'] }} / {{ seclabel['gym'] }}</span>
+      <h2 class="stitle">Six minutes. Sharper.</h2>
+    </div>
+    <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
+      pressure, estimation, recall, and the two calculations a trading desk actually runs.
+      Scores stay in this browser.</p>
+  </div>
+
+  <div class="gym-tabs rv" id="gymTabs"></div>
+  <div class="gym-stage rv" id="gymStage"></div>
+  <div class="gym-score rv" id="gymScore"></div>
 </section>{% endif %}
 
 </main>
