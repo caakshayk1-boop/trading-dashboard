@@ -1156,6 +1156,53 @@ var TV_ALIASES = (function () {
       };
     }
 
+    /* ═══════ theme ═══════
+       Three states, cycling light → dark → system. Two would make "follow my
+       OS" unexpressible, which is the state most readers are actually in.
+
+       The stored value is read in <head> before first paint (see the inline
+       script in newspaper.py); this only handles the cycling afterwards. */
+    var THEMES = [
+      { id: 'light',  glyph: '☀', label: 'Light' },
+      { id: 'dark',   glyph: '☾', label: 'Dark' },
+      { id: 'system', glyph: '◐', label: 'System' }
+    ];
+
+    function currentTheme(){
+      var t = document.documentElement.getAttribute('data-theme');
+      return (t === 'light' || t === 'dark') ? t : 'system';
+    }
+
+    function applyTheme(id){
+      var root = document.documentElement;
+      if (id === 'system') root.removeAttribute('data-theme');
+      else root.setAttribute('data-theme', id);
+      try {
+        if (id === 'system') localStorage.removeItem('aa-theme');
+        else localStorage.setItem('aa-theme', id);
+      } catch (e){ /* private mode — the choice just does not persist */ }
+      var btn = el('themeBtn');
+      if (btn){
+        var t = THEMES.filter(function(x){ return x.id === id; })[0] || THEMES[2];
+        var i = btn.querySelector('.thm-i');
+        if (i) i.textContent = t.glyph;
+        // The label carries the state for a screen reader, which cannot see
+        // the glyph and must not be left guessing what the button does.
+        btn.setAttribute('aria-label', 'Theme: ' + t.label + '. Click to change.');
+        btn.setAttribute('title', 'Theme: ' + t.label);
+      }
+    }
+
+    function initTheme(){
+      applyTheme(currentTheme());
+      var btn = el('themeBtn');
+      if (!btn) return;
+      btn.addEventListener('click', function(){
+        var order = ['light', 'dark', 'system'];
+        applyTheme(order[(order.indexOf(currentTheme()) + 1) % order.length]);
+      });
+    }
+
     function bar(state, msg){
       var b = el('livebar'); if (!b) return;
       b.classList.add('on');
@@ -1301,6 +1348,7 @@ var TV_ALIASES = (function () {
       loadLongTerm();
       loadPaperWallet();
       loadSectorHeat();
+      initTheme();
 
       var lr = el('liverefresh');
       if (lr) lr.addEventListener('click', function(){

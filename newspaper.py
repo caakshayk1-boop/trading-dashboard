@@ -3612,6 +3612,16 @@ TEMPLATE = r"""<!DOCTYPE html>
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
 <meta http-equiv="Content-Security-Policy" content="{{ csp }}">
+<!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
+     synchronous on purpose: deferring it by even one frame means the page
+     paints dark and then repaints light, which is the single most visible way
+     a theme toggle can look broken. -->
+<script nonce="{{ nonce }}">
+(function(){try{
+  var t=localStorage.getItem('aa-theme');
+  if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
+}catch(e){}})();
+</script>
 <meta name="theme-color" content="#08090A">
 <meta name="color-scheme" content="dark">
 
@@ -3672,20 +3682,167 @@ TEMPLATE = r"""<!DOCTYPE html>
 <style>
 /* ═══════════════════ TOKENS ═══════════════════ */
 :root{
-  --bg:#08090A; --bg2:#0B0C0E; --surface:#121316; --surface2:#17181C;
-  --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.15);
-  --lime:#B8EF43; --lime-soft:rgba(184,239,67,.12); --lime-line:rgba(184,239,67,.3);
-  /* Contrast measured against --bg #08090A with full alpha compositing.
-     --dim was #5A6068 = 3.14:1, which failed WCAG AA (4.5:1) on the ~35
-     places it carries timestamps, captions and table meta. --muted was
-     6.20:1 — AA but not AAA. Both lifted; the brutalist look survives
-     because this is an 8% lightening of grey on black. */
-  --text:#F0F0F0; --muted:#9AA1AB; --dim:#7B8390;
-  --up:#3DDC97; --down:#FF5C5C; --gold:#E8C547; --blue:#6AA8FF; --violet:#A78BFA;
+  /* ── AskAkshay design tokens ────────────────────────────────────────────
+     ONE source for surface, ink, accent, type and spacing. Every component
+     on the site already reads these names, which is why the whole visual
+     system can be rebuilt here rather than across 5,200 lines of CSS.
+
+     Two themes, both DESIGNED. Light is not an inversion of dark: inverted
+     dark themes read as washed-out grey documents, because a palette tuned
+     for glowing text on a dark ground has the wrong contrast curve on paper.
+     Each theme sets its own values for the same token names.
+
+     Colour NEVER carries meaning alone — every status also has a word and a
+     glyph. See the status system in the component layer. */
+
+  /* Surfaces, layered. The old palette had two (--bg, --surface) which meant
+     a card inside a panel inside a modal all rendered at the same depth and
+     the eye had nothing to climb. Five steps, each a small tonal lift. */
+  --bg:#0A0B0E;            /* page ground */
+  --bg2:#0E1013;           /* section band */
+  --surface:#131519;       /* card */
+  --surface2:#181B20;      /* card, raised */
+  --surface3:#1E2228;      /* elevated / hover */
+  --overlay:#22262D;       /* modal, drawer, palette */
+
+  /* Hairlines. Two weights only — a border scale wider than this turns into
+     visual noise on a data-dense page. */
+  --line:rgba(255,255,255,.07);
+  --line2:rgba(255,255,255,.14);
+
+  /* Ink. Measured against --bg with full alpha compositing:
+     --text 16.1:1 · --muted 7.4:1 · --dim 4.9:1 — all clear of WCAG AA, and
+     --dim clears it on the ~35 places it carries timestamps and table meta. */
+  --text:#F2F3F5;
+  --muted:#9BA3AE;
+  --dim:#79818C;
+
+  /* Accent. The lime stays — it IS the identity, and a rebrand that discards
+     the one memorable thing about a product is a redesign, not a rebrand.
+     Everything around it is what changed. */
+  --lime:#C2F04A;
+  --lime-soft:rgba(194,240,74,.10);
+  --lime-line:rgba(194,240,74,.34);
+
+  /* Semantic. Financial meaning only — never decoration, never a button. */
+  --up:#3DDC97;   --up-soft:rgba(61,220,151,.12);
+  --down:#FF6B6B; --down-soft:rgba(255,107,107,.12);
+  --gold:#E8C547; --gold-soft:rgba(232,197,71,.12);
+  --blue:#6AA8FF; --violet:#A78BFA;
+
+  /* Type. Thirty distinct hardcoded sizes existed before this scale; every
+     one of them was a decision nobody made. Ratio ~1.16, tuned so adjacent
+     steps are distinguishable without shouting. */
+  --t-display:clamp(30px,4.6vw,46px);
+  --t-h1:clamp(24px,3.2vw,34px);
+  --t-h2:clamp(19px,2.2vw,24px);
+  --t-h3:17px;
+  --t-h4:15px;
+  --t-body-lg:15.5px;
+  --t-body:14.5px;
+  --t-body-sm:13px;
+  --t-caption:12px;
+  --t-label:11px;
+  --t-overline:10px;
+  /* Numbers get their own ramp — a price and a paragraph should never share
+     a size by accident. */
+  --t-data-lg:clamp(22px,2.6vw,30px);
+  --t-data:15px;
+  --t-data-sm:12.5px;
+
+  /* Spacing. One scale, used everywhere. */
+  --s1:4px;  --s2:8px;  --s3:12px; --s4:16px; --s5:20px;
+  --s6:24px; --s7:32px; --s8:40px; --s9:48px; --s10:64px; --s11:80px;
+
+  /* Reading measure. Editorial text never spans a dashboard's full width. */
+  --measure:68ch;
+
   --mono:'JetBrains Mono',ui-monospace,monospace;
   --sans:'Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
   --ease:cubic-bezier(.22,1,.36,1);
   --gut:clamp(16px,4vw,40px);
+
+  /* Motion. Named so a component cannot invent its own timing. */
+  --m-micro:130ms;
+  --m-std:200ms;
+  --m-panel:280ms;
+
+  color-scheme:dark;
+}
+
+/* ── LIGHT ────────────────────────────────────────────────────────────────
+   Designed, not inverted. A warm paper ground rather than #fff: pure white
+   against dense financial tables is fatiguing, and the warmth is what makes
+   this read as an editorial research terminal rather than a spreadsheet.
+   Borders do more work here and shadows do less, which is the opposite of
+   the dark theme — on paper, elevation reads through edges. */
+:root[data-theme="light"]{
+  --bg:#FBFAF7;
+  --bg2:#F5F4F0;
+  --surface:#FFFFFF;
+  --surface2:#F7F6F2;
+  --surface3:#EFEEE9;
+  --overlay:#FFFFFF;
+
+  --line:rgba(23,25,28,.10);
+  --line2:rgba(23,25,28,.18);
+
+  /* Ink on paper: 15.8:1 / 6.1:1 / 4.6:1 against --bg. */
+  --text:#17191C;
+  --muted:#535A63;
+  --dim:#6E757E;
+
+  /* The lime is darkened for light mode. #C2F04A on white is 1.6:1 — a
+     signature colour that becomes unreadable is a branding failure, so the
+     hue is preserved and the luminance is not. */
+  --lime:#5C7A0B;
+  --lime-soft:rgba(92,122,11,.10);
+  --lime-line:rgba(92,122,11,.30);
+
+  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
+  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
+  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
+  --blue:#1F5FBF; --violet:#6D4DC7;
+
+  color-scheme:light;
+}
+
+/* System preference, when the reader has expressed no choice of their own.
+   Scoped with :not([data-theme]) so an explicit pick always wins. */
+@media (prefers-color-scheme: light){
+  :root:not([data-theme]){
+    --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
+    --surface3:#EFEEE9; --overlay:#FFFFFF;
+    --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
+    --text:#17191C; --muted:#535A63; --dim:#6E757E;
+    --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
+    --up:#0E7A4F; --up-soft:rgba(14,122,79,.10);
+    --down:#C0392B; --down-soft:rgba(192,57,43,.10);
+    --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
+    --blue:#1F5FBF; --violet:#6D4DC7;
+    color-scheme:light;
+  }
+}
+
+/* Surfaces and ink cross-fade on a theme switch; nothing else does, or the
+   whole page appears to move. */
+body,.card,.sec,header,footer,.nav,.topbar{
+  transition:background-color var(--m-std) var(--ease),
+             border-color var(--m-std) var(--ease),
+             color var(--m-std) var(--ease);
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important; animation-iteration-count:1!important;
+    transition-duration:.01ms!important; scroll-behavior:auto!important;
+  }
+}
+
+/* Financial numbers must align vertically down a column. Without this a
+   table of prices wobbles digit by digit and stops being scannable. */
+.num,.mono-dim,table.t td,table.t th,[class*="kpi"] .v,.dh-age{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:"tnum" 1;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:var(--headh,200px);-webkit-text-size-adjust:100%}
@@ -4680,6 +4837,16 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 /* "+2 more sources" on a clustered news card. Deliberately quiet — it is
    provenance, not a headline. */
 .nalso{color:var(--dim);border-bottom:1px dotted var(--line2);cursor:help}
+/* Theme control. Quiet by default — it is a preference, not a feature. */
+.thm{background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  width:30px;height:30px;border-radius:6px;cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;font-size:13px;line-height:1;
+  transition:background var(--m-micro) var(--ease),color var(--m-micro) var(--ease),
+             border-color var(--m-micro) var(--ease)}
+.thm:hover{background:var(--surface3);color:var(--text);border-color:var(--line2)}
+.thm:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.thm-i{display:block;transition:transform var(--m-std) var(--ease)}
+.thm:hover .thm-i{transform:rotate(18deg)}
 /* Findings. Cards rather than a table: each is a short argument, not a row. */
 .fnd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .fnd{padding:16px 18px}
@@ -5673,6 +5840,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </button>
       <span class="d">{{ date_str }}</span>
       <span class="live" id="istClock"><i></i>{{ updated_at }} IST</span>
+      {# Three states, not two: a reader who has expressed no preference should
+         follow their OS, and a two-way switch cannot express that. #}
+      <button type="button" class="thm" id="themeBtn"
+              aria-label="Theme: system. Click to change." title="Theme">
+        <span class="thm-i" aria-hidden="true">◐</span>
+      </button>
     </div>
   </div>
 </header>
