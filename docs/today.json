@@ -1,5 +1,5 @@
 {
- "build_id": "20260819T181301",
+ "build_id": "20260819T193442",
  "date": "2026-08-19",
  "date_str": "Wednesday, August 19 2026",
  "picks": [
@@ -531,7 +531,7 @@
    "sector": "Consumer Defensive"
   },
   "MDB": {
-   "price": 434.62,
+   "price": 429.1,
    "sector": ""
   },
   "MOTHERSON": {
@@ -543,7 +543,7 @@
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 481.63,
+   "price": 482.795,
    "sector": ""
   },
   "NATIONALUM": {
@@ -555,11 +555,11 @@
    "sector": "Consumer Defensive"
   },
   "NET": {
-   "price": 301.36,
+   "price": 288.1201,
    "sector": ""
   },
   "NGAS": {
-   "price": 2.849,
+   "price": 2.862,
    "sector": ""
   },
   "NIACL": {
@@ -709,20 +709,14 @@
  },
  "data_health": {
   "worst": "DEGRADED",
-  "current": 10,
+  "current": 11,
   "total": 12,
   "degraded": [
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "35 min old",
+    "age": "2h old",
     "note": "partial coverage \u2014 11/22 records"
-   },
-   {
-    "dataset": "Stock screen",
-    "status": "DEGRADED",
-    "age": "47h old",
-    "note": "latest refresh attempt failed: only 50 companies priced \u2014 refusing to cache"
    }
   ]
  },
