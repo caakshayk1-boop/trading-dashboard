@@ -4687,6 +4687,9 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .fsc li{font-size:12.5px;line-height:1.45;display:flex;gap:8px;align-items:baseline}
 .fsc li b{font-family:var(--mono);font-size:12px;width:12px;flex:none}
 .fsc li.mono-dim{color:var(--dim)}
+/* "+2 more sources" on a clustered news card. Deliberately quiet — it is
+   provenance, not a headline. */
+.nalso{color:var(--dim);border-bottom:1px dotted var(--line2);cursor:help}
 /* ── Tap targets ─────────────────────────────────────────────────────────
    WCAG 2.2 AA 2.5.8 asks for 24x24 CSS px. Measured on a 375px viewport,
    64 controls were under it — mostly 16px-tall inline links in the footer

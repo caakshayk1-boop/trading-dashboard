@@ -1821,6 +1821,13 @@ var TV_ALIASES = (function () {
       }
 
       box.innerHTML = kpi + catBars + rulesElog + tableHtml;
+      // Without this the section renders and stays invisible. The KPI row, the
+      // rules list and the trades table all carry .rv, and the scroll-reveal
+      // observer registered once at load over the nodes that existed then —
+      // so injected ones sit at opacity:0 for good. The tier bars were the
+      // only part of this section WITHOUT .rv, which is why the wallet looked
+      // like three coloured pills floating in an empty page (2026-08-19).
+      reveal(box);
     }
 
     // Also called when a WRITE (not just login) 401s — the session cookie
@@ -3979,13 +3986,24 @@ var TV_ALIASES = (function () {
                    (n.summary ? '<p>' + esc(n.summary.slice(0, 150)) + '</p>' : '') +
                    '<div class="ts">' + esc(wmAgo(n.published)) +
                    (n.places && n.places.length ? ' · ' + esc(n.places.join(', ')) : '') +
+                   // One event, one card — but say how many outlets ran it
+                   // rather than hiding the others. A story four wires carried
+                   // is a different signal from one only Reuters filed, and
+                   // silently dropping the duplicates throws that away.
+                   (n.also ? ' · <span class="nalso" title="' +
+                      esc((n.also_sources || []).join(', ')) + '">+' + n.also +
+                      ' more ' + (n.also === 1 ? 'source' : 'sources') + '</span>' : '') +
                    '</div></div>';
         }).join('');
       }
 
       var d = document.getElementById('worldDesc');
-      if (d) d.textContent = 'Wires only, deduplicated, last ' + j.window_hours +
-        ' hours. ' + j.count + ' stories from ' + j.sources_ok + ' feeds, refreshed every 15 minutes.';
+      // Articles seen AND events published. "202 stories" when 22 of them were
+      // the same rate decision overstates how much happened.
+      if (d) d.textContent = 'Wires only, clustered into events, last ' + j.window_hours +
+        ' hours. ' + j.count + ' articles from ' + j.sources_ok + ' feeds' +
+        (j.merged ? ' — ' + j.merged + ' collapsed into an existing event' : '') +
+        ', refreshed every 15 minutes.';
     }
 
     function wmAgo(iso){

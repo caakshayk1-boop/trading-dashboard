@@ -282,3 +282,85 @@ test("a null target stays null and does not shift the ones after it", () => {
 test("three collapsed targets leave exactly one", () => {
   assert.deepEqual(distinctTargets(100, 90, 110, 110.5, 111), [110, null, null]);
 });
+
+// ── News event clustering ───────────────────────────────────────────────────
+import { clusterByEvent, sameEvent, tokens } from "../api/_cluster.js";
+
+test("one RBI rate decision told four ways becomes one card", () => {
+  const items = [
+    { title: "RBI Panel Watches Inflation as One Member Eyes Hike This Year - Bloomberg.com", source: "Google Markets" },
+    { title: "RBI MPC minutes: Policy panel signals rate hike risk as inflation rises - indianexpress.com", source: "Google India" },
+    { title: "India rate panel signals impending hikes, eyes inflation path for timing - reuters", source: "Reuters" },
+    { title: "India's central bank signals possible rate hikes amid inflation risks - CNBC", source: "CNBC" },
+  ];
+  const out = clusterByEvent(items);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].also, 3);
+});
+
+test("a DIFFERENT RBI story is not swallowed by the rate-decision cluster", () => {
+  // The failure that matters. Merging on the loudest shared token would hide a
+  // real story behind an unrelated one — worse than a duplicate, and far
+  // harder to notice, because nothing looks wrong.
+  const items = [
+    { title: "RBI MPC minutes: Policy panel signals rate hike risk as inflation rises", source: "A" },
+    { title: "RBI issues major warning on KYC fraud, scammers can access bank OTP", source: "B" },
+  ];
+  assert.equal(clusterByEvent(items).length, 2);
+});
+
+test("Armenia's central bank does not join India's rate decision", () => {
+  // The exact false merge that ruled out a looser threshold (0.35).
+  assert.equal(
+    sameEvent(
+      "RBI MPC minutes: Policy panel signals rate hike risk as inflation rises",
+      "Central Bank of Armenia: exchange rates and prices of precious metals"
+    ),
+    false
+  );
+});
+
+test("acronyms survive tokenisation — they are the identifying word", () => {
+  // A four-character floor drops RBI, SEC, FED, IMF, GDP, IPO: precisely the
+  // token that says WHICH event a headline is about.
+  const t = tokens("RBI MPC minutes signal a rate hike");
+  assert.ok(t.has("rbi") && t.has("mpc"));
+});
+
+test("plural and singular of the event word do not split a cluster", () => {
+  const t1 = tokens("India rate panel signals impending hikes on inflation path");
+  const t2 = tokens("India rate panel signal impending hike on inflation path");
+  assert.deepEqual([...t1].sort(), [...t2].sort());
+});
+
+test("the publisher suffix is not part of the event", () => {
+  assert.deepEqual(
+    [...tokens("Nifty ends lower on IT drag - Reuters")].sort(),
+    [...tokens("Nifty ends lower on IT drag")].sort()
+  );
+});
+
+test("the primary keeps its own source out of also_sources", () => {
+  const out = clusterByEvent([
+    { title: "RBI MPC minutes signal rate hike risk as inflation rises", source: "Reuters" },
+    { title: "RBI MPC minutes signal rate hike risk amid inflation", source: "Reuters" },
+    { title: "RBI MPC minutes signal a rate hike as inflation rises further", source: "CNBC" },
+  ]);
+  assert.equal(out.length, 1);
+  assert.deepEqual(out[0].also_sources, ["CNBC"]);
+});
+
+test("unrelated stories are never merged", () => {
+  const items = [
+    { title: "Moderna, Merck cancer vaccine shows promise in late-stage trial", source: "CNBC" },
+    { title: "Israel confirms it opened fire on vehicle carrying a child in Gaza", source: "BBC" },
+    { title: "Nifty 50 profit growth faces global headwinds", source: "Investing" },
+  ];
+  assert.equal(clusterByEvent(items).length, 3);
+});
+
+test("an empty or single-item list is handled", () => {
+  assert.deepEqual(clusterByEvent([]), []);
+  assert.deepEqual(clusterByEvent(null), []);
+  assert.equal(clusterByEvent([{ title: "x", source: "s" }]).length, 1);
+});

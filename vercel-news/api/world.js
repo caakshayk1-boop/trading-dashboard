@@ -15,6 +15,7 @@
 //
 // Query: hours= (default 24, max 72), limit= (default 14, max 40)
 import { json, fail, str } from "./_db.js";
+import { clusterByEvent } from "./_cluster.js";
 
 const FEEDS = [
   ["Reuters World", "https://news.google.com/rss/search?q=when:1d+world+news&hl=en-US&gl=US&ceid=US:en"],
@@ -137,8 +138,21 @@ export default async function handler(req, res) {
     }
     items.sort((a, b) => (b.ts || 0) - (a.ts || 0));
 
+    // One event, one card.
+    //
+    // The exact-title dedup above catches the same wire republished verbatim
+    // and nothing else. On 2026-08-19 the top 40 carried the same RBI rate
+    // decision on four separate cards, told four ways — which a reader scanning
+    // the page counts as four things happening.
+    //
+    // Sorted by recency FIRST, so the survivor of each cluster is the newest
+    // telling. Nothing is dropped silently: each carries `also` and
+    // `also_sources`, so a card can say how many other outlets ran it.
+    const beforeCluster = items.length;
+    const clustered = clusterByEvent(items);
+
     const byCountry = new Map();
-    for (const it of items) {
+    for (const it of clustered) {
       it.tone = toneOf(`${it.title} ${it.summary}`);
       it.places = placesIn(`${it.title} ${it.summary}`);
       for (const p of it.places) {
@@ -167,13 +181,20 @@ export default async function handler(req, res) {
       window_hours: hours,
       sources_ok: settled.filter((l) => l.length).length,
       sources_total: FEEDS.length,
-      count: items.length,
+      // Articles seen vs events published. Both, because "202 articles" and
+      // "180 events" are different facts and collapsing them would hide how
+      // much of the wire is the same story repeated.
+      count: beforeCluster,
+      events: clustered.length,
+      merged: beforeCluster - clustered.length,
       tagging: "keyword match over country names, demonyms and capitals — approximate",
-      top: items.slice(0, limit).map((it) => ({
+      top: clustered.slice(0, limit).map((it) => ({
         title: it.title, link: it.link, source: it.source,
         published: it.ts ? new Date(it.ts).toISOString() : null,
         summary: it.summary.slice(0, 180),
         tone: it.tone, places: it.places,
+        // How many other outlets carried this same event, and which.
+        also: it.also || 0, also_sources: it.also_sources || [],
       })),
       countries,
       totals: {

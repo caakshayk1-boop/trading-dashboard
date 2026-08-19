@@ -406,6 +406,33 @@ def check_node_tests_pull_no_packages():
     return problems
 
 
+def check_injected_rv_is_revealed():
+    """Every function that injects .rv markup must call reveal() on it.
+
+    The scroll-reveal observer registers ONCE, at load, over the .rv elements
+    that exist then. Anything injected afterwards was never observed and stays
+    at opacity:0 permanently — the section renders, the data is correct, and
+    the reader sees nothing.
+
+    renderPaperWallet shipped exactly this on 2026-08-19: the KPI row, rules
+    list and trades table were all invisible, and only the tier bars showed
+    because they were the one part without .rv. Nothing failed, nothing logged.
+    """
+    import re as _re
+    js = open("static/app.js", encoding="utf-8").read()
+    problems = []
+    # Each `function name(...){ ... }` at two-space indent, non-greedy to the
+    # matching two-space closing brace.
+    for m in _re.finditer(r"\n    function (\w+)\(([^)]*)\)\s*\{(.*?)\n    \}", js, _re.S):
+        name, body = m.group(1), m.group(3)
+        if name == "reveal":
+            continue
+        injects_rv = _re.search(r"innerHTML\s*=", body) and "rv\"" in body.replace("'", '"')
+        if injects_rv and "reveal(" not in body:
+            problems.append(name)
+    return problems
+
+
 def main() -> int:
     print("engine regressions — every case here shipped to production once\n")
     for fn in (test_band_rejects_nan,
@@ -615,6 +642,11 @@ def test_non_trading_types_agree_across_python_and_js():
 
     # newspaper.yml runs the node tests with NO npm install. Anything a test
     # file reaches must import zero packages. This broke the build twice.
+    rv_problems = check_injected_rv_is_revealed()
+    check("every function injecting .rv markup calls reveal()",
+          not rv_problems,
+          f"injected but never revealed: {rv_problems}")
+
     pkg_problems = check_node_tests_pull_no_packages()
     check("no vercel-news test reaches a package import",
           not pkg_problems, "; ".join(pkg_problems))
