@@ -5106,6 +5106,10 @@ table.t tbody tr:last-child td{border-bottom:none}
   transition:transform .25s var(--ease),box-shadow .25s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(184,239,67,.25)}
 .btn-sm{padding:6px 13px;font-size:10px}
+/* 10px text plus 6px padding lands at ~23.6px — under WCAG 2.2 AA's
+   24px target, and invisibly so, because it ROUNDS to 24 in devtools.
+   Only enforced for a finger; on a mouse the button is fine as drawn. */
+@media (pointer: coarse){.btn-sm{min-height:24px}}
 .btn-gh{background:transparent;color:var(--muted);border:1px solid var(--line);padding:6px 13px;
   font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:100px;
   text-transform:uppercase;transition:all .25s}

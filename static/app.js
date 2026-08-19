@@ -3119,7 +3119,11 @@ var TV_ALIASES = (function () {
 
       function table(title, rows, labelWord){
         if (!rows || !rows.length) return '';
-        return '<div class="brk-card"><h4>' + title + '</h4>' +
+        // h3, not h4: the section heading above these is an h2, and jumping a
+        // level leaves a screen-reader user navigating by heading into a level
+        // that sits under nothing. .fh4 keeps the h4 styling — .brk-card .fh4
+        // is in the same rule as .brk-card h4.
+        return '<div class="brk-card"><h3 class="fh4">' + title + '</h3>' +
           rows.slice(0, 8).map(function(b){
             var col = b.total_r === null ? '' : (b.total_r >= 0 ? 'var(--up)' : 'var(--down)');
             return '<div class="brk-row"><span class="kk">' + esc(b.key) + '</span>' +
