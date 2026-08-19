@@ -1,5 +1,5 @@
 {
- "build_id": "20260819T220226",
+ "build_id": "20260819T224117",
  "date": "2026-08-19",
  "date_str": "Wednesday, August 19 2026",
  "picks": [
@@ -426,6 +426,10 @@
    "price": 4499.3999,
    "sector": "Financial Services"
   },
+  "CRUDE": {
+   "price": 85.58,
+   "sector": ""
+  },
   "DEEPAKNTR": {
    "price": 1768.3,
    "sector": "Basic Materials"
@@ -531,7 +535,7 @@
    "sector": "Consumer Defensive"
   },
   "MDB": {
-   "price": 433.62,
+   "price": 430.76,
    "sector": ""
   },
   "MOTHERSON": {
@@ -543,7 +547,7 @@
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 486.54,
+   "price": 484.281,
    "sector": ""
   },
   "NATIONALUM": {
@@ -555,11 +559,11 @@
    "sector": "Consumer Defensive"
   },
   "NET": {
-   "price": 293.11,
+   "price": 292.24,
    "sector": ""
   },
   "NGAS": {
-   "price": 2.839,
+   "price": 2.84,
    "sector": ""
   },
   "NIACL": {
@@ -581,10 +585,6 @@
   "PAYTM.NS": {
    "price": 1583.5,
    "sector": "Technology"
-  },
-  "POLYCAB": {
-   "price": 9140.0,
-   "sector": "Industrials"
   }
  },
  "ipos": {
@@ -715,7 +715,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "49 min old",
+    "age": "1h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
