@@ -188,6 +188,57 @@ def _():
     assert sy.to_yahoo("") == ""
 
 
+# ── Which slot grades which market ───────────────────────────────────────────
+# Live on 2026-08-19: the 16:30 IST end-of-day scan sent "SL HIT — SMCI" at
+# 16:41 IST, when the US market had been shut 14 hours and would not reopen for
+# two. The exit itself was graded off a completed bar and was correct; the
+# timing detached it from the session it described.
+
+@check("the US slot grades US names, and only US names")
+def _():
+    from standalone_scan import SLOT_MARKETS
+    assert SLOT_MARKETS["us"] == {"US"}
+
+
+@check("the NSE slots do NOT grade US names")
+def _():
+    from standalone_scan import SLOT_MARKETS
+    for slot in ("midday", "eod"):
+        assert "US" not in SLOT_MARKETS[slot], f"{slot} still grades US symbols"
+
+
+@check("commodities and FX stay in the NSE slots — they have no daily close")
+def _():
+    from standalone_scan import SLOT_MARKETS
+    for slot in ("midday", "eod"):
+        assert {"COMEX", "FX"} <= SLOT_MARKETS[slot]
+
+
+@check("every cron slot arm has a market set, and vice versa")
+def _():
+    """A slot with no entry falls through to None, which grades EVERYTHING —
+    silently reintroducing the exact bug, because nothing fails."""
+    import re
+    from standalone_scan import SLOT_MARKETS
+    wf = (ROOT / ".github" / "workflows" / "daily_scan.yml").read_text()
+    arms = set(re.findall(r"SLOT=(\w+)", wf))
+    missing = arms - set(SLOT_MARKETS)
+    assert not missing, f"cron slots with no market set: {sorted(missing)}"
+
+
+@check("the symbols that actually alerted route to the US slot")
+def _():
+    # NET, MDB and SMCI are the three that arrived at the wrong hour.
+    for sym in ("NET", "MDB", "SMCI"):
+        assert sy.market_of(sym) == "US", f"{sym} -> {sy.market_of(sym)}"
+
+
+@check("an NSE name is not swept into the US slot")
+def _():
+    for sym in ("RELIANCE", "COALINDIA", "TECHM", "IOC"):
+        assert sy.market_of(sym) == "NSE", f"{sym} -> {sy.market_of(sym)}"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

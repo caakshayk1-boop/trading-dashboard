@@ -359,9 +359,40 @@ def _since_entry(tick, opened_at):
         return tick.iloc[0:0]
 
 
-def run_price_alerts(time_str: str):
+# Which markets each scan slot is allowed to grade.
+#
+# The scanner was built entirely on an NSE clock, and every slot graded every
+# open signal regardless of where it trades. Once US names entered the ledger
+# that produced this, live on 2026-08-19: the 16:30 IST end-of-day scan sent
+# "SL HIT — SMCI" at 16:41 IST, when the US market had been shut for 14 hours
+# and would not open for another two.
+#
+# The GRADING was never wrong — exits are read off completed bars, so there is
+# no look-ahead. What was wrong is WHEN the reader was told: a stop broken in
+# Monday night's US session surfaced on Tuesday afternoon IST, detached from
+# the session it belonged to.
+#
+# So each slot now grades only markets whose session has actually closed:
+#
+#   midday / eod   NSE equities, plus COMEX and FX, which trade nearly around
+#                  the clock and have no single daily close to wait for.
+#   us             US equities, run in the IST morning — after the US close
+#                  (20:00-21:00 UTC) and at an hour a reader is awake for.
+SLOT_MARKETS = {
+    "midday":  {"NSE", "BSE", "COMEX", "FX"},
+    "eod":     {"NSE", "BSE", "COMEX", "FX"},
+    "weekend": {"NSE", "BSE", "COMEX", "FX", "US"},
+    "us":      {"US"},
+}
+
+
+def run_price_alerts(time_str: str, markets: set | None = None):
     """
     Position management for every OPEN signal in all_signals.
+
+    `markets` limits the run to instruments whose market_of() is in the set.
+    None means every market — the manual/fallback path, which keeps the old
+    behaviour for an operator running the script by hand.
 
     Rules, in priority order per signal:
       time stop → EXPIRED, real R booked at last close (matches backtest.py)
@@ -392,6 +423,20 @@ def run_price_alerts(time_str: str):
     if open_df.empty:
         logging.info("price_alerts: no open signals to check")
         return
+
+    if markets:
+        from symbols import market_of
+        before = len(open_df)
+        open_df = open_df[open_df["symbol"].map(
+            lambda x: market_of(str(x)) in markets)]
+        skipped = before - len(open_df)
+        if skipped:
+            logging.info(f"price_alerts: {skipped} signal(s) held back — their "
+                         f"market is not in this slot ({sorted(markets)}). They "
+                         f"are graded by the slot that follows their own close.")
+        if open_df.empty:
+            logging.info("price_alerts: nothing to evaluate for this slot")
+            return
 
     now = datetime.now(IST)
     logging.info(f"price_alerts: {len(open_df)} open signals to evaluate")
@@ -1259,10 +1304,20 @@ def main():
 
     try:
         # ── Price alerts FIRST ────────────────────────────────────────────────
-        _safe("price_alerts", run_price_alerts, time_str)
+        # Scoped to the markets this slot is responsible for. An unrecognised
+        # slot passes None, which grades everything — the manual-run path, and
+        # deliberately unchanged so an operator running this by hand still
+        # sees the whole book.
+        _safe("price_alerts", run_price_alerts, time_str, SLOT_MARKETS.get(slot))
         _safe("markets",      run_markets,      time_str)
 
         mode = None   # set by slots that generate no signals by design
+
+        if slot == "us":
+            # Position management only. This slot exists to grade US positions
+            # after the US close; it generates nothing, because every signal
+            # engine here is built on the NSE session.
+            mode = "us position check"
 
         if slot in ("morning", "midday"):
             # Signal generation removed here on 2026-07-30. Every scan that ran

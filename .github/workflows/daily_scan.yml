@@ -29,6 +29,17 @@ on:
                                  # After the close BY DESIGN: measurement and
                                  # ledger settlement, not tradeable alerts.
     - cron: '0 4 * * 6'          # 09:30 IST — Saturday full + multibaggers
+    # US positions, graded after the US close and delivered in the IST morning.
+    #
+    # Before this, US names were graded by the 16:30 IST end-of-day slot: on
+    # 2026-08-19 "SL HIT — SMCI" arrived at 16:41 IST, 14 hours after the US
+    # close and two hours before the next US open. The grading was right; the
+    # timing made it unreadable.
+    #
+    # 03:00 UTC = 08:30 IST, Tue-Sat so it covers Mon-Fri US sessions. The US
+    # close is 20:00 UTC (summer) / 21:00 UTC (winter), so even 3h of the cron
+    # drift this repo sees still lands well after it.
+    - cron: '0 3 * * 2-6'        # 08:30 IST — US positions, after the US close
     #
     # The 30-minute intraday tier (10:00–14:30 IST, 9 runs/day) was removed on
     # 2026-07-30. It fired unmeasured signals and nothing ever established that
@@ -116,6 +127,7 @@ jobs:
             "0 5 * * 1-5")  SLOT=midday  ;;
             "0 11 * * 1-5") SLOT=eod     ;;
             "0 4 * * 6")    SLOT=weekend ;;
+            "0 3 * * 2-6")  SLOT=us      ;;
             *)              SLOT=""      ;;
           esac
           if [ -n "$SLOT" ]; then
