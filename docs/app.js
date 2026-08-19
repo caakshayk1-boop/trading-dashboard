@@ -2343,6 +2343,11 @@ var TV_ALIASES = (function () {
       if (document.querySelector('#alertTable tbody')) renderAlerts();
     };
 
+    // How many ledger rows go into the DOM before the reader asks for more.
+    // A budget, not an editorial decision — see the note inside renderAlerts.
+    var ALERT_RENDER_CAP = 60;
+    var alertsShowAll = false;
+
     function renderAlerts(){
       var tbody = document.querySelector('#alertTable tbody');
       if (!tbody) return;
@@ -2375,8 +2380,25 @@ var TV_ALIASES = (function () {
         return true;
       });
 
+      // ── Render cap ───────────────────────────────────────────────────────
+      // The FILTERED set is already complete at this point; this caps only how
+      // many are put in the DOM at once.
+      //
+      // Measured 2026-08-19: #alerts rendered 187 rows x 17 columns = 5,178
+      // nodes, 42% of the page's 12,234. On a phone that is the difference
+      // between a page that scrolls and one that stutters.
+      //
+      // Capping is only acceptable because nothing is hidden QUIETLY. The
+      // count line below always states the true total, the button says exactly
+      // how many are not shown, and every filter still runs across all of
+      // them — a search for a symbol on row 400 finds it whether or not the
+      // table has been expanded. The stock screen already works this way for
+      // the same reason.
+      var shown = alertsShowAll ? rows : rows.slice(0, ALERT_RENDER_CAP);
+      var hiddenCount = rows.length - shown.length;
+
       // 800 rows of innerHTML is fine; building them one node at a time is not.
-      var html = rows.map(function(a){
+      var html = shown.map(function(a){
         var badgeTxt = a.badge === 'win' ? '✅ Win' : a.badge === 'loss' ? '❌ Stop'
                      : a.badge === 'open' ? '🔵 Open' : a.badge === 'expired' ? '⏱ Expired'
                      : (a.status || '—');
@@ -2431,9 +2453,24 @@ var TV_ALIASES = (function () {
       } else {
         why = 'Nothing matches those filters.';
       }
+      // The "and N more" row is part of the table, not a control beside it, so
+      // it cannot be scrolled past without being seen.
+      if (html && hiddenCount > 0){
+        html += '<tr><td colspan="17" style="padding:18px;text-align:center">' +
+          '<button type="button" class="btn" id="alertShowAll">' +
+          'Show all ' + rows.length + ' signals</button>' +
+          '<div class="mono-dim" style="font-size:11px;margin-top:6px">' +
+          hiddenCount + ' more in this filter — every one of them is already ' +
+          'searchable and counted above</div></td></tr>';
+      }
       tbody.innerHTML = html ||
-        '<tr><td colspan="15" style="padding:26px;text-align:center;color:var(--dim)">' +
+        '<tr><td colspan="17" style="padding:26px;text-align:center;color:var(--dim)">' +
         why + '</td></tr>';
+      var showAll = document.getElementById('alertShowAll');
+      if (showAll) showAll.addEventListener('click', function(){
+        alertsShowAll = true;
+        renderAlerts();
+      });
       var clear = document.getElementById('archClear');
       if (clear) clear.addEventListener('click', function(ev){ ev.preventDefault(); selectDay(null); });
 

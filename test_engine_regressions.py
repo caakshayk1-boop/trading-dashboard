@@ -455,14 +455,26 @@ def test_alert_table_columns_match():
     check("server-rendered alert row found", row is not None)
     n_row = len(re.findall(r'<td[ >]', row.group(1)))
 
-    live = re.search(r"var html = rows\.map\(function\(a\)\{(.*?)\}\)\.join", js, re.S)
+    # `shown`, not `rows`: renderAlerts caps how many rows reach the DOM
+    # (ALERT_RENDER_CAP) and maps the capped slice. Matching either name keeps
+    # this from breaking on a rename that changes no columns.
+    live = re.search(r"var html = (?:rows|shown)\.map\(function\(a\)\{(.*?)\}\)\.join", js, re.S)
     check("live alert row renderer found", live is not None)
+    if live is None:
+        return          # already reported; groups below would raise
     body = live.group(1)
     n_live = body.count("'<td") + body.count("pnlCell(a)")
 
     check("alert table columns agree across all three renderers",
           n_head == n_row == n_live,
           f"thead={n_head} ssr={n_row} live={n_live}")
+
+    # Any full-width row in that tbody must span the whole table. The empty
+    # state sat at colspan=15 on a 17-column table, so its message rendered
+    # short of the right-hand edge.
+    for span in re.findall(r'colspan="(\d+)"', js):
+        check(f"full-width alert row spans all {n_head} columns",
+              int(span) == n_head, f"found colspan={span}")
 
 
 def test_docs_files_have_all_four_allow_lists():

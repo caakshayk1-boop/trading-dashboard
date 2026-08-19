@@ -4104,7 +4104,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .foot-legal{display:grid;grid-template-columns:1.4fr 1.4fr 1fr;gap:28px;
   max-width:1400px;margin:34px auto 0;padding:26px var(--gut) 0;
   border-top:1px solid var(--line)}
-.foot-legal h4{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+.foot-legal h4,.foot-legal .fh4{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
   color:var(--lime);margin:0 0 9px}
 .foot-legal p{font-size:12.5px;line-height:1.65;color:var(--dim);margin:0}
 .foot-legal strong{color:var(--muted)}
@@ -4193,7 +4193,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .sheet-flags p:last-child{margin-bottom:0}
 /* "Why this fired" — the engine's own gates, rendered from metadata. */
 .sheet-why{border:1px solid var(--line2);border-radius:8px;padding:14px 16px;margin-bottom:20px}
-.sheet-why h4{margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
+.sheet-why h4,.sheet-why .fh4{margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:1.2px;
   text-transform:uppercase;color:var(--dim)}
 .wy-p{margin:0 0 10px;font-size:12.5px;line-height:1.65;color:var(--muted)}
 .wy-p:last-child{margin-bottom:0}
@@ -4679,6 +4679,40 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sr-interp{color:var(--muted);border-left:2px solid var(--line2);padding-left:10px}
 .sr-x .sr-why dt{color:var(--gold)}
 .sr-read{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px}
+/* ── Tap targets ─────────────────────────────────────────────────────────
+   WCAG 2.2 AA 2.5.8 asks for 24x24 CSS px. Measured on a 375px viewport,
+   64 controls were under it — mostly 16px-tall inline links in the footer
+   and the provenance strips.
+
+   Applied on POINTER-COARSE only. On a mouse a 16px link is perfectly
+   clickable, and padding every inline link on desktop would loosen the
+   dense, deliberate typography this page is built on. The problem is a
+   finger, so the fix is scoped to fingers.
+
+   inline-flex + min-height rather than padding: padding on an inline element
+   does not grow its hit box vertically in a way that survives line-wrapping,
+   which is exactly how these ended up at 16px in the first place. */
+@media (pointer: coarse){
+  a:not(.btn):not(.readmore),
+  summary,
+  .nav a,
+  .prov a,
+  footer a{
+    min-height:24px;
+    display:inline-flex;
+    align-items:center;
+  }
+  /* Anchors that wrap mid-sentence must stay inline, or a link inside a
+     paragraph becomes a block and breaks the line it sits in. */
+  p a, li a, .sdesc a, .sr-s a{
+    display:inline;
+    min-height:0;
+  }
+}
+/* The visually-hidden helper the new <label> uses. Present already for the
+   honeypot fields; named here because a label must be reachable, not gone. */
+.hp{position:absolute!important;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap}
 @media(max-width:560px){.dh-src{margin-left:0;width:100%}}
 /* Provenance strip. Every weekly artefact on this page showed its RESULT and
    not its VINTAGE, so "ran and found the same funds" and "did not run at all"
@@ -4962,7 +4996,7 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
 .sd-sc .conf{font-family:var(--mono);font-size:9.5px;color:var(--gold);margin-top:5px;display:block}
 
 .sd-blk{margin:0 0 20px}
-.sd-blk h4{font-family:var(--mono);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;
+.sd-blk h4,.sd-blk .fh4{font-family:var(--mono);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;
   color:var(--lime);margin:0 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
 .sd-blk p{font-size:13px;line-height:1.65;color:var(--muted);margin:0}
 
@@ -5056,7 +5090,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 
 /* ═══════════════════ 04 PORTFOLIO ═══════════════════ */
 .formbox{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:16px}
-.formbox h4{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+.formbox h4,.formbox .fh4{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
   color:var(--lime);margin-bottom:14px;font-weight:600}
 .frow{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:9px}
 .frow input{background:var(--bg);border:1px solid var(--line);color:var(--text);padding:10px 13px;
@@ -5271,7 +5305,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:20px;background:var(--bg2)}
 .foot-in{max-width:1400px;margin:0 auto;padding:clamp(40px,6vw,70px) var(--gut);
   display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;align-items:flex-end}
-.foot-in h4{font-size:clamp(24px,4vw,42px);font-weight:800;letter-spacing:-1.8px;line-height:1}
+.foot-in h4,.foot-in .fh4{font-size:clamp(24px,4vw,42px);font-weight:800;letter-spacing:-1.8px;line-height:1}
 .foot-in h4 b{color:var(--lime)}
 .foot-in .m{font-family:var(--mono);font-size:11px;color:var(--dim);line-height:2;text-align:right}
 @media(max-width:640px){.foot-in .m{text-align:left}}
@@ -5340,7 +5374,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 .brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .brk-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
-.brk-card h4{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;
+.brk-card h4,.brk-card .fh4{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;
   letter-spacing:1.2px;margin-bottom:12px}
 .brk-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
   padding:8px 0;border-top:1px solid var(--line);font-size:12.5px}
@@ -6147,6 +6181,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="keybox" id="keybox">
     <span>Editing the book needs your key. Signed in for 48 hours, on this device only — nothing is stored in the browser.</span>
+    <label for="keyInput" class="hp">Edit key</label>
     <input type="password" id="keyInput" placeholder="Edit key" autocomplete="off">
     <button type="button" class="btn btn-sm" id="keySave">Unlock</button>
   </div>
@@ -6183,7 +6218,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   <div class="formbox rv">
-    <h4>+ Add position manually</h4>
+    <h3 class="fh4">+ Add position manually</h3>
     <form action="/tracker/add" method="post" id="posAddForm">
       <div class="frow">
         <input type="text" name="symbol" aria-label="Symbol" placeholder="Symbol e.g. RELIANCE.NS" required>
@@ -8551,7 +8586,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <footer>
   <div class="foot-in">
     <div>
-      <h4>THE DAILY <b>SIGNAL</b></h4>
+      <h3 class="fh4">THE DAILY <b>SIGNAL</b></h3>
       <p style="color:var(--muted);font-size:13.5px;margin-top:12px;max-width:38ch">
         Built by Akshay Kothari. Rebuilt every morning at 6 AM IST by a machine that does not sleep.</p>
     </div>
@@ -8563,7 +8598,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <div class="foot-legal">
     <div>
-      <h4>What this is, and is not</h4>
+      <h3 class="fh4">What this is, and is not</h3>
       <p>A public log of signals generated by my own engine and the trades I take against
         them. Every signal is recorded when it fires and scored when it closes, wins and
         losses alike. <strong>It is not investment advice and I am not a SEBI-registered
@@ -8571,7 +8606,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         do take the whole position; size accordingly.</p>
     </div>
     <div>
-      <h4>Your email</h4>
+      <h3 class="fh4">Your email</h3>
       <p>If you subscribe, your address is stored on my own database and used for one
         thing: sending the daily edition. It is never sold, never shared, and never passed
         to an ad network. This page loads no analytics and no tracking scripts of any kind,
@@ -8583,7 +8618,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <a href="mailto:ca.akkothari@gmail.com">ca.akkothari@gmail.com</a>.</p>
     </div>
     <div>
-      <h4>Reach me</h4>
+      <h3 class="fh4">Reach me</h3>
       <p><a href="https://askakshay.com" target="_blank" rel="noopener">askakshay.com</a> ·
          <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn</a> ·
          <a href="mailto:ca.akkothari@gmail.com">Email</a><br>
