@@ -53,6 +53,7 @@ jobs:
           python test_sip_engine.py
           python test_ipo_tracker.py
           python test_signal_history.py
+          python test_smart_reads.py
 
       - name: Lint the page script
         run: |

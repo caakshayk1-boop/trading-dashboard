@@ -4663,6 +4663,22 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   letter-spacing:1px;text-transform:uppercase}
 .dh-grid dd{color:var(--muted);font-family:var(--mono);margin-top:2px}
 .dh-note{margin-top:10px;font-size:12px;color:var(--gold);line-height:1.5}
+/* ── Smart Read structure ────────────────────────────────────────────────
+   FACT and INTERPRETATION are visually distinct, not just labelled, because
+   a reader skimming will not read the label. What the article SAYS carries
+   the page's normal text colour; what a model made of it is dimmer, indented
+   behind a rule, and captioned. This is the only place on the site where a
+   model writes interpretation, and it must never be mistakable for reporting. */
+.sr-x{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.sr-x dt{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.sr-x dd{margin:0 0 12px;font-size:13px;line-height:1.55}
+.sr-x dd:last-child{margin-bottom:0}
+.sr-fact{color:var(--text)}
+.sr-fact li{margin-bottom:5px}
+.sr-interp{color:var(--muted);border-left:2px solid var(--line2);padding-left:10px}
+.sr-x .sr-why dt{color:var(--gold)}
+.sr-read{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px}
 @media(max-width:560px){.dh-src{margin-left:0;width:100%}}
 /* Provenance strip. Every weekly artefact on this page showed its RESULT and
    not its VINTAGE, so "ran and found the same funds" and "did not run at all"
@@ -6954,6 +6970,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         {%- else %}{{ r.title }}{% endif -%}
       </h3>
       <p class="sr-s">{{ r.summary }}</p>
+
+      {# Present only on reads that passed BOTH gates — the shared truthfulness
+         gate in brief_engine (no number or name absent from the source) and
+         the recommendation gate in smart_reads.py. A read that failed either
+         renders exactly as it always did, so a rejection costs its prose and
+         nothing else. #}
+      {% if r.smart %}
+      <dl class="sr-x">
+        <dt>What happened &middot; from the article</dt>
+        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
+          {% for b in r.smart.what_happened %}<li>{{ b }}</li>{% endfor %}
+        </ul></dd>
+        {% if r.smart.why_it_matters %}
+        <div class="sr-why">
+          <dt>Why it matters &middot; interpretation</dt>
+          <dd class="sr-interp">{{ r.smart.why_it_matters }}</dd>
+        </div>
+        {% endif %}
+        {% if r.smart.what_to_watch %}
+        <dt>What to watch &middot; interpretation</dt>
+        <dd class="sr-interp">{{ r.smart.what_to_watch }}</dd>
+        {% endif %}
+      </dl>
+      <p class="sr-read">{{ r.smart.read_seconds }} sec read &middot; no recommendation, by design</p>
+      {% endif %}
+
       {% if r.link %}<a class="readmore" href="{{ r.link }}" target="_blank" rel="noopener">Read more &rarr;</a>{% endif %}
     </article>
     {% endfor %}

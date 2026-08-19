@@ -293,8 +293,19 @@ def generate() -> None:
     # fetches — cheap next to the ~700 NAV downloads the fund screen needs, so
     # unlike that one this can build inside the daily job.
     smart_reads = fetch_smart_reads()
+    # The "so what" layer. Injected AI, so no key means the reads render
+    # exactly as they always did rather than the section failing.
+    try:
+        import smart_reads as _sr
+        from newspaper import groq_complete as _groq, GROQ_KEY as _gk
+        _srs = _sr.enrich(smart_reads, _groq if _gk else None)
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  smart read structuring skipped: {e}")
+        _srs = {"structured": 0, "rejected": 0, "attempted": 0, "total": len(smart_reads)}
     print(f"[generate] Smart reads: {len(smart_reads)} from "
-          f"{len({r['source'] for r in smart_reads})} sources")
+          f"{len({r['source'] for r in smart_reads})} sources · "
+          f"{_srs['structured']} structured, {_srs['rejected']} gate-rejected "
+          f"of {_srs['attempted']} attempted")
 
     podcasts = get_podcasts(build_if_missing=True)
     print(f"[generate] Podcasts: {len(podcasts.get('episodes', []))} episodes "
