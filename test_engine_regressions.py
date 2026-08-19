@@ -499,9 +499,16 @@ def test_alert_table_columns_match():
     # Any full-width row in that tbody must span the whole table. The empty
     # state sat at colspan=15 on a 17-column table, so its message rendered
     # short of the right-hand edge.
-    for span in re.findall(r'colspan="(\d+)"', js):
-        check(f"full-width alert row spans all {n_head} columns",
-              int(span) == n_head, f"found colspan={span}")
+    # Scoped to renderAlerts. app.js has other tables with other column counts
+    # — the stock screen's empty state is legitimately 18 — and checking every
+    # colspan in the file against the ALERT table's width fails on unrelated,
+    # correct code.
+    ra = re.search(r"function renderAlerts\(\)\{(.*?)\n    \}", js, re.S)
+    check("renderAlerts found", ra is not None)
+    if ra:
+        for span in re.findall(r'colspan="(\d+)"', ra.group(1)):
+            check(f"full-width alert row spans all {n_head} columns",
+                  int(span) == n_head, f"found colspan={span}")
 
 
 def test_docs_files_have_all_four_allow_lists():

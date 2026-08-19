@@ -4847,6 +4847,54 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .thm:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
 .thm-i{display:block;transition:transform var(--m-std) var(--ease)}
 .thm:hover .thm-i{transform:rotate(18deg)}
+/* Watchlist star. Quiet until set — a column of bright stars would compete
+   with the numbers, which are the point of the table. */
+.wcell{width:30px;padding-left:4px!important;padding-right:0!important}
+.wstar{background:none;border:0;cursor:pointer;font-size:14px;line-height:1;
+  color:var(--line2);padding:2px 4px;border-radius:4px;
+  transition:color var(--m-micro) var(--ease),transform var(--m-micro) var(--ease)}
+.wstar:hover{color:var(--muted);transform:scale(1.15)}
+.wstar.on{color:var(--gold)}
+.wstar:focus-visible{outline:2px solid var(--lime);outline-offset:1px}
+
+.wbar{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;
+  margin:0 0 var(--s3);padding:var(--s3) var(--s4);border:1px solid var(--line);
+  border-left:2px solid var(--gold);border-radius:6px;background:var(--surface)}
+.wbar-n{font-family:var(--mono);font-size:var(--t-label);color:var(--muted);
+  letter-spacing:1px;text-transform:uppercase;margin-right:auto}
+.btn.ghost{background:none;border-color:transparent;color:var(--dim)}
+.btn.ghost:hover{color:var(--text);border-color:var(--line)}
+
+/* Comparison drawer. A drawer rather than a modal: the reader is comparing
+   against the table behind it, and a modal that hides the source makes them
+   close it to check. */
+.cmp-back{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;
+  opacity:0;pointer-events:none;transition:opacity var(--m-std) var(--ease)}
+.cmp-back.on{opacity:1;pointer-events:auto}
+.cmp{position:fixed;top:0;right:0;bottom:0;width:min(880px,96vw);z-index:901;
+  background:var(--overlay);border-left:1px solid var(--line2);
+  transform:translateX(100%);transition:transform var(--m-panel) var(--ease);
+  overflow-y:auto;padding:var(--s6) var(--s6) var(--s9)}
+.cmp.on{transform:translateX(0)}
+.cmp-h{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
+.cmp-h h3{font-size:var(--t-h2);font-weight:600}
+.cmp-x{margin-left:auto;background:none;border:1px solid var(--line);
+  color:var(--muted);border-radius:6px;width:28px;height:28px;cursor:pointer}
+.cmp-x:hover{color:var(--text);border-color:var(--line2)}
+.cmp table{width:100%;border-collapse:collapse;font-size:var(--t-body-sm)}
+.cmp th,.cmp td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right}
+.cmp th:first-child,.cmp td:first-child{text-align:left;color:var(--dim);
+  font-family:var(--mono);font-size:var(--t-label);letter-spacing:.6px;
+  text-transform:uppercase;white-space:nowrap}
+.cmp thead th{color:var(--text);font-weight:600;font-size:var(--t-body);
+  text-transform:none;letter-spacing:0;font-family:var(--sans)}
+/* The win marker is a glyph AND a colour — a reader who cannot separate the
+   two must still see who won a row. */
+.cmp .win{color:var(--lime);font-weight:600}
+.cmp .win::after{content:" \2713";font-size:11px}
+.cmp-sum{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--line2)}
+.cmp-sum li{list-style:none;font-size:var(--t-body-sm);line-height:1.7;color:var(--muted)}
+.cmp-sum b{color:var(--text)}
 /* Findings. Cards rather than a table: each is a short argument, not a row. */
 .fnd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
 .fnd{padding:16px 18px}
@@ -5798,6 +5846,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <body>
 <a class="skip" href="#{{ nav[0].id }}">Skip to content</a>
+<div class="cmp-back" id="cmpBack"></div>
+<aside class="cmp" id="cmpPanel" role="dialog" aria-modal="true" aria-label="Comparison"></aside>
 <div class="grain"></div>
 <div class="vgrid"></div>
 <div class="progress" id="prog"></div>
@@ -6733,8 +6783,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   <div class="tw tw-tall rv">
+    {# Watchlist and comparison. Hidden until something is watched — an empty
+       toolbar teaches the reader there is nothing here. #}
+    <div class="wbar rv" id="wBar" style="display:none">
+      <span class="wbar-n" id="wCount"></span>
+      <button type="button" class="btn btn-sm" id="wOnly">Show only watched</button>
+      <button type="button" class="btn btn-sm" id="wCompare">Compare</button>
+      <button type="button" class="btn btn-sm ghost" id="wClear">Clear</button>
+    </div>
+
     <table class="t" id="scrTable" style="min-width:1180px">
       <thead><tr>
+        <th scope="col" class="wcell"><span class="hp">Watch</span></th>
         <th scope="col" class="sortable" data-k="sym">Company</th>
         <th scope="col" class="num sortable" data-k="price">Price</th>
         <th scope="col" class="num sortable" data-k="r1y">1Y</th>
@@ -6767,6 +6827,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         {% for s in stock_screen.rows[:25] %}
         {% set r1y = s.get('r1y') %}
         <tr data-sym="{{ s.sym }}">
+          {# Placeholder. The live renderer replaces this tbody wholesale and
+             draws a real star; without a matching cell here every column after
+             it sits under the wrong heading until screen.json resolves. #}
+          <td class="wcell"></td>
           <td><strong class="sym">{{ s.sym }}</strong><br>
               <span class="mono-dim">{{ s.get('name', '')[:34] }}</span></td>
           <td class="num">{{ n(s.get('price')) }}</td>

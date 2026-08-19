@@ -72,7 +72,7 @@ jobs:
       # The SWP drawdown engine, extracted from the shipped static/app.js so
       # it cannot pass against a copy that has drifted from what the page runs.
       - name: SWP edge cases
-        run: node --test test_swp.mjs
+        run: node --test test_swp.mjs test_compare.mjs
 
       # Installed before generate so BOTH the pre-publish gate and the
       # post-deploy check can use it. smoke_runner.cjs is Node, not Python —

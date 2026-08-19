@@ -4179,6 +4179,10 @@ var TV_ALIASES = (function () {
     var PAGE = 60;
     var ROWS = [], view = [], shown = 0;
     var sortKey = 'comp', sortDir = -1, preset = 'all', loaded = false, loading = false;
+    // Filter state for the watchlist view. Not persisted: a reader who
+    // returns tomorrow should see the whole screen, not silently be looking
+    // at nine stocks and wondering where the other 741 went.
+    var watchOnly = false;
 
     /* Ranking mode. `mode` names which composite the Rank column shows and
        sorts by — the components are identical, only the weights differ. See
@@ -4264,6 +4268,181 @@ var TV_ALIASES = (function () {
       return '';
     }
 
+    /* ═══════ watchlist ═══════
+       localStorage, deliberately. A watchlist is one person's list on one
+       machine; putting it behind an API would mean a 13th serverless function
+       on a project that is AT the Hobby plan's cap of 12, plus an account
+       system, to store nine ticker symbols.
+
+       Stored as symbols only, never as row data — prices go stale, the screen
+       rebuilds weekly, and a watchlist holding its own copy of Tuesday's
+       numbers would quietly show a price nobody can reconcile. */
+    var WATCH_KEY = 'aa-watch';
+
+    function watchRead(){
+      try {
+        var v = JSON.parse(localStorage.getItem(WATCH_KEY) || '[]');
+        return Array.isArray(v) ? v.filter(function(x){ return typeof x === 'string'; }) : [];
+      } catch (e){ return []; }        // private mode, or someone edited it
+    }
+
+    function watchWrite(list){
+      try { localStorage.setItem(WATCH_KEY, JSON.stringify(list.slice(0, 200))); }
+      catch (e){ /* quota or private mode — the toggle still works this session */ }
+    }
+
+    function watchHas(sym){ return watchRead().indexOf(sym) !== -1; }
+
+    function watchToggle(sym){
+      var list = watchRead();
+      var i = list.indexOf(sym);
+      if (i === -1) list.push(sym); else list.splice(i, 1);
+      watchWrite(list);
+      return i === -1;
+    }
+
+    /* ═══════ comparison ═══════
+       "Where each wins", computed rather than asserted.
+
+       DIRECTION is the whole difference between a comparison and a table. A
+       lower P/E is better and a lower ROCE is not, so a naive max() would
+       hand the win to whichever company is worst on half the metrics. Every
+       row here declares which way is better. */
+    var CMP_METRICS = [
+      { k: 'comp',      label: 'Composite',      dir: 1,  fmt: 's' },
+      { k: 'q',         label: 'Quality',        dir: 1,  fmt: 's' },
+      { k: 'g',         label: 'Growth',         dir: 1,  fmt: 's' },
+      { k: 'v',         label: 'Value',          dir: 1,  fmt: 's' },
+      { k: 'tech',      label: 'Technical',      dir: 1,  fmt: 's' },
+      { k: 'roce',      label: 'ROCE',           dir: 1,  fmt: '%' },
+      { k: 'roe',       label: 'ROE',            dir: 1,  fmt: '%' },
+      { k: 'rev_cagr',  label: 'Revenue CAGR',   dir: 1,  fmt: '%' },
+      { k: 'piotroski', label: 'F-score',        dir: 1,  fmt: 'n' },
+      { k: 'pe',        label: 'P/E',            dir: -1, fmt: 'n' },
+      { k: 'de',        label: 'Debt / equity',  dir: -1, fmt: 'n' },
+      { k: 'r1y',       label: '1-year return',  dir: 1,  fmt: '%' },
+      { k: 'r3m',       label: '3-month return', dir: 1,  fmt: '%' },
+      { k: 'rsi',       label: 'RSI',            dir: 0,  fmt: 'n' }
+    ];
+
+    /* Winner per metric across the selected rows.
+       Returns the winning symbol, or null when it cannot be decided — a tie,
+       or fewer than two companies with a readable value. Declining to pick is
+       the point: a "winner" chosen from one company that happened to report
+       is not a comparison. */
+    function cmpWinner(rows, m){
+      if (!m.dir) return null;                      // RSI has no better end
+      var vals = rows.map(function(r){
+        var v = r ? r[m.k] : null;
+        // Number.isFinite rejects null, undefined, strings, NaN and Infinity
+        // in one call — and a missing value must never be read as a zero,
+        // which would hand the win to whoever failed to report.
+        return Number.isFinite(v) ? v : null;
+      });
+      var have = vals.filter(function(v){ return v !== null; });
+      if (have.length < 2) return null;
+      var best = m.dir > 0 ? Math.max.apply(null, have) : Math.min.apply(null, have);
+      var winners = [];
+      vals.forEach(function(v, i){ if (v === best) winners.push(rows[i].sym); });
+      return winners.length === 1 ? winners[0] : null;   // a tie is not a win
+    }
+
+    /* Tally, so the drawer can say who wins on what rather than making the
+       reader count coloured cells. */
+    function cmpTally(rows){
+      var out = {};
+      rows.forEach(function(r){ out[r.sym] = { wins: 0, on: [] }; });
+      CMP_METRICS.forEach(function(m){
+        var w = cmpWinner(rows, m);
+        if (w && out[w]){ out[w].wins++; out[w].on.push(m.label); }
+      });
+      return out;
+    }
+
+    function cmpFmt(v, kind){
+      if (!Number.isFinite(v)) return '—';
+      if (kind === '%') return fmt(v, '%');
+      if (kind === 's') return String(Math.round(v));
+      return fmt(v);
+    }
+
+    function cmpRender(rows){
+      var tally = cmpTally(rows);
+      var head = '<tr><th>Metric</th>' + rows.map(function(r){
+        return '<th>' + esc(r.sym) + '</th>';
+      }).join('') + '</tr>';
+
+      var body = CMP_METRICS.map(function(m){
+        var w = cmpWinner(rows, m);
+        return '<tr><td>' + esc(m.label) + '</td>' + rows.map(function(r){
+          var v = Number.isFinite(r[m.k]) ? r[m.k] : null;
+          return '<td class="' + (w && w === r.sym ? 'win' : '') + '">'
+               + cmpFmt(v, m.fmt) + '</td>';
+        }).join('') + '</tr>';
+      }).join('');
+
+      var sum = rows.map(function(r){
+        var t = tally[r.sym];
+        if (!t.wins) {
+          return '<li><b>' + esc(r.sym) + '</b> does not lead on any measured metric.</li>';
+        }
+        return '<li><b>' + esc(r.sym) + '</b> leads on ' + t.wins + ' of '
+             + CMP_METRICS.length + ' — ' + esc(t.on.join(', ')) + '.</li>';
+      }).join('');
+
+      return '<div class="cmp-h"><h3>Where each wins</h3>'
+        + '<button type="button" class="cmp-x" id="cmpX" aria-label="Close">&times;</button></div>'
+        + '<div class="tw"><table>' + '<thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>'
+        + '<ul class="cmp-sum">' + sum + '</ul>'
+        + '<p class="sdesc" style="margin-top:16px;max-width:70ch">A tie is not a win, and a '
+        + 'metric only one company reports is not compared &mdash; both are left blank rather '
+        + 'than awarded. RSI has no better end, so it is shown and not scored. '
+        + 'Lower is better for P/E and debt-to-equity; higher for everything else.<br><br>'
+        + 'A comparison of published numbers. Not a recommendation.</p>';
+    }
+
+    function cmpOpen(syms){
+      var rows = syms.map(function(sy){
+        return ROWS.filter(function(r){ return r.sym === sy; })[0];
+      }).filter(Boolean).slice(0, 5);
+      if (rows.length < 2) return;
+
+      var back = el('cmpBack'), panel = el('cmpPanel');
+      if (!back || !panel) return;
+      panel.innerHTML = cmpRender(rows);
+      // No reveal() here: cmpRender emits no .rv markup, and reveal lives in a
+      // different closure. Nothing injected by this drawer is scroll-revealed.
+      back.classList.add('on');
+      panel.classList.add('on');
+      var x = el('cmpX');
+      if (x) x.addEventListener('click', cmpClose);
+      // Focus moves into the drawer, or a keyboard reader is left behind on
+      // the table underneath it.
+      if (x) x.focus();
+    }
+
+    function cmpClose(){
+      var back = el('cmpBack'), panel = el('cmpPanel');
+      if (back) back.classList.remove('on');
+      if (panel) panel.classList.remove('on');
+      var b = el('wCompare');
+      if (b) b.focus();
+    }
+
+    function watchSync(){
+      var list = watchRead();
+      var bar = el('wBar');
+      if (!bar) return;
+      bar.style.display = list.length ? 'flex' : 'none';
+      var c = el('wCount');
+      if (c) c.textContent = list.length + (list.length === 1 ? ' watched' : ' watched');
+      var cmp = el('wCompare');
+      if (cmp){
+        cmp.disabled = list.length < 2;
+        cmp.textContent = list.length < 2 ? 'Compare (pick 2+)' : 'Compare ' + Math.min(list.length, 5);
+      }
+    }
+
     function rowHtml(r){
       var tags = (r.setup && r.setup.tags) || [];
       var tagHtml = tags.length
@@ -4273,6 +4452,12 @@ var TV_ALIASES = (function () {
         : '<span class="mono-dim">—</span>';
       var r1y = num(r, 'r1y');
       return '<tr data-sym="' + esc(r.sym) + '" tabindex="0">'
+        // Watch toggle. A button, not a click-anywhere row handler — the row
+        // already opens the company sheet, and one target must not do two
+        // things depending on where the pointer landed.
+        + '<td class="wcell"><button type="button" class="wstar' + (watchHas(r.sym) ? ' on' : '')
+        + '" data-w="' + esc(r.sym) + '" aria-pressed="' + (watchHas(r.sym) ? 'true' : 'false')
+        + '" aria-label="Watch ' + esc(r.sym) + '" title="Watch">&#9733;</button></td>'
         + '<td><strong class="sym">' + esc(r.sym) + '</strong><br>'
         + '<span class="mono-dim">' + esc((r.name || '').slice(0, 34)) + '</span></td>'
         + '<td class="num">' + fmt(num(r, 'price')) + '</td>'
@@ -4369,12 +4554,19 @@ var TV_ALIASES = (function () {
     function paint(append){
       if (!append){
         view = ROWS.filter(passes).sort(cmp);
+        // The watch filter runs AFTER the others, so "show only watched"
+        // narrows what is already on screen rather than replacing it — a
+        // reader who has a sector filter set expects both to hold.
+        if (watchOnly){
+          var w = watchRead();
+          view = view.filter(function(r){ return w.indexOf(r.sym) !== -1; });
+        }
         shown = 0;
         body.innerHTML = '';
       }
       var slice = view.slice(shown, shown + PAGE);
       if (!view.length){
-        body.innerHTML = '<tr><td colspan="17" class="scr-empty">'
+        body.innerHTML = '<tr><td colspan="18" class="scr-empty">'
           + 'No company in the screen matches that. Try clearing a filter.</td></tr>';
       } else {
         body.insertAdjacentHTML('beforeend', slice.map(rowHtml).join(''));
@@ -4999,6 +5191,55 @@ var TV_ALIASES = (function () {
     }
 
     function wire(){
+      // ── watchlist + comparison ──────────────────────────────────────────
+      // Delegated on the tbody: rows are replaced wholesale on every sort,
+      // filter and search, so a listener bound to each star would be gone the
+      // first time anyone typed.
+      var body = el('scrBody');
+      if (body) body.addEventListener('click', function(ev){
+        var b = ev.target.closest ? ev.target.closest('[data-w]') : null;
+        if (!b) return;
+        // The row opens the company sheet; the star must not also do that.
+        ev.stopPropagation();
+        var on = watchToggle(b.getAttribute('data-w'));
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        watchSync();
+        if (watchOnly && !on) paint(false);   // it just left the filtered view
+      });
+
+      var only = el('wOnly');
+      if (only) only.addEventListener('click', function(){
+        watchOnly = !watchOnly;
+        this.textContent = watchOnly ? 'Show all' : 'Show only watched';
+        this.classList.toggle('on', watchOnly);
+        paint(false);
+      });
+
+      var cmpBtn = el('wCompare');
+      if (cmpBtn) cmpBtn.addEventListener('click', function(){
+        // Five is the cap: past that the columns stop being readable and the
+        // comparison stops being one.
+        cmpOpen(watchRead().slice(0, 5));
+      });
+
+      var clr = el('wClear');
+      if (clr) clr.addEventListener('click', function(){
+        watchWrite([]);
+        watchOnly = false;
+        var o = el('wOnly');
+        if (o){ o.textContent = 'Show only watched'; o.classList.remove('on'); }
+        watchSync();
+        paint(false);
+      });
+
+      var back = el('cmpBack');
+      if (back) back.addEventListener('click', cmpClose);
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape') cmpClose();
+      });
+      watchSync();
+
       var rerender = debounce(function(){ paint(false); }, 180);
       el('scrSearch').addEventListener('input', rerender);
       el('scrSector').addEventListener('change', function(){ paint(false); });
