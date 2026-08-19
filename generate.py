@@ -624,6 +624,32 @@ def generate() -> None:
         # correlation-aware heat on the page; both would otherwise need a
         # Yahoo call from the browser, which is not available to it.
         "open_context": open_ctx,
+        # New listings and data health, so the bot can answer /listings and
+        # /health without a second artefact to write, allow-list in four places
+        # and keep in sync. Summaries only — the full tables stay on the page.
+        "ipos": {
+            "count": ipos.get("count", 0),
+            "months": ipos.get("months"),
+            "built_on": ipos.get("built_on"),
+            "summary": ipos.get("summary") or {},
+            # Top movers both ways, so a phone reply is useful without
+            # shipping all 32 rows through Telegram.
+            "rows": sorted(ipos.get("rows") or [],
+                           key=lambda r: r.get("since_listing_pct") or 0,
+                           reverse=True)[:5],
+            "worst": sorted(ipos.get("rows") or [],
+                            key=lambda r: r.get("since_listing_pct") or 0)[:3],
+        },
+        "data_health": {
+            "worst": health.get("worst"),
+            "current": health.get("current"),
+            "total": health.get("total"),
+            "degraded": [
+                {"dataset": d["dataset"], "status": d["status"],
+                 "age": d["freshness_age"], "note": (d.get("notes") or [""])[0]}
+                for d in health.get("datasets", []) if not d.get("is_current")
+            ],
+        },
         "desk": {
             "chess": chess,
             "wisdom": wisdom,

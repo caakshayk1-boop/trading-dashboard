@@ -226,6 +226,25 @@ def _():
     assert not missing, f"cron slots with no market set: {sorted(missing)}"
 
 
+@check("every slot the workflow can pass is ACCEPTED by the CLI")
+def _():
+    """The gap that nearly shipped.
+
+    SLOT_MARKETS had "us" and daily_scan.yml had the cron arm, but
+    VALID_SLOTS did not — so `--slot us` raised and the 08:30 IST job would
+    have failed every single day while every other check here passed.
+
+    Asserting the three lists agree is the only version of this test that
+    would have caught it.
+    """
+    import re
+    from standalone_scan import SLOT_MARKETS, VALID_SLOTS, _requested_slot
+    wf = (ROOT / ".github" / "workflows" / "daily_scan.yml").read_text()
+    for slot in set(re.findall(r"SLOT=(\w+)", wf)) | set(SLOT_MARKETS):
+        assert slot in VALID_SLOTS, f"slot {slot!r} is not in VALID_SLOTS"
+        assert _requested_slot(["--slot", slot]) == slot, f"CLI rejected {slot!r}"
+
+
 @check("the symbols that actually alerted route to the US slot")
 def _():
     # NET, MDB and SMCI are the three that arrived at the wrong hour.

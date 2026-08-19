@@ -685,6 +685,27 @@ def _quality_fields(sig, extra_meta=None):
     q = sig.get("quality")
     if q is not None:
         meta.update(q.as_metadata())
+
+    # The chart pattern that actually fired.
+    #
+    # scanner.py detects it — _check_breakouts returns ("Weekly", "Cup &
+    # Handle") and the OHL/OLL engine names its own — and then it was dropped
+    # here. Every pattern signal reached the ledger carrying only its ENGINE
+    # ("breakout", "ohl") and the generic remark "Breakout scan — swing
+    # horizon", so the one fact that distinguishes one pattern trade from
+    # another was computed and thrown away.
+    #
+    # That made the ledger unable to answer its own central question for these
+    # engines: which patterns actually work? Expectancy could be measured per
+    # engine but never per pattern.
+    #
+    # `patterns` (plural) is kept as well as `pattern`: a name breaking out on
+    # the weekly AND monthly frame is a different setup from one breaking out
+    # on the weekly alone, and the singular field only keeps the strongest.
+    for key in ("pattern", "patterns"):
+        val = sig.get(key)
+        if val:
+            meta[key] = val
     return {
         "grade":        sig.get("grade"),
         "breakeven_wr": sig.get("breakeven_wr"),
@@ -693,7 +714,12 @@ def _quality_fields(sig, extra_meta=None):
     }
 
 
-VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full", "none"}
+# "us" is the post-US-close position pass — see SLOT_MARKETS. It MUST be
+# listed here: _requested_slot() rejects anything not in this set, so a
+# slot added to the workflow and to SLOT_MARKETS but not to this line
+# fails the job outright, every run, with a clean-looking error.
+VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full",
+               "none", "us"}
 
 
 def _requested_slot(argv=None):

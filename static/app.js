@@ -2073,7 +2073,12 @@ var TV_ALIASES = (function () {
         support1: 'Support 1', support2: 'Support 2', pe: 'P/E',
         horizon: 'Horizon', cadence: 'Scan cadence', sector: 'Sector',
         fund_score: 'Fundamental score', tech_score: 'Technical score',
-        coverage: 'Data coverage'
+        coverage: 'Data coverage',
+        // The chart pattern that fired. Detected by scanner.py all along and
+        // dropped before the ledger until 2026-08-19, so every pattern signal
+        // reached the page carrying only its ENGINE name — "breakout", "ohl" —
+        // and the reader could never learn which pattern it actually was.
+        pattern: 'Chart pattern', patterns: 'Confirmed on'
       };
       function why(a){
         var m = a.metadata || {};
@@ -2082,6 +2087,10 @@ var TV_ALIASES = (function () {
           return v !== null && v !== undefined && v !== '';
         }).map(function(k){
           var v = m[k];
+          // `patterns` is a list — "Weekly: Cup & Handle", "Monthly: Breakout".
+          // Joined rather than stringified, or it renders with a bare comma
+          // and reads as one mangled name.
+          if (Array.isArray(v)) v = v.join(' · ');
           if (typeof v === 'number') v = fmt(v, Math.abs(v) >= 100 ? 0 : 2);
           return '<div class="wy-row"><span class="wy-k">' + esc(LABELS[k]) +
                  '</span><span class="wy-v">' + esc(v) + '</span></div>';
@@ -2091,7 +2100,7 @@ var TV_ALIASES = (function () {
         var prose = m.reason || m.rationale || m.thesis || '';
         if (!rows.length && !prose) return '';
         return '<div class="sheet-why">' +
-          '<h4>Why this fired' + (m.engine ? ' · ' + esc(m.engine) : '') + '</h4>' +
+          '<h3 class="fh4">Why this fired' + (m.engine ? ' · ' + esc(m.engine) : '') + '</h3>' +
           (prose ? '<p class="wy-p">' + esc(prose) + '</p>' : '') +
           (rows.length ? '<div class="wy-grid">' + rows.join('') + '</div>' : '') +
           (m.fno ? '<p class="wy-p mono-dim">In the F&amp;O segment.</p>' : '') +

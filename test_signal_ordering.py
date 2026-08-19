@@ -167,6 +167,50 @@ def _():
     assert not ok
 
 
+@tcheck("the chart pattern survives into ledger metadata")
+def _():
+    """scanner.py detects the pattern; _quality_fields used to drop it.
+
+    Every pattern signal reached the ledger carrying only its ENGINE name, so
+    the log could measure expectancy per engine but never per pattern — which
+    is the question these engines exist to answer.
+    """
+    import inspect
+    from standalone_scan import _quality_fields
+    src = inspect.getsource(_quality_fields)
+    assert '"pattern"' in src and '"patterns"' in src, \
+        "the pattern is computed by the scanner and dropped before the ledger"
+
+
+@tcheck("_quality_fields does not invent a pattern when the engine has none")
+def _():
+    # Most engines are not pattern engines. A key present but empty would put
+    # a blank "Chart pattern" row on every signal sheet on the site.
+    from standalone_scan import _quality_fields
+    out = _quality_fields({"grade": "A"}, None)
+    assert "pattern" not in out["metadata"]
+    assert "patterns" not in out["metadata"]
+
+
+@tcheck("a pattern the engine DID name is carried through verbatim")
+def _():
+    from standalone_scan import _quality_fields
+    out = _quality_fields(
+        {"grade": "A", "pattern": "Cup & Handle",
+         "patterns": ["Weekly: Cup & Handle", "Monthly: Breakout"]}, None)
+    assert out["metadata"]["pattern"] == "Cup & Handle"
+    assert len(out["metadata"]["patterns"]) == 2
+
+
+@tcheck("the sheet renders a pattern list without mangling it")
+def _():
+    # Array.isArray -> join(' · '). Without it the list stringifies with bare
+    # commas and reads as one mangled pattern name.
+    js = (__import__("pathlib").Path(__file__).parent / "static" / "app.js").read_text()
+    assert "Array.isArray(v)) v = v.join(' · ')" in js
+    assert "pattern: 'Chart pattern'" in js
+
+
 def main() -> int:
     passed = failed = 0
     for name, args, expect_ok in CASES:
