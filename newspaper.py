@@ -4680,6 +4680,13 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sr-interp{color:var(--muted);border-left:2px solid var(--line2);padding-left:10px}
 .sr-x .sr-why dt{color:var(--gold)}
 .sr-read{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px}
+/* The F-score, broken into its nine tests. Tick, cross and dash rather than
+   colour alone — a reader who cannot distinguish red from green must still be
+   able to read which criteria failed. */
+.fsc{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:5px}
+.fsc li{font-size:12.5px;line-height:1.45;display:flex;gap:8px;align-items:baseline}
+.fsc li b{font-family:var(--mono);font-size:12px;width:12px;flex:none}
+.fsc li.mono-dim{color:var(--dim)}
 /* ── Tap targets ─────────────────────────────────────────────────────────
    WCAG 2.2 AA 2.5.8 asks for 24x24 CSS px. Measured on a 375px viewport,
    64 controls were under it — mostly 16px-tall inline links in the footer

@@ -54,6 +54,7 @@ jobs:
           python test_ipo_tracker.py
           python test_signal_history.py
           python test_smart_reads.py
+          python test_fscore.py
 
       - name: Lint the page script
         run: |
@@ -66,6 +67,11 @@ jobs:
       # sign flip before it reaches the live book instead of after.
       - name: Position tracker tests
         run: cd vercel-news && node --test
+
+      # The SWP drawdown engine, extracted from the shipped static/app.js so
+      # it cannot pass against a copy that has drifted from what the page runs.
+      - name: SWP edge cases
+        run: node --test test_swp.mjs
 
       # Installed before generate so BOTH the pre-publish gate and the
       # post-deploy check can use it. smoke_runner.cjs is Node, not Python —

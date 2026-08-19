@@ -4535,6 +4535,47 @@ var TV_ALIASES = (function () {
         + 'predicts a price.</p></div>';
     }
 
+    /* The F-score, broken into the nine tests it actually is.
+       Until 2026-08-19 the site published "4/9" and nothing else — which says
+       a company failed five tests without saying which five, so a deleveraging
+       loss-maker read identically to a profitable company diluting its
+       shareholders. The score was correct; it just was not checkable.
+
+       Labels mirror stock_screen.PIOTROSKI_CRITERIA in Piotroski's own order.
+       An "X" is a criterion this company had no data for — shown as such
+       rather than as a failure, because that is how the score is computed. */
+    var FSCORE_CRITERIA = [
+      'Return on assets is positive',
+      'Operating cash flow is positive',
+      'Return on assets improved on last year',
+      'Operating cash flow exceeds net profit',
+      'Debt fell as a share of assets',
+      'Current ratio improved',
+      'No new shares issued',
+      'Gross margin improved',
+      'Asset turnover improved'
+    ];
+
+    function fscoreBlock(r){
+      var b = r.piotroski_bits;
+      if (!b || b.length !== FSCORE_CRITERIA.length) return '';
+      var rows = FSCORE_CRITERIA.map(function(label, i){
+        var c = b.charAt(i);
+        var mark = c === '1' ? '✓' : c === '0' ? '✗' : '–';
+        var cls  = c === '1' ? 'up' : c === '0' ? 'dn' : 'mono-dim';
+        return '<li class="' + cls + '"><b>' + mark + '</b> ' + esc(label) + '</li>';
+      }).join('');
+      var na = (b.split('X').length - 1);
+      return '<div class="sd-blk"><h4>How the F-score got to '
+           + r.piotroski + '/' + r.piotroski_of + '</h4>'
+           + '<ul class="fsc">' + rows + '</ul>'
+           + (na ? '<p class="mono-dim" style="font-size:11px;margin-top:8px">'
+                 + na + ' of the nine could not be computed for this company, so '
+                 + 'they are excluded from the denominator rather than counted '
+                 + 'as failures.</p>' : '')
+           + '</div>';
+    }
+
     function swotBlock(r){
       var sw = r.swot || {};
       var map = [['s', 'Strengths', 'q-s'], ['w', 'Weaknesses', 'q-w'],
@@ -4738,6 +4779,7 @@ var TV_ALIASES = (function () {
             + 'structurally inside this history, so the EPS column is not comparable across it and '
             + 'no per-share growth rate is published for this company.</p>' : '')
         + '</div>'
+        + fscoreBlock(r)
         + swotBlock(r)
         + aiBlock(r)
         + peerBlock(r)

@@ -596,61 +596,65 @@ def piotroski(ys: list[dict]) -> dict:
     balance sheet today (see fundamentals.py's _BALANCE_ROWS). Stated here
     rather than silently approximated as "the" Piotroski score.
     """
-    out = {"piotroski": None, "piotroski_of": None}
+    out = {"piotroski": None, "piotroski_of": None, "piotroski_bits": None}
     if not ys or len(ys) < 2:
         return out
 
     cur, prev = ys[0], ys[1]
     score = 0
     computable = 0
+    # Per-criterion outcome, in Piotroski's own order: "1" passed, "0" failed,
+    # "X" could not be computed for this company.
+    #
+    # A bare "4/9" is not checkable by the reader and not checkable by us
+    # either — it says a company failed five tests without saying which five,
+    # and a deleveraging loss-maker reads identically to a profitable company
+    # diluting its shareholders. Nine characters per row is the whole cost of
+    # making the number explainable, and it rides in the detail payload rather
+    # than the table one.
+    bits = []
 
-    def yoy_up(key):
+    def record(ok):
+        """ok True/False adds to the denominator; None means not computable."""
         nonlocal score, computable
-        a, b = _finite(cur.get(key)), _finite(prev.get(key))
-        if a is None or b is None:
+        if ok is None:
+            bits.append("X")
             return
         computable += 1
-        if a > b:
+        bits.append("1" if ok else "0")
+        if ok:
             score += 1
+
+    def yoy_up(key):
+        a, b = _finite(cur.get(key)), _finite(prev.get(key))
+        record(None if a is None or b is None else a > b)
 
     # 1. ROA > 0
     roa = _finite(cur.get("roa"))
-    if roa is not None:
-        computable += 1
-        if roa > 0:
-            score += 1
+    record(None if roa is None else roa > 0)
     # 2. CFO > 0
     cfo = _finite(cur.get("cfo"))
-    if cfo is not None:
-        computable += 1
-        if cfo > 0:
-            score += 1
+    record(None if cfo is None else cfo > 0)
     # 3. ROA increased YoY
     yoy_up("roa")
     # 4. CFO > net income (accrual quality — the profit is real cash, not
     # sitting in receivables/inventory)
     net_income = _finite(cur.get("net_income"))
-    if cfo is not None and net_income is not None:
-        computable += 1
-        if cfo > net_income:
-            score += 1
+    record(None if cfo is None or net_income is None else cfo > net_income)
     # 5. Debt ratio decreased YoY (total_debt/total_assets — see docstring)
     cur_assets, prev_assets = _finite(cur.get("total_assets")), _finite(prev.get("total_assets"))
     cur_debt, prev_debt = _finite(cur.get("total_debt")), _finite(prev.get("total_debt"))
     cur_dr = cur_debt / cur_assets if cur_debt is not None and cur_assets else None
     prev_dr = prev_debt / prev_assets if prev_debt is not None and prev_assets else None
-    if cur_dr is not None and prev_dr is not None:
-        computable += 1
-        if cur_dr < prev_dr:
-            score += 1
+    record(None if cur_dr is None or prev_dr is None else cur_dr < prev_dr)
     # 6. Current ratio increased YoY
     yoy_up("current_ratio")
     # 7. Shares outstanding did not increase YoY (no dilution)
     cur_shares, prev_shares = _finite(cur.get("shares_out")), _finite(prev.get("shares_out"))
-    if cur_shares is not None and prev_shares is not None:
-        computable += 1
-        if cur_shares <= prev_shares:
-            score += 1
+    # <= not <: NOT issuing shares is the pass condition, so a flat count
+    # passes. This is the only criterion of the nine that is not strict.
+    record(None if cur_shares is None or prev_shares is None
+           else cur_shares <= prev_shares)
     # 8. Gross margin increased YoY
     yoy_up("gross_margin")
     # 9. Asset turnover increased YoY
@@ -658,7 +662,24 @@ def piotroski(ys: list[dict]) -> dict:
 
     out["piotroski"] = score
     out["piotroski_of"] = computable
+    out["piotroski_bits"] = "".join(bits)
     return out
+
+
+# Criterion labels, in Piotroski's order. Lives next to the function that
+# produces the bit string so the two cannot drift — a label list that has
+# fallen out of step relabels every failure on the site.
+PIOTROSKI_CRITERIA = (
+    "Return on assets is positive",
+    "Operating cash flow is positive",
+    "Return on assets improved on last year",
+    "Operating cash flow exceeds net profit",
+    "Debt fell as a share of assets",
+    "Current ratio improved",
+    "No new shares issued",
+    "Gross margin improved",
+    "Asset turnover improved",
+)
 
 
 def ratios(stmts: dict | None, info: dict | None) -> dict:
@@ -2203,6 +2224,11 @@ DETAIL_FIELDS = (
     "years", "swot", "business", "parts", "capalloc_notes", "why_now",
     "updates", "val_hist", "ind_med", "news", "ai_view", "loc", "website",
     "roce_basis", "val_scope", "peers", "capalloc",
+    # Nine characters explaining the F-score. In the DETAIL payload, not the
+    # table: the table already carries the score itself, which is what sorts
+    # and filters, and 750 x 9 bytes belongs in the half that is fetched only
+    # when a reader opens a company.
+    "piotroski_bits",
 )
 
 
