@@ -807,6 +807,10 @@ def ratios(stmts: dict | None, info: dict | None) -> dict:
         pt = piotroski(ys)
         r["piotroski"] = pt["piotroski"]
         r["piotroski_of"] = pt["piotroski_of"]
+        # The per-criterion breakdown. Copied explicitly like the two above —
+        # this row is assembled field by field, so a key returned by
+        # piotroski() but not named here never reaches the payload at all.
+        r["piotroski_bits"] = pt["piotroski_bits"]
 
     # Compact per-year block for the detail view. Rounded here so the payload
     # does not ship 14 decimal places 500 times over.
@@ -1926,6 +1930,10 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             # 6/9 are not the same claim.
             "piotroski": r.get("piotroski"),
             "piotroski_of": r.get("piotroski_of"),
+            # Nine characters — 1 passed, 0 failed, X not computable — routed
+            # to the detail payload by DETAIL_FIELDS. Without it the published
+            # score is a number the reader cannot check.
+            "piotroski_bits": r.get("piotroski_bits"),
             # Technicals
             "rsi": _round(t.get("rsi14"), 1, 1),
             "sma20": _round(t.get("sma20"), 1, 1),

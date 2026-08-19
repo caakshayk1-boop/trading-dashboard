@@ -269,6 +269,27 @@ def _():
     assert piotroski([STRONG_CUR])["piotroski_bits"] is None
 
 
+@check("the bits survive every hop from piotroski() to the published payload")
+def _():
+    """The gap that shipped once.
+
+    piotroski() emitted the bits, the tests passed, and NOTHING reached the
+    site: rows are assembled field by field in two separate places, and a key
+    the function returns but the row builder does not name is silently
+    dropped. Verifying the function is not verifying the payload.
+    """
+    src = (__import__("pathlib").Path(__file__).parent / "stock_screen.py").read_text()
+    # 1. copied onto the row after scoring
+    assert 'r["piotroski_bits"] = pt["piotroski_bits"]' in src, \
+        "the row builder drops the breakdown"
+    # 2. named in the published shape
+    assert '"piotroski_bits": r.get("piotroski_bits")' in src, \
+        "the publish shape drops the breakdown"
+    # 3. routed to the DETAIL payload, not the 1.2MB table one
+    detail = src[src.index("DETAIL_FIELDS = ("):src.index(")", src.index("DETAIL_FIELDS = ("))]
+    assert '"piotroski_bits"' in detail, "the breakdown is not in DETAIL_FIELDS"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
