@@ -384,6 +384,28 @@ def generate() -> None:
           f"{ipos.get('months', 0)} months"
           f"{' (previous build)' if ipos.get('is_fallback') else ''}")
 
+    # ── Findings ────────────────────────────────────────────────────────────
+    # Deterministic scans over datasets already built. No model writes any of
+    # this, so every finding can be reproduced by hand from screen.json.
+    try:
+        import insights as _ins
+        _srows = stock_screen.get("rows") or []
+        findings = {
+            "hidden": _ins.hidden_findings(_srows),
+            "contradictions": _ins.contradictions(
+                stock_screen.get("breadth"),
+                (market_intel or {}).get("fii_dii")),
+            "changed": _ins.what_changed(stock_screen),
+            "built_on": stock_screen.get("built_on"),
+            "universe": len(_srows),
+        }
+        print(f"[generate] Findings: {len(findings['hidden'])} hidden, "
+              f"{len(findings['contradictions'])} contradictions"
+              f"{' , change report' if findings['changed'] else ''}")
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  findings skipped: {e}")
+        findings = {}
+
     # Picks are keyed by ISO week. Nothing warms that cache on a static build —
     # under Flask a startup thread did it — so every Monday the section
     # rendered "check back Monday". Build it here, and fall back to the last
@@ -589,6 +611,7 @@ def generate() -> None:
         careers=careers,
         brief=brief,
         stock_screen=stock_screen,
+        findings=findings,
         ipos=ipos,
         podcasts=podcasts,
         smart_reads=smart_reads,
@@ -697,7 +720,7 @@ def generate() -> None:
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
                                                         stock_screen, market_intel, careers,
-                                                        brief, health, ipos)))
+                                                        brief, health, ipos, findings)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

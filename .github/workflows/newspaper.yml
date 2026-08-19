@@ -55,6 +55,7 @@ jobs:
           python test_signal_history.py
           python test_smart_reads.py
           python test_fscore.py
+          python test_insights.py
 
       - name: Lint the page script
         run: |

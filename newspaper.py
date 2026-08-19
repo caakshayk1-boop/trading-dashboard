@@ -1973,6 +1973,9 @@ SECTION_MAP = [
     # Conviction first, then the vehicles, then the screen a name comes from.
     # #stocks ends the run so it sits directly above Trade Ideas: the screen is
     # where a name comes FROM, the ideas are what was done with it.
+    # First in Research because it answers the question the ranked tables
+    # cannot: what is unusual here that I would never have scrolled to?
+    ("findings",    "Findings",     "main", "Research"),
     ("longterm",    "Long-Term",    "main", "Research"),
     ("tracker",     "Portfolio",    "main", "Research"),
     ("sip",         "SIP Buckets",  "main", "Research"),
@@ -2067,7 +2070,7 @@ PAGE_META = {
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
                    stock_screen=None, market_intel=None, careers=None,
-                   brief=None, health=None, ipos=None) -> set:
+                   brief=None, health=None, ipos=None, findings=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2117,6 +2120,10 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
         drop.add("datahealth")
     if not (ipos or {}).get("rows"):
         drop.add("ipos")
+    # A findings section with nothing found is worse than none: it teaches the
+    # reader that the section is usually empty and to stop opening it.
+    if not ((findings or {}).get("hidden") or (findings or {}).get("contradictions")):
+        drop.add("findings")
     return drop
 
 
@@ -4690,6 +4697,19 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 /* "+2 more sources" on a clustered news card. Deliberately quiet — it is
    provenance, not a headline. */
 .nalso{color:var(--dim);border-bottom:1px dotted var(--line2);cursor:help}
+/* Findings. Cards rather than a table: each is a short argument, not a row. */
+.fnd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.fnd{padding:16px 18px}
+.fnd-warn{border-left:2px solid var(--gold)}
+.fnd-t{font-size:14px;margin:0 0 8px;font-weight:600;line-height:1.35}
+.fnd-n{font-family:var(--mono);font-size:11px;color:var(--lime);margin-left:6px}
+.fnd-r{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.3px;
+  margin:0 0 10px;line-height:1.5}
+.fnd-d{font-size:13px;color:var(--muted);margin:0 0 8px;line-height:1.5}
+.fnd-s{font-size:12.5px;line-height:1.7;margin:0}
+.fnd-m,.fnd-w{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.fnd-m b,.fnd-w b{color:var(--dim);font-family:var(--mono);font-size:10px;
+  letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:3px}
 /* ── Tap targets ─────────────────────────────────────────────────────────
    WCAG 2.2 AA 2.5.8 asks for 24x24 CSS px. Measured on a 375px viewport,
    64 controls were under it — mostly 16px-tall inline links in the footer
@@ -6141,6 +6161,84 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      back to. The claim that earns the address is the losing month printed in
      public further down, so the ask belongs after it, not before.
      The submit handler binds to every .sub-form, so it needs no change. -->
+
+<!-- ══════════ FINDINGS ══════════
+     What the datasets already contain and nobody was reading.
+
+     Every finding here is a RULE over published numbers — no model writes any
+     of it, and each one states its own criteria so a reader can reproduce it
+     from screen.json by hand. That is the whole design: an LLM would add
+     nothing here except the possibility of being wrong.
+
+     Findings are research leads, not recommendations. "Strong on the accounts,
+     weak on the tape" is an observation about a shared property; what it means
+     for any one company is exactly the work the reader still has to do. -->
+{% if 'findings' in secs and findings %}
+<section class="sec" id="findings">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['findings'] }} / {{ seclabel['findings'] }}</span>
+      <h2 class="stitle">What the data says that nobody looked for.</h2>
+    </div>
+    <p class="sdesc">Deterministic scans across {{ findings.universe }} companies and the
+      market's own internals. Every finding states the rule that produced it, so it can be
+      checked rather than believed. Research leads &mdash; not recommendations, and not
+      ranked: the tables below already do the ranking, this answers a different question.</p>
+  </div>
+
+  {% if findings.contradictions %}
+  <h3 style="font-size:15px;margin:22px 0 10px">Where the market disagrees with itself</h3>
+  <div class="fnd-grid rv">
+    {% for c in findings.contradictions %}
+    <div class="card fnd fnd-warn">
+      <h4 class="fnd-t">{{ c.title }}</h4>
+      <p class="fnd-d">{{ c.detail }}</p>
+      <p class="fnd-m"><b>What it means</b> {{ c.means }}</p>
+      <p class="fnd-w"><b>What to watch</b> {{ c.watch }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if findings.hidden %}
+  <h3 style="font-size:15px;margin:26px 0 10px">Unusual combinations</h3>
+  <div class="fnd-grid rv">
+    {% for f in findings.hidden %}
+    <div class="card fnd">
+      <h4 class="fnd-t">{{ f.title }} <span class="fnd-n">{{ f.count }}</span></h4>
+      {# The rule, always. A finding that cannot state its own criteria is not
+         checkable, and an unfalsifiable finding is decoration. #}
+      <p class="fnd-r">{{ f.rule }}</p>
+      <p class="fnd-s">
+        {% for n in f.names %}<a href="#stocks" class="sym">{{ n.sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+        {% if f.count > f.names|length %}<span class="mono-dim"> +{{ f.count - f.names|length }} more</span>{% endif %}
+      </p>
+      {% if f.note %}<p class="fnd-m">{{ f.note }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if findings.changed %}
+  {% set w = findings.changed %}
+  <h3 style="font-size:15px;margin:26px 0 10px">What changed since the last build</h3>
+  <p class="sdesc" style="max-width:70ch">
+    {{ w.moved }} of {{ w.universe }} companies moved since {{ w.compared_with }}{% if w.new_names %},
+    and {{ w.new_names }} names are new to the universe{% endif %}.
+    Composite scores now sit at
+    {% for k, v in w.bands.items() %}<b>{{ v }}</b> in {{ k }}{% if not loop.last %} · {% endif %}{% endfor %}.
+    Market breadth: {{ w.breadth.advancing|int }} advancing against
+    {{ w.breadth.declining|int }} declining, {{ w.breadth.above200 }}% above the 200-day.
+  </p>
+  {% endif %}
+
+  <p class="sdesc" style="margin-top:20px;max-width:70ch">
+    Research findings, not investment advice. Nothing here is scored, ranked or
+    recommended &mdash; each is a group of companies that happen to share a
+    measurable property, surfaced because 750 rows are more than anyone scrolls.
+  </p>
+</section>
+{% endif %}
 
 <!-- ══════════ LONG-TERM CONVICTION ══════════
      Written by ai_longterm.py, which screens the business before the chart.
