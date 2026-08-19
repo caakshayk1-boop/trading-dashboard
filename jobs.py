@@ -143,6 +143,24 @@ SOURCES: list[dict[str, Any]] = [
                   "site": "Americana"},
      "discover": "https://www.americanarestaurants.com/people/"},
 
+    # Aviation. Added 2026-08-19 on request, and because the Abu Dhabi
+    # employers were entirely absent — every existing source is Dubai-weighted,
+    # so "UAE coverage" in practice meant Dubai coverage.
+    #
+    # Etihad runs SmartRecruiters. Verified before shipping: 92 live postings,
+    # 51 of them Abu Dhabi, 8 surviving the finance title prefilter.
+    #
+    # Emirates Group is NOT here yet, deliberately. Its careers site advertises
+    # Taleo in the page source but actually posts through Avature
+    # (emiratesjobs.avature.net/careersmarketplace, SearchJobs returns 200).
+    # That needs its own adapter, and registering it now would add a source
+    # that returns zero rows — which would push the Careers coverage ratio
+    # down while pretending to be progress. Left out until it is built.
+    {"name": "Etihad Airways", "kind": "employer", "adapter": "smartrecruiters",
+     "group": "Etihad", "confidence": "high",
+     "endpoint": {"slug": "EtihadAirways5"},
+     "discover": "https://careers.etihad.com"},
+
     {"name": "Aldar", "kind": "employer", "adapter": "lever",
      "group": "Aldar", "confidence": "high",
      "endpoint": {"slug": "aldar"},
@@ -1743,6 +1761,64 @@ def fetch_lever(src: dict) -> list[dict]:
     return out
 
 
+# -- SmartRecruiters (Etihad) --------------------------------------------
+# Two calls per posting: the list carries no description, and a posting with
+# no description fails the length floor below and would be dropped — so this
+# would have shipped an employer that produced zero rows while reporting "ok".
+def fetch_smartrecruiters(src: dict) -> list[dict]:
+    slug = src["endpoint"]["slug"]
+    base = f"https://api.smartrecruiters.com/v1/companies/{slug}/postings"
+    resp = _check(_get(f"{base}?limit=100", headers={"Accept": "application/json"}),
+                  f"{src['name']} list")
+    try:
+        listing = resp.json()
+    except ValueError as e:
+        raise SourceError(f"{src['name']}: non-JSON response ({e})")
+
+    out = []
+    for p in (listing.get("content") or []):
+        title = (p.get("name") or "").strip()
+        if not TITLE_PREFILTER.search(title):
+            continue
+        pid = p.get("id")
+        if not pid:
+            continue
+        try:
+            det = _get(f"{base}/{pid}", headers={"Accept": "application/json"}).json()
+        except Exception:
+            continue                       # one dead posting is not a dead source
+
+        sections = ((det.get("jobAd") or {}).get("sections") or {})
+        def _sec(key):
+            return strip_html(((sections.get(key) or {}).get("text")) or "")
+        desc = "\n\n".join(x for x in (_sec("jobDescription"),
+                                        _sec("qualifications"),
+                                        _sec("additionalInformation")) if x).strip()
+        if len(desc) < 120:
+            continue
+
+        loc = det.get("location") or p.get("location") or {}
+        # fullLocation is "Abu Dhabi, , United Arab Emirates" — the city field
+        # on its own is what the location filter and the city chips read.
+        city = loc.get("city") or ""
+        full = loc.get("fullLocation") or city
+        out.append(_raw(
+            title=title or None, company=src["name"],
+            location=primary_city(city or full),
+            country=resolve_country(full, loc.get("country")),
+            department=(det.get("function") or {}).get("label"),
+            employment_type=(det.get("typeOfEmployment") or {}).get("label"),
+            posted_date=parse_date(det.get("releasedDate") or p.get("releasedDate")),
+            description=desc,
+            responsibilities=text_bullets(_sec("jobDescription"))[:20],
+            requirements=text_bullets(_sec("qualifications"))[:20],
+            source_url=det.get("postingUrl") or p.get("ref"),
+            application_url=det.get("applyUrl") or det.get("postingUrl"),
+            is_direct_apply=True, req_id=str(pid),
+        ))
+    return out
+
+
 # -- LinkedIn guest job search ------------------------------------------
 _LI_CARD_RE = re.compile(
     r'<a[^>]+href="(https://[a-z]{0,3}\.?linkedin\.com/jobs/view/[^"?]+)[^"]*"', re.I)
@@ -1998,6 +2074,7 @@ ADAPTERS = {
     "teamtailor": fetch_teamtailor,
     "successfactors": fetch_successfactors,
     "lever": fetch_lever,
+    "smartrecruiters": fetch_smartrecruiters,
     "linkedin": fetch_linkedin,
     "michaelpage": fetch_michaelpage,
     "firecrawl_html": fetch_firecrawl_html,

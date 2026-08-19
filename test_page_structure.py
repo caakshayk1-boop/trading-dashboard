@@ -166,6 +166,33 @@ def _():
         assert m.start() > open_main, f"#{m.group(1)} is outside <main>"
 
 
+@check("every tab strip has exactly one pane per tab")
+def _():
+    """Removing a tab means removing its pane, and vice versa.
+
+    Lifting the Book out of The Desk on 2026-08-19 removed both — but a tab
+    without a pane is a dead control that switches to nothing, and a pane
+    without a tab is content no reader can reach. Neither shows up in any
+    other check here, and the JS silently does nothing in both cases.
+    """
+    for m in re.finditer(r'<section class="sec" id="([a-z0-9]+)"', TEMPLATE):
+        sec = TEMPLATE[m.start():TEMPLATE.find("</section>", m.start())]
+        tabs = set(re.findall(r'data-p="([a-z0-9]+)"', sec))
+        panes = set(re.findall(r'class="pane[^"]*" id="([a-z0-9]+)"', sec))
+        if not tabs and not panes:
+            continue
+        assert tabs == panes, (
+            f'#{m.group(1)}: tabs {sorted(tabs)} vs panes {sorted(panes)}')
+
+
+@check("the Book section carries the whole-book depth, not just the chapter")
+def _():
+    start = TEMPLATE.index("{% if 'book' in secs and book %}")
+    sec = TEMPLATE[start:TEMPLATE.index("</section>", start)]
+    for field in ("book.crux", "book.learnings", "book.examples", "book.adapt"):
+        assert field in sec, f"{field} did not survive the move out of #desk"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

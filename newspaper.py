@@ -2013,6 +2013,7 @@ SECTION_MAP = [
     # LIBRARY — everything that keeps rather than expires. Mind Gym sits here
     # rather than with the drills because a nav group must be one contiguous
     # run (test_page_structure.py).
+    ("book",        "Book",         "desk", "Library"),
     ("review",      "The Review",   "desk", "Library"),
     ("desk",        "The Desk",     "desk", "Library"),
     ("mind",        "The Mind",     "desk", "Library"),
@@ -7365,6 +7366,76 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 
 
+<!-- ══════════ BOOK ══════════
+     One chapter a day out of 48, and — for the 29 books that have one — the
+     whole book underneath it: the crux in a dozen points, what actually
+     changes in your head, worked examples, and how it lands in this life.
+
+     This was a TAB inside The Desk, fifth of seven, which meant the deepest
+     writing on the site was two clicks from being seen and never was. Nothing
+     about the content changed on 2026-08-19; it was simply given its own
+     section, because a book summary buried behind a tab strip is a book
+     summary nobody reads. -->
+{% if 'book' in secs and book %}
+<section class="sec" id="book">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['book'] }} / {{ seclabel['book'] }}</span>
+      <h2 class="stitle">{{ book.book }}.</h2>
+    </div>
+    <p class="sdesc">{{ book.author }} &middot; chapter {{ book.index }} of {{ book.total }}.
+      One chapter a day, and where the book has been read properly, the whole thing
+      underneath it &mdash; the argument in a dozen points, what changes in your head
+      after reading it, and how it lands on an FP&amp;A desk rather than in general.</p>
+  </div>
+
+  <div class="essay rv" style="--ac:var(--violet)">
+
+        <div class="meta">{{ book.book }} · {{ book.author }} · {{ book.index }}/{{ book.total }}</div>
+        <h3>{{ book.chapter }}</h3>
+        <p>{{ book.lesson }}</p>
+        <div class="q">{{ book.key_quote }}</div>
+        <div class="act"><b>Today's action</b>{{ book.action }}</div>
+
+        {% if book.crux %}
+        <div class="bookdeep">
+          <div class="bdhead">The whole book · {{ book.crux|length }} points</div>
+          <ol class="crux">
+            {% for c in book.crux %}<li>{{ c }}</li>{% endfor %}
+          </ol>
+        </div>
+        {% endif %}
+
+        {% if book.learnings %}
+        <div class="bookdeep">
+          <div class="bdhead">What actually changes in your head</div>
+          <ul class="bdlist">
+            {% for l in book.learnings %}<li>{{ l }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if book.examples %}
+        <div class="bookdeep">
+          <div class="bdhead">Examples</div>
+          <ul class="bdlist eg">
+            {% for e in book.examples %}<li>{{ e }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if book.adapt %}
+        <div class="bookdeep adapt">
+          <div class="bdhead">How to adapt it into your life</div>
+          <ul class="bdlist">
+            {% for a in book.adapt %}<li>{{ a }}</li>{% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        </div>
+</section>
+{% endif %}
+
 <!-- ══════════ 08 THE REVIEW ══════════ -->
 {% if 'review' in secs %}<section class="sec" id="review">
   <div class="shead rv">
@@ -7435,7 +7506,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <button class="tab" data-p="d2">🇦🇪 Dubai · {{ dubai.index }}/{{ dubai.total }}</button>
     <button class="tab" data-p="d3">🏆 FC → CFO · {{ cfo.index }}/{{ cfo.total }}</button>
     <button class="tab" data-p="d4">📊 Case Study</button>
-    <button class="tab" data-p="d5">📚 Book · {{ book.index }}/{{ book.total }}</button>
     <button class="tab" data-p="d6">💰 Money</button>
     <button class="tab" data-p="d7">⚡ Execution</button>
   </div>
@@ -7473,52 +7543,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <h3>{{ case.title }}</h3>
         <p>{{ case.story }}</p>
         <div class="act"><b>💡 The lesson</b>{{ case.lesson }}</div>
-      </div>
-    </div>
-
-    <div class="pane" id="d5">
-      <div class="essay" style="--ac:var(--violet)">
-        <div class="meta">{{ book.book }} · {{ book.author }} · {{ book.index }}/{{ book.total }}</div>
-        <h3>{{ book.chapter }}</h3>
-        <p>{{ book.lesson }}</p>
-        <div class="q">{{ book.key_quote }}</div>
-        <div class="act"><b>Today's action</b>{{ book.action }}</div>
-
-        {% if book.crux %}
-        <div class="bookdeep">
-          <div class="bdhead">The whole book · {{ book.crux|length }} points</div>
-          <ol class="crux">
-            {% for c in book.crux %}<li>{{ c }}</li>{% endfor %}
-          </ol>
-        </div>
-        {% endif %}
-
-        {% if book.learnings %}
-        <div class="bookdeep">
-          <div class="bdhead">What actually changes in your head</div>
-          <ul class="bdlist">
-            {% for l in book.learnings %}<li>{{ l }}</li>{% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-
-        {% if book.examples %}
-        <div class="bookdeep">
-          <div class="bdhead">Examples</div>
-          <ul class="bdlist eg">
-            {% for e in book.examples %}<li>{{ e }}</li>{% endfor %}
-          </ul>
-        </div>
-        {% endif %}
-
-        {% if book.adapt %}
-        <div class="bookdeep adapt">
-          <div class="bdhead">How to adapt it into your life</div>
-          <ul class="bdlist">
-            {% for a in book.adapt %}<li>{{ a }}</li>{% endfor %}
-          </ul>
-        </div>
-        {% endif %}
       </div>
     </div>
 
