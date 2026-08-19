@@ -77,10 +77,29 @@ jobs:
       # Installed before generate so BOTH the pre-publish gate and the
       # post-deploy check can use it. smoke_runner.cjs is Node, not Python —
       # `pip install playwright` gets you a package the runner cannot import.
+      # Chromium is ~130MB and this step stalled past the job's 15-minute cap
+      # twice on 2026-08-19, taking two otherwise-green builds with it. Every
+      # test had already passed; the download is simply the slowest thing here.
+      #
+      # Cached on the playwright version, so a hit skips the download entirely
+      # and a miss still works. --with-deps stays OUTSIDE the cache: the apt
+      # libraries it installs live in the runner image, not in ~/.cache.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}
+          restore-keys: playwright-chromium-
+
       - name: Install Playwright (node)
+        timeout-minutes: 6
         run: |
           npm i -D playwright --no-audit --no-fund
-          npx playwright install chromium --with-deps
+          # A retry rather than a hard fail: this is a network download, and
+          # losing a whole newspaper build to one slow CDN response is worse
+          # than spending 30 seconds trying again.
+          npx playwright install chromium --with-deps \
+            || (echo "retrying playwright install" && sleep 20 && npx playwright install chromium --with-deps)
 
       - name: Generate newspaper HTML
         env:
