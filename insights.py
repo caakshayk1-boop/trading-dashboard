@@ -211,6 +211,65 @@ def multi_signal_names(findings: list[dict], rows: list[dict] | None = None) -> 
     return out
 
 
+# ── 1c. Movers inside each sector ────────────────────────────────────────────
+
+# Five each way. Fewer than this many names in a sector and "top five" is just
+# "the sector", which tells a reader nothing they could not see by listing it.
+MOVERS_N = 5
+MIN_SECTOR_SIZE = 8
+
+
+def sector_movers(rows: list[dict], window: str = "r1w") -> list[dict]:
+    """Best and worst performers within each sector.
+
+    Deliberately built on the SCREEN's own sector labels rather than on the
+    heat map's NSE index tiles, and the two must not be conflated. The tiles
+    are NSE sector indices (^CNXIT, ^NSEBANK, ^CNXPSUBANK...); these rows carry
+    Yahoo's sector taxonomy. Mapping one onto the other is lossy in one
+    direction and plainly wrong in the other — Banking and PSU Bank are
+    separate indices that would both collapse into "Financial Services",
+    so two tiles would drill into an identical list of names. Better to
+    answer the question on a taxonomy that can actually answer it.
+
+    The window is a RETURN ALREADY ON THE ROW (default 1-week), so this costs
+    no network call and inherits the screen's build date rather than implying
+    it is live. A sector with no reachable return is omitted, never shown flat.
+    """
+    rows = [r for r in (rows or []) if isinstance(r, dict)]
+    buckets: dict[str, list[dict]] = {}
+    for r in rows:
+        sec = r.get("sector")
+        if not sec or _f(r, window) is None:
+            continue
+        buckets.setdefault(str(sec), []).append(r)
+
+    out = []
+    for sec, names in sorted(buckets.items()):
+        if len(names) < MIN_SECTOR_SIZE:
+            continue
+        ranked = sorted(names, key=lambda r: -(_f(r, window) or 0))
+
+        def pack(rs):
+            return [{"sym": r.get("sym"), "name": r.get("name"),
+                     "move": _f(r, window), "price": _f(r, "price"),
+                     "comp": _f(r, "comp")} for r in rs]
+
+        moves = [_f(r, window) for r in names]
+        out.append({
+            "sector": sec,
+            "count": len(names),
+            "window": window,
+            # The sector's own middle, so a reader can tell a broad move from
+            # a couple of names carrying the label.
+            "median": round(sorted(moves)[len(moves) // 2], 2),
+            "gainers": pack(ranked[:MOVERS_N]),
+            "losers": pack(list(reversed(ranked[-MOVERS_N:]))),
+        })
+    # Strongest sector first, by its median name — not by its best one.
+    out.sort(key=lambda x: -(x["median"] or 0))
+    return out
+
+
 # ── 2. Contradiction detector ────────────────────────────────────────────────
 
 def contradictions(breadth: dict, fii: dict | None = None,

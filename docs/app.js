@@ -2747,6 +2747,13 @@ var TV_ALIASES = (function () {
                 '<div><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
                   encodeURIComponent(r.symbol) + '" target="_blank" rel="noopener">' +
                   esc(r.symbol) + '</a>' +
+                  // A name carried over from a previous week rather than newly
+                  // selected. The screen is ~70% annual fundamentals, which do
+                  // not move in seven days, so a weekly rerun reproduces most
+                  // of its own list — four of five, measured. Saying which
+                  // names are new is the difference between a weekly screen
+                  // and a weekly screen that LOOKS stalled.
+                  (m.held ? '<span class="lt-held">held from a prior week</span>' : '') +
                   '<div class="sec-l">' + esc(m.sector || '') + '</div></div>' +
                 '<span class="tag">' + fmt(r.score, 0) + '/100' +
                   (r.grade ? ' · ' + esc(r.grade) : '') + '</span>' +

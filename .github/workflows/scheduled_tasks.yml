@@ -10,6 +10,13 @@ on:
     - cron: '30 8 * * 1-5'    # 2:00 PM  IST — CF scan (Mon–Fri only)
     - cron: '30 12 * * 1-5'   # 6:00 PM  IST — CF scan (Mon–Fri only)
     - cron: '30 16 * * 1-5'   # 10:00 PM IST — CF scan (Mon–Fri only)
+    # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
+    # to TASK=health since it was written, but that cron was never in this
+    # list — so the arm was unreachable and the health watch only ever ran
+    # by manual dispatch. Its own comment reads "Three times a day. Nothing
+    # else watches production", and nothing did: every failure it was built
+    # to catch is a 200 with a degraded body, which uptime pings miss.
+    - cron: '0 3,9,15 * * *'  # 08:30 / 14:30 / 20:30 IST — health watch
   workflow_dispatch:
     inputs:
       task:

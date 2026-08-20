@@ -381,6 +381,35 @@ def _thesis(c: dict) -> str:
 
 # ── build ────────────────────────────────────────────────────────────────────
 
+# A name picked inside this window is not a NEW idea this week.
+#
+# The ranking is ~70% annual fundamentals, and annual accounts do not move in
+# seven days — so re-running a 2-3 year screen weekly reproduces itself by
+# construction. Measured on the live ledger: the 2026-08-15 run returned
+# NMDC, OFSS, POLYCAB and SHRIRAMFIN, four of the same five as 2026-08-05.
+# The engine was not stalled; it was deterministic, and calling that output
+# "this week's picks" was the part that was wrong.
+REPEAT_COOLDOWN_DAYS = 28
+
+
+def _recently_picked(days: int = REPEAT_COOLDOWN_DAYS) -> set[str]:
+    """Symbols this engine has already published inside the cooldown."""
+    try:
+        import db as _db
+        cutoff = (datetime.now(IST).date() - timedelta(days=days)).isoformat()
+        with _db.connect() as c:
+            rows = c.execute(
+                "SELECT DISTINCT symbol FROM all_signals "
+                "WHERE signal_type=? AND date >= ?",
+                (SIGNAL_TYPE, cutoff)).fetchall()
+        return {str(r[0]) for r in rows}
+    except Exception as e:                                   # noqa: BLE001
+        # No ledger, no cooldown. Failing open repeats a name; failing closed
+        # would publish nothing at all, which is the worse of the two.
+        log.warning(f"ai_longterm: cooldown lookup failed, allowing repeats — {e}")
+        return set()
+
+
 def build(n: int = PICKS, dry_run: bool = False, candidates=None) -> list[dict]:
     """Rank, pick, write to the ledger. Returns the picks."""
     cands = candidates if candidates is not None else rank()
@@ -392,7 +421,26 @@ def build(n: int = PICKS, dry_run: bool = False, candidates=None) -> list[dict]:
     if len(strong) < len(cands):
         log.info(f"ai_longterm: dropped {len(cands) - len(strong)} below "
                  f"{MIN_SCORE:.0f}/100")
-    picks = _one_per_sector(strong, n)
+    # Prefer names not published in the last four weeks, so a weekly rerun of
+    # a slow screen surfaces something a reader has not already seen. Names
+    # inside the cooldown are NOT discarded — if too few fresh ones clear the
+    # score floor, they backfill and are marked `held`, because publishing
+    # three names and calling it five would be the dishonest fix, and quietly
+    # re-listing last week's five as new was the bug this exists to correct.
+    recent = _recently_picked()
+    fresh = [c for c in strong if c["symbol"] not in recent]
+    picks = _one_per_sector(fresh, n)
+    if len(picks) < n:
+        chosen = {c["symbol"] for c in picks}
+        held = [c for c in strong
+                if c["symbol"] in recent and c["symbol"] not in chosen]
+        for c in held:
+            c["held"] = True
+        log.info(f"ai_longterm: {len(picks)} fresh names cleared, "
+                 f"backfilling {min(n - len(picks), len(held))} held from a prior week")
+        picks = picks + _one_per_sector(held, n - len(picks))
+    for c in picks:
+        c.setdefault("held", False)
     for i, c in enumerate(picks):
         c["rank"] = i + 1
         c.update(_levels(c))
@@ -435,6 +483,10 @@ def build(n: int = PICKS, dry_run: bool = False, candidates=None) -> list[dict]:
             "tech_score": round(c["tech_score"] * 100, 1),
             "coverage": round(c["coverage"] * 100),
             "sector": c["sector"], "rationale": c["rationale"],
+            # True when this name was already published inside the cooldown
+            # and is here to fill the list rather than because it is new.
+            # The page says so; it does not present it as a fresh idea.
+            "held": bool(c.get("held")),
             "thesis": c["thesis"], "facts": c["facts"],
         },
     } for c in picks]

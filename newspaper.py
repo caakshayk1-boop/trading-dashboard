@@ -5849,6 +5849,17 @@ table.t tbody tr:last-child td{border-bottom:none}
 /* Long vs short in the paper wallet. Shape AND colour, not colour alone —
    the arrow carries the meaning for a red/green colour-blind reader, and the
    word carries it for a screen reader. */
+.lt-held{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;color:var(--gold);
+  border:1px solid var(--gold);border-radius:3px;padding:2px 6px;margin-top:4px}
+.sec-movers{padding:14px 16px}
+.sec-movers>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;
+  align-items:center;gap:10px;min-height:24px}
+.sec-movers>summary::-webkit-details-marker{display:none}
+.sec-movers>summary:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.mv-list{list-style:none;margin:4px 0 0;padding:0;font-size:12.5px}
+.mv-list li{display:flex;justify-content:space-between;gap:10px;padding:3px 0;
+  font-family:var(--mono)}
 /* A pick the ledger has already resolved. Marked, never removed — it WAS
    this week's pick, and deleting it would be the dishonest fix. */
 .pick-done{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;
@@ -6809,6 +6820,52 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
   {% endif %}
 
+  {# Movers INSIDE each sector. Built from the stock screen's own rows, so it
+     costs no extra fetch and inherits the screen's build date — which is why
+     it is stamped with that date and not with the 6 AM heat snapshot's.
+
+     These are the SCREEN's sector labels, not the NSE index tiles above, and
+     the two are deliberately not wired together: Banking and PSU Bank are
+     separate indices that would both collapse into one "Financial Services"
+     bucket, so drilling into either tile would show the same names. A
+     drill-down that lies about which sector you asked for is worse than a
+     separate, honest control. <details> so it needs no JavaScript. #}
+  {% set movers = market_intel.get('sector_movers') or [] %}
+  {% if movers %}
+  <h3 style="font-size:15px;margin:22px 0 6px">Movers inside each sector</h3>
+  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
+    Best and worst five in each of {{ movers|length }} sectors over one week, taken from the
+    stock screen's own rows &mdash; so these are the screen's sectors, not the index tiles
+    above, and they carry the screen's date{% if stock_screen.built_on %}
+    ({{ stock_screen.built_on }}){% endif %}, not the 6 AM snapshot's.
+    The median tells you whether a sector moved or a couple of names carried it.
+  </p>
+  <div class="fnd-grid rv">
+    {% for m in movers %}
+    <details class="card fnd sec-movers">
+      <summary>
+        <strong>{{ m.sector }}</strong>
+        <span class="fnd-n">{{ '+' if m.median > 0 else '' }}{{ m.median }}% median &middot; {{ m.count }} names</span>
+      </summary>
+      <p class="fnd-r" style="margin-top:10px">Best five</p>
+      <ul class="mv-list">
+        {% for g in m.gainers %}
+        <li><a href="#stocks" class="sym">{{ g.sym }}</a>
+            <span class="up">{{ '+' if g.move > 0 else '' }}{{ g.move }}%</span></li>
+        {% endfor %}
+      </ul>
+      <p class="fnd-r" style="margin-top:10px">Worst five</p>
+      <ul class="mv-list">
+        {% for l in m.losers %}
+        <li><a href="#stocks" class="sym">{{ l.sym }}</a>
+            <span class="dn">{{ '+' if l.move > 0 else '' }}{{ l.move }}%</span></li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% set fd = market_intel.get('fii_dii') %}
   {% if fd and fd.get('fii_cr') is not none and fd.get('dii_cr') is not none %}
   {# Same treatment as the sector map: the server-rendered figures below are
@@ -6837,18 +6894,44 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% set ca = market_intel.get('corporate_actions') or [] %}
   {% if ca %}
   <h3 style="font-size:15px;margin:20px 0 10px">Corporate actions</h3>
+  {# Ex-date and record date are the SAME DAY for almost every row, and the two
+     columns printed identical values down the page — which reads as a copied
+     field rather than as what it is. India settles T+1, so the two coincide by
+     design; NSE publishes them as separate fields and this reads both, so the
+     duplication is in the market's calendar, not in the pipeline.
+
+     One column when they agree, both when they do not, and the difference is
+     stated rather than left for the reader to infer from two columns that
+     almost never disagree. Nothing is dropped: a row where they genuinely
+     differ still shows both dates. #}
+  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
+    Ex-date and record date fall on the same day under T+1 settlement, so one date is
+    shown where they agree. Any row where they genuinely differ shows both.
+  </p>
   <div class="tw rv">
     <table class="t">
       <thead><tr>
-        <th scope="col">Symbol</th><th scope="col">Action</th><th scope="col">Ex-date</th><th scope="col">Record date</th>
+        <th scope="col">Symbol</th><th scope="col">Action</th>
+        <th scope="col">Ex / record date</th>
       </tr></thead>
       <tbody>
         {% for r in ca %}
+        {% set ex = r.get('ex_date') or '' %}
+        {% set rd = r.get('record_date') or '' %}
         <tr>
           <td><strong>{{ r.get('symbol', '—') }}</strong></td>
           <td style="font-size:12.5px;color:var(--muted)">{{ r.get('subject', '—') }}</td>
-          <td class="mono-dim">{{ r.get('ex_date', '—') }}</td>
-          <td class="mono-dim">{{ r.get('record_date', '—') }}</td>
+          <td class="mono-dim">
+            {%- if ex and rd and ex != rd -%}
+              ex {{ ex }} &middot; record {{ rd }}
+            {%- elif ex -%}
+              {{ ex }}
+            {%- elif rd -%}
+              {{ rd }}
+            {%- else -%}
+              &mdash;
+            {%- endif -%}
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -7210,6 +7293,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       you pay — the chart only votes on whether the trend is intact. Two to three years.
       Selection is arithmetic; the paragraph under each is AI. Excluded from the trading
       win rate on purpose.</p>
+    <p class="sdesc" style="margin-top:8px">This screen is roughly 70% annual accounts, and
+      annual accounts do not move in a week &mdash; so a name already published in the last
+      four weeks steps aside to let a new one through. Where too few fresh names clear the
+      score floor, the list is filled from prior weeks and those cards are marked
+      <b>held from a prior week</b> rather than presented as new.</p>
   </div>
 
   <div class="prov rv">

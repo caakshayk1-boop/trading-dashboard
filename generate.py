@@ -407,6 +407,14 @@ def generate() -> None:
             "built_on": stock_screen.get("built_on"),
             "universe": len(_srows),
         }
+        # Movers inside each sector, from the SAME screen rows. Attached to
+        # market_intel because that is where the sector heat map lives, and
+        # this reads directly under it — but built here, where _srows is
+        # already in hand, rather than paying for the payload twice.
+        if isinstance(market_intel, dict):
+            market_intel["sector_movers"] = _ins.sector_movers(_srows)
+            print(f"[generate] Sector movers: "
+                  f"{len(market_intel['sector_movers'])} sectors")
         print(f"[generate] Findings: {len(findings['hidden'])} hidden, "
               f"{len(findings['multi'])} multi-signal, "
               f"{len(findings['contradictions'])} contradictions"
