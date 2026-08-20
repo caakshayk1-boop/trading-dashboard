@@ -1846,24 +1846,46 @@ var TV_ALIASES = (function () {
           var pnlCell = t.realized_pnl === null ? '—' :
             '<span class="' + (t.realized_pnl > 0 ? 'pnl-u' : t.realized_pnl < 0 ? 'pnl-d' : '') + '">' +
             (t.realized_pnl > 0 ? '+' : '') + rupees(t.realized_pnl) + '</span>';
+          // Direction, first-class. The ledger carries real shorts — Gold,
+          // Crude, Natural Gas and Silver all fire SELL signals — and without
+          // this column a short's stop (which sits ABOVE its entry) read as a
+          // broken row. A reader could not tell whether the book was buying
+          // or selling the instrument.
+          var side = t.side === 'SHORT' ? 'SHORT' : 'LONG';
+          var sideCell = '<span class="wside ws-' + side.toLowerCase() + '">' +
+            (side === 'SHORT' ? '▼ SHORT' : '▲ LONG') + '</span>';
           return '<tr>' +
             '<td class="mono-dim">' + esc(t.date) + '</td>' +
             '<td><strong class="sym">' + esc(t.symbol) + '</strong></td>' +
+            '<td>' + sideCell + '</td>' +
             '<td class="mono-dim">' + esc(t.signal_type) + '</td>' +
             '<td class="mono-dim">' + esc(t.grade || '—') + '</td>' +
             '<td class="num">' + tradePrice(t.entry, t.currency) + '</td>' +
+            '<td class="num dn">' + tradePrice(t.sl, t.currency) + '</td>' +
+            '<td class="num up">' + tradePrice(t.target1, t.currency) + '</td>' +
+            '<td class="num up">' + tradePrice(t.target2, t.currency) + '</td>' +
             '<td class="num">' + tradePrice(t.exit, t.currency) + '</td>' +
             '<td class="num">' + rupees(t.allocated_amount) +
               (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
               '</td>' +
             '<td class="num">' + (t.allocated_qty === null ? '—' : t.allocated_qty) + '</td>' +
             '<td><span class="badge badge-' + t.badge + '">' + badgeTxt(t.badge) + '</span></td>' +
-            '<td class="num">' + pnlCell + '</td>' +
+            '<td class="num">' + pnlCell +
+              // Say which rule produced the number. A T2_HIT booked on the
+              // ladder is NOT the ledger's full-position figure, and a reader
+              // comparing the two is owed the reason they differ.
+              (t.pnl_basis === 'partial_booking'
+                ? ' <span class="mono-dim" title="Half booked at T1, the rest at T2. Ledger records the full-position outcome: '
+                  + fmt(t.ledger_pnl_pct, 2) + '%">½</span>'
+                : '') +
+              '</td>' +
             '</tr>';
         }).join('');
         tableHtml = '<div class="tw rv" style="margin-top:14px"><table class="t"><thead><tr>' +
-          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Engine</th><th scope="col">Grade</th>' +
-          '<th scope="col">Entry</th><th scope="col">Exit</th>' +
+          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Side</th>' +
+          '<th scope="col">Engine</th><th scope="col">Grade</th>' +
+          '<th scope="col">Entry</th><th scope="col">SL</th><th scope="col">T1</th>' +
+          '<th scope="col">T2</th><th scope="col">Exit</th>' +
           '<th scope="col">Allocated</th><th scope="col">Qty</th><th scope="col">Status</th><th scope="col">P&amp;L</th>' +
           '</tr></thead><tbody>' + rows + '</tbody></table></div>';
       }

@@ -5703,6 +5703,14 @@ table.t tbody tr:last-child td{border-bottom:none}
 .badge-loss{background:rgba(255,92,92,.1);color:var(--down);border:1px solid rgba(255,92,92,.28)}
 .badge-open{background:rgba(106,168,255,.1);color:var(--blue);border:1px solid rgba(106,168,255,.28)}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
+/* Long vs short in the paper wallet. Shape AND colour, not colour alone —
+   the arrow carries the meaning for a red/green colour-blind reader, and the
+   word carries it for a screen reader. */
+.wside{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);
+  font-size:9.5px;font-weight:700;letter-spacing:.8px;padding:3px 7px;
+  border-radius:4px;white-space:nowrap}
+.ws-long{color:var(--up);background:var(--up-soft);border:1px solid var(--up)}
+.ws-short{color:var(--down);background:var(--down-soft);border:1px solid var(--down)}
 .badge-expired{background:rgba(232,197,71,.1);color:var(--gold);border:1px solid rgba(232,197,71,.25)}
 /* Position battle status — where a tracked position sits in the profit-protection ladder. */
 .badge-accumulation{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
@@ -7952,6 +7960,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <p class="sdesc">A mechanical capital allocator, not a recommendation — every signal this
       ledger produces from here on gets sized by its horizon and grade, nothing more. Started
       2026-08-17; no history before that date is replayed in.</p>
+    <p class="sdesc" style="margin-top:8px">Every position shows its <b>side</b>, stop and both
+      targets: this book takes real shorts, and a short's stop sits <i>above</i> its entry.
+      Winners are booked on a ladder &mdash; <b>half off at T1, the rest at T2</b> &mdash; so a
+      row that reached the far target is banked at the blend of the two, not as though the whole
+      position ran to T2. Rows booked that way are marked &frac12;, and the ledger's
+      full-position figure is on the tooltip.</p>
   </div>
 
   <div id="paperWalletLive"><div class="empty">Loading the wallet…</div></div>

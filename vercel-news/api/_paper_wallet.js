@@ -33,6 +33,14 @@ export const TIERS = {
   },
 };
 
+// The file is deliberately import-free (see the header on _levels.js), so it
+// carries its own coercion rather than reaching into _db.js for num().
+function num(v) {
+  if (v === null || v === undefined) return null;
+  const x = typeof v === "number" ? v : Number(v);
+  return Number.isFinite(x) ? x : null;
+}
+
 export function tierFor(signalType) {
   const t = String(signalType || "").toLowerCase();
   for (const [key, tier] of Object.entries(TIERS)) {
@@ -49,6 +57,72 @@ export function gradeMultiplier(grade) {
   if (g === "A") return 1.0;
   if (g === "B") return 0.7;
   return 0.45;
+}
+
+// ── Direction ───────────────────────────────────────────────────────────────
+// The ledger stores BUY/SELL in `action`. The wallet never read it, so a short
+// and a long rendered identically — and this book carries real shorts: 131 SELL
+// signals across Gold, Crude, Natural Gas and Silver. A reader looking at a
+// commodity row could not tell whether the position was bought or sold, which
+// makes the stop and the targets unreadable too (a short's stop is ABOVE its
+// entry). Ordering convention matches tracker.py: SHORT is t2 < t1 < entry < sl.
+export function sideOf(action) {
+  return String(action || "").toUpperCase() === "SELL" ? "SHORT" : "LONG";
+}
+
+// Percentage move in the trade's FAVOUR. A short that falls has made money.
+export function directionalPnlPct(side, entry, exit) {
+  if (entry === null || exit === null || !(entry > 0)) return null;
+  const raw = ((exit - entry) / entry) * 100;
+  return side === "SHORT" ? -raw : raw;
+}
+
+// ── Partial booking ─────────────────────────────────────────────────────────
+// Half off at T1, the rest runs to T2. The ledger records the FULL-position
+// outcome, so a T2_HIT was previously banked as if the entire position had run
+// to the far target — which overstates a real ladder every time, because half
+// of it came off lower.
+//
+// T2 cannot be reached without passing through T1 (T1 sits between entry and
+// T2 by construction, both directions), so a T2_HIT implies both legs.
+// TARGET_HIT does not say WHICH target, so it books at T1 — the conservative
+// reading, and the only one that cannot overstate.
+export const T1_FRACTION = 0.5;
+
+export function bookingLegs(status, side, entry, sl, t1, t2) {
+  const st = String(status || "").toUpperCase();
+  const at = (px, frac) =>
+    px === null || px === undefined || !isFinite(px) ? null : { px: Number(px), frac };
+
+  if (st === "SL_HIT" || st === "STOPPED" || st === "STOP_HIT") {
+    return [at(sl, 1)].filter(Boolean);
+  }
+  if (st === "T2_HIT" || st === "TP2_HIT") {
+    const a = at(t1, T1_FRACTION), b = at(t2, 1 - T1_FRACTION);
+    // A collapsed target pair leaves only one real level — distinctTargets()
+    // nulls the duplicate rather than inventing a second exit. One leg then.
+    if (a && b) return [a, b];
+    return [at(t2, 1) || at(t1, 1)].filter(Boolean);
+  }
+  if (st === "T1_HIT" || st === "TP1_HIT" || st === "TARGET_HIT" || st === "PROFIT") {
+    return [at(t1, 1)].filter(Boolean);
+  }
+  return [];
+}
+
+// Weighted P&L across the ladder, in the trade's own direction. Returns null
+// when the ladder cannot be built — the caller then falls back to the ledger's
+// own pnl_pct rather than inventing a number.
+export function ladderedPnlPct(status, side, entry, sl, t1, t2) {
+  const legs = bookingLegs(status, side, entry, sl, t1, t2);
+  if (!legs.length || entry === null || !(entry > 0)) return null;
+  let acc = 0;
+  for (const leg of legs) {
+    const p = directionalPnlPct(side, entry, leg.px);
+    if (p === null) return null;
+    acc += p * leg.frac;
+  }
+  return Number(acc.toFixed(4));
 }
 
 // `rows` — plain objects with: id, date (YYYY-MM-DD...), symbol, signal_type,
@@ -88,8 +162,17 @@ export function simulateWallet(rows, badgeOf, currencyOf = () => "\u20b9") {
       // dollars. Carrying the unit per trade is what lets the table print the
       // allocation in ₹ and the entry price in $ without either being a lie.
       currency: currencyOf(r.symbol),
+      // Direction, and the levels that only mean anything once you know it.
+      // A short's stop sits ABOVE its entry; printing 2,412 as "stop" beside a
+      // 2,380 entry reads as a broken row until the side is on the card.
+      side: sideOf(r.action),
+      action: r.action ? String(r.action).toUpperCase() : null,
+      sl: num(r.sl),
+      target1: num(r.target1),
+      target2: num(r.target2),
       pnl_pct: r.pnl_pct === null || r.pnl_pct === undefined ? null : Number(r.pnl_pct),
       closed_at: r.closed_at ? String(r.closed_at).slice(0, 10) : null,
+      status_raw: String(r.status || ""),
       allocated_amount: 0,
       allocated_qty: null,
       realized_pnl: null,
@@ -140,7 +223,17 @@ export function simulateWallet(rows, badgeOf, currencyOf = () => "\u20b9") {
       // trade made or lost money.
       deployedByTier[ev.trade.tier] -= ev.trade.allocated_amount;
       deployedTotal -= ev.trade.allocated_amount;
-      const pnl = ev.trade.pnl_pct;
+      // Half off at T1, the rest to T2. The ledger's pnl_pct is the
+      // FULL-position outcome and banks a T2_HIT as though none of it came
+      // off lower, which overstates every laddered win. Fall back to the
+      // ledger figure when the ladder cannot be built — never invent one.
+      const ladder = ladderedPnlPct(
+        ev.trade.status_raw, ev.trade.side, ev.trade.entry,
+        ev.trade.sl, ev.trade.target1, ev.trade.target2);
+      ev.trade.pnl_basis = ladder === null ? "ledger" : "partial_booking";
+      ev.trade.ledger_pnl_pct = ev.trade.pnl_pct;
+      const pnl = ladder === null ? ev.trade.pnl_pct : ladder;
+      ev.trade.booked_pnl_pct = pnl;
       if (pnl !== null && ev.trade.allocated_amount > 0) {
         const rp = Math.round(ev.trade.allocated_amount * (pnl / 100));
         ev.trade.realized_pnl = rp;

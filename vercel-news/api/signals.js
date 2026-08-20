@@ -182,8 +182,18 @@ export default async function handler(req, res) {
 async function handleWallet(res) {
   try {
     const gradeCol = await optional("grade");
+    // Direction and the target ladder. The wallet simulated allocation and
+    // P&L without ever reading which WAY a trade was taken, so a short and a
+    // long were indistinguishable on the page — and this book carries real
+    // shorts on Gold, Crude, Natural Gas and Silver. optional() so the API
+    // still answers on a schema that predates any of these columns.
+    const [actionCol, slCol, t1Col, t2Col] = await Promise.all([
+      optional("action"), optional("sl"),
+      optional("target1"), optional("target2"),
+    ]);
     const sql = `SELECT id, date, symbol, signal_type, entry, status, lifecycle_status,
-                        exit_price, pnl_pct, closed_at, ${gradeCol}
+                        exit_price, pnl_pct, closed_at, ${gradeCol},
+                        ${actionCol}, ${slCol}, ${t1Col}, ${t2Col}
                  FROM all_signals
                  WHERE substr(date,1,10) >= ?
                  ORDER BY date ASC, id ASC`;
@@ -194,6 +204,7 @@ async function handleWallet(res) {
       symbol: str(r.symbol),
       closed_at: str(r.closed_at) || null,
       grade: str(r.grade) || null,
+      action: str(r.action) || null,
     }));
 
     const result = simulateWallet(rows, badgeOf, currencyOf);
