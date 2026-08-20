@@ -129,7 +129,7 @@ preloads 404'd as well.
 **Fixed.** Latin + latin-ext static subsets for all three families, 22 faces.
 `latin-ext` is not optional — the rupee sign is U+20B9, outside the `latin`
 subset, and this page is made of rupee figures. Regenerate with
-`scratchpad/fetch_fonts.py`; pin the variable axes or Google returns the whole
+`tools_fetch_fonts.py`; pin the variable axes or Google returns the whole
 132KB variable file once per weight requested.
 
 Actual transfer on a first load of `/`: **290KB across 15 files.** `unicode-range`
