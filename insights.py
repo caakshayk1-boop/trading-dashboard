@@ -67,6 +67,17 @@ def _finding(key, title, rule, rows, note=""):
         "names": [{"sym": r.get("sym"), "name": r.get("name"),
                    "comp": _f(r, "comp"), "sector": r.get("sector")}
                   for r in rows[:MAX_NAMES]],
+        # The COMPLETE list, symbols only.
+        #
+        # `names` is capped at MAX_NAMES and the page printed "+37 more" beside
+        # it — but the other 37 were never serialised, so there was nothing for
+        # that label to expand into. It was a dead end rendered as an offer.
+        #
+        # Symbols only, deliberately: the full dict shape for every hit across
+        # six findings adds ~110KB to a server-rendered page. A bare ticker is
+        # ~10 bytes, so the entire list costs ~3KB and the reader can actually
+        # have all of it. The first MAX_NAMES keep their full detail above.
+        "all_syms": [r.get("sym") for r in rows if r.get("sym")],
         "note": note,
     }
 
@@ -142,6 +153,62 @@ def hidden_findings(rows: list[dict]) -> list[dict]:
          and (_f(r, "r3m") is not None and _f(r, "r3m") <= 0)]))
 
     return [f for f in out if f]
+
+
+# ── 1b. Names that clear more than one screen ────────────────────────────────
+
+# Two independent rules landing on the same company is the point. One is a
+# property; two is a coincidence worth a look; three is a reason to open the
+# accounts.
+MIN_OVERLAP = 2
+
+
+def multi_signal_names(findings: list[dict], rows: list[dict] | None = None) -> list[dict]:
+    """Companies that appear in MORE THAN ONE finding above.
+
+    Each finding on its own is a single property — "quality high, price weak"
+    is one lens. The question this answers is different and, per name, harder:
+    which companies show up under SEVERAL unrelated lenses at once?
+
+    Worked example, and the reason this exists: a company can be simultaneously
+    (a) profit up 20%+ year on year, (b) price down over three months, and
+    (c) carrying a volume spike with no price response. Each rule finds it
+    separately, each buries it in a list of forty, and nothing on the page ever
+    said the three were the same company. That intersection is the finding.
+
+    Ranked by how many findings a name clears, then by composite. NOT a
+    recommendation and NOT a score — a name clearing three rules is a name
+    three rules happened to select, which is a reason to look, not a thesis.
+    """
+    findings = [f for f in (findings or []) if isinstance(f, dict)]
+    meta = {}
+    for r in (rows or []):
+        if isinstance(r, dict) and r.get("sym"):
+            meta[r["sym"]] = r
+
+    hits: dict[str, list[str]] = {}
+    for f in findings:
+        for sym in (f.get("all_syms") or []):
+            hits.setdefault(sym, []).append(f.get("title") or f.get("key") or "")
+
+    out = []
+    for sym, titles in hits.items():
+        # A rule cannot vouch for a name twice.
+        titles = sorted(set(t for t in titles if t))
+        if len(titles) < MIN_OVERLAP:
+            continue
+        r = meta.get(sym) or {}
+        out.append({
+            "sym": sym,
+            "name": r.get("name"),
+            "sector": r.get("sector"),
+            "comp": _f(r, "comp"),
+            "n": len(titles),
+            "findings": titles,
+        })
+
+    out.sort(key=lambda x: (-x["n"], -(x["comp"] or 0), x["sym"]))
+    return out
 
 
 # ── 2. Contradiction detector ────────────────────────────────────────────────

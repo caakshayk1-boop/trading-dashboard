@@ -391,8 +391,13 @@ def generate() -> None:
     try:
         import insights as _ins
         _srows = stock_screen.get("rows") or []
+        _hidden = _ins.hidden_findings(_srows)
         findings = {
-            "hidden": _ins.hidden_findings(_srows),
+            "hidden": _hidden,
+            # Names clearing more than one of the rules above. Every finding
+            # is a single lens; this is the only thing on the page that asks
+            # which companies several unrelated lenses agree on.
+            "multi": _ins.multi_signal_names(_hidden, _srows),
             "contradictions": _ins.contradictions(
                 stock_screen.get("breadth"),
                 (market_intel or {}).get("fii_dii")),
@@ -401,6 +406,7 @@ def generate() -> None:
             "universe": len(_srows),
         }
         print(f"[generate] Findings: {len(findings['hidden'])} hidden, "
+              f"{len(findings['multi'])} multi-signal, "
               f"{len(findings['contradictions'])} contradictions"
               f"{' , change report' if findings['changed'] else ''}")
     except Exception as e:                                   # noqa: BLE001

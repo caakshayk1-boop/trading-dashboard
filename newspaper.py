@@ -5246,6 +5246,26 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .fnd-m,.fnd-w{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.5}
 .fnd-m b,.fnd-w b{color:var(--dim);font-family:var(--mono);font-size:10px;
   letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:3px}
+/* The full-list disclosure. <summary> is 24px tall to clear WCAG 2.5.8 the
+   same way the tap-target block below does, and carries a visible focus ring
+   because it is genuinely keyboard-operable now. */
+.fnd-all{margin-top:8px}
+.fnd-all>summary{font-family:var(--mono);font-size:10.5px;color:var(--lime);
+  letter-spacing:.4px;cursor:pointer;list-style:none;min-height:24px;
+  display:flex;align-items:center}
+.fnd-all>summary::-webkit-details-marker{display:none}
+.fnd-all>summary::before{content:"▸";margin-right:6px;transition:transform .15s ease}
+.fnd-all[open]>summary::before{transform:rotate(90deg)}
+.fnd-all>summary:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.fnd-all .fnd-s{margin-top:8px;max-height:230px;overflow-y:auto}
+@media (prefers-reduced-motion:reduce){.fnd-all>summary::before{transition:none}}
+/* Multi-rule names. Left border in --lime, not --gold: --gold marks a
+   contradiction (something is wrong), this marks agreement (several rules
+   independently landed on the same company). */
+.fnd-multi{border-left:2px solid var(--lime)}
+.fnd-hits{margin:8px 0 0;padding-left:16px;font-size:12px;color:var(--muted);
+  line-height:1.6}
+.fnd-hits li{margin-bottom:2px}
 /* ── Tap targets ─────────────────────────────────────────────────────────
    WCAG 2.2 AA 2.5.8 asks for 24x24 CSS px. Measured on a 375px viewport,
    64 controls were under it — mostly 16px-tall inline links in the footer
@@ -6917,12 +6937,54 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <p class="fnd-r">{{ f.rule }}</p>
       <p class="fnd-s">
         {% for n in f.names %}<a href="#stocks" class="sym">{{ n.sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
-        {% if f.count > f.names|length %}<span class="mono-dim"> +{{ f.count - f.names|length }} more</span>{% endif %}
       </p>
+      {# "+N more" used to be a bare <span>. The other N names were never
+         serialised, so it was a dead label offering an expansion that did not
+         exist. insights.py now emits all_syms (the complete list, symbols
+         only), and this is a real <details> — no JS, works with scripting off,
+         keyboard-operable, and announces its own state to a screen reader. #}
+      {% if f.count > f.names|length and f.all_syms %}
+      <details class="fnd-all">
+        <summary>+{{ f.count - f.names|length }} more &mdash; show all {{ f.count }}</summary>
+        <p class="fnd-s">
+          {% for sym in f.all_syms %}<a href="#stocks" class="sym">{{ sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+        </p>
+      </details>
+      {% endif %}
       {% if f.note %}<p class="fnd-m">{{ f.note }}</p>{% endif %}
     </div>
     {% endfor %}
   </div>
+  {% endif %}
+
+  {# Names that clear MORE THAN ONE rule above. Every finding on its own is a
+     single property; this is the only place on the page that asks which
+     companies several unrelated rules independently selected. Ranked by how
+     many rules a name clears — not scored, and not a recommendation. #}
+  {% if findings.multi %}
+  <h3 style="font-size:15px;margin:26px 0 4px">Names that clear more than one screen</h3>
+  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
+    {{ findings.multi|length }} companies appear in two or more of the findings above.
+    One rule selecting a name is a property. Several unrelated rules selecting the same
+    name is the finding &mdash; and it is the one thing six separate lists cannot show you.
+  </p>
+  <div class="fnd-grid rv">
+    {% for m in findings.multi[:12] %}
+    <div class="card fnd fnd-multi">
+      <h4 class="fnd-t">
+        <a href="#stocks" class="sym">{{ m.sym }}</a>
+        <span class="fnd-n">{{ m.n }} rules</span>
+      </h4>
+      <p class="fnd-r">{{ m.name or '' }}{% if m.sector %} &middot; {{ m.sector }}{% endif %}{% if m.comp is not none %} &middot; composite {{ m.comp|round|int }}{% endif %}</p>
+      <ul class="fnd-hits">
+        {% for t in m.findings %}<li>{{ t }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+  {% if findings.multi|length > 12 %}
+  <p class="sdesc" style="margin-top:8px">Showing the 12 clearing the most rules, of {{ findings.multi|length }}.</p>
+  {% endif %}
   {% endif %}
 
   {% if findings.changed %}
