@@ -224,6 +224,40 @@ def _():
     assert not (expected - have), f"DELETED: {sorted(expected - have)}"
 
 
+@check("no theme-dependent colour is hardcoded outside a token declaration")
+def _():
+    """A near-white or near-black hex in a rule is legible in ONE theme.
+
+    Nine of these existed: the Trade Ideas cards rendered a near-black gradient
+    under dark ink in light mode and were unreadable, every ticker symbol on the
+    site was #E6EAF0 on paper, and the hero orbs — a glow tuned to be additive
+    on a dark ground — read as a grey smudge. All were invisible to review
+    because each looked correct in the theme its author was using.
+
+    Token DECLARATIONS are exempt: that is the one place a literal belongs, and
+    both themes declare their own value for the same name. Everything else must
+    read a token.
+
+    Threshold is relative luminance: above 0.72 is near-white, below 0.20 is
+    near-black. Mid-tones are theme-agnostic enough to pass either way.
+    """
+    css = re.search(r"<style>(.*)</style>", TEMPLATE, re.S)
+    assert css, "no <style> block in TEMPLATE"
+    offenders = []
+    for n, line in enumerate(css.group(1).split("\n"), 1):
+        stripped = line.lstrip()
+        # token declarations and comments are where literals are allowed
+        if stripped.startswith(("--", "/*", "*")):
+            continue
+        for hexv in re.findall(r"#([0-9A-Fa-f]{6})\b", line):
+            r, g, b = (int(hexv[i:i + 2], 16) for i in (0, 2, 4))
+            lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255
+            if lum > 0.72 or lum < 0.20:
+                offenders.append(f"#{hexv} (lum {lum:.2f}) in: {stripped[:70]}")
+    assert not offenders, "hardcoded theme-dependent colour:\n    " + \
+        "\n    ".join(offenders)
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

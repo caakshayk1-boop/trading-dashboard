@@ -26,6 +26,7 @@ from newspaper import (
     fetch_global_news,
     fetch_markets,
     market_regime,
+    what_matters,
     get_entrepreneur_quote,
     get_world_lesson,
     get_case_study,
@@ -576,6 +577,26 @@ def generate() -> None:
                                for d in health["datasets"] if not d["is_current"])
              if health["degraded"] else ""))
 
+    # ── What matters now ────────────────────────────────────────────────────
+    # The hero's interpretation layer. Deterministic — see what_matters() in
+    # newspaper.py for why this is Python and not a model call.
+    #
+    # wins/closed are recomputed here rather than read from the template,
+    # because the template derives them itself in Jinja and there is no way to
+    # hand a {% set %} back to Python. The expression below MIRRORS the Jinja
+    # one exactly, including its rounding: Jinja's |round(0) is half-up, while
+    # Python's round() is half-to-even, so 24.5% would print 25 on the page and
+    # 24 in the card. +0.5 then truncate reproduces the page's number.
+    _wins   = sum(1 for a in alerts if a.get("badge") == "win")
+    _losses = sum(1 for a in alerts if a.get("badge") == "loss")
+    _closed = _wins + _losses
+    _winrate = int(_wins / _closed * 100 + 0.5) if _closed else 0
+    matters = what_matters(
+        regime=regime, markets=markets, market_intel=market_intel, top5=top5,
+        closed=_closed, winrate=_winrate, engine_changes=ENGINE_CHANGES)
+    print(f"[generate] What matters: {len(matters)} card(s) — "
+          + ", ".join(c["tag"] for c in matters))
+
     base = dict(
         health=health,
         tv_aliases=TV_ALIASES,
@@ -588,6 +609,7 @@ def generate() -> None:
         build_date=now.strftime("%Y-%m-%d"),
         markets=markets,
         regime=regime,
+        matters=matters,
         news=news,
         quote=quote,
         lesson=lesson,

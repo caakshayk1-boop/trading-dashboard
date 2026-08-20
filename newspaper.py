@@ -456,6 +456,165 @@ def market_regime(markets: list[dict]) -> dict:
         "thin": len(parts) < 4,
     }
 
+
+def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None,
+                 top5: list[dict], closed: int, winrate: float,
+                 engine_changes: list[dict]) -> list[dict]:
+    """The interpretation layer: at most five cards saying what today means.
+
+    The page had the numbers and no reading of them. A reader arriving at 6 AM
+    got a regime score, a nine-instrument rail, five ranked ideas and a ledger,
+    and had to do the synthesis themselves — which is the work the site exists
+    to have already done.
+
+    Three rules govern every card here, and they are the reason this is Python
+    and not a Groq prompt:
+
+    ONE — DETERMINISTIC. Every card is a rule over data already on the page.
+    Nothing is generated, nothing is inferred by a model, so the same build
+    always produces the same reading and any card can be traced to its inputs.
+    The site's own trust rule is that AI interpretation must never wear raw
+    data's clothes; the cheapest way to honour it is to have no AI here.
+
+    TWO — EVIDENCE OR SILENCE. A card is emitted only when its trigger fires.
+    Four cards on a day that earned four, one on a day that earned one. Filling
+    a fixed grid means inventing a reading on a quiet day, and a manufactured
+    "Momentum" card on a flat tape is worse than an empty column: it is a
+    confident statement about nothing.
+
+    THREE — EVERY CARD HANDS OFF. Each carries the section that proves it.
+    A claim with no route to its evidence is an assertion.
+
+    Returns [] when nothing qualifies. The template renders the whole block
+    only when this is non-empty.
+    """
+    cards: list[dict] = []
+    parts = (regime or {}).get("parts") or []
+    priced = [m for m in (markets or [])
+              if m.get("price") not in (None, "", "—")]
+
+    def pct(p) -> float:
+        return float(p.get("pct") or 0)
+
+    havens = sorted([p for p in parts if p["side"] == "haven"],
+                    key=pct, reverse=True)
+    risky  = sorted([p for p in parts if p["side"] == "risk"],
+                    key=pct, reverse=True)
+
+    # ── RISK ────────────────────────────────────────────────────────────────
+    # The card the brief asks for by name: "Gold +4.26% while equities soften".
+    # It fires on DIVERGENCE, not on a single move — a haven bid while risk
+    # assets are also up is a liquidity story, not a risk story, and calling it
+    # one would be the fake-precision the brief forbids.
+    risk_dn = [p for p in risky if pct(p) < 0]
+    if havens and risky and pct(havens[0]) >= 0.5 and len(risk_dn) >= max(1, len(risky) // 2):
+        h = havens[0]
+        cards.append({
+            "kind": "risk", "tag": "Risk",
+            "head": f"{h['name']} {pct(h):+.2f}% while {len(risk_dn)} of "
+                    f"{len(risky)} risk assets fell",
+            "why": f"A haven bid against a soft tape is what pushes the regime "
+                   f"reading down. It sits at {regime['score']}/100 — "
+                   f"{regime['label'].lower()}.",
+            "href": "#marketintel", "cta": "Market intel",
+        })
+    elif regime and regime.get("score", 50) <= 30:
+        cards.append({
+            "kind": "risk", "tag": "Risk",
+            "head": f"{regime['label']} · {regime['score']}/100",
+            "why": "Risk appetite across the priced board, weighted by move "
+                   "size. 50 is neutral.",
+            "href": "#marketintel", "cta": "Market intel",
+        })
+
+    # ── MOMENTUM ────────────────────────────────────────────────────────────
+    # The strongest risk asset, and only when it actually moved. A +0.04% "best
+    # riser" is not momentum; it is the top of a flat list.
+    if risky and pct(risky[0]) >= 0.5:
+        r = risky[0]
+        up_n = sum(1 for m in priced if float(m.get("change_pct") or 0) > 0)
+        cards.append({
+            "kind": "momentum", "tag": "Momentum",
+            "head": f"{r['name']} {pct(r):+.2f}% — the day's strongest risk asset",
+            "why": f"{up_n} of {len(priced)} priced instruments advanced. "
+                   f"Breadth is what separates a move from a rotation.",
+            "href": "#world", "cta": "Full board",
+        })
+
+    # ── WATCH ───────────────────────────────────────────────────────────────
+    # Priority order matters. A thin board outranks every other observation,
+    # because on a thin board every other observation is weaker than it looks.
+    fd = (market_intel or {}).get("fii_dii") or {}
+    fii, dii = fd.get("fii_cr"), fd.get("dii_cr")
+    if regime and regime.get("thin"):
+        cards.append({
+            "kind": "watch", "tag": "Watch",
+            "head": f"Only {regime['n']} instruments priced this morning",
+            "why": "Under half the board reported. Read today's regime score "
+                   "as a sketch, not a measurement — including the cards "
+                   "beside this one.",
+            "href": "#datahealth", "cta": "Data health",
+        })
+    elif (fii is not None and dii is not None
+          and (fii < 0 < dii or dii < 0 < fii)
+          and max(abs(fii), abs(dii)) >= 500):
+        buyer, seller = ("DII", "FII") if dii > 0 else ("FII", "DII")
+        cards.append({
+            "kind": "watch", "tag": "Watch",
+            "head": f"FII ₹{fii:+,.0f} Cr against DII ₹{dii:+,.0f} Cr",
+            "why": f"{buyer} money is absorbing {seller} selling. Flows on "
+                   f"opposite sides is the setup that resolves violently in "
+                   f"whichever direction gives up first.",
+            "href": "#marketintel", "cta": "The flows",
+        })
+    elif engine_changes:
+        ec = engine_changes[0]
+        cards.append({
+            "kind": "watch", "tag": "Watch",
+            "head": f"Engine changed — {ec.get('title', '')}",
+            "why": f"{ec.get('date', '')} · {ec.get('tag', '')}. Every rule "
+                   f"change is logged before it affects a signal, not after.",
+            "href": "#rules", "cta": "Engine log",
+        })
+
+    # ── OPPORTUNITY ─────────────────────────────────────────────────────────
+    if top5:
+        t = top5[0]
+        rest = ", ".join(f"{p.get('name')} {p.get('score')}" for p in top5[1:4])
+        cards.append({
+            "kind": "opportunity", "tag": "Opportunity",
+            "head": f"{t.get('name')} scores {t.get('score')}/100 in this week's screen",
+            "why": (f"Then {rest}. " if rest else "")
+                   + "Ranked once per ISO week — these are ideas, not ledger "
+                     "signals, and they never touch the win rate.",
+            "href": "#picks", "cta": "All five",
+        })
+
+    # ── RECORD ──────────────────────────────────────────────────────────────
+    # The site's whole argument, and the one card that is allowed to say the
+    # sample is too small — because saying "20%" over four trades in the same
+    # type as a measured result is the single most misleading thing this page
+    # could do.
+    if closed >= 30:
+        cards.append({
+            "kind": "record", "tag": "Record",
+            "head": f"{closed} closed signals · {winrate:g}% winners",
+            "why": "Logged when it fires, scored when it closes. Losers "
+                   "included — that is the point of publishing it.",
+            "href": "#perf", "cta": "Full record",
+        })
+    elif closed:
+        cards.append({
+            "kind": "record", "tag": "Record",
+            "head": f"{closed} closed signal{'' if closed == 1 else 's'} — "
+                    f"too few to measure",
+            "why": "A win rate under 30 closed trades is a running tally, not "
+                   "an edge. It is reported here as a count on purpose.",
+            "href": "#perf", "cta": "Full record",
+        })
+
+    return cards
+
 # ─────────────────────────────────────────────────────────────
 # ENTREPRENEUR QUOTES — 100 quotes
 # ─────────────────────────────────────────────────────────────
@@ -1972,7 +2131,11 @@ SECTION_MAP = [
     # underneath it cannot: what here would I never have scrolled to?
     ("world",       "World",        "main", "Research"),
     ("findings",    "Findings",     "main", "Research"),
-    ("longterm",    "Long-Term",    "main", "Research"),
+    # Renamed from "Long-Term". The section's own headline has read "Own the
+    # business." for some time while the nav still said "Long-Term" — the same
+    # nav/heading disagreement that put "07 Performance" over "17 / EDGE".
+    # seclabel reads from here, so the eyebrow follows automatically.
+    ("longterm",    "Own the Business", "main", "Research"),
     ("stocks",      "Stock Screen", "main", "Research"),
     ("ipos",        "New Listings", "main", "Research"),
     ("funds",       "Fund Screen",  "main", "Research"),
@@ -3667,17 +3830,63 @@ TEMPLATE = r"""<!DOCTYPE html>
      stylesheet from the critical path. Latin subset, the five weights the
      stylesheet actually uses, 61 KB across eight files that cache
      independently of the daily HTML rebuild. -->
-<link rel="preload" href="/fonts/FiraSans-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/JetBrainsMono-400.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Preload only the two faces above the fold: the section headline serif and
+     the mono that sets the ticker rail and every number in the hero. Both
+     pointed at the deleted Cyrillic files until now, so both preloads 404'd
+     — the browser opened two connections, got nothing, and then discovered
+     the real faces later through CSS. Preloading a font you do not ship is
+     strictly worse than not preloading at all. -->
+<link rel="preload" href="/fonts/Newsreader-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-@font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/FiraSans-400.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Fira Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/FiraSans-500.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Fira Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/FiraSans-600.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Fira Sans';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/FiraSans-700.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'Fira Sans';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/FiraSans-800.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/JetBrainsMono-400.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/JetBrainsMono-500.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
-@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/JetBrainsMono-700.woff2') format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+/* ══════════ TYPEFACES ══════════
+   These eight files used to be CYRILLIC subsets. Every @font-face carried
+   unicode-range U+0400-045F, so the browser was told to use Fira Sans and
+   JetBrains Mono only for Cyrillic — on a site with no Cyrillic on it. Every
+   Latin letter and every digit fell through to the system font, which means
+   the site's typography was whatever the reader's OS happened to have, and it
+   looked different on every machine. Confirmed against production by measuring
+   `'Fira Sans', monospace` against plain `monospace` for "Numbers first 24078":
+   identical, i.e. Fira Sans covered none of it. The three JetBrainsMono files
+   were also byte-identical, so 500 and 700 were copies of 400.
+
+   The Cyrillic files are gone rather than kept. Nothing on this site is
+   Cyrillic, and eight files serving a script the page never renders is dead
+   weight in the repo and one more thing to keep in sync.
+
+   THE SUBSETS ARE SPLIT ON PURPOSE. unicode-range means the browser fetches a
+   file only when the page actually contains a glyph from that range at that
+   weight — so latin-ext (which exists here almost entirely to carry ₹, U+20B9,
+   absent from the `latin` subset) costs nothing on a page that has no rupee
+   figures at that weight.
+
+   Newsreader is pinned at opsz 36. It is a variable font, and an unpinned
+   request returns the entire 132KB variable file for EVERY weight asked for;
+   the pinned static instance is 24KB. It is only ever used at display sizes,
+   so one optical size is the right one. Regenerate with
+   scratchpad/fetch_fonts.py — the reasoning lives in that file's docstring. */
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/FiraSans-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/FiraSans-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/FiraSans-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/FiraSans-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/FiraSans-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/FiraSans-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/FiraSans-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/FiraSans-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/FiraSans-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/FiraSans-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/JetBrainsMono-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/JetBrainsMono-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/JetBrainsMono-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/JetBrainsMono-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/JetBrainsMono-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/JetBrainsMono-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/Newsreader-400i-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/Newsreader-400i-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Newsreader-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Newsreader-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/Newsreader-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/Newsreader-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 </style>
 <style>
 /* ═══════════════════ TOKENS ═══════════════════ */
@@ -3725,6 +3934,26 @@ TEMPLATE = r"""<!DOCTYPE html>
   --lime-line:rgba(194,240,74,.34);
 
   /* Semantic. Financial meaning only — never decoration, never a button. */
+  /* Hero orbs. Tokenised because a translucent colour glow is an ADDITIVE
+     device: on a dark ground it reads as light, on a warm paper ground the
+     same fill is darker than the page and reads as a smudge. Light mode
+     gets its own values rather than inheriting these. */
+  --orb-a:rgba(184,239,67,.11);
+  --orb-b:rgba(106,168,255,.07);
+
+  /* Surfaces that were hardcoded hex before the light theme existed and
+     stayed hardcoded after it. Each one is a near-black: on the paper
+     ground they rendered a dark card under dark text, which is how the
+     Trade Ideas grid came to be unreadable in light mode while every
+     token-driven surface beside it was fine. */
+  --pick-edge:#0E0F12;        /* far end of the pick-card gradient */
+  /* Ink printed ON a --up fill. The fill itself flips from a bright mint
+     (dark) to a deep forest (light), so a single hardcoded ink is legible
+     against exactly one of them. */
+  --on-up:#06251A;
+  --rank-ink:rgba(255,255,255,.035);  /* the ghosted 01..05 numeral */
+  --scroll-thumb:#232529;
+
   --up:#3DDC97;   --up-soft:rgba(61,220,151,.12);
   --down:#FF6B6B; --down-soft:rgba(255,107,107,.12);
   --gold:#E8C547; --gold-soft:rgba(232,197,71,.12);
@@ -3759,6 +3988,14 @@ TEMPLATE = r"""<!DOCTYPE html>
 
   --mono:'JetBrains Mono',ui-monospace,monospace;
   --sans:'Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  /* Editorial display face. Newsreader carries the headlines and nothing
+     else — never a number, never a label, never a table. The split is the
+     point: a serif says "this is an argument", the mono says "this is a
+     measurement", and a page that uses one face for both reads as either a
+     blog or a terminal rather than a research desk.
+     Georgia is the fallback because it ships everywhere and its x-height
+     is close enough that a swap does not reflow the headline. */
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
   --ease:cubic-bezier(.22,1,.36,1);
   --gut:clamp(16px,4vw,40px);
 
@@ -3787,10 +4024,16 @@ TEMPLATE = r"""<!DOCTYPE html>
   --line:rgba(23,25,28,.10);
   --line2:rgba(23,25,28,.18);
 
-  /* Ink on paper: 15.8:1 / 6.1:1 / 4.6:1 against --bg. */
+  /* Ink on paper. The ratios below are measured against --bg2 (#F5F4F0), the
+     DARKEST surface any of these three regularly print on — not against --bg.
+     --dim was tuned to 4.6:1 on --bg and shipped at 4.23:1 on a section band,
+     which is where it actually appears: table headers, the provenance strip,
+     card metadata. A contrast figure quoted against the lightest possible
+     ground is a figure that is never true where the text is.
+     Measured: 16.0:1 / 6.2:1 / 4.62:1. */
   --text:#17191C;
   --muted:#535A63;
-  --dim:#6E757E;
+  --dim:#656C74;
 
   /* The lime is darkened for light mode. #C2F04A on white is 1.6:1 — a
      signature colour that becomes unreadable is a branding failure, so the
@@ -3799,6 +4042,12 @@ TEMPLATE = r"""<!DOCTYPE html>
   --lime-soft:rgba(92,122,11,.10);
   --lime-line:rgba(92,122,11,.30);
 
+  --orb-a:rgba(194,240,74,.16);
+  --orb-b:rgba(31,95,191,.05);
+  --pick-edge:#F1EFE8;
+  --on-up:#FFFFFF;
+  --rank-ink:rgba(23,25,28,.05);
+  --scroll-thumb:#D9D7D0;
   --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
   --down:#C0392B; --down-soft:rgba(192,57,43,.10);
   --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
@@ -3814,8 +4063,11 @@ TEMPLATE = r"""<!DOCTYPE html>
     --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
     --surface3:#EFEEE9; --overlay:#FFFFFF;
     --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-    --text:#17191C; --muted:#535A63; --dim:#6E757E;
+    --text:#17191C; --muted:#535A63; --dim:#656C74;
     --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
+    --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
+    --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
+    --on-up:#FFFFFF;
     --up:#0E7A4F; --up-soft:rgba(14,122,79,.10);
     --down:#C0392B; --down-soft:rgba(192,57,43,.10);
     --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
@@ -3858,7 +4110,7 @@ a{color:inherit;text-decoration:none}
 ::selection{background:var(--lime);color:#000}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:#232529;border-radius:9px}
+::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:9px}
 ::-webkit-scrollbar-thumb:hover{background:#33363c}
 
 /* ═══════════════════ TEXTURE + CHROME ═══════════════════ */
@@ -3921,19 +4173,28 @@ a{color:inherit;text-decoration:none}
 .hero{position:relative;max-width:1400px;margin:0 auto;padding:clamp(48px,9vw,110px) var(--gut) clamp(30px,5vw,56px);
   overflow:hidden;z-index:2;}
 .orb{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:-1}
-.orb.a{width:min(46vw,520px);aspect-ratio:1;background:rgba(184,239,67,.11);top:-14%;right:-8%;animation:drift 22s ease-in-out infinite;}
-.orb.b{width:min(34vw,380px);aspect-ratio:1;background:rgba(106,168,255,.07);bottom:-20%;left:-6%;animation:drift 28s ease-in-out infinite reverse;}
+.orb.a{width:min(46vw,520px);aspect-ratio:1;background:var(--orb-a);top:-14%;right:-8%;animation:drift 22s ease-in-out infinite;}
+.orb.b{width:min(34vw,380px);aspect-ratio:1;background:var(--orb-b);bottom:-20%;left:-6%;animation:drift 28s ease-in-out infinite reverse;}
 @keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(-6%,7%)}}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10.5px;
   letter-spacing:2.4px;text-transform:uppercase;color:var(--lime);border:1px solid var(--lime-line);
   background:var(--lime-soft);padding:6px 13px;border-radius:100px;margin-bottom:26px;}
-h1.hl{font-size:clamp(40px,8.2vw,94px);line-height:.94;font-weight:800;letter-spacing:-3px;
-  max-width:15ch;margin-bottom:22px;}
+/* Display type is the serif; everything measured stays sans or mono.
+   Tracking is -1.4px rather than the -3px this was set at as a sans: a serif's
+   serifs already close the gaps between letters, so the same negative tracking
+   that tightens Fira Sans collides Newsreader. Weight is 600 because 600 is the
+   heaviest face actually shipped — asking for 800 gets a synthesised bold,
+   which is a smeared outline rather than a heavier cut. */
+h1.hl{font-family:var(--serif);font-size:clamp(40px,8.2vw,94px);line-height:.98;
+  font-weight:600;letter-spacing:-1.4px;max-width:15ch;margin-bottom:22px;}
 h1.hl .w{display:inline-block;overflow:hidden;vertical-align:top}
 h1.hl .w>span{display:inline-block;transform:translateY(105%);opacity:0;
   animation:rise .9s var(--ease) forwards;animation-delay:var(--d,0s);}
 @keyframes rise{to{transform:translateY(0);opacity:1}}
-h1.hl em{font-style:normal;color:var(--lime)}
+/* Restored to a real italic. It was forced upright because the old stack had
+   no italic cut to fall back on; Newsreader ships one, and the contrast
+   between roman and italic is the whole reason to set a headline in a serif. */
+h1.hl em{font-style:italic;font-weight:400;color:var(--lime)}
 .hero-sub{font-size:clamp(15px,1.7vw,19px);color:var(--muted);max-width:52ch;line-height:1.6;
   opacity:0;animation:fadeUp .8s var(--ease) .7s forwards;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
@@ -3985,6 +4246,82 @@ h1.hl em{font-style:normal;color:var(--lime)}
 @media(max-width:640px){
   .brief-l li{padding:10px 14px;font-size:13px}
   .brief-h,.regime{padding-left:14px;padding-right:14px}
+}
+
+/* ══════════ WHAT MATTERS NOW ══════════
+   The interpretation layer, and the only block above the fold allowed to make
+   a claim. It lives INSIDE .brief's border on purpose: a bordered grid of
+   bordered cards inside a bordered panel is three frames around one thought,
+   which is the "excessive rounded cards" failure the rebuild brief names by
+   name. The cards are separated by newspaper column rules instead — one
+   hairline between readings, no box around any of them.
+
+   Semantic colour appears once per card, on a 5px dot. Never on the heading,
+   never as a fill: --down on a heading would make "Gold rose" read as a loss.
+   Every card also carries its tag as a WORD, so the colour is never the only
+   thing distinguishing a risk reading from an opportunity. */
+.matters{padding:2px 0 0}
+.matters-h{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);
+  flex-wrap:wrap;padding:var(--s3) var(--s5) var(--s2)}
+.matters-t{font-family:var(--mono);font-size:var(--t-overline);font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--text)}
+.matters-n{font-family:var(--mono);font-size:var(--t-overline);color:var(--dim);
+  letter-spacing:.4px}
+
+/* auto-fit rather than a fixed column count: what_matters() returns one to
+   five cards depending on what the day earned, and a fixed 5-up grid would
+   leave dead columns on a quiet morning. */
+/* Separators are box-shadows, not borders. auto-fit resolves to a different
+   column count at every width AND with every card count, so any rule written
+   as "border-left except nth-child(odd)" is correct at exactly one of those
+   and wrong at the rest — it assumed two columns and got three at 900px.
+   A left+top shadow on every cell draws the full lattice whatever the count;
+   overflow:hidden on the grid clips the outermost two, and the grid's own
+   border-top replaces the row of top shadows it just clipped. Shadows take no
+   layout space, so this costs nothing in alignment. */
+.matters-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));
+  border-top:1px solid var(--line);overflow:hidden}
+
+.mcard{position:relative;display:flex;flex-direction:column;
+  padding:var(--s4) var(--s5) var(--s5);
+  box-shadow:-1px 0 0 var(--line),0 -1px 0 var(--line);
+  transition:background var(--m-micro) var(--ease)}
+.mcard:hover{background:var(--surface)}
+
+.mc-tag{display:flex;align-items:center;gap:6px;font-family:var(--mono);
+  font-size:var(--t-overline);font-weight:700;letter-spacing:1.6px;
+  text-transform:uppercase;color:var(--mc,var(--muted));margin-bottom:var(--s3)}
+.mc-tag i{width:5px;height:5px;border-radius:50%;background:var(--mc,var(--muted));
+  flex:0 0 auto}
+
+.mc-head{font-size:var(--t-h4);font-weight:600;line-height:1.35;color:var(--text);
+  letter-spacing:-.1px;margin:0 0 var(--s2);font-variant-numeric:tabular-nums}
+.mc-why{font-size:var(--t-body-sm);line-height:1.6;color:var(--muted);margin:0 0 var(--s3)}
+
+/* margin-top:auto pins every CTA to the bottom of its column. Without it the
+   links sit directly under their own paragraph, so a card whose reading wraps
+   to three lines drops its link 20px below its neighbours' — four "→" at four
+   different heights, which is the detail that makes a grid look assembled
+   rather than designed. */
+.mc-cta{margin-top:auto;align-self:flex-start;font-family:var(--mono);font-size:var(--t-overline);
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);
+  border-bottom:1px solid transparent;transition:color var(--m-micro) var(--ease),
+  border-color var(--m-micro) var(--ease)}
+.mcard:hover .mc-cta,.mc-cta:hover{color:var(--mc,var(--lime));
+  border-bottom-color:currentColor}
+
+.mc-risk{--mc:var(--down)}
+.mc-momentum{--mc:var(--up)}
+.mc-watch{--mc:var(--gold)}
+.mc-opportunity{--mc:var(--lime)}
+.mc-record{--mc:var(--blue)}
+
+/* Below 900px auto-fit lands on two columns, so the left rule that separated
+   columns now also has to separate ROWS — without this, cards 3 and 4 sit
+   flush against 1 and 2 with no rule between them. */
+@media(max-width:640px){
+  .matters-h{padding-left:var(--s4);padding-right:var(--s4)}
+  .mcard{padding:var(--s4)}
 }
 
 
@@ -4580,7 +4917,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .jc-warn li::marker{color:var(--gold)}
 .jc-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto;padding-top:4px}
 .jc-apply{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
-  padding:7px 13px;border-radius:6px;background:var(--up);color:#06251A;font-weight:600;
+  padding:7px 13px;border-radius:6px;background:var(--up);color:var(--on-up);font-weight:600;
   text-decoration:none;border:1px solid transparent}
 .jc-apply:hover{filter:brightness(1.08)}
 .jc-apply-unv{background:transparent;color:var(--gold);border-color:rgba(232,197,71,.5)}
@@ -4770,7 +5107,8 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sec:last-child{border-bottom:none}
 .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
 .snum{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:2px;margin-bottom:12px;display:block}
-.stitle{font-size:clamp(26px,4.4vw,50px);font-weight:700;letter-spacing:-1.8px;line-height:1}
+.stitle{font-family:var(--serif);font-size:clamp(26px,4.4vw,50px);font-weight:600;
+  letter-spacing:-.8px;line-height:1.04}
 .sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
 /* ── Data health ─────────────────────────────────────────────────────────
    One badge, six statuses, every section. Before it, #funds said "0.5d old",
@@ -5028,16 +5366,45 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 
 /* ═══════════════════ 01 PICKS ═══════════════════ */
 .pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.pick{position:relative;background:linear-gradient(160deg,var(--surface),#0E0F12);border:1px solid var(--line);
+.pick{position:relative;background:linear-gradient(160deg,var(--surface),var(--pick-edge));border:1px solid var(--line);
   border-radius:18px;padding:22px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
 .pick:hover{border-color:var(--lime-line);transform:translateY(-4px)}
+
+/* ══════════ THE LEAD IDEA ══════════
+   Five equally-sized cards said the fifth idea was worth the same attention as
+   the first, and the grid put the fifth alone on a second row with three empty
+   cells beside it. Rank 01 now occupies a 2x2 block: same markup, same fields,
+   same detail — nothing is summarised away — but at a size that matches what
+   the score already claims about it.
+
+   Guarded on .has-lead (set only at five ideas) and on a width wide enough for
+   four columns. Below that the grid stays uniform, because a double-width card
+   in a two-column grid is just a full-width card with a gap under it. */
+.pick-lead{display:none}
+@media(min-width:1080px){
+  .pick-grid.has-lead{grid-template-columns:repeat(4,1fr)}
+  .pick-grid.has-lead > .pick:first-child{grid-column:span 2;grid-row:span 2;padding:30px 32px}
+  .pick-grid.has-lead > .pick:first-child .rank{font-size:104px;top:-20px;right:18px}
+  .pick-grid.has-lead > .pick:first-child .sym{font-size:24px}
+  .pick-grid.has-lead > .pick:first-child .px{font-size:clamp(40px,3.6vw,54px);letter-spacing:-2.4px}
+  .pick-grid.has-lead > .pick:first-child .mom{font-size:12.5px;gap:18px;margin-top:10px}
+  .pick-grid.has-lead > .pick:first-child .th{font-size:15px;margin:20px 0}
+  .pick-grid.has-lead > .pick:first-child .inval{font-size:13px}
+  /* The label is the only new content on the card, and it exists because size
+     alone does not say WHY this one is bigger. */
+  .pick-grid.has-lead > .pick:first-child .pick-lead{display:inline-block;
+    font-family:var(--mono);font-size:var(--t-overline);font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;color:var(--lime);
+    background:var(--lime-soft);border:1px solid var(--lime-line);
+    border-radius:4px;padding:4px 9px;margin-bottom:var(--s3)}
+}
 .pick .rank{position:absolute;top:-14px;right:10px;font-family:var(--mono);font-size:64px;font-weight:700;
-  color:rgba(255,255,255,.035);line-height:1;pointer-events:none}
+  color:var(--rank-ink);line-height:1;pointer-events:none}
 .pick .sym{font-family:var(--mono);font-size:17px;font-weight:700;letter-spacing:-.4px}
 .pick .px{font-family:var(--mono);font-size:30px;font-weight:700;letter-spacing:-1.6px;margin:6px 0 2px}
 .pick .mom{display:flex;gap:12px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px;flex-wrap:wrap}
 .pick .mom b{font-weight:600}
-.pick .th{font-size:12.5px;color:#B4BAC2;line-height:1.6;margin:14px 0;font-style:italic;
+.pick .th{font-size:12.5px;color:var(--muted);line-height:1.6;margin:14px 0;font-style:italic;
   border-left:2px solid var(--line2);padding-left:11px}
 .lvl{display:flex;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .lvl>div{flex:1}
@@ -5293,7 +5660,7 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
 .tw-tall{max-height:min(78vh,780px);overflow-y:auto}
 .tw-tall table.t th{z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
 table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
-table.t th{position:sticky;top:0;background:#0E0F12;text-align:left;font-size:9.5px;letter-spacing:1.4px;
+table.t th{position:sticky;top:0;background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
 table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 table.t tbody tr{transition:background .2s}
@@ -5311,7 +5678,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 .badge-protected{background:rgba(184,239,67,.12);color:var(--lime);border:1px solid rgba(184,239,67,.3)}
 .badge-compounding{background:rgba(167,139,250,.12);color:var(--violet);border:1px solid rgba(167,139,250,.3)}
 .badge-threatened{background:rgba(232,197,71,.12);color:var(--gold);border:1px solid rgba(232,197,71,.3)}
-.sym{font-family:var(--mono);font-weight:700;color:#E6EAF0;transition:color .2s}
+.sym{font-family:var(--mono);font-weight:700;color:var(--text);transition:color .2s}
 .sym:hover{color:var(--lime)}
 .mono-dim{font-family:var(--mono);color:var(--dim);font-size:11.5px}
 .pnl-u{color:var(--up);font-weight:700;font-family:var(--mono)}
@@ -5350,7 +5717,8 @@ table.t tbody tr:last-child td{border-bottom:none}
   overflow:hidden;margin-bottom:14px;background:var(--surface)}
 @media(max-width:820px){.lead{grid-template-columns:1fr}}
 .lead-m{padding:clamp(22px,3.4vw,38px)}
-.lead-m h2{font-size:clamp(21px,3vw,34px);font-weight:700;line-height:1.14;letter-spacing:-1.1px;margin:12px 0 14px}
+.lead-m h2{font-family:var(--serif);font-size:clamp(21px,3vw,34px);font-weight:600;
+  line-height:1.18;letter-spacing:-.4px;margin:12px 0 14px}
 .lead-m h2 a{transition:color .25s}
 .lead-m h2 a:hover{color:var(--lime)}
 .lead-m p{font-size:14.5px;color:var(--muted);line-height:1.7}
@@ -5439,11 +5807,11 @@ table.t tbody tr:last-child td{border-bottom:none}
 .essay::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,var(--lime))}
 .essay h3{font-size:clamp(19px,2.6vw,27px);font-weight:700;letter-spacing:-.8px;line-height:1.25;
   margin-bottom:16px;color:var(--ac,var(--lime))}
-.essay p{font-size:14.5px;line-height:1.85;color:#C4CAD2}
+.essay p{font-size:14.5px;line-height:1.85;color:var(--muted)}
 .essay .q{font-size:15px;font-style:italic;color:var(--ac,var(--lime));border-left:2px solid var(--ac,var(--lime));
   padding-left:15px;margin:20px 0;line-height:1.7}
 .essay .act{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
-  margin-top:20px;font-size:13.5px;line-height:1.7;color:#C4CAD2}
+  margin-top:20px;font-size:13.5px;line-height:1.7;color:var(--muted)}
 .essay .act b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
   color:var(--ac,var(--lime));margin-bottom:7px}
 .essay .meta{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
@@ -5454,12 +5822,12 @@ table.t tbody tr:last-child td{border-bottom:none}
   color:var(--ac,var(--lime));margin-bottom:12px}
 .bookdeep ol.crux{margin:0;padding-left:0;list-style:none;counter-reset:cx}
 .bookdeep ol.crux li{counter-increment:cx;position:relative;padding-left:34px;margin-bottom:11px;
-  font-size:13.5px;line-height:1.65;color:#C4CAD2}
+  font-size:13.5px;line-height:1.65;color:var(--muted)}
 .bookdeep ol.crux li::before{content:counter(cx,decimal-leading-zero);position:absolute;left:0;top:1px;
   font-family:var(--mono);font-size:10.5px;color:var(--ac,var(--lime));opacity:.75}
 .bookdeep ul.bdlist{margin:0;padding-left:0;list-style:none}
 .bookdeep ul.bdlist li{position:relative;padding-left:20px;margin-bottom:10px;
-  font-size:13.5px;line-height:1.65;color:#C4CAD2}
+  font-size:13.5px;line-height:1.65;color:var(--muted)}
 .bookdeep ul.bdlist li::before{content:"—";position:absolute;left:0;color:var(--ac,var(--lime));opacity:.7}
 .bookdeep ul.bdlist.eg li{color:#AEB5BE;font-size:13px}
 .bookdeep.adapt{background:var(--bg);border:1px solid var(--line);border-radius:12px;
@@ -5490,7 +5858,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ck .v{font-family:var(--mono);font-size:clamp(20px,2.6vw,28px);font-weight:700;letter-spacing:-1px;line-height:1}
 .ck .k{font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-top:7px}
 .verdict{padding:18px 20px;background:rgba(61,220,151,.05);border:1px solid rgba(61,220,151,.22);
-  border-radius:14px;font-size:14px;line-height:1.75;color:#C4CAD2;margin-bottom:18px}
+  border-radius:14px;font-size:14px;line-height:1.75;color:var(--muted);margin-bottom:18px}
 .verdict b{color:var(--up);font-weight:700}
 .game{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--dim);border-radius:14px;
   padding:18px;margin-bottom:10px;position:relative;transition:border-color .3s,transform .3s var(--ease)}
@@ -5499,21 +5867,21 @@ table.t tbody tr:last-child td{border-bottom:none}
 .game .hdr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
 .game .res{font-weight:700;font-size:14px}
 .game .meta{font-size:12px;color:var(--muted);line-height:1.6}
-.game .op{font-size:13px;color:#DDE2E8;margin-bottom:6px;font-weight:500}
+.game .op{font-size:13px;color:var(--text);margin-bottom:6px;font-weight:500}
 .game .mv{font-family:var(--mono);font-size:10.5px;color:var(--dim);overflow-x:auto;white-space:nowrap;margin-top:5px}
 .game .an{margin-top:11px;padding:11px 13px;background:var(--bg);border-radius:10px;border-left:2px solid var(--lime);
-  font-size:12.5px;color:#B4BAC2;line-height:1.7}
+  font-size:12.5px;color:var(--muted);line-height:1.7}
 /* Best move / standout / key facts — replaced the raw opening+final move dumps */
 .game .bestmv{margin-top:11px;padding:11px 13px;background:rgba(232,183,74,.06);
   border:1px solid rgba(232,183,74,.22);border-radius:10px}
 .game .bmlab{font-family:var(--mono);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;
   color:var(--gold);margin-bottom:7px}
 .game .bmrow{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
-.game .bmsan{font-family:var(--mono);font-size:17px;font-weight:700;color:#F2E4C0;letter-spacing:-.3px}
+.game .bmsan{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--gold);letter-spacing:-.3px}
 .game .bmgain{font-size:12px;font-weight:600;color:var(--up)}
 .game .bmeval{font-family:var(--mono);font-size:10.5px;color:var(--dim)}
 .game .uniq{margin-top:10px;padding:11px 13px;background:rgba(106,168,255,.05);
-  border-left:2px solid var(--blue);border-radius:10px;font-size:12.5px;color:#B4BAC2;line-height:1.65}
+  border-left:2px solid var(--blue);border-radius:10px;font-size:12.5px;color:var(--muted);line-height:1.65}
 .game .uniq b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--blue);margin-bottom:5px;font-weight:600}
 .game .kfacts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
@@ -6065,6 +6433,34 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     {% endif %}
 
+    {# ══════════ WHAT MATTERS NOW ══════════
+       The interpretation layer. Built by what_matters() in Python — every card
+       is a rule over data already on this page, so the reading is reproducible
+       and traceable, and nothing here is model-generated. A card appears only
+       when its trigger fires: four on a day that earned four, one on a day
+       that earned one. Filling a fixed grid would mean inventing a reading.
+
+       The numbered 60-second list below is kept as the {% raw %}{% else %}{% endraw %} branch, not
+       deleted: the two legacy Flask routes render this same template without
+       `matters`, and that path must still get its summary. #}
+    {% if matters %}
+    <div class="matters">
+      <div class="matters-h">
+        <span class="matters-t">What matters now</span>
+        <span class="matters-n">{{ matters|length }} reading{{ '' if matters|length == 1 else 's' }} &middot; every one links to its evidence</span>
+      </div>
+      <div class="matters-g">
+        {% for c in matters %}
+        <article class="mcard mc-{{ c.kind }}">
+          <div class="mc-tag"><i></i>{{ c.tag }}</div>
+          <h3 class="mc-head">{{ c.head }}</h3>
+          <p class="mc-why">{{ c.why }}</p>
+          <a class="mc-cta" href="{{ c.href }}">{{ c.cta }} &rarr;</a>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
     <ol class="brief-l">
       {% set movers = markets | rejectattr('price', 'in', ['—', '', None]) | sort(attribute='change_pct', reverse=true) | list %}
       {% if movers %}
@@ -6115,6 +6511,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </li>
       {% endif %}
     </ol>
+    {% endif %}
   </div>
 
 
@@ -6302,10 +6699,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       never touch win rate or expectancy</span>
   </div>
   {% if top5 %}
-  <div class="pick-grid">
+  {# has-lead promotes idea 01 to a double-width, double-height card. It is
+     applied only at five ideas: with fewer, a 2x2 lead in a 4-column grid
+     leaves empty cells beside it, and a hole in the grid reads as a
+     failed render rather than a design. #}
+  <div class="pick-grid{{ ' has-lead' if top5|length >= 5 }}">
     {% for s in top5 %}
     <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
       <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
+      {% if loop.first and top5|length >= 5 %}<div class="pick-lead">Top idea</div>{% endif %}
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
         <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
              target="_blank" rel="noopener"
@@ -6325,8 +6727,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
          the reader has to take on trust, and the whole argument of this site
          is that nothing here should be taken on trust. Collapsed by default —
          it is the answer to a question, not the headline. #}
+      {# The lead card opens its breakdown by default. Two reasons: a 2x2 card
+         whose content only fills the top half is padding pretending to be
+         hierarchy, and the score bars are the most persuasive thing on the
+         card — collapsing the evidence under the one idea being promoted is
+         the wrong default. Ideas 02-05 stay collapsed. #}
       {% if s.factors %}
-      <details class="why">
+      <details class="why"{{ ' open' if loop.first and top5|length >= 5 }}>
         <summary>Why {{ s.score }}<span>/100</span></summary>
         <div class="why-b">
           {% for f in s.factors %}

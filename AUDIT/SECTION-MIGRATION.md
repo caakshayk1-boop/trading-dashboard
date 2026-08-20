@@ -23,7 +23,7 @@ merged away, nothing hidden behind a feature flag.
 | Trade Ideas | Trade | **Signal** | Preserved |
 | World | Read | **Research** | Preserved |
 | Findings | Research | **Research** | Preserved |
-| Long-Term | Research | **Research** | Preserved |
+| Long-Term | Research | **Research** | Preserved &mdash; renamed **Own the Business** 2026-08-20 |
 | Stock Screen | Research | **Research** | Preserved |
 | New Listings | Research | **Research** | Preserved |
 | Fund Screen | Research | **Research** | Preserved |
@@ -102,8 +102,8 @@ they are new capability the four-pillar architecture makes room for:
 
 | Asked for | State |
 |---|---|
-| Watchlist | Not built. DESK has a slot for it. |
-| Comparison engine (2–5 stocks/funds) | Not built. |
+| Watchlist | Built. |
+| Comparison engine (2–5 stocks/funds) | Built. |
 | Saved items across pillars | Not built. |
 | Notification centre | Not built — Telegram carries alerts today. |
 | Career: applications, interviews, fit tracking | Feed exists; tracking does not. |
@@ -114,3 +114,32 @@ they are new capability the four-pillar architecture makes room for:
 
 The architecture below is what lets these be added without moving anything
 again — which is the actual point of doing the restructure first.
+
+
+---
+
+## Addendum — 2026-08-20
+
+**Renames.** `longterm`'s nav label became **Own the Business**, matching the
+headline the section has carried for some time. The id, the anchor and every
+link to `#longterm` are unchanged, so no bookmark and no cross-reference broke.
+`seclabel` reads from `SECTION_MAP`, so the eyebrow followed automatically —
+which is the whole reason that indirection exists.
+
+**Nothing was removed.** 32 sections before this session, 32 after. The one
+piece of markup deleted anywhere was the hero's numbered 60-second list being
+moved behind an `{% else %}` — it still renders on the two legacy Flask routes,
+which pass no `matters`.
+
+**Two brief items deliberately not built**, with reasons, in
+`DESIGN-SYSTEM.md` §8: the "So what?" decision strip (duplicates the layer
+above it) and per-story market-relevance prose (needs the QA gate and Groq
+headroom it does not have). Naming them here so the next pass does not have to
+rediscover the reasoning.
+
+**Departure from the brief's §10.** It asks for Funds / SIP / SWP / New
+Listings to become a **Wealth** pillar in the primary nav. Not done: on the main
+page the nav group *is* the pillar, and a fourth main-page group would read as a
+fifth pillar next to Signal / Research / Desk / Life — contradicting the
+four-pillar mandate the same document opens with. The four sections stay under
+Research, which is where the brief's own §18 navigation sketch puts them.
