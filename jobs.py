@@ -283,6 +283,50 @@ OTHER_COUNTRIES = {
 }
 
 TARGET_COUNTRIES = {"UAE", "Saudi Arabia", "Malaysia", "Oman"}
+
+# ── Where he will actually take a role ──────────────────────────────────────
+# Narrowed on request to Dubai, Abu Dhabi and Malaysia. Saudi Arabia and Oman
+# are no longer targets.
+#
+# The narrowing happens HERE, at scoring time, and never at fetch time. The
+# sources stay queried broadly on purpose: a Dubai-headquartered group routinely
+# posts a Dubai role under a bare "United Arab Emirates" with no city, and
+# filtering at the source would drop it. Deciding late means the pipeline can
+# say WHY a role was set aside instead of silently never fetching it.
+#
+# Nothing is deleted. A role outside this set is flagged is_excluded with a
+# reason, exactly like the title rules — it stays in jobs.json, stays auditable,
+# and simply stops competing for attention with the roles he can take.
+TARGET_CITIES = {"dubai", "abu dhabi"}
+TARGET_WHOLE_COUNTRIES = {"Malaysia"}
+
+# UAE emirates that are NOT targets. Listed explicitly rather than inferred:
+# a UAE role with NO city is kept (most UAE finance postings are Dubai and
+# carry no city field, so excluding the unknowns would throw away real Dubai
+# roles), but a role that names one of these has told us where it is.
+NON_TARGET_UAE_CITIES = {
+    "sharjah", "ajman", "al ain", "fujairah", "ras al-khaimah",
+    "ras al khaimah", "umm al quwain",
+}
+
+
+def geography_exclusion(country: str | None, location: str | None) -> str | None:
+    """Reason this role is outside the target geography, or None.
+
+    Unknown country returns None — an unresolved location is missing data, not
+    evidence of a wrong country, and the same rule the rest of this file obeys
+    applies here: missing never counts as failing.
+    """
+    if not country:
+        return None
+    if country in TARGET_WHOLE_COUNTRIES:
+        return None
+    if country == "UAE":
+        city = normalize_location(location)
+        if city in NON_TARGET_UAE_CITIES:
+            return f"outside Dubai/Abu Dhabi ({city.title()})"
+        return None
+    return f"outside Dubai, Abu Dhabi and Malaysia ({country})"
 GCC = {"UAE", "Saudi Arabia", "Oman", "Kuwait", "Qatar", "Bahrain"}
 SEA = {"Malaysia", "Indonesia", "Singapore", "Thailand", "Vietnam", "Philippines"}
 
@@ -2279,6 +2323,11 @@ def normalize_job(raw: dict, src: dict, now_iso: str) -> dict | None:
     job["id"] = job_id(job)
     job["status"] = freshness_status(job["posted_date"])
     reason = exclusion_for(normalized, text)
+    # Geography is checked second so a title exclusion keeps its more specific
+    # reason — "restricted to nationals he cannot be" is more useful to read
+    # than "outside Dubai, Abu Dhabi and Malaysia" for the same row.
+    if not reason:
+        reason = geography_exclusion(job.get("country"), job.get("location"))
     if reason:
         job["is_excluded"] = True
         job["exclusion_reason"] = reason

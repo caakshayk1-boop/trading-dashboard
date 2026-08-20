@@ -4178,7 +4178,13 @@ var TV_ALIASES = (function () {
 
     var PAGE = 60;
     var ROWS = [], view = [], shown = 0;
-    var sortKey = 'comp', sortDir = -1, preset = 'all', loaded = false, loading = false;
+    // `presets` is a LIST, not a scalar. It used to be one string, so the
+    // eighteen preset buttons were mutually exclusive — asking for "debt-free"
+    // AND "RSI oversold" was not expressible, even though the two are
+    // independent predicates and the sector/cap dropdowns already combined
+    // freely with everything. An EMPTY list means no preset constraint, which
+    // is what the "all" button now selects.
+    var sortKey = 'comp', sortDir = -1, presets = [], loaded = false, loading = false;
     // Filter state for the watchlist view. Not persisted: a reader who
     // returns tomorrow should see the whole screen, not silently be looking
     // at nine stocks and wondering where the other 741 went.
@@ -4527,7 +4533,12 @@ var TV_ALIASES = (function () {
     }
 
     function passes(r){
-      if (!PRESETS[preset](r)) return false;
+      // Every active preset must pass — they AND together, like the sector
+      // and cap filters below. An empty list constrains nothing.
+      for (var pi = 0; pi < presets.length; pi++){
+        var pf = PRESETS[presets[pi]];
+        if (pf && !pf(r)) return false;
+      }
       var q = (el('scrSearch').value || '').trim().toLowerCase();
       if (q && (r.sym + ' ' + (r.name || '') + ' ' + (r.isin || '')).toLowerCase().indexOf(q) < 0) return false;
       var ind = el('scrSector').value;
@@ -5250,10 +5261,11 @@ var TV_ALIASES = (function () {
       el('scrReset').addEventListener('click', function(){
         el('scrSearch').value = ''; el('scrSector').value = ''; el('scrCap').value = '';
         el('scrSort').value = 'comp';
-        sortKey = 'comp'; sortDir = -1; preset = 'all';
+        sortKey = 'comp'; sortDir = -1; presets = [];
         var bs = document.querySelectorAll('#scrPresets .fbtn');
         for (var i = 0; i < bs.length; i++){
           bs[i].classList.toggle('on', bs[i].dataset.preset === 'all');
+          bs[i].setAttribute('aria-pressed', bs[i].dataset.preset === 'all' ? 'true' : 'false');
         }
         paint(false);
       });
@@ -5286,9 +5298,25 @@ var TV_ALIASES = (function () {
       document.getElementById('scrPresets').addEventListener('click', function(ev){
         var b = ev.target.closest ? ev.target.closest('.fbtn') : null;
         if (!b || !b.dataset.preset) return;
-        preset = b.dataset.preset;
+        var k = b.dataset.preset;
+        // "all" is not a filter, it is the absence of one — so it clears the
+        // list rather than joining it. Every other button toggles.
+        if (k === 'all'){
+          presets = [];
+        } else {
+          var at = presets.indexOf(k);
+          if (at >= 0) presets.splice(at, 1); else presets.push(k);
+        }
         var bs = this.querySelectorAll('.fbtn');
-        for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i] === b);
+        for (var i = 0; i < bs.length; i++){
+          var pk = bs[i].dataset.preset;
+          var on = (pk === 'all') ? presets.length === 0 : presets.indexOf(pk) >= 0;
+          bs[i].classList.toggle('on', on);
+          // These are toggles now, not a radio group, so they must say so to
+          // assistive tech — `aria-pressed` is the difference between "this
+          // one is selected" and "this one is currently applied among others".
+          bs[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
         paint(false);
       });
 

@@ -5678,9 +5678,20 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
    table into its own scroll region. Applied only here; short tables elsewhere
    must keep growing with the page. */
 .tw-tall{max-height:min(78vh,780px);overflow-y:auto}
-.tw-tall table.t th{z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
+/* Inside .tw-tall the wrapper is its own scroll container, so top:0 means the
+   top of THAT box and the header behaves. It must override the viewport
+   offset set on `table.t th` below. */
+.tw-tall table.t th{top:0;z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
 table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
-table.t th{position:sticky;top:0;background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
+/* top:var(--headh), not top:0.
+   A table that is NOT wrapped in .tw-tall sticks to the VIEWPORT, and .headstack
+   is sticky at top:0 with z-index:300. So the column headers stuck themselves
+   underneath the site header and vanished — on exactly the long tables where a
+   reader most needs to know which column they are reading.
+   --headh is the stack's real measured height, written by syncScrollPad() in
+   app.js on load and on resize, and it already backs scroll-padding-top for
+   anchor jumps. The fallback matches the one used there. */
+table.t th{position:sticky;top:var(--headh,200px);background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
 table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 table.t tbody tr{transition:background .2s}
