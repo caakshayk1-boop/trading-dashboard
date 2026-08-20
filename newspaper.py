@@ -11,6 +11,7 @@ import os, json, math, sqlite3, logging, time, threading
 from datetime import datetime, timezone, timedelta, date
 from typing import Optional
 import feedparser
+import pandas as pd
 import yfinance as yf
 import requests
 from flask import Flask, render_template_string, jsonify, request, redirect
@@ -2409,7 +2410,11 @@ def pick_currency(sym: str) -> str:
 
 def score_stock(sym: str) -> Optional[dict]:
     try:
-        hist     = yf.Ticker(sym).history(period="3mo")
+        # A YEAR, not three months. The targets below are derived from
+        # structure — the 52-week high, the true range — and none of that
+        # exists in a 3-month window. It also lets the 50-day average
+        # converge: over 63 bars an ewm(span=50) is barely warmed up.
+        hist     = yf.Ticker(sym).history(period="1y")
         if hist.empty or len(hist) < 20: return None
         # Yahoo intermittently returns rows with a null Close for non-US
         # listings — a holiday on that exchange, or a partial response when 200
@@ -2429,7 +2434,13 @@ def score_stock(sym: str) -> Optional[dict]:
         ema50    = close.ewm(span=50).mean().iloc[-1]
         price    = close.iloc[-1]
         mom_1m   = (price - close.iloc[-22]) / close.iloc[-22] * 100 if len(close) >= 22 else 0
-        mom_3m   = (price - close.iloc[0])   / close.iloc[0]  * 100
+        # Indexed from the END, not from close.iloc[0]. With a 3-month window
+        # those were the same bar; with a year they are not, and leaving it
+        # would have silently turned every "3-month trend" score into a
+        # 12-month one — a scoring change disguised as a data change.
+        # ~63 trading days is three months.
+        _b3      = close.iloc[-63] if len(close) >= 63 else close.iloc[0]
+        mom_3m   = (price - _b3) / _b3 * 100
         vol_ratio = hist["Volume"].iloc[-5:].mean() / (hist["Volume"].iloc[-20:].mean() or 1)
         # Graded, not binary. The old version was six pass/fail buckets adding
         # to exactly 100, so in a strong tape every decent name cleared all six
@@ -2484,13 +2495,90 @@ def score_stock(sym: str) -> Optional[dict]:
             return None
 
         currency = pick_currency(sym)
-        target   = round(price * (1.25 if mom_3m > 15 else 1.20), 2)
+
+        # ── Levels, from structure ──────────────────────────────────────────
+        # These used to be `price * 1.25` and `price * 0.92`: a flat +25% and
+        # −8% on every idea regardless of where the stock actually was. Two
+        # names could sit a rupee below and a rupee above their 52-week high
+        # and be given the same target. That is not analysis, it is a constant
+        # wearing the costume of one — and the old stop contradicted the very
+        # comment beside it, which already named the 20-day average as the
+        # level that ends the idea.
+        prev   = close.shift(1)
+        tr     = pd.concat([hist["High"] - hist["Low"],
+                            (hist["High"] - prev).abs(),
+                            (hist["Low"]  - prev).abs()], axis=1).max(axis=1)
+        atr    = float(tr.rolling(14).mean().iloc[-1])
+        hi52   = float(hist["High"].max())
+
+        if not math.isfinite(atr) or atr <= 0:
+            return None
+
+        # STOP FIRST, because the target has to be measured against the risk
+        # and not the other way round. The 20-day average is the invalidation
+        # — the same line the largest single score component measures, and the
+        # one the factor table already names. Floored at 1.5x ATR: an average
+        # sitting inside one day's noise is not a stop, it is a coin toss.
+        if ema20 < price - atr:
+            stop, stop_basis = float(ema20), "the 20-day average"
+        else:
+            stop, stop_basis = price - 1.5 * atr, "1.5x the 14-day range (the 20-day average is inside the noise)"
+        if stop <= 0 or stop >= price:
+            return None
+        risk = price - stop
+
+        # TARGET. A real level where supply actually appeared beats an invented
+        # percentage — so the 52-week high is the first candidate.
+        #
+        # But a level is only a target if it is worth the risk. A momentum name
+        # sitting just under its high gives a target 3% away against a stop 7%
+        # away: R:R 0.48, which is not a trade. The old flat +25% hid this
+        # completely — it printed 3.1 for every idea on the page, including
+        # that one. So the high has to clear one unit of risk to be used, and
+        # when it does not, the objective is the measured move THROUGH it:
+        # the high plus the range the name would have to break to get there.
+        if hi52 >= price + risk:
+            target, target_basis = hi52, "the 52-week high"
+        elif hi52 > price:
+            target = hi52 + 2 * atr
+            target_basis = "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)"
+        else:
+            target = price + 2 * atr
+            target_basis = "2x the 14-day range (already at its highs, no overhead level left)"
+
+        # HORIZON. Extrapolated from the name's OWN three-month pace, and
+        # labelled as exactly that. A stock that has covered 30% in three
+        # months is moving ~10%/month; asking it for another 12% is roughly a
+        # month's more work. When the three-month drift is flat or negative
+        # there is no pace to extrapolate and no honest estimate — so it says
+        # so rather than printing a number it cannot support.
+        move_pct     = (target - price) / price * 100
+        monthly_pace = mom_3m / 3.0
+        if monthly_pace >= 1.0:
+            months = move_pct / monthly_pace
+            if   months <= 1.5: timeframe = "about a month"
+            elif months <= 3:   timeframe = "1-3 months"
+            elif months <= 6:   timeframe = "3-6 months"
+            elif months <= 12:  timeframe = "6-12 months"
+            else:               timeframe = "over a year at this pace"
+            horizon_basis = f"{move_pct:.0f}% to go at its recent {monthly_pace:.1f}%/month"
+        else:
+            timeframe = "no estimate"
+            horizon_basis = "three-month drift is flat or negative — no pace to extrapolate"
+
+        rr = round((target - price) / risk, 2)
         return {"symbol": sym, "name": sym.replace(".NS","").replace(".BO",""),
                 "ext20": round(ext20, 2), "vol_ratio": round(float(vol_ratio), 2),
                 "price": round(price, 2), "change_1d": round((price - close.iloc[-2]) / close.iloc[-2] * 100, 2),
                 "mom_1m": round(mom_1m, 1), "mom_3m": round(mom_3m, 1), "score": score,
-                "target": target, "stop_loss": round(price * 0.92, 2),
-                "timeframe": "2–3 months", "currency": currency,
+                "target": round(target, 2), "stop_loss": round(stop, 2),
+                # Every level now says where it came from. A reader who
+                # disagrees with the target can see the level it was taken
+                # from and argue with THAT, instead of with a constant.
+                "target_basis": target_basis, "stop_basis": stop_basis,
+                "horizon_basis": horizon_basis, "rr": rr,
+                "atr": round(atr, 2), "high_52w": round(hi52, 2),
+                "timeframe": timeframe, "currency": currency,
                 # What the score is made of, and the level that ends the idea.
                 # The 20-day average is the invalidation because it is the same
                 # line the largest single component scores — an idea whose
@@ -2598,7 +2686,17 @@ def _build_picks() -> list[dict]:
 # composite) and `ema20` (the invalidation level). The key is part of the cache
 # key on purpose — without the bump the page would render this week's v4 rows,
 # which have neither field, and the new card would silently show nothing.
-PICKS_ENGINE = "v5"
+# v6: levels come from STRUCTURE, not from a constant. Target is the 52-week
+#     high (or a 2x-ATR measured move when the name is already at its highs);
+#     the stop is the 20-day average, floored at 1.5x ATR; the horizon is
+#     extrapolated from the name's own three-month pace instead of being the
+#     string "2-3 months" on every card. Adds target_basis, stop_basis,
+#     horizon_basis, rr, atr and high_52w. History widened 3mo -> 1y to make
+#     any of it computable, so scores shift slightly too: a 50-day average
+#     over 250 bars is converged where one over 63 bars was not. Without the
+#     bump the page would serve v5 rows that carry none of the basis fields
+#     and render blank "why this level" lines. (2026-08-20)
+PICKS_ENGINE = "v6"
 
 
 # A weekly screen is rebuilt every 7 days, so anything inside two cycles is
@@ -2803,13 +2901,21 @@ def get_job_status(job: str, served_generated_at: str | None = None) -> dict:
 
 
 def _week_key() -> str:
-    """Cache key: ISO week plus the engine that produced the picks.
+    """Cache key: the SUNDAY-based week, plus the engine that produced the picks.
 
     Keyed on the IST date, not the runner's UTC date. Everything else on this
     page is stamped IST, and a delayed GitHub run near the UTC/IST boundary
-    would otherwise file Monday's picks under last week.
+    would otherwise file the new week's picks under the old one.
+
+    The +1 day is what moves the roll from Monday to Sunday. ISO weeks run
+    Monday to Sunday, so a bare isocalendar() kept Sunday in the OUTGOING week
+    and the picks changed on Monday morning — which is why "why don't the picks
+    update on Sunday" had the answer "because they never could". Shifting the
+    date forward one day before taking the ISO week means Sunday already reads
+    as the next week: the key changes at Sunday 00:00 IST and then holds steady
+    Sunday through Saturday.
     """
-    d = datetime.now(IST).date()
+    d = (datetime.now(IST) + timedelta(days=1)).date()
     return f"{d.isocalendar()[0]}-W{d.isocalendar()[1]:02d}-{PICKS_ENGINE}"
 
 
@@ -3293,6 +3399,43 @@ def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
             return _picks_cache.get(week, [])
 
     return []
+
+
+def picks_outcomes(week: str) -> dict:
+    """What the ledger now says about this week's five ideas, keyed by symbol.
+
+    The section renders from the newspaper_stocks_picked cache, which is a
+    SNAPSHOT of the ranking at the moment it was built and carries no exit
+    state. The picks are separately mirrored into the ledger as top5_pick and
+    graded there like every other signal — so a pick could stop out on Monday
+    and still sit on the front page all week presented as a live idea. SMCI
+    did exactly that: SL_HIT at -8.01% on 2026-08-17, still shown as one of
+    five ideas.
+
+    Cache and ledger are two records of the same five names, and only one of
+    them was being read. This joins them back together.
+    """
+    try:
+        with _db() as con:
+            rows = con.execute(
+                "SELECT symbol, status, pnl_pct, closed_at FROM all_signals "
+                "WHERE signal_type = 'top5_pick' AND metadata LIKE ?",
+                (f'%"week": "{week}"%',)).fetchall()
+    except Exception as e:                                   # noqa: BLE001
+        log.warning(f"picks_outcomes({week}): {e}")
+        return {}
+    out = {}
+    for r in rows:
+        status = str(r["status"] or "").upper()
+        if status in ("", "OPEN"):
+            continue                      # still running — nothing to report
+        out[str(r["symbol"])] = {
+            "status": status,
+            "pnl_pct": r["pnl_pct"],
+            "closed_at": (str(r["closed_at"])[:10] if r["closed_at"] else None),
+            "is_loss": status in ("SL_HIT", "STOPPED", "STOP_HIT"),
+        }
+    return out
 
 
 def last_known_picks() -> tuple[list[dict], str | None]:
@@ -5246,6 +5389,26 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .fnd-m,.fnd-w{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.5}
 .fnd-m b,.fnd-w b{color:var(--dim);font-family:var(--mono);font-size:10px;
   letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:3px}
+/* The full-list disclosure. <summary> is 24px tall to clear WCAG 2.5.8 the
+   same way the tap-target block below does, and carries a visible focus ring
+   because it is genuinely keyboard-operable now. */
+.fnd-all{margin-top:8px}
+.fnd-all>summary{font-family:var(--mono);font-size:10.5px;color:var(--lime);
+  letter-spacing:.4px;cursor:pointer;list-style:none;min-height:24px;
+  display:flex;align-items:center}
+.fnd-all>summary::-webkit-details-marker{display:none}
+.fnd-all>summary::before{content:"▸";margin-right:6px;transition:transform .15s ease}
+.fnd-all[open]>summary::before{transform:rotate(90deg)}
+.fnd-all>summary:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.fnd-all .fnd-s{margin-top:8px;max-height:230px;overflow-y:auto}
+@media (prefers-reduced-motion:reduce){.fnd-all>summary::before{transition:none}}
+/* Multi-rule names. Left border in --lime, not --gold: --gold marks a
+   contradiction (something is wrong), this marks agreement (several rules
+   independently landed on the same company). */
+.fnd-multi{border-left:2px solid var(--lime)}
+.fnd-hits{margin:8px 0 0;padding-left:16px;font-size:12px;color:var(--muted);
+  line-height:1.6}
+.fnd-hits li{margin-bottom:2px}
 /* ── Tap targets ─────────────────────────────────────────────────────────
    WCAG 2.2 AA 2.5.8 asks for 24x24 CSS px. Measured on a 375px viewport,
    64 controls were under it — mostly 16px-tall inline links in the footer
@@ -5658,9 +5821,20 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
    table into its own scroll region. Applied only here; short tables elsewhere
    must keep growing with the page. */
 .tw-tall{max-height:min(78vh,780px);overflow-y:auto}
-.tw-tall table.t th{z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
+/* Inside .tw-tall the wrapper is its own scroll container, so top:0 means the
+   top of THAT box and the header behaves. It must override the viewport
+   offset set on `table.t th` below. */
+.tw-tall table.t th{top:0;z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
 table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
-table.t th{position:sticky;top:0;background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
+/* top:var(--headh), not top:0.
+   A table that is NOT wrapped in .tw-tall sticks to the VIEWPORT, and .headstack
+   is sticky at top:0 with z-index:300. So the column headers stuck themselves
+   underneath the site header and vanished — on exactly the long tables where a
+   reader most needs to know which column they are reading.
+   --headh is the stack's real measured height, written by syncScrollPad() in
+   app.js on load and on resize, and it already backs scroll-padding-top for
+   anchor jumps. The fallback matches the one used there. */
+table.t th{position:sticky;top:var(--headh,200px);background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
 table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 table.t tbody tr{transition:background .2s}
@@ -5672,6 +5846,31 @@ table.t tbody tr:last-child td{border-bottom:none}
 .badge-loss{background:rgba(255,92,92,.1);color:var(--down);border:1px solid rgba(255,92,92,.28)}
 .badge-open{background:rgba(106,168,255,.1);color:var(--blue);border:1px solid rgba(106,168,255,.28)}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
+/* Long vs short in the paper wallet. Shape AND colour, not colour alone —
+   the arrow carries the meaning for a red/green colour-blind reader, and the
+   word carries it for a screen reader. */
+.lt-held{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;color:var(--gold);
+  border:1px solid var(--gold);border-radius:3px;padding:2px 6px;margin-top:4px}
+.sec-movers{padding:14px 16px}
+.sec-movers>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;
+  align-items:center;gap:10px;min-height:24px}
+.sec-movers>summary::-webkit-details-marker{display:none}
+.sec-movers>summary:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+.mv-list{list-style:none;margin:4px 0 0;padding:0;font-size:12.5px}
+.mv-list li{display:flex;justify-content:space-between;gap:10px;padding:3px 0;
+  font-family:var(--mono)}
+/* A pick the ledger has already resolved. Marked, never removed — it WAS
+   this week's pick, and deleting it would be the dishonest fix. */
+.pick-done{display:inline-block;font-family:var(--mono);font-size:9.5px;font-weight:700;
+  letter-spacing:.9px;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:8px}
+.pd-loss{color:var(--down);background:var(--down-soft);border:1px solid var(--down)}
+.pd-win{color:var(--up);background:var(--up-soft);border:1px solid var(--up)}
+.wside{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);
+  font-size:9.5px;font-weight:700;letter-spacing:.8px;padding:3px 7px;
+  border-radius:4px;white-space:nowrap}
+.ws-long{color:var(--up);background:var(--up-soft);border:1px solid var(--up)}
+.ws-short{color:var(--down);background:var(--down-soft);border:1px solid var(--down)}
 .badge-expired{background:rgba(232,197,71,.1);color:var(--gold);border:1px solid rgba(232,197,71,.25)}
 /* Position battle status — where a tracked position sits in the profit-protection ladder. */
 .badge-accumulation{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
@@ -6621,6 +6820,52 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
   {% endif %}
 
+  {# Movers INSIDE each sector. Built from the stock screen's own rows, so it
+     costs no extra fetch and inherits the screen's build date — which is why
+     it is stamped with that date and not with the 6 AM heat snapshot's.
+
+     These are the SCREEN's sector labels, not the NSE index tiles above, and
+     the two are deliberately not wired together: Banking and PSU Bank are
+     separate indices that would both collapse into one "Financial Services"
+     bucket, so drilling into either tile would show the same names. A
+     drill-down that lies about which sector you asked for is worse than a
+     separate, honest control. <details> so it needs no JavaScript. #}
+  {% set movers = market_intel.get('sector_movers') or [] %}
+  {% if movers %}
+  <h3 style="font-size:15px;margin:22px 0 6px">Movers inside each sector</h3>
+  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
+    Best and worst five in each of {{ movers|length }} sectors over one week, taken from the
+    stock screen's own rows &mdash; so these are the screen's sectors, not the index tiles
+    above, and they carry the screen's date{% if stock_screen.built_on %}
+    ({{ stock_screen.built_on }}){% endif %}, not the 6 AM snapshot's.
+    The median tells you whether a sector moved or a couple of names carried it.
+  </p>
+  <div class="fnd-grid rv">
+    {% for m in movers %}
+    <details class="card fnd sec-movers">
+      <summary>
+        <strong>{{ m.sector }}</strong>
+        <span class="fnd-n">{{ '+' if m.median > 0 else '' }}{{ m.median }}% median &middot; {{ m.count }} names</span>
+      </summary>
+      <p class="fnd-r" style="margin-top:10px">Best five</p>
+      <ul class="mv-list">
+        {% for g in m.gainers %}
+        <li><a href="#stocks" class="sym">{{ g.sym }}</a>
+            <span class="up">{{ '+' if g.move > 0 else '' }}{{ g.move }}%</span></li>
+        {% endfor %}
+      </ul>
+      <p class="fnd-r" style="margin-top:10px">Worst five</p>
+      <ul class="mv-list">
+        {% for l in m.losers %}
+        <li><a href="#stocks" class="sym">{{ l.sym }}</a>
+            <span class="dn">{{ '+' if l.move > 0 else '' }}{{ l.move }}%</span></li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% set fd = market_intel.get('fii_dii') %}
   {% if fd and fd.get('fii_cr') is not none and fd.get('dii_cr') is not none %}
   {# Same treatment as the sector map: the server-rendered figures below are
@@ -6649,18 +6894,44 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% set ca = market_intel.get('corporate_actions') or [] %}
   {% if ca %}
   <h3 style="font-size:15px;margin:20px 0 10px">Corporate actions</h3>
+  {# Ex-date and record date are the SAME DAY for almost every row, and the two
+     columns printed identical values down the page — which reads as a copied
+     field rather than as what it is. India settles T+1, so the two coincide by
+     design; NSE publishes them as separate fields and this reads both, so the
+     duplication is in the market's calendar, not in the pipeline.
+
+     One column when they agree, both when they do not, and the difference is
+     stated rather than left for the reader to infer from two columns that
+     almost never disagree. Nothing is dropped: a row where they genuinely
+     differ still shows both dates. #}
+  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
+    Ex-date and record date fall on the same day under T+1 settlement, so one date is
+    shown where they agree. Any row where they genuinely differ shows both.
+  </p>
   <div class="tw rv">
     <table class="t">
       <thead><tr>
-        <th scope="col">Symbol</th><th scope="col">Action</th><th scope="col">Ex-date</th><th scope="col">Record date</th>
+        <th scope="col">Symbol</th><th scope="col">Action</th>
+        <th scope="col">Ex / record date</th>
       </tr></thead>
       <tbody>
         {% for r in ca %}
+        {% set ex = r.get('ex_date') or '' %}
+        {% set rd = r.get('record_date') or '' %}
         <tr>
           <td><strong>{{ r.get('symbol', '—') }}</strong></td>
           <td style="font-size:12.5px;color:var(--muted)">{{ r.get('subject', '—') }}</td>
-          <td class="mono-dim">{{ r.get('ex_date', '—') }}</td>
-          <td class="mono-dim">{{ r.get('record_date', '—') }}</td>
+          <td class="mono-dim">
+            {%- if ex and rd and ex != rd -%}
+              ex {{ ex }} &middot; record {{ rd }}
+            {%- elif ex -%}
+              {{ ex }}
+            {%- elif rd -%}
+              {{ rd }}
+            {%- else -%}
+              &mdash;
+            {%- endif -%}
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -6686,14 +6957,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
-      Target 20–30%. Every idea carries a stop.
+      Every level is taken from structure &mdash; the target from the 52-week high or a measured
+      move past it, the stop from the 20-day average &mdash; so the reward/risk differs per idea
+      instead of being the same number on every card. Hover any level for the rule behind it.
       {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
       showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
   </div>
 
   <div class="prov{{ ' stale' if top5_week else '' }} rv">
     <span class="pv-tag">WEEKLY</span>
-    <span>Ranked once per ISO week &mdash; <b>the same five all week is the design</b>, not a stalled scan</span>
+    <span>Ranked once a week, <b>Sunday morning IST</b> &mdash; the same five all week is the design, not a stalled scan</span>
     <span>Engine <b>{{ picks_engine }}</b></span>
     <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
       never touch win rate or expectancy</span>
@@ -6708,6 +6981,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="pick rv" style="--d:{{ loop.index0 * 0.07 }}s">
       <div class="rank" aria-hidden="true">{{ "%02d"|format(loop.index) }}</div>
       {% if loop.first and top5|length >= 5 %}<div class="pick-lead">Top idea</div>{% endif %}
+      {# The ledger's verdict on this idea, if it already has one. The ranking
+         is a snapshot taken once a week and carries no exit state, so a pick
+         that stopped out on Monday used to sit here all week still presented
+         as live — SMCI did exactly that, SL_HIT at -8.01%, on the front page
+         for the rest of the week. The idea is NOT removed: it was this week's
+         pick and hiding it would be the dishonest fix. It is marked. #}
+      {% if s.outcome %}
+      <div class="pick-done {{ 'pd-loss' if s.outcome.is_loss else 'pd-win' }}">
+        {{ 'Stopped out' if s.outcome.is_loss else 'Closed' }}
+        {%- if s.outcome.pnl_pct is not none %} · {{ '%+.1f'|format(s.outcome.pnl_pct) }}%{% endif %}
+        {%- if s.outcome.closed_at %} · {{ s.outcome.closed_at }}{% endif %}
+      </div>
+      {% endif %}
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
         <div class="sym"><a href="https://www.tradingview.com/chart/?symbol={{ s.tv or s.name }}"
              target="_blank" rel="noopener"
@@ -6758,9 +7044,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       {% endif %}
 
       <div class="lvl">
-        <div><div class="k">🎯 Target</div><div class="v up">{{ s.currency }}{{ s.target }}</div></div>
-        <div><div class="k">🛡 Stop</div><div class="v dn">{{ s.currency }}{{ s.stop_loss }}</div></div>
-        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)">{{ s.timeframe }}</div></div>
+        {# Every level states where it came from. A target of "+25%" cannot be
+           argued with; "the 52-week high" can — the reader can go and look at
+           the level and disagree with it, which is the whole point. #}
+        <div><div class="k">🎯 Target</div><div class="v up" title="{{ s.target_basis or '' }}">{{ s.currency }}{{ s.target }}</div></div>
+        <div><div class="k">🛡 Stop</div><div class="v dn" title="{{ s.stop_basis or '' }}">{{ s.currency }}{{ s.stop_loss }}</div></div>
+        {% if s.rr %}<div><div class="k">⚖ Reward/risk</div><div class="v">{{ s.rr }}</div></div>{% endif %}
+        <div><div class="k">⏱ Horizon</div><div class="v" style="font-size:11.5px;color:var(--muted)" title="{{ s.horizon_basis or '' }}">{{ s.timeframe }}</div></div>
       </div>
       <form action="/tracker/add" method="post" style="margin-top:14px">
         <input type="hidden" name="symbol" value="{{ s.symbol }}">
@@ -6917,12 +7207,54 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <p class="fnd-r">{{ f.rule }}</p>
       <p class="fnd-s">
         {% for n in f.names %}<a href="#stocks" class="sym">{{ n.sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
-        {% if f.count > f.names|length %}<span class="mono-dim"> +{{ f.count - f.names|length }} more</span>{% endif %}
       </p>
+      {# "+N more" used to be a bare <span>. The other N names were never
+         serialised, so it was a dead label offering an expansion that did not
+         exist. insights.py now emits all_syms (the complete list, symbols
+         only), and this is a real <details> — no JS, works with scripting off,
+         keyboard-operable, and announces its own state to a screen reader. #}
+      {% if f.count > f.names|length and f.all_syms %}
+      <details class="fnd-all">
+        <summary>+{{ f.count - f.names|length }} more &mdash; show all {{ f.count }}</summary>
+        <p class="fnd-s">
+          {% for sym in f.all_syms %}<a href="#stocks" class="sym">{{ sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+        </p>
+      </details>
+      {% endif %}
       {% if f.note %}<p class="fnd-m">{{ f.note }}</p>{% endif %}
     </div>
     {% endfor %}
   </div>
+  {% endif %}
+
+  {# Names that clear MORE THAN ONE rule above. Every finding on its own is a
+     single property; this is the only place on the page that asks which
+     companies several unrelated rules independently selected. Ranked by how
+     many rules a name clears — not scored, and not a recommendation. #}
+  {% if findings.multi %}
+  <h3 style="font-size:15px;margin:26px 0 4px">Names that clear more than one screen</h3>
+  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
+    {{ findings.multi|length }} companies appear in two or more of the findings above.
+    One rule selecting a name is a property. Several unrelated rules selecting the same
+    name is the finding &mdash; and it is the one thing six separate lists cannot show you.
+  </p>
+  <div class="fnd-grid rv">
+    {% for m in findings.multi[:12] %}
+    <div class="card fnd fnd-multi">
+      <h4 class="fnd-t">
+        <a href="#stocks" class="sym">{{ m.sym }}</a>
+        <span class="fnd-n">{{ m.n }} rules</span>
+      </h4>
+      <p class="fnd-r">{{ m.name or '' }}{% if m.sector %} &middot; {{ m.sector }}{% endif %}{% if m.comp is not none %} &middot; composite {{ m.comp|round|int }}{% endif %}</p>
+      <ul class="fnd-hits">
+        {% for t in m.findings %}<li>{{ t }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+  {% if findings.multi|length > 12 %}
+  <p class="sdesc" style="margin-top:8px">Showing the 12 clearing the most rules, of {{ findings.multi|length }}.</p>
+  {% endif %}
   {% endif %}
 
   {% if findings.changed %}
@@ -6961,6 +7293,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       you pay — the chart only votes on whether the trend is intact. Two to three years.
       Selection is arithmetic; the paragraph under each is AI. Excluded from the trading
       win rate on purpose.</p>
+    <p class="sdesc" style="margin-top:8px">This screen is roughly 70% annual accounts, and
+      annual accounts do not move in a week &mdash; so a name already published in the last
+      four weeks steps aside to let a new one through. Where too few fresh names clear the
+      score floor, the list is filled from prior weeks and those cards are marked
+      <b>held from a prior week</b> rather than presented as new.</p>
   </div>
 
   <div class="prov rv">
@@ -7879,6 +8216,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <p class="sdesc">A mechanical capital allocator, not a recommendation — every signal this
       ledger produces from here on gets sized by its horizon and grade, nothing more. Started
       2026-08-17; no history before that date is replayed in.</p>
+    <p class="sdesc" style="margin-top:8px">Every position shows its <b>side</b>, stop and both
+      targets: this book takes real shorts, and a short's stop sits <i>above</i> its entry.
+      Winners are booked on a ladder &mdash; <b>half off at T1, the rest at T2</b> &mdash; so a
+      row that reached the far target is banked at the blend of the two, not as though the whole
+      position ran to T2. Rows booked that way are marked &frac12;, and the ledger's
+      full-position figure is on the tooltip.</p>
   </div>
 
   <div id="paperWalletLive"><div class="empty">Loading the wallet…</div></div>

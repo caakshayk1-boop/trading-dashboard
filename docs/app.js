@@ -1846,24 +1846,46 @@ var TV_ALIASES = (function () {
           var pnlCell = t.realized_pnl === null ? '—' :
             '<span class="' + (t.realized_pnl > 0 ? 'pnl-u' : t.realized_pnl < 0 ? 'pnl-d' : '') + '">' +
             (t.realized_pnl > 0 ? '+' : '') + rupees(t.realized_pnl) + '</span>';
+          // Direction, first-class. The ledger carries real shorts — Gold,
+          // Crude, Natural Gas and Silver all fire SELL signals — and without
+          // this column a short's stop (which sits ABOVE its entry) read as a
+          // broken row. A reader could not tell whether the book was buying
+          // or selling the instrument.
+          var side = t.side === 'SHORT' ? 'SHORT' : 'LONG';
+          var sideCell = '<span class="wside ws-' + side.toLowerCase() + '">' +
+            (side === 'SHORT' ? '▼ SHORT' : '▲ LONG') + '</span>';
           return '<tr>' +
             '<td class="mono-dim">' + esc(t.date) + '</td>' +
             '<td><strong class="sym">' + esc(t.symbol) + '</strong></td>' +
+            '<td>' + sideCell + '</td>' +
             '<td class="mono-dim">' + esc(t.signal_type) + '</td>' +
             '<td class="mono-dim">' + esc(t.grade || '—') + '</td>' +
             '<td class="num">' + tradePrice(t.entry, t.currency) + '</td>' +
+            '<td class="num dn">' + tradePrice(t.sl, t.currency) + '</td>' +
+            '<td class="num up">' + tradePrice(t.target1, t.currency) + '</td>' +
+            '<td class="num up">' + tradePrice(t.target2, t.currency) + '</td>' +
             '<td class="num">' + tradePrice(t.exit, t.currency) + '</td>' +
             '<td class="num">' + rupees(t.allocated_amount) +
               (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
               '</td>' +
             '<td class="num">' + (t.allocated_qty === null ? '—' : t.allocated_qty) + '</td>' +
             '<td><span class="badge badge-' + t.badge + '">' + badgeTxt(t.badge) + '</span></td>' +
-            '<td class="num">' + pnlCell + '</td>' +
+            '<td class="num">' + pnlCell +
+              // Say which rule produced the number. A T2_HIT booked on the
+              // ladder is NOT the ledger's full-position figure, and a reader
+              // comparing the two is owed the reason they differ.
+              (t.pnl_basis === 'partial_booking'
+                ? ' <span class="mono-dim" title="Half booked at T1, the rest at T2. Ledger records the full-position outcome: '
+                  + fmt(t.ledger_pnl_pct, 2) + '%">½</span>'
+                : '') +
+              '</td>' +
             '</tr>';
         }).join('');
         tableHtml = '<div class="tw rv" style="margin-top:14px"><table class="t"><thead><tr>' +
-          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Engine</th><th scope="col">Grade</th>' +
-          '<th scope="col">Entry</th><th scope="col">Exit</th>' +
+          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Side</th>' +
+          '<th scope="col">Engine</th><th scope="col">Grade</th>' +
+          '<th scope="col">Entry</th><th scope="col">SL</th><th scope="col">T1</th>' +
+          '<th scope="col">T2</th><th scope="col">Exit</th>' +
           '<th scope="col">Allocated</th><th scope="col">Qty</th><th scope="col">Status</th><th scope="col">P&amp;L</th>' +
           '</tr></thead><tbody>' + rows + '</tbody></table></div>';
       }
@@ -2725,6 +2747,13 @@ var TV_ALIASES = (function () {
                 '<div><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
                   encodeURIComponent(r.symbol) + '" target="_blank" rel="noopener">' +
                   esc(r.symbol) + '</a>' +
+                  // A name carried over from a previous week rather than newly
+                  // selected. The screen is ~70% annual fundamentals, which do
+                  // not move in seven days, so a weekly rerun reproduces most
+                  // of its own list — four of five, measured. Saying which
+                  // names are new is the difference between a weekly screen
+                  // and a weekly screen that LOOKS stalled.
+                  (m.held ? '<span class="lt-held">held from a prior week</span>' : '') +
                   '<div class="sec-l">' + esc(m.sector || '') + '</div></div>' +
                 '<span class="tag">' + fmt(r.score, 0) + '/100' +
                   (r.grade ? ' · ' + esc(r.grade) : '') + '</span>' +
@@ -4178,7 +4207,13 @@ var TV_ALIASES = (function () {
 
     var PAGE = 60;
     var ROWS = [], view = [], shown = 0;
-    var sortKey = 'comp', sortDir = -1, preset = 'all', loaded = false, loading = false;
+    // `presets` is a LIST, not a scalar. It used to be one string, so the
+    // eighteen preset buttons were mutually exclusive — asking for "debt-free"
+    // AND "RSI oversold" was not expressible, even though the two are
+    // independent predicates and the sector/cap dropdowns already combined
+    // freely with everything. An EMPTY list means no preset constraint, which
+    // is what the "all" button now selects.
+    var sortKey = 'comp', sortDir = -1, presets = [], loaded = false, loading = false;
     // Filter state for the watchlist view. Not persisted: a reader who
     // returns tomorrow should see the whole screen, not silently be looking
     // at nine stocks and wondering where the other 741 went.
@@ -4527,7 +4562,12 @@ var TV_ALIASES = (function () {
     }
 
     function passes(r){
-      if (!PRESETS[preset](r)) return false;
+      // Every active preset must pass — they AND together, like the sector
+      // and cap filters below. An empty list constrains nothing.
+      for (var pi = 0; pi < presets.length; pi++){
+        var pf = PRESETS[presets[pi]];
+        if (pf && !pf(r)) return false;
+      }
       var q = (el('scrSearch').value || '').trim().toLowerCase();
       if (q && (r.sym + ' ' + (r.name || '') + ' ' + (r.isin || '')).toLowerCase().indexOf(q) < 0) return false;
       var ind = el('scrSector').value;
@@ -5250,10 +5290,11 @@ var TV_ALIASES = (function () {
       el('scrReset').addEventListener('click', function(){
         el('scrSearch').value = ''; el('scrSector').value = ''; el('scrCap').value = '';
         el('scrSort').value = 'comp';
-        sortKey = 'comp'; sortDir = -1; preset = 'all';
+        sortKey = 'comp'; sortDir = -1; presets = [];
         var bs = document.querySelectorAll('#scrPresets .fbtn');
         for (var i = 0; i < bs.length; i++){
           bs[i].classList.toggle('on', bs[i].dataset.preset === 'all');
+          bs[i].setAttribute('aria-pressed', bs[i].dataset.preset === 'all' ? 'true' : 'false');
         }
         paint(false);
       });
@@ -5286,9 +5327,25 @@ var TV_ALIASES = (function () {
       document.getElementById('scrPresets').addEventListener('click', function(ev){
         var b = ev.target.closest ? ev.target.closest('.fbtn') : null;
         if (!b || !b.dataset.preset) return;
-        preset = b.dataset.preset;
+        var k = b.dataset.preset;
+        // "all" is not a filter, it is the absence of one — so it clears the
+        // list rather than joining it. Every other button toggles.
+        if (k === 'all'){
+          presets = [];
+        } else {
+          var at = presets.indexOf(k);
+          if (at >= 0) presets.splice(at, 1); else presets.push(k);
+        }
         var bs = this.querySelectorAll('.fbtn');
-        for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i] === b);
+        for (var i = 0; i < bs.length; i++){
+          var pk = bs[i].dataset.preset;
+          var on = (pk === 'all') ? presets.length === 0 : presets.indexOf(pk) >= 0;
+          bs[i].classList.toggle('on', on);
+          // These are toggles now, not a radio group, so they must say so to
+          // assistive tech — `aria-pressed` is the difference between "this
+          // one is selected" and "this one is currently applied among others".
+          bs[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
         paint(false);
       });
 

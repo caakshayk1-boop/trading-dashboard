@@ -67,6 +67,17 @@ def _finding(key, title, rule, rows, note=""):
         "names": [{"sym": r.get("sym"), "name": r.get("name"),
                    "comp": _f(r, "comp"), "sector": r.get("sector")}
                   for r in rows[:MAX_NAMES]],
+        # The COMPLETE list, symbols only.
+        #
+        # `names` is capped at MAX_NAMES and the page printed "+37 more" beside
+        # it — but the other 37 were never serialised, so there was nothing for
+        # that label to expand into. It was a dead end rendered as an offer.
+        #
+        # Symbols only, deliberately: the full dict shape for every hit across
+        # six findings adds ~110KB to a server-rendered page. A bare ticker is
+        # ~10 bytes, so the entire list costs ~3KB and the reader can actually
+        # have all of it. The first MAX_NAMES keep their full detail above.
+        "all_syms": [r.get("sym") for r in rows if r.get("sym")],
         "note": note,
     }
 
@@ -142,6 +153,121 @@ def hidden_findings(rows: list[dict]) -> list[dict]:
          and (_f(r, "r3m") is not None and _f(r, "r3m") <= 0)]))
 
     return [f for f in out if f]
+
+
+# ── 1b. Names that clear more than one screen ────────────────────────────────
+
+# Two independent rules landing on the same company is the point. One is a
+# property; two is a coincidence worth a look; three is a reason to open the
+# accounts.
+MIN_OVERLAP = 2
+
+
+def multi_signal_names(findings: list[dict], rows: list[dict] | None = None) -> list[dict]:
+    """Companies that appear in MORE THAN ONE finding above.
+
+    Each finding on its own is a single property — "quality high, price weak"
+    is one lens. The question this answers is different and, per name, harder:
+    which companies show up under SEVERAL unrelated lenses at once?
+
+    Worked example, and the reason this exists: a company can be simultaneously
+    (a) profit up 20%+ year on year, (b) price down over three months, and
+    (c) carrying a volume spike with no price response. Each rule finds it
+    separately, each buries it in a list of forty, and nothing on the page ever
+    said the three were the same company. That intersection is the finding.
+
+    Ranked by how many findings a name clears, then by composite. NOT a
+    recommendation and NOT a score — a name clearing three rules is a name
+    three rules happened to select, which is a reason to look, not a thesis.
+    """
+    findings = [f for f in (findings or []) if isinstance(f, dict)]
+    meta = {}
+    for r in (rows or []):
+        if isinstance(r, dict) and r.get("sym"):
+            meta[r["sym"]] = r
+
+    hits: dict[str, list[str]] = {}
+    for f in findings:
+        for sym in (f.get("all_syms") or []):
+            hits.setdefault(sym, []).append(f.get("title") or f.get("key") or "")
+
+    out = []
+    for sym, titles in hits.items():
+        # A rule cannot vouch for a name twice.
+        titles = sorted(set(t for t in titles if t))
+        if len(titles) < MIN_OVERLAP:
+            continue
+        r = meta.get(sym) or {}
+        out.append({
+            "sym": sym,
+            "name": r.get("name"),
+            "sector": r.get("sector"),
+            "comp": _f(r, "comp"),
+            "n": len(titles),
+            "findings": titles,
+        })
+
+    out.sort(key=lambda x: (-x["n"], -(x["comp"] or 0), x["sym"]))
+    return out
+
+
+# ── 1c. Movers inside each sector ────────────────────────────────────────────
+
+# Five each way. Fewer than this many names in a sector and "top five" is just
+# "the sector", which tells a reader nothing they could not see by listing it.
+MOVERS_N = 5
+MIN_SECTOR_SIZE = 8
+
+
+def sector_movers(rows: list[dict], window: str = "r1w") -> list[dict]:
+    """Best and worst performers within each sector.
+
+    Deliberately built on the SCREEN's own sector labels rather than on the
+    heat map's NSE index tiles, and the two must not be conflated. The tiles
+    are NSE sector indices (^CNXIT, ^NSEBANK, ^CNXPSUBANK...); these rows carry
+    Yahoo's sector taxonomy. Mapping one onto the other is lossy in one
+    direction and plainly wrong in the other — Banking and PSU Bank are
+    separate indices that would both collapse into "Financial Services",
+    so two tiles would drill into an identical list of names. Better to
+    answer the question on a taxonomy that can actually answer it.
+
+    The window is a RETURN ALREADY ON THE ROW (default 1-week), so this costs
+    no network call and inherits the screen's build date rather than implying
+    it is live. A sector with no reachable return is omitted, never shown flat.
+    """
+    rows = [r for r in (rows or []) if isinstance(r, dict)]
+    buckets: dict[str, list[dict]] = {}
+    for r in rows:
+        sec = r.get("sector")
+        if not sec or _f(r, window) is None:
+            continue
+        buckets.setdefault(str(sec), []).append(r)
+
+    out = []
+    for sec, names in sorted(buckets.items()):
+        if len(names) < MIN_SECTOR_SIZE:
+            continue
+        ranked = sorted(names, key=lambda r: -(_f(r, window) or 0))
+
+        def pack(rs):
+            return [{"sym": r.get("sym"), "name": r.get("name"),
+                     "move": _f(r, window), "price": _f(r, "price"),
+                     "comp": _f(r, "comp")} for r in rs]
+
+        moves = [_f(r, window) for r in names]
+        out.append({
+            "sector": sec,
+            "count": len(names),
+            "window": window,
+            # The sector's own middle, so a reader can tell a broad move from
+            # a couple of names carrying the label.
+            "median": round(sorted(moves)[len(moves) // 2], 2),
+            "gainers": pack(ranked[:MOVERS_N]),
+            "losers": pack(list(reversed(ranked[-MOVERS_N:]))),
+        })
+    # Strongest sector first, by its median name — not by its best one.
+    out.sort(key=lambda x: -(x["median"] or 0))
+    return out
 
 
 # ── 2. Contradiction detector ────────────────────────────────────────────────

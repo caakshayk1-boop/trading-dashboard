@@ -775,5 +775,51 @@ class TestFailureHandling(unittest.TestCase):
         self.assertEqual(scores, sorted(scores, reverse=True))
 
 
+class TestGeography(unittest.TestCase):
+    """The target geography is Dubai, Abu Dhabi and Malaysia. Nothing is
+    deleted for being outside it — it is flagged, with a reason."""
+
+    def test_target_geography_is_kept(self):
+        for country, loc in [("Malaysia", "Kuala Lumpur"),
+                             ("Malaysia", "Penang"),
+                             ("UAE", "Dubai"),
+                             ("UAE", "Abu Dhabi, United Arab Emirates")]:
+            self.assertIsNone(jobs.geography_exclusion(country, loc),
+                              f"{country}/{loc} must be kept")
+
+    def test_non_target_country_is_excluded_with_a_reason(self):
+        for country in ["Saudi Arabia", "Oman", "Egypt", "India", "Germany"]:
+            r = jobs.geography_exclusion(country, "Anywhere")
+            self.assertIsNotNone(r, f"{country} must be excluded")
+            self.assertIn(country, r, "the reason must name the country")
+
+    def test_non_target_emirate_is_excluded(self):
+        r = jobs.geography_exclusion("UAE", "Sharjah")
+        self.assertIsNotNone(r)
+        self.assertIn("Sharjah", r)
+
+    def test_uae_without_a_city_is_kept(self):
+        """Most UAE finance postings carry no city and are in practice Dubai.
+        Excluding the unknowns would throw away real Dubai roles, so an
+        unnamed emirate is kept — missing data never counts as failing."""
+        self.assertIsNone(jobs.geography_exclusion("UAE", None))
+        self.assertIsNone(jobs.geography_exclusion("UAE", ""))
+
+    def test_unknown_country_is_kept(self):
+        """An unresolved location is missing data, not evidence of a wrong
+        country. Same rule the rest of this file obeys."""
+        self.assertIsNone(jobs.geography_exclusion(None, "Somewhere"))
+
+    def test_a_title_exclusion_keeps_its_more_specific_reason(self):
+        """Geography is checked second on purpose: 'restricted to nationals he
+        cannot be' tells him more than 'outside the target geography'."""
+        j = jobs.score_job(make_job(id="x", company="Majid Al Futtaim",
+                                    country="Saudi Arabia",
+                                    description=STRONG_FPA_DESC,
+                                    is_excluded=True,
+                                    exclusion_reason="accountant role"))
+        self.assertEqual(j["exclusion_reason"], "accountant role")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2, exit=False, argv=[sys.argv[0]])

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { simulateWallet, tierFor, gradeMultiplier, CAPITAL, TIERS } from "../api/_paper_wallet.js";
+import { simulateWallet, tierFor, gradeMultiplier, CAPITAL, TIERS,
+         sideOf, directionalPnlPct, ladderedPnlPct } from "../api/_paper_wallet.js";
 // From _badge.js specifically, not _db.js — this test runs via plain
 // `node --test` with no npm install in newspaper.yml's "Position tracker
 // tests" CI step, and _db.js's top-level @libsql/client import would fail
@@ -363,4 +364,115 @@ test("an empty or single-item list is handled", () => {
   assert.deepEqual(clusterByEvent([]), []);
   assert.deepEqual(clusterByEvent(null), []);
   assert.equal(clusterByEvent([{ title: "x", source: "s" }]).length, 1);
+});
+
+// ── Direction ───────────────────────────────────────────────────────────────
+// This book carries real shorts — 131 SELL signals across Gold, Crude, Natural
+// Gas and Silver. The wallet never read `action`, so a short and a long
+// rendered identically and the stop looked broken (a short's stop is ABOVE
+// its entry).
+
+test("sideOf: SELL is a short, everything else is a long", () => {
+  assert.equal(sideOf("SELL"), "SHORT");
+  assert.equal(sideOf("sell"), "SHORT");
+  assert.equal(sideOf("BUY"), "LONG");
+  assert.equal(sideOf(null), "LONG");
+  assert.equal(sideOf(""), "LONG");
+});
+
+test("directionalPnlPct: a short that FALLS has made money", () => {
+  assert.equal(directionalPnlPct("SHORT", 100, 90), 10);
+  assert.equal(directionalPnlPct("SHORT", 100, 110), -10);
+  assert.equal(directionalPnlPct("LONG", 100, 110), 10);
+  assert.equal(directionalPnlPct("LONG", 100, 90), -10);
+});
+
+test("directionalPnlPct: no entry, no number — never a fabricated 0", () => {
+  assert.equal(directionalPnlPct("LONG", null, 90), null);
+  assert.equal(directionalPnlPct("LONG", 100, null), null);
+  assert.equal(directionalPnlPct("LONG", 0, 90), null);
+});
+
+// ── Partial booking ─────────────────────────────────────────────────────────
+
+test("T2_HIT books half at T1 and half at T2, not all of it at T2", () => {
+  // entry 100, T1 110, T2 130. Full-position would be +30%.
+  // The ladder is half at +10 and half at +30 = +20%.
+  assert.equal(ladderedPnlPct("T2_HIT", "LONG", 100, 95, 110, 130), 20);
+});
+
+test("T1_HIT books the whole position at T1", () => {
+  assert.equal(ladderedPnlPct("T1_HIT", "LONG", 100, 95, 110, 130), 10);
+});
+
+test("TARGET_HIT does not say which target, so it books at T1", () => {
+  // The conservative reading, and the only one that cannot overstate.
+  assert.equal(ladderedPnlPct("TARGET_HIT", "LONG", 100, 95, 110, 130), 10);
+});
+
+test("SL_HIT books the whole position at the stop", () => {
+  assert.equal(ladderedPnlPct("SL_HIT", "LONG", 100, 95, 110, 130), -5);
+});
+
+test("a SHORT ladder runs downward and profits", () => {
+  // SHORT: t2 < t1 < entry < sl (tracker.py's ordering).
+  // entry 100, T1 90, T2 70, stop 105. Half at +10, half at +30 = +20%.
+  assert.equal(ladderedPnlPct("T2_HIT", "SHORT", 100, 105, 90, 70), 20);
+  assert.equal(ladderedPnlPct("SL_HIT", "SHORT", 100, 105, 90, 70), -5);
+});
+
+test("a collapsed target pair books one leg, never an invented second exit", () => {
+  // distinctTargets() nulls the duplicate rather than inventing a level.
+  assert.equal(ladderedPnlPct("T2_HIT", "LONG", 100, 95, 110, null), 10);
+});
+
+test("an open trade has no ladder", () => {
+  assert.equal(ladderedPnlPct("OPEN", "LONG", 100, 95, 110, 130), null);
+});
+
+test("no levels means fall back to the ledger, not a fabricated ladder", () => {
+  assert.equal(ladderedPnlPct("T2_HIT", "LONG", 100, null, null, null), null);
+});
+
+// ── End to end through simulateWallet ───────────────────────────────────────
+
+test("simulateWallet carries side and levels onto every trade", () => {
+  const out = simulateWallet(
+    [row({ id: 7, symbol: "GOLD", signal_type: "commodity", action: "SELL",
+           entry: 100, sl: 105, target1: 90, target2: 70 })],
+    badgeOf);
+  const t = out.trades.find((x) => x.id === 7);
+  assert.equal(t.side, "SHORT");
+  assert.equal(t.action, "SELL");
+  assert.equal(t.sl, 105);
+  assert.equal(t.target1, 90);
+  assert.equal(t.target2, 70);
+});
+
+test("simulateWallet books a T2_HIT on the ladder, and says so", () => {
+  const out = simulateWallet(
+    [row({ id: 8, status: "T2_HIT", exit_price: 130, pnl_pct: 30,
+           closed_at: "2026-08-19", entry: 100, sl: 95,
+           target1: 110, target2: 130 })],
+    badgeOf);
+  const t = out.trades.find((x) => x.id === 8);
+  assert.equal(t.pnl_basis, "partial_booking");
+  assert.equal(t.booked_pnl_pct, 20);      // ladder
+  assert.equal(t.ledger_pnl_pct, 30);      // what the ledger recorded
+  // The wallet's realized rupees follow the ladder, not the full position.
+  assert.equal(t.realized_pnl, Math.round(t.allocated_amount * 0.20));
+});
+
+test("a closed trade with no levels falls back to the ledger figure", () => {
+  // A real resolved status, but the row carries no stop — older rows predate
+  // the levels columns. The ladder cannot be built, so the ledger's own
+  // number stands rather than a fabricated one.
+  const out = simulateWallet(
+    [row({ id: 9, status: "SL_HIT", exit_price: 92, pnl_pct: -8,
+           closed_at: "2026-08-19", entry: 100, sl: null,
+           target1: null, target2: null })],
+    badgeOf);
+  const t = out.trades.find((x) => x.id === 9);
+  assert.equal(t.pnl_basis, "ledger");
+  assert.equal(t.booked_pnl_pct, -8);
 });

@@ -39,6 +39,8 @@ from newspaper import (
     get_review,
     fetch_alert_log,
     get_top5_picks,
+    picks_outcomes,
+    _week_key,
     get_fund_screen,
     get_market_intel,
     get_brief,
@@ -391,8 +393,13 @@ def generate() -> None:
     try:
         import insights as _ins
         _srows = stock_screen.get("rows") or []
+        _hidden = _ins.hidden_findings(_srows)
         findings = {
-            "hidden": _ins.hidden_findings(_srows),
+            "hidden": _hidden,
+            # Names clearing more than one of the rules above. Every finding
+            # is a single lens; this is the only thing on the page that asks
+            # which companies several unrelated lenses agree on.
+            "multi": _ins.multi_signal_names(_hidden, _srows),
             "contradictions": _ins.contradictions(
                 stock_screen.get("breadth"),
                 (market_intel or {}).get("fii_dii")),
@@ -400,7 +407,16 @@ def generate() -> None:
             "built_on": stock_screen.get("built_on"),
             "universe": len(_srows),
         }
+        # Movers inside each sector, from the SAME screen rows. Attached to
+        # market_intel because that is where the sector heat map lives, and
+        # this reads directly under it — but built here, where _srows is
+        # already in hand, rather than paying for the payload twice.
+        if isinstance(market_intel, dict):
+            market_intel["sector_movers"] = _ins.sector_movers(_srows)
+            print(f"[generate] Sector movers: "
+                  f"{len(market_intel['sector_movers'])} sectors")
         print(f"[generate] Findings: {len(findings['hidden'])} hidden, "
+              f"{len(findings['multi'])} multi-signal, "
               f"{len(findings['contradictions'])} contradictions"
               f"{' , change report' if findings['changed'] else ''}")
     except Exception as e:                                   # noqa: BLE001
@@ -422,7 +438,20 @@ def generate() -> None:
         top5, top5_week = last_known_picks()
         if top5:
             print(f"[generate] ⚠️  using last known picks from {top5_week}")
-    print(f"[generate] Picks: {len(top5)}")
+    # What the ledger now says about those five. The section renders from a
+    # snapshot of the ranking with no exit state, so a pick that stopped out on
+    # Monday sat on the front page all week looking live.
+    try:
+        picks_out = picks_outcomes(top5_week or _week_key())
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  pick outcomes unavailable: {e}")
+        picks_out = {}
+    for _p in top5:
+        _o = picks_out.get(_p.get("symbol")) or picks_out.get(_p.get("name"))
+        if _o:
+            _p["outcome"] = _o
+    print(f"[generate] Picks: {len(top5)}"
+          f"{f' ({len(picks_out)} already resolved)' if picks_out else ''}")
     tracker = get_tracker_stocks()
 
     print("[generate] Fetching alert log...")
