@@ -39,6 +39,8 @@ from newspaper import (
     get_review,
     fetch_alert_log,
     get_top5_picks,
+    picks_outcomes,
+    _week_key,
     get_fund_screen,
     get_market_intel,
     get_brief,
@@ -428,7 +430,20 @@ def generate() -> None:
         top5, top5_week = last_known_picks()
         if top5:
             print(f"[generate] ⚠️  using last known picks from {top5_week}")
-    print(f"[generate] Picks: {len(top5)}")
+    # What the ledger now says about those five. The section renders from a
+    # snapshot of the ranking with no exit state, so a pick that stopped out on
+    # Monday sat on the front page all week looking live.
+    try:
+        picks_out = picks_outcomes(top5_week or _week_key())
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  pick outcomes unavailable: {e}")
+        picks_out = {}
+    for _p in top5:
+        _o = picks_out.get(_p.get("symbol")) or picks_out.get(_p.get("name"))
+        if _o:
+            _p["outcome"] = _o
+    print(f"[generate] Picks: {len(top5)}"
+          f"{f' ({len(picks_out)} already resolved)' if picks_out else ''}")
     tracker = get_tracker_stocks()
 
     print("[generate] Fetching alert log...")
