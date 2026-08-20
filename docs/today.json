@@ -1,21 +1,83 @@
 {
- "build_id": "20260820T073008",
+ "build_id": "20260820T204706",
  "date": "2026-08-20",
  "date_str": "Thursday, August 20 2026",
  "picks": [
   {
-   "symbol": "PAYTM.NS",
-   "name": "PAYTM",
-   "ext20": 10.73,
-   "vol_ratio": 1.54,
-   "price": 1603.0,
-   "change_1d": -2.82,
-   "mom_1m": 16.0,
-   "mom_3m": 40.0,
-   "score": 97,
-   "target": 2003.75,
-   "stop_loss": 1474.76,
-   "timeframe": "2\u20133 months",
+   "symbol": "MRK",
+   "name": "MRK",
+   "ext20": 12.38,
+   "vol_ratio": 1.34,
+   "price": 151.51,
+   "change_1d": -0.45,
+   "mom_1m": 18.9,
+   "mom_3m": 31.7,
+   "score": 91,
+   "target": 162.28,
+   "stop_loss": 134.82,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "7% to go at its recent 10.6%/month",
+   "rr": 0.65,
+   "atr": 4.39,
+   "high_52w": 153.5,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 11.9
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 9.1
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 4.9
+    }
+   ],
+   "ema20": 134.82,
+   "tv": "MRK",
+   "thesis": "31.7% three\u2011month gain, 18.9% one\u2011month rise, price 12.4% above 20\u2011day average on 1.34\u00d7 volume, composite 91."
+  },
+  {
+   "symbol": "COFORGE.NS",
+   "name": "COFORGE",
+   "ext20": 8.21,
+   "vol_ratio": 0.65,
+   "price": 1882.0,
+   "change_1d": 3.8,
+   "mom_1m": 25.3,
+   "mom_3m": 37.3,
+   "score": 90,
+   "target": 2068.1,
+   "stop_loss": 1739.16,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "10% to go at its recent 12.4%/month",
+   "rr": 1.3,
+   "atr": 46.15,
+   "high_52w": 1975.81,
+   "timeframe": "about a month",
    "currency": "\u20b9",
    "factors": [
     {
@@ -46,132 +108,38 @@
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 7.1
+     "e": 0.0
     }
    ],
-   "ema20": 1447.66,
-   "tv": "NSE:PAYTM",
-   "thesis": "97 composite score with 40% 3-month gain and 1.54x volume."
+   "ema20": 1739.16,
+   "tv": "NSE:COFORGE",
+   "thesis": "25.3% one\u2011month gain, 37.3% three\u2011month gain, price 8.2% above 20\u2011day average on 0.65\u00d7 volume, composite 90/100."
   },
   {
-   "symbol": "NET",
-   "name": "NET",
-   "ext20": 8.04,
-   "vol_ratio": 1.25,
-   "price": 315.78,
-   "change_1d": -4.55,
-   "mom_1m": 15.9,
-   "mom_3m": 59.8,
-   "score": 94,
-   "target": 394.72,
-   "stop_loss": 290.52,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
+   "symbol": "PAYTM.NS",
+   "name": "PAYTM",
+   "ext20": 7.56,
+   "vol_ratio": 0.82,
+   "price": 1603.6,
+   "change_1d": 1.27,
+   "mom_1m": 23.3,
+   "mom_3m": 44.2,
+   "score": 89,
+   "target": 1773.29,
+   "stop_loss": 1490.94,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "11% to go at its recent 14.7%/month",
+   "rr": 1.51,
+   "atr": 57.84,
+   "high_52w": 1657.6,
+   "timeframe": "about a month",
+   "currency": "\u20b9",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 3.9
-    }
-   ],
-   "ema20": 292.27,
-   "tv": "NET",
-   "thesis": "+60% three-month trend, +8.0% above the 20-day, volume 1.25x normal."
-  },
-  {
-   "symbol": "MDB",
-   "name": "MDB",
-   "ext20": 19.32,
-   "vol_ratio": 1.19,
-   "price": 460.33,
-   "change_1d": -2.53,
-   "mom_1m": 40.1,
-   "mom_3m": 47.5,
-   "score": 93,
-   "target": 575.41,
-   "stop_loss": 423.5,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 3.2
-    }
-   ],
-   "ema20": 385.8,
-   "tv": "MDB",
-   "thesis": "+40% in a month against +48% over three \u2014 the trend is accelerating, not maturing."
-  },
-  {
-   "symbol": "SNOW",
-   "name": "SNOW",
-   "ext20": 7.09,
-   "vol_ratio": 0.74,
-   "price": 328.92,
-   "change_1d": -2.51,
-   "mom_1m": 21.8,
-   "mom_3m": 108.9,
-   "score": 88,
-   "target": 411.15,
-   "stop_loss": 302.61,
-   "timeframe": "2\u20133 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 22.7
+     "e": 23.9
     },
     {
      "k": "Above 50-day avg",
@@ -199,23 +167,85 @@
      "e": 0.0
     }
    ],
-   "ema20": 307.16,
-   "tv": "SNOW",
-   "thesis": "+109% three-month trend, +7.1% above the 20-day, volume 0.74x normal."
+   "ema20": 1490.94,
+   "tv": "NSE:PAYTM",
+   "thesis": "44.2% three\u2011month gain, 23.3% one\u2011month rise, price +7.6% above 20\u2011day average on 0.82\u00d7 typical volume; composite 89/100."
   },
   {
-   "symbol": "SMCI",
-   "name": "SMCI",
-   "ext20": 24.54,
-   "vol_ratio": 1.62,
-   "price": 39.84,
-   "change_1d": 1.74,
-   "mom_1m": 61.4,
-   "mom_3m": 28.4,
-   "score": 87,
-   "target": 49.8,
-   "stop_loss": 36.65,
-   "timeframe": "2\u20133 months",
+   "symbol": "AXON",
+   "name": "AXON",
+   "ext20": 7.53,
+   "vol_ratio": 0.57,
+   "price": 635.02,
+   "change_1d": -1.66,
+   "mom_1m": 24.4,
+   "mom_3m": 59.0,
+   "score": 89,
+   "target": 794.29,
+   "stop_loss": 590.54,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "25% to go at its recent 19.7%/month",
+   "rr": 3.58,
+   "atr": 41.31,
+   "high_52w": 794.29,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 23.8
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 590.54,
+   "tv": "AXON",
+   "thesis": "59% three\u2011month rise, 24% one\u2011month surge, price 7.5% above 20\u2011day average on 0.57\u00d7 volume."
+  },
+  {
+   "symbol": "SAP",
+   "name": "SAP",
+   "ext20": 9.97,
+   "vol_ratio": 0.7,
+   "price": 217.17,
+   "change_1d": 0.73,
+   "mom_1m": 40.7,
+   "mom_3m": 20.7,
+   "score": 86,
+   "target": 276.56,
+   "stop_loss": 197.47,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "27% to go at its recent 6.9%/month",
+   "rr": 3.02,
+   "atr": 6.29,
+   "high_52w": 276.56,
+   "timeframe": "3-6 months",
    "currency": "$",
    "factors": [
     {
@@ -231,7 +261,7 @@
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 5.9
+     "e": 15.0
     },
     {
      "k": "1-month thrust",
@@ -241,17 +271,17 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 8.1
+     "e": 5.9
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 8.0
+     "e": 0.0
     }
    ],
-   "ema20": 31.99,
-   "tv": "SMCI",
-   "thesis": "1.6x normal volume behind a +61% month \u2014 participation is confirming the move."
+   "ema20": 197.47,
+   "tv": "SAP",
+   "thesis": "40.7% one\u2011month gain, 20.7% three\u2011month rise, price 10% above its 20\u2011day average on 0.7\u00d7 typical volume, composite 86."
   }
  ],
  "engine": [
@@ -347,243 +377,243 @@
  "picks_week": null,
  "open_context": {
   "ABCAPITAL": {
-   "price": 396.0,
+   "price": 409.0,
    "sector": "Financial Services"
   },
   "AIAENG": {
-   "price": 4447.6001,
+   "price": 4357.6001,
    "sector": "Industrials"
   },
+  "ALKEM": {
+   "price": 5400.0,
+   "sector": "Healthcare"
+  },
   "ANTHEM": {
-   "price": 891.05,
+   "price": 874.5,
    "sector": "Healthcare"
   },
   "ASAHIINDIA": {
-   "price": 957.05,
+   "price": 951.55,
    "sector": "Consumer Cyclical"
   },
   "ASHOKLEY": {
-   "price": 173.1,
+   "price": 173.8,
+   "sector": "Industrials"
+  },
+  "AXON": {
+   "price": 634.84,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
-   "price": 2012.0,
+   "price": 2016.0,
    "sector": "Financial Services"
   },
   "BAJFINANCE.NS": {
-   "price": 1080.2,
+   "price": 1095.0,
    "sector": "Financial Services"
   },
   "BANKBARODA": {
-   "price": 245.0,
+   "price": 244.5,
    "sector": "Financial Services"
   },
   "BANKINDIA": {
-   "price": 141.7,
+   "price": 142.8,
    "sector": "Financial Services"
   },
   "BDL": {
-   "price": 1349.0,
+   "price": 1317.0,
    "sector": "Industrials"
   },
   "BHARTIARTL": {
-   "price": 1922.0,
+   "price": 1941.7,
    "sector": "Communication Services"
   },
   "BRIGADE": {
-   "price": 588.9,
+   "price": 625.75,
    "sector": "Real Estate"
   },
   "CANBK": {
-   "price": 129.08,
+   "price": 129.6,
    "sector": "Financial Services"
   },
   "CDSL": {
-   "price": 1329.0,
+   "price": 1345.9,
    "sector": "Financial Services"
   },
   "CEATLTD": {
-   "price": 3605.3999,
+   "price": 3588.2,
    "sector": "Consumer Cyclical"
   },
   "CEMPRO": {
-   "price": 1265.7,
+   "price": 1273.9,
    "sector": "Industrials"
   },
   "CHOLAFIN": {
-   "price": 1873.5,
+   "price": 1888.9,
    "sector": "Financial Services"
   },
   "COFORGE.NS": {
-   "price": 1813.1,
+   "price": 1882.0,
    "sector": "Technology"
   },
   "COROMANDEL": {
-   "price": 2062.7,
+   "price": 2004.8,
    "sector": "Basic Materials"
   },
   "CRISIL": {
-   "price": 4442.5,
+   "price": 4478.6001,
    "sector": "Financial Services"
   },
   "CRUDE": {
-   "price": 84.71,
+   "price": 86.14,
    "sector": ""
   },
   "DEEPAKNTR": {
-   "price": 1768.3,
+   "price": 1750.4,
    "sector": "Basic Materials"
   },
   "DIXON": {
-   "price": 14462.0,
+   "price": 14850.0,
    "sector": "Technology"
   },
   "DLF": {
-   "price": 669.9,
+   "price": 676.15,
    "sector": "Real Estate"
   },
   "ECLERX": {
-   "price": 1805.2,
+   "price": 1804.8,
    "sector": "Technology"
   },
   "EICHERMOT": {
-   "price": 8018.5,
+   "price": 8042.0,
    "sector": "Consumer Cyclical"
   },
   "ESCORTS": {
-   "price": 3062.1001,
+   "price": 3092.1001,
    "sector": "Industrials"
   },
   "EXIDEIND": {
-   "price": 465.25,
+   "price": 464.1,
    "sector": "Consumer Cyclical"
   },
   "FLUOROCHEM": {
-   "price": 4674.7998,
+   "price": 4682.7002,
    "sector": "Basic Materials"
   },
   "GRASIM": {
-   "price": 3278.7,
+   "price": 3300.0,
    "sector": "Basic Materials"
   },
   "GVT&D": {
-   "price": 4100.0,
+   "price": 4050.1001,
    "sector": "Industrials"
   },
   "HCLTECH": {
-   "price": 1324.8,
+   "price": 1318.4,
    "sector": "Technology"
   },
   "HEG": {
-   "price": 708.05,
+   "price": 711.95,
    "sector": "Industrials"
   },
-  "HINDALCO": {
-   "price": 1038.95,
-   "sector": "Basic Materials"
-  },
   "HINDCOPPER": {
-   "price": 554.85,
+   "price": 560.1,
    "sector": "Basic Materials"
   },
   "IFCI": {
-   "price": 81.68,
+   "price": 81.76,
    "sector": "Financial Services"
   },
   "INDHOTEL": {
-   "price": 723.35,
+   "price": 735.85,
    "sector": "Consumer Cyclical"
   },
-  "IOC": {
-   "price": 136.3,
-   "sector": "Energy"
-  },
   "IPCALAB": {
-   "price": 1903.7,
+   "price": 1900.1,
    "sector": "Healthcare"
   },
   "J&KBANK": {
-   "price": 150.24,
+   "price": 148.19,
    "sector": "Financial Services"
   },
   "JSWDULUX": {
-   "price": 3110.3999,
+   "price": 3086.1001,
    "sector": ""
   },
   "KIRLOSENG": {
-   "price": 2125.7,
+   "price": 2150.1001,
    "sector": "Industrials"
   },
   "KPRMILL": {
-   "price": 1126.2,
+   "price": 1153.2,
    "sector": "Consumer Cyclical"
   },
   "LAURUSLABS": {
-   "price": 1801.8,
+   "price": 1825.0,
    "sector": "Healthcare"
   },
   "LUPIN": {
-   "price": 2225.0,
+   "price": 2201.5,
    "sector": "Healthcare"
   },
   "M&MFIN": {
-   "price": 389.6,
+   "price": 382.45,
    "sector": "Financial Services"
   },
   "MARICO": {
-   "price": 841.55,
+   "price": 858.35,
    "sector": "Consumer Defensive"
   },
   "MDB": {
-   "price": 440.53,
+   "price": 422.145,
    "sector": ""
   },
   "MOTHERSON": {
-   "price": 170.29,
+   "price": 169.58,
    "sector": "Consumer Cyclical"
   },
+  "MRK": {
+   "price": 151.315,
+   "sector": "Healthcare"
+  },
   "MRPL": {
-   "price": 176.51,
+   "price": 173.98,
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 484.31,
+   "price": 480.88,
    "sector": ""
   },
   "NATIONALUM": {
-   "price": 386.55,
+   "price": 385.6,
    "sector": "Basic Materials"
   },
   "NESTLEIND": {
-   "price": 1465.0,
+   "price": 1458.0,
    "sector": "Consumer Defensive"
   },
   "NET": {
-   "price": 291.88,
-   "sector": ""
-  },
-  "NGAS": {
-   "price": 2.783,
+   "price": 282.855,
    "sector": ""
   },
   "NIACL": {
-   "price": 184.08,
+   "price": 183.08,
    "sector": "Financial Services"
   },
   "NMDC": {
-   "price": 83.35,
+   "price": 83.95,
    "sector": "Basic Materials"
   },
   "OFSS": {
-   "price": 11774.0,
+   "price": 11826.0,
    "sector": "Technology"
   },
   "PARADEEP": {
-   "price": 150.89,
+   "price": 148.64,
    "sector": "Basic Materials"
   },
   "PAYTM.NS": {
-   "price": 1583.5,
+   "price": 1603.6,
    "sector": "Technology"
   }
  },
@@ -715,8 +745,8 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "10h old",
-    "note": "partial coverage \u2014 12/22 records"
+    "age": "7h old",
+    "note": "partial coverage \u2014 11/22 records"
    }
   ]
  },
