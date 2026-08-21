@@ -7,12 +7,12 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-e5i9hOxU5LhV0VLaJsaKOw'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-lYl-J1KBICuhldbgzDbPAg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints dark and then repaints light, which is the single most visible way
      a theme toggle can look broken. -->
-<script nonce="e5i9hOxU5LhV0VLaJsaKOw">
+<script nonce="lYl-J1KBICuhldbgzDbPAg">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -55,7 +55,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="e5i9hOxU5LhV0VLaJsaKOw">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-22","dateModified":"2026-08-22T05:41:51.655368+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="lYl-J1KBICuhldbgzDbPAg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-22","dateModified":"2026-08-22T05:56:44.480856+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -2197,6 +2197,34 @@ table.t tbody tr:last-child td{border-bottom:none}
 /* Impact level on a news card. Information, so blue per the colour contract —
    an impact LEVEL is a classification, not an outcome, and colouring HIGH red
    would say "this is bad" when it only says "this reaches your portfolio". */
+/* Rolling 24h. A rail of time down the left, regions grouped inside each
+   window. Events carrying a transmission chain are marked — those are the ones
+   with a stated route to a portfolio, and in a list ordered by TIME rather than
+   by rank they would otherwise be indistinguishable from the rest. */
+.wt{margin:0 0 26px}
+.wt-b{border-top:1px solid var(--line);padding:14px 0 4px}
+.wt-bh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;margin-bottom:10px}
+.wt-bt{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--lime)}
+.wt-bn{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.wt-r{display:grid;grid-template-columns:112px 1fr;gap:14px;margin-bottom:10px}
+.wt-rn{font-family:var(--mono);font-size:10.5px;color:var(--muted);padding-top:2px}
+.wt-l{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+.wt-i{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:5px 0 5px 12px;
+  position:relative}
+.wt-i::before{content:'';position:absolute;left:-3px;top:11px;width:5px;height:5px;
+  border-radius:50%;background:var(--line2)}
+/* Blue: an impact classification is information, per the colour contract. */
+.wt-hi::before{background:var(--blue);box-shadow:0 0 0 3px rgba(106,168,255,.15)}
+.wt-t{font-family:var(--mono);font-size:10px;color:var(--dim);padding-top:2px;text-align:right}
+.wt-x{font-size:13px;line-height:1.5}
+.wt-x a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line2)}
+.wt-x a:hover{border-color:var(--lime)}
+.wt-s{display:block;font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:2px}
+.wt-s b{color:var(--muted);font-weight:400}
+@media(max-width:640px){.wt-r{grid-template-columns:1fr;gap:4px}
+  .wt-rn{font-size:9.5px;letter-spacing:1px;text-transform:uppercase}}
 .nimp{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:1px;
   padding:2px 6px;border-radius:3px;border:1px solid currentColor;margin-left:6px;white-space:nowrap}
 .nimp-high{color:var(--blue);background:rgba(106,168,255,.10)}
@@ -2838,7 +2866,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Saturday, August 22 2026</span>
-      <span class="live" id="istClock"><i></i>05:41 MYT</span>
+      <span class="live" id="istClock"><i></i>05:56 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -2890,7 +2918,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260822T054151">
+<div class="editionbar" id="editionbar" data-build="20260822T055644">
   
   <span><b>New edition published<span id="editionWhen"></span>.</b>
     This tab was built for Saturday, August 22 2026. Live data &mdash; the ticker, heat map and
@@ -2960,8 +2988,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78152</span>
-      <span class="c up">▲ +7.01%</span>
+      <span class="p">$78420</span>
+      <span class="c up">▲ +7.38%</span>
     </div>
     
     
@@ -3018,8 +3046,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78152</span>
-      <span class="c up">▲ +7.01%</span>
+      <span class="p">$78420</span>
+      <span class="c up">▲ +7.38%</span>
     </div>
     
     
@@ -3166,7 +3194,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <article class="mcard mc-momentum">
           <div class="mc-tag"><i></i>Momentum</div>
-          <h3 class="mc-head">BTC +7.01% — the day's strongest risk asset</h3>
+          <h3 class="mc-head">BTC +7.38% — the day's strongest risk asset</h3>
           <p class="mc-why">7 of 8 priced instruments advanced. Breadth is what separates a move from a rotation.</p>
           <a class="mc-cta" href="#world">Full board &rarr;</a>
         </article>
@@ -4163,7 +4191,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">02 / TRADE IDEAS</span> 
-<span class="dh dh-LIVE" title="Trade ideas · just built.">LIVE<span class="dh-age">just built</span></span>
+<span class="dh dh-LIVE" title="Trade ideas · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
       <h2 class="stitle">Top 2 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
@@ -4387,12 +4415,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">03 / WORLD</span> 
-<span class="dh dh-LIVE" title="World news · just built.">LIVE<span class="dh-age">just built</span></span>
+<span class="dh dh-LIVE" title="World news · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
       actually changes a decision.</p>
   </div>
+
+  
+  <div class="wt" id="worldTimeline" hidden></div>
 
   <!-- Live incident map.
        Land is a 156x66 dot grid rasterised once from Natural Earth (public
@@ -5831,7 +5862,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="kpi"><div class="v up">1</div><div class="k">Apply / Apply-small</div></div>
     <div class="kpi"><div class="v ">0</div><div class="k">Avoid</div></div>
     <div class="kpi"><div class="v">4</div><div class="k">Awaiting listing</div></div>
-    <div class="kpi"><div class="v">24</div><div class="k">Listed &amp; measured · 12m</div></div>
+    <div class="kpi"><div class="v">82</div><div class="k">Listed &amp; measured · 12m</div></div>
   </div>
 
   
@@ -6356,12 +6387,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="subeyebrow">The record</span>
     <h3>Listed in the last 12 months</h3>
     <p class="subdesc">All <b>85</b> mainboard issues that closed
-      and listed inside the window. <b>24</b> of them carry
-      measured post-listing performance and sit first &mdash; the same set, and the same numbers,
-      as New Listings below; click any of those for its full screen detail. The rest are real
-      listings that fall outside the 750-name screen universe or have no usable price history,
-      so they show their band and dates and say so, rather than being dropped or padded with a
-      number nobody measured.
+      and listed inside the window, <b>82</b> of them with
+      measured performance. Return is from the <b>first traded close</b>, not the issue price
+      &mdash; nothing trades before it lists, so the first close is the first close by
+      construction, while NSE's issue-price data is unreliable and a listing gain built on a
+      guessed one would be fabricated. Names inside the 750-stock screen open their full detail
+      sheet; every row links to its chart.
       Return is measured from the <b>first traded close</b>, not the issue price &mdash; NSE's
       issue-price data is not reliable and a listing gain computed off a guessed one would be
       fabricated. Click any measured name for its full screen detail.</p>
@@ -6372,6 +6403,38 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <th scope="col">Listed</th><th scope="col">First close / band</th><th scope="col">Last</th>
       <th scope="col">Since listing</th><th scope="col">From high</th><th scope="col">Sessions</th>
     </tr></thead><tbody>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="MEIL" style="cursor:pointer">MEIL</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AMEIL"
+             title="Open MEIL on TradingView">chart</a></td>
+        <td>Mangal Electrical Industries Limited</td>
+        <td class="num">2025-08-28</td>
+        <td class="num">535.35</td>
+        <td class="num">263.10</td>
+        
+        <td class="num dn">-50.9%</td>
+        <td class="num dn">-52.7%</td>
+        <td class="num mono-dim">245</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="VIKRAN" style="cursor:pointer">VIKRAN</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AVIKRAN"
+             title="Open VIKRAN on TradingView">chart</a></td>
+        <td>Vikran Engineering Limited</td>
+        <td class="num">2025-09-03</td>
+        <td class="num">95.71</td>
+        <td class="num">62.62</td>
+        
+        <td class="num dn">-34.6%</td>
+        <td class="num dn">-45.5%</td>
+        <td class="num mono-dim">242</td>
+      </tr>
       
       <tr class="">
         <td><strong class="sym" data-stock="URBANCO" style="cursor:pointer">URBANCO</strong>
@@ -6387,6 +6450,86 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num dn">-13.3%</td>
         <td class="num dn">-22.6%</td>
         <td class="num mono-dim">229</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="SHRINGARMS" style="cursor:pointer">SHRINGARMS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASHRINGARMS"
+             title="Open SHRINGARMS on TradingView">chart</a></td>
+        <td>Shringar House of Mangalsutra Limited</td>
+        <td class="num">2025-09-17</td>
+        <td class="num">184.88</td>
+        <td class="num">223.98</td>
+        
+        <td class="num up">+21.1%</td>
+        <td class="num dn">-14.5%</td>
+        <td class="num mono-dim">231</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="EUROPRATIK" style="cursor:pointer">EUROPRATIK</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AEUROPRATIK"
+             title="Open EUROPRATIK on TradingView">chart</a></td>
+        <td>Euro Pratik Sales Limited</td>
+        <td class="num">2025-09-23</td>
+        <td class="num">248.17</td>
+        <td class="num">265.75</td>
+        
+        <td class="num up">+7.1%</td>
+        <td class="num dn">-30.3%</td>
+        <td class="num mono-dim">227</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="IVALUE" style="cursor:pointer">IVALUE</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AIVALUE"
+             title="Open IVALUE on TradingView">chart</a></td>
+        <td>Ivalue Infosolutions Limited</td>
+        <td class="num">2025-09-25</td>
+        <td class="num">281.85</td>
+        <td class="num">279.65</td>
+        
+        <td class="num dn">-0.8%</td>
+        <td class="num dn">-14.4%</td>
+        <td class="num mono-dim">225</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="GKENERGY" style="cursor:pointer">GKENERGY</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AGKENERGY"
+             title="Open GKENERGY on TradingView">chart</a></td>
+        <td>GK Energy Limited</td>
+        <td class="num">2025-09-26</td>
+        <td class="num">167.74</td>
+        <td class="num">123.99</td>
+        
+        <td class="num dn">-26.1%</td>
+        <td class="num dn">-46.8%</td>
+        <td class="num mono-dim">224</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="GANESHCP" style="cursor:pointer">GANESHCP</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AGANESHCP"
+             title="Open GANESHCP on TradingView">chart</a></td>
+        <td>Ganesh Consumer Products Limited</td>
+        <td class="num">2025-09-29</td>
+        <td class="num">287.30</td>
+        <td class="num">162.35</td>
+        
+        <td class="num dn">-43.5%</td>
+        <td class="num dn">-45.6%</td>
+        <td class="num mono-dim">222</td>
       </tr>
       
       <tr class="">
@@ -6422,6 +6565,54 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr>
       
       <tr class="">
+        <td><strong class="sym" data-stock="SOLARWORLD" style="cursor:pointer">SOLARWORLD</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASOLARWORLD"
+             title="Open SOLARWORLD on TradingView">chart</a></td>
+        <td>Solarworld Energy Solutions Limited</td>
+        <td class="num">2025-09-30</td>
+        <td class="num">323.50</td>
+        <td class="num">149.82</td>
+        
+        <td class="num dn">-53.7%</td>
+        <td class="num dn">-55.7%</td>
+        <td class="num mono-dim">222</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="JARO" style="cursor:pointer">JARO</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AJARO"
+             title="Open JARO on TradingView">chart</a></td>
+        <td>Jaro Institute of Technology Management and Research Limited</td>
+        <td class="num">2025-09-30</td>
+        <td class="num">739.73</td>
+        <td class="num">440.05</td>
+        
+        <td class="num dn">-40.5%</td>
+        <td class="num dn">-43.8%</td>
+        <td class="num mono-dim">221</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="ARSSBL" style="cursor:pointer">ARSSBL</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AARSSBL"
+             title="Open ARSSBL on TradingView">chart</a></td>
+        <td>Anand Rathi Share and Stock Brokers Limited</td>
+        <td class="num">2025-09-30</td>
+        <td class="num">441.62</td>
+        <td class="num">497.65</td>
+        
+        <td class="num up">+12.7%</td>
+        <td class="num dn">-35.1%</td>
+        <td class="num mono-dim">223</td>
+      </tr>
+      
+      <tr class="">
         <td><strong class="sym" data-stock="JAINREC" style="cursor:pointer">JAINREC</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
@@ -6435,6 +6626,70 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num dn">-3.0%</td>
         <td class="num dn">-47.2%</td>
         <td class="num mono-dim">217</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="EPACKPEB" style="cursor:pointer">EPACKPEB</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AEPACKPEB"
+             title="Open EPACKPEB on TradingView">chart</a></td>
+        <td>Epack Prefab Technologies Limited</td>
+        <td class="num">2025-10-01</td>
+        <td class="num">186.01</td>
+        <td class="num">232.90</td>
+        
+        <td class="num up">+25.2%</td>
+        <td class="num dn">-29.4%</td>
+        <td class="num mono-dim">220</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="TRUALT" style="cursor:pointer">TRUALT</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ATRUALT"
+             title="Open TRUALT on TradingView">chart</a></td>
+        <td>TruAlt Bioenergy Limited</td>
+        <td class="num">2025-10-03</td>
+        <td class="num">510.90</td>
+        <td class="num">462.60</td>
+        
+        <td class="num dn">-9.5%</td>
+        <td class="num dn">-13.0%</td>
+        <td class="num mono-dim">220</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="PACEDIGITK" style="cursor:pointer">PACEDIGITK</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3APACEDIGITK"
+             title="Open PACEDIGITK on TradingView">chart</a></td>
+        <td>Pace Digitek Limited</td>
+        <td class="num">2025-10-06</td>
+        <td class="num">217.99</td>
+        <td class="num">175.37</td>
+        
+        <td class="num dn">-19.6%</td>
+        <td class="num dn">-23.1%</td>
+        <td class="num mono-dim">220</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="GLOTTIS" style="cursor:pointer">GLOTTIS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AGLOTTIS"
+             title="Open GLOTTIS on TradingView">chart</a></td>
+        <td>Glottis Limited</td>
+        <td class="num">2025-10-07</td>
+        <td class="num">83.70</td>
+        <td class="num">66.01</td>
+        
+        <td class="num dn">-21.1%</td>
+        <td class="num dn">-21.1%</td>
+        <td class="num mono-dim">219</td>
       </tr>
       
       <tr class="">
@@ -6502,6 +6757,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr>
       
       <tr class="">
+        <td><strong class="sym" data-stock="MIDWESTLTD" style="cursor:pointer">MIDWESTLTD</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AMIDWESTLTD"
+             title="Open MIDWESTLTD on TradingView">chart</a></td>
+        <td>Midwest Limited</td>
+        <td class="num">2025-10-24</td>
+        <td class="num">1,140.50</td>
+        <td class="num">1,154.00</td>
+        
+        <td class="num up">+1.2%</td>
+        <td class="num dn">-36.0%</td>
+        <td class="num mono-dim">206</td>
+      </tr>
+      
+      <tr class="">
         <td><strong class="sym" data-stock="ORKLAINDIA" style="cursor:pointer">ORKLAINDIA</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
@@ -6515,6 +6786,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num dn">-23.7%</td>
         <td class="num dn">-23.7%</td>
         <td class="num mono-dim">195</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="STUDDS" style="cursor:pointer">STUDDS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASTUDDS"
+             title="Open STUDDS on TradingView">chart</a></td>
+        <td>Studds Accessories Limited</td>
+        <td class="num">2025-11-07</td>
+        <td class="num">560.30</td>
+        <td class="num">448.00</td>
+        
+        <td class="num dn">-20.0%</td>
+        <td class="num dn">-22.0%</td>
+        <td class="num mono-dim">198</td>
       </tr>
       
       <tr class="">
@@ -6646,6 +6933,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr>
       
       <tr class="">
+        <td><strong class="sym" data-stock="EXCELSOFT" style="cursor:pointer">EXCELSOFT</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AEXCELSOFT"
+             title="Open EXCELSOFT on TradingView">chart</a></td>
+        <td>Excelsoft Technologies Limited</td>
+        <td class="num">2025-11-26</td>
+        <td class="num">125.97</td>
+        <td class="num">70.88</td>
+        
+        <td class="num dn">-43.7%</td>
+        <td class="num dn">-43.7%</td>
+        <td class="num mono-dim">185</td>
+      </tr>
+      
+      <tr class="">
         <td><strong class="sym" data-stock="SUDEEPPHRM" style="cursor:pointer">SUDEEPPHRM</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
@@ -6659,6 +6962,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num up">+42.3%</td>
         <td class="num dn">-0.6%</td>
         <td class="num mono-dim">179</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="VIDYAWIRES" style="cursor:pointer">VIDYAWIRES</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AVIDYAWIRES"
+             title="Open VIDYAWIRES on TradingView">chart</a></td>
+        <td>Vidya Wires Limited</td>
+        <td class="num">2025-12-10</td>
+        <td class="num">53.17</td>
+        <td class="num">87.40</td>
+        
+        <td class="num up">+64.4%</td>
+        <td class="num dn">-23.3%</td>
+        <td class="num mono-dim">175</td>
       </tr>
       
       <tr class="">
@@ -6726,6 +7045,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr>
       
       <tr class="">
+        <td><strong class="sym" data-stock="NEPHROPLUS" style="cursor:pointer">NEPHROPLUS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ANEPHROPLUS"
+             title="Open NEPHROPLUS on TradingView">chart</a></td>
+        <td>Nephrocare Health Services Limited</td>
+        <td class="num">2025-12-17</td>
+        <td class="num">471.25</td>
+        <td class="num">674.15</td>
+        
+        <td class="num up">+43.1%</td>
+        <td class="num dn">-10.3%</td>
+        <td class="num mono-dim">169</td>
+      </tr>
+      
+      <tr class="">
         <td><strong class="sym" data-stock="PARKHOSPS" style="cursor:pointer">PARKHOSPS</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
@@ -6757,100 +7092,628 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num mono-dim">165</td>
       </tr>
       
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">MEIL</strong>
+      <tr class="">
+        <td><strong class="sym" data-stock="KSHINTL" style="cursor:pointer">KSHINTL</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AMEIL"
-             title="Open MEIL on TradingView">chart</a></td>
-        <td>Mangal Electrical Industries Limited</td>
-        <td class="num">2025-08-28</td>
-        <td class="num">Rs.533 to Rs.561</td>
-        <td class="num">—</td>
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AKSHINTL"
+             title="Open KSHINTL on TradingView">chart</a></td>
+        <td>KSH International Limited</td>
+        <td class="num">2025-12-23</td>
+        <td class="num">355.00</td>
+        <td class="num">1,011.30</td>
         
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
+        <td class="num up">+184.9%</td>
+        <td class="num dn">-1.7%</td>
+        <td class="num mono-dim">166</td>
       </tr>
       
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">VIKRAN</strong>
+      <tr class="">
+        <td><strong class="sym" data-stock="GKSL" style="cursor:pointer">GKSL</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AVIKRAN"
-             title="Open VIKRAN on TradingView">chart</a></td>
-        <td>Vikran Engineering Limited</td>
-        <td class="num">2025-09-03</td>
-        <td class="num">Rs.92 to Rs.97</td>
-        <td class="num">—</td>
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AGKSL"
+             title="Open GKSL on TradingView">chart</a></td>
+        <td>Gujarat Kidney and Super Speciality Limited</td>
+        <td class="num">2025-12-30</td>
+        <td class="num">104.54</td>
+        <td class="num">156.41</td>
         
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
+        <td class="num up">+49.6%</td>
+        <td class="num dn">-0.5%</td>
+        <td class="num mono-dim">162</td>
       </tr>
       
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SHRINGARMS</strong>
+      <tr class="">
+        <td><strong class="sym" data-stock="BHARATCOAL" style="cursor:pointer">BHARATCOAL</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASHRINGARMS"
-             title="Open SHRINGARMS on TradingView">chart</a></td>
-        <td>Shringar House of Mangalsutra Limited</td>
-        <td class="num">2025-09-17</td>
-        <td class="num">Rs.155 to Rs.165</td>
-        <td class="num">—</td>
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ABHARATCOAL"
+             title="Open BHARATCOAL on TradingView">chart</a></td>
+        <td>Bharat Coking Coal Limited</td>
+        <td class="num">2026-01-19</td>
+        <td class="num">40.58</td>
+        <td class="num">33.27</td>
         
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
+        <td class="num dn">-18.0%</td>
+        <td class="num dn">-21.8%</td>
+        <td class="num mono-dim">148</td>
       </tr>
       
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">EUROPRATIK</strong>
+      <tr class="">
+        <td><strong class="sym" data-stock="AMAGI" style="cursor:pointer">AMAGI</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AEUROPRATIK"
-             title="Open EUROPRATIK on TradingView">chart</a></td>
-        <td>Euro Pratik Sales Limited</td>
-        <td class="num">2025-09-23</td>
-        <td class="num">Rs.235 to Rs.247</td>
-        <td class="num">—</td>
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AAMAGI"
+             title="Open AMAGI on TradingView">chart</a></td>
+        <td>Amagi Media Labs Limited</td>
+        <td class="num">2026-01-21</td>
+        <td class="num">348.25</td>
+        <td class="num">576.45</td>
         
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
+        <td class="num up">+65.5%</td>
+        <td class="num dn">-14.6%</td>
+        <td class="num mono-dim">146</td>
       </tr>
       
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">IVALUE</strong>
+      <tr class="">
+        <td><strong class="sym" data-stock="SHADOWFAX" style="cursor:pointer">SHADOWFAX</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AIVALUE"
-             title="Open IVALUE on TradingView">chart</a></td>
-        <td>Ivalue Infosolutions Limited</td>
-        <td class="num">2025-09-25</td>
-        <td class="num">Rs.284 to Rs.299</td>
-        <td class="num">—</td>
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASHADOWFAX"
+             title="Open SHADOWFAX on TradingView">chart</a></td>
+        <td>Shadowfax Technologies Limited</td>
+        <td class="num">2026-01-28</td>
+        <td class="num">109.98</td>
+        <td class="num">258.00</td>
         
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
+        <td class="num up">+134.6%</td>
+        <td class="num dn">-2.6%</td>
+        <td class="num mono-dim">142</td>
       </tr>
       
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">GKENERGY</strong>
+      <tr class="">
+        <td><strong class="sym" data-stock="FRACTAL" style="cursor:pointer">FRACTAL</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AGKENERGY"
-             title="Open GKENERGY on TradingView">chart</a></td>
-        <td>GK Energy Limited</td>
-        <td class="num">2025-09-26</td>
-        <td class="num">Rs.145 to Rs.153</td>
-        <td class="num">—</td>
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AFRACTAL"
+             title="Open FRACTAL on TradingView">chart</a></td>
+        <td>Fractal Analytics Limited</td>
+        <td class="num">2026-02-16</td>
+        <td class="num">847.15</td>
+        <td class="num">855.25</td>
         
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
+        <td class="num up">+1.0%</td>
+        <td class="num dn">-22.4%</td>
+        <td class="num mono-dim">129</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="AYE" style="cursor:pointer">AYE</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AAYE"
+             title="Open AYE on TradingView">chart</a></td>
+        <td>Aye Finance Limited</td>
+        <td class="num">2026-02-16</td>
+        <td class="num">128.91</td>
+        <td class="num">169.69</td>
+        
+        <td class="num up">+31.6%</td>
+        <td class="num dn">-10.3%</td>
+        <td class="num mono-dim">129</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="CLEANMAX" style="cursor:pointer">CLEANMAX</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ACLEANMAX"
+             title="Open CLEANMAX on TradingView">chart</a></td>
+        <td>Clean Max Enviro Energy Solutions Limited</td>
+        <td class="num">2026-03-02</td>
+        <td class="num">867.50</td>
+        <td class="num">1,220.10</td>
+        
+        <td class="num up">+40.6%</td>
+        <td class="num dn">-18.3%</td>
+        <td class="num mono-dim">118</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="PNGSREVA" style="cursor:pointer">PNGSREVA</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3APNGSREVA"
+             title="Open PNGSREVA on TradingView">chart</a></td>
+        <td>PNGS Reva Diamond Jewellery Limited</td>
+        <td class="num">2026-03-04</td>
+        <td class="num">411.70</td>
+        <td class="num">552.50</td>
+        
+        <td class="num up">+34.2%</td>
+        <td class="num dn">-11.0%</td>
+        <td class="num mono-dim">118</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="OMNI" style="cursor:pointer">OMNI</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AOMNI"
+             title="Open OMNI on TradingView">chart</a></td>
+        <td>Omnitech Engineering Limited</td>
+        <td class="num">2026-03-05</td>
+        <td class="num">204.93</td>
+        <td class="num">574.00</td>
+        
+        <td class="num up">+180.1%</td>
+        <td class="num dn">-21.6%</td>
+        <td class="num mono-dim">117</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="SEDEMAC" style="cursor:pointer">SEDEMAC</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASEDEMAC"
+             title="Open SEDEMAC on TradingView">chart</a></td>
+        <td>Sedemac Mechatronics Limited</td>
+        <td class="num">2026-03-11</td>
+        <td class="num">1,451.10</td>
+        <td class="num">3,261.40</td>
+        
+        <td class="num up">+124.8%</td>
+        <td class="num ">+0.0%</td>
+        <td class="num mono-dim">113</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="RSL" style="cursor:pointer">RSL</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ARSL"
+             title="Open RSL on TradingView">chart</a></td>
+        <td>Rajputana Stainless Limited</td>
+        <td class="num">2026-03-19</td>
+        <td class="num">113.03</td>
+        <td class="num">165.55</td>
+        
+        <td class="num up">+46.5%</td>
+        <td class="num dn">-0.7%</td>
+        <td class="num mono-dim">107</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="INNOVISION" style="cursor:pointer">INNOVISION</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AINNOVISION"
+             title="Open INNOVISION on TradingView">chart</a></td>
+        <td>Innovision Limited</td>
+        <td class="num">2026-03-23</td>
+        <td class="num">374.20</td>
+        <td class="num">269.45</td>
+        
+        <td class="num dn">-28.0%</td>
+        <td class="num dn">-28.5%</td>
+        <td class="num mono-dim">105</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="GSPCROP" style="cursor:pointer">GSPCROP</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AGSPCROP"
+             title="Open GSPCROP on TradingView">chart</a></td>
+        <td>GSP Crop Science Limited</td>
+        <td class="num">2026-03-24</td>
+        <td class="num">356.25</td>
+        <td class="num">590.50</td>
+        
+        <td class="num up">+65.8%</td>
+        <td class="num dn">-1.2%</td>
+        <td class="num mono-dim">104</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="CMPDI" style="cursor:pointer">CMPDI</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ACMPDI"
+             title="Open CMPDI on TradingView">chart</a></td>
+        <td>Central Mine Planning & Design Institute Limited</td>
+        <td class="num">2026-03-30</td>
+        <td class="num">152.77</td>
+        <td class="num">234.49</td>
+        
+        <td class="num up">+53.5%</td>
+        <td class="num dn">-14.8%</td>
+        <td class="num mono-dim">101</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="AMIRCHAND" style="cursor:pointer">AMIRCHAND</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AAMIRCHAND"
+             title="Open AMIRCHAND on TradingView">chart</a></td>
+        <td>Amir Chand Jagdish Kumar (Exports) Limited</td>
+        <td class="num">2026-04-02</td>
+        <td class="num">185.11</td>
+        <td class="num">182.56</td>
+        
+        <td class="num dn">-1.4%</td>
+        <td class="num dn">-9.4%</td>
+        <td class="num mono-dim">25</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="SAIPARENT" style="cursor:pointer">SAIPARENT</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASAIPARENT"
+             title="Open SAIPARENT on TradingView">chart</a></td>
+        <td>Sai Parenteral's Limited</td>
+        <td class="num">2026-04-02</td>
+        <td class="num">405.70</td>
+        <td class="num">543.40</td>
+        
+        <td class="num up">+33.9%</td>
+        <td class="num dn">-12.9%</td>
+        <td class="num mono-dim">98</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="POWERICA" style="cursor:pointer">POWERICA</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3APOWERICA"
+             title="Open POWERICA on TradingView">chart</a></td>
+        <td>Powerica Limited</td>
+        <td class="num">2026-04-02</td>
+        <td class="num">390.00</td>
+        <td class="num">533.90</td>
+        
+        <td class="num up">+36.9%</td>
+        <td class="num dn">-19.3%</td>
+        <td class="num mono-dim">99</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="KISSHT" style="cursor:pointer">KISSHT</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AKISSHT"
+             title="Open KISSHT on TradingView">chart</a></td>
+        <td>Onemi Technology Solutions Limited</td>
+        <td class="num">2026-05-08</td>
+        <td class="num">208.63</td>
+        <td class="num">302.65</td>
+        
+        <td class="num up">+45.1%</td>
+        <td class="num dn">-12.5%</td>
+        <td class="num mono-dim">75</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="CMRGREEN" style="cursor:pointer">CMRGREEN</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ACMRGREEN"
+             title="Open CMRGREEN on TradingView">chart</a></td>
+        <td>CMR Green Technologies Limited</td>
+        <td class="num">2026-06-10</td>
+        <td class="num">241.20</td>
+        <td class="num">213.75</td>
+        
+        <td class="num dn">-11.4%</td>
+        <td class="num dn">-17.5%</td>
+        <td class="num mono-dim">52</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="TURTLEMINT" style="cursor:pointer">TURTLEMINT</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ATURTLEMINT"
+             title="Open TURTLEMINT on TradingView">chart</a></td>
+        <td>Turtlemint Fintech Solutions Limited</td>
+        <td class="num">2026-06-29</td>
+        <td class="num">135.37</td>
+        <td class="num">144.60</td>
+        
+        <td class="num up">+6.8%</td>
+        <td class="num dn">-3.7%</td>
+        <td class="num mono-dim">39</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="CORDELIA" style="cursor:pointer">CORDELIA</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ACORDELIA"
+             title="Open CORDELIA on TradingView">chart</a></td>
+        <td>Waterways Leisure Tourism Limited</td>
+        <td class="num">2026-07-01</td>
+        <td class="num">668.10</td>
+        <td class="num">907.75</td>
+        
+        <td class="num up">+35.9%</td>
+        <td class="num dn">-0.5%</td>
+        <td class="num mono-dim">37</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="KNACK" style="cursor:pointer">KNACK</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AKNACK"
+             title="Open KNACK on TradingView">chart</a></td>
+        <td>Knack Packaging Limited</td>
+        <td class="num">2026-07-08</td>
+        <td class="num">182.98</td>
+        <td class="num">209.17</td>
+        
+        <td class="num up">+14.3%</td>
+        <td class="num dn">-2.9%</td>
+        <td class="num mono-dim">32</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="KUSUMGAR" style="cursor:pointer">KUSUMGAR</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AKUSUMGAR"
+             title="Open KUSUMGAR on TradingView">chart</a></td>
+        <td>Kusumgar Limited</td>
+        <td class="num">2026-07-15</td>
+        <td class="num">602.80</td>
+        <td class="num">572.50</td>
+        
+        <td class="num dn">-5.0%</td>
+        <td class="num dn">-12.0%</td>
+        <td class="num mono-dim">27</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="LASERPOWER" style="cursor:pointer">LASERPOWER</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ALASERPOWER"
+             title="Open LASERPOWER on TradingView">chart</a></td>
+        <td>Laser Power & Infra Limited</td>
+        <td class="num">2026-07-16</td>
+        <td class="num">262.42</td>
+        <td class="num">328.40</td>
+        
+        <td class="num up">+25.1%</td>
+        <td class="num ">+0.0%</td>
+        <td class="num mono-dim">26</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="SBIFUNDS" style="cursor:pointer">SBIFUNDS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASBIFUNDS"
+             title="Open SBIFUNDS on TradingView">chart</a></td>
+        <td>SBI Funds Management Limited</td>
+        <td class="num">2026-07-21</td>
+        <td class="num">609.75</td>
+        <td class="num">555.50</td>
+        
+        <td class="num dn">-8.9%</td>
+        <td class="num dn">-8.9%</td>
+        <td class="num mono-dim">23</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="CMLL" style="cursor:pointer">CMLL</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ACMLL"
+             title="Open CMLL on TradingView">chart</a></td>
+        <td>Caliber Mining and Logistics Limited</td>
+        <td class="num">2026-07-24</td>
+        <td class="num">528.20</td>
+        <td class="num">506.95</td>
+        
+        <td class="num dn">-4.0%</td>
+        <td class="num dn">-15.4%</td>
+        <td class="num mono-dim">20</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="INDOMIM" style="cursor:pointer">INDOMIM</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AINDOMIM"
+             title="Open INDOMIM on TradingView">chart</a></td>
+        <td>INDO-MIM Limited</td>
+        <td class="num">2026-07-30</td>
+        <td class="num">741.75</td>
+        <td class="num">919.55</td>
+        
+        <td class="num up">+24.0%</td>
+        <td class="num dn">-5.0%</td>
+        <td class="num mono-dim">16</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="LCL" style="cursor:pointer">LCL</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ALCL"
+             title="Open LCL on TradingView">chart</a></td>
+        <td>Lohia Corp Limited</td>
+        <td class="num">2026-07-30</td>
+        <td class="num">494.60</td>
+        <td class="num">539.85</td>
+        
+        <td class="num up">+9.1%</td>
+        <td class="num dn">-5.8%</td>
+        <td class="num mono-dim">16</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="MANIPALHOS" style="cursor:pointer">MANIPALHOS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AMANIPALHOS"
+             title="Open MANIPALHOS on TradingView">chart</a></td>
+        <td>Manipal Health Enterprises Limited</td>
+        <td class="num">2026-08-05</td>
+        <td class="num">666.95</td>
+        <td class="num">724.35</td>
+        
+        <td class="num up">+8.6%</td>
+        <td class="num dn">-2.7%</td>
+        <td class="num mono-dim">12</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="JNPR" style="cursor:pointer">JNPR</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AJNPR"
+             title="Open JNPR on TradingView">chart</a></td>
+        <td>Juniper Green Energy Limited</td>
+        <td class="num">2026-08-06</td>
+        <td class="num">259.71</td>
+        <td class="num">273.76</td>
+        
+        <td class="num up">+5.4%</td>
+        <td class="num ">+0.0%</td>
+        <td class="num mono-dim">11</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="MVELECTRO" style="cursor:pointer">MVELECTRO</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AMVELECTRO"
+             title="Open MVELECTRO on TradingView">chart</a></td>
+        <td>MV Electrosystems Limited</td>
+        <td class="num">2026-08-06</td>
+        <td class="num">624.00</td>
+        <td class="num">568.30</td>
+        
+        <td class="num dn">-8.9%</td>
+        <td class="num dn">-8.9%</td>
+        <td class="num mono-dim">11</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="ARDEE" style="cursor:pointer">ARDEE</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AARDEE"
+             title="Open ARDEE on TradingView">chart</a></td>
+        <td>Ardee Industries Limited</td>
+        <td class="num">2026-08-12</td>
+        <td class="num">67.12</td>
+        <td class="num">61.48</td>
+        
+        <td class="num dn">-8.4%</td>
+        <td class="num dn">-8.4%</td>
+        <td class="num mono-dim">7</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="TECHNOCRAF" style="cursor:pointer">TECHNOCRAF</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ATECHNOCRAF"
+             title="Open TECHNOCRAF on TradingView">chart</a></td>
+        <td>Technocraft Ventures Limited</td>
+        <td class="num">2026-08-14</td>
+        <td class="num">311.15</td>
+        <td class="num">330.37</td>
+        
+        <td class="num up">+6.2%</td>
+        <td class="num ">+0.0%</td>
+        <td class="num mono-dim">5</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="MOLBIO" style="cursor:pointer">MOLBIO</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AMOLBIO"
+             title="Open MOLBIO on TradingView">chart</a></td>
+        <td>Molbio Diagnostics Limited</td>
+        <td class="num">2026-08-17</td>
+        <td class="num">1,041.70</td>
+        <td class="num">1,036.65</td>
+        
+        <td class="num dn">-0.5%</td>
+        <td class="num dn">-6.7%</td>
+        <td class="num mono-dim">4</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="DHOOTTRANS" style="cursor:pointer">DHOOTTRANS</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ADHOOTTRANS"
+             title="Open DHOOTTRANS on TradingView">chart</a></td>
+        <td>Dhoot Transmission Limited</td>
+        <td class="num">2026-08-17</td>
+        <td class="num">1,187.05</td>
+        <td class="num">1,468.65</td>
+        
+        <td class="num up">+23.7%</td>
+        <td class="num ">+0.0%</td>
+        <td class="num mono-dim">4</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="MILKYMIST" style="cursor:pointer">MILKYMIST</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3AMILKYMIST"
+             title="Open MILKYMIST on TradingView">chart</a></td>
+        <td>Milky Mist Dairy Food Limited</td>
+        <td class="num">2026-08-18</td>
+        <td class="num">181.50</td>
+        <td class="num">184.89</td>
+        
+        <td class="num up">+1.9%</td>
+        <td class="num dn">-7.4%</td>
+        <td class="num mono-dim">3</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="SHIPROCKET" style="cursor:pointer">SHIPROCKET</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ASHIPROCKET"
+             title="Open SHIPROCKET on TradingView">chart</a></td>
+        <td>Shiprocket Limited</td>
+        <td class="num">2026-08-19</td>
+        <td class="num">143.45</td>
+        <td class="num">141.65</td>
+        
+        <td class="num dn">-1.3%</td>
+        <td class="num dn">-1.3%</td>
+        <td class="num mono-dim">2</td>
+      </tr>
+      
+      <tr class="">
+        <td><strong class="sym" data-stock="BLEL" style="cursor:pointer">BLEL</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ABLEL"
+             title="Open BLEL on TradingView">chart</a></td>
+        <td>Behari Lal Engineering Limited</td>
+        <td class="num">2026-08-19</td>
+        <td class="num">502.20</td>
+        <td class="num">504.25</td>
+        
+        <td class="num up">+0.4%</td>
+        <td class="num ">+0.0%</td>
+        <td class="num mono-dim">2</td>
       </tr>
       
       <tr class="ipo-unmeasured">
@@ -6862,294 +7725,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td>Saatvik Green Energy Limited</td>
         <td class="num">2025-09-26</td>
         <td class="num">Rs.442 to Rs.465</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">GANESHCP</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AGANESHCP"
-             title="Open GANESHCP on TradingView">chart</a></td>
-        <td>Ganesh Consumer Products Limited</td>
-        <td class="num">2025-09-29</td>
-        <td class="num">Rs.306 to Rs.322</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SOLARWORLD</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASOLARWORLD"
-             title="Open SOLARWORLD on TradingView">chart</a></td>
-        <td>Solarworld Energy Solutions Limited</td>
-        <td class="num">2025-09-30</td>
-        <td class="num">Rs.333 to Rs.351</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">JARO</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AJARO"
-             title="Open JARO on TradingView">chart</a></td>
-        <td>Jaro Institute of Technology Management and Research Limited</td>
-        <td class="num">2025-09-30</td>
-        <td class="num">Rs.846 to Rs.890</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">ARSSBL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AARSSBL"
-             title="Open ARSSBL on TradingView">chart</a></td>
-        <td>Anand Rathi Share and Stock Brokers Limited</td>
-        <td class="num">2025-09-30</td>
-        <td class="num">Rs.393 to Rs.414</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">EPACKPEB</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AEPACKPEB"
-             title="Open EPACKPEB on TradingView">chart</a></td>
-        <td>Epack Prefab Technologies Limited</td>
-        <td class="num">2025-10-01</td>
-        <td class="num">Rs.194 to Rs.204</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">TRUALT</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ATRUALT"
-             title="Open TRUALT on TradingView">chart</a></td>
-        <td>TruAlt Bioenergy Limited</td>
-        <td class="num">2025-10-03</td>
-        <td class="num">Rs.472 to Rs.496</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">PACEDIGITK</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3APACEDIGITK"
-             title="Open PACEDIGITK on TradingView">chart</a></td>
-        <td>Pace Digitek Limited</td>
-        <td class="num">2025-10-06</td>
-        <td class="num">Rs.208 to Rs.219</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">GLOTTIS</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AGLOTTIS"
-             title="Open GLOTTIS on TradingView">chart</a></td>
-        <td>Glottis Limited</td>
-        <td class="num">2025-10-07</td>
-        <td class="num">Rs.120 to Rs.129</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">MIDWESTLTD</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AMIDWESTLTD"
-             title="Open MIDWESTLTD on TradingView">chart</a></td>
-        <td>Midwest Limited</td>
-        <td class="num">2025-10-24</td>
-        <td class="num">Rs.1014 to Rs.1065</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">STUDDS</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASTUDDS"
-             title="Open STUDDS on TradingView">chart</a></td>
-        <td>Studds Accessories Limited</td>
-        <td class="num">2025-11-07</td>
-        <td class="num">Rs.557 to Rs.585</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">EXCELSOFT</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AEXCELSOFT"
-             title="Open EXCELSOFT on TradingView">chart</a></td>
-        <td>Excelsoft Technologies Limited</td>
-        <td class="num">2025-11-26</td>
-        <td class="num">Rs.114 to Rs.120</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">VIDYAWIRES</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AVIDYAWIRES"
-             title="Open VIDYAWIRES on TradingView">chart</a></td>
-        <td>Vidya Wires Limited</td>
-        <td class="num">2025-12-10</td>
-        <td class="num">Rs.48 to Rs.52</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">NEPHROPLUS</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ANEPHROPLUS"
-             title="Open NEPHROPLUS on TradingView">chart</a></td>
-        <td>Nephrocare Health Services Limited</td>
-        <td class="num">2025-12-17</td>
-        <td class="num">Rs.438 to Rs.460</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">KSHINTL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AKSHINTL"
-             title="Open KSHINTL on TradingView">chart</a></td>
-        <td>KSH International Limited</td>
-        <td class="num">2025-12-23</td>
-        <td class="num">Rs.365 to Rs.384</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">GKSL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AGKSL"
-             title="Open GKSL on TradingView">chart</a></td>
-        <td>Gujarat Kidney and Super Speciality Limited</td>
-        <td class="num">2025-12-30</td>
-        <td class="num">Rs.108 to Rs.114</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">BHARATCOAL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ABHARATCOAL"
-             title="Open BHARATCOAL on TradingView">chart</a></td>
-        <td>Bharat Coking Coal Limited</td>
-        <td class="num">2026-01-19</td>
-        <td class="num">Rs.21 to Rs.23</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">AMAGI</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AAMAGI"
-             title="Open AMAGI on TradingView">chart</a></td>
-        <td>Amagi Media Labs Limited</td>
-        <td class="num">2026-01-21</td>
-        <td class="num">Rs.343 to Rs.361</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SHADOWFAX</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASHADOWFAX"
-             title="Open SHADOWFAX on TradingView">chart</a></td>
-        <td>Shadowfax Technologies Limited</td>
-        <td class="num">2026-01-28</td>
-        <td class="num">Rs.118 to Rs.124</td>
         <td class="num">—</td>
         
         <td class="num dn">&mdash;</td>
@@ -7174,454 +7749,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </tr>
       
       <tr class="ipo-unmeasured">
-        <td><strong class="sym">FRACTAL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AFRACTAL"
-             title="Open FRACTAL on TradingView">chart</a></td>
-        <td>Fractal Analytics Limited</td>
-        <td class="num">2026-02-16</td>
-        <td class="num">Rs.857 to Rs.900</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">AYE</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AAYE"
-             title="Open AYE on TradingView">chart</a></td>
-        <td>Aye Finance Limited</td>
-        <td class="num">2026-02-16</td>
-        <td class="num">Rs.122 to Rs.129</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">CLEANMAX</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ACLEANMAX"
-             title="Open CLEANMAX on TradingView">chart</a></td>
-        <td>Clean Max Enviro Energy Solutions Limited</td>
-        <td class="num">2026-03-02</td>
-        <td class="num">Rs.1000 to Rs.1053</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">PNGSREVA</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3APNGSREVA"
-             title="Open PNGSREVA on TradingView">chart</a></td>
-        <td>PNGS Reva Diamond Jewellery Limited</td>
-        <td class="num">2026-03-04</td>
-        <td class="num">Rs.367 to Rs.386</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">OMNI</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AOMNI"
-             title="Open OMNI on TradingView">chart</a></td>
-        <td>Omnitech Engineering Limited</td>
-        <td class="num">2026-03-05</td>
-        <td class="num">Rs.216 to Rs.227</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SEDEMAC</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASEDEMAC"
-             title="Open SEDEMAC on TradingView">chart</a></td>
-        <td>Sedemac Mechatronics Limited</td>
-        <td class="num">2026-03-11</td>
-        <td class="num">Rs.1287 to Rs.1352</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">RSL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ARSL"
-             title="Open RSL on TradingView">chart</a></td>
-        <td>Rajputana Stainless Limited</td>
-        <td class="num">2026-03-19</td>
-        <td class="num">Rs.116 to Rs.122</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">INNOVISION</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AINNOVISION"
-             title="Open INNOVISION on TradingView">chart</a></td>
-        <td>Innovision Limited</td>
-        <td class="num">2026-03-23</td>
-        <td class="num">Rs.494 to Rs.519</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">GSPCROP</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AGSPCROP"
-             title="Open GSPCROP on TradingView">chart</a></td>
-        <td>GSP Crop Science Limited</td>
-        <td class="num">2026-03-24</td>
-        <td class="num">Rs.304 to Rs.320</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">CMPDI</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ACMPDI"
-             title="Open CMPDI on TradingView">chart</a></td>
-        <td>Central Mine Planning & Design Institute Limited</td>
-        <td class="num">2026-03-30</td>
-        <td class="num">Rs.163 to Rs.172</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">AMIRCHAND</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AAMIRCHAND"
-             title="Open AMIRCHAND on TradingView">chart</a></td>
-        <td>Amir Chand Jagdish Kumar (Exports) Limited</td>
-        <td class="num">2026-04-02</td>
-        <td class="num">Rs.201 to Rs.212</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SAIPARENT</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASAIPARENT"
-             title="Open SAIPARENT on TradingView">chart</a></td>
-        <td>Sai Parenteral's Limited</td>
-        <td class="num">2026-04-02</td>
-        <td class="num">Rs.372 to Rs.392</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">POWERICA</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3APOWERICA"
-             title="Open POWERICA on TradingView">chart</a></td>
-        <td>Powerica Limited</td>
-        <td class="num">2026-04-02</td>
-        <td class="num">Rs.375 to Rs.395</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">KISSHT</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AKISSHT"
-             title="Open KISSHT on TradingView">chart</a></td>
-        <td>Onemi Technology Solutions Limited</td>
-        <td class="num">2026-05-08</td>
-        <td class="num">Rs.162 to Rs.171</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">CMRGREEN</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ACMRGREEN"
-             title="Open CMRGREEN on TradingView">chart</a></td>
-        <td>CMR Green Technologies Limited</td>
-        <td class="num">2026-06-10</td>
-        <td class="num">Rs.182 to Rs.192</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">TURTLEMINT</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ATURTLEMINT"
-             title="Open TURTLEMINT on TradingView">chart</a></td>
-        <td>Turtlemint Fintech Solutions Limited</td>
-        <td class="num">2026-06-29</td>
-        <td class="num">Rs.144 to Rs.152</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">CORDELIA</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ACORDELIA"
-             title="Open CORDELIA on TradingView">chart</a></td>
-        <td>Waterways Leisure Tourism Limited</td>
-        <td class="num">2026-07-01</td>
-        <td class="num">Rs.769 to Rs.808 </td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">KNACK</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AKNACK"
-             title="Open KNACK on TradingView">chart</a></td>
-        <td>Knack Packaging Limited</td>
-        <td class="num">2026-07-08</td>
-        <td class="num">Rs.161 to Rs.170</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">KUSUMGAR</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AKUSUMGAR"
-             title="Open KUSUMGAR on TradingView">chart</a></td>
-        <td>Kusumgar Limited</td>
-        <td class="num">2026-07-15</td>
-        <td class="num">Rs.398 to Rs.419</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">LASERPOWER</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ALASERPOWER"
-             title="Open LASERPOWER on TradingView">chart</a></td>
-        <td>Laser Power & Infra Limited</td>
-        <td class="num">2026-07-16</td>
-        <td class="num">Rs.203 to Rs.214</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SBIFUNDS</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASBIFUNDS"
-             title="Open SBIFUNDS on TradingView">chart</a></td>
-        <td>SBI Funds Management Limited</td>
-        <td class="num">2026-07-21</td>
-        <td class="num">Rs.545 to Rs.574</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">CMLL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ACMLL"
-             title="Open CMLL on TradingView">chart</a></td>
-        <td>Caliber Mining and Logistics Limited</td>
-        <td class="num">2026-07-24</td>
-        <td class="num">Rs.402 to Rs.424</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">INDOMIM</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AINDOMIM"
-             title="Open INDOMIM on TradingView">chart</a></td>
-        <td>INDO-MIM Limited</td>
-        <td class="num">2026-07-30</td>
-        <td class="num">Rs.461 to Rs.485</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">LCL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ALCL"
-             title="Open LCL on TradingView">chart</a></td>
-        <td>Lohia Corp Limited</td>
-        <td class="num">2026-07-30</td>
-        <td class="num">Rs.404 to Rs.425</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">MANIPALHOS</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AMANIPALHOS"
-             title="Open MANIPALHOS on TradingView">chart</a></td>
-        <td>Manipal Health Enterprises Limited</td>
-        <td class="num">2026-08-05</td>
-        <td class="num">Rs.560 to Rs.590</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">JNPR</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AJNPR"
-             title="Open JNPR on TradingView">chart</a></td>
-        <td>Juniper Green Energy Limited</td>
-        <td class="num">2026-08-06</td>
-        <td class="num">Rs.214 to Rs.225</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">MVELECTRO</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AMVELECTRO"
-             title="Open MVELECTRO on TradingView">chart</a></td>
-        <td>MV Electrosystems Limited</td>
-        <td class="num">2026-08-06</td>
-        <td class="num">Rs.400 to Rs.425</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">ARDEE</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AARDEE"
-             title="Open ARDEE on TradingView">chart</a></td>
-        <td>Ardee Industries Limited</td>
-        <td class="num">2026-08-12</td>
-        <td class="num">Rs.50 to Rs.53</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
         <td><strong class="sym">LEAP</strong>
           
           <a class="tv-lnk" target="_blank" rel="noopener"
@@ -7630,102 +7757,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td>Leap India Limited</td>
         <td class="num">2026-08-14</td>
         <td class="num">Rs.151 to Rs.159</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">TECHNOCRAF</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ATECHNOCRAF"
-             title="Open TECHNOCRAF on TradingView">chart</a></td>
-        <td>Technocraft Ventures Limited</td>
-        <td class="num">2026-08-14</td>
-        <td class="num">Rs.200 to Rs.212</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">MOLBIO</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AMOLBIO"
-             title="Open MOLBIO on TradingView">chart</a></td>
-        <td>Molbio Diagnostics Limited</td>
-        <td class="num">2026-08-17</td>
-        <td class="num">Rs.768 to Rs.807</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">DHOOTTRANS</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ADHOOTTRANS"
-             title="Open DHOOTTRANS on TradingView">chart</a></td>
-        <td>Dhoot Transmission Limited</td>
-        <td class="num">2026-08-17</td>
-        <td class="num">Rs.829 to Rs.871</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">MILKYMIST</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3AMILKYMIST"
-             title="Open MILKYMIST on TradingView">chart</a></td>
-        <td>Milky Mist Dairy Food Limited</td>
-        <td class="num">2026-08-18</td>
-        <td class="num">Rs.133 to Rs.140</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">SHIPROCKET</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ASHIPROCKET"
-             title="Open SHIPROCKET on TradingView">chart</a></td>
-        <td>Shiprocket Limited</td>
-        <td class="num">2026-08-19</td>
-        <td class="num">Rs.92 to Rs.97</td>
-        <td class="num">—</td>
-        
-        <td class="num dn">&mdash;</td>
-        <td class="num ">&mdash;</td>
-        <td class="num mono-dim">—</td>
-      </tr>
-      
-      <tr class="ipo-unmeasured">
-        <td><strong class="sym">BLEL</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ABLEL"
-             title="Open BLEL on TradingView">chart</a></td>
-        <td>Behari Lal Engineering Limited</td>
-        <td class="num">2026-08-19</td>
-        <td class="num">Rs.271 to Rs.285</td>
         <td class="num">—</td>
         
         <td class="num dn">&mdash;</td>
@@ -7743,7 +7774,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    2026-08-21 21:43. Lot size, minimum application, the
+    2026-08-21 21:58. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -11669,7 +11700,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">13 / SIGNAL LOG</span> 
-<span class="dh dh-LIVE" title="Signal ledger · just built.">LIVE<span class="dh-age">just built</span></span>
+<span class="dh dh-LIVE" title="Signal ledger · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -12745,7 +12776,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><dt>Last attempt</dt>
           <dd>2026-08-21 16:20
             </dd></div>
-        <div><dt>Age</dt><dd>5h old</dd></div>
+        <div><dt>Age</dt><dd>6h old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Published coverage</dt>
@@ -12840,7 +12871,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><dt>Last attempt</dt>
           <dd>2026-08-21 19:27
             </dd></div>
-        <div><dt>Age</dt><dd>2h old</dd></div>
+        <div><dt>Age</dt><dd>3h old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         
@@ -12880,11 +12911,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-21 21:41</dd></div>
+          <dd>2026-08-21 21:56</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-21 21:41
+          <dd>2026-08-21 21:56
             </dd></div>
-        <div><dt>Age</dt><dd>just built</dd></div>
+        <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -12925,11 +12956,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-21 21:41</dd></div>
+          <dd>2026-08-21 21:56</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-21 21:41
+          <dd>2026-08-21 21:56
             </dd></div>
-        <div><dt>Age</dt><dd>just built</dd></div>
+        <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -12948,11 +12979,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-21 21:41</dd></div>
+          <dd>2026-08-21 21:56</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-21 21:41
+          <dd>2026-08-21 21:56
             </dd></div>
-        <div><dt>Age</dt><dd>just built</dd></div>
+        <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -12971,11 +13002,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-21 21:41</dd></div>
+          <dd>2026-08-21 21:56</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-21 21:41
+          <dd>2026-08-21 21:56
             </dd></div>
-        <div><dt>Age</dt><dd>just built</dd></div>
+        <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>weekly</dd></div>
         
         <div><dt>Records</dt>
@@ -12994,11 +13025,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-21 21:41</dd></div>
+          <dd>2026-08-21 21:56</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-21 21:41
+          <dd>2026-08-21 21:56
             </dd></div>
-        <div><dt>Age</dt><dd>just built</dd></div>
+        <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -13159,7 +13190,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Saturday, August 22 2026 · built 05:41 MYT<br>
+      Saturday, August 22 2026 · built 05:56 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -13201,9 +13232,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="e5i9hOxU5LhV0VLaJsaKOw">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="lYl-J1KBICuhldbgzDbPAg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="e5i9hOxU5LhV0VLaJsaKOw">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="e5i9hOxU5LhV0VLaJsaKOw" src="/app.js?v=20260822T054151" defer></script>
+<script type="application/json" id="sector-map" nonce="lYl-J1KBICuhldbgzDbPAg">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="lYl-J1KBICuhldbgzDbPAg" src="/app.js?v=20260822T055644" defer></script>
 </body>
 </html>
