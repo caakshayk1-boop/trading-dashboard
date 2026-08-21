@@ -6040,6 +6040,8 @@ table.t tbody tr:last-child td{border-bottom:none}
   border-left:2px solid rgba(230,180,80,.35);padding-left:9px}
 .ipo-fin-u{font-size:11.5px;line-height:1.5;color:var(--muted);margin:8px 0 0}
 /* The two-sided argument, side by side so neither reads as the conclusion. */
+.ipo-args-src{font-family:var(--mono);font-size:9.5px;line-height:1.6;color:var(--dim);
+  margin:0 0 12px}
 .ipo-args{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .ipo-arg{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .ipo-arg b{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
@@ -8112,13 +8114,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       {% endif %}
 
-      {% if r.strengths or r.risks %}
+      {# Derived from the filed numbers above, never scraped. Chittorgarh carries
+         analyst prose and lifting it would be somebody else's judgement wearing
+         this page's voice, with no way to check it. Every line here is a
+         statement about a number already on the card, with its threshold named,
+         so a reader can disagree with the threshold rather than with an
+         assertion. Silent where a figure is missing. #}
+      {% if r.reads_for or r.reads_against %}
       <div class="ipo-args">
-        {% if r.strengths %}<div class="ipo-arg ipo-arg-y"><b>Why it might work</b>
-          <ul>{% for s in r.strengths.split(';') %}{% if s.strip() %}<li>{{ s.strip() }}</li>{% endif %}{% endfor %}</ul></div>{% endif %}
-        {% if r.risks %}<div class="ipo-arg ipo-arg-n"><b>Why it might not</b>
-          <ul>{% for s in r.risks.split(';') %}{% if s.strip() %}<li>{{ s.strip() }}</li>{% endif %}{% endfor %}</ul></div>{% endif %}
+        {% if r.reads_for %}<div class="ipo-arg ipo-arg-y"><b>What the numbers support</b>
+          <ul>{% for s in r.reads_for %}<li>{{ s }}</li>{% endfor %}</ul></div>{% endif %}
+        {% if r.reads_against %}<div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
+          <ul>{% for s in r.reads_against %}<li>{{ s }}</li>{% endfor %}</ul></div>{% endif %}
       </div>
+      <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
+        analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
+        everything else is stated in the prospectus summary.</p>
       {% endif %}
 
       {% if r.gmp_text %}

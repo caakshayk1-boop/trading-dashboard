@@ -353,6 +353,113 @@ def _num(s):
         return None
 
 
+def _financials(text: str) -> dict:
+    """The company's own filed numbers, from Chittorgarh's restated table.
+
+    Deterministic, not a model. The table states its rows in fixed phrasing and
+    the newest financial year is always the FIRST numeric column, so a regex
+    reads it exactly; an LLM would cost money to produce the same figures and
+    could produce a confident wrong one instead of nothing.
+
+    Margin and debt/equity are DERIVED here rather than scraped, because
+    Chittorgarh does not publish them and computing them from two numbers on
+    the same row of the same table is arithmetic, not estimation. Both are
+    labelled as derived on the card.
+
+    None of it enters the score. The score measures public DEMAND — a fact about
+    what money did. These are accounts, and turning accounts into points would
+    assert a valuation view this site has no basis for.
+    """
+    out = {}
+
+    def row(label):
+        m = re.search(re.escape(label) + r"\]\([^)]*\)[^|\n]*((?:\|\s*[\d,.\-]+\s*)+)",
+                      text, re.I)
+        if not m:
+            return None
+        nums = [n.strip() for n in m.group(1).split("|") if n.strip()]
+        try:
+            return float(nums[0].replace(",", ""))          # newest FY first
+        except (ValueError, IndexError):
+            return None
+
+    rev, pat = row("Total Income"), row("Profit After Tax")
+    nw, debt = row("NET Worth"), row("Total Borrowing")
+    if rev:
+        out["revenue_cr"] = rev
+    if pat:
+        out["pat_cr"] = pat
+    if rev and pat and rev > 0:
+        out["pat_margin_pct"] = round(pat / rev * 100, 2)
+    if nw and debt is not None and nw > 0:
+        out["debt_to_equity"] = round(debt / nw, 2)
+
+    m = re.search(r"revenue increased by\s*([\d.]+)%.{0,60}?PAT\)?\s*rose by\s*([\d.]+)%",
+                  text, re.I | re.S)
+    if m:
+        out["revenue_growth_pct"] = float(m.group(1))
+        out["pat_growth_pct"] = float(m.group(2))
+    m = re.search(r"RoNW\]\([^)]*\)[^|]*\|\s*([\d.]+)%", text, re.I)
+    if m:
+        out["roe_pct"] = float(m.group(1))
+    m = re.search(r"financial year ending with\s*\w+\s*\d{1,2},\s*(\d{4})", text, re.I)
+    if m:
+        out["fy_label"] = f"FY{m.group(1)[2:]}"
+    return out
+
+
+def _read_numbers(r: dict) -> tuple[list, list]:
+    """What the filed numbers say, for and against. Derived, never scraped.
+
+    Chittorgarh carries analyst prose and it is tempting to lift it. This does
+    not: a scraped opinion is somebody else's judgement wearing this page's
+    voice, and there is no way to check it. Every line below is a statement
+    about a number already displayed on the card, with the threshold named, so
+    a reader can disagree with the threshold rather than with an assertion.
+
+    Silent when a figure is missing. No line is better than a hedged one.
+    """
+    good, bad = [], []
+    rev_g, pat_g = r.get("revenue_growth_pct"), r.get("pat_growth_pct")
+    margin, roe = r.get("pat_margin_pct"), r.get("roe_pct")
+    de, fresh, ofs = r.get("debt_to_equity"), r.get("fresh_issue_cr"), r.get("ofs_cr")
+
+    if rev_g is not None and rev_g >= 20:
+        good.append(f"Revenue grew {rev_g:.0f}% year on year.")
+    elif rev_g is not None and rev_g < 5:
+        bad.append(f"Revenue grew only {rev_g:.0f}% — this is not a growth story.")
+    if pat_g is not None and rev_g is not None and pat_g > rev_g:
+        good.append(f"Profit grew faster than revenue ({pat_g:.0f}% against "
+                    f"{rev_g:.0f}%), so margins widened rather than bought growth.")
+    if roe is not None and roe >= 20:
+        good.append(f"Return on net worth of {roe:.0f}% — well above the ~14% "
+                    "a typical listed peer earns.")
+    if de is not None and de <= 0.25:
+        good.append(f"Effectively debt-free at {de:.2f} debt to equity, so the "
+                    "balance sheet is not a constraint.")
+    elif de is not None and de >= 1.5:
+        bad.append(f"Debt to equity of {de:.2f} — leverage magnifies both "
+                   "directions from here.")
+
+    if margin is not None and margin < 2:
+        bad.append(f"Net margin is {margin:.2f}%. A high-volume, low-margin "
+                   "model: a small move in input costs or realisations swings "
+                   "profit far more than it swings revenue.")
+    if fresh is not None and ofs is not None and ofs > fresh:
+        bad.append(f"More of the issue is existing holders selling (₹{ofs:,.0f} Cr) "
+                   f"than new money into the business (₹{fresh:,.0f} Cr).")
+    sub = r.get("subscription_by_category") or {}
+    if sub.get("QIB") is not None and sub.get("Retail") is not None:
+        if sub["QIB"] < 2 <= sub["Retail"]:
+            bad.append(f"Institutions are taking it at {sub['QIB']:.2f}x while retail "
+                       f"bids {sub['Retail']:.2f}x — the money with research access is "
+                       "the money staying out.")
+        elif sub["QIB"] >= 10:
+            good.append(f"Institutions are in at {sub['QIB']:.2f}x, which is where "
+                        "the research budgets are.")
+    return good[:4], bad[:4]
+
+
 def _find_page(company: str) -> str | None:
     """The company's Chittorgarh URL, by search."""
     import crawler
@@ -508,6 +615,15 @@ def enrich(rows, key=None, previous=None):
                 r[f] = _num(raw) if f in _NUMERIC else raw
             r["enriched_source"] = "chittorgarh.com"
             r["enriched_url"] = url
+            # Same page, no second fetch: crawler.extract() has already pulled
+            # it and the cache still holds it.
+            try:
+                page = crawler.fetch(url, timeout=50)
+                if page.ok:
+                    for k, v in _financials(page.content).items():
+                        r[k] = v
+            except Exception as e:                    # noqa: BLE001
+                log.warning(f"financials {r['symbol']}: {e}")
         except Exception as e:                        # noqa: BLE001
             log.warning(f"enrich {r['symbol']}: {type(e).__name__} {e} — keeping previous")
 
@@ -523,6 +639,12 @@ def enrich(rows, key=None, previous=None):
                     r["category_source"] = "ipopremium.in"
             except Exception as e:                    # noqa: BLE001
                 log.warning(f"ipopremium {r['symbol']}: {type(e).__name__} {e}")
+
+    # The read on the numbers, once every figure that feeds it is in place.
+    for r in rows:
+        g, b = _read_numbers(r)
+        r["reads_for"] = g or None
+        r["reads_against"] = b or None
 
     # Min investment is derivable once lot size is known; deriving it from the
     # CAP is the honest direction — the most a retail applicant can be asked for.
