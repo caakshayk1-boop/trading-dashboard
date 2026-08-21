@@ -127,6 +127,14 @@ jobs:
           for i in $(seq 1 20); do curl -sf http://127.0.0.1:4321/ > /dev/null && break; sleep 0.5; done
           python smoke_test.py http://127.0.0.1:4321 --pre
 
+      # data/ipo_radar.json is committed alongside docs/ on purpose. It is the
+      # ONLY persistent record of the enriched IPO fields — lot size, minimum
+      # application, anchor book, GMP, financials — which are fetched in CI and
+      # otherwise die with the runner. ipo_radar.enrich() carries the previous
+      # values forward when a fetch fails, and that carry-forward reads this
+      # file: without it there is nothing to carry, so the first Firecrawl
+      # outage silently strips every enriched field from the page. Which is
+      # exactly what happened the first time the account hit its credit limit.
       - name: Commit & push docs/index.html
         run: |
           git config user.name  "github-actions[bot]"
@@ -150,7 +158,8 @@ jobs:
                   docs/today.json docs/app.js docs/data-health.json \
                   docs/screen.json docs/screen-detail.json \
                   docs/robots.txt docs/sitemap.xml docs/manifest.webmanifest \
-                  docs/icon.svg docs/og.png docs/fonts
+                  docs/icon.svg docs/og.png docs/fonts \
+                  data/ipo_radar.json
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
           # Rebase before pushing. This step raced the scanner's data commit and
           # any hand push, and a losing race failed the whole run — meaning the

@@ -7933,7 +7933,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="kpi"><div class="v {{ 'up' if iporadar.counts.apply else '' }}">{{ iporadar.counts.apply }}</div><div class="k">Apply / Apply-small</div></div>
     <div class="kpi"><div class="v {{ 'dn' if iporadar.counts.avoid else '' }}">{{ iporadar.counts.avoid }}</div><div class="k">Avoid</div></div>
     <div class="kpi"><div class="v">{{ iporadar.counts.awaiting }}</div><div class="k">Awaiting listing</div></div>
-    <div class="kpi"><div class="v">{{ iporadar.counts.listed_12m }}</div><div class="k">Listed · 12 months</div></div>
+    <div class="kpi"><div class="v">{{ iporadar.counts.listed_measured or iporadar.counts.listed_12m }}</div><div class="k">Listed &amp; measured · 12m</div></div>
   </div>
 
   {% for grp, label, eyebrow, blurb in [
@@ -8090,11 +8090,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="subhead">
     <span class="subeyebrow">The record</span>
     <h3>Listed in the last {{ iporadar.recent_window_months }} months</h3>
-    <p class="subdesc">Every mainboard issue that closed and listed inside the window &mdash;
-      <b>{{ iporadar.recent_listed|length }}</b> of them. <b>{{ iporadar.counts.listed_measured }}</b>
-      carry measured post-listing performance and are shown first; the rest sit outside the
-      750-name screen universe or have no usable price history, and show their dates only.
-      Both numbers are published rather than quietly showing whichever flatters.
+    <p class="subdesc">The <b>{{ iporadar.counts.listed_measured }}</b> mainboard issues that
+      listed inside the window and can actually be measured &mdash; the same set, and the same
+      numbers, as New Listings below. NSE records
+      <b>{{ iporadar.counts.listed_12m }}</b> listings in the window in total; the remainder sit
+      outside the 750-name screen universe or have no usable price history, so there is nothing
+      to report about them beyond a date. Both figures are stated rather than quietly showing
+      whichever flatters.
       Return is measured from the <b>first traded close</b>, not the issue price &mdash; NSE's
       issue-price data is not reliable and a listing gain computed off a guessed one would be
       fabricated. Click any measured name for its full screen detail.</p>
@@ -8105,11 +8107,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <th scope="col">Listed</th><th scope="col">First close</th><th scope="col">Last</th>
       <th scope="col">Since listing</th><th scope="col">From high</th><th scope="col">Sessions</th>
     </tr></thead><tbody>
-      {% for r in iporadar.recent_listed %}
-      <tr><td><strong class="sym"{% if r.measured %} data-stock="{{ r.symbol }}" style="cursor:pointer"{% endif %}>{{ r.symbol }}</strong></td>
+      {% for r in iporadar.recent_listed if r.measured %}
+      <tr><td><strong class="sym" data-stock="{{ r.symbol }}" style="cursor:pointer">{{ r.symbol }}</strong></td>
         <td>{{ r.company }}</td>
         <td class="num">{{ r.listing_date }}</td>
-        {% if r.measured %}
         <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else '—' }}</td>
         <td class="num">{{ '{:,.2f}'.format(r.last_close) if r.last_close else '—' }}</td>
         {# `measured` means ipo_tracker reached the symbol, NOT that every field
@@ -8120,9 +8121,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num {{ 'up' if (r.since_listing_pct or 0) > 0 else 'dn' }}">{% if r.since_listing_pct is not none %}{{ '%+.1f'|format(r.since_listing_pct) }}%{% else %}&mdash;{% endif %}</td>
         <td class="num {{ 'dn' if (r.from_high_pct or 0) < 0 else '' }}">{% if r.from_high_pct is not none %}{{ '%+.1f'|format(r.from_high_pct) }}%{% else %}&mdash;{% endif %}</td>
         <td class="num mono-dim">{{ r.sessions if r.sessions is not none else '—' }}</td>
-        {% else %}
-        <td class="num mono-dim" colspan="5">not in the measured universe</td>
-        {% endif %}
       </tr>
       {% endfor %}
     </tbody></table>
