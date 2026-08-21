@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T19:18:48",
+ "generated_at": "2026-08-21T19:30:12",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -19,7 +19,13 @@
    "issue_size_shares": 15181667.0,
    "issue_size_cr": 650.0,
    "subscription_x": 13.70394305184009,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 3.31,
+    "HNI": 53.15,
+    "Retail": 18.86,
+    "Employee": 29.37,
+    "Total": 21.79
+   },
    "lot_size": 50.0,
    "min_investment": 15000.0,
    "fresh_issue_cr": 95.0,
@@ -27,7 +33,7 @@
    "face_value": 4.0,
    "anchor_cr": 194.55,
    "listing_date": null,
-   "gmp_text": null,
+   "gmp_text": "\u20b9290",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -58,6 +64,7 @@
      "valuation multiples"
     ],
     "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
      "lot size and minimum application \u2014 facts, not judgements"
     ]
    },
@@ -65,7 +72,9 @@
    "verdict_why": "Subscribed 13.7x, but the book is small (about Rs.650 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1304/tempsens-instruments",
+   "category_source": "ipopremium.in"
   },
   {
    "symbol": "AUGMONT",
@@ -83,7 +92,13 @@
    "issue_size_shares": 7715999.0,
    "issue_size_cr": 825.0,
    "subscription_x": 1.7901764891364034,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 1.85,
+    "HNI": 4.2,
+    "Retail": 3.0,
+    "Employee": 1.51,
+    "Total": 2.92
+   },
    "lot_size": 19.0,
    "min_investment": 14972.0,
    "fresh_issue_cr": 620.0,
@@ -91,7 +106,7 @@
    "face_value": 5.0,
    "anchor_cr": 246.3,
    "listing_date": null,
-   "gmp_text": "\u20b9310 (39.34%)",
+   "gmp_text": "\u20b9310",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -130,7 +145,9 @@
    "verdict_why": "1.8x so far, with time left on the book.",
    "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1303/augmont-enterprises-ltd",
+   "category_source": "ipopremium.in"
   }
  ],
  "upcoming": [
