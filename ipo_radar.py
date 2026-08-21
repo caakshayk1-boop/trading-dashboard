@@ -562,6 +562,16 @@ def _ipopremium_detail(company: str) -> dict:
         m = re.search(r"GMP[^\n₹]{0,40}₹\s*\**\s*([\d,]+)", p.content)
     if m:
         out["gmp_text"] = f"₹{m.group(1)}"
+    # Listing and allotment dates. For a book awaiting listing these are the
+    # only two facts left to report, and NSE's closed feed carries neither.
+    m = re.search(r"Listing\s*\n+\s*(\w{3}\s+\d{1,2},\s*\d{4})", p.content)
+    if not m:
+        m = re.search(r"Listing[^\n|]{0,20}[|\n]\s*\**\s*(\w{3}\s+\d{1,2},\s*\d{4})", p.content)
+    if m:
+        out["listing_date"] = m.group(1)
+    m = re.search(r"Allotment\s*\n+\s*(\w{3}\s+\d{1,2},\s*\d{4})", p.content)
+    if m:
+        out["allotment_date"] = m.group(1)
     return out
 
 
@@ -627,9 +637,15 @@ def enrich(rows, key=None, previous=None):
         except Exception as e:                        # noqa: BLE001
             log.warning(f"enrich {r['symbol']}: {type(e).__name__} {e} — keeping previous")
 
-        # Category breakdown. Only worth the browser for a book that is OPEN —
-        # there is no bidding to break down before it opens or after it closes.
-        if r.get("phase") == "open":
+        # Worth the browser for an OPEN book (the category breakdown) and for one
+        # AWAITING LISTING (the grey-market quote and the listing date, which are
+        # precisely what is still outstanding once bidding has closed).
+        #
+        # Awaiting rows carry no `phase` key at all — they come from the closed
+        # feed, not the upcoming one — so gating on `phase == "open"` silently
+        # skipped every one of them and their Grey Market column rendered a dash
+        # while ipopremium was carrying the number the whole time.
+        if r.get("phase") == "open" or r.get("days_since_close") is not None:
             try:
                 extra = _ipopremium_detail(name)
                 for k, v in extra.items():

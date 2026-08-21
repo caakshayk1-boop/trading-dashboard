@@ -6163,6 +6163,14 @@ table.t tbody tr:last-child td{border-bottom:none}
 .hc-why{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 12px;max-width:74ch}
 .hc-why b{color:var(--text);font-weight:600}
 .hc-why-d{display:block;margin-top:5px;color:var(--dim);font-size:11.5px}
+.ev-more{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.ev-more>summary{cursor:pointer;list-style:none;font-size:13px;color:var(--muted);
+  line-height:1.6;max-width:78ch}
+.ev-more>summary::-webkit-details-marker{display:none}
+.ev-more>summary::before{content:'+ ';font-family:var(--mono);color:var(--dim)}
+.ev-more[open]>summary::before{content:'– '}
+.ev-more>summary b{color:var(--text)}
+.ev-more>summary:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
 .ev-supp{font-family:var(--mono);font-size:8px;letter-spacing:.6px;text-transform:uppercase;
   color:var(--down);border:1px solid rgba(255,92,92,.35);border-radius:3px;padding:1px 4px;
   margin-left:5px;cursor:help;white-space:nowrap}
@@ -9159,13 +9167,21 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     number it would not be worth doing.</span></p>
   {% endif %}
 
+  {# Decided first, undecided folded away.
+     Thirteen rows, ten of them UNPROVEN, is ten rows of "we do not know" —
+     technically complete and useless to read. The engines with enough closed
+     trades to say something are the table; the rest are one line and a
+     disclosure. Nothing is removed, and the count is stated so a reader can see
+     exactly how much is being held back. #}
+  {% set decided = evidence.engines|rejectattr('verdict', 'equalto', 'UNPROVEN')|list %}
+  {% set undecided = evidence.engines|selectattr('verdict', 'equalto', 'UNPROVEN')|list %}
   <div class="tw rv">
     <table class="t"><thead><tr>
       <th scope="col">Engine</th><th scope="col">Closed</th><th scope="col">Open</th>
       <th scope="col">Win rate</th><th scope="col">Expectancy</th><th scope="col">t</th>
       <th scope="col">Total R</th><th scope="col">Verdict</th>
     </tr></thead><tbody>
-      {% for e in evidence.engines %}
+      {% for e in decided %}
       <tr>
         <td><strong class="sym">{{ e.engine }}</strong>{% if not e.is_trade %}
           <span class="ev-tag" title="A research artefact, not a trade signal — no capital is sized to it.">research</span>{% endif %}</td>
@@ -9181,6 +9197,32 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       {% endfor %}
     </tbody></table>
   </div>
+
+  {% if undecided %}
+  <details class="ev-more">
+    <summary><b>{{ undecided|length }} more engines</b> have fewer than {{ evidence.min_n }}
+      closed trades &mdash; not enough to judge in either direction. Shown for completeness.</summary>
+    <div class="tw" style="margin-top:12px">
+      <table class="t"><thead><tr>
+        <th scope="col">Engine</th><th scope="col">Closed</th><th scope="col">Open</th>
+        <th scope="col">Win rate</th><th scope="col">Expectancy</th><th scope="col">Total R</th>
+      </tr></thead><tbody>
+        {% for e in undecided %}
+        <tr>
+          <td><strong class="sym">{{ e.engine }}</strong>{% if not e.is_trade %}
+            <span class="ev-tag" title="A research artefact, not a trade signal — no capital is sized to it.">research</span>{% endif %}</td>
+          <td class="num">{{ e.n }}</td>
+          <td class="num mono-dim">{{ e.open_now }}</td>
+          <td class="num">{{ e.win_rate }}%</td>
+          <td class="num mono-dim">{{ '%+.3f'|format(e.expectancy) }}R</td>
+          <td class="num mono-dim">{{ '%+.1f'|format(e.total_r) }}R</td>
+        </tr>
+        {% endfor %}
+      </tbody></table>
+    </div>
+  </details>
+  {% endif %}
+
   <p class="subdesc" style="margin-top:12px">Hover any verdict for the reasoning behind it.
     <b>t</b> is the expectancy divided by its own standard error &mdash; roughly, how many
     times larger the result is than the noise around it. Below <b>&plusmn;2</b> a result is not
@@ -9368,7 +9410,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         Wins and losses both. Nothing hidden.</p>
       <div class="who-links">
         <a href="https://askakshay.com" target="_blank" rel="noopener">askakshay.com &nearr;</a>
-        <a href="https://terminal.askakshay.com" target="_blank" rel="noopener">Dhruvedge terminal &nearr;</a>
         <a href="https://www.linkedin.com/in/akkothari" target="_blank" rel="noopener">LinkedIn &nearr;</a>
       </div>
     </div>
