@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T20:43:18",
+ "generated_at": "2026-08-21T20:57:03",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -19,14 +19,20 @@
    "issue_size_shares": 15181667.0,
    "issue_size_cr": 650.0,
    "subscription_x": 13.70394305184009,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 3.31,
+    "HNI": 53.15,
+    "Retail": 18.86,
+    "Employee": 29.37,
+    "Total": 21.79
+   },
    "lot_size": 50.0,
    "min_investment": 15000.0,
    "fresh_issue_cr": 95.0,
    "ofs_cr": 555.0,
    "face_value": 4.0,
    "anchor_cr": 194.55,
-   "listing_date": null,
+   "listing_date": "Aug 28, 2026",
    "gmp_text": "\u20b9290",
    "revenue_cr": 455.86,
    "revenue_growth_pct": 19.0,
@@ -52,7 +58,6 @@
      "Window": "15/15"
     },
     "not_measured": [
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -68,6 +73,8 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1304/tempsens-instruments",
+   "allotment_date": "Aug 25, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Effectively debt-free at 0.16 debt to equity, so the balance sheet is not a constraint."
    ],
@@ -104,7 +111,7 @@
    "ofs_cr": 205.0,
    "face_value": 5.0,
    "anchor_cr": 246.3,
-   "listing_date": null,
+   "listing_date": "Aug 31, 2026",
    "gmp_text": "\u20b9310",
    "revenue_cr": 94282.47,
    "revenue_growth_pct": 42.0,
@@ -130,7 +137,6 @@
      "Window": "15/15"
     },
     "not_measured": [
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -146,6 +152,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1303/augmont-enterprises-ltd",
+   "allotment_date": "Aug 27, 2026",
    "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 42% year on year.",
@@ -448,7 +455,7 @@
    "company": "Sunshine Pictures Limited",
    "price_band": "Rs.342 to Rs.360",
    "close_date": "2026-08-20",
-   "listing_date": null,
+   "listing_date": "Aug 25, 2026",
    "days_since_close": 2,
    "lot_size": 41.0,
    "min_investment": 14760.0,
@@ -456,7 +463,7 @@
    "ofs_cr": 109.34,
    "face_value": 10.0,
    "anchor_cr": 84.64,
-   "gmp_text": null,
+   "gmp_text": "\u20b962",
    "revenue_cr": 76.27,
    "revenue_growth_pct": null,
    "pat_cr": 40.02,
@@ -473,9 +480,19 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 282.14,
    "enriched_url": "https://www.chittorgarh.com/ipo/sunshine-pictures-ipo/2002/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1288/sunshine-pictures-ltd",
+   "subscription_by_category": {
+    "QIB": 123.52,
+    "HNI": 197.04,
+    "Retail": 56.6,
+    "Total": 105.81
+   },
+   "allotment_date": "Aug 21, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 28% \u2014 well above the ~14% a typical listed peer earns.",
-    "Effectively debt-free at 0.06 debt to equity, so the balance sheet is not a constraint."
+    "Effectively debt-free at 0.06 debt to equity, so the balance sheet is not a constraint.",
+    "Institutions are in at 123.52x, which is where the research budgets are."
    ],
    "reads_against": null
   },
@@ -484,7 +501,7 @@
    "company": "Shankesh Jewellers Limited",
    "price_band": "Rs.88 to Rs.93",
    "close_date": "2026-08-20",
-   "listing_date": null,
+   "listing_date": "Aug 25, 2026",
    "days_since_close": 2,
    "lot_size": 160.0,
    "min_investment": 14880.0,
@@ -492,7 +509,7 @@
    "ofs_cr": 93.0,
    "face_value": 5.0,
    "anchor_cr": 110.15,
-   "gmp_text": null,
+   "gmp_text": "\u20b91",
    "revenue_cr": 1630.93,
    "revenue_growth_pct": 16.0,
    "pat_cr": 106.68,
@@ -509,18 +526,29 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 367.18,
    "enriched_url": "https://www.chittorgarh.com/ipo/shankesh-jewellers-ipo/2663/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1291/shankesh-jewellers-ltd",
+   "subscription_by_category": {
+    "QIB": 1.32,
+    "HNI": 5.68,
+    "Retail": 2.42,
+    "Total": 2.8
+   },
+   "allotment_date": "Aug 21, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Profit grew faster than revenue (165% against 16%), so margins widened rather than bought growth.",
     "Return on net worth of 51% \u2014 well above the ~14% a typical listed peer earns."
    ],
-   "reads_against": null
+   "reads_against": [
+    "Institutions are taking it at 1.32x while retail bids 2.42x \u2014 the money with research access is the money staying out."
+   ]
   },
   {
    "symbol": "LALITHAA",
    "company": "Lalithaa Jewellery Mart Limited",
    "price_band": "Rs.190 to Rs.201",
    "close_date": "2026-08-19",
-   "listing_date": null,
+   "listing_date": "Aug 24, 2026",
    "days_since_close": 3,
    "lot_size": 74.0,
    "min_investment": 14874.0,
@@ -528,7 +556,7 @@
    "ofs_cr": 500.0,
    "face_value": 5.0,
    "anchor_cr": 508.2,
-   "gmp_text": null,
+   "gmp_text": "\u20b966",
    "revenue_cr": 25039.8,
    "revenue_growth_pct": 48.0,
    "pat_cr": 1009.82,
@@ -545,10 +573,21 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 1700.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/lalithaa-jewellery-mart-ipo/2469/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1289/lalithaa-jewellery-mart-ltd",
+   "subscription_by_category": {
+    "QIB": 153.8,
+    "HNI": 78.17,
+    "Retail": 12.49,
+    "Employee": 9.1,
+    "Total": 66.62
+   },
+   "allotment_date": "Aug 20, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 48% year on year.",
     "Profit grew faster than revenue (177% against 48%), so margins widened rather than bought growth.",
-    "Return on net worth of 40% \u2014 well above the ~14% a typical listed peer earns."
+    "Return on net worth of 40% \u2014 well above the ~14% a typical listed peer earns.",
+    "Institutions are in at 153.80x, which is where the research budgets are."
    ],
    "reads_against": null
   },
@@ -557,7 +596,7 @@
    "company": "Horizon Industrial Parks Limited",
    "price_band": "Rs.57 to Rs.60",
    "close_date": "2026-08-19",
-   "listing_date": null,
+   "listing_date": "Aug 24, 2026",
    "days_since_close": 3,
    "lot_size": 250.0,
    "min_investment": 15000.0,
@@ -565,7 +604,7 @@
    "ofs_cr": null,
    "face_value": 10.0,
    "anchor_cr": 1167.75,
-   "gmp_text": null,
+   "gmp_text": "\u20b92",
    "revenue_cr": 767.84,
    "revenue_growth_pct": null,
    "pat_cr": -203.65,
@@ -582,6 +621,8 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 2600.04,
    "enriched_url": "https://www.chittorgarh.com/ipo/horizon-industrial-parks-ipo/2826/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1301/horizon-industrial-parks-ltd",
+   "allotment_date": "Aug 20, 2026",
    "reads_for": null,
    "reads_against": [
     "Net margin is -26.52%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue."
