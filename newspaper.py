@@ -6074,6 +6074,23 @@ table.t tbody tr:last-child td{border-bottom:none}
    above it, because one is what a newsroom reported and the other is a reading
    of it — collapsing them visually would let the second borrow the first's
    authority. */
+/* Content that belongs to the section above it but is not a section of its own.
+   Keeps the page's section count honest — the structure tests assert that every
+   <section> is declared in the nav, and a nav entry per subsection is exactly
+   the menu pollution this page already has too much of. */
+.sec-append{max-width:var(--wrap,1400px);margin:0 auto;padding:0 clamp(18px,4vw,54px) clamp(40px,6vw,80px)}
+.ev-v{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;
+  padding:3px 8px;border-radius:100px;border:1px solid currentColor;cursor:help;white-space:nowrap}
+.ev-edge{color:var(--up);background:rgba(61,220,151,.1)}
+.ev-bleeding{color:var(--down);background:rgba(255,92,92,.1)}
+.ev-unproven{color:var(--gold);background:rgba(230,180,80,.1)}
+.ev-flat{color:var(--dim);background:var(--bg2)}
+.ev-tag{font-family:var(--mono);font-size:8px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help}
+.ev-alert{font-size:13px;line-height:1.6;color:var(--muted);max-width:80ch;margin:0 0 16px;
+  border-left:2px solid var(--down);padding-left:12px}
+.ev-alert code{font-family:var(--mono);font-size:11.5px;color:var(--down);
+  background:rgba(255,92,92,.08);padding:1px 5px;border-radius:3px}
 .nwhy{border-top:1px solid var(--line);margin-top:11px;padding-top:10px}
 .nwhy-k{font-family:var(--mono);font-size:8.5px;letter-spacing:1.2px;text-transform:uppercase;
   color:var(--lime);display:block;margin-bottom:3px}
@@ -8991,6 +9008,58 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Server-rendered and always visible — no API, no display:none. It has to
      survive the static snapshot, because the whole point is that a reader can
      see what changed in the rules even on a day the ledger is unreachable. -->
+{# ── DOES EACH ENGINE EARN ITS PLACE ────────────────────────────────────────
+   The wallet sizes by horizon and grade; neither asks whether the engine has
+   any measured edge. That question kept being asked of this page and the page
+   had no answer on it. Worst first on purpose: leading with the best engine is
+   a brochure, and what a reader needs is what is losing money right now. #}
+{% if 'perf' in secs and evidence and evidence.engines %}
+<div class="sec-append">
+  <div class="subhead">
+    <span class="subeyebrow">The evidence</span>
+    <h3>Which engines have earned their place</h3>
+    <p class="subdesc">Every engine, scored on its own closed trades &mdash; worst first.
+      An engine with fewer than {{ evidence.min_n }} closed trades gets no verdict at all:
+      below that the standard error is wider than any effect worth acting on, and
+      &ldquo;not significant&rdquo; would wrongly imply the sample could have settled it.</p>
+  </div>
+
+  {% if evidence.bleeding %}
+  <p class="ev-alert"><b>Measured losses:</b>
+    {% for e in evidence.bleeding %}<code>{{ e }}</code>{{ ' · ' if not loop.last }}{% endfor %}.
+    These are not runs of bad luck &mdash; they clear the significance bar in the wrong
+    direction. They stay published because hiding a losing engine is the one thing this
+    ledger exists not to do.</p>
+  {% endif %}
+
+  <div class="tw rv">
+    <table class="t"><thead><tr>
+      <th scope="col">Engine</th><th scope="col">Closed</th><th scope="col">Open</th>
+      <th scope="col">Win rate</th><th scope="col">Expectancy</th><th scope="col">t</th>
+      <th scope="col">Total R</th><th scope="col">Verdict</th>
+    </tr></thead><tbody>
+      {% for e in evidence.engines %}
+      <tr>
+        <td><strong class="sym">{{ e.engine }}</strong>{% if not e.is_trade %}
+          <span class="ev-tag" title="A research artefact, not a trade signal — no capital is sized to it.">research</span>{% endif %}</td>
+        <td class="num">{{ e.n }}</td>
+        <td class="num mono-dim">{{ e.open_now }}</td>
+        <td class="num">{{ e.win_rate }}%</td>
+        <td class="num {{ 'up' if e.expectancy > 0 else 'dn' if e.expectancy < 0 else '' }}">{{ '%+.3f'|format(e.expectancy) }}R</td>
+        <td class="num mono-dim">{{ '%+.2f'|format(e.t) if e.t is not none else '—' }}</td>
+        <td class="num {{ 'up' if e.total_r > 0 else 'dn' if e.total_r < 0 else '' }}">{{ '%+.1f'|format(e.total_r) }}R</td>
+        <td><span class="ev-v ev-{{ e.verdict|lower }}" title="{{ e.why }}">{{ e.verdict }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody></table>
+  </div>
+  <p class="subdesc" style="margin-top:12px">Hover any verdict for the reasoning behind it.
+    <b>t</b> is the expectancy divided by its own standard error &mdash; roughly, how many
+    times larger the result is than the noise around it. Below <b>&plusmn;2</b> a result is not
+    distinguishable from chance, however good or bad the headline number looks.</p>
+</div>
+{% endif %}
+
 {% if 'rules' in secs %}<section class="sec" id="rules">
   <div class="shead rv">
     <div>

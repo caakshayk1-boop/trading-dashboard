@@ -401,6 +401,20 @@ def generate() -> None:
         iporadar = None
         print(f"[generate] IPO Radar FAILED: {e}")
 
+    # Per-engine evidence. Reads the ledger already fetched for the alert log,
+    # so it costs nothing and cannot disagree with the Signal Log above it.
+    try:
+        import engine_evidence
+        import json as _json
+        _sig = _json.loads((pathlib.Path(__file__).parent / "data" /
+                            "all_signals.json").read_text())
+        evidence = engine_evidence.build(_sig)
+        print(f"[generate] Engine evidence: {len(evidence['engines'])} engines, "
+              f"{len(evidence['bleeding'])} bleeding, {len(evidence['unproven'])} unproven")
+    except Exception as e:
+        evidence = None
+        print(f"[generate] Engine evidence unavailable: {e}")
+
     print(f"[generate] New listings (cached): {ipos.get('count', 0)} in "
           f"{ipos.get('months', 0)} months"
           f"{' (previous build)' if ipos.get('is_fallback') else ''}")
@@ -683,6 +697,7 @@ def generate() -> None:
         findings=findings,
         ipos=ipos,
         iporadar=iporadar,
+        evidence=evidence,
         podcasts=podcasts,
         smart_reads=smart_reads,
         top5_week=top5_week,
