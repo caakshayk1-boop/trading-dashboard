@@ -4472,10 +4472,19 @@ var TV_ALIASES = (function () {
           var link = n.link
             ? '<a href="' + esc(n.link) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>'
             : esc(n.title);
+          // Impact, not just tone. A card that carries a transmission chain has
+          // a route to a portfolio and is HIGH; one the map flagged but that
+          // reaches no market is MEDIUM; everything else is LOW and says so
+          // rather than being silently unlabelled. Colour follows the contract:
+          // red is a negative outcome, green a positive one, blue is neutral
+          // information — an impact LEVEL is information, so it is blue.
           var flag = n.tone === 'red' ? '<span class="tone red">▲ escalation</span>'
                    : n.tone === 'green' ? '<span class="tone green">▼ good news</span>' : '';
+          var impact = xm ? 'HIGH' : (n.tone === 'red' || n.tone === 'green') ? 'MEDIUM' : 'LOW';
+          var impactEl = '<span class="nimp nimp-' + impact.toLowerCase() + '">' +
+                         impact + ' IMPACT</span>';
           return '<div class="ncard rv in" style="--d:' + (i * 0.04) + 's">' +
-                   '<span class="s">' + esc(n.source) + '</span>' + flag +
+                   '<span class="s">' + esc(n.source) + '</span>' + impactEl + flag +
                    '<h3>' + link + '</h3>' +
                    (n.summary ? '<p>' + esc(n.summary.slice(0, 150)) + '</p>' : '') +
                    (xm ? '<div class="nwhy"><span class="nwhy-k">Why it matters</span>' +

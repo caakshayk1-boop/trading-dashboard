@@ -4192,6 +4192,25 @@ TEMPLATE = r"""<!DOCTYPE html>
   --rank-ink:rgba(255,255,255,.035);  /* the ghosted 01..05 numeral */
   --scroll-thumb:#232529;
 
+  /* ── COLOUR CONTRACT ────────────────────────────────────────────────────
+     Each colour means ONE thing. Overlapping meanings is how a page ends up
+     with a freshness badge and a rising price wearing the same green — which
+     is exactly what this file did before the contract was written down.
+
+       --up      positive market movement · winning outcome · nothing else
+       --down    negative movement · loss · failed state
+       --gold    warning · degraded · unresolved · needs attention
+       --blue    information · freshness · neutral status · active selection
+       --violet  machine-generated text, so it can never pass as measured data
+       --lime    BRAND ONLY — wordmark, section numbers, editorial accent.
+                 Never a status: a brand colour that also means "good" cannot
+                 be used for emphasis without implying a judgement.
+       --muted
+       --dim     metadata · secondary · historical
+
+     Before giving a component a colour, find its meaning in that list. If the
+     meaning is not there, the component needs a different one, not a new hue.
+     ─────────────────────────────────────────────────────────────────────── */
   --up:#3DDC97;   --up-soft:rgba(61,220,151,.12);
   --down:#FF6B6B; --down-soft:rgba(255,107,107,.12);
   --gold:#E8C547; --gold-soft:rgba(232,197,71,.12);
@@ -5380,8 +5399,14 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   color:var(--muted);white-space:nowrap;vertical-align:middle}
 .dh::before{content:"";width:6px;height:6px;border-radius:50%;
   background:currentColor;flex:none}
-.dh-LIVE{color:var(--up);border-color:rgba(61,220,151,.35)}
-.dh-FRESH{color:var(--lime);border-color:var(--lime-line)}
+/* Freshness is INFORMATION, not a market outcome, so it is blue.
+   LIVE was var(--up) — the identical green as "+5.64%" — so a data-freshness
+   badge and a rising price were the same colour saying two unrelated things,
+   and a reader scanning for green found both. FRESH was var(--lime), the brand
+   accent, which made a status read as decoration. Both are now blue: neutral,
+   informational, impossible to mistake for a gain. */
+.dh-LIVE{color:var(--blue);border-color:rgba(106,168,255,.40);background:rgba(106,168,255,.07)}
+.dh-FRESH{color:var(--blue);border-color:rgba(106,168,255,.24)}
 .dh-STALE{color:var(--gold);border-color:rgba(232,197,71,.35)}
 .dh-DEGRADED{color:var(--gold);border-color:rgba(232,197,71,.55);background:rgba(232,197,71,.07)}
 .dh-FAILED{color:var(--down);border-color:rgba(255,92,92,.45);background:rgba(255,92,92,.07)}
@@ -6148,6 +6173,14 @@ table.t tbody tr:last-child td{border-bottom:none}
   border-left:2px solid var(--down);padding-left:12px}
 .ev-alert code{font-family:var(--mono);font-size:11.5px;color:var(--down);
   background:rgba(255,92,92,.08);padding:1px 5px;border-radius:3px}
+/* Impact level on a news card. Information, so blue per the colour contract —
+   an impact LEVEL is a classification, not an outcome, and colouring HIGH red
+   would say "this is bad" when it only says "this reaches your portfolio". */
+.nimp{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:1px;
+  padding:2px 6px;border-radius:3px;border:1px solid currentColor;margin-left:6px;white-space:nowrap}
+.nimp-high{color:var(--blue);background:rgba(106,168,255,.10)}
+.nimp-medium{color:var(--muted);border-color:var(--line2)}
+.nimp-low{color:var(--dim);border-color:var(--line)}
 .nwhy{border-top:1px solid var(--line);margin-top:11px;padding-top:10px}
 .nwhy-k{font-family:var(--mono);font-size:8.5px;letter-spacing:1.2px;text-transform:uppercase;
   color:var(--lime);display:block;margin-bottom:3px}
@@ -10427,7 +10460,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="m">
       news.askakshay.com<br>
-      {{ date_str }} · {{ updated_at }} IST
+      {{ date_str }} · built {{ updated_at }} MYT<br>
+      <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
+        investorgain · wire RSS</span><br>
+      <a href="#datahealth" class="lnk">Data health</a> ·
+      <a href="#who" class="lnk">Methodology</a> ·
+      <a href="/data-health.json" class="lnk">JSON</a>
     </div>
   </div>
 
