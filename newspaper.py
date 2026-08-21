@@ -6065,6 +6065,33 @@ table.t tbody tr:last-child td{border-bottom:none}
   background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:3px 8px}
 /* Why a row got the size it got. Quiet by default, full arithmetic on hover —
    the number is the answer, the rule behind it is the explanation. */
+/* Status line under the Data Health heading. The heading states the system's
+   condition; this states the exact counts. Green when the degraded feeds are
+   all non-market. */
+/* Hero byline. Mono and small on purpose — it is provenance, not a headline,
+   and it has to sit under the statement without competing with it. */
+/* The interpretation layer on a world card. Set apart from the wire summary
+   above it, because one is what a newsroom reported and the other is a reading
+   of it — collapsing them visually would let the second borrow the first's
+   authority. */
+.nwhy{border-top:1px solid var(--line);margin-top:11px;padding-top:10px}
+.nwhy-k{font-family:var(--mono);font-size:8.5px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--lime);display:block;margin-bottom:3px}
+.nwhy p{font-size:12px;line-height:1.55;color:var(--muted);margin:0 0 8px}
+.nwhy-chain{font-family:var(--mono);font-size:10.5px;color:var(--text)}
+.nwhy-w{font-family:var(--mono);font-size:10px;color:var(--gold);display:block}
+.hero-by{font-family:var(--mono);font-size:11.5px;line-height:1.9;color:var(--dim);
+  margin-top:18px;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 10px;max-width:68ch}
+.hero-by b{color:var(--text);font-weight:600}
+.hero-by i{font-style:italic;color:var(--muted)}
+.hero-by-sep{color:var(--line2)}
+@media(max-width:640px){.hero-by{gap:0 7px;font-size:10.5px}.hero-by-sep{display:none}
+  .hero-by span{display:block;width:100%}}
+.dh-status{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin:9px 0 0;
+  display:flex;align-items:center;gap:8px}
+.dh-dot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.dh-dot-ok{background:var(--up);box-shadow:0 0 0 3px rgba(61,220,151,.15)}
+.dh-dot-warn{background:var(--gold);box-shadow:0 0 0 3px rgba(230,180,80,.15)}
 .wal-why{font-family:var(--mono);font-size:8.5px;letter-spacing:.4px;color:var(--dim);
   border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help;
   white-space:nowrap}
@@ -6788,6 +6815,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   <p class="hero-sub">Markets, live signals, the world, and the work — one page, rebuilt every
     morning before the open. No feeds. No scroll trap. Just what moved and what to do about it.</p>
+
+  {# Who built this, and the claim the whole page rests on, in the hero.
+     Both were true and both sat 17 sections down in "Who" — a reader deciding
+     in the first ten seconds whether to trust a track record had no idea who
+     was publishing it or that the losses were included. Credentials up front
+     are not vanity here; they are the reason the ledger means anything. #}
+  <p class="hero-by">
+    <span>Built by <b>Akshay Kothari</b> · CA · FP&amp;A · AI builder</span>
+    <span class="hero-by-sep" aria-hidden="true">·</span>
+    <span>Public ledger — wins <i>and</i> losses</span>
+    <span class="hero-by-sep" aria-hidden="true">·</span>
+    <span>Not investment advice</span>
+  </p>
   {% endif %}
 
   {% if page != 'desk' %}
@@ -9026,10 +9066,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['datahealth'] }} / {{ seclabel['datahealth'] }}</span>
+      {# Lead with the system's state, then the exception — not with the
+         exception alone. "1 of 12 datasets are not current" as a headline reads
+         as "something is broken" even when the degraded feed is Careers, which
+         has nothing to do with a market number on this page. Honest and alarming
+         are different things, and the alarming version costs trust it should not.
+
+         The count is still here, still exact, one line down and still linked to
+         the full table. Nothing is hidden; the emphasis is corrected. #}
       <h2 class="stitle">
-        {% if health.degraded %}{{ health.degraded }} of {{ health.total }} datasets are not current.
-        {% else %}All {{ health.total }} datasets are current.{% endif %}
+        {% set core_bad = health.degraded_core if health.degraded_core is defined else health.degraded %}
+        {% if core_bad %}{{ core_bad }} market dataset{{ 's' if core_bad != 1 }} behind.
+        {% elif health.degraded %}Operational.
+        {% else %}All {{ health.total }} datasets current.{% endif %}
       </h2>
+      {% if health.degraded %}
+      <p class="dh-status">
+        <span class="dh-dot {{ 'dh-dot-warn' if core_bad else 'dh-dot-ok' }}"></span>
+        {{ health.total - health.degraded }} of {{ health.total }} current ·
+        {{ health.degraded }} degraded{% if not core_bad %}, none of them market data{% endif %}.
+      </p>
+      {% endif %}
     </div>
     <p class="sdesc">Nothing on this page is allowed to look more current than the data
       behind it. Every section carries the same badge this table explains, from the same

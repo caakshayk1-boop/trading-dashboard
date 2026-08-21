@@ -278,6 +278,13 @@ def _headline(dataset: str, status: str, age: float | None, notes: list[str]) ->
 _REGISTRY: list[dict] = []
 
 
+# Datasets that are not market data. Their freshness matters to the section
+# that renders them and to nothing else on the page, so they are excluded
+# from the headline status while still appearing in the table and in the
+# total. Names must match the `dataset` field exactly.
+NON_MARKET = {"Careers feed", "Podcasts", "Smart Reads", "Daily Brief"}
+
+
 def register(block: dict) -> dict:
     """File a health block. Returns it, so callers can inline the call."""
     _REGISTRY[:] = [b for b in _REGISTRY if b.get("dataset") != block.get("dataset")]
@@ -320,4 +327,12 @@ def snapshot(now: datetime | None = None) -> dict:
         "total": len(items),
         "current": sum(1 for b in items if b["is_current"]),
         "degraded": sum(1 for b in items if not b["is_current"]),
+        # Degraded MARKET datasets, which is a different question from degraded
+        # datasets. A stale Careers feed and a stale signal ledger are not the
+        # same event, and a headline that counts them together tells a reader
+        # the financial data is behind when it is not — which costs trust the
+        # page has actually earned. Both numbers are published; only this one
+        # sets the headline.
+        "degraded_core": sum(1 for b in items
+                             if not b["is_current"] and b["dataset"] not in NON_MARKET),
     }

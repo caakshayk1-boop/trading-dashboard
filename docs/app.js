@@ -4298,6 +4298,65 @@ var TV_ALIASES = (function () {
           j.sources_ok + '/' + j.sources_total + ' feeds · tagging is keyword-based and approximate';
       }
 
+    /* ── why a headline matters ──
+       A wire summary says WHAT happened. This says how it reaches a portfolio.
+
+       Deterministic keyword matching, not a model. Three reasons: it costs
+       nothing and cannot rate-limit (the Groq path this build already uses for
+       the Daily Brief is capped at 8k TPM and silently drops events past the
+       eighth); it cannot invent a causal chain that is not there, which is the
+       failure mode that matters most on a page whose whole argument is that it
+       does not fabricate; and the chains themselves are textbook macro
+       plumbing, not insight — writing them by hand is more honest than having
+       a model paraphrase them back.
+
+       A headline matching nothing gets NO interpretation rather than a generic
+       one. "This may affect markets" is noise wearing an analyst's jacket. */
+    var TRANSMISSION = [
+      { re: /\b(oil|crude|brent|wti|opec)\b/i,
+        why: 'Energy is an input cost for almost every listed business, so a crude move is an inflation move with a delay.',
+        chain: 'Crude → input costs → inflation → policy rates → equity multiples',
+        watch: 'Brent above $90, and Indian OMC margins' },
+      { re: /\b(tariff|trade war|import dut|export ban|sanction)\b/i,
+        why: 'Tariffs re-price traded goods and re-route supply chains; the earnings effect lands on importers and exporters before it lands on consumers.',
+        chain: 'Tariff → landed cost → margin compression → guidance cuts',
+        watch: 'Sector exposure to US and China revenue' },
+      { re: /\b(fed|fomc|rate (cut|hike|decision)|central bank|rbi|ecb|boj)\b/i,
+        why: 'The policy rate is the discount rate under every valuation on this page. It moves what a future rupee of earnings is worth today.',
+        chain: 'Policy rate → bond yields → discount rate → equity valuations',
+        watch: 'US 10-year, and the INR' },
+      { re: /\b(inflation|cpi|wpi|price index)\b/i,
+        why: 'Inflation prints set the range of what a central bank can do next, which is what the rate market is actually trading.',
+        chain: 'CPI → rate expectations → yields → rate-sensitive sectors',
+        watch: 'Banks, real estate and autos on the print' },
+      { re: /\b(gold|bullion|silver)\b/i,
+        why: 'Gold rises when real yields fall or confidence does. Which of the two it is decides whether the move is bullish or bearish for everything else.',
+        chain: 'Gold → real yields / risk appetite → rotation out of equities',
+        watch: 'Whether the dollar moves with it or against it' },
+      { re: /\b(war|strike|missile|conflict|invasion|escalat)\b/i,
+        why: 'Geopolitical escalation is priced through energy and shipping first, and through risk appetite immediately.',
+        chain: 'Conflict → energy and freight → inflation → risk-off',
+        watch: 'Crude, gold and the dollar together' },
+      { re: /\b(rupee|dollar index|dxy|currency|forex|yuan|yen)\b/i,
+        why: 'A currency move re-prices every foreign-earning and import-dependent name on the screen, in opposite directions.',
+        chain: 'FX → importer costs vs exporter realisations → sector rotation',
+        watch: 'IT and pharma against oil marketers' },
+      { re: /\b(semiconductor|chip|ai capex|data cent|nvidia)\b/i,
+        why: 'AI capital spending is currently one of the largest single swing factors in global earnings growth.',
+        chain: 'AI capex → semis and power demand → global growth expectations',
+        watch: 'Whether capex guidance is raised or merely reaffirmed' }
+    ];
+    function transmission(n){
+      var hay = (n.title || '') + ' ' + (n.summary || '');
+      for (var i = 0; i < TRANSMISSION.length; i++){
+        if (TRANSMISSION[i].re.test(hay)){
+          var m = TRANSMISSION[i];
+          return { why: esc(m.why), chain: esc(m.chain), watch: esc(m.watch) };
+        }
+      }
+      return null;
+    }
+
       // Headlines: same window, same fetch.
       var sec = document.getElementById('world');
       var host = document.getElementById('worldLive');
@@ -4311,6 +4370,7 @@ var TV_ALIASES = (function () {
       if (host){
         host.className = 'news-grid';
         host.innerHTML = (j.top || []).map(function(n, i){
+          var xm = transmission(n);
           var link = n.link
             ? '<a href="' + esc(n.link) + '" target="_blank" rel="noopener">' + esc(n.title) + '</a>'
             : esc(n.title);
@@ -4320,6 +4380,11 @@ var TV_ALIASES = (function () {
                    '<span class="s">' + esc(n.source) + '</span>' + flag +
                    '<h3>' + link + '</h3>' +
                    (n.summary ? '<p>' + esc(n.summary.slice(0, 150)) + '</p>' : '') +
+                   (xm ? '<div class="nwhy"><span class="nwhy-k">Why it matters</span>' +
+                         '<p>' + xm.why + '</p>' +
+                         '<span class="nwhy-k">Transmission</span>' +
+                         '<p class="nwhy-chain">' + xm.chain + '</p>' +
+                         '<span class="nwhy-w">Watch: ' + xm.watch + '</span></div>' : '') +
                    '<div class="ts">' + esc(wmAgo(n.published)) +
                    (n.places && n.places.length ? ' · ' + esc(n.places.join(', ')) : '') +
                    // One event, one card — but say how many outlets ran it
