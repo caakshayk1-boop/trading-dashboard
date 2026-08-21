@@ -6102,6 +6102,10 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ev-bleeding{color:var(--down);background:rgba(255,92,92,.1)}
 .ev-unproven{color:var(--gold);background:rgba(230,180,80,.1)}
 .ev-flat{color:var(--dim);background:var(--bg2)}
+.ev-supp{font-family:var(--mono);font-size:8px;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--down);border:1px solid rgba(255,92,92,.35);border-radius:3px;padding:1px 4px;
+  margin-left:5px;cursor:help;white-space:nowrap}
+.wal-why-x{color:var(--down)!important;border-color:rgba(255,92,92,.35)!important}
 .ev-tag{font-family:var(--mono);font-size:8px;letter-spacing:.5px;text-transform:uppercase;
   color:var(--dim);border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help}
 .ev-alert{font-size:13px;line-height:1.6;color:var(--muted);max-width:80ch;margin:0 0 16px;
@@ -8996,6 +9000,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="subeyebrow">The evidence</span>
     <h3>Which engines have earned their place</h3>
     <p class="subdesc">Every engine, scored on its own closed trades &mdash; worst first.
+      {% if evidence.aliased %}<code>{{ evidence.aliased|join('</code>, <code>') }}</code>
+      {{ 'is' if evidence.aliased|length == 1 else 'are' }} reported inside
+      <code>magic</code>: one screen with two spellings that wrote byte-identical levels on
+      ten occasions, so the same idea was being counted twice here and twice again in
+      expectancy. The ledger rows stay separate &mdash; rewriting history to tidy a report is
+      not on &mdash; and a write-time guard stops new pairs.{% endif %}
       An engine with fewer than {{ evidence.min_n }} closed trades gets no verdict at all:
       below that the standard error is wider than any effect worth acting on, and
       &ldquo;not significant&rdquo; would wrongly imply the sample could have settled it.</p>
@@ -9006,7 +9016,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% for e in evidence.bleeding %}<code>{{ e }}</code>{{ ' · ' if not loop.last }}{% endfor %}.
     These are not runs of bad luck &mdash; they clear the significance bar in the wrong
     direction. They stay published because hiding a losing engine is the one thing this
-    ledger exists not to do.</p>
+    ledger exists not to do, but they no longer receive capital: the paper wallet sizes them
+    at zero and marks the row <b>not funded</b>.
+    <br><span class="mono-dim">Suppressing them moves the published headline from
+    <b>+0.349R</b> to <b>+0.398R</b>, t 1.80 to 1.96 &mdash; almost nothing. That is the point.
+    This is about not funding a loss, not about improving the number; if it were about the
+    number it would not be worth doing.</span></p>
   {% endif %}
 
   <div class="tw rv">
@@ -9025,7 +9040,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <td class="num {{ 'up' if e.expectancy > 0 else 'dn' if e.expectancy < 0 else '' }}">{{ '%+.3f'|format(e.expectancy) }}R</td>
         <td class="num mono-dim">{{ '%+.2f'|format(e.t) if e.t is not none else '—' }}</td>
         <td class="num {{ 'up' if e.total_r > 0 else 'dn' if e.total_r < 0 else '' }}">{{ '%+.1f'|format(e.total_r) }}R</td>
-        <td><span class="ev-v ev-{{ e.verdict|lower }}" title="{{ e.why }}">{{ e.verdict }}</span></td>
+        <td><span class="ev-v ev-{{ e.verdict|lower }}" title="{{ e.why }}">{{ e.verdict }}</span>{% if e.suppressed %}
+          <span class="ev-supp" title="Still fires, still logged, still scored — but receives no capital in the paper wallet. Evidence decides funding.">not funded</span>{% endif %}</td>
       </tr>
       {% endfor %}
     </tbody></table>

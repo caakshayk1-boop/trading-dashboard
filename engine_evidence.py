@@ -42,6 +42,30 @@ NOT_CLOSED = ("OPEN", "T1_HIT", "CANCELLED", "VOID")
 # says what they are so a reader does not read a weekly ranking as a trade.
 NOT_TRADES = {"top5_pick", "sip_bucket", "multibagger", "ai_longterm"}
 
+# One engine, two names. scan_magic and scan_magicmagic are separate screens,
+# but they overlap: a name 20-40% off its 52-week high can satisfy both on the
+# same day and they then write BYTE-IDENTICAL levels. Ten such pairs exist in
+# the ledger and three of them have closed, so the same idea has been counted
+# twice in expectancy and again in every per-engine breakdown.
+#
+# Reported as one family. The rows stay separate in the ledger — rewriting
+# history to tidy a report is not on — but a reader comparing engines is asking
+# about the SCREEN, and "magic" and "magicmagic" are one screen with two
+# spellings. A duplicate guard at write time stops new pairs (tracker.py).
+ENGINE_ALIASES = {"magicmagic": "magic"}
+
+# Capital follows evidence. An engine the ledger has MEASURED as losing does not
+# get sized, and this is the list the paper wallet reads.
+#
+# Note what suppressing them does to the headline: +0.349R to +0.398R, t 1.80 to
+# 1.96. Almost nothing. That is the point — this is not about flattering the
+# published number, it is about not deploying capital into a measured loss. The
+# rows stay in the ledger and stay on the page, because hiding a losing engine
+# is the one thing this record exists not to do.
+def suppressed(engines: list[dict]) -> list[str]:
+    return sorted(e["engine"] for e in engines
+                  if e["verdict"] == "BLEEDING" and e["is_trade"])
+
 
 def _stats(rs: list[float]) -> dict:
     n = len(rs)
@@ -81,6 +105,7 @@ def build(rows: list[dict]) -> dict:
         st = r.get("signal_type")
         if not st:
             continue
+        st = ENGINE_ALIASES.get(st, st)
         if r.get("status") == "OPEN":
             open_by[st] += 1
         if r.get("status") in NOT_CLOSED:
@@ -101,10 +126,15 @@ def build(rows: list[dict]) -> dict:
     # Worst first. A page that leads with its best engine is a brochure; the
     # thing a reader needs to see is what is losing money right now.
     out.sort(key=lambda x: (x["expectancy"], -x["n"]))
+    supp = suppressed(out)
+    for e in out:
+        e["suppressed"] = e["engine"] in supp
     return {
         "engines": out,
         "bleeding": [e["engine"] for e in out if e["verdict"] == "BLEEDING"],
         "unproven": [e["engine"] for e in out if e["verdict"] == "UNPROVEN"],
+        "suppressed": supp,
+        "aliased": sorted(ENGINE_ALIASES),
         "min_n": MIN_N,
     }
 

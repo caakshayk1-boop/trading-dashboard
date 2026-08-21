@@ -33,6 +33,25 @@ export const TIERS = {
   },
 };
 
+// Engines the ledger has MEASURED as losing. They keep firing, keep being
+// logged and keep being scored — hiding a losing engine is the one thing this
+// record exists not to do — but they stop receiving capital.
+//
+// commodity: 20 closed, 25.0% win, -0.511R expectancy, t = -2.48. That clears
+// the significance bar in the wrong direction, which makes it a measured loss
+// rather than a run of bad luck.
+//
+// Note what suppressing it does to the published headline: +0.349R to +0.398R,
+// t 1.80 to 1.96. Almost nothing. That is the point — this is not about
+// flattering the number, it is about not funding a loss. If it were about the
+// number it would not be worth doing.
+//
+// Kept in sync BY HAND with engine_evidence.py, which computes the verdict.
+// A serverless function cannot import a Python module, and a second automatic
+// path that silently disagreed would be worse than a line that has to be
+// changed deliberately.
+export const SUPPRESSED_ENGINES = new Set(["commodity"]);
+
 // The file is deliberately import-free (see the header on _levels.js), so it
 // carries its own coercion rather than reaching into _db.js for num().
 function num(v) {
@@ -176,6 +195,7 @@ export function simulateWallet(rows, badgeOf, currencyOf = () => "\u20b9") {
       allocated_amount: 0,
       allocated_qty: null,
       realized_pnl: null,
+      suppressed: false,
       capital_unavailable: false,
     };
     trades.push(trade);
@@ -207,12 +227,21 @@ export function simulateWallet(rows, badgeOf, currencyOf = () => "\u20b9") {
   for (const ev of events) {
     const tier = TIERS[ev.trade.tier];
     if (ev.type === "open") {
-      const desired = CAPITAL * tier.maxPct * gradeMultiplier(ev.trade.grade);
+      // A suppressed engine is sized at zero, and says why. Not dropped from
+      // the table: the reader should see that the signal fired and that no
+      // capital followed it, which is a different and more useful fact than
+      // the row simply not being there.
+      const suppressed = SUPPRESSED_ENGINES.has(
+        String(ev.trade.signal_type || "").toLowerCase());
+      const desired = suppressed
+        ? 0
+        : CAPITAL * tier.maxPct * gradeMultiplier(ev.trade.grade);
       const categoryHeadroom = CAPITAL * tier.capPct - deployedByTier[ev.trade.tier];
       const globalHeadroom = CAPITAL * GLOBAL_CAP_PCT - deployedTotal;
       const allocated = Math.max(0, Math.min(desired, categoryHeadroom, globalHeadroom));
       ev.trade.allocated_amount = Math.round(allocated);
-      ev.trade.capital_unavailable = allocated <= 0;
+      ev.trade.capital_unavailable = allocated <= 0 && !suppressed;
+      ev.trade.suppressed = suppressed;
       ev.trade.allocated_qty =
         ev.trade.entry !== null && ev.trade.entry > 0 ? Math.floor(allocated / ev.trade.entry) : null;
       deployedByTier[ev.trade.tier] += allocated;

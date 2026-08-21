@@ -2066,6 +2066,13 @@ var TV_ALIASES = (function () {
           var g = GRADE_MULT[String(t.grade || '').toUpperCase()];
           var gTxt = g ? ('grade ' + t.grade + ' x' + g) : 'ungraded x0.45';
           var pct = fmt(c.max_pct * 100, 1);
+          if (t.suppressed){
+            return ' <span class="wal-why wal-why-x" title="This engine is measured as ' +
+              'losing — negative expectancy past the significance bar, not a run of bad ' +
+              'luck. It keeps firing and keeps being scored, because hiding a losing ' +
+              'engine is the one thing this ledger exists not to do, but it receives no ' +
+              'capital.">not funded</span>';
+          }
           if (t.capital_unavailable){
             return ' <span class="wal-why wal-why-0" title="Sized at ' + pct + '% of the wallet for the ' +
               esc(c.label) + ' tier, ' + gTxt + ' — but that tier was already at its ' +
