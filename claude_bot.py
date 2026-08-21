@@ -1132,7 +1132,10 @@ def _start_scheduler():
             IntervalTrigger(minutes=15, timezone=IST)
         )
 
-        # Personal daily brief — 6:00 AM IST every day (Dubai move + markets + habits)
+        # Personal daily brief — 6:00 AM MYT every day (Dubai move + markets + habits).
+        # MYT, not IST: the brief is read in Malaysia, and scheduled_tasks.yml
+        # already fires its copy at 22:00 UTC. Two clocks for one brief is how
+        # it arrives twice, or at the wrong hour, with nothing to show which won.
         try:
             from daily_brief import send_brief as _send_daily_brief
             sched.add_job(
@@ -1140,7 +1143,7 @@ def _start_scheduler():
                 CronTrigger(hour=6, minute=0, timezone=IST),
                 id="personal_daily_brief",
             )
-            logging.info("Scheduled: personal daily brief at 06:00 IST daily")
+            logging.info("Scheduled: personal daily brief at 06:00 MYT daily")
         except Exception as _e:
             logging.warning(f"daily_brief import failed (non-fatal): {_e}")
 
@@ -1206,7 +1209,7 @@ def route(text: str, chat_id: str):
             f"NSE swing: 9:20 · 11:45 · 16:30 IST\n"
             f"Intraday: 10:00–14:30 IST (30min)\n"
             f"CF (Forex/Commod): 10:00 · 14:00 · 18:00 · 22:00 IST\n"
-            f"Daily brief: 6:00 AM IST\n\n"
+            f"Daily brief: 6:00 AM MYT\n\n"
             f"Commands: `Scan` · `/cf` · `/magic` · `/track` · `Brief: NSE:X`",
             chat_id
         )

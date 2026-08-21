@@ -2,7 +2,7 @@ name: Daily Newspaper — Generate & Publish
 
 on:
   schedule:
-    - cron: "30 0 * * *"   # 6:00 AM IST (00:30 UTC)
+    - cron: "0 22 * * *"   # 6:00 AM MYT (22:00 UTC prev day) — site is operated from Malaysia
   workflow_dispatch:         # manual trigger anytime
 
 permissions:

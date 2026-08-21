@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 generate.py — Static HTML generator for GitHub Pages.
-Run by GitHub Actions daily at 6am IST.
+Run by GitHub Actions daily at 6am MYT (22:00 UTC).
 Calls all newspaper data functions → renders Jinja2 template → writes docs/index.html
 """
 from __future__ import annotations

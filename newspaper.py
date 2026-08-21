@@ -3,7 +3,7 @@
 THE DAILY SIGNAL — Akshay's Personal Intelligence Brief
 Sections: Weather · World News · Markets · Quote · Wisdom/Dad · Chess · FP&A→CFO
           Business Case Study · Top 5 Picks · Stock Tracker · Money Hack · Productivity
-Refreshes at 6 AM IST daily. Deploy: news.askakshay.com
+Refreshes at 6 AM MYT daily. Deploy: news.askakshay.com
 """
 from __future__ import annotations
 
@@ -2193,7 +2193,7 @@ PAGE_META = {
         "desc": ("A public, auditable NSE trading ledger. Every signal logged when it "
                  "fires and scored when it closes — wins and losses both. Live markets, "
                  "long-term conviction picks and the last 24 hours of world news, "
-                 "rebuilt at 6 AM IST daily by Akshay Kothari, CA."),
+                 "rebuilt at 6 AM MYT daily by Akshay Kothari, CA."),
         "path": "/",
         # The other page IS the fourth pillar, so the link says so. "The Desk"
         # was ambiguous once DESK became a pillar name on this page.
@@ -2653,16 +2653,28 @@ def tv_symbol(yahoo: str) -> str:
 
 
 def _build_picks() -> list[dict]:
-    """Score all 60 stocks, return top 5 by momentum score.
+    """Score all 60 stocks, return top 5 by momentum score among those that
+    clear the site's own R:R floor.
+
+    score_stock() already computes rr and even names the failure mode in its
+    own comment ("R:R 0.48, which is not a trade") — but nothing acted on it.
+    Ranking by momentum score alone let a stock with a great score and a
+    terrible R:R (target too close to a wide, structure-based stop) outrank a
+    stock with a slightly lower score and an actual tradeable setup. Same
+    floor every other engine enforces (config.MIN_RR), so this page cannot
+    publish a "trade idea" the scanners themselves would have rejected.
+
     Runs weekly — same week's picks stay consistent for journal tracking.
     """
+    from config import MIN_RR
     scored = []
     for sym in WATCHLIST:
         s = score_stock(sym)
         if s: scored.append(s)
         time.sleep(0.05)
-    scored.sort(key=lambda x: x["score"], reverse=True)
-    top5 = scored[:5]
+    tradeable = [s for s in scored if s.get("rr") is not None and s["rr"] >= MIN_RR]
+    tradeable.sort(key=lambda x: x["score"], reverse=True)
+    top5 = tradeable[:5]
     for s in top5:
         s["thesis"] = ai_stock_thesis(s["name"], s["mom_1m"], s["mom_3m"], s["score"],
                                       s.get("ext20", 0.0), s.get("vol_ratio", 1.0))
@@ -3947,7 +3959,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta property="og:site_name" content="The Daily Signal">
 <meta property="og:url" content="https://news.askakshay.com{{ page_path }}">
 <meta property="og:title" content="{{ page_title }}">
-<meta property="og:description" content="Every signal logged when it fires, scored when it closes. Wins and losses both, in public. Rebuilt 6 AM IST.">
+<meta property="og:description" content="Every signal logged when it fires, scored when it closes. Wins and losses both, in public. Rebuilt 6 AM MYT.">
 <meta property="og:image" content="https://news.askakshay.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -5253,6 +5265,23 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .stitle{font-family:var(--serif);font-size:clamp(26px,4.4vw,50px);font-weight:600;
   letter-spacing:-.8px;line-height:1.04}
 .sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
+/* Subsection heading. Nine subsections were each hand-styled with an inline
+   `<h3 style="font-size:15px">`, which rendered them as bold body text: no
+   eyebrow, no rule, no relationship to the .shead above them. A reader hit a
+   table with what looked like a caption over it, which is how a section ends
+   up reading as an unlabelled block of data. One class, so a subsection cannot
+   be added later without inheriting the hierarchy. */
+.subhead{margin:clamp(28px,3.6vw,42px) 0 12px;padding-top:16px;border-top:1px solid var(--line)}
+.subhead:first-child{border-top:none;padding-top:0;margin-top:0}
+.subeyebrow{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--lime);display:block;margin-bottom:8px}
+.subhead h3{font-family:var(--serif);font-size:clamp(18px,2.1vw,25px);font-weight:600;
+  letter-spacing:-.4px;line-height:1.2;margin:0;display:flex;align-items:baseline;
+  gap:9px;flex-wrap:wrap;text-wrap:balance}
+/* The "what is this / why it matters" line. Wider measure than .sdesc: it sits
+   under a narrower heading and carries a full sentence, not a label. */
+.subdesc{font-size:12.5px;color:var(--muted);max-width:66ch;line-height:1.6;margin:9px 0 0}
+@media(max-width:640px){.subhead{margin-top:26px;padding-top:14px}}
 /* ── Data health ─────────────────────────────────────────────────────────
    One badge, six statuses, every section. Before it, #funds said "0.5d old",
    #stocks printed a coverage count and the brief said nothing — a reader had
@@ -6537,7 +6566,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="hero" id="top">
   <div class="orb a"></div><div class="orb b"></div>
 
-  <div class="eyebrow">◆ Compiled 6:00 AM IST · {{ date_str }}</div>
+  <div class="eyebrow">◆ Compiled 6:00 AM MYT · {{ date_str }}</div>
 
   {% if page == 'desk' %}
   <h1 class="hl">
@@ -6803,8 +6832,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      server-rendered version stays because it must read correctly with JS off
      and for a crawler. The id is what the live path targets; the label is
      what stops a stale map claiming to be current. #}
-  <h3 style="font-size:15px;margin:20px 0 10px">Sector heat
-    <span id="heatAsOf" class="dh dh-STALE" style="margin-left:8px">6 AM SNAPSHOT</span></h3>
+  <div class="subhead">
+    <span class="subeyebrow">Market state</span>
+    <h3>Sector heat
+      <span id="heatAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></h3>
+    <p class="subdesc">Which parts of the market moved today, by NSE sector index. Read it for rotation — money leaving one sector usually shows up in another before it shows up in the headlines.</p>
+  </div>
   <div class="fund-grid rv" id="heatGrid">
     {% for s in heat|selectattr('chg_pct', 'defined')|sort(attribute='chg_pct', reverse=True) %}
     {% set chg = s.get('chg_pct', 0) %}
@@ -6832,7 +6865,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      separate, honest control. <details> so it needs no JavaScript. #}
   {% set movers = market_intel.get('sector_movers') or [] %}
   {% if movers %}
-  <h3 style="font-size:15px;margin:22px 0 6px">Movers inside each sector</h3>
+  <div class="subhead">
+    <span class="subeyebrow">Market state</span>
+    <h3>Movers inside each sector</h3>
+    <p class="subdesc">The five best and five worst names in each sector over <strong>one week</strong> — not today. Drawn from the stock screen's own rows, so they carry the screen's build date, not the 6&nbsp;AM heat snapshot's. Use it to see whether a hot sector is broad or is one name carrying it.</p>
+  </div>
   <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
     Best and worst five in each of {{ movers|length }} sectors over one week, taken from the
     stock screen's own rows &mdash; so these are the screen's sectors, not the index tiles
@@ -6873,8 +6910,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      with the flow's own TRADE date. FII is not a live number — NSE publishes
      it once after the close — so what the live path buys is not freshness but
      an honest date on it. #}
-  <h3 style="font-size:15px;margin:20px 0 10px">FII / DII net flow
-    <span id="fiiAsOf" class="dh dh-STALE" style="margin-left:8px">6 AM SNAPSHOT</span></h3>
+  <div class="subhead">
+    <span class="subeyebrow">Market state</span>
+    <h3>FII / DII net flow
+      <span id="fiiAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></h3>
+    <p class="subdesc">Net rupees bought or sold by foreign and domestic institutions. They are usually on opposite sides; the size of the gap matters more than the direction of either one.</p>
+  </div>
   <div class="kpi-row rv" style="margin-bottom:10px" id="fiiGrid">
     <div class="kpi"><div class="v {{ 'up' if fd.get('fii_cr', 0) >= 0 else 'dn' }}">
       &#8377;{{ '{:,.0f}'.format(fd.get('fii_cr', 0)) }} Cr</div><div class="k">FII net</div></div>
@@ -6893,7 +6934,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   {% set ca = market_intel.get('corporate_actions') or [] %}
   {% if ca %}
-  <h3 style="font-size:15px;margin:20px 0 10px">Corporate actions</h3>
+  <div class="subhead">
+    <span class="subeyebrow">Calendar</span>
+    <h3>Corporate actions</h3>
+    <p class="subdesc">Dividends, splits, bonuses and buybacks with their ex-dates. Buy on or after the ex-date and you do not receive the action — this is the date that decides it.</p>
+  </div>
   {# Ex-date and record date are the SAME DAY for almost every row, and the two
      columns printed identical values down the page — which reads as a copied
      field rather than as what it is. India settles T+1, so the two coincide by
@@ -6954,12 +6999,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span> {{ dh('Trade ideas') }}
-      <h2 class="stitle">Top 5 trade ideas.</h2>
+      <h2 class="stitle">{% if top5|length >= 5 %}Top 5 trade ideas.{% elif top5 %}Top {{ top5|length }} trade ideas.{% else %}No trade ideas clear the bar this week.{% endif %}</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
       Every level is taken from structure &mdash; the target from the 52-week high or a measured
       move past it, the stop from the 20-day average &mdash; so the reward/risk differs per idea
       instead of being the same number on every card. Hover any level for the rule behind it.
+      Ranked only among names clearing a minimum 2:1 reward/risk — the same floor every
+      scanner engine enforces; this page used to rank on momentum score alone and could
+      surface an idea with a great score and a sub-1.0 R:R.
+      {% if top5|length < 5 %}<br><span style="color:var(--gold)">Only {{ top5|length }}
+      of the watchlist cleared that floor this week{% if not top5 %} — none did{% endif %}.
+      Fewer honest ideas beats five, one of which is not a trade.</span>{% endif %}
       {% if top5_week %}<br><span style="color:var(--gold)">This week's scan did not complete —
       showing {{ top5_week }}'s ranking. Prices have moved since.</span>{% endif %}</p>
   </div>
@@ -7066,7 +7117,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     {% endfor %}
   </div>
   {% else %}
-  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM IST build;
+  <div class="empty rv">No ranking available. The weekly scan runs with the 6 AM MYT build;
     if this persists past Monday morning, the scan is failing — check the Daily Newspaper workflow.</div>
   {% endif %}
 </section>{% endif %}
@@ -7183,7 +7234,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
 
   {% if findings.contradictions %}
-  <h3 style="font-size:15px;margin:22px 0 10px">Where the market disagrees with itself</h3>
+  <div class="subhead">
+    <span class="subeyebrow">Findings</span>
+    <h3>Where the market disagrees with itself</h3>
+    <p class="subdesc">Names where two screens reach opposite conclusions — strong fundamentals with a broken chart, or the reverse. Disagreement is not a signal; it marks where the easy read is wrong.</p>
+  </div>
   <div class="fnd-grid rv">
     {% for c in findings.contradictions %}
     <div class="card fnd fnd-warn">
@@ -7197,7 +7252,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% endif %}
 
   {% if findings.hidden %}
-  <h3 style="font-size:15px;margin:26px 0 10px">Unusual combinations</h3>
+  <div class="subhead">
+    <span class="subeyebrow">Findings</span>
+    <h3>Unusual combinations</h3>
+    <p class="subdesc">Pairs of attributes that rarely occur together in the same company. Rare is not the same as good — treat each as a question to investigate, not a conclusion.</p>
+  </div>
   <div class="fnd-grid rv">
     {% for f in findings.hidden %}
     <div class="card fnd">
@@ -7232,7 +7291,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      companies several unrelated rules independently selected. Ranked by how
      many rules a name clears — not scored, and not a recommendation. #}
   {% if findings.multi %}
-  <h3 style="font-size:15px;margin:26px 0 4px">Names that clear more than one screen</h3>
+  <div class="subhead">
+    <span class="subeyebrow">Findings</span>
+    <h3>Names that clear more than one screen</h3>
+    <p class="subdesc">Companies surfacing in two or more findings above. Independent screens agreeing is weak corroboration, not confirmation — they share the same underlying price and fundamental data.</p>
+  </div>
   <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
     {{ findings.multi|length }} companies appear in two or more of the findings above.
     One rule selecting a name is a property. Several unrelated rules selecting the same
@@ -7259,7 +7322,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
   {% if findings.changed %}
   {% set w = findings.changed %}
-  <h3 style="font-size:15px;margin:26px 0 10px">What changed since the last build</h3>
+  <div class="subhead">
+    <span class="subeyebrow">Findings</span>
+    <h3>What changed since the last build</h3>
+    <p class="subdesc">The diff against the previous weekly screen: who entered, who left, who moved. This is the section that tells you whether anything is actually new this week.</p>
+  </div>
   <p class="sdesc" style="max-width:70ch">
     {{ w.moved }} of {{ w.universe }} companies moved since {{ w.compared_with }}{% if w.new_names %},
     and {{ w.new_names }} names are new to the universe{% endif %}.
@@ -8384,7 +8451,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div>
     <h3>You just read a losing month in public.</h3>
     <p>Most people showing you signals do not show you the stops. If that is the kind of record you want in your inbox, this is where you say so.</p>
-    <p class="fine">One email a day at 6 AM IST. Not investment advice — a public log of what I actually did.</p>
+    <p class="fine">One email a day at 6 AM MYT. Not investment advice — a public log of what I actually did.</p>
   </div>
   <div>
     <form class="sub-form" id="subEnd" novalidate>
@@ -9694,7 +9761,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div>
       <h3 class="fh4">THE DAILY <b>SIGNAL</b></h3>
       <p style="color:var(--muted);font-size:13.5px;margin-top:12px;max-width:38ch">
-        Built by Akshay Kothari. Rebuilt every morning at 6 AM IST by a machine that does not sleep.</p>
+        Built by Akshay Kothari. Rebuilt every morning at 6 AM MYT by a machine that does not sleep.</p>
     </div>
     <div class="m">
       news.askakshay.com<br>
@@ -9901,12 +9968,17 @@ def health():
     return jsonify({"status": "ok", "name": "The Daily Signal", "time": datetime.now(IST).isoformat()})
 
 # ─────────────────────────────────────────────────────────────
-# 6 AM IST DAILY REFRESH SCHEDULER
+# 6 AM MYT DAILY REFRESH SCHEDULER
 # ─────────────────────────────────────────────────────────────
 
 def _daily_6am_refresh():
-    """Fires at 6 AM IST (00:30 UTC) — clears all caches, rebuilds picks."""
-    log.info("6 AM IST refresh: clearing all caches")
+    """Fires at 6 AM MYT (22:00 UTC) — clears all caches, rebuilds picks.
+
+    Must stay in step with .github/workflows/newspaper.yml. When this said
+    00:30 UTC and the workflow said 22:00 UTC, a long-running process would
+    have cleared the caches 2h30m after the build that filled them.
+    """
+    log.info("6 AM MYT refresh: clearing all caches")
     try:
         from content_cache import invalidate
         invalidate()
@@ -9918,13 +9990,13 @@ def _daily_6am_refresh():
     with _picks_lock:
         _picks_cache.pop(today, None)
     threading.Thread(target=_warm_picks_cache, daemon=True).start()
-    log.info("6 AM IST refresh: done — fresh content ready")
+    log.info("6 AM MYT refresh: done — fresh content ready")
 
 def _start_scheduler():
     sched = BackgroundScheduler(timezone="UTC")
-    sched.add_job(_daily_6am_refresh, CronTrigger(hour=0, minute=30, timezone="UTC"))  # 6 AM IST
+    sched.add_job(_daily_6am_refresh, CronTrigger(hour=22, minute=0, timezone="UTC"))  # 6 AM MYT
     sched.start()
-    log.info("Scheduler: daily refresh at 06:00 IST (00:30 UTC)")
+    log.info("Scheduler: daily refresh at 06:00 MYT (22:00 UTC)")
     return sched
 
 # ─────────────────────────────────────────────────────────────

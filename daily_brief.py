@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-daily_brief.py — 6 AM IST personal morning brief for Akshay Kothari
+daily_brief.py — 6 AM MYT personal morning brief for Akshay Kothari
 Sends to Telegram: Dubai jobs · markets · habit · productivity · learning · quote
 Stores each brief in signals.db (daily_briefs table) for history.
 Pulls Obsidian habits via GitHub API if GITHUB_TOKEN is set.
@@ -587,7 +587,7 @@ def _build_signal_recap() -> str:
     """
     Pulls yesterday's signals from Turso and formats a one-line-per-signal recap.
     Shows: symbol · action · type · entry · current status · outcome/lesson.
-    Sent once at 6 AM IST — never repeated.
+    Sent once at 6 AM MYT — never repeated.
     """
     try:
         yesterday = (datetime.now(IST) - timedelta(days=1)).date().isoformat()
@@ -791,7 +791,7 @@ def build_brief() -> str:
     ) if any(puzzle_parts) else ""
 
     brief = f"""🌅 *GOOD MORNING, AKSHAY*
-{weekday} · {datestr} · 6 AM IST
+{weekday} · {datestr} · 6 AM MYT
 
 ━━━━━━━━━━━━━━━━━━━
 💼 *OPPORTUNITIES*
