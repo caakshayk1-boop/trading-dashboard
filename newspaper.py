@@ -6108,6 +6108,17 @@ table.t tbody tr:last-child td{border-bottom:none}
    plain — no borders competing with the cards below, just a rule between
    tiles — because it is the first thing read and the last thing that should
    be decorated. */
+/* Mobile type floor. A phone audit found 91 text nodes under 11px. Most are
+   legitimately small — badges, freshness stamps, source lines — and shrinking
+   metadata is how a dense page stays readable at all. But a handful carry real
+   meaning a reader has to act on: what a score does NOT include, where a number
+   came from, and how the score decomposes. Those are arguments, not labels, and
+   an argument set in 9.5px on a phone is an argument nobody reads.
+   Desktop density is untouched. */
+@media(max-width:640px){
+  .ipo-missing,.ipo-args-src,.ipo-score-parts,.ipo-gmp-w,.wal-excluded{font-size:11.5px}
+  .ipo-missing,.ipo-args-src{line-height:1.65}
+}
 .dboard{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 0 26px;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .db{display:flex;flex-direction:column;gap:3px;padding:15px 18px;text-decoration:none;
