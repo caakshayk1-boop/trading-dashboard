@@ -1,7 +1,7 @@
 {
- "build_id": "20260820T204706",
- "date": "2026-08-20",
- "date_str": "Thursday, August 20 2026",
+ "build_id": "20260821T073853",
+ "date": "2026-08-21",
+ "date_str": "Friday, August 21 2026",
  "picks": [
   {
    "symbol": "MRK",
@@ -381,7 +381,7 @@
    "sector": "Financial Services"
   },
   "AIAENG": {
-   "price": 4357.6001,
+   "price": 4384.8999,
    "sector": "Industrials"
   },
   "ALKEM": {
@@ -389,7 +389,7 @@
    "sector": "Healthcare"
   },
   "ANTHEM": {
-   "price": 874.5,
+   "price": 881.9,
    "sector": "Healthcare"
   },
   "ASAHIINDIA": {
@@ -401,11 +401,11 @@
    "sector": "Industrials"
   },
   "AXON": {
-   "price": 634.84,
+   "price": 614.26,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
-   "price": 2016.0,
+   "price": 2012.0,
    "sector": "Financial Services"
   },
   "BAJFINANCE.NS": {
@@ -441,7 +441,7 @@
    "sector": "Financial Services"
   },
   "CEATLTD": {
-   "price": 3588.2,
+   "price": 3534.8,
    "sector": "Consumer Cyclical"
   },
   "CEMPRO": {
@@ -449,7 +449,7 @@
    "sector": "Industrials"
   },
   "CHOLAFIN": {
-   "price": 1888.9,
+   "price": 1873.5,
    "sector": "Financial Services"
   },
   "COFORGE.NS": {
@@ -461,11 +461,11 @@
    "sector": "Basic Materials"
   },
   "CRISIL": {
-   "price": 4478.6001,
+   "price": 4499.3999,
    "sector": "Financial Services"
   },
   "CRUDE": {
-   "price": 86.14,
+   "price": 86.78,
    "sector": ""
   },
   "DEEPAKNTR": {
@@ -481,11 +481,11 @@
    "sector": "Real Estate"
   },
   "ECLERX": {
-   "price": 1804.8,
+   "price": 1832.9,
    "sector": "Technology"
   },
   "EICHERMOT": {
-   "price": 8042.0,
+   "price": 7990.5,
    "sector": "Consumer Cyclical"
   },
   "ESCORTS": {
@@ -497,19 +497,19 @@
    "sector": "Consumer Cyclical"
   },
   "FLUOROCHEM": {
-   "price": 4682.7002,
+   "price": 4689.1001,
    "sector": "Basic Materials"
   },
   "GRASIM": {
-   "price": 3300.0,
+   "price": 3270.0,
    "sector": "Basic Materials"
   },
   "GVT&D": {
-   "price": 4050.1001,
+   "price": 4040.1001,
    "sector": "Industrials"
   },
   "HCLTECH": {
-   "price": 1318.4,
+   "price": 1324.8,
    "sector": "Technology"
   },
   "HEG": {
@@ -529,7 +529,7 @@
    "sector": "Consumer Cyclical"
   },
   "IPCALAB": {
-   "price": 1900.1,
+   "price": 1903.7,
    "sector": "Healthcare"
   },
   "J&KBANK": {
@@ -537,15 +537,15 @@
    "sector": "Financial Services"
   },
   "JSWDULUX": {
-   "price": 3086.1001,
+   "price": 3094.2,
    "sector": ""
   },
   "KIRLOSENG": {
-   "price": 2150.1001,
+   "price": 2079.8999,
    "sector": "Industrials"
   },
   "KPRMILL": {
-   "price": 1153.2,
+   "price": 1126.2,
    "sector": "Consumer Cyclical"
   },
   "LAURUSLABS": {
@@ -557,15 +557,15 @@
    "sector": "Healthcare"
   },
   "M&MFIN": {
-   "price": 382.45,
+   "price": 389.6,
    "sector": "Financial Services"
   },
   "MARICO": {
-   "price": 858.35,
+   "price": 850.0,
    "sector": "Consumer Defensive"
   },
   "MDB": {
-   "price": 422.145,
+   "price": 420.37,
    "sector": ""
   },
   "MOTHERSON": {
@@ -573,7 +573,7 @@
    "sector": "Consumer Cyclical"
   },
   "MRK": {
-   "price": 151.315,
+   "price": 148.99,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -581,7 +581,7 @@
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 480.88,
+   "price": 481.15,
    "sector": ""
   },
   "NATIONALUM": {
@@ -593,7 +593,7 @@
    "sector": "Consumer Defensive"
   },
   "NET": {
-   "price": 282.855,
+   "price": 278.91,
    "sector": ""
   },
   "NIACL": {
@@ -745,261 +745,260 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "7h old",
+    "age": "17h old",
     "note": "partial coverage \u2014 11/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Opening Principle #2: Develop Your Pieces",
-   "body": "In the first 10 moves, move each piece once. Get knights out before bishops (Ng1-f3, Nb1-c3). Don't move the same piece twice. Don't bring the queen out early \u2014 she gets chased. Goal: by move 8, have 3-4 pieces off the back rank. Development = time. Time = initiative.",
-   "index": 2,
+   "title": "Opening Principle #3: Castle Early",
+   "body": "King safety is non-negotiable in the opening. Castle within the first 10 moves. An uncastled king in the centre is a target. After castling, your king is protected by 3 pawns and 2 corner squares. Rooks also connect after castling. Rule: castle before you attack.",
+   "index": 3,
    "total": 20
   },
   "wisdom": {
-   "title": "On Failure",
-   "body": "You will fail your daughter sometimes. You'll be impatient. You'll miss something important. You'll get it wrong. What matters is the repair: the apology, the return, the consistent showing up after the mistake. Children don't need perfect parents. They need parents who can say sorry and mean it.",
-   "index": 12,
+   "title": "Rest is Productive",
+   "body": "High performers rest. Sleep is not laziness \u2014 it's when the brain consolidates learning, the body repairs, emotional regulation resets. Cutting sleep to work more is borrowing from tomorrow's performance to pay today's anxiety. Protect 7 hours. It will make you a better analyst, better father, better human.",
+   "index": 13,
    "total": 18
   },
   "book": {
-   "book": "Measure What Matters",
-   "author": "John Doerr",
-   "chapter": "Stretch Goals Change What's Possible",
-   "lesson": "Doerr profiles how OKRs drove Google's 10\u00d7 growth. The key principle: set 'stretch goals' that are uncomfortable \u2014 goals that you're not sure you can achieve. A goal you can definitely hit in normal circumstances is not ambitious enough. Google's rule: OKRs should score 0.6-0.7 (60-70% achieved) consistently. If you're hitting 1.0 every quarter, your targets are too conservative. This is counterintuitive for finance professionals trained to hit budgets. In innovation contexts, the right level of ambition makes success feel slightly out of reach \u2014 that tension drives breakthrough thinking, not incremental improvement.",
-   "key_quote": "If you never miss a target, your targets are too safe. Set goals that force you to change how you work, not just do more of what you already do.",
-   "action": "Set one 10\u00d7 goal for your career in the next 2 years. Not 10% better \u2014 10\u00d7 different. What would have to change for that to happen?",
-   "index": 48,
+   "book": "Atomic Habits",
+   "author": "James Clear",
+   "chapter": "The 1% Rule: Why Small Gains Compound Into Extraordinary Results",
+   "lesson": "If you get 1% better every day for a year, you end up 37 times better. If you get 1% worse, you decay to nearly zero. Most people overestimate what they can do in a day and underestimate what they can do in a year of consistent 1% improvements. Clear's central insight: you don't rise to the level of your goals, you fall to the level of your systems. Goals are for direction. Systems are for progress.",
+   "key_quote": "Habits are the compound interest of self-improvement.",
+   "action": "Identify one tiny habit you can improve by 1% today. Stack it onto an existing behaviour: after [CURRENT HABIT], I will [NEW HABIT].",
+   "index": 1,
    "total": 48,
    "crux": [
-    "OKRs = Objective (where to go) + Key Results (how you know you got there).",
-    "Objectives are qualitative and inspiring. Key results are numeric and time-bound.",
-    "If it has no number, it is not a key result.",
-    "Focus: 3\u20135 objectives per cycle. More than that means no priorities.",
-    "Align transparently. Everyone's OKRs visible, including the CEO's.",
-    "Roughly half of OKRs should be bottom-up, or you get compliance instead of commitment.",
-    "Commit publicly. Visibility is what converts a goal into an obligation.",
-    "Stretch: aspirational OKRs should land around 70%. Consistent 100% means you set them too low.",
-    "Separate committed OKRs (must hit 100%) from aspirational ones (70% is success).",
-    "Never tie OKRs to compensation. It corrupts the target-setting immediately.",
-    "Track continuously \u2014 grade, then continue, update, start over, or stop.",
-    "CFRs \u2014 Conversations, Feedback, Recognition \u2014 replace annual reviews.",
-    "OKRs are a vessel, not the content. Bad strategy with good OKRs still fails."
+    "You do not rise to the level of your goals. You fall to the level of your systems.",
+    "1% better daily compounds to 37x in a year. 1% worse decays to 0.03x.",
+    "Habits form on a four-step loop: cue \u2192 craving \u2192 response \u2192 reward.",
+    "Build good habits: make it obvious, attractive, easy, satisfying. Invert all four to break one.",
+    "Identity drives behaviour, not the reverse. 'I don't smoke' beats 'I'm trying to quit'.",
+    "Every action is a vote for the person you are becoming. Majority wins, not unanimity.",
+    "The two-minute rule: a new habit must take under two minutes to start.",
+    "Environment beats willpower. Motivation is overrated; friction is decisive.",
+    "Habit stacking: after [existing habit], I will [new habit]. The old habit becomes the cue.",
+    "You need a plateau of latent potential. Results lag effort \u2014 most people quit inside the lag.",
+    "Never miss twice. One miss is an accident. Two is the start of a new habit.",
+    "Measure what you want to repeat. An unrecorded habit drifts within three weeks."
    ],
    "learnings": [
-    "A goal without a number is a wish with better vocabulary.",
-    "Transparency is what makes alignment happen without meetings.",
-    "70% on a hard target beats 100% on an easy one.",
-    "Linking goals to bonuses guarantees sandbagged goals."
+    "Discipline is a design problem, not a character problem.",
+    "The gap between effort and visible result is where nearly everyone quits.",
+    "Systems survive bad days. Motivation does not.",
+    "Tracking is not admin. Tracking is the habit."
    ],
    "examples": [
-    "Intel's Operation Crush retook the microprocessor market from Motorola in 1980, coordinated entirely through OKRs across every function.",
-    "Google adopted OKRs at ~40 people and has published them quarterly since. Chrome's 20M\u2192111M user objective drove the browser's whole roadmap.",
-    "The Gates Foundation uses OKRs on a $20bn scale to make measurable what was previously a stated intention."
+    "British Cycling went from one Tour de France win in 110 years to five in six years by stacking 1% gains \u2014 pillow hygiene, hand-washing, bike paint for dust visibility.",
+    "Clear's own recovery: a bat to the face at 15, two years of rebuilding, then an academic All-American \u2014 built entirely on sleep and study routines, not talent.",
+    "Twice-weekly gym attendance beats a 90-minute session once a month, even though the monthly total is similar. Frequency builds identity; volume does not."
    ],
    "adapt": [
-    "Q3 objective: land the Dubai offer. KRs: 40 targeted applications, 12 first-round calls, 3 finals. Numbers, not effort.",
-    "Codex KR: 20 paying customers at $47, not 'launch the product'.",
-    "Trading KR: expectancy above +0.15R over 100 live signals. Grade it, then stop or continue.",
-    "Grade quarterly and write the number down even when it's 40%. Especially then."
+    "Score one caption per day before posting. The score is the habit, not the post.",
+    "Two-minute rule on the Dubai job hunt: open the tracker and add one company. That is the whole commitment.",
+    "SIP on auto-debit the day salary lands. Remove the monthly decision entirely.",
+    "Never miss twice on the daily brief. One skipped morning is fine. Two means the system broke."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Subscription Audit",
-    "body": "Recurring charges are the most invisible clutter you own \u2014 designed to be forgotten. The average person carries several they cannot name.",
-    "action": "Open your statement. Cancel every subscription you cannot justify out loud.",
-    "index": 14,
+    "title": "One Screen, One Task",
+    "body": "Seventeen open tabs is not research, it is deferred decisions rendered in pixels. Each one is a small unfinished thought.",
+    "action": "Close every tab. Bookmark what genuinely matters \u2014 usually two.",
+    "index": 15,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Leave Well",
-    "body": "How you exit a job, a room, or a conversation is what people remember. Notice periods honoured, handovers documented, no bridges burned. The world is smaller than it feels.",
-    "action": "Leave your next meeting with a clear closing sentence, not a trailing off.",
-    "index": 20,
+    "title": "Learn The Name, Use The Name",
+    "body": "Names are the cheapest respect available and the most noticed when withheld. Repeat it immediately on hearing it. Ask the spelling. Ask the pronunciation \u2014 getting it wrong twice is careless, asking once is respect.",
+    "action": "Learn one colleague's name properly today. Use it twice.",
+    "index": 1,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Serve Without Being Seen",
-    "body": "Do one useful thing today that nobody will attribute to you. Every tradition prescribes this because it is the fastest available correction to the ego.",
-    "action": "One anonymous useful act. Tell no one.",
-    "index": 18,
+    "title": "Simplify The Morning",
+    "body": "Same breakfast. Same order. Same route. Ritual removes decisions from the hours when your judgement is most valuable and least replaceable.",
+    "action": "Fix one morning variable permanently.",
+    "index": 19,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Regression To The Mean",
-    "body": "Extreme results are followed by less extreme ones, with no cause required. Most 'the intervention worked' stories are regression wearing a costume.",
-    "action": "Before crediting a change, ask what would have happened anyway.",
-    "index": 10,
+    "title": "Occam's Razor",
+    "body": "The explanation requiring fewest assumptions is usually right. Elaborate theories feel like insight and are mostly the mind pattern-matching on noise.",
+    "action": "Take your most complex current explanation. Find the simpler one.",
+    "index": 11,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0633\u0627\u0621 \u0627\u0644\u062e\u064a\u0631",
-    "translit": "masaa' al-khayr",
-    "meaning": "Good evening",
-    "use": "Reply: masaa' an-noor. From roughly midday onward.",
-    "index": 26,
+    "script": "\u0645\u0639 \u0627\u0644\u0633\u0644\u0627\u0645\u0629",
+    "translit": "ma'a as-salaama",
+    "meaning": "Go in peace / goodbye",
+    "use": "The standard farewell. Said to the person leaving.",
+    "index": 27,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Rule of 72",
-    "body": "Years to double = 72 \u00f7 rate. At 12%, six years. At 8%, nine. Lets you sanity-check any growth or return claim instantly, without a spreadsheet.",
-    "action": "Apply it to five return rates. Then invert: what rate doubles in 4 years?",
-    "index": 2,
+    "title": "Read A Cash Flow Statement First",
+    "body": "Profit is an opinion; cash is a fact. Most analysts start at revenue. Start at operating cash flow and compare it to net income \u2014 the gap is where the story is.",
+    "action": "Pull one company's cash flow. Find the largest gap to net income. Explain it.",
+    "index": 3,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Visceral Fat Is The One That Matters",
-    "body": "Fat around the organs is metabolically active and drives insulin resistance. Waist-to-height under 0.5 is the simplest useful screen \u2014 better than BMI, which cannot distinguish muscle from fat.",
-    "action": "Measure waist and height. Divide. Should be under 0.5.",
-    "index": 12,
+    "title": "Fibre, Not Supplements",
+    "body": "Most people get under half the recommended 30g. Fibre feeds the gut microbiome, blunts glucose response, and is one of the few dietary factors with consistent large-cohort support.",
+    "action": "Add one high-fibre food today. Legumes, oats, or berries.",
+    "index": 13,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Thomas Edison",
-   "quote": "I have not failed. I've just found 10,000 ways that won't work.",
-   "index": 73,
+   "name": "Andrew Carnegie",
+   "quote": "Anything in life worth having is worth working for.",
+   "index": 74,
    "total": 96
   },
   "lesson": {
    "tradition": "Discipline",
-   "lesson": "Discipline is the bridge between goals and accomplishment.",
+   "lesson": "We must all suffer one of two things: the pain of discipline or the pain of regret.",
    "source": "Jim Rohn"
   },
   "case": {
-   "title": "McDonald's: Real Estate, Not Burgers",
-   "story": "Ray Kroc's insight: McDonald's isn't a food company \u2014 it's a real estate company. Franchise owners pay rent on land McDonald's owns.",
-   "lesson": "The most valuable part of a business is often hidden. Always ask: what are we actually selling? Who really controls the profit pool in our industry?"
+   "title": "Infosys: The Global Delivery Model",
+   "story": "Narayana Murthy started Infosys with \u20b910,000 borrowed from his wife in 1981. Built the global delivery model \u2014 offshore talent, onshore management. Revenue: $18B+.",
+   "lesson": "Arbitrage is a legitimate business model. Take a global problem, apply local economics, execute flawlessly. Consistency beats creativity in services."
   },
   "fpna": {
-   "title": "Headcount Planning",
-   "body": "FTE cost = Salary \u00d7 1.3\u20131.5. Always model hiring lag \u2014 60\u201390 days from approval to productive.",
-   "index": 9,
+   "title": "Free Cash Flow",
+   "body": "FCF = Net Income + D&A \u2013 Capex \u2013 \u0394NWC. A company can show profit and still run out of cash.",
+   "index": 10,
    "total": 20
   },
   "cfo": {
-   "title": "Power BI for Finance Leaders",
-   "body": "Build a CFO dashboard: P&L vs Budget, Cashflow waterfall, Working Capital trend, Revenue bridge. Link to ERP via DirectQuery. Refresh daily. Present this in interviews as your personal project. It shows initiative + technical skill + commercial sense.",
-   "index": 15,
+   "title": "FC Step 1: Own the Close",
+   "body": "Financial Controllers close the books \u2014 every month, clean, on time, no surprises. Speed + accuracy is the baseline. If close takes 10 days, get it to 5. Automate reconciliations. Build a close checklist and hit it every time.",
+   "index": 1,
    "total": 15
   },
   "money_hack": {
-   "title": "Tax-Loss Harvesting",
-   "body": "Book losses at year-end to offset LTCG. Reinvest post 30 days. Saves 10\u201315% tax."
+   "title": "EPF Power",
+   "body": "EPF gives 8.25% guaranteed, tax-free. Max out VPF if your employer allows."
   },
   "dubai": {
-   "title": "The reference call decides it",
-   "body": "Gulf groups check references properly, and they call the person you name. A manager who says 'he was good' loses you the band. A manager who says 'he cut our forecast error from 12% to 4%' wins you the counter.",
-   "targets": "Brief your references. Give them the number you want said.",
-   "action_label": "Do",
-   "action": "Pick two. Send each a three-line note on what the role needs.",
-   "index": 22,
+   "title": "Attestation is the silent blocker",
+   "body": "Degree and CA certificate need MEA attestation in India, then UAE embassy attestation, then MOFA in the UAE. Three to six weeks if nothing goes wrong. Offers have been withdrawn over this.",
+   "targets": "Start it before you have an offer. It expires slowly and costs little.",
+   "action_label": "Cost",
+   "action": "Roughly \u20b98\u201315K all-in per document, and the only thing it buys is not losing the job.",
+   "index": 23,
    "total": 30
   },
   "daughter": {
    "months": 7,
-   "days": 238,
+   "days": 239,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Under-promise, over-deliver. Every time. Build a reputation.",
+  "productivity": "Weekly financial review: 10 min. Net worth, cash flow, investments.",
   "father": [
    {
-    "title": "Learn her tired signals",
-    "do": "Watch for the specific cues before crying \u2014 ear pulling, gaze aversion, a particular whine.",
-    "why": "Catching the window before the overtired threshold is the difference between a 5-minute settle and a 40-minute one. Every baby's signal set is different; only observation finds hers."
+    "title": "Point at things",
+    "do": "Point at an object and name it, then look at her to check she followed your finger.",
+    "why": "Following a point is a joint-attention milestone that typically emerges between 9 and 12 months. Practising the gesture now builds toward it, and delayed joint attention is one of the earlier developmental flags worth knowing about."
    },
    {
-    "title": "One-word labels",
-    "do": "Use single words for objects she sees constantly \u2014 'cup', 'light', 'dog' \u2014 rather than full sentences.",
-    "why": "Isolated words are easier to segment from the speech stream. Mix with full sentences; she needs both the target and the grammar around it."
+    "title": "Describe her, not just the world",
+    "do": "Narrate what she is doing: 'you are banging the cup, you are looking at me.'",
+    "why": "Self-directed narration builds the vocabulary of internal states. It is the same mechanism as labelling emotions, applied to actions first because they are observable."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Satya",
-    "translation": "Truthfulness",
-    "teaching": "The second great vow. Jain teaching qualifies it sharply: truth that causes harm is not virtue, so silence is sometimes the higher form of satya.",
-    "apply": "Before delivering a hard truth, ask whether you are serving accuracy or serving yourself. Both can be honest; only one is useful."
+    "term": "Brahmacharya",
+    "translation": "Restraint, classically of the senses",
+    "teaching": "For laypeople this is moderation rather than abstinence \u2014 the discipline of not letting appetite set the agenda.",
+    "apply": "Pick the appetite that currently sets your agenda \u2014 the phone, the market screen, the second helping \u2014 and put one structural limit on it. Not willpower; a limit."
    },
    {
     "tradition": "Buddhism",
-    "term": "Sati",
-    "translation": "Mindfulness as remembering",
-    "teaching": "Sati literally means 'to remember' \u2014 remembering to notice what is actually happening, rather than the narrative running over it.",
-    "apply": "Once today, mid-task, stop and name what you are actually doing versus what you told yourself you would be doing. The gap is the data."
+    "term": "Appamada",
+    "translation": "Diligence, heedfulness",
+    "teaching": "The Buddha's last words were reportedly about this \u2014 striving on with diligence. It is the opposite of drifting.",
+    "apply": "Diligence is not intensity, it is not letting things run on autopilot. Audit one recurring commitment this week and ask whether you would start it today."
    }
   ],
   "spanish": [
    {
-    "word": "quisiera",
-    "meaning": "I would like",
-    "es": "Quisiera un caf\u00e9, por favor.",
-    "en": "I would like a coffee, please.",
+    "word": "ahora mismo",
+    "meaning": "right now",
+    "es": "Lo hago ahora mismo.",
+    "en": "I will do it right now.",
     "tag": "Everyday"
    },
    {
-    "word": "hace dos a\u00f1os",
-    "meaning": "two years ago",
-    "es": "Empec\u00e9 hace dos a\u00f1os.",
-    "en": "I started two years ago.",
+    "word": "mientras tanto",
+    "meaning": "meanwhile",
+    "es": "Mientras tanto, seguimos con el plan.",
+    "en": "Meanwhile, we continue with the plan.",
     "tag": "Everyday"
    }
   ],
   "vocab": [
    {
-    "word": "Attrition",
-    "say": "uh-TRISH-uhn",
-    "meaning": "Gradual loss, usually of people or customers.",
-    "example": "We lost the margin to attrition, not to a single event.",
-    "note": "More precise than 'churn' when the loss is slow and structural."
+    "word": "Nominal",
+    "say": "NOM-i-nuhl",
+    "meaning": "In name only; or, not adjusted for inflation.",
+    "example": "Nominal growth was 8%; real growth was closer to 3%.",
+    "note": "Two meanings \u2014 make the context obvious or you will be misread."
    },
    {
-    "word": "Concede",
-    "say": "kuhn-SEED",
-    "meaning": "To admit a point is valid.",
-    "example": "I concede the timing assumption was optimistic.",
-    "note": "Conceding one point early buys credibility for the ten you defend."
+    "word": "Onerous",
+    "say": "OH-nuhr-uhs",
+    "meaning": "Burdensome; costly to fulfil.",
+    "example": "The lease became onerous once footfall dropped.",
+    "note": "A technical term under IAS 37 \u2014 onerous contracts require provision."
    }
   ],
   "speaking": {
-   "title": "Own the accent",
-   "drill": "Read a page aloud focusing only on the final consonant of each word, at normal speed.",
-   "why": "Clarity comes from finishing words, not from changing your accent. Endings are where intelligibility is lost."
+   "title": "The elevator version",
+   "drill": "Explain your entire current role in 20 seconds: scope, scale, and one outcome with a number.",
+   "why": "You will need this more than any other single answer \u2014 in interviews, at conferences, and in lifts."
   },
   "interview_tech": [
    {
-    "q": "Explain contribution margin versus gross margin and when each misleads.",
-    "a": "Gross margin is revenue less cost of goods \u2014 it answers whether you bought and priced well. Contribution margin deducts all variable costs, including logistics, payment fees, markdown and returns \u2014 it answers whether the sale was worth making. Gross margin misleads for high-return or bulky goods; contribution misleads when 'variable' costs are actually committed in the short run, which makes closure decisions look better on paper than in cash. Use gross margin for buying decisions and contribution for range and channel decisions.",
-    "who": "Amazon \u00b7 Tesco \u00b7 Landmark Group"
+    "q": "What is EBITDAR and why does retail use it?",
+    "a": "EBITDA before rent. Retail and hospitality use it because the owned-versus-leased decision distorts EBITDA comparability \u2014 a company that owns its stores shows higher EBITDA than an identical company that leases them, purely from capital structure. EBITDAR strips that out. Post-IFRS 16 it matters less for reported figures since operating leases already sit below EBITDA, but it remains standard in valuation and in comparing operators across own-versus-lease models.",
+    "who": "Retail analysts \u00b7 Americana \u00b7 Alshaya"
    },
    {
-    "q": "What is the cash conversion cycle for a fashion retailer, and how would you cut it 15 days?",
-    "a": "CCC = DIO + DSO \u2212 DPO. Fashion retail is inventory-heavy and near-zero DSO, so it is mostly DIO minus DPO. To cut 15 days: shorten the buying calendar and increase in-season replenishment so you commit later; push slow lines to markdown earlier rather than holding for full price; renegotiate supplier terms from 60 to 90 days in exchange for volume commitment; and consolidate SKUs \u2014 every incremental SKU carries safety stock. Quantify it: on AED 400M COGS, 15 days is roughly AED 16M of cash released.",
-    "who": "Zara \u00b7 Uniqlo \u00b7 Landmark Group"
+    "q": "UAE corporate tax is 9%. How does that change your group structure thinking?",
+    "a": "It ends the era of treating the UAE as a zero-tax base. Key points: 9% applies above AED 375K taxable income; qualifying free zone persons can still get 0% on qualifying income but the conditions are strict and substance-tested; transfer pricing documentation is now mandatory and OECD-aligned. Practically: intercompany charges between a UAE HQ and operating markets need defensible benchmarking, and management fee structures designed purely for tax will be challenged. Model the effective rate, not the headline rate.",
+    "who": "PwC Gulf \u00b7 Chalhoub \u00b7 Emaar"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you handle a request from the CEO that you believe is unethical?",
-    "a": "Slow it down without escalating to confrontation. First assume miscommunication and restate what you understood \u2014 a surprising share of these resolve there. If it holds, state your objection privately, in writing, with the specific standard or law engaged. Offer the compliant alternative that gets closest to the commercial aim. If pressed, escalate to the audit committee chair. Say plainly that you would resign rather than sign something you believe is false \u2014 the willingness is the answer they are testing for.",
-    "who": "Every CFO search \u00b7 post-Wirecard"
+    "q": "How would your team describe your management style?",
+    "a": "Answer with evidence rather than adjectives. 'They would say I am specific \u2014 I give the number I expect and the date, and I do not change it quietly. They would also say I go into detail on their work more than some managers, which is useful when they are learning and irritating when they are not, so I have had to learn where to stop.' Naming the downside of your own style is what makes the strength believable.",
+    "who": "Universal"
    },
    {
-    "q": "A peer takes credit for your team's work in front of the CEO. What do you do?",
-    "a": "Not in the room. Afterwards, directly and without an audience: describe what you observed, not their motive, and say what you need going forward. If it repeats, correct it factually in the moment \u2014 'just to add, the modelling on that was Priya's team' \u2014 which is a contribution rather than an accusation. Escalating first, or absorbing it silently and resenting it, are both worse. They are testing composure and whether you protect your team.",
-    "who": "Any matrixed organisation"
+    "q": "How do you handle stress and long hours during close or audit?",
+    "a": "They are checking sustainability, not stoicism. Do not claim you thrive on pressure. Give the operating answer: what you do to make the peak smaller (moving work out of the close), how you protect the team (rotating the worst shifts, protecting recovery time after), and what you personally do that is non-negotiable. Having a young child is relevant here and worth saying \u2014 it reads as someone with real boundaries rather than someone who has not been tested yet.",
+    "who": "Universal"
    }
   ]
  }
