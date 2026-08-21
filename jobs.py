@@ -239,12 +239,6 @@ TITLE_PREFILTER = re.compile(
 # Geography
 # ---------------------------------------------------------------------------
 
-# The only two markets this pipeline is for: the UAE (the Dubai FP&A target)
-# and Malaysia (where the operator lives). Sources are region-wide and will
-# keep returning Saudi, Egypt, Oman and further afield; the filter is applied
-# after dedupe so the counts in the log still show what was reached.
-TARGET_COUNTRIES = {"UAE", "Malaysia"}
-
 COUNTRY_ALIASES = {
     "uae": "UAE", "united arab emirates": "UAE", "u.a.e": "UAE", "ae": "UAE",
     "emirates": "UAE",
@@ -288,7 +282,13 @@ OTHER_COUNTRIES = {
     "south africa", "united states", "canada", "australia",
 }
 
-TARGET_COUNTRIES = {"UAE", "Saudi Arabia", "Malaysia", "Oman"}
+# The two markets this pipeline is for: the UAE (the Dubai FP&A target) and
+# Malaysia (where the operator lives). The comment below has said "narrowed
+# to Dubai, Abu Dhabi and Malaysia — Saudi Arabia and Oman are no longer
+# targets" for some time while this set still contained both, so 30 Saudi and
+# Omani roles kept shipping. Sources are region-wide and will keep returning
+# them; this is the one place that decides.
+TARGET_COUNTRIES = {"UAE", "Malaysia"}
 
 # ── Where he will actually take a role ──────────────────────────────────────
 # Narrowed on request to Dubai, Abu Dhabi and Malaysia. Saudi Arabia and Oman
@@ -1081,7 +1081,7 @@ def build_why_fit(job: dict) -> list[str]:
         scored.append((8, "Team leadership is proven — he mentors a team of 4 analysts "
                           "and business-partners Ops, Retail Heads, Buying and IR."))
     if country in TARGET_COUNTRIES:
-        scored.append((9, f"{country} is one of his four active target markets, and he "
+        scored.append((9, f"{country} is one of his two target markets, and he "
                           "is already GCC-adjacent inside a Dubai-headquartered group."))
 
     scored.sort(key=lambda p: p[0])
