@@ -111,7 +111,7 @@ REMARKS = {
     # Present in the live ledger (24 rows) and absent from the first draft of
     # this map, which is exactly how a row ends up with a blank "Relates to".
     "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing",
-    "ohl":              "Open-High-Low intraday engine",
+    "ohl":              "Open-High-Low intraday engine — long-only, entry at open near the day's low",
     "multibagger":      "Weekly multibagger scan — research idea, not a trade",
     "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop",
     "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks",
@@ -1826,13 +1826,38 @@ def _log_magic_to_ledger(signals, engine, today):
                 _db.sync(c)
                 log.info(f"{engine}: replaced {n} ledger row(s) already written today")
 
-        rows = []
+        # magic and magicmagic are different screens, but they overlap: a name
+        # 20-40% off its 52-week high can satisfy both on the same day, and when
+        # it does the two write byte-identical levels. Ten (symbol, date) pairs
+        # in the live ledger are one idea recorded twice — PARADEEP 2026-08-15
+        # and DIXON 2026-08-15 among them. Both rows resolve to the same R, so
+        # the idea is counted twice in expectancy and once again in every
+        # per-engine breakdown. Whichever screen runs second yields.
+        sibling = "magicmagic" if engine == "magic" else "magic"
+        already = set()
+        try:
+            with _conn() as c:
+                already = {(r[0], round(float(r[1]), 4)) for r in c.execute(
+                    "SELECT symbol, entry FROM all_signals "
+                    "WHERE signal_type=? AND date=? AND entry IS NOT NULL",
+                    (sibling, today)).fetchall()}
+        except Exception as e:                          # noqa: BLE001
+            # A failed lookup must not cost the scan. Worst case we log the
+            # duplicate we already log today, which is no worse than now.
+            log.warning(f"{engine}: duplicate check failed ({e}) — logging all rows")
+
+        rows, skipped = [], 0
         for s in signals:
             # A candidate without levels is not written. scanner.magic_levels
             # returns None when the 52-week high cannot clear the stop by 1R, and
             # such a row would be another permanently-unresolvable OPEN.
             if not all(s.get(k) is not None for k in ("sl", "target1", "target2", "target3")):
                 log.warning(f"{engine}: {s.get('symbol')} has no levels — not logged")
+                continue
+            if s.get("price") is not None and (s["symbol"], round(float(s["price"]), 4)) in already:
+                log.info(f"{engine}: {s['symbol']} already logged today by "
+                         f"{sibling} at the same entry — not double-counted")
+                skipped += 1
                 continue
             rows.append({
                 "symbol": s["symbol"], "signal_type": engine,
@@ -1865,7 +1890,8 @@ def _log_magic_to_ledger(signals, engine, today):
         ids = log_batch_to_all_signals(rows, date=today)
         log.info(f"{engine}: wrote {len(ids)} row(s) to the ledger "
                  f"({', '.join(r['symbol'] for r in rows[:8])}"
-                 f"{'…' if len(rows) > 8 else ''})")
+                 f"{'…' if len(rows) > 8 else ''})"
+                 + (f" · {skipped} skipped as {sibling} duplicates" if skipped else ""))
         return ids
     except Exception as e:
         log.error(f"{engine}: ledger write failed — {e}")

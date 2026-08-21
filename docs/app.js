@@ -2434,6 +2434,21 @@ var TV_ALIASES = (function () {
     var ALERT_RENDER_CAP = 60;
     var alertsShowAll = false;
 
+    // Full setup logic for engines a reader is likely to ask "why did this
+    // fire" about, shown on hover over the engine tag. Read fresh at render
+    // time by signal_type, so it applies to every row already in the ledger,
+    // not just ones logged after this was written.
+    var ENGINE_METHODOLOGY = {
+      ohl: 'OHL (Open≈Low), long only. Entry: today’s open sits within 0.5% ' +
+        'of today’s low — no separate confirmation bar. Stop: tight, off the ' +
+        'day’s low. Targets: three structural R-multiples (1.5R / 2.5R / 4R). ' +
+        'Rejected when the open/low gap exceeds 0.5%, under 30 daily bars of ' +
+        'history, or any OHLC value is missing/non-positive. The bearish mirror ' +
+        '(open≈high, short) is detected internally but withheld — short-side ' +
+        'levels aren’t built out yet. Passes the same minimum R:R gate as every ' +
+        'other engine.'
+    };
+
     function renderAlerts(){
       var tbody = document.querySelector('#alertTable tbody');
       if (!tbody) return;
@@ -2495,7 +2510,9 @@ var TV_ALIASES = (function () {
               (a.duplicate_note ? ' <span class="mono-dim" title="' + esc(a.duplicate_note) +
                 '" style="cursor:help">🔁</span>' : '') + '</td>' +
           '<td class="' + (a.action === 'BUY' ? 'up' : 'dn') + '" style="font-weight:600">' + esc(a.action) +
-              (a.signal_type ? '<span class="mono-dim" style="font-size:10px"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
+              (a.signal_type ? '<span class="mono-dim" style="font-size:10px' +
+                (ENGINE_METHODOLOGY[a.signal_type] ? ';cursor:help" title="' + esc(ENGINE_METHODOLOGY[a.signal_type]) : '') +
+                '"> · ' + esc(a.signal_type) + '</span>' : '') + '</td>' +
           /* "Relates to". Third of the three renderers that must agree
              column-for-column — <thead> and the server-rendered row are in
              newspaper.py. This one replaces the tbody only, so a column added
