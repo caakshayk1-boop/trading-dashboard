@@ -383,6 +383,81 @@ def _gmp_table() -> dict:
     return out
 
 
+IPOPREMIUM_HOST = "ipopremium.in"
+
+
+def _ipopremium_page(company: str) -> str | None:
+    """That company's ipopremium URL, by search. Never constructed."""
+    import crawler
+    q = quote_plus(f"{company} IPO site:{IPOPREMIUM_HOST}")
+    p = crawler.fetch(DDG + q, timeout=50)
+    if not p.ok:
+        return None
+    hits = re.findall(r"(https?://(?:www\.)?ipopremium\.in/view/ipo/\d+/[a-z0-9\-]+)",
+                      unquote(p.content))
+    return hits[0] if hits else None
+
+
+def _ipopremium_detail(company: str) -> dict:
+    """Category-wise subscription and the GMP quote.
+
+    NSE publishes ONE subscription number — the total. Who is bidding matters
+    as much as how much: a book carried by retail and shunned by institutions
+    reads very differently from the reverse, and the total hides that entirely.
+    ipopremium breaks it out by QIB, HNI, Retail and Employee.
+
+    The page is client-rendered, so it is unreachable by plain HTTP (403) and
+    returns an empty body to a reader that does not run scripts. crawler.py
+    falls through to a real browser for it.
+
+    NSE stays authoritative for the HEADLINE multiple. This adds the breakdown
+    beside it and says where it came from, rather than quietly replacing an
+    exchange figure with a third party's.
+    """
+    import crawler
+    out = {}
+    url = _ipopremium_page(company)
+    if not url:
+        return out
+    p = crawler.fetch(url, timeout=60)
+    if not p.ok:
+        return out
+    out["ipopremium_url"] = url
+
+    # "QIBs\t2083757\t3847557\t1.85"  — tabs in rendered text, pipes in markdown.
+    # Row shape: "QIBs | 2083757 | 3847557 | 1.85" — offered, applied, TIMES.
+    # The multiple is the LAST number on the line, not the first; taking the
+    # first returns the shares offered, which is a large plausible number and
+    # therefore fails silently rather than visibly.
+    cats = {}
+    for label, key in (("QIBs", "QIB"), ("HNIs", "HNI"), ("Retail", "Retail"),
+                       ("Employees", "Employee"), ("Total", "Total")):
+        # Leading "|" in the markdown rendering, none in the browser rendering,
+        # so both are allowed. Requiring THREE numbers on the line is what keeps
+        # "Issue Size ₹825.00 cr" from being read as a Total subscription of
+        # 825x — a wrong number that looks entirely reasonable.
+        m = re.search(rf"^[^\S\n]*\|?[^\S\n]*\**{label}\**[^\n]*$",
+                      p.content, re.M | re.I)
+        if not m:
+            continue
+        nums = re.findall(r"[\d]+(?:\.[\d]+)?", m.group(0).replace(",", ""))
+        if len(nums) >= 3:
+            try:
+                cats[key] = float(nums[-1])
+            except ValueError:
+                pass
+    # Sanity: a subscription multiple in the hundreds of thousands is the
+    # offered-shares column leaking through. Drop the lot rather than publish it.
+    if cats and max(cats.values()) < 10000:
+        out["subscription_by_category"] = cats
+    m = re.search(r"GMP[^\n]{0,30}\n+\s*₹\s*\**\s*([\d,]+)", p.content)
+    if not m:
+        m = re.search(r"GMP[^\n₹]{0,40}₹\s*\**\s*([\d,]+)", p.content)
+    if m:
+        out["gmp_text"] = f"₹{m.group(1)}"
+    return out
+
+
 def enrich(rows, key=None, previous=None):
     """Fill the fields NSE does not publish. Fails soft, never blanks.
 
@@ -435,6 +510,19 @@ def enrich(rows, key=None, previous=None):
             r["enriched_url"] = url
         except Exception as e:                        # noqa: BLE001
             log.warning(f"enrich {r['symbol']}: {type(e).__name__} {e} — keeping previous")
+
+        # Category breakdown. Only worth the browser for a book that is OPEN —
+        # there is no bidding to break down before it opens or after it closes.
+        if r.get("phase") == "open":
+            try:
+                extra = _ipopremium_detail(name)
+                for k, v in extra.items():
+                    if v:
+                        r[k] = v
+                if extra.get("subscription_by_category"):
+                    r["category_source"] = "ipopremium.in"
+            except Exception as e:                    # noqa: BLE001
+                log.warning(f"ipopremium {r['symbol']}: {type(e).__name__} {e}")
 
     # Min investment is derivable once lot size is known; deriving it from the
     # CAP is the honest direction — the most a retail applicant can be asked for.

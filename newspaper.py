@@ -5997,6 +5997,9 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ipo-facts .k{font-family:var(--mono);font-size:9px;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim)}
 .ipo-facts .v{font-size:13px;font-variant-numeric:tabular-nums}
 .ipo-cats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.ipo-cat-hot{color:var(--up)!important;border-color:rgba(61,220,151,.3)!important}
+.ipo-cat-cold{color:var(--down)!important;border-color:rgba(255,92,92,.28)!important}
+.ipo-cat-src{color:var(--dim)!important;border-style:dashed!important}
 .ipo-cats span{font-family:var(--mono);font-size:10px;color:var(--muted);
   background:var(--bg2);border:1px solid var(--line);border-radius:100px;padding:3px 9px}
 .ipo-score{margin-bottom:12px}
@@ -8096,8 +8099,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       {% endif %}
 
+      {# WHO is bidding, not just how much. NSE publishes one number — the
+         total — and a book carried by retail while institutions sit out reads
+         very differently from the reverse. Source is named because it is not
+         the exchange's figure. #}
       {% if r.subscription_by_category %}
-      <div class="ipo-cats">{% for c, n in r.subscription_by_category.items() %}<span>{{ c }} <b>{{ '%.1fx'|format(n) }}</b></span>{% endfor %}</div>
+      <div class="ipo-cats">
+        {% for c, n in r.subscription_by_category.items() %}
+        <span class="{{ 'ipo-cat-hot' if n >= 10 else 'ipo-cat-cold' if n < 1 else '' }}">{{ c }} <b>{{ '%.2fx'|format(n) }}</b></span>
+        {% endfor %}
+        {% if r.category_source %}<span class="ipo-cat-src">via {{ r.category_source }}</span>{% endif %}
+      </div>
       {% endif %}
 
       <div class="ipo-score">

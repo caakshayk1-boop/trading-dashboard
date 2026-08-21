@@ -44,6 +44,9 @@ from urllib.parse import urlparse
 
 log = logging.getLogger(__name__)
 
+from pathlib import Path as _P
+_ROOT = _P(__file__).parent
+
 JINA = "https://r.jina.ai/"
 DEFAULT_TIMEOUT = 45
 MAX_ATTEMPTS = 2                 # per provider; blocked sites do not improve on retry
@@ -182,6 +185,35 @@ def _via_crawl4ai(url: str, timeout: int) -> Page:
     return p
 
 
+def _via_playwright(url: str, timeout: int) -> Page:
+    """Render the page in Chromium and take its text. Last resort, and slow.
+
+    Some sources hold their data behind client-side rendering: ipopremium.in
+    returns 403 to a plain request and 200-with-empty-body to a reader, because
+    the subscription tables only exist after its own scripts have run. Nothing
+    short of a browser sees them.
+
+    Shells out to Node rather than importing python-playwright. The build
+    already installs Node Playwright and caches Chromium for the smoke test, so
+    this reuses a browser that is on disk anyway; pip-installing playwright
+    would add a second driver and a second ~130MB download for the same thing.
+
+    Raises when node or the script is absent, which the chain treats like any
+    other provider failure and moves past.
+    """
+    import subprocess
+    script = str(_ROOT / "render_page.cjs")
+    if not (_ROOT / "render_page.cjs").exists():
+        raise ImportError("render_page.cjs not present")
+    r = subprocess.run(["node", script, url, str(timeout * 1000)],
+                       capture_output=True, text=True, timeout=timeout + 25)
+    if r.returncode != 0:
+        raise RuntimeError((r.stderr or "").strip()[:200] or f"exit {r.returncode}")
+    p = Page(url=url, provider="playwright", status=200)
+    p.content = p.markdown = r.stdout
+    return p
+
+
 def _via_direct(url: str, timeout: int) -> Page:
     """Last resort. Fine for plain HTML, useless against a bot check."""
     import requests
@@ -203,7 +235,12 @@ def _via_direct(url: str, timeout: int) -> Page:
     return p
 
 
-PROVIDERS = (("jina", _via_jina), ("crawl4ai", _via_crawl4ai), ("direct", _via_direct))
+# Order is cheapest-and-most-likely first. Playwright sits LAST because it
+# spends seconds and a browser process where the others spend one HTTP request —
+# but it is the only one that sees a client-rendered page at all, so it is the
+# difference between having ipopremium's category breakdown and not.
+PROVIDERS = (("jina", _via_jina), ("crawl4ai", _via_crawl4ai),
+             ("direct", _via_direct), ("playwright", _via_playwright))
 
 
 # ── the interface ────────────────────────────────────────────────────────────
