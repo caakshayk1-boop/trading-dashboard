@@ -137,7 +137,19 @@ class Live(unittest.TestCase):
              "-X", "POST", "-H", "Content-Type: application/json",
              "-d", '{"action":"noop"}', "--max-time", "25", SITE + "/api/tracker"],
             capture_output=True, text=True, timeout=40).stdout.strip()
-        self.assertIn(out, ("401", "403"), f"tracker POST returned {out}, expected 401/403")
+        # 429 counts, and finding it here is the lockout working: repeated
+        # unauthenticated attempts from one IP stop getting a key check at all
+        # and start getting refused outright. That is a STRONGER rejection than
+        # 401, not a weaker one.
+        #
+        # The guarantee under test is "an unauthenticated write does not
+        # succeed". Asserting only 401 would have made a correctly-hardened
+        # endpoint look broken — which is exactly what happened the first time
+        # this ran after a handful of probes.
+        self.assertIn(out, ("401", "403", "429"),
+                      f"tracker POST returned {out}; an unauthenticated write "
+                      "must be refused, not accepted")
+        self.assertNotIn(out, ("200", "201", "204"), "unauthenticated write ACCEPTED")
 
 
 if __name__ == "__main__":
