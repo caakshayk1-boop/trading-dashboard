@@ -5874,6 +5874,13 @@ table.t tbody tr:last-child td{border-bottom:none}
 .badge-win{background:rgba(61,220,151,.12);color:var(--up);border:1px solid rgba(61,220,151,.3)}
 .badge-loss{background:rgba(255,92,92,.1);color:var(--down);border:1px solid rgba(255,92,92,.28)}
 .badge-open{background:rgba(106,168,255,.1);color:var(--blue);border:1px solid rgba(106,168,255,.28)}
+/* Unrealised P&L on an open wallet row. Deliberately quieter than a booked
+   result — dimmer, italic percentage, a dotted underline that invites the
+   tooltip naming the mark price. An open position's mark is not a result, and
+   rendering the two identically is the same error as counting open trades in a
+   win rate. */
+.wal-live{border-bottom:1px dotted var(--line2);cursor:help;opacity:.86}
+.wal-live-tag{font-family:var(--mono);font-size:10px;font-style:italic;color:var(--dim);margin-left:3px}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
 /* Long vs short in the paper wallet. Shape AND colour, not colour alone —
    the arrow carries the meaning for a red/green colour-blind reader, and the

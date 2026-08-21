@@ -806,6 +806,31 @@ var TV_ALIASES = (function () {
   syncScrollPad();
   window.addEventListener('resize', syncScrollPad, {passive:true});
 
+  // --headh has to track the stack's REAL height, not the height it happened to
+  // have when this script first ran.
+  //
+  // .headstack holds the nav, the live-ledger bar AND the market ticker, and the
+  // ticker is populated asynchronously. So the first measurement caught a stack
+  // 125px tall that then grew to 412px once the ticker rendered, and nothing
+  // remeasured it — `resize` never fires for content growth. Every `table.t th`
+  // is `position:sticky; top:var(--headh)`, so all of them stuck 287px too high:
+  // the column headers parked *underneath* the site header, floating over the
+  // rows they were meant to label and hiding the row behind them. That is the
+  // "header appears in the middle of the table" bug.
+  //
+  // ResizeObserver fires on content growth, which is the case `resize` misses.
+  // The font load is a separate trigger: web fonts change the nav's line box
+  // after layout, and on a cold cache that lands after this runs.
+  if (typeof ResizeObserver === 'function') {
+    var _stack = document.querySelector('.headstack');
+    if (_stack) new ResizeObserver(syncScrollPad).observe(_stack);
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(syncScrollPad).catch(function(){});
+  }
+  // Belt and braces for the ticker's own late paint on browsers without RO.
+  window.addEventListener('load', syncScrollPad, {passive:true});
+
   function setActive(){
     var best = -1;
     // Distance from the top of the DOCUMENT. offsetTop is measured against the
@@ -1793,11 +1818,39 @@ var TV_ALIASES = (function () {
       var box = el('paperWalletLive');
       var w = j.wallet, cats = j.categories;
 
+      // The ticker and the wallet race: whichever resolves second must not
+      // leave the other's numbers stale. Keep the payload and re-render when
+      // fresh quotes land, so open rows are marked at the price on the rail
+      // rather than at whatever existed when the wallet happened to paint.
+      window.__walletPayload = j;
+      window.__onLedgerPx = function(){
+        if (window.__walletPayload) renderPaperWallet(window.__walletPayload);
+      };
+
       var kpi = '<div class="kpi-row rv" style="margin-bottom:16px">' +
         '<div class="kpi"><div class="v">' + rupees(w.deployed_amount) + '</div><div class="k">Deployed (' + fmt(w.deployed_pct, 1) + '%)</div></div>' +
         '<div class="kpi"><div class="v">' + rupees(w.cash_amount) + '</div><div class="k">Cash (' + fmt(w.cash_pct, 1) + '%)</div></div>' +
         '<div class="kpi"><div class="v ' + (w.realized_pnl > 0 ? 'up' : w.realized_pnl < 0 ? 'dn' : '') + '">' +
           (w.realized_pnl > 0 ? '+' : '') + rupees(w.realized_pnl) + '</div><div class="k">Realized P&amp;L</div></div>' +
+        // Open risk, marked live. Separate tile from Realized on purpose: one
+        // is money banked, the other is money still on the table, and a single
+        // blended figure would hide which is which.
+        (function(){
+          var px = window.__ledgerPx || {}, sum = 0, marked = 0, openN = 0;
+          (j.trades || []).forEach(function(t){
+            if (t.realized_pnl !== null || t.status_raw !== 'OPEN') return;
+            openN++;
+            var q = px[t.symbol];
+            if (!q || typeof q.price !== 'number' || !t.allocated_qty) return;
+            sum += (t.side === 'SHORT' ? (t.entry - q.price) : (q.price - t.entry)) * t.allocated_qty;
+            marked++;
+          });
+          if (!openN) return '';
+          var val = marked ? ((sum > 0 ? '+' : '') + rupees(sum)) : '—';
+          return '<div class="kpi"><div class="v ' + (marked && sum > 0 ? 'up' : marked && sum < 0 ? 'dn' : '') +
+            '">' + val + '</div><div class="k">Unrealised · ' + marked + '/' + openN +
+            ' marked</div></div>';
+        })() +
         '<div class="kpi"><div class="v">' + (w.win_rate === null ? '—' : fmt(w.win_rate, 1) + '%') +
           '</div><div class="k">Win rate (' + w.closed_trades + ' closed)</div></div>' +
         '<div class="kpi"><div class="v">' + j.trades.length + '</div><div class="k">Trades sized</div></div>' +
@@ -1842,10 +1895,40 @@ var TV_ALIASES = (function () {
           return b === 'win' ? '✅ Win' : b === 'loss' ? '❌ Stop' : b === 'open' ? '🔵 Open'
                : b === 'expired' ? '⏱ Expired' : b;
         };
+        // Live P&L on open rows. Every open position showed "—", so the wallet
+        // reported a realized total and nothing at all about the money actually
+        // at risk right now — the one number a reader opens this section for.
+        //
+        // Prices come from window.__ledgerPx, which /api/ticker already ships
+        // alongside the rail (see api/ticker.js). No new fetch and no new
+        // endpoint: Vercel caps this project at 12 serverless functions and it
+        // is at 12, so a quotes route for the wallet cannot exist.
+        //
+        // Marked UNREALISED and styled dimmer than a booked result. An open
+        // position's mark is not a result, and a wallet that renders the two
+        // identically is the same error as counting open trades in a win rate.
+        function livePnl(t){
+          if (t.realized_pnl !== null || t.status_raw !== 'OPEN') return null;
+          var q = (window.__ledgerPx || {})[t.symbol];
+          if (!q || typeof q.price !== 'number' || !t.allocated_qty) return null;
+          var move = t.side === 'SHORT' ? (t.entry - q.price) : (q.price - t.entry);
+          return { amt: move * t.allocated_qty, px: q.price,
+                   pct: t.entry ? (move / t.entry) * 100 : 0 };
+        }
         var rows = j.trades.map(function(t){
-          var pnlCell = t.realized_pnl === null ? '—' :
-            '<span class="' + (t.realized_pnl > 0 ? 'pnl-u' : t.realized_pnl < 0 ? 'pnl-d' : '') + '">' +
-            (t.realized_pnl > 0 ? '+' : '') + rupees(t.realized_pnl) + '</span>';
+          var lp = livePnl(t);
+          var pnlCell;
+          if (t.realized_pnl !== null) {
+            pnlCell = '<span class="' + (t.realized_pnl > 0 ? 'pnl-u' : t.realized_pnl < 0 ? 'pnl-d' : '') + '">' +
+              (t.realized_pnl > 0 ? '+' : '') + rupees(t.realized_pnl) + '</span>';
+          } else if (lp) {
+            pnlCell = '<span class="wal-live ' + (lp.amt > 0 ? 'pnl-u' : lp.amt < 0 ? 'pnl-d' : '') + '"' +
+              ' title="Unrealised. Marked at ' + tradePrice(lp.px, t.currency) +
+              ', not a booked result.">' + (lp.amt > 0 ? '+' : '') + rupees(lp.amt) +
+              ' <span class="wal-live-tag">' + (lp.pct > 0 ? '+' : '') + fmt(lp.pct, 1) + '%</span></span>';
+          } else {
+            pnlCell = '—';
+          }
           // Direction, first-class. The ledger carries real shorts — Gold,
           // Crude, Natural Gas and Silver all fire SELL signals — and without
           // this column a short's stop (which sits ABOVE its entry) read as a
