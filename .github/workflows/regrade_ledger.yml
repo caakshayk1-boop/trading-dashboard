@@ -1,0 +1,85 @@
+name: Regrade Ledger From Bars
+
+# MANUAL ONLY. There is deliberately no `schedule:` here.
+#
+# This rewrites `status`, `exit_price`, `pnl_pct` and `r_multiple` on rows that
+# have already been published on news.askakshay.com. The 2026-08-08 regrade is
+# what corrupted them in the first place, so this one does not get to run on a
+# timer: it runs when a human asks, after reading the dry-run diff, and it backs
+# up every row it is about to touch.
+#
+# Run `mode: dry-run` first. It changes nothing and uploads the full diff as an
+# artifact. Only then run `mode: apply`, which additionally requires typing the
+# confirm phrase.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'dry-run (safe, reports only) or apply (rewrites the ledger)'
+        required: true
+        default: 'dry-run'
+        type: choice
+        options: [dry-run, apply]
+      confirm:
+        description: 'To apply, type exactly: REGRADE THE PUBLISHED LEDGER'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  regrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: pip install -q -r requirements.txt
+
+      # Fail before touching anything, not halfway through. A typo'd confirm
+      # phrase must stop the job, not fall through to a partial write.
+      - name: Gate the apply
+        if: inputs.mode == 'apply'
+        run: |
+          if [ "${{ inputs.confirm }}" != "REGRADE THE PUBLISHED LEDGER" ]; then
+            echo "::error::confirm phrase missing or wrong — refusing to rewrite published grades"
+            exit 1
+          fi
+          if [ -z "$TURSO_URL" ]; then
+            echo "::error::TURSO_URL is empty — this would write to the local sqlite stub"
+            exit 1
+          fi
+
+      - name: Dry run
+        run: |
+          python3 rebuild_ledger_from_bars.py --dry-run --days 30 --report \
+            --out rebuilt_ledger.json | tee regrade_report.txt
+
+      - name: Apply
+        if: inputs.mode == 'apply'
+        run: |
+          mkdir -p data/backups
+          python3 rebuild_ledger_from_bars.py --apply --backup-dir data/backups \
+            | tee -a regrade_report.txt
+
+      # The backup is the rollback. It has to leave the runner or it dies with it.
+      - name: Upload report and backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regrade-${{ inputs.mode }}-${{ github.run_id }}
+          path: |
+            regrade_report.txt
+            rebuilt_ledger.json
+            data/backups/
+          retention-days: 90
