@@ -71,6 +71,11 @@ from newspaper import (
 import data_health as dh
 
 IST = timezone(timedelta(hours=5, minutes=30))
+# The operator's timezone. The page is built at 6 AM MYT and read from
+# Malaysia, so its date, its clock and its build stamp are all MYT. IST stays
+# for anything describing a market session — NSE trades on IST regardless of
+# where this runs, and converting a session time would mislead.
+MYT = timezone(timedelta(hours=8))
 
 # Countries this search is actually for. Anything else scored by the engine is
 # real, but it is not what he asked for, so it is grouped separately rather
@@ -243,7 +248,15 @@ def load_careers(path) -> dict:
 
 
 def generate() -> None:
-    now = datetime.now(IST)
+    # The page's own date and clock are the OPERATOR's, not the exchange's.
+    # It is built at 6 AM MYT and read from Malaysia; dating it in IST put
+    # "Friday, August 21" and "00:13 IST" in the chrome of a page whose build
+    # stamp two lines below said 6:00 AM MYT — one page, two clocks, and the
+    # date itself wrong for several hours every night.
+    #
+    # Market-hours copy elsewhere stays in IST deliberately: NSE trades on IST
+    # wherever this is read.
+    now = datetime.now(MYT)
     print(f"[generate] Running at {now.strftime('%Y-%m-%d %H:%M IST')}")
 
     # Init DB (creates tables if not exists — returns empty tracker, that's fine)

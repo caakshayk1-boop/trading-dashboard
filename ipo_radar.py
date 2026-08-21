@@ -590,6 +590,9 @@ def build(listing_perf=None):
     for r in listed:
         m = perf.get(r["symbol"])
         if m:
+            for k in ("first_close", "last_close", "since_listing_pct",
+                      "from_high_pct", "high", "low", "months_listed", "sessions"):
+                r.setdefault(k, None)
             r.update(measured=True,
                      first_close=m.get("first_close"), last_close=m.get("last_close"),
                      since_listing_pct=m.get("since_listing_pct"),
@@ -597,7 +600,16 @@ def build(listing_perf=None):
                      high=m.get("high"), low=m.get("low"),
                      months_listed=m.get("months_listed"), sessions=m.get("sessions"))
         else:
+            # Set every performance key to None rather than leaving it absent.
+            # A missing key is Undefined in Jinja, `x is not none` passes for it,
+            # and the format filter then raises and takes the whole page down.
+            # Third time this exact trap has fired; present-and-None is testable,
+            # absent is a landmine that only goes off on the row where the data
+            # happens to be missing.
             r["measured"] = False
+            for k in ("first_close", "last_close", "since_listing_pct",
+                      "from_high_pct", "high", "low", "months_listed", "sessions"):
+                r.setdefault(k, None)
     # Measured rows first: a row with a return on it is worth more than one
     # with only a date, and burying them under unmeasured names by pure
     # recency hides the only part of this table that answers anything.

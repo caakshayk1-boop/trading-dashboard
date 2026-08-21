@@ -867,7 +867,25 @@ var TV_ALIASES = (function () {
     // Rounding identically removes the mismatch; the slack absorbs the
     // fractional getBoundingClientRect values and browser scroll quantisation
     // that Math.round alone does not.
-    var SPY_SLACK = 3;
+    // The probe line sits a THIRD of the way down the reading area, not at its
+    // very top edge.
+    //
+    // Requiring `section.top <= scrollY + headh + 12 + 3` meant the clicked
+    // section had to land within three pixels of where scroll-margin-top said
+    // it would. It does on this machine — a simulation over all 18 sections
+    // finds zero mismatches — and it does not in Safari, where smooth-scroll
+    // settles a pixel or two short and sub-pixel layout rounds the other way.
+    // Miss by one pixel and the section fails its own test, so the highlight
+    // stays on the one above it: click Paper Wallet, land on Paper Wallet, read
+    // Portfolio. Three reports of that, and two fixes that each made the
+    // arithmetic more exact rather than making it stop mattering.
+    //
+    // A reader is "in" a section when that section fills the part of the screen
+    // they are reading, not when its top edge is level with the chrome. Probing
+    // a third of the way down asks that question instead, and sections here are
+    // one to three thousand pixels tall, so the answer is stable against any
+    // landing error a browser can produce.
+    var SPY_SLACK = Math.round(window.innerHeight * 0.33);
     // Read --headh, NOT headH(). scroll-margin-top on the sections is
     // `calc(var(--headh) + 12px)`, so the anchor lands against the VARIABLE
     // while this used to compare against a fresh live measurement. The two
@@ -3942,17 +3960,26 @@ var TV_ALIASES = (function () {
   (function(){
     var API = '/api';
 
-    /* ── IST clock: real time, not build time ── */
+    /* ── Operator clock: MYT, real time, not build time ──
+       The page is built at 6 AM MYT and read from Malaysia, so the clock in the
+       chrome is the operator's wall time. It showed IST, which meant the header
+       said 00:13 while the build stamp beside it said 6:00 AM MYT — the same
+       page telling the reader two different times.
+
+       Market-hours copy elsewhere STAYS in IST on purpose: NSE trades on IST
+       wherever this is read, and converting a session time would be worse than
+       leaving it. Only the operator's own clock moves.
+
+       MYT is UTC+8 with no DST, so a fixed offset is exact. */
     var clock = document.getElementById('istClock');
     if (clock){
       var tick = function(){
         var n = new Date();
-        // IST is UTC+5:30 with no DST, so a fixed offset is exact.
-        var ist = new Date(n.getTime() + (n.getTimezoneOffset() + 330) * 60000);
-        var hh = ('0' + ist.getHours()).slice(-2),
-            mm = ('0' + ist.getMinutes()).slice(-2),
-            ss = ('0' + ist.getSeconds()).slice(-2);
-        clock.innerHTML = '<i></i>' + hh + ':' + mm + ':' + ss + ' IST';
+        var myt = new Date(n.getTime() + (n.getTimezoneOffset() + 480) * 60000);
+        var hh = ('0' + myt.getHours()).slice(-2),
+            mm = ('0' + myt.getMinutes()).slice(-2),
+            ss = ('0' + myt.getSeconds()).slice(-2);
+        clock.innerHTML = '<i></i>' + hh + ':' + mm + ':' + ss + ' MYT';
       };
       tick(); setInterval(tick, 1000);
     }

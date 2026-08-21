@@ -6079,6 +6079,11 @@ table.t tbody tr:last-child td{border-bottom:none}
    <section> is declared in the nav, and a nav entry per subsection is exactly
    the menu pollution this page already has too much of. */
 .sec-append{max-width:var(--wrap,1400px);margin:0 auto;padding:0 clamp(18px,4vw,54px) clamp(40px,6vw,80px)}
+/* A listing that exists but cannot be measured. Dimmer, not hidden: it is a
+   real IPO, and dropping it would understate the population every verdict on
+   this page is eventually judged against. */
+.ipo-unmeasured td{opacity:.6}
+.ipo-unmeasured .sym{cursor:default}
 .ev-v{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;
   padding:3px 8px;border-radius:100px;border:1px solid currentColor;cursor:help;white-space:nowrap}
 .ev-edge{color:var(--up);background:rgba(61,220,151,.1)}
@@ -6727,7 +6732,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">{{ date_str }}</span>
-      <span class="live" id="istClock"><i></i>{{ updated_at }} IST</span>
+      <span class="live" id="istClock"><i></i>{{ updated_at }} MYT</span>
       {# Three states, not two: a reader who has expressed no preference should
          follow their OS, and a two-way switch cannot express that. #}
       <button type="button" class="thm" id="themeBtn"
@@ -8147,13 +8152,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="subhead">
     <span class="subeyebrow">The record</span>
     <h3>Listed in the last {{ iporadar.recent_window_months }} months</h3>
-    <p class="subdesc">The <b>{{ iporadar.counts.listed_measured }}</b> mainboard issues that
-      listed inside the window and can actually be measured &mdash; the same set, and the same
-      numbers, as New Listings below. NSE records
-      <b>{{ iporadar.counts.listed_12m }}</b> listings in the window in total; the remainder sit
-      outside the 750-name screen universe or have no usable price history, so there is nothing
-      to report about them beyond a date. Both figures are stated rather than quietly showing
-      whichever flatters.
+    <p class="subdesc">All <b>{{ iporadar.counts.listed_12m }}</b> mainboard issues that closed
+      and listed inside the window. <b>{{ iporadar.counts.listed_measured }}</b> of them carry
+      measured post-listing performance and sit first &mdash; the same set, and the same numbers,
+      as New Listings below; click any of those for its full screen detail. The rest are real
+      listings that fall outside the 750-name screen universe or have no usable price history,
+      so they show their band and dates and say so, rather than being dropped or padded with a
+      number nobody measured.
       Return is measured from the <b>first traded close</b>, not the issue price &mdash; NSE's
       issue-price data is not reliable and a listing gain computed off a guessed one would be
       fabricated. Click any measured name for its full screen detail.</p>
@@ -8161,14 +8166,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="tw rv">
     <table class="t"><thead><tr>
       <th scope="col">Symbol</th><th scope="col">Company</th>
-      <th scope="col">Listed</th><th scope="col">First close</th><th scope="col">Last</th>
+      <th scope="col">Listed</th><th scope="col">First close / band</th><th scope="col">Last</th>
       <th scope="col">Since listing</th><th scope="col">From high</th><th scope="col">Sessions</th>
     </tr></thead><tbody>
-      {% for r in iporadar.recent_listed if r.measured %}
-      <tr><td><strong class="sym" data-stock="{{ r.symbol }}" style="cursor:pointer">{{ r.symbol }}</strong></td>
+      {% for r in iporadar.recent_listed %}
+      <tr class="{{ '' if r.measured else 'ipo-unmeasured' }}">
+        <td><strong class="sym"{% if r.measured %} data-stock="{{ r.symbol }}" style="cursor:pointer"{% endif %}>{{ r.symbol }}</strong></td>
         <td>{{ r.company }}</td>
         <td class="num">{{ r.listing_date }}</td>
-        <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else '—' }}</td>
+        <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else (r.price_band or '—') }}</td>
         <td class="num">{{ '{:,.2f}'.format(r.last_close) if r.last_close else '—' }}</td>
         {# `measured` means ipo_tracker reached the symbol, NOT that every field
            came back — a name with too few sessions has a listing return and no
