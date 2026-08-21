@@ -34,7 +34,8 @@ none of them are finance.
 
 *Firecrawl is optional.* The MCP tools are not available inside GitHub Actions,
 so the Firecrawl-backed sources call the HTTP API directly with requests. When
-FIRECRAWL_API_KEY is unset those sources degrade to status "error" and the run
+those sources are fetched through crawler.py (Jina Reader, then Crawl4AI if
+installed, then direct) and need no API key. If all providers fail the run
 still produces a valid file from the plain-requests sources.
 
 *A failed source never blanks the dataset.* Previous jobs are carried forward
@@ -75,7 +76,6 @@ HTTP_TIMEOUT = 30
 DETAIL_WORKERS = 6
 MAX_DETAIL_PER_SOURCE = 40
 
-FIRECRAWL_API = "https://api.firecrawl.dev/v2/scrape"
 
 # ---------------------------------------------------------------------------
 # Source registry
@@ -167,8 +167,9 @@ SOURCES: list[dict[str, Any]] = [
      "discover": "https://www.aldar.com/en/careers"},
 
     # Alshaya fronts its careers site with a bot filter that returns 403 to
-    # plain requests. Routed through Firecrawl, which means it only runs when
-    # FIRECRAWL_API_KEY is set.
+    # plain requests. Routed through crawler.py, which needs no key. The adapter
+    # name stays "firecrawl_html" only because it is the key in SOURCES; the
+    # implementation behind it no longer touches Firecrawl.
     {"name": "Alshaya Group", "kind": "employer", "adapter": "firecrawl_html",
      "group": "Alshaya", "confidence": "high",
      "endpoint": {"url": "https://www.alshaya.com/en/careers/vacancies",
@@ -2032,34 +2033,37 @@ def fetch_michaelpage(src: dict) -> list[dict]:
 
 # -- Firecrawl-backed HTML (Alshaya, GulfTalent, Bayt, Indeed) -----------
 def firecrawl_key() -> str | None:
+    """Retained for the migration only. Nothing requires it any more.
+
+    Kept so a deployment that still sets the variable does not break, and so the
+    adapter name in SOURCES stays stable. It is not read by the fetch path.
+    """
     return os.environ.get("FIRECRAWL_API_KEY") or None
 
 
 def firecrawl_scrape(url: str, formats: Iterable[str] = ("markdown", "links")) -> dict:
-    """Direct Firecrawl HTTP API — MCP is not available inside GitHub Actions."""
-    key = firecrawl_key()
-    if not key:
-        raise SourceError("FIRECRAWL_API_KEY not set")
-    resp = requests.post(
-        FIRECRAWL_API,
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-        json={"url": url, "formats": list(formats), "onlyMainContent": False,
-              "proxy": "auto", "maxAge": 0},
-        timeout=90)
-    if resp.status_code in (401, 402, 403):
-        raise SourceError(f"Firecrawl auth/credit error: HTTP {resp.status_code}")
-    if resp.status_code >= 400:
-        raise SourceError(f"Firecrawl: HTTP {resp.status_code}")
-    body = resp.json()
-    if not body.get("success"):
-        raise SourceError(f"Firecrawl: {body.get('error', 'unknown error')}")
-    return body.get("data") or {}
+    """Fetch one blocked page. No paid provider, no API key.
+
+    Was a direct call to Firecrawl's API. Firecrawl expired and every source
+    behind this adapter went dark in the same hour — Alshaya, GulfTalent, Bayt
+    and Indeed, all four at once, because they all imported one paid provider
+    directly.
+
+    Now a thin adapter over crawler.py, which tries Jina Reader, then Crawl4AI
+    if it is installed, then a direct fetch. The name and return shape are
+    unchanged so SOURCES entries and their tests did not have to move.
+    """
+    import crawler
+    page = crawler.fetch(url, timeout=60)
+    if not page.ok:
+        raise SourceError(f"crawler: {page.error or 'no usable content'}")
+    return {"markdown": page.markdown, "rawHtml": page.html,
+            "links": page.links, "metadata": page.metadata,
+            "provider": page.provider}
 
 
 def fetch_firecrawl_html(src: dict) -> list[dict]:
-    """Sources that block plain requests. Requires FIRECRAWL_API_KEY."""
-    if not firecrawl_key():
-        raise SourceError("FIRECRAWL_API_KEY not set")
+    """Sources that block plain requests. No API key required any more."""
     ep = src["endpoint"]
     listing = firecrawl_scrape(ep["url"], formats=("markdown", "links", "rawHtml"))
     blob = " ".join(filter(None, [
@@ -2467,9 +2471,12 @@ def build(write: bool = False, path: str = OUT_PATH) -> dict:
     log.info("resolving career endpoints…")
     sources = resolve_sources(SOURCES)
 
-    if not firecrawl_key():
-        log.info("FIRECRAWL_API_KEY not set — Firecrawl-backed sources will "
-                 "report status 'error' and be skipped")
+    try:
+        import crawler
+        log.info("crawler providers: %s", crawler.health_check(
+            "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/"))
+    except Exception as e:                            # noqa: BLE001
+        log.warning("crawler health check failed: %s", e)
 
     log.info("scraping %d sources…", len(sources))
     fresh, statuses = scrape_all(sources, now_iso)

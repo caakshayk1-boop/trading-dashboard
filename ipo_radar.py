@@ -62,6 +62,7 @@ import json
 import logging
 import os
 import re
+from urllib.parse import quote_plus, unquote
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -253,7 +254,7 @@ def verdict(row, sc):
 # NSE's feeds are authoritative for band, size, dates and subscription, and they
 # carry none of: lot size, minimum application, the fresh/OFS split, face value,
 # anchor book, or GMP. Those live on Chittorgarh, which sits behind a Cloudflare
-# challenge that plain HTTP cannot pass — Firecrawl can.
+# challenge that plain HTTP cannot pass. crawler.py gets through it.
 #
 # Rules this pass follows:
 #   * Only OPEN and UPCOMING issues are enriched. Enriching 1,400 closed issues
@@ -304,96 +305,131 @@ FINANCIAL_FIELDS = {
 }
 
 
-FIRECRAWL_SEARCH = "https://api.firecrawl.dev/v2/search"
+# ── Enrichment, without any paid provider ────────────────────────────────────
+# Firecrawl expired mid-build and every enriched field vanished with it. The
+# replacement uses crawler.py, which has no API key anywhere in it:
+#
+#   discovery  DuckDuckGo HTML through Jina Reader → the exact Chittorgarh URL
+#   detail     that Chittorgarh page → lot size, bands, fresh/OFS, anchor, dates
+#   gmp        investorgain.com's live GMP table → the grey-market quote
+#
+# Discovery is a SEARCH, never a constructed URL. /ipo/<slug>/<id>/ resolves on
+# the id alone and ignores the slug, so a guessed id returns a different
+# company's IPO with a 200 and nothing to flag it — verified: id 2000 with the
+# augmont slug returned A-One Steels.
+#
+# Extraction is regex over stated phrasing, not an LLM. It costs nothing, cannot
+# rate-limit, and when it fails it returns None instead of a confident wrong
+# number — which is the only acceptable failure mode on this page.
+DDG = "https://duckduckgo.com/html/?q="
+GMP_PAGE = "https://www.investorgain.com/report/live-ipo-gmp/331/ipo/"
+
+CG_PATTERNS = {
+    "lot_size":       r"lot size (?:for an application )?is\s*([\d,]+)",
+    "min_investment": r"minimum amount required for application is\s*(?:₹|Rs\.?)?\s*([\d,]+)",
+    "issue_size_cr":  r"book build[^₹]{0,80}₹\s*([\d,.]+)\s*crore",
+    "fresh_issue_cr": r"fresh issue[^₹]{0,140}?aggregating to\s*₹\s*([\d,.]+)\s*crore",
+    "ofs_cr":         r"offer for sale[^₹]{0,140}?aggregating to\s*₹\s*([\d,.]+)\s*crore",
+    "anchor_cr":      r"raises\s*₹\s*([\d,.]+)\s*crore[^.]{0,40}anchor",
+    "face_value":     r"face value[^₹]{0,40}₹\s*([\d,.]+)",
+    "listing_date":   r"[Ll]isting [Dd]ate[^)]{0,80}?(?:fixed as|is)\s*(\w{3}\s+\d{1,2},\s*\d{4})",
+}
+_NUMERIC = {"lot_size", "min_investment", "issue_size_cr", "fresh_issue_cr",
+            "ofs_cr", "anchor_cr", "face_value"}
 
 
-def _fc_search(key, company, fields, extra=""):
-    """One Firecrawl search + structured extract. REST, not the SDK.
+def _num(s):
+    try:
+        return float(str(s).replace(",", "").strip(" .")) if s is not None else None
+    except (TypeError, ValueError):
+        return None
 
-    The SDK would be a new dependency for one HTTP call, and requests is
-    already here. Chittorgarh sits behind a Cloudflare challenge, which is the
-    whole reason this cannot be a plain GET.
 
-    The URL id matters and the slug does not: /ipo/<slug>/<id>/ resolves on the
-    id alone, so guessing a URL returns a DIFFERENT company's IPO with a 200 and
-    no indication anything is wrong. Search, never construct.
+def _find_page(company: str) -> str | None:
+    """The company's Chittorgarh URL, by search."""
+    import crawler
+    q = quote_plus(f"{company} IPO site:chittorgarh.com")
+    p = crawler.fetch(DDG + q, timeout=50)
+    if not p.ok:
+        return None
+    # DuckDuckGo wraps every result in /l/?uddg=<percent-encoded target>, so the
+    # real URL is not present as plain text and a naive regex finds nothing on a
+    # page that plainly contains the answer. Unquote first, then match.
+    text = unquote(p.content)
+    hits = re.findall(r"(https?://www\.chittorgarh\.com/ipo/[a-z0-9\-]+/\d+/?)", text)
+    return (hits[0].rstrip("/") + "/") if hits else None
+
+
+def _gmp_table() -> dict:
+    """Live grey-market quotes, keyed by a normalised company name. One fetch."""
+    import crawler
+    out = {}
+    p = crawler.fetch(GMP_PAGE, timeout=50)
+    if not p.ok:
+        return out
+    # "Augmont Enterprises](...)IPO O | ₹**310** (39.34%)"
+    for m in re.finditer(r"([A-Z][A-Za-z0-9&.,()\- ]{3,60})\]\([^)]*\)IPO\s*\w?\s*\|\s*"
+                         r"₹\*\*([\d,]+)\*\*\s*\(([\d.]+)%\)", p.content):
+        key = re.sub(r"[^a-z]", "", m.group(1).lower())
+        out[key] = f"₹{m.group(2)} ({m.group(3)}%)"
+    return out
+
+
+def enrich(rows, key=None, previous=None):
+    """Fill the fields NSE does not publish. Fails soft, never blanks.
+
+    `key` is accepted and ignored. It was the paid provider's API key; the
+    signature is kept so a caller passing one still works during migration.
     """
-    import requests
-    strings = {"listing_date", "gmp_text", "fy_label", "strengths", "risks",
-               "use_of_proceeds"}
-    body = {
-        "query": f"{company} IPO {extra}".strip(),
-        "limit": 2,
-        "includeDomains": ["chittorgarh.com"],
-        "scrapeOptions": {
-            "formats": [{
-                "type": "json",
-                "prompt": ("Extract these IPO facts for THIS company only. Return "
-                           "null for any field not stated on the page. Never estimate, "
-                           "never infer a figure from another figure."),
-                "schema": {"type": "object", "properties": {
-                    k: {"type": "string" if k in strings else "number"}
-                    for k in fields}},
-            }],
-        },
-    }
-    r = requests.post(FIRECRAWL_SEARCH, json=body, timeout=90,
-                      headers={"Authorization": f"Bearer {key}",
-                               "Content-Type": "application/json"})
-    r.raise_for_status()
-    d = r.json()
-    return ((d.get("data") or {}).get("web")) or []
-
-
-def enrich(rows, key, previous=None):
-    """Fill the fields NSE does not publish. Fails soft, never blanks."""
     prev = {r.get("symbol"): r for r in (previous or [])}
-    # Every enriched key EXISTS on every row, set to None when unknown.
-    #
-    # A missing key is Undefined in Jinja, not None — so `x is not none` passes
-    # for an absent field and the format filter then raises on it, aborting the
-    # whole template. One issue without a debt/equity figure took the entire
-    # page down after every dataset had been fetched. Present-and-None is
-    # testable; absent is a trap.
     for r in rows:
         for f in list(CHITTORGARH_FIELDS) + list(FINANCIAL_FIELDS):
             r.setdefault(f, None)
+
+    gmp = {}
+    try:
+        gmp = _gmp_table()
+    except Exception as e:                            # noqa: BLE001
+        log.warning(f"gmp table unavailable: {e}")
+
     for r in rows:
         was = prev.get(r["symbol"]) or {}
-        # Carry the last good values forward FIRST, so a failed fetch below
-        # leaves the row no worse than it was.
+        # Carry last good values forward FIRST, so a failure below leaves the
+        # row no worse than it was.
         for f in list(CHITTORGARH_FIELDS) + list(FINANCIAL_FIELDS):
-            if was.get(f) is not None:
-                r.setdefault(f, was[f])
-        r.setdefault("enriched_source", was.get("enriched_source"))
-        if not key:
-            continue
-        # Two passes against the same domain: issue mechanics, then the
-        # company's own numbers. Separate calls rather than one fat schema —
-        # a model asked for fourteen fields at once returns more nulls than one
-        # asked for eight, and a failure on the financials must not cost the lot
-        # size a reader can otherwise still use.
-        for fields, hint in ((CHITTORGARH_FIELDS, "lot size GMP price band"),
-                             (FINANCIAL_FIELDS, "review revenue PAT margin ROE "
-                                                "P/E peer comparison strengths risks")):
-            try:
-                for item in _fc_search(key, r["company"], fields, hint):
-                    j = item.get("json") or {}
-                    got = False
-                    for f in fields:
-                        v = j.get(f)
-                        if v not in (None, "", 0):
-                            r[f] = v
-                            got = True
-                    if got:
-                        r["enriched_source"] = "chittorgarh.com"
-                        break
-            except Exception as e:               # noqa: BLE001
-                log.warning(f"enrich {r['symbol']} ({hint[:12]}): {e} — keeping previous")
+            if r.get(f) is None and was.get(f) is not None:
+                r[f] = was[f]
+        if r.get("enriched_source") is None:
+            r["enriched_source"] = was.get("enriched_source")
 
-    # Min investment is derivable once lot size is known, and deriving it from
-    # the CAP price is the honest direction: it is the most a retail applicant
-    # can be asked for.
+        name = r.get("company") or r.get("symbol") or ""
+        nkey = re.sub(r"[^a-z]", "", name.lower())
+        for k, v in gmp.items():
+            if k and (k in nkey or nkey.startswith(k[:14])):
+                r["gmp_text"] = v
+                break
+
+        try:
+            url = _find_page(name)
+            if not url:
+                log.warning(f"enrich {r['symbol']}: no Chittorgarh page found")
+                continue
+            import crawler
+            got = crawler.extract(url, CG_PATTERNS, timeout=50)
+            if not got.get("_ok"):
+                log.warning(f"enrich {r['symbol']}: {got['_page'].error}")
+                continue
+            for f, raw in got.items():
+                if f.startswith("_") or raw is None:
+                    continue
+                r[f] = _num(raw) if f in _NUMERIC else raw
+            r["enriched_source"] = "chittorgarh.com"
+            r["enriched_url"] = url
+        except Exception as e:                        # noqa: BLE001
+            log.warning(f"enrich {r['symbol']}: {type(e).__name__} {e} — keeping previous")
+
+    # Min investment is derivable once lot size is known; deriving it from the
+    # CAP is the honest direction — the most a retail applicant can be asked for.
     for r in rows:
         if r.get("min_investment") is None and r.get("lot_size") and r.get("price_high"):
             r["min_investment"] = round(r["lot_size"] * r["price_high"])
@@ -474,7 +510,7 @@ def build(listing_perf=None):
                             + (pj.get("awaiting_listing") or []))
             except Exception:                     # noqa: BLE001
                 pass
-        enrich(live, os.environ.get("FIRECRAWL_API_KEY"), previous)
+        enrich(live, previous=previous)
         # Re-score: lot size and the fresh/OFS split change nothing in the score
         # (they are facts, not judgements), but min investment and GMP are now
         # available to the verdict's context lines.
@@ -530,9 +566,8 @@ def build(listing_perf=None):
     if awaiting:
         for r in awaiting:
             r["company"] = r.get("company") or r["symbol"]
-        enrich(awaiting, os.environ.get("FIRECRAWL_API_KEY"),
-               (json.loads(OUT.read_text()).get("awaiting_listing")
-                if OUT.exists() else []) or [])
+        enrich(awaiting, previous=(json.loads(OUT.read_text()).get("awaiting_listing")
+                                   if OUT.exists() else []) or [])
     listed.sort(key=lambda x: x["listing_date"] or "", reverse=True)
 
     # Attach measured post-listing performance. ipo_tracker.py already computes

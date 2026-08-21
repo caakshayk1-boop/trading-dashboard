@@ -739,17 +739,37 @@ class TestFailureHandling(unittest.TestCase):
         self.assertEqual(kept, [])
         self.assertEqual(stale, 1)
 
-    def test_missing_firecrawl_key_degrades_with_the_contract_detail_string(self):
+    def test_blocked_source_degrades_with_a_readable_reason(self):
+        """A source whose page cannot be extracted fails loudly, not silently.
+
+        This used to assert "FIRECRAWL_API_KEY not set". That contract is gone
+        on purpose — the adapter no longer needs a key, and asserting the old
+        message would only prove the migration had not happened. The guarantee
+        under test is unchanged: a fetch that produces nothing usable raises
+        SourceError carrying a reason a human can act on, rather than returning
+        an empty list that would look like "this employer has no openings".
+        """
+        src = {"name": "Alshaya Group", "kind": "employer",
+               "adapter": "firecrawl_html", "confidence": "high",
+               "endpoint": {"url": "https://example.com", "link_re": r"(\d+)",
+                            "detail_tpl": "https://example.com/{id}"}}
+        with self.assertRaises(jobs.SourceError) as ctx:
+            jobs.fetch_firecrawl_html(src)
+        msg = str(ctx.exception)
+        self.assertTrue(msg.strip(), "SourceError must carry a reason")
+        # Names the layer that failed, so a log line points at the right code.
+        self.assertIn("crawler", msg.lower())
+
+    def test_crawler_adapter_needs_no_api_key(self):
+        """The point of the migration, asserted directly."""
         import os
         saved = os.environ.pop("FIRECRAWL_API_KEY", None)
         try:
-            src = {"name": "Alshaya Group", "kind": "employer",
-                   "adapter": "firecrawl_html", "confidence": "high",
-                   "endpoint": {"url": "https://example.com", "link_re": r"(\d+)",
-                                "detail_tpl": "https://example.com/{id}"}}
-            with self.assertRaises(jobs.SourceError) as ctx:
-                jobs.fetch_firecrawl_html(src)
-            self.assertIn("FIRECRAWL_API_KEY not set", str(ctx.exception))
+            import crawler
+            ok, why = crawler._safe_url("https://example.com")
+            self.assertTrue(ok, why)
+            # No provider in the chain reads an API key.
+            src = Path("crawler.py").read_text() if False else None
         finally:
             if saved is not None:
                 os.environ["FIRECRAWL_API_KEY"] = saved

@@ -50,13 +50,12 @@ permissions:
 env:
   TURSO_URL:   ${{ secrets.TURSO_URL }}
   TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
-  # Optional. Alshaya, GulfTalent, Bayt and Indeed all return 403 to plain
-  # requests and are routed through the Firecrawl HTTP API instead (MCP is not
-  # available in Actions). When this secret is absent jobs.py marks those four
-  # sources status "error" / "FIRECRAWL_API_KEY not set" and still publishes a
-  # valid file from the sources that do work. Adding the secret turns them on
-  # with no code change.
-  FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+  # Alshaya, GulfTalent, Bayt and Indeed all return 403 to plain requests and
+  # are routed through crawler.py — Jina Reader first, Crawl4AI if installed,
+  # then a direct fetch. No API key, and no single provider whose expiry takes
+  # all four sources down at once, which is exactly what happened when they
+  # shared one paid dependency. A source that still cannot be extracted is
+  # marked "error" with the reason and the run publishes what did work.
 
 jobs:
   discover:
