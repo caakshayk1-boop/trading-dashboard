@@ -821,6 +821,13 @@ var TV_ALIASES = (function () {
   // ResizeObserver fires on content growth, which is the case `resize` misses.
   // The font load is a separate trigger: web fonts change the nav's line box
   // after layout, and on a cold cache that lands after this runs.
+  // Published so the code that CAUSES the stack to grow can re-measure it
+  // directly. That is the deterministic path; everything below is backup.
+  // ResizeObserver delivery is tied to the rendering lifecycle, so it does not
+  // fire at all while the document is hidden — a page restored from a
+  // background tab would otherwise keep the stale first measurement.
+  window.__syncHeadH = syncScrollPad;
+
   // window.ResizeObserver, not the bare global: eslint's browser env here does
   // not declare it, and `no-undef` fails the build before anything deploys.
   var _RO = window.ResizeObserver;
@@ -828,6 +835,13 @@ var TV_ALIASES = (function () {
     var _stack = document.querySelector('.headstack');
     if (_stack) new _RO(syncScrollPad).observe(_stack);
   }
+  // Unconditional catch-up passes. Cheap (one getBoundingClientRect each) and
+  // they do not depend on the rendering lifecycle, so they cover the hidden-tab
+  // case and any late paint neither RO nor fonts.ready reports.
+  [250, 1200, 3000].forEach(function(ms){ setTimeout(syncScrollPad, ms); });
+  document.addEventListener('visibilitychange', function(){
+    if (!document.hidden) syncScrollPad();
+  });
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(syncScrollPad).catch(function(){});
   }
@@ -3900,6 +3914,11 @@ var TV_ALIASES = (function () {
         window.__ledgerPx = j.ledger;
         if (window.__onLedgerPx) window.__onLedgerPx();
       }
+      // Painting the rail is what makes .headstack taller, so re-measure here
+      // rather than waiting for an observer to notice. This is the direct
+      // cause of the stale --headh that put every sticky table header 58-287px
+      // too high, floating over the rows it was meant to label.
+      if (window.__syncHeadH) window.__syncHeadH();
     }
 
     function loadTicker(){
