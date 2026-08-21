@@ -2678,7 +2678,6 @@ def _build_picks() -> list[dict]:
 
     Runs weekly — same week's picks stay consistent for journal tracking.
     """
-    from config import MIN_RR
     scored = []
     for sym in WATCHLIST:
         s = score_stock(sym)
@@ -3398,6 +3397,29 @@ def _warm_picks_cache():
     except Exception as e:                                   # noqa: BLE001
         log.warning(f"picks: ledger mirror failed: {e}")
 
+# The reward/risk floor every engine enforces. Read from config when config is
+# importable, with an explicit fallback that must stay equal to it.
+#
+# `from config import MIN_RR` inside a function looked harmless and was not:
+# config.py calls _require("TELEGRAM_TOKEN") at module scope, so importing it
+# for one float raises whenever the Telegram secrets are absent — which is
+# exactly the case in the newspaper workflow. That exception was thrown inside
+# _warm_picks_cache's worker THREAD, where it printed a traceback and killed
+# only that thread. The build carried on, the picks cache stayed empty,
+# get_top5_picks() returned nothing, and generate.py fell through to
+# last_known_picks() — the previous week's list, unfiltered. MRK shipped as the
+# week's top idea at 0.65 R:R underneath a paragraph promising a 2:1 minimum.
+#
+# A threshold is not a credential and must not be reachable only through one.
+try:
+    from config import MIN_RR as _MIN_RR
+    MIN_RR = float(_MIN_RR)
+except Exception:                                     # noqa: BLE001
+    MIN_RR = 2.0
+    log.warning("config.MIN_RR unreadable (config requires secrets) — "
+                "using the built-in floor of %.1f", MIN_RR)
+
+
 def _rr_floor(picks: list[dict]) -> list[dict]:
     """Drop ideas that do not clear config.MIN_RR, at READ time.
 
@@ -3416,7 +3438,6 @@ def _rr_floor(picks: list[dict]) -> list[dict]:
     a stated RISK, and one without the ratio cannot be checked against the
     floor. Unmeasurable is not the same as acceptable.
     """
-    from config import MIN_RR
     out = []
     for p in picks or []:
         try:
@@ -3505,7 +3526,10 @@ def last_known_picks() -> tuple[list[dict], str | None]:
     if not row:
         return [], None
     try:
-        return json.loads(row[1]), row[0]
+        # The floor applies here as well. This is the path that actually
+        # published MRK: a fallback that skips the standard is not a fallback,
+        # it is a hole in it.
+        return _rr_floor(json.loads(row[1])), row[0]
     except (ValueError, TypeError):
         return [], None
 
