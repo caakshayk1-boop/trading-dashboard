@@ -868,7 +868,21 @@ var TV_ALIASES = (function () {
     // fractional getBoundingClientRect values and browser scroll quantisation
     // that Math.round alone does not.
     var SPY_SLACK = 3;
-    var y = window.scrollY + Math.round(headH()) + 12 + SPY_SLACK;
+    // Read --headh, NOT headH(). scroll-margin-top on the sections is
+    // `calc(var(--headh) + 12px)`, so the anchor lands against the VARIABLE
+    // while this used to compare against a fresh live measurement. The two
+    // agree only for as long as nothing has resized the stack since the
+    // variable was last written — and the stack changes height whenever the
+    // ticker rewraps at a different width. When they diverge by even a pixel
+    // in the wrong direction the clicked section fails its own test and the
+    // highlight stays on the one above it: click Paper Wallet, land on Paper
+    // Wallet, and the nav says Portfolio.
+    //
+    // One source for both, so they cannot disagree by construction.
+    var hv = parseInt(window.getComputedStyle(document.documentElement)
+                        .getPropertyValue('--headh'), 10);
+    if (!hv) hv = Math.round(headH());
+    var y = window.scrollY + hv + 12 + SPY_SLACK;
     secs.forEach(function(s, i){
       // Sections stay display:none until the live API confirms there is
       // anything to put in them. A hidden section reports top 0, which
@@ -889,6 +903,18 @@ var TV_ALIASES = (function () {
   }
   window.addEventListener('scroll', setActive, {passive:true});
   setActive();
+
+  // Mark the clicked link immediately, before the smooth scroll starts.
+  // Geometry decides which section is CURRENT while reading; an explicit click
+  // is not a question about geometry — the reader already said where they
+  // want to be, and the nav should agree with them from the first frame rather
+  // than after the animation settles. setActive() takes over on the next
+  // scroll event either way, so this cannot leave the nav wrong.
+  links.forEach(function(a, i){
+    a.addEventListener('click', function(){
+      links.forEach(function(x, j){ x.classList.toggle('on', j === i); });
+    });
+  });
 
   /* ── alert filters ──
      Scoped to `.fbtn[data-f]`, and the clear is scoped to the same group.

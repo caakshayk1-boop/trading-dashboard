@@ -3398,6 +3398,36 @@ def _warm_picks_cache():
     except Exception as e:                                   # noqa: BLE001
         log.warning(f"picks: ledger mirror failed: {e}")
 
+def _rr_floor(picks: list[dict]) -> list[dict]:
+    """Drop ideas that do not clear config.MIN_RR, at READ time.
+
+    _build_picks() already applies this floor, but the picks are a weekly
+    SNAPSHOT stored in newspaper_stocks_picked and read back all week. Any row
+    written before the floor existed sails straight past it — which is how MRK
+    stayed on the front page as the week's top idea at an R:R of 0.65 against a
+    2.0 minimum, alongside COFORGE at 1.3 and PAYTM at 1.51.
+
+    A rule that only runs at write time is not a rule, it is a rule about
+    Mondays. Enforcing on read means a cached snapshot cannot outlive the
+    standard it was built under, and a threshold change takes effect on the
+    next page build rather than the next ISO week.
+
+    An idea with no rr at all is dropped too: this page publishes a REWARD for
+    a stated RISK, and one without the ratio cannot be checked against the
+    floor. Unmeasurable is not the same as acceptable.
+    """
+    from config import MIN_RR
+    out = []
+    for p in picks or []:
+        try:
+            rr = float(p.get("rr"))
+        except (TypeError, ValueError):
+            continue
+        if rr >= MIN_RR:
+            out.append(p)
+    return out
+
+
 def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
     """This week's five ideas.
 
@@ -3413,14 +3443,14 @@ def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
     with _db() as con:
         row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (week,)).fetchone()
         if row:
-            picks = json.loads(row[0])
+            picks = _rr_floor(json.loads(row[0]))
             with _picks_lock: _picks_cache[week] = picks
             return picks
 
     if build_if_missing:
         _warm_picks_cache()
         with _picks_lock:
-            return _picks_cache.get(week, [])
+            return _rr_floor(_picks_cache.get(week, []))
 
     return []
 
@@ -7838,6 +7868,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="kpi"><div class="v">{{ iporadar.counts.upcoming }}</div><div class="k">Opening soon</div></div>
     <div class="kpi"><div class="v {{ 'up' if iporadar.counts.apply else '' }}">{{ iporadar.counts.apply }}</div><div class="k">Apply / Apply-small</div></div>
     <div class="kpi"><div class="v {{ 'dn' if iporadar.counts.avoid else '' }}">{{ iporadar.counts.avoid }}</div><div class="k">Avoid</div></div>
+    <div class="kpi"><div class="v">{{ iporadar.counts.awaiting }}</div><div class="k">Awaiting listing</div></div>
+    <div class="kpi"><div class="v">{{ iporadar.counts.listed_12m }}</div><div class="k">Listed · 12 months</div></div>
   </div>
 
   {% for grp, label, eyebrow, blurb in [
@@ -7914,6 +7946,67 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
   {% endif %}
   {% endfor %}
+
+  {# Subscription CLOSED, no listing date yet. These are live decisions —
+     allotment, refunds and a listing date are all still ahead — so they sit
+     beside open and upcoming rather than in history. A book that closed more
+     than three weeks ago with no listing date is NOT pending; it is stalled or
+     withdrawn, and is separated below rather than presented as forthcoming. #}
+  {% if iporadar.awaiting_listing %}
+  <div class="subhead">
+    <span class="subeyebrow">Bid closed</span>
+    <h3>Awaiting listing</h3>
+    <p class="subdesc">Subscription has closed and no listing date is published yet. Nothing
+      here can still be applied for &mdash; what is outstanding is allotment, refunds and the
+      listing itself. Normal mainboard timetables run about three days.</p>
+  </div>
+  <div class="tw rv">
+    <table class="t"><thead><tr>
+      <th scope="col">Symbol</th><th scope="col">Company</th>
+      <th scope="col">Price band</th><th scope="col">Bid closed</th><th scope="col">Days since</th>
+    </tr></thead><tbody>
+      {% for r in iporadar.awaiting_listing %}
+      <tr><td><strong class="sym">{{ r.symbol }}</strong></td>
+        <td>{{ r.company }}</td><td class="num">{{ r.price_band or '—' }}</td>
+        <td class="num">{{ r.close_date }}</td>
+        <td class="num">{{ r.days_since_close }}d</td></tr>
+      {% endfor %}
+    </tbody></table>
+  </div>
+  {% endif %}
+
+  {% if iporadar.stalled %}
+  <p class="subdesc" style="margin-top:12px">
+    <b>{{ iporadar.stalled|length }}</b> issue{{ 's' if iporadar.stalled|length != 1 }} closed more than
+    three weeks ago with no listing date on record &mdash;
+    {% for r in iporadar.stalled %}{{ r.symbol }}{{ ', ' if not loop.last }}{% endfor %}.
+    Listed here as unresolved rather than as forthcoming, because presenting a stalled book as
+    pending would be a claim this section cannot support.
+  </p>
+  {% endif %}
+
+  {% if iporadar.recent_listed %}
+  <div class="subhead">
+    <span class="subeyebrow">The record</span>
+    <h3>Listed in the last {{ iporadar.recent_window_months }} months</h3>
+    <p class="subdesc">Every mainboard issue that closed and listed inside the window &mdash;
+      {{ iporadar.recent_listed|length }} of them, newest first. This is the population any
+      verdict above is eventually judged against, which is why it is the full list rather than
+      a selected handful.</p>
+  </div>
+  <div class="tw rv">
+    <table class="t"><thead><tr>
+      <th scope="col">Symbol</th><th scope="col">Company</th>
+      <th scope="col">Price band</th><th scope="col">Bid closed</th><th scope="col">Listed</th>
+    </tr></thead><tbody>
+      {% for r in iporadar.recent_listed %}
+      <tr><td><strong class="sym">{{ r.symbol }}</strong></td>
+        <td>{{ r.company }}</td><td class="num">{{ r.price_band or '—' }}</td>
+        <td class="num">{{ r.close_date }}</td><td class="num">{{ r.listing_date }}</td></tr>
+      {% endfor %}
+    </tbody></table>
+  </div>
+  {% endif %}
 
   <p class="fine" style="margin-top:20px;max-width:80ch">
     Not investment advice, and not a view on any business. A verdict here is a reading of

@@ -61,7 +61,7 @@ import argparse
 import json
 import logging
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 log = logging.getLogger(__name__)
@@ -428,16 +428,41 @@ def build():
     order = {"open": 0, "upcoming": 1, "closed": 2}
     rows.sort(key=lambda x: (order.get(x["phase"], 3), x["close_date"] or ""))
 
-    recent = []
-    for r in past[:60]:
+    # The past feed is newest-first and carries 14 years of history. Two
+    # different things live in it and the old code conflated them by taking a
+    # flat first-60 slice, which is why the section showed a short, arbitrary
+    # and largely stale list.
+    #
+    #   awaiting listing — subscription CLOSED, listingDate still "-". These are
+    #     live decisions: allotment, refunds and a listing date are all still
+    #     ahead. They belong beside open and upcoming, not buried in history.
+    #   recently listed — closed AND listed, inside twelve months, which is what
+    #     was actually asked for.
+    cutoff = today - timedelta(days=365)
+    awaiting, listed = [], []
+    for r in past:
         if (r.get("securityType") or "").upper() not in MAINBOARD_SERIES:
             continue
-        recent.append({"symbol": r.get("symbol"), "company": r.get("company"),
-                       "price_band": r.get("priceRange"),
-                       "close_date": (_date(r.get("ipoEndDate")) or "") and
-                                     _date(r.get("ipoEndDate")).isoformat(),
-                       "listing_date": (_date(r.get("listingDate")).isoformat()
-                                        if _date(r.get("listingDate")) else None)})
+        closed_on = _date(r.get("ipoEndDate"))
+        if not closed_on or closed_on < cutoff:
+            continue                                  # feed is sorted, but do not rely on it
+        listed_on = _date(r.get("listingDate"))
+        row = {"symbol": r.get("symbol"), "company": r.get("company"),
+               "price_band": r.get("priceRange"),
+               "close_date": closed_on.isoformat(),
+               "listing_date": listed_on.isoformat() if listed_on else None,
+               "days_since_close": (today - closed_on).days}
+        (listed if listed_on else awaiting).append(row)
+
+    # A book that closed months ago with no listing date is not "awaiting
+    # listing", it is a withdrawn or stalled issue — and presenting it as
+    # pending would be the fabrication this file exists to avoid. Three weeks
+    # is longer than any normal T+3 mainboard timetable.
+    stalled = [r for r in awaiting if r["days_since_close"] > 21]
+    awaiting = [r for r in awaiting if r["days_since_close"] <= 21]
+    awaiting.sort(key=lambda x: x["close_date"], reverse=True)
+    listed.sort(key=lambda x: x["listing_date"] or "", reverse=True)
+    recent = listed
 
     return {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -446,9 +471,14 @@ def build():
         "open": [r for r in rows if r["phase"] == "open"],
         "upcoming": [r for r in rows if r["phase"] == "upcoming"],
         "closed": [r for r in rows if r["phase"] == "closed"],
-        "recent_closed": recent[:12],
+        "awaiting_listing": awaiting,
+        "stalled": stalled,
+        "recent_listed": recent,
+        "recent_window_months": 12,
         "counts": {"open": sum(1 for r in rows if r["phase"] == "open"),
                    "upcoming": sum(1 for r in rows if r["phase"] == "upcoming"),
+                   "awaiting": len(awaiting),
+                   "listed_12m": len(recent),
                    "apply": sum(1 for r in rows if r["verdict"].startswith("APPLY")),
                    "avoid": sum(1 for r in rows if r["verdict"] == "AVOID")},
     }
