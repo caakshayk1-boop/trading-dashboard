@@ -3458,22 +3458,34 @@ def get_top5_picks(build_if_missing: bool = False) -> list[dict]:
     new ISO week the DB had no row for that week and the section rendered its
     "check back Monday" empty state — every Monday, all day. See generate.py.
     """
+    # ONE exit, so the floor cannot be bypassed by whichever path happens to be
+    # taken. It was applied on the DB read and on the build_if_missing branch
+    # but NOT on the in-memory early return — and a startup thread warms
+    # _picks_cache before generate.py ever calls this, so the unfiltered branch
+    # was the one that always ran. Three returns, two of them filtered, and the
+    # third was the live one. Collect, then filter, then return.
     week = _week_key()
-    with _picks_lock:
-        if week in _picks_cache: return _picks_cache[week]
-    with _db() as con:
-        row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?", (week,)).fetchone()
-        if row:
-            picks = _rr_floor(json.loads(row[0]))
-            with _picks_lock: _picks_cache[week] = picks
-            return picks
+    picks = None
 
-    if build_if_missing:
+    with _picks_lock:
+        if week in _picks_cache:
+            picks = _picks_cache[week]
+
+    if picks is None:
+        with _db() as con:
+            row = con.execute("SELECT picks FROM newspaper_stocks_picked WHERE pick_date=?",
+                              (week,)).fetchone()
+        if row:
+            picks = json.loads(row[0])
+            with _picks_lock:
+                _picks_cache[week] = picks
+
+    if picks is None and build_if_missing:
         _warm_picks_cache()
         with _picks_lock:
-            return _rr_floor(_picks_cache.get(week, []))
+            picks = _picks_cache.get(week, [])
 
-    return []
+    return _rr_floor(picks or [])
 
 
 def picks_outcomes(week: str) -> dict:
