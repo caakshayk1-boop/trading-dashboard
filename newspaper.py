@@ -6102,6 +6102,9 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ev-bleeding{color:var(--down);background:rgba(255,92,92,.1)}
 .ev-unproven{color:var(--gold);background:rgba(230,180,80,.1)}
 .ev-flat{color:var(--dim);background:var(--bg2)}
+.hc-why{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 12px;max-width:74ch}
+.hc-why b{color:var(--text);font-weight:600}
+.hc-why-d{display:block;margin-top:5px;color:var(--dim);font-size:11.5px}
 .ev-supp{font-family:var(--mono);font-size:8px;letter-spacing:.6px;text-transform:uppercase;
   color:var(--down);border:1px solid rgba(255,92,92,.35);border-radius:3px;padding:1px 4px;
   margin-left:5px;cursor:help;white-space:nowrap}
@@ -6786,8 +6789,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
 <div class="editionbar" id="editionbar" data-build="{{ build_id }}">
+  {# Say precisely WHAT is stale. "its markets, ideas and ledger are stale" was
+     wrong on two of the three: the ticker, the heat map and the signal ledger
+     all refresh from /api on their own timers and are current in this tab right
+     now. A banner that overstates staleness while live numbers tick beside it
+     teaches the reader to distrust both the banner and the numbers — the
+     opposite of what it is for. #}
   <span><b>New edition published<span id="editionWhen"></span>.</b>
-    This tab is still showing {{ date_str }} — its markets, ideas and ledger are stale.</span>
+    This tab was built for {{ date_str }}. Live data &mdash; the ticker, heat map and
+    signal ledger &mdash; is still current; the written brief, trade ideas, screens and
+    IPO cards are yesterday&rsquo;s.</span>
   <button type="button" id="editionReload">Load the new edition</button>
 </div>
 <!-- ══════════ TICKER ══════════
@@ -7031,6 +7042,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <span class="hc-t">Cumulative R · every closed signal</span>
       <span class="hc-v" id="hcTotal">—</span>
     </div>
+    {# What the curve IS, on the curve. It was captioned "drawdowns included —
+       that is the point", which explains the shape to someone who already knows
+       what an R-multiple is and nothing at all to anyone else. A falling line
+       with no unit and no baseline is a chart of the reader's own confusion. #}
+    <p class="hc-why">Each closed signal adds its result to a running total, measured in
+      <b>R</b> &mdash; multiples of the money that signal put at risk. A trade that hit its
+      stop is &minus;1R whatever the rupee size; one that made twice its risk is +2R. Rising
+      means the signals collectively made more than they risked; falling means the opposite.
+      <span class="hc-why-d">The line is every closed signal in order, with nothing removed
+      &mdash; the dips are real losing streaks, and a record that has none has been
+      edited.</span></p>
     <svg viewBox="0 0 600 96" preserveAspectRatio="none" role="img"
          aria-labelledby="hcDesc">
       <title id="hcDesc">Cumulative R-multiple across every closed signal</title>
@@ -7143,7 +7165,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   {% if movers %}
   <div class="subhead">
     <span class="subeyebrow">Market state</span>
-    <h3>Movers inside each sector</h3>
+    <h3>Movers inside each sector<span id="moversAsOf" class="dh dh-STALE">1-WEEK SCREEN</span></h3>
     <p class="subdesc">The five best and five worst names in each sector over <strong>one week</strong> — not today. Drawn from the stock screen's own rows, so they carry the screen's build date, not the 6&nbsp;AM heat snapshot's. Use it to see whether a hot sector is broad or is one name carrying it.</p>
   </div>
   <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
@@ -7153,7 +7175,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     ({{ stock_screen.built_on }}){% endif %}, not the 6 AM snapshot's.
     The median tells you whether a sector moved or a couple of names carried it.
   </p>
-  <div class="fnd-grid rv">
+  {# The live version replaces this grid once /api/ticker answers. The weekly
+     screen stays as the server-rendered floor: with JS off, or on a static host
+     with no API, a one-week drill-down beats an empty box — and the badge says
+     1-WEEK SCREEN until the live path overwrites it. #}
+  <div class="fnd-grid rv" id="sectorMoversLive">
     {% for m in movers %}
     <details class="card fnd sec-movers">
       <summary>
@@ -10363,6 +10389,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
 <script type="application/json" id="tv-aliases" nonce="{{ nonce }}">{{ tv_aliases|tojson }}</script>
+{# symbol -> industry for the heat-map drill-down. A JSON block, not string
+   interpolation into app.js — app.js is a real file with a linter pointed at
+   it and must never become a template again. #}
+<script type="application/json" id="sector-map" nonce="{{ nonce }}">{{ (sector_map or {})|tojson }}</script>
 <script nonce="{{ nonce }}" src="/app.js?v={{ build_id }}" defer></script>
 </body>
 </html>

@@ -414,6 +414,15 @@ def generate() -> None:
         iporadar = None
         print(f"[generate] IPO Radar FAILED: {e}")
 
+    # symbol -> industry for the NIFTY names the ticker quotes.
+    sector_map = {}
+    try:
+        for _r in (stock_screen.get("rows") or []):
+            if _r.get("sym") and _r.get("ind"):
+                sector_map[_r["sym"]] = _r["ind"]
+    except Exception as e:
+        print(f"[generate] sector map unavailable: {e}")
+
     # Per-engine evidence. Reads the ledger already fetched for the alert log,
     # so it costs nothing and cannot disagree with the Signal Log above it.
     try:
@@ -674,6 +683,15 @@ def generate() -> None:
     base = dict(
         health=health,
         tv_aliases=TV_ALIASES,
+        # symbol -> industry, for the live heat-map drill-down. Built here
+        # because the mapping belongs to the stock screen; duplicating it into
+        # the serverless ticker route is how two copies drift apart.
+        #
+        # The whole screen is emitted, not just the NIFTY 50 the rail quotes.
+        # It is ~750 short strings and compresses to a few KB, and scoping it to
+        # today's constituents would silently break the drill-down the next time
+        # the index is reconstituted or another symbol set is added.
+        sector_map=sector_map,
         date_str=now.strftime("%A, %B %d %Y"),
         updated_at=now.strftime("%H:%M"),
         build_id=build_id,

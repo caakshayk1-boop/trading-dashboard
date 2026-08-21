@@ -4085,11 +4085,75 @@ var TV_ALIASES = (function () {
         window.__ledgerPx = j.ledger;
         if (window.__onLedgerPx) window.__onLedgerPx();
       }
+      // Live sector movers. The heat map names eleven sectors and, until now,
+      // could not name one stock inside any of them — the drill-down underneath
+      // was one-WEEK change from the weekly stock screen, which is a different
+      // question from "what moved today" and was labelled as such because it
+      // could not be anything else.
+      //
+      // /api/ticker now ships every NIFTY 50 constituent with its live move
+      // (quotes it already had to fetch), and the build ships a symbol→industry
+      // map (~50 entries) taken from the stock screen so the sector definitions
+      // cannot drift from the ones used elsewhere on the page. Joining the two
+      // in the browser costs no request at all.
+      if (j.constituents && j.constituents.length) paintSectorMovers(j.constituents);
+
       // Painting the rail is what makes .headstack taller, so re-measure here
       // rather than waiting for an observer to notice. This is the direct
       // cause of the stale --headh that put every sticky table header 58-287px
       // too high, floating over the rows it was meant to label.
       if (window.__syncHeadH) window.__syncHeadH();
+    }
+
+    /* ── live movers inside each sector ── */
+    var SECTOR_MAP = (function(){
+      var el = document.getElementById('sector-map');
+      try { return el ? JSON.parse(el.textContent) : {}; } catch(e){ return {}; }
+    })();
+
+    // Local number formatter: `fmt` lives in another IIFE and this file has
+    // no module system, so reaching for it across scopes is a ReferenceError
+    // the linter catches and the browser would not until the code ran.
+    function _pct(n){ return (Math.round(n * 100) / 100).toFixed(2); }
+
+    function paintSectorMovers(rows){
+      var host = document.getElementById('sectorMoversLive');
+      if (!host || !Object.keys(SECTOR_MAP).length) return;
+      var by = {};
+      rows.forEach(function(r){
+        var sec = SECTOR_MAP[r.symbol];
+        if (!sec || typeof r.change_pct !== 'number') return;
+        (by[sec] = by[sec] || []).push(r);
+      });
+      var names = Object.keys(by).filter(function(s){ return by[s].length >= 2; }).sort();
+      if (!names.length) return;
+
+      host.innerHTML = names.map(function(sec){
+        var list = by[sec].slice().sort(function(a, b){ return b.change_pct - a.change_pct; });
+        // Up-only and down-only, not top-and-bottom-five. On a strong day the
+        // bottom five are all green, and a column headed "worst" full of green
+        // numbers is worse than a short column. Same rule as the rail.
+        var up = list.filter(function(x){ return x.change_pct > 0; }).slice(0, 5);
+        var dn = list.filter(function(x){ return x.change_pct < 0; }).slice(-5).reverse();
+        var med = list[Math.floor(list.length / 2)].change_pct;
+        var row = function(x, cls){
+          return '<li><a href="#stocks" class="sym" data-stock="' + esc(x.symbol) + '">' +
+            esc(x.symbol) + '</a><span class="' + cls + '">' +
+            (x.change_pct > 0 ? '+' : '') + _pct(x.change_pct) + '%</span></li>';
+        };
+        return '<details class="card fnd sec-movers"><summary><strong>' + esc(sec) +
+          '</strong><span class="fnd-n">' + (med > 0 ? '+' : '') + _pct(med) +
+          '% median · ' + list.length + ' names</span></summary>' +
+          (up.length ? '<p class="fnd-r" style="margin-top:10px">Up today</p><ul class="mv-list">' +
+            up.map(function(x){ return row(x, 'up'); }).join('') + '</ul>' : '') +
+          (dn.length ? '<p class="fnd-r" style="margin-top:10px">Down today</p><ul class="mv-list">' +
+            dn.map(function(x){ return row(x, 'dn'); }).join('') + '</ul>' : '') +
+          '</details>';
+      }).join('');
+
+      var tag = document.getElementById('moversAsOf');
+      if (tag){ tag.textContent = 'LIVE · ' + names.length + ' SECTORS';
+                tag.className = 'dh dh-LIVE'; }
     }
 
     function loadTicker(){

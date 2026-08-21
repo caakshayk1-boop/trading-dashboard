@@ -201,6 +201,23 @@ export default async function handler(req, res) {
       total: headline.length,
       advancing: headline.filter((m) => m.up).length,
       segments,
+      // Every NIFTY 50 constituent with its live move, not just the ten that
+      // reach the rail. The heat map above the fold names eleven SECTORS and
+      // could not name a single stock inside one, because the only per-stock
+      // data on the page was the five gainers and five losers already shown.
+      //
+      // These quotes are ALREADY fetched for the movers segments — the rail
+      // needs the whole 50 to know which five are top and which five bottom —
+      // so shipping all of them costs one array in a response that was going
+      // out anyway. No extra request, no extra function (Hobby caps this
+      // project at 12 and it is at 12).
+      //
+      // Sector is deliberately NOT attached here: the mapping lives in the
+      // stock screen, which is a build-time artefact, and duplicating it into a
+      // serverless function is how the two drift apart.
+      constituents: nifty.map((s) => ({
+        symbol: s.name, price: s.price_raw, change_pct: s.change_pct, up: s.up,
+      })),
       // Keyed by bare ledger symbol, not the Yahoo one, because that is what
       // all_signals stores and what the table joins on. Symbols Yahoo could
       // not price — commodities and FX rows like BRNUSD, which are not
