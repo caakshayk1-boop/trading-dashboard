@@ -821,9 +821,12 @@ var TV_ALIASES = (function () {
   // ResizeObserver fires on content growth, which is the case `resize` misses.
   // The font load is a separate trigger: web fonts change the nav's line box
   // after layout, and on a cold cache that lands after this runs.
-  if (typeof ResizeObserver === 'function') {
+  // window.ResizeObserver, not the bare global: eslint's browser env here does
+  // not declare it, and `no-undef` fails the build before anything deploys.
+  var _RO = window.ResizeObserver;
+  if (typeof _RO === 'function') {
     var _stack = document.querySelector('.headstack');
-    if (_stack) new ResizeObserver(syncScrollPad).observe(_stack);
+    if (_stack) new _RO(syncScrollPad).observe(_stack);
   }
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(syncScrollPad).catch(function(){});
