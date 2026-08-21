@@ -568,6 +568,18 @@ def generate() -> None:
             },
             {
                 "@type": "WebSite",
+                # potentialAction declares the on-page ⌘K search to crawlers.
+                # Only claimed because the search genuinely exists and resolves
+                # a query string — declaring a SearchAction a site cannot honour
+                # is the schema equivalent of a broken link.
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": f"{site}/?q={{search_term_string}}",
+                    },
+                    "query-input": "required name=search_term_string",
+                },
                 "@id": f"{site}/#website",
                 "url": site,
                 "name": "The Daily Signal",

@@ -6144,6 +6144,24 @@ table.t tbody tr:last-child td{border-bottom:none}
   .ipo-missing,.ipo-args-src,.ipo-score-parts,.ipo-gmp-w,.wal-excluded{font-size:11.5px}
   .ipo-missing,.ipo-args-src{line-height:1.65}
 }
+/* India at a glance. Tabular numerals and a fixed decimal count so the column
+   of figures aligns on the decimal point — a board of market levels that jitters
+   as digits change width reads as unreliable whatever the numbers say. */
+.ib-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ib{background:var(--bg);padding:13px 15px;display:flex;flex-direction:column;gap:3px}
+.ib-k{font-family:var(--mono);font-size:9px;letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--dim);white-space:nowrap}
+.ib-v{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px;
+  color:var(--text)}
+.ib-c{font-family:var(--mono);font-size:11px;font-variant-numeric:tabular-nums}
+.ib-hero{grid-column:span 2}
+.ib-hero .ib-v{font-size:clamp(23px,3vw,31px)}
+/* VIX is not a price and must not be read as one: no currency, and a band label
+   instead of a change figure, because "11.20 -1.1%" invites the reader to treat
+   a fall in expected volatility as a loss. */
+.ib-vix .ib-v{color:var(--blue)}
+@media(max-width:520px){.ib-hero{grid-column:span 2}}
 .dboard{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 0 26px;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .db{display:flex;flex-direction:column;gap:3px;padding:15px 18px;text-decoration:none;
@@ -7269,6 +7287,26 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      bucket, so drilling into either tile would show the same names. A
      drill-down that lies about which sector you asked for is worse than a
      separate, honest control. <details> so it needs no JavaScript. #}
+  {# ══════════ INDIA AT A GLANCE ══════════
+     Every instrument here already scrolls past in the rail. A rail is the wrong
+     shape for "what is the Nifty at": it moves, it wraps, and finding one number
+     means waiting for it to come round. This is the same data standing still.
+
+     Filled by paintIndiaBoard() from /api/ticker — the response the rail is
+     already fetching, so no extra request. The server-rendered numbers below are
+     the 6 AM build and are replaced the moment the live path answers. #}
+  <div class="subhead">
+    <span class="subeyebrow">Market state</span>
+    <h3>India at a glance<span id="indiaAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></h3>
+    <p class="subdesc">The headline indices, the currency, the two commodities that move
+      Indian earnings most, and the volatility index &mdash; standing still, rather than
+      scrolling past. <b>VIX</b> is the market&rsquo;s own estimate of how much it expects to
+      move: under 13 is complacent, over 20 is fearful.</p>
+  </div>
+  <div class="ib-grid rv" id="indiaBoard">
+    <div class="empty">Loading the board&hellip;</div>
+  </div>
+
   {% set movers = market_intel.get('sector_movers') or [] %}
   {% if movers %}
   <div class="subhead">

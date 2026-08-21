@@ -226,13 +226,24 @@ var TV_ALIASES = (function () {
       }
     }
 
-    function show(){
+    function show(prefill){
       collect();
       box.hidden = false;
-      input.value = '';
+      input.value = prefill || '';
       render();
-      setTimeout(function(){ input.focus(); }, 20);
+      setTimeout(function(){ input.focus(); input.select(); }, 20);
     }
+
+    /* ?q=... opens the palette on that query.
+       The site declares a schema.org SearchAction pointing at ?q={term}, and a
+       declared SearchAction the page cannot honour is the schema equivalent of
+       a broken link — a crawler is told a search entry point exists and the URL
+       does nothing. This is what makes the claim true. It also gives every
+       result on this page a shareable address. */
+    try {
+      var q0 = new URLSearchParams(location.search).get('q');
+      if (q0 && q0.trim()) show(q0.trim());
+    } catch(e){}
     function close(){ box.hidden = true; }
 
     document.addEventListener('keydown', function(e){
@@ -4097,12 +4108,63 @@ var TV_ALIASES = (function () {
       // cannot drift from the ones used elsewhere on the page. Joining the two
       // in the browser costs no request at all.
       if (j.constituents && j.constituents.length) paintSectorMovers(j.constituents);
+      paintIndiaBoard(j.segments);
 
       // Painting the rail is what makes .headstack taller, so re-measure here
       // rather than waiting for an observer to notice. This is the direct
       // cause of the stale --headh that put every sticky table header 58-287px
       // too high, floating over the rows it was meant to label.
       if (window.__syncHeadH) window.__syncHeadH();
+    }
+
+    /* ── India at a glance ──
+       Assembly, not new plumbing: every instrument below already arrives in the
+       ticker response. A scrolling rail is the wrong shape for "what is the
+       Nifty at" — it moves, it wraps, and reading one number means waiting for
+       it to come round again. */
+    var IB_ROWS = [
+      { name: 'Nifty 50',   key: 'NIFTY',  hero: true },
+      { name: 'Sensex',     key: 'SENSEX', hero: true },
+      { name: 'Bank Nifty', key: 'BANKNIFTY' },
+      { name: 'USD/INR',    key: 'USDINR' },
+      { name: 'Gold',       key: 'GOLD' },
+      { name: 'Crude WTI',  key: 'CRUDE' },
+      { name: 'India VIX',  key: 'VIX', vix: true }
+    ];
+
+    function paintIndiaBoard(segments){
+      var host = document.getElementById('indiaBoard');
+      if (!host || !segments) return;
+      var found = {};
+      segments.forEach(function(s){
+        (s.items || []).forEach(function(i){ found[i.name] = i; });
+      });
+      var cells = IB_ROWS.map(function(r){
+        var q = found[r.name];
+        if (!q) return '';
+        var cls = r.hero ? 'ib ib-hero' : r.vix ? 'ib ib-vix' : 'ib';
+        var chg;
+        if (r.vix){
+          // A band, not a percentage. "11.20 -1.1%" invites a reader to treat a
+          // FALL in expected volatility as a loss, which is backwards — and the
+          // level is the information, not the day's move in it.
+          var v = q.price_raw;
+          chg = '<span class="ib-c mono-dim">' +
+                (v < 13 ? 'calm — under 13' : v > 20 ? 'fearful — over 20' : 'ordinary — 13 to 20') +
+                '</span>';
+        } else {
+          var up = q.change_pct > 0, flat = q.change_pct === 0;
+          chg = '<span class="ib-c ' + (flat ? 'mono-dim' : up ? 'up' : 'dn') + '">' +
+                (up ? '▲ +' : flat ? '· ' : '▼ ') + Math.abs(q.change_pct).toFixed(2) + '%</span>';
+        }
+        return '<div class="' + cls + '"><span class="ib-k">' + esc(r.name) + '</span>' +
+               '<span class="ib-v">' + esc(q.price) + '</span>' + chg + '</div>';
+      }).filter(Boolean).join('');
+
+      if (!cells) return;                       // never blank a working fallback
+      host.innerHTML = cells;
+      var tag = document.getElementById('indiaAsOf');
+      if (tag){ tag.textContent = 'LIVE'; tag.className = 'dh dh-LIVE'; }
     }
 
     /* ── live movers inside each sector ── */
