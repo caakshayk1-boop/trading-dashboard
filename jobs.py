@@ -239,6 +239,12 @@ TITLE_PREFILTER = re.compile(
 # Geography
 # ---------------------------------------------------------------------------
 
+# The only two markets this pipeline is for: the UAE (the Dubai FP&A target)
+# and Malaysia (where the operator lives). Sources are region-wide and will
+# keep returning Saudi, Egypt, Oman and further afield; the filter is applied
+# after dedupe so the counts in the log still show what was reached.
+TARGET_COUNTRIES = {"UAE", "Malaysia"}
+
 COUNTRY_ALIASES = {
     "uae": "UAE", "united arab emirates": "UAE", "u.a.e": "UAE", "ae": "UAE",
     "emirates": "UAE",
@@ -2479,6 +2485,26 @@ def build(write: bool = False, path: str = OUT_PATH) -> dict:
 
     merged, stale_removed = merge_with_previous(fresh, previous, statuses, now_iso)
     deduped, dup_removed = deduplicate(merged)
+
+    # Geography. The feed reached across the region and returned Saudi, Egypt,
+    # Oman, Kenya, Jordan, the UK and Germany — 50 of 129 roles in places that
+    # are not the plan. The two markets that matter are the UAE (the Dubai FP&A
+    # target) and Malaysia (where the operator actually lives); everything else
+    # is noise that makes the section look bigger than it is useful.
+    #
+    # Rows with NO country are dropped too. An unplaceable role cannot be judged
+    # against a relocation plan, and keeping it "just in case" is how a filtered
+    # list quietly stops being filtered.
+    kept, off_geo = [], 0
+    for j in deduped:
+        if (j.get("country") or "") in TARGET_COUNTRIES:
+            kept.append(j)
+        else:
+            off_geo += 1
+    if off_geo:
+        log.info("geo filter: dropped %d role(s) outside %s",
+                 off_geo, " / ".join(sorted(TARGET_COUNTRIES)))
+    deduped = kept
 
     log.info("validating %d application URLs…", len(deduped))
     url_stats = validate_all(deduped)

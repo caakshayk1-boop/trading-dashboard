@@ -173,13 +173,38 @@ def score(row):
 
     got = sum(v for v, _ in parts.values())
     of = sum(m for _, m in parts.values())
-    # Never invent the denominator. A row scored on two of four dimensions is
-    # reported as "/55 measured", not normalised to /100 as though it were whole.
+
+    # "Not measured" has to be computed from the row, not hardcoded. The static
+    # list said "lot size · anchor book · GMP" on cards that were displaying a
+    # lot size, an anchor book and a GMP three lines above it — the enrichment
+    # pass filled them in and this list never learned. A card that contradicts
+    # itself is worse than one that admits a gap.
+    #
+    # Two different kinds of gap, kept separate:
+    #   absent  — nothing anywhere publishes it for this issue
+    #   unscored — present on the card, deliberately outside the score
+    absent = list(missing)
+    for label, key in (("lot size", "lot_size"),
+                       ("minimum application", "min_investment"),
+                       ("fresh/OFS split", "fresh_issue_cr"),
+                       ("anchor book", "anchor_cr"),
+                       ("listing date", "listing_date")):
+        if row.get(key) in (None, "", 0):
+            absent.append(label)
+    # Never available from any source this build reads.
+    absent += ["sector", "audited financials", "valuation multiples"]
+
+    unscored = []
+    if row.get("gmp_text"):
+        unscored.append("grey market premium — shown, deliberately not scored")
+    if row.get("lot_size"):
+        unscored.append("lot size and minimum application — facts, not judgements")
+
     return {"points": got, "of": of,
             "pct": round(got / of * 100) if of else None,
             "parts": {k: f"{v}/{m}" for k, (v, m) in parts.items()},
-            "not_measured": missing + ["lot size", "sector", "financials",
-                                       "valuation multiples", "anchor book", "GMP"]}
+            "not_measured": absent,
+            "shown_not_scored": unscored}
 
 
 def verdict(row, sc):

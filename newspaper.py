@@ -5969,6 +5969,12 @@ table.t tbody tr:last-child td{border-bottom:none}
 .wal-tier-e{display:flex;flex-wrap:wrap;gap:5px}
 .wal-tier-e span{font-family:var(--mono);font-size:9.5px;color:var(--dim);
   background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:3px 8px}
+/* Why a row got the size it got. Quiet by default, full arithmetic on hover —
+   the number is the answer, the rule behind it is the explanation. */
+.wal-why{font-family:var(--mono);font-size:8.5px;letter-spacing:.4px;color:var(--dim);
+  border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help;
+  white-space:nowrap}
+.wal-why-0{color:var(--gold);border-color:rgba(230,180,80,.35)}
 .wal-excluded{font-size:12.5px;line-height:1.6;color:var(--muted);margin:12px 0 0;max-width:78ch;
   border-left:2px solid var(--line2);padding-left:12px}
 .wal-live-tag{font-family:var(--mono);font-size:10px;font-style:italic;color:var(--dim);margin-left:3px}
@@ -7901,7 +7907,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
       <p class="ipo-why"><b>Why:</b> {{ r.verdict_why }}</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> {{ r.verdict_caveat }}</p>
-      <p class="ipo-missing"><b>Not measured:</b> {{ r.score.not_measured|join(' · ') }}</p>
+      <p class="ipo-missing"><b>No public source:</b> {{ r.score.not_measured|join(' · ') }}
+        {% if r.score.shown_not_scored %}<br><b>Shown but not scored:</b> {{ r.score.shown_not_scored|join(' · ') }}{% endif %}</p>
     </div>
     {% endfor %}
   </div>

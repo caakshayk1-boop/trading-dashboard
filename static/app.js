@@ -2009,6 +2009,35 @@ var TV_ALIASES = (function () {
           return { amt: move * t.allocated_qty, px: q.price,
                    pct: t.entry ? (move / t.entry) * 100 : 0 };
         }
+        // WHY a row got the size it got. allocated = min(desired, tier headroom,
+        // global headroom) and desired = capital x tier% x grade multiplier —
+        // none of which was visible, so two OHL signals on the same day at the
+        // same grade showing Rs 1,05,000 and Rs 0 looked arbitrary. It is not
+        // arbitrary, it is first-come-first-served against a tier cap, and a
+        // reader is owed that rather than left to infer it.
+        var GRADE_MULT = { A: 1.0, B: 0.7 };
+        function sizeWhy(t){
+          var c = cats[t.tier];
+          if (!c) return '';
+          var g = GRADE_MULT[String(t.grade || '').toUpperCase()];
+          var gTxt = g ? ('grade ' + t.grade + ' x' + g) : 'ungraded x0.45';
+          var pct = fmt(c.max_pct * 100, 1);
+          if (t.capital_unavailable){
+            return ' <span class="wal-why wal-why-0" title="Sized at ' + pct + '% of the wallet for the ' +
+              esc(c.label) + ' tier, ' + gTxt + ' — but that tier was already at its ' +
+              fmt(c.cap_pct * 100, 0) + '% cap when this signal fired, so nothing was left to allocate. ' +
+              'Capital goes to whichever qualifying signal arrives first, not to the best one.">' +
+              'tier full</span>';
+          }
+          var desired = j.capital * c.max_pct * (g || 0.45);
+          var capped = t.allocated_amount < Math.round(desired) - 1;
+          return ' <span class="wal-why" title="' + pct + '% of the wallet for the ' + esc(c.label) +
+            ' tier, ' + gTxt + ' = ' + rupees(Math.round(desired)) +
+            (capped ? '. Trimmed to ' + rupees(t.allocated_amount) +
+                      ' by the headroom left under this tier\'s ' + fmt(c.cap_pct * 100, 0) + '% cap.'
+                    : '.') + '">' + pct + '% ' + (g ? t.grade : 'u') + (capped ? ' ·cap' : '') + '</span>';
+        }
+
         var rows = j.trades.map(function(t){
           var lp = livePnl(t);
           var pnlCell;
@@ -2049,9 +2078,7 @@ var TV_ALIASES = (function () {
             '<td class="num">' + (lp ? '<span class="wal-live">' + tradePrice(lp.px, t.currency) +
               '</span>' : (t.realized_pnl !== null ? '<span class="mono-dim">closed</span>' : '—')) + '</td>' +
             '<td class="num">' + tradePrice(t.exit, t.currency) + '</td>' +
-            '<td class="num">' + rupees(t.allocated_amount) +
-              (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
-              '</td>' +
+            '<td class="num">' + rupees(t.allocated_amount) + sizeWhy(t) + '</td>' +
             '<td class="num">' + (t.allocated_qty === null ? '—' : t.allocated_qty) + '</td>' +
             '<td><span class="badge badge-' + t.badge + '">' + badgeTxt(t.badge) + '</span></td>' +
             '<td class="num">' + pnlCell +
