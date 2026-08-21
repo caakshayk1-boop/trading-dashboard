@@ -229,7 +229,10 @@ var TV_ALIASES = (function () {
     function show(prefill){
       collect();
       box.hidden = false;
-      input.value = prefill || '';
+      // Guard the type as well as the call site. `prefill || ''` accepts
+      // anything truthy, so one careless handler puts an object's toString into
+      // the search field. Only a string may prefill this.
+      input.value = (typeof prefill === 'string') ? prefill : '';
       render();
       setTimeout(function(){ input.focus(); input.select(); }, 20);
     }
@@ -255,7 +258,11 @@ var TV_ALIASES = (function () {
       else if (e.key === 'Enter'){ e.preventDefault(); go(sel); }
     });
     input.addEventListener('input', render);
-    if (open) open.addEventListener('click', show);
+    // NOT `addEventListener('click', show)`. A listener is called with the
+    // Event, so show(prefill) received a PointerEvent and typed
+    // "[object PointerEvent]" into the search box — which is what a reader saw
+    // the moment they clicked the button rather than pressing Cmd-K.
+    if (open) open.addEventListener('click', function(){ show(); });
     box.querySelector('[data-close]').addEventListener('click', close);
   })();
 
