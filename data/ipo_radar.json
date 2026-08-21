@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T20:57:03",
+ "generated_at": "2026-08-21T21:10:47",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -527,21 +527,11 @@
    "issue_size_cr": 367.18,
    "enriched_url": "https://www.chittorgarh.com/ipo/shankesh-jewellers-ipo/2663/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1291/shankesh-jewellers-ltd",
-   "subscription_by_category": {
-    "QIB": 1.32,
-    "HNI": 5.68,
-    "Retail": 2.42,
-    "Total": 2.8
-   },
-   "allotment_date": "Aug 21, 2026",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Profit grew faster than revenue (165% against 16%), so margins widened rather than bought growth.",
     "Return on net worth of 51% \u2014 well above the ~14% a typical listed peer earns."
    ],
-   "reads_against": [
-    "Institutions are taking it at 1.32x while retail bids 2.42x \u2014 the money with research access is the money staying out."
-   ]
+   "reads_against": null
   },
   {
    "symbol": "LALITHAA",
@@ -573,21 +563,10 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 1700.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/lalithaa-jewellery-mart-ipo/2469/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1289/lalithaa-jewellery-mart-ltd",
-   "subscription_by_category": {
-    "QIB": 153.8,
-    "HNI": 78.17,
-    "Retail": 12.49,
-    "Employee": 9.1,
-    "Total": 66.62
-   },
-   "allotment_date": "Aug 20, 2026",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 48% year on year.",
     "Profit grew faster than revenue (177% against 48%), so margins widened rather than bought growth.",
-    "Return on net worth of 40% \u2014 well above the ~14% a typical listed peer earns.",
-    "Institutions are in at 153.80x, which is where the research budgets are."
+    "Return on net worth of 40% \u2014 well above the ~14% a typical listed peer earns."
    ],
    "reads_against": null
   },
@@ -622,7 +601,15 @@
    "issue_size_cr": 2600.04,
    "enriched_url": "https://www.chittorgarh.com/ipo/horizon-industrial-parks-ipo/2826/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1301/horizon-industrial-parks-ltd",
+   "subscription_by_category": {
+    "QIB": 1.94,
+    "HNI": 1.03,
+    "Retail": 1.01,
+    "Employee": 1.64,
+    "Total": 1.52
+   },
    "allotment_date": "Aug 20, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": null,
    "reads_against": [
     "Net margin is -26.52%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue."
