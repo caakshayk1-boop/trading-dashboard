@@ -8184,6 +8184,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div>
       <span class="snum">{{ secnum['tracker'] }} / {{ seclabel['tracker'] }}</span>
       <h2 class="stitle">The book.</h2>
+      <p class="sdesc">Real capital, actually held &mdash; not the paper wallet and not a signal
+        list. Risk before profit: each position shows what it can lose to its stop before it shows
+        what it has made, because the first number is the one that is certain.</p>
     </div>
     <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
       <form action="/tracker/obsidian" method="post" style="display:inline">
