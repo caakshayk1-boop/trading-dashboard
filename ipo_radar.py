@@ -348,6 +348,16 @@ def _fc_search(key, company, fields, extra=""):
 def enrich(rows, key, previous=None):
     """Fill the fields NSE does not publish. Fails soft, never blanks."""
     prev = {r.get("symbol"): r for r in (previous or [])}
+    # Every enriched key EXISTS on every row, set to None when unknown.
+    #
+    # A missing key is Undefined in Jinja, not None — so `x is not none` passes
+    # for an absent field and the format filter then raises on it, aborting the
+    # whole template. One issue without a debt/equity figure took the entire
+    # page down after every dataset had been fetched. Present-and-None is
+    # testable; absent is a trap.
+    for r in rows:
+        for f in list(CHITTORGARH_FIELDS) + list(FINANCIAL_FIELDS):
+            r.setdefault(f, None)
     for r in rows:
         was = prev.get(r["symbol"]) or {}
         # Carry the last good values forward FIRST, so a failed fetch below
@@ -446,6 +456,8 @@ def build(listing_perf=None):
             # exactly the fabricated number this file exists to avoid.
             "lot_size": None, "min_investment": None,
         }
+        for f in list(CHITTORGARH_FIELDS) + list(FINANCIAL_FIELDS):
+            row.setdefault(f, None)
         sc = score(row)
         v, why, caveat = verdict(row, sc)
         row.update(score=sc, verdict=v, verdict_why=why, verdict_caveat=caveat)
@@ -512,9 +524,12 @@ def build(listing_perf=None):
     # precisely the listing date and where the grey market is pricing the
     # debut — the two fields NSE's closed feed does not carry — so leaving them
     # bare is leaving out the only things still undecided.
+    for r in awaiting + stalled:
+        for f in list(CHITTORGARH_FIELDS) + list(FINANCIAL_FIELDS):
+            r.setdefault(f, None)
     if awaiting:
         for r in awaiting:
-            r.setdefault("company", r.get("company") or r["symbol"])
+            r["company"] = r.get("company") or r["symbol"]
         enrich(awaiting, os.environ.get("FIRECRAWL_API_KEY"),
                (json.loads(OUT.read_text()).get("awaiting_listing")
                 if OUT.exists() else []) or [])
