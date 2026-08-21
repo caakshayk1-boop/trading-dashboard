@@ -2144,7 +2144,12 @@ SECTION_MAP = [
     # failure mode — so they are two sections, and Radar comes first because a
     # book that closes on Monday cannot wait behind a history table.
     ("iporadar",    "IPO Radar",    "main", "Research"),
-    ("ipos",        "New Listings", "main", "Research"),
+    # New Listings retired 2026-08-22. IPO Radar's "Listed in the last 12
+    # months" is the same population with the same measured returns, plus the
+    # unmeasured listings it used to omit — two sections answering one question
+    # with two different counts was the duplication being complained about.
+    # ipo_tracker.py still runs: the Radar consumes its rows.
+
     ("funds",       "Fund Screen",  "main", "Research"),
     ("sip",         "SIP Buckets",  "main", "Research"),
     ("swp",         "SWP",          "main", "Research"),
@@ -6082,6 +6087,10 @@ table.t tbody tr:last-child td{border-bottom:none}
 /* A listing that exists but cannot be measured. Dimmer, not hidden: it is a
    real IPO, and dropping it would understate the population every verdict on
    this page is eventually judged against. */
+.tv-lnk{font-family:var(--mono);font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:6px;
+  text-decoration:none;white-space:nowrap}
+.tv-lnk:hover{color:var(--lime);border-color:var(--lime)}
 .ipo-unmeasured td{opacity:.6}
 .ipo-unmeasured .sym{cursor:default}
 .ev-v{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1px;
@@ -8026,7 +8035,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><span class="k">Price band</span><span class="v">{{ r.price_band or '—' }}</span></div>
         <div><span class="k">Issue size</span><span class="v">{{ ('₹%s Cr'|format('{:,.0f}'.format(r.issue_size_cr))) if r.issue_size_cr else '—' }}</span></div>
         <div><span class="k">Window</span><span class="v">{{ r.open_date or '—' }} → {{ r.close_date or '—' }}</span></div>
-        <div><span class="k">Subscribed</span><span class="v {{ 'up' if r.subscription_x and r.subscription_x >= 3 else 'dn' if r.subscription_x is not none and r.subscription_x < 1 else '' }}">{{ ('%.2fx'|format(r.subscription_x)) if r.subscription_x is not none else 'not open yet' }}</span></div>
+        <div><span class="k">Subscribed</span><span class="v {{ 'up' if r.subscription_x and r.subscription_x >= 3 else 'dn' if r.subscription_x is not none and r.subscription_x < 1 else '' }}">{{ ('%.2fx'|format(r.subscription_x)) if r.subscription_x is not none else ('closed — not published' if r.phase == 'closed' or (r.days_left is not none and r.days_left < 0) else 'not open yet') }}</span></div>
         <div><span class="k">Lot size</span><span class="v">{{ (r.lot_size|int ~ ' shares') if r.lot_size else 'not published' }}</span></div>
         <div><span class="k">Min. investment</span><span class="v">{{ ('₹' ~ '{:,.0f}'.format(r.min_investment)) if r.min_investment else 'not published' }}{% if r.min_investment_derived %}<span class="ipo-drv" title="Lot size × the cap of the price band — the most a retail applicant can be asked for.">calc</span>{% endif %}</span></div>
         {% if r.fresh_issue_cr or r.ofs_cr %}
@@ -8171,7 +8180,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </tr></thead><tbody>
       {% for r in iporadar.recent_listed %}
       <tr class="{{ '' if r.measured else 'ipo-unmeasured' }}">
-        <td><strong class="sym"{% if r.measured %} data-stock="{{ r.symbol }}" style="cursor:pointer"{% endif %}>{{ r.symbol }}</strong></td>
+        <td><strong class="sym"{% if r.measured %} data-stock="{{ r.symbol }}" style="cursor:pointer"{% endif %}>{{ r.symbol }}</strong>
+          {# TradingView for every row, measured or not. A listing outside the
+             screen universe has no sheet to open, but it still has a chart, and
+             a dead name in a table is worse than one that goes somewhere. #}
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3A{{ r.symbol }}"
+             title="Open {{ r.symbol }} on TradingView">chart</a></td>
         <td>{{ r.company }}</td>
         <td class="num">{{ r.listing_date }}</td>
         <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else (r.price_band or '—') }}</td>
@@ -8203,69 +8218,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>
 {% endif %}
 
-{% if 'ipos' in secs and ipos.get('rows') %}
-<section class="sec" id="ipos">
-  <div class="shead rv">
-    <div>
-      <span class="snum">{{ secnum['ipos'] }} / {{ seclabel['ipos'] }}</span> {{ dh('New listings') }}
-      <h2 class="stitle">{{ ipos.count }} listed in {{ ipos.months }} months.</h2>
-    </div>
-    <p class="sdesc">Every NSE listing inside the window, measured from its first traded
-      close — not from an issue price, which is not reliably available and would be a
-      guess wearing a decimal point. {{ ipos.summary.up }} are above that close,
-      {{ ipos.summary.down }} below.</p>
-  </div>
-
-  <div class="prov{{ ' stale' if ipos.get('is_fallback') else '' }} rv">
-    <span class="pv-tag">WEEKLY</span>
-    <span>Built {{ ipos.built_on }}{% if ipos.age_days is not none %} &middot; {{ ipos.age_days }}d old{% endif %}</span>
-    <span>Probed {{ ipos.probed }} of {{ ipos.attempted }} listed names</span>
-    {% if ipos.summary.median_pct is not none %}
-    <span>Median since listing {{ '{:+.1f}'.format(ipos.summary.median_pct) }}%</span>
-    {% endif %}
-  </div>
-
-  {# Median, never mean. One 300% listing should not be allowed to describe
-     the cohort, and a mean is the first figure that gets quoted out of it. #}
-  <div class="tw rv" style="margin-top:14px">
-    <table class="t">
-      <thead><tr>
-        <th scope="col">Symbol</th><th scope="col">Listed</th><th scope="col">Age</th>
-        <th scope="col">First close</th><th scope="col">Now</th>
-        <th scope="col">Since listing</th><th scope="col">From high</th>
-        <th scope="col">Sessions</th>
-      </tr></thead>
-      <tbody>
-        {% for r in ipos.rows %}
-        <tr>
-          <td><strong class="sym">{{ r.sym }}</strong></td>
-          <td class="mono-dim">{{ r.listed_on }}</td>
-          <td class="mono-dim">{{ r.months_listed }}m</td>
-          <td class="num mono-dim">&#8377;{{ '{:,.2f}'.format(r.first_close) }}</td>
-          <td class="num">&#8377;{{ '{:,.2f}'.format(r.last_close) }}</td>
-          <td class="num"><span class="{{ 'pnl-u' if r.since_listing_pct > 0 else 'pnl-d' if r.since_listing_pct < 0 else '' }}">
-            {{ '{:+.1f}'.format(r.since_listing_pct) }}%</span></td>
-          <td class="num mono-dim">{{ '{:+.1f}'.format(r.from_high_pct) }}%</td>
-          <td class="num mono-dim">{{ r.sessions }}{% if not r.below_first_ever %}
-            <span title="Has never closed below its first traded close">&#9733;</span>{% endif %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <p class="sdesc" style="margin-top:18px;max-width:70ch">
-    <b>Since listing</b> is measured from the first traded close, not from an issue
-    price &mdash; so it is not the return an allottee saw. <b>From high</b> is the
-    distance from the highest close since listing, which is the number most often
-    left out of a new-listing table and usually the most useful one in it.
-    A &#9733; marks a name that has never closed below its first close.
-    <br><br>
-    Nothing here is ranked, scored or recommended. A recent listing has no annual
-    statements to judge, which is exactly why it is not in the screen above.
-  </p>
-</section>
-{% endif %}
+<!-- New Listings retired 2026-08-22. IPO Radar's "Listed in the last 12
+     months" carries the same population and the same measured returns,
+     plus the unmeasured listings this section omitted. Two sections
+     answering one question with two different counts (32 here, 88 there)
+     was the duplication being reported. ipo_tracker.py still runs and the
+     Radar consumes its rows — the data did not go anywhere, the second
+     rendering of it did. -->
 
 <!-- ══════════ FUND SCREEN ══════════
      A ranking of public data, not a recommendation. Direct + Growth plans

@@ -197,8 +197,8 @@ def _():
 def _():
     """The rebuild's core promise, as an assertion.
 
-    32 sections before the restructure, 32 after; 33 once IPO Radar was added
-    on 2026-08-21. A section that drifts into a group outside the four pillars
+    32 before the restructure, 32 after; 33 once IPO Radar was added on
+    2026-08-21, back to 32 when New Listings was retired into it on 2026-08-22. A section that drifts into a group outside the four pillars
     is orphaned functionality — reachable by scrolling, invisible in navigation.
 
     The count is a canary for sections appearing by ACCIDENT, so it moves only
@@ -211,7 +211,20 @@ def _():
     for _i, _l, page, group in SECTION_MAP:
         allowed = PILLARS if page == "main" else LIFE
         assert group in allowed, f"{_i} is in {group!r}, which is no pillar"
-    assert len(SECTION_MAP) == 33, f"section count changed: {len(SECTION_MAP)}"
+    assert len(SECTION_MAP) == 32, f"section count changed: {len(SECTION_MAP)}"
+
+
+# Sections deliberately retired, with the reason and the date. A section may
+# only leave the site by being named here — the guard below still fails on any
+# id that disappears without an entry, which is the accident it exists to catch.
+RETIRED = {
+    # 2026-08-22: IPO Radar's "Listed in the last 12 months" carries the same
+    # population and the same measured returns, plus the unmeasured listings
+    # New Listings omitted. Two sections answering one question with two
+    # different counts (32 and 88) was the duplication being reported.
+    # ipo_tracker.py still runs; the Radar consumes its rows.
+    "ipos",
+}
 
 
 @check("every section that existed before the rebuild still exists")
@@ -226,7 +239,10 @@ def _():
         "way", "gym",
     }
     have = {i for i, _l, _p, _g in SECTION_MAP}
-    assert not (expected - have), f"DELETED: {sorted(expected - have)}"
+    gone = expected - have - RETIRED
+    assert not gone, f"DELETED without being recorded in RETIRED: {sorted(gone)}"
+    # A retirement that was later undone should not sit in the list forever.
+    assert not (RETIRED & have), f"listed as retired but still present: {sorted(RETIRED & have)}"
 
 
 @check("no theme-dependent colour is hardcoded outside a token declaration")

@@ -63,7 +63,7 @@ import logging
 import os
 import re
 from urllib.parse import quote_plus, unquote
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 log = logging.getLogger(__name__)
@@ -220,6 +220,14 @@ def verdict(row, sc):
                 "Re-check once subscription starts; nothing here is a judgement "
                 "on the business.")
     if sub is None:
+        # A book past its close date with no figure is not "not open yet" — it
+        # is closed and NSE has dropped it from the live feed. Saying the first
+        # about the second is the worst kind of wrong: confidently backwards.
+        if row.get("close_date") and row["close_date"] < date.today().isoformat():
+            return ("WATCH", "Book has closed; NSE no longer publishes a live "
+                    "subscription figure for it.",
+                    "The final multiple is not in the public feed, so no verdict "
+                    "on demand can be offered after the fact.")
         return ("WATCH", "Open, but NSE has not published a subscription figure yet.",
                 "Demand is the only dimension measurable from public data, and it "
                 "is not there yet.")
@@ -449,7 +457,15 @@ def build(listing_perf=None):
     upcoming = _get(s, "api/all-upcoming-issues?category=ipo")
     current = _get(s, "api/ipo-current-issue")
     past = _get(s, "api/public-past-issues")
-    today = date.today()
+    # The IPO calendar is an INDIAN calendar and the runner is on UTC. At
+    # 18:44 UTC on the 21st, date.today() is still the 21st while it is already
+    # the 22nd in Mumbai — so GAJA, whose book closed on the 21st, was still
+    # being classed "open" and, with NSE's live feed no longer carrying it,
+    # rendered as "not open yet". A closed issue advertised as not yet started.
+    #
+    # IST, not MYT: these are NSE dates. The operator's timezone governs the
+    # page's own clock; the exchange's governs the exchange's calendar.
+    today = datetime.now(timezone(timedelta(hours=5, minutes=30))).date()
 
     # Live subscription, keyed by symbol. 'Total' is the headline; the
     # category rows (QIB / NII / Retail) are kept for the detail line.
