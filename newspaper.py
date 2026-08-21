@@ -8112,9 +8112,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         {% if r.measured %}
         <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else '—' }}</td>
         <td class="num">{{ '{:,.2f}'.format(r.last_close) if r.last_close else '—' }}</td>
-        <td class="num {{ 'up' if (r.since_listing_pct or 0) > 0 else 'dn' }}">{{ '%+.1f'|format(r.since_listing_pct) }}%</td>
-        <td class="num {{ 'dn' if (r.from_high_pct or 0) < 0 else '' }}">{{ '%+.1f'|format(r.from_high_pct) }}%</td>
-        <td class="num mono-dim">{{ r.sessions }}</td>
+        {# `measured` means ipo_tracker reached the symbol, NOT that every field
+           came back — a name with too few sessions has a listing return and no
+           distance-from-high. Jinja's format filter raises on None rather than
+           printing a blank, and one such row took down the entire page render
+           in CI while five complete rows had passed locally. Guard each. #}
+        <td class="num {{ 'up' if (r.since_listing_pct or 0) > 0 else 'dn' }}">{% if r.since_listing_pct is not none %}{{ '%+.1f'|format(r.since_listing_pct) }}%{% else %}&mdash;{% endif %}</td>
+        <td class="num {{ 'dn' if (r.from_high_pct or 0) < 0 else '' }}">{% if r.from_high_pct is not none %}{{ '%+.1f'|format(r.from_high_pct) }}%{% else %}&mdash;{% endif %}</td>
+        <td class="num mono-dim">{{ r.sessions if r.sessions is not none else '—' }}</td>
         {% else %}
         <td class="num mono-dim" colspan="5">not in the measured universe</td>
         {% endif %}
