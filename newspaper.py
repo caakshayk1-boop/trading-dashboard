@@ -6202,6 +6202,34 @@ table.t tbody tr:last-child td{border-bottom:none}
 /* Impact level on a news card. Information, so blue per the colour contract —
    an impact LEVEL is a classification, not an outcome, and colouring HIGH red
    would say "this is bad" when it only says "this reaches your portfolio". */
+/* Rolling 24h. A rail of time down the left, regions grouped inside each
+   window. Events carrying a transmission chain are marked — those are the ones
+   with a stated route to a portfolio, and in a list ordered by TIME rather than
+   by rank they would otherwise be indistinguishable from the rest. */
+.wt{margin:0 0 26px}
+.wt-b{border-top:1px solid var(--line);padding:14px 0 4px}
+.wt-bh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;margin-bottom:10px}
+.wt-bt{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--lime)}
+.wt-bn{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.wt-r{display:grid;grid-template-columns:112px 1fr;gap:14px;margin-bottom:10px}
+.wt-rn{font-family:var(--mono);font-size:10.5px;color:var(--muted);padding-top:2px}
+.wt-l{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+.wt-i{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:5px 0 5px 12px;
+  position:relative}
+.wt-i::before{content:'';position:absolute;left:-3px;top:11px;width:5px;height:5px;
+  border-radius:50%;background:var(--line2)}
+/* Blue: an impact classification is information, per the colour contract. */
+.wt-hi::before{background:var(--blue);box-shadow:0 0 0 3px rgba(106,168,255,.15)}
+.wt-t{font-family:var(--mono);font-size:10px;color:var(--dim);padding-top:2px;text-align:right}
+.wt-x{font-size:13px;line-height:1.5}
+.wt-x a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line2)}
+.wt-x a:hover{border-color:var(--lime)}
+.wt-s{display:block;font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:2px}
+.wt-s b{color:var(--muted);font-weight:400}
+@media(max-width:640px){.wt-r{grid-template-columns:1fr;gap:4px}
+  .wt-rn{font-size:9.5px;letter-spacing:1px;text-transform:uppercase}}
 .nimp{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:1px;
   padding:2px 6px;border-radius:3px;border:1px solid currentColor;margin-left:6px;white-space:nowrap}
 .nimp-high{color:var(--blue);background:rgba(106,168,255,.10)}
@@ -7585,6 +7613,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       actually changes a decision.</p>
   </div>
 
+  {# ══════════ 24 ROLLING HOURS ══════════
+     The card grid answers "what happened". It cannot answer "when, and where is
+     it concentrated" — the two questions a 24-hour window exists to answer.
+     Same response, arranged by time and place instead of by rank.
+
+     Empty until /api/world answers: there is no server-rendered fallback
+     because a timeline built from a 6 AM snapshot would claim a recency it does
+     not have, and a stale timeline is worse than no timeline. #}
+  <div class="wt" id="worldTimeline" hidden></div>
+
   <!-- Live incident map.
        Land is a 156x66 dot grid rasterised once from Natural Earth (public
        domain) and run-length encoded into the string below — no external asset,
@@ -8359,12 +8397,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="subeyebrow">The record</span>
     <h3>Listed in the last {{ iporadar.recent_window_months }} months</h3>
     <p class="subdesc">All <b>{{ iporadar.counts.listed_12m }}</b> mainboard issues that closed
-      and listed inside the window. <b>{{ iporadar.counts.listed_measured }}</b> of them carry
-      measured post-listing performance and sit first &mdash; the same set, and the same numbers,
-      as New Listings below; click any of those for its full screen detail. The rest are real
-      listings that fall outside the 750-name screen universe or have no usable price history,
-      so they show their band and dates and say so, rather than being dropped or padded with a
-      number nobody measured.
+      and listed inside the window, <b>{{ iporadar.counts.listed_measured }}</b> of them with
+      measured performance. Return is from the <b>first traded close</b>, not the issue price
+      &mdash; nothing trades before it lists, so the first close is the first close by
+      construction, while NSE's issue-price data is unreliable and a listing gain built on a
+      guessed one would be fabricated. Names inside the 750-stock screen open their full detail
+      sheet; every row links to its chart.
       Return is measured from the <b>first traded close</b>, not the issue price &mdash; NSE's
       issue-price data is not reliable and a listing gain computed off a guessed one would be
       fabricated. Click any measured name for its full screen detail.</p>

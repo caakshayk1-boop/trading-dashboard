@@ -4465,6 +4465,95 @@ var TV_ALIASES = (function () {
           j.sources_ok + '/' + j.sources_total + ' feeds · tagging is keyword-based and approximate';
       }
 
+    /* ── World, as 24 rolling hours ──
+       The card grid answers "what happened". It cannot answer "when, and where
+       is it concentrated", and those are the two questions a 24-hour window
+       exists to answer. Same /api/world response, arranged by time and place
+       instead of by rank.
+
+       Regions are derived from the `places` the API already tags, mapped here
+       rather than in the route: the tagging is keyword matching over country
+       names and is explicitly approximate, so the grouping belongs next to the
+       code that has to live with that. */
+    var REGION = {
+      'India':'India', 'Pakistan':'India', 'Bangladesh':'India', 'Sri Lanka':'India',
+      'China':'Asia-Pacific', 'Japan':'Asia-Pacific', 'South Korea':'Asia-Pacific',
+      'Taiwan':'Asia-Pacific', 'Australia':'Asia-Pacific', 'Singapore':'Asia-Pacific',
+      'Hong Kong':'Asia-Pacific', 'Indonesia':'Asia-Pacific', 'Vietnam':'Asia-Pacific',
+      'United States':'Americas', 'Canada':'Americas', 'Brazil':'Americas',
+      'Mexico':'Americas', 'Argentina':'Americas',
+      'United Kingdom':'Europe', 'Germany':'Europe', 'France':'Europe', 'Italy':'Europe',
+      'Spain':'Europe', 'Netherlands':'Europe', 'Switzerland':'Europe',
+      'Russia':'Europe', 'Ukraine':'Europe', 'Poland':'Europe', 'Turkey':'Europe',
+      'Israel':'Middle East', 'Iran':'Middle East', 'Saudi Arabia':'Middle East',
+      'United Arab Emirates':'Middle East', 'Qatar':'Middle East', 'Egypt':'Middle East',
+      'Nigeria':'Africa', 'South Africa':'Africa', 'Kenya':'Africa'
+    };
+    var REGION_ORDER = ['India','Asia-Pacific','Middle East','Europe','Americas','Africa','Unplaced'];
+
+    function regionOf(places){
+      if (!places || !places.length) return 'Unplaced';
+      for (var i = 0; i < places.length; i++){
+        if (REGION[places[i]]) return REGION[places[i]];
+      }
+      return 'Unplaced';
+    }
+
+    function hoursAgo(iso){
+      var t = Date.parse(iso);
+      if (!t) return null;
+      return Math.max(0, Math.floor((Date.now() - t) / 3600000));
+    }
+
+    function paintWorldTimeline(items){
+      var host = document.getElementById('worldTimeline');
+      if (!host || !items || !items.length) return;
+
+      var withTime = items.filter(function(n){ return hoursAgo(n.published) !== null; });
+      if (!withTime.length) return;
+      withTime.sort(function(a, b){ return Date.parse(b.published) - Date.parse(a.published); });
+
+      // Three buckets, not twenty-four rows. An hour-by-hour axis on 15 events
+      // is mostly empty gutter; "how recent" is the question, and recent /
+      // earlier today / overnight answers it without inventing precision.
+      var buckets = [
+        { label: 'Last 6 hours',  test: function(h){ return h < 6; } },
+        { label: '6 to 12 hours', test: function(h){ return h >= 6 && h < 12; } },
+        { label: '12 to 24 hours',test: function(h){ return h >= 12; } }
+      ];
+
+      var html = buckets.map(function(b){
+        var inB = withTime.filter(function(n){ return b.test(hoursAgo(n.published)); });
+        if (!inB.length) return '';
+        var byRegion = {};
+        inB.forEach(function(n){ (byRegion[regionOf(n.places)] = byRegion[regionOf(n.places)] || []).push(n); });
+        var regions = REGION_ORDER.filter(function(r){ return byRegion[r]; });
+
+        return '<div class="wt-b"><div class="wt-bh"><span class="wt-bt">' + b.label +
+          '</span><span class="wt-bn">' + inB.length + ' event' + (inB.length === 1 ? '' : 's') +
+          ' · ' + regions.length + ' region' + (regions.length === 1 ? '' : 's') + '</span></div>' +
+          regions.map(function(reg){
+            return '<div class="wt-r"><span class="wt-rn">' + esc(reg) + '</span><ul class="wt-l">' +
+              byRegion[reg].map(function(n){
+                var xm = transmission(n);
+                var h = hoursAgo(n.published);
+                return '<li class="wt-i' + (xm ? ' wt-hi' : '') + '">' +
+                  '<span class="wt-t">' + (h === 0 ? 'now' : h + 'h') + '</span>' +
+                  '<span class="wt-x">' +
+                    (n.link ? '<a href="' + esc(n.link) + '" target="_blank" rel="noopener">' +
+                       esc(n.title) + '</a>' : esc(n.title)) +
+                    '<span class="wt-s">' + esc(n.source) +
+                    (xm ? ' · <b>' + xm.chain + '</b>' : '') + '</span>' +
+                  '</span></li>';
+              }).join('') + '</ul></div>';
+          }).join('') + '</div>';
+      }).filter(Boolean).join('');
+
+      if (!html) return;
+      host.innerHTML = html;
+      host.hidden = false;           // hidden until it has something real to show
+    }
+
     /* ── why a headline matters ──
        A wire summary says WHAT happened. This says how it reaches a portfolio.
 
@@ -4573,6 +4662,8 @@ var TV_ALIASES = (function () {
                    '</div></div>';
         }).join('');
       }
+
+      paintWorldTimeline(j.top || []);
 
       var d = document.getElementById('worldDesc');
       // Articles seen AND events published. "202 stories" when 22 of them were

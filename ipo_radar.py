@@ -408,6 +408,62 @@ def _financials(text: str) -> dict:
     return out
 
 
+def _measure_listings(rows: list[dict], chunk: int = 40) -> int:
+    """Post-listing performance for the names ipo_tracker cannot reach.
+
+    ipo_tracker only measures symbols inside the 750-name screen universe, which
+    left 61 of 85 real listings showing a band and a date and nothing else. That
+    was honest but useless: "outside the measured universe" tells a reader why
+    there is no number, not what the stock did.
+
+    Nothing trades before it lists, so the FIRST close in a one-year window is
+    the first traded close by construction — which is the same basis ipo_tracker
+    uses, and the reason both can sit in one column without a footnote. Return is
+    never computed off the issue price: NSE's issue-price data is unreliable and
+    a listing gain built on a guessed one is fabricated.
+
+    Batched, because 61 individual downloads is 61 round trips inside a build
+    with a fifteen-minute cap. Fails soft per symbol: a name Yahoo cannot price
+    keeps its dash rather than taking the whole pass down.
+    """
+    want = [r for r in rows if not r.get("measured") and r.get("symbol")]
+    if not want:
+        return 0
+    import yfinance as yf
+    from symbols import to_yahoo
+
+    done = 0
+    for i in range(0, len(want), chunk):
+        batch = want[i:i + chunk]
+        ymap = {r["symbol"]: to_yahoo(r["symbol"]) for r in batch}
+        try:
+            df = yf.download(list(ymap.values()), period="1y", interval="1d",
+                             progress=False, auto_adjust=True, group_by="ticker",
+                             threads=True, timeout=30)
+        except Exception as e:                        # noqa: BLE001
+            log.warning(f"listing measure batch {i//chunk}: {e}")
+            continue
+        for r in batch:
+            try:
+                sub = df[ymap[r["symbol"]]]["Close"].dropna()
+                if len(sub) < 2:
+                    continue
+                first, last = float(sub.iloc[0]), float(sub.iloc[-1])
+                hi, lo = float(sub.max()), float(sub.min())
+                if first <= 0:
+                    continue
+                r.update(measured=True, measured_by="yahoo",
+                         first_close=round(first, 2), last_close=round(last, 2),
+                         high=round(hi, 2), low=round(lo, 2),
+                         since_listing_pct=round((last / first - 1) * 100, 1),
+                         from_high_pct=round((last / hi - 1) * 100, 1) if hi else None,
+                         sessions=int(len(sub)))
+                done += 1
+            except Exception:                         # noqa: BLE001
+                continue                              # keep the dash, lose nothing else
+    return done
+
+
 def _read_numbers(r: dict) -> tuple[list, list]:
     """What the filed numbers say, for and against. Derived, never scraped.
 
@@ -855,6 +911,11 @@ def build(listing_perf=None):
     # Measured rows first: a row with a return on it is worth more than one
     # with only a date, and burying them under unmeasured names by pure
     # recency hides the only part of this table that answers anything.
+    # Fill in everything ipo_tracker could not reach, so the table has a number
+    # for every row rather than a reason for most of them.
+    filled = _measure_listings(listed)
+    if filled:
+        log.info(f"measured {filled} listings Yahoo could price but the screen could not")
     listed.sort(key=lambda x: (not x["measured"], x["listing_date"] or ""), reverse=False)
     listed.sort(key=lambda x: (not x["measured"],))
     recent = listed
@@ -875,6 +936,8 @@ def build(listing_perf=None):
                    "awaiting": len(awaiting),
                    "listed_12m": len(recent),
                    "listed_measured": sum(1 for r in recent if r.get("measured")),
+                   "listed_via_screen": sum(1 for r in recent
+                                            if r.get("measured") and not r.get("measured_by")),
                    "apply": sum(1 for r in rows if r["verdict"].startswith("APPLY")),
                    "avoid": sum(1 for r in rows if r["verdict"] == "AVOID")},
     }
