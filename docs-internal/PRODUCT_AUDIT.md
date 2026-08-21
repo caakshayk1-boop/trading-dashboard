@@ -240,12 +240,21 @@ never enter any statistic. 67 of 112 have been open 7+ days. `max_profit_pct` an
 `max_drawdown_pct` are **null on all 112**, so they cannot even be marked to market
 from the ledger as it stands.
 
-### 0.12 `magic` / `magicmagic` is a duplicated signal type
+### 0.12 `magic` / `magicmagic` — not a duplicate type, but a double-counted idea
 
-36 rows each. 10 share an identical (symbol, date, entry) key — e.g. PARADEEP
-2026-08-15 @147.85 exists as id 764 (`magic`) and id 775 (`magicmagic`). One engine,
-two type names, partial double-writes. Any per-engine breakdown is currently splitting
-one engine across two rows and double-counting the overlap.
+**Correction.** I first called this one engine written under two names. It is not:
+`scanner.scan_magic` and `scanner.scan_magicmagic` are separate screens (the second is
+"20–40% from the 52-week high"). That part of the finding is withdrawn.
+
+**What is real:** a name can satisfy both screens on the same day, and when it does they
+write **byte-identical levels**. 10 (symbol, date) pairs in the live ledger are one idea
+recorded twice — PARADEEP and DIXON on 2026-08-15, PARADEEP again on 2026-08-12, all with
+identical entry, sl, target1 and target2. Both rows will resolve to the same R, so the
+idea is counted twice in expectancy and again in every per-engine breakdown.
+
+**FIXED** in `tracker._log_magic_to_ledger`: whichever screen runs second checks the
+sibling engine for the same symbol and entry on the same date and yields, logging the
+skip. The lookup fails open — a failed check costs the scan nothing.
 
 ### 0.13 Dead status branch
 `T1_HIT` is listed in `NOT_CLOSED` (`signal_report.py:39`) but **zero rows in the entire
@@ -285,26 +294,43 @@ times. Needs one check before I touch it.
 
 ---
 
-## 2. MISSING SECTION HEADINGS — confirmed, and worse than reported
+## 2. SUBSECTION HEADINGS — my first finding was wrong; the real one is worse
 
-The request lists four sections with missing headers. Verified by grepping both the
-Jinja template and the built HTML:
+**Correction.** I first reported that "Corporate Actions", "Recently Listed", "Step-Up"
+and "SIP Bucket" had no headings anywhere. That was a case-sensitive grep miss.
+`Corporate actions` and `Where the step-up takes it.` both exist. The finding was wrong
+and is withdrawn.
 
-| Label | in `newspaper.py` | in built `docs/index.html` |
+**The real defect, verified:** the site had **33 proper section heads** (`.shead` /
+`.stitle` / `.snum`) and **9 subsections each hand-styled with an inline
+`<h3 style="font-size:15px">`**. Those nine rendered as bold body text — no eyebrow, no
+rule, no relationship to the section head above them. A reader met a data table with
+what looked like a caption over it, which is why they read as unlabelled blocks:
+
+| line | heading | section |
 |---|---|---|
-| "Corporate Actions" | **0** | **0** |
-| "Recently Listed" / "Recent Listed" | **0** | **0** |
-| "Step-Up" / "Step Up" | **0** | **0** |
-| "SIP Bucket" (singular) | 0 — registered as "SIP Buckets" (`newspaper.py:2143`) | — |
+| 6818 | Sector heat | Market Intel |
+| 6847 | Movers inside each sector | Market Intel |
+| 6888 | FII / DII net flow | Market Intel |
+| 6908 | Corporate actions | Market Intel |
+| 7204 | Where the market disagrees with itself | Findings |
+| 7218 | Unusual combinations | Findings |
+| 7253 | Names that clear more than one screen | Findings |
+| 7280 | What changed since the last build | Findings |
+| 9258 | `{{ lesson.lesson }}` | content item inside a loop — **left alone** |
 
-These are **not headers that broke**. They were never written. The corporate-actions
-data is rendered at `newspaper.py:6906` as a bare block with no heading above it — an
-unlabelled table, which is exactly the "unexplained data" problem in the brief.
+**FIXED.** Added `.subhead` / `.subeyebrow` / `.subdesc` to the design system and
+converted the eight structural ones. Each now carries an eyebrow, a serif heading at the
+same scale as its peers, a top rule, and a one-line *what this is and why it matters* —
+which is the "every section answers three questions" requirement, applied at subsection
+level. Verified live: 7 of 8 render (the 8th is `{% if findings.contradictions %}`-gated
+and had none today), all at 25px Newsreader with a 1px top rule.
 
-"Step-Up" appears nowhere in the codebase at all. *Assumed:* it is planned, not built.
-Confirm before I design a header for a section that does not exist.
-
----
+**Still open — the movers question.** `Sector heat` now reports `LIVE · 11/11 sectors`,
+but `Movers inside each sector` is still **one-week** change taken from the weekly stock
+screen, not from the live heat contributors. The heading now says so explicitly rather
+than leaving the reader to assume it is today's data, but the underlying ask — top 5
+gainers and losers drawn from the live heat map — is **not built**.
 
 ## 3. INFORMATION ARCHITECTURE — closer to the target than the brief assumes
 
@@ -340,6 +366,46 @@ Stated plainly rather than implied complete:
 - `akk-terminal` and `tradeflow-pro` not audited — out of scope for this pass.
 
 ---
+
+## 6. WHAT SHIPPED 2026-08-21
+
+Pushed to `main` (`b49e465`, `74ecb84`, `adc5546`); newspaper.yml rebuilt with real
+credentials and Vercel deployed. Live and verified on news.askakshay.com.
+
+| Item | Status |
+|---|---|
+| Daily build at 6 AM MYT — crons | already done (prior session, uncommitted) — **committed** |
+| 14 user-visible "6 AM IST" strings | **fixed** — 0 remain; live page reads `COMPILED 6:00 AM MYT` |
+| Duplicate in-process scheduler at 00:30 UTC | **fixed** — realigned to 22:00 UTC |
+| 8 ad-hoc subsection headings | **fixed** — `.subhead` component, verified live |
+| magic/magicmagic double-counting | **fixed** — cross-engine guard in `tracker` |
+| Ledger grade corruption (168 rows) | **tooling shipped, not applied** — manual-gated workflow |
+| `docs/app.js` out of sync with source | **fixed** — test suite now 344 pass / 0 fail (was 343/1) |
+| $MRK-style poor-R:R trade ideas | already done (prior session) — **committed**: `_build_picks` now enforces `config.MIN_RR` |
+| OHL setup logic exposed to readers | already done (prior session) — **committed**: methodology tooltip in `app.js` |
+
+**Checks run this session:** all 15 test suites, 344 assertions, 0 failures. CI build
+green, smoke test passed, live page 552 KB / HTTP 200.
+
+## 7. NOT DONE — carried forward
+
+Stated plainly rather than implied complete.
+
+1. **Ledger repair not applied.** `regrade_ledger.yml` is `workflow_dispatch` only and
+   needs a human to run it with the confirm phrase. Until it runs, the published
+   Performance figures are still the corrupt ones.
+2. **Movers from live heat contributors** — still one-week screen data (§2).
+3. **IPO Radar** as a decision engine — not started. The existing New Listings is a
+   historical table; the brief is explicit these are different products.
+4. **The two-product split** (Intelligence / Life) — not started. The `/desk` page is
+   already the Life surface in skeleton (§3).
+5. **World 24h as a Daily-Brief-style summary** — not started.
+6. **Wallet live P&L**, Wallet strategy framework — not started.
+7. **Jobs section expansion** to the companies in the reference images — not started.
+8. **Design system, animation, mobile, accessibility, Lighthouse, SEO** — not started.
+   Only the subsection-heading layer of the design system exists so far.
+9. **Not audited:** the 503 KB `index.html` and 274 KB `app.js` end-to-end, `akk-terminal`,
+   `tradeflow-pro`.
 
 ## 5. RECOMMENDED ORDER
 
