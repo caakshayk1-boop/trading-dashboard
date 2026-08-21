@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T18:22:48",
+ "generated_at": "2026-08-21T18:44:04",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -9,7 +9,7 @@
    "exchange": "NSE",
    "series": "EQ",
    "phase": "open",
-   "status": "Active",
+   "status": "Closed",
    "open_date": "2026-08-19",
    "close_date": "2026-08-21",
    "days_left": 0,
@@ -17,17 +17,17 @@
    "price_low": 152.0,
    "price_high": 160.0,
    "issue_size_shares": 25328946.0,
-   "issue_size_cr": 405.3,
-   "subscription_x": 15.631971500116903,
+   "issue_size_cr": 550.0,
+   "subscription_x": null,
    "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 93.0,
+   "min_investment": 14880.0,
+   "fresh_issue_cr": 450.0,
+   "ofs_cr": 100.0,
+   "face_value": 5.0,
+   "anchor_cr": 165.0,
    "listing_date": null,
-   "gmp_text": null,
+   "gmp_text": "\u20b919 (11.88%)",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -42,31 +42,31 @@
    "risks": null,
    "use_of_proceeds": null,
    "score": {
-    "points": 73,
-    "of": 100,
-    "pct": 73,
+    "points": 33,
+    "of": 60,
+    "pct": 55,
     "parts": {
-     "Demand": "40/40",
      "Size": "14/25",
      "Pricing": "15/20",
      "Window": "4/15"
     },
     "not_measured": [
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
-     "anchor book",
+     "subscription (book not open yet)",
      "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
     ],
-    "shown_not_scored": []
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
    },
-   "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 15.6x, but the book is small (about Rs.405 Cr).",
-   "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
-   "enriched_source": null
+   "verdict": "WATCH",
+   "verdict_why": "Open, but NSE has not published a subscription figure yet.",
+   "verdict_caveat": "Demand is the only dimension measurable from public data, and it is not there yet.",
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/gaja-alternative-asset-management-ipo/2527/"
   },
   {
    "symbol": "TEMPSENS",
@@ -82,15 +82,15 @@
    "price_low": 285.0,
    "price_high": 300.0,
    "issue_size_shares": 15181667.0,
-   "issue_size_cr": 455.5,
+   "issue_size_cr": 650.0,
    "subscription_x": 13.70394305184009,
    "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 50.0,
+   "min_investment": 15000.0,
+   "fresh_issue_cr": 95.0,
+   "ofs_cr": 555.0,
+   "face_value": 4.0,
+   "anchor_cr": 194.55,
    "listing_date": null,
    "gmp_text": null,
    "revenue_cr": null,
@@ -117,21 +117,20 @@
      "Window": "15/15"
     },
     "not_measured": [
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
-     "anchor book",
      "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
     ],
-    "shown_not_scored": []
+    "shown_not_scored": [
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 13.7x, but the book is small (about Rs.456 Cr).",
+   "verdict_why": "Subscribed 13.7x, but the book is small (about Rs.650 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/"
   },
   {
    "symbol": "AUGMONT",
@@ -147,17 +146,17 @@
    "price_low": 750.0,
    "price_high": 788.0,
    "issue_size_shares": 7715999.0,
-   "issue_size_cr": 608.0,
+   "issue_size_cr": 825.0,
    "subscription_x": 1.7901764891364034,
    "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 19.0,
+   "min_investment": 14972.0,
+   "fresh_issue_cr": 620.0,
+   "ofs_cr": 205.0,
+   "face_value": 5.0,
+   "anchor_cr": 246.3,
    "listing_date": null,
-   "gmp_text": null,
+   "gmp_text": "\u20b9310 (39.34%)",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -172,31 +171,31 @@
    "risks": null,
    "use_of_proceeds": null,
    "score": {
-    "points": 60,
+    "points": 66,
     "of": 100,
-    "pct": 60,
+    "pct": 66,
     "parts": {
      "Demand": "16/40",
-     "Size": "14/25",
+     "Size": "20/25",
      "Pricing": "15/20",
      "Window": "15/15"
     },
     "not_measured": [
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
-     "anchor book",
      "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
     ],
-    "shown_not_scored": []
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
    },
    "verdict": "WATCH",
    "verdict_why": "1.8x so far, with time left on the book.",
    "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/"
   }
  ],
  "upcoming": [
@@ -214,17 +213,17 @@
    "price_low": 50.0,
    "price_high": 53.0,
    "issue_size_shares": 18145406.0,
-   "issue_size_cr": 96.2,
+   "issue_size_cr": 135.73,
    "subscription_x": null,
    "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
+   "lot_size": 283.0,
+   "min_investment": 14999.0,
+   "fresh_issue_cr": 60.0,
+   "ofs_cr": 75.73,
+   "face_value": 5.0,
    "anchor_cr": null,
    "listing_date": null,
-   "gmp_text": null,
+   "gmp_text": "\u20b922 (41.51%)",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -249,21 +248,22 @@
     "not_measured": [
      "subscription (book not open yet)",
      "issue window",
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
      "anchor book",
      "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
     ],
-    "shown_not_scored": []
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
    },
    "verdict": "WATCH",
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/"
   },
   {
    "symbol": "SYMBIOTEC",
@@ -279,17 +279,17 @@
    "price_low": 938.0,
    "price_high": 988.0,
    "issue_size_shares": 13124929.0,
-   "issue_size_cr": 1296.7,
+   "issue_size_cr": 1757.0,
    "subscription_x": null,
    "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
+   "lot_size": 15.0,
+   "min_investment": 14820.0,
+   "fresh_issue_cr": 150.0,
+   "ofs_cr": 1607.0,
+   "face_value": 2.0,
    "anchor_cr": null,
    "listing_date": null,
-   "gmp_text": null,
+   "gmp_text": "\u20b9345 (34.92%)",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -314,21 +314,22 @@
     "not_measured": [
      "subscription (book not open yet)",
      "issue window",
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
      "anchor book",
      "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
     ],
-    "shown_not_scored": []
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
    },
    "verdict": "WATCH",
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/"
   },
   {
    "symbol": "SKYWAYS",
@@ -344,17 +345,17 @@
    "price_low": 131.0,
    "price_high": 138.0,
    "issue_size_shares": 29583600.0,
-   "issue_size_cr": 408.3,
+   "issue_size_cr": 582.8,
    "subscription_x": null,
    "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 100.0,
+   "min_investment": 13800.0,
+   "fresh_issue_cr": 398.8,
+   "ofs_cr": 184.0,
+   "face_value": 10.0,
+   "anchor_cr": 174.54,
    "listing_date": null,
-   "gmp_text": null,
+   "gmp_text": "\u20b945 (32.61%)",
    "revenue_cr": null,
    "revenue_growth_pct": null,
    "pat_cr": null,
@@ -379,21 +380,21 @@
     "not_measured": [
      "subscription (book not open yet)",
      "issue window",
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
-     "anchor book",
      "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
     ],
-    "shown_not_scored": []
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
    },
    "verdict": "WATCH",
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/skyways-air-ipo/2510/"
   }
  ],
  "closed": [],
@@ -405,12 +406,12 @@
    "close_date": "2026-08-20",
    "listing_date": null,
    "days_since_close": 1,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 41.0,
+   "min_investment": 14760.0,
+   "fresh_issue_cr": 172.8,
+   "ofs_cr": 109.34,
+   "face_value": 10.0,
+   "anchor_cr": 84.64,
    "gmp_text": null,
    "revenue_cr": null,
    "revenue_growth_pct": null,
@@ -425,7 +426,9 @@
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "issue_size_cr": 282.14,
+   "enriched_url": "https://www.chittorgarh.com/ipo/sunshine-pictures-ipo/2002/"
   },
   {
    "symbol": "SHANKESH",
@@ -434,12 +437,12 @@
    "close_date": "2026-08-20",
    "listing_date": null,
    "days_since_close": 1,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 160.0,
+   "min_investment": 14880.0,
+   "fresh_issue_cr": 274.18,
+   "ofs_cr": 93.0,
+   "face_value": 5.0,
+   "anchor_cr": 110.15,
    "gmp_text": null,
    "revenue_cr": null,
    "revenue_growth_pct": null,
@@ -454,7 +457,9 @@
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "issue_size_cr": 367.18,
+   "enriched_url": "https://www.chittorgarh.com/ipo/shankesh-jewellers-ipo/2663/"
   },
   {
    "symbol": "LALITHAA",
@@ -463,12 +468,12 @@
    "close_date": "2026-08-19",
    "listing_date": null,
    "days_since_close": 2,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "lot_size": 74.0,
+   "min_investment": 14874.0,
+   "fresh_issue_cr": 1200.0,
+   "ofs_cr": 500.0,
+   "face_value": 5.0,
+   "anchor_cr": 508.2,
    "gmp_text": null,
    "revenue_cr": null,
    "revenue_growth_pct": null,
@@ -483,7 +488,9 @@
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "issue_size_cr": 1700.0,
+   "enriched_url": "https://www.chittorgarh.com/ipo/lalithaa-jewellery-mart-ipo/2469/"
   },
   {
    "symbol": "HORIZONIND",
@@ -492,12 +499,12 @@
    "close_date": "2026-08-19",
    "listing_date": null,
    "days_since_close": 2,
-   "lot_size": null,
-   "min_investment": null,
+   "lot_size": 250.0,
+   "min_investment": 15000.0,
    "fresh_issue_cr": null,
    "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "face_value": 10.0,
+   "anchor_cr": 1167.75,
    "gmp_text": null,
    "revenue_cr": null,
    "revenue_growth_pct": null,
@@ -512,7 +519,9 @@
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
-   "enriched_source": null
+   "enriched_source": "chittorgarh.com",
+   "issue_size_cr": 2600.04,
+   "enriched_url": "https://www.chittorgarh.com/ipo/horizon-industrial-parks-ipo/2826/"
   }
  ],
  "stalled": [
@@ -1546,7 +1555,7 @@
   "awaiting": 4,
   "listed_12m": 88,
   "listed_measured": 25,
-  "apply": 2,
+  "apply": 1,
   "avoid": 0
  }
 }
