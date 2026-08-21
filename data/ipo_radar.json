@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T19:59:11",
+ "generated_at": "2026-08-21T20:11:06",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -34,16 +34,16 @@
    "anchor_cr": 194.55,
    "listing_date": null,
    "gmp_text": "\u20b9290",
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 455.86,
+   "revenue_growth_pct": 19.0,
+   "pat_cr": 71.07,
+   "pat_growth_pct": 14.0,
+   "pat_margin_pct": 15.59,
+   "roe_pct": 13.55,
+   "debt_to_equity": 0.16,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
@@ -74,7 +74,13 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1304/tempsens-instruments",
-   "category_source": "ipopremium.in"
+   "category_source": "ipopremium.in",
+   "reads_for": [
+    "Effectively debt-free at 0.16 debt to equity, so the balance sheet is not a constraint."
+   ],
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b9555 Cr) than new money into the business (\u20b995 Cr)."
+   ]
   },
   {
    "symbol": "AUGMONT",
@@ -107,16 +113,16 @@
    "anchor_cr": 246.3,
    "listing_date": null,
    "gmp_text": "\u20b9310",
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 94282.47,
+   "revenue_growth_pct": 42.0,
+   "pat_cr": 348.3,
+   "pat_growth_pct": 53.0,
+   "pat_margin_pct": 0.37,
+   "roe_pct": 49.52,
+   "debt_to_equity": 0.01,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
@@ -147,7 +153,17 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1303/augmont-enterprises-ltd",
-   "category_source": "ipopremium.in"
+   "category_source": "ipopremium.in",
+   "reads_for": [
+    "Revenue grew 42% year on year.",
+    "Profit grew faster than revenue (53% against 42%), so margins widened rather than bought growth.",
+    "Return on net worth of 50% \u2014 well above the ~14% a typical listed peer earns.",
+    "Effectively debt-free at 0.01 debt to equity, so the balance sheet is not a constraint."
+   ],
+   "reads_against": [
+    "Net margin is 0.37%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue.",
+    "Institutions are taking it at 1.85x while retail bids 3.00x \u2014 the money with research access is the money staying out."
+   ]
   }
  ],
  "upcoming": [
@@ -176,16 +192,16 @@
    "anchor_cr": null,
    "listing_date": null,
    "gmp_text": "\u20b922 (41.51%)",
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 193.44,
+   "revenue_growth_pct": 16.0,
+   "pat_cr": 22.59,
+   "pat_growth_pct": 15.0,
+   "pat_margin_pct": 11.68,
+   "roe_pct": 20.24,
+   "debt_to_equity": 0.24,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
@@ -215,7 +231,14 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/",
+   "reads_for": [
+    "Return on net worth of 20% \u2014 well above the ~14% a typical listed peer earns.",
+    "Effectively debt-free at 0.24 debt to equity, so the balance sheet is not a constraint."
+   ],
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b976 Cr) than new money into the business (\u20b960 Cr)."
+   ]
   },
   {
    "symbol": "SYMBIOTEC",
@@ -242,16 +265,16 @@
    "anchor_cr": null,
    "listing_date": null,
    "gmp_text": "\u20b9345 (34.92%)",
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 872.26,
+   "revenue_growth_pct": 15.0,
+   "pat_cr": 109.9,
+   "pat_growth_pct": 14.0,
+   "pat_margin_pct": 12.6,
+   "roe_pct": 9.48,
+   "debt_to_equity": 0.33,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
@@ -281,7 +304,11 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/",
+   "reads_for": null,
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr)."
+   ]
   },
   {
    "symbol": "SKYWAYS",
@@ -308,16 +335,16 @@
    "anchor_cr": 174.54,
    "listing_date": null,
    "gmp_text": "\u20b945 (32.61%)",
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 2839.67,
+   "revenue_growth_pct": 25.0,
+   "pat_cr": 63.52,
+   "pat_growth_pct": 32.0,
+   "pat_margin_pct": 2.24,
+   "roe_pct": 12.33,
+   "debt_to_equity": 1.88,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
@@ -346,7 +373,14 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/skyways-air-ipo/2510/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/skyways-air-ipo/2510/",
+   "reads_for": [
+    "Revenue grew 25% year on year.",
+    "Profit grew faster than revenue (32% against 25%), so margins widened rather than bought growth."
+   ],
+   "reads_against": [
+    "Debt to equity of 1.88 \u2014 leverage magnifies both directions from here."
+   ]
   }
  ],
  "closed": [
@@ -430,22 +464,27 @@
    "face_value": 10.0,
    "anchor_cr": 84.64,
    "gmp_text": null,
-   "revenue_cr": null,
+   "revenue_cr": 76.27,
    "revenue_growth_pct": null,
-   "pat_cr": null,
+   "pat_cr": 40.02,
    "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "pat_margin_pct": 52.47,
+   "roe_pct": 27.58,
+   "debt_to_equity": 0.06,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 282.14,
-   "enriched_url": "https://www.chittorgarh.com/ipo/sunshine-pictures-ipo/2002/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/sunshine-pictures-ipo/2002/",
+   "reads_for": [
+    "Return on net worth of 28% \u2014 well above the ~14% a typical listed peer earns.",
+    "Effectively debt-free at 0.06 debt to equity, so the balance sheet is not a constraint."
+   ],
+   "reads_against": null
   },
   {
    "symbol": "SHANKESH",
@@ -461,22 +500,27 @@
    "face_value": 5.0,
    "anchor_cr": 110.15,
    "gmp_text": null,
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 1630.93,
+   "revenue_growth_pct": 16.0,
+   "pat_cr": 106.68,
+   "pat_growth_pct": 165.0,
+   "pat_margin_pct": 6.54,
+   "roe_pct": 50.94,
+   "debt_to_equity": 0.8,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 367.18,
-   "enriched_url": "https://www.chittorgarh.com/ipo/shankesh-jewellers-ipo/2663/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/shankesh-jewellers-ipo/2663/",
+   "reads_for": [
+    "Profit grew faster than revenue (165% against 16%), so margins widened rather than bought growth.",
+    "Return on net worth of 51% \u2014 well above the ~14% a typical listed peer earns."
+   ],
+   "reads_against": null
   },
   {
    "symbol": "LALITHAA",
@@ -492,22 +536,28 @@
    "face_value": 5.0,
    "anchor_cr": 508.2,
    "gmp_text": null,
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
+   "revenue_cr": 25039.8,
+   "revenue_growth_pct": 48.0,
+   "pat_cr": 1009.82,
+   "pat_growth_pct": 177.0,
+   "pat_margin_pct": 4.03,
+   "roe_pct": 39.9,
+   "debt_to_equity": 0.53,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 1700.0,
-   "enriched_url": "https://www.chittorgarh.com/ipo/lalithaa-jewellery-mart-ipo/2469/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/lalithaa-jewellery-mart-ipo/2469/",
+   "reads_for": [
+    "Revenue grew 48% year on year.",
+    "Profit grew faster than revenue (177% against 48%), so margins widened rather than bought growth.",
+    "Return on net worth of 40% \u2014 well above the ~14% a typical listed peer earns."
+   ],
+   "reads_against": null
   },
   {
    "symbol": "HORIZONIND",
@@ -523,22 +573,26 @@
    "face_value": 10.0,
    "anchor_cr": 1167.75,
    "gmp_text": null,
-   "revenue_cr": null,
+   "revenue_cr": 767.84,
    "revenue_growth_pct": null,
-   "pat_cr": null,
+   "pat_cr": -203.65,
    "pat_growth_pct": null,
-   "pat_margin_pct": null,
+   "pat_margin_pct": -26.52,
    "roe_pct": null,
-   "debt_to_equity": null,
+   "debt_to_equity": 1.47,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 2600.04,
-   "enriched_url": "https://www.chittorgarh.com/ipo/horizon-industrial-parks-ipo/2826/"
+   "enriched_url": "https://www.chittorgarh.com/ipo/horizon-industrial-parks-ipo/2826/",
+   "reads_for": null,
+   "reads_against": [
+    "Net margin is -26.52%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue."
+   ]
   }
  ],
  "stalled": [
