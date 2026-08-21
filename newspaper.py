@@ -5934,6 +5934,20 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ipo-missing{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.6;
   border-top:1px solid var(--line);padding-top:9px;margin-top:11px}
 @media(max-width:520px){.ipo-facts{grid-template-columns:1fr}}
+/* Paper-wallet tier framework. Three cards explaining WHY a tier exists, above
+   the rule list that states WHAT its caps are. Separated because they answer
+   different questions and a reader needs the first to make sense of the second. */
+.wal-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.wal-tier{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.wal-tier-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  flex-wrap:wrap;margin-bottom:8px}
+.wal-tier-n{font-family:var(--mono);font-size:10px;color:var(--lime);white-space:nowrap}
+.wal-tier-w{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0 0 10px}
+.wal-tier-e{display:flex;flex-wrap:wrap;gap:5px}
+.wal-tier-e span{font-family:var(--mono);font-size:9.5px;color:var(--dim);
+  background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:3px 8px}
+.wal-excluded{font-size:12.5px;line-height:1.6;color:var(--muted);margin:12px 0 0;max-width:78ch;
+  border-left:2px solid var(--line2);padding-left:12px}
 .wal-live-tag{font-family:var(--mono);font-size:10px;font-style:italic;color:var(--dim);margin-left:3px}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
 /* Long vs short in the paper wallet. Shape AND colour, not colour alone —

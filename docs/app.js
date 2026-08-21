@@ -1884,9 +1884,59 @@ var TV_ALIASES = (function () {
           '</div>';
       }).join('');
 
+      // WHY each tier exists, and why an engine sits in one rather than another.
+      // The rule table below shows WHAT the caps are; without this a reader can
+      // see that cf_1h gets 1.5% and multibagger gets 5% but not why, and a
+      // sizing rule nobody can reconstruct reads as arbitrary.
+      //
+      // Keyed by tier, not by engine: engines move between tiers as horizons are
+      // re-measured, and the reason belongs to the horizon, not to the name.
+      var TIER_WHY = {
+        long: 'Ideas held for quarters or years, where the thesis is the business ' +
+              'rather than the chart. Widest stops, so the largest per-trade size ' +
+              'is affordable: a 5% position on a stop 25% away risks about the same ' +
+              'as a 1.5% position on a stop 8% away.',
+        swing: 'Days to weeks, entered on structure and exited on a level. The ' +
+               'middle tier by both size and stop distance, and the one that does ' +
+               'most of the work — most engines produce signals of this shape.',
+        hf:   'Hours to a session. Smallest per-trade size and the tightest ' +
+              'combined cap, because the edge per trade is thinnest and the ' +
+              'trade count is highest: the risk here is death by a thousand cuts, ' +
+              'not one bad position.'
+      };
+      var framework =
+        '<div class="subhead"><span class="subeyebrow">The framework</span>' +
+        '<h3>Why each trade is here, and how big it gets</h3>' +
+        '<p class="subdesc">Every signal this ledger produces is sorted into one of three ' +
+        'horizon tiers, and the tier — not the engine\'s name and not how good the setup ' +
+        'looks — decides the position size. Stops widen with horizon, so size has to narrow ' +
+        'as horizon shortens for the rupee risk to stay comparable across all three.</p></div>' +
+        '<div class="wal-tiers">' +
+        WALLET_TIER_ORDER.map(function(k){
+          var c = cats[k];
+          if (!c) return '';
+          return '<div class="wal-tier">' +
+            '<div class="wal-tier-h"><strong>' + esc(c.label) + '</strong>' +
+            '<span class="wal-tier-n">' + fmt(c.max_pct * 100, 1) + '% / trade · ' +
+            fmt(c.cap_pct * 100, 0) + '% cap</span></div>' +
+            '<p class="wal-tier-w">' + TIER_WHY[k] + '</p>' +
+            '<div class="wal-tier-e">' + c.engines.map(function(e){
+              return '<span>' + esc(e) + '</span>'; }).join('') + '</div></div>';
+        }).join('') + '</div>' +
+        // What is deliberately NOT sized matters as much as what is. Without
+        // this a reader sees top5_pick in the Signal Log, looks for it here and
+        // concludes the wallet is dropping trades silently.
+        ((j.untiered_types && j.untiered_types.length)
+          ? '<p class="wal-excluded"><b>Deliberately not sized:</b> ' +
+            j.untiered_types.map(esc).join(', ') +
+            '. These are research artefacts, not trade signals — a weekly ranking and a ' +
+            'monthly savings bucket. They appear in the Signal Log because they were ' +
+            'published, and they are absent here because no capital is committed to them.</p>'
+          : '');
+
       // The rule table itself, rendered from the SAME numbers the backend
       // just enforced — not a second hardcoded copy that could drift.
-      var rulesElog = '<ol class="elog rv" style="margin-top:18px">' +
+      var rulesElog = framework + '<ol class="elog rv" style="margin-top:18px">' +
         WALLET_TIER_ORDER.map(function(k){
           var c = cats[k];
           if (!c) return '';
