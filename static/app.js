@@ -890,16 +890,43 @@ var TV_ALIASES = (function () {
   window.addEventListener('scroll', setActive, {passive:true});
   setActive();
 
-  /* ── alert filters ── */
-  document.querySelectorAll('.fbtn').forEach(function(b){
+  /* ── alert filters ──
+     Scoped to `.fbtn[data-f]`, and the clear is scoped to the same group.
+
+     This used to bind to EVERY .fbtn on the page and, on any click, strip `on`
+     from every .fbtn in the document. The stock screen's preset chips are also
+     .fbtn, and they are a multi-select that ANDs — so picking "Cheap & good"
+     and then "RSI > 70" left only the second one lit, and the screen behaved as
+     a radio group even though presets[] and passes() had supported multi-select
+     all along. The filtering logic was never the problem; this handler was
+     erasing its state.
+
+     Second bug in the same three lines: a screener chip has no data-f, so `f`
+     came back undefined and the row test `f === 'all' || r.dataset.badge === f`
+     failed for every row — clicking a preset in the Stock Screen hid every row
+     of the Signal Log table further down the page.
+
+     Same failure and same fix as the `.tabs` groups immediately below, which
+     were scoped to their owning section for exactly this reason. */
+  document.querySelectorAll('.fbtn[data-f]').forEach(function(b){
     b.addEventListener('click', function(){
-      document.querySelectorAll('.fbtn').forEach(function(x){ x.classList.remove('on'); });
+      var group = b.parentElement || document;
+      group.querySelectorAll('.fbtn[data-f]').forEach(function(x){ x.classList.remove('on'); });
       b.classList.add('on');
       var f = b.dataset.f;
       document.querySelectorAll('#alertTable tbody tr').forEach(function(r){
         r.style.display = (f === 'all' || r.dataset.badge === f) ? '' : 'none';
       });
     });
+  });
+
+  /* Any element carrying data-stock opens that company's detail sheet.
+     Delegated on the document so it works for markup rendered after load. */
+  document.addEventListener('click', function(ev){
+    var a = ev.target.closest ? ev.target.closest('[data-stock]') : null;
+    if (!a) return;
+    ev.preventDefault();
+    if (window.__openStock) window.__openStock(a.dataset.stock);
   });
 
   /* ── tab groups (desk, way) ──
@@ -5350,6 +5377,28 @@ var TV_ALIASES = (function () {
       document.body.style.overflow = 'hidden';
       try { history.pushState({ stock: sym }, '', '?stock=' + encodeURIComponent(sym)); } catch(e){}
     }
+
+    /* Published so anything on the page can open a company, not just a row in
+       this table. Sector movers in Market Intel used to be <a href="#stocks">,
+       which scrolled the reader to the top of a 750-row screen and left them to
+       find the name themselves — a link that answers a different question from
+       the one that was clicked.
+
+       ROWS is loaded lazily when the Stock Screen scrolls into view, so a click
+       from Market Intel usually arrives before the data does. openStock()
+       returns silently in that case, which would read as a dead link; this
+       loads first and opens after. */
+    window.__openStock = function(sym){
+      if (!sym) return;
+      if (ROWS.length){ openStock(sym); return; }
+      load();
+      var tries = 0;
+      (function wait(){
+        if (ROWS.length) return openStock(sym);
+        if (++tries > 40) return;              // ~6s, then give up silently
+        setTimeout(wait, 150);
+      })();
+    };
 
     /* This block closes its OWN sheet.
        The #sheet element is shared with the ledger's trade sheet, and that one

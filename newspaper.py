@@ -5943,6 +5943,10 @@ table.t tbody tr:last-child td{border-bottom:none}
    score does NOT include is part of reading the score. */
 .ipo-missing{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.6;
   border-top:1px solid var(--line);padding-top:9px;margin-top:11px}
+/* The screens are a multi-select that ANDs, and nothing on screen said so —
+   readers picked one, saw the list change, and assumed it was a radio group. */
+.ctl-hint{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.4px;
+  text-transform:none;color:var(--dim);margin-top:2px;font-weight:400}
 .ipo-drv{font-family:var(--mono);font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;
   color:var(--dim);border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help}
 /* Grey market. Boxed and visually cooler than every other fact on the card,
@@ -6980,15 +6984,19 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </summary>
       <p class="fnd-r" style="margin-top:10px">Best five</p>
       <ul class="mv-list">
+        {# Opens THAT company's detail sheet — scores, fundamentals, technicals,
+           the year tables — rather than scrolling to the top of a 750-row
+           screen and leaving the reader to find the name themselves. href
+           survives as the no-JS fallback. #}
         {% for g in m.gainers %}
-        <li><a href="#stocks" class="sym">{{ g.sym }}</a>
+        <li><a href="#stocks" class="sym" data-stock="{{ g.sym }}">{{ g.sym }}</a>
             <span class="up">{{ '+' if g.move > 0 else '' }}{{ g.move }}%</span></li>
         {% endfor %}
       </ul>
       <p class="fnd-r" style="margin-top:10px">Worst five</p>
       <ul class="mv-list">
         {% for l in m.losers %}
-        <li><a href="#stocks" class="sym">{{ l.sym }}</a>
+        <li><a href="#stocks" class="sym" data-stock="{{ l.sym }}">{{ l.sym }}</a>
             <span class="dn">{{ '+' if l.move > 0 else '' }}{{ l.move }}%</span></li>
         {% endfor %}
       </ul>
@@ -7624,7 +7632,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </details>
 
   <div class="ctlbar rv" id="scrPresets" role="group" aria-label="Preset screens">
-    <span class="ghost" style="margin-left:0">SCREENS</span>
+    <span class="ghost" style="margin-left:0">SCREENS<span class="ctl-hint">combine any &mdash; they narrow together</span></span>
     <button type="button" class="fbtn on" data-preset="all">All</button>
     <button type="button" class="fbtn" data-preset="compounders">Quality compounders</button>
     <button type="button" class="fbtn" data-preset="cheapquality">Cheap &amp; good</button>
