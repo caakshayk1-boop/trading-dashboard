@@ -2138,6 +2138,12 @@ SECTION_MAP = [
     # seclabel reads from here, so the eyebrow follows automatically.
     ("longterm",    "Own the Business", "main", "Research"),
     ("stocks",      "Stock Screen", "main", "Research"),
+    # IPO Radar is a DECISION artefact: what is open now and whether to apply.
+    # New Listings below it is a PERFORMANCE artefact: how names that already
+    # listed have traded since. Different question, different source, different
+    # failure mode — so they are two sections, and Radar comes first because a
+    # book that closes on Monday cannot wait behind a history table.
+    ("iporadar",    "IPO Radar",    "main", "Research"),
     ("ipos",        "New Listings", "main", "Research"),
     ("funds",       "Fund Screen",  "main", "Research"),
     ("sip",         "SIP Buckets",  "main", "Research"),
@@ -2217,7 +2223,8 @@ PAGE_META = {
 
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
                    stock_screen=None, market_intel=None, careers=None,
-                   brief=None, health=None, ipos=None, findings=None) -> set:
+                   brief=None, health=None, ipos=None, findings=None,
+                   iporadar=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2226,6 +2233,11 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     here, and this is where the nav and the document have to agree.
     """
     drop = set()
+    # Radar earns its nav slot only when there is a live book or one coming.
+    # Between windows there is genuinely nothing to decide, and a permanently
+    # empty "IPO Radar" in the nav teaches the reader to skip it.
+    if not ((iporadar or {}).get("open") or (iporadar or {}).get("upcoming")):
+        drop.add("iporadar")
     if not (fund_screen or {}).get("categories"):
         drop.add("funds")
     if not (podcasts or {}).get("episodes"):
@@ -5880,6 +5892,48 @@ table.t tbody tr:last-child td{border-bottom:none}
    rendering the two identically is the same error as counting open trades in a
    win rate. */
 .wal-live{border-bottom:1px dotted var(--line2);cursor:help;opacity:.86}
+/* ═══════════════════ IPO RADAR ═══════════════════
+   Cards, not a table: each issue carries a verdict, a reason, a counter-reason
+   and a list of what was NOT measured, and none of that survives being flattened
+   into columns. The verdict colour is a left border rather than a filled card —
+   an APPLY should read as confident, not as an advertisement. */
+.ipo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.ipo-card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line2);
+  border-radius:14px;padding:17px 19px;transition:border-color .25s,transform .25s}
+.ipo-card:hover{transform:translateY(-2px)}
+.ipo-apply{border-left-color:var(--up)}
+.ipo-avoid{border-left-color:var(--down)}
+.ipo-watch{border-left-color:var(--gold)}
+.ipo-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.ipo-co{font-size:12px;color:var(--muted);line-height:1.4;margin-top:3px;max-width:34ch}
+.ipo-verdict{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.1px;
+  padding:5px 10px;border-radius:100px;white-space:nowrap;border:1px solid currentColor}
+.ipo-apply .ipo-verdict{color:var(--up);background:rgba(61,220,151,.1)}
+.ipo-avoid .ipo-verdict{color:var(--down);background:rgba(255,92,92,.1)}
+.ipo-watch .ipo-verdict{color:var(--gold);background:rgba(230,180,80,.1)}
+.ipo-facts{display:grid;grid-template-columns:1fr 1fr;gap:9px 14px;margin-bottom:12px}
+.ipo-facts>div{display:flex;flex-direction:column;gap:2px}
+.ipo-facts .k{font-family:var(--mono);font-size:9px;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim)}
+.ipo-facts .v{font-size:13px;font-variant-numeric:tabular-nums}
+.ipo-cats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.ipo-cats span{font-family:var(--mono);font-size:10px;color:var(--muted);
+  background:var(--bg2);border:1px solid var(--line);border-radius:100px;padding:3px 9px}
+.ipo-score{margin-bottom:12px}
+.ipo-score-bar{height:4px;background:var(--bg2);border-radius:100px;overflow:hidden;margin-bottom:7px}
+/* Width is inline from the template; the transition makes it draw in rather
+   than snap, which is the only motion on this card. */
+.ipo-score-bar i{display:block;height:100%;background:var(--lime);border-radius:100px;
+  transition:width .9s cubic-bezier(.22,1,.36,1)}
+.ipo-score-n{font-family:var(--mono);font-size:10.5px;color:var(--text);margin-right:8px}
+.ipo-score-parts{font-family:var(--mono);font-size:9.5px;color:var(--dim)}
+.ipo-why,.ipo-caveat,.ipo-missing{font-size:12.5px;line-height:1.55;margin:0 0 7px}
+.ipo-why{color:var(--text)}
+.ipo-caveat{color:var(--muted)}
+/* The list of gaps is deliberately legible, not hidden in a tooltip: what a
+   score does NOT include is part of reading the score. */
+.ipo-missing{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.6;
+  border-top:1px solid var(--line);padding-top:9px;margin-top:11px}
+@media(max-width:520px){.ipo-facts{grid-template-columns:1fr}}
 .wal-live-tag{font-family:var(--mono);font-size:10px;font-style:italic;color:var(--dim);margin-left:3px}
 .badge-cancelled{background:rgba(255,255,255,.04);color:var(--dim);border:1px solid var(--line)}
 /* Long vs short in the paper wallet. Shape AND colour, not colour alone —
@@ -7709,6 +7763,96 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           that it does not fabricate. Every figure here is measured from the
           FIRST TRADED CLOSE and the column says so.
        2. Any view on what to do about it. Same rule as the screen. -->
+<!-- ══════════ IPO RADAR ══════════
+     What is open now and whether to apply. Distinct from New Listings below,
+     which measures how already-listed names have traded. Source is NSE's own
+     public issue endpoints; mainboard only (series EQ), because SME issues are
+     a different asset class with different lot sizes and liquidity.
+
+     The score denominator is deliberately NOT normalised to 100. An issue whose
+     book has not opened can only be scored on two of four dimensions, so it
+     reads "/45 measured" rather than being scaled up to look complete. Filling
+     the gaps to reach a tidy /100 is the exact failure this section exists to
+     avoid. -->
+{% if 'iporadar' in secs and iporadar %}<section class="sec" id="iporadar">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['iporadar'] }} / {{ seclabel['iporadar'] }}</span>
+      <h2 class="stitle">Open books, and whether to apply.</h2>
+    </div>
+    <p class="sdesc">Mainboard NSE issues only &mdash; SME is a different asset class and is
+      filtered out by series, not by size. Verdicts are driven by <b>subscription demand</b>,
+      the one dimension public data actually measures. Everything not measured is named on
+      each card rather than estimated.</p>
+  </div>
+
+  <div class="kpi-row rv" style="margin-bottom:18px">
+    <div class="kpi"><div class="v">{{ iporadar.counts.open }}</div><div class="k">Open now</div></div>
+    <div class="kpi"><div class="v">{{ iporadar.counts.upcoming }}</div><div class="k">Opening soon</div></div>
+    <div class="kpi"><div class="v {{ 'up' if iporadar.counts.apply else '' }}">{{ iporadar.counts.apply }}</div><div class="k">Apply / Apply-small</div></div>
+    <div class="kpi"><div class="v {{ 'dn' if iporadar.counts.avoid else '' }}">{{ iporadar.counts.avoid }}</div><div class="k">Avoid</div></div>
+  </div>
+
+  {% for grp, label, eyebrow, blurb in [
+       ('open', 'Open now', 'Act this week',
+        'Books taking bids today. The subscription multiple is live from NSE and moves through the day &mdash; most of it arrives on the final session, so an early figure is not a final one.'),
+       ('upcoming', 'Opening soon', 'On the calendar',
+        'Dates and bands are confirmed, but no money has been committed yet. Every one of these is WATCH by construction: there is no demand evidence to judge, and a verdict without evidence is a guess with a colour on it.')] %}
+  {% set rows = iporadar.get(grp) or [] %}
+  {% if rows %}
+  <div class="subhead">
+    <span class="subeyebrow">{{ eyebrow }}</span>
+    <h3>{{ label }}</h3>
+    <p class="subdesc">{{ blurb }}</p>
+  </div>
+  <div class="ipo-grid rv">
+    {% for r in rows %}
+    {% set v = r.verdict %}
+    <div class="ipo-card ipo-{{ 'apply' if v.startswith('APPLY') else 'avoid' if v == 'AVOID' else 'watch' }}">
+      <div class="ipo-top">
+        <div>
+          <strong class="sym">{{ r.symbol }}</strong>
+          <div class="ipo-co">{{ r.company }}</div>
+        </div>
+        <span class="ipo-verdict">{{ v }}</span>
+      </div>
+
+      <div class="ipo-facts">
+        <div><span class="k">Price band</span><span class="v">{{ r.price_band or '—' }}</span></div>
+        <div><span class="k">Issue size</span><span class="v">{{ ('₹%s Cr'|format('{:,.0f}'.format(r.issue_size_cr))) if r.issue_size_cr else '—' }}</span></div>
+        <div><span class="k">Window</span><span class="v">{{ r.open_date or '—' }} → {{ r.close_date or '—' }}</span></div>
+        <div><span class="k">Subscribed</span><span class="v {{ 'up' if r.subscription_x and r.subscription_x >= 3 else 'dn' if r.subscription_x is not none and r.subscription_x < 1 else '' }}">{{ ('%.2fx'|format(r.subscription_x)) if r.subscription_x is not none else 'not open yet' }}</span></div>
+      </div>
+
+      {% if r.subscription_by_category %}
+      <div class="ipo-cats">{% for c, n in r.subscription_by_category.items() %}<span>{{ c }} <b>{{ '%.1fx'|format(n) }}</b></span>{% endfor %}</div>
+      {% endif %}
+
+      <div class="ipo-score">
+        <div class="ipo-score-bar"><i style="width:{{ r.score.pct or 0 }}%"></i></div>
+        <span class="ipo-score-n">{{ r.score.points }}/{{ r.score.of }} measured</span>
+        <span class="ipo-score-parts">{% for k, val in r.score.parts.items() %}{{ k }} {{ val }}{% if not loop.last %} · {% endif %}{% endfor %}</span>
+      </div>
+
+      <p class="ipo-why"><b>Why:</b> {{ r.verdict_why }}</p>
+      <p class="ipo-caveat"><b>Why it might be wrong:</b> {{ r.verdict_caveat }}</p>
+      <p class="ipo-missing"><b>Not measured:</b> {{ r.score.not_measured|join(' · ') }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endfor %}
+
+  <p class="fine" style="margin-top:20px;max-width:80ch">
+    Not investment advice, and not a view on any business. A verdict here is a reading of
+    <i>public demand</i> and nothing more &mdash; NSE's feeds carry no lot size, no sector, no
+    financials and no valuation, so none of those inform the score and none are guessed at.
+    Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
+    Source: NSE public issue endpoints, read {{ iporadar.generated_at[:16]|replace('T', ' ') }}.
+  </p>
+</section>
+{% endif %}
+
 {% if 'ipos' in secs and ipos.get('rows') %}
 <section class="sec" id="ipos">
   <div class="shead rv">

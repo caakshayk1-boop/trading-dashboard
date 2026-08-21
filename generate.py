@@ -383,6 +383,24 @@ def generate() -> None:
     ipos = get_ipos()
     if ipos:
         ipos["job_status"] = get_job_status("ipos", ipos.get("generated_at"))
+    # IPO Radar. Three HTTP calls against NSE's own public endpoints, so unlike
+    # the fund and stock screens it is cheap enough to refresh with the daily
+    # build — and it has to be: subscription figures move hourly while a book is
+    # open, and a fortnightly Radar would show a stale multiple on a live issue.
+    try:
+        import ipo_radar
+        iporadar = ipo_radar.build()
+        ipo_radar.OUT.parent.mkdir(parents=True, exist_ok=True)
+        ipo_radar.OUT.write_text(json.dumps(iporadar, indent=1))
+        print(f"[generate] IPO Radar: {iporadar['counts']['open']} open, "
+              f"{iporadar['counts']['upcoming']} upcoming, "
+              f"{iporadar['counts']['apply']} APPLY")
+    except Exception as e:
+        # Never fail the paper for one section. An empty Radar renders its own
+        # empty state, which is honest; a crashed build publishes nothing.
+        iporadar = None
+        print(f"[generate] IPO Radar FAILED: {e}")
+
     print(f"[generate] New listings (cached): {ipos.get('count', 0)} in "
           f"{ipos.get('months', 0)} months"
           f"{' (previous build)' if ipos.get('is_fallback') else ''}")
@@ -664,6 +682,7 @@ def generate() -> None:
         stock_screen=stock_screen,
         findings=findings,
         ipos=ipos,
+        iporadar=iporadar,
         podcasts=podcasts,
         smart_reads=smart_reads,
         top5_week=top5_week,
@@ -771,7 +790,8 @@ def generate() -> None:
         # so a reader never gets a link to a section that is not there.
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
                                                         stock_screen, market_intel, careers,
-                                                        brief, health, ipos, findings)))
+                                                        brief, health, ipos, findings,
+                                                        iporadar)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")

@@ -1,0 +1,354 @@
+{
+ "generated_at": "2026-08-21T23:08:17",
+ "source": "NSE public issue endpoints",
+ "mainboard_only": true,
+ "open": [
+  {
+   "symbol": "GAJA",
+   "company": "Gaja Alternative Asset Management Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "open",
+   "status": "Active",
+   "open_date": "2026-08-19",
+   "close_date": "2026-08-21",
+   "days_left": 0,
+   "price_band": "Rs.152 to Rs.160",
+   "price_low": 152.0,
+   "price_high": 160.0,
+   "issue_size_shares": 25328946.0,
+   "issue_size_cr": 405.3,
+   "subscription_x": 15.631971500116903,
+   "subscription_by_category": null,
+   "lot_size": null,
+   "min_investment": null,
+   "score": {
+    "points": 73,
+    "of": 100,
+    "pct": 73,
+    "parts": {
+     "Demand": "40/40",
+     "Size": "14/25",
+     "Pricing": "15/20",
+     "Window": "4/15"
+    },
+    "not_measured": [
+     "lot size",
+     "sector",
+     "financials",
+     "valuation multiples",
+     "anchor book",
+     "GMP"
+    ]
+   },
+   "verdict": "APPLY - SMALL",
+   "verdict_why": "Subscribed 15.6x, but the book is small (about Rs.405 Cr).",
+   "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly."
+  },
+  {
+   "symbol": "TEMPSENS",
+   "company": "Tempsens Instruments (India) Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "open",
+   "status": "Active",
+   "open_date": "2026-08-20",
+   "close_date": "2026-08-24",
+   "days_left": 3,
+   "price_band": "Rs.285 to Rs.300",
+   "price_low": 285.0,
+   "price_high": 300.0,
+   "issue_size_shares": 15181667.0,
+   "issue_size_cr": 455.5,
+   "subscription_x": 13.70394305184009,
+   "subscription_by_category": null,
+   "lot_size": null,
+   "min_investment": null,
+   "score": {
+    "points": 84,
+    "of": 100,
+    "pct": 84,
+    "parts": {
+     "Demand": "40/40",
+     "Size": "14/25",
+     "Pricing": "15/20",
+     "Window": "15/15"
+    },
+    "not_measured": [
+     "lot size",
+     "sector",
+     "financials",
+     "valuation multiples",
+     "anchor book",
+     "GMP"
+    ]
+   },
+   "verdict": "APPLY - SMALL",
+   "verdict_why": "Subscribed 13.7x, but the book is small (about Rs.456 Cr).",
+   "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly."
+  },
+  {
+   "symbol": "AUGMONT",
+   "company": "Augmont Enterprises Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "open",
+   "status": "Active",
+   "open_date": "2026-08-21",
+   "close_date": "2026-08-25",
+   "days_left": 4,
+   "price_band": "Rs.750 to Rs.788",
+   "price_low": 750.0,
+   "price_high": 788.0,
+   "issue_size_shares": 7715999.0,
+   "issue_size_cr": 608.0,
+   "subscription_x": 1.7901764891364034,
+   "subscription_by_category": null,
+   "lot_size": null,
+   "min_investment": null,
+   "score": {
+    "points": 60,
+    "of": 100,
+    "pct": 60,
+    "parts": {
+     "Demand": "16/40",
+     "Size": "14/25",
+     "Pricing": "15/20",
+     "Window": "15/15"
+    },
+    "not_measured": [
+     "lot size",
+     "sector",
+     "financials",
+     "valuation multiples",
+     "anchor book",
+     "GMP"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "1.8x so far, with time left on the book.",
+   "verdict_caveat": "Most subscription arrives on the final day; this figure is not final."
+  }
+ ],
+ "upcoming": [
+  {
+   "symbol": "HTEL",
+   "company": "Hy-Tech Engineers Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-08-24",
+   "close_date": "2026-08-27",
+   "days_left": null,
+   "price_band": "Rs.50 to Rs.53",
+   "price_low": 50.0,
+   "price_high": 53.0,
+   "issue_size_shares": 18145406.0,
+   "issue_size_cr": 96.2,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": null,
+   "min_investment": null,
+   "score": {
+    "points": 23,
+    "of": 45,
+    "pct": 51,
+    "parts": {
+     "Size": "8/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "lot size",
+     "sector",
+     "financials",
+     "valuation multiples",
+     "anchor book",
+     "GMP"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business."
+  },
+  {
+   "symbol": "SYMBIOTEC",
+   "company": "Symbiotec Pharmalab Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-08-24",
+   "close_date": "2026-08-27",
+   "days_left": null,
+   "price_band": "Rs.938 to Rs.988",
+   "price_low": 938.0,
+   "price_high": 988.0,
+   "issue_size_shares": 13124929.0,
+   "issue_size_cr": 1296.7,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": null,
+   "min_investment": null,
+   "score": {
+    "points": 35,
+    "of": 45,
+    "pct": 78,
+    "parts": {
+     "Size": "20/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "lot size",
+     "sector",
+     "financials",
+     "valuation multiples",
+     "anchor book",
+     "GMP"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business."
+  },
+  {
+   "symbol": "SKYWAYS",
+   "company": "Skyways Air Services Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-08-24",
+   "close_date": "2026-08-27",
+   "days_left": null,
+   "price_band": "Rs.131 to Rs.138",
+   "price_low": 131.0,
+   "price_high": 138.0,
+   "issue_size_shares": 29583600.0,
+   "issue_size_cr": 408.3,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": null,
+   "min_investment": null,
+   "score": {
+    "points": 29,
+    "of": 45,
+    "pct": 64,
+    "parts": {
+     "Size": "14/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "lot size",
+     "sector",
+     "financials",
+     "valuation multiples",
+     "anchor book",
+     "GMP"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business."
+  }
+ ],
+ "closed": [],
+ "recent_closed": [
+  {
+   "symbol": "SUNSHINE",
+   "company": "Sunshine Pictures Limited",
+   "price_band": "Rs.342 to Rs.360",
+   "close_date": "2026-08-20",
+   "listing_date": null
+  },
+  {
+   "symbol": "SHANKESH",
+   "company": "Shankesh Jewellers Limited",
+   "price_band": "Rs.88 to Rs.93",
+   "close_date": "2026-08-20",
+   "listing_date": null
+  },
+  {
+   "symbol": "LALITHAA",
+   "company": "Lalithaa Jewellery Mart Limited",
+   "price_band": "Rs.190 to Rs.201",
+   "close_date": "2026-08-19",
+   "listing_date": null
+  },
+  {
+   "symbol": "HORIZONIND",
+   "company": "Horizon Industrial Parks Limited",
+   "price_band": "Rs.57 to Rs.60",
+   "close_date": "2026-08-19",
+   "listing_date": null
+  },
+  {
+   "symbol": "SHIPROCKET",
+   "company": "Shiprocket Limited",
+   "price_band": "Rs.92 to Rs.97",
+   "close_date": "2026-08-14",
+   "listing_date": "2026-08-19"
+  },
+  {
+   "symbol": "BLEL",
+   "company": "Behari Lal Engineering Limited",
+   "price_band": "Rs.271 to Rs.285",
+   "close_date": "2026-08-14",
+   "listing_date": "2026-08-19"
+  },
+  {
+   "symbol": "MILKYMIST",
+   "company": "Milky Mist Dairy Food Limited",
+   "price_band": "Rs.133 to Rs.140",
+   "close_date": "2026-08-13",
+   "listing_date": "2026-08-18"
+  },
+  {
+   "symbol": "MOLBIO",
+   "company": "Molbio Diagnostics Limited",
+   "price_band": "Rs.768 to Rs.807",
+   "close_date": "2026-08-12",
+   "listing_date": "2026-08-17"
+  },
+  {
+   "symbol": "DHOOTTRANS",
+   "company": "Dhoot Transmission Limited",
+   "price_band": "Rs.829 to Rs.871",
+   "close_date": "2026-08-12",
+   "listing_date": "2026-08-17"
+  },
+  {
+   "symbol": "LEAP",
+   "company": "Leap India Limited",
+   "price_band": "Rs.151 to Rs.159",
+   "close_date": "2026-08-11",
+   "listing_date": "2026-08-14"
+  },
+  {
+   "symbol": "TECHNOCRAF",
+   "company": "Technocraft Ventures Limited",
+   "price_band": "Rs.200 to Rs.212",
+   "close_date": "2026-08-11",
+   "listing_date": "2026-08-14"
+  },
+  {
+   "symbol": "ARDEE",
+   "company": "Ardee Industries Limited",
+   "price_band": "Rs.50 to Rs.53",
+   "close_date": "2026-08-07",
+   "listing_date": "2026-08-12"
+  }
+ ],
+ "counts": {
+  "open": 3,
+  "upcoming": 3,
+  "apply": 2,
+  "avoid": 0
+ }
+}

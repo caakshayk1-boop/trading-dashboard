@@ -197,16 +197,21 @@ def _():
 def _():
     """The rebuild's core promise, as an assertion.
 
-    32 sections before the restructure, 32 after. A section that drifts into a
-    group outside the four pillars is orphaned functionality — reachable by
-    scrolling, invisible in navigation.
+    32 sections before the restructure, 32 after; 33 once IPO Radar was added
+    on 2026-08-21. A section that drifts into a group outside the four pillars
+    is orphaned functionality — reachable by scrolling, invisible in navigation.
+
+    The count is a canary for sections appearing by ACCIDENT, so it moves only
+    with a deliberate addition and a note saying which one. Bumping it to make
+    a red test go green, without knowing what the new section is, defeats the
+    only thing this line does.
     """
     PILLARS = {"Signal", "Research", "Desk"}          # the / page
     LIFE = {"Career", "Learning", "Practice", "Mind", "Drills"}   # the /desk page
     for _i, _l, page, group in SECTION_MAP:
         allowed = PILLARS if page == "main" else LIFE
         assert group in allowed, f"{_i} is in {group!r}, which is no pillar"
-    assert len(SECTION_MAP) == 32, f"section count changed: {len(SECTION_MAP)}"
+    assert len(SECTION_MAP) == 33, f"section count changed: {len(SECTION_MAP)}"
 
 
 @check("every section that existed before the rebuild still exists")
