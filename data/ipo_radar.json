@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-21T20:30:08",
+ "generated_at": "2026-08-21T20:43:18",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -19,13 +19,7 @@
    "issue_size_shares": 15181667.0,
    "issue_size_cr": 650.0,
    "subscription_x": 13.70394305184009,
-   "subscription_by_category": {
-    "QIB": 3.31,
-    "HNI": 53.15,
-    "Retail": 18.86,
-    "Employee": 29.37,
-    "Total": 21.79
-   },
+   "subscription_by_category": null,
    "lot_size": 50.0,
    "min_investment": 15000.0,
    "fresh_issue_cr": 95.0,
@@ -74,7 +68,6 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1304/tempsens-instruments",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Effectively debt-free at 0.16 debt to equity, so the balance sheet is not a constraint."
    ],
@@ -98,7 +91,13 @@
    "issue_size_shares": 7715999.0,
    "issue_size_cr": 825.0,
    "subscription_x": 1.7901764891364034,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 1.85,
+    "HNI": 4.2,
+    "Retail": 3.0,
+    "Employee": 1.51,
+    "Total": 2.92
+   },
    "lot_size": 19.0,
    "min_investment": 14972.0,
    "fresh_issue_cr": 620.0,
@@ -106,7 +105,7 @@
    "face_value": 5.0,
    "anchor_cr": 246.3,
    "listing_date": null,
-   "gmp_text": "\u20b9310 (39.34%)",
+   "gmp_text": "\u20b9310",
    "revenue_cr": 94282.47,
    "revenue_growth_pct": 42.0,
    "pat_cr": 348.3,
@@ -147,6 +146,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1303/augmont-enterprises-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 42% year on year.",
     "Profit grew faster than revenue (53% against 42%), so margins widened rather than bought growth.",
@@ -154,7 +154,8 @@
     "Effectively debt-free at 0.01 debt to equity, so the balance sheet is not a constraint."
    ],
    "reads_against": [
-    "Net margin is 0.37%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue."
+    "Net margin is 0.37%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue.",
+    "Institutions are taking it at 1.85x while retail bids 3.00x \u2014 the money with research access is the money staying out."
    ]
   }
  ],
