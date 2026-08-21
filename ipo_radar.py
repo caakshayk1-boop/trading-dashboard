@@ -60,6 +60,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import re
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -70,7 +71,8 @@ NSE = "https://www.nseindia.com"
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 REFERER = f"{NSE}/market-data/all-upcoming-issues-ipo"
-OUT = Path(__file__).parent / "data" / "ipo_radar.json"
+ROOT = Path(__file__).parent
+OUT = ROOT / "data" / "ipo_radar.json"
 
 # Mainboard. The upcoming feed mixes both classes in one response.
 MAINBOARD_SERIES = {"EQ"}
@@ -275,11 +277,37 @@ CHITTORGARH_FIELDS = {
     "gmp_text": "grey market premium as quoted, verbatim",
 }
 
+# Business performance. A second extract against the same page, kept separate
+# because these are ACCOUNTING figures rather than issue mechanics, and because
+# a failure here must not cost the lot size a reader can otherwise still use.
+#
+# None of it enters the score. The score measures public DEMAND, which is a
+# fact about what money did; these are the company's own filed numbers, and
+# turning them into points would mean asserting a valuation view the site has
+# no basis for. They are published so a reader can form theirs.
+FINANCIAL_FIELDS = {
+    "revenue_cr": "most recent full-year revenue in Rs crore",
+    "revenue_growth_pct": "year-on-year revenue growth percent",
+    "pat_cr": "most recent full-year profit after tax in Rs crore",
+    "pat_growth_pct": "year-on-year PAT growth percent",
+    "pat_margin_pct": "PAT as a percent of revenue",
+    "roe_pct": "return on equity percent",
+    "debt_to_equity": "debt to equity ratio",
+    "pe_post_issue": "post-issue price to earnings ratio",
+    "peer_pe": "average price to earnings of listed peers",
+    "fy_label": "the financial year these figures cover, e.g. FY26",
+    "strengths": "the two or three strongest points in the company's favour, "
+                 "as a single semicolon-separated string",
+    "risks": "the two or three most serious risks or weaknesses, as a single "
+             "semicolon-separated string",
+    "use_of_proceeds": "what the fresh issue money is for, one short phrase",
+}
+
 
 FIRECRAWL_SEARCH = "https://api.firecrawl.dev/v2/search"
 
 
-def _fc_search(key, company):
+def _fc_search(key, company, fields, extra=""):
     """One Firecrawl search + structured extract. REST, not the SDK.
 
     The SDK would be a new dependency for one HTTP call, and requests is
@@ -291,18 +319,21 @@ def _fc_search(key, company):
     no indication anything is wrong. Search, never construct.
     """
     import requests
+    strings = {"listing_date", "gmp_text", "fy_label", "strengths", "risks",
+               "use_of_proceeds"}
     body = {
-        "query": f"{company} IPO lot size GMP price band",
+        "query": f"{company} IPO {extra}".strip(),
         "limit": 2,
         "includeDomains": ["chittorgarh.com"],
         "scrapeOptions": {
             "formats": [{
                 "type": "json",
                 "prompt": ("Extract these IPO facts for THIS company only. Return "
-                           "null for any field not stated on the page. Never estimate."),
+                           "null for any field not stated on the page. Never estimate, "
+                           "never infer a figure from another figure."),
                 "schema": {"type": "object", "properties": {
-                    k: {"type": "string" if k in ("listing_date", "gmp_text")
-                        else "number"} for k in CHITTORGARH_FIELDS}},
+                    k: {"type": "string" if k in strings else "number"}
+                    for k in fields}},
             }],
         },
     }
@@ -321,26 +352,34 @@ def enrich(rows, key, previous=None):
         was = prev.get(r["symbol"]) or {}
         # Carry the last good values forward FIRST, so a failed fetch below
         # leaves the row no worse than it was.
-        for f in CHITTORGARH_FIELDS:
+        for f in list(CHITTORGARH_FIELDS) + list(FINANCIAL_FIELDS):
             if was.get(f) is not None:
                 r.setdefault(f, was[f])
         r.setdefault("enriched_source", was.get("enriched_source"))
         if not key:
             continue
-        try:
-            for item in _fc_search(key, r["company"]):
-                j = item.get("json") or {}
-                got = False
-                for f in CHITTORGARH_FIELDS:
-                    v = j.get(f)
-                    if v not in (None, "", 0):
-                        r[f] = v
-                        got = True
-                if got:
-                    r["enriched_source"] = "chittorgarh.com"
-                    break
-        except Exception as e:                   # noqa: BLE001
-            log.warning(f"enrich {r['symbol']}: {e} — keeping previous values")
+        # Two passes against the same domain: issue mechanics, then the
+        # company's own numbers. Separate calls rather than one fat schema —
+        # a model asked for fourteen fields at once returns more nulls than one
+        # asked for eight, and a failure on the financials must not cost the lot
+        # size a reader can otherwise still use.
+        for fields, hint in ((CHITTORGARH_FIELDS, "lot size GMP price band"),
+                             (FINANCIAL_FIELDS, "review revenue PAT margin ROE "
+                                                "P/E peer comparison strengths risks")):
+            try:
+                for item in _fc_search(key, r["company"], fields, hint):
+                    j = item.get("json") or {}
+                    got = False
+                    for f in fields:
+                        v = j.get(f)
+                        if v not in (None, "", 0):
+                            r[f] = v
+                            got = True
+                    if got:
+                        r["enriched_source"] = "chittorgarh.com"
+                        break
+            except Exception as e:               # noqa: BLE001
+                log.warning(f"enrich {r['symbol']} ({hint[:12]}): {e} — keeping previous")
 
     # Min investment is derivable once lot size is known, and deriving it from
     # the CAP price is the honest direction: it is the most a retail applicant
@@ -352,7 +391,14 @@ def enrich(rows, key, previous=None):
     return rows
 
 
-def build():
+def build(listing_perf=None):
+    """listing_perf: ipo_tracker rows, passed in by generate.py.
+
+    Passed rather than read from docs/today.json, because that artefact carries
+    a TRUNCATED preview of the listings — five rows out of thirty-two — and
+    reading it silently measured five of eighty-five listings while reporting
+    the number as though it were the real coverage.
+    """
     s = _session()
     upcoming = _get(s, "api/all-upcoming-issues?category=ipo")
     current = _get(s, "api/ipo-current-issue")
@@ -406,14 +452,14 @@ def build():
         rows.append(row)
 
     # Enrich only what someone can still act on.
-    import os
     live = [r for r in rows if r["phase"] in ("open", "upcoming")]
     if live:
         previous = []
         if OUT.exists():
             try:
                 pj = json.loads(OUT.read_text())
-                previous = (pj.get("open") or []) + (pj.get("upcoming") or [])
+                previous = ((pj.get("open") or []) + (pj.get("upcoming") or [])
+                            + (pj.get("awaiting_listing") or []))
             except Exception:                     # noqa: BLE001
                 pass
         enrich(live, os.environ.get("FIRECRAWL_API_KEY"), previous)
@@ -461,7 +507,52 @@ def build():
     stalled = [r for r in awaiting if r["days_since_close"] > 21]
     awaiting = [r for r in awaiting if r["days_since_close"] <= 21]
     awaiting.sort(key=lambda x: x["close_date"], reverse=True)
+
+    # Awaiting-listing rows are enriched too. What is outstanding for them is
+    # precisely the listing date and where the grey market is pricing the
+    # debut — the two fields NSE's closed feed does not carry — so leaving them
+    # bare is leaving out the only things still undecided.
+    if awaiting:
+        for r in awaiting:
+            r.setdefault("company", r.get("company") or r["symbol"])
+        enrich(awaiting, os.environ.get("FIRECRAWL_API_KEY"),
+               (json.loads(OUT.read_text()).get("awaiting_listing")
+                if OUT.exists() else []) or [])
     listed.sort(key=lambda x: x["listing_date"] or "", reverse=True)
+
+    # Attach measured post-listing performance. ipo_tracker.py already computes
+    # it for every recent listing it can reach — return since the first traded
+    # close, high, low, distance from the high — measured from the FIRST CLOSE
+    # rather than the issue price, because NSE's issue-price data is not
+    # reliable and a listing gain computed off a guessed one is fabricated.
+    #
+    # NSE says 88 mainboard issues closed and listed inside the window;
+    # ipo_tracker can measure a subset, because the rest sit outside the
+    # 750-name screen universe or have no usable history. Both numbers are
+    # published rather than quietly showing whichever is more flattering.
+    perf = {}
+    for row in (listing_perf or []):
+        if row.get("sym"):
+            perf[row["sym"]] = row
+    if not perf:
+        log.warning("no listing performance passed in — the listed table will "
+                    "show dates only")
+    for r in listed:
+        m = perf.get(r["symbol"])
+        if m:
+            r.update(measured=True,
+                     first_close=m.get("first_close"), last_close=m.get("last_close"),
+                     since_listing_pct=m.get("since_listing_pct"),
+                     from_high_pct=m.get("from_high_pct"),
+                     high=m.get("high"), low=m.get("low"),
+                     months_listed=m.get("months_listed"), sessions=m.get("sessions"))
+        else:
+            r["measured"] = False
+    # Measured rows first: a row with a return on it is worth more than one
+    # with only a date, and burying them under unmeasured names by pure
+    # recency hides the only part of this table that answers anything.
+    listed.sort(key=lambda x: (not x["measured"], x["listing_date"] or ""), reverse=False)
+    listed.sort(key=lambda x: (not x["measured"],))
     recent = listed
 
     return {
@@ -479,6 +570,7 @@ def build():
                    "upcoming": sum(1 for r in rows if r["phase"] == "upcoming"),
                    "awaiting": len(awaiting),
                    "listed_12m": len(recent),
+                   "listed_measured": sum(1 for r in recent if r.get("measured")),
                    "apply": sum(1 for r in rows if r["verdict"].startswith("APPLY")),
                    "avoid": sum(1 for r in rows if r["verdict"] == "AVOID")},
     }

@@ -6013,6 +6013,34 @@ table.t tbody tr:last-child td{border-bottom:none}
    readers picked one, saw the list change, and assumed it was a radio group. */
 .ctl-hint{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.4px;
   text-transform:none;color:var(--dim);margin-top:2px;font-weight:400}
+/* Business performance. Boxed apart from the issue mechanics above it because
+   these are the company's accounts, not the offer's terms — and because none of
+   them enter the score. */
+.ipo-fin{background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:11px 13px;margin-bottom:12px}
+.ipo-fin-h{font-family:var(--mono);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--lime);margin-bottom:9px}
+.ipo-fin-g{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.ipo-fin-g>div{display:flex;flex-direction:column;gap:1px}
+.ipo-fin-g .k{font-family:var(--mono);font-size:8.5px;letter-spacing:1px;
+  text-transform:uppercase;color:var(--dim)}
+.ipo-fin-g .v{font-size:12.5px;font-variant-numeric:tabular-nums}
+.ipo-fin-g .v i{font-style:normal;font-family:var(--mono);font-size:10px}
+/* The margin warning is gold, not red: a thin margin is a characteristic of the
+   business model, not an error. */
+.ipo-fin-w{font-size:11.5px;line-height:1.55;color:var(--gold);margin:10px 0 0;
+  border-left:2px solid rgba(230,180,80,.35);padding-left:9px}
+.ipo-fin-u{font-size:11.5px;line-height:1.5;color:var(--muted);margin:8px 0 0}
+/* The two-sided argument, side by side so neither reads as the conclusion. */
+.ipo-args{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.ipo-arg{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.ipo-arg b{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  display:block;margin-bottom:6px}
+.ipo-arg-y{border-left:2px solid var(--up)} .ipo-arg-y b{color:var(--up)}
+.ipo-arg-n{border-left:2px solid var(--down)} .ipo-arg-n b{color:var(--down)}
+.ipo-arg ul{margin:0;padding-left:15px}
+.ipo-arg li{font-size:11.5px;line-height:1.5;color:var(--muted);margin-bottom:4px}
+@media(max-width:560px){.ipo-args{grid-template-columns:1fr}.ipo-fin-g{grid-template-columns:1fr}}
 .ipo-drv{font-family:var(--mono);font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;
   color:var(--dim);border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help}
 /* Grey market. Boxed and visually cooler than every other fact on the card,
@@ -7955,6 +7983,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
          because a reader will look for it, boxed and labelled because acting on
          it as though it were a published figure is the mistake this whole
          section is built to prevent. #}
+      {# The company's own filed numbers. Deliberately outside the score: the
+         score measures public DEMAND, which is a fact about what money did,
+         while these are accounting figures — turning them into points would
+         assert a valuation view this site has no basis for. Published so a
+         reader can form theirs. #}
+      {% if r.revenue_cr or r.pat_cr or r.roe_pct or r.pe_post_issue %}
+      <div class="ipo-fin">
+        <div class="ipo-fin-h">Business performance{% if r.fy_label %} · {{ r.fy_label }}{% endif %}</div>
+        <div class="ipo-fin-g">
+          {% if r.revenue_cr %}<div><span class="k">Revenue</span><span class="v">₹{{ '{:,.0f}'.format(r.revenue_cr) }} Cr{% if r.revenue_growth_pct %} <i class="{{ 'up' if r.revenue_growth_pct > 0 else 'dn' }}">{{ '%+.0f'|format(r.revenue_growth_pct) }}%</i>{% endif %}</span></div>{% endif %}
+          {% if r.pat_cr %}<div><span class="k">PAT</span><span class="v">₹{{ '{:,.0f}'.format(r.pat_cr) }} Cr{% if r.pat_growth_pct %} <i class="{{ 'up' if r.pat_growth_pct > 0 else 'dn' }}">{{ '%+.0f'|format(r.pat_growth_pct) }}%</i>{% endif %}</span></div>{% endif %}
+          {% if r.pat_margin_pct %}<div><span class="k">PAT margin</span><span class="v {{ 'dn' if r.pat_margin_pct < 2 else '' }}">{{ '%.2f'|format(r.pat_margin_pct) }}%</span></div>{% endif %}
+          {% if r.roe_pct %}<div><span class="k">ROE</span><span class="v">{{ '%.0f'|format(r.roe_pct) }}%</span></div>{% endif %}
+          {% if r.debt_to_equity is not none and r.debt_to_equity != 0 %}<div><span class="k">Debt / equity</span><span class="v">{{ '%.2f'|format(r.debt_to_equity) }}</span></div>{% endif %}
+          {% if r.pe_post_issue %}<div><span class="k">P/E post-issue</span><span class="v">{{ '%.1f'|format(r.pe_post_issue) }}x{% if r.peer_pe %} <i class="mono-dim">vs {{ '%.0f'|format(r.peer_pe) }}x peers</i>{% endif %}</span></div>{% endif %}
+        </div>
+        {% if r.pat_margin_pct and r.pat_margin_pct < 2 %}
+        <p class="ipo-fin-w">A PAT margin under 2% means a high-volume, low-margin model:
+          a small move in input costs or realisations swings profit far more than it swings
+          revenue. Read the P/E against that, not against the growth rate.</p>
+        {% endif %}
+        {% if r.use_of_proceeds %}<p class="ipo-fin-u"><b>Proceeds:</b> {{ r.use_of_proceeds }}</p>{% endif %}
+      </div>
+      {% endif %}
+
+      {% if r.strengths or r.risks %}
+      <div class="ipo-args">
+        {% if r.strengths %}<div class="ipo-arg ipo-arg-y"><b>Why it might work</b>
+          <ul>{% for s in r.strengths.split(';') %}{% if s.strip() %}<li>{{ s.strip() }}</li>{% endif %}{% endfor %}</ul></div>{% endif %}
+        {% if r.risks %}<div class="ipo-arg ipo-arg-n"><b>Why it might not</b>
+          <ul>{% for s in r.risks.split(';') %}{% if s.strip() %}<li>{{ s.strip() }}</li>{% endif %}{% endfor %}</ul></div>{% endif %}
+      </div>
+      {% endif %}
+
       {% if r.gmp_text %}
       <div class="ipo-gmp">
         <span class="ipo-gmp-k">Grey market</span>
@@ -7999,12 +8061,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="tw rv">
     <table class="t"><thead><tr>
       <th scope="col">Symbol</th><th scope="col">Company</th>
-      <th scope="col">Price band</th><th scope="col">Bid closed</th><th scope="col">Days since</th>
+      <th scope="col">Price band</th><th scope="col">Bid closed</th>
+      <th scope="col">Lists on</th><th scope="col">Grey market</th><th scope="col">Days since</th>
     </tr></thead><tbody>
       {% for r in iporadar.awaiting_listing %}
       <tr><td><strong class="sym">{{ r.symbol }}</strong></td>
         <td>{{ r.company }}</td><td class="num">{{ r.price_band or '—' }}</td>
         <td class="num">{{ r.close_date }}</td>
+        <td class="num">{{ r.listing_date or 'not announced' }}</td>
+        <td class="num">{% if r.gmp_text %}<span class="wal-live" title="Unofficial grey-market quote. No exchange, no audit trail — context, not a price.">{{ r.gmp_text }}</span>{% else %}—{% endif %}</td>
         <td class="num">{{ r.days_since_close }}d</td></tr>
       {% endfor %}
     </tbody></table>
@@ -8026,19 +8091,34 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="subeyebrow">The record</span>
     <h3>Listed in the last {{ iporadar.recent_window_months }} months</h3>
     <p class="subdesc">Every mainboard issue that closed and listed inside the window &mdash;
-      {{ iporadar.recent_listed|length }} of them, newest first. This is the population any
-      verdict above is eventually judged against, which is why it is the full list rather than
-      a selected handful.</p>
+      <b>{{ iporadar.recent_listed|length }}</b> of them. <b>{{ iporadar.counts.listed_measured }}</b>
+      carry measured post-listing performance and are shown first; the rest sit outside the
+      750-name screen universe or have no usable price history, and show their dates only.
+      Both numbers are published rather than quietly showing whichever flatters.
+      Return is measured from the <b>first traded close</b>, not the issue price &mdash; NSE's
+      issue-price data is not reliable and a listing gain computed off a guessed one would be
+      fabricated. Click any measured name for its full screen detail.</p>
   </div>
   <div class="tw rv">
     <table class="t"><thead><tr>
       <th scope="col">Symbol</th><th scope="col">Company</th>
-      <th scope="col">Price band</th><th scope="col">Bid closed</th><th scope="col">Listed</th>
+      <th scope="col">Listed</th><th scope="col">First close</th><th scope="col">Last</th>
+      <th scope="col">Since listing</th><th scope="col">From high</th><th scope="col">Sessions</th>
     </tr></thead><tbody>
       {% for r in iporadar.recent_listed %}
-      <tr><td><strong class="sym">{{ r.symbol }}</strong></td>
-        <td>{{ r.company }}</td><td class="num">{{ r.price_band or '—' }}</td>
-        <td class="num">{{ r.close_date }}</td><td class="num">{{ r.listing_date }}</td></tr>
+      <tr><td><strong class="sym"{% if r.measured %} data-stock="{{ r.symbol }}" style="cursor:pointer"{% endif %}>{{ r.symbol }}</strong></td>
+        <td>{{ r.company }}</td>
+        <td class="num">{{ r.listing_date }}</td>
+        {% if r.measured %}
+        <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else '—' }}</td>
+        <td class="num">{{ '{:,.2f}'.format(r.last_close) if r.last_close else '—' }}</td>
+        <td class="num {{ 'up' if (r.since_listing_pct or 0) > 0 else 'dn' }}">{{ '%+.1f'|format(r.since_listing_pct) }}%</td>
+        <td class="num {{ 'dn' if (r.from_high_pct or 0) < 0 else '' }}">{{ '%+.1f'|format(r.from_high_pct) }}%</td>
+        <td class="num mono-dim">{{ r.sessions }}</td>
+        {% else %}
+        <td class="num mono-dim" colspan="5">not in the measured universe</td>
+        {% endif %}
+      </tr>
       {% endfor %}
     </tbody></table>
   </div>

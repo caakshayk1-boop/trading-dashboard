@@ -389,7 +389,7 @@ def generate() -> None:
     # open, and a fortnightly Radar would show a stale multiple on a live issue.
     try:
         import ipo_radar
-        iporadar = ipo_radar.build()
+        iporadar = ipo_radar.build(listing_perf=(ipos or {}).get("rows"))
         ipo_radar.OUT.parent.mkdir(parents=True, exist_ok=True)
         ipo_radar.OUT.write_text(json.dumps(iporadar, indent=1))
         print(f"[generate] IPO Radar: {iporadar['counts']['open']} open, "
