@@ -109,6 +109,12 @@ jobs:
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
           LICHESS_TOKEN: ${{ secrets.LICHESS_TOKEN }}
+          # IPO Radar's enrichment pass. NSE publishes band, size, dates and
+          # subscription but not lot size, minimum application, the fresh/OFS
+          # split or GMP; those come from Chittorgarh, which sits behind a
+          # Cloudflare challenge only Firecrawl gets through. Absent, the Radar
+          # still renders from NSE alone and simply shows fewer fields.
+          FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
         run: python generate.py
 
       # THE GATE. Serve the freshly generated docs/ locally and check it before

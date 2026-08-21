@@ -5852,7 +5852,21 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
    stuck offset specifically on scroll-direction reversal, because the
    legacy property forces its own compositing path that doesn't always
    resync the sticky offset on fling/scroll-up. */
-.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+/* Every table is its own scroll region, and its header sticks to the top of
+   THAT box — never to the viewport.
+
+   The viewport-sticky version is what put a column-header row in the middle of
+   Corporate Actions, SIP Buckets and the Paper Wallet, floating over a row and
+   hiding it. It stuck at top:var(--headh), which had to equal the height of a
+   .headstack that grows asynchronously as the ticker fills; any drift, at any
+   viewport width, on any late paint, put every header on the site in the wrong
+   place at once. That is too much machinery to keep correct for a column label.
+
+   top:0 inside a bounded box needs nothing measured and cannot drift. max-height
+   only engages once a table is actually taller than it, so short tables are
+   untouched and keep growing with the page. */
+.tw{overflow:auto;border:1px solid var(--line);border-radius:16px;max-height:min(78vh,760px);
+  overscroll-behavior:contain}
 /* The signal log is 87 rows and growing, and `position:sticky` on its <th> did
    nothing: .tw sets overflow-x, which makes overflow-y compute to auto, so .tw
    IS the scroll container — and an unbounded container has no top edge to
@@ -5867,15 +5881,11 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
    offset set on `table.t th` below. */
 .tw-tall table.t th{top:0;z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
 table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
-/* top:var(--headh), not top:0.
-   A table that is NOT wrapped in .tw-tall sticks to the VIEWPORT, and .headstack
-   is sticky at top:0 with z-index:300. So the column headers stuck themselves
-   underneath the site header and vanished — on exactly the long tables where a
-   reader most needs to know which column they are reading.
-   --headh is the stack's real measured height, written by syncScrollPad() in
-   app.js on load and on resize, and it already backs scroll-padding-top for
-   anchor jumps. The fallback matches the one used there. */
-table.t th{position:sticky;top:var(--headh,200px);background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
+/* top:0, scoped to the .tw box above — see the note there. --headh is no longer
+   involved in table headers at all; it still backs scroll-padding-top and
+   section scroll-margin for anchor jumps, where being a few px out is invisible
+   rather than a header landing in the middle of a table. */
+table.t th{position:sticky;top:0;z-index:5;background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
 table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 table.t tbody tr{transition:background .2s}
@@ -5933,7 +5943,16 @@ table.t tbody tr:last-child td{border-bottom:none}
    score does NOT include is part of reading the score. */
 .ipo-missing{font-family:var(--mono);font-size:10px;color:var(--dim);line-height:1.6;
   border-top:1px solid var(--line);padding-top:9px;margin-top:11px}
-@media(max-width:520px){.ipo-facts{grid-template-columns:1fr}}
+.ipo-drv{font-family:var(--mono);font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--dim);border:1px solid var(--line);border-radius:3px;padding:1px 4px;margin-left:5px;cursor:help}
+/* Grey market. Boxed and visually cooler than every other fact on the card,
+   because it is the one number here with no official source behind it. */
+.ipo-gmp{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;background:var(--bg2);
+  border:1px dashed var(--line2);border-radius:9px;padding:8px 12px;margin-bottom:12px}
+.ipo-gmp-k{font-family:var(--mono);font-size:9px;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim)}
+.ipo-gmp-v{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ipo-gmp-w{font-family:var(--mono);font-size:9px;color:var(--dim);margin-left:auto}
+@media(max-width:520px){.ipo-facts{grid-template-columns:1fr}.ipo-gmp-w{margin-left:0}}
 /* Paper-wallet tier framework. Three cards explaining WHY a tier exists, above
    the rule list that states WHAT its caps are. Separated because they answer
    different questions and a reader needs the first to make sense of the second. */
@@ -7836,7 +7855,31 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><span class="k">Issue size</span><span class="v">{{ ('₹%s Cr'|format('{:,.0f}'.format(r.issue_size_cr))) if r.issue_size_cr else '—' }}</span></div>
         <div><span class="k">Window</span><span class="v">{{ r.open_date or '—' }} → {{ r.close_date or '—' }}</span></div>
         <div><span class="k">Subscribed</span><span class="v {{ 'up' if r.subscription_x and r.subscription_x >= 3 else 'dn' if r.subscription_x is not none and r.subscription_x < 1 else '' }}">{{ ('%.2fx'|format(r.subscription_x)) if r.subscription_x is not none else 'not open yet' }}</span></div>
+        <div><span class="k">Lot size</span><span class="v">{{ (r.lot_size|int ~ ' shares') if r.lot_size else 'not published' }}</span></div>
+        <div><span class="k">Min. investment</span><span class="v">{{ ('₹' ~ '{:,.0f}'.format(r.min_investment)) if r.min_investment else 'not published' }}{% if r.min_investment_derived %}<span class="ipo-drv" title="Lot size × the cap of the price band — the most a retail applicant can be asked for.">calc</span>{% endif %}</span></div>
+        {% if r.fresh_issue_cr or r.ofs_cr %}
+        <div><span class="k">Fresh / OFS</span><span class="v">{{ ('₹%s Cr'|format('{:,.0f}'.format(r.fresh_issue_cr))) if r.fresh_issue_cr else '—' }} / {{ ('₹%s Cr'|format('{:,.0f}'.format(r.ofs_cr))) if r.ofs_cr else '—' }}</span></div>
+        {% endif %}
+        {% if r.anchor_cr %}
+        <div><span class="k">Anchor book</span><span class="v">₹{{ '{:,.0f}'.format(r.anchor_cr) }} Cr</span></div>
+        {% endif %}
+        {% if r.listing_date %}
+        <div><span class="k">Listing</span><span class="v">{{ r.listing_date }}</span></div>
+        {% endif %}
       </div>
+
+      {# GMP is shown and never scored. It is an unofficial grey-market quote
+         with no exchange, no audit trail and no regulator behind it — carried
+         because a reader will look for it, boxed and labelled because acting on
+         it as though it were a published figure is the mistake this whole
+         section is built to prevent. #}
+      {% if r.gmp_text %}
+      <div class="ipo-gmp">
+        <span class="ipo-gmp-k">Grey market</span>
+        <span class="ipo-gmp-v">{{ r.gmp_text }}</span>
+        <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
+      </div>
+      {% endif %}
 
       {% if r.subscription_by_category %}
       <div class="ipo-cats">{% for c, n in r.subscription_by_category.items() %}<span>{{ c }} <b>{{ '%.1fx'|format(n) }}</b></span>{% endfor %}</div>
@@ -7862,7 +7905,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <i>public demand</i> and nothing more &mdash; NSE's feeds carry no lot size, no sector, no
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
-    Source: NSE public issue endpoints, read {{ iporadar.generated_at[:16]|replace('T', ' ') }}.
+    Sources: NSE public issue endpoints for band, size, dates and subscription, read
+    {{ iporadar.generated_at[:16]|replace('T', ' ') }}. Lot size, minimum application, the
+    fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
+    not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
 </section>
 {% endif %}

@@ -1992,7 +1992,8 @@ var TV_ALIASES = (function () {
             pnlCell = '<span class="wal-live ' + (lp.amt > 0 ? 'pnl-u' : lp.amt < 0 ? 'pnl-d' : '') + '"' +
               ' title="Unrealised. Marked at ' + tradePrice(lp.px, t.currency) +
               ', not a booked result.">' + (lp.amt > 0 ? '+' : '') + rupees(lp.amt) +
-              ' <span class="wal-live-tag">' + (lp.pct > 0 ? '+' : '') + fmt(lp.pct, 1) + '%</span></span>';
+              ' <span class="wal-live-tag">' + (lp.pct > 0 ? '+' : '') + fmt(lp.pct, 1) +
+              '% unreal.</span></span>';
           } else {
             pnlCell = '—';
           }
@@ -2014,6 +2015,12 @@ var TV_ALIASES = (function () {
             '<td class="num dn">' + tradePrice(t.sl, t.currency) + '</td>' +
             '<td class="num up">' + tradePrice(t.target1, t.currency) + '</td>' +
             '<td class="num up">' + tradePrice(t.target2, t.currency) + '</td>' +
+            // The mark the unrealised P&L was computed from. Without it the
+            // reader has a number they cannot check: they can see +₹724 but not
+            // the price that produced it, so they cannot tell an unrealised
+            // figure from a realised one, or a live mark from a stale one.
+            '<td class="num">' + (lp ? '<span class="wal-live">' + tradePrice(lp.px, t.currency) +
+              '</span>' : (t.realized_pnl !== null ? '<span class="mono-dim">closed</span>' : '—')) + '</td>' +
             '<td class="num">' + tradePrice(t.exit, t.currency) + '</td>' +
             '<td class="num">' + rupees(t.allocated_amount) +
               (t.capital_unavailable ? ' <span class="mono-dim" title="No headroom left in this tier or globally when this signal fired">⚠</span>' : '') +
@@ -2035,7 +2042,7 @@ var TV_ALIASES = (function () {
           '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Side</th>' +
           '<th scope="col">Engine</th><th scope="col">Grade</th>' +
           '<th scope="col">Entry</th><th scope="col">SL</th><th scope="col">T1</th>' +
-          '<th scope="col">T2</th><th scope="col">Exit</th>' +
+          '<th scope="col">T2</th><th scope="col">Last</th><th scope="col">Exit</th>' +
           '<th scope="col">Allocated</th><th scope="col">Qty</th><th scope="col">Status</th><th scope="col">P&amp;L</th>' +
           '</tr></thead><tbody>' + rows + '</tbody></table></div>';
       }

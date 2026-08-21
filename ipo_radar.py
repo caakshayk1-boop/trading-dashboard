@@ -222,6 +222,111 @@ def verdict(row, sc):
             "Most subscription arrives on the final day; this figure is not final.")
 
 
+# ── Enrichment ───────────────────────────────────────────────────────────────
+# NSE's feeds are authoritative for band, size, dates and subscription, and they
+# carry none of: lot size, minimum application, the fresh/OFS split, face value,
+# anchor book, or GMP. Those live on Chittorgarh, which sits behind a Cloudflare
+# challenge that plain HTTP cannot pass — Firecrawl can.
+#
+# Rules this pass follows:
+#   * Only OPEN and UPCOMING issues are enriched. Enriching 1,400 closed issues
+#     would burn credits to decorate history nobody is deciding on.
+#   * Every enriched field is tagged with its source, separately from the NSE
+#     fields, so a reader can see which numbers are official and which are not.
+#   * GMP is carried but never scored. It is an unofficial grey-market quote
+#     with no audit trail and no regulator behind it; the brief says it must not
+#     drive the decision, and here it does not — it is context, labelled as such.
+#   * Enrichment NEVER blanks a field it fails to fetch. A failed pass leaves the
+#     previous value in place, the same rule the rest of this site follows: a
+#     partial build must not replace a good dataset.
+CHITTORGARH_FIELDS = {
+    "lot_size": "number of shares in one application",
+    "min_investment": "rupees for one retail lot",
+    "fresh_issue_cr": "fresh issue in Rs crore",
+    "ofs_cr": "offer for sale in Rs crore",
+    "face_value": "face value per share in rupees",
+    "anchor_cr": "amount raised from anchor investors in Rs crore",
+    "listing_date": "expected listing date",
+    "gmp_text": "grey market premium as quoted, verbatim",
+}
+
+
+FIRECRAWL_SEARCH = "https://api.firecrawl.dev/v2/search"
+
+
+def _fc_search(key, company):
+    """One Firecrawl search + structured extract. REST, not the SDK.
+
+    The SDK would be a new dependency for one HTTP call, and requests is
+    already here. Chittorgarh sits behind a Cloudflare challenge, which is the
+    whole reason this cannot be a plain GET.
+
+    The URL id matters and the slug does not: /ipo/<slug>/<id>/ resolves on the
+    id alone, so guessing a URL returns a DIFFERENT company's IPO with a 200 and
+    no indication anything is wrong. Search, never construct.
+    """
+    import requests
+    body = {
+        "query": f"{company} IPO lot size GMP price band",
+        "limit": 2,
+        "includeDomains": ["chittorgarh.com"],
+        "scrapeOptions": {
+            "formats": [{
+                "type": "json",
+                "prompt": ("Extract these IPO facts for THIS company only. Return "
+                           "null for any field not stated on the page. Never estimate."),
+                "schema": {"type": "object", "properties": {
+                    k: {"type": "string" if k in ("listing_date", "gmp_text")
+                        else "number"} for k in CHITTORGARH_FIELDS}},
+            }],
+        },
+    }
+    r = requests.post(FIRECRAWL_SEARCH, json=body, timeout=90,
+                      headers={"Authorization": f"Bearer {key}",
+                               "Content-Type": "application/json"})
+    r.raise_for_status()
+    d = r.json()
+    return ((d.get("data") or {}).get("web")) or []
+
+
+def enrich(rows, key, previous=None):
+    """Fill the fields NSE does not publish. Fails soft, never blanks."""
+    prev = {r.get("symbol"): r for r in (previous or [])}
+    for r in rows:
+        was = prev.get(r["symbol"]) or {}
+        # Carry the last good values forward FIRST, so a failed fetch below
+        # leaves the row no worse than it was.
+        for f in CHITTORGARH_FIELDS:
+            if was.get(f) is not None:
+                r.setdefault(f, was[f])
+        r.setdefault("enriched_source", was.get("enriched_source"))
+        if not key:
+            continue
+        try:
+            for item in _fc_search(key, r["company"]):
+                j = item.get("json") or {}
+                got = False
+                for f in CHITTORGARH_FIELDS:
+                    v = j.get(f)
+                    if v not in (None, "", 0):
+                        r[f] = v
+                        got = True
+                if got:
+                    r["enriched_source"] = "chittorgarh.com"
+                    break
+        except Exception as e:                   # noqa: BLE001
+            log.warning(f"enrich {r['symbol']}: {e} — keeping previous values")
+
+    # Min investment is derivable once lot size is known, and deriving it from
+    # the CAP price is the honest direction: it is the most a retail applicant
+    # can be asked for.
+    for r in rows:
+        if r.get("min_investment") is None and r.get("lot_size") and r.get("price_high"):
+            r["min_investment"] = round(r["lot_size"] * r["price_high"])
+            r["min_investment_derived"] = True
+    return rows
+
+
 def build():
     s = _session()
     upcoming = _get(s, "api/all-upcoming-issues?category=ipo")
@@ -274,6 +379,26 @@ def build():
         v, why, caveat = verdict(row, sc)
         row.update(score=sc, verdict=v, verdict_why=why, verdict_caveat=caveat)
         rows.append(row)
+
+    # Enrich only what someone can still act on.
+    import os
+    live = [r for r in rows if r["phase"] in ("open", "upcoming")]
+    if live:
+        previous = []
+        if OUT.exists():
+            try:
+                pj = json.loads(OUT.read_text())
+                previous = (pj.get("open") or []) + (pj.get("upcoming") or [])
+            except Exception:                     # noqa: BLE001
+                pass
+        enrich(live, os.environ.get("FIRECRAWL_API_KEY"), previous)
+        # Re-score: lot size and the fresh/OFS split change nothing in the score
+        # (they are facts, not judgements), but min investment and GMP are now
+        # available to the verdict's context lines.
+        for r in live:
+            sc = score(r)
+            v, why, caveat = verdict(r, sc)
+            r.update(score=sc, verdict=v, verdict_why=why, verdict_caveat=caveat)
 
     order = {"open": 0, "upcoming": 1, "closed": 2}
     rows.sort(key=lambda x: (order.get(x["phase"], 3), x["close_date"] or ""))
