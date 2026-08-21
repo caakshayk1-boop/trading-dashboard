@@ -6104,6 +6104,26 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ev-bleeding{color:var(--down);background:rgba(255,92,92,.1)}
 .ev-unproven{color:var(--gold);background:rgba(230,180,80,.1)}
 .ev-flat{color:var(--dim);background:var(--bg2)}
+/* Decision board. Four states at a glance, above everything. Deliberately
+   plain — no borders competing with the cards below, just a rule between
+   tiles — because it is the first thing read and the last thing that should
+   be decorated. */
+.dboard{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 0 26px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.db{display:flex;flex-direction:column;gap:3px;padding:15px 18px;text-decoration:none;
+  border-left:1px solid var(--line);transition:background .2s}
+.db:first-child{border-left:none}
+.db:hover{background:var(--bg2)}
+.db-k{font-family:var(--mono);font-size:9px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--dim)}
+.db-v{font-family:var(--serif);font-size:clamp(17px,2vw,23px);font-weight:600;
+  letter-spacing:-.3px;color:var(--text);line-height:1.15}
+.db-s{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.db-hot .db-v{color:var(--lime)}
+.db-warn .db-s{color:var(--down)}
+@media(max-width:760px){.dboard{grid-template-columns:1fr 1fr}
+  .db:nth-child(3),.db:nth-child(4){border-top:1px solid var(--line)}
+  .db:nth-child(odd){border-left:none}}
 .hc-why{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 12px;max-width:74ch}
 .hc-why b{color:var(--text);font-weight:600}
 .hc-why-d{display:block;margin-top:5px;color:var(--dim);font-size:11.5px}
@@ -6960,6 +6980,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
        The numbered 60-second list below is kept as the {% raw %}{% else %}{% endraw %} branch, not
        deleted: the two legacy Flask routes render this same template without
        `matters`, and that path must still get its summary. #}
+    {# ══════════ DECISION BOARD ══════════
+       Four states, one line each, above everything else on the page.
+
+       The homepage had eighteen destinations and no answer to "what is the
+       state of things" — a reader had to assemble it from a regime score in one
+       place, an IPO section eleven screens down and an engine verdict below
+       that. Each of these four is already computed elsewhere on this page; the
+       board is the synthesis, not new data, and every tile links to the section
+       that produced it.
+
+       Nothing is invented to fill a tile. A tile with no data says so. #}
+    <div class="dboard">
+      <a class="db" href="#marketintel">
+        <span class="db-k">Market</span>
+        <span class="db-v">{{ regime.label if regime else '—' }}</span>
+        <span class="db-s">{% if regime %}{{ regime.score }}/100 regime{% else %}no reading{% endif %}</span>
+      </a>
+      <a class="db" href="#world">
+        <span class="db-k">World</span>
+        <span class="db-v">{{ (news|length) if news else 0 }} events</span>
+        <span class="db-s">last 24h, clustered</span>
+      </a>
+      <a class="db {{ 'db-hot' if iporadar and iporadar.counts.open else '' }}" href="#iporadar">
+        <span class="db-k">IPO</span>
+        <span class="db-v">{% if iporadar %}{{ iporadar.counts.open }} open{% else %}—{% endif %}</span>
+        <span class="db-s">{% if iporadar %}{{ iporadar.counts.apply }} apply · {{ iporadar.counts.upcoming }} coming{% else %}no radar{% endif %}</span>
+      </a>
+      <a class="db {{ 'db-warn' if evidence and evidence.bleeding else '' }}" href="#perf">
+        <span class="db-k">Engine</span>
+        <span class="db-v">{% if evidence %}{{ evidence.engines|length }} scored{% else %}—{% endif %}</span>
+        <span class="db-s">{% if evidence and evidence.bleeding %}{{ evidence.bleeding|length }} not funded{% elif evidence %}none bleeding{% else %}no evidence{% endif %}</span>
+      </a>
+    </div>
+
     {% if matters %}
     <div class="matters">
       <div class="matters-h">
