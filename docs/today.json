@@ -1,5 +1,5 @@
 {
- "build_id": "20260821T222737",
+ "build_id": "20260821T230102",
  "date": "2026-08-21",
  "date_str": "Friday, August 21 2026",
  "picks": [
@@ -233,7 +233,7 @@
    "sector": "Industrials"
   },
   "AXON": {
-   "price": 634.99,
+   "price": 634.55,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
@@ -295,6 +295,10 @@
   "CRISIL": {
    "price": 4514.5,
    "sector": "Financial Services"
+  },
+  "CRUDE": {
+   "price": 87.03,
+   "sector": ""
   },
   "DEEPAKNTR": {
    "price": 1747.1,
@@ -401,7 +405,7 @@
    "sector": "Consumer Cyclical"
   },
   "MRK": {
-   "price": 151.935,
+   "price": 151.9,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -409,7 +413,11 @@
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 484.93,
+   "price": 483.25,
+   "sector": ""
+  },
+  "NATGAS": {
+   "price": 2.801,
    "sector": ""
   },
   "NATIONALUM": {
@@ -421,7 +429,7 @@
    "sector": "Consumer Defensive"
   },
   "NET": {
-   "price": 290.89,
+   "price": 289.615,
    "sector": ""
   },
   "NIACL": {
@@ -438,14 +446,6 @@
   },
   "PARADEEP": {
    "price": 148.48,
-   "sector": "Basic Materials"
-  },
-  "PAYTM.NS": {
-   "price": 1632.0,
-   "sector": "Technology"
-  },
-  "PIDILITIND": {
-   "price": 1649.0,
    "sector": "Basic Materials"
   }
  },
@@ -577,7 +577,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "40 min old",
+    "age": "1h old",
     "note": "partial coverage \u2014 13/22 records"
    }
   ]
