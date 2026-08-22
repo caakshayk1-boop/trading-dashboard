@@ -1,81 +1,25 @@
 {
- "build_id": "20260822T062029",
- "date": "2026-08-22",
- "date_str": "Saturday, August 22 2026",
+ "build_id": "20260823T061803",
+ "date": "2026-08-23",
+ "date_str": "Sunday, August 23 2026",
  "picks": [
-  {
-   "symbol": "AXON",
-   "name": "AXON",
-   "ext20": 7.53,
-   "vol_ratio": 0.57,
-   "price": 635.02,
-   "change_1d": -1.66,
-   "mom_1m": 24.4,
-   "mom_3m": 59.0,
-   "score": 89,
-   "target": 794.29,
-   "stop_loss": 590.54,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "25% to go at its recent 19.7%/month",
-   "rr": 3.58,
-   "atr": 41.31,
-   "high_52w": 794.29,
-   "timeframe": "about a month",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 23.8
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 0.0
-    }
-   ],
-   "ema20": 590.54,
-   "tv": "AXON",
-   "thesis": "59% three\u2011month rise, 24% one\u2011month surge, price 7.5% above 20\u2011day average on 0.57\u00d7 volume."
-  },
   {
    "symbol": "SAP",
    "name": "SAP",
-   "ext20": 9.97,
-   "vol_ratio": 0.7,
-   "price": 217.17,
+   "ext20": 9.4,
+   "vol_ratio": 0.76,
+   "price": 218.68,
    "change_1d": 0.73,
-   "mom_1m": 40.7,
-   "mom_3m": 20.7,
-   "score": 86,
+   "mom_1m": 49.4,
+   "mom_3m": 24.3,
+   "score": 87,
    "target": 276.56,
-   "stop_loss": 197.47,
+   "stop_loss": 199.89,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "27% to go at its recent 6.9%/month",
-   "rr": 3.02,
-   "atr": 6.29,
+   "horizon_basis": "26% to go at its recent 8.1%/month",
+   "rr": 3.08,
+   "atr": 5.67,
    "high_52w": 276.56,
    "timeframe": "3-6 months",
    "currency": "$",
@@ -103,7 +47,7 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 5.9
+     "e": 6.9
     },
     {
      "k": "Volume confirming",
@@ -111,9 +55,233 @@
      "e": 0.0
     }
    ],
-   "ema20": 197.47,
+   "ema20": 199.89,
    "tv": "SAP",
-   "thesis": "40.7% one\u2011month gain, 20.7% three\u2011month rise, price 10% above its 20\u2011day average on 0.7\u00d7 typical volume, composite 86."
+   "thesis": "49.4% one\u2011month gain, 24.3% three\u2011month gain, price 9.4% above 20\u2011day average on 0.76\u00d7 volume, composite 87."
+  },
+  {
+   "symbol": "AXON",
+   "name": "AXON",
+   "ext20": 6.09,
+   "vol_ratio": 0.72,
+   "price": 627.75,
+   "change_1d": 2.2,
+   "mom_1m": 27.6,
+   "mom_3m": 62.6,
+   "score": 85,
+   "target": 794.29,
+   "stop_loss": 566.95,
+   "target_basis": "the 52-week high",
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "27% to go at its recent 20.9%/month",
+   "rr": 2.74,
+   "atr": 40.53,
+   "high_52w": 794.29,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 20.2
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 19.3
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 591.7,
+   "tv": "AXON",
+   "thesis": "62.6% three\u2011month surge, 27.6% one\u2011month rise, price 6.1% above its 20\u2011day average on 0.72\u00d7 typical volume, composite 85/100."
+  },
+  {
+   "symbol": "CRM",
+   "name": "CRM",
+   "ext20": 8.56,
+   "vol_ratio": 1.05,
+   "price": 209.17,
+   "change_1d": 1.82,
+   "mom_1m": 33.3,
+   "mom_3m": 16.5,
+   "score": 83,
+   "target": 267.75,
+   "stop_loss": 192.67,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "28% to go at its recent 5.5%/month",
+   "rr": 3.55,
+   "atr": 7.77,
+   "high_52w": 267.75,
+   "timeframe": "3-6 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 18.9
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 12.7
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 4.7
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 1.7
+    }
+   ],
+   "ema20": 192.67,
+   "tv": "CRM",
+   "thesis": "33.3% one\u2011month gain, 16.5% three\u2011month rise, price 8.6% above 20\u2011day average, volume 1.05\u00d7 norm, composite 83."
+  },
+  {
+   "symbol": "DUOL",
+   "name": "DUOL",
+   "ext20": 6.82,
+   "vol_ratio": 0.93,
+   "price": 146.13,
+   "change_1d": -0.61,
+   "mom_1m": 21.1,
+   "mom_3m": 37.1,
+   "score": 82,
+   "target": 355.0,
+   "stop_loss": 131.88,
+   "target_basis": "the 52-week high",
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "143% to go at its recent 12.4%/month",
+   "rr": 14.66,
+   "atr": 9.5,
+   "high_52w": 355.0,
+   "timeframe": "6-12 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 22.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 16.7
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 12.7
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.3
+    }
+   ],
+   "ema20": 136.8,
+   "tv": "DUOL",
+   "thesis": "Three\u2011month gain of 37.1% alongside a 6.8% price premium over the 20\u2011day average, with volume at 0.93\u00d7 norm."
+  },
+  {
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 9.47,
+   "vol_ratio": 0.84,
+   "price": 37.24,
+   "change_1d": 2.03,
+   "mom_1m": 19.4,
+   "mom_3m": 4.7,
+   "score": 81,
+   "target": 58.78,
+   "stop_loss": 34.02,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "58% to go at its recent 1.6%/month",
+   "rr": 6.68,
+   "atr": 2.55,
+   "high_52w": 58.78,
+   "timeframe": "over a year at this pace",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 14.3
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 1.3
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 34.02,
+   "tv": "SMCI",
+   "thesis": "19.4% one\u2011month rise, 4.7% three\u2011month rise, price 9.5% above its 20\u2011day average, volume 0.84\u00d7 norm, composite 81/100."
   }
  ],
  "engine": [
@@ -208,36 +376,48 @@
  ],
  "picks_week": null,
  "open_context": {
-  "ABCAPITAL": {
-   "price": 409.0,
-   "sector": "Financial Services"
+  "ABREL": {
+   "price": 1406.3,
+   "sector": "Real Estate"
+  },
+  "AFFLE": {
+   "price": 1718.7,
+   "sector": "Communication Services"
   },
   "AIAENG": {
-   "price": 4357.6001,
+   "price": 4348.8999,
    "sector": "Industrials"
   },
   "ALKEM": {
    "price": 5400.0,
    "sector": "Healthcare"
   },
+  "ANANTRAJ": {
+   "price": 625.0,
+   "sector": "Real Estate"
+  },
   "ANTHEM": {
-   "price": 874.5,
+   "price": 871.45,
    "sector": "Healthcare"
   },
   "ASAHIINDIA": {
-   "price": 951.55,
+   "price": 965.75,
    "sector": "Consumer Cyclical"
   },
   "ASHOKLEY": {
-   "price": 173.8,
+   "price": 173.0,
    "sector": "Industrials"
+  },
+  "AWL": {
+   "price": 188.12,
+   "sector": "Consumer Defensive"
   },
   "AXON": {
    "price": 627.75,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
-   "price": 2016.0,
+   "price": 2032.5,
    "sector": "Financial Services"
   },
   "BAJFINANCE.NS": {
@@ -245,63 +425,75 @@
    "sector": "Financial Services"
   },
   "BANKBARODA": {
-   "price": 244.5,
+   "price": 247.0,
    "sector": "Financial Services"
   },
   "BANKINDIA": {
-   "price": 142.8,
+   "price": 142.79,
    "sector": "Financial Services"
   },
   "BDL": {
-   "price": 1317.0,
+   "price": 1359.0,
    "sector": "Industrials"
   },
   "BHARTIARTL": {
-   "price": 1941.7,
+   "price": 1946.0,
    "sector": "Communication Services"
   },
   "BRIGADE": {
-   "price": 625.75,
+   "price": 639.3,
    "sector": "Real Estate"
   },
   "CANBK": {
-   "price": 129.6,
+   "price": 129.96,
    "sector": "Financial Services"
   },
   "CDSL": {
-   "price": 1345.9,
+   "price": 1388.9,
    "sector": "Financial Services"
   },
   "CEATLTD": {
-   "price": 3588.2,
+   "price": 3563.3999,
    "sector": "Consumer Cyclical"
   },
   "CEMPRO": {
-   "price": 1273.9,
+   "price": 1276.4,
    "sector": "Industrials"
   },
+  "CHALET": {
+   "price": 861.95,
+   "sector": "Consumer Cyclical"
+  },
   "CHOLAFIN": {
-   "price": 1888.9,
+   "price": 1862.9,
    "sector": "Financial Services"
   },
   "COFORGE.NS": {
-   "price": 1882.0,
+   "price": 1891.7,
    "sector": "Technology"
   },
   "COROMANDEL": {
-   "price": 2004.8,
+   "price": 1996.1,
    "sector": "Basic Materials"
   },
-  "CRISIL": {
-   "price": 4478.6001,
+  "CREDITACC": {
+   "price": 1496.1,
    "sector": "Financial Services"
   },
+  "CRISIL": {
+   "price": 4514.5,
+   "sector": "Financial Services"
+  },
+  "CRM": {
+   "price": 209.17,
+   "sector": "Technology"
+  },
   "CRUDE": {
-   "price": 86.64,
+   "price": 87.06,
    "sector": ""
   },
   "DEEPAKNTR": {
-   "price": 1750.4,
+   "price": 1747.1,
    "sector": "Basic Materials"
   },
   "DIXON": {
@@ -309,99 +501,107 @@
    "sector": "Technology"
   },
   "DLF": {
-   "price": 676.15,
+   "price": 678.1,
    "sector": "Real Estate"
   },
+  "DUOL": {
+   "price": 146.13,
+   "sector": "Technology"
+  },
   "ECLERX": {
-   "price": 1803.8,
+   "price": 1815.7,
    "sector": "Technology"
   },
   "EICHERMOT": {
-   "price": 8042.0,
+   "price": 8010.0,
    "sector": "Consumer Cyclical"
   },
   "ESCORTS": {
-   "price": 3092.1001,
+   "price": 3086.6001,
    "sector": "Industrials"
   },
   "EXIDEIND": {
-   "price": 464.1,
+   "price": 459.6,
    "sector": "Consumer Cyclical"
   },
   "FLUOROCHEM": {
-   "price": 4682.7002,
+   "price": 4621.8999,
    "sector": "Basic Materials"
   },
+  "FSL": {
+   "price": 276.05,
+   "sector": "Technology"
+  },
   "GRASIM": {
-   "price": 3300.0,
+   "price": 3308.0,
    "sector": "Basic Materials"
   },
   "GVT&D": {
-   "price": 4040.1001,
+   "price": 4127.2002,
    "sector": "Industrials"
   },
   "HCLTECH": {
-   "price": 1318.4,
+   "price": 1302.5,
    "sector": "Technology"
   },
   "HEG": {
-   "price": 711.95,
+   "price": 710.75,
    "sector": "Industrials"
   },
   "HINDCOPPER": {
-   "price": 560.1,
+   "price": 572.7,
    "sector": "Basic Materials"
   },
   "HINDPETRO": {
-   "price": 363.2,
+   "price": 363.25,
    "sector": "Energy"
   },
   "IFCI": {
-   "price": 81.76,
+   "price": 80.91,
    "sector": "Financial Services"
   },
   "INDHOTEL": {
-   "price": 735.85,
+   "price": 730.0,
    "sector": "Consumer Cyclical"
   },
   "IPCALAB": {
-   "price": 1900.1,
+   "price": 1911.2,
    "sector": "Healthcare"
   },
   "J&KBANK": {
-   "price": 148.19,
+   "price": 149.01,
    "sector": "Financial Services"
   },
   "JSWDULUX": {
-   "price": 3086.1001,
+   "price": 3118.8,
    "sector": ""
   },
   "KIRLOSENG": {
-   "price": 2150.1001,
+   "price": 2100.8,
    "sector": "Industrials"
   },
   "KPRMILL": {
-   "price": 1153.2,
+   "price": 1151.6,
    "sector": "Consumer Cyclical"
   },
-  "LAURUSLABS": {
-   "price": 1825.0,
-   "sector": "Healthcare"
-  },
   "LUPIN": {
-   "price": 2201.5,
+   "price": 2201.8,
    "sector": "Healthcare"
   },
   "M&MFIN": {
-   "price": 382.45,
+   "price": 381.6,
    "sector": "Financial Services"
   },
   "MARICO": {
-   "price": 858.35,
+   "price": 849.25,
    "sector": "Consumer Defensive"
   },
+  "MARUTI": {
+   "price": 13565.0,
+   "sector": "Consumer Cyclical"
+  },
   "MOTHERSON": {
-   "price": 169.58,
+   "price": 169.38,
    "sector": "Consumer Cyclical"
   },
   "MRK": {
@@ -409,44 +609,12 @@
    "sector": "Healthcare"
   },
   "MRPL": {
-   "price": 173.98,
+   "price": 176.81,
    "sector": "Energy"
   },
   "MSFT": {
    "price": 483.24,
    "sector": ""
-  },
-  "NATGAS": {
-   "price": 2.798,
-   "sector": ""
-  },
-  "NATIONALUM": {
-   "price": 385.6,
-   "sector": "Basic Materials"
-  },
-  "NESTLEIND": {
-   "price": 1458.0,
-   "sector": "Consumer Defensive"
-  },
-  "NET": {
-   "price": 293.14,
-   "sector": ""
-  },
-  "NIACL": {
-   "price": 183.08,
-   "sector": "Financial Services"
-  },
-  "NMDC": {
-   "price": 83.95,
-   "sector": "Basic Materials"
-  },
-  "OFSS": {
-   "price": 11826.0,
-   "sector": "Technology"
-  },
-  "PARADEEP": {
-   "price": 148.64,
-   "sector": "Basic Materials"
   }
  },
  "ipos": {
@@ -577,32 +745,32 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "6h old",
+    "age": "14h old",
     "note": "partial coverage \u2014 13/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Opening Principle #3: Castle Early",
-   "body": "King safety is non-negotiable in the opening. Castle within the first 10 moves. An uncastled king in the centre is a target. After castling, your king is protected by 3 pawns and 2 corner squares. Rooks also connect after castling. Rule: castle before you attack.",
-   "index": 3,
+   "title": "Tactics: The Pin",
+   "body": "A pin prevents a piece from moving because moving it would expose a more valuable piece behind it. Absolute pin = pinned to the king (piece cannot move legally). Relative pin = pinned to queen/rook (can move but it's a blunder). Identify pins in every position. Then exploit them.",
+   "index": 4,
    "total": 20
   },
   "wisdom": {
-   "title": "Rest is Productive",
-   "body": "High performers rest. Sleep is not laziness \u2014 it's when the brain consolidates learning, the body repairs, emotional regulation resets. Cutting sleep to work more is borrowing from tomorrow's performance to pay today's anxiety. Protect 7 hours. It will make you a better analyst, better father, better human.",
-   "index": 13,
+   "title": "The Identity Question",
+   "body": "Who are you when the job title is gone, when the market is closed, when your daughter is asleep? Define yourself by what you do, not what you've achieved. 'I am someone who learns daily. I love deeply. I show up.' These don't depend on AED 30K or a Dubai visa. They're yours now.",
+   "index": 14,
    "total": 18
   },
   "book": {
    "book": "Atomic Habits",
    "author": "James Clear",
-   "chapter": "The 1% Rule: Why Small Gains Compound Into Extraordinary Results",
-   "lesson": "If you get 1% better every day for a year, you end up 37 times better. If you get 1% worse, you decay to nearly zero. Most people overestimate what they can do in a day and underestimate what they can do in a year of consistent 1% improvements. Clear's central insight: you don't rise to the level of your goals, you fall to the level of your systems. Goals are for direction. Systems are for progress.",
-   "key_quote": "Habits are the compound interest of self-improvement.",
-   "action": "Identify one tiny habit you can improve by 1% today. Stack it onto an existing behaviour: after [CURRENT HABIT], I will [NEW HABIT].",
-   "index": 1,
+   "chapter": "Identity-Based Habits: Become the Person First",
+   "lesson": "Most people start with outcomes (lose 10kg), then think about processes (exercise), and never examine identity (I am someone who moves their body daily). Clear argues you should flip it. Start with identity: who do you want to become? Every action you take is a vote for that identity. Cast enough votes and the identity solidifies. A smoker trying to quit says 'I'm trying to quit.' A non-smoker says 'I don't smoke.' Same external action, completely different internal frame \u2014 and the internal frame determines long-term behaviour.",
+   "key_quote": "The most practical way to change who you are is to change what you do.",
+   "action": "Pick one identity statement: 'I am a daily learner.' 'I am someone who finishes what they start.' Then find one action today that votes for that identity.",
+   "index": 2,
    "total": 48,
    "crux": [
     "You do not rise to the level of your goals. You fall to the level of your systems.",
@@ -638,199 +806,199 @@
   },
   "way": {
    "minimalism": {
-    "title": "One Screen, One Task",
-    "body": "Seventeen open tabs is not research, it is deferred decisions rendered in pixels. Each one is a small unfinished thought.",
-    "action": "Close every tab. Bookmark what genuinely matters \u2014 usually two.",
-    "index": 15,
+    "title": "The Cost Of A Bigger House",
+    "body": "More space does not reduce clutter; it raises the threshold at which clutter becomes visible. People fill whatever they have. Then they pay to heat, clean, and furnish it.",
+    "action": "Before upgrading space, try emptying the space you have.",
+    "index": 16,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Learn The Name, Use The Name",
-    "body": "Names are the cheapest respect available and the most noticed when withheld. Repeat it immediately on hearing it. Ask the spelling. Ask the pronunciation \u2014 getting it wrong twice is careless, asking once is respect.",
-    "action": "Learn one colleague's name properly today. Use it twice.",
-    "index": 1,
+    "title": "Reply Within 24 Hours, Even If Only To Acknowledge",
+    "body": "A three-word acknowledgement beats a perfect reply a week late. Silence is read as disregard, never as busyness. 'Got this \u2014 proper answer Thursday' costs eight seconds.",
+    "action": "Clear every message older than 24 hours with an acknowledgement.",
+    "index": 2,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Simplify The Morning",
-    "body": "Same breakfast. Same order. Same route. Ritual removes decisions from the hours when your judgement is most valuable and least replaceable.",
-    "action": "Fix one morning variable permanently.",
-    "index": 19,
+    "title": "High Thinking Requires Simple Living",
+    "body": "The phrase is one instruction, not two. Complexity of life consumes exactly the capacity that deep thought requires. Cut the first to afford the second.",
+    "action": "Name the most complicated part of your week. Remove one layer.",
+    "index": 20,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Occam's Razor",
-    "body": "The explanation requiring fewest assumptions is usually right. Elaborate theories feel like insight and are mostly the mind pattern-matching on noise.",
-    "action": "Take your most complex current explanation. Find the simpler one.",
-    "index": 11,
+    "title": "Hanlon's Razor",
+    "body": "Never attribute to malice what incompetence, tiredness, or a missed email explains. The uncharitable read is usually wrong and always expensive.",
+    "action": "Reinterpret one recent slight as a mistake rather than an intent.",
+    "index": 12,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0639 \u0627\u0644\u0633\u0644\u0627\u0645\u0629",
-    "translit": "ma'a as-salaama",
-    "meaning": "Go in peace / goodbye",
-    "use": "The standard farewell. Said to the person leaving.",
-    "index": 27,
+    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u0646\u0644\u062a\u0642\u064a",
+    "translit": "in shaa Allah naltaqi",
+    "meaning": "God willing, we will meet",
+    "use": "Closing a first meeting warmly without committing to a date.",
+    "index": 28,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Read A Cash Flow Statement First",
-    "body": "Profit is an opinion; cash is a fact. Most analysts start at revenue. Start at operating cash flow and compare it to net income \u2014 the gap is where the story is.",
-    "action": "Pull one company's cash flow. Find the largest gap to net income. Explain it.",
-    "index": 3,
+    "title": "The 3-Statement Link",
+    "body": "Net income flows to retained earnings and to the top of cash flow. Closing cash lands on the balance sheet. If you cannot recite this cold, every model you build is fragile.",
+    "action": "Draw all three statements and every link from memory. No reference.",
+    "index": 4,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Fibre, Not Supplements",
-    "body": "Most people get under half the recommended 30g. Fibre feeds the gut microbiome, blunts glucose response, and is one of the few dietary factors with consistent large-cohort support.",
-    "action": "Add one high-fibre food today. Legumes, oats, or berries.",
-    "index": 13,
+    "title": "Train Balance Before You Need It",
+    "body": "Falls are a leading cause of injury death in older adults, and balance declines silently from midlife. It is trainable at any age and takes 60 seconds a day.",
+    "action": "Stand on one leg, 30 seconds each side. Eyes closed to progress.",
+    "index": 14,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Andrew Carnegie",
-   "quote": "Anything in life worth having is worth working for.",
-   "index": 74,
+   "name": "John D. Rockefeller",
+   "quote": "Don't be afraid to give up the good to go for the great.",
+   "index": 75,
    "total": 96
   },
   "lesson": {
-   "tradition": "Discipline",
-   "lesson": "We must all suffer one of two things: the pain of discipline or the pain of regret.",
-   "source": "Jim Rohn"
+   "tradition": "Character",
+   "lesson": "Character is how you treat those who can do nothing for you.",
+   "source": "Unknown"
   },
   "case": {
-   "title": "Infosys: The Global Delivery Model",
-   "story": "Narayana Murthy started Infosys with \u20b910,000 borrowed from his wife in 1981. Built the global delivery model \u2014 offshore talent, onshore management. Revenue: $18B+.",
-   "lesson": "Arbitrage is a legitimate business model. Take a global problem, apply local economics, execute flawlessly. Consistency beats creativity in services."
+   "title": "OYO: Growth Before Foundation",
+   "story": "OYO expanded to 80+ countries in 5 years. No standardized product, operational chaos, $600M losses. Had to shut down hundreds of hotels and lay off 5,000 people.",
+   "lesson": "Blitzscaling works only if the unit economics work. Expand when you've proven the model, not before. Speed without structure is just expensive chaos."
   },
   "fpna": {
-   "title": "Free Cash Flow",
-   "body": "FCF = Net Income + D&A \u2013 Capex \u2013 \u0394NWC. A company can show profit and still run out of cash.",
-   "index": 10,
+   "title": "SaaS Metrics",
+   "body": "ARR, MRR, Churn, NRR, CAC, LTV. In tech FP&A, know these cold.",
+   "index": 11,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 1: Own the Close",
-   "body": "Financial Controllers close the books \u2014 every month, clean, on time, no surprises. Speed + accuracy is the baseline. If close takes 10 days, get it to 5. Automate reconciliations. Build a close checklist and hit it every time.",
-   "index": 1,
+   "title": "FC Step 2: IFRS Mastery",
+   "body": "IFRS 16 (leases), IFRS 9 (financial instruments), IFRS 15 (revenue recognition) \u2014 these are the FC's bread and butter in Dubai/GCC. Know them technically AND practically. Interviewers will test this. Study one standard per week.",
+   "index": 2,
    "total": 15
   },
   "money_hack": {
-   "title": "EPF Power",
-   "body": "EPF gives 8.25% guaranteed, tax-free. Max out VPF if your employer allows."
+   "title": "No Lifestyle Inflation",
+   "body": "Got a raise? Don't upgrade lifestyle. Invest the increment for 3 years."
   },
   "dubai": {
-   "title": "Attestation is the silent blocker",
-   "body": "Degree and CA certificate need MEA attestation in India, then UAE embassy attestation, then MOFA in the UAE. Three to six weeks if nothing goes wrong. Offers have been withdrawn over this.",
-   "targets": "Start it before you have an offer. It expires slowly and costs little.",
-   "action_label": "Cost",
-   "action": "Roughly \u20b98\u201315K all-in per document, and the only thing it buys is not losing the job.",
-   "index": 23,
+   "title": "Notice period is a negotiation, not a fact",
+   "body": "Gulf employers plan around a 30-day joiner. A 90-day Indian notice period kills live mandates. Buy-out clauses exist in most Indian contracts and employers routinely fund them.",
+   "targets": "Say the real number early. Discovering it in week six loses the offer.",
+   "action_label": "Ask",
+   "action": "Find out your buy-out amount now. It is a line in the contract.",
+   "index": 24,
    "total": 30
   },
   "daughter": {
    "months": 7,
-   "days": 240,
+   "days": 241,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Weekly financial review: 10 min. Net worth, cash flow, investments.",
+  "productivity": "Clear inbox to zero before 9 AM. Empty inbox = no mental overhead.",
   "father": [
    {
-    "title": "Wait out the frustration noise",
-    "do": "When she grumbles at a task, wait. Only step in if it escalates to genuine distress.",
-    "why": "There is a difference between frustration and distress, and learning to tell them apart is a skill you build now. Frustration tolerated becomes persistence; frustration always rescued becomes helplessness."
+    "title": "Vary who holds her",
+    "do": "Hand her to grandparents, friends, and colleagues while you stay visible in the room.",
+    "why": "Stranger wariness peaks around now. Practising handovers while you remain in sight teaches that unfamiliar people are safe, without forcing separation at the same time."
    },
    {
-    "title": "Check the floor at her eye level",
-    "do": "Lie on the floor and look across the room from her height. Remove what you find.",
-    "why": "Mobility arrives suddenly. Anything reachable at that height will be in her mouth within days of her crawling, and you will not get advance notice."
+    "title": "Sit her up and step back",
+    "do": "Sit her unsupported on a soft surface within arm's reach, and let her balance.",
+    "why": "Independent sitting typically consolidates around 7\u20138 months. Constant propping delays the postural adjustments she needs to make herself."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Karma as physical residue",
-    "translation": "Action leaves a trace",
-    "teaching": "Jain metaphysics treats karma as fine matter that adheres to the soul through action and intent. Unusually, intent matters as much as the act.",
-    "apply": "Judge your own decisions on intent and process, not only outcome. A profitable trade taken for bad reasons still deposits the bad habit."
+    "term": "Aparigraha for time",
+    "translation": "Non-possessiveness applied to hours",
+    "teaching": "The vow limits accumulation. Applied beyond property, hoarding commitments is a form of grasping \u2014 saying yes to everything is acquisitiveness in a respectable costume.",
+    "apply": "Say no to one thing this week that you would normally accept out of reflex rather than interest."
    },
    {
     "tradition": "Buddhism",
-    "term": "Anatta",
-    "translation": "Non-self",
-    "teaching": "The doctrine that there is no fixed, unchanging self \u2014 what feels like a permanent 'I' is a process, continually reconstructed.",
-    "apply": "When you catch yourself saying 'I am not a numbers-under-pressure person', notice that is a description of a habit, not a fact about you."
+    "term": "Right Livelihood",
+    "translation": "Work that does not require harm",
+    "teaching": "One of the eightfold path's least discussed elements: how you earn matters as much as how you behave outside earning.",
+    "apply": "Ask whether any part of your work depends on someone else not understanding something. That is the test, and it applies to finance more than most fields."
    }
   ],
   "spanish": [
    {
-    "word": "otra vez",
-    "meaning": "again",
-    "es": "Expl\u00edcamelo otra vez, por favor.",
-    "en": "Explain it to me again, please.",
+    "word": "por supuesto",
+    "meaning": "of course",
+    "es": "Por supuesto, sin problema.",
+    "en": "Of course, no problem.",
     "tag": "Everyday"
    },
    {
-    "word": "dar en el clavo",
-    "meaning": "to hit the nail on the head",
-    "es": "Diste en el clavo con ese an\u00e1lisis.",
-    "en": "You hit the nail on the head with that analysis.",
+    "word": "no tener pelos en la lengua",
+    "meaning": "to speak bluntly",
+    "es": "Ella no tiene pelos en la lengua.",
+    "en": "She does not mince her words.",
     "tag": "Idiom"
    }
   ],
   "vocab": [
    {
-    "word": "Pragmatic",
-    "say": "prag-MAT-ik",
-    "meaning": "Dealing with things practically rather than ideally.",
-    "example": "The pragmatic route is to phase it over two quarters.",
-    "note": "Useful when you are choosing the workable option over the elegant one."
+    "word": "Ostensibly",
+    "say": "os-TEN-si-blee",
+    "meaning": "Apparently, but perhaps not actually.",
+    "example": "The cost was ostensibly one-off.",
+    "note": "Signals scepticism without accusation. Powerful in a review meeting."
    },
    {
-    "word": "Granular",
-    "say": "GRAN-yuh-luhr",
-    "meaning": "Broken into fine detail.",
-    "example": "I need this granular \u2014 by store, by category, by week.",
-    "note": "The exact word for asking someone to stop showing you aggregates."
+    "word": "Latitude",
+    "say": "LAT-i-tood",
+    "meaning": "Freedom to act within limits.",
+    "example": "Give the country teams latitude on promotions, not on pricing.",
+    "note": "A leadership word \u2014 defines the boundary rather than the rule."
    }
   ],
   "speaking": {
-   "title": "Breathe before the hard part",
-   "drill": "Identify the toughest sentence in an answer and take a full breath immediately before it.",
-   "why": "Nerves shorten breath, which raises pitch and speeds delivery precisely when you most need authority."
+   "title": "Cut the throat-clear",
+   "drill": "Notice and eliminate the meaningless opener: 'So\u2026', 'Yeah, so\u2026', 'I guess\u2026'.",
+   "why": "It signals you started talking before you started thinking, even when you did not."
   },
   "interview_tech": [
    {
-    "q": "Walk me through how a $1M inventory write-down flows through all three statements.",
-    "a": "P&L: COGS up $1M, so gross profit, EBIT and pre-tax income each fall $1M. At a 25% rate, net income falls $750K. Cash flow: start from net income \u2212$750K, add back the $1M non-cash write-down, so operating cash flow rises $250K \u2014 the tax shield. Balance sheet: inventory \u2212$1M, cash +$250K, so assets fall $750K; retained earnings fall $750K. It balances. The point they are testing: you know the write-down is non-cash and that the only real cash effect is tax.",
-    "who": "Amazon \u00b7 Walmart \u00b7 Majid Al Futtaim"
+    "q": "How does IFRS 16 change the picture for a retailer with 60 leases?",
+    "a": "Operating leases come on balance sheet as a right-of-use asset and a lease liability. Rent expense is replaced by depreciation plus interest, so EBITDA rises \u2014 often materially for retail \u2014 while EBIT moves little. Interest is front-loaded, so early-life leases depress net income versus the old treatment. Watch three consequences: gearing ratios jump and can breach covenants written pre-IFRS 16; EBITDA-based multiples are no longer comparable to history; and store-level return metrics need restating or you will misjudge performance.",
+    "who": "Al-Futtaim \u00b7 Carrefour MAF \u00b7 H&M"
    },
    {
-    "q": "How do you value a new store before signing a 10-year lease?",
-    "a": "Build an unlevered free cash flow model over the lease term. Revenue from catchment population, comparable sales density and a ramp curve \u2014 never assume year-one maturity. Deduct COGS, rent with escalation clauses, staff, and allocated overhead only if genuinely incremental. Capex is fit-out plus initial inventory. Discount at WACC and test IRR versus hurdle, payback, and NPV. Then sensitise the two variables that actually decide it: year-one sales and the ramp. A store that only clears the hurdle at 100% of forecast is a no.",
-    "who": "IKEA \u00b7 Majid Al Futtaim \u00b7 Costco"
+    "q": "Explain working capital optimisation to a non-finance retail board.",
+    "a": "Working capital is cash tied up in running the business \u2014 stock on shelves and money owed to you, less money you owe suppliers. Every day of stock is cash sitting in a warehouse instead of in the bank. Frame it in days and rupees, not ratios: 'we hold 95 days of stock; every day we cut releases AED 1.1M in cash we can spend on new stores instead of borrowing.' Boards act on that. They do not act on 'DIO improved 4%.'",
+    "who": "Landmark Group \u00b7 Lulu \u00b7 Walmart"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you stay current technically while managing?",
-    "a": "Be specific and verifiable. Name the standard you last read in full and why, the technical update you attended, the thing you built yourself recently rather than delegated. Vague answers about 'reading widely' land badly with technical interviewers. The strongest version connects it to a decision: 'I went back through IFRS 16 properly when we hit the lease modification question on the Indonesian stores, and that changed how we structured the renewal.'",
-    "who": "Big Four partners \u00b7 Group CFOs"
+    "q": "What do you know about our company?",
+    "a": "The disqualifying answer is anything from the homepage. Come with: their last reported results and one number from them, their format or brand mix and how it differs from peers, one strategic move in the last 18 months, and one question you genuinely cannot answer from outside. For a Gulf retail group that means knowing their franchise portfolio, which markets they operate directly versus through partners, and their exposure to mall footfall.",
+    "who": "Every interview, every time"
    },
    {
-    "q": "Where do you think retail is heading in the next five years?",
-    "a": "Have a view and defend it with numbers, not trends. Something like: physical stores stop being judged on their own sales as fulfilment and returns blur the channels, which breaks conventional store P&L and forces a catchment-level view; margin pressure shifts from price to cost-to-serve; and in the Gulf specifically, corporate tax and e-invoicing professionalise finance functions that were previously light. Then say what you would do about it in the role you are interviewing for.",
-    "who": "Gulf retail boards \u00b7 Search firms"
+    "q": "How do you build credibility in the first 90 days in a new company?",
+    "a": "Deliver one visible thing early and be accurate about everything. Concretely: get the close done cleanly, learn the actual business by walking the stores rather than reading the reports, and find the one number everyone argues about and fix its definition. Do not restructure anything in the first quarter. Credibility in finance is cumulative and fragile \u2014 it comes from being right repeatedly, not from an early bold move.",
+    "who": "Every incoming CFO"
    }
   ]
  }
