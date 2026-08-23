@@ -1,7 +1,7 @@
 {
- "build_id": "20260823T061803",
- "date": "2026-08-23",
- "date_str": "Sunday, August 23 2026",
+ "build_id": "20260824T061757",
+ "date": "2026-08-24",
+ "date_str": "Monday, August 24 2026",
  "picks": [
   {
    "symbol": "SAP",
@@ -489,7 +489,7 @@
    "sector": "Technology"
   },
   "CRUDE": {
-   "price": 87.06,
+   "price": 86.42,
    "sector": ""
   },
   "DEEPAKNTR": {
@@ -618,121 +618,121 @@
   }
  },
  "ipos": {
-  "count": 32,
+  "count": 31,
   "months": 12,
-  "built_on": "2026-08-19",
+  "built_on": "2026-08-22",
   "summary": {
-   "count": 32,
-   "up": 20,
+   "count": 31,
+   "up": 19,
    "down": 12,
-   "up_pct": 62.5,
-   "median_pct": 13.0
+   "up_pct": 61.3,
+   "median_pct": 17.4
   },
   "rows": [
    {
     "sym": "RUBICON",
-    "months_listed": 10.1,
+    "months_listed": 10.2,
     "first_close": 628.2,
-    "last_close": 1798.7,
-    "since_listing_pct": 186.3,
-    "high": 1798.7,
+    "last_close": 1724.7,
+    "since_listing_pct": 174.5,
+    "high": 1804.1,
     "low": 577.25,
-    "from_high_pct": 0.0,
+    "from_high_pct": -4.4,
     "below_first_ever": true,
-    "sessions": 206,
+    "sessions": 211,
     "listed_on": "2025-10-16"
    },
    {
     "sym": "UTLSOLAR",
-    "months_listed": 8.9,
+    "months_listed": 9.0,
     "first_close": 208.44,
-    "last_close": 468.3,
-    "since_listing_pct": 124.7,
-    "high": 468.3,
+    "last_close": 477.4,
+    "since_listing_pct": 129.0,
+    "high": 483.95,
     "low": 174.83,
-    "from_high_pct": 0.0,
+    "from_high_pct": -1.4,
     "below_first_ever": true,
-    "sessions": 186,
+    "sessions": 190,
     "listed_on": "2025-11-20"
    },
    {
     "sym": "ATLANTAELE",
-    "months_listed": 10.6,
+    "months_listed": 10.7,
     "first_close": 823.35,
-    "last_close": 1774.4,
-    "since_listing_pct": 115.5,
+    "last_close": 1846.9,
+    "since_listing_pct": 124.3,
     "high": 2151.5,
     "low": 726.3,
-    "from_high_pct": -17.5,
+    "from_high_pct": -14.2,
     "below_first_ever": true,
-    "sessions": 220,
+    "sessions": 224,
     "listed_on": "2025-09-29"
    },
    {
     "sym": "PARKHOSPS",
-    "months_listed": 8.0,
+    "months_listed": 8.1,
     "first_close": 147.95,
-    "last_close": 276.65,
-    "since_listing_pct": 87.0,
+    "last_close": 274.55,
+    "since_listing_pct": 85.6,
     "high": 299.3,
     "low": 143.92,
-    "from_high_pct": -7.6,
+    "from_high_pct": -8.3,
     "below_first_ever": true,
-    "sessions": 167,
+    "sessions": 171,
     "listed_on": "2025-12-17"
    },
    {
     "sym": "AEQUS",
-    "months_listed": 8.2,
+    "months_listed": 8.4,
     "first_close": 151.29,
-    "last_close": 259.85,
-    "since_listing_pct": 71.8,
-    "high": 259.85,
+    "last_close": 259.22,
+    "since_listing_pct": 71.3,
+    "high": 262.45,
     "low": 115.11,
-    "from_high_pct": 0.0,
+    "from_high_pct": -1.2,
     "below_first_ever": true,
-    "sessions": 172,
+    "sessions": 176,
     "listed_on": "2025-12-10"
    }
   ],
   "worst": [
    {
     "sym": "VIKRAMSOLR",
-    "months_listed": 11.7,
+    "months_listed": 11.9,
     "first_close": 356.4,
-    "last_close": 177.11,
-    "since_listing_pct": -50.3,
+    "last_close": 173.23,
+    "since_listing_pct": -51.4,
     "high": 378.8,
     "low": 156.8,
-    "from_high_pct": -53.2,
+    "from_high_pct": -54.3,
     "below_first_ever": true,
-    "sessions": 244,
+    "sessions": 248,
     "listed_on": "2025-08-26"
    },
    {
     "sym": "PINELABS",
-    "months_listed": 9.1,
+    "months_listed": 9.2,
     "first_close": 250.89,
-    "last_close": 160.32,
-    "since_listing_pct": -36.1,
+    "last_close": 156.91,
+    "since_listing_pct": -37.5,
     "high": 250.89,
     "low": 137.94,
-    "from_high_pct": -36.1,
+    "from_high_pct": -37.5,
     "below_first_ever": true,
-    "sessions": 191,
+    "sessions": 194,
     "listed_on": "2025-11-14"
    },
    {
     "sym": "WAKEFIT",
-    "months_listed": 8.1,
+    "months_listed": 8.2,
     "first_close": 192.29,
-    "last_close": 131.52,
-    "since_listing_pct": -31.6,
+    "last_close": 141.36,
+    "since_listing_pct": -26.5,
     "high": 215.8,
     "low": 113.04,
-    "from_high_pct": -39.1,
+    "from_high_pct": -34.5,
     "below_first_ever": true,
-    "sessions": 168,
+    "sessions": 172,
     "listed_on": "2025-12-15"
    }
   ]
@@ -752,25 +752,25 @@
  },
  "desk": {
   "chess": {
-   "title": "Tactics: The Pin",
-   "body": "A pin prevents a piece from moving because moving it would expose a more valuable piece behind it. Absolute pin = pinned to the king (piece cannot move legally). Relative pin = pinned to queen/rook (can move but it's a blunder). Identify pins in every position. Then exploit them.",
-   "index": 4,
+   "title": "Tactics: The Fork",
+   "body": "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest \u2014 they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap.",
+   "index": 5,
    "total": 20
   },
   "wisdom": {
-   "title": "The Identity Question",
-   "body": "Who are you when the job title is gone, when the market is closed, when your daughter is asleep? Define yourself by what you do, not what you've achieved. 'I am someone who learns daily. I love deeply. I show up.' These don't depend on AED 30K or a Dubai visa. They're yours now.",
-   "index": 14,
+   "title": "Letting Go of Control",
+   "body": "You can control your effort. You cannot control outcomes. The job market, the Instagram algorithm, the baby's sleep schedule \u2014 all outside your control. Epictetus: 'Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are, and you will have a tranquil flow of life.'",
+   "index": 15,
    "total": 18
   },
   "book": {
    "book": "Atomic Habits",
    "author": "James Clear",
-   "chapter": "Identity-Based Habits: Become the Person First",
-   "lesson": "Most people start with outcomes (lose 10kg), then think about processes (exercise), and never examine identity (I am someone who moves their body daily). Clear argues you should flip it. Start with identity: who do you want to become? Every action you take is a vote for that identity. Cast enough votes and the identity solidifies. A smoker trying to quit says 'I'm trying to quit.' A non-smoker says 'I don't smoke.' Same external action, completely different internal frame \u2014 and the internal frame determines long-term behaviour.",
-   "key_quote": "The most practical way to change who you are is to change what you do.",
-   "action": "Pick one identity statement: 'I am a daily learner.' 'I am someone who finishes what they start.' Then find one action today that votes for that identity.",
-   "index": 2,
+   "chapter": "The Four Laws of Behaviour Change",
+   "lesson": "Every habit is built on four components: Cue (make it obvious) \u2192 Craving (make it attractive) \u2192 Response (make it easy) \u2192 Reward (make it satisfying). To build a good habit, apply all four. To break a bad one, invert them: make it invisible, make it unattractive, make it difficult, make it unsatisfying. The two-minute rule: when starting a new habit, it should take less than two minutes. You're not running 5km yet \u2014 you're putting on your running shoes. The gateway habit becomes the habit.",
+   "key_quote": "Reduce friction for good habits. Increase friction for bad ones.",
+   "action": "Apply the two-minute rule to one habit you've been failing to start. Make the first step so small it's impossible to say no.",
+   "index": 3,
    "total": 48,
    "crux": [
     "You do not rise to the level of your goals. You fall to the level of your systems.",
@@ -806,199 +806,199 @@
   },
   "way": {
    "minimalism": {
-    "title": "The Cost Of A Bigger House",
-    "body": "More space does not reduce clutter; it raises the threshold at which clutter becomes visible. People fill whatever they have. Then they pay to heat, clean, and furnish it.",
-    "action": "Before upgrading space, try emptying the space you have.",
-    "index": 16,
+    "title": "Travel Light As Practice",
+    "body": "Pack for a week in a carry-on. It teaches, in three days, exactly how little you require \u2014 a lesson that transfers directly home.",
+    "action": "Next trip: carry-on only. Note what you never opened.",
+    "index": 17,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Reply Within 24 Hours, Even If Only To Acknowledge",
-    "body": "A three-word acknowledgement beats a perfect reply a week late. Silence is read as disregard, never as busyness. 'Got this \u2014 proper answer Thursday' costs eight seconds.",
-    "action": "Clear every message older than 24 hours with an acknowledgement.",
-    "index": 2,
+    "title": "The Right Hand Rule",
+    "body": "In the Gulf and much of Asia, give and receive with the right hand \u2014 cards, food, documents, money. The left hand carries a specific connotation. This is not a preference; it is the baseline.",
+    "action": "Hand over your next document or card with the right hand, deliberately.",
+    "index": 3,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "High Thinking Requires Simple Living",
-    "body": "The phrase is one instruction, not two. Complexity of life consumes exactly the capacity that deep thought requires. Cut the first to afford the second.",
-    "action": "Name the most complicated part of your week. Remove one layer.",
-    "index": 20,
+    "title": "The First Hour Is Yours",
+    "body": "Whoever touches your attention first sets the agenda for the day. If that is a notification, you have outsourced the day to a stranger's priorities before you were fully awake.",
+    "action": "No screen for the first 30 minutes tomorrow. Nothing else changes.",
+    "index": 1,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Hanlon's Razor",
-    "body": "Never attribute to malice what incompetence, tiredness, or a missed email explains. The uncharitable read is usually wrong and always expensive.",
-    "action": "Reinterpret one recent slight as a mistake rather than an intent.",
-    "index": 12,
+    "title": "Availability Heuristic",
+    "body": "You judge probability by how easily an example comes to mind. Plane crashes feel likelier than car crashes because they are memorable, not because they are common.",
+    "action": "Check one belief against actual frequency data rather than recall.",
+    "index": 13,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u0646\u0644\u062a\u0642\u064a",
-    "translit": "in shaa Allah naltaqi",
-    "meaning": "God willing, we will meet",
-    "use": "Closing a first meeting warmly without committing to a date.",
-    "index": 28,
+    "script": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642",
+    "translit": "bit-tawfeeq",
+    "meaning": "Good luck / wishing you success",
+    "use": "Before an exam, an interview, a launch. Sincere and common.",
+    "index": 29,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "The 3-Statement Link",
-    "body": "Net income flows to retained earnings and to the top of cash flow. Closing cash lands on the balance sheet. If you cannot recite this cold, every model you build is fragile.",
-    "action": "Draw all three statements and every link from memory. No reference.",
-    "index": 4,
+    "title": "Explain It To A Ten-Year-Old",
+    "body": "Take the most technical thing you know and explain it with no jargon. If you cannot, you have memorised it rather than understood it. This is the Feynman technique and it is brutal.",
+    "action": "Pick one concept. Explain it in writing with no technical terms.",
+    "index": 5,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Train Balance Before You Need It",
-    "body": "Falls are a leading cause of injury death in older adults, and balance declines silently from midlife. It is trainable at any age and takes 60 seconds a day.",
-    "action": "Stand on one leg, 30 seconds each side. Eyes closed to progress.",
-    "index": 14,
+    "title": "Heat And Cold Are Adjuncts, Not Basics",
+    "body": "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
+    "action": "Only add these once training, sleep, and protein are consistent.",
+    "index": 15,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "John D. Rockefeller",
-   "quote": "Don't be afraid to give up the good to go for the great.",
-   "index": 75,
+   "name": "Sam Walton",
+   "quote": "High expectations are the key to everything.",
+   "index": 76,
    "total": 96
   },
   "lesson": {
-   "tradition": "Character",
-   "lesson": "Character is how you treat those who can do nothing for you.",
-   "source": "Unknown"
+   "tradition": "Simplicity",
+   "lesson": "Simplicity is the ultimate sophistication.",
+   "source": "Leonardo da Vinci"
   },
   "case": {
-   "title": "OYO: Growth Before Foundation",
-   "story": "OYO expanded to 80+ countries in 5 years. No standardized product, operational chaos, $600M losses. Had to shut down hundreds of hotels and lay off 5,000 people.",
-   "lesson": "Blitzscaling works only if the unit economics work. Expand when you've proven the model, not before. Speed without structure is just expensive chaos."
+   "title": "Stripe: Developer-First, CEO-Last",
+   "story": "Stripe built payment APIs for developers, not CFOs. 7 lines of code to accept payments. No sales team for the first 3 years \u2014 product sold itself.",
+   "lesson": "The best distribution is built into the product. If developers love it, adoption spreads through word of mouth. Sell to builders, not buyers."
   },
   "fpna": {
-   "title": "SaaS Metrics",
-   "body": "ARR, MRR, Churn, NRR, CAC, LTV. In tech FP&A, know these cold.",
-   "index": 11,
+   "title": "Three-Statement Model",
+   "body": "P&L \u2192 Balance Sheet \u2192 Cash Flow \u2014 they must tie. If they don't, you have a bug.",
+   "index": 12,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 2: IFRS Mastery",
-   "body": "IFRS 16 (leases), IFRS 9 (financial instruments), IFRS 15 (revenue recognition) \u2014 these are the FC's bread and butter in Dubai/GCC. Know them technically AND practically. Interviewers will test this. Study one standard per week.",
-   "index": 2,
+   "title": "FC Step 3: Internal Controls",
+   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
+   "index": 3,
    "total": 15
   },
   "money_hack": {
-   "title": "No Lifestyle Inflation",
-   "body": "Got a raise? Don't upgrade lifestyle. Invest the increment for 3 years."
+   "title": "Emergency Fund",
+   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
   },
   "dubai": {
-   "title": "Notice period is a negotiation, not a fact",
-   "body": "Gulf employers plan around a 30-day joiner. A 90-day Indian notice period kills live mandates. Buy-out clauses exist in most Indian contracts and employers routinely fund them.",
-   "targets": "Say the real number early. Discovering it in week six loses the offer.",
-   "action_label": "Ask",
-   "action": "Find out your buy-out amount now. It is a line in the contract.",
-   "index": 24,
+   "title": "What a Financial Controller title actually needs",
+   "body": "The jump from FP&A Manager to Controller in the Gulf is statutory reporting plus audit ownership plus a team. If the CV has no signed statutory set on it, that is the gap \u2014 not the years.",
+   "targets": "Controller bands start around AED 40K. It is the next rung, and it is close.",
+   "action_label": "Gap",
+   "action": "Get a statutory reporting line on the CV in the next six months. Any entity, any size.",
+   "index": 25,
    "total": 30
   },
   "daughter": {
    "months": 7,
-   "days": 241,
+   "days": 242,
    "heading": "Seven months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Clear inbox to zero before 9 AM. Empty inbox = no mental overhead.",
+  "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
   "father": [
    {
-    "title": "Vary who holds her",
-    "do": "Hand her to grandparents, friends, and colleagues while you stay visible in the room.",
-    "why": "Stranger wariness peaks around now. Practising handovers while you remain in sight teaches that unfamiliar people are safe, without forcing separation at the same time."
+    "title": "Build then let her destroy",
+    "do": "Stack three blocks, let her knock them down, rebuild. Repeat until she loses interest.",
+    "why": "Cause and effect is the entire lesson. Knocking down precedes building by months \u2014 do not rush to the constructive half."
    },
    {
-    "title": "Sit her up and step back",
-    "do": "Sit her unsupported on a soft surface within arm's reach, and let her balance.",
-    "why": "Independent sitting typically consolidates around 7\u20138 months. Constant propping delays the postural adjustments she needs to make herself."
+    "title": "Do bedtime alone once this week",
+    "do": "Handle the entire routine solo \u2014 no handover, no rescue.",
+    "why": "Solo caregiving builds a distinct relationship rather than an assisted one. It also gives her mother an uninterrupted evening, which is not a small thing at seven months."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Aparigraha for time",
-    "translation": "Non-possessiveness applied to hours",
-    "teaching": "The vow limits accumulation. Applied beyond property, hoarding commitments is a form of grasping \u2014 saying yes to everything is acquisitiveness in a respectable costume.",
-    "apply": "Say no to one thing this week that you would normally accept out of reflex rather than interest."
+    "term": "Samyak Charitra",
+    "translation": "Right conduct",
+    "teaching": "The third jewel, and deliberately placed after right perception and right knowledge \u2014 you cannot act well on a false picture.",
+    "apply": "When a decision feels hard, check whether it is genuinely a conduct problem or actually a perception problem you have not resolved. Most are the latter."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Livelihood",
-    "translation": "Work that does not require harm",
-    "teaching": "One of the eightfold path's least discussed elements: how you earn matters as much as how you behave outside earning.",
-    "apply": "Ask whether any part of your work depends on someone else not understanding something. That is the test, and it applies to finance more than most fields."
+    "term": "Right Effort",
+    "translation": "Applied in the correct direction",
+    "teaching": "Effort is one of the eight, but so is rightness of effort. Energy in the wrong direction is not neutral; it entrenches the error.",
+    "apply": "Before adding hours to a problem, spend ten minutes asking whether the problem is the right one. Most overwork is misdirection, not insufficiency."
    }
   ],
   "spanish": [
    {
-    "word": "por supuesto",
-    "meaning": "of course",
-    "es": "Por supuesto, sin problema.",
-    "en": "Of course, no problem.",
+    "word": "\u00bfqu\u00e9 significa?",
+    "meaning": "what does it mean?",
+    "es": "\u00bfQu\u00e9 significa esta palabra?",
+    "en": "What does this word mean?",
     "tag": "Everyday"
    },
    {
-    "word": "no tener pelos en la lengua",
-    "meaning": "to speak bluntly",
-    "es": "Ella no tiene pelos en la lengua.",
-    "en": "She does not mince her words.",
+    "word": "de golpe",
+    "meaning": "all at once / suddenly",
+    "es": "Los costos subieron de golpe.",
+    "en": "Costs rose all at once.",
     "tag": "Idiom"
    }
   ],
   "vocab": [
    {
-    "word": "Ostensibly",
-    "say": "os-TEN-si-blee",
-    "meaning": "Apparently, but perhaps not actually.",
-    "example": "The cost was ostensibly one-off.",
-    "note": "Signals scepticism without accusation. Powerful in a review meeting."
+    "word": "Contingent",
+    "say": "kuhn-TIN-juhnt",
+    "meaning": "Dependent on something else happening.",
+    "example": "The bonus is contingent on hitting the cash target.",
+    "note": "Also technical \u2014 contingent liabilities are disclosed, not recognised."
    },
    {
-    "word": "Latitude",
-    "say": "LAT-i-tood",
-    "meaning": "Freedom to act within limits.",
-    "example": "Give the country teams latitude on promotions, not on pricing.",
-    "note": "A leadership word \u2014 defines the boundary rather than the rule."
+    "word": "Commensurate",
+    "say": "kuh-MEN-suh-rit",
+    "meaning": "In proportion to.",
+    "example": "The return is not commensurate with the capital at risk.",
+    "note": "The precise way to say something is not worth what it costs."
    }
   ],
   "speaking": {
-   "title": "Cut the throat-clear",
-   "drill": "Notice and eliminate the meaningless opener: 'So\u2026', 'Yeah, so\u2026', 'I guess\u2026'.",
-   "why": "It signals you started talking before you started thinking, even when you did not."
+   "title": "Read a wire story aloud",
+   "drill": "Take one headline from the World section and read the first paragraph aloud, twice.",
+   "why": "Journalistic prose is tightly written. Reading it aloud daily rewires sentence rhythm faster than conversation does."
   },
   "interview_tech": [
    {
-    "q": "How does IFRS 16 change the picture for a retailer with 60 leases?",
-    "a": "Operating leases come on balance sheet as a right-of-use asset and a lease liability. Rent expense is replaced by depreciation plus interest, so EBITDA rises \u2014 often materially for retail \u2014 while EBIT moves little. Interest is front-loaded, so early-life leases depress net income versus the old treatment. Watch three consequences: gearing ratios jump and can breach covenants written pre-IFRS 16; EBITDA-based multiples are no longer comparable to history; and store-level return metrics need restating or you will misjudge performance.",
-    "who": "Al-Futtaim \u00b7 Carrefour MAF \u00b7 H&M"
+    "q": "Like-for-like sales are +3% but total sales are \u22122%. What is happening?",
+    "a": "The existing estate is growing while the total base shrank \u2014 you closed stores, or a material store left the LFL set. LFL strips out openings and closures, so the gap is the net space effect. Ask: was the closure deliberate portfolio pruning, in which case \u22122% total with +3% LFL and better margin is a good outcome; or did leases expire without replacement, which is a pipeline failure. Follow with sales density per sqm \u2014 that tells you whether the remaining estate is genuinely stronger.",
+    "who": "Marks & Spencer \u00b7 Americana \u00b7 Alshaya"
    },
    {
-    "q": "Explain working capital optimisation to a non-finance retail board.",
-    "a": "Working capital is cash tied up in running the business \u2014 stock on shelves and money owed to you, less money you owe suppliers. Every day of stock is cash sitting in a warehouse instead of in the bank. Frame it in days and rupees, not ratios: 'we hold 95 days of stock; every day we cut releases AED 1.1M in cash we can spend on new stores instead of borrowing.' Boards act on that. They do not act on 'DIO improved 4%.'",
-    "who": "Landmark Group \u00b7 Lulu \u00b7 Walmart"
+    "q": "You are consolidating Malaysia and Indonesia. Where do FX translation differences land?",
+    "a": "Functional currency results are translated at the closing rate for assets and liabilities, average rate for P&L, and the difference goes to other comprehensive income as a foreign currency translation reserve \u2014 not through P&L. It only recycles to P&L on disposal of the foreign operation. The trap: intercompany balances that are effectively permanent investment belong in the net investment, so their FX also goes to OCI. Getting that wrong puts noise through earnings every quarter.",
+    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
    }
   ],
   "interview_soft": [
    {
-    "q": "What do you know about our company?",
-    "a": "The disqualifying answer is anything from the homepage. Come with: their last reported results and one number from them, their format or brand mix and how it differs from peers, one strategic move in the last 18 months, and one question you genuinely cannot answer from outside. For a Gulf retail group that means knowing their franchise portfolio, which markets they operate directly versus through partners, and their exposure to mall footfall.",
-    "who": "Every interview, every time"
+    "q": "Tell me about a time you had to say no to a business partner.",
+    "a": "Retail finance says no constantly \u2014 to a buy outside open-to-buy, a promotion that destroys margin, a headcount request without a business case. Pick one and show the method: you did not just refuse, you showed the number that made it a no, and you offered what would make it a yes. The best answers end with the partner coming back with a version you could approve, because that proves the relationship survived.",
+    "who": "Landmark Group \u00b7 P&G \u00b7 Mars"
    },
    {
-    "q": "How do you build credibility in the first 90 days in a new company?",
-    "a": "Deliver one visible thing early and be accurate about everything. Concretely: get the close done cleanly, learn the actual business by walking the stores rather than reading the reports, and find the one number everyone argues about and fix its definition. Do not restructure anything in the first quarter. Credibility in finance is cumulative and fragile \u2014 it comes from being right repeatedly, not from an early bold move.",
-    "who": "Every incoming CFO"
+    "q": "What motivates you, besides money?",
+    "a": "Be concrete or it sounds rehearsed. Good answers name the specific texture of the work: seeing a decision you modelled play out in real numbers weeks later, building a team member into something they were not when they arrived, or the particular satisfaction of a clean close. Avoid 'challenge' and 'growth' unqualified. If money genuinely is a driver \u2014 Dubai, young family \u2014 it is fine to say it is one of several, and honest beats performed modesty.",
+    "who": "Universal"
    }
   ]
  }
