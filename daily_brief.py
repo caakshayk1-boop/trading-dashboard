@@ -322,13 +322,144 @@ LIFE_LESSONS = [
 # HELPERS
 # ────────────────────────────────────────────────────────────────────────────
 
+# ────────────────────────────────────────────────────────────────────────────
+# news.askakshay.com — the one source the brief and the site share
+# ────────────────────────────────────────────────────────────────────────────
+#
+# The morning brief used to assemble its own view of the world: yfinance
+# through content_cache for markets, a Reuters RSS feed for the headline, and a
+# direct Turso query for the signal recap. The website assembled a second view
+# from /api/*. Two pipelines, one subject — so they drifted, and there was no
+# way to tell which one was wrong.
+#
+# Everything factual in this brief now reads the same live API the site renders
+# from. If a number is wrong in Telegram it is wrong on the site too, which is
+# the only arrangement that keeps either of them honest.
+#
+# Every call fails soft. A brief that arrives with one section degraded is worth
+# more at 6 AM than no brief at all, so each fetch returns None on failure and
+# the caller falls back to what it used before.
+
+NEWS_API = os.environ.get("NEWS_API_BASE", "https://news.askakshay.com/api")
+
+
+def _news_get(path: str, timeout: int = 12) -> Optional[dict]:
+    """One GET against news.askakshay.com. None on any failure, never raises."""
+    try:
+        r = requests.get(
+            f"{NEWS_API}{path}",
+            timeout=timeout,
+            headers={"User-Agent": "daily-brief/2.0"},
+        )
+        if r.status_code != 200:
+            log.warning("news api %s -> HTTP %s", path, r.status_code)
+            return None
+        j = r.json()
+        if not isinstance(j, dict) or j.get("ok") is False:
+            log.warning("news api %s -> ok=false: %s", path, str(j)[:160])
+            return None
+        return j
+    except Exception as e:
+        log.warning("news api %s failed: %s", path, e)
+        return None
+
+
+def _news_markets() -> Optional[str]:
+    """The same market strip the site shows, formatted for Telegram."""
+    j = _news_get("/markets")
+    if not j:
+        return None
+    rows = j.get("markets") or []
+    lines = []
+    for m in rows:
+        pct = m.get("change_pct")
+        if pct is None:
+            continue
+        arrow = "↑" if pct > 0.05 else ("↓" if pct < -0.05 else "→")
+        name = str(m.get("name", ""))[:10]
+        price = str(m.get("price", "—"))
+        lines.append(f"`{name:<10}` {price:<12} {arrow} {pct:+.1f}%")
+    if not lines:
+        return None
+    live, total = j.get("live"), j.get("total")
+    if live is not None and total is not None and live < total:
+        lines.append(f"_{live} of {total} quotes live — the rest are last close._")
+    return "\n".join(lines)
+
+
+def _news_headline() -> Optional[str]:
+    """
+    One headline, from the same wire the site reads.
+
+    This replaces feedparser against feeds.reuters.com. That host stopped
+    resolving — the lookup returns NXDOMAIN — so `_get_global_headline` had been
+    returning None on every run and the brief had silently shipped without its
+    world line for as long as the feed has been dead. A source that fails to a
+    blank section is worse than one that fails loudly.
+    """
+    j = _news_get("/news")
+    if j:
+        items = j.get("news") or []
+        if items:
+            title = str(items[0].get("title", "")).strip()
+            src = str(items[0].get("source", "")).strip()
+            if title:
+                # Plain text only. The caller wraps this whole string in _..._,
+                # so emphasising the source here nests underscores and Telegram
+                # rejects the message with a 400 rather than rendering it.
+                return f"{title} — {src}" if src else title
+    # Second choice: the top clustered world event.
+    j = _news_get("/world")
+    if j:
+        top = j.get("top") or []
+        if top:
+            title = str(top[0].get("title", "")).strip()
+            if title:
+                return title
+    return None
+
+
+def _fmt_price(v, currency: str = "") -> str:
+    """
+    Price at a sane precision for its magnitude.
+
+    The old recap tried to do this inline as
+    `f"{entry:.4f if entry < 100 else entry:.1f}"`, which is not a legal format
+    spec — Python raises ValueError on it. That exception was caught by the
+    bare `except Exception` around the whole recap, logged at warning level and
+    turned into an empty string, so the 6 AM signal recap has never once been
+    delivered. It failed on the first row it tried to format, every single day.
+    """
+    try:
+        n = float(v)
+    except (TypeError, ValueError):
+        return "—"
+    if n >= 1000:
+        body = f"{n:,.0f}"
+    elif n >= 100:
+        body = f"{n:.1f}"
+    elif n >= 1:
+        body = f"{n:.2f}"
+    else:
+        body = f"{n:.4f}"
+    return f"{currency}{body}" if currency else body
+
+
 def _rotate(items: list, seed: date = None):
     d = seed or date.today()
     return items[d.toordinal() % len(items)]
 
 
 def _get_markets() -> str:
-    # Use shared cache — avoids duplicate yfinance calls with newspaper.py
+    # news.askakshay.com first, so Telegram and the site quote the same tape.
+    # The yfinance cache stays as the fallback: it is what this ran on before,
+    # it is already warm from newspaper.py, and 6 AM is the wrong time to have
+    # no markets section because one host was slow.
+    from_api = _news_markets()
+    if from_api:
+        return from_api
+
+    log.warning("markets: news API unavailable, falling back to yfinance cache")
     markets = get_cached_markets()
     lines = []
     for m in markets:
@@ -371,14 +502,13 @@ def _get_jobs() -> str:
     return out
 
 def _get_global_headline() -> Optional[str]:
-    """One Reuters business headline."""
-    try:
-        feed = feedparser.parse("https://feeds.reuters.com/reuters/businessNews")
-        if feed.entries:
-            return feed.entries[0].get("title", "").strip()
-    except Exception:
-        pass
-    return None
+    """
+    One business headline, from news.askakshay.com.
+
+    Was feedparser against feeds.reuters.com, which no longer resolves. See
+    `_news_headline` for why that mattered more than it looked.
+    """
+    return _news_headline()
 
 
 def _get_quote() -> str:
@@ -585,71 +715,98 @@ def _get_chess_puzzle() -> str:
 
 def _build_signal_recap() -> str:
     """
-    Pulls yesterday's signals from Turso and formats a one-line-per-signal recap.
-    Shows: symbol · action · type · entry · current status · outcome/lesson.
-    Sent once at 6 AM MYT — never repeated.
+    Yesterday and today's signals, read from news.askakshay.com.
+
+    Two things were wrong with the version this replaces.
+
+    First, it queried Turso directly while the website rendered the same trades
+    through /api/signals, so the recap and the site could disagree about a
+    trade's status and nothing would catch it.
+
+    Second, and worse, it never ran. Every price was formatted with
+    `f"{entry:.4f if entry < 100 else entry:.1f}"`, which is not a valid format
+    specifier; Python raises ValueError on the first row. The bare
+    `except Exception` around the whole function swallowed it into a warning and
+    returned "", and `send_brief` treats "" as "nothing to report". The recap
+    has been failing this way on every run that had signals to report.
+
+    Returns "" when there is genuinely nothing to say. Any failure is logged and
+    also returns "" — the brief still goes out without this block.
     """
     try:
-        yesterday = (datetime.now(IST) - timedelta(days=1)).date().isoformat()
-        today     = datetime.now(IST).date().isoformat()
+        now       = datetime.now(IST)
+        yesterday = (now - timedelta(days=1)).date().isoformat()
+        today     = now.date().isoformat()
 
-        con = db.connect()
-        rows = con.execute("""
-            SELECT symbol, signal_type, action, entry, sl, target1, target2,
-                   status, pnl_pct, date, market
-            FROM all_signals
-            WHERE date >= ? AND date <= ?
-            ORDER BY date DESC, id DESC
-        """, (yesterday, today)).fetchall()
-        con.close()
+        j = _news_get("/signals?limit=400")
+        if not j:
+            log.warning("signal recap: news API unavailable")
+            return ""
 
+        rows = [
+            r for r in (j.get("signals") or [])
+            if yesterday <= str(r.get("date", ""))[:10] <= today
+            or yesterday <= str(r.get("closed_at") or "")[:10] <= today
+        ]
         if not rows:
             return ""
 
-        # Group by outcome
         open_sigs, winners, losers, cancelled = [], [], [], []
         for r in rows:
-            sym, stype, action, entry, sl, t1, t2, status, pnl, date, market = r
-            sym    = str(sym or "")
-            status = str(status or "OPEN")
-            pnl    = float(pnl) if pnl else 0
-            entry  = float(entry) if entry else 0
-            t1     = float(t1) if t1 else 0
-            sl     = float(sl) if sl else 0
+            sym    = str(r.get("symbol") or "")
+            action = str(r.get("action") or "")
+            status = str(r.get("status") or "OPEN").upper()
+            cur    = str(r.get("currency") or "")
+            entry  = _fmt_price(r.get("entry"), cur)
+            # pnl_str is pre-formatted by the API, so Telegram and the site
+            # cannot round the same trade two different ways.
+            pnl    = str(r.get("pnl_str") or "—")
+            rmult  = r.get("r_multiple")
+            rtxt   = f" · {float(rmult):+.2f}R" if isinstance(rmult, (int, float)) else ""
 
             if status == "OPEN":
-                open_sigs.append(f"• *{sym}* {action} @ `{entry:.4f if entry < 100 else entry:.1f}` — still open")
-            elif "T1" in status or "T2" in status:
-                emoji = "✅"
-                target = t1 if "T1" in status else t2
-                winners.append(f"{emoji} *{sym}* {action} → Target hit `{target:.4f if target < 100 else target:.1f}` (+{pnl:.1f}%)")
-            elif "SL" in status:
-                sl_val = float(sl) if sl else 0
-                losers.append(f"❌ *{sym}* {action} → SL hit `{sl_val:.4f if sl_val < 100 else sl_val:.1f}` ({pnl:.1f}%)")
+                open_sigs.append(f"• *{sym}* {action} @ `{entry}` — still open")
+            elif status.startswith("T") and "_HIT" in status:
+                tgt = _fmt_price(r.get("target2") or r.get("target1"), cur)
+                winners.append(f"✅ *{sym}* {action} → target `{tgt}` ({pnl}{rtxt})")
+            elif "SL" in status or status == "STOPPED":
+                losers.append(f"❌ *{sym}* {action} → stop `{_fmt_price(r.get('sl'), cur)}` ({pnl}{rtxt})")
             elif status == "CANCELLED":
                 cancelled.append(f"⚪ *{sym}* {action} — cancelled")
+            else:
+                # TIME_STOP, EXPIRED — closed, but neither a target nor a stop.
+                losers.append(f"⏳ *{sym}* {action} → {status.replace('_', ' ').lower()} ({pnl}{rtxt})")
 
         lines = [f"📊 *SIGNAL RECAP* — {yesterday} → {today}\n"]
-
         if winners:
-            lines.append("*✅ Closed — Target Hit:*")
+            lines.append("*✅ Closed — target hit:*")
             lines.extend(winners)
         if losers:
-            lines.append("\n*❌ Closed — SL Hit:*")
+            lines.append("\n*❌ Closed — stopped or timed out:*")
             lines.extend(losers)
         if open_sigs:
-            lines.append(f"\n*🔵 Still Open ({len(open_sigs)}):*")
-            lines.extend(open_sigs[:6])   # cap at 6 to avoid spam
+            lines.append(f"\n*🔵 Still open ({len(open_sigs)}):*")
+            lines.extend(open_sigs[:6])
             if len(open_sigs) > 6:
-                lines.append(f"  _...and {len(open_sigs)-6} more_")
+                lines.append(f"  _...and {len(open_sigs) - 6} more_")
         if cancelled:
             lines.append(f"\n*⚪ Cancelled: {len(cancelled)}*")
 
-        total  = len(rows)
-        w, l   = len(winners), len(losers)
-        wr_str = f"{round(w/(w+l)*100)}% WR" if (w + l) > 0 else "no closed trades"
-        lines.append(f"\n_Total: {total} signals · {wr_str} · Not SEBI advice_")
+        w, l = len(winners), len(losers)
+        wr   = f"{round(w / (w + l) * 100)}% WR" if (w + l) else "no closed trades"
 
+        # Lifetime edge, from the same /stats the site publishes. Quoted with
+        # its sample size, because an expectancy without an n is a mood.
+        edge = ""
+        st = _news_get("/stats")
+        if st:
+            h = st.get("headline") or {}
+            trades = h.get("trades")
+            exp    = h.get("expectancy_r")
+            if isinstance(trades, int) and isinstance(exp, (int, float)):
+                edge = f" · lifetime {exp:+.3f}R over {trades} closed"
+
+        lines.append(f"\n_{len(rows)} signals · {wr}{edge} · not SEBI advice_")
         return "\n".join(lines)
     except Exception as e:
         log.warning(f"signal recap error: {e}")
@@ -838,9 +995,20 @@ Senior FP&A · Finance Manager · Regional · Controller
 
 
 def _build_apex_digest() -> str:
-    """Fetch APEX bot P&L from Render and build a Telegram digest."""
+    """
+    Fetch APEX bot P&L and build a Telegram digest.
+
+    The host moved. This pointed at apex-bot-jnuc.onrender.com, a service that
+    is gone — the connection does not establish at all, so the request raised,
+    the bare except returned "", and `send_brief` skipped the block. APEX has
+    been running behind the named Cloudflare tunnel at apex.askakshay.com; that
+    is where /health actually answers.
+    """
     try:
-        r = requests.get("https://apex-bot-jnuc.onrender.com/health", timeout=15)
+        r = requests.get(
+            os.environ.get("APEX_HEALTH_URL", "https://apex.askakshay.com/health"),
+            timeout=15,
+        )
         if r.status_code != 200:
             return ""
         d = r.json()
