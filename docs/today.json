@@ -1,7 +1,7 @@
 {
- "build_id": "20260824T061757",
- "date": "2026-08-24",
- "date_str": "Monday, August 24 2026",
+ "build_id": "20260825T062134",
+ "date": "2026-08-25",
+ "date_str": "Tuesday, August 25 2026",
  "picks": [
   {
    "symbol": "SAP",
@@ -408,12 +408,16 @@
    "price": 173.0,
    "sector": "Industrials"
   },
+  "ASTRAL": {
+   "price": 1528.5,
+   "sector": "Industrials"
+  },
   "AWL": {
    "price": 188.12,
    "sector": "Consumer Defensive"
   },
   "AXON": {
-   "price": 627.75,
+   "price": 597.59,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
@@ -464,10 +468,6 @@
    "price": 861.95,
    "sector": "Consumer Cyclical"
   },
-  "CHOLAFIN": {
-   "price": 1862.9,
-   "sector": "Financial Services"
-  },
   "COFORGE.NS": {
    "price": 1891.7,
    "sector": "Technology"
@@ -485,12 +485,8 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 209.17,
+   "price": 209.06,
    "sector": "Technology"
-  },
-  "CRUDE": {
-   "price": 86.42,
-   "sector": ""
   },
   "DEEPAKNTR": {
    "price": 1747.1,
@@ -505,7 +501,7 @@
    "sector": "Real Estate"
   },
   "DUOL": {
-   "price": 146.13,
+   "price": 146.84,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -519,10 +515,6 @@
   "ESCORTS": {
    "price": 3086.6001,
    "sector": "Industrials"
-  },
-  "EXIDEIND": {
-   "price": 459.6,
-   "sector": "Consumer Cyclical"
   },
   "FLUOROCHEM": {
    "price": 4621.8999,
@@ -538,6 +530,10 @@
   },
   "GVT&D": {
    "price": 4127.2002,
+   "sector": "Industrials"
+  },
+  "HAL": {
+   "price": 5000.0,
    "sector": "Industrials"
   },
   "HCLTECH": {
@@ -576,6 +572,10 @@
    "price": 3118.8,
    "sector": ""
   },
+  "JSWSTEEL": {
+   "price": 1293.7,
+   "sector": "Basic Materials"
+  },
   "KIRLOSENG": {
    "price": 2100.8,
    "sector": "Industrials"
@@ -605,7 +605,7 @@
    "sector": "Consumer Cyclical"
   },
   "MRK": {
-   "price": 152.55,
+   "price": 150.66,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -613,7 +613,7 @@
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 483.24,
+   "price": 487.31,
    "sector": ""
   }
  },
@@ -745,260 +745,261 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "14h old",
+    "age": "13h old",
     "note": "partial coverage \u2014 13/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Tactics: The Fork",
-   "body": "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest \u2014 they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap.",
-   "index": 5,
+   "title": "Tactics: The Skewer",
+   "body": "A skewer is a reverse pin. A valuable piece is attacked, it moves, and the piece behind it is captured. Skewers happen on open files and diagonals. Rooks and bishops execute skewers. Pattern: Rook checks king \u2192 king moves \u2192 rook captures queen. Spot this on every open file.",
+   "index": 6,
    "total": 20
   },
   "wisdom": {
-   "title": "Letting Go of Control",
-   "body": "You can control your effort. You cannot control outcomes. The job market, the Instagram algorithm, the baby's sleep schedule \u2014 all outside your control. Epictetus: 'Seek not that the things which happen should happen as you wish; but wish the things which happen to be as they are, and you will have a tranquil flow of life.'",
-   "index": 15,
+   "title": "Joy is a Practise",
+   "body": "Joy doesn't arrive when the conditions are right. It's practiced in the conditions you have. Find one thing today that is genuinely good. Savour it for 30 seconds. This is not toxic positivity \u2014 it's neurological training. Brains that practise noticing goodness get better at finding it, even in hard seasons.",
+   "index": 16,
    "total": 18
   },
   "book": {
-   "book": "Atomic Habits",
-   "author": "James Clear",
-   "chapter": "The Four Laws of Behaviour Change",
-   "lesson": "Every habit is built on four components: Cue (make it obvious) \u2192 Craving (make it attractive) \u2192 Response (make it easy) \u2192 Reward (make it satisfying). To build a good habit, apply all four. To break a bad one, invert them: make it invisible, make it unattractive, make it difficult, make it unsatisfying. The two-minute rule: when starting a new habit, it should take less than two minutes. You're not running 5km yet \u2014 you're putting on your running shoes. The gateway habit becomes the habit.",
-   "key_quote": "Reduce friction for good habits. Increase friction for bad ones.",
-   "action": "Apply the two-minute rule to one habit you've been failing to start. Make the first step so small it's impossible to say no.",
-   "index": 3,
+   "book": "Deep Work",
+   "author": "Cal Newport",
+   "chapter": "The Shallow Work Trap: Why Being Busy Is Not the Same as Being Productive",
+   "lesson": "Shallow work is non-cognitively demanding tasks performed while distracted \u2014 email, meetings, admin. Deep work is professional activity performed in a state of distraction-free concentration that pushes your cognitive capabilities to their limit. These efforts create new value, improve your skill, and are hard to replicate. Newport's argument: the ability to do deep work is becoming increasingly rare at exactly the same time it is becoming increasingly valuable in the economy. The few who cultivate this skill will thrive.",
+   "key_quote": "Two to four hours of genuine deep work produces more output than eight hours of fragmented shallow work.",
+   "action": "Schedule one 90-minute deep work block tomorrow. No phone, no email, one hard problem. Treat it like a meeting you cannot cancel.",
+   "index": 4,
    "total": 48,
    "crux": [
-    "You do not rise to the level of your goals. You fall to the level of your systems.",
-    "1% better daily compounds to 37x in a year. 1% worse decays to 0.03x.",
-    "Habits form on a four-step loop: cue \u2192 craving \u2192 response \u2192 reward.",
-    "Build good habits: make it obvious, attractive, easy, satisfying. Invert all four to break one.",
-    "Identity drives behaviour, not the reverse. 'I don't smoke' beats 'I'm trying to quit'.",
-    "Every action is a vote for the person you are becoming. Majority wins, not unanimity.",
-    "The two-minute rule: a new habit must take under two minutes to start.",
-    "Environment beats willpower. Motivation is overrated; friction is decisive.",
-    "Habit stacking: after [existing habit], I will [new habit]. The old habit becomes the cue.",
-    "You need a plateau of latent potential. Results lag effort \u2014 most people quit inside the lag.",
-    "Never miss twice. One miss is an accident. Two is the start of a new habit.",
-    "Measure what you want to repeat. An unrecorded habit drifts within three weeks."
+    "Deep work: focused, undistracted, cognitively demanding work. It is becoming rare and simultaneously more valuable.",
+    "Two core abilities now decide income: learn hard things fast, and produce elite output fast.",
+    "Both abilities depend on deep work. Both are destroyed by fragmented attention.",
+    "Shallow work is logistically necessary and infinitely replaceable. It feels like work and produces nothing durable.",
+    "Attention residue: switching tasks leaves cognitive drag for 15\u201320 minutes. Ten switches cost you the day.",
+    "High-quality work = time spent \u00d7 intensity of focus. Intensity is the neglected multiplier.",
+    "Four scheduling philosophies: monastic, bimodal, rhythmic, journalistic. Rhythmic \u2014 same hours daily \u2014 is the only one most people can sustain.",
+    "Willpower is finite and depletes. Rituals and fixed locations spend none of it.",
+    "Schedule every minute of the workday. Not to obey it, but to force the question 'what deserves this hour?'",
+    "Fixed-schedule productivity: hard-stop the day and work backwards. Constraint forces ruthless triage.",
+    "Boredom tolerance is trainable and prerequisite. If every queue is filled with a phone, focus never develops.",
+    "Quit social media by default; readmit a tool only if it clearly serves a core goal.",
+    "Drain the shallows. Aim shallow work under 40% of the week and defend the rest."
    ],
    "learnings": [
-    "Discipline is a design problem, not a character problem.",
-    "The gap between effort and visible result is where nearly everyone quits.",
-    "Systems survive bad days. Motivation does not.",
-    "Tracking is not admin. Tracking is the habit."
+    "Busy is not a proxy for valuable. It is usually a proxy for unfocused.",
+    "The ability to concentrate is a skill you build, not a mood you catch.",
+    "Fragmented time is not additive \u2014 four 30-minute blocks are worth far less than one 2-hour block.",
+    "Downtime is not idleness; unconscious processing needs it."
    ],
    "examples": [
-    "British Cycling went from one Tour de France win in 110 years to five in six years by stacking 1% gains \u2014 pillow hygiene, hand-washing, bike paint for dust visibility.",
-    "Clear's own recovery: a bat to the face at 15, two years of rebuilding, then an academic All-American \u2014 built entirely on sleep and study routines, not talent.",
-    "Twice-weekly gym attendance beats a 90-minute session once a month, even though the monthly total is similar. Frequency builds identity; volume does not."
+    "Carl Jung built a stone tower at Bollingen and wrote there in the mornings, uninterrupted, while running a clinical practice.",
+    "Adam Grant compressed teaching into one semester and batched research into the other \u2014 becoming one of the most published psychologists of his generation.",
+    "Newport wrote a book, earned a PhD, and published peer-reviewed papers while rarely working past 5:30pm, by hard-stopping his day."
    ],
    "adapt": [
-    "Score one caption per day before posting. The score is the habit, not the post.",
-    "Two-minute rule on the Dubai job hunt: open the tracker and add one company. That is the whole commitment.",
-    "SIP on auto-debit the day salary lands. Remove the monthly decision entirely.",
-    "Never miss twice on the daily brief. One skipped morning is fine. Two means the system broke."
+    "One 90-minute block before 8am for the highest-leverage build. Phone in another room, not face-down on the desk.",
+    "Batch Telegram, Instagram, and email into two windows. Notifications off outside them.",
+    "Financial models are deep work. Do them before the market opens, never in gaps between messages.",
+    "Hard-stop at 7pm on weekdays. The constraint is what forces the triage."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Travel Light As Practice",
-    "body": "Pack for a week in a carry-on. It teaches, in three days, exactly how little you require \u2014 a lesson that transfers directly home.",
-    "action": "Next trip: carry-on only. Note what you never opened.",
-    "index": 17,
+    "title": "Say No To Free",
+    "body": "Free samples, conference tote bags, hotel toiletries. Free acquisitions carry the same ongoing cost as bought ones. The price tag was never the expensive part.",
+    "action": "Decline the next free item you are offered.",
+    "index": 18,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "The Right Hand Rule",
-    "body": "In the Gulf and much of Asia, give and receive with the right hand \u2014 cards, food, documents, money. The left hand carries a specific connotation. This is not a preference; it is the baseline.",
-    "action": "Hand over your next document or card with the right hand, deliberately.",
-    "index": 3,
+    "title": "Accept The Coffee",
+    "body": "In Gulf business culture, refusing offered coffee or dates can read as refusing the relationship. Take it, hold it, sip it. The transaction is not the point of the meeting.",
+    "action": "Accept the next hospitality offered, even if you do not want it.",
+    "index": 4,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The First Hour Is Yours",
-    "body": "Whoever touches your attention first sets the agenda for the day. If that is a notification, you have outsourced the day to a stranger's priorities before you were fully awake.",
-    "action": "No screen for the first 30 minutes tomorrow. Nothing else changes.",
-    "index": 1,
+    "title": "Sit For Ten Minutes",
+    "body": "Not to achieve anything. Sit, breathe, and let thoughts pass without following them. The mind wandering is not failure \u2014 noticing it wandered is the entire rep.",
+    "action": "Ten minutes. Timer on. No app required.",
+    "index": 2,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Availability Heuristic",
-    "body": "You judge probability by how easily an example comes to mind. Plane crashes feel likelier than car crashes because they are memorable, not because they are common.",
-    "action": "Check one belief against actual frequency data rather than recall.",
-    "index": 13,
+    "title": "Loss Aversion",
+    "body": "Losses hurt roughly twice as much as equivalent gains please. This makes you hold losing positions and sell winners \u2014 precisely backwards, and reliably so.",
+    "action": "Review one holding you are keeping only because selling would confirm the loss.",
+    "index": 14,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642",
-    "translit": "bit-tawfeeq",
-    "meaning": "Good luck / wishing you success",
-    "use": "Before an exam, an interview, a launch. Sincere and common.",
-    "index": 29,
+    "script": "\u0648\u0627\u0644\u0644\u0647",
+    "translit": "wallah",
+    "meaning": "By God / seriously",
+    "use": "Emphasis. 'Wallah?' means 'seriously?'. Extremely common; use lightly.",
+    "index": 30,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Explain It To A Ten-Year-Old",
-    "body": "Take the most technical thing you know and explain it with no jargon. If you cannot, you have memorised it rather than understood it. This is the Feynman technique and it is brutal.",
-    "action": "Pick one concept. Explain it in writing with no technical terms.",
-    "index": 5,
+    "title": "Estimate Before Calculating",
+    "body": "Guess the answer before opening the spreadsheet. Then compare. This builds the instinct that catches a model error before the client does.",
+    "action": "Estimate three figures before computing. Track how close you were.",
+    "index": 6,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Heat And Cold Are Adjuncts, Not Basics",
-    "body": "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
-    "action": "Only add these once training, sleep, and protein are consistent.",
-    "index": 15,
+    "title": "Blood Panel Annually, Minimum",
+    "body": "ApoB, HbA1c, fasting insulin, hs-CRP, lipid panel, vitamin D. ApoB predicts cardiovascular risk better than LDL-C and is rarely ordered unless you ask specifically.",
+    "action": "Book the panel. Ask for ApoB by name.",
+    "index": 16,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Sam Walton",
-   "quote": "High expectations are the key to everything.",
-   "index": 76,
+   "name": "Michael Bloomberg",
+   "quote": "In business, what's dangerous is not to evolve.",
+   "index": 77,
    "total": 96
   },
   "lesson": {
-   "tradition": "Simplicity",
-   "lesson": "Simplicity is the ultimate sophistication.",
-   "source": "Leonardo da Vinci"
+   "tradition": "Action",
+   "lesson": "A year from now, you will wish you had started today.",
+   "source": "Karen Lamb"
   },
   "case": {
-   "title": "Stripe: Developer-First, CEO-Last",
-   "story": "Stripe built payment APIs for developers, not CFOs. 7 lines of code to accept payments. No sales team for the first 3 years \u2014 product sold itself.",
-   "lesson": "The best distribution is built into the product. If developers love it, adoption spreads through word of mouth. Sell to builders, not buyers."
+   "title": "Slack: From Failed Game to $27B",
+   "story": "Slack's founders built a failed multiplayer game called Glitch. They salvaged the internal communication tool they'd built. Sold to Salesforce for $27B.",
+   "lesson": "Pivots are not failures \u2014 they're redirected learning. The most valuable thing from a failed product is often the tool you built to build it."
   },
   "fpna": {
-   "title": "Three-Statement Model",
-   "body": "P&L \u2192 Balance Sheet \u2192 Cash Flow \u2014 they must tie. If they don't, you have a bug.",
-   "index": 12,
+   "title": "Sensitivity Tables",
+   "body": "Use Excel's Data Table (What-If Analysis) to show EBITDA across assumptions. One table > 5 slides.",
+   "index": 13,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 3: Internal Controls",
-   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
-   "index": 3,
+   "title": "FC Step 4: ERP Ownership",
+   "body": "SAP S/4HANA or Oracle Fusion \u2014 the FC owns the finance module. Know chart of accounts design, cost centre structure, intercompany eliminations, period-end close in the system. This separates candidates. SAP certification: \u20b915K online.",
+   "index": 4,
    "total": 15
   },
   "money_hack": {
-   "title": "Emergency Fund",
-   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
+   "title": "Credit Card Strategy",
+   "body": "Use card for all spends, pay in full before due. Earn 1\u20132% cashback. Never pay interest."
   },
   "dubai": {
-   "title": "What a Financial Controller title actually needs",
-   "body": "The jump from FP&A Manager to Controller in the Gulf is statutory reporting plus audit ownership plus a team. If the CV has no signed statutory set on it, that is the gap \u2014 not the years.",
-   "targets": "Controller bands start around AED 40K. It is the next rung, and it is close.",
-   "action_label": "Gap",
-   "action": "Get a statutory reporting line on the CV in the next six months. Any entity, any size.",
-   "index": 25,
+   "title": "Consolidation is the differentiator",
+   "body": "Multi-entity, multi-currency consolidation with intercompany elimination is what a Gulf group does every month and what most candidates have never touched. Naming the tool \u2014 HFM, OneStream, Tagetik, SAP BPC \u2014 moves you up a band on its own.",
+   "targets": "IFRS 10, IFRS 3 and IAS 21 are the standards behind it. Know which does what.",
+   "action_label": "Learn",
+   "action": "Take one 20-entity consolidation end to end, even as an exercise. Then say so.",
+   "index": 26,
    "total": 30
   },
   "daughter": {
-   "months": 7,
-   "days": 242,
-   "heading": "Seven months old.",
+   "months": 8,
+   "days": 243,
+   "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
+  "productivity": "Shutdown ritual: write tomorrow's top 3, close all tabs. Stop working.",
   "father": [
    {
-    "title": "Build then let her destroy",
-    "do": "Stack three blocks, let her knock them down, rebuild. Repeat until she loses interest.",
-    "why": "Cause and effect is the entire lesson. Knocking down precedes building by months \u2014 do not rush to the constructive half."
+    "title": "Read her a real book",
+    "do": "Read something you are reading, aloud, for five minutes. Content is irrelevant.",
+    "why": "Prosody, turn-taking and attention are carried by adult speech regardless of vocabulary. It also means reading time survives on days when the board pack is due."
    },
    {
-    "title": "Do bedtime alone once this week",
-    "do": "Handle the entire routine solo \u2014 no handover, no rescue.",
-    "why": "Solo caregiving builds a distinct relationship rather than an assisted one. It also gives her mother an uninterrupted evening, which is not a small thing at seven months."
+    "title": "Let her see you fail",
+    "do": "When you drop or fumble something in front of her, react calmly and try again visibly.",
+    "why": "Emotional regulation is learned by observation long before instruction. Your reaction to small frustrations is a template she is already recording."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Samyak Charitra",
-    "translation": "Right conduct",
-    "teaching": "The third jewel, and deliberately placed after right perception and right knowledge \u2014 you cannot act well on a false picture.",
-    "apply": "When a decision feels hard, check whether it is genuinely a conduct problem or actually a perception problem you have not resolved. Most are the latter."
+    "term": "Ahimsa in speech",
+    "translation": "Non-violence applied to words",
+    "teaching": "Jain tradition treats harsh speech as a form of violence, listing it alongside physical harm rather than as a lesser category.",
+    "apply": "Review one message you sent under pressure this week. Would you send it unchanged now? The gap between those two versions is the practice."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Effort",
-    "translation": "Applied in the correct direction",
-    "teaching": "Effort is one of the eight, but so is rightness of effort. Energy in the wrong direction is not neutral; it entrenches the error.",
-    "apply": "Before adding hours to a problem, spend ten minutes asking whether the problem is the right one. Most overwork is misdirection, not insufficiency."
+    "term": "The Two Truths",
+    "translation": "Conventional and ultimate",
+    "teaching": "Something can be true conventionally and empty ultimately \u2014 a table is a table for practical purposes and a collection of parts on analysis. Both are needed.",
+    "apply": "Hold the forecast as both real enough to act on and provisional enough to abandon. Treating a model as ultimately true is how people ride a position down."
    }
   ],
   "spanish": [
    {
-    "word": "\u00bfqu\u00e9 significa?",
-    "meaning": "what does it mean?",
-    "es": "\u00bfQu\u00e9 significa esta palabra?",
-    "en": "What does this word mean?",
+    "word": "darse cuenta",
+    "meaning": "to realise",
+    "es": "Me di cuenta del error muy tarde.",
+    "en": "I realised the mistake too late.",
     "tag": "Everyday"
    },
    {
-    "word": "de golpe",
-    "meaning": "all at once / suddenly",
-    "es": "Los costos subieron de golpe.",
-    "en": "Costs rose all at once.",
+    "word": "sobre la marcha",
+    "meaning": "on the fly / as we go",
+    "es": "Lo ajustamos sobre la marcha.",
+    "en": "We adjust it as we go.",
     "tag": "Idiom"
    }
   ],
   "vocab": [
    {
-    "word": "Contingent",
-    "say": "kuhn-TIN-juhnt",
-    "meaning": "Dependent on something else happening.",
-    "example": "The bonus is contingent on hitting the cash target.",
-    "note": "Also technical \u2014 contingent liabilities are disclosed, not recognised."
+    "word": "Untenable",
+    "say": "un-TEN-uh-buhl",
+    "meaning": "Impossible to defend or maintain.",
+    "example": "Holding 95 days of stock at this rate is untenable.",
+    "note": "Stronger than 'difficult'. Use it when you mean the position must change."
    },
    {
-    "word": "Commensurate",
-    "say": "kuh-MEN-suh-rit",
-    "meaning": "In proportion to.",
-    "example": "The return is not commensurate with the capital at risk.",
-    "note": "The precise way to say something is not worth what it costs."
+    "word": "Judicious",
+    "say": "joo-DISH-uhs",
+    "meaning": "Showing good judgement.",
+    "example": "A judicious use of markdown clears stock without training customers to wait.",
+    "note": "Sounds considered rather than cautious."
    }
   ],
   "speaking": {
-   "title": "Read a wire story aloud",
-   "drill": "Take one headline from the World section and read the first paragraph aloud, twice.",
-   "why": "Journalistic prose is tightly written. Reading it aloud daily rewires sentence rhythm faster than conversation does."
+   "title": "Say the difficult number",
+   "drill": "Practise delivering bad news out loud: 'We are AED 14M behind.' No preamble, no cushion.",
+   "why": "The instinct is to soften it with context first. Context after the number is briefing; before it is stalling."
   },
   "interview_tech": [
    {
-    "q": "Like-for-like sales are +3% but total sales are \u22122%. What is happening?",
-    "a": "The existing estate is growing while the total base shrank \u2014 you closed stores, or a material store left the LFL set. LFL strips out openings and closures, so the gap is the net space effect. Ask: was the closure deliberate portfolio pruning, in which case \u22122% total with +3% LFL and better margin is a good outcome; or did leases expire without replacement, which is a pipeline failure. Follow with sales density per sqm \u2014 that tells you whether the remaining estate is genuinely stronger.",
-    "who": "Marks & Spencer \u00b7 Americana \u00b7 Alshaya"
+    "q": "Your CEO wants to grow revenue 20%. Finance says cash cannot fund it. How do you frame that?",
+    "a": "Not as a refusal. Compute the sustainable growth rate: ROE \u00d7 retention ratio. If the business sustainably funds 12% and the ask is 20%, the gap is 8 points that must come from somewhere \u2014 debt, equity, working capital release, or margin. Present the three routes with the cost of each and the covenant headroom. Then let the CEO choose. Finance's job is to price the options, not to be the department that says no.",
+    "who": "Unilever \u00b7 P&G \u00b7 Nestl\u00e9"
    },
    {
-    "q": "You are consolidating Malaysia and Indonesia. Where do FX translation differences land?",
-    "a": "Functional currency results are translated at the closing rate for assets and liabilities, average rate for P&L, and the difference goes to other comprehensive income as a foreign currency translation reserve \u2014 not through P&L. It only recycles to P&L on disposal of the foreign operation. The trap: intercompany balances that are effectively permanent investment belong in the net investment, so their FX also goes to OCI. Getting that wrong puts noise through earnings every quarter.",
-    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
+    "q": "Same-store sales are flat but the store is more profitable. Is that good?",
+    "a": "Depends entirely on the cause. If margin rose from better buying, less markdown, or labour-scheduling efficiency \u2014 excellent, that is real operating leverage. If it rose because you cut staff hours below service thresholds, deferred maintenance, or stopped local marketing, you are harvesting the store and flat sales will turn negative within three quarters. Ask for the conversion rate and units per transaction, not just the margin.",
+    "who": "Costco \u00b7 Zara \u00b7 Alshaya"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you had to say no to a business partner.",
-    "a": "Retail finance says no constantly \u2014 to a buy outside open-to-buy, a promotion that destroys margin, a headcount request without a business case. Pick one and show the method: you did not just refuse, you showed the number that made it a no, and you offered what would make it a yes. The best answers end with the partner coming back with a version you could approve, because that proves the relationship survived.",
-    "who": "Landmark Group \u00b7 P&G \u00b7 Mars"
+    "q": "What questions do you have for us?",
+    "a": "Never none. Ask things that reveal you are evaluating them: what does the first 12 months look like for whoever takes this; what is the finance function currently not able to answer that the board keeps asking; how is the relationship between finance and the commercial teams today; and why is the role open. The last one is the most informative and the least asked. Avoid salary and benefits at first interview.",
+    "who": "Universal"
    },
    {
-    "q": "What motivates you, besides money?",
-    "a": "Be concrete or it sounds rehearsed. Good answers name the specific texture of the work: seeing a decision you modelled play out in real numbers weeks later, building a team member into something they were not when they arrived, or the particular satisfaction of a clean close. Avoid 'challenge' and 'growth' unqualified. If money genuinely is a driver \u2014 Dubai, young family \u2014 it is fine to say it is one of several, and honest beats performed modesty.",
-    "who": "Universal"
+    "q": "Describe a situation where you had incomplete information and had to decide anyway.",
+    "a": "Forecasting and provisioning are full of these. Structure: what you knew, what you could not know in the time available, the cost of waiting, the assumption you took and why, and how you made the assumption visible rather than burying it. The mark of seniority is deciding with 70% of the information and saying explicitly what would change your mind \u2014 say that phrase.",
+    "who": "Amazon \u00b7 McKinsey \u00b7 Boards"
    }
   ]
  }
