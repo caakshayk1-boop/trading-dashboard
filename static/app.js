@@ -3452,8 +3452,162 @@ var TV_ALIASES = (function () {
         '</div>';
     }
 
+    // ── WHEN IT WORKS ───────────────────────────────────────────────────
+    //
+    // Buckets every closed trade by the weekday and the month it resolved.
+    // Built from /api/stats' equity_curve, which already carries a date and an
+    // R per trade — no new endpoint and no new payload.
+    //
+    // Colour encodes TOTAL R, not win rate. A day can win four times out of
+    // five and still lose money, and a heatmap keyed on win rate hides exactly
+    // that. Colour is never the only carrier: every cell prints its R and its
+    // trade count.
+    var DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    function heatStyle(totalR, maxAbs){
+      if (!maxAbs) return '';
+      var a = Math.min(0.20, Math.abs(totalR) / maxAbs * 0.20);
+      if (!totalR) return '';
+      return 'background:color-mix(in srgb, var(--' + (totalR > 0 ? 'up' : 'down') +
+             ') ' + (a * 100).toFixed(1) + '%, transparent)';
+    }
+
+    function whenCell(label, bucket, maxAbs){
+      var n = bucket ? bucket.n : 0;
+      var tot = bucket ? bucket.r : 0;
+      var d = document.createElement('div');
+      d.className = 'whencell' + (n ? '' : ' empty-cell');
+      d.setAttribute('style', heatStyle(tot, maxAbs));
+      var wins = bucket ? bucket.w : 0;
+      d.innerHTML =
+        '<div class="wk">' + label + '</div>' +
+        '<div class="wv" style="color:var(--' + (n ? (tot > 0 ? 'up' : (tot < 0 ? 'down' : 'dim')) : 'dim') + ')">' +
+          (n ? (tot > 0 ? '+' : '') + tot.toFixed(2) + 'R' : '—') + '</div>' +
+        '<div class="wn">' + (n ? n + (n === 1 ? ' trade · ' : ' trades · ') + wins + 'W' : 'no trades') + '</div>';
+      return d;
+    }
+
+    function renderWhen(curve){
+      var wrap = el('whenWrap');
+      if (!wrap) return;
+      if (!curve || !curve.length){ wrap.style.display = 'none'; return; }
+
+      var dow = {}, mon = {}, bad = 0;
+      curve.forEach(function(p){
+        var r = Number(p.r);
+        if (!isFinite(r) || !p.date) { bad++; return; }
+        // Parsed as UTC on purpose. new Date('2026-08-04') is UTC midnight in
+        // every browser, while new Date('2026/08/04') is local — mixing them
+        // moves a trade across a day boundary for anyone west of Greenwich.
+        var t = new Date(p.date + 'T00:00:00Z');
+        if (isNaN(t)) { bad++; return; }
+        var k = DOW[(t.getUTCDay() + 6) % 7];              // Mon-first
+        var m = p.date.slice(0, 7);
+        (dow[k] = dow[k] || {n:0,r:0,w:0});
+        (mon[m] = mon[m] || {n:0,r:0,w:0});
+        dow[k].n++; dow[k].r += r; if (r > 0) dow[k].w++;
+        mon[m].n++; mon[m].r += r; if (r > 0) mon[m].w++;
+      });
+
+      var maxAbs = 0;
+      Object.keys(dow).forEach(function(k){ maxAbs = Math.max(maxAbs, Math.abs(dow[k].r)); });
+      Object.keys(mon).forEach(function(k){ maxAbs = Math.max(maxAbs, Math.abs(mon[k].r)); });
+
+      var gd = el('whenDow'), gm = el('whenMonth');
+      gd.innerHTML = ''; gm.innerHTML = '';
+      // Weekends are dropped rather than shown empty — NSE does not trade them,
+      // and two permanently blank cells teach the reader to ignore the grid.
+      DOW.slice(0, 5).forEach(function(k){ gd.appendChild(whenCell(k, dow[k], maxAbs)); });
+      Object.keys(mon).sort().forEach(function(m){ gm.appendChild(whenCell(m, mon[m], maxAbs)); });
+
+      var best = null, worst = null;
+      DOW.slice(0, 5).forEach(function(k){
+        if (!dow[k] || !dow[k].n) return;
+        if (!best || dow[k].r > dow[best].r) best = k;
+        if (!worst || dow[k].r < dow[worst].r) worst = k;
+      });
+      var note = '';
+      if (best && worst && best !== worst){
+        note = best + ' is the best day at ' + (dow[best].r > 0 ? '+' : '') + dow[best].r.toFixed(2) +
+               'R over ' + dow[best].n + ', ' + worst + ' the worst at ' + dow[worst].r.toFixed(2) +
+               'R over ' + dow[worst].n + '. At this sample size that is a description of what happened, ' +
+               'not a rule to trade — a single trade moves either number.';
+      } else {
+        note = 'Not enough closed trades yet for a day-of-week pattern to mean anything.';
+      }
+      if (bad) note += ' ' + bad + ' trade' + (bad === 1 ? '' : 's') + ' had no usable date and ' +
+                      (bad === 1 ? 'was' : 'were') + ' left out.';
+      el('whenNote').textContent = note;
+      wrap.style.display = '';
+    }
+
+    // ── WHAT IF ─────────────────────────────────────────────────────────
+    //
+    // Switch an engine off and recompute the headline. Exact arithmetic, not a
+    // re-simulation: /api/stats gives trades and total_r per engine, so
+    // excluding one is a subtraction.
+    //
+    // Framed as attribution rather than as a better result. Removing the worst
+    // engine in hindsight is not a strategy; knowing which engine is paying for
+    // the others is the actual question.
+    var whatIfOff = {};
+
+    function renderWhatIf(j){
+      var wrap = el('whatIfWrap');
+      if (!wrap) return;
+      var eng = (j.by_signal_type || []).filter(function(e){ return (e.trades || 0) > 0; });
+      if (eng.length < 2){ wrap.style.display = 'none'; return; }
+
+      var row = el('whatIfToggles');
+      row.innerHTML = '';
+      eng.forEach(function(e){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'whatifchip';
+        b.setAttribute('aria-pressed', whatIfOff[e.key] ? 'true' : 'false');
+        b.textContent = e.key + ' (' + e.trades + ')';
+        b.addEventListener('click', function(){
+          whatIfOff[e.key] = !whatIfOff[e.key];
+          renderWhatIf(j);
+        });
+        row.appendChild(b);
+      });
+
+      var n = 0, tot = 0, wins = 0, dropped = 0;
+      eng.forEach(function(e){
+        if (whatIfOff[e.key]) { dropped += (e.trades || 0); return; }
+        n += (e.trades || 0);
+        tot += (e.total_r || 0);
+        wins += (e.wins || 0);
+      });
+
+      var base = j.headline || {};
+      var exp = n ? tot / n : null;
+      var wr = n ? wins / n * 100 : null;
+      var dExp = (exp != null && base.expectancy_r != null) ? exp - base.expectancy_r : null;
+
+      function box(k, v, d){
+        return '<div class="wo"><div class="k">' + k + '</div>' +
+               '<div class="v">' + v + '</div>' +
+               (d ? '<div class="d">' + d + '</div>' : '') + '</div>';
+      }
+      el('whatIfOut').innerHTML =
+        box('Expectancy', exp == null ? '—' : (exp > 0 ? '+' : '') + exp.toFixed(3) + 'R',
+            dExp == null ? 'no trades left' :
+            (dExp === 0 ? 'unchanged' : (dExp > 0 ? '+' : '') + dExp.toFixed(3) + 'R vs published')) +
+        box('Win rate', wr == null ? '—' : wr.toFixed(1) + '%',
+            base.win_rate != null ? 'published ' + base.win_rate.toFixed(1) + '%' : '') +
+        box('Total R', (tot > 0 ? '+' : '') + tot.toFixed(2) + 'R', n + ' closed trades') +
+        box('Excluded', String(dropped), dropped ? 'trades switched off' : 'nothing switched off');
+      wrap.style.display = '';
+    }
+
     function renderStats(j){
       var h = j.headline, t = j.totals;
+      // Both read from the payload renderStats already has. Guarded so a
+      // malformed block cannot take the headline figures down with it.
+      try { renderWhen(j.equity_curve); } catch (e) { /* non-fatal */ }
+      try { renderWhatIf(j); } catch (e) { /* non-fatal */ }
       el('perfBasis').textContent = t.closed + ' closed of ' + t.all + ' signals · ' +
         (t.first_date || '—') + ' → ' + (t.last_date || '—');
 

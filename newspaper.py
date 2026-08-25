@@ -4542,6 +4542,36 @@ TEMPLATE = r"""<!DOCTYPE html>
   color:var(--dim);
   letter-spacing:.16em;
 }
+/* ── WHEN IT WORKS / WHAT IF ──────────────────────────────────────────────
+   Both blocks are built from tokens only. The heat scale runs through --up and
+   --down at varying alpha rather than a rainbow: the question is "did this day
+   make or lose money", which is one axis, and a two-colour scale answers it
+   without asking the reader to learn a legend. */
+.whenwrap,.whatifwrap{margin-top:clamp(28px,3.4vw,44px)}
+.whenhead{margin-bottom:16px}
+.whentitle{font-size:clamp(19px,2.2vw,25px);letter-spacing:-.025em;margin-bottom:6px}
+.whensub{color:var(--muted);font-size:14px;max-width:62ch;margin:0}
+.whengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:6px;margin-bottom:10px}
+.whenmonths{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
+.whencell{border:1px solid var(--line);border-radius:6px;padding:10px 11px;min-height:74px;
+  display:flex;flex-direction:column;justify-content:space-between}
+.whencell .wk{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.whencell .wv{font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.whencell .wn{font-size:10.5px;color:var(--dim);font-family:var(--mono)}
+.whencell.empty-cell .wv{color:var(--dim)}
+.whennote{color:var(--dim);font-size:13px;max-width:64ch;margin-top:4px}
+.whatifrow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.whatifchip{font-family:var(--mono);font-size:12px;padding:6px 11px;border-radius:99px;
+  border:1px solid var(--line2);background:none;color:var(--muted);cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s,opacity .15s}
+.whatifchip:hover{color:var(--text)}
+.whatifchip[aria-pressed="true"]{opacity:.42;text-decoration:line-through}
+.whatifout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.whatifout .wo{border-top:1px solid var(--line);padding-top:11px}
+.whatifout .wo .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.whatifout .wo .v{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.whatifout .wo .d{font-size:11.5px;color:var(--dim);font-family:var(--mono);margin-top:4px}
+
 /* The decorative column grid nearly disappears.
    .vgrid paints 1px verticals at --line. On the dark ground that was a faint
    texture you had to look for; the same alpha as dark-on-light is markedly
@@ -9488,6 +9518,48 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      content container, so a failure notice can never overwrite figures that
      did load — and an empty div renders as nothing when all is well. #}
   <div id="perfNotice"></div>
+
+  {# ── WHEN IT WORKS ─────────────────────────────────────────────────────
+     Day-of-week and month buckets over the closed ledger. Borrowed in spirit
+     from the calendar heatmaps trade journals use, but built on the one thing
+     this ledger has that a journal does not: every trade was published when it
+     fired, so the buckets cannot be assembled after the fact to flatter a day.
+
+     Rendered by renderWhen() in app.js from /api/stats' equity_curve, which
+     already carries a date and an R for every closed trade. No new endpoint,
+     no new payload. #}
+  <div class="whenwrap rv" id="whenWrap" style="display:none">
+    <div class="whenhead">
+      <h3 class="whentitle">When it works</h3>
+      <p class="whensub">Every closed trade bucketed by the day it resolved. Colour is total R,
+        not win rate — a day can win often and still lose money.</p>
+    </div>
+    <div class="whengrid" id="whenDow"></div>
+    <div class="whengrid whenmonths" id="whenMonth"></div>
+    <p class="whennote" id="whenNote"></p>
+  </div>
+
+  {# ── WHAT IF ───────────────────────────────────────────────────────────
+     The simulator trade journals sell as "your equity curve without your
+     mistakes". Theirs removes emotion-tagged trades, which is a judgement the
+     trader makes after the loss. This one removes an ENGINE — a pre-declared,
+     mechanical grouping — and the arithmetic is exact rather than inferred:
+     total R and trade count are both known per engine, so excluding one is a
+     subtraction, not a re-simulation.
+
+     It is deliberately framed as attribution, not as a better result. Removing
+     your worst engine in hindsight is not a strategy; knowing which engine is
+     paying for the others is. #}
+  <div class="whatifwrap rv" id="whatIfWrap" style="display:none">
+    <div class="whenhead">
+      <h3 class="whentitle">What if</h3>
+      <p class="whensub">Switch an engine off to see what the ledger would read without it.
+        This is attribution, not a backtest — the trades still happened, and picking the
+        loser to remove after the fact is not a strategy.</p>
+    </div>
+    <div class="whatifrow" id="whatIfToggles"></div>
+    <div class="whatifout" id="whatIfOut"></div>
+  </div>
 
   <!-- Shown by renderStats() while the closed count is below MIN_N_FOR_EDGE.
        The record restarted on the gated engine, so it will be visible for a
