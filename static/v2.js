@@ -7,6 +7,23 @@
    ═══════════════════════════════════════════════════════════════════════ */
 (function () {
 "use strict";
+// The core carries every primitive this file is written against. If it fails
+// to load — a bad deploy, a cache serving one file and not the other, an
+// adblocker — the page would otherwise render as a masthead over nothing,
+// which is indistinguishable from "there is no data today". It was blank for
+// about a minute during the deploy that introduced this split. Say so instead.
+if (!window.SD) {
+  var _m = document.getElementById("main") || document.body;
+  var _p = document.createElement("p");
+  _p.className = "empty";
+  _p.style.cssText = "max-width:60ch;margin:40px auto;padding:0 24px";
+  _p.textContent = "The page script did not load, so nothing below could be built. " +
+    "This is a fault on this site, not an empty day — reload, and if it persists " +
+    "the ledger API is still readable directly at /api/stats and /api/signals.";
+  _m.appendChild(_p);
+  return;
+}
+
 var SD = window.SD;
 var el = SD.el, num = SD.num, fx = SD.fx, sgn = SD.sgn, cls = SD.cls, money = SD.money;
 var txt = SD.txt, clip = SD.clip, when = SD.when, cells = SD.cells, keyGrid = SD.keyGrid;
