@@ -501,6 +501,17 @@ def generate() -> None:
     # nothing in this build reads that file, so there is no delivery figure to
     # filter on. Turnover is the liquidity proxy actually available, and the
     # section says so rather than implying a delivery screen it cannot run.
+    # ── Build log ───────────────────────────────────────────────────────────
+    # Read from git rather than hand-kept: a curated changelog is a second
+    # place to remember to write, and the first one to be abandoned.
+    buildlog = []
+    try:
+        import build_log
+        buildlog = build_log.build(limit=40)
+        print(f"[generate] Build log: {len(buildlog)} product changes")
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  build log unavailable: {e}")
+
     breakouts = []
     try:
         _rows = (stock_screen or {}).get("rows") or []
@@ -799,6 +810,7 @@ def generate() -> None:
         csp=csp,
         mandate=mandate,
         breakouts=breakouts,
+        buildlog=buildlog,
         jsonld=jsonld,
         build_date=now.strftime("%Y-%m-%d"),
         markets=markets,
@@ -1042,6 +1054,31 @@ def generate() -> None:
             f"{adv}/{len(markets)}" if markets else "",
         )
         print(f"[generate] {'✅' if ok else '⚠️ '} social card")
+
+        # The share card. It MUST quote the same figures the site publishes,
+        # so it reads /api/stats — the exact endpoint the Performance section
+        # renders from — rather than recomputing from `alerts`.
+        #
+        # Recomputing locally looked simpler and was wrong: `alerts` is the
+        # last 200 rows, /api/stats scores a different population, and a card
+        # whose expectancy disagrees with the page it links to is worse than no
+        # card. One number, one source.
+        _exp = _dd = _wr = _closed = None
+        try:
+            import urllib.request as _u
+            _st = json.loads(_u.urlopen(
+                "https://news.askakshay.com/api/stats", timeout=20).read())
+            _h = _st.get("headline") or {}
+            _exp, _wr = _h.get("expectancy_r"), _h.get("win_rate")
+            _closed, _dd = _h.get("trades"), _h.get("max_drawdown_r")
+        except Exception as _e:                               # noqa: BLE001
+            print(f"[generate] ⚠️  share card figures unavailable: {_e}")
+        ok2 = og_card.render_share(
+            str(out_dir / "share.png"), _exp, _closed, _wr, _dd,
+            f"as of {now.strftime('%d %b %Y')}",
+        )
+        print(f"[generate] {'✅' if ok2 else '⚠️ '} share card"
+              f"{f' ({_exp:+.3f}R over {_closed})' if _exp is not None else ' (no figures)'}")
     except Exception as e:
         print(f"[generate] ⚠️  og card skipped: {e}")
 

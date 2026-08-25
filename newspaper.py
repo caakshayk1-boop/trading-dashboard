@@ -2167,6 +2167,10 @@ SECTION_MAP = [
     # and collapsing them would bury the second inside the first.
     ("rules",       "Engine Log",   "main", "Ledger"),
     ("datahealth",  "Data Health",  "main", "Ledger"),
+    # 2026-08-26. The Engine Log records what the LEDGER forced the rules to
+    # change; this records what the SITE shipped. Same question, two subjects,
+    # so they sit together. Generated from git history rather than hand-kept.
+    ("buildlog",    "Build Log",    "main", "Ledger"),
     ("who",         "Who",          "main", "About"),
 
     # ── LIFE — the whole /desk page ─────────────────────────────────────────
@@ -7166,6 +7170,20 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   .arch-day{min-width:66px;padding:8px}
 }
 
+/* ── BUILD LOG ────────────────────────────────────────────────────────────
+   Two columns: when, and what. The "why" runs under the title in the quiet
+   voice — the reason a thing changed is context, not headline. */
+.rows-log{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.logrow{display:grid;grid-template-columns:190px 1fr;gap:18px;
+  padding:16px 0;border-bottom:1px solid var(--line)}
+.logmeta{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.logdate{font:500 11.5px/1.6 var(--mono);color:var(--dim)}
+.logsha{font:400 10.5px/1.6 var(--mono);color:var(--dim);opacity:.7}
+.logbody b{display:block;font:600 15.5px/1.4 var(--disp);letter-spacing:-.015em;
+  color:var(--text);margin-bottom:5px}
+.logbody span{display:block;font:400 13.5px/1.65 var(--sans);color:var(--muted);max-width:70ch}
+@media (max-width:720px){.logrow{grid-template-columns:1fr;gap:8px}}
+
 /* ── TRUST STRIP ──────────────────────────────────────────────────────────
    One line under the nav saying how fresh the page is. Tone is carried by a
    word as well as a colour — "worst stale" reads without seeing the dot. */
@@ -10223,6 +10241,48 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      Sits between the world and the trade ideas: a reader who arrived from a
      Telegram link should know whose ledger they are reading before they read
      the numbers. -->
+{% if 'buildlog' in secs and buildlog %}
+{# ── BUILD LOG ───────────────────────────────────────────────────────────
+   Generated from git history, not hand-kept. A curated changelog is a second
+   place to remember to write and the first to be abandoned; this cannot
+   quietly omit the week nothing shipped, and it cannot describe work that was
+   never committed. If it looks thin, the month was thin.
+
+   Only feat/fix/perf/refactor commits appear. The daily bot's chore: and
+   data: commits are hundreds of signal and newspaper writes, none of which is
+   a change to the product. #}
+<section class="sec" id="buildlog">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['buildlog'] }} / {{ seclabel['buildlog'] }}</span>
+      <h2 class="stitle">What shipped, and when.</h2>
+    </div>
+    <p class="sdesc">Read straight from this repository&rsquo;s history. The Engine Log
+      records what the <em>ledger</em> forced the rules to change; this records what the
+      <em>site</em> shipped. Nothing is curated into it, so a quiet month looks like a
+      quiet month.</p>
+  </div>
+  <div class="rows-log rv">
+    {% for c in buildlog[:24] %}
+    <div class="logrow">
+      <div class="logmeta">
+        <span class="logdate">{{ c.date }}</span>
+        <span class="pill {{ 'pill-result' if c.kind == 'Shipped' else 'pill-model' }}">{{ c.kind }}</span>
+        <code class="logsha">{{ c.sha }}</code>
+      </div>
+      <div class="logbody">
+        <b>{{ c.title }}</b>
+        {% if c.why %}<span>{{ c.why }}</span>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <p class="lv-sys rv" style="margin-top:14px">
+    {{ buildlog|length }} product changes in history &middot; chore and data commits excluded
+  </p>
+</section>
+{% endif %}
+
 {% if 'who' in secs %}<section class="sec" id="who">
   <div class="shead rv">
     <div>

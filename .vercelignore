@@ -27,6 +27,8 @@
 # The Rs 1 crore order book the client-rendered site sizes its Book
 # section from. Allow-listed BY NAME like every other file here.
 !docs/mandate.json
+# The performance card, for posting rather than for link previews.
+!docs/share.png
 # The client-rendered site: shell + renderer.
 !docs/v2-core.js
 !docs/life.html

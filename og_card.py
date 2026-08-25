@@ -131,3 +131,78 @@ if __name__ == "__main__":
     ok = render("docs/og.png", "Wednesday, August 05 2026",
                 35.3, 582, 38, "27/46")
     print("wrote docs/og.png" if ok else "render failed")
+
+
+# ── SHARE CARD ──────────────────────────────────────────────────────────────
+#
+# A second card, for posting rather than for link previews.
+#
+# The og.png above answers "what is this site" — win rate, signals, open
+# setups. This one answers "did it work", which is the only question worth
+# posting about and the one most trading accounts never answer in public.
+#
+# It leads with expectancy including its sign, prints the sample size next to
+# it, and states the drawdown. A card that shows a win rate and nothing else is
+# the format every signal-seller uses; the sample size and the drawdown are
+# what make this one falsifiable.
+
+def render_share(out_path: str, expectancy, closed, win_rate,
+                 max_dd, period: str = "") -> bool:
+    """The performance card. Returns False rather than raising — a missing
+    share image must never fail the daily build."""
+    try:
+        from PIL import Image, ImageDraw
+    except ImportError:
+        log.warning("og_card: Pillow not installed, skipping share card")
+        return False
+
+    try:
+        img = Image.new("RGB", (W, H), BG)
+        d = ImageDraw.Draw(img)
+
+        f_huge = _font(_SANS, 128)
+        f_big = _font(_SANS, 46)
+        f_mid = _font(_SANS, 30)
+        f_small = _font(_MONO, 24)
+        f_tiny = _font(_MONO, 20)
+
+        d.rectangle([0, 0, W, 6], fill=LIME)
+        d.text((72, 64), "THE DAILY SIGNAL", font=f_small, fill=LIME)
+        d.text((72, 100), period or "public NSE ledger", font=f_tiny, fill=DIM)
+
+        # Expectancy leads, signed, coloured by direction. A losing number is
+        # printed exactly as loudly as a winning one — that is the whole point.
+        #
+        # When there is no expectancy yet, the card must NOT print an em-dash
+        # at 128px: that renders as a long horizontal bar and reads as a broken
+        # image rather than as "no data". Say it in words, at a size that looks
+        # deliberate.
+        if expectancy is None:
+            d.text((72, 196), "NOT MEASURED YET", font=f_big, fill=MUTED)
+            d.text((76, 268), "no closed trades in this window", font=f_small, fill=DIM)
+        else:
+            colour = UP if expectancy > 0 else (231, 76, 60)
+            d.text((72, 176), f"{expectancy:+.3f}R", font=f_huge, fill=colour)
+            d.text((76, 322), "EXPECTANCY PER CLOSED TRADE", font=f_small, fill=MUTED)
+
+        d.line([(72, 396), (W - 72, 396)], fill=LINE, width=2)
+
+        cols = [
+            (str(closed if closed is not None else "—"), "CLOSED TRADES"),
+            ("—" if win_rate is None else f"{win_rate:.1f}%", "WIN RATE"),
+            ("—" if max_dd is None else f"{max_dd:.1f}R", "MAX DRAWDOWN"),
+        ]
+        x = 72
+        for value, label in cols:
+            d.text((x, 428), value, font=f_big, fill=TEXT)
+            d.text((x, 490), label, font=f_tiny, fill=DIM)
+            x += 352
+
+        d.text((72, 556), "Every signal published when it fired. Losses included.",
+               font=f_small, fill=MUTED)
+        d.text((72, 590), "news.askakshay.com", font=f_tiny, fill=LIME)
+        img.save(out_path, "PNG", optimize=True)
+        return True
+    except Exception as e:                                   # noqa: BLE001
+        log.warning("og_card: share card failed (%s)", e)
+        return False

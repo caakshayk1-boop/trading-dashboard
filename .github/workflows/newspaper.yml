@@ -159,7 +159,7 @@ jobs:
                   docs/life.html docs/life.js \
                   docs/screen.json docs/screen-detail.json \
                   docs/robots.txt docs/sitemap.xml docs/manifest.webmanifest \
-                  docs/icon.svg docs/og.png docs/fonts \
+                  docs/icon.svg docs/og.png docs/share.png docs/fonts \
                   data/ipo_radar.json
           git diff --staged --quiet || git commit -m "chore: newspaper $(date -u +'%Y-%m-%d %H:%M UTC')"
           # Rebase before pushing. This step raced the scanner's data commit and
