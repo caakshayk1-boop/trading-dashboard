@@ -4309,7 +4309,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
      three regularly print on — a contrast figure quoted against pure white is
      a figure that is never true where the text actually sits.
-     Measured: 17.4:1 / 6.6:1 / 5.1:1. */
+     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
   --text:#111214;
   --muted:#54595F;
   --dim:#61666C;
@@ -4317,7 +4317,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* The lime is the mark, not the interface. On white it is reserved for the
      wordmark and a small number of live-state dots; everything that used to be
      lime-on-dark is ink now. A signature colour spent on every border stops
-     being a signature. #4E6B08 measures 5.2:1 on --bg2. */
+     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
   --lime:#4E6B08;
   --lime-soft:rgba(78,107,8,.07);
   --lime-line:rgba(78,107,8,.22);
@@ -4356,7 +4356,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
      three regularly print on — a contrast figure quoted against pure white is
      a figure that is never true where the text actually sits.
-     Measured: 17.4:1 / 6.6:1 / 5.1:1. */
+     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
   --text:#111214;
   --muted:#54595F;
   --dim:#61666C;
@@ -4364,7 +4364,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* The lime is the mark, not the interface. On white it is reserved for the
      wordmark and a small number of live-state dots; everything that used to be
      lime-on-dark is ink now. A signature colour spent on every border stops
-     being a signature. #4E6B08 measures 5.2:1 on --bg2. */
+     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
   --lime:#4E6B08;
   --lime-soft:rgba(78,107,8,.07);
   --lime-line:rgba(78,107,8,.22);
@@ -4542,6 +4542,17 @@ TEMPLATE = r"""<!DOCTYPE html>
   color:var(--dim);
   letter-spacing:.16em;
 }
+/* The decorative column grid nearly disappears.
+   .vgrid paints 1px verticals at --line. On the dark ground that was a faint
+   texture you had to look for; the same alpha as dark-on-light is markedly
+   stronger, and a white page ruled into columns reads as a spreadsheet rather
+   than a magazine. Kept rather than removed — it still aligns the eye — at
+   roughly a quarter of the weight. */
+:root:not([data-theme]) .vgrid,
+:root[data-theme="light"] .vgrid{
+  opacity:.28;
+}
+
 /* Numerals line up in columns on a page that is mostly numbers. */
 :root:not([data-theme]) table,
 :root:not([data-theme]) .num,
