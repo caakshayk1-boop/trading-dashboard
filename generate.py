@@ -508,6 +508,48 @@ def generate() -> None:
           f"{f' ({len(picks_out)} already resolved)' if picks_out else ''}")
     tracker = get_tracker_stocks()
 
+    # ── The Rs 1 crore mandate's order book ────────────────────────────────
+    #
+    # #picks ranks the week's five best IDEAS. This is a different question:
+    # given the mandate, what would actually be placed today, at what size,
+    # with which exits. The two sit in the same section because a reader who
+    # scrolls to "trade ideas" is asking the second question, and until now the
+    # page only answered the first.
+    #
+    # Its own query rather than fetch_alert_log's: the rulebook needs `id`,
+    # `target3` and `entry_triggered_at`, and widening the alert-log SELECT
+    # would change a payload three other sections render from.
+    print("[generate] Sizing the Rs 1 crore mandate...")
+    mandate = None
+    try:
+        import swing_rulebook as _rb
+        from newspaper import _db as _mdb
+        with _mdb() as _con:
+            _rows = _con.execute("""
+                SELECT id, date, symbol, action, timeframe, signal_type, market,
+                       entry, sl, target1, target2, target3, score, status,
+                       entry_triggered_at
+                FROM all_signals
+                WHERE status = 'OPEN'
+                  AND (entry_triggered_at IS NULL OR entry_triggered_at = '')
+                  AND date >= date('now', '-30 day')
+                ORDER BY date DESC
+            """).fetchall()
+        _cols = ["id","date","symbol","action","timeframe","signal_type","market",
+                 "entry","sl","target1","target2","target3","score","status",
+                 "entry_triggered_at"]
+        mandate = _rb.build_book([dict(zip(_cols, r)) for r in _rows], {})
+        print(f"[generate] Mandate: {len(mandate['admitted'])} to place, "
+              f"{mandate['state']['deployed_pct']}% deployed, "
+              f"{mandate['state']['heat_pct']}% heat")
+    except Exception as e:                                   # noqa: BLE001
+        # A failed sizing must not take the page down, and must not render as
+        # an empty order book either — the section guard reads `mandate`, so
+        # None removes the block rather than printing "0 to place", which is a
+        # different and much more misleading statement.
+        print(f"[generate] ⚠️  mandate sizing unavailable: {e}")
+        mandate = None
+
     print("[generate] Fetching alert log...")
     alerts = fetch_alert_log(limit=200)
     print(f"[generate] Alerts: {len(alerts)} signals found")
@@ -650,7 +692,18 @@ def generate() -> None:
            "frame-src https://www.youtube-nocookie.com; "
            # The browser only ever talks to this origin's /api. gold-api and
            # Yahoo are called server-side.
-           "connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'")
+           "connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; "
+           # frame-ancestors is the modern half of the clickjacking pair. The
+           # X-Frame-Options header in vercel.json covers legacy browsers and
+           # is ignored by every current one, so without this line the modern
+           # protection was simply absent. 'self' rather than 'none' so /desk
+           # can embed a same-origin preview.
+           "frame-ancestors 'self'; "
+           # Any http:// subresource that slips into generated content is
+           # fetched over https instead of being blocked outright, so a mixed
+           # -content mistake degrades to a working request rather than a
+           # silently missing image.
+           "upgrade-insecure-requests")
 
     # Render template — once per page. Same data, same styles; the section
     # guards in the template decide what appears on which.
@@ -708,6 +761,7 @@ def generate() -> None:
         build_id=build_id,
         nonce=nonce,
         csp=csp,
+        mandate=mandate,
         jsonld=jsonld,
         build_date=now.strftime("%Y-%m-%d"),
         markets=markets,

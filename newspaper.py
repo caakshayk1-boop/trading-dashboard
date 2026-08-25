@@ -4015,16 +4015,23 @@ TEMPLATE = r"""<!DOCTYPE html>
 <meta http-equiv="Content-Security-Policy" content="{{ csp }}">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
-     paints dark and then repaints light, which is the single most visible way
-     a theme toggle can look broken. -->
+     paints in one theme and repaints in the other, which is the single most
+     visible way a theme toggle can look broken.
+
+     There is deliberately no work to do in the default case. Light is the
+     default in CSS, on :root:not([data-theme]), so a first-time reader needs
+     no JavaScript at all to get the right theme — and a reader with JS
+     disabled or blocked gets it too. This script only re-applies an explicit
+     choice the reader made on a previous visit. -->
 <script nonce="{{ nonce }}">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
 }catch(e){}})();
 </script>
-<meta name="theme-color" content="#08090A">
-<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#FBFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#FBFAF7">
+<meta name="color-scheme" content="light dark">
 
 <!-- The title used to be "THE DAILY SIGNAL — {{ date_str }}", which handed
      search engines a brand-new ranking target every 24 hours and never
@@ -4264,6 +4271,37 @@ TEMPLATE = r"""<!DOCTYPE html>
   color-scheme:dark;
 }
 
+/* ── DEFAULT: LIGHT ───────────────────────────────────────────────────────
+   The palette on :root above is the DARK one and it stays there, because it is
+   what `[data-theme="dark"]` needs to fall back to. This block makes light the
+   theme a reader gets when they have expressed no preference.
+
+   :root:not([data-theme]) outranks bare :root on specificity, so:
+     · no stored choice          -> this block wins            -> light
+     · reader picked light       -> [data-theme="light"] wins  -> light
+     · reader picked dark        -> :not() stops matching,
+                                    bare :root applies         -> dark
+
+   No values are duplicated by hand — they are the same measured tokens as the
+   explicit light theme below, which is the only place they are tuned. System
+   preference no longer decides this: the site is light, and dark is a choice
+   the reader makes and keeps. */
+:root:not([data-theme]){
+  --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
+  --surface3:#EFEEE9; --overlay:#FFFFFF;
+  --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
+  --text:#17191C; --muted:#535A63; --dim:#656C74;
+  --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
+  --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
+  --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
+  --on-up:#FFFFFF;
+  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
+  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
+  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
+  --blue:#1F5FBF; --violet:#6D4DC7;
+  color-scheme:light;
+}
+
 /* ── LIGHT ────────────────────────────────────────────────────────────────
    Designed, not inverted. A warm paper ground rather than #fff: pure white
    against dense financial tables is fatiguing, and the warmth is what makes
@@ -4331,6 +4369,84 @@ TEMPLATE = r"""<!DOCTYPE html>
     --blue:#1F5FBF; --violet:#6D4DC7;
     color-scheme:light;
   }
+}
+
+/* ── THE MANDATE'S ORDER BOOK ─────────────────────────────────────────────
+   Every colour and size below is a token, so this block follows the theme
+   without a second set of light-mode rules. Built as rows rather than cards:
+   a book is read down a column and compared line to line, which a card grid
+   actively prevents. */
+.mandate{
+  border:1px solid var(--lime-line);
+  background:var(--lime-soft);
+  border-radius:14px;
+  padding:clamp(14px,2vw,20px);
+  margin:0 0 28px;
+}
+.mandate-head{
+  display:flex; flex-wrap:wrap; gap:10px 18px;
+  align-items:baseline; justify-content:space-between;
+  padding-bottom:12px; margin-bottom:12px;
+  border-bottom:1px solid var(--line2);
+  font:500 var(--t-body-sm)/1.5 var(--sans); color:var(--muted);
+}
+.mandate-head b{ color:var(--text); font-family:var(--mono); }
+.mandate-state{ display:flex; flex-wrap:wrap; gap:6px 16px;
+  font:500 var(--t-caption)/1.4 var(--mono); color:var(--dim); }
+.mandate-state i{ font-style:normal; color:var(--text); font-weight:600; }
+
+.mandate-rows{ display:flex; flex-direction:column; gap:2px; }
+.mrow{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:11px 13px;
+  transition:border-color var(--m-micro) var(--ease),
+             transform var(--m-micro) var(--ease);
+}
+/* Motion is a nudge, not a performance. 2px and 130ms is enough to say the row
+   is a unit; anything larger and a list of eight becomes a wave. */
+.mrow:hover{ border-color:var(--lime-line); transform:translateX(2px); }
+@media (prefers-reduced-motion:reduce){ .mrow{ transition:none } .mrow:hover{ transform:none } }
+
+.mrow-top{ display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 10px; }
+.msym{ font:700 var(--t-body)/1.2 var(--sans); color:var(--text); letter-spacing:-.01em; }
+.mhz{ font:600 var(--t-overline)/1 var(--sans); text-transform:uppercase;
+  letter-spacing:.08em; color:var(--lime);
+  background:var(--lime-soft); border:1px solid var(--lime-line);
+  border-radius:4px; padding:3px 6px; }
+.meng{ font:400 var(--t-caption)/1 var(--mono); color:var(--dim); }
+.mrr{ margin-left:auto; font:600 var(--t-data-sm)/1 var(--mono); color:var(--muted); }
+.mgain{ font:700 var(--t-data-sm)/1 var(--mono); color:var(--up);
+  background:var(--up-soft); border-radius:4px; padding:3px 6px; }
+
+.mrow-nums{ display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:7px;
+  font:400 var(--t-caption)/1.5 var(--mono); color:var(--muted); }
+.mrow-nums b{ color:var(--text); font-weight:600; }
+.mstop b{ color:var(--down); }
+
+.mladder{ display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; }
+.mleg{
+  font:400 var(--t-caption)/1 var(--mono); color:var(--muted);
+  background:var(--surface2); border:1px solid var(--line);
+  border-radius:5px; padding:4px 7px; white-space:nowrap;
+}
+.mleg i{ font-style:normal; font-weight:700; color:var(--text); }
+.mleg em{ font-style:normal; color:var(--up); }
+.mtrail{ margin-top:7px; font:400 var(--t-caption)/1.5 var(--sans); color:var(--dim); }
+
+.mandate-empty{ font:400 var(--t-body-sm)/1.6 var(--sans); color:var(--muted); margin:4px 0; }
+.mandate-foot{
+  display:flex; flex-wrap:wrap; gap:4px 14px; margin-top:12px; padding-top:10px;
+  border-top:1px solid var(--line);
+  font:400 var(--t-caption)/1.5 var(--sans); color:var(--dim);
+}
+.mandate-foot span:not(:last-child)::after{ content:'\00b7'; margin-left:14px; opacity:.5 }
+
+@media (max-width:640px){
+  .mrr{ margin-left:0 }
+  .mladder{ flex-direction:column; align-items:flex-start }
+  .mleg{ width:100% }
 }
 
 /* Surfaces and ink cross-fade on a theme switch; nothing else does, or the
@@ -7502,6 +7618,75 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
       never touch win rate or expectancy</span>
   </div>
+  {# ── THE MANDATE'S ORDER BOOK ────────────────────────────────────────────
+     The five above are a RANKING. This is a BOOK: what the Rs 1 crore rulebook
+     would place today, at what size, with the exits already decided. Same
+     section because a reader who scrolls to "trade ideas" is asking this
+     question, and the page only ever answered the ranking one.
+
+     Rendered only when sizing succeeded. A failed run drops the block; it must
+     never print an empty book, because "0 to place" is a claim about the
+     market and "sizing did not run" is a claim about this page. #}
+  {% if mandate %}
+  <div class="mandate rv">
+    <div class="mandate-head">
+      <div>
+        <span class="pv-tag">MANDATE</span>
+        <b>{{ '{:,}'.format(mandate.capital) }}</b> &middot; Indian listed equity, no intraday
+      </div>
+      <div class="mandate-state">
+        <span><i>{{ mandate.admitted|length }}</i> to place</span>
+        <span>heat <i>{{ mandate.state.heat_pct }}%</i></span>
+        <span>deployed <i>{{ mandate.state.deployed_pct }}%</i></span>
+        <span>cash <i>{{ '{:,}'.format(mandate.state.cash) }}</i></span>
+      </div>
+    </div>
+
+    {% if mandate.admitted %}
+    <div class="mandate-rows">
+      {% for t in mandate.admitted %}
+      <div class="mrow">
+        <div class="mrow-top">
+          <span class="msym">{{ t.symbol }}</span>
+          <span class="mhz">{{ t.horizon_label }}</span>
+          <span class="meng">{{ t.engine }}</span>
+          <span class="mrr">{{ t.reward_risk }}:1</span>
+          <span class="mgain">+{{ t.final_gain_pct }}%</span>
+        </div>
+        <div class="mrow-nums">
+          <span>buy <b>{{ t.qty }}</b> @ <b>{{ '{:,.2f}'.format(t.entry) }}</b></span>
+          <span class="mstop">stop <b>{{ '{:,.2f}'.format(t.stop) }}</b> ({{ t.stop_pct }}%)</span>
+          <span>{{ '{:,}'.format(t.notional) }} &middot; {{ t.notional_pct }}%</span>
+          <span>risk {{ '{:,}'.format(t.risk_amount) }}</span>
+          <span>hold {{ t.hold_days }}</span>
+        </div>
+        {# The ladder is the point. 20% at T1, half the remainder at T2, the
+           rest at T3 — printed per leg with the share count already worked
+           out, because "scale out" without a number is not an instruction. #}
+        <div class="mladder">
+          {% for leg in t.legs %}
+          <span class="mleg"><i>{{ leg.label }}</i> sell {{ leg.qty }} @
+            {{ '{:,.2f}'.format(leg.price) }} <em>+{{ leg.gain_pct }}%</em></span>
+          {% endfor %}
+        </div>
+        <div class="mtrail">{{ t.trail_note }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="mandate-empty">Nothing clears the mandate today. Cash is the position.</p>
+    {% endif %}
+
+    <div class="mandate-foot">
+      {% if mandate.deferred %}<span>{{ mandate.deferred|length }} valid, waiting on a cap</span>{% endif %}
+      {% if mandate.duplicates %}<span>{{ mandate.duplicates|length }} dropped as duplicate names</span>{% endif %}
+      {% if mandate.rejected %}<span>{{ mandate.rejected|length }} rejected</span>{% endif %}
+      <span>Bands: swing 25&ndash;60% &middot; medium 35&ndash;75% &middot; long 40&ndash;90%</span>
+      <span>No order is placed by this page &mdash; there is no broker link.</span>
+    </div>
+  </div>
+  {% endif %}
+
   {% if top5 %}
   {# has-lead promotes idea 01 to a double-width, double-height card. It is
      applied only at five ideas: with fewer, a 2x2 lead in a 4-column grid
