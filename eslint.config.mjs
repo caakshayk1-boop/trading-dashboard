@@ -37,6 +37,11 @@ export default [
         setInterval: "readonly",
         requestAnimationFrame: "readonly",
         IntersectionObserver: "readonly",
+        // Added 2026-08-26 with the metric-badge stamper. Most KPI tiles are
+        // rendered from live responses, so the stamper has to react to DOM
+        // insertions rather than run once — and a timer short enough to catch
+        // a network-bound render is a timer that runs forever for nothing.
+        MutationObserver: "readonly",
         URLSearchParams: "readonly",
         FormData: "readonly",
         Event: "readonly",

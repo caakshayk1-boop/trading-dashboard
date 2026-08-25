@@ -1970,11 +1970,26 @@ var TV_ALIASES = (function () {
       var catBars = WALLET_TIER_ORDER.map(function(k){
         var c = cats[k];
         if (!c) return '';
+        // WHICH CAP IS ACTUALLY BINDING.
+        //
+        // The wallet read as "47% deployed, 53% cash, global cap 65%" — which
+        // says there is 18% of headroom and invites the question of why fresh
+        // capital is not going out. It is not: the long-horizon tier is at
+        // 35 of 35 lakh, so no long-horizon signal can be sized at any price,
+        // while the global cap is nowhere near binding. A tier at its cap is a
+        // different state from a tier with room and no signals, and the wallet
+        // was showing them identically.
+        var atCap = (c.deployed_pct || 0) >= (c.cap_pct * 100) - 0.05;
         return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">' +
           '<span class="rk ' + tierRiskClass(c.deployed_pct, c.cap_pct) + '" style="min-width:130px;text-align:center">' +
             esc(c.label) + '</span>' +
           '<span class="mono-dim" style="font-size:12px">' + rupees(c.deployed_amount) + ' / ' + rupees(c.cap_amount) +
           ' &middot; ' + fmt(c.deployed_pct, 1) + '% of wallet (cap ' + fmt(c.cap_pct * 100, 0) + '%)</span>' +
+          (atCap
+            ? '<span class="rk rk-high" title="This tier is full. New signals in it are logged but not sized.">AT CAP</span>' +
+              '<span class="mono-dim" style="font-size:12px">full &mdash; a new ' + esc(c.label).toLowerCase() +
+              ' signal is logged but cannot be sized until one of these closes</span>'
+            : '') +
           '</div>';
       }).join('') +
       // The tier bars sum to what is DEPLOYED, not to the wallet, so on their own
