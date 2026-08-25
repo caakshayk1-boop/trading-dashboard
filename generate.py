@@ -481,6 +481,40 @@ def generate() -> None:
     # under Flask a startup thread did it — so every Monday the section
     # rendered "check back Monday". Build it here, and fall back to the last
     # week we do have rather than shipping an empty section if Yahoo is down.
+    # ── Breakout board ──────────────────────────────────────────────────────
+    #
+    # 20-day breakouts that are actually tradeable. Every field here already
+    # ships in screen.json; this is a view over it, not a new dataset.
+    #
+    #   brk20            closed above the 20-day high
+    #   above_mas == 3   above the 20, 50 AND 200 day averages — a breakout
+    #                    inside a downtrend is a bounce, not a breakout
+    #   turnover >= 10cr you can leave. A Rs 10,00,000 position in a name that
+    #                    trades Rs 2cr a day IS the day's volume.
+    #   rsi < 75         not already extended. Buying the third day of a
+    #                    vertical move is how a breakout becomes a top.
+    #
+    # NOT filtered on volume: screen.json's `vol_spike` is true for all 750
+    # rows, so it selects nothing. It was checked rather than assumed.
+    #
+    # NOT filtered on delivery percentage: NSE publishes it in the bhavcopy and
+    # nothing in this build reads that file, so there is no delivery figure to
+    # filter on. Turnover is the liquidity proxy actually available, and the
+    # section says so rather than implying a delivery screen it cannot run.
+    breakouts = []
+    try:
+        _rows = (stock_screen or {}).get("rows") or []
+        _cand = [r for r in _rows
+                 if r.get("brk20") and r.get("above_mas") == 3
+                 and (r.get("turnover_cr") or 0) >= 10
+                 and (r.get("rsi") or 100) < 75]
+        breakouts = sorted(_cand, key=lambda r: -(r.get("turnover_cr") or 0))[:20]
+        print(f"[generate] Breakout board: {len(breakouts)} of {len(_cand)} "
+              f"qualifying, from {len(_rows)} screened")
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  breakout board unavailable: {e}")
+        breakouts = []
+
     print("[generate] Fetching top 5 picks...")
     try:
         top5 = get_top5_picks(build_if_missing=True)
@@ -764,6 +798,7 @@ def generate() -> None:
         nonce=nonce,
         csp=csp,
         mandate=mandate,
+        breakouts=breakouts,
         jsonld=jsonld,
         build_date=now.strftime("%Y-%m-%d"),
         markets=markets,

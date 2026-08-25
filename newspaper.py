@@ -2324,10 +2324,20 @@ def page_context(page: str, drop=()) -> dict:
     for n, (i, lbl, grp) in enumerate(rows, 1):
         nav.append({"id": i, "label": lbl, "n": f"{n:02d}", "group": grp,
                     "head": grp if (n == 1 or rows[n - 2][2] != grp) else ""})
+    # Grouped nav. `nav` stays a flat list — the command palette, the scroll spy
+    # and the tests all read it — and this is the same items keyed by group so
+    # the header can render six destinations instead of seventeen links.
+    navgroups = []
+    for item in nav:
+        if not navgroups or navgroups[-1]["name"] != item["group"]:
+            navgroups.append({"name": item["group"], "links": []})
+        navgroups[-1]["links"].append(item)
+
     return {
         "page": page,
         "secs": {i for i, _l, _g in rows},
         "nav": nav,
+        "navgroups": navgroups,
         # Section headings read their number from here rather than carrying a
         # literal, so the nav and the heading cannot disagree — which they did,
         # with Performance showing "17 / EDGE" under a nav item numbered 07.
@@ -7156,6 +7166,100 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   .arch-day{min-width:66px;padding:8px}
 }
 
+/* ── TRUST STRIP ──────────────────────────────────────────────────────────
+   One line under the nav saying how fresh the page is. Tone is carried by a
+   word as well as a colour — "worst stale" reads without seeing the dot. */
+.trust{border-bottom:1px solid var(--line);background:var(--bg2)}
+.trust-in{
+  max-width:1400px;margin:0 auto;padding:8px var(--gut);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font:400 11.5px/1.4 var(--sans);color:var(--muted);
+}
+.trust-txt b{color:var(--text);font-weight:600;font-family:var(--mono)}
+.trust-dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--dim)}
+.trust.ok   .trust-dot{background:var(--up)}
+.trust.warn .trust-dot{background:var(--gold)}
+.trust.bad  .trust-dot{background:var(--down)}
+.trust-link{margin-left:auto;color:var(--lime);text-decoration:none;font-weight:500;white-space:nowrap}
+.trust-link:hover{text-decoration:underline}
+
+/* ── EXPLAIN THIS ─────────────────────────────────────────────────────────
+   A metric with no stated method is a number you are asked to take on faith.
+   Every headline figure gets a small "?" that opens what it is, how it is
+   computed and what it is computed FROM.
+
+   Built on <details>, so it works with no JavaScript at all and is keyboard
+   operable for free. */
+.xp{display:inline-block;vertical-align:middle;margin-left:6px}
+.xp>summary{
+  list-style:none;cursor:pointer;width:16px;height:16px;border-radius:50%;
+  border:1px solid var(--line2);color:var(--dim);
+  font:600 10px/14px var(--mono);text-align:center;
+  transition:color .15s var(--ease),border-color .15s var(--ease);
+}
+.xp>summary::-webkit-details-marker{display:none}
+.xp>summary:hover{color:var(--text);border-color:var(--text)}
+.xp[open]>summary{background:var(--text);color:var(--bg);border-color:var(--text)}
+.xp-body{
+  position:absolute;z-index:60;margin-top:8px;max-width:340px;
+  background:var(--bg);border:1px solid var(--line2);border-radius:10px;
+  padding:14px 15px;box-shadow:0 18px 44px rgba(17,18,20,.13);
+  font:400 12.5px/1.6 var(--sans);color:var(--muted);text-align:left;
+  white-space:normal;
+}
+.xp-body b{display:block;color:var(--text);font-weight:600;margin-bottom:5px;font-family:var(--disp)}
+.xp-body dt{font:600 9.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--dim);margin-top:10px}
+.xp-body dd{margin:3px 0 0}
+
+/* ── COLLAPSED NAVIGATION ─────────────────────────────────────────────────
+   Six buttons, each opening its sections. The anchors are unchanged and still
+   in the DOM — this is a disclosure layer, not a different list, so the scroll
+   spy, command palette and deep links all keep working. */
+.navgrp{position:relative;display:flex}
+.navgrp-btn{
+  appearance:none;background:none;border:0;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  padding:12px 14px;color:var(--muted);
+  font:600 11.5px/1 var(--disp);font-variation-settings:'wdth' 92;
+  letter-spacing:.06em;text-transform:uppercase;
+  border-bottom:2px solid transparent;
+  transition:color .15s var(--ease),border-color .15s var(--ease);
+}
+.navgrp-btn:hover{color:var(--text)}
+.navgrp-btn i{
+  font-style:normal;font-family:var(--mono);font-size:9.5px;
+  color:var(--dim);background:var(--surface2);
+  border-radius:99px;padding:2px 6px;line-height:1.4;
+}
+.navgrp-btn[aria-expanded="true"]{color:var(--text);border-bottom-color:var(--lime)}
+/* Marks the group containing whatever the scroll spy says you are reading, so
+   a collapsed nav still tells you where you are. */
+.navgrp.here .navgrp-btn{color:var(--text)}
+.navgrp.here .navgrp-btn::before{
+  content:'';width:5px;height:5px;border-radius:50%;background:var(--lime);flex:none;
+}
+.navgrp-menu{
+  position:absolute;top:100%;left:0;z-index:70;min-width:230px;
+  background:var(--bg);border:1px solid var(--line2);border-radius:10px;
+  padding:6px;display:flex;flex-direction:column;gap:1px;
+  box-shadow:0 18px 44px rgba(17,18,20,.13);
+}
+.navgrp-menu[hidden]{display:none}
+.navgrp-menu a{
+  display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:6px;
+  font:400 13.5px/1.3 var(--sans);color:var(--muted);text-decoration:none;white-space:nowrap;
+  transition:background .12s var(--ease),color .12s var(--ease);
+}
+.navgrp-menu a:hover,.navgrp-menu a:focus-visible{background:var(--surface2);color:var(--text)}
+.navgrp-menu a i{
+  font-style:normal;font-family:var(--mono);font-size:10px;color:var(--dim);
+  min-width:18px;
+}
+@media (max-width:760px){
+  .navgrp-menu{position:fixed;left:8px;right:8px;min-width:0}
+}
+
 /* ── WHERE BRICOLAGE ACTUALLY LANDS ───────────────────────────────────────
    The split is by JOB, not by size.
 
@@ -7259,9 +7363,47 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      signal log and "The Mind" while you were reading The Desk. The numbers had
      drifted too — two 05s in the nav, and section headings that disagreed with
      it. One sequence now, top to bottom, nav and headings the same. -->
+{# ── TRUST STRIP ───────────────────────────────────────────────────────────
+   Data freshness belongs above the numbers it qualifies, not seventeen
+   sections below them. A reader who has already read a stale figure cannot
+   un-read it.
+
+   Server-rendered from the same health snapshot the Data Health section uses,
+   so the strip and the section can never disagree — a client fetch would have
+   been a second source for one number. The full section stays; this points
+   at it. #}
+{% if health and health.datasets %}
+<div class="trust {{ 'ok' if health.current == health.total else ('bad' if health.worst in ('UNAVAILABLE','FAILED') else 'warn') }}">
+  <div class="trust-in">
+    <span class="trust-dot" aria-hidden="true"></span>
+    <span class="trust-txt">
+      <b>{{ health.current }} of {{ health.total }}</b> datasets current
+      {%- if health.current != health.total %} &middot; worst <b>{{ (health.worst or 'unknown')|lower }}</b>{% endif %}
+    </span>
+    <a class="trust-link" href="#datahealth">How fresh is this? &rarr;</a>
+  </div>
+</div>
+{% endif %}
 <nav class="nav">
   <div class="nav-in" id="navin">
-    {% for n in nav %}{% if n.head %}<span class="nav-g" aria-hidden="true">{{ n.head }}</span>{% endif %}<a href="#{{ n.id }}" aria-label="{{ n.group }} — {{ n.label }}"><i>{{ n.n }}</i>{{ n.label }}</a>
+    {# Six destinations, not seventeen links. Seventeen anchors in a row is an
+       index, not navigation — a first-time reader cannot tell which of them is
+       the point. Each group is a button that opens its sections.
+
+       The anchors still exist in the DOM inside each menu, so the scroll spy,
+       the command palette and every deep link keep working unchanged. This is
+       a disclosure layer over the same list, not a different list. #}
+    {% for g in navgroups %}
+    <div class="navgrp" data-group="{{ g.name }}">
+      <button type="button" class="navgrp-btn" aria-expanded="false"
+              aria-controls="navmenu-{{ loop.index }}">
+        {{ g.name }}<i>{{ g.links|length }}</i>
+      </button>
+      <div class="navgrp-menu" id="navmenu-{{ loop.index }}" hidden>
+        {% for n in g.links %}<a href="#{{ n.id }}" aria-label="{{ n.group }} — {{ n.label }}"><i>{{ n.n }}</i>{{ n.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
     {% endfor %}
     <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
   </div>
@@ -7408,16 +7550,67 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="v" id="heroRate"
            style="color:{{ 'var(--lime)' if closed >= 30 else 'var(--muted)' }}"
            data-count="{{ winrate }}" data-suffix="%">{{ winrate }}%</div>
-      <div class="k">Signal Win Rate</div>
+      <div class="k">Signal Win Rate
+        <span class="pill pill-result">Result</span>
+        <details class="xp"><summary aria-label="How win rate is computed">?</summary>
+          <div class="xp-body">
+            <b>Signal win rate</b>
+            Share of CLOSED signals that reached a target before their stop.
+            <dl>
+              <dt>Computed from</dt>
+              <dd>Every signal with a recorded exit. Open signals are excluded — a
+                  trade that has not resolved has no result, and counting it as
+                  neutral is how a 50% system starts looking like an 80% one.</dd>
+              <dt>Wrong if</dt>
+              <dd>The exit price is wrong. R is recomputed from exit_price against
+                  entry and stop, never read from the ledger's r_multiple column —
+                  a 2026-08-08 re-grade corrupted that column on 168 of 573 rows.</dd>
+              <dt>Sample</dt>
+              <dd>{{ closed }} closed. Below 30 this is a running tally, not a
+                  measurement.</dd>
+            </dl>
+          </div>
+        </details>
+      </div>
       <div class="kn" id="heroRateNote">{{ closed }} closed{{ ' · too few to measure' if closed < 30 else '' }}</div>
     </div>
     <div class="stat">
       <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">{{ opens }}</div>
-      <div class="k" id="heroOpenK">Open Setups</div>
+      <div class="k" id="heroOpenK">Open Setups
+        <span class="pill pill-fact">Fact</span>
+        <details class="xp"><summary aria-label="What an open setup is">?</summary>
+          <div class="xp-body">
+            <b>Open setups</b>
+            Signals the engine has published that have not yet resolved.
+            <dl>
+              <dt>What it is not</dt>
+              <dd>A position. Nothing here holds capital — a signal becomes a
+                  position only when the order is placed by hand and confirmed.</dd>
+              <dt>Computed from</dt>
+              <dd>A direct count of rows with status OPEN. No model, no estimate.</dd>
+            </dl>
+          </div>
+        </details>
+      </div>
     </div>
     <div class="stat">
       <div class="v" id="heroTotal" data-count="{{ alerts|length }}">{{ alerts|length }}</div>
-      <div class="k">Signals Logged</div>
+      <div class="k">Signals Logged
+        <span class="pill pill-fact">Fact</span>
+        <details class="xp"><summary aria-label="What signals logged counts">?</summary>
+          <div class="xp-body">
+            <b>Signals logged</b>
+            Every signal this engine has ever published, winners and losers.
+            <dl>
+              <dt>Computed from</dt>
+              <dd>A row count. Each was written when it fired, not added afterwards.</dd>
+              <dt>Why it matters</dt>
+              <dd>It is the denominator. A track record quoted without one is a
+                  selection of trades, not a record of them.</dd>
+            </dl>
+          </div>
+        </details>
+      </div>
     </div>
     <div class="stat">
       <div class="v" style="color:{{ 'var(--up)' if advancers >= (markets|length / 2) else 'var(--down)' }}"
@@ -8366,6 +8559,71 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <a class="slink" href="/screen.json" target="_blank"
          style="display:inline-block;margin-top:10px">&darr; screen.json</a>
     </div>
+
+  {# ── BREAKOUT BOARD ─────────────────────────────────────────────────────
+     A view over screen.json, not a new dataset. Four conditions, and each one
+     removes a specific way a breakout list goes wrong:
+
+       above the 20-day high      it is a breakout
+       above the 20/50/200 MAs    a breakout inside a downtrend is a bounce
+       turnover over Rs 10cr      you can leave. A Rs 10 lakh position in a
+                                  name that trades Rs 2cr a day IS the volume
+       RSI under 75               not already vertical. Buying the third day
+                                  of a straight-line move is how a breakout
+                                  becomes somebody else's exit
+
+     No delivery-percentage filter. NSE publishes delivery in the bhavcopy and
+     nothing in this build reads that file, so there is no figure to filter on.
+     Turnover is the liquidity proxy that actually exists here, and saying so
+     is better than implying a delivery screen that is not running. #}
+  {% if breakouts %}
+  <div class="subhead rv">
+    <h3>Breaking out, and liquid enough to leave.</h3>
+  </div>
+  <p class="lv-3 rv" style="margin-bottom:16px">
+    <span class="pill pill-model">Model</span>
+    Names closing above their 20-day high while above all three moving averages,
+    trading more than &#8377;10 crore a day, and not yet extended.
+    <b>{{ breakouts|length }} shown</b> of the {{ stock_screen.count or '—' }} screened.
+    Liquidity is measured on turnover &mdash; NSE&rsquo;s delivery percentage is not in
+    any feed this build reads, so it is not filtered on and not implied.
+  </p>
+  <div class="tblwrap rv">
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th><th class="r">Turnover</th><th class="r">RSI</th>
+          <th class="r">1M</th><th class="r">6M</th><th class="r">ROCE</th><th class="r">From 52w high</th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Every optional field goes through .get(). A MISSING key in Jinja is
+           Undefined, and `Undefined is not none` is TRUE — so a plain
+           `is not none` guard passes and the format filter then fails on it.
+           That is what broke this table on the first render. #}
+        {% for b in breakouts %}
+        {% set _rsi = b.get('rsi') %}{% set _r1m = b.get('r1m') %}
+        {% set _r6m = b.get('r6m') %}{% set _roce = b.get('roce') %}
+        {% set _fh = b.get('from_high') %}{% set _to = b.get('turnover_cr') %}
+        <tr>
+          <td><b>{{ b.get('sym', '—') }}</b><span class="tsub">{{ (b.get('name') or '')[:34] }}</span></td>
+          <td class="r num">{% if _to is not none %}&#8377;{{ '{:,.0f}'.format(_to) }}cr{% else %}&mdash;{% endif %}</td>
+          <td class="r num">{% if _rsi is not none %}{{ '%.0f'|format(_rsi) }}{% else %}&mdash;{% endif %}</td>
+          <td class="r num {{ 'up' if (_r1m or 0) > 0 else 'down' }}">{% if _r1m is not none %}{{ '%+.1f'|format(_r1m) }}%{% else %}&mdash;{% endif %}</td>
+          <td class="r num {{ 'up' if (_r6m or 0) > 0 else 'down' }}">{% if _r6m is not none %}{{ '%+.1f'|format(_r6m) }}%{% else %}&mdash;{% endif %}</td>
+          <td class="r num">{% if _roce is not none %}{{ '%.1f'|format(_roce) }}%{% else %}<span class="lv-sys">not measured</span>{% endif %}</td>
+          <td class="r num">{% if _fh is not none %}{{ '%.1f'|format(_fh) }}%{% else %}&mdash;{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="lv-sys rv" style="margin-top:10px">
+    A breakout is a setup, not a signal. None of these has been published to the
+    ledger, none carries an entry, a stop or a size, and none of them appears in
+    the win rate above.
+  </p>
+  {% endif %}
   </div>
 
   <!-- Vintage first, like every other weekly artefact here. The price date is

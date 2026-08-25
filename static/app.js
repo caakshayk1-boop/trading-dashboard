@@ -6282,3 +6282,77 @@ var TV_ALIASES = (function () {
      own timers, and the ledger sections pull on demand — reloading every five
      minutes would only throw away scroll position and any game in progress. */
 })();
+
+/* ══════════════ NAVIGATION ══════════════
+   Deliberately its own scope, at the end of the file.
+
+   This started inside the ledger module, whose start() opens with
+   `if (!el('perf') && !el('tracker') && !el('alerts')) return;` — a sensible
+   guard, because /desk carries no ledger UI. But it meant the site's
+   NAVIGATION was wired only on pages that happen to have a performance
+   section, and a throw anywhere earlier in that boot took the nav with it.
+
+   Moving around a page must not depend on the portfolio editor initialising.
+   Nothing here reads ledger state; it only opens and closes menus. */
+(function () {
+  "use strict";
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+  // ── COLLAPSED NAVIGATION ────────────────────────────────────────────
+  //
+  // Six group buttons, each disclosing its sections. The anchors inside are
+  // the same ones the scroll spy and command palette already use, so this
+  // adds a layer and changes no behaviour underneath it.
+  function wireNavGroups(){
+    var groups = [].slice.call(document.querySelectorAll('.navgrp'));
+    if (!groups.length) return;
+
+    function closeAll(except){
+      groups.forEach(function(g){
+        if (g === except) return;
+        var b = g.querySelector('.navgrp-btn'), m = g.querySelector('.navgrp-menu');
+        if (b) b.setAttribute('aria-expanded', 'false');
+        if (m) m.hidden = true;
+      });
+    }
+
+    groups.forEach(function(g){
+      var btn = g.querySelector('.navgrp-btn'), menu = g.querySelector('.navgrp-menu');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var open = btn.getAttribute('aria-expanded') === 'true';
+        closeAll(g);
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        menu.hidden = open;
+      });
+      // Following a link should put the menu away — otherwise it hangs over
+      // the section you just jumped to.
+      menu.addEventListener('click', function(e){
+        if (e.target.closest('a')) { btn.setAttribute('aria-expanded','false'); menu.hidden = true; }
+      });
+    });
+
+    document.addEventListener('click', function(){ closeAll(null); });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeAll(null);
+    });
+  }
+
+  // The scroll spy marks a LINK; with the links hidden inside menus it has to
+  // mark the group too, or a collapsed nav stops telling you where you are.
+  function markNavGroup(id){
+    var link = document.querySelector('.navgrp-menu a[href="#' + id + '"]');
+    [].slice.call(document.querySelectorAll('.navgrp')).forEach(function(g){
+      g.classList.toggle('here', !!link && g.contains(link));
+    });
+  }
+  window.__markNavGroup = markNavGroup;
+
+
+  ready(function () {
+    try { wireNavGroups(); } catch (e) { console.warn('nav wiring failed', e); }
+  });
+})();
