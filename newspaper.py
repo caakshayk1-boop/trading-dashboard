@@ -2100,6 +2100,229 @@ ENGINE_CHANGES = [
 # rows sharing a group render under one heading; a group that appears twice in
 # the sequence simply gets its heading twice, which is the honest rendering of
 # a page whose order is fixed.
+# ── EVERY NUMBER ON THE PAGE, DEFINED ONCE ──────────────────────────────────
+#
+# The brief was "legend badges on every metric". Stamping a coloured pill next
+# to seventy figures would decorate the page without telling anyone what the
+# figure MEANS, so the badge and the definition are the same object: one row
+# here produces the pill wherever the metric appears AND its entry in the
+# How to Read This section.
+#
+# `tier` is provenance, not importance, and uses the four words the legend at
+# the top of the page already teaches:
+#
+#   fact    an observed value — a close, a flow, a filing
+#   model   computed by the engine from facts
+#   result  what happened to a published signal
+#   view    a human opinion, labelled as one
+#
+# `label` must match the on-page label EXACTLY: app.js matches on it to attach
+# the pill, and a near-miss silently attaches nothing.
+METRICS = [
+    # ── The ledger's own scoreboard. These are RESULTS: they exist only
+    #    because a signal was published and then lived or died.
+    {"key": "winrate", "label": "Win rate", "tier": "result",
+     "what": "Closed signals that ended in profit, over all closed signals.",
+     "how": "Expiries count as losses. A setup that never triggered and timed "
+            "out is not a neutral event — the capital was committed and the "
+            "idea did not work. Excluding them is how a 24% win rate reads as "
+            "31%."},
+    {"key": "expectancy", "label": "Expectancy", "tier": "result",
+     "what": "Average R made per closed signal.",
+     "how": "R is recomputed from the exit price against the entry and stop of "
+            "that same signal, never read from the stored r_multiple column — "
+            "a 2026-08-08 re-grade corrupted that column on 168 of 573 rows."},
+    {"key": "rmultiple", "label": "R", "tier": "result",
+     "what": "One R is the distance from entry to stop: the money at risk.",
+     "how": "A trade exited at +2R made twice what it was risking. Quoting "
+            "returns in R rather than rupees is what makes a 500-rupee stop "
+            "and a 50,000-rupee stop comparable."},
+    {"key": "drawdown", "label": "Max drawdown", "tier": "result",
+     "what": "The deepest peak-to-trough fall of the running R curve.",
+     "how": "Measured on closed signals in sequence. It is the number that "
+            "decides whether a strategy is survivable, not the average."},
+
+    # ── The allocator. MODEL: derived from the rules, not observed.
+    {"key": "deployed", "label": "Deployed", "tier": "model",
+     "what": "Capital currently sitting in open paper positions.",
+     "how": "Deployed plus Cash is always the full wallet. Tier caps add to "
+            "more than 100% deliberately; the binding limit is the global cap."},
+    {"key": "cash", "label": "Cash", "tier": "model",
+     "what": "The wallet minus everything deployed.",
+     "how": "Uncommitted money waiting on a signal that clears its tier's "
+            "rules. A high cash figure is the rules declining, not an error."},
+    {"key": "heat", "label": "Heat", "tier": "model",
+     "what": "Total capital at risk if every open stop is hit at once.",
+     "how": "Sum of (entry − stop) × quantity across open positions, as a "
+            "percentage of the wallet. This, not deployed capital, is the "
+            "number that describes a bad day."},
+    {"key": "rr", "label": "R:R", "tier": "model",
+     "what": "Reward divided by risk on an unfilled idea.",
+     "how": "Target distance over stop distance. Every published idea clears "
+            "a 2:1 floor; the target comes from structure — a 52-week high or "
+            "a measured move — never from a fixed percentage."},
+    {"key": "allocated", "label": "Allocated", "tier": "model",
+     "what": "What the sizing rules gave this position.",
+     "how": "Tier percentage of the wallet, scaled down for grade B and C "
+            "signals, then clipped by whichever cap binds first."},
+
+    # ── The screen. FACTS off the tape, and one model on top.
+    {"key": "volspike", "label": "Volume", "tier": "fact",
+     "what": "The day's volume as a multiple of the name's own average.",
+     "how": "2x means twice the usual number of shares changed hands. It "
+            "carries no direction on its own, which is why the week's move is "
+            "always printed beside it."},
+    {"key": "turnover", "label": "Turnover", "tier": "fact",
+     "what": "Rupees traded in the name per day.",
+     "how": "The liquidity measure this build actually has. NSE's delivery "
+            "percentage lives in the bhavcopy, which nothing here reads, so "
+            "delivery is never filtered on and never implied."},
+    {"key": "rsi", "label": "RSI", "tier": "model",
+     "what": "14-day relative strength index.",
+     "how": "Above 70 is stretched, below 30 is washed out. Used here only as "
+            "an exclusion — an idea already vertical is not published."},
+    {"key": "roce", "label": "ROCE", "tier": "fact",
+     "what": "Return on capital employed, from the filed statements.",
+     "how": "Blank rather than zero where statements are not in the feed. "
+            "'Not measured' and 'measured at zero' are different facts."},
+    {"key": "fromhigh", "label": "From 52w high", "tier": "fact",
+     "what": "Distance below the highest close of the last year.",
+     "how": "0.0% means the name is at its own high today."},
+    {"key": "median", "label": "median", "tier": "model",
+     "what": "The middle name's move in a sector, not the average.",
+     "how": "It separates a sector that moved from a sector where two names "
+            "carried the label. The average cannot do that."},
+
+    # ── The ledger's counts, and what is open right now.
+    {"key": "totalsignals", "label": "Total Signals", "tier": "fact",
+     "what": "Every signal ever published to the ledger.",
+     "how": "Open and closed together. Nothing is ever deleted from this "
+            "count — a signal that went wrong stays in it."},
+    {"key": "targets", "label": "Targets Hit", "tier": "result",
+     "what": "Closed signals that reached their published target.",
+     "how": "Counted at the target actually printed at publication, never at "
+            "one moved afterwards."},
+    {"key": "stops", "label": "Stops Hit", "tier": "result",
+     "what": "Closed signals that reached their published stop.",
+     "how": "A stop-out is a -1R outcome by definition; that is what makes R "
+            "comparable across positions of different sizes."},
+    {"key": "openrisk", "label": "Open risk", "tier": "model",
+     "what": "Money that would be lost if every open stop hit today.",
+     "how": "The forward-looking twin of realised P&L. Kept as a separate tile "
+            "because banked money and money still on the table are different "
+            "facts, and one blended figure hides which is which."},
+    {"key": "unrealised", "label": "Unrealised", "tier": "model",
+     "what": "Open positions marked at the latest price on the ticker rail.",
+     "how": "The tile says how many of the open rows could be marked. An "
+            "unmarked row is one with no live quote, not one worth zero."},
+    {"key": "realized", "label": "Realized P&L", "tier": "result",
+     "what": "Money actually banked by closed paper positions.",
+     "how": "Winners book on a ladder — half at the first target, the rest at "
+            "the second — so a row that reached the far target is banked at "
+            "the blend, not as though the whole position ran to it."},
+    {"key": "tradessized", "label": "Trades sized", "tier": "model",
+     "what": "Signals the allocator gave a position size to.",
+     "how": "Fewer than the ledger publishes: engines outside the mandate are "
+            "logged but never sized, and the section names which ones."},
+    {"key": "openpos", "label": "Open Setups", "tier": "fact",
+     "what": "Published signals that have neither hit a target nor a stop.",
+     "how": "An open setup is not a position. Nothing here has been bought — "
+            "this ledger cannot place a trade, and says so."},
+    {"key": "advancing", "label": "Markets Advancing", "tier": "fact",
+     "what": "How many of the tracked indices closed up.",
+     "how": "Counted across the index list on the ticker rail, not across "
+            "stocks. It is a breadth reading of markets, not of the tape."},
+    {"key": "fii", "label": "FII net", "tier": "fact",
+     "what": "Net rupees bought or sold by foreign institutions.",
+     "how": "NSE publishes it once, after the close, so it is never live. FII "
+            "and DII are usually on opposite sides; the size of the gap says "
+            "more than the direction of either."},
+    {"key": "dii", "label": "DII net", "tier": "fact",
+     "what": "Net rupees bought or sold by domestic institutions.",
+     "how": "Same source and the same once-a-day cadence as the FII figure."},
+    {"key": "subscribed", "label": "Subscribed", "tier": "fact",
+     "what": "Times an open IPO book has been covered.",
+     "how": "Straight from NSE's public issue endpoint. Grey-market premium is "
+            "deliberately absent everywhere on this page: it is an unofficial "
+            "quote with no audit trail."},
+
+    # ── IPO Radar's counts, and the one verdict among them.
+    {"key": "ipoopen", "label": "Open now", "tier": "fact",
+     "what": "Mainboard issues whose book is open for applications today.",
+     "how": "Mainboard is NSE's own series == EQ. SME issues are a different "
+            "instrument with different lot sizes and are not counted here."},
+    {"key": "ipoSoon", "label": "Opening soon", "tier": "fact",
+     "what": "Issues with a published open date still ahead.",
+     "how": "Dates move. A book that slips is re-read on the next build "
+            "rather than carried forward from the announcement."},
+    {"key": "ipoverdict", "label": "Apply / Apply-small", "tier": "model",
+     "what": "How many open books the scorer rates worth applying to.",
+     "how": "A reading of public DEMAND and nothing else. NSE's feeds carry "
+            "no lot size, sector, financials or valuation, so none of those "
+            "inform the score and none are guessed at. Grey-market premium is "
+            "deliberately excluded: an unofficial quote with no audit trail."},
+    {"key": "ipoavoid", "label": "Avoid", "tier": "model",
+     "what": "Open books the same scorer rates against applying to.",
+     "how": "Printed beside the Apply count on purpose. A scorer that only "
+            "publishes its positives is a marketing sheet."},
+    {"key": "ipoawait", "label": "Awaiting listing", "tier": "fact",
+     "what": "Closed books that have not yet produced a traded price.",
+     "how": "These carry an ISSUE date, not a listing date, and every "
+            "performance cell is blank rather than zero. Mixing them with "
+            "names that actually listed is what made this table read as "
+            "broken."},
+    {"key": "ipomeasured", "label": "Listed & measured · 12m", "tier": "result",
+     "what": "Last year's listings whose post-listing return could be priced.",
+     "how": "A listing with no reachable price is excluded from the return "
+            "rather than counted flat — a delisted or unquoted symbol is "
+            "missing data, not a 0% outcome."},
+
+    # ── The savings calculators. MODEL: projections, not observations.
+    {"key": "corpusret", "label": "Corpus at retirement", "tier": "model",
+     "what": "What the plan is projected to be worth on the retirement date.",
+     "how": "Compounded from the stated contribution and return assumption. "
+            "It is arithmetic on an assumption, not a forecast of markets."},
+    {"key": "corpusreq", "label": "Corpus required", "tier": "model",
+     "what": "What the stated withdrawal actually needs to be funded.",
+     "how": "Printed next to the projected corpus so the gap is visible. The "
+            "gap, not either figure alone, is the number that decides "
+            "anything."},
+    {"key": "firstdraw", "label": "First withdrawal / month", "tier": "model",
+     "what": "The opening monthly withdrawal the plan supports.",
+     "how": "It rises with inflation across the plan; the first year is the "
+            "smallest one, which is the honest number to quote."},
+    {"key": "lastuntil", "label": "Money lasts till", "tier": "model",
+     "what": "The year the plan runs out under its own assumptions.",
+     "how": "Sensitive to the return assumption more than to anything else. "
+            "Treat a year past the life expectancy as 'does not run out', "
+            "not as precision."},
+    {"key": "invested", "label": "Invested", "tier": "fact",
+     "what": "Money actually put in, before any return.",
+     "how": "The cost base. Paired with Value so the return is the "
+            "difference rather than a separately computed figure that could "
+            "disagree with it."},
+
+    # ── Freshness. FACT about the build, not about the market.
+    {"key": "asof", "label": "As of", "tier": "fact",
+     "what": "When the underlying data was read, not when the page was built.",
+     "how": "A weekly screen rebuilt on Sunday still shows Sunday's date on "
+            "Thursday. The badge says which, because a stale RSI and a stale "
+            "ROCE go wrong at very different speeds."},
+]
+
+# Keyed for the template, so a section can pull one definition without walking
+# the list. Duplicate keys would silently shadow, so it is asserted.
+METRICS_BY_KEY = {m["key"]: m for m in METRICS}
+assert len(METRICS_BY_KEY) == len(METRICS), "duplicate metric key"
+
+PROV_TIERS = {
+    "fact":   ("Fact",   "an observed value — a close, a flow, a filing"),
+    "model":  ("Model",  "computed by the engine from facts"),
+    "result": ("Result", "what happened to a published signal"),
+    "view":   ("View",   "a human opinion, labelled as one"),
+}
+
+
 SECTION_MAP = [
     # (id,          nav label,      page,   nav group)
     #
@@ -2132,6 +2355,11 @@ SECTION_MAP = [
     # underneath it cannot: what here would I never have scrolled to?
     ("world",       "World",        "main", "Markets"),
     ("findings",    "Findings",     "main", "Markets"),
+    # 2026-08-26. Price says where a name went; volume says whether anybody
+    # came with it. The screen has carried a real volume ratio all along and
+    # nothing on the page read it — a comment in generate.py wrongly claimed
+    # the field was constant, and that comment stopped anyone looking.
+    ("volspikes",   "Volume",       "main", "Markets"),
     # Renamed from "Long-Term". The section's own headline has read "Own the
     # business." for some time while the nav still said "Long-Term" — the same
     # nav/heading disagreement that put "07 Performance" over "17 / EDGE".
@@ -2171,6 +2399,13 @@ SECTION_MAP = [
     # change; this records what the SITE shipped. Same question, two subjects,
     # so they sit together. Generated from git history rather than hand-kept.
     ("buildlog",    "Build Log",    "main", "Ledger"),
+    # 2026-08-26. One place that defines every number on the page and says
+    # where it comes from. The definitions were previously spread across
+    # seventeen section ledes, which meant a reader who wanted to check what
+    # "expectancy" meant had to remember which section had explained it. The
+    # ledes stay — an explanation is most useful next to the thing it explains
+    # — but this is the canonical copy, and the legend links to it.
+    ("method",      "How to Read This", "main", "About"),
     ("who",         "Who",          "main", "About"),
 
     # ── LIFE — the whole /desk page ─────────────────────────────────────────
@@ -2350,11 +2585,28 @@ def page_context(page: str, drop=()) -> dict:
         # over "17 / EDGE" on the page — two sources of truth for one name.
         "secnum": {i: f"{n:02d}" for n, (i, _l, _g) in enumerate(rows, 1)},
         "seclabel": {i: l.upper() for i, l, _g in rows},
+        # Which pillar of the paper a section belongs to. Read only by the
+        # generated pillar stylesheet below the nav — the hue is derived from
+        # SECTION_MAP like the number and the label are, so a section moved
+        # between pillars changes colour without anyone editing CSS.
+        "secgroup": {i: g for i, _l, g in rows},
         # Supplied here rather than at each render call site. There are two of
         # those in the Flask path alone plus the static generator, and the
         # error-path render is the one that would have silently dropped it —
         # which is precisely the day the log needs to still be on the page.
         "engine_changes": ENGINE_CHANGES,
+        # The metric dictionary and the four provenance tiers. Supplied from
+        # page_context for the same reason engine_changes is: three render call
+        # sites, and the error path is the one that would silently drop it.
+        "metrics": METRICS,
+        "prov_tiers": PROV_TIERS,
+        # The same list again, trimmed to what the badge stamper needs and
+        # serialised here rather than in the template: json.dumps escapes for a
+        # <script> context, and hand-building this in Jinja is how a stray
+        # apostrophe in a metric label breaks JSON.parse for the whole page.
+        "metrics_json": json.dumps(
+            [{"key": m["key"], "label": m["label"], "tier": m["tier"]}
+             for m in METRICS], separators=(",", ":")),
         # Supplied here for the same reason engine_changes is: three render
         # call sites, and the provenance strip must not be the one that
         # silently renders blank on the error path.
@@ -4052,7 +4304,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
 }catch(e){}})();
 </script>
-<meta name="theme-color" content="#FBFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#E9ECF0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#FBFAF7">
 <meta name="color-scheme" content="light dark">
 
@@ -4337,46 +4589,71 @@ TEMPLATE = r"""<!DOCTYPE html>
    preference no longer decides this: the site is light, and dark is a choice
    the reader makes and keeps. */
 :root:not([data-theme]){
-  /* Paper, not a lightbox.
-     Pure white at full screen brightness is a lamp pointed at the reader — on
-     a page this dense the glare is what makes it tiring rather than the
-     information. The ground drops to a soft warm paper and CARDS become the
-     white, so a card now reads as raised against its page instead of needing a
-     border to exist. Ink darkens to hold contrast on the softer ground. */
-  --bg:#F6F5F1;
-  --bg2:#EFEEE9;
-  --surface:#FFFFFF;
-  --surface2:#FBFAF7;
-  --surface3:#EDECE6;
-  --overlay:#FFFFFF;
+  /* RAG PAPER, NOT A LIGHTBOX — and not cream either.
+     The previous ground was a warm off-white with pure-white cards: two
+     near-whites, so the page was one bright field with nothing separating a
+     card from the sheet it sits on, and at that brightness the field is a lamp
+     pointed at the reader. The ground now drops to a cool rag paper with a
+     blue-grey bias and the cards come UP to a near-white that is still not
+     white, so elevation reads as a step in value rather than as a border.
+     The bias is cool on purpose: warm cream under dense red/green financial
+     tables muddies both, and a slate-tinted sheet lets the semantic colours
+     sit on it cleanly. */
+  --bg:#E9ECF0;
+  --bg2:#E2E6EB;
+  --surface:#F8FAFC;
+  --surface2:#EFF2F6;
+  --surface3:#DDE2E9;
+  --overlay:#F8FAFC;
 
-  --line:rgba(20,21,24,.10);
-  --line2:rgba(20,21,24,.19);
+  --line:rgba(22,29,42,.13);
+  --line2:rgba(22,29,42,.24);
 
-  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
-     three regularly print on — a contrast figure quoted against pure white is
-     a figure that is never true where the text actually sits.
-     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
-  --text:#14161A;
-  --muted:#4C525A;
-  --dim:#5A6068;
+  /* Ink on paper, blue-black rather than neutral so it belongs to the ground.
+     Measured against --bg2, the darkest sheet these three regularly
+     print on — a contrast figure quoted against pure white is a figure that is
+     never true where the text actually sits.
+     Computed: 13.6:1 / 7.4:1 / 4.9:1. --dim is metadata only, never body. */
+  --text:#161D2A;
+  --muted:#3D4757;
+  --dim:#54606F;
 
-  /* The lime is the mark, not the interface. On white it is reserved for the
-     wordmark and a small number of live-state dots; everything that used to be
-     lime-on-dark is ink now. A signature colour spent on every border stops
-     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
-  --lime:#4E6B08;
-  --lime-soft:rgba(78,107,8,.07);
-  --lime-line:rgba(78,107,8,.22);
+  /* THE MARK. Was an olive lime chosen to survive a dark ground; on rag paper
+     it read as tired. Deep ink-teal instead — far enough from --up green that
+     the wordmark is never mistaken for a P&L colour, which is the whole reason
+     a brand hue and a semantic hue have to be different colours.
+     #0B5C63 computes 6.3:1 on --bg2. */
+  --lime:#0B5C63;
+  --lime-soft:rgba(11,92,99,.08);
+  --lime-line:rgba(11,92,99,.26);
 
-  --orb-a:rgba(78,107,8,.05);
-  --orb-b:rgba(31,95,191,.03);
-  --pick-edge:#FAFAF9;
-  --on-up:#FFFFFF;
-  --rank-ink:rgba(17,18,20,.045);
-  --scroll-thumb:#DEDEDA;
-  --up:#06714A;   --up-soft:rgba(6,113,74,.11);
-  --down:#C02A20; --down-soft:rgba(192,42,32,.10);
+  /* PILLAR HUES. Six sections of the paper, six colours — carried by the nav
+     button, the section number and the rule beside a heading. This is the
+     "colourful" part of the design and it is doing a job: the hue tells you
+     which part of the paper you are standing in, so colour is navigation
+     rather than decoration. None of them is used for a value; values only
+     ever get --up/--down/--gold. */
+  --p-today:#B04A16;
+  --p-markets:#1A4FB0;
+  --p-research:#6438B8;
+  --p-portfolio:#0B6E5F;
+  --p-ledger:#A8123F;
+  --p-about:#54606F;
+  /* The Life page runs its own five pillars off the same idea. */
+  --p-career:#9A4A00;
+  --p-learning:#1A4FB0;
+  --p-practice:#0B6E5F;
+  --p-drills:#6438B8;
+  --p-mind:#A8123F;
+
+  --orb-a:rgba(11,92,99,.06);
+  --orb-b:rgba(26,79,176,.04);
+  --pick-edge:#F8FAFC;
+  --on-up:#F8FAFC;
+  --rank-ink:rgba(22,29,42,.055);
+  --scroll-thumb:#C9D0DA;
+  --up:#0A6B45;   --up-soft:rgba(10,107,69,.12);
+  --down:#B4231A; --down-soft:rgba(180,35,26,.11);
   --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
   --blue:#1A4FB0; --violet:#6438B8;
 
@@ -4390,46 +4667,71 @@ TEMPLATE = r"""<!DOCTYPE html>
    Borders do more work here and shadows do less, which is the opposite of
    the dark theme — on paper, elevation reads through edges. */
 :root[data-theme="light"]{
-  /* Paper, not a lightbox.
-     Pure white at full screen brightness is a lamp pointed at the reader — on
-     a page this dense the glare is what makes it tiring rather than the
-     information. The ground drops to a soft warm paper and CARDS become the
-     white, so a card now reads as raised against its page instead of needing a
-     border to exist. Ink darkens to hold contrast on the softer ground. */
-  --bg:#F6F5F1;
-  --bg2:#EFEEE9;
-  --surface:#FFFFFF;
-  --surface2:#FBFAF7;
-  --surface3:#EDECE6;
-  --overlay:#FFFFFF;
+  /* RAG PAPER, NOT A LIGHTBOX — and not cream either.
+     The previous ground was a warm off-white with pure-white cards: two
+     near-whites, so the page was one bright field with nothing separating a
+     card from the sheet it sits on, and at that brightness the field is a lamp
+     pointed at the reader. The ground now drops to a cool rag paper with a
+     blue-grey bias and the cards come UP to a near-white that is still not
+     white, so elevation reads as a step in value rather than as a border.
+     The bias is cool on purpose: warm cream under dense red/green financial
+     tables muddies both, and a slate-tinted sheet lets the semantic colours
+     sit on it cleanly. */
+  --bg:#E9ECF0;
+  --bg2:#E2E6EB;
+  --surface:#F8FAFC;
+  --surface2:#EFF2F6;
+  --surface3:#DDE2E9;
+  --overlay:#F8FAFC;
 
-  --line:rgba(20,21,24,.10);
-  --line2:rgba(20,21,24,.19);
+  --line:rgba(22,29,42,.13);
+  --line2:rgba(22,29,42,.24);
 
-  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
-     three regularly print on — a contrast figure quoted against pure white is
-     a figure that is never true where the text actually sits.
-     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
-  --text:#14161A;
-  --muted:#4C525A;
-  --dim:#5A6068;
+  /* Ink on paper, blue-black rather than neutral so it belongs to the ground.
+     Measured against --bg2, the darkest sheet these three regularly
+     print on — a contrast figure quoted against pure white is a figure that is
+     never true where the text actually sits.
+     Computed: 13.6:1 / 7.4:1 / 4.9:1. --dim is metadata only, never body. */
+  --text:#161D2A;
+  --muted:#3D4757;
+  --dim:#54606F;
 
-  /* The lime is the mark, not the interface. On white it is reserved for the
-     wordmark and a small number of live-state dots; everything that used to be
-     lime-on-dark is ink now. A signature colour spent on every border stops
-     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
-  --lime:#4E6B08;
-  --lime-soft:rgba(78,107,8,.07);
-  --lime-line:rgba(78,107,8,.22);
+  /* THE MARK. Was an olive lime chosen to survive a dark ground; on rag paper
+     it read as tired. Deep ink-teal instead — far enough from --up green that
+     the wordmark is never mistaken for a P&L colour, which is the whole reason
+     a brand hue and a semantic hue have to be different colours.
+     #0B5C63 computes 6.3:1 on --bg2. */
+  --lime:#0B5C63;
+  --lime-soft:rgba(11,92,99,.08);
+  --lime-line:rgba(11,92,99,.26);
 
-  --orb-a:rgba(78,107,8,.05);
-  --orb-b:rgba(31,95,191,.03);
-  --pick-edge:#FAFAF9;
-  --on-up:#FFFFFF;
-  --rank-ink:rgba(17,18,20,.045);
-  --scroll-thumb:#DEDEDA;
-  --up:#06714A;   --up-soft:rgba(6,113,74,.11);
-  --down:#C02A20; --down-soft:rgba(192,42,32,.10);
+  /* PILLAR HUES. Six sections of the paper, six colours — carried by the nav
+     button, the section number and the rule beside a heading. This is the
+     "colourful" part of the design and it is doing a job: the hue tells you
+     which part of the paper you are standing in, so colour is navigation
+     rather than decoration. None of them is used for a value; values only
+     ever get --up/--down/--gold. */
+  --p-today:#B04A16;
+  --p-markets:#1A4FB0;
+  --p-research:#6438B8;
+  --p-portfolio:#0B6E5F;
+  --p-ledger:#A8123F;
+  --p-about:#54606F;
+  /* The Life page runs its own five pillars off the same idea. */
+  --p-career:#9A4A00;
+  --p-learning:#1A4FB0;
+  --p-practice:#0B6E5F;
+  --p-drills:#6438B8;
+  --p-mind:#A8123F;
+
+  --orb-a:rgba(11,92,99,.06);
+  --orb-b:rgba(26,79,176,.04);
+  --pick-edge:#F8FAFC;
+  --on-up:#F8FAFC;
+  --rank-ink:rgba(22,29,42,.055);
+  --scroll-thumb:#C9D0DA;
+  --up:#0A6B45;   --up-soft:rgba(10,107,69,.12);
+  --down:#B4231A; --down-soft:rgba(180,35,26,.11);
   --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
   --blue:#1A4FB0; --violet:#6438B8;
 
@@ -4601,9 +4903,13 @@ TEMPLATE = r"""<!DOCTYPE html>
   border-bottom:1px solid var(--line);
 }
 /* The eyebrow becomes a rule-and-label instead of a chip. */
+/* This rule outranks the base .snum on specificity, so it has to carry the
+   pillar hue too — it silently repainted every section eyebrow grey and made
+   the whole colour scheme invisible below the nav. Fallback stays --dim for
+   any .snum outside a mapped section. */
 :root:not([data-theme]) .snum,
 :root[data-theme="light"] .snum{
-  color:var(--dim);
+  color:var(--pillar,var(--dim));
   letter-spacing:.16em;
 }
 /* ── PROVENANCE LEGEND ────────────────────────────────────────────────────
@@ -4639,8 +4945,8 @@ TEMPLATE = r"""<!DOCTYPE html>
   font:600 9.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
   padding:4px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex:none;
 }
-.pill-fact  {color:var(--text); border-color:var(--line2); background:var(--surface2)}
-.pill-model {color:var(--blue); border-color:color-mix(in srgb, var(--blue) 34%, transparent); background:color-mix(in srgb, var(--blue) 7%, transparent)}
+.pill-fact  {color:var(--p-markets); border-color:color-mix(in srgb, var(--p-markets) 32%, transparent); background:color-mix(in srgb, var(--p-markets) 7%, transparent)}
+.pill-model {color:var(--p-research); border-color:color-mix(in srgb, var(--p-research) 34%, transparent); background:color-mix(in srgb, var(--p-research) 7%, transparent)}
 .pill-result{color:var(--up);   border-color:color-mix(in srgb, var(--up) 34%, transparent);   background:var(--up-soft)}
 .pill-view  {color:var(--gold); border-color:color-mix(in srgb, var(--gold) 34%, transparent); background:var(--gold-soft)}
 
@@ -5732,7 +6038,17 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sec{padding:clamp(56px,8vw,104px) 0;border-bottom:1px solid var(--line)}
 .sec:last-child{border-bottom:none}
 .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
-.snum{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:2px;margin-bottom:12px;display:block}
+/* The eyebrow takes the pillar's hue, so "12 / PAPER WALLET" is the same
+   colour as the PORTFOLIO button that got you here. --pillar is set per
+   section by the generated block under the nav; the fallback keeps every
+   other use of .snum working. */
+.snum{font-family:var(--mono);font-size:11px;color:var(--pillar,var(--lime));letter-spacing:2px;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* A short rule in the pillar hue ahead of the number. On a page of 33 stacked
+   sections this is the cheapest possible "you are somewhere new" marker, and
+   it is the thing that makes the colour scheme visible while scrolling rather
+   than only in the nav. */
+.snum::before{content:'';width:22px;height:2px;background:var(--pillar,var(--lime));flex:none;border-radius:2px}
 .stitle{font-family:var(--serif);font-size:clamp(26px,4.4vw,50px);font-weight:600;
   letter-spacing:-.8px;line-height:1.04}
 .sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
@@ -7286,12 +7602,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   color:var(--dim);background:var(--surface2);
   border-radius:99px;padding:2px 6px;line-height:1.4;
 }
-.navgrp-btn[aria-expanded="true"]{color:var(--text);border-bottom-color:var(--lime)}
+.navgrp-btn[aria-expanded="true"]{color:var(--text);border-bottom-color:var(--pillar,var(--lime))}
+/* Each group carries its pillar's colour on the count chip. Six grey chips
+   told you nothing; six coloured ones are the legend for the rules and
+   eyebrows further down the page. */
+.navgrp-btn i{color:var(--pillar,var(--dim));background:color-mix(in srgb,var(--pillar,var(--dim)) 10%,transparent)}
 /* Marks the group containing whatever the scroll spy says you are reading, so
    a collapsed nav still tells you where you are. */
 .navgrp.here .navgrp-btn{color:var(--text)}
 .navgrp.here .navgrp-btn::before{
-  content:'';width:5px;height:5px;border-radius:50%;background:var(--lime);flex:none;
+  content:'';width:5px;height:5px;border-radius:50%;background:var(--pillar,var(--lime));flex:none;
 }
 .navgrp-menu{
   /* fixed, NOT absolute: the parent .nav-in is overflow-x:auto, which clips on
@@ -7353,6 +7673,88 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   font-family:var(--disp);
   font-variation-settings:'wdth' 92;
   font-weight:600;
+}
+
+/* ── VOLUME BOARD ─────────────────────────────────────────────────────────
+   The bar is the point of the section. A column of "3.4x  2.9x  2.7x" is a
+   list; a column of bars is a shape, and the shape is what tells you whether
+   today's participation is concentrated in three names or spread across
+   eighteen. Width is the ratio against a 10x ceiling — anything past 10x is a
+   different kind of event and gets a full bar rather than a longer one.
+   Colour is the WEEK's direction, never the ratio, so a wall of red reads as
+   distribution before a single figure is read. */
+.volboard td{vertical-align:middle}
+.volbar{display:inline-block;width:min(180px,34vw);height:9px;border-radius:2px;
+  background:var(--surface3);overflow:hidden;vertical-align:middle;margin-right:9px}
+.volbar-fill{display:block;height:100%;border-radius:2px;background:var(--dim)}
+.volbar-fill.up{background:var(--up)}
+.volbar-fill.dn{background:var(--down)}
+.volbar-x{font-family:var(--mono);font-size:12px;color:var(--text);font-variant-numeric:tabular-nums}
+/* The reading is a word, not only a colour: the colour is unreadable to a
+   reader who cannot separate the two, and "Churn" has no colour at all. */
+.vread{font:600 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 7px;border-radius:3px;border:1px solid var(--line2);color:var(--dim);
+  background:var(--surface2);white-space:nowrap}
+.vread.up{color:var(--up);border-color:color-mix(in srgb,var(--up) 32%,transparent);background:var(--up-soft)}
+.vread.dn{color:var(--down);border-color:color-mix(in srgb,var(--down) 32%,transparent);background:var(--down-soft)}
+
+/* ── DEFINITIONS ──────────────────────────────────────────────────────────
+   Two-column on a wide screen — term left, definition right — because a
+   glossary is scanned by term, and a term buried above its own paragraph
+   cannot be scanned. Collapses to stacked below 720px where two columns
+   would give the definition about twenty characters of measure. */
+.metdefs{display:flex;flex-direction:column;gap:0;margin:0}
+.metdef{display:grid;grid-template-columns:minmax(140px,1fr) 3fr;gap:clamp(16px,3vw,44px);
+  padding:16px 0;border-top:1px solid var(--line)}
+.metdef:first-child{border-top:0}
+.metdef dt{font:600 clamp(15px,1.6vw,17px)/1.3 var(--disp);color:var(--text);letter-spacing:-.01em}
+.metdef dd{margin:0}
+.metdef .md-what{font:400 14.5px/1.6 var(--sans);color:var(--text);margin:0}
+.metdef .md-how{font:400 13.5px/1.65 var(--sans);color:var(--muted);margin:6px 0 0;max-width:62ch}
+@media (max-width:720px){
+  .metdef{grid-template-columns:1fr;gap:6px;padding:14px 0}
+}
+
+/* ── METRIC BADGES ────────────────────────────────────────────────────────
+   Stamped by app.js onto any KPI whose label matches the METRICS list, and
+   linked to that metric's definition. Deliberately tiny and low-contrast: the
+   badge is a footnote marker, and a legend that competes with the number it
+   annotates has defeated itself. */
+.kpi .k{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+a.mprov{font:600 8.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 5px;border-radius:3px;border:1px solid;text-decoration:none;flex:none;
+  transition:opacity .15s var(--ease)}
+a.mprov:hover,a.mprov:focus-visible{opacity:1}
+a.mprov{opacity:.78}
+.mprov-fact  {color:var(--p-markets); border-color:color-mix(in srgb,var(--p-markets) 30%,transparent); background:color-mix(in srgb,var(--p-markets) 7%,transparent)}
+.mprov-model {color:var(--p-research);border-color:color-mix(in srgb,var(--p-research) 30%,transparent);background:color-mix(in srgb,var(--p-research) 7%,transparent)}
+.mprov-result{color:var(--up);        border-color:color-mix(in srgb,var(--up) 30%,transparent);        background:var(--up-soft)}
+.mprov-view  {color:var(--gold);      border-color:color-mix(in srgb,var(--gold) 30%,transparent);      background:var(--gold-soft)}
+
+
+/* ── MOBILE: THE PAGE MUST NOT SCROLL SIDEWAYS ────────────────────────────
+   Measured at 375px, the document was 419px wide, so every screen could be
+   dragged 44px to the right and the fixed header slid with it. Two causes,
+   both fixed at the source rather than papered over with overflow-x:hidden on
+   <html> — that hides the symptom and the next one arrives unnoticed.
+
+   1. A fund's sector chip is white-space:nowrap inside a flex row. "Financial
+      Services 21.54%" is wider than a phone, and nowrap means it cannot give.
+      It wraps below 760px; on a desktop the chip still reads as one unit.
+   2. The masthead ran brand + date + clock + Search + theme on one 375px line.
+      The date already hid at 720px; below 600px the word "Search" goes too —
+      the glyph carries it, and a phone has no Cmd key to press anyway. */
+@media(max-width:760px){
+  .fpf-c{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+}
+@media(max-width:600px){
+  .topbar-in{gap:10px}
+  .stamp{gap:8px;min-width:0}
+  .cmdk-hint span:last-child{display:none}
+  .stamp .live{font-size:10px;white-space:nowrap}
+  /* Tap targets. A 24px button is under every platform's 44px minimum, and
+     these two sit next to each other in a corner. */
+  .thm,.cmdk-hint{min-height:38px;display:inline-flex;align-items:center}
 }
 
 </style>
@@ -7465,6 +7867,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
   </div>
 </nav>
+
+{# ── PILLAR HUES ────────────────────────────────────────────────────────────
+   One rule per section and one per nav group, generated from SECTION_MAP so
+   the colour cannot drift from the grouping the nav already prints. Each sets
+   a single --pillar variable; every rule that paints with it is in the main
+   stylesheet, so this block assigns colour and never styles anything.
+
+   The var() fallback matters: the Life page's pillars are a different five,
+   and a missing token there should quietly become the house accent rather
+   than an unset property that paints nothing. #}
+<style>
+{% for i, grp in secgroup.items() %}#{{ i }}{--pillar:var(--p-{{ grp|lower }},var(--lime))}
+{% endfor %}{% for g in navgroups %}.navgrp[data-group="{{ g.name }}"]{--pillar:var(--p-{{ g.name|lower }},var(--lime))}
+{% endfor %}
+</style>
+
+{# The metric dictionary, for the badge stamper in app.js. A data island rather
+   than a JS literal so nothing here is executable, and generated from the same
+   METRICS list that writes the definitions in How to Read This — a badge and
+   its definition therefore cannot disagree. #}
+<script type="application/json" id="metricProv">{{ metrics_json }}</script>
 
 <!-- Live-layer status. Hidden until the API probe resolves one way or the other. -->
 <div class="livebar" id="livebar">
@@ -8535,6 +8958,87 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     Research findings, not investment advice. Nothing here is scored, ranked or
     recommended &mdash; each is a group of companies that happen to share a
     measurable property, surfaced because 750 rows are more than anyone scrolls.
+  </p>
+</section>
+{% endif %}
+
+<!-- ══════════ VOLUME ══════════
+     Price is half a fact. A name up 8% on its usual volume and a name up 8% on
+     four times its usual volume are different events, and the screen has
+     carried the ratio all along — a wrong comment in generate.py said the
+     field was constant, so nothing read it for months.
+
+     The board never shows the ratio alone. Volume has no direction; pairing it
+     with the week's move is what turns a number into a reading, and the third
+     reading ("churn") exists because most high-volume days genuinely go
+     nowhere and calling those accumulation would be inventing a fact. -->
+{% if 'volspikes' in secs and volspikes %}<section class="sec" id="volspikes">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['volspikes'] }} / {{ seclabel['volspikes'] }}</span>
+      <h2 class="stitle">Who actually showed up.</h2>
+    </div>
+    <p class="sdesc">Names trading at twice their own average volume or more. Volume is the
+      only thing on this page that tells you whether a move had participation behind it.</p>
+  </div>
+
+  <p class="lv-3 rv" style="margin-bottom:18px">
+    <span class="pill pill-fact">Fact</span>
+    The multiple is the day&rsquo;s volume against the name&rsquo;s own average &mdash; not against
+    another stock, so a small cap and a large cap are comparable here. Floor of
+    <b>2&times;</b> on at least <b>&#8377;5 crore</b> of turnover: a twelve-times day on a name
+    that trades forty lakh is a ratio artefact, not a crowd.
+    <b>{{ volspikes|length }} shown</b> of the {{ stock_screen.count or '&mdash;' }} screened.
+    Bars are drawn against <b>{{ volspike_ceiling }}&times;</b> &mdash; today&rsquo;s highest, so
+    the column compares these names to each other rather than to a fixed line.
+  </p>
+
+  {# The bar is the infographic: width encodes the ratio, colour encodes the
+     DIRECTION of the week — so a wall of red bars reads as distribution across
+     the tape at a glance, before any number is read.
+
+     The ceiling is the board's OWN top ratio, floored at 10x. A fixed 10x
+     ceiling was tried first and saturated on the first real build: that day's
+     board ran to 19x, so all eighteen bars painted full width and the column
+     carried no information at all. Flooring at 10x is what stops a quiet day
+     — where the best spike is 2.2x — from drawing that as a full bar. #}
+  <div class="tblwrap rv">
+    <table class="volboard">
+      <thead>
+        <tr>
+          <th>Symbol</th><th>Volume vs its own average</th><th class="r">1W</th>
+          <th class="r">Price</th><th class="r">Turnover</th><th>Reading</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in volspikes %}
+        {% set _vs = v.get('vol_spike') %}{% set _w = v.get('r1w') %}
+        {% set _px = v.get('price') %}{% set _to = v.get('turnover_cr') %}
+        <tr>
+          <td><b>{{ v.get('sym', '&mdash;') }}</b><span class="tsub">{{ (v.get('name') or '')[:30] }}</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill {{ v.get('vclass') }}"
+                    style="width:{{ [((_vs or 0) / volspike_ceiling * 100), 100]|min|round(1) }}%"></span>
+            </span>
+            <span class="volbar-x num">{{ '%.1f'|format(_vs) }}&times;</span>
+          </td>
+          <td class="r num {{ 'up' if (_w or 0) > 0 else 'down' if (_w or 0) < 0 else '' }}">{% if _w is not none %}{{ '%+.1f'|format(_w) }}%{% else %}&mdash;{% endif %}</td>
+          <td class="r num">{% if _px is not none %}&#8377;{{ '{:,.0f}'.format(_px) }}{% else %}&mdash;{% endif %}</td>
+          <td class="r num">{% if _to is not none %}&#8377;{{ '{:,.0f}'.format(_to) }}cr{% else %}&mdash;{% endif %}</td>
+          <td><span class="vread {{ v.get('vclass') }}">{{ v.get('vread') }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="lv-sys rv" style="margin-top:12px">
+    A volume spike is an observation, not a setup. Nothing here has an entry, a stop
+    or a size, none of it has been published to the ledger, and none of it touches the
+    win rate. Volume from the weekly screen &mdash; same vintage as the stock screen
+    {%- if stock_screen.built_on %}, built {{ stock_screen.built_on }}{% endif %}.
+    <a href="#method">What these columns mean &rarr;</a>
   </p>
 </section>
 {% endif %}
@@ -10338,6 +10842,67 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   </div>
   <p class="lv-sys rv" style="margin-top:14px">
     {{ buildlog|length }} product changes in history &middot; chore and data commits excluded
+  </p>
+</section>
+{% endif %}
+
+<!-- ══════════ HOW TO READ THIS ══════════
+     The consolidation. Every number on the page defined once, with the tier
+     that says where it came from, generated from the METRICS list at the top
+     of this file rather than typed here — so a metric added to the page and
+     not defined shows up as a gap in one obvious place instead of nowhere.
+
+     What was NOT done: the per-section explanations were left where they are.
+     Moving them all here would have produced a reference nobody reads and
+     seventeen sections of bare tables, which is worse than the duplication it
+     removes. This is the canonical copy; the ledes stay as the local one. -->
+{% if 'method' in secs %}<section class="sec" id="method">
+  <div class="shead rv">
+    <div>
+      <span class="snum">{{ secnum['method'] }} / {{ seclabel['method'] }}</span>
+      <h2 class="stitle">Every number, defined once.</h2>
+    </div>
+    <p class="sdesc">What each figure on this page measures, how it is computed, and which
+      of the four kinds of claim it is. If a number here disagrees with a number above,
+      this page is the one that is wrong &mdash; report it.</p>
+  </div>
+
+  <div class="prov-legend rv" role="note" aria-label="The four kinds of claim">
+    <span class="pl-lead">The four labels</span>
+    {% for k, (nm, desc) in prov_tiers.items() %}
+    <span class="pl-item"><span class="pill pill-{{ k }}">{{ nm }}</span> {{ desc }}</span>
+    {% endfor %}
+  </div>
+
+  {# Grouped by tier rather than alphabetically: the tier is the thing a reader
+     is being taught, and a list sorted by name teaches nothing. #}
+  {% for tier_key, (tier_name, tier_desc) in prov_tiers.items() %}
+  {% set rows = metrics | selectattr('tier', 'equalto', tier_key) | list %}
+  {% if rows %}
+  <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
+    <h3><span class="pill pill-{{ tier_key }}">{{ tier_name }}</span>
+      {{ rows|length }} figure{{ '' if rows|length == 1 else 's' }}</h3>
+    <p class="subdesc">{{ tier_desc|capitalize }}.</p>
+  </div>
+  <dl class="metdefs rv">
+    {% for m in rows %}
+    <div class="metdef" id="metric-{{ m.key }}">
+      <dt>{{ m.label }}</dt>
+      <dd>
+        <p class="md-what">{{ m.what }}</p>
+        <p class="md-how">{{ m.how }}</p>
+      </dd>
+    </div>
+    {% endfor %}
+  </dl>
+  {% endif %}
+  {% endfor %}
+
+  <p class="lv-sys rv" style="margin-top:clamp(26px,3vw,40px)">
+    Nothing on this page is investment advice. The ledger publishes losses at the same
+    size as wins because a record you can only see the good half of is not a record.
+    Definitions are generated from the same list the page stamps its badges from, so a
+    badge and its definition cannot disagree.
   </p>
 </section>
 {% endif %}

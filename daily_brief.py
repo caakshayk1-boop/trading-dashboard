@@ -1065,11 +1065,21 @@ def build_section_brief(slot: str = "midday") -> str:
     its Opportunities block with two LinkedIn links and no jobs, which taught
     the reader to skip it.
 
+    MORNING — before the Indian open, and after the site has rebuilt. What the
+              book wants today, and what the world did overnight.
     MIDDAY  — NSE is live. What the book wants, and what moved to get there.
     EVENING — NSE has closed. What happened, and what is queued for tomorrow.
+
+    Only the title and the evening extras vary by slot. The BODY is the site's
+    own document order in every slot on purpose: the brief is a table of
+    contents for news.askakshay.com, and a brief that reorganised itself per
+    slot would be a second summary competing with the page.
     """
     evening = slot == "evening"
-    title = "🌇 *EVENING — THE DAILY SIGNAL*" if evening else "🌤 *MIDDAY — THE DAILY SIGNAL*"
+    title = {
+        "evening": "🌇 *EVENING — THE DAILY SIGNAL*",
+        "morning": "🌅 *MORNING — THE DAILY SIGNAL*",
+    }.get(slot, "🌤 *MIDDAY — THE DAILY SIGNAL*")
     L = [f"{title}\n{istNow()} IST · news.askakshay.com\n"]
     ticket_blocks: list = []
 
@@ -1259,10 +1269,17 @@ def _build_apex_digest() -> str:
 
 def send_brief(slot: str = "midday"):
     """
-    One of the two daily sends. `slot` is "midday" (12:30 MYT) or "evening"
-    (17:00 MYT), and comes from the cron that fired rather than from the wall
+    One of the two daily sends. `slot` is "morning" (08:00 MYT) or "evening"
+    (17:00 MYT); "midday" is still accepted and is what the morning slot
+    replaced. The slot comes from the cron that fired rather than from the wall
     clock — GitHub delays scheduled runs by hours, and an hour-equality test is
     how the 6 AM brief silently became a CF scan on late days.
+
+    The morning send sits two hours after the newspaper build's own cron rather
+    than immediately after it. Both jobs drift by the same unpredictable amount,
+    and the gap is what stops the brief quoting yesterday's page. If it loses
+    the race anyway the brief degrades rather than breaks: every news.askakshay
+    call falls back to the local yfinance cache.
     """
     log.info("daily_brief: building %s...", slot)
     brief    = build_section_brief(slot)

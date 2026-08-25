@@ -1,4 +1,4 @@
-name: Scheduled Tasks — Two Daily Briefs
+name: Scheduled Tasks — Morning and Evening Briefs
 
 # Replaces Railway bot scheduler (Railway being shut down)
 # IST = UTC+5:30 · MYT = UTC+8:00. Market-hours tasks stay pinned to IST
@@ -12,14 +12,23 @@ name: Scheduled Tasks — Two Daily Briefs
 # with a notification sound. They are removed rather than silenced, because a
 # scan whose output nothing may act on is not worth the API calls.
 #
-# MIDDAY  12:30 MYT — the session is live on NSE (10:00 IST). What the book
-#                     wants today, and what moved to get there.
+# MORNING 08:00 MYT — before the Indian open (05:30 IST), and two hours after
+#                     the newspaper build's own cron. What the book wants today
+#                     and what the world did overnight, read over breakfast.
+#                     This REPLACED the 12:30 MYT midday send rather than being
+#                     added to it: two Telegram alerts a day means two.
 # EVENING 17:00 MYT — NSE has closed (14:30 IST). What actually happened.
+#
+# Why two hours and not ten minutes after the site build: GitHub delays
+# scheduled runs by 1.5-3 hours and both jobs drift independently, so a small
+# gap is a coin flip on whether the brief quotes today's page or yesterday's.
+# The brief falls back to its local yfinance cache if it loses that race, so
+# the failure is a staler markets line rather than a missing brief.
 #
 # Mon-Fri: a market brief on a Sunday is noise. Change `1-5` to `*` for daily.
 on:
   schedule:
-    - cron: '30 4 * * 1-5'    # 12:30 MYT · 10:00 IST — midday brief
+    - cron: '0 0 * * 1-5'     # 08:00 MYT · 05:30 IST — morning brief
     - cron: '0 9 * * 1-5'     # 17:00 MYT · 14:30 IST — evening brief
     - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (data only, no Telegram)
     # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
@@ -36,7 +45,7 @@ on:
         required: false
         default: 'auto'
         type: choice
-        options: [auto, brief_midday, brief_evening, sip_bucket, ai_longterm, health, subscribers]
+        options: [auto, brief_morning, brief_midday, brief_evening, sip_bucket, ai_longterm, health, subscribers]
 
 concurrency:
   group: scheduled-tasks
@@ -89,6 +98,8 @@ jobs:
             TASK="$INPUT"
           else
             case "$SCHEDULE" in
+              "0 0 * * 1-5")    TASK=brief_morning ;;
+              # Kept so a manual dispatch of the old name still works.
               "30 4 * * 1-5")   TASK=brief_midday  ;;
               "0 9 * * 1-5")    TASK=brief_evening ;;
               "45 1 * * *")     TASK=sip_bucket    ;;
@@ -101,6 +112,15 @@ jobs:
           fi
           echo "cron '$SCHEDULE' input '$INPUT' → task $TASK"
           echo "task=$TASK" >> $GITHUB_OUTPUT
+
+      - name: Run morning brief
+        if: steps.task.outputs.task == 'brief_morning'
+        run: |
+          python -c "
+          from daily_brief import send_brief
+          send_brief(slot='morning')
+          print('Morning brief sent.')
+          "
 
       - name: Run midday brief
         if: steps.task.outputs.task == 'brief_midday'

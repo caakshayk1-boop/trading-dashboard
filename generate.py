@@ -494,8 +494,12 @@ def generate() -> None:
     #   rsi < 75         not already extended. Buying the third day of a
     #                    vertical move is how a breakout becomes a top.
     #
-    # NOT filtered on volume: screen.json's `vol_spike` is true for all 750
-    # rows, so it selects nothing. It was checked rather than assumed.
+    # NOT filtered on volume, but not for the reason a previous comment here
+    # claimed. That comment said vol_spike was true for all 750 rows and so
+    # selected nothing; re-checked against the live file, it is a RATIO and it
+    # spans 0.08 to 15.09. The real reason is that adding it would change which
+    # names this published board has been showing, which is a separate decision
+    # from fixing a wrong comment. The ratio now drives its own board below.
     #
     # NOT filtered on delivery percentage: NSE publishes it in the bhavcopy and
     # nothing in this build reads that file, so there is no delivery figure to
@@ -525,6 +529,58 @@ def generate() -> None:
     except Exception as e:                                   # noqa: BLE001
         print(f"[generate] ⚠️  breakout board unavailable: {e}")
         breakouts = []
+
+    # ── Volume board ────────────────────────────────────────────────────────
+    # Price tells you where a name went; volume tells you whether anyone came
+    # with it. A 2x day on a name that moved 8% and a 2x day on a name that
+    # moved -8% are opposite events sharing one number, so the board never
+    # shows the ratio alone — the week's move sits beside it and the reading
+    # is spelled out in words.
+    #
+    # Floor of 5cr turnover: a 12x volume day on a name that trades 40 lakh is
+    # a ratio artefact, not a crowd. Ratio floor of 2.0 matches the scanner's
+    # own surge threshold (scanner.py) rather than inventing a second one.
+    volspikes = []
+    try:
+        _rows = (stock_screen or {}).get("rows") or []
+        _vc = [r for r in _rows
+               if isinstance(r.get("vol_spike"), (int, float))
+               and r["vol_spike"] >= 2.0
+               and (r.get("turnover_cr") or 0) >= 5]
+        _vc = sorted(_vc, key=lambda r: -(r.get("vol_spike") or 0))[:18]
+        for r in _vc:
+            mv = r.get("r1w")
+            # Deliberately three readings, not two. Volume without direction is
+            # the most common case and calling it "accumulation" would be an
+            # invented fact — it gets named as what it is.
+            r = dict(r)
+            if isinstance(mv, (int, float)) and mv >= 3:
+                r["vread"], r["vclass"] = "Bought into", "up"
+            elif isinstance(mv, (int, float)) and mv <= -3:
+                r["vread"], r["vclass"] = "Sold into", "dn"
+            else:
+                r["vread"], r["vclass"] = "Churn, no direction", ""
+            volspikes.append(r)
+        print(f"[generate] Volume board: {len(volspikes)} of {len(_vc)} "
+              f"at 2x+ on 5cr+, from {len(_rows)} screened")
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  volume board unavailable: {e}")
+        volspikes = []
+
+    # The bar column's scale. A FIXED 10x ceiling was the first attempt and it
+    # saturated on the first real build — that day's board ran to 19x, so all
+    # eighteen bars painted full width and the column carried no information.
+    # Scaling to the board's own top makes the bars comparative; the 10x floor
+    # is what stops a quiet day, where the best spike is 2.2x, from drawing
+    # that as a full bar and implying an event that did not happen.
+    volspike_ceiling = 10.0
+    try:
+        if volspikes:
+            volspike_ceiling = max(10.0, round(max(
+                v.get("vol_spike") or 0 for v in volspikes), 1))
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[generate] ⚠️  volume ceiling fell back to 10x: {e}")
+        volspike_ceiling = 10.0
 
     print("[generate] Fetching top 5 picks...")
     try:
@@ -824,6 +880,8 @@ def generate() -> None:
         csp=csp,
         mandate=mandate,
         breakouts=breakouts,
+        volspikes=volspikes,
+        volspike_ceiling=volspike_ceiling,
         buildlog=buildlog,
         jsonld=jsonld,
         build_date=now.strftime("%Y-%m-%d"),

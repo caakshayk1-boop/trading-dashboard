@@ -6394,7 +6394,87 @@ var TV_ALIASES = (function () {
   window.__markNavGroup = markNavGroup;
 
 
+  // ── METRIC PROVENANCE BADGES ────────────────────────────────────────
+  //
+  // Every KPI on the page gets a badge saying which of the four kinds of claim
+  // it is, linked to its definition in How to Read This. Done here rather than
+  // in the template because most KPI tiles are rendered by JS from live
+  // responses — stamping them in Jinja would badge the server-rendered third
+  // of them and silently miss the rest, which is worse than badging none.
+  //
+  // The dictionary comes from a data island the template writes from the same
+  // METRICS list that generates the definitions, so a badge cannot claim a
+  // tier its own definition contradicts.
+  var METRIC_BY_LABEL = null;
+
+  function loadMetrics(){
+    if (METRIC_BY_LABEL) return METRIC_BY_LABEL;
+    METRIC_BY_LABEL = {};
+    var node = document.getElementById('metricProv');
+    if (!node) return METRIC_BY_LABEL;
+    var list;
+    try { list = JSON.parse(node.textContent || '[]'); }
+    catch (e) { console.warn('metric dictionary unparseable', e); return METRIC_BY_LABEL; }
+    (list || []).forEach(function(m){
+      if (m && m.label) METRIC_BY_LABEL[String(m.label).toLowerCase()] = m;
+    });
+    return METRIC_BY_LABEL;
+  }
+
+  // KPI labels carry their own qualifier — "Win rate (5 closed)",
+  // "Deployed (47.0%)", "Unrealised · 17/20 marked". The metric is the part
+  // before the first qualifier; matching on the whole string would match none
+  // of them, and matching on a substring would match the wrong one.
+  function metricKey(text){
+    return String(text || '')
+      .split(/[(\u00b7\u2014\u2013]/)[0]
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  }
+
+  var TIER_WORD = {fact: 'Fact', model: 'Model', result: 'Result', view: 'View'};
+
+  function stampMetricBadges(root){
+    var dict = loadMetrics();
+    // Both KPI shapes: the hero's stat rail and the tile grids everywhere else.
+    var labels = [].slice.call((root || document).querySelectorAll('.kpi .k, .stat .k'));
+    labels.forEach(function(k){
+      if (k.querySelector('.mprov')) return;              // already stamped
+      // Three hero stats carry a hand-written pill from the template. A second
+      // badge beside it would say the same thing twice.
+      if (k.querySelector('.pill')) return;
+      var m = dict[metricKey(k.textContent)];
+      if (!m) return;
+      var a = document.createElement('a');
+      a.className = 'mprov mprov-' + m.tier;
+      a.href = '#metric-' + m.key;
+      a.textContent = TIER_WORD[m.tier] || m.tier;
+      a.title = TIER_WORD[m.tier] + ' — what this number is, and how it is computed';
+      k.appendChild(a);
+    });
+  }
+  window.__stampMetricBadges = stampMetricBadges;
+
   ready(function () {
     try { wireNavGroups(); } catch (e) { console.warn('nav wiring failed', e); }
+    try { stampMetricBadges(document); } catch (e) { console.warn('metric badges failed', e); }
+
+    // Most KPI tiles arrive later, from the wallet and performance responses.
+    // A MutationObserver rather than a timer: the renders are network-bound and
+    // any interval short enough to catch them is an interval that runs forever
+    // for nothing. Coalesced into one pass per frame so a render that appends
+    // twenty tiles costs one stamping pass, not twenty.
+    if (typeof MutationObserver === 'function') {
+      var queued = false;
+      new MutationObserver(function(){
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function(){
+          queued = false;
+          try { stampMetricBadges(document); } catch (e) { /* never break a render */ }
+        });
+      }).observe(document.body, {childList: true, subtree: true});
+    }
   });
 })();

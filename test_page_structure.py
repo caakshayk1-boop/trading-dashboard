@@ -216,10 +216,12 @@ def _():
     for _i, _l, page, group in SECTION_MAP:
         allowed = PILLARS if page == "main" else LIFE
         assert group in allowed, f"{_i} is in {group!r}, which is no pillar"
-    # 33 since 2026-08-26: Build Log added under Ledger. It is generated from
-    # git history and pairs with the Engine Log — what the ledger forced to
-    # change, and what the site shipped.
-    assert len(SECTION_MAP) == 33, f"section count changed: {len(SECTION_MAP)}"
+    # 35 since 2026-08-26. Build Log under Ledger (generated from git history,
+    # pairing with the Engine Log — what the ledger forced to change, and what
+    # the site shipped), then Volume under Markets and How to Read This under
+    # About. The count is asserted so a section cannot be added without someone
+    # deciding which pillar it belongs to.
+    assert len(SECTION_MAP) == 35, f"section count changed: {len(SECTION_MAP)}"
 
 
 # Sections deliberately retired, with the reason and the date. A section may
