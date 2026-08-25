@@ -911,6 +911,18 @@ def generate() -> None:
     # The page script. It is a real file in static/ now rather than a string
     # inside newspaper.py — see the header of static/app.js for why. Copied
     # rather than generated, so what ships is byte-identical to what CI linted.
+    # The v2 shell and renderer. Copied, not generated: the client-rendered
+    # site reads the same /api and docs/*.json the old template did, so there
+    # is nothing for Jinja to do to it. Shipping them from static/ means what
+    # reaches production is byte-identical to what CI linted.
+    for _v2 in ("v2.html", "v2.js"):
+        _src = pathlib.Path(__file__).parent / "static" / _v2
+        if _src.exists():
+            (out_dir / _v2).write_text(_src.read_text(encoding="utf-8"), encoding="utf-8")
+            print(f"[generate] ✅ {_v2} ({_src.stat().st_size // 1024}KB)")
+        else:
+            print(f"[generate] ❌ static/{_v2} MISSING — /v2 will 404")
+
     _appjs = pathlib.Path(__file__).parent / "static" / "app.js"
     if _appjs.exists():
         (out_dir / "app.js").write_text(_appjs.read_text(encoding="utf-8"), encoding="utf-8")
@@ -925,6 +937,15 @@ def generate() -> None:
     (out_dir / "alerts.json").write_text(
         json.dumps(alerts, default=str, indent=2), encoding="utf-8"
     )
+    # mandate.json — the Rs 1 crore order book, for the client-rendered site.
+    # FOUR places or it 404s: written here, committed by newspaper.yml's git
+    # add, named in .vercelignore, and copied in vercel-news/build.js. Three of
+    # the four is the documented failure mode — today.json had two and served
+    # nothing for days.
+    (out_dir / "mandate.json").write_text(
+        json.dumps(mandate or {"admitted": [], "unavailable": True}, default=str),
+        encoding="utf-8")
+    print(f"[generate] ✅ mandate.json ({len((mandate or {}).get('admitted', []))} tickets)")
     # data-health.json — the machine-readable half of the honesty layer, and
     # the one artefact that must publish even when everything else is broken.
     # Small enough to indent; it is meant to be read by a human with curl when

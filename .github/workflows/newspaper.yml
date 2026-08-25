@@ -154,7 +154,8 @@ jobs:
           # F-Score column was populated in the server-rendered top 25 and
           # empty for all 750 rows the moment the table lazy-loaded.
           git add docs/index.html docs/desk.html docs/alerts.json docs/edition.json \
-                  docs/today.json docs/app.js docs/data-health.json \
+                  docs/today.json docs/mandate.json docs/app.js docs/data-health.json \
+                  docs/v2.html docs/v2.js \
                   docs/screen.json docs/screen-detail.json \
                   docs/robots.txt docs/sitemap.xml docs/manifest.webmanifest \
                   docs/icon.svg docs/og.png docs/fonts \

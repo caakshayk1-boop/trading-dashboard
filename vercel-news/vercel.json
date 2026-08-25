@@ -97,6 +97,10 @@
   ],
   "rewrites": [
     {
+      "source": "/v2",
+      "destination": "/v2.html"
+    },
+    {
       "source": "/day/:date",
       "destination": "/index.html"
     },

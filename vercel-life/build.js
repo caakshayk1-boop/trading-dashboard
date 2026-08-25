@@ -39,7 +39,7 @@ if (existsSync(source)) {
   // still 404'd for days. If a file is missing in production and the build log
   // says it was written, this list is why.
   for (const f of ["app.js", "icon.svg", "og.png", "manifest.webmanifest",
-                   "robots.txt", "today.json", "edition.json", "jobs.json"]) {
+                   "robots.txt", "today.json", "edition.json", "jobs.json", "mandate.json"]) {
     const src = join(here, "..", "docs", f);
     if (existsSync(src)) copyFileSync(src, join(publicDir, f));
   }
