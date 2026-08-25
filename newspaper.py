@@ -2220,7 +2220,16 @@ PAGE_META = {
                  "games. Rebuilt daily alongside the ledger."),
         "path": "/desk",
         "other_label": "Signal · Research · Desk",
-        "other_path": "/",
+        # Absolute, not "/". This page is served from TWO origins now — as
+        # /desk on news.askakshay.com and as the index of life.askakshay.com —
+        # and a relative "/" resolves to the Life site's own front page there,
+        # so the link back to the ledger pointed at itself. The absolute URL is
+        # correct from both origins.
+        #
+        # The main page's link to Life stays relative at /desk until
+        # life.askakshay.com has DNS; flipping it before then would publish a
+        # dead link on the busier of the two sites.
+        "other_path": "https://news.askakshay.com",
         "other_hint": "markets, findings, the ledger and what it is worth",
     },
 }
