@@ -1929,6 +1929,11 @@ var TV_ALIASES = (function () {
       // fresh quotes land, so open rows are marked at the price on the rail
       // rather than at whatever existed when the wallet happened to paint.
       window.__walletPayload = j;
+
+      // The headline used to be a hardcoded ₹50,00,000 in the template while the
+      // allocator ran at a crore. One source now: whatever the API says.
+      var capEl = el('pwCapital');
+      if (capEl && typeof j.capital === 'number') capEl.textContent = rupees(j.capital);
       window.__onLedgerPx = function(){
         if (window.__walletPayload) renderPaperWallet(window.__walletPayload);
       };
@@ -1971,7 +1976,21 @@ var TV_ALIASES = (function () {
           '<span class="mono-dim" style="font-size:12px">' + rupees(c.deployed_amount) + ' / ' + rupees(c.cap_amount) +
           ' &middot; ' + fmt(c.deployed_pct, 1) + '% of wallet (cap ' + fmt(c.cap_pct * 100, 0) + '%)</span>' +
           '</div>';
-      }).join('');
+      }).join('') +
+      // The tier bars sum to what is DEPLOYED, not to the wallet, so on their own
+      // they read as money gone missing. This row closes the book: tiers + cash
+      // is the whole crore, and the note says why the caps overlap.
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">' +
+        '<span class="rk rk-idle" style="min-width:130px;text-align:center">Uncommitted</span>' +
+        '<span class="mono-dim" style="font-size:12px">' + rupees(j.wallet.cash_amount) +
+        ' &middot; ' + fmt(j.wallet.cash_pct, 1) + '% of wallet &mdash; cash, waiting on a qualifying signal</span>' +
+      '</div>' +
+      '<p class="fnote" style="margin-top:6px">Tier caps add to more than the wallet on purpose ' +
+        '(' + WALLET_TIER_ORDER.map(function(k){ return cats[k] ? fmt(cats[k].cap_pct*100,0)+'%' : ''; })
+              .filter(Boolean).join(' + ') +
+        '). No tier is required to fill; the binding limit is the global ' +
+        fmt(j.global_cap_pct * 100, 0) + '% (' + rupees(j.global_cap_amount) + '), so deployed + cash ' +
+        'is always the full ' + rupees(j.capital) + '.</p>';
 
       // WHY each tier exists, and why an engine sits in one rather than another.
       // The rule table below shows WHAT the caps are; without this a reader can
@@ -6318,6 +6337,24 @@ var TV_ALIASES = (function () {
       });
     }
 
+    // The menu is position:fixed, because its ancestor .nav-in is a horizontal
+    // scroll container and would otherwise clip it out of existence. Fixed
+    // means it no longer inherits the button's position, so place it by hand.
+    var openPair = null;
+    function place(btn, menu){
+      var r = btn.getBoundingClientRect();
+      menu.style.top = Math.round(r.bottom + 4) + 'px';
+      if (window.innerWidth <= 760){
+        menu.style.left = '8px'; menu.style.right = '8px'; menu.style.width = 'auto';
+      } else {
+        menu.style.right = 'auto'; menu.style.width = '';
+        // Measured after unhiding, so a menu near the right edge is pulled back
+        // on screen rather than opening off it.
+        var w = menu.offsetWidth || 230;
+        menu.style.left = Math.max(8, Math.round(Math.min(r.left, window.innerWidth - w - 12))) + 'px';
+      }
+    }
+
     groups.forEach(function(g){
       var btn = g.querySelector('.navgrp-btn'), menu = g.querySelector('.navgrp-menu');
       if (!btn || !menu) return;
@@ -6327,6 +6364,8 @@ var TV_ALIASES = (function () {
         closeAll(g);
         btn.setAttribute('aria-expanded', open ? 'false' : 'true');
         menu.hidden = open;
+        if (open) { openPair = null; }
+        else { openPair = [btn, menu]; place(btn, menu); }
       });
       // Following a link should put the menu away — otherwise it hangs over
       // the section you just jumped to.
@@ -6335,10 +6374,13 @@ var TV_ALIASES = (function () {
       });
     });
 
-    document.addEventListener('click', function(){ closeAll(null); });
+    document.addEventListener('click', function(){ openPair = null; closeAll(null); });
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape') closeAll(null);
+      if (e.key === 'Escape') { openPair = null; closeAll(null); }
     });
+    // A fixed menu does not travel with its button, so follow it.
+    window.addEventListener('resize', function(){ if (openPair) place(openPair[0], openPair[1]); });
+    window.addEventListener('scroll', function(){ if (openPair) place(openPair[0], openPair[1]); }, {passive:true});
   }
 
   // The scroll spy marks a LINK; with the links hidden inside menus it has to
