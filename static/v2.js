@@ -433,48 +433,73 @@ section({
   }
 });
 
-// 04 · FINDINGS — the open-setup context the daily build prices
+// 04 · FINDINGS — where open setups sit against their own levels
 section({
   id: "findings", nav: "Findings", title: "Findings",
-  needs: ["today"],
-  lede: "Where open setups actually sit against their levels right now. A setup that has drifted past its entry is a different proposition from one still waiting.",
+  needs: ["today", "signals"],
+  lede: "Open setups joined to today's price. A setup that has already run past its entry is a different proposition from one still waiting — and the sector column is where crowding shows up.",
   filters: [
-    { label: "Position", accent: true, options: [{ label: "All", value: "all" }, { label: "Above entry", value: "above" }, { label: "Below entry", value: "below" }] },
-    { label: "Sort", options: [{ label: "Distance", value: "dist" }, { label: "Symbol", value: "sym" }] }
+    { label: "Position", accent: true, options: [{ label: "All", value: "all" }, { label: "Past entry", value: "above" }, { label: "Still below", value: "below" }] },
+    { label: "Sort", options: [{ label: "Distance", value: "dist" }, { label: "Sector", value: "sec" }] }
   ],
   render: function (host) {
-    var f = this.filters, ctx = DATA.today.open_context || {};
-    var rows = Object.keys(ctx).map(function (k) { var v = ctx[k] || {}; v._sym = k; return v; })
-      .filter(function (v) { return num(v.last) != null && num(v.entry) != null; })
-      .map(function (v) { v._d = (num(v.last) - num(v.entry)) / num(v.entry) * 100; return v; })
-      .filter(function (v) {
-        if (f[0].value === "above") return v._d > 0;
-        if (f[0].value === "below") return v._d <= 0;
-        return true;
-      });
-    rows.sort(f[1].value === "sym"
-      ? function (a, b) { return a._sym.localeCompare(b._sym); }
-      : function (a, b) { return Math.abs(b._d) - Math.abs(a._d); });
-    setCount(this, rows.length + " priced");
-    if (!rows.length) { host.appendChild(el("p", "empty", "No open setup carries a live price on this build.")); return; }
+    var f = this.filters;
+    // open_context is {symbol: {price, sector}} — prices only. The levels live
+    // on the signals feed, so the two are joined here rather than assumed to
+    // be on one payload.
+    var ctx = DATA.today.open_context || {};
+    var open = (DATA.signals.signals || []).filter(function (s) { return txt(s.status).toUpperCase() === "OPEN"; });
+    var rows = open.map(function (s) {
+      var c = ctx[txt(s.symbol).toUpperCase()] || ctx[txt(s.symbol)];
+      if (!c || num(c.price) == null || num(s.entry) == null) return null;
+      return { s: s, price: num(c.price), sector: txt(c.sector || "—"),
+               d: (num(c.price) - num(s.entry)) / num(s.entry) * 100 };
+    }).filter(Boolean).filter(function (r) {
+      if (f[0].value === "above") return r.d > 0;
+      if (f[0].value === "below") return r.d <= 0;
+      return true;
+    });
+    rows.sort(f[1].value === "sec"
+      ? function (a, b) { return a.sector.localeCompare(b.sector) || Math.abs(b.d) - Math.abs(a.d); }
+      : function (a, b) { return Math.abs(b.d) - Math.abs(a.d); });
+    setCount(this, rows.length + " priced of " + open.length + " open");
+    if (!rows.length) {
+      host.appendChild(el("p", "empty", "No open setup carries a live price on this build. " + open.length + " setups are open; the price context covers " + Object.keys(ctx).length + " symbols, and none of them overlap today."));
+      return;
+    }
+    // Sector concentration — the finding the table alone will not show you.
+    var bySec = {};
+    rows.forEach(function (r) { bySec[r.sector] = (bySec[r.sector] || 0) + 1; });
+    var secs = Object.keys(bySec).map(function (k) {
+      return { name: k, value: bySec[k], display: String(bySec[k]), color: "var(--blue)" };
+    }).sort(function (a, b) { return b.value - a.value; });
+    if (secs.length > 1) {
+      var panel = el("div", "panel"); panel.style.marginBottom = "20px";
+      panel.appendChild(el("h3", null, "Where the open book is crowded"));
+      panel.appendChild(el("p", "sub", "Open setups by sector. Several names in one sector is one bet wearing several tickers."));
+      panel.appendChild(barRows(secs, true));
+      host.appendChild(panel);
+    }
     var list = el("div", "rows");
-    rows.slice(0, 30).forEach(function (v) {
+    rows.slice(0, 30).forEach(function (r) {
+      var s = r.s, cur = s.currency || "₹";
       list.appendChild(makeRow({
         main: function (m) {
-          m.appendChild(el("span", "rsym", v._sym));
-          m.appendChild(el("span", "rmeta", "entry " + money(v.entry, v.currency)));
+          m.appendChild(el("span", "rsym", txt(s.symbol)));
+          m.appendChild(el("span", "rtag", r.sector.slice(0, 18)));
+          m.appendChild(el("span", "rmeta", txt(s.signal_type) + " · " + txt(s.date)));
         },
         nums: function (x) {
-          x.appendChild(el("span", "rnum", money(v.last, v.currency)));
-          x.appendChild(el("span", "rnum " + cls(v._d), sgn(v._d, 1, "%") + " vs entry"));
+          x.appendChild(el("span", "rnum", money(r.price, cur)));
+          x.appendChild(el("span", "rnum " + cls(r.d), sgn(r.d, 1, "%") + " vs entry"));
         },
         detail: function (d) {
-          d.appendChild(cells([["Last", money(v.last, v.currency)], ["Entry", money(v.entry, v.currency)],
-            ["Stop", money(v.sl, v.currency)], ["Target", money(v.target1 || v.target, v.currency)],
-            ["Distance", sgn(v._d, 2, "%")], ["As of", txt(v.as_of || DATA.today.date)]]));
-          d.appendChild(el("p", "dnote", v._d > 0
-            ? "Price has moved past the entry. Chasing it changes the reward/risk the signal was scored on."
-            : "Still below entry. The setup has not triggered."));
+          d.appendChild(cells([["Last", money(r.price, cur)], ["Entry", money(s.entry, cur)],
+            ["Stop", money(s.sl, cur)], ["Target 1", money(s.target1, cur)],
+            ["Distance", sgn(r.d, 2, "%")], ["Sector", r.sector]]));
+          d.appendChild(el("p", "dnote", r.d > 0
+            ? "Price has moved past the entry. Taking it now changes the reward/risk the signal was scored on — the stop is unchanged but the distance to it is not."
+            : "Still below entry. The setup has not triggered and carries no capital."));
         }
       }));
     });
@@ -626,6 +651,61 @@ section({
   }
 });
 
+// 08 · FUND SCREEN
+section({
+  id: "funds", nav: "Fund Screen", title: "Fund Screen",
+  needs: ["sip"],
+  lede: "The mutual-fund screen behind the SIP buckets. Direct plans only — the expense ratio is not in any free feed, so plan type is the one cost lever that can be verified.",
+  filters: [
+    { label: "Bucket", accent: true, options: [{ label: "All", value: "all" }, { label: "Top ranked", value: "top" }] },
+    { label: "Sort", options: [{ label: "Rank", value: "rank" }, { label: "Name", value: "name" }] }
+  ],
+  render: function (host) {
+    var f = this.filters, S = DATA.sip || {};
+    var fs = S.fund_screen || {};
+    var cats = Array.isArray(fs) ? fs : (fs.categories || fs.rows || []);
+    if (!cats.length) {
+      setCount(this, "unavailable");
+      host.appendChild(el("p", "empty", "The weekly fund screen has not populated on this build. It runs on its own clock, and an empty cache is shown as empty rather than as zero funds."));
+      return;
+    }
+    var rows = [];
+    cats.forEach(function (c) {
+      (c.funds || c.rows || []).forEach(function (fn, i) {
+        if (f[0].value === "top" && i > 2) return;
+        rows.push({ cat: txt(c.name || c.category), fund: fn, rank: i + 1 });
+      });
+    });
+    rows.sort(f[1].value === "name"
+      ? function (a, b) { return txt(a.fund.name).localeCompare(txt(b.fund.name)); }
+      : function (a, b) { return a.rank - b.rank; });
+    setCount(this, rows.length + " funds · " + cats.length + " categories");
+    var list = el("div", "rows");
+    rows.slice(0, 30).forEach(function (r) {
+      var fn = r.fund;
+      list.appendChild(makeRow({
+        main: function (m) {
+          m.appendChild(el("span", "rtag", String(r.rank).padStart(2, "0")));
+          m.appendChild(el("span", "rsym", clip(fn.name || fn.scheme, 52)));
+          m.appendChild(el("span", "rmeta", r.cat));
+        },
+        nums: function (x) {
+          x.appendChild(el("span", "rnum", fn.nav == null ? "—" : money(fn.nav)));
+          x.appendChild(el("span", "rnum " + cls(fn.ret_1y != null ? fn.ret_1y : fn.cagr),
+            sgn(fn.ret_1y != null ? fn.ret_1y : fn.cagr, 1, "%")));
+        },
+        detail: function (d) {
+          d.appendChild(cells([["NAV", fn.nav == null ? "—" : money(fn.nav)],
+            ["1Y", sgn(fn.ret_1y, 1, "%")], ["3Y", sgn(fn.ret_3y, 1, "%")],
+            ["5Y", sgn(fn.ret_5y, 1, "%")], ["Category", r.cat], ["Rank", "#" + r.rank]]));
+          d.appendChild(el("p", "dnote", "Expense ratio is not published in the free AMFI feed, so it cannot be compared here. Direct plans are chosen for that reason — the cost difference is structural rather than measured."));
+        }
+      }));
+    });
+    host.appendChild(list);
+  }
+});
+
 // 08 · SIP BUCKETS  ·  09 · SWP — both from /api/sip
 section({
   id: "sip", nav: "SIP", title: "SIP Buckets",
@@ -662,6 +742,37 @@ section({
     panel.appendChild(el("p", "sub", "Step-up SIP, compounded monthly. The bar is the corpus, not the gain."));
     panel.appendChild(barRows(items, true));
     host.appendChild(panel);
+  }
+});
+
+// 10 · SWP — the other end of the same plan
+section({
+  id: "swp", nav: "SWP", title: "SWP",
+  needs: ["sip"],
+  lede: "What the corpus pays out if you stop adding and start drawing. Arithmetic on the SIP projections — a withdrawal rate, not a promise.",
+  filters: [
+    { label: "Draw", accent: true, options: [{ label: "4%", value: 4 }, { label: "5%", value: 5 }, { label: "6%", value: 6 }] },
+    { label: "Return", options: [{ label: "12%", value: "r12" }, { label: "14%", value: "r14" }, { label: "16%", value: "r16" }] }
+  ],
+  render: function (host) {
+    var f = this.filters, S = DATA.sip || {}, proj = (S.projections || []).slice();
+    if (!proj.length) { setCount(this, "unavailable"); host.appendChild(el("p", "empty", "No projection to draw against.")); return; }
+    var rate = f[0].value / 100, key = f[1].value;
+    setCount(this, f[0].value + "% of corpus");
+    host.appendChild(keyGrid(proj.slice(0, 4).map(function (p) {
+      var corpus = num(p[key]) || 0;
+      return [p.years + " years", money(Math.round(corpus * rate / 12)) + "/mo",
+              "on " + money(corpus) + " at " + key.replace("r", "") + "%"];
+    })));
+    var panel = el("div", "panel"); panel.style.marginTop = "16px";
+    panel.appendChild(el("h3", null, "Monthly draw by horizon"));
+    panel.appendChild(el("p", "sub", "A " + f[0].value + "% annual withdrawal, paid monthly. The bar is the payment, not the corpus."));
+    panel.appendChild(barRows(proj.map(function (p) {
+      var v = Math.round((num(p[key]) || 0) * rate / 12);
+      return { name: p.years + "y", value: v, display: money(v), color: "var(--blue)" };
+    }), true));
+    host.appendChild(panel);
+    host.appendChild(el("p", "lede", "A withdrawal rate is a rule of thumb, not a guarantee. It assumes the corpus keeps earning while it is being drawn down, and it says nothing about the order returns arrive in — which is the risk that actually breaks retirement plans."));
   }
 });
 
@@ -712,6 +823,67 @@ section({
           d.appendChild(cells([["Entry", money(p.entry_price, p.currency)], ["Last", money(p.current_price, p.currency)],
             ["Stop", money(p.stop, p.currency)], ["Qty", txt(p.qty)],
             ["P&L", sgn(p.pnl_pct, 2, "%")], ["Opened", txt(p.opened_at)]]));
+        }
+      }));
+    });
+    host.appendChild(list);
+  }
+});
+
+// 12 · PAPER WALLET — the distinction the whole ledger rests on
+section({
+  id: "paperwallet", nav: "Paper Wallet", title: "Paper Wallet",
+  needs: ["mandate", "tracker"],
+  lede: "What the rules would have placed, against what was actually placed. The gap between these two numbers is the honest state of this operation.",
+  filters: [
+    { label: "Show", accent: true, options: [{ label: "The gap", value: "gap" }, { label: "Paper book", value: "book" }] },
+    { label: "Detail", options: [{ label: "Summary", value: "sum" }, { label: "Per ticket", value: "each" }] }
+  ],
+  render: function (host) {
+    var f = this.filters, M = DATA.mandate || {}, st = M.state || {}, T = DATA.tracker || {};
+    var real = T.count || 0, paper = (M.admitted || []).length;
+    if (f[0].value === "gap") {
+      setCount(this, paper + " paper · " + real + " real");
+      host.appendChild(keyGrid([
+        ["Paper tickets", String(paper), "sized by the rulebook"],
+        ["Real positions", String(real), "confirmed by hand"],
+        ["Paper notional", money(st.deployed), "if every ticket were placed"],
+        ["Real capital", real ? "—" : "₹0", real ? "see Portfolio" : "nothing committed"]
+      ]));
+      host.appendChild(el("p", "lede", "Nothing in this repository can place an order — the broker link is read-only. A signal becomes a position only when the order is placed manually and confirmed with /confirm on Telegram. Across the whole feed that has never happened, which is why real capital reads zero and why this section exists rather than being quietly folded into Portfolio."));
+      return;
+    }
+    setCount(this, paper + " tickets");
+    if (!paper) { host.appendChild(el("p", "empty", "The rulebook placed nothing today.")); return; }
+    if (f[1].value === "sum") {
+      var byH = M.by_horizon || {};
+      var items = Object.keys(byH).map(function (k) {
+        return { name: k.toLowerCase(), value: byH[k].notional, display: money(byH[k].notional), color: "var(--coral)" };
+      });
+      var panel = el("div", "panel");
+      panel.appendChild(el("h3", null, "Paper notional by horizon"));
+      panel.appendChild(el("p", "sub", "Where the rulebook would put the money, if it could."));
+      panel.appendChild(items.length ? barRows(items, true) : el("p", "empty", "No horizon breakdown."));
+      host.appendChild(panel);
+      return;
+    }
+    var list = el("div", "rows");
+    (M.admitted || []).forEach(function (t) {
+      list.appendChild(makeRow({
+        main: function (m) {
+          m.appendChild(el("span", "rsym", t.symbol));
+          m.appendChild(el("span", "rtag", "paper"));
+          m.appendChild(el("span", "rmeta", t.horizon_label + " · " + t.engine));
+        },
+        nums: function (x) {
+          x.appendChild(el("span", "rnum", money(t.notional)));
+          x.appendChild(el("span", "rnum warn", "unconfirmed"));
+        },
+        detail: function (d) {
+          d.appendChild(cells([["Would buy", t.qty + " sh"], ["At", money(t.entry)],
+            ["Notional", money(t.notional)], ["Risk", money(t.risk_amount)],
+            ["Status", "paper only"], ["To confirm", "/confirm " + t.symbol]]));
+          d.appendChild(el("p", "dnote", "This ticket carries no capital. It is scored so the engine behind it accumulates a record, and it is excluded from deployment, heat and P&L until confirmed."));
         }
       }));
     });
@@ -957,6 +1129,7 @@ SECS.forEach(build);
 [["markets", "/api/markets"], ["stats", "/api/stats"], ["health", "/api/health"],
  ["world", "/api/world"], ["news", "/api/news"], ["sip", "/api/sip"],
  ["tracker", "/api/tracker"], ["today", "/today.json"], ["mandate", "/mandate.json"],
+ ["signals", "/api/signals?limit=300"],
  ["dhealth", "/data-health.json"], ["alerts", "/alerts.json"]
 ].forEach(function (p) { load(p[0], p[1]); });
 
