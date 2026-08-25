@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T15:47:00",
+ "generated_at": "2026-08-25T17:59:41",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -101,13 +101,7 @@
    "issue_size_shares": 13124929.0,
    "issue_size_cr": 1757.0,
    "subscription_x": 1.3419158305542072,
-   "subscription_by_category": {
-    "QIB": 0.57,
-    "HNI": 3.17,
-    "Retail": 2.23,
-    "Employee": 3.22,
-    "Total": 1.96
-   },
+   "subscription_by_category": null,
    "lot_size": 15.0,
    "min_investment": 14820.0,
    "fresh_issue_cr": 150.0,
@@ -115,7 +109,7 @@
    "face_value": 2.0,
    "anchor_cr": 526.2,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b9352",
+   "gmp_text": "\u20b9352 (35.63%)",
    "revenue_cr": 872.26,
    "revenue_growth_pct": 15.0,
    "pat_cr": 109.9,
@@ -155,12 +149,9 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1302/symbiotec-pharmalab-ltd",
-   "allotment_date": "Aug 28, 2026",
-   "category_source": "ipopremium.in",
    "reads_for": null,
    "reads_against": [
-    "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr).",
-    "Institutions are taking it at 0.57x while retail bids 2.23x \u2014 the money with research access is the money staying out."
+    "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr)."
    ]
   },
   {
@@ -179,15 +170,20 @@
    "issue_size_shares": 29583600.0,
    "issue_size_cr": 582.8,
    "subscription_x": 1.6276315255749807,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 0.47,
+    "HNI": 2.58,
+    "Retail": 3.57,
+    "Total": 2.48
+   },
    "lot_size": 100.0,
    "min_investment": 13800.0,
    "fresh_issue_cr": 398.8,
    "ofs_cr": 184.0,
    "face_value": 10.0,
    "anchor_cr": 174.54,
-   "listing_date": null,
-   "gmp_text": "\u20b929 (21.01%)",
+   "listing_date": "Sep 1, 2026",
+   "gmp_text": "\u20b929",
    "revenue_cr": 2839.67,
    "revenue_growth_pct": 25.0,
    "pat_cr": 63.52,
@@ -212,7 +208,6 @@
      "Window": "15/15"
     },
     "not_measured": [
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -228,12 +223,15 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/skyways-air-ipo/2510/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1164/skyways-air-services-ltd",
+   "allotment_date": "Aug 28, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 25% year on year.",
     "Profit grew faster than revenue (32% against 25%), so margins widened rather than bought growth."
    ],
    "reads_against": [
-    "Debt to equity of 1.88 \u2014 leverage magnifies both directions from here."
+    "Debt to equity of 1.88 \u2014 leverage magnifies both directions from here.",
+    "Institutions are taking it at 0.47x while retail bids 3.57x \u2014 the money with research access is the money staying out."
    ]
   },
   {
@@ -422,7 +420,7 @@
    "face_value": 5.0,
    "anchor_cr": null,
    "listing_date": "Sep 3, 2026",
-   "gmp_text": "\u20b949 (59.76%)",
+   "gmp_text": "\u20b946 (56.10%)",
    "revenue_cr": 2089.31,
    "revenue_growth_pct": 7.0,
    "pat_cr": 160.0,
@@ -591,7 +589,7 @@
    "ofs_cr": 100.0,
    "face_value": 5.0,
    "anchor_cr": 165.0,
-   "gmp_text": "\u20b919",
+   "gmp_text": "\u20b918",
    "revenue_cr": 157.8,
    "revenue_growth_pct": 28.0,
    "pat_cr": 81.96,
@@ -672,7 +670,7 @@
    "high": 114.88,
    "low": 51.9,
    "months_listed": null,
-   "sessions": 244,
+   "sessions": 245,
    "measured_by": "yahoo"
   },
   {
@@ -725,7 +723,7 @@
    "high": 381.47,
    "low": 210.15,
    "months_listed": null,
-   "sessions": 229,
+   "sessions": 230,
    "measured_by": "yahoo"
   },
   {
@@ -761,7 +759,7 @@
    "high": 232.28,
    "low": 89.8,
    "months_listed": null,
-   "sessions": 226,
+   "sessions": 227,
    "measured_by": "yahoo"
   },
   {
@@ -779,7 +777,7 @@
    "high": 298.28,
    "low": 153.11,
    "months_listed": null,
-   "sessions": 224,
+   "sessions": 225,
    "measured_by": "yahoo"
   },
   {
@@ -831,7 +829,7 @@
    "high": 338.4,
    "low": 142.55,
    "months_listed": null,
-   "sessions": 224,
+   "sessions": 225,
    "measured_by": "yahoo"
   },
   {
@@ -867,7 +865,7 @@
    "high": 767.12,
    "low": 414.41,
    "months_listed": null,
-   "sessions": 225,
+   "sessions": 226,
    "measured_by": "yahoo"
   },
   {
@@ -920,7 +918,7 @@
    "high": 531.95,
    "low": 319.65,
    "months_listed": null,
-   "sessions": 222,
+   "sessions": 223,
    "measured_by": "yahoo"
   },
   {
@@ -956,7 +954,7 @@
    "high": 83.71,
    "low": 38.14,
    "months_listed": null,
-   "sessions": 221,
+   "sessions": 222,
    "measured_by": "yahoo"
   },
   {
@@ -1042,7 +1040,7 @@
    "high": 1803.6,
    "low": 1061.1,
    "months_listed": null,
-   "sessions": 208,
+   "sessions": 209,
    "measured_by": "yahoo"
   },
   {
@@ -1077,7 +1075,7 @@
    "high": 574.6,
    "low": 420.55,
    "months_listed": null,
-   "sessions": 200,
+   "sessions": 201,
    "measured_by": "yahoo"
   },
   {
@@ -1352,7 +1350,7 @@
    "high": 751.3,
    "low": 449.15,
    "months_listed": null,
-   "sessions": 171,
+   "sessions": 172,
    "measured_by": "yahoo"
   },
   {
@@ -1422,7 +1420,7 @@
    "high": 157.25,
    "low": 99.36,
    "months_listed": null,
-   "sessions": 164,
+   "sessions": 165,
    "measured_by": "yahoo"
   },
   {
@@ -1458,7 +1456,7 @@
    "high": 674.7,
    "low": 316.7,
    "months_listed": null,
-   "sessions": 148,
+   "sessions": 149,
    "measured_by": "yahoo"
   },
   {
@@ -1494,7 +1492,7 @@
    "high": 1101.55,
    "low": 751.5,
    "months_listed": null,
-   "sessions": 131,
+   "sessions": 132,
    "measured_by": "yahoo"
   },
   {
@@ -1548,7 +1546,7 @@
    "high": 620.75,
    "low": 331.8,
    "months_listed": null,
-   "sessions": 120,
+   "sessions": 121,
    "measured_by": "yahoo"
   },
   {
@@ -1620,7 +1618,7 @@
    "high": 376.7,
    "low": 257.45,
    "months_listed": null,
-   "sessions": 107,
+   "sessions": 108,
    "measured_by": "yahoo"
   },
   {
@@ -1638,7 +1636,7 @@
    "high": 631.4,
    "low": 337.9,
    "months_listed": null,
-   "sessions": 106,
+   "sessions": 107,
    "measured_by": "yahoo"
   },
   {
@@ -1692,7 +1690,7 @@
    "high": 623.8,
    "low": 405.7,
    "months_listed": null,
-   "sessions": 100,
+   "sessions": 101,
    "measured_by": "yahoo"
   },
   {
@@ -1764,7 +1762,7 @@
    "high": 150.15,
    "low": 111.84,
    "months_listed": null,
-   "sessions": 41,
+   "sessions": 42,
    "measured_by": "yahoo"
   },
   {
@@ -1800,7 +1798,7 @@
    "high": 215.32,
    "low": 182.98,
    "months_listed": null,
-   "sessions": 34,
+   "sessions": 35,
    "measured_by": "yahoo"
   },
   {
@@ -1818,7 +1816,7 @@
    "high": 650.5,
    "low": 565.8,
    "months_listed": null,
-   "sessions": 29,
+   "sessions": 30,
    "measured_by": "yahoo"
   },
   {
@@ -1836,7 +1834,7 @@
    "high": 337.55,
    "low": 262.42,
    "months_listed": null,
-   "sessions": 28,
+   "sessions": 29,
    "measured_by": "yahoo"
   },
   {
@@ -1872,7 +1870,7 @@
    "high": 599.45,
    "low": 506.95,
    "months_listed": null,
-   "sessions": 22,
+   "sessions": 23,
    "measured_by": "yahoo"
   },
   {
@@ -1908,7 +1906,7 @@
    "high": 587.0,
    "low": 494.6,
    "months_listed": null,
-   "sessions": 18,
+   "sessions": 19,
    "measured_by": "yahoo"
   },
   {
@@ -1926,7 +1924,7 @@
    "high": 762.8,
    "low": 650.5,
    "months_listed": null,
-   "sessions": 14,
+   "sessions": 15,
    "measured_by": "yahoo"
   },
   {
@@ -1994,11 +1992,11 @@
    "first_close": 311.15,
    "last_close": 341.42,
    "since_listing_pct": 9.7,
-   "from_high_pct": 0.0,
-   "high": 341.42,
+   "from_high_pct": -0.1,
+   "high": 341.77,
    "low": 299.94,
    "months_listed": null,
-   "sessions": 7,
+   "sessions": 8,
    "measured_by": "yahoo"
   },
   {
