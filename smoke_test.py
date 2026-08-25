@@ -97,7 +97,6 @@ def main() -> int:
         print(f"    nav == dom      {r['navMatchesDom']}")
         print(f"    ticker segments {r['tickerSegments']}")
         print(f"    ticker items    {r['tickerItems']}")
-        print(f"    map pixels      {r['mapPainted']}")
         print(f"    dom nodes       {r['domNodes']}")
         spy = r.get("spy") or {}
         print(f"    scroll spy      {spy.get('checked', 0)} checked, "
@@ -136,8 +135,15 @@ def main() -> int:
         if not PRE and path == "/" and r["tickerSegments"] < 8:
             fails.append(f"/: ticker has {r['tickerSegments']} segments, expected 8+ "
                          "(a fallback to /api/markets looks like this)")
-        if not PRE and path == "/" and r["mapPainted"] < 10000:
-            fails.append(f"/: world map painted {r['mapPainted']} px, expected 10000+")
+        # The world-map assertion is retired with the map itself (2026-08-26).
+        # It existed to catch a canvas that silently painted nothing — a real
+        # failure while the map was on the page. The map is gone: it cost a
+        # canvas, an SVG overlay, two night layers and a sweep animation to say
+        # roughly where the day's stories happened, when the region is the
+        # first word of every row in the list underneath it.
+        #
+        # Deleted rather than loosened to `>= 0`. A check that cannot fail is
+        # worse than no check: it reads as coverage and is noise.
 
         # The stock screen is a CONDITIONAL section — it is dropped whenever the
         # weekly cache is empty, exactly like #funds — so its absence is not a
