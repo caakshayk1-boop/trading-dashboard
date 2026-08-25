@@ -1,0 +1,6 @@
+.vercel
+node_modules
+# build.js output — regenerated from docs/desk.html on every deploy.
+# Committing it would put a 440KB copy of the daily shell in git twice a day
+# and let the two diverge; docs/desk.html is the one source.
+public
