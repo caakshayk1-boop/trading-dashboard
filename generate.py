@@ -693,12 +693,14 @@ def generate() -> None:
            # The browser only ever talks to this origin's /api. gold-api and
            # Yahoo are called server-side.
            "connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; "
-           # frame-ancestors is the modern half of the clickjacking pair. The
-           # X-Frame-Options header in vercel.json covers legacy browsers and
-           # is ignored by every current one, so without this line the modern
-           # protection was simply absent. 'self' rather than 'none' so /desk
-           # can embed a same-origin preview.
-           "frame-ancestors 'self'; "
+           # NO frame-ancestors here. This policy ships as a <meta http-equiv>,
+           # and frame-ancestors is one of three directives the spec makes
+           # header-only (with report-uri and sandbox). In a meta tag it is not
+           # merely inert — the browser logs a console error for it, which is
+           # what smoke_test.py failed on. It is delivered as a real
+           # Content-Security-Policy header from vercel-news/vercel.json
+           # instead, which is the only place it does anything.
+           #
            # Any http:// subresource that slips into generated content is
            # fetched over https instead of being blocked outright, so a mixed
            # -content mistake degrades to a working request rather than a
