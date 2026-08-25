@@ -6173,6 +6173,10 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .rk-medium{color:var(--gold);border-color:rgba(233,196,106,.34);background:rgba(233,196,106,.07)}
 .rk-high{color:var(--down);border-color:rgba(255,92,92,.34);background:rgba(255,92,92,.08)}
 .rk-n{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-left:5px}
+/* Cash is not a risk level, so it gets the neutral pill rather than borrowing
+   the "low risk" green — uninvested money is an absence of a position, not a
+   safe one. */
+.rk-idle{color:var(--dim);border-color:var(--line2);background:var(--surface2)}
 /* Earnings momentum: the DIRECTION of the accounts. A level and a direction
    are different facts — a 25% compounder that is slowing and a 12% one that
    is speeding up have the same CAGR column. */
@@ -7193,6 +7197,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   .arch-day{min-width:66px;padding:8px}
 }
 
+/* The divider between measured listings and issues that never traded. */
+.ipo-split td{
+  background:var(--bg2);
+  font:400 12.5px/1.6 var(--sans);
+  color:var(--muted);
+  padding:12px 14px;
+}
+.ipo-unmeasured{opacity:.72}
+
 /* ── BUILD LOG ────────────────────────────────────────────────────────────
    Two columns: when, and what. The "why" runs under the title in the quiet
    voice — the reason a thing changed is context, not headline. */
@@ -7281,7 +7294,10 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   content:'';width:5px;height:5px;border-radius:50%;background:var(--lime);flex:none;
 }
 .navgrp-menu{
-  position:absolute;top:100%;left:0;z-index:70;min-width:230px;
+  /* fixed, NOT absolute: the parent .nav-in is overflow-x:auto, which clips on
+     both axes, so an absolutely-positioned menu below the button was painted
+     outside the scroll box and was invisible. Coordinates come from JS. */
+  position:fixed;top:0;left:0;z-index:70;min-width:230px;
   background:var(--bg);border:1px solid var(--line2);border-radius:10px;
   padding:6px;display:flex;flex-direction:column;gap:1px;
   box-shadow:0 18px 44px rgba(17,18,20,.13);
@@ -7298,7 +7314,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   min-width:18px;
 }
 @media (max-width:760px){
-  .navgrp-menu{position:fixed;left:8px;right:8px;min-width:0}
+  .navgrp-menu{min-width:0;max-height:60vh;overflow-y:auto}
 }
 
 /* ── WHERE BRICOLAGE ACTUALLY LANDS ───────────────────────────────────────
@@ -9166,7 +9182,28 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <th scope="col">Listed</th><th scope="col">First close / band</th><th scope="col">Last</th>
       <th scope="col">Since listing</th><th scope="col">From high</th><th scope="col">Sessions</th>
     </tr></thead><tbody>
-      {% for r in iporadar.recent_listed %}
+      {# Measured rows first, then the ones nothing could price, under a label.
+         Mixed together they read as broken: SAATVIK shows a September date and
+         a price band with every performance cell dashed, and a reader
+         reasonably asks how that is a "listing". It is one — NSE published the
+         issue — but no traded line exists for it on any feed this build reads,
+         so there is nothing to measure and the row is evidence of that rather
+         than of a bug. Saying so is the whole difference. #}
+      {% set _measured = iporadar.recent_listed | selectattr('measured') | list %}
+      {% set _unmeasured = iporadar.recent_listed | rejectattr('measured') | list %}
+      {% for r in (_measured + _unmeasured) %}
+      {% if loop.index0 == _measured | length and _unmeasured %}
+      <tr class="ipo-split">
+        <td colspan="8">
+          <span class="pill pill-fact">Issued</span>
+          {{ _unmeasured | length }} of these never produced a traded price on
+          any feed this build reads — partly-paid instruments, symbols that
+          changed, or issues that did not list. The date is when the issue
+          closed, not a listing date, and the band is the issue band. Nothing
+          below is measured, and none of it is scored.
+        </td>
+      </tr>
+      {% endif %}
       <tr class="{{ '' if r.measured else 'ipo-unmeasured' }}">
         <td><strong class="sym"{% if r.measured %} data-stock="{{ r.symbol }}" style="cursor:pointer"{% endif %}>{{ r.symbol }}</strong>
           {# TradingView for every row, measured or not. A listing outside the
@@ -9176,7 +9213,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
              href="https://www.tradingview.com/chart/?symbol=NSE%3A{{ r.symbol }}"
              title="Open {{ r.symbol }} on TradingView">chart</a></td>
         <td>{{ r.company }}</td>
-        <td class="num">{{ r.listing_date }}</td>
+        <td class="num">{{ r.listing_date }}{% if not r.measured %} <span class="lv-sys" title="Issue date — this symbol never produced a traded price">issue</span>{% endif %}</td>
         <td class="num">{{ '{:,.2f}'.format(r.first_close) if r.first_close else (r.price_band or '—') }}</td>
         <td class="num">{{ '{:,.2f}'.format(r.last_close) if r.last_close else '—' }}</td>
         {# `measured` means ipo_tracker reached the symbol, NOT that every field
@@ -9715,7 +9752,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>{% endif %}
 
 <!-- ══════════ PAPER WALLET ══════════
-     ₹50,00,000, sized mechanically against every signal by horizon tier —
+     The wallet's own capital, sized mechanically against every signal by tier —
      forward-only from launch (2026-08-17), no fabricated history. Entirely
      JS-rendered from GET /api/signals?wallet=1 (see paperWallet.js in
      static/app.js): the tier percentages, category caps and grade rules
@@ -9729,7 +9766,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['paperwallet'] }} / {{ seclabel['paperwallet'] }}</span>
-      <h2 class="stitle">₹50,00,000, sized by the rules below.</h2>
+      {# The figure is a placeholder that renderPaperWallet() overwrites from the
+         live response. It was hardcoded ₹50,00,000 here while _paper_wallet.js
+         ran at a crore, so the headline and every number under it disagreed.
+         test_page_structure.py asserts this fallback equals CAPITAL. #}
+      <h2 class="stitle"><span id="pwCapital">₹1,00,00,000</span>, sized by the rules below.</h2>
     </div>
     <p class="sdesc">A mechanical capital allocator, not a recommendation — every signal this
       ledger produces from here on gets sized by its horizon and grade, nothing more. Started

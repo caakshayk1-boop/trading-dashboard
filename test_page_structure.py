@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import logging
+import pathlib
 import re
 import sys
 
@@ -284,6 +285,44 @@ def _():
                 offenders.append(f"#{hexv} (lum {lum:.2f}) in: {stripped[:70]}")
     assert not offenders, "hardcoded theme-dependent colour:\n    " + \
         "\n    ".join(offenders)
+
+
+@check("wallet headline fallback matches the allocator's CAPITAL")
+def _():
+    """One capital, or none.
+
+    The paper-wallet heading carried a literal ₹50,00,000 while
+    _paper_wallet.js sized every position against ₹1,00,00,000, so the
+    headline contradicted every figure beneath it. The heading is now a
+    placeholder the live response overwrites — but the placeholder is what a
+    reader sees for the first few hundred milliseconds, and on a slow network
+    for much longer, so it still has to be right.
+    """
+    m = re.search(r'<span id="pwCapital">₹([\d,]+)</span>', TEMPLATE)
+    assert m, "#pwCapital placeholder missing from the wallet heading"
+    shown = int(m.group(1).replace(",", ""))
+
+    js = pathlib.Path(__file__).with_name("vercel-news") / "api" / "_paper_wallet.js"
+    src = js.read_text(encoding="utf-8")
+    c = re.search(r"export const CAPITAL\s*=\s*([0-9_]+)", src)
+    assert c, "CAPITAL not found in _paper_wallet.js"
+    real = int(c.group(1).replace("_", ""))
+
+    assert shown == real, f"heading says {shown:,} but the allocator sizes on {real:,}"
+
+
+@check("the collapsed nav menu is not clipped by its scroll container")
+def _():
+    """.nav-in is overflow-x:auto, which clips on BOTH axes.
+
+    An absolutely-positioned .navgrp-menu at top:100% was therefore painted
+    outside the scroll box and never appeared — the buttons toggled state and
+    nothing opened. It must stay position:fixed.
+    """
+    m = re.search(r"\.navgrp-menu\{(.*?)\}", TEMPLATE, re.S)
+    assert m, ".navgrp-menu rule missing"
+    assert "position:fixed" in m.group(1), \
+        ".navgrp-menu must be position:fixed — .nav-in clips absolute children"
 
 
 def main() -> int:
