@@ -100,33 +100,108 @@ HORIZONS = {
                     frozenset({"LONG", "1M", "MONTHLY"})),
 }
 
-# Max 8 alert types. Four are mapped; the cap is a ceiling, not a quota, and
-# filling it with engines that cannot reach a band would defeat the mandate.
-ENGINE_HORIZON = {
-    "top5_pick":   "SWING",
-    "magicmagic":  "SWING",
-    "multibagger": "MEDIUM",
-    "ai_longterm": "LONG",
+# ── ENGINE REVIEW ───────────────────────────────────────────────────────────
+#
+# Reviewed engine by engine on 2026-08-25 against the full feed. R is
+# recomputed per trade from exit_price against entry and stop — never read from
+# the r_multiple column, which a re-grade corrupted on 168 of 573 rows while
+# the exit prices stayed consistent.
+#
+#   engine           sig  closed   mean R      t   win%   final%  stop%  in-universe
+#   cf_1h            367     367   +0.334  +3.85   40%      3%     0.7%   0 of 367
+#   breakout         106      96   +0.022  +0.10   31%     10%     2.2%   106 of 106
+#   magic             48      11   +0.485  +0.91   45%     24%     9.2%   48 of 48
+#   magicmagic        43       7   +0.726  +1.19   57%     32%     9.9%   43 of 43
+#   multibagger       42      10   -0.030  -0.06   30%     47%    12.7%   42 of 42
+#   top5_pick         25       4   -1.000      —    0%     40%     8.0%   8 of 25
+#   commodity         23      22   -0.531  -2.38   18%     15%     4.4%   0 of 23
+#   4h                22      22   -0.176  -0.53   23%      5%     1.8%   22 of 22
+#   ohl               19       6   -1.000      —    0%      9%     1.5%   19 of 19
+#   ai_longterm       17       0        —      —     —    150%    20.0%   17 of 17
+#   intraday          17      17   +1.472  +3.69   71%      1%     0.3%   17 of 17
+#   ai_4h             15      15   +0.331  +0.97   60%     14%     5.7%   15 of 15
+#   equity_measured   14       8   -1.000 -20.17    0%     12%     4.1%   14 of 14
+#   ai_daily           6       6   -0.106  -0.28   17%     23%     9.2%   6 of 6
+#   sip_bucket         4       4   -0.250  -0.33   25%      0%     0.1%   4 of 4
+#
+# FOUR TIERS, decided in this order:
+#
+#   OUT_OF_MANDATE  wrong instrument or wrong clock. Not a judgement on the
+#                   engine — cf_1h posts the best t-statistic in the table and
+#                   is still out, because none of its 367 signals is an Indian
+#                   listed equity. intraday posts +1.47R at t=+3.69 and is out
+#                   for trading a 15-minute chart, which this account cannot.
+#
+#   RETIRED         measured loser, or structurally broken. ohl is 0 for 6 with
+#                   every close at the stop. equity_measured is 0 for 8 at
+#                   t=-20.17 and files T1 at 0.32R — a third of the way to its
+#                   own stop. top5_pick is 0 for 4 AND only 8 of its 25 symbols
+#                   are in the NSE universe: it is the engine that produced
+#                   MSFT and SNOW priced as rupees. magicmagic is retired as
+#                   the duplicate of magic, not for its numbers.
+#
+#   CANDIDATE       clean instrument, clean clock, no disqualifying record.
+#                   Sized on paper and accumulating the sample that would fund
+#                   it. Everything honest sits here today.
+#
+#   FUNDED          cleared for real capital. 30+ closed at t >= +2.0. The bar
+#                   was fixed before these numbers were looked at, and NOTHING
+#                   MEETS IT. magic is closest at +0.485R; n=11 at t=+0.91 is
+#                   not a result.
+#
+# The honest state: no engine is funded, four are candidates. Publishing that
+# is the entire point of keeping the ledger in the open.
+
+FUNDED: dict = {}          # cleared for real capital — empty by measurement
+
+CANDIDATE = {
+    "magic":       "SWING",   # +0.485R over 11, all NSE, no duplicates, 24% target behind a 9.2% stop
+    "multibagger": "MEDIUM",  # flat over 10, but 47% targets on a clean 1W instrument
+    "ai_longterm": "LONG",    # nothing closed yet — unmeasured, not unproven
+    "breakout":    "SWING",   # +0.022R over 96, the largest clean sample here. Flat, not losing
 }
+
+RETIRED = {
+    "ohl":             "0 wins in 6 closed, every one at the stop",
+    "equity_measured": "0 wins in 8 at t = -20.17, and files T1 at 0.32R",
+    "top5_pick":       "0 wins in 4, and only 8 of 25 symbols are Indian listings",
+    "magicmagic":      "duplicate of magic — 10 of its 43 rows are the same trade filed twice",
+    "sip_bucket":      "0.1% stops and 0% targets: an accumulation bucket, not a trade",
+    "ai_daily":        "n=6, nothing measurable either way",
+}
+
+OUT_OF_MANDATE = {
+    "cf_1h":     "367 of 367 signals are FX or commodity — not an Indian listed equity",
+    "commodity": "commodities, and a measured loser at t = -2.38",
+    "intraday":  "15-minute chart. The mandate is swing and longer",
+    "4h":        "4H chart — intraday by any reading, and a 5% final target",
+    "ai_4h":     "4H chart",
+}
+
+# Every engine the ledger has run appears in exactly one tier. A new engine that
+# appears in none is UNKNOWN and is never sized — absence is not permission.
+ENGINE_HORIZON = dict(CANDIDATE)
 MAX_ALERT_TYPES = 8
 
-# Engines that file the same trade as another engine. Named rather than deleted
-# so a dropped row can say which engine it duplicated.
-DUPLICATE_OF = {"magic": "magicmagic"}
 
-# Everything else, with the reason it is out. Rendered verbatim.
-OUT_OF_MANDATE = {
-    "intraday":        "15m signals — the mandate excludes intraday",
-    "4h":              "4H signals — intraday timeframe, and a 5.0% final target",
-    "ohl":             "final target 8.6% — below the swing band",
-    "breakout":        "final target 10.4% — below the swing band",
-    "equity_measured": "final target 14.0% — below the swing band",
-    "ai_4h":           "4H signals — intraday timeframe",
-    "ai_daily":        "final target 22.9% — below the swing band",
-    "sip_bucket":      "accumulation bucket, 0.2% targets — not a trade",
-    "cf_1h":           "FX and commodities — not Indian equity",
-    "commodity":       "commodities — not Indian equity",
-}
+def tier_of(engine: str) -> str:
+    """FUNDED / CANDIDATE / RETIRED / OUT_OF_MANDATE / UNKNOWN."""
+    if engine in FUNDED: return "FUNDED"
+    if engine in CANDIDATE: return "CANDIDATE"
+    if engine in RETIRED: return "RETIRED"
+    if engine in OUT_OF_MANDATE: return "OUT_OF_MANDATE"
+    return "UNKNOWN"
+
+
+def tier_reason(engine: str) -> str:
+    return (RETIRED.get(engine) or OUT_OF_MANDATE.get(engine)
+            or ("candidate — sized on paper while it earns a record"
+                if engine in CANDIDATE else
+                "not recognised by the rulebook"))
+
+
+# Kept so a dropped row can name what it duplicated.
+DUPLICATE_OF = {"magicmagic": "magic"}
 
 # ── Exit ladder ─────────────────────────────────────────────────────────────
 #

@@ -2123,15 +2123,15 @@ SECTION_MAP = [
     # What moved the tape, and what the engine wants to do about it.
     # Market Intel sits here rather than in Research: FII/DII, sector heat and
     # corporate actions are the day's market state, not a research artefact.
-    ("marketintel", "Market Intel", "main", "Signal"),
-    ("picks",       "Trade Ideas",  "main", "Signal"),
+    ("marketintel", "Market Intel", "main", "Today"),
+    ("picks",       "Trade Ideas",  "main", "Today"),
 
     # ── RESEARCH ────────────────────────────────────────────────────────────
     # Context first, then what is unusual in it, then the instruments.
     # Findings sits second because it answers the question the ranked tables
     # underneath it cannot: what here would I never have scrolled to?
-    ("world",       "World",        "main", "Research"),
-    ("findings",    "Findings",     "main", "Research"),
+    ("world",       "World",        "main", "Markets"),
+    ("findings",    "Findings",     "main", "Markets"),
     # Renamed from "Long-Term". The section's own headline has read "Own the
     # business." for some time while the nav still said "Long-Term" — the same
     # nav/heading disagreement that put "07 Performance" over "17 / EDGE".
@@ -2157,17 +2157,17 @@ SECTION_MAP = [
     # ── DESK ────────────────────────────────────────────────────────────────
     # What is held, what it was sized to, what happened, what that adds up to,
     # and — last — whether any of it can be trusted today.
-    ("tracker",     "Portfolio",    "main", "Desk"),
-    ("paperwallet", "Paper Wallet", "main", "Desk"),
-    ("alerts",      "Signal Log",   "main", "Desk"),
-    ("perf",        "Performance",  "main", "Desk"),
+    ("tracker",     "Portfolio",    "main", "Portfolio"),
+    ("paperwallet", "Paper Wallet", "main", "Portfolio"),
+    ("alerts",      "Signal Log",   "main", "Ledger"),
+    ("perf",        "Performance",  "main", "Ledger"),
     # Engine Log and Data Health are the System Health pair the brief asks for.
     # Kept as two sections rather than merged into one: they answer different
     # questions (what the engine CHANGED vs whether today's data is CURRENT),
     # and collapsing them would bury the second inside the first.
-    ("rules",       "Engine Log",   "main", "Desk"),
-    ("datahealth",  "Data Health",  "main", "Desk"),
-    ("who",         "Who",          "main", "Desk"),
+    ("rules",       "Engine Log",   "main", "Ledger"),
+    ("datahealth",  "Data Health",  "main", "Ledger"),
+    ("who",         "Who",          "main", "About"),
 
     # ── LIFE — the whole /desk page ─────────────────────────────────────────
     # The page is the pillar; these groups are its secondary navigation.
@@ -4119,6 +4119,16 @@ TEMPLATE = r"""<!DOCTYPE html>
    the pinned static instance is 24KB. It is only ever used at display sizes,
    so one optical size is the right one. Regenerate with
    tools_fetch_fonts.py — the reasoning lives in that file's docstring. */
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/BricolageGrotesque-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/BricolageGrotesque-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/BricolageGrotesque-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/BricolageGrotesque-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Onest';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Onest-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Onest';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Onest-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Onest';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/Onest-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Onest';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/Onest-500-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Onest';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/Onest-700-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Onest';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/Onest-700-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/FiraSans-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/FiraSans-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Fira Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/FiraSans-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
@@ -4141,6 +4151,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 @font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Newsreader-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/Newsreader-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/Newsreader-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+
 </style>
 <style>
 /* ═══════════════════ TOKENS ═══════════════════ */
@@ -4259,8 +4270,24 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* Reading measure. Editorial text never spans a dashboard's full width. */
   --measure:68ch;
 
+  /* FOUR ROLES, and nothing outside them.
+     A page where every metric looks equally important is a page with no
+     hierarchy, which is the single loudest complaint about this site.
+
+       --disp   Bricolage Grotesque. Headlines and the numbers that ARE the
+                point. Variable width axis, so a headline can be set tight
+                without faking it with letter-spacing.
+       --serif  Newsreader. The editorial voice — section titles and pull
+                quotes. It is what makes this read as a publication rather
+                than a dashboard, so it is kept rather than replaced.
+       --sans   Onest. Running text. Warmer and rounder than Fira Sans at the
+                same size, which matters on a white ground where a neutral
+                grotesk goes cold.
+       --mono   JetBrains Mono. Data, and only data. If it is in mono it is a
+                measurement. */
+  --disp:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
-  --sans:'Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --sans:'Onest','Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
   /* Editorial display face. Newsreader carries the headlines and nothing
      else — never a number, never a label, never a table. The split is the
      point: a serif says "this is an argument", the mono says "this is a
@@ -4542,6 +4569,53 @@ TEMPLATE = r"""<!DOCTYPE html>
   color:var(--dim);
   letter-spacing:.16em;
 }
+/* ── PROVENANCE LEGEND ────────────────────────────────────────────────────
+   The single most useful thing this site can do that a screener cannot: say
+   where every number came from. Four kinds sit on the same page and they are
+   not the same kind of claim.
+
+     FACT     an observed value. A close, a flow, a filing. Wrong only if the
+              source is wrong.
+     MODEL    computed by this engine from facts. A score, an expectancy, a
+              regime reading. Wrong if the method is wrong.
+     RESULT   what actually happened to a published signal. Wins and losses
+              both, never edited after the fact.
+     VIEW     a human opinion. Rare on purpose, and always labelled.
+
+   Rendered as a small badge, and explained once in a legend strip so the
+   badges do not need a caption each. Colour is never the only carrier — each
+   badge is a word first.
+
+   This also does regulatory work. A page that mixes an observed close with a
+   model output and an opinion, all in the same weight, is implicitly claiming
+   they are the same kind of statement. They are not. */
+.prov-legend{
+  display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
+  padding:12px 0;margin:0 0 20px;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.prov-legend .pl-lead{
+  font:600 10px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.prov-legend .pl-item{display:flex;align-items:center;gap:7px;font:400 12px/1.4 var(--sans);color:var(--muted)}
+.pill{
+  font:600 9.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
+  padding:4px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex:none;
+}
+.pill-fact  {color:var(--text); border-color:var(--line2); background:var(--surface2)}
+.pill-model {color:var(--blue); border-color:color-mix(in srgb, var(--blue) 34%, transparent); background:color-mix(in srgb, var(--blue) 7%, transparent)}
+.pill-result{color:var(--up);   border-color:color-mix(in srgb, var(--up) 34%, transparent);   background:var(--up-soft)}
+.pill-view  {color:var(--gold); border-color:color-mix(in srgb, var(--gold) 34%, transparent); background:var(--gold-soft)}
+
+/* ── FOUR LEVELS OF EMPHASIS ──────────────────────────────────────────────
+   Primary is what matters now. Secondary is the evidence under it. Tertiary
+   is context. System is metadata — freshness, method, provenance — and it is
+   deliberately the quietest thing on the page. */
+.lv-1{font:800 clamp(26px,3.4vw,40px)/1.05 var(--disp);letter-spacing:-.03em;color:var(--text)}
+.lv-2{font:600 clamp(16px,1.8vw,19px)/1.35 var(--disp);letter-spacing:-.02em;color:var(--text)}
+.lv-3{font:400 14.5px/1.65 var(--sans);color:var(--muted);max-width:64ch}
+.lv-sys{font:400 11px/1.5 var(--mono);color:var(--dim);letter-spacing:.02em}
+
 /* ── WHEN IT WORKS / WHAT IF ──────────────────────────────────────────────
    Both blocks are built from tokens only. The heat scale runs through --up and
    --down at varying alpha rather than a rainbow: the question is "did this day
@@ -7081,6 +7155,45 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     font-size:9px;color:var(--dim);letter-spacing:.8px}
   .arch-day{min-width:66px;padding:8px}
 }
+
+/* ── WHERE BRICOLAGE ACTUALLY LANDS ───────────────────────────────────────
+   The split is by JOB, not by size.
+
+   Newsreader keeps the editorial work — section titles and subheadings. That
+   serif is what makes the page read as a publication rather than a control
+   panel, and replacing it would have cost the thing the redesign was for.
+
+   Bricolage takes the DATA. Every headline number on this page was set in
+   JetBrains Mono at 40px with -1.5px tracking: a monospace face stretched
+   three times past the size it was drawn for, where the even advance widths
+   that make a table readable turn a headline gappy. Bricolage is a display
+   grotesque with a width axis, so a big number can be set tight and still
+   keep tabular figures.
+
+   Mono stays exactly where it belongs — inside tables, in row data, and
+   anywhere digits must line up in a column. If it is small and it is data,
+   it is mono. If it is large and it is data, it is Bricolage. */
+.stat .v,
+.kpi .v,
+.hero-stat .v,
+.whencell .wv,
+.whatifout .wo .v{
+  font-family:var(--disp);
+  font-variation-settings:'wdth' 88;
+  font-variant-numeric:tabular-nums;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+/* Eyebrows and group labels — small, wide-tracked, and previously mono, which
+   made them read as data rather than as navigation. */
+.nav-g,
+.snum,
+.prov-legend .pl-lead{
+  font-family:var(--disp);
+  font-variation-settings:'wdth' 92;
+  font-weight:600;
+}
+
 </style>
 </head>
 
@@ -7240,8 +7353,27 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <span class="w"><span style="--d:.32s"><em>last.</em></span></span>
   </h1>
 
-  <p class="hero-sub">Markets, live signals, the world, and the work — one page, rebuilt every
-    morning before the open. No feeds. No scroll trap. Just what moved and what to do about it.</p>
+  {# The sub-head used to end "...and what to do about it." It was the best line
+     on the page and it had to go. "What to do" is advice, and this is not an
+     advisory service — it is a research record that publishes its own losses.
+     The replacement makes the same promise without the claim: what changed,
+     why it matters, and what the evidence actually supports. Everything
+     downstream of this sentence is labelled FACT, MODEL, RESULT or VIEW so a
+     reader can see which one they are looking at. #}
+  <p class="hero-sub">Markets, research and a public signal ledger &mdash; one page, rebuilt
+    every morning before the open. What changed, why it matters, and what the evidence
+    says. Wins and losses both, because a record you can only see the good half of
+    is not a record.</p>
+
+  {# The legend, once, at the top. Every number below carries one of these four
+     labels. It is the one thing this page does that a screener cannot. #}
+  <div class="prov-legend rv" role="note" aria-label="How to read the labels on this page">
+    <span class="pl-lead">How to read this</span>
+    <span class="pl-item"><span class="pill pill-fact">Fact</span> an observed value &mdash; a close, a flow, a filing</span>
+    <span class="pl-item"><span class="pill pill-model">Model</span> computed by the engine from facts</span>
+    <span class="pl-item"><span class="pill pill-result">Result</span> what happened to a published signal</span>
+    <span class="pl-item"><span class="pill pill-view">View</span> a human opinion, labelled as one</span>
+  </div>
 
   {# Who built this, and the claim the whole page rests on, in the hero.
      Both were true and both sat 17 sections down in "Who" — a reader deciding

@@ -206,7 +206,11 @@ def _():
     a red test go green, without knowing what the new section is, defeats the
     only thing this line does.
     """
-    PILLARS = {"Signal", "Research", "Desk"}          # the / page
+    # Regrouped 2026-08-26 from three pillars to six. Three buckets over
+    # seventeen sections meant the nav printed all seventeen links flat, which
+    # is the "18 destinations, figure it out yourself" problem. Six named
+    # groups give a first-time reader a map instead of an index.
+    PILLARS = {"Today", "Markets", "Research", "Portfolio", "Ledger", "About"}
     LIFE = {"Career", "Learning", "Practice", "Mind", "Drills"}   # the /desk page
     for _i, _l, page, group in SECTION_MAP:
         allowed = PILLARS if page == "main" else LIFE

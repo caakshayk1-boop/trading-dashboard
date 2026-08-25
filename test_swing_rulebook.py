@@ -13,7 +13,7 @@ UNI = frozenset({"PAYTM", "COFORGE", "TESTCO", "DIXON"})
 RB._UNIVERSE = UNI
 
 def sig(**kw):
-    base = dict(id=1, symbol="TESTCO", signal_type="top5_pick", date="2026-08-20",
+    base = dict(id=1, symbol="TESTCO", signal_type="magic", date="2026-08-20",
                 market="NSE", timeframe="1W", action="BUY", score=80,
                 entry=1000.0, sl=920.0, target1=1250.0, target2=1400.0, target3=1400.0)
     base.update(kw); return base
@@ -39,10 +39,32 @@ t, r = RB.size_signal(sig(target1=1500.0, target2=2000.0, target3=2000.0), {})
 ok("a 100% final target is above the band", r and r.reason == "ABOVE_BAND")
 t, r = RB.size_signal(sig(sl=800.0), {})
 ok("a 20% stop is too wide for a swing", r and r.reason == "STOP_TOO_WIDE")
+# breakout is a CANDIDATE now: +0.022R over 96 closed, the largest clean
+# sample in the review. Flat, not losing, so it sizes on paper.
 t, r = RB.size_signal(sig(signal_type="breakout"), {})
-ok("breakout is out of mandate", r and r.reason == "OUT_OF_MANDATE")
-t, r = RB.size_signal(sig(signal_type="magic"), {})
-ok("magic is named as magicmagic's duplicate", r and r.reason == "DUPLICATE_ENGINE")
+ok("breakout is a candidate and sizes", t is not None, r.reason if r else "sized")
+# The retired ones, and the reason each is out.
+for eng in ("ohl", "equity_measured", "top5_pick", "sip_bucket"):
+    t, r = RB.size_signal(sig(signal_type=eng), {})
+    ok(f"{eng} is retired", r and r.reason == "OUT_OF_MANDATE", r.detail[:52] if r else "sized")
+# Out of mandate on the instrument or the clock, whatever the record says.
+for eng in ("cf_1h", "commodity", "intraday", "4h", "ai_4h"):
+    t, r = RB.size_signal(sig(signal_type=eng), {})
+    ok(f"{eng} is out of mandate", r and r.reason == "OUT_OF_MANDATE")
+ok("nothing is funded", RB.FUNDED == {})
+ok("four candidates", len(RB.CANDIDATE) == 4)
+ok("every engine sits in exactly one tier",
+   all(RB.tier_of(e) != "UNKNOWN" for e in
+       ["magic","multibagger","ai_longterm","breakout","ohl","equity_measured",
+        "top5_pick","magicmagic","sip_bucket","ai_daily","cf_1h","commodity",
+        "intraday","4h","ai_4h"]))
+ok("an unknown engine is never sized", RB.tier_of("brand_new") == "UNKNOWN")
+# The duplicate direction reversed on review: magic is the survivor (48
+# signals, no duplicates of its own), magicmagic is retired as its copy.
+t, r = RB.size_signal(sig(signal_type="magicmagic"), {})
+ok("magicmagic is named as magic's duplicate",
+   r and r.reason in ("DUPLICATE_ENGINE", "OUT_OF_MANDATE"),
+   r.detail[:52] if r else "sized")
 t, r = RB.size_signal(sig(timeframe="15m"), {})
 ok("a 15m signal is not a swing timeframe", r and r.reason == "WRONG_TIMEFRAME")
 t, r = RB.size_signal(sig(score=30), {})
@@ -76,9 +98,10 @@ t, r = RB.size_signal(sig(entry=2_000_000.0, sl=1_900_000.0, target1=2_600_000.0
                           target2=2_800_000.0, target3=2_800_000.0), {})
 ok("a share pricier than the name cap does not exist", r and r.reason == "BELOW_MIN_SIZE")
 
-# One name, one ticket — even across two engines.
-book = RB.build_book([sig(id=1, symbol="PAYTM", signal_type="top5_pick"),
-                      sig(id=2, symbol="PAYTM", signal_type="magicmagic")], {})
+# One name, one ticket — even across two engines. Both must be engines that
+# actually size, or the second is dropped as retired and nothing is deduped.
+book = RB.build_book([sig(id=1, symbol="PAYTM", signal_type="magic"),
+                      sig(id=2, symbol="PAYTM", signal_type="breakout")], {})
 ok("the same name is not sized twice",
    len(book["admitted"]) == 1 and len(book["duplicates"]) == 1)
 
