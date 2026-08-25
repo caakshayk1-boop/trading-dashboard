@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-25T13:39:36",
+ "generated_at": "2026-08-25T15:47:00",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -33,7 +33,7 @@
    "face_value": 5.0,
    "anchor_cr": 246.3,
    "listing_date": "Aug 31, 2026",
-   "gmp_text": "\u20b9330",
+   "gmp_text": "\u20b9315",
    "revenue_cr": 94282.47,
    "revenue_growth_pct": 42.0,
    "pat_cr": 348.3,
@@ -86,6 +86,84 @@
    ]
   },
   {
+   "symbol": "SYMBIOTEC",
+   "company": "Symbiotec Pharmalab Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "open",
+   "status": "Active",
+   "open_date": "2026-08-24",
+   "close_date": "2026-08-27",
+   "days_left": 2,
+   "price_band": "Rs.938 to Rs.988",
+   "price_low": 938.0,
+   "price_high": 988.0,
+   "issue_size_shares": 13124929.0,
+   "issue_size_cr": 1757.0,
+   "subscription_x": 1.3419158305542072,
+   "subscription_by_category": {
+    "QIB": 0.57,
+    "HNI": 3.17,
+    "Retail": 2.23,
+    "Employee": 3.22,
+    "Total": 1.96
+   },
+   "lot_size": 15.0,
+   "min_investment": 14820.0,
+   "fresh_issue_cr": 150.0,
+   "ofs_cr": 1607.0,
+   "face_value": 2.0,
+   "anchor_cr": 526.2,
+   "listing_date": "Sep 1, 2026",
+   "gmp_text": "\u20b9352",
+   "revenue_cr": 872.26,
+   "revenue_growth_pct": 15.0,
+   "pat_cr": 109.9,
+   "pat_growth_pct": 14.0,
+   "pat_margin_pct": 12.6,
+   "roe_pct": 9.48,
+   "debt_to_equity": 0.33,
+   "pe_post_issue": null,
+   "peer_pe": null,
+   "fy_label": "FY26",
+   "strengths": null,
+   "risks": null,
+   "use_of_proceeds": null,
+   "score": {
+    "points": 66,
+    "of": 100,
+    "pct": 66,
+    "parts": {
+     "Demand": "16/40",
+     "Size": "20/25",
+     "Pricing": "15/20",
+     "Window": "15/15"
+    },
+    "not_measured": [
+     "sector",
+     "audited financials",
+     "valuation multiples"
+    ],
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "1.3x so far, with time left on the book.",
+   "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1302/symbiotec-pharmalab-ltd",
+   "allotment_date": "Aug 28, 2026",
+   "category_source": "ipopremium.in",
+   "reads_for": null,
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr).",
+    "Institutions are taking it at 0.57x while retail bids 2.23x \u2014 the money with research access is the money staying out."
+   ]
+  },
+  {
    "symbol": "SKYWAYS",
    "company": "Skyways Air Services Limited",
    "exchange": "NSE",
@@ -109,7 +187,7 @@
    "face_value": 10.0,
    "anchor_cr": 174.54,
    "listing_date": null,
-   "gmp_text": "\u20b937 (26.81%)",
+   "gmp_text": "\u20b929 (21.01%)",
    "revenue_cr": 2839.67,
    "revenue_growth_pct": 25.0,
    "pat_cr": 63.52,
@@ -159,75 +237,6 @@
    ]
   },
   {
-   "symbol": "SYMBIOTEC",
-   "company": "Symbiotec Pharmalab Limited",
-   "exchange": "NSE",
-   "series": "EQ",
-   "phase": "open",
-   "status": "Active",
-   "open_date": "2026-08-24",
-   "close_date": "2026-08-27",
-   "days_left": 2,
-   "price_band": "Rs.938 to Rs.988",
-   "price_low": 938.0,
-   "price_high": 988.0,
-   "issue_size_shares": 13124929.0,
-   "issue_size_cr": 1757.0,
-   "subscription_x": 1.3419158305542072,
-   "subscription_by_category": null,
-   "lot_size": 15.0,
-   "min_investment": 14820.0,
-   "fresh_issue_cr": 150.0,
-   "ofs_cr": 1607.0,
-   "face_value": 2.0,
-   "anchor_cr": 526.2,
-   "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b9352 (35.63%)",
-   "revenue_cr": 872.26,
-   "revenue_growth_pct": 15.0,
-   "pat_cr": 109.9,
-   "pat_growth_pct": 14.0,
-   "pat_margin_pct": 12.6,
-   "roe_pct": 9.48,
-   "debt_to_equity": 0.33,
-   "pe_post_issue": null,
-   "peer_pe": null,
-   "fy_label": "FY26",
-   "strengths": null,
-   "risks": null,
-   "use_of_proceeds": null,
-   "score": {
-    "points": 66,
-    "of": 100,
-    "pct": 66,
-    "parts": {
-     "Demand": "16/40",
-     "Size": "20/25",
-     "Pricing": "15/20",
-     "Window": "15/15"
-    },
-    "not_measured": [
-     "sector",
-     "audited financials",
-     "valuation multiples"
-    ],
-    "shown_not_scored": [
-     "grey market premium \u2014 shown, deliberately not scored",
-     "lot size and minimum application \u2014 facts, not judgements"
-    ]
-   },
-   "verdict": "WATCH",
-   "verdict_why": "1.3x so far, with time left on the book.",
-   "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
-   "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1302/symbiotec-pharmalab-ltd",
-   "reads_for": null,
-   "reads_against": [
-    "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr)."
-   ]
-  },
-  {
    "symbol": "HTEL",
    "company": "Hy-Tech Engineers Limited",
    "exchange": "NSE",
@@ -245,9 +254,9 @@
    "subscription_x": 12.819090683338802,
    "subscription_by_category": {
     "QIB": 0.6,
-    "HNI": 25.28,
-    "Retail": 28.18,
-    "Total": 19.68
+    "HNI": 25.31,
+    "Retail": 28.25,
+    "Total": 19.72
    },
    "lot_size": 283.0,
    "min_investment": 14999.0,
@@ -304,7 +313,7 @@
    ],
    "reads_against": [
     "More of the issue is existing holders selling (\u20b976 Cr) than new money into the business (\u20b960 Cr).",
-    "Institutions are taking it at 0.60x while retail bids 28.18x \u2014 the money with research access is the money staying out."
+    "Institutions are taking it at 0.60x while retail bids 28.25x \u2014 the money with research access is the money staying out."
    ]
   },
   {
@@ -327,7 +336,7 @@
     "QIB": 0.57,
     "HNI": 0.36,
     "Retail": 0.29,
-    "Total": 0.34
+    "Total": 0.35
    },
    "lot_size": 151.0,
    "min_investment": 14949.0,
@@ -402,7 +411,7 @@
    "price_band": "Rs.78 to Rs.82",
    "price_low": 78.0,
    "price_high": 82.0,
-   "issue_size_shares": 89743588.0,
+   "issue_size_shares": 63205127.0,
    "issue_size_cr": 700.0,
    "subscription_x": null,
    "subscription_by_category": null,
@@ -412,7 +421,7 @@
    "ofs_cr": 200.0,
    "face_value": 5.0,
    "anchor_cr": null,
-   "listing_date": null,
+   "listing_date": "Sep 3, 2026",
    "gmp_text": "\u20b949 (59.76%)",
    "revenue_cr": 2089.31,
    "revenue_growth_pct": 7.0,
@@ -439,7 +448,6 @@
      "subscription (book not open yet)",
      "issue window",
      "anchor book",
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -533,103 +541,42 @@
    "reads_against": null
   }
  ],
- "closed": [
-  {
-   "symbol": "TEMPSENS",
-   "company": "Tempsens Instruments (India) Limited",
-   "exchange": "NSE",
-   "series": "EQ",
-   "phase": "closed",
-   "status": "Closed",
-   "open_date": "2026-08-20",
-   "close_date": "2026-08-24",
-   "days_left": null,
-   "price_band": "Rs.285 to Rs.300",
-   "price_low": 285.0,
-   "price_high": 300.0,
-   "issue_size_shares": 15181667.0,
-   "issue_size_cr": 455.5,
-   "subscription_x": null,
-   "subscription_by_category": null,
-   "lot_size": null,
-   "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
-   "listing_date": null,
-   "gmp_text": null,
-   "revenue_cr": null,
-   "revenue_growth_pct": null,
-   "pat_cr": null,
-   "pat_growth_pct": null,
-   "pat_margin_pct": null,
-   "roe_pct": null,
-   "debt_to_equity": null,
-   "pe_post_issue": null,
-   "peer_pe": null,
-   "fy_label": null,
-   "strengths": null,
-   "risks": null,
-   "use_of_proceeds": null,
-   "score": {
-    "points": 29,
-    "of": 45,
-    "pct": 64,
-    "parts": {
-     "Size": "14/25",
-     "Pricing": "15/20"
-    },
-    "not_measured": [
-     "subscription (book not open yet)",
-     "issue window",
-     "lot size",
-     "minimum application",
-     "fresh/OFS split",
-     "anchor book",
-     "listing date",
-     "sector",
-     "audited financials",
-     "valuation multiples"
-    ],
-    "shown_not_scored": []
-   },
-   "verdict": "WATCH",
-   "verdict_why": "Book has closed; NSE no longer publishes a live subscription figure for it.",
-   "verdict_caveat": "The final multiple is not in the public feed, so no verdict on demand can be offered after the fact."
-  }
- ],
+ "closed": [],
  "awaiting_listing": [
   {
    "symbol": "TEMPSENS",
    "company": "Tempsens Instruments (India) Limited",
    "price_band": "Rs.285 to Rs.300",
    "close_date": "2026-08-24",
-   "listing_date": null,
+   "listing_date": "Aug 28, 2026",
    "days_since_close": 1,
-   "lot_size": null,
+   "lot_size": 50.0,
    "min_investment": null,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
-   "face_value": null,
-   "anchor_cr": null,
+   "fresh_issue_cr": 95.0,
+   "ofs_cr": 555.0,
+   "face_value": 4.0,
+   "anchor_cr": 194.55,
    "gmp_text": null,
    "revenue_cr": null,
-   "revenue_growth_pct": null,
+   "revenue_growth_pct": 19.0,
    "pat_cr": null,
-   "pat_growth_pct": null,
+   "pat_growth_pct": 14.0,
    "pat_margin_pct": null,
    "roe_pct": null,
    "debt_to_equity": null,
    "pe_post_issue": null,
    "peer_pe": null,
-   "fy_label": null,
+   "fy_label": "FY26",
    "strengths": null,
    "risks": null,
    "use_of_proceeds": null,
-   "enriched_source": null,
+   "enriched_source": "chittorgarh.com",
+   "issue_size_cr": 650.0,
+   "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/",
    "reads_for": null,
-   "reads_against": null
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b9555 Cr) than new money into the business (\u20b995 Cr)."
+   ]
   },
   {
    "symbol": "GAJA",

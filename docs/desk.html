@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-QbDfrqlm2EV8nqTYUqIz0A'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-lT76xIwVxxwCEdiAU1SWCQ'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="QbDfrqlm2EV8nqTYUqIz0A">
+<script nonce="lT76xIwVxxwCEdiAU1SWCQ">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="QbDfrqlm2EV8nqTYUqIz0A">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-25","dateModified":"2026-08-25T21:37:26.488334+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="lT76xIwVxxwCEdiAU1SWCQ">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-25","dateModified":"2026-08-25T23:44:51.527256+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -282,18 +282,43 @@
    preference no longer decides this: the site is light, and dark is a choice
    the reader makes and keeps. */
 :root:not([data-theme]){
-  --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
-  --surface3:#EFEEE9; --overlay:#FFFFFF;
-  --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-  --text:#17191C; --muted:#535A63; --dim:#656C74;
-  --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
-  --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
-  --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
+  --bg:#FFFFFF;
+  --bg2:#FAFAF9;
+  --surface:#FFFFFF;
+  --surface2:#F8F8F7;
+  --surface3:#F1F1EF;
+  --overlay:#FFFFFF;
+
+  --line:rgba(17,18,20,.085);
+  --line2:rgba(17,18,20,.16);
+
+  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
+     three regularly print on — a contrast figure quoted against pure white is
+     a figure that is never true where the text actually sits.
+     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
+  --text:#111214;
+  --muted:#54595F;
+  --dim:#61666C;
+
+  /* The lime is the mark, not the interface. On white it is reserved for the
+     wordmark and a small number of live-state dots; everything that used to be
+     lime-on-dark is ink now. A signature colour spent on every border stops
+     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
+  --lime:#4E6B08;
+  --lime-soft:rgba(78,107,8,.07);
+  --lime-line:rgba(78,107,8,.22);
+
+  --orb-a:rgba(78,107,8,.05);
+  --orb-b:rgba(31,95,191,.03);
+  --pick-edge:#FAFAF9;
   --on-up:#FFFFFF;
-  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
-  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-  --blue:#1F5FBF; --violet:#6D4DC7;
+  --rank-ink:rgba(17,18,20,.045);
+  --scroll-thumb:#DEDEDA;
+  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
+  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
+  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
+  --blue:#1B54AC; --violet:#5F41B8;
+
   color-scheme:light;
 }
 
@@ -304,67 +329,50 @@
    Borders do more work here and shadows do less, which is the opposite of
    the dark theme — on paper, elevation reads through edges. */
 :root[data-theme="light"]{
-  --bg:#FBFAF7;
-  --bg2:#F5F4F0;
+  --bg:#FFFFFF;
+  --bg2:#FAFAF9;
   --surface:#FFFFFF;
-  --surface2:#F7F6F2;
-  --surface3:#EFEEE9;
+  --surface2:#F8F8F7;
+  --surface3:#F1F1EF;
   --overlay:#FFFFFF;
 
-  --line:rgba(23,25,28,.10);
-  --line2:rgba(23,25,28,.18);
+  --line:rgba(17,18,20,.085);
+  --line2:rgba(17,18,20,.16);
 
-  /* Ink on paper. The ratios below are measured against --bg2 (#F5F4F0), the
-     DARKEST surface any of these three regularly print on — not against --bg.
-     --dim was tuned to 4.6:1 on --bg and shipped at 4.23:1 on a section band,
-     which is where it actually appears: table headers, the provenance strip,
-     card metadata. A contrast figure quoted against the lightest possible
-     ground is a figure that is never true where the text is.
-     Measured: 16.0:1 / 6.2:1 / 4.62:1. */
-  --text:#17191C;
-  --muted:#535A63;
-  --dim:#656C74;
+  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
+     three regularly print on — a contrast figure quoted against pure white is
+     a figure that is never true where the text actually sits.
+     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
+  --text:#111214;
+  --muted:#54595F;
+  --dim:#61666C;
 
-  /* The lime is darkened for light mode. #C2F04A on white is 1.6:1 — a
-     signature colour that becomes unreadable is a branding failure, so the
-     hue is preserved and the luminance is not. */
-  --lime:#5C7A0B;
-  --lime-soft:rgba(92,122,11,.10);
-  --lime-line:rgba(92,122,11,.30);
+  /* The lime is the mark, not the interface. On white it is reserved for the
+     wordmark and a small number of live-state dots; everything that used to be
+     lime-on-dark is ink now. A signature colour spent on every border stops
+     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
+  --lime:#4E6B08;
+  --lime-soft:rgba(78,107,8,.07);
+  --lime-line:rgba(78,107,8,.22);
 
-  --orb-a:rgba(194,240,74,.16);
-  --orb-b:rgba(31,95,191,.05);
-  --pick-edge:#F1EFE8;
+  --orb-a:rgba(78,107,8,.05);
+  --orb-b:rgba(31,95,191,.03);
+  --pick-edge:#FAFAF9;
   --on-up:#FFFFFF;
-  --rank-ink:rgba(23,25,28,.05);
-  --scroll-thumb:#D9D7D0;
-  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
-  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-  --blue:#1F5FBF; --violet:#6D4DC7;
+  --rank-ink:rgba(17,18,20,.045);
+  --scroll-thumb:#DEDEDA;
+  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
+  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
+  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
+  --blue:#1B54AC; --violet:#5F41B8;
 
   color-scheme:light;
 }
 
-/* System preference, when the reader has expressed no choice of their own.
-   Scoped with :not([data-theme]) so an explicit pick always wins. */
-@media (prefers-color-scheme: light){
-  :root:not([data-theme]){
-    --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
-    --surface3:#EFEEE9; --overlay:#FFFFFF;
-    --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-    --text:#17191C; --muted:#535A63; --dim:#656C74;
-    --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
-    --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
-    --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
-    --on-up:#FFFFFF;
-    --up:#0E7A4F; --up-soft:rgba(14,122,79,.10);
-    --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-    --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-    --blue:#1F5FBF; --violet:#6D4DC7;
-    color-scheme:light;
-  }
-}
+/* No prefers-color-scheme block. Light is the default for every reader
+   without an explicit choice, so a media query repeating the same palette
+   would only be a third place for it to drift out of step. Dark remains a
+   deliberate pick via the toggle, which stamps data-theme="dark". */
 
 /* ── THE MANDATE'S ORDER BOOK ─────────────────────────────────────────────
    Every colour and size below is a token, so this block follows the theme
@@ -442,6 +450,131 @@
   .mrr{ margin-left:0 }
   .mladder{ flex-direction:column; align-items:flex-start }
   .mleg{ width:100% }
+}
+
+/* ── MAGAZINE LAYER ───────────────────────────────────────────────────────
+   The palette above made the page white. This makes it read like a magazine
+   rather than a dashboard that happens to be light.
+
+   Three moves, in order of how much work they do:
+
+   1. SPACE. A dark UI holds together on contrast; a white page holds together
+      on whitespace. Sections breathe roughly 40% harder, and the measure is
+      capped so running text never crosses ~68 characters.
+
+   2. RULES, NOT BOXES. On dark, a card reads as a card because it is lighter
+      than its ground. On white there is nowhere lighter to go, so the same
+      card needs a border on every side and the page turns into a grid of
+      rectangles. Cards lose their frames and keep a single hairline above —
+      elevation reads through the edge, the way it does in print.
+
+   3. TYPE CARRIES THE HIERARCHY. Headings get tighter tracking and more size
+      contrast against the body, so a reader can find the shape of the page
+      without a single box being drawn.
+
+   Scoped to the light themes only. The dark theme was designed around
+   contrast and shadow and is left exactly as it was. */
+:root:not([data-theme]) .sec,
+:root[data-theme="light"] .sec{
+  padding-block:clamp(52px,7vw,104px);
+}
+:root:not([data-theme]) .shead,
+:root[data-theme="light"] .shead{
+  margin-bottom:clamp(26px,3.4vw,46px);
+}
+:root:not([data-theme]) .stitle,
+:root[data-theme="light"] .stitle{
+  letter-spacing:-.032em;
+  line-height:1.02;
+}
+:root:not([data-theme]) .sdesc,
+:root[data-theme="light"] .sdesc{
+  max-width:64ch;
+  color:var(--muted);
+}
+/* Cards keep one hairline and lose the frame. */
+:root:not([data-theme]) .card,
+:root[data-theme="light"] .card{
+  background:transparent;
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  box-shadow:none;
+  padding-block:clamp(18px,2vw,26px);
+}
+:root:not([data-theme]) .card:hover,
+:root[data-theme="light"] .card:hover{
+  background:var(--bg2);
+  box-shadow:none;
+}
+/* Tables lose their outer box for the same reason and keep their row rules. */
+:root:not([data-theme]) table,
+:root[data-theme="light"] table{
+  border:0;
+}
+:root:not([data-theme]) th,
+:root[data-theme="light"] th{
+  border-bottom:1px solid var(--line2);
+  color:var(--dim);
+  font-weight:600;
+}
+:root:not([data-theme]) td,
+:root[data-theme="light"] td{
+  border-bottom:1px solid var(--line);
+}
+/* The eyebrow becomes a rule-and-label instead of a chip. */
+:root:not([data-theme]) .snum,
+:root[data-theme="light"] .snum{
+  color:var(--dim);
+  letter-spacing:.16em;
+}
+/* ── WHEN IT WORKS / WHAT IF ──────────────────────────────────────────────
+   Both blocks are built from tokens only. The heat scale runs through --up and
+   --down at varying alpha rather than a rainbow: the question is "did this day
+   make or lose money", which is one axis, and a two-colour scale answers it
+   without asking the reader to learn a legend. */
+.whenwrap,.whatifwrap{margin-top:clamp(28px,3.4vw,44px)}
+.whenhead{margin-bottom:16px}
+.whentitle{font-size:clamp(19px,2.2vw,25px);letter-spacing:-.025em;margin-bottom:6px}
+.whensub{color:var(--muted);font-size:14px;max-width:62ch;margin:0}
+.whengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:6px;margin-bottom:10px}
+.whenmonths{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
+.whencell{border:1px solid var(--line);border-radius:6px;padding:10px 11px;min-height:74px;
+  display:flex;flex-direction:column;justify-content:space-between}
+.whencell .wk{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.whencell .wv{font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.whencell .wn{font-size:10.5px;color:var(--dim);font-family:var(--mono)}
+.whencell.empty-cell .wv{color:var(--dim)}
+.whennote{color:var(--dim);font-size:13px;max-width:64ch;margin-top:4px}
+.whatifrow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.whatifchip{font-family:var(--mono);font-size:12px;padding:6px 11px;border-radius:99px;
+  border:1px solid var(--line2);background:none;color:var(--muted);cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s,opacity .15s}
+.whatifchip:hover{color:var(--text)}
+.whatifchip[aria-pressed="true"]{opacity:.42;text-decoration:line-through}
+.whatifout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.whatifout .wo{border-top:1px solid var(--line);padding-top:11px}
+.whatifout .wo .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.whatifout .wo .v{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.whatifout .wo .d{font-size:11.5px;color:var(--dim);font-family:var(--mono);margin-top:4px}
+
+/* The decorative column grid nearly disappears.
+   .vgrid paints 1px verticals at --line. On the dark ground that was a faint
+   texture you had to look for; the same alpha as dark-on-light is markedly
+   stronger, and a white page ruled into columns reads as a spreadsheet rather
+   than a magazine. Kept rather than removed — it still aligns the eye — at
+   roughly a quarter of the weight. */
+:root:not([data-theme]) .vgrid,
+:root[data-theme="light"] .vgrid{
+  opacity:.28;
+}
+
+/* Numerals line up in columns on a page that is mostly numbers. */
+:root:not([data-theme]) table,
+:root:not([data-theme]) .num,
+:root[data-theme="light"] table,
+:root[data-theme="light"] .num{
+  font-variant-numeric:tabular-nums;
 }
 
 /* Surfaces and ink cross-fade on a theme switch; nothing else does, or the
@@ -2982,7 +3115,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Tuesday, August 25 2026</span>
-      <span class="live" id="istClock"><i></i>21:37 MYT</span>
+      <span class="live" id="istClock"><i></i>23:44 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -3032,7 +3165,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260825T213726">
+<div class="editionbar" id="editionbar" data-build="20260825T234451">
   
   <span><b>New edition published<span id="editionWhen"></span>.</b>
     This tab was built for Tuesday, August 25 2026. Live data &mdash; the ticker, heat map and
@@ -3067,43 +3200,43 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7683</span>
-      <span class="c up">▲ +0.4%</span>
+      <span class="p">7669</span>
+      <span class="c up">▲ +0.21%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">26166</span>
-      <span class="c up">▲ +0.71%</span>
+      <span class="p">26121</span>
+      <span class="c up">▲ +0.54%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4669.8</span>
-      <span class="c up">▲ +0.62%</span>
+      <span class="p">$4705.1</span>
+      <span class="c up">▲ +1.39%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$82.60</span>
-      <span class="c dn">▼ -2.83%</span>
+      <span class="p">$82.16</span>
+      <span class="c dn">▼ -3.35%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.41</span>
-      <span class="c dn">▼ -0.3%</span>
+      <span class="p">₹95.40</span>
+      <span class="c dn">▼ -0.31%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$79125</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$79422</span>
+      <span class="c up">▲ +0.58%</span>
     </div>
     
     
@@ -3125,43 +3258,43 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7683</span>
-      <span class="c up">▲ +0.4%</span>
+      <span class="p">7669</span>
+      <span class="c up">▲ +0.21%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">26166</span>
-      <span class="c up">▲ +0.71%</span>
+      <span class="p">26121</span>
+      <span class="c up">▲ +0.54%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4669.8</span>
-      <span class="c up">▲ +0.62%</span>
+      <span class="p">$4705.1</span>
+      <span class="c up">▲ +1.39%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$82.60</span>
-      <span class="c dn">▼ -2.83%</span>
+      <span class="p">$82.16</span>
+      <span class="c dn">▼ -3.35%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.41</span>
-      <span class="c dn">▼ -0.3%</span>
+      <span class="p">₹95.40</span>
+      <span class="c dn">▼ -0.31%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$79125</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$79422</span>
+      <span class="c up">▲ +0.58%</span>
     </div>
     
     
@@ -3429,7 +3562,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">01 / FINANCE CAREERS</span> 
-<span class="dh dh-DEGRADED" title="Careers feed · 5h old — partial coverage — 13/22 records.">DEGRADED<span class="dh-age">5h old</span></span>
+<span class="dh dh-DEGRADED" title="Careers feed · 7h old — partial coverage — 13/22 records.">DEGRADED<span class="dh-age">7h old</span></span>
       <h2 class="stitle">Where the next role is.</h2>
     </div>
     <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
@@ -5569,7 +5702,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">03 / DAILY BRIEF</span> 
-<span class="dh dh-LIVE" title="Daily Brief · 6h old.">LIVE<span class="dh-age">6h old</span></span>
+<span class="dh dh-FRESH" title="Daily Brief · 8h old.">FRESH<span class="dh-age">8h old</span></span>
       <h2 class="stitle">Everything important today.</h2>
     </div>
     <p class="sdesc">173 articles from
@@ -5969,31 +6102,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span class="sr-tag sr-money">MONEY</span>
         <span class="sr-date">Aug 25, 2026</span>
       </div>
-      <h3 class="sr-t"><a href="https://www.livemint.com/money/personal-finance/how-india-is-investing-in-mutual-funds-longer-holding-periods-rising-equity-exposure-and-changing-investor-behaviour-11787661648714.html" target="_blank" rel="noopener">How India is investing in mutual funds: Longer holding periods, rising equity exposure and changing investor behaviour</a></h3>
-      <p class="sr-s">Indian mutual fund investors are holding their investments longer, while women and younger investors are taking greater equity exposure. AMFI-Crisil data also shows regular-plan investors have longer holding periods, even as the industry's allocation shifts from debt towards equity.</p>
+      <h3 class="sr-t"><a href="https://www.livemint.com/money/personal-finance/nps-100-equity-option-explained-how-it-works-who-should-consider-it-and-key-rules-11787664796753.html" target="_blank" rel="noopener">NPS 100% equity option explained: How it works, who should consider it and key rules</a></h3>
+      <p class="sr-s">NPS now allows non-government subscribers to access schemes with up to 100% equity exposure under the Multiple Scheme Framework. But higher equity also means higher market risk. Here’s what investors should know before choosing the option.</p>
 
       
       
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Mutual fund investors are holding their investments longer.</li><li>Women and younger investors are taking greater equity exposure as the industry's allocation shifts from debt toward equity.</li>
-        </ul></dd>
-        
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">Longer holding periods suggest a move toward a more stable investor base, reducing turnover volatility, while the shift toward equity—especially among women and younger investors—signals growing risk appetite and could boost demand for equity-oriented funds, influencing fund managers' asset allocation strategies and potentially affecting capital flows into Indian equities.</dd>
-        </div>
-        
-        
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">Track the equity share of regular‑plan mutual fund assets in the upcoming AMFI‑Crisil quarterly report.</dd>
-        
-      </dl>
-      <p class="sr-read">23 sec read &middot; no recommendation, by design</p>
-      
 
-      <a class="readmore" href="https://www.livemint.com/money/personal-finance/how-india-is-investing-in-mutual-funds-longer-holding-periods-rising-equity-exposure-and-changing-investor-behaviour-11787661648714.html" target="_blank" rel="noopener">Read more &rarr;</a>
+      <a class="readmore" href="https://www.livemint.com/money/personal-finance/nps-100-equity-option-explained-how-it-works-who-should-consider-it-and-key-rules-11787664796753.html" target="_blank" rel="noopener">Read more &rarr;</a>
     </article>
     
     <article class="sr rv" style="--d:0.04s">
@@ -6029,24 +6144,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <p class="sr-s">While the country has in the past provided recourse to arbitration abroad for overseas investors, this may not be necessary to attract foreign direct investment. Let India’s Brazil pact inspire the forthcoming rejig of its model bilateral investment treaty (BIT).</p>
 
       
-      
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>India has previously provided overseas investors with recourse to arbitration abroad.</li><li>The forthcoming India‑Brazil bilateral investment treaty is being cited as a model for revising India's BIT framework without relying on foreign arbitration.</li>
-        </ul></dd>
-        
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">If India can attract foreign direct investment without guaranteeing foreign‑court arbitration, it could reshape its investment treaty strategy, reduce legal costs, and give the government greater control over dispute resolution while still offering sufficient protection to investors.</dd>
-        </div>
-        
-        
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">The signing and ratification of the India‑Brazil bilateral investment treaty and any official announcements of changes to India's standard BIT template.</dd>
-        
-      </dl>
-      <p class="sr-read">21 sec read &middot; no recommendation, by design</p>
       
 
       <a class="readmore" href="https://www.livemint.com/opinion/online-views/bilateral-investment-treaties-success-foreign-arbitration-brazil-pact-fdi-foreign-direct-investment-11787563994984.html" target="_blank" rel="noopener">Read more &rarr;</a>
@@ -6090,17 +6187,17 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       <dl class="sr-x">
         <dt>What happened &middot; from the article</dt>
         <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Peter Attia emphasizes that early intervention can reverse steatosis and early-stage fibrosis.</li><li>The AMA discussion covered assessing risk, catching dysfunction early, and preventing or reversing liver disease.</li>
+          <li>Peter Attia said the disease can be reversible and emphasized intervening early.</li><li>He noted that steatosis and early-stage fibrosis may regress when metabolic drivers are addressed.</li>
         </ul></dd>
         
         <div class="sr-why">
           <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">Early detection of metabolic liver dysfunction is crucial because it allows clinicians to intervene before fibrosis progresses, offering the possibility of reversing steatosis and early fibrosis, which can improve long-term health outcomes and reduce the burden of chronic liver disease.</dd>
+          <dd class="sr-interp">Early detection and reversal of metabolic liver disease could reduce long‑term healthcare spending and drive demand for diagnostic tools and therapeutic products aimed at steatosis and fibrosis, making it a focus for companies in the biotech and medical device sectors.</dd>
         </div>
         
         
         <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">Monitor for any new clinical guidelines or screening recommendations related to metabolic liver disease risk assessment.</dd>
+        <dd class="sr-interp">Monitor announcements from upcoming AMA sessions or related conferences for updates on new diagnostic or therapeutic approaches to early‑stage liver fibrosis.</dd>
         
       </dl>
       <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
@@ -6127,17 +6224,17 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       <dl class="sr-x">
         <dt>What happened &middot; from the article</dt>
         <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>The piece explores Oliver Sacks' perspective on the neurocognitive foundations of what makes us who we are.</li><li>It notes that biologically we are similar, but each person is unique as a historical narrative.</li>
+          <li>Oliver Sacks explored the neurocognitive foundations of what makes us who we are.</li><li>He highlighted that biologically we are similar, but each person has a unique narrative.</li>
         </ul></dd>
         
         <div class="sr-why">
           <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">Understanding the balance between shared biological traits and individual narrative identity helps frame discussions in neuroscience, psychology, and bioethics about how personhood is defined and protected, influencing policy and research priorities.</dd>
+          <dd class="sr-interp">The commentary underscores the interplay between shared human biology and individual experience, informing debates in neuroscience, psychology, and ethics about the nature of identity and personhood.</dd>
         </div>
         
         
         <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">No specific upcoming event or development is mentioned in the article.</dd>
+        <dd class="sr-interp">Watch for the full interview or article where Sacks expands on this quote for deeper insight.</dd>
         
       </dl>
       <p class="sr-read">20 sec read &middot; no recommendation, by design</p>
@@ -6286,7 +6383,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
   <div class="shead rv">
     <div>
       <span class="snum">06 / PODCASTS</span> 
-<span class="dh dh-FRESH" title="Podcasts · 15h old.">FRESH<span class="dh-age">15h old</span></span>
+<span class="dh dh-FRESH" title="Podcasts · 17h old.">FRESH<span class="dh-age">17h old</span></span>
       <h2 class="stitle">What&rsquo;s worth listening to.</h2>
     </div>
     <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
@@ -6300,7 +6397,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
   <div class="prov rv">
     <span class="pv-tag">DAILY</span>
     <span>20 episodes from 20 shows</span>
-    <span>Built <b>2026-08-24</b> · 0.6d old</span>
+    <span>Built <b>2026-08-24</b> · 0.7d old</span>
     
   </div>
 
@@ -7007,7 +7104,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
   </div>
 
   
-  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>Your opening repertoire is a liability: ditch the A45 Indian Defense entirely—its zero‑percent record proves it’s a dead‑end, not a surprise weapon. Double down on the Philidor (C41), study its typical pawn structures and typical counter‑play, and make it your go‑to system to build a reliable win‑rate. From now on, every game must start with a prepared line you’ve rehearsed to depth; if you ever open with anything else, you’re signing a loss before the first move.</div>
+  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>Your opening repertoire is a liability: abandon the A45 Indian Defense entirely—its 0 % win rate proves it’s a losing weapon, and you’re handing opponents free points. Double‑down on the C41 Philidor, but deepen your theory (study the 3…c6 and 4…Nbd7 systems) to convert the 80 % success into a consistent edge. Allocate at least one hour each week to drilling Philidor endgames and replace every practice game’s first ten moves with a forced line from the main Philidor theory, then reassess your win rate after ten games.</div>
   
 
   
@@ -7063,7 +7160,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early development: play 4.Nc3 instead of 4.Qe2, control d5, avoid queen‑early moves, and reduce unnecessary tempo loss.</div>
+      <div class="an">💡 Focus on early piece development: play Nf3 before Bc4, avoid queen moves like Qd2; this cuts average move count by ~2 and raises accuracy >85 %.</div>
     </div>
     
     <div class="game win">
@@ -7099,7 +7196,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; in the Philidor, play ...Nf6, ...Be7, ...0‑0 within 8 moves, avoiding queen sorties that waste time.</div>
+      <div class="an">💡 Focus on central pawn breaks: after 10…Nf6, play …c5 immediately instead of …Be7; you’ll gain ~0.3 cp and avoid passive positions.</div>
     </div>
     
     <div class="game win">
@@ -7135,7 +7232,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Improve your early queen‑side development: play Nf6 and e6 before pushing ...c5; this saves ~0.3 pawn‑value and prevents opponent’s rapid Qb3 attack.</div>
+      <div class="an">💡 Focus on early piece development: move your light‑squared bishop to e7 (or g4) by move 4, avoiding queen‑side delays that cost ~0.3 pawns.</div>
     </div>
     
     <div class="game loss">
@@ -7171,7 +7268,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early central control: after 1.d4 Nf6 2.Nf3 d5 3.c4, develop the light‑squared bishop to g5 or e2 instead of passive …e6, preventing Black’s solid …c6‑…Bb4 setup and reducing time‑losses (≈30 % of your inaccuracies).</div>
+      <div class="an">💡 Focus on early piece coordination: develop knights before moving the same bishop twice; in the first 12 moves you wasted 3 tempi, costing ~0.4 % accuracy. Optimize development to avoid falling behind.</div>
     </div>
     
     <div class="game win">
@@ -7207,7 +7304,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early pawn structure: after 1.d4 f5, avoid passive 2.Nf3 and instead play 2.c4, 3.Nc3, targeting ...e6 and ...d5; this reduces Black’s Dutch counter‑play and improves your piece activity.</div>
+      <div class="an">💡 Focus on early piece coordination: develop knights before moving the queen; aim for <20 % pawn‑structure weaknesses and reduce average centipawn loss to under 30 by move 15.</div>
     </div>
     
     <div class="game win">
@@ -7243,7 +7340,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on defending the f7‑square early; after 1.e4 e5 2.f4 exf4, develop Nf6 before …d5, preventing White’s quick queen‑check threats.</div>
+      <div class="an">💡 Focus on early king safety: after 1.e4 e5 2.f4 exf4 3.Nf3 g5, avoid 4.h4?; instead play 4...d6, develop knights, and castle by move 8 to prevent rapid attacks.</div>
     </div>
     
     <div class="game loss">
@@ -7279,7 +7376,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Strengthen your opening: develop knights before queen, avoid 2…Qh5 lines; aim for <30 % piece‑move repetitions and reduce blunders to zero.</div>
+      <div class="an">💡 Focus on early king safety: castle by move 8, avoid moving the f‑pawn after 9.Nf3, and stop exposing the king to opponent’s queen‑bishop battery.</div>
     </div>
     
     <div class="game win">
@@ -7315,7 +7412,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Strengthen your endgame technique: practice converting simple material advantages (e.g., +1 pawn) into wins within 15 moves; aim ≤30 % accuracy loss after move 20.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights to f6 and c6 before moving the queen; avoid unnecessary queen moves that waste tempo and expose you to tactics.</div>
     </div>
     
     <div class="game loss">
@@ -7351,7 +7448,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early king safety: after 9…Nf6, avoid 10…g5‑g4; instead develop with …Be7, castle, and keep pawn structure intact to prevent the forced mate at move 25.</div>
+      <div class="an">💡 Focus on early king safety: after 1.e4 e5 2.Nf3 d6, avoid the passive 3...Nd7; instead play 3...Nf6, develop, then castle by move 8, preventing the swift queen‑bishop battery that led to mate at move 25.</div>
     </div>
     
     <div class="game win">
@@ -7387,7 +7484,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early queen development: avoid 5.Qd2 and 9.Qe2; instead play 5.Nc3, 9.Bd3, reducing queen moves by ≈ 30 % and saving critical time.</div>
+      <div class="an">💡 Focus on early piece coordination: develop knights before moving the queen (e.g., Nf3, Nc3) to avoid losing tempo and potential tactics.</div>
     </div>
     
     <div class="game win">
@@ -7423,7 +7520,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early queen development: avoid moving Qd1–h5/h4 before completing piece development; aim to castle by move 8 and keep queen off vulnerable squares. This cuts tactical threats and improves time‑to‑castle by ~2–3 moves.</div>
+      <div class="an">💡 Focus on early queen development: avoid moving the queen before move 9; it cost you ~0.6 pts by allowing Black’s active piece play. Strengthen opening fundamentals.</div>
     </div>
     
     <div class="game win">
@@ -7459,7 +7556,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece development: bring your dark‑squared bishop out before moving the queen; aim to complete development by move 8, reducing average centipawn loss to under 30.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; aim to castle by move 8 to avoid unnecessary queen sorties that waste time and expose the king.</div>
     </div>
     
     <div class="game loss">
@@ -7495,7 +7592,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early king safety: avoid 9.Nd2 and 13.Qf3, develop pieces, castle before pushing pawns; reduces check‑mate threats dramatically.</div>
+      <div class="an">💡 Focus on early king safety: avoid moving the f‑pawn before castling; in this game you left the king exposed, leading to a forced mate at move 41. Strengthen opening fundamentals and castle promptly.</div>
     </div>
     
     <div class="game loss">
@@ -7540,7 +7637,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Study the early ...c5 and ...e6 pawn structures; avoid 10...Qb6? and 12...Bf5? which allowed forced mate at move 20. Master Slav move orders.</div>
+      <div class="an">💡 Study the early queen‑side pawn structure: stop 1…c5? and 2…Qb6; instead develop Nf6, Bf5, then castle—avoid losing material before move 12.</div>
     </div>
     
     <div class="game loss">
@@ -7576,7 +7673,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early king safety: avoid leaving the back‑rank open—your queen’s premature exchange at move 12 cost ~3 points, leading to forced mate by move 29. Improve by 2‑3 moves each game.</div>
+      <div class="an">💡 Focus on early king safety: stop castling queenside after 8…b5; instead play 9 O‑O, avoid exposing the king to a swift pawn storm.</div>
     </div>
     
     <div class="game win">
@@ -7612,7 +7709,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early pawn structure: after 1.d4 d5 2.Nf3 Nf6 3.c4, you repeatedly allowed isolated or doubled pawns; tighten c‑ and e‑pawns to avoid conceding half‑points—aim ≤0.5 ACPL in the opening phase.</div>
+      <div class="an">💡 Focus on early queen development: avoid bringing the queen out before move 12; it cost ~0.8 ACPL and created unnecessary tempo losses. Reduce queen moves by ≥ 30 % to tighten the opening.</div>
     </div>
     
     <div class="game win">
@@ -7648,7 +7745,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early queen‑side pawn structure: after 10…c5, you missed the stronger 11…cxd4! (instead of 11…a6). This caused a weak d5‑square and extra tempo loss, costing ~0.3 % accuracy. Improve by calculating pawn breaks before committing to flank moves.</div>
+      <div class="an">💡 Focus on early queen‑side pawn structure: after 10…c5, you left d5 weak; strengthen d5 with …c6 or …e6, preventing opponent’s Nd4‑c6 infiltration and reducing later tactical threats.</div>
     </div>
     
     <div class="game win">
@@ -7684,7 +7781,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; avoid queen sorties before Nf6 and Bc5, reducing unnecessary tempo losses.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before moving the same piece twice; in this game you wasted 3 tempi on queen moves, losing ~0.6 ACPL. Reduce unnecessary queen sorties and finish development within 8 moves.</div>
     </div>
     
     <div class="game draw">
@@ -7720,7 +7817,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Improve your opening: aim for 3.Nc3 or 3.Nf3 within 5 moves, avoiding passive 2...e6 setups that waste ~30 cp.</div>
+      <div class="an">💡 Focus on early queen development: avoid 3.Qh5 and 5.Qb3; instead play 3.Nc3, 4.Bd3, 5.Nf3, reducing queen moves by ≈ 30 % and cutting average centipawn loss from ~45 to <30.</div>
     </div>
     
     <div class="game win">
@@ -7756,7 +7853,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on reducing unnecessary queen trades early: avoid 9.Qxd5? (or similar) that simplifies into equal endgames; keep tension to exploit your pawn majority.Stop exchanging queens prematurely; after 9...Qxd5 keep queens on board to pressure his isolated d‑pawn and activate rooks in the.</div>
+      <div class="an">💡 Focus on move 13: you missed a forced …c5! (instead of …a6). It would have equalized the pawn structure and saved ~0.5 pawns in evaluation. Improve calculation depth in sharp middlegame positions.</div>
     </div>
     
     <div class="game win">
@@ -7792,7 +7889,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Focus on early queen development: avoid 3.Qh5? and 4.Qxd5?; instead play 3.Nc3, 4.Nf3, reaching solid setup—reduces blunders, cuts ACPL below 40.</div>
+      <div class="an">💡 Reduce opening blunders: study Modern Defense lines — learn 3 main pawn structures and 5 key move orders to avoid early inaccuracies.</div>
     </div>
     
     <div class="game win">
@@ -7828,7 +7925,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early central control: after 1.c4 c5 2.Nc3 Nc6 3.g3 g6, develop with …Bg7 and …d5 promptly (instead of …e6), reducing white’s space and preventing your queen‑side pawn‑storm. This cuts the game’s length by ~3–4 moves and raises accuracy above 85 %.</div>
+      <div class="an">💡 Focus on early pawn structure: stop playing ...c5 too early; after 1.c4 Nf6 2.Nc3 e6 3.g3 d5, maintain central tension and avoid premature ...c5 that weakens d6–e5 squares.Focus on early pawn structure: stop playing …c5 too early; after 1.c4 Nf6 2.Nc3 e6 3.g3 d5, maintain central tension and avoid premature …c5 that weakens d6–e5 squares.</div>
     </div>
     
   </div>
@@ -7899,7 +7996,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 2045 · 🔴 stretch</h3>
+      <h3>Rating 1928 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Middlegame · Advantage · Very Long</p>
       <div class="q">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
       <a href="https://lichess.org/training/zFy6T" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -7953,7 +8050,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Tuesday, August 25 2026 · built 21:37 MYT<br>
+      Tuesday, August 25 2026 · built 23:44 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -7995,9 +8092,9 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="QbDfrqlm2EV8nqTYUqIz0A">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="lT76xIwVxxwCEdiAU1SWCQ">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="QbDfrqlm2EV8nqTYUqIz0A">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="QbDfrqlm2EV8nqTYUqIz0A" src="/app.js?v=20260825T213726" defer></script>
+<script type="application/json" id="sector-map" nonce="lT76xIwVxxwCEdiAU1SWCQ">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="lT76xIwVxxwCEdiAU1SWCQ" src="/app.js?v=20260825T234451" defer></script>
 </body>
 </html>

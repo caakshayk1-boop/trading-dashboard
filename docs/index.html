@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-QbDfrqlm2EV8nqTYUqIz0A'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-lT76xIwVxxwCEdiAU1SWCQ'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="QbDfrqlm2EV8nqTYUqIz0A">
+<script nonce="lT76xIwVxxwCEdiAU1SWCQ">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="QbDfrqlm2EV8nqTYUqIz0A">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-25","dateModified":"2026-08-25T21:37:26.488334+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="lT76xIwVxxwCEdiAU1SWCQ">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-25","dateModified":"2026-08-25T23:44:51.527256+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -282,18 +282,43 @@
    preference no longer decides this: the site is light, and dark is a choice
    the reader makes and keeps. */
 :root:not([data-theme]){
-  --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
-  --surface3:#EFEEE9; --overlay:#FFFFFF;
-  --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-  --text:#17191C; --muted:#535A63; --dim:#656C74;
-  --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
-  --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
-  --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
+  --bg:#FFFFFF;
+  --bg2:#FAFAF9;
+  --surface:#FFFFFF;
+  --surface2:#F8F8F7;
+  --surface3:#F1F1EF;
+  --overlay:#FFFFFF;
+
+  --line:rgba(17,18,20,.085);
+  --line2:rgba(17,18,20,.16);
+
+  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
+     three regularly print on — a contrast figure quoted against pure white is
+     a figure that is never true where the text actually sits.
+     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
+  --text:#111214;
+  --muted:#54595F;
+  --dim:#61666C;
+
+  /* The lime is the mark, not the interface. On white it is reserved for the
+     wordmark and a small number of live-state dots; everything that used to be
+     lime-on-dark is ink now. A signature colour spent on every border stops
+     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
+  --lime:#4E6B08;
+  --lime-soft:rgba(78,107,8,.07);
+  --lime-line:rgba(78,107,8,.22);
+
+  --orb-a:rgba(78,107,8,.05);
+  --orb-b:rgba(31,95,191,.03);
+  --pick-edge:#FAFAF9;
   --on-up:#FFFFFF;
-  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
-  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-  --blue:#1F5FBF; --violet:#6D4DC7;
+  --rank-ink:rgba(17,18,20,.045);
+  --scroll-thumb:#DEDEDA;
+  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
+  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
+  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
+  --blue:#1B54AC; --violet:#5F41B8;
+
   color-scheme:light;
 }
 
@@ -304,67 +329,50 @@
    Borders do more work here and shadows do less, which is the opposite of
    the dark theme — on paper, elevation reads through edges. */
 :root[data-theme="light"]{
-  --bg:#FBFAF7;
-  --bg2:#F5F4F0;
+  --bg:#FFFFFF;
+  --bg2:#FAFAF9;
   --surface:#FFFFFF;
-  --surface2:#F7F6F2;
-  --surface3:#EFEEE9;
+  --surface2:#F8F8F7;
+  --surface3:#F1F1EF;
   --overlay:#FFFFFF;
 
-  --line:rgba(23,25,28,.10);
-  --line2:rgba(23,25,28,.18);
+  --line:rgba(17,18,20,.085);
+  --line2:rgba(17,18,20,.16);
 
-  /* Ink on paper. The ratios below are measured against --bg2 (#F5F4F0), the
-     DARKEST surface any of these three regularly print on — not against --bg.
-     --dim was tuned to 4.6:1 on --bg and shipped at 4.23:1 on a section band,
-     which is where it actually appears: table headers, the provenance strip,
-     card metadata. A contrast figure quoted against the lightest possible
-     ground is a figure that is never true where the text is.
-     Measured: 16.0:1 / 6.2:1 / 4.62:1. */
-  --text:#17191C;
-  --muted:#535A63;
-  --dim:#656C74;
+  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
+     three regularly print on — a contrast figure quoted against pure white is
+     a figure that is never true where the text actually sits.
+     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
+  --text:#111214;
+  --muted:#54595F;
+  --dim:#61666C;
 
-  /* The lime is darkened for light mode. #C2F04A on white is 1.6:1 — a
-     signature colour that becomes unreadable is a branding failure, so the
-     hue is preserved and the luminance is not. */
-  --lime:#5C7A0B;
-  --lime-soft:rgba(92,122,11,.10);
-  --lime-line:rgba(92,122,11,.30);
+  /* The lime is the mark, not the interface. On white it is reserved for the
+     wordmark and a small number of live-state dots; everything that used to be
+     lime-on-dark is ink now. A signature colour spent on every border stops
+     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
+  --lime:#4E6B08;
+  --lime-soft:rgba(78,107,8,.07);
+  --lime-line:rgba(78,107,8,.22);
 
-  --orb-a:rgba(194,240,74,.16);
-  --orb-b:rgba(31,95,191,.05);
-  --pick-edge:#F1EFE8;
+  --orb-a:rgba(78,107,8,.05);
+  --orb-b:rgba(31,95,191,.03);
+  --pick-edge:#FAFAF9;
   --on-up:#FFFFFF;
-  --rank-ink:rgba(23,25,28,.05);
-  --scroll-thumb:#D9D7D0;
-  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
-  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-  --blue:#1F5FBF; --violet:#6D4DC7;
+  --rank-ink:rgba(17,18,20,.045);
+  --scroll-thumb:#DEDEDA;
+  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
+  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
+  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
+  --blue:#1B54AC; --violet:#5F41B8;
 
   color-scheme:light;
 }
 
-/* System preference, when the reader has expressed no choice of their own.
-   Scoped with :not([data-theme]) so an explicit pick always wins. */
-@media (prefers-color-scheme: light){
-  :root:not([data-theme]){
-    --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
-    --surface3:#EFEEE9; --overlay:#FFFFFF;
-    --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-    --text:#17191C; --muted:#535A63; --dim:#656C74;
-    --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
-    --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
-    --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
-    --on-up:#FFFFFF;
-    --up:#0E7A4F; --up-soft:rgba(14,122,79,.10);
-    --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-    --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-    --blue:#1F5FBF; --violet:#6D4DC7;
-    color-scheme:light;
-  }
-}
+/* No prefers-color-scheme block. Light is the default for every reader
+   without an explicit choice, so a media query repeating the same palette
+   would only be a third place for it to drift out of step. Dark remains a
+   deliberate pick via the toggle, which stamps data-theme="dark". */
 
 /* ── THE MANDATE'S ORDER BOOK ─────────────────────────────────────────────
    Every colour and size below is a token, so this block follows the theme
@@ -442,6 +450,131 @@
   .mrr{ margin-left:0 }
   .mladder{ flex-direction:column; align-items:flex-start }
   .mleg{ width:100% }
+}
+
+/* ── MAGAZINE LAYER ───────────────────────────────────────────────────────
+   The palette above made the page white. This makes it read like a magazine
+   rather than a dashboard that happens to be light.
+
+   Three moves, in order of how much work they do:
+
+   1. SPACE. A dark UI holds together on contrast; a white page holds together
+      on whitespace. Sections breathe roughly 40% harder, and the measure is
+      capped so running text never crosses ~68 characters.
+
+   2. RULES, NOT BOXES. On dark, a card reads as a card because it is lighter
+      than its ground. On white there is nowhere lighter to go, so the same
+      card needs a border on every side and the page turns into a grid of
+      rectangles. Cards lose their frames and keep a single hairline above —
+      elevation reads through the edge, the way it does in print.
+
+   3. TYPE CARRIES THE HIERARCHY. Headings get tighter tracking and more size
+      contrast against the body, so a reader can find the shape of the page
+      without a single box being drawn.
+
+   Scoped to the light themes only. The dark theme was designed around
+   contrast and shadow and is left exactly as it was. */
+:root:not([data-theme]) .sec,
+:root[data-theme="light"] .sec{
+  padding-block:clamp(52px,7vw,104px);
+}
+:root:not([data-theme]) .shead,
+:root[data-theme="light"] .shead{
+  margin-bottom:clamp(26px,3.4vw,46px);
+}
+:root:not([data-theme]) .stitle,
+:root[data-theme="light"] .stitle{
+  letter-spacing:-.032em;
+  line-height:1.02;
+}
+:root:not([data-theme]) .sdesc,
+:root[data-theme="light"] .sdesc{
+  max-width:64ch;
+  color:var(--muted);
+}
+/* Cards keep one hairline and lose the frame. */
+:root:not([data-theme]) .card,
+:root[data-theme="light"] .card{
+  background:transparent;
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  box-shadow:none;
+  padding-block:clamp(18px,2vw,26px);
+}
+:root:not([data-theme]) .card:hover,
+:root[data-theme="light"] .card:hover{
+  background:var(--bg2);
+  box-shadow:none;
+}
+/* Tables lose their outer box for the same reason and keep their row rules. */
+:root:not([data-theme]) table,
+:root[data-theme="light"] table{
+  border:0;
+}
+:root:not([data-theme]) th,
+:root[data-theme="light"] th{
+  border-bottom:1px solid var(--line2);
+  color:var(--dim);
+  font-weight:600;
+}
+:root:not([data-theme]) td,
+:root[data-theme="light"] td{
+  border-bottom:1px solid var(--line);
+}
+/* The eyebrow becomes a rule-and-label instead of a chip. */
+:root:not([data-theme]) .snum,
+:root[data-theme="light"] .snum{
+  color:var(--dim);
+  letter-spacing:.16em;
+}
+/* ── WHEN IT WORKS / WHAT IF ──────────────────────────────────────────────
+   Both blocks are built from tokens only. The heat scale runs through --up and
+   --down at varying alpha rather than a rainbow: the question is "did this day
+   make or lose money", which is one axis, and a two-colour scale answers it
+   without asking the reader to learn a legend. */
+.whenwrap,.whatifwrap{margin-top:clamp(28px,3.4vw,44px)}
+.whenhead{margin-bottom:16px}
+.whentitle{font-size:clamp(19px,2.2vw,25px);letter-spacing:-.025em;margin-bottom:6px}
+.whensub{color:var(--muted);font-size:14px;max-width:62ch;margin:0}
+.whengrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:6px;margin-bottom:10px}
+.whenmonths{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
+.whencell{border:1px solid var(--line);border-radius:6px;padding:10px 11px;min-height:74px;
+  display:flex;flex-direction:column;justify-content:space-between}
+.whencell .wk{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.whencell .wv{font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+.whencell .wn{font-size:10.5px;color:var(--dim);font-family:var(--mono)}
+.whencell.empty-cell .wv{color:var(--dim)}
+.whennote{color:var(--dim);font-size:13px;max-width:64ch;margin-top:4px}
+.whatifrow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.whatifchip{font-family:var(--mono);font-size:12px;padding:6px 11px;border-radius:99px;
+  border:1px solid var(--line2);background:none;color:var(--muted);cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s,opacity .15s}
+.whatifchip:hover{color:var(--text)}
+.whatifchip[aria-pressed="true"]{opacity:.42;text-decoration:line-through}
+.whatifout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.whatifout .wo{border-top:1px solid var(--line);padding-top:11px}
+.whatifout .wo .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.whatifout .wo .v{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
+.whatifout .wo .d{font-size:11.5px;color:var(--dim);font-family:var(--mono);margin-top:4px}
+
+/* The decorative column grid nearly disappears.
+   .vgrid paints 1px verticals at --line. On the dark ground that was a faint
+   texture you had to look for; the same alpha as dark-on-light is markedly
+   stronger, and a white page ruled into columns reads as a spreadsheet rather
+   than a magazine. Kept rather than removed — it still aligns the eye — at
+   roughly a quarter of the weight. */
+:root:not([data-theme]) .vgrid,
+:root[data-theme="light"] .vgrid{
+  opacity:.28;
+}
+
+/* Numerals line up in columns on a page that is mostly numbers. */
+:root:not([data-theme]) table,
+:root:not([data-theme]) .num,
+:root[data-theme="light"] table,
+:root[data-theme="light"] .num{
+  font-variant-numeric:tabular-nums;
 }
 
 /* Surfaces and ink cross-fade on a theme switch; nothing else does, or the
@@ -2982,7 +3115,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Tuesday, August 25 2026</span>
-      <span class="live" id="istClock"><i></i>21:37 MYT</span>
+      <span class="live" id="istClock"><i></i>23:44 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -3034,7 +3167,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260825T213726">
+<div class="editionbar" id="editionbar" data-build="20260825T234451">
   
   <span><b>New edition published<span id="editionWhen"></span>.</b>
     This tab was built for Tuesday, August 25 2026. Live data &mdash; the ticker, heat map and
@@ -3069,43 +3202,43 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7683</span>
-      <span class="c up">▲ +0.4%</span>
+      <span class="p">7669</span>
+      <span class="c up">▲ +0.21%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">26166</span>
-      <span class="c up">▲ +0.71%</span>
+      <span class="p">26121</span>
+      <span class="c up">▲ +0.54%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4669.8</span>
-      <span class="c up">▲ +0.62%</span>
+      <span class="p">$4705.1</span>
+      <span class="c up">▲ +1.39%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$82.60</span>
-      <span class="c dn">▼ -2.83%</span>
+      <span class="p">$82.16</span>
+      <span class="c dn">▼ -3.35%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.41</span>
-      <span class="c dn">▼ -0.3%</span>
+      <span class="p">₹95.40</span>
+      <span class="c dn">▼ -0.31%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$79125</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$79422</span>
+      <span class="c up">▲ +0.58%</span>
     </div>
     
     
@@ -3127,43 +3260,43 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7683</span>
-      <span class="c up">▲ +0.4%</span>
+      <span class="p">7669</span>
+      <span class="c up">▲ +0.21%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">26166</span>
-      <span class="c up">▲ +0.71%</span>
+      <span class="p">26121</span>
+      <span class="c up">▲ +0.54%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4669.8</span>
-      <span class="c up">▲ +0.62%</span>
+      <span class="p">$4705.1</span>
+      <span class="c up">▲ +1.39%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$82.60</span>
-      <span class="c dn">▼ -2.83%</span>
+      <span class="p">$82.16</span>
+      <span class="c dn">▼ -3.35%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.41</span>
-      <span class="c dn">▼ -0.3%</span>
+      <span class="p">₹95.40</span>
+      <span class="c dn">▼ -0.31%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$79125</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$79422</span>
+      <span class="c up">▲ +0.58%</span>
     </div>
     
     
@@ -3259,15 +3392,15 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="regime">
       <div class="rg-l">
         <span class="rg-k">Market regime</span>
-        <span class="rg-v up">Risk-on · 82<i>/100</i></span>
+        <span class="rg-v up">Risk-on · 73<i>/100</i></span>
       </div>
-      <div class="rg-bar" style="--rg:82%"><i></i><b></b></div>
+      <div class="rg-bar" style="--rg:73%"><i></i><b></b></div>
       <div class="rg-why">
         Risk appetite across 8 instruments,
         weighted by move size. Moved most by
-        <b class="dn">Crude
-          -2.83%</b> and <b class="dn">USD/INR
-          -0.3%</b>.
+        <b class="up">Gold
+          +1.39%</b> and <b class="dn">USD/INR
+          -0.31%</b>.
         
         50 is neutral; risk assets push up, havens push down.
         
@@ -3281,7 +3414,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <a class="db" href="#marketintel">
         <span class="db-k">Market</span>
         <span class="db-v">Risk-on</span>
-        <span class="db-s">82/100 regime</span>
+        <span class="db-s">73/100 regime</span>
       </a>
       <a class="db" href="#world">
         <span class="db-k">World</span>
@@ -3310,7 +3443,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <article class="mcard mc-momentum">
           <div class="mc-tag"><i></i>Momentum</div>
-          <h3 class="mc-head">Nasdaq +0.71% — the day's strongest risk asset</h3>
+          <h3 class="mc-head">BTC +0.58% — the day's strongest risk asset</h3>
           <p class="mc-why">6 of 8 priced instruments advanced. Breadth is what separates a move from a rotation.</p>
           <a class="mc-cta" href="#world">Full board &rarr;</a>
         </article>
@@ -3403,7 +3536,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">01 / MARKET INTEL</span> 
-<span class="dh dh-FRESH" title="Market Intelligence · 15h old.">FRESH<span class="dh-age">15h old</span></span>
+<span class="dh dh-LIVE" title="Market Intelligence · 1h old.">LIVE<span class="dh-age">1h old</span></span>
       <h2 class="stitle">What moved the tape today.</h2>
     </div>
     <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
@@ -3413,7 +3546,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="prov rv">
     <span class="pv-tag">DAILY</span>
     <span>Rebuilt <b>~04:30 IST</b>, before the 6 AM edition</span>
-    <span>Built <b>2026-08-24</b> · 0.6d old</span>
+    <span>Built <b>2026-08-25</b> · 0.1d old</span>
     
     
   </div>
@@ -3432,9 +3565,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Metal</strong>
+        <strong>Pharma</strong>
         <span class="rk rk-low">
-          +1.62%
+          +0.83%
         </span>
       </div>
     </div>
@@ -3442,7 +3575,17 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Realty</strong>
+        <strong>PSU Bank</strong>
+        <span class="rk rk-low">
+          +0.75%
+        </span>
+      </div>
+    </div>
+    
+    
+    <div class="card fund-card" style="padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Infra</strong>
         <span class="rk rk-low">
           +0.63%
         </span>
@@ -3452,9 +3595,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Energy</strong>
-        <span class="rk rk-medium">
-          +0.23%
+        <strong>IT</strong>
+        <span class="rk rk-low">
+          +0.57%
         </span>
       </div>
     </div>
@@ -3462,9 +3605,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>IT</strong>
-        <span class="rk rk-medium">
-          +0.21%
+        <strong>Auto</strong>
+        <span class="rk rk-low">
+          +0.39%
         </span>
       </div>
     </div>
@@ -3473,6 +3616,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <strong>FMCG</strong>
+        <span class="rk rk-low">
+          +0.38%
+        </span>
+      </div>
+    </div>
+    
+    
+    <div class="card fund-card" style="padding:14px 16px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Media</strong>
         <span class="rk rk-medium">
           +0.05%
         </span>
@@ -3482,29 +3635,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Pharma</strong>
+        <strong>Realty</strong>
         <span class="rk rk-medium">
-          -0.08%
-        </span>
-      </div>
-    </div>
-    
-    
-    <div class="card fund-card" style="padding:14px 16px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Auto</strong>
-        <span class="rk rk-medium">
-          -0.08%
-        </span>
-      </div>
-    </div>
-    
-    
-    <div class="card fund-card" style="padding:14px 16px">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Infra</strong>
-        <span class="rk rk-medium">
-          -0.22%
+          +0.02%
         </span>
       </div>
     </div>
@@ -3513,8 +3646,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <strong>Banking</strong>
-        <span class="rk rk-high">
-          -0.41%
+        <span class="rk rk-medium">
+          -0.02%
         </span>
       </div>
     </div>
@@ -3522,9 +3655,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>Media</strong>
-        <span class="rk rk-high">
-          -0.56%
+        <strong>Metal</strong>
+        <span class="rk rk-medium">
+          -0.03%
         </span>
       </div>
     </div>
@@ -3532,9 +3665,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="card fund-card" style="padding:14px 16px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong>PSU Bank</strong>
-        <span class="rk rk-high">
-          -0.94%
+        <strong>Energy</strong>
+        <span class="rk rk-medium">
+          -0.06%
         </span>
       </div>
     </div>
@@ -4138,32 +4271,24 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         
         <tr>
-          <td><strong>VHL</strong></td>
-          <td style="font-size:12.5px;color:var(--muted)">Dividend - Rs 5 Per Share</td>
+          <td><strong>ROHLTD</strong></td>
+          <td style="font-size:12.5px;color:var(--muted)">Dividend - Rs 2.50 Per Share</td>
           <td class="mono-dim">28-Aug-2026</td>
         </tr>
         
         
         
         <tr>
-          <td><strong>GAEL</strong></td>
-          <td style="font-size:12.5px;color:var(--muted)">Dividend - Re 0.30 Per Share</td>
+          <td><strong>VARDHACRLC</strong></td>
+          <td style="font-size:12.5px;color:var(--muted)">Dividend - Rs 1.50 Per Share</td>
           <td class="mono-dim">28-Aug-2026</td>
         </tr>
         
         
         
         <tr>
-          <td><strong>DYNAMATECH</strong></td>
-          <td style="font-size:12.5px;color:var(--muted)">Dividend - Rs 5 Per Share</td>
-          <td class="mono-dim">28-Aug-2026</td>
-        </tr>
-        
-        
-        
-        <tr>
-          <td><strong>STERTOOLS</strong></td>
-          <td style="font-size:12.5px;color:var(--muted)">Dividend - Rs 2.75 Per Share</td>
+          <td><strong>CORALFINAC</strong></td>
+          <td style="font-size:12.5px;color:var(--muted)">Dividend - Re 0.20 Per Share</td>
           <td class="mono-dim">28-Aug-2026</td>
         </tr>
         
@@ -4188,6 +4313,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <tr>
           <td><strong>PGHL</strong></td>
           <td style="font-size:12.5px;color:var(--muted)">Dividend - Rs 45 Per Share</td>
+          <td class="mono-dim">27-Aug-2026</td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><strong>MANAKCOAT</strong></td>
+          <td style="font-size:12.5px;color:var(--muted)">Dividend - Re 0.05 Per Share</td>
           <td class="mono-dim">27-Aug-2026</td>
         </tr>
         
@@ -5131,41 +5264,41 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">Economic Times · LEAD</span>
-        <h2><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/euro-zone-yields-dip-from-multi-year-highs-as-oil-falls-on-iran-sanctions/articleshow/133512503.cms" target="_blank">Euro zone yields dip from multi-year highs as oil falls on Iran sanctions</a></h2>
-        <p>On Tuesday, government bond yields across the Euro zone saw a drop from recent peaks, accompanied by falling oil prices as traders evaluated newly imposed U.S. sanctions on Iran. Additionally, money markets adjusted their expectations regarding potential rate hikes by the European Central Bank this year. Meanwhile, recent data highlighted a rebound in German economic growth during the second quart</p>
-        <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/euro-zone-yields-dip-from-multi-year-highs-as-oil-falls-on-iran-sanctions/articleshow/133512503.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
+        <h2><a href="https://economictimes.indiatimes.com/markets/stocks/news/welspun-corp-promoter-group-ceo-to-sell-up-to-rs-1417-crore-stake-via-block-deal/articleshow/133516717.cms" target="_blank">Welspun Corp promoter group, CEO to sell up to Rs 1,417 crore stake via block deal</a></h2>
+        <p>Welspun Corp’s promoter group entity and CEO Vipul Mathur plan to sell up to 63 lakh shares worth Rs 1,417.5 crore through a block deal. The transaction represents 2.4% of outstanding shares and comes after a sharp stock price rally.</p>
+        <a class="readmore" href="https://economictimes.indiatimes.com/markets/stocks/news/welspun-corp-promoter-group-ceo-to-sell-up-to-rs-1417-crore-stake-via-block-deal/articleshow/133516717.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
       </div>
       <div class="lead-s">
         
         
         <div class="mini">
           <span class="s">ET Economy</span>
-          <a href="https://economictimes.indiatimes.com/news/economy/finance/rbi-working-to-give-banknotes-in-your-pocket-a-longer-lease-on-life/articleshow/133511944.cms" target="_blank">RBI working to give  banknotes in your pocket a longer lease on life</a>
-          <p class="mini-s">The RBI is exploring ways to extend the life of banknotes, including surface coatings and polymer notes for lower denominations, D&hellip;</p>
+          <a href="https://economictimes.indiatimes.com/news/economy/agriculture/sugar-prices-rise-by-nearly-re-1-per-kg-to-about-rs-64/articleshow/133511160.cms" target="_blank">Sugar prices rise by nearly Re 1 per kg to about Rs 64</a>
+          <p class="mini-s">Sugar prices rose by nearly Re 1 per kg to Rs 63.97 in the retail market on August 25, despite recent government steps to curb the&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">Livemint</span>
-          <a href="https://www.livemint.com/market/bonds/scott-bessent-s-bond-buyback-strategy-draws-criticism-from-druckenmiller-jpmorgan-paying-mortgage-with-credit-card-11787661389133.html" target="_blank">Scott Bessent’s bond buyback strategy draws criticism from Druckenmiller, JPMorgan: ‘Paying mortgage with credit card’</a>
-          <p class="mini-s">The US Treasury's $4 billion increase in long-term bond purchases faces criticism from experts like Stanley Druckenmiller and Jame&hellip;</p>
+          <a href="https://www.livemint.com/market/stock-market-news/vodafone-idea-news-clarification-from-telecom-giant-on-rs-53-crore-income-tax-refund-order-11787669930925.html" target="_blank">Vodafone Idea News: Clarification from telecom giant on  ₹53 crore income tax refund order</a>
+          <p class="mini-s">Vodafone Idea clarified that a Delhi High Court directive regarding a  ₹53.09 crore tax refund is a routine matter and does not re&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">BusinessLine</span>
-          <a href="https://www.thehindubusinessline.com/markets/nifty-surges-115-points-on-expiry-day-as-crude-retreat-and-cas-swing-the-close/article71388636.ece" target="_blank">Nifty surges 115 points on expiry day as crude retreat and CAS swing the close</a>
-          <p class="mini-s">The morning session opened in the red after Washington announced sweeping new sanctions targeting Iran and its trading partners in&hellip;</p>
+          <a href="https://www.thehindubusinessline.com/markets/welspun-corp-promoters-launch-1417-crore-block-deal-at-4-discount/article71389771.ece" target="_blank">Welspun Corp promoters launch ₹1,417 crore block deal at 4% discount</a>
+          <p class="mini-s">The floor price for the transaction has been set at ₹2,250 per share, implying a discount of about 4.1% to the company’s NSE closi&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">Bloomberg</span>
-          <a href="https://www.bloomberg.com/news/articles/2026-08-24/stock-market-today-dow-s-p-live-updates" target="_blank">Stocks Rise Before Nvidia’s Earnings as Oil Falls: Markets Wrap</a>
-          <p class="mini-s">Stocks rose as a decline in oil prices sent bond yields lower, with traders awaiting Nvidia Corp.’s earnings for clues on whether &hellip;</p>
+          <a href="https://www.bloomberg.com/news/articles/2026-08-25/adnoc-extends-2-7-billion-ship-buying-spree-as-uae-exports-soar" target="_blank">UAE’s Adnoc Spends $2.7 Billion on Ship-Buying Spree</a>
+          <p class="mini-s">The biggest oil and gas producer in the United Arab Emirates has ordered two more liquefied natural gas carriers, extending a rece&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">Financial Times</span>
-          <a href="https://www.ft.com/content/e08d7f0e-f9fb-45a4-a1ef-025a75a5b776?syn-25a6b1a6=1" target="_blank">Iranians queue for petrol as US blockade bites</a>
-          <p class="mini-s">Long lines form in capital as officials warn that war and inflation are triggering fuel shortages</p>
+          <a href="https://www.ft.com/content/7ced71c2-03b8-4569-a68d-14624a7e83f2?syn-25a6b1a6=1" target="_blank">Canada announces $20bn retaliatory tariffs as US trade war escalates</a>
+          <p class="mini-s">Hundreds of US goods will face increased levies after September 8</p>
         </div>
         
       </div>
@@ -5175,8 +5308,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">WSJ Markets</span>
-        <h3><a href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-08-25-2026?mod=rss_markets_main" target="_blank">Stock Market Today: Stocks Rise, Shrugging Off Mideast Tensions, Canada Trade Fight</a></h3>
-        <p>Nasdaq leads advance; oil drops as investors pin hopes on diplomacy</p>
+        <h3><a href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-08-25-2026?mod=rss_markets_main" target="_blank">Stock Market Today: Stocks Advance as Effects of Bessent's 'D-Day' Look Contained</a></h3>
+        <p>Canada to impose new tariffs; oil drops as investors pin hopes on diplomacy</p>
         <div class="ncard-f">
           <span class="ts">Aug 25 08:19</span>
           <a class="readmore" href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-08-25-2026?mod=rss_markets_main" target="_blank" rel="noopener">Read more &rarr;</a>
@@ -5195,71 +5328,71 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.1s">
         <span class="s">CNBC</span>
-        <h3><a href="https://www.cnbc.com/2026/08/25/dicks-sporting-goods-dks-earnings-q2-2026.html" target="_blank">Dick's Sporting Goods stock falls 20% as retailer misses expectations, cites 'challenging' footwear market</a></h3>
-        <p>Dick's Sporting Goods reported second fiscal quarter earnings on Tuesday that missed Wall Street expectations amid what it called a "challenging" environment.</p>
+        <h3><a href="https://www.cnbc.com/2026/08/25/dicks-sporting-goods-dks-earnings-q2-2026.html" target="_blank">Dick's Sporting Goods stock falls 25% as retailer misses expectations, cites 'challenging' footwear market</a></h3>
+        <p>Dick's Sporting Goods reported fiscal second-quarter earnings on Tuesday that missed Wall Street expectations amid what it called a "challenging" environment.</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 13:35</span>
+          <span class="ts">Aug 25 14:47</span>
           <a class="readmore" href="https://www.cnbc.com/2026/08/25/dicks-sporting-goods-dks-earnings-q2-2026.html" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/shes-desperate-my-friend-was-laid-off-and-lost-her-health-insurance-how-can-she-find-affordable-coverage-3b17b553?mod=mw_rss_topstories" target="_blank">‘She looked into COBRA’: My friend was laid off and lost her health insurance. How can she find affordable coverage?</a></h3>
-        <p>“The cost is absolutely ridiculous.”</p>
+        <h3><a href="https://www.marketwatch.com/story/home-prices-in-chicago-have-risen-the-most-in-the-u-s-over-the-past-year-3ee317a8?mod=mw_rss_topstories" target="_blank">Home prices in Chicago have risen the most in the U.S. over the past year</a></h3>
+        <p>Nationally, home prices are rising at a slow pace as housing inventory remains relatively low. But some markets, particularly in the Midwest, are seeing big gains.</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 13:15</span>
-          <a class="readmore" href="https://www.marketwatch.com/story/shes-desperate-my-friend-was-laid-off-and-lost-her-health-insurance-how-can-she-find-affordable-coverage-3b17b553?mod=mw_rss_topstories" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 15:22</span>
+          <a class="readmore" href="https://www.marketwatch.com/story/home-prices-in-chicago-have-risen-the-most-in-the-u-s-over-the-past-year-3ee317a8?mod=mw_rss_topstories" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
         <span class="s">Economic Times</span>
-        <h3><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/sterling-hovers-near-six-month-high-underpinned-by-boe-rate-hike-expectations/articleshow/133512463.cms" target="_blank">Sterling hovers near six-month high underpinned by BoE rate hike expectations</a></h3>
-        <p>The pound is maintaining its position close to a six-month peak against the dollar, buoyed by expectations of interest rate hikes. However, analysts predict a minor decline in curr&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/markets/stocks/news/market-trading-guide-adani-enterprises-dixontechamong-4-stock-recommendations-for-wednesday/slideshow/133515517.cms" target="_blank">Market Trading Guide: Adani Enterprises, DixonTechamong 4 stock recommendations for Wednesday</a></h3>
+        <p>Indian equities gained as softer-than-expected US sanctions on Iran eased crude oil and bond yield pressures. Analysts highlighted Adani Enterprises, HDFC AMC, Hyundai Motor India &hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 13:15</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/sterling-hovers-near-six-month-high-underpinned-by-boe-rate-hike-expectations/articleshow/133512463.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 14:38</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/markets/stocks/news/market-trading-guide-adani-enterprises-dixontechamong-4-stock-recommendations-for-wednesday/slideshow/133515517.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
         <span class="s">ET Economy</span>
-        <h3><a href="https://economictimes.indiatimes.com/news/economy/indicators/rbi-flags-risk-of-food-fuel-prices-fuelling-broader-inflation/articleshow/133511523.cms" target="_blank">RBI warns food, fuel costs could reignite broader inflation</a></h3>
-        <p>Most high-frequency indicators showed sustained manufacturing and services activity in July. Merchandise exports and imports experienced double-digit expansion, continuing Q1 momen&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/news/economy/finance/rbi-working-to-give-banknotes-in-your-pocket-a-longer-lease-on-life/articleshow/133511944.cms" target="_blank">RBI working to give  banknotes in your pocket a longer lease on life</a></h3>
+        <p>The RBI is exploring ways to extend the life of banknotes, including surface coatings and polymer notes for lower denominations, Deputy Governor Shirish Chandra Murmu said in the c&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 13:05</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/news/economy/indicators/rbi-flags-risk-of-food-fuel-prices-fuelling-broader-inflation/articleshow/133511523.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 13:14</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/news/economy/finance/rbi-working-to-give-banknotes-in-your-pocket-a-longer-lease-on-life/articleshow/133511944.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">Livemint</span>
-        <h3><a href="https://www.livemint.com/market/taiwan-index-asian-bourse-jumps-85-in-one-year-top-5-gainers-losers-you-must-know-11787658897377.html" target="_blank">Taiwan index: Asian bourse jumps 85% in one year | Top 5 gainers &amp; losers you MUST Know</a></h3>
-        <p>Taiwanese equities, driven by chip stocks, have emerged as top performers in Asia, with the TAIEX gaining 54.55% in 2026. However, recent volatility raises concerns about sustainab&hellip;</p>
+        <h3><a href="https://www.livemint.com/market/stock-market-news/sebi-bars-varanium-cloud-promoter-for-7-years-orders-128-8-crore-disgorgement-11787664270771.html" target="_blank">Sebi bars Varanium Cloud, promoter for 7 years, orders  ₹128.8 crore disgorgement</a></h3>
+        <p>The market regulator found that the company had misrepresented its financial statements and disclosures, including through fictitious sales and purchases.</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 12:55</span>
-          <a class="readmore" href="https://www.livemint.com/market/taiwan-index-asian-bourse-jumps-85-in-one-year-top-5-gainers-losers-you-must-know-11787658897377.html" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 14:31</span>
+          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/sebi-bars-varanium-cloud-promoter-for-7-years-orders-128-8-crore-disgorgement-11787664270771.html" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">BusinessLine</span>
-        <h3><a href="https://www.thehindubusinessline.com/markets/stock-markets/lt-shares-rise-071-as-company-bags-two-major-west-asia-orders/article71388498.ece" target="_blank">L&T shares rise 0.71% as company bags two major West Asia orders</a></h3>
-        <p>Two projects are ultra-mega gas compression facilities with a contract value above ₹15,000 crore and three Battery Energy Storage System (BESS) valued between ₹5,000 crore and ₹10,&hellip;</p>
+        <h3><a href="https://www.thehindubusinessline.com/economy/agri-business/mill-gate-prices-of-sugar-drop-further-but-retail-rates-soar/article71388694.ece" target="_blank">Mill gate prices of sugar drop further, but retail rates soar</a></h3>
+        <p>Wholesale prices across cities drop by ₹300 a quintal even as ex-mill rates drop to ₹5,400-5,500 a quintal for S-grade</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 12:05</span>
-          <a class="readmore" href="https://www.thehindubusinessline.com/markets/stock-markets/lt-shares-rise-071-as-company-bags-two-major-west-asia-orders/article71388498.ece" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 14:48</span>
+          <a class="readmore" href="https://www.thehindubusinessline.com/economy/agri-business/mill-gate-prices-of-sugar-drop-further-but-retail-rates-soar/article71388694.ece" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Bloomberg</span>
-        <h3><a href="https://www.bloomberg.com/news/articles/2026-08-25/software-stocks-get-an-earnings-gut-check-after-hot-summer-rally" target="_blank">Software Stocks Get an Earnings Gut Check After Hot Summer Rally</a></h3>
-        <p>Software investors are betting that the struggling stocks have found their footing again after a strong performance over the past month. Earnings this week can confirm that this la&hellip;</p>
+        <h3><a href="https://www.bloomberg.com/news/videos/2026-08-24/wellington-launches-funds-with-blackstone-vanguard-video" target="_blank">Wellington Launches Funds with Blackstone, Vanguard</a></h3>
+        <p>Nick Samouilhan, portfolio manager at Wellington Management, joins Scarlet Fu and Eric Balchunas on "ETF IQ." Blackstone teamed up with Wellington Management and Vanguard Group to &hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 08:30</span>
-          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-08-25/software-stocks-get-an-earnings-gut-check-after-hot-summer-rally" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 24 20:14</span>
+          <a class="readmore" href="https://www.bloomberg.com/news/videos/2026-08-24/wellington-launches-funds-with-blackstone-vanguard-video" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -5692,7 +5825,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="prov stale rv">
     <span class="pv-tag">WEEKLY</span>
     <span>Rebuilt <b>Sundays 02:30 IST</b></span>
-    <span>Built <b>2026-08-23</b> · 2.7d old</span>
+    <span>Built <b>2026-08-23</b> · 2.8d old</span>
     <span>Prices to <b>2026-08-21</b></span>
     
     <span>Statements for <b>750</b> of
@@ -6627,7 +6760,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ipo-gmp">
         <span class="ipo-gmp-k">Grey market</span>
-        <span class="ipo-gmp-v">₹330</span>
+        <span class="ipo-gmp-v">₹315</span>
         <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
       </div>
       
@@ -6658,6 +6791,102 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
       <p class="ipo-why"><b>Why:</b> Subscribed 79.8x on a mainboard book of about Rs.825 Cr.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.</p>
+      <p class="ipo-missing"><b>No public source:</b> sector · audited financials · valuation multiples
+        <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
+    </div>
+    
+    
+    <div class="ipo-card ipo-watch">
+      <div class="ipo-top">
+        <div>
+          <strong class="sym">SYMBIOTEC</strong>
+          <div class="ipo-co">Symbiotec Pharmalab Limited</div>
+        </div>
+        <span class="ipo-verdict">WATCH</span>
+      </div>
+
+      <div class="ipo-facts">
+        <div><span class="k">Price band</span><span class="v">Rs.938 to Rs.988</span></div>
+        <div><span class="k">Issue size</span><span class="v">₹1,757 Cr</span></div>
+        <div><span class="k">Window</span><span class="v">2026-08-24 → 2026-08-27</span></div>
+        <div><span class="k">Subscribed</span><span class="v ">1.34x</span></div>
+        <div><span class="k">Lot size</span><span class="v">15 shares</span></div>
+        <div><span class="k">Min. investment</span><span class="v">₹14,820</span></div>
+        
+        <div><span class="k">Fresh / OFS</span><span class="v">₹150 Cr / ₹1,607 Cr</span></div>
+        
+        
+        <div><span class="k">Anchor book</span><span class="v">₹526 Cr</span></div>
+        
+        
+        <div><span class="k">Listing</span><span class="v">Sep 1, 2026</span></div>
+        
+      </div>
+
+      
+      
+      
+      <div class="ipo-fin">
+        <div class="ipo-fin-h">Business performance · FY26</div>
+        <div class="ipo-fin-g">
+          <div><span class="k">Revenue</span><span class="v">₹872 Cr <i class="up">+15%</i></span></div>
+          <div><span class="k">PAT</span><span class="v">₹110 Cr <i class="up">+14%</i></span></div>
+          <div><span class="k">PAT margin</span><span class="v ">12.60%</span></div>
+          <div><span class="k">ROE</span><span class="v">9%</span></div>
+          <div><span class="k">Debt / equity</span><span class="v">0.33</span></div>
+          
+        </div>
+        
+        
+      </div>
+      
+
+      
+      
+      <div class="ipo-args">
+        
+        <div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
+          <ul><li>More of the issue is existing holders selling (₹1,607 Cr) than new money into the business (₹150 Cr).</li><li>Institutions are taking it at 0.57x while retail bids 2.23x — the money with research access is the money staying out.</li></ul></div>
+      </div>
+      <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
+        analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
+        everything else is stated in the prospectus summary.</p>
+      
+
+      
+      <div class="ipo-gmp">
+        <span class="ipo-gmp-k">Grey market</span>
+        <span class="ipo-gmp-v">₹352</span>
+        <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
+      </div>
+      
+
+      
+      
+      <div class="ipo-cats">
+        
+        <span class="ipo-cat-cold">QIB <b>0.57x</b></span>
+        
+        <span class="">HNI <b>3.17x</b></span>
+        
+        <span class="">Retail <b>2.23x</b></span>
+        
+        <span class="">Employee <b>3.22x</b></span>
+        
+        <span class="">Total <b>1.96x</b></span>
+        
+        <span class="ipo-cat-src">via ipopremium.in</span>
+      </div>
+      
+
+      <div class="ipo-score">
+        <div class="ipo-score-bar"><i style="width:66%"></i></div>
+        <span class="ipo-score-n">66/100 measured</span>
+        <span class="ipo-score-parts">Demand 16/40 · Size 20/25 · Pricing 15/20 · Window 15/15</span>
+      </div>
+
+      <p class="ipo-why"><b>Why:</b> 1.3x so far, with time left on the book.</p>
+      <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
     </div>
@@ -6722,7 +6951,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ipo-gmp">
         <span class="ipo-gmp-k">Grey market</span>
-        <span class="ipo-gmp-v">₹37 (26.81%)</span>
+        <span class="ipo-gmp-v">₹29 (21.01%)</span>
         <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
       </div>
       
@@ -6739,87 +6968,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <p class="ipo-why"><b>Why:</b> 1.6x so far, with time left on the book.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> listing date · sector · audited financials · valuation multiples
-        <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
-    </div>
-    
-    
-    <div class="ipo-card ipo-watch">
-      <div class="ipo-top">
-        <div>
-          <strong class="sym">SYMBIOTEC</strong>
-          <div class="ipo-co">Symbiotec Pharmalab Limited</div>
-        </div>
-        <span class="ipo-verdict">WATCH</span>
-      </div>
-
-      <div class="ipo-facts">
-        <div><span class="k">Price band</span><span class="v">Rs.938 to Rs.988</span></div>
-        <div><span class="k">Issue size</span><span class="v">₹1,757 Cr</span></div>
-        <div><span class="k">Window</span><span class="v">2026-08-24 → 2026-08-27</span></div>
-        <div><span class="k">Subscribed</span><span class="v ">1.34x</span></div>
-        <div><span class="k">Lot size</span><span class="v">15 shares</span></div>
-        <div><span class="k">Min. investment</span><span class="v">₹14,820</span></div>
-        
-        <div><span class="k">Fresh / OFS</span><span class="v">₹150 Cr / ₹1,607 Cr</span></div>
-        
-        
-        <div><span class="k">Anchor book</span><span class="v">₹526 Cr</span></div>
-        
-        
-        <div><span class="k">Listing</span><span class="v">Sep 1, 2026</span></div>
-        
-      </div>
-
-      
-      
-      
-      <div class="ipo-fin">
-        <div class="ipo-fin-h">Business performance · FY26</div>
-        <div class="ipo-fin-g">
-          <div><span class="k">Revenue</span><span class="v">₹872 Cr <i class="up">+15%</i></span></div>
-          <div><span class="k">PAT</span><span class="v">₹110 Cr <i class="up">+14%</i></span></div>
-          <div><span class="k">PAT margin</span><span class="v ">12.60%</span></div>
-          <div><span class="k">ROE</span><span class="v">9%</span></div>
-          <div><span class="k">Debt / equity</span><span class="v">0.33</span></div>
-          
-        </div>
-        
-        
-      </div>
-      
-
-      
-      
-      <div class="ipo-args">
-        
-        <div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
-          <ul><li>More of the issue is existing holders selling (₹1,607 Cr) than new money into the business (₹150 Cr).</li></ul></div>
-      </div>
-      <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
-        analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
-        everything else is stated in the prospectus summary.</p>
-      
-
-      
-      <div class="ipo-gmp">
-        <span class="ipo-gmp-k">Grey market</span>
-        <span class="ipo-gmp-v">₹352 (35.63%)</span>
-        <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
-      </div>
-      
-
-      
-      
-
-      <div class="ipo-score">
-        <div class="ipo-score-bar"><i style="width:66%"></i></div>
-        <span class="ipo-score-n">66/100 measured</span>
-        <span class="ipo-score-parts">Demand 16/40 · Size 20/25 · Pricing 15/20 · Window 15/15</span>
-      </div>
-
-      <p class="ipo-why"><b>Why:</b> 1.3x so far, with time left on the book.</p>
-      <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
-      <p class="ipo-missing"><b>No public source:</b> sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
     </div>
     
@@ -6875,7 +7023,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div class="ipo-arg ipo-arg-y"><b>What the numbers support</b>
           <ul><li>Return on net worth of 20% — well above the ~14% a typical listed peer earns.</li><li>Effectively debt-free at 0.24 debt to equity, so the balance sheet is not a constraint.</li></ul></div>
         <div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
-          <ul><li>More of the issue is existing holders selling (₹76 Cr) than new money into the business (₹60 Cr).</li><li>Institutions are taking it at 0.60x while retail bids 28.18x — the money with research access is the money staying out.</li></ul></div>
+          <ul><li>More of the issue is existing holders selling (₹76 Cr) than new money into the business (₹60 Cr).</li><li>Institutions are taking it at 0.60x while retail bids 28.25x — the money with research access is the money staying out.</li></ul></div>
       </div>
       <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
         analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
@@ -6896,11 +7044,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <span class="ipo-cat-cold">QIB <b>0.60x</b></span>
         
-        <span class="ipo-cat-hot">HNI <b>25.28x</b></span>
+        <span class="ipo-cat-hot">HNI <b>25.31x</b></span>
         
-        <span class="ipo-cat-hot">Retail <b>28.18x</b></span>
+        <span class="ipo-cat-hot">Retail <b>28.25x</b></span>
         
-        <span class="ipo-cat-hot">Total <b>19.68x</b></span>
+        <span class="ipo-cat-hot">Total <b>19.72x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -6990,7 +7138,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <span class="ipo-cat-cold">Retail <b>0.29x</b></span>
         
-        <span class="ipo-cat-cold">Total <b>0.34x</b></span>
+        <span class="ipo-cat-cold">Total <b>0.35x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -7041,6 +7189,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><span class="k">Fresh / OFS</span><span class="v">₹500 Cr / ₹200 Cr</span></div>
         
         
+        
+        <div><span class="k">Listing</span><span class="v">Sep 3, 2026</span></div>
         
       </div>
 
@@ -7093,7 +7243,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
       <p class="ipo-why"><b>Why:</b> Book has not opened — no demand evidence exists yet.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Re-check once subscription starts; nothing here is a judgement on the business.</p>
-      <p class="ipo-missing"><b>No public source:</b> subscription (book not open yet) · issue window · anchor book · listing date · sector · audited financials · valuation multiples
+      <p class="ipo-missing"><b>No public source:</b> subscription (book not open yet) · issue window · anchor book · sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
     </div>
     
@@ -7195,7 +7345,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <tr><td><strong class="sym">TEMPSENS</strong></td>
         <td>Tempsens Instruments (India) Limited</td><td class="num">Rs.285 to Rs.300</td>
         <td class="num">2026-08-24</td>
-        <td class="num">not announced</td>
+        <td class="num">Aug 28, 2026</td>
         <td class="num">—</td>
         <td class="num">1d</td></tr>
       
@@ -8660,7 +8810,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    2026-08-25 13:39. Lot size, minimum application, the
+    2026-08-25 15:47. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -8704,7 +8854,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="prov stale rv">
     <span class="pv-tag">WEEKLY</span>
     <span>Rebuilt <b>Sundays 01:30 IST</b>, after the week&rsquo;s last NAV publish</span>
-    <span>Built <b>2026-08-22</b> · 2.7d old</span>
+    <span>Built <b>2026-08-22</b> · 2.8d old</span>
     
     <span>&#9888; This week&rsquo;s screen has not run &mdash; showing the previous build.
       NAVs below are from that date, not today.</span>
@@ -13190,6 +13340,30 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   
   <div id="perfNotice"></div>
 
+  
+  <div class="whenwrap rv" id="whenWrap" style="display:none">
+    <div class="whenhead">
+      <h3 class="whentitle">When it works</h3>
+      <p class="whensub">Every closed trade bucketed by the day it resolved. Colour is total R,
+        not win rate — a day can win often and still lose money.</p>
+    </div>
+    <div class="whengrid" id="whenDow"></div>
+    <div class="whengrid whenmonths" id="whenMonth"></div>
+    <p class="whennote" id="whenNote"></p>
+  </div>
+
+  
+  <div class="whatifwrap rv" id="whatIfWrap" style="display:none">
+    <div class="whenhead">
+      <h3 class="whentitle">What if</h3>
+      <p class="whensub">Switch an engine off to see what the ledger would read without it.
+        This is attribution, not a backtest — the trades still happened, and picking the
+        loser to remove after the fact is not a strategy.</p>
+    </div>
+    <div class="whatifrow" id="whatIfToggles"></div>
+    <div class="whatifout" id="whatIfOut"></div>
+  </div>
+
   <!-- Shown by renderStats() while the closed count is below MIN_N_FOR_EDGE.
        The record restarted on the gated engine, so it will be visible for a
        while — that is the honest state of a ledger that has just begun. -->
@@ -13632,7 +13806,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><dt>Last attempt</dt>
           <dd>2026-08-25 08:53
             </dd></div>
-        <div><dt>Age</dt><dd>5h old</dd></div>
+        <div><dt>Age</dt><dd>7h old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Published coverage</dt>
@@ -13642,6 +13816,28 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
       </dl>
       <p class="dh-note">partial coverage — 13/22 records</p>
+    </li>
+    
+    <li class="dh-row">
+      <div class="dh-top">
+        <span class="dh dh-FRESH">FRESH</span>
+        <span class="dh-name">Daily Brief</span>
+        <span class="dh-src">wire clustering + Groq</span>
+      </div>
+      <dl class="dh-grid">
+        <div><dt>Last successful</dt>
+          <dd>2026-08-25 07:53</dd></div>
+        <div><dt>Last attempt</dt>
+          <dd>2026-08-25 07:53
+            </dd></div>
+        <div><dt>Age</dt><dd>8h old</dd></div>
+        <div><dt>Expected</dt><dd>daily</dd></div>
+        
+        
+        
+        
+      </dl>
+      
     </li>
     
     <li class="dh-row">
@@ -13663,28 +13859,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
           <dd>24</dd></div>
         
         <div><dt>Serving</dt><dd>previous build</dd></div>
-      </dl>
-      
-    </li>
-    
-    <li class="dh-row">
-      <div class="dh-top">
-        <span class="dh dh-FRESH">FRESH</span>
-        <span class="dh-name">Market Intelligence</span>
-        <span class="dh-src">NSE / Yahoo</span>
-      </div>
-      <dl class="dh-grid">
-        <div><dt>Last successful</dt>
-          <dd>2026-08-24 22:22</dd></div>
-        <div><dt>Last attempt</dt>
-          <dd>2026-08-24 14:12
-            · success</dd></div>
-        <div><dt>Age</dt><dd>15h old</dd></div>
-        <div><dt>Expected</dt><dd>daily</dd></div>
-        
-        
-        
-        
       </dl>
       
     </li>
@@ -13725,7 +13899,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><dt>Last attempt</dt>
           <dd>2026-08-24 22:22
             </dd></div>
-        <div><dt>Age</dt><dd>15h old</dd></div>
+        <div><dt>Age</dt><dd>17h old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         
@@ -13762,16 +13936,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <li class="dh-row">
       <div class="dh-top">
         <span class="dh dh-LIVE">LIVE</span>
-        <span class="dh-name">Daily Brief</span>
-        <span class="dh-src">wire clustering + Groq</span>
+        <span class="dh-name">Market Intelligence</span>
+        <span class="dh-src">NSE / Yahoo</span>
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 07:53</dd></div>
+          <dd>2026-08-25 14:21</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 07:53
-            </dd></div>
-        <div><dt>Age</dt><dd>6h old</dd></div>
+          <dd>2026-08-25 14:22
+            · success</dd></div>
+        <div><dt>Age</dt><dd>1h old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         
@@ -13789,9 +13963,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 13:37</dd></div>
+          <dd>2026-08-25 15:44</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 13:37
+          <dd>2026-08-25 15:44
             </dd></div>
         <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -13812,9 +13986,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 13:37</dd></div>
+          <dd>2026-08-25 15:44</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 13:37
+          <dd>2026-08-25 15:44
             </dd></div>
         <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -13835,9 +14009,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 13:37</dd></div>
+          <dd>2026-08-25 15:44</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 13:37
+          <dd>2026-08-25 15:44
             </dd></div>
         <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -13858,9 +14032,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 13:37</dd></div>
+          <dd>2026-08-25 15:44</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 13:37
+          <dd>2026-08-25 15:44
             </dd></div>
         <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>weekly</dd></div>
@@ -13881,9 +14055,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 13:37</dd></div>
+          <dd>2026-08-25 15:44</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 13:37
+          <dd>2026-08-25 15:44
             </dd></div>
         <div><dt>Age</dt><dd>2 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -14046,7 +14220,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Tuesday, August 25 2026 · built 21:37 MYT<br>
+      Tuesday, August 25 2026 · built 23:44 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -14088,9 +14262,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="QbDfrqlm2EV8nqTYUqIz0A">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="lT76xIwVxxwCEdiAU1SWCQ">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="QbDfrqlm2EV8nqTYUqIz0A">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="QbDfrqlm2EV8nqTYUqIz0A" src="/app.js?v=20260825T213726" defer></script>
+<script type="application/json" id="sector-map" nonce="lT76xIwVxxwCEdiAU1SWCQ">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="lT76xIwVxxwCEdiAU1SWCQ" src="/app.js?v=20260825T234451" defer></script>
 </body>
 </html>
