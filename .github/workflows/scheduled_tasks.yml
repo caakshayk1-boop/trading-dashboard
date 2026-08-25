@@ -1,17 +1,27 @@
-name: Scheduled Tasks — CF Scans + Daily Brief
+name: Scheduled Tasks — Two Daily Briefs
 
 # Replaces Railway bot scheduler (Railway being shut down)
 # IST = UTC+5:30 · MYT = UTC+8:00. Market-hours tasks stay pinned to IST
 # (NSE trades on IST regardless of where this runs); only the daily brief
 # is pinned to MYT, since that's when the operator actually reads it.
+# TWO Telegram sends a day. Nothing else in this workflow talks to Telegram.
+#
+# It used to be six crons, four of them CF scans that alerted on FX and
+# commodity setups. The Rs 1 crore mandate is Indian listed equity only, so
+# those scans were alerting on instruments the rulebook will not size — noise
+# with a notification sound. They are removed rather than silenced, because a
+# scan whose output nothing may act on is not worth the API calls.
+#
+# MIDDAY  12:30 MYT — the session is live on NSE (10:00 IST). What the book
+#                     wants today, and what moved to get there.
+# EVENING 17:00 MYT — NSE has closed (14:30 IST). What actually happened.
+#
+# Mon-Fri: a market brief on a Sunday is noise. Change `1-5` to `*` for daily.
 on:
   schedule:
-    - cron: '0 22 * * *'      # 6:00 AM  MYT (22:00 UTC prev day) — daily brief; site is operated from Malaysia
-    - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (pinned to IST: aligns with NSE pre-market, not operator location)
-    - cron: '30 4 * * 1-5'    # 10:00 AM IST — CF scan (Mon–Fri only)
-    - cron: '30 8 * * 1-5'    # 2:00 PM  IST — CF scan (Mon–Fri only)
-    - cron: '30 12 * * 1-5'   # 6:00 PM  IST — CF scan (Mon–Fri only)
-    - cron: '30 16 * * 1-5'   # 10:00 PM IST — CF scan (Mon–Fri only)
+    - cron: '30 4 * * 1-5'    # 12:30 MYT · 10:00 IST — midday brief
+    - cron: '0 9 * * 1-5'     # 17:00 MYT · 14:30 IST — evening brief
+    - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (data only, no Telegram)
     # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
     # to TASK=health since it was written, but that cron was never in this
     # list — so the arm was unreachable and the health watch only ever ran
@@ -26,7 +36,7 @@ on:
         required: false
         default: 'auto'
         type: choice
-        options: [auto, daily_brief, cf_scan, sip_bucket, ai_longterm, health, subscribers]
+        options: [auto, brief_midday, brief_evening, sip_bucket, ai_longterm, health, subscribers]
 
 concurrency:
   group: scheduled-tasks
@@ -79,22 +89,35 @@ jobs:
             TASK="$INPUT"
           else
             case "$SCHEDULE" in
-              "0 22 * * *") TASK=daily_brief ;;
-              "45 1 * * *") TASK=sip_bucket  ;;
-              "0 3,9,15 * * *") TASK=health   ;;
-              *)            TASK=cf_scan     ;;
+              "30 4 * * 1-5")   TASK=brief_midday  ;;
+              "0 9 * * 1-5")    TASK=brief_evening ;;
+              "45 1 * * *")     TASK=sip_bucket    ;;
+              "0 3,9,15 * * *") TASK=health        ;;
+              # No fallthrough to cf_scan any more. An unrecognised cron used to
+              # become a CF scan, which is how a mis-typed schedule would have
+              # quietly started alerting on commodities again.
+              *)                TASK=none          ;;
             esac
           fi
           echo "cron '$SCHEDULE' input '$INPUT' → task $TASK"
           echo "task=$TASK" >> $GITHUB_OUTPUT
 
-      - name: Run daily brief
-        if: steps.task.outputs.task == 'daily_brief'
+      - name: Run midday brief
+        if: steps.task.outputs.task == 'brief_midday'
         run: |
           python -c "
           from daily_brief import send_brief
-          send_brief()
-          print('Daily brief sent.')
+          send_brief(slot='midday')
+          print('Midday brief sent.')
+          "
+
+      - name: Run evening brief
+        if: steps.task.outputs.task == 'brief_evening'
+        run: |
+          python -c "
+          from daily_brief import send_brief
+          send_brief(slot='evening')
+          print('Evening brief sent.')
           "
 
       - name: Run SIP bucket

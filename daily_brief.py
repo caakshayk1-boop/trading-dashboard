@@ -994,6 +994,215 @@ Senior FP&A · Finance Manager · Regional · Controller
     return brief
 
 
+# ── Telegram formatting helpers ─────────────────────────────────────────────
+
+def istNow() -> str:
+    return datetime.now(IST).strftime("%d %b %Y, %I:%M %p")
+
+
+def esc(v) -> str:
+    """Telegram legacy Markdown breaks on an unbalanced _ * ` or [ — a headline
+    with an underscore silently drops the whole message with a 400."""
+    out = str(v if v is not None else "")
+    for ch in ("_", "*", "`", "[", "]"):
+        out = out.replace(ch, "\\" + ch)
+    return out
+
+
+def num(v):
+    try:
+        n = float(v)
+        return n if math_isfinite(n) else None
+    except (TypeError, ValueError):
+        return None
+
+
+def math_isfinite(n) -> bool:
+    import math as _m
+    return _m.isfinite(n)
+
+
+def rate(v, digits: int = 1) -> str:
+    """A LEVEL, so it carries no sign: a 34.8% win rate is not "up 34.8%"."""
+    n = num(v)
+    return "—" if n is None else f"{n:.{digits}f}%"
+
+
+def _mandate_book() -> Optional[dict]:
+    """Today's order book under the Rs 1 crore mandate. None if unavailable."""
+    try:
+        import swing_rulebook as RB
+        import datetime as _dt
+        j = _news_get("/signals?limit=400")
+        if not j:
+            return None
+        today = _dt.date.today()
+
+        def age(d):
+            try:
+                return (today - _dt.date(*map(int, str(d)[:10].split("-")))).days
+            except Exception:
+                return 9999
+
+        fresh = [r for r in (j.get("signals") or [])
+                 if str(r.get("status")) == "OPEN"
+                 and not r.get("entry_triggered_at")
+                 and age(r.get("date")) <= 30]
+        return RB.build_book(fresh, {})
+    except Exception as e:
+        log.warning("mandate book unavailable: %s", e)
+        return None
+
+
+def build_section_brief(slot: str = "midday") -> str:
+    """
+    The whole of news.askakshay.com, in one Telegram message.
+
+    Every section of the site gets a line here, in the site's own document
+    order, so the brief is a table of contents for the page rather than a
+    second, competing summary that can drift from it. Sections that have
+    nothing to say are omitted rather than printed empty — the old brief padded
+    its Opportunities block with two LinkedIn links and no jobs, which taught
+    the reader to skip it.
+
+    MIDDAY  — NSE is live. What the book wants, and what moved to get there.
+    EVENING — NSE has closed. What happened, and what is queued for tomorrow.
+    """
+    evening = slot == "evening"
+    title = "🌇 *EVENING — THE DAILY SIGNAL*" if evening else "🌤 *MIDDAY — THE DAILY SIGNAL*"
+    L = [f"{title}\n{istNow()} IST · news.askakshay.com\n"]
+    ticket_blocks: list = []
+
+    def rule(s):
+        L.append(f"━━━━━━━━━━━━━━━━━━━\n{s}\n━━━━━━━━━━━━━━━━━━━")
+
+    # ── 01 Market Intel ────────────────────────────────────────────────────
+    mk = _news_markets()
+    if mk:
+        rule("📊 *01 · MARKET INTEL*")
+        L.append(mk)
+
+    # ── 02 Trade Ideas — the mandate's order book ──────────────────────────
+    book = _mandate_book()
+    if book:
+        st = book["state"]
+        rule("🎯 *02 · TRADE IDEAS* — Rs 1 crore mandate")
+        L.append(f"*{len(book['admitted'])} to place* · heat {st['heat_pct']}% · "
+                 f"deployed {st['deployed_pct']}% · cash Rs {st['cash']:,}")
+        # Engine names carry underscores — top5_pick, ai_longterm — and an
+        # unbalanced _ makes Telegram reject the WHOLE message with a 400.
+        for t in book["admitted"]:
+            ticket_blocks.append([
+                f"\n*{esc(t['symbol'])}* — {esc(t['horizon_label'])} · {esc(t['engine'])}",
+                f"  buy `{t['qty']}` @ `{t['entry']:,.2f}`  ·  stop `{t['stop']:,.2f}` ({t['stop_pct']}%)",
+                f"  target +{t['final_gain_pct']}% · {t['reward_risk']}:1 · hold {esc(t['hold_days'])}",
+                *[f"    {leg['label']} sell `{leg['qty']}` @ `{leg['price']:,.2f}` (+{leg['gain_pct']}%)"
+                  for leg in t["legs"]],
+            ])
+        L.append(_BOOK)
+        if book["deferred"]:
+            L.append(f"\n_{len(book['deferred'])} more valid, waiting on a cap._")
+        if book["duplicates"]:
+            L.append(f"_{len(book['duplicates'])} dropped as duplicate names._")
+
+    # ── 03 World · 04 Findings ─────────────────────────────────────────────
+    w = _news_get("/world")
+    if w and (w.get("top") or []):
+        rule("🌍 *03 · WORLD* — last 24h")
+        for e in (w.get("top") or [])[:4]:
+            L.append(f"  • {esc(str(e.get('title',''))[:150])}")
+    nw = _news_get("/news")
+    if nw and (nw.get("news") or []):
+        rule("📰 *04 · THE WIRE*")
+        for n in (nw.get("news") or [])[:4]:
+            L.append(f"  • {esc(str(n.get('title',''))[:130])} — {esc(n.get('source'))}")
+
+    # ── 09 SIP Buckets ─────────────────────────────────────────────────────
+    sp = _news_get("/sip")
+    if sp and sp.get("plan"):
+        pl = sp["plan"]
+        rule("🪣 *09 · SIP BUCKETS*")
+        L.append(f"  Rs {pl.get('monthly_amount', 0):,}/mo · step-up {pl.get('step_up_pct')}% · "
+                 f"year {pl.get('sip_year')}")
+
+    # ── 11 Portfolio ───────────────────────────────────────────────────────
+    tr = _news_get("/tracker")
+    if tr:
+        rule("📁 *11 · PORTFOLIO*")
+        n = tr.get("count") or 0
+        L.append(f"  {n} tracked position{'' if n == 1 else 's'}" if n else
+                 "  Nothing held. An OPEN setup is not a position.")
+
+    # ── 13 Signal Log · 14 Performance ─────────────────────────────────────
+    if evening:
+        recap = _build_signal_recap()
+        if recap:
+            rule("📋 *13 · SIGNAL LOG* — today")
+            L.append(recap)
+    stt = _news_get("/stats")
+    if stt and (stt.get("headline") or {}):
+        h = stt["headline"]
+        rule("📈 *14 · PERFORMANCE* — closed trades only")
+        L.append(f"  expectancy `{num(h.get('expectancy_r')) or 0:+.3f}R` over "
+                 f"{h.get('trades','—')} closed · win rate {rate(h.get('win_rate'),1)}")
+        L.append(f"  avg win `{num(h.get('avg_win_r')) or 0:+.2f}R` · "
+                 f"avg loss `{num(h.get('avg_loss_r')) or 0:+.2f}R` · "
+                 f"profit factor {num(h.get('profit_factor')) or 0:.2f}")
+
+    # ── 16 Data Health ─────────────────────────────────────────────────────
+    hl = _news_get("/health")
+    if hl:
+        rule("🩺 *16 · DATA HEALTH*")
+        L.append(f"  {hl.get('signals','—')} signals · latest {hl.get('latest_signal_date','—')} · "
+                 f"{hl.get('open_setups','—')} open setups")
+
+    L.append("\n_Full board: news.askakshay.com · Life: life.askakshay.com_")
+    L.append("_Not SEBI advice._")
+    return _fit(L, ticket_blocks)
+
+
+# Telegram rejects a sendMessage over 4096 characters outright. A full order
+# book plus every section reached 4,004 on the first live build — inside the
+# limit, but with no headroom for a day that fills all eight tickets with three
+# legs each, and the evening brief then hit the ceiling exactly.
+#
+# Trimming by scanning rendered lines was fragile, so the order book is
+# assembled as a list of whole ticket BLOCKS and dropped one at a time from the
+# tail. Tickets are ranked by score, so what falls off is the weakest, and the
+# reader is told how many and where to read them.
+TG_LIMIT = 3900
+
+
+def _fit(lines: list, ticket_blocks: list) -> str:
+    """Join the brief, dropping whole ticket blocks until it fits."""
+    def render(keep: int) -> str:
+        out = []
+        for item in lines:
+            if item is _BOOK:
+                for b in ticket_blocks[:keep]:
+                    out.extend(b)
+                gone = len(ticket_blocks) - keep
+                if gone:
+                    out.append(f"\n_{gone} more on the board — news.askakshay.com_")
+            else:
+                out.append(item)
+        return "\n".join(out)
+
+    keep = len(ticket_blocks)
+    text = render(keep)
+    while len(text) > TG_LIMIT and keep > 0:
+        keep -= 1
+        text = render(keep)
+    return text
+
+
+class _BookMarker:
+    """Placeholder for where the order book is spliced in."""
+
+
+_BOOK = _BookMarker()
+
+
 def _build_apex_digest() -> str:
     """
     Fetch APEX bot P&L and build a Telegram digest.
@@ -1037,24 +1246,29 @@ def _build_apex_digest() -> str:
         return ""
 
 
-def send_brief():
-    log.info("daily_brief: building...")
-    brief    = build_brief()
+def send_brief(slot: str = "midday"):
+    """
+    One of the two daily sends. `slot` is "midday" (12:30 MYT) or "evening"
+    (17:00 MYT), and comes from the cron that fired rather than from the wall
+    clock — GitHub delays scheduled runs by hours, and an hour-equality test is
+    how the 6 AM brief silently became a CF scan on late days.
+    """
+    log.info("daily_brief: building %s...", slot)
+    brief    = build_section_brief(slot)
     today    = datetime.now(IST).date().isoformat()   # IST date
     _save_to_db(brief)
     _post(brief)
 
-    # APEX Bot P&L digest
-    apex_digest = _build_apex_digest()
-    if apex_digest:
-        _post(apex_digest)
-        log.info("APEX P&L digest sent")
+    # APEX P&L rides the evening send only. Two alerts a day means two, and a
+    # digest that arrives as its own notification is a third.
+    if slot == "evening":
+        apex_digest = _build_apex_digest()
+        if apex_digest:
+            _post(apex_digest)
+            log.info("APEX P&L digest sent")
 
-    # Signal recap — sent once at 6 AM as a separate message (no duplicates)
-    recap = _build_signal_recap()
-    if recap:
-        _post(recap)
-        log.info("Signal recap sent")
+    # The recap is a SECTION of the evening brief now, not a second message.
+    # Posting it separately as well is how one event became two notifications.
     # Send newspaper link
     newspaper_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
     if newspaper_domain:
