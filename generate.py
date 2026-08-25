@@ -781,10 +781,24 @@ def generate() -> None:
     # one exactly, including its rounding: Jinja's |round(0) is half-up, while
     # Python's round() is half-to-even, so 24.5% would print 25 on the page and
     # 24 in the card. +0.5 then truncate reproduces the page's number.
+    # ONE definition of closed, and it includes every resolved outcome.
+    #
+    # This counted only badge win/loss and dropped `expired` from the
+    # denominator entirely. Ten expired signals were being excluded — trades
+    # that resolved without reaching a target, which is not a win by any
+    # reading. The result was a hero rail showing 23.6% over 55 while
+    # /api/stats showed 20.6% over 34: two numbers, two populations, no
+    # statement anywhere that they were measuring different things.
+    #
+    # A signal that resolved is closed. If it did not reach a target it is not
+    # a win. Expiries and time stops count in the denominator, which is the
+    # only reading that cannot flatter the record.
     _wins   = sum(1 for a in alerts if a.get("badge") == "win")
-    _losses = sum(1 for a in alerts if a.get("badge") == "loss")
+    _losses = sum(1 for a in alerts if a.get("badge") in ("loss", "expired"))
     _closed = _wins + _losses
     _winrate = int(_wins / _closed * 100 + 0.5) if _closed else 0
+    print(f"[generate] Hero win rate: {_winrate}% over {_closed} closed "
+          f"({_wins}W, {_losses}L incl. expiries) — last {len(alerts)} alerts")
     matters = what_matters(
         regime=regime, markets=markets, market_intel=market_intel, top5=top5,
         closed=_closed, winrate=_winrate, engine_changes=ENGINE_CHANGES)

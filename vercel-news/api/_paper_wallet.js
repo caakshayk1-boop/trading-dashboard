@@ -3,7 +3,13 @@
 // pure functions are tested by positions.test.js. paper_wallet.js is the
 // thin HTTP handler that fetches rows and hands them to simulateWallet().
 
-export const CAPITAL = 5_000_000;
+// Rs 1,00,00,000 — the SAME wallet as swing_rulebook.py and Dhruvedge.
+//
+// This was Rs 50,00,000 while two other books ran at a crore, which is how the
+// site showed two capital figures at once. Three wallets against one operator
+// is not three strategies; it is three answers to "how much is at risk" and
+// none of them was the truth.
+export const CAPITAL = 10_000_000;
 // Forward-only — confirmed with Akshay 2026-08-16. No historical replay: a
 // signal from before this date never enters the simulation at all.
 export const START_DATE = "2026-08-17";
@@ -12,26 +18,45 @@ export const GLOBAL_CAP_PCT = 0.65;
 export const TIERS = {
   long: {
     label: "Long-horizon",
-    engines: new Set(["multibagger", "magic", "magicmagic", "ai_longterm"]),
+    // magicmagic retired as magic's duplicate — 10 of its 43 rows are the same
+    // trade filed twice, and sizing both charged two budgets for one position.
+    engines: new Set(["multibagger", "magic", "ai_longterm"]),
     maxPct: 0.05,
-    capPct: 0.25,
+    capPct: 0.35,
   },
   swing: {
     label: "Swing/medium",
-    // ohl (added 2026-08-17): same-day pattern signal on the F&O-eligible
-    // universe, same classification as breakout — liquid names, pattern-
-    // based, not a multi-month thesis or a high-frequency intraday churn.
-    engines: new Set(["breakout", "4h", "ai_4h", "ai_daily", "equity_measured", "ohl"]),
+    // ohl and equity_measured removed on the 2026-08-25 engine review: ohl is
+    // 0 for 6 with every close at the stop, equity_measured 0 for 8 at
+    // t = -20.17. They keep firing and keep being scored — hiding a losing
+    // engine is the one thing this record exists not to do — but they no
+    // longer receive capital, on paper or otherwise.
+    engines: new Set(["breakout", "ai_daily"]),
     maxPct: 0.03,
-    capPct: 0.30,
-  },
-  hf: {
-    label: "High-frequency",
-    engines: new Set(["cf_1h", "intraday", "commodity"]),
-    maxPct: 0.015,
-    capPct: 0.20,
+    capPct: 0.45,
   },
 };
+
+// The High-frequency tier is GONE, not emptied.
+//
+// It held cf_1h, intraday and commodity and reserved 20% of the book for them.
+// All three are out of mandate — cf_1h and commodity are FX and commodities
+// this account cannot hold, intraday trades a 15-minute chart — so the tier
+// could never fill. The visible symptom was "High-frequency: nil" on every
+// build and Rs 10,00,000 of the wallet sitting idle forever, reserved for
+// trades that were structurally unable to happen.
+//
+// A cap that can never be used is not risk control, it is a rounding error
+// with a label. The capital it was holding is redistributed to the two tiers
+// that actually trade.
+//
+// The tier caps deliberately SUM ABOVE the global cap: 35% + 45% = 80% against
+// a 65% ceiling. That is not an error. Redistributing to exactly 65% was the
+// first attempt and it quietly removed a safety property — with the caps
+// summing to the global cap, the global cap can never bind before a category
+// cap does, so it stops being a constraint and becomes decoration. Tiers cap
+// concentration WITHIN a bucket; the global cap is the real ceiling on the
+// book. They have to be able to disagree for both to mean anything.
 
 // Engines the ledger has MEASURED as losing. They keep firing, keep being
 // logged and keep being scored — hiding a losing engine is the one thing this

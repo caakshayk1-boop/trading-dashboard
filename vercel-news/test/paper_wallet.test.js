@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { simulateWallet, tierFor, gradeMultiplier, CAPITAL, TIERS,
+import { simulateWallet, tierFor, gradeMultiplier, CAPITAL, TIERS, GLOBAL_CAP_PCT,
          sideOf, directionalPnlPct, ladderedPnlPct } from "../api/_paper_wallet.js";
 // From _badge.js specifically, not _db.js — this test runs via plain
 // `node --test` with no npm install in newspaper.yml's "Position tracker
@@ -28,17 +28,28 @@ function row(overrides) {
 test("tierFor maps the real signal_type taxonomy correctly", () => {
   assert.equal(tierFor("multibagger"), "long");
   assert.equal(tierFor("magic"), "long");
-  assert.equal(tierFor("magicmagic"), "long");
+  // magicmagic is retired as magic's duplicate, so it is no longer in any tier.
+  // magic — the survivor — still is.
+  assert.equal(tierFor("magicmagic"), null);
+  assert.equal(tierFor("magic"), "long");
   assert.equal(tierFor("ai_longterm"), "long");
   assert.equal(tierFor("breakout"), "swing");
-  assert.equal(tierFor("4h"), "swing");
-  assert.equal(tierFor("ai_4h"), "swing");
   assert.equal(tierFor("ai_daily"), "swing");
-  assert.equal(tierFor("equity_measured"), "swing");
-  assert.equal(tierFor("ohl"), "swing");
-  assert.equal(tierFor("cf_1h"), "hf");
-  assert.equal(tierFor("intraday"), "hf");
-  assert.equal(tierFor("commodity"), "hf");
+
+  // Retired on the 2026-08-25 review — measured losers or structurally broken.
+  // They keep firing and keep being scored; they no longer receive capital.
+  assert.equal(tierFor("equity_measured"), null);   // 0 for 8 at t = -20.17
+  assert.equal(tierFor("ohl"), null);               // 0 for 6, every close at the stop
+  assert.equal(tierFor("top5_pick"), null);         // 0 for 4, 8 of 25 not Indian listings
+
+  // Out of mandate on instrument or clock, whatever the record says. cf_1h has
+  // the best t-statistic of any engine and is still out: none of its 367
+  // signals is an Indian listed equity.
+  assert.equal(tierFor("cf_1h"), null);
+  assert.equal(tierFor("commodity"), null);
+  assert.equal(tierFor("intraday"), null);          // 15-minute chart
+  assert.equal(tierFor("4h"), null);
+  assert.equal(tierFor("ai_4h"), null);
   assert.equal(tierFor("something_unknown"), null);
 });
 
@@ -63,54 +74,73 @@ test("single long-horizon grade-A OPEN trade gets the full tier max (5% of capit
 });
 
 test("grade scales the trade size within its tier ceiling", () => {
-  const rows = [row({ id: 1, signal_type: "cf_1h", grade: "C", entry: 50 })];
+  const rows = [row({ id: 1, signal_type: "breakout", grade: "C", entry: 50 })];
   const out = simulateWallet(rows, badgeOf);
-  const expected = Math.round(CAPITAL * TIERS.hf.maxPct * 0.45);
+  // The hf tier is gone: cf_1h, intraday and commodity are all out of mandate,
+  // so it reserved 20% of the book for trades that could never happen. Its
+  // engines now belong to no tier at all.
+  const expected = Math.round(CAPITAL * TIERS.swing.maxPct * 0.45);
   assert.equal(out.trades[0].allocated_amount, expected);
 });
 
-test("category cap: a 3rd long-horizon grade-A trade gets reduced once 25% category cap is hit", () => {
-  // Each grade-A long trade wants 5% (₹2.5L). Cap is 25% (₹12.5L) → room for
-  // exactly 5 full-size trades. A 6th concurrently-open one should be capped.
-  const rows = Array.from({ length: 6 }, (_, i) =>
+test("category cap: a long-horizon grade-A trade is reduced once the category cap is hit", () => {
+  // Each grade-A long trade wants maxPct of the book. The category cap divided
+  // by that is how many fit at full size; the next one gets whatever headroom
+  // is left, which is nothing.
+  //
+  // Derived from TIERS rather than written as literals: the long cap moved
+  // from 25% to 30% when the dead High-frequency tier's reservation was
+  // redistributed, and a test carrying "25%" in its name and its arithmetic
+  // fails for a reason that has nothing to do with the behaviour under test.
+  const perTrade = Math.round(CAPITAL * TIERS.long.maxPct);
+  const fit = Math.floor((CAPITAL * TIERS.long.capPct) / perTrade);
+  const rows = Array.from({ length: fit + 1 }, (_, i) =>
     row({ id: i + 1, signal_type: "multibagger", grade: "A", entry: 100, date: "2026-08-17" })
   );
   const out = simulateWallet(rows, badgeOf);
   const amounts = out.trades.slice().sort((a, b) => a.id - b.id).map((t) => t.allocated_amount);
-  assert.equal(amounts[0], Math.round(CAPITAL * 0.05));
-  assert.equal(amounts[4], Math.round(CAPITAL * 0.05));
-  // The 6th should be capped to whatever headroom remains — category cap
-  // (₹12.5L) minus 5 * ₹2.5L already deployed = ₹0 headroom.
-  assert.equal(amounts[5], 0);
-  assert.equal(out.trades.find((t) => t.id === 6).capital_unavailable, true);
+  assert.equal(amounts[0], perTrade);
+  assert.equal(amounts[fit - 1], perTrade);
+  // The one past the cap gets the remaining headroom, which is under a full
+  // allocation — and it is MARKED, never silently shrunk.
+  assert.ok(amounts[fit] < perTrade);
+  assert.equal(out.trades.find((t) => t.id === fit + 1).capital_unavailable, true);
   assert.ok(out.categories.long.deployed_amount <= out.categories.long.cap_amount);
 });
 
 test("global cap binds even when a category still has its own headroom", () => {
-  // hf to its 20% cap (14 grade-A trades @1.5%, last one capped by hf's own
-  // ceiling), swing to its 30% cap (10 grade-A trades @3% exactly), and 3
-  // long-horizon trades @5% each = 15% (well under long's 25% cap) — total
-  // pre-existing deployment: 20% + 30% + 15% = 65%, exactly the global cap.
-  // A 4th long trade wants 5% more and its OWN category has room (15%+5%=20%
-  // is still under the 25% cap), but zero GLOBAL headroom remains — proving
-  // the global cap is what actually stops it, not the category cap.
+  // Fill swing to its own cap, then add long trades until the BOOK is at the
+  // global ceiling while the long category still has room of its own. The next
+  // long trade must be stopped by the global cap, not by its category.
+  //
+  // Every number is derived from TIERS. Written as literals, this test broke
+  // when the tier caps were re-cut and failed for a reason unrelated to the
+  // behaviour it exists to prove.
+  const swingEach = Math.round(CAPITAL * TIERS.swing.maxPct);
+  const longEach = Math.round(CAPITAL * TIERS.long.maxPct);
+  const swingFit = Math.floor((CAPITAL * TIERS.swing.capPct) / swingEach);
+  const globalRoom = CAPITAL * GLOBAL_CAP_PCT - swingFit * swingEach;
+  const longFit = Math.floor(globalRoom / longEach);
+
   const rows = [];
   let id = 1;
-  for (let i = 0; i < 14; i++) rows.push(row({ id: id++, signal_type: "cf_1h", grade: "A", entry: 100 }));
-  for (let i = 0; i < 10; i++) rows.push(row({ id: id++, signal_type: "breakout", grade: "A", entry: 100 }));
-  for (let i = 0; i < 3; i++) rows.push(row({ id: id++, signal_type: "multibagger", grade: "A", entry: 100 }));
-  const fourthLongId = id;
+  for (let i = 0; i < swingFit; i++)
+    rows.push(row({ id: id++, signal_type: "breakout", grade: "A", entry: 100 }));
+  for (let i = 0; i < longFit; i++)
+    rows.push(row({ id: id++, signal_type: "multibagger", grade: "A", entry: 100 }));
+  const blockedId = id;
   rows.push(row({ id: id++, signal_type: "multibagger", grade: "A", entry: 100 }));
 
   const out = simulateWallet(rows, badgeOf);
-  assert.ok(out.wallet.deployed_pct <= 65.01, `deployed_pct ${out.wallet.deployed_pct} must not exceed global cap`);
-  assert.ok(out.categories.long.deployed_amount + Math.round(CAPITAL * 0.05) <= out.categories.long.cap_amount,
-    "sanity check: the 4th long trade's own category cap was NOT the binding constraint");
-  const fourthLong = out.trades.find((t) => t.id === fourthLongId);
-  assert.equal(fourthLong.allocated_amount, 0);
-  assert.equal(fourthLong.capital_unavailable, true);
+  assert.ok(out.wallet.deployed_pct <= GLOBAL_CAP_PCT * 100 + 0.01,
+    `deployed_pct ${out.wallet.deployed_pct} must not exceed the global cap`);
+  // Its own category still had headroom — so the global cap is what stopped it.
+  assert.ok(out.categories.long.deployed_amount < out.categories.long.cap_amount,
+    "long category should still have room, proving the GLOBAL cap bound");
+  const blocked = out.trades.find((t) => t.id === blockedId);
+  assert.ok(blocked.allocated_amount < longEach,
+    "the trade past the global cap must not get a full allocation");
 });
-
 test("capital recycles: a trade opened after an earlier same-category trade CLOSED gets full room again", () => {
   const rows = [
     row({ id: 1, signal_type: "multibagger", grade: "A", entry: 100, date: "2026-08-17",
@@ -186,7 +216,7 @@ test("win_rate is null with no decided (win/loss) trades yet, not a fake 0%", ()
 test("deployed + cash always sum to capital", () => {
   const rows = [
     row({ id: 1, signal_type: "multibagger", grade: "A" }),
-    row({ id: 2, signal_type: "cf_1h", grade: "B", date: "2026-08-18" }),
+    row({ id: 2, signal_type: "breakout", grade: "B", date: "2026-08-18" }),
   ];
   const out = simulateWallet(rows, badgeOf);
   assert.equal(out.wallet.deployed_amount + out.wallet.cash_amount, CAPITAL);
@@ -198,7 +228,7 @@ test("deployed + cash always sum to capital", () => {
 // `entry` was already computed and simply never surfaced (found 2026-08-18).
 test("a trade carries the price it was entered at", () => {
   const { trades } = simulateWallet(
-    [{ id: 1, date: "2026-08-18", symbol: "IOC", signal_type: "ohl",
+    [{ id: 1, date: "2026-08-18", symbol: "IOC", signal_type: "breakout",
        entry: 137.8, status: "OPEN", lifecycle_status: null,
        exit_price: null, pnl_pct: null, closed_at: null, grade: "B" }],
     () => "open"
@@ -208,7 +238,7 @@ test("a trade carries the price it was entered at", () => {
 
 test("a closed trade carries its exit price too", () => {
   const { trades } = simulateWallet(
-    [{ id: 2, date: "2026-08-17", symbol: "IOC", signal_type: "ohl",
+    [{ id: 2, date: "2026-08-17", symbol: "IOC", signal_type: "breakout",
        entry: 100, status: "CLOSED", lifecycle_status: null,
        exit_price: 112.5, pnl_pct: 12.5, closed_at: "2026-08-18", grade: "A" }],
     () => "win"
@@ -221,10 +251,10 @@ test("the instrument's currency travels with the trade, not the book's", () => {
   // QUOTED in dollars; printing the entry as ₹ would restate a $ price as an
   // INR one, which is the bug currencyOf() was fixed for.
   const { trades } = simulateWallet(
-    [{ id: 3, date: "2026-08-18", symbol: "SNOW", signal_type: "ohl",
+    [{ id: 3, date: "2026-08-18", symbol: "SNOW", signal_type: "breakout",
        entry: 214.3, status: "OPEN", lifecycle_status: null,
        exit_price: null, pnl_pct: null, closed_at: null, grade: "A" },
-     { id: 4, date: "2026-08-18", symbol: "IOC", signal_type: "ohl",
+     { id: 4, date: "2026-08-18", symbol: "IOC", signal_type: "breakout",
        entry: 137.8, status: "OPEN", lifecycle_status: null,
        exit_price: null, pnl_pct: null, closed_at: null, grade: "A" }],
     () => "open",
@@ -236,7 +266,7 @@ test("the instrument's currency travels with the trade, not the book's", () => {
 
 test("currencyOf is optional — omitting it defaults to rupees, never undefined", () => {
   const { trades } = simulateWallet(
-    [{ id: 5, date: "2026-08-18", symbol: "IOC", signal_type: "ohl",
+    [{ id: 5, date: "2026-08-18", symbol: "IOC", signal_type: "breakout",
        entry: 1, status: "OPEN", lifecycle_status: null,
        exit_price: null, pnl_pct: null, closed_at: null, grade: "A" }],
     () => "open"
@@ -438,7 +468,7 @@ test("no levels means fall back to the ledger, not a fabricated ladder", () => {
 
 test("simulateWallet carries side and levels onto every trade", () => {
   const out = simulateWallet(
-    [row({ id: 7, symbol: "GOLD", signal_type: "commodity", action: "SELL",
+    [row({ id: 7, symbol: "GOLD", signal_type: "breakout", action: "SELL",
            entry: 100, sl: 105, target1: 90, target2: 70 })],
     badgeOf);
   const t = out.trades.find((x) => x.id === 7);

@@ -4337,23 +4337,29 @@ TEMPLATE = r"""<!DOCTYPE html>
    preference no longer decides this: the site is light, and dark is a choice
    the reader makes and keeps. */
 :root:not([data-theme]){
-  --bg:#FFFFFF;
-  --bg2:#FAFAF9;
+  /* Paper, not a lightbox.
+     Pure white at full screen brightness is a lamp pointed at the reader — on
+     a page this dense the glare is what makes it tiring rather than the
+     information. The ground drops to a soft warm paper and CARDS become the
+     white, so a card now reads as raised against its page instead of needing a
+     border to exist. Ink darkens to hold contrast on the softer ground. */
+  --bg:#F6F5F1;
+  --bg2:#EFEEE9;
   --surface:#FFFFFF;
-  --surface2:#F8F8F7;
-  --surface3:#F1F1EF;
+  --surface2:#FBFAF7;
+  --surface3:#EDECE6;
   --overlay:#FFFFFF;
 
-  --line:rgba(17,18,20,.085);
-  --line2:rgba(17,18,20,.16);
+  --line:rgba(20,21,24,.10);
+  --line2:rgba(20,21,24,.19);
 
   /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
      three regularly print on — a contrast figure quoted against pure white is
      a figure that is never true where the text actually sits.
      Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
-  --text:#111214;
-  --muted:#54595F;
-  --dim:#61666C;
+  --text:#14161A;
+  --muted:#4C525A;
+  --dim:#5A6068;
 
   /* The lime is the mark, not the interface. On white it is reserved for the
      wordmark and a small number of live-state dots; everything that used to be
@@ -4369,10 +4375,10 @@ TEMPLATE = r"""<!DOCTYPE html>
   --on-up:#FFFFFF;
   --rank-ink:rgba(17,18,20,.045);
   --scroll-thumb:#DEDEDA;
-  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
-  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
-  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
-  --blue:#1B54AC; --violet:#5F41B8;
+  --up:#06714A;   --up-soft:rgba(6,113,74,.11);
+  --down:#C02A20; --down-soft:rgba(192,42,32,.10);
+  --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
+  --blue:#1A4FB0; --violet:#6438B8;
 
   color-scheme:light;
 }
@@ -4384,23 +4390,29 @@ TEMPLATE = r"""<!DOCTYPE html>
    Borders do more work here and shadows do less, which is the opposite of
    the dark theme — on paper, elevation reads through edges. */
 :root[data-theme="light"]{
-  --bg:#FFFFFF;
-  --bg2:#FAFAF9;
+  /* Paper, not a lightbox.
+     Pure white at full screen brightness is a lamp pointed at the reader — on
+     a page this dense the glare is what makes it tiring rather than the
+     information. The ground drops to a soft warm paper and CARDS become the
+     white, so a card now reads as raised against its page instead of needing a
+     border to exist. Ink darkens to hold contrast on the softer ground. */
+  --bg:#F6F5F1;
+  --bg2:#EFEEE9;
   --surface:#FFFFFF;
-  --surface2:#F8F8F7;
-  --surface3:#F1F1EF;
+  --surface2:#FBFAF7;
+  --surface3:#EDECE6;
   --overlay:#FFFFFF;
 
-  --line:rgba(17,18,20,.085);
-  --line2:rgba(17,18,20,.16);
+  --line:rgba(20,21,24,.10);
+  --line2:rgba(20,21,24,.19);
 
   /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
      three regularly print on — a contrast figure quoted against pure white is
      a figure that is never true where the text actually sits.
      Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
-  --text:#111214;
-  --muted:#54595F;
-  --dim:#61666C;
+  --text:#14161A;
+  --muted:#4C525A;
+  --dim:#5A6068;
 
   /* The lime is the mark, not the interface. On white it is reserved for the
      wordmark and a small number of live-state dots; everything that used to be
@@ -4416,10 +4428,10 @@ TEMPLATE = r"""<!DOCTYPE html>
   --on-up:#FFFFFF;
   --rank-ink:rgba(17,18,20,.045);
   --scroll-thumb:#DEDEDA;
-  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
-  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
-  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
-  --blue:#1B54AC; --violet:#5F41B8;
+  --up:#06714A;   --up-soft:rgba(6,113,74,.11);
+  --down:#C02A20; --down-soft:rgba(192,42,32,.10);
+  --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
+  --blue:#1A4FB0; --violet:#6438B8;
 
   color-scheme:light;
 }
@@ -4547,20 +4559,31 @@ TEMPLATE = r"""<!DOCTYPE html>
   max-width:64ch;
   color:var(--muted);
 }
-/* Cards keep one hairline and lose the frame. */
+/* Cards are WHITE ON PAPER now.
+   The previous pass stripped their frames because on a pure-white ground a
+   card had nowhere lighter to go and needed four borders to exist. Softening
+   the ground to paper removes that constraint: a white card against a paper
+   ground reads as raised on its own, which is how a card works in print. */
 :root:not([data-theme]) .card,
 :root[data-theme="light"] .card{
-  background:transparent;
-  border:0;
-  border-top:1px solid var(--line);
-  border-radius:0;
-  box-shadow:none;
-  padding-block:clamp(18px,2vw,26px);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  box-shadow:0 1px 2px rgba(20,21,24,.04);
+  padding:clamp(16px,2vw,22px);
 }
 :root:not([data-theme]) .card:hover,
 :root[data-theme="light"] .card:hover{
-  background:var(--bg2);
-  box-shadow:none;
+  border-color:var(--line2);
+  box-shadow:0 6px 18px rgba(20,21,24,.07);
+}
+/* Tables sit on paper too, so they get the same lift. */
+:root:not([data-theme]) .tblwrap,
+:root[data-theme="light"] .tblwrap{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
 }
 /* Tables lose their outer box for the same reason and keep their row rules. */
 :root:not([data-theme]) table,
@@ -7584,8 +7607,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
                   entry and stop, never read from the ledger's r_multiple column —
                   a 2026-08-08 re-grade corrupted that column on 168 of 573 rows.</dd>
               <dt>Sample</dt>
-              <dd>{{ closed }} closed. Below 30 this is a running tally, not a
+              <dd>{{ closed }} closed, from the most recent 200 alerts across
+                  every engine version. Below 30 this is a running tally, not a
                   measurement.</dd>
+              <dt>Why Performance differs</dt>
+              <dd>The Performance section scores the v2 engine only, so it
+                  reports a smaller sample. Neither figure is the &ldquo;real&rdquo;
+                  one — they answer different questions, and both name their
+                  population rather than leaving you to guess.</dd>
+              <dt>Expiries count</dt>
+              <dd>A signal that resolved without reaching a target is in the
+                  denominator. Dropping expiries raises the win rate without
+                  a single trade going differently.</dd>
             </dl>
           </div>
         </details>
@@ -8299,33 +8332,18 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
        no runtime fetch, nothing for a CSP to block. Blue is the baseline
        everywhere; a country lights red or green when the last 24 hours of wires
        say something is happening there. Filled from /api/world. -->
-  <div class="wmap-wrap rv">
-    <div class="wmap-head">
-      <span class="wm-t">Live incident map · rolling 24h</span>
-      <span class="wm-legend">
-        <i class="dot red"></i>escalation
-        <i class="dot green"></i>good news
-        <i class="dot blue"></i>quiet
-      </span>
-    </div>
-    <div class="wmap" id="worldMap" data-mask="2a.8.8.a.7d.2.1.8.1.16.1b.2.12.2.41.1.3.1.1.1.2.7.2.16.e.3.23.3.39.2.3.1.3.2.1.2.1.1.1.1.5.15.24.3.d.6.35.3.1a.10.21.1.c.a.36.a.1.2.3.7.8.e.20.2.6.1.1.18.4.5.14.a.4.2.4.7.1.1.1.1.4.1.1.5.5.e.12.5.10.28.5.2.2.2.5.24.3.4.5.9.14.c.1.1.1.39.1.2.2.23.6.3.1.1.4.6.7.4.b.4.2.4.2.3d.4.1.2.20.8.3.6.4.15.5.1.45.6.1f.7.4.9.2.15.6.1.3b.1.1.1.4.c.3.6.13.7.4.1.2.1d.2.1.3.2.34.7.2.10.1.a.14.5.6.18.2.6.2.2.33.8.3.1c.15.1.a.15.4.7.1.1.32.8.3.1f.14.1.a.14.1.1.3.1.3c.6.1.1f.1b.2.1.1.1.19.3c.29.1a.2.3.15.3e.2a.1c.19.e.3.2c.2a.18.1.1.18.1.2.4.1.2.1.5.5.2a.2.2.27.17.1b.5.4.2.1.4.2.2.2.26.2e.16.1c.4.9.1.1.29.2.1.30.14.1d.3.7.1.2.1.2.29.2.1.4.1.2b.13.1e.8.9.1.1.24.3.1.1.4.2c.10.1f.a.3.1.5.25.4.1.32.e.1f.39.37.6.6.1.1e.1a.1.1f.36.1.1.5.8.1.1b.15.1.6.3.1b.3a.4.23.16.2.8.4.16.1.1.39.4.7.1.1b.17.1.9.4.9.1.9.27.1.15.4.3.1.6.2.17.17.2.7.7.5.4.5.1.1.40.6.1f.18.1.6.8.4.5.5.6.1.3f.4.1d.18.2.3.a.3.7.5.5.1.41.2.1d.19.1.1.c.3.9.3.5.2.41.1.3.3.18.19.1.2.b.2.a.2.6.1.42.1.2.7.14.1c.b.1.14.1.43.9.14.1a.16.1.6.1.47.c.1a.11.15.1.1.1.4.2.47.c.1a.10.17.2.3.3.46.d.1a.f.18.2.2.4.46.10.17.e.1a.1.3.3.1.1.4.1.1.1.3d.13.15.c.1c.1.d.4.3a.14.14.c.1d.1.d.4.3.1.36.13.15.b.22.2.1.1.6.1.1.1.3a.12.16.c.69.10.17.c.3.1.22.3.2.1.3d.10.16.d.2.2.20.5.2.2.3e.e.16.b.3.2.20.7.1.2.3f.d.17.9.4.2.1f.c.3e.c.18.9.4.2.1d.f.3c.b.1a.9.4.2.1c.11.3b.a.1c.7.23.11.3b.a.1c.7.24.11.3a.9.1e.5.25.10.3b.8.1f.4.26.4.4.8.3b.6.4b.1.8.6.3b.7.56.4.3b.5.66.2.2f.4.5b.1.b.1.30.4.65.2.31.3.65.2.31.4.98.3.9a.2.9b.2.1a3">
-      <!-- Landmass on canvas, events on SVG. The land used to be 3,091
-           individual <rect> nodes — 55% of the entire page DOM and a 223ms
-           paint task — for something that never changes and is never
-           interactive. Canvas draws it in one node. The 30-odd event bubbles
-           stay as SVG because they need hit-testing, tooltips and a11y. -->
-      <canvas id="wmCanvas" width="624" height="264" aria-hidden="true"></canvas>
-      <svg viewBox="0 0 156 66" preserveAspectRatio="xMidYMid meet" role="img"
-           aria-label="World map of the last 24 hours of news">
-        <g id="wmDots"></g>
-      </svg>
-      <div class="wm-night" id="wmNight" aria-hidden="true"></div>
-      <div class="wm-night" id="wmNight2" aria-hidden="true" style="display:none"></div>
-      <div class="wm-sweep" aria-hidden="true"></div>
-      <div class="wm-tip" id="wmTip" hidden></div>
-    </div>
-    <div class="wm-foot" id="wmFoot">Reading the wires…</div>
-  </div>
+  {# The world map is gone.
+
+     It cost a 624x264 canvas, an SVG overlay, two night-shade layers, a sweep
+     animation and a tooltip layer to convey one thing: roughly where today's
+     stories happened. The region is already the first word of every row in the
+     list below, in text, grouped and sorted. A decorative globe that repeats
+     the rows underneath it teaches a reader to skip the section that holds the
+     actual information.
+
+     The "last 6 hours" strip went with it, for the same reason: it was the
+     same events as the detailed list below, filtered to a shorter window — the
+     top of the section was a preview of its own middle. One list now. #}
 
   {% if news %}
     {% set lead = news[0] %}
