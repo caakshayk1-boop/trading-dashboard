@@ -1,0 +1,700 @@
+{
+ "build_id": "20260825T211452",
+ "date": "2026-08-25",
+ "date_str": "Tuesday, August 25 2026",
+ "picks": [
+  {
+   "symbol": "SAP",
+   "name": "SAP",
+   "ext20": 8.42,
+   "vol_ratio": 0.74,
+   "price": 218.66,
+   "change_1d": -0.01,
+   "mom_1m": 36.7,
+   "mom_3m": 24.8,
+   "score": 87,
+   "target": 276.56,
+   "stop_loss": 201.68,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "26% to go at its recent 8.3%/month",
+   "rr": 3.41,
+   "atr": 5.46,
+   "high_52w": 276.56,
+   "timeframe": "3-6 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 7.1
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 201.68,
+   "tv": "SAP",
+   "thesis": "+37% in a month against +25% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "CRM",
+   "name": "CRM",
+   "ext20": 7.63,
+   "vol_ratio": 1.01,
+   "price": 209.06,
+   "change_1d": -0.05,
+   "mom_1m": 27.7,
+   "mom_3m": 17.0,
+   "score": 82,
+   "target": 267.75,
+   "stop_loss": 194.23,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "28% to go at its recent 5.7%/month",
+   "rr": 3.96,
+   "atr": 7.6,
+   "high_52w": 267.75,
+   "timeframe": "3-6 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 24.1
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 18.1
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 13.4
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 4.9
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 1.2
+    }
+   ],
+   "ema20": 194.23,
+   "tv": "CRM",
+   "thesis": "+28% in a month against +17% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "DUOL",
+   "name": "DUOL",
+   "ext20": 6.59,
+   "vol_ratio": 0.87,
+   "price": 146.84,
+   "change_1d": 0.49,
+   "mom_1m": 20.1,
+   "mom_3m": 37.9,
+   "score": 81,
+   "target": 353.0,
+   "stop_loss": 137.76,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "140% to go at its recent 12.6%/month",
+   "rr": 22.7,
+   "atr": 9.0,
+   "high_52w": 353.0,
+   "timeframe": "6-12 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 21.5
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 16.7
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 13.2
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 137.76,
+   "tv": "DUOL",
+   "thesis": "+20% in a month against +38% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "ACN",
+   "name": "ACN",
+   "ext20": 7.84,
+   "vol_ratio": 0.88,
+   "price": 186.53,
+   "change_1d": 0.67,
+   "mom_1m": 26.9,
+   "mom_3m": 6.7,
+   "score": 76,
+   "target": 285.21,
+   "stop_loss": 172.96,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "53% to go at its recent 2.2%/month",
+   "rr": 7.27,
+   "atr": 7.53,
+   "high_52w": 285.21,
+   "timeframe": "over a year at this pace",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 24.6
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 17.5
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 11.7
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 1.9
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 172.96,
+   "tv": "ACN",
+   "thesis": "+27% in a month against +7% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "CELH",
+   "name": "CELH",
+   "ext20": 15.74,
+   "vol_ratio": 0.76,
+   "price": 35.03,
+   "change_1d": 5.01,
+   "mom_1m": 29.2,
+   "mom_3m": 18.1,
+   "score": 71,
+   "target": 66.74,
+   "stop_loss": 30.27,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "91% to go at its recent 6.0%/month",
+   "rr": 6.66,
+   "atr": 2.1,
+   "high_52w": 66.74,
+   "timeframe": "over a year at this pace",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 1.2
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 5.2
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 30.27,
+   "tv": "CELH",
+   "thesis": "+29% in a month against +18% over three \u2014 the trend is accelerating, not maturing."
+  }
+ ],
+ "engine": [
+  {
+   "date": "2026-08-09",
+   "tag": "SELECTION",
+   "verdict": "adopted",
+   "title": "Stop buying strength that has already run",
+   "body": "The 4H RSI ceiling for longs was 75. Splitting every closed trade by the RSI recorded at entry showed the engine bleeding above 65 and profitable below it. The ceiling is now 65.",
+   "evidence": [
+    [
+     "BUY, 4H RSI 65 and over",
+     "\u22120.599R",
+     "n=90",
+     "\u22125.6 SE"
+    ],
+    [
+     "BUY, 4H RSI under 65",
+     "+0.274R",
+     "n=67",
+     "+1.5 SE"
+    ]
+   ],
+   "note": "Holds in both halves of the sample and at every cut point tested (60, 65, 70), so it is not one lucky threshold. The threshold was still chosen from this sample, so treat the size as an upper bound."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "STOPS",
+   "verdict": "rejected",
+   "title": "A break-even stop would not have helped",
+   "body": "The median losing trade was +1.44R in profit before it reversed, and 59% touched a full +1R first. That looks like an obvious fix: move the stop to entry once price pays 1R. Re-walking every trade bar by bar, with winners subject to the same rule, says otherwise.",
+   "evidence": [
+    [
+     "baseline",
+     "+0.194R",
+     "",
+     ""
+    ],
+    [
+     "break-even @1R",
+     "+0.166R",
+     "",
+     "worse"
+    ]
+   ],
+   "note": "The first version of this test only altered losers, which guarantees a positive answer. Correcting it reversed the conclusion. Nothing tested cleared one standard error, so no stop rule was adopted."
+  },
+  {
+   "date": "2026-08-08",
+   "tag": "INTEGRITY",
+   "verdict": "adopted",
+   "title": "Trades were being closed at prices that never traded",
+   "body": "The grader had never resolved a single trade \u2014 an exception was being swallowed silently \u2014 leaving a fallback path that could book an exit at a bar from before the signal existed. Every closed trade was re-graded against bars that actually printed.",
+   "evidence": [
+    [
+     "reopened, never truly closed",
+     "57",
+     "",
+     ""
+    ],
+    [
+     "exits corrected to a real price",
+     "22",
+     "",
+     ""
+    ],
+    [
+     "published expectancy",
+     "+0.090R \u2192 \u22120.182R",
+     "",
+     ""
+    ]
+   ],
+   "note": "This moved the headline number against me. It is published anyway, because the earlier number was not real. Pre-correction data is kept in the repo rather than deleted."
+  },
+  {
+   "date": "2026-08-07",
+   "tag": "TARGETS",
+   "verdict": "adopted",
+   "title": "A first target must pay back the risk",
+   "body": "T1 was whichever structural level sat nearest the entry, with no distance test. One signal shipped a T1 worth 0.19R against its own stop, printed beside an R:R of 2.41 quoted off T2. T1 must now return at least 1R.",
+   "evidence": [
+    [
+     "signals carrying a sub-1R T1",
+     "26",
+     "",
+     ""
+    ]
+   ],
+   "note": ""
+  }
+ ],
+ "picks_week": null,
+ "open_context": {
+  "ACN": {
+   "price": 186.53,
+   "sector": "Technology"
+  },
+  "AXON": {
+   "price": 597.59,
+   "sector": "Industrials"
+  },
+  "CELH": {
+   "price": 35.03,
+   "sector": "Consumer Defensive"
+  },
+  "CRM": {
+   "price": 209.06,
+   "sector": "Technology"
+  },
+  "DUOL": {
+   "price": 146.84,
+   "sector": "Technology"
+  },
+  "SAP": {
+   "price": 218.66,
+   "sector": "Technology"
+  },
+  "SMCI": {
+   "price": 35.17,
+   "sector": "Technology"
+  }
+ },
+ "ipos": {
+  "count": 0,
+  "months": null,
+  "built_on": null,
+  "summary": {},
+  "rows": [],
+  "worst": []
+ },
+ "data_health": {
+  "worst": "UNAVAILABLE",
+  "current": 8,
+  "total": 12,
+  "degraded": [
+   {
+    "dataset": "Fund screen",
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
+   },
+   {
+    "dataset": "New listings",
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
+   },
+   {
+    "dataset": "Careers feed",
+    "status": "DEGRADED",
+    "age": "4h old",
+    "note": "partial coverage \u2014 13/22 records"
+   },
+   {
+    "dataset": "Stock screen",
+    "status": "STALE",
+    "age": "13 days old",
+    "note": "older than its weekly refresh"
+   }
+  ]
+ },
+ "desk": {
+  "chess": {
+   "title": "Tactics: Discovered Attack",
+   "body": "Moving one piece reveals an attack from another. The moved piece itself may also attack something. Discovered checks are devastating \u2014 the opponent must deal with the check while you capture elsewhere. Pattern: move a blocking piece with tempo, reveal a rook/bishop attack. Double attacks are impossible to fully defend.",
+   "index": 7,
+   "total": 20
+  },
+  "wisdom": {
+   "title": "On Discipline and Freedom",
+   "body": "The most disciplined people are the freest. Akshay who wakes at 6am, exercises, studies, then works has more hours and more energy than the one who stays up late and drags through mornings. Discipline is choosing what you want most over what you want now. It's the highest form of self-respect.",
+   "index": 17,
+   "total": 18
+  },
+  "book": {
+   "book": "Deep Work",
+   "author": "Cal Newport",
+   "chapter": "The Any-Benefit Mindset vs The Craftsman Mindset",
+   "lesson": "Most people adopt the any-benefit mindset for tools: if a tool provides any benefit, use it. This is why everyone is on every social platform, attending every meeting, checking email all day. Newport argues for the craftsman mindset: identify the core factors that determine your success and happiness. Adopt a tool only if its positive impacts on these factors substantially outweigh its negative ones. Your attention is finite. Every tool that fragments it has a cost, even if it has some benefits. The question is never 'is there value here?' but 'is this the best use of my limited attention?'",
+   "key_quote": "Your attention is your most valuable professional asset. Spend it deliberately.",
+   "action": "List your three most important professional skills. Then ask: does checking social media or attending this meeting help or hurt those skills?",
+   "index": 5,
+   "total": 48,
+   "crux": [
+    "Deep work: focused, undistracted, cognitively demanding work. It is becoming rare and simultaneously more valuable.",
+    "Two core abilities now decide income: learn hard things fast, and produce elite output fast.",
+    "Both abilities depend on deep work. Both are destroyed by fragmented attention.",
+    "Shallow work is logistically necessary and infinitely replaceable. It feels like work and produces nothing durable.",
+    "Attention residue: switching tasks leaves cognitive drag for 15\u201320 minutes. Ten switches cost you the day.",
+    "High-quality work = time spent \u00d7 intensity of focus. Intensity is the neglected multiplier.",
+    "Four scheduling philosophies: monastic, bimodal, rhythmic, journalistic. Rhythmic \u2014 same hours daily \u2014 is the only one most people can sustain.",
+    "Willpower is finite and depletes. Rituals and fixed locations spend none of it.",
+    "Schedule every minute of the workday. Not to obey it, but to force the question 'what deserves this hour?'",
+    "Fixed-schedule productivity: hard-stop the day and work backwards. Constraint forces ruthless triage.",
+    "Boredom tolerance is trainable and prerequisite. If every queue is filled with a phone, focus never develops.",
+    "Quit social media by default; readmit a tool only if it clearly serves a core goal.",
+    "Drain the shallows. Aim shallow work under 40% of the week and defend the rest."
+   ],
+   "learnings": [
+    "Busy is not a proxy for valuable. It is usually a proxy for unfocused.",
+    "The ability to concentrate is a skill you build, not a mood you catch.",
+    "Fragmented time is not additive \u2014 four 30-minute blocks are worth far less than one 2-hour block.",
+    "Downtime is not idleness; unconscious processing needs it."
+   ],
+   "examples": [
+    "Carl Jung built a stone tower at Bollingen and wrote there in the mornings, uninterrupted, while running a clinical practice.",
+    "Adam Grant compressed teaching into one semester and batched research into the other \u2014 becoming one of the most published psychologists of his generation.",
+    "Newport wrote a book, earned a PhD, and published peer-reviewed papers while rarely working past 5:30pm, by hard-stopping his day."
+   ],
+   "adapt": [
+    "One 90-minute block before 8am for the highest-leverage build. Phone in another room, not face-down on the desk.",
+    "Batch Telegram, Instagram, and email into two windows. Notifications off outside them.",
+    "Financial models are deep work. Do them before the market opens, never in gaps between messages.",
+    "Hard-stop at 7pm on weekdays. The constraint is what forces the triage."
+   ]
+  },
+  "way": {
+   "minimalism": {
+    "title": "The Deathbed Filter",
+    "body": "Nobody has ever wished for a larger television. Possessions almost never make the list of what mattered. Use that as a purchasing filter while there is still time to act on it.",
+    "action": "Name three things that would make your list. Spend accordingly.",
+    "index": 19,
+    "total": 20,
+    "label": "Minimalism"
+   },
+   "etiquette": {
+    "title": "Never Be The Loudest In The Room",
+    "body": "Volume signals insecurity, not authority. The person everyone leans in to hear holds the room. Competence rarely needs amplification.",
+    "action": "In your next meeting, speak one notch quieter than feels natural.",
+    "index": 5,
+    "total": 20,
+    "label": "Etiquette"
+   },
+   "stillness": {
+    "title": "Eat One Meal In Silence",
+    "body": "No phone, no screen, no conversation. Taste the food. Most meals are consumed while attention is elsewhere, which is why they satisfy so little.",
+    "action": "One meal today, fully attended.",
+    "index": 3,
+    "total": 20,
+    "label": "Stillness"
+   },
+   "model": {
+    "title": "Sunk Cost",
+    "body": "Money and time already spent are gone and should not influence the next decision. The only question is the value from here forward.",
+    "action": "Name one commitment you continue solely because of what it has already cost.",
+    "index": 15,
+    "total": 20,
+    "label": "Mental Model"
+   },
+   "arabic": {
+    "script": "\u0627\u0644\u0633\u0644\u0627\u0645 \u0639\u0644\u064a\u0643\u0645",
+    "translit": "as-salaamu alaykum",
+    "meaning": "Peace be upon you",
+    "use": "The universal greeting. Reply: wa alaykum as-salaam. Use it entering any room or meeting.",
+    "index": 1,
+    "total": 30,
+    "label": "Arabic"
+   },
+   "drill": {
+    "title": "Keyboard Only",
+    "body": "Work for ten minutes with no mouse. Excel and modelling speed is mostly navigation, and navigation is mostly shortcuts you have not learned yet.",
+    "action": "Ten minutes, mouse unplugged. Note every shortcut you had to look up.",
+    "index": 7,
+    "total": 20,
+    "label": "Drill"
+   },
+   "health": {
+    "title": "Breathe Through Your Nose",
+    "body": "Nasal breathing improves oxygen uptake, filters air, and produces nitric oxide, which is a vasodilator. Mouth breathing during sleep correlates with poorer sleep quality and dental issues.",
+    "action": "Nasal-only breathing for one Zone 2 session. Pace will drop. That is the point.",
+    "index": 17,
+    "total": 20,
+    "label": "Health"
+   }
+  },
+  "quote": {
+   "name": "Jack Dorsey",
+   "quote": "Make every detail perfect and limit the number of details to perfect.",
+   "index": 78,
+   "total": 96
+  },
+  "lesson": {
+   "tradition": "Courage",
+   "lesson": "Do one thing every day that scares you.",
+   "source": "Eleanor Roosevelt"
+  },
+  "case": {
+   "title": "HDFC Bank: The Conservative Compounding Machine",
+   "story": "HDFC Bank has never posted a quarterly loss in 28 years. Never chased exotic products. Just excellent credit underwriting, low NPAs, and consistent execution.",
+   "lesson": "In banking and in life, the boring strategy often wins. Consistency over 20 years beats brilliance in short bursts. Compounding requires not breaking the chain."
+  },
+  "fpna": {
+   "title": "CFO Communication",
+   "body": "Lead with the number, then variance, then reason, then action. '\u20b912Cr EBITDA, \u20b92Cr below plan, due to X, here's the fix.'",
+   "index": 14,
+   "total": 20
+  },
+  "cfo": {
+   "title": "FC Step 5: Treasury Basics",
+   "body": "Cash flow forecasting, FX hedging policy, bank relationship management, working capital optimisation. The jump from FP&A to FC often requires you to pick up treasury. Start with 13-week cash flow models.",
+   "index": 5,
+   "total": 15
+  },
+  "money_hack": {
+   "title": "NPS for Tax Saving",
+   "body": "\u20b950K in NPS under 80CCD(1B) = \u20b915K saved at 30% bracket. Plus retirement corpus."
+  },
+  "dubai": {
+   "title": "Do not send the same CV twice",
+   "body": "One master CV, then a version per pool: retail, logistics, energy, advisory. Same facts, different order, different top five bullets. It takes 20 minutes per version and roughly doubles response rate.",
+   "targets": "The bullet at the top of the page is doing 80% of the work.",
+   "action_label": "Rule",
+   "action": "If the top bullet does not name the sector's core problem, rewrite it.",
+   "index": 27,
+   "total": 30
+  },
+  "daughter": {
+   "months": 8,
+   "days": 243,
+   "heading": "Eight months old.",
+   "band": "crawling",
+   "born": "2025-12-25"
+  },
+  "productivity": "Eat the frog: hardest task first, before checking any messages.",
+  "father": [
+   {
+    "title": "Read her a real book",
+    "do": "Read something you are reading, aloud, for five minutes. Content is irrelevant.",
+    "why": "Prosody, turn-taking and attention are carried by adult speech regardless of vocabulary. It also means reading time survives on days when the board pack is due."
+   },
+   {
+    "title": "Let her see you fail",
+    "do": "When you drop or fumble something in front of her, react calmly and try again visibly.",
+    "why": "Emotional regulation is learned by observation long before instruction. Your reaction to small frustrations is a template she is already recording."
+   }
+  ],
+  "life_wisdom": [
+   {
+    "tradition": "Jainism",
+    "term": "Ahimsa in speech",
+    "translation": "Non-violence applied to words",
+    "teaching": "Jain tradition treats harsh speech as a form of violence, listing it alongside physical harm rather than as a lesser category.",
+    "apply": "Review one message you sent under pressure this week. Would you send it unchanged now? The gap between those two versions is the practice."
+   },
+   {
+    "tradition": "Buddhism",
+    "term": "The Two Truths",
+    "translation": "Conventional and ultimate",
+    "teaching": "Something can be true conventionally and empty ultimately \u2014 a table is a table for practical purposes and a collection of parts on analysis. Both are needed.",
+    "apply": "Hold the forecast as both real enough to act on and provisional enough to abandon. Treating a model as ultimately true is how people ride a position down."
+   }
+  ],
+  "spanish": [
+   {
+    "word": "darse cuenta",
+    "meaning": "to realise",
+    "es": "Me di cuenta del error muy tarde.",
+    "en": "I realised the mistake too late.",
+    "tag": "Everyday"
+   },
+   {
+    "word": "sobre la marcha",
+    "meaning": "on the fly / as we go",
+    "es": "Lo ajustamos sobre la marcha.",
+    "en": "We adjust it as we go.",
+    "tag": "Idiom"
+   }
+  ],
+  "vocab": [
+   {
+    "word": "Untenable",
+    "say": "un-TEN-uh-buhl",
+    "meaning": "Impossible to defend or maintain.",
+    "example": "Holding 95 days of stock at this rate is untenable.",
+    "note": "Stronger than 'difficult'. Use it when you mean the position must change."
+   },
+   {
+    "word": "Judicious",
+    "say": "joo-DISH-uhs",
+    "meaning": "Showing good judgement.",
+    "example": "A judicious use of markdown clears stock without training customers to wait.",
+    "note": "Sounds considered rather than cautious."
+   }
+  ],
+  "speaking": {
+   "title": "Say the difficult number",
+   "drill": "Practise delivering bad news out loud: 'We are AED 14M behind.' No preamble, no cushion.",
+   "why": "The instinct is to soften it with context first. Context after the number is briefing; before it is stalling."
+  },
+  "interview_tech": [
+   {
+    "q": "Your CEO wants to grow revenue 20%. Finance says cash cannot fund it. How do you frame that?",
+    "a": "Not as a refusal. Compute the sustainable growth rate: ROE \u00d7 retention ratio. If the business sustainably funds 12% and the ask is 20%, the gap is 8 points that must come from somewhere \u2014 debt, equity, working capital release, or margin. Present the three routes with the cost of each and the covenant headroom. Then let the CEO choose. Finance's job is to price the options, not to be the department that says no.",
+    "who": "Unilever \u00b7 P&G \u00b7 Nestl\u00e9"
+   },
+   {
+    "q": "Same-store sales are flat but the store is more profitable. Is that good?",
+    "a": "Depends entirely on the cause. If margin rose from better buying, less markdown, or labour-scheduling efficiency \u2014 excellent, that is real operating leverage. If it rose because you cut staff hours below service thresholds, deferred maintenance, or stopped local marketing, you are harvesting the store and flat sales will turn negative within three quarters. Ask for the conversion rate and units per transaction, not just the margin.",
+    "who": "Costco \u00b7 Zara \u00b7 Alshaya"
+   }
+  ],
+  "interview_soft": [
+   {
+    "q": "What questions do you have for us?",
+    "a": "Never none. Ask things that reveal you are evaluating them: what does the first 12 months look like for whoever takes this; what is the finance function currently not able to answer that the board keeps asking; how is the relationship between finance and the commercial teams today; and why is the role open. The last one is the most informative and the least asked. Avoid salary and benefits at first interview.",
+    "who": "Universal"
+   },
+   {
+    "q": "Describe a situation where you had incomplete information and had to decide anyway.",
+    "a": "Forecasting and provisioning are full of these. Structure: what you knew, what you could not know in the time available, the cost of waiting, the assumption you took and why, and how you made the assumption visible rather than burying it. The mark of seniority is deciding with 70% of the information and saying explicitly what would change your mind \u2014 say that phrase.",
+    "who": "Amazon \u00b7 McKinsey \u00b7 Boards"
+   }
+  ]
+ }
+}

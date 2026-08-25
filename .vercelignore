@@ -9,6 +9,10 @@
 *
 !vercel-news
 !vercel-news/**
+# life.askakshay.com. Its build.js reads docs/desk.html, which is already
+# allow-listed below for the /desk route on news.askakshay.com.
+!vercel-life
+!vercel-life/**
 !docs
 !docs/index.html
 !docs/alerts.json
