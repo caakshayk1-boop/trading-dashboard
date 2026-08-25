@@ -305,9 +305,10 @@ section({
     if (f[0].value === "age") {
       setCount(this, dg.heading ? txt(dg.heading) : "");
       host.appendChild(keyGrid([
-        ["Age", (dg.months != null ? dg.months + "m" : "—") + (dg.days != null ? " " + dg.days + "d" : ""), "since " + txt(dg.born)],
+        ["Age", txt(dg.heading) || (dg.months != null ? dg.months + " months" : "—"),
+          dg.days != null ? dg.days + " days since " + txt(dg.born) : ""],
         ["Band", txt(dg.band) || "—", "developmental stage"],
-        ["Heading", txt(dg.heading) || "—", ""]
+        ["Born", txt(dg.born) || "—", "the clock this section runs on"]
       ]));
       return;
     }
@@ -536,7 +537,11 @@ function masthead() {
   var grid = keyGrid([
     ["Rebuilt", txt(D.date_str || D.date) || "—", "every morning"],
     ["Sections", "15", "career, learning, practice, mind"],
-    ["Her age", dg.months != null ? dg.months + "m " + (dg.days || 0) + "d" : "—", txt(dg.band) || ""],
+    // `days` is TOTAL days since birth (243 at eight months), not a remainder,
+    // so months and days cannot be concatenated — "8m 243d" reads as fourteen
+    // months. Months lead; the day count is the subtitle it actually is.
+    ["Her age", dg.months != null ? dg.months + " months" : "—",
+      dg.days != null ? dg.days + " days old" : txt(dg.band)],
     ["Roles tracked", DATA.jobs ? String((DATA.jobs.jobs || []).length) : "on demand", "Gulf and Malaysia"]
   ]);
   while (grid.firstChild) kr.appendChild(grid.firstChild);
