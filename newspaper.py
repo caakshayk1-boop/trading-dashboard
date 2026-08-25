@@ -7757,6 +7757,46 @@ a.mprov{opacity:.78}
   .thm,.cmdk-hint{min-height:38px;display:inline-flex;align-items:center}
 }
 
+
+/* ── PLAIN TABLES ─────────────────────────────────────────────────────────
+   Every table rule in this file targeted `table.t` — the sortable stock
+   screen. The breakout board, the volume board, the IPO listings and the
+   engine tables are plain <table> inside .tblwrap and matched NONE of them, so
+   they rendered with zero cell padding, no border collapse and a company name
+   set in full-strength body ink butted straight against its symbol:
+   "NETWEBNetweb Technologies India Ltd." That is the "tabulate properly"
+   complaint, and it was a missing selector rather than a layout choice.
+
+   Scoped to .tblwrap so table.t keeps its own rules untouched — it works, and
+   changing a table that works is a separate decision. */
+.tblwrap table{width:100%;border-collapse:collapse;font-size:13px}
+.tblwrap table th{
+  text-align:left;padding:11px 14px;white-space:nowrap;
+  font:600 9.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--dim);background:var(--surface2);
+  border-bottom:1px solid var(--line2);
+}
+.tblwrap table th.r,.tblwrap table td.r{text-align:right}
+.tblwrap table td{
+  padding:12px 14px;border-top:1px solid var(--line);vertical-align:middle;
+  color:var(--text);
+}
+.tblwrap table tbody tr:first-child td{border-top:0}
+.tblwrap table tbody tr:hover{background:var(--surface2)}
+/* Digits in a column have to line up or the column cannot be compared down its
+   own length, which is the only reason to put them in a column. */
+.tblwrap table td.num,.tblwrap table .num{
+  font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+}
+/* The company name under its symbol. It had no rule at all, so it rendered as
+   inline body text in full ink — same size, same colour, no space. A subtitle
+   has to be a different weight AND a different line, or it is not a subtitle. */
+.tsub{
+  display:block;margin-top:3px;
+  font:400 11.5px/1.35 var(--sans);color:var(--muted);
+  max-width:26ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
 </style>
 </head>
 
