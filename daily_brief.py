@@ -1089,9 +1089,20 @@ def build_section_brief(slot: str = "midday") -> str:
         rule("🎯 *02 · TRADE IDEAS* — Rs 1 crore mandate")
         L.append(f"*{len(book['admitted'])} to place* · heat {st['heat_pct']}% · "
                  f"deployed {st['deployed_pct']}% · cash Rs {st['cash']:,}")
+        # In the EVENING the market is shut, so the full book is not actionable
+        # tonight and it is the first thing that should give way to the recap.
+        # Summarised deliberately rather than left to the length guard, which
+        # was trimming eight tickets down to one — a book showing 1 of 8 reads
+        # as a bug, and "here is tomorrow's board, one line" reads as a choice.
+        if evening:
+            L.append("_Placed at tomorrow's open. Full board: news.askakshay.com_")
+            ticket_blocks_enabled = False
+        else:
+            ticket_blocks_enabled = True
+
         # Engine names carry underscores — top5_pick, ai_longterm — and an
         # unbalanced _ makes Telegram reject the WHOLE message with a 400.
-        for t in book["admitted"]:
+        for t in (book["admitted"] if ticket_blocks_enabled else []):
             ticket_blocks.append([
                 f"\n*{esc(t['symbol'])}* — {esc(t['horizon_label'])} · {esc(t['engine'])}",
                 f"  buy `{t['qty']}` @ `{t['entry']:,.2f}`  ·  stop `{t['stop']:,.2f}` ({t['stop_pct']}%)",
