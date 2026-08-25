@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-6WvUkpOGfMqi_YYrcBcjfw'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce--ysGWiqa9rDxhGtzBjAXMg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,13 +18,13 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="6WvUkpOGfMqi_YYrcBcjfw">
+<script nonce="-ysGWiqa9rDxhGtzBjAXMg">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
 }catch(e){}})();
 </script>
-<meta name="theme-color" content="#FBFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#E9ECF0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#FBFAF7">
 <meta name="color-scheme" content="light dark">
 
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="6WvUkpOGfMqi_YYrcBcjfw">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-26","dateModified":"2026-08-26T03:29:32.463579+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="-ysGWiqa9rDxhGtzBjAXMg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-26","dateModified":"2026-08-26T03:48:54.722988+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -309,46 +309,71 @@
    preference no longer decides this: the site is light, and dark is a choice
    the reader makes and keeps. */
 :root:not([data-theme]){
-  /* Paper, not a lightbox.
-     Pure white at full screen brightness is a lamp pointed at the reader — on
-     a page this dense the glare is what makes it tiring rather than the
-     information. The ground drops to a soft warm paper and CARDS become the
-     white, so a card now reads as raised against its page instead of needing a
-     border to exist. Ink darkens to hold contrast on the softer ground. */
-  --bg:#F6F5F1;
-  --bg2:#EFEEE9;
-  --surface:#FFFFFF;
-  --surface2:#FBFAF7;
-  --surface3:#EDECE6;
-  --overlay:#FFFFFF;
+  /* RAG PAPER, NOT A LIGHTBOX — and not cream either.
+     The previous ground was a warm off-white with pure-white cards: two
+     near-whites, so the page was one bright field with nothing separating a
+     card from the sheet it sits on, and at that brightness the field is a lamp
+     pointed at the reader. The ground now drops to a cool rag paper with a
+     blue-grey bias and the cards come UP to a near-white that is still not
+     white, so elevation reads as a step in value rather than as a border.
+     The bias is cool on purpose: warm cream under dense red/green financial
+     tables muddies both, and a slate-tinted sheet lets the semantic colours
+     sit on it cleanly. */
+  --bg:#E9ECF0;
+  --bg2:#E2E6EB;
+  --surface:#F8FAFC;
+  --surface2:#EFF2F6;
+  --surface3:#DDE2E9;
+  --overlay:#F8FAFC;
 
-  --line:rgba(20,21,24,.10);
-  --line2:rgba(20,21,24,.19);
+  --line:rgba(22,29,42,.13);
+  --line2:rgba(22,29,42,.24);
 
-  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
-     three regularly print on — a contrast figure quoted against pure white is
-     a figure that is never true where the text actually sits.
-     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
-  --text:#14161A;
-  --muted:#4C525A;
-  --dim:#5A6068;
+  /* Ink on paper, blue-black rather than neutral so it belongs to the ground.
+     Measured against --bg2, the darkest sheet these three regularly
+     print on — a contrast figure quoted against pure white is a figure that is
+     never true where the text actually sits.
+     Computed: 13.6:1 / 7.4:1 / 4.9:1. --dim is metadata only, never body. */
+  --text:#161D2A;
+  --muted:#3D4757;
+  --dim:#54606F;
 
-  /* The lime is the mark, not the interface. On white it is reserved for the
-     wordmark and a small number of live-state dots; everything that used to be
-     lime-on-dark is ink now. A signature colour spent on every border stops
-     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
-  --lime:#4E6B08;
-  --lime-soft:rgba(78,107,8,.07);
-  --lime-line:rgba(78,107,8,.22);
+  /* THE MARK. Was an olive lime chosen to survive a dark ground; on rag paper
+     it read as tired. Deep ink-teal instead — far enough from --up green that
+     the wordmark is never mistaken for a P&L colour, which is the whole reason
+     a brand hue and a semantic hue have to be different colours.
+     #0B5C63 computes 6.3:1 on --bg2. */
+  --lime:#0B5C63;
+  --lime-soft:rgba(11,92,99,.08);
+  --lime-line:rgba(11,92,99,.26);
 
-  --orb-a:rgba(78,107,8,.05);
-  --orb-b:rgba(31,95,191,.03);
-  --pick-edge:#FAFAF9;
-  --on-up:#FFFFFF;
-  --rank-ink:rgba(17,18,20,.045);
-  --scroll-thumb:#DEDEDA;
-  --up:#06714A;   --up-soft:rgba(6,113,74,.11);
-  --down:#C02A20; --down-soft:rgba(192,42,32,.10);
+  /* PILLAR HUES. Six sections of the paper, six colours — carried by the nav
+     button, the section number and the rule beside a heading. This is the
+     "colourful" part of the design and it is doing a job: the hue tells you
+     which part of the paper you are standing in, so colour is navigation
+     rather than decoration. None of them is used for a value; values only
+     ever get --up/--down/--gold. */
+  --p-today:#B04A16;
+  --p-markets:#1A4FB0;
+  --p-research:#6438B8;
+  --p-portfolio:#0B6E5F;
+  --p-ledger:#A8123F;
+  --p-about:#54606F;
+  /* The Life page runs its own five pillars off the same idea. */
+  --p-career:#9A4A00;
+  --p-learning:#1A4FB0;
+  --p-practice:#0B6E5F;
+  --p-drills:#6438B8;
+  --p-mind:#A8123F;
+
+  --orb-a:rgba(11,92,99,.06);
+  --orb-b:rgba(26,79,176,.04);
+  --pick-edge:#F8FAFC;
+  --on-up:#F8FAFC;
+  --rank-ink:rgba(22,29,42,.055);
+  --scroll-thumb:#C9D0DA;
+  --up:#0A6B45;   --up-soft:rgba(10,107,69,.12);
+  --down:#B4231A; --down-soft:rgba(180,35,26,.11);
   --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
   --blue:#1A4FB0; --violet:#6438B8;
 
@@ -362,46 +387,71 @@
    Borders do more work here and shadows do less, which is the opposite of
    the dark theme — on paper, elevation reads through edges. */
 :root[data-theme="light"]{
-  /* Paper, not a lightbox.
-     Pure white at full screen brightness is a lamp pointed at the reader — on
-     a page this dense the glare is what makes it tiring rather than the
-     information. The ground drops to a soft warm paper and CARDS become the
-     white, so a card now reads as raised against its page instead of needing a
-     border to exist. Ink darkens to hold contrast on the softer ground. */
-  --bg:#F6F5F1;
-  --bg2:#EFEEE9;
-  --surface:#FFFFFF;
-  --surface2:#FBFAF7;
-  --surface3:#EDECE6;
-  --overlay:#FFFFFF;
+  /* RAG PAPER, NOT A LIGHTBOX — and not cream either.
+     The previous ground was a warm off-white with pure-white cards: two
+     near-whites, so the page was one bright field with nothing separating a
+     card from the sheet it sits on, and at that brightness the field is a lamp
+     pointed at the reader. The ground now drops to a cool rag paper with a
+     blue-grey bias and the cards come UP to a near-white that is still not
+     white, so elevation reads as a step in value rather than as a border.
+     The bias is cool on purpose: warm cream under dense red/green financial
+     tables muddies both, and a slate-tinted sheet lets the semantic colours
+     sit on it cleanly. */
+  --bg:#E9ECF0;
+  --bg2:#E2E6EB;
+  --surface:#F8FAFC;
+  --surface2:#EFF2F6;
+  --surface3:#DDE2E9;
+  --overlay:#F8FAFC;
 
-  --line:rgba(20,21,24,.10);
-  --line2:rgba(20,21,24,.19);
+  --line:rgba(22,29,42,.13);
+  --line2:rgba(22,29,42,.24);
 
-  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
-     three regularly print on — a contrast figure quoted against pure white is
-     a figure that is never true where the text actually sits.
-     Measured in the browser: 17.95:1 / 6.77:1 / 5.55:1. */
-  --text:#14161A;
-  --muted:#4C525A;
-  --dim:#5A6068;
+  /* Ink on paper, blue-black rather than neutral so it belongs to the ground.
+     Measured against --bg2, the darkest sheet these three regularly
+     print on — a contrast figure quoted against pure white is a figure that is
+     never true where the text actually sits.
+     Computed: 13.6:1 / 7.4:1 / 4.9:1. --dim is metadata only, never body. */
+  --text:#161D2A;
+  --muted:#3D4757;
+  --dim:#54606F;
 
-  /* The lime is the mark, not the interface. On white it is reserved for the
-     wordmark and a small number of live-state dots; everything that used to be
-     lime-on-dark is ink now. A signature colour spent on every border stops
-     being a signature. #4E6B08 measures 5.86:1 on --bg2. */
-  --lime:#4E6B08;
-  --lime-soft:rgba(78,107,8,.07);
-  --lime-line:rgba(78,107,8,.22);
+  /* THE MARK. Was an olive lime chosen to survive a dark ground; on rag paper
+     it read as tired. Deep ink-teal instead — far enough from --up green that
+     the wordmark is never mistaken for a P&L colour, which is the whole reason
+     a brand hue and a semantic hue have to be different colours.
+     #0B5C63 computes 6.3:1 on --bg2. */
+  --lime:#0B5C63;
+  --lime-soft:rgba(11,92,99,.08);
+  --lime-line:rgba(11,92,99,.26);
 
-  --orb-a:rgba(78,107,8,.05);
-  --orb-b:rgba(31,95,191,.03);
-  --pick-edge:#FAFAF9;
-  --on-up:#FFFFFF;
-  --rank-ink:rgba(17,18,20,.045);
-  --scroll-thumb:#DEDEDA;
-  --up:#06714A;   --up-soft:rgba(6,113,74,.11);
-  --down:#C02A20; --down-soft:rgba(192,42,32,.10);
+  /* PILLAR HUES. Six sections of the paper, six colours — carried by the nav
+     button, the section number and the rule beside a heading. This is the
+     "colourful" part of the design and it is doing a job: the hue tells you
+     which part of the paper you are standing in, so colour is navigation
+     rather than decoration. None of them is used for a value; values only
+     ever get --up/--down/--gold. */
+  --p-today:#B04A16;
+  --p-markets:#1A4FB0;
+  --p-research:#6438B8;
+  --p-portfolio:#0B6E5F;
+  --p-ledger:#A8123F;
+  --p-about:#54606F;
+  /* The Life page runs its own five pillars off the same idea. */
+  --p-career:#9A4A00;
+  --p-learning:#1A4FB0;
+  --p-practice:#0B6E5F;
+  --p-drills:#6438B8;
+  --p-mind:#A8123F;
+
+  --orb-a:rgba(11,92,99,.06);
+  --orb-b:rgba(26,79,176,.04);
+  --pick-edge:#F8FAFC;
+  --on-up:#F8FAFC;
+  --rank-ink:rgba(22,29,42,.055);
+  --scroll-thumb:#C9D0DA;
+  --up:#0A6B45;   --up-soft:rgba(10,107,69,.12);
+  --down:#B4231A; --down-soft:rgba(180,35,26,.11);
   --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
   --blue:#1A4FB0; --violet:#6438B8;
 
@@ -573,9 +623,13 @@
   border-bottom:1px solid var(--line);
 }
 /* The eyebrow becomes a rule-and-label instead of a chip. */
+/* This rule outranks the base .snum on specificity, so it has to carry the
+   pillar hue too — it silently repainted every section eyebrow grey and made
+   the whole colour scheme invisible below the nav. Fallback stays --dim for
+   any .snum outside a mapped section. */
 :root:not([data-theme]) .snum,
 :root[data-theme="light"] .snum{
-  color:var(--dim);
+  color:var(--pillar,var(--dim));
   letter-spacing:.16em;
 }
 /* ── PROVENANCE LEGEND ────────────────────────────────────────────────────
@@ -611,8 +665,8 @@
   font:600 9.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
   padding:4px 7px;border-radius:3px;border:1px solid;white-space:nowrap;flex:none;
 }
-.pill-fact  {color:var(--text); border-color:var(--line2); background:var(--surface2)}
-.pill-model {color:var(--blue); border-color:color-mix(in srgb, var(--blue) 34%, transparent); background:color-mix(in srgb, var(--blue) 7%, transparent)}
+.pill-fact  {color:var(--p-markets); border-color:color-mix(in srgb, var(--p-markets) 32%, transparent); background:color-mix(in srgb, var(--p-markets) 7%, transparent)}
+.pill-model {color:var(--p-research); border-color:color-mix(in srgb, var(--p-research) 34%, transparent); background:color-mix(in srgb, var(--p-research) 7%, transparent)}
 .pill-result{color:var(--up);   border-color:color-mix(in srgb, var(--up) 34%, transparent);   background:var(--up-soft)}
 .pill-view  {color:var(--gold); border-color:color-mix(in srgb, var(--gold) 34%, transparent); background:var(--gold-soft)}
 
@@ -1704,7 +1758,17 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sec{padding:clamp(56px,8vw,104px) 0;border-bottom:1px solid var(--line)}
 .sec:last-child{border-bottom:none}
 .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
-.snum{font-family:var(--mono);font-size:11px;color:var(--lime);letter-spacing:2px;margin-bottom:12px;display:block}
+/* The eyebrow takes the pillar's hue, so "12 / PAPER WALLET" is the same
+   colour as the PORTFOLIO button that got you here. --pillar is set per
+   section by the generated block under the nav; the fallback keeps every
+   other use of .snum working. */
+.snum{font-family:var(--mono);font-size:11px;color:var(--pillar,var(--lime));letter-spacing:2px;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* A short rule in the pillar hue ahead of the number. On a page of 33 stacked
+   sections this is the cheapest possible "you are somewhere new" marker, and
+   it is the thing that makes the colour scheme visible while scrolling rather
+   than only in the nav. */
+.snum::before{content:'';width:22px;height:2px;background:var(--pillar,var(--lime));flex:none;border-radius:2px}
 .stitle{font-family:var(--serif);font-size:clamp(26px,4.4vw,50px);font-weight:600;
   letter-spacing:-.8px;line-height:1.04}
 .sdesc{font-size:13px;color:var(--muted);max-width:44ch;line-height:1.55}
@@ -3258,12 +3322,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   color:var(--dim);background:var(--surface2);
   border-radius:99px;padding:2px 6px;line-height:1.4;
 }
-.navgrp-btn[aria-expanded="true"]{color:var(--text);border-bottom-color:var(--lime)}
+.navgrp-btn[aria-expanded="true"]{color:var(--text);border-bottom-color:var(--pillar,var(--lime))}
+/* Each group carries its pillar's colour on the count chip. Six grey chips
+   told you nothing; six coloured ones are the legend for the rules and
+   eyebrows further down the page. */
+.navgrp-btn i{color:var(--pillar,var(--dim));background:color-mix(in srgb,var(--pillar,var(--dim)) 10%,transparent)}
 /* Marks the group containing whatever the scroll spy says you are reading, so
    a collapsed nav still tells you where you are. */
 .navgrp.here .navgrp-btn{color:var(--text)}
 .navgrp.here .navgrp-btn::before{
-  content:'';width:5px;height:5px;border-radius:50%;background:var(--lime);flex:none;
+  content:'';width:5px;height:5px;border-radius:50%;background:var(--pillar,var(--lime));flex:none;
 }
 .navgrp-menu{
   /* fixed, NOT absolute: the parent .nav-in is overflow-x:auto, which clips on
@@ -3327,6 +3395,88 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   font-weight:600;
 }
 
+/* ── VOLUME BOARD ─────────────────────────────────────────────────────────
+   The bar is the point of the section. A column of "3.4x  2.9x  2.7x" is a
+   list; a column of bars is a shape, and the shape is what tells you whether
+   today's participation is concentrated in three names or spread across
+   eighteen. Width is the ratio against a 10x ceiling — anything past 10x is a
+   different kind of event and gets a full bar rather than a longer one.
+   Colour is the WEEK's direction, never the ratio, so a wall of red reads as
+   distribution before a single figure is read. */
+.volboard td{vertical-align:middle}
+.volbar{display:inline-block;width:min(180px,34vw);height:9px;border-radius:2px;
+  background:var(--surface3);overflow:hidden;vertical-align:middle;margin-right:9px}
+.volbar-fill{display:block;height:100%;border-radius:2px;background:var(--dim)}
+.volbar-fill.up{background:var(--up)}
+.volbar-fill.dn{background:var(--down)}
+.volbar-x{font-family:var(--mono);font-size:12px;color:var(--text);font-variant-numeric:tabular-nums}
+/* The reading is a word, not only a colour: the colour is unreadable to a
+   reader who cannot separate the two, and "Churn" has no colour at all. */
+.vread{font:600 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 7px;border-radius:3px;border:1px solid var(--line2);color:var(--dim);
+  background:var(--surface2);white-space:nowrap}
+.vread.up{color:var(--up);border-color:color-mix(in srgb,var(--up) 32%,transparent);background:var(--up-soft)}
+.vread.dn{color:var(--down);border-color:color-mix(in srgb,var(--down) 32%,transparent);background:var(--down-soft)}
+
+/* ── DEFINITIONS ──────────────────────────────────────────────────────────
+   Two-column on a wide screen — term left, definition right — because a
+   glossary is scanned by term, and a term buried above its own paragraph
+   cannot be scanned. Collapses to stacked below 720px where two columns
+   would give the definition about twenty characters of measure. */
+.metdefs{display:flex;flex-direction:column;gap:0;margin:0}
+.metdef{display:grid;grid-template-columns:minmax(140px,1fr) 3fr;gap:clamp(16px,3vw,44px);
+  padding:16px 0;border-top:1px solid var(--line)}
+.metdef:first-child{border-top:0}
+.metdef dt{font:600 clamp(15px,1.6vw,17px)/1.3 var(--disp);color:var(--text);letter-spacing:-.01em}
+.metdef dd{margin:0}
+.metdef .md-what{font:400 14.5px/1.6 var(--sans);color:var(--text);margin:0}
+.metdef .md-how{font:400 13.5px/1.65 var(--sans);color:var(--muted);margin:6px 0 0;max-width:62ch}
+@media (max-width:720px){
+  .metdef{grid-template-columns:1fr;gap:6px;padding:14px 0}
+}
+
+/* ── METRIC BADGES ────────────────────────────────────────────────────────
+   Stamped by app.js onto any KPI whose label matches the METRICS list, and
+   linked to that metric's definition. Deliberately tiny and low-contrast: the
+   badge is a footnote marker, and a legend that competes with the number it
+   annotates has defeated itself. */
+.kpi .k{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+a.mprov{font:600 8.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 5px;border-radius:3px;border:1px solid;text-decoration:none;flex:none;
+  transition:opacity .15s var(--ease)}
+a.mprov:hover,a.mprov:focus-visible{opacity:1}
+a.mprov{opacity:.78}
+.mprov-fact  {color:var(--p-markets); border-color:color-mix(in srgb,var(--p-markets) 30%,transparent); background:color-mix(in srgb,var(--p-markets) 7%,transparent)}
+.mprov-model {color:var(--p-research);border-color:color-mix(in srgb,var(--p-research) 30%,transparent);background:color-mix(in srgb,var(--p-research) 7%,transparent)}
+.mprov-result{color:var(--up);        border-color:color-mix(in srgb,var(--up) 30%,transparent);        background:var(--up-soft)}
+.mprov-view  {color:var(--gold);      border-color:color-mix(in srgb,var(--gold) 30%,transparent);      background:var(--gold-soft)}
+
+
+/* ── MOBILE: THE PAGE MUST NOT SCROLL SIDEWAYS ────────────────────────────
+   Measured at 375px, the document was 419px wide, so every screen could be
+   dragged 44px to the right and the fixed header slid with it. Two causes,
+   both fixed at the source rather than papered over with overflow-x:hidden on
+   <html> — that hides the symptom and the next one arrives unnoticed.
+
+   1. A fund's sector chip is white-space:nowrap inside a flex row. "Financial
+      Services 21.54%" is wider than a phone, and nowrap means it cannot give.
+      It wraps below 760px; on a desktop the chip still reads as one unit.
+   2. The masthead ran brand + date + clock + Search + theme on one 375px line.
+      The date already hid at 720px; below 600px the word "Search" goes too —
+      the glyph carries it, and a phone has no Cmd key to press anyway. */
+@media(max-width:760px){
+  .fpf-c{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+}
+@media(max-width:600px){
+  .topbar-in{gap:10px}
+  .stamp{gap:8px;min-width:0}
+  .cmdk-hint span:last-child{display:none}
+  .stamp .live{font-size:10px;white-space:nowrap}
+  /* Tap targets. A 24px button is under every platform's 44px minimum, and
+     these two sit next to each other in a corner. */
+  .thm,.cmdk-hint{min-height:38px;display:inline-flex;align-items:center}
+}
+
 </style>
 </head>
 
@@ -3375,7 +3525,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Wednesday, August 26 2026</span>
-      <span class="live" id="istClock"><i></i>03:29 MYT</span>
+      <span class="live" id="istClock"><i></i>03:48 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -3422,11 +3572,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="navgrp" data-group="Markets">
       <button type="button" class="navgrp-btn" aria-expanded="false"
               aria-controls="navmenu-2">
-        Markets<i>2</i>
+        Markets<i>3</i>
       </button>
       <div class="navgrp-menu" id="navmenu-2" hidden>
         <a href="#world" aria-label="Markets — World"><i>03</i>World</a>
         <a href="#findings" aria-label="Markets — Findings"><i>04</i>Findings</a>
+        <a href="#volspikes" aria-label="Markets — Volume"><i>05</i>Volume</a>
         
       </div>
     </div>
@@ -3437,12 +3588,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         Research<i>6</i>
       </button>
       <div class="navgrp-menu" id="navmenu-3" hidden>
-        <a href="#longterm" aria-label="Research — Own the Business"><i>05</i>Own the Business</a>
-        <a href="#stocks" aria-label="Research — Stock Screen"><i>06</i>Stock Screen</a>
-        <a href="#iporadar" aria-label="Research — IPO Radar"><i>07</i>IPO Radar</a>
-        <a href="#funds" aria-label="Research — Fund Screen"><i>08</i>Fund Screen</a>
-        <a href="#sip" aria-label="Research — SIP Buckets"><i>09</i>SIP Buckets</a>
-        <a href="#swp" aria-label="Research — SWP"><i>10</i>SWP</a>
+        <a href="#longterm" aria-label="Research — Own the Business"><i>06</i>Own the Business</a>
+        <a href="#stocks" aria-label="Research — Stock Screen"><i>07</i>Stock Screen</a>
+        <a href="#iporadar" aria-label="Research — IPO Radar"><i>08</i>IPO Radar</a>
+        <a href="#funds" aria-label="Research — Fund Screen"><i>09</i>Fund Screen</a>
+        <a href="#sip" aria-label="Research — SIP Buckets"><i>10</i>SIP Buckets</a>
+        <a href="#swp" aria-label="Research — SWP"><i>11</i>SWP</a>
         
       </div>
     </div>
@@ -3453,8 +3604,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         Portfolio<i>2</i>
       </button>
       <div class="navgrp-menu" id="navmenu-4" hidden>
-        <a href="#tracker" aria-label="Portfolio — Portfolio"><i>11</i>Portfolio</a>
-        <a href="#paperwallet" aria-label="Portfolio — Paper Wallet"><i>12</i>Paper Wallet</a>
+        <a href="#tracker" aria-label="Portfolio — Portfolio"><i>12</i>Portfolio</a>
+        <a href="#paperwallet" aria-label="Portfolio — Paper Wallet"><i>13</i>Paper Wallet</a>
         
       </div>
     </div>
@@ -3465,11 +3616,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         Ledger<i>5</i>
       </button>
       <div class="navgrp-menu" id="navmenu-5" hidden>
-        <a href="#alerts" aria-label="Ledger — Signal Log"><i>13</i>Signal Log</a>
-        <a href="#perf" aria-label="Ledger — Performance"><i>14</i>Performance</a>
-        <a href="#rules" aria-label="Ledger — Engine Log"><i>15</i>Engine Log</a>
-        <a href="#datahealth" aria-label="Ledger — Data Health"><i>16</i>Data Health</a>
-        <a href="#buildlog" aria-label="Ledger — Build Log"><i>17</i>Build Log</a>
+        <a href="#alerts" aria-label="Ledger — Signal Log"><i>14</i>Signal Log</a>
+        <a href="#perf" aria-label="Ledger — Performance"><i>15</i>Performance</a>
+        <a href="#rules" aria-label="Ledger — Engine Log"><i>16</i>Engine Log</a>
+        <a href="#datahealth" aria-label="Ledger — Data Health"><i>17</i>Data Health</a>
+        <a href="#buildlog" aria-label="Ledger — Build Log"><i>18</i>Build Log</a>
         
       </div>
     </div>
@@ -3477,10 +3628,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="navgrp" data-group="About">
       <button type="button" class="navgrp-btn" aria-expanded="false"
               aria-controls="navmenu-6">
-        About<i>1</i>
+        About<i>2</i>
       </button>
       <div class="navgrp-menu" id="navmenu-6" hidden>
-        <a href="#who" aria-label="About — Who"><i>18</i>Who</a>
+        <a href="#method" aria-label="About — How to Read This"><i>19</i>How to Read This</a>
+        <a href="#who" aria-label="About — Who"><i>20</i>Who</a>
         
       </div>
     </div>
@@ -3488,6 +3640,40 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <a class="nav-other" href="/desk" title="career, learning, practice, mind, drills">Life &rarr;</a>
   </div>
 </nav>
+
+
+<style>
+#marketintel{--pillar:var(--p-today,var(--lime))}
+#picks{--pillar:var(--p-today,var(--lime))}
+#world{--pillar:var(--p-markets,var(--lime))}
+#findings{--pillar:var(--p-markets,var(--lime))}
+#volspikes{--pillar:var(--p-markets,var(--lime))}
+#longterm{--pillar:var(--p-research,var(--lime))}
+#stocks{--pillar:var(--p-research,var(--lime))}
+#iporadar{--pillar:var(--p-research,var(--lime))}
+#funds{--pillar:var(--p-research,var(--lime))}
+#sip{--pillar:var(--p-research,var(--lime))}
+#swp{--pillar:var(--p-research,var(--lime))}
+#tracker{--pillar:var(--p-portfolio,var(--lime))}
+#paperwallet{--pillar:var(--p-portfolio,var(--lime))}
+#alerts{--pillar:var(--p-ledger,var(--lime))}
+#perf{--pillar:var(--p-ledger,var(--lime))}
+#rules{--pillar:var(--p-ledger,var(--lime))}
+#datahealth{--pillar:var(--p-ledger,var(--lime))}
+#buildlog{--pillar:var(--p-ledger,var(--lime))}
+#method{--pillar:var(--p-about,var(--lime))}
+#who{--pillar:var(--p-about,var(--lime))}
+.navgrp[data-group="Today"]{--pillar:var(--p-today,var(--lime))}
+.navgrp[data-group="Markets"]{--pillar:var(--p-markets,var(--lime))}
+.navgrp[data-group="Research"]{--pillar:var(--p-research,var(--lime))}
+.navgrp[data-group="Portfolio"]{--pillar:var(--p-portfolio,var(--lime))}
+.navgrp[data-group="Ledger"]{--pillar:var(--p-ledger,var(--lime))}
+.navgrp[data-group="About"]{--pillar:var(--p-about,var(--lime))}
+
+</style>
+
+
+<script type="application/json" id="metricProv">[{"key":"winrate","label":"Win rate","tier":"result"},{"key":"expectancy","label":"Expectancy","tier":"result"},{"key":"rmultiple","label":"R","tier":"result"},{"key":"drawdown","label":"Max drawdown","tier":"result"},{"key":"deployed","label":"Deployed","tier":"model"},{"key":"cash","label":"Cash","tier":"model"},{"key":"heat","label":"Heat","tier":"model"},{"key":"rr","label":"R:R","tier":"model"},{"key":"allocated","label":"Allocated","tier":"model"},{"key":"volspike","label":"Volume","tier":"fact"},{"key":"turnover","label":"Turnover","tier":"fact"},{"key":"rsi","label":"RSI","tier":"model"},{"key":"roce","label":"ROCE","tier":"fact"},{"key":"fromhigh","label":"From 52w high","tier":"fact"},{"key":"median","label":"median","tier":"model"},{"key":"totalsignals","label":"Total Signals","tier":"fact"},{"key":"targets","label":"Targets Hit","tier":"result"},{"key":"stops","label":"Stops Hit","tier":"result"},{"key":"openrisk","label":"Open risk","tier":"model"},{"key":"unrealised","label":"Unrealised","tier":"model"},{"key":"realized","label":"Realized P&L","tier":"result"},{"key":"tradessized","label":"Trades sized","tier":"model"},{"key":"openpos","label":"Open Setups","tier":"fact"},{"key":"advancing","label":"Markets Advancing","tier":"fact"},{"key":"fii","label":"FII net","tier":"fact"},{"key":"dii","label":"DII net","tier":"fact"},{"key":"subscribed","label":"Subscribed","tier":"fact"},{"key":"ipoopen","label":"Open now","tier":"fact"},{"key":"ipoSoon","label":"Opening soon","tier":"fact"},{"key":"ipoverdict","label":"Apply / Apply-small","tier":"model"},{"key":"ipoavoid","label":"Avoid","tier":"model"},{"key":"ipoawait","label":"Awaiting listing","tier":"fact"},{"key":"ipomeasured","label":"Listed & measured \u00b7 12m","tier":"result"},{"key":"corpusret","label":"Corpus at retirement","tier":"model"},{"key":"corpusreq","label":"Corpus required","tier":"model"},{"key":"firstdraw","label":"First withdrawal / month","tier":"model"},{"key":"lastuntil","label":"Money lasts till","tier":"model"},{"key":"invested","label":"Invested","tier":"fact"},{"key":"asof","label":"As of","tier":"fact"}]</script>
 
 <!-- Live-layer status. Hidden until the API probe resolves one way or the other. -->
 <div class="livebar" id="livebar">
@@ -3501,7 +3687,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260826T032932">
+<div class="editionbar" id="editionbar" data-build="20260826T034854">
   
   <span><b>New edition published<span id="editionWhen"></span>.</b>
     This tab was built for Wednesday, August 26 2026. Live data &mdash; the ticker, heat map and
@@ -3536,29 +3722,29 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7670</span>
-      <span class="c up">▲ +0.22%</span>
+      <span class="p">7673</span>
+      <span class="c up">▲ +0.26%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">26101</span>
-      <span class="c up">▲ +0.46%</span>
+      <span class="p">26120</span>
+      <span class="c up">▲ +0.54%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4724.3</span>
-      <span class="c up">▲ +1.8%</span>
+      <span class="p">$4716.1</span>
+      <span class="c up">▲ +1.62%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$82.25</span>
-      <span class="c dn">▼ -3.25%</span>
+      <span class="p">$82.06</span>
+      <span class="c dn">▼ -3.47%</span>
     </div>
     
     
@@ -3571,8 +3757,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78931</span>
-      <span class="c dn">▼ -0.04%</span>
+      <span class="p">$78783</span>
+      <span class="c dn">▼ -0.23%</span>
     </div>
     
     
@@ -3594,29 +3780,29 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">S&P 500</span>
-      <span class="p">7670</span>
-      <span class="c up">▲ +0.22%</span>
+      <span class="p">7673</span>
+      <span class="c up">▲ +0.26%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Nasdaq</span>
-      <span class="p">26101</span>
-      <span class="c up">▲ +0.46%</span>
+      <span class="p">26120</span>
+      <span class="c up">▲ +0.54%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4724.3</span>
-      <span class="c up">▲ +1.8%</span>
+      <span class="p">$4716.1</span>
+      <span class="c up">▲ +1.62%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$82.25</span>
-      <span class="c dn">▼ -3.25%</span>
+      <span class="p">$82.06</span>
+      <span class="c dn">▼ -3.47%</span>
     </div>
     
     
@@ -3629,8 +3815,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78931</span>
-      <span class="c dn">▼ -0.04%</span>
+      <span class="p">$78783</span>
+      <span class="c dn">▼ -0.23%</span>
     </div>
     
     
@@ -3799,14 +3985,14 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="regime">
       <div class="rg-l">
         <span class="rg-k">Market regime</span>
-        <span class="rg-v up">Leaning risk-on · 63<i>/100</i></span>
+        <span class="rg-v up">Leaning risk-on · 64<i>/100</i></span>
       </div>
-      <div class="rg-bar" style="--rg:63%"><i></i><b></b></div>
+      <div class="rg-bar" style="--rg:64%"><i></i><b></b></div>
       <div class="rg-why">
         Risk appetite across 8 instruments,
         weighted by move size. Moved most by
         <b class="up">Gold
-          +1.8%</b> and <b class="dn">USD/INR
+          +1.62%</b> and <b class="dn">USD/INR
           -0.31%</b>.
         
         50 is neutral; risk assets push up, havens push down.
@@ -3821,7 +4007,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <a class="db" href="#marketintel">
         <span class="db-k">Market</span>
         <span class="db-v">Leaning risk-on</span>
-        <span class="db-s">63/100 regime</span>
+        <span class="db-s">64/100 regime</span>
       </a>
       <a class="db" href="#world">
         <span class="db-k">World</span>
@@ -3844,15 +4030,22 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     <div class="matters">
       <div class="matters-h">
         <span class="matters-t">What matters now</span>
-        <span class="matters-n">4 readings &middot; every one links to its evidence</span>
+        <span class="matters-n">5 readings &middot; every one links to its evidence</span>
       </div>
       <div class="matters-g">
         
         <article class="mcard mc-risk">
           <div class="mc-tag"><i></i>Risk</div>
-          <h3 class="mc-head">Gold +1.80% while 3 of 5 risk assets fell</h3>
-          <p class="mc-why">A haven bid against a soft tape is what pushes the regime reading down. It sits at 63/100 — leaning risk-on.</p>
+          <h3 class="mc-head">Gold +1.62% while 3 of 5 risk assets fell</h3>
+          <p class="mc-why">A haven bid against a soft tape is what pushes the regime reading down. It sits at 64/100 — leaning risk-on.</p>
           <a class="mc-cta" href="#marketintel">Market intel &rarr;</a>
+        </article>
+        
+        <article class="mcard mc-momentum">
+          <div class="mc-tag"><i></i>Momentum</div>
+          <h3 class="mc-head">Nasdaq +0.54% — the day's strongest risk asset</h3>
+          <p class="mc-why">3 of 8 priced instruments advanced. Breadth is what separates a move from a rotation.</p>
+          <a class="mc-cta" href="#world">Full board &rarr;</a>
         </article>
         
         <article class="mcard mc-watch">
@@ -3943,7 +4136,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">01 / MARKET INTEL</span> 
-<span class="dh dh-LIVE" title="Market Intelligence · 31 min old.">LIVE<span class="dh-age">31 min old</span></span>
+<span class="dh dh-LIVE" title="Market Intelligence · 51 min old.">LIVE<span class="dh-age">51 min old</span></span>
       <h2 class="stitle">What moved the tape today.</h2>
     </div>
     <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
@@ -4847,7 +5040,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">02 / TRADE IDEAS</span> 
-<span class="dh dh-LIVE" title="Trade ideas · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
+<span class="dh dh-LIVE" title="Trade ideas · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">Top 5 trade ideas.</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
@@ -5631,7 +5824,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   <div class="shead rv">
     <div>
       <span class="snum">03 / WORLD</span> 
-<span class="dh dh-LIVE" title="World news · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
+<span class="dh dh-LIVE" title="World news · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">The world, last 24h.</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
@@ -5681,8 +5874,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         
         <div class="mini">
           <span class="s">Bloomberg</span>
-          <a href="https://www.bloomberg.com/news/articles/2026-08-24/stock-market-today-dow-s-p-live-updates" target="_blank">Stocks Rise Before Nvidia as Oil Drop Lifts Bonds: Markets Wrap</a>
-          <p class="mini-s">Stocks rose as a decline in oil prices sent bond yields lower, with traders awaiting Nvidia Corp.’s earnings for clues on whether &hellip;</p>
+          <a href="https://www.bloomberg.com/news/articles/2026-08-25/short-squeeze-in-us-swaps-options-shows-bessent-put-at-work" target="_blank">Short Squeeze in US Long Bonds Shows ‘Bessent Put’ at Work</a>
+          <p class="mini-s">Treasury Secretary Scott Bessent’s surprise plan to tamp down US borrowing costs by expanding bond buybacks may have sparked fierc&hellip;</p>
         </div>
         
         <div class="mini">
@@ -5728,11 +5921,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/u-s-canada-trade-war-threatens-to-worsen-inflation-for-both-economies-neither-can-afford-it-bd797506?mod=mw_rss_topstories" target="_blank">U.S.-Canada trade war threatens to worsen inflation for both economies. Neither can afford it.</a></h3>
-        <p>An actual trade war with Canada would undoubtably hurt the smaller neighbor to the north, economists say, but the U.S. wouldn’t escape entirely unscathed.</p>
+        <h3><a href="https://www.marketwatch.com/story/has-ai-gotten-any-better-at-stock-picking-a7cfb998?mod=mw_rss_topstories" target="_blank">Has AI gotten any better at stock picking?</a></h3>
+        <p>Beating the market is difficult, even with AI’s help.</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 19:24</span>
-          <a class="readmore" href="https://www.marketwatch.com/story/u-s-canada-trade-war-threatens-to-worsen-inflation-for-both-economies-neither-can-afford-it-bd797506?mod=mw_rss_topstories" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 19:35</span>
+          <a class="readmore" href="https://www.marketwatch.com/story/has-ai-gotten-any-better-at-stock-picking-a7cfb998?mod=mw_rss_topstories" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -5778,11 +5971,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Bloomberg</span>
-        <h3><a href="https://www.bloomberg.com/news/articles/2026-08-25/short-squeeze-in-us-swaps-options-shows-bessent-put-at-work" target="_blank">Short Squeeze in US Long Bonds Shows ‘Bessent Put’ at Work</a></h3>
-        <p>Treasury Secretary Scott Bessent’s surprise plan to tamp down US borrowing costs by expanding bond buybacks may have sparked fierce debate about its ultimate effectiveness, but key&hellip;</p>
+        <h3><a href="https://www.bloomberg.com/news/articles/2026-08-25/us-canada-cosmetic-tariffs-threaten-the-10-beauty-impulse-buy" target="_blank">US-Canada Cosmetic Tariffs Threaten the $10 Beauty Impulse Buy</a></h3>
+        <p>In between offering advice on how to find the best towels and where to buy affordable versions of high-end garments, Bryce Gruber recently waded into the US-Canada trade war, warni&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Aug 25 18:35</span>
-          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-08-25/short-squeeze-in-us-swaps-options-shows-bessent-put-at-work" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 25 19:38</span>
+          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-08-25/us-canada-cosmetic-tariffs-threaten-the-10-beauty-impulse-buy" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -6133,6 +6326,367 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>
 
 
+<!-- ══════════ VOLUME ══════════
+     Price is half a fact. A name up 8% on its usual volume and a name up 8% on
+     four times its usual volume are different events, and the screen has
+     carried the ratio all along — a wrong comment in generate.py said the
+     field was constant, so nothing read it for months.
+
+     The board never shows the ratio alone. Volume has no direction; pairing it
+     with the week's move is what turns a number into a reading, and the third
+     reading ("churn") exists because most high-volume days genuinely go
+     nowhere and calling those accumulation would be inventing a fact. -->
+<section class="sec" id="volspikes">
+  <div class="shead rv">
+    <div>
+      <span class="snum">05 / VOLUME</span>
+      <h2 class="stitle">Who actually showed up.</h2>
+    </div>
+    <p class="sdesc">Names trading at twice their own average volume or more. Volume is the
+      only thing on this page that tells you whether a move had participation behind it.</p>
+  </div>
+
+  <p class="lv-3 rv" style="margin-bottom:18px">
+    <span class="pill pill-fact">Fact</span>
+    The multiple is the day&rsquo;s volume against the name&rsquo;s own average &mdash; not against
+    another stock, so a small cap and a large cap are comparable here. Floor of
+    <b>2&times;</b> on at least <b>&#8377;5 crore</b> of turnover: a twelve-times day on a name
+    that trades forty lakh is a ratio artefact, not a crowd.
+    <b>18 shown</b> of the 750 screened.
+    Bars are drawn against <b>15.1&times;</b> &mdash; today&rsquo;s highest, so
+    the column compares these names to each other rather than to a fixed line.
+  </p>
+
+  
+  <div class="tblwrap rv">
+    <table class="volboard">
+      <thead>
+        <tr>
+          <th>Symbol</th><th>Volume vs its own average</th><th class="r">1W</th>
+          <th class="r">Price</th><th class="r">Turnover</th><th>Reading</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        
+        
+        <tr>
+          <td><b>JBMA</b><span class="tsub">JBM Auto Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:99.9%"></span>
+            </span>
+            <span class="volbar-x num">15.1&times;</span>
+          </td>
+          <td class="r num up">+8.2%</td>
+          <td class="r num">&#8377;674</td>
+          <td class="r num">&#8377;889cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>WELCORP</b><span class="tsub">Welspun Corp Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:77.5%"></span>
+            </span>
+            <span class="volbar-x num">11.7&times;</span>
+          </td>
+          <td class="r num up">+23.4%</td>
+          <td class="r num">&#8377;2,312</td>
+          <td class="r num">&#8377;4,615cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>NETWORK18</b><span class="tsub">Network18 Media & Investments </span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:64.4%"></span>
+            </span>
+            <span class="volbar-x num">9.7&times;</span>
+          </td>
+          <td class="r num up">+5.4%</td>
+          <td class="r num">&#8377;31</td>
+          <td class="r num">&#8377;139cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>THOMASCOOK</b><span class="tsub">Thomas Cook (India) Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:63.0%"></span>
+            </span>
+            <span class="volbar-x num">9.5&times;</span>
+          </td>
+          <td class="r num up">+6.9%</td>
+          <td class="r num">&#8377;113</td>
+          <td class="r num">&#8377;289cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>WELENT</b><span class="tsub">Welspun Enterprises Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:61.7%"></span>
+            </span>
+            <span class="volbar-x num">9.3&times;</span>
+          </td>
+          <td class="r num up">+12.4%</td>
+          <td class="r num">&#8377;631</td>
+          <td class="r num">&#8377;357cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>JINDALSAW</b><span class="tsub">Jindal Saw Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:61.5%"></span>
+            </span>
+            <span class="volbar-x num">9.3&times;</span>
+          </td>
+          <td class="r num up">+9.2%</td>
+          <td class="r num">&#8377;292</td>
+          <td class="r num">&#8377;490cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>STAR</b><span class="tsub">Strides Pharma Science Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill "
+                    style="width:61.5%"></span>
+            </span>
+            <span class="volbar-x num">9.3&times;</span>
+          </td>
+          <td class="r num up">+0.4%</td>
+          <td class="r num">&#8377;993</td>
+          <td class="r num">&#8377;491cr</td>
+          <td><span class="vread ">Churn, no direction</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>NCC</b><span class="tsub">NCC Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:53.4%"></span>
+            </span>
+            <span class="volbar-x num">8.1&times;</span>
+          </td>
+          <td class="r num up">+6.3%</td>
+          <td class="r num">&#8377;150</td>
+          <td class="r num">&#8377;311cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>BALRAMCHIN</b><span class="tsub">Balrampur Chini Mills Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:38.6%"></span>
+            </span>
+            <span class="volbar-x num">5.8&times;</span>
+          </td>
+          <td class="r num up">+16.7%</td>
+          <td class="r num">&#8377;729</td>
+          <td class="r num">&#8377;1,458cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>IIFL</b><span class="tsub">IIFL Finance Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:34.5%"></span>
+            </span>
+            <span class="volbar-x num">5.2&times;</span>
+          </td>
+          <td class="r num up">+7.7%</td>
+          <td class="r num">&#8377;680</td>
+          <td class="r num">&#8377;779cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>DCBBANK</b><span class="tsub">DCB Bank Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:32.3%"></span>
+            </span>
+            <span class="volbar-x num">4.9&times;</span>
+          </td>
+          <td class="r num up">+11.8%</td>
+          <td class="r num">&#8377;204</td>
+          <td class="r num">&#8377;207cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>VMART</b><span class="tsub">V-Mart Retail Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:30.9%"></span>
+            </span>
+            <span class="volbar-x num">4.7&times;</span>
+          </td>
+          <td class="r num up">+3.9%</td>
+          <td class="r num">&#8377;839</td>
+          <td class="r num">&#8377;51cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>URBANCO</b><span class="tsub">Urban Company Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:30.3%"></span>
+            </span>
+            <span class="volbar-x num">4.6&times;</span>
+          </td>
+          <td class="r num up">+9.8%</td>
+          <td class="r num">&#8377;159</td>
+          <td class="r num">&#8377;1,042cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>EIDPARRY</b><span class="tsub">E.I.D. Parry (India) Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:28.5%"></span>
+            </span>
+            <span class="volbar-x num">4.3&times;</span>
+          </td>
+          <td class="r num up">+3.8%</td>
+          <td class="r num">&#8377;810</td>
+          <td class="r num">&#8377;178cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>TEGA</b><span class="tsub">Tega Industries Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:26.2%"></span>
+            </span>
+            <span class="volbar-x num">4.0&times;</span>
+          </td>
+          <td class="r num up">+6.4%</td>
+          <td class="r num">&#8377;1,776</td>
+          <td class="r num">&#8377;167cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>FACT</b><span class="tsub">Fertilisers and Chemicals Trav</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill dn"
+                    style="width:26.0%"></span>
+            </span>
+            <span class="volbar-x num">3.9&times;</span>
+          </td>
+          <td class="r num down">-3.0%</td>
+          <td class="r num">&#8377;783</td>
+          <td class="r num">&#8377;32cr</td>
+          <td><span class="vread dn">Sold into</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>EMMVEE</b><span class="tsub">Emmvee Photovoltaic Power Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill "
+                    style="width:24.7%"></span>
+            </span>
+            <span class="volbar-x num">3.7&times;</span>
+          </td>
+          <td class="r num up">+0.6%</td>
+          <td class="r num">&#8377;326</td>
+          <td class="r num">&#8377;243cr</td>
+          <td><span class="vread ">Churn, no direction</span></td>
+        </tr>
+        
+        
+        
+        <tr>
+          <td><b>RENUKA</b><span class="tsub">Shree Renuka Sugars Ltd.</span></td>
+          <td>
+            <span class="volbar">
+              <span class="volbar-fill up"
+                    style="width:23.8%"></span>
+            </span>
+            <span class="volbar-x num">3.6&times;</span>
+          </td>
+          <td class="r num up">+14.5%</td>
+          <td class="r num">&#8377;25</td>
+          <td class="r num">&#8377;138cr</td>
+          <td><span class="vread up">Bought into</span></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <p class="lv-sys rv" style="margin-top:12px">
+    A volume spike is an observation, not a setup. Nothing here has an entry, a stop
+    or a size, none of it has been published to the ledger, and none of it touches the
+    win rate. Volume from the weekly screen &mdash; same vintage as the stock screen, built 2026-08-23.
+    <a href="#method">What these columns mean &rarr;</a>
+  </p>
+</section>
+
+
 <!-- ══════════ LONG-TERM CONVICTION ══════════
      Written by ai_longterm.py, which screens the business before the chart.
      Deliberately NOT in the trade log above and excluded from expectancy: a
@@ -6141,7 +6695,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="longterm">
   <div class="shead rv">
     <div>
-      <span class="snum">05 / OWN THE BUSINESS</span>
+      <span class="snum">06 / OWN THE BUSINESS</span>
       <h2 class="stitle">Own the business.</h2>
     </div>
     <p class="sdesc">Five NSE names screened on return on capital, growth, leverage and what
@@ -6190,7 +6744,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="stocks">
   <div class="shead rv">
     <div>
-      <span class="snum">06 / STOCK SCREEN</span> 
+      <span class="snum">07 / STOCK SCREEN</span> 
 <span class="dh dh-FRESH" title="Stock screen · 3 days old.">FRESH<span class="dh-age">3 days old</span></span>
       <h2 class="stitle">Which 750, and why.</h2>
     </div>
@@ -7350,7 +7904,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="iporadar">
   <div class="shead rv">
     <div>
-      <span class="snum">07 / IPO RADAR</span>
+      <span class="snum">08 / IPO RADAR</span>
       <h2 class="stitle">Open books, and whether to apply.</h2>
     </div>
     <p class="sdesc">Mainboard NSE issues only &mdash; SME is a different asset class and is
@@ -7727,19 +8281,6 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       
 
       
-      
-      <div class="ipo-cats">
-        
-        <span class="ipo-cat-cold">QIB <b>0.57x</b></span>
-        
-        <span class="ipo-cat-cold">HNI <b>0.36x</b></span>
-        
-        <span class="ipo-cat-cold">Retail <b>0.29x</b></span>
-        
-        <span class="ipo-cat-cold">Total <b>0.35x</b></span>
-        
-        <span class="ipo-cat-src">via ipopremium.in</span>
-      </div>
       
 
       <div class="ipo-score">
@@ -9510,7 +10051,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    2026-08-25 19:31. Lot size, minimum application, the
+    2026-08-25 19:51. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -9537,7 +10078,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="funds">
   <div class="shead rv">
     <div>
-      <span class="snum">08 / FUND SCREEN</span> 
+      <span class="snum">09 / FUND SCREEN</span> 
 <span class="dh dh-FRESH" title="Fund screen · 3 days old.">FRESH<span class="dh-age">3 days old</span></span>
       <h2 class="stitle">Where the SIP goes.</h2>
     </div>
@@ -13156,7 +13697,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="sip" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">09 / SIP BUCKETS</span>
+      <span class="snum">10 / SIP BUCKETS</span>
       <h2 class="stitle">One bucket a month.</h2>
     </div>
     <div style="text-align:right">
@@ -13210,7 +13751,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="swp">
   <div class="shead rv">
     <div>
-      <span class="snum">10 / SWP</span>
+      <span class="snum">11 / SWP</span>
       <h2 class="stitle">And what it pays out.</h2>
     </div>
     <p class="sdesc">Accumulate to retirement, then draw down. Withdrawals are grossed up
@@ -13305,7 +13846,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="tracker">
   <div class="shead rv">
     <div>
-      <span class="snum">11 / PORTFOLIO</span>
+      <span class="snum">12 / PORTFOLIO</span>
       <h2 class="stitle">The book.</h2>
       <p class="sdesc">Real capital, actually held &mdash; not the paper wallet and not a signal
         list. Risk before profit: each position shows what it can lose to its stop before it shows
@@ -13385,7 +13926,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="paperwallet">
   <div class="shead rv">
     <div>
-      <span class="snum">12 / PAPER WALLET</span>
+      <span class="snum">13 / PAPER WALLET</span>
       
       <h2 class="stitle"><span id="pwCapital">₹1,00,00,000</span>, sized by the rules below.</h2>
     </div>
@@ -13408,8 +13949,8 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="alerts">
   <div class="shead rv">
     <div>
-      <span class="snum">13 / SIGNAL LOG</span> 
-<span class="dh dh-LIVE" title="Signal ledger · 2 min old.">LIVE<span class="dh-age">2 min old</span></span>
+      <span class="snum">14 / SIGNAL LOG</span> 
+<span class="dh dh-LIVE" title="Signal ledger · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">Every signal, scored.</h2>
     </div>
     <div style="text-align:right">
@@ -14021,7 +14562,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="perf" style="display:none">
   <div class="shead rv">
     <div>
-      <span class="snum">14 / PERFORMANCE</span>
+      <span class="snum">15 / PERFORMANCE</span>
       <h2 class="stitle">Does this actually work?</h2>
     </div>
     <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
@@ -14279,7 +14820,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="rules">
   <div class="shead rv">
     <div>
-      <span class="snum">15 / ENGINE LOG</span>
+      <span class="snum">16 / ENGINE LOG</span>
       <h2 class="stitle">What the ledger changed.</h2>
     </div>
     <p class="sdesc">Every rule the engine follows because the record forced it — with the number
@@ -14472,7 +15013,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="datahealth">
   <div class="shead rv">
     <div>
-      <span class="snum">16 / DATA HEALTH</span>
+      <span class="snum">17 / DATA HEALTH</span>
       
       <h2 class="stitle">
         
@@ -14598,11 +15139,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 19:02</dd></div>
+          <dd>2026-08-25 19:33</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 19:02
+          <dd>2026-08-25 19:33
             </dd></div>
-        <div><dt>Age</dt><dd>29 min old</dd></div>
+        <div><dt>Age</dt><dd>18 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         
@@ -14624,7 +15165,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><dt>Last attempt</dt>
           <dd>2026-08-25 14:22
             · success</dd></div>
-        <div><dt>Age</dt><dd>31 min old</dd></div>
+        <div><dt>Age</dt><dd>51 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         
@@ -14642,11 +15183,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 19:29</dd></div>
+          <dd>2026-08-25 19:48</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 19:29
+          <dd>2026-08-25 19:48
             </dd></div>
-        <div><dt>Age</dt><dd>2 min old</dd></div>
+        <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -14669,7 +15210,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
         <div><dt>Last attempt</dt>
           <dd>2026-08-25 19:00
             </dd></div>
-        <div><dt>Age</dt><dd>31 min old</dd></div>
+        <div><dt>Age</dt><dd>51 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         
@@ -14687,11 +15228,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 19:29</dd></div>
+          <dd>2026-08-25 19:48</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 19:29
+          <dd>2026-08-25 19:48
             </dd></div>
-        <div><dt>Age</dt><dd>2 min old</dd></div>
+        <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -14710,11 +15251,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 19:29</dd></div>
+          <dd>2026-08-25 19:48</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 19:29
+          <dd>2026-08-25 19:48
             </dd></div>
-        <div><dt>Age</dt><dd>2 min old</dd></div>
+        <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -14733,11 +15274,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 19:29</dd></div>
+          <dd>2026-08-25 19:48</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 19:29
+          <dd>2026-08-25 19:48
             </dd></div>
-        <div><dt>Age</dt><dd>2 min old</dd></div>
+        <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>weekly</dd></div>
         
         <div><dt>Records</dt>
@@ -14756,11 +15297,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-25 19:29</dd></div>
+          <dd>2026-08-25 19:48</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-25 19:29
+          <dd>2026-08-25 19:48
             </dd></div>
-        <div><dt>Age</dt><dd>2 min old</dd></div>
+        <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Records</dt>
@@ -14800,7 +15341,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 <section class="sec" id="buildlog">
   <div class="shead rv">
     <div>
-      <span class="snum">17 / BUILD LOG</span>
+      <span class="snum">18 / BUILD LOG</span>
       <h2 class="stitle">What shipped, and when.</h2>
     </div>
     <p class="sdesc">Read straight from this repository&rsquo;s history. The Engine Log
@@ -14814,11 +15355,11 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
       <div class="logmeta">
         <span class="logdate">2026-08-26</span>
         <span class="pill pill-model">Fixed</span>
-        <code class="logsha">8ecce8f</code>
+        <code class="logsha">a721650</code>
       </div>
       <div class="logbody">
-        <b>the header nav could not open, and the wallet headline said 50 lakh</b>
-        <span>Three things a reader hits in the first ten seconds.</span>
+        <b>declare MutationObserver, and say which cap is actually binding</b>
+        <span>The build failed at the lint step, so none of the colour work deployed. The badge stamper uses MutationObserver and the ESLint config declares every browser global explicitly — that is the config working as designed, not a false positive, so the global is declared rather than the rule relaxed.</span>
       </div>
     </div>
     
@@ -14829,10 +15370,407 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 </section>
 
 
+<!-- ══════════ HOW TO READ THIS ══════════
+     The consolidation. Every number on the page defined once, with the tier
+     that says where it came from, generated from the METRICS list at the top
+     of this file rather than typed here — so a metric added to the page and
+     not defined shows up as a gap in one obvious place instead of nowhere.
+
+     What was NOT done: the per-section explanations were left where they are.
+     Moving them all here would have produced a reference nobody reads and
+     seventeen sections of bare tables, which is worse than the duplication it
+     removes. This is the canonical copy; the ledes stay as the local one. -->
+<section class="sec" id="method">
+  <div class="shead rv">
+    <div>
+      <span class="snum">19 / HOW TO READ THIS</span>
+      <h2 class="stitle">Every number, defined once.</h2>
+    </div>
+    <p class="sdesc">What each figure on this page measures, how it is computed, and which
+      of the four kinds of claim it is. If a number here disagrees with a number above,
+      this page is the one that is wrong &mdash; report it.</p>
+  </div>
+
+  <div class="prov-legend rv" role="note" aria-label="The four kinds of claim">
+    <span class="pl-lead">The four labels</span>
+    
+    <span class="pl-item"><span class="pill pill-fact">Fact</span> an observed value — a close, a flow, a filing</span>
+    
+    <span class="pl-item"><span class="pill pill-model">Model</span> computed by the engine from facts</span>
+    
+    <span class="pl-item"><span class="pill pill-result">Result</span> what happened to a published signal</span>
+    
+    <span class="pl-item"><span class="pill pill-view">View</span> a human opinion, labelled as one</span>
+    
+  </div>
+
+  
+  
+  
+  
+  <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
+    <h3><span class="pill pill-fact">Fact</span>
+      15 figures</h3>
+    <p class="subdesc">An observed value — a close, a flow, a filing.</p>
+  </div>
+  <dl class="metdefs rv">
+    
+    <div class="metdef" id="metric-volspike">
+      <dt>Volume</dt>
+      <dd>
+        <p class="md-what">The day's volume as a multiple of the name's own average.</p>
+        <p class="md-how">2x means twice the usual number of shares changed hands. It carries no direction on its own, which is why the week's move is always printed beside it.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-turnover">
+      <dt>Turnover</dt>
+      <dd>
+        <p class="md-what">Rupees traded in the name per day.</p>
+        <p class="md-how">The liquidity measure this build actually has. NSE's delivery percentage lives in the bhavcopy, which nothing here reads, so delivery is never filtered on and never implied.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-roce">
+      <dt>ROCE</dt>
+      <dd>
+        <p class="md-what">Return on capital employed, from the filed statements.</p>
+        <p class="md-how">Blank rather than zero where statements are not in the feed. 'Not measured' and 'measured at zero' are different facts.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-fromhigh">
+      <dt>From 52w high</dt>
+      <dd>
+        <p class="md-what">Distance below the highest close of the last year.</p>
+        <p class="md-how">0.0% means the name is at its own high today.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-totalsignals">
+      <dt>Total Signals</dt>
+      <dd>
+        <p class="md-what">Every signal ever published to the ledger.</p>
+        <p class="md-how">Open and closed together. Nothing is ever deleted from this count — a signal that went wrong stays in it.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-openpos">
+      <dt>Open Setups</dt>
+      <dd>
+        <p class="md-what">Published signals that have neither hit a target nor a stop.</p>
+        <p class="md-how">An open setup is not a position. Nothing here has been bought — this ledger cannot place a trade, and says so.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-advancing">
+      <dt>Markets Advancing</dt>
+      <dd>
+        <p class="md-what">How many of the tracked indices closed up.</p>
+        <p class="md-how">Counted across the index list on the ticker rail, not across stocks. It is a breadth reading of markets, not of the tape.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-fii">
+      <dt>FII net</dt>
+      <dd>
+        <p class="md-what">Net rupees bought or sold by foreign institutions.</p>
+        <p class="md-how">NSE publishes it once, after the close, so it is never live. FII and DII are usually on opposite sides; the size of the gap says more than the direction of either.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-dii">
+      <dt>DII net</dt>
+      <dd>
+        <p class="md-what">Net rupees bought or sold by domestic institutions.</p>
+        <p class="md-how">Same source and the same once-a-day cadence as the FII figure.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-subscribed">
+      <dt>Subscribed</dt>
+      <dd>
+        <p class="md-what">Times an open IPO book has been covered.</p>
+        <p class="md-how">Straight from NSE's public issue endpoint. Grey-market premium is deliberately absent everywhere on this page: it is an unofficial quote with no audit trail.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-ipoopen">
+      <dt>Open now</dt>
+      <dd>
+        <p class="md-what">Mainboard issues whose book is open for applications today.</p>
+        <p class="md-how">Mainboard is NSE's own series == EQ. SME issues are a different instrument with different lot sizes and are not counted here.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-ipoSoon">
+      <dt>Opening soon</dt>
+      <dd>
+        <p class="md-what">Issues with a published open date still ahead.</p>
+        <p class="md-how">Dates move. A book that slips is re-read on the next build rather than carried forward from the announcement.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-ipoawait">
+      <dt>Awaiting listing</dt>
+      <dd>
+        <p class="md-what">Closed books that have not yet produced a traded price.</p>
+        <p class="md-how">These carry an ISSUE date, not a listing date, and every performance cell is blank rather than zero. Mixing them with names that actually listed is what made this table read as broken.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-invested">
+      <dt>Invested</dt>
+      <dd>
+        <p class="md-what">Money actually put in, before any return.</p>
+        <p class="md-how">The cost base. Paired with Value so the return is the difference rather than a separately computed figure that could disagree with it.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-asof">
+      <dt>As of</dt>
+      <dd>
+        <p class="md-what">When the underlying data was read, not when the page was built.</p>
+        <p class="md-how">A weekly screen rebuilt on Sunday still shows Sunday's date on Thursday. The badge says which, because a stale RSI and a stale ROCE go wrong at very different speeds.</p>
+      </dd>
+    </div>
+    
+  </dl>
+  
+  
+  
+  
+  <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
+    <h3><span class="pill pill-model">Model</span>
+      16 figures</h3>
+    <p class="subdesc">Computed by the engine from facts.</p>
+  </div>
+  <dl class="metdefs rv">
+    
+    <div class="metdef" id="metric-deployed">
+      <dt>Deployed</dt>
+      <dd>
+        <p class="md-what">Capital currently sitting in open paper positions.</p>
+        <p class="md-how">Deployed plus Cash is always the full wallet. Tier caps add to more than 100% deliberately; the binding limit is the global cap.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-cash">
+      <dt>Cash</dt>
+      <dd>
+        <p class="md-what">The wallet minus everything deployed.</p>
+        <p class="md-how">Uncommitted money waiting on a signal that clears its tier's rules. A high cash figure is the rules declining, not an error.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-heat">
+      <dt>Heat</dt>
+      <dd>
+        <p class="md-what">Total capital at risk if every open stop is hit at once.</p>
+        <p class="md-how">Sum of (entry − stop) × quantity across open positions, as a percentage of the wallet. This, not deployed capital, is the number that describes a bad day.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-rr">
+      <dt>R:R</dt>
+      <dd>
+        <p class="md-what">Reward divided by risk on an unfilled idea.</p>
+        <p class="md-how">Target distance over stop distance. Every published idea clears a 2:1 floor; the target comes from structure — a 52-week high or a measured move — never from a fixed percentage.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-allocated">
+      <dt>Allocated</dt>
+      <dd>
+        <p class="md-what">What the sizing rules gave this position.</p>
+        <p class="md-how">Tier percentage of the wallet, scaled down for grade B and C signals, then clipped by whichever cap binds first.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-rsi">
+      <dt>RSI</dt>
+      <dd>
+        <p class="md-what">14-day relative strength index.</p>
+        <p class="md-how">Above 70 is stretched, below 30 is washed out. Used here only as an exclusion — an idea already vertical is not published.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-median">
+      <dt>median</dt>
+      <dd>
+        <p class="md-what">The middle name's move in a sector, not the average.</p>
+        <p class="md-how">It separates a sector that moved from a sector where two names carried the label. The average cannot do that.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-openrisk">
+      <dt>Open risk</dt>
+      <dd>
+        <p class="md-what">Money that would be lost if every open stop hit today.</p>
+        <p class="md-how">The forward-looking twin of realised P&L. Kept as a separate tile because banked money and money still on the table are different facts, and one blended figure hides which is which.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-unrealised">
+      <dt>Unrealised</dt>
+      <dd>
+        <p class="md-what">Open positions marked at the latest price on the ticker rail.</p>
+        <p class="md-how">The tile says how many of the open rows could be marked. An unmarked row is one with no live quote, not one worth zero.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-tradessized">
+      <dt>Trades sized</dt>
+      <dd>
+        <p class="md-what">Signals the allocator gave a position size to.</p>
+        <p class="md-how">Fewer than the ledger publishes: engines outside the mandate are logged but never sized, and the section names which ones.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-ipoverdict">
+      <dt>Apply / Apply-small</dt>
+      <dd>
+        <p class="md-what">How many open books the scorer rates worth applying to.</p>
+        <p class="md-how">A reading of public DEMAND and nothing else. NSE's feeds carry no lot size, sector, financials or valuation, so none of those inform the score and none are guessed at. Grey-market premium is deliberately excluded: an unofficial quote with no audit trail.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-ipoavoid">
+      <dt>Avoid</dt>
+      <dd>
+        <p class="md-what">Open books the same scorer rates against applying to.</p>
+        <p class="md-how">Printed beside the Apply count on purpose. A scorer that only publishes its positives is a marketing sheet.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-corpusret">
+      <dt>Corpus at retirement</dt>
+      <dd>
+        <p class="md-what">What the plan is projected to be worth on the retirement date.</p>
+        <p class="md-how">Compounded from the stated contribution and return assumption. It is arithmetic on an assumption, not a forecast of markets.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-corpusreq">
+      <dt>Corpus required</dt>
+      <dd>
+        <p class="md-what">What the stated withdrawal actually needs to be funded.</p>
+        <p class="md-how">Printed next to the projected corpus so the gap is visible. The gap, not either figure alone, is the number that decides anything.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-firstdraw">
+      <dt>First withdrawal / month</dt>
+      <dd>
+        <p class="md-what">The opening monthly withdrawal the plan supports.</p>
+        <p class="md-how">It rises with inflation across the plan; the first year is the smallest one, which is the honest number to quote.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-lastuntil">
+      <dt>Money lasts till</dt>
+      <dd>
+        <p class="md-what">The year the plan runs out under its own assumptions.</p>
+        <p class="md-how">Sensitive to the return assumption more than to anything else. Treat a year past the life expectancy as 'does not run out', not as precision.</p>
+      </dd>
+    </div>
+    
+  </dl>
+  
+  
+  
+  
+  <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
+    <h3><span class="pill pill-result">Result</span>
+      8 figures</h3>
+    <p class="subdesc">What happened to a published signal.</p>
+  </div>
+  <dl class="metdefs rv">
+    
+    <div class="metdef" id="metric-winrate">
+      <dt>Win rate</dt>
+      <dd>
+        <p class="md-what">Closed signals that ended in profit, over all closed signals.</p>
+        <p class="md-how">Expiries count as losses. A setup that never triggered and timed out is not a neutral event — the capital was committed and the idea did not work. Excluding them is how a 24% win rate reads as 31%.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-expectancy">
+      <dt>Expectancy</dt>
+      <dd>
+        <p class="md-what">Average R made per closed signal.</p>
+        <p class="md-how">R is recomputed from the exit price against the entry and stop of that same signal, never read from the stored r_multiple column — a 2026-08-08 re-grade corrupted that column on 168 of 573 rows.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-rmultiple">
+      <dt>R</dt>
+      <dd>
+        <p class="md-what">One R is the distance from entry to stop: the money at risk.</p>
+        <p class="md-how">A trade exited at +2R made twice what it was risking. Quoting returns in R rather than rupees is what makes a 500-rupee stop and a 50,000-rupee stop comparable.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-drawdown">
+      <dt>Max drawdown</dt>
+      <dd>
+        <p class="md-what">The deepest peak-to-trough fall of the running R curve.</p>
+        <p class="md-how">Measured on closed signals in sequence. It is the number that decides whether a strategy is survivable, not the average.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-targets">
+      <dt>Targets Hit</dt>
+      <dd>
+        <p class="md-what">Closed signals that reached their published target.</p>
+        <p class="md-how">Counted at the target actually printed at publication, never at one moved afterwards.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-stops">
+      <dt>Stops Hit</dt>
+      <dd>
+        <p class="md-what">Closed signals that reached their published stop.</p>
+        <p class="md-how">A stop-out is a -1R outcome by definition; that is what makes R comparable across positions of different sizes.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-realized">
+      <dt>Realized P&L</dt>
+      <dd>
+        <p class="md-what">Money actually banked by closed paper positions.</p>
+        <p class="md-how">Winners book on a ladder — half at the first target, the rest at the second — so a row that reached the far target is banked at the blend, not as though the whole position ran to it.</p>
+      </dd>
+    </div>
+    
+    <div class="metdef" id="metric-ipomeasured">
+      <dt>Listed & measured · 12m</dt>
+      <dd>
+        <p class="md-what">Last year's listings whose post-listing return could be priced.</p>
+        <p class="md-how">A listing with no reachable price is excluded from the return rather than counted flat — a delisted or unquoted symbol is missing data, not a 0% outcome.</p>
+      </dd>
+    </div>
+    
+  </dl>
+  
+  
+  
+  
+  
+
+  <p class="lv-sys rv" style="margin-top:clamp(26px,3vw,40px)">
+    Nothing on this page is investment advice. The ledger publishes losses at the same
+    size as wins because a record you can only see the good half of is not a record.
+    Definitions are generated from the same list the page stamps its badges from, so a
+    badge and its definition cannot disagree.
+  </p>
+</section>
+
+
 <section class="sec" id="who">
   <div class="shead rv">
     <div>
-      <span class="snum">18 / WHO</span>
+      <span class="snum">20 / WHO</span>
       <h2 class="stitle">Who is publishing this.</h2>
     </div>
     <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
@@ -14955,7 +15893,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Wednesday, August 26 2026 · built 03:29 MYT<br>
+      Wednesday, August 26 2026 · built 03:48 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -14997,9 +15935,9 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="6WvUkpOGfMqi_YYrcBcjfw">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="-ysGWiqa9rDxhGtzBjAXMg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="6WvUkpOGfMqi_YYrcBcjfw">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="6WvUkpOGfMqi_YYrcBcjfw" src="/app.js?v=20260826T032932" defer></script>
+<script type="application/json" id="sector-map" nonce="-ysGWiqa9rDxhGtzBjAXMg">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="-ysGWiqa9rDxhGtzBjAXMg" src="/app.js?v=20260826T034854" defer></script>
 </body>
 </html>
