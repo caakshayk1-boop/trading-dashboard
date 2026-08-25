@@ -28,8 +28,6 @@
 # section from. Allow-listed BY NAME like every other file here.
 !docs/mandate.json
 # The client-rendered site: shell + renderer.
-!docs/v2.html
-!docs/v2.js
 !docs/v2-core.js
 !docs/life.html
 !docs/life.js

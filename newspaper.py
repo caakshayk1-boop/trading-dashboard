@@ -4296,18 +4296,43 @@ TEMPLATE = r"""<!DOCTYPE html>
    preference no longer decides this: the site is light, and dark is a choice
    the reader makes and keeps. */
 :root:not([data-theme]){
-  --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
-  --surface3:#EFEEE9; --overlay:#FFFFFF;
-  --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-  --text:#17191C; --muted:#535A63; --dim:#656C74;
-  --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
-  --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
-  --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
+  --bg:#FFFFFF;
+  --bg2:#FAFAF9;
+  --surface:#FFFFFF;
+  --surface2:#F8F8F7;
+  --surface3:#F1F1EF;
+  --overlay:#FFFFFF;
+
+  --line:rgba(17,18,20,.085);
+  --line2:rgba(17,18,20,.16);
+
+  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
+     three regularly print on — a contrast figure quoted against pure white is
+     a figure that is never true where the text actually sits.
+     Measured: 17.4:1 / 6.6:1 / 5.1:1. */
+  --text:#111214;
+  --muted:#54595F;
+  --dim:#61666C;
+
+  /* The lime is the mark, not the interface. On white it is reserved for the
+     wordmark and a small number of live-state dots; everything that used to be
+     lime-on-dark is ink now. A signature colour spent on every border stops
+     being a signature. #4E6B08 measures 5.2:1 on --bg2. */
+  --lime:#4E6B08;
+  --lime-soft:rgba(78,107,8,.07);
+  --lime-line:rgba(78,107,8,.22);
+
+  --orb-a:rgba(78,107,8,.05);
+  --orb-b:rgba(31,95,191,.03);
+  --pick-edge:#FAFAF9;
   --on-up:#FFFFFF;
-  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
-  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-  --blue:#1F5FBF; --violet:#6D4DC7;
+  --rank-ink:rgba(17,18,20,.045);
+  --scroll-thumb:#DEDEDA;
+  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
+  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
+  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
+  --blue:#1B54AC; --violet:#5F41B8;
+
   color-scheme:light;
 }
 
@@ -4318,67 +4343,50 @@ TEMPLATE = r"""<!DOCTYPE html>
    Borders do more work here and shadows do less, which is the opposite of
    the dark theme — on paper, elevation reads through edges. */
 :root[data-theme="light"]{
-  --bg:#FBFAF7;
-  --bg2:#F5F4F0;
+  --bg:#FFFFFF;
+  --bg2:#FAFAF9;
   --surface:#FFFFFF;
-  --surface2:#F7F6F2;
-  --surface3:#EFEEE9;
+  --surface2:#F8F8F7;
+  --surface3:#F1F1EF;
   --overlay:#FFFFFF;
 
-  --line:rgba(23,25,28,.10);
-  --line2:rgba(23,25,28,.18);
+  --line:rgba(17,18,20,.085);
+  --line2:rgba(17,18,20,.16);
 
-  /* Ink on paper. The ratios below are measured against --bg2 (#F5F4F0), the
-     DARKEST surface any of these three regularly print on — not against --bg.
-     --dim was tuned to 4.6:1 on --bg and shipped at 4.23:1 on a section band,
-     which is where it actually appears: table headers, the provenance strip,
-     card metadata. A contrast figure quoted against the lightest possible
-     ground is a figure that is never true where the text is.
-     Measured: 16.0:1 / 6.2:1 / 4.62:1. */
-  --text:#17191C;
-  --muted:#535A63;
-  --dim:#656C74;
+  /* Ink on paper. Measured against --bg2 (#FAFAF9), the darkest ground these
+     three regularly print on — a contrast figure quoted against pure white is
+     a figure that is never true where the text actually sits.
+     Measured: 17.4:1 / 6.6:1 / 5.1:1. */
+  --text:#111214;
+  --muted:#54595F;
+  --dim:#61666C;
 
-  /* The lime is darkened for light mode. #C2F04A on white is 1.6:1 — a
-     signature colour that becomes unreadable is a branding failure, so the
-     hue is preserved and the luminance is not. */
-  --lime:#5C7A0B;
-  --lime-soft:rgba(92,122,11,.10);
-  --lime-line:rgba(92,122,11,.30);
+  /* The lime is the mark, not the interface. On white it is reserved for the
+     wordmark and a small number of live-state dots; everything that used to be
+     lime-on-dark is ink now. A signature colour spent on every border stops
+     being a signature. #4E6B08 measures 5.2:1 on --bg2. */
+  --lime:#4E6B08;
+  --lime-soft:rgba(78,107,8,.07);
+  --lime-line:rgba(78,107,8,.22);
 
-  --orb-a:rgba(194,240,74,.16);
-  --orb-b:rgba(31,95,191,.05);
-  --pick-edge:#F1EFE8;
+  --orb-a:rgba(78,107,8,.05);
+  --orb-b:rgba(31,95,191,.03);
+  --pick-edge:#FAFAF9;
   --on-up:#FFFFFF;
-  --rank-ink:rgba(23,25,28,.05);
-  --scroll-thumb:#D9D7D0;
-  --up:#0E7A4F;   --up-soft:rgba(14,122,79,.10);
-  --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-  --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-  --blue:#1F5FBF; --violet:#6D4DC7;
+  --rank-ink:rgba(17,18,20,.045);
+  --scroll-thumb:#DEDEDA;
+  --up:#0B6E46;   --up-soft:rgba(11,110,70,.08);
+  --down:#B3261E; --down-soft:rgba(179,38,30,.08);
+  --gold:#7A5F06; --gold-soft:rgba(122,95,6,.10);
+  --blue:#1B54AC; --violet:#5F41B8;
 
   color-scheme:light;
 }
 
-/* System preference, when the reader has expressed no choice of their own.
-   Scoped with :not([data-theme]) so an explicit pick always wins. */
-@media (prefers-color-scheme: light){
-  :root:not([data-theme]){
-    --bg:#FBFAF7; --bg2:#F5F4F0; --surface:#FFFFFF; --surface2:#F7F6F2;
-    --surface3:#EFEEE9; --overlay:#FFFFFF;
-    --line:rgba(23,25,28,.10); --line2:rgba(23,25,28,.18);
-    --text:#17191C; --muted:#535A63; --dim:#656C74;
-    --lime:#5C7A0B; --lime-soft:rgba(92,122,11,.10); --lime-line:rgba(92,122,11,.30);
-    --orb-a:rgba(194,240,74,.16); --orb-b:rgba(31,95,191,.05);
-    --pick-edge:#F1EFE8; --rank-ink:rgba(23,25,28,.05); --scroll-thumb:#D9D7D0;
-    --on-up:#FFFFFF;
-    --up:#0E7A4F; --up-soft:rgba(14,122,79,.10);
-    --down:#C0392B; --down-soft:rgba(192,57,43,.10);
-    --gold:#8A6D08; --gold-soft:rgba(138,109,8,.12);
-    --blue:#1F5FBF; --violet:#6D4DC7;
-    color-scheme:light;
-  }
-}
+/* No prefers-color-scheme block. Light is the default for every reader
+   without an explicit choice, so a media query repeating the same palette
+   would only be a third place for it to drift out of step. Dark remains a
+   deliberate pick via the toggle, which stamps data-theme="dark". */
 
 /* ── THE MANDATE'S ORDER BOOK ─────────────────────────────────────────────
    Every colour and size below is a token, so this block follows the theme
@@ -4456,6 +4464,90 @@ TEMPLATE = r"""<!DOCTYPE html>
   .mrr{ margin-left:0 }
   .mladder{ flex-direction:column; align-items:flex-start }
   .mleg{ width:100% }
+}
+
+/* ── MAGAZINE LAYER ───────────────────────────────────────────────────────
+   The palette above made the page white. This makes it read like a magazine
+   rather than a dashboard that happens to be light.
+
+   Three moves, in order of how much work they do:
+
+   1. SPACE. A dark UI holds together on contrast; a white page holds together
+      on whitespace. Sections breathe roughly 40% harder, and the measure is
+      capped so running text never crosses ~68 characters.
+
+   2. RULES, NOT BOXES. On dark, a card reads as a card because it is lighter
+      than its ground. On white there is nowhere lighter to go, so the same
+      card needs a border on every side and the page turns into a grid of
+      rectangles. Cards lose their frames and keep a single hairline above —
+      elevation reads through the edge, the way it does in print.
+
+   3. TYPE CARRIES THE HIERARCHY. Headings get tighter tracking and more size
+      contrast against the body, so a reader can find the shape of the page
+      without a single box being drawn.
+
+   Scoped to the light themes only. The dark theme was designed around
+   contrast and shadow and is left exactly as it was. */
+:root:not([data-theme]) .sec,
+:root[data-theme="light"] .sec{
+  padding-block:clamp(52px,7vw,104px);
+}
+:root:not([data-theme]) .shead,
+:root[data-theme="light"] .shead{
+  margin-bottom:clamp(26px,3.4vw,46px);
+}
+:root:not([data-theme]) .stitle,
+:root[data-theme="light"] .stitle{
+  letter-spacing:-.032em;
+  line-height:1.02;
+}
+:root:not([data-theme]) .sdesc,
+:root[data-theme="light"] .sdesc{
+  max-width:64ch;
+  color:var(--muted);
+}
+/* Cards keep one hairline and lose the frame. */
+:root:not([data-theme]) .card,
+:root[data-theme="light"] .card{
+  background:transparent;
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  box-shadow:none;
+  padding-block:clamp(18px,2vw,26px);
+}
+:root:not([data-theme]) .card:hover,
+:root[data-theme="light"] .card:hover{
+  background:var(--bg2);
+  box-shadow:none;
+}
+/* Tables lose their outer box for the same reason and keep their row rules. */
+:root:not([data-theme]) table,
+:root[data-theme="light"] table{
+  border:0;
+}
+:root:not([data-theme]) th,
+:root[data-theme="light"] th{
+  border-bottom:1px solid var(--line2);
+  color:var(--dim);
+  font-weight:600;
+}
+:root:not([data-theme]) td,
+:root[data-theme="light"] td{
+  border-bottom:1px solid var(--line);
+}
+/* The eyebrow becomes a rule-and-label instead of a chip. */
+:root:not([data-theme]) .snum,
+:root[data-theme="light"] .snum{
+  color:var(--dim);
+  letter-spacing:.16em;
+}
+/* Numerals line up in columns on a page that is mostly numbers. */
+:root:not([data-theme]) table,
+:root:not([data-theme]) .num,
+:root[data-theme="light"] table,
+:root[data-theme="light"] .num{
+  font-variant-numeric:tabular-nums;
 }
 
 /* Surfaces and ink cross-fade on a theme switch; nothing else does, or the
