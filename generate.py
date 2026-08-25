@@ -915,7 +915,7 @@ def generate() -> None:
     # site reads the same /api and docs/*.json the old template did, so there
     # is nothing for Jinja to do to it. Shipping them from static/ means what
     # reaches production is byte-identical to what CI linted.
-    for _v2 in ("v2.html", "v2.js"):
+    for _v2 in ("v2.html", "v2.js", "v2-core.js", "life.html", "life.js"):
         _src = pathlib.Path(__file__).parent / "static" / _v2
         if _src.exists():
             (out_dir / _v2).write_text(_src.read_text(encoding="utf-8"), encoding="utf-8")

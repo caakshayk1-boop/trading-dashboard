@@ -30,6 +30,9 @@
 # The client-rendered site: shell + renderer.
 !docs/v2.html
 !docs/v2.js
+!docs/v2-core.js
+!docs/life.html
+!docs/life.js
 # The Nifty 500 research screen #stocks fetches lazily. Same by-name rule: omit
 # it and the section falls back to its server-rendered top 25 forever, with the
 # only symptom a console warning nobody reads.

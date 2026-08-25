@@ -1,228 +1,18 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   v2.js — the client-rendered Daily Signal.
+   v2.js — the seventeen sections of news.askakshay.com.
 
-   WHY THIS IS NOT A JINJA TEMPLATE
-   --------------------------------
-   The server-rendered page is a 6,841-line template string inside
-   newspaper.py that emits a 500KB document once a day. Everything genuinely
-   live on it — signals, stats, positions — was already fetched from /api at
-   page load anyway, so the template's job had shrunk to markup.
-
-   This file is that markup, built from the same sources at runtime:
-
-     /api/*          live   markets, signals, stats, world, news, sip, tracker, health
-     /today.json     daily  picks, engine log, IPO rows, open-setup context, desk
-     /mandate.json   daily  the Rs 1 crore order book
-     /data-health.json      per-dataset freshness
-     /alerts.json           the signal log
-     /screen.json    lazy   750-company research screen (1.2MB — only on demand)
-     /jobs.json      lazy   the careers board (713KB — only on demand)
-
-   The daily build is untouched. It still writes every file above; this page
-   just stops re-rendering them into HTML.
-
-   RULES THIS FILE KEEPS
-   ---------------------
-   1. A failed fetch renders as "unavailable", never as zero. A section that
-      quietly shows 0 when its source is down is lying.
-   2. Detail hides behind a +. Highlight sections open by default.
-   3. Every section carries at least two independent filters.
-   4. Nothing is dropped silently — counts always say "n of m".
+   The machinery is in v2-core.js, which life.js shares. This file is only
+   the declarations: what each section is called, which sources it reads,
+   which filters it offers, and how it draws a row.
    ═══════════════════════════════════════════════════════════════════════ */
 (function () {
 "use strict";
-
-var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
-var DATA = {};       // source -> parsed payload
-var FAILED = {};     // source -> error string
-
-// ── tiny DOM helpers ──────────────────────────────────────────────────
-function el(t, c, txt) { var e = document.createElement(t); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; }
-function num(v) { var x = Number(v); return isFinite(x) ? x : null; }
-function fx(v, d) { var x = num(v); return x == null ? "—" : x.toFixed(d == null ? 2 : d); }
-function sgn(v, d, suf) { var x = num(v); return x == null ? "—" : (x > 0 ? "+" : "") + x.toFixed(d == null ? 2 : d) + (suf || ""); }
-function cls(v) { var x = num(v); return x == null ? "" : (x > 0 ? "up" : (x < 0 ? "down" : "")); }
-function money(v, cur) { var x = num(v); return x == null ? "—" : (cur || "₹") + x.toLocaleString("en-IN"); }
-function txt(v) { return String(v == null ? "" : v); }
-function clip(s, n) { s = txt(s); return s.length > n ? s.slice(0, n) + "…" : s; }
-function when(iso) {
-  try { var m = Math.round((Date.now() - new Date(iso)) / 60000);
-    if (m < 1) return "now"; if (m < 60) return m + "m ago";
-    if (m < 1440) return Math.round(m / 60) + "h ago"; return Math.round(m / 1440) + "d ago";
-  } catch (e) { return ""; }
-}
-
-function get(path) {
-  return fetch(path, { cache: "no-store" })
-    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then(function (j) { if (j && j.ok === false) throw new Error(j.error || "not ok"); return j; });
-}
-
-// ── expandable row ────────────────────────────────────────────────────
-function makeRow(o) {
-  var row = el("div", "row" + (o.open ? " open" : ""));
-  var line = el("button", "rowline"); line.type = "button";
-  line.setAttribute("aria-expanded", o.open ? "true" : "false");
-  line.appendChild(el("span", "plus", "+"));
-  var main = el("div", "rmain"); o.main(main); line.appendChild(main);
-  var nums = el("div", "rnums"); if (o.nums) o.nums(nums); line.appendChild(nums);
-  row.appendChild(line);
-
-  var drawer = el("div", "drawer"), inner = el("div"), pad = el("div", "dpad");
-  var built = false;
-  function build() { if (built) return; built = true; o.detail(pad); bars(pad); }
-  inner.appendChild(pad); drawer.appendChild(inner); row.appendChild(drawer);
-  if (o.open) build();
-  line.addEventListener("click", function () {
-    var open = row.classList.toggle("open");
-    line.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) build();
-  });
-  return row;
-}
-
-function bars(scope) {
-  requestAnimationFrame(function () {
-    Array.prototype.forEach.call(scope.querySelectorAll("[data-w]"), function (b) {
-      b.style.width = b.getAttribute("data-w");
-    });
-  });
-}
-
-function cells(pairs) {
-  var g = el("div", "dgrid");
-  pairs.forEach(function (kv) {
-    var c = el("div", "dcell");
-    c.appendChild(el("div", "k", kv[0]));
-    c.appendChild(el("div", "v", txt(kv[1]) || "—"));
-    g.appendChild(c);
-  });
-  return g;
-}
-
-function keyGrid(items) {
-  var g = el("div", "keyrow");
-  items.forEach(function (kv) {
-    var c = el("div", "key");
-    c.appendChild(el("div", "k", kv[0]));
-    var v = el("div", "v " + (kv[3] || "")); v.textContent = kv[1];
-    c.appendChild(v);
-    if (kv[2]) c.appendChild(el("div", "s", kv[2]));
-    g.appendChild(c);
-  });
-  return g;
-}
-
-function barRows(items, plain) {
-  var host = el("div");
-  var max = Math.max.apply(null, items.map(function (i) { return Math.abs(num(i.value) || 0); }).concat([1e-6]));
-  items.forEach(function (it) {
-    var r = el("div", "hb");
-    r.appendChild(el("span", "n", it.name));
-    var t = el("span", "t"), f = el("i");
-    f.setAttribute("data-w", (Math.abs(num(it.value) || 0) / max * 100).toFixed(1) + "%");
-    f.style.background = it.color || ((num(it.value) || 0) >= 0 ? "var(--mint)" : "var(--rose)");
-    t.appendChild(f); r.appendChild(t);
-    r.appendChild(el("span", "val " + (plain ? "" : cls(it.value)), it.display));
-    host.appendChild(r);
-  });
-  return host;
-}
-
-// Cumulative-R curve. Area fill, dashed breakeven, emphasised endpoint.
-function curve(vals) {
-  var W = 560, H = 170, P = 26, L = P + 12;
-  var lo = Math.min.apply(null, vals.concat([0])), hi = Math.max.apply(null, vals.concat([0]));
-  var pad = (hi - lo) * 0.12 || 1; lo -= pad; hi += pad;
-  var x = function (i) { return L + i * (W - L - P) / Math.max(1, vals.length - 1); };
-  var y = function (v) { return H - P - (v - lo) / (hi - lo) * (H - P * 2); };
-  var d = ""; vals.forEach(function (v, i) { d += (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1) + " "; });
-  var a = d + "L" + x(vals.length - 1).toFixed(1) + " " + y(lo).toFixed(1) + " L" + x(0).toFixed(1) + " " + y(lo).toFixed(1) + " Z";
-  var last = vals[vals.length - 1], col = last < 0 ? "var(--rose)" : "var(--mint)";
-  var id = "g" + Math.random().toString(36).slice(2, 8);
-  return '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Cumulative R over ' +
-    vals.length + " closed trades, ending at " + fx(last) + 'R">' +
-    '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="' + col + '" stop-opacity=".26"/>' +
-    '<stop offset="1" stop-color="' + col + '" stop-opacity="0"/></linearGradient></defs>' +
-    '<line class="gridline" x1="' + L + '" y1="' + y(0).toFixed(1) + '" x2="' + (W - P) + '" y2="' + y(0).toFixed(1) + '" stroke-dasharray="3 4"/>' +
-    '<path d="' + a + '" fill="url(#' + id + ')"/>' +
-    '<path d="' + d + '" fill="none" stroke="' + col + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
-    '<circle cx="' + x(vals.length - 1).toFixed(1) + '" cy="' + y(last).toFixed(1) + '" r="9" fill="' + col + '" opacity=".2"/>' +
-    '<circle cx="' + x(vals.length - 1).toFixed(1) + '" cy="' + y(last).toFixed(1) + '" r="4.5" fill="' + col + '"/>' +
-    '<text class="axis" x="0" y="' + (y(0) + 3.5).toFixed(1) + '">0R</text>' +
-    '<text class="axis" x="' + (W - P) + '" y="' + (y(last) - 13).toFixed(1) + '" text-anchor="end" fill="' + col + '">' + sgn(last, 2) + 'R</text>' +
-    "</svg>";
-}
-
-// ── section scaffolding ───────────────────────────────────────────────
-var SECS = [];
-function section(o) { SECS.push(o); }
-
-function build(o, i) {
-  var sec = el("section", "sec"); sec.id = o.id;
-  var head = el("div", "sechead"), hw = el("div", "wrap");
-  hw.appendChild(el("span", "secnum", String(i + 1).padStart(2, "0")));
-  hw.appendChild(el("h2", "sectitle", o.title));
-  var cnt = el("span", "seccount", ""); cnt.id = o.id + "-count"; hw.appendChild(cnt);
-  if (o.highlight) hw.appendChild(el("span", "hl", "Highlight"));
-
-  var fw = el("div", "filters");
-  (o.filters || []).forEach(function (g) {
-    var grp = el("div", "fgroup");
-    grp.appendChild(el("span", "flabel", g.label));
-    g.options.forEach(function (opt, n) {
-      var b = el("button", "chip" + (g.accent ? " acc" : ""), opt.label);
-      b.type = "button"; b.setAttribute("aria-pressed", n === 0 ? "true" : "false");
-      b.addEventListener("click", function () {
-        Array.prototype.forEach.call(grp.querySelectorAll(".chip"), function (c) { c.setAttribute("aria-pressed", "false"); });
-        b.setAttribute("aria-pressed", "true");
-        g.value = opt.value;
-        if (g.onPick) g.onPick(opt.value, o);
-        render(o);
-      });
-      grp.appendChild(b);
-    });
-    g.value = g.options[0].value;
-    fw.appendChild(grp);
-  });
-  hw.appendChild(fw);
-  head.appendChild(hw); sec.appendChild(head);
-
-  var body = el("div", "secbody"), bw = el("div", "wrap");
-  if (o.lede) bw.appendChild(el("p", "lede", o.lede));
-  var host = el("div"); host.id = o.id + "-host";
-  host.appendChild(el("p", "loading", "Loading…"));
-  bw.appendChild(host); body.appendChild(bw); sec.appendChild(body);
-  document.getElementById("main").appendChild(sec);
-
-  var a = el("a", null, o.nav); a.href = "#" + o.id;
-  document.getElementById("jump").appendChild(a);
-  o._host = host; o._count = cnt;
-}
-
-function setCount(o, s) { if (o._count) o._count.textContent = s || ""; }
-
-function render(o) {
-  var host = o._host; if (!host) return;
-  var need = o.needs || [];
-  var missing = need.filter(function (k) { return FAILED[k]; });
-  if (missing.length) {
-    host.innerHTML = "";
-    host.appendChild(el("p", "empty",
-      "This section reads " + missing.join(" and ") + ", which did not load (" +
-      FAILED[missing[0]] + "). Showing nothing rather than zero — the difference matters."));
-    setCount(o, "unavailable");
-    return;
-  }
-  var pending = need.filter(function (k) { return DATA[k] === undefined; });
-  if (pending.length) return;   // still loading; the loader will re-render
-  host.innerHTML = "";
-  try { o.render(host); } catch (e) {
-    host.appendChild(el("p", "empty", "This section failed to render: " + e.message));
-  }
-  bars(host);
-}
+var SD = window.SD;
+var el = SD.el, num = SD.num, fx = SD.fx, sgn = SD.sgn, cls = SD.cls, money = SD.money;
+var txt = SD.txt, clip = SD.clip, when = SD.when, cells = SD.cells, keyGrid = SD.keyGrid;
+var barRows = SD.barRows, curve = SD.curve, makeRow = SD.makeRow, setCount = SD.setCount;
+var section = SD.section, load = SD.load;
+var DATA = SD.DATA, FAILED = SD.FAILED;
 
 // ══════════════════════════════════════════════════════════════════════
 //  THE SECTIONS — the same seventeen, in the same order
@@ -1113,34 +903,11 @@ section({
   }
 });
 
-// ══════════════════════════════════════════════════════════════════════
-//  LOAD + BOOT
-// ══════════════════════════════════════════════════════════════════════
-function load(key, path) {
-  return get(path).then(function (j) { DATA[key] = j; }, function (e) { FAILED[key] = e.message; })
-    .then(function () { SECS.forEach(render); masthead(); });
-}
-
-SECS.forEach(build);
-
-// Live endpoints first — they are small and carry the headline numbers.
-// The big daily artefacts follow. screen.json and jobs.json are not here on
-// purpose: 1.2MB and 713KB have no business blocking a first paint.
-[["markets", "/api/markets"], ["stats", "/api/stats"], ["health", "/api/health"],
- ["world", "/api/world"], ["news", "/api/news"], ["sip", "/api/sip"],
- ["tracker", "/api/tracker"], ["today", "/today.json"], ["mandate", "/mandate.json"],
- ["signals", "/api/signals?limit=300"],
- ["dhealth", "/data-health.json"], ["alerts", "/alerts.json"]
-].forEach(function (p) { load(p[0], p[1]); });
-
-// Masthead numbers, filled in as their sources land.
 function masthead() {
-  var h = (DATA.stats || {}).headline || {};
-  var M = DATA.mandate || {}, st = M.state || {};
+  var h = (SD.DATA.stats || {}).headline || {};
+  var M = SD.DATA.mandate || {}, st = M.state || {};
   var kr = document.getElementById("keyrow");
   kr.innerHTML = "";
-  // keyGrid returns its own .keyrow wrapper; the masthead already has one, so
-  // the children are moved across rather than nesting a grid inside a grid.
   var grid = keyGrid([
     ["Capital", M.capital ? money(M.capital) : "—", "mandate"],
     ["Deployed", st.deployed_pct == null ? "—" : fx(st.deployed_pct, 2) + "%",
@@ -1151,36 +918,22 @@ function masthead() {
   ]);
   while (grid.firstChild) kr.appendChild(grid.firstChild);
 
-  var H = DATA.health || {};
+  var H = SD.DATA.health || {};
   if (H.signals) {
     document.getElementById("stamp").textContent =
       "Live ledger · " + H.signals + " signals · " + (H.latest_signal_date || "");
   }
-  var T = (DATA.stats || {}).totals;
+  var T = (SD.DATA.stats || {}).totals;
   document.getElementById("footstamp").textContent = T
     ? "Rebuilt daily. " + T.closed + " closed of " + T.all + " scored signals, first logged " + T.first_date + "."
     : "";
 }
 
-// Reveal + nav spy. Both are enhancements: content is visible without them.
-if ("IntersectionObserver" in window) {
-  if (!RM) {
-    var rv = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); rv.unobserve(e.target); } });
-    }, { rootMargin: "0px 0px -8% 0px" });
-    Array.prototype.forEach.call(document.querySelectorAll(".secbody, .mast h1, .mast p, .keyrow"), function (n) {
-      n.classList.add("rv"); rv.observe(n);
-    });
-  }
-  var links = {};
-  Array.prototype.forEach.call(document.querySelectorAll("#jump a"), function (a) { links[a.getAttribute("href").slice(1)] = a; });
-  var spy = new IntersectionObserver(function (es) {
-    es.forEach(function (e) {
-      var a = links[e.target.id]; if (!a || !e.isIntersecting) return;
-      Array.prototype.forEach.call(document.querySelectorAll("#jump a"), function (x) { x.removeAttribute("aria-current"); });
-      a.setAttribute("aria-current", "true");
-    });
-  }, { rootMargin: "-20% 0px -70% 0px" });
-  Array.prototype.forEach.call(document.querySelectorAll(".sec"), function (s) { spy.observe(s); });
-}
+SD.boot([
+  ["markets", "/api/markets"], ["stats", "/api/stats"], ["health", "/api/health"],
+  ["world", "/api/world"], ["news", "/api/news"], ["sip", "/api/sip"],
+  ["tracker", "/api/tracker"], ["today", "/today.json"], ["mandate", "/mandate.json"],
+  ["signals", "/api/signals?limit=300"], ["dhealth", "/data-health.json"],
+  ["alerts", "/alerts.json"]
+], masthead);
 })();

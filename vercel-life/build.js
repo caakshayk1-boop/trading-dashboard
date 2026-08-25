@@ -30,7 +30,12 @@ mkdirSync(publicDir, { recursive: true });
 if (existsSync(source)) {
   // desk.html becomes THIS site's index. The file keeps its own name too, so a
   // /desk link from news.askakshay.com still resolves after the split.
-  copyFileSync(source, target);
+  // The new client-rendered Life page is the index. The old server-rendered
+  // desk.html is kept under its own name so existing /desk links resolve —
+  // one source of truth for the data, two shells while the switch settles.
+  const lifeShell = join(here, "..", "docs", "life.html");
+  if (existsSync(lifeShell)) copyFileSync(lifeShell, target);
+  else copyFileSync(source, target);
   copyFileSync(source, join(publicDir, "desk.html"));
 
   // Same by-name allow-list discipline as vercel-news/build.js. A docs/ file
@@ -39,7 +44,7 @@ if (existsSync(source)) {
   // still 404'd for days. If a file is missing in production and the build log
   // says it was written, this list is why.
   for (const f of ["app.js", "icon.svg", "og.png", "manifest.webmanifest",
-                   "robots.txt", "today.json", "edition.json", "jobs.json", "mandate.json"]) {
+                   "robots.txt", "today.json", "edition.json", "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js"]) {
     const src = join(here, "..", "docs", f);
     if (existsSync(src)) copyFileSync(src, join(publicDir, f));
   }
