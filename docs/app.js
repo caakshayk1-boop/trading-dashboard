@@ -6538,6 +6538,7 @@ var TV_ALIASES = (function () {
   // hand-written in fourteen places. A label typed next to the markup is a
   // label that drifts when the heading above it is reworded; this one cannot,
   // and a table added later is covered without anyone remembering to.
+  window.__renameTables = function(){ nameTables(document); };
   function nameTables(root){
     [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
       if (!t.getAttribute('aria-label') && !t.caption) {
@@ -6554,6 +6555,14 @@ var TV_ALIASES = (function () {
             p = p.previousElementSibling;
           }
           node = node.parentElement;
+        }
+        // Fallback to the SECTION's own heading. Two live-rendered tables — the
+        // SIP projection and the paper wallet's ledger — sit as the first thing
+        // in their container with no heading anywhere on the walk path, so the
+        // sibling climb above found nothing and left them unnamed. The section
+        // heading is always there and is always true of the table inside it.
+        if (!head && sec && sec.querySelector) {
+          head = sec.querySelector('.stitle, h2, h3');
         }
         var label = head && head.textContent ? head.textContent.replace(/\s+/g, ' ').trim() : '';
         if (label) t.setAttribute('aria-label', label.slice(0, 90));
