@@ -184,7 +184,12 @@ export default async function handler(req, res) {
       seg("commodities", "COMMODITIES", "🛢", pick(COMMODITIES)),
       seg("fx", "FX", "💱", pick(FX)),
       seg("crypto", "CRYPTO", "₿", pick(CRYPTO)),
-      seg("multibagger", "MULTIBAGGER IDEAS", "💎", mbItems),
+      // Labelled WEEKLY, because it is. The five names come from the Saturday
+      // scan's newest row and do not change until the next Saturday — the
+      // prices beside them are live, which makes a stalled-looking list of
+      // names look like a bug rather than the design. Every other weekly
+      // artefact on this site prints its vintage; this one did not.
+      seg("multibagger", "MULTIBAGGER IDEAS · WEEKLY", "💎", mbItems),
     ].filter((s) => s.items.length);
 
     // "Markets advancing" in the hero counts headline instruments only —

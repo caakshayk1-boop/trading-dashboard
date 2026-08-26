@@ -1381,7 +1381,14 @@ var TV_ALIASES = (function () {
       var hk = el('heroOpenK'); if (hk) hk.textContent = openLbl;
       bar('live', 'LIVE LEDGER · ' + logged + ' signals' +
                   ' · latest ' + stamp +
-                  ' · ' + tracked + ' tracked · ' + otxt +
+                  // "0 tracked" is correct and reads as broken. A tracked
+                  // position is one actually HELD; it is zero because nothing
+                  // has ever been confirmed as held — this ledger cannot place
+                  // a trade. Saying "held" and pairing it with the setup count
+                  // makes the zero self-explaining instead of alarming.
+                  ' · ' + tracked + ' held' +
+                  (tracked === 0 ? ' (nothing bought — this ledger cannot trade)' : '') +
+                  ' · ' + otxt +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
       // Wiring the page is NOT part of deciding whether the ledger is up. The
       // health check has already answered that. Left unguarded, any DOM error
