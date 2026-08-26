@@ -4373,9 +4373,23 @@ var TV_ALIASES = (function () {
     // the linter catches and the browser would not until the code ran.
     function _pct(n){ return (Math.round(n * 100) / 100).toFixed(2); }
 
+    // Paints the TODAY board only. It used to paint over #sectorMoversLive when
+    // that id belonged to the weekly grid, so a one-week read across all 750
+    // screened names was replaced by a same-day read across whatever the ticker
+    // rail carries — ten sectors, a handful of names each. Two questions, one
+    // box, and the thorough one always lost. The weekly grid is
+    // #sectorMoversWeek now and nothing here touches it.
     function paintSectorMovers(rows){
       var host = document.getElementById('sectorMoversLive');
-      if (!host || !Object.keys(SECTOR_MAP).length) return;
+      if (!host) return;
+      function giveUp(msg){
+        // Say why rather than leaving "Waiting on the live ticker…" forever.
+        // A board stuck on a loading message is indistinguishable from a hang.
+        host.innerHTML = '<div class="empty">' + msg + ' The week\u2019s board below is unaffected.</div>';
+        var t = document.getElementById('moversAsOf');
+        if (t){ t.textContent = 'NOT AVAILABLE'; t.className = 'dh dh-STALE'; }
+      }
+      if (!Object.keys(SECTOR_MAP).length) return giveUp('No sector map in this build.');
       var by = {};
       rows.forEach(function(r){
         var sec = SECTOR_MAP[r.symbol];
@@ -4383,7 +4397,7 @@ var TV_ALIASES = (function () {
         (by[sec] = by[sec] || []).push(r);
       });
       var names = Object.keys(by).filter(function(s){ return by[s].length >= 2; }).sort();
-      if (!names.length) return;
+      if (!names.length) return giveUp('No sector on the live rail has two priced names yet.');
 
       host.innerHTML = names.map(function(sec){
         var list = by[sec].slice().sort(function(a, b){ return b.change_pct - a.change_pct; });

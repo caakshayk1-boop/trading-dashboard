@@ -8450,9 +8450,30 @@ a.mprov{opacity:.78}
 
   {% set movers = market_intel.get('sector_movers') or [] %}
   {% if movers %}
+  {# TWO BOARDS, NOT ONE.
+     The live board used to REPLACE this grid — same element id, painted over
+     as soon as /api/ticker answered. That traded a weekly read across all 750
+     screened names for a same-day read across whatever the ticker rail happens
+     to carry, which is ten sectors and a handful of names each. Two different
+     questions were sharing one box and the more thorough one always lost.
+     They are separate elements now. Today first, because today is the one you
+     can act on; the week underneath, because it is the one that tells you
+     whether today means anything. #}
   <div class="subhead">
     <span class="subeyebrow">Market state</span>
-    <h3>Movers inside each sector<span id="moversAsOf" class="dh dh-STALE">1-WEEK SCREEN</span></h3>
+    <h3>Moving today, by sector<span id="moversAsOf" class="dh dh-STALE">WAITING ON LIVE</span></h3>
+    <p class="subdesc">Today&rsquo;s move, grouped by sector. Drawn from the live ticker, so it
+      covers the names on the rail rather than the full screen &mdash; narrow but current.
+      The week&rsquo;s version, across all {{ stock_screen.count or '750' }} screened names,
+      sits below it.</p>
+  </div>
+  <div class="fnd-grid rv" id="sectorMoversLive">
+    <div class="empty">Waiting on the live ticker&hellip;</div>
+  </div>
+
+  <div class="subhead" style="margin-top:clamp(26px,3vw,40px)">
+    <span class="subeyebrow">Market state</span>
+    <h3>Moving this week, by sector<span class="dh dh-STALE">1-WEEK SCREEN</span></h3>
     <p class="subdesc">The five best and five worst names in each sector over <strong>one week</strong> — not today. Drawn from the stock screen's own rows, so they carry the screen's build date, not the 6&nbsp;AM heat snapshot's. Use it to see whether a hot sector is broad or is one name carrying it.</p>
   </div>
   <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
@@ -8462,11 +8483,7 @@ a.mprov{opacity:.78}
     ({{ stock_screen.built_on }}){% endif %}, not the 6 AM snapshot's.
     The median tells you whether a sector moved or a couple of names carried it.
   </p>
-  {# The live version replaces this grid once /api/ticker answers. The weekly
-     screen stays as the server-rendered floor: with JS off, or on a static host
-     with no API, a one-week drill-down beats an empty box — and the badge says
-     1-WEEK SCREEN until the live path overwrites it. #}
-  <div class="fnd-grid rv" id="sectorMoversLive">
+  <div class="fnd-grid rv" id="sectorMoversWeek">
     {% for m in movers %}
     <details class="card fnd sec-movers">
       <summary>
