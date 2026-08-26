@@ -8894,6 +8894,70 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
   .why-body{border:0;padding:0}
 }
 
+
+/* ── ONE DASHBOARD, NOT TWO BOXES ────────────────────────────────────────
+   The day blocks and the index tiles were two boxes stacked directly on top
+   of each other answering the same question — what did the market do today —
+   each with its own heading, freshness badge and explanation. They are one
+   surface now: claim blocks, then the board, then what the scans found. */
+.dash-tiles,.dash-find{
+  border-top:1px solid var(--line);
+  padding-top:14px;margin-top:16px;
+}
+.dash-tiles-h{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;flex-wrap:wrap;margin-bottom:12px;
+}
+.dash-tiles-t{
+  font:600 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);
+}
+.dash-more{
+  font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--lime);text-decoration:none;
+}
+.dash-more:hover{text-decoration:underline}
+
+/* Key findings: the count first, because the count is the finding. */
+.dfind-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;
+  overflow:hidden;
+}
+.dfind{background:var(--surface);padding:13px 14px;display:flex;
+  flex-direction:column;gap:4px;min-width:0}
+.dfind-n{font:700 24px/1 var(--disp);letter-spacing:-.03em;color:var(--text);
+  font-variant-numeric:tabular-nums}
+.dfind-t{font:600 13px/1.35 var(--sans);color:var(--text)}
+.dfind-r{font:400 11px/1.45 var(--mono);color:var(--dim)}
+
+
+/* ── IPO CARDS: SUMMARY, THEN EVERYTHING ─────────────────────────────────
+   Each card carries band, dates, lot size, subscription by category, both
+   sides of the argument, the score breakdown and the grey-market caveat.
+   Eight open at once is the whole section. The summary is the line a reader
+   scans — symbol, company, subscription, verdict — and every one of those
+   details is one click away, not removed. */
+details.ipo-card{padding:0}
+.ipo-sum{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  padding:13px 14px;min-height:44px;
+}
+.ipo-sum::-webkit-details-marker{display:none}
+.ipo-sum::before{
+  content:'+';font:400 15px/1 var(--mono);color:var(--dim);flex:none;
+  width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line2);align-self:center;
+}
+details.ipo-card[open] .ipo-sum::before{content:'\2212'}
+.ipo-sum .sym{font:700 14px/1.2 var(--mono);color:var(--text)}
+.ipo-sum-co{font:400 12px/1.4 var(--sans);color:var(--muted);
+  flex:1 1 140px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ipo-sum-x{font:700 13px/1 var(--mono);color:var(--text);font-variant-numeric:tabular-nums}
+details.ipo-card > *:not(summary){padding-inline:14px}
+details.ipo-card > *:last-child{padding-bottom:14px}
+
 </style>
 </head>
 
@@ -9675,16 +9739,45 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
   </div>
   {% endif %}
 
-  <div class="subhead">
-    <span class="subeyebrow">Market state</span>
-    <h3>India at a glance<span id="indiaAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></h3>
-    <p class="subdesc">The headline indices, the currency, the two commodities that move
-      Indian earnings most, and the volatility index &mdash; standing still, rather than
-      scrolling past. <b>VIX</b> is the market&rsquo;s own estimate of how much it expects to
-      move: under 13 is complacent, over 20 is fearful.</p>
-  </div>
+  {# The index tiles live INSIDE the dashboard now. They were a second box
+     directly under the first, repeating the same question — what did the
+     market do today — with a second heading, a second freshness badge and a
+     second explanation. One box, one heading, one badge. #}
+  <div class="dash-tiles">
+    <div class="dash-tiles-h">
+      <span class="dash-tiles-t">The board</span>
+      <span id="indiaAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span>
+    </div>
   <div class="ib-grid rv" id="indiaBoard">
     <div class="empty">Loading the board&hellip;</div>
+  </div>
+
+  {# KEY FINDINGS FOR THE DAY — the deterministic scans' own headline, inside
+     the dashboard rather than nine sections down. Three at most: this is the
+     summary, and a summary that lists everything is the thing it was meant to
+     replace. The full set, with every name and the rule behind it, is in
+     Findings. #}
+  {# `hidden`, not `findings.findings` — the context key is findings.hidden and
+     the first version invented a key that does not exist. Verified against
+     insights.hidden_findings(): six entries, each with count / title / rule. #}
+  {% set _fs = (findings.get('hidden') or []) | selectattr('count') | list %}
+  {% if _fs %}
+  <div class="dash-find">
+    <div class="dash-tiles-h">
+      <span class="dash-tiles-t">What the scans found today</span>
+      <a class="dash-more" href="#findings">All {{ _fs|length }} &rarr;</a>
+    </div>
+    <div class="dfind-row">
+      {% for f in (_fs | sort(attribute='count', reverse=true))[:3] %}
+      <div class="dfind">
+        <span class="dfind-n num">{{ f.count }}</span>
+        <span class="dfind-t">{{ f.title }}</span>
+        <span class="dfind-r">{{ f.rule }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
   </div>
 
   {% set movers = market_intel.get('sector_movers') or [] %}
@@ -10489,7 +10582,8 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
     <table>
       <thead>
         <tr>
-          <th>Symbol</th><th class="r">Turnover</th><th class="r">RSI(14)<span class="th-sub">daily</span></th>
+          {# Period AND vintage. "RSI(14) daily" was right about the method and silent about the date, so a reader comparing 68.5 here against 58.4 on a live chart concludes the number is wrong. It is not wrong, it is FOUR DAYS OLD — this screen rebuilds weekly and its prices stop at the date below. A stale number without its date is indistinguishable from a broken one. #}
+          <th>Symbol</th><th class="r">Turnover{% if stock_screen.price_date %}<span class="th-sub">to {{ stock_screen.price_date[5:] }}</span>{% endif %}</th><th class="r">RSI(14)<span class="th-sub">daily{% if stock_screen.price_date %} · to {{ stock_screen.price_date[5:] }}{% endif %}</span></th>
           <th class="r">1M</th><th class="r">6M</th><th class="r">ROCE</th><th class="r">From 52w high</th>
         </tr>
       </thead>
@@ -10853,7 +10947,20 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
   <div class="ipo-grid rv">
     {% for r in rows %}
     {% set v = r.verdict %}
-    <div class="ipo-card ipo-{{ 'apply' if v.startswith('APPLY') else 'avoid' if v == 'AVOID' else 'watch' }}">
+    {# SUMMARY, THEN THE WHOLE CARD — same treatment as the fund screen, and
+       for the same reason. Each IPO card carries the band, dates, lot size,
+       subscription by category, both sides of the argument, the score
+       breakdown and the grey-market caveat. Eight of those open at once is
+       the section. Collapsed to the line a reader actually scans — symbol,
+       company, verdict, subscription — with every one of those details one
+       click down. Nothing removed. #}
+    <details class="ipo-card ipo-{{ 'apply' if v.startswith('APPLY') else 'avoid' if v == 'AVOID' else 'watch' }}">
+      <summary class="ipo-sum">
+        <strong class="sym">{{ r.symbol }}</strong>
+        <span class="ipo-sum-co">{{ r.company }}</span>
+        {% if r.subscription_x is not none %}<span class="ipo-sum-x num">{{ '%.1fx'|format(r.subscription_x) }}</span>{% endif %}
+        <span class="ipo-verdict">{{ v }}</span>
+      </summary>
       <div class="ipo-top">
         <div>
           <strong class="sym">{{ r.symbol }}</strong>
@@ -10959,7 +11066,7 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
       <p class="ipo-caveat"><b>Why it might be wrong:</b> {{ r.verdict_caveat }}</p>
       <p class="ipo-missing"><b>No public source:</b> {{ r.score.not_measured|join(' · ') }}
         {% if r.score.shown_not_scored %}<br><b>Shown but not scored:</b> {{ r.score.shown_not_scored|join(' · ') }}{% endif %}</p>
-    </div>
+    </details>
     {% endfor %}
   </div>
   {% endif %}
