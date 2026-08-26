@@ -2028,6 +2028,24 @@ def daughter_age(on: date | None = None) -> dict:
 # make the adopted ones worth believing.
 ENGINE_CHANGES = [
     {
+        "date": "2026-08-27",
+        "tag": "CADENCE",
+        "verdict": "logged",
+        "title": "Multibagger ideas refresh weekly, not daily",
+        "body": ("The five names on the multibagger ticker come from the newest row "
+                 "of the Saturday scan and hold until the next Saturday. The prices "
+                 "beside them are live and tick all week, which made a fixed list of "
+                 "names read as a stalled feed. The scan is running on schedule; the "
+                 "cadence was simply never stated anywhere a reader could see it."),
+        "evidence": [("Scan cron", "Saturday 09:30 IST", "daily_scan.yml", "weekly"),
+                     ("Names change", "once a week", "on the scan", "by design"),
+                     ("Prices change", "every refresh", "from the tape", "live")],
+        "note": ("The segment is labelled WEEKLY on the rail now, and the ticker query "
+                 "already drops the whole segment if the newest scan is more than 31 "
+                 "days old — so a scan that genuinely stops disappears rather than "
+                 "quietly serving month-old ideas as current."),
+    },
+    {
         "date": "2026-08-09",
         "tag": "SELECTION",
         "verdict": "adopted",
@@ -8654,6 +8672,74 @@ body,button,input,select,textarea{font-family:var(--sans)}
    unreadable regardless of which face it is set in. */
 .sdesc,.subdesc,.why-body,.md-how,.record-p{max-width:62ch}
 
+
+/* ── THE DAY, IN LABELLED BLOCKS ──────────────────────────────────────────
+   Semafor's Semaform, applied to a market summary: each block says what KIND
+   of claim it is before it says anything else. The labels are the same four
+   this page already uses everywhere, so the reader learns one key. */
+.dayblocks{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;
+  overflow:hidden;margin-bottom:clamp(20px,2.6vw,30px);
+}
+.dayblock{background:var(--surface);padding:16px 18px 18px;display:flex;
+  flex-direction:column;gap:10px;min-width:0}
+.dayblock.db-wide{grid-column:1/-1}
+.db-lab{
+  align-self:flex-start;
+  font:700 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 8px;border-radius:3px;color:#fff;
+}
+.db-fact{background:#1F6FB2}
+.db-model{background:#6A4CC4}
+.db-view{background:#8A5A18}
+.db-big{
+  font:700 clamp(24px,3vw,32px)/1.05 var(--disp);letter-spacing:-.03em;
+  color:var(--text);font-variant-numeric:tabular-nums;
+}
+.db-big .up{color:var(--up)} .db-big .dn{color:var(--down)}
+.db-vs{color:var(--dim);font-weight:400;margin:0 4px}
+.db-note{font:400 13px/1.6 var(--sans);color:var(--muted);margin:0;max-width:52ch}
+.db-note b{color:var(--text);font-weight:600}
+.db-arg{max-width:none}
+/* The split, as one picture rather than two numbers. */
+.db-bar{display:flex;height:8px;border-radius:2px;overflow:hidden;background:var(--surface3)}
+.db-up{background:var(--up)} .db-dn{background:var(--down)}
+
+/* ── SECTOR CUBES ─────────────────────────────────────────────────────────
+   A treemap-style block per sector, coloured in five steps by size of move.
+   Eleven bordered cards each holding one percentage is a list wearing a
+   grid's clothes — you read it name by name. This is read in one look: which
+   half of the market is green, and how hard.
+
+   Steps, not a gradient: five buckets a reader can name beat two hundred
+   shades nobody can tell apart. */
+.heatcubes{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(132px,100%),1fr));
+  gap:4px;
+}
+.hcube{
+  border-radius:4px;padding:13px 12px 12px;min-height:74px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:8px;
+  border:1px solid transparent;
+}
+.hc-n{font:600 12px/1.25 var(--sans);letter-spacing:-.01em}
+.hc-p{font:700 16px/1 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+/* Flat is deliberately grey, not pale green. A sector that did nothing should
+   not read as a small win. */
+.h-flat{background:var(--surface2);color:var(--muted);border-color:var(--line)}
+.h-up.s-1{background:color-mix(in srgb,var(--up) 14%,var(--surface));color:var(--text)}
+.h-up.s-2{background:color-mix(in srgb,var(--up) 42%,var(--surface));color:var(--text)}
+.h-up.s-3{background:var(--up);color:#fff}
+.h-dn.s-1{background:color-mix(in srgb,var(--down) 14%,var(--surface));color:var(--text)}
+.h-dn.s-2{background:color-mix(in srgb,var(--down) 42%,var(--surface));color:var(--text)}
+.h-dn.s-3{background:var(--down);color:#fff}
+@media(max-width:600px){
+  .heatcubes{grid-template-columns:repeat(auto-fit,minmax(min(104px,100%),1fr));gap:3px}
+  .hcube{min-height:62px;padding:10px 9px}
+  .hc-p{font-size:14px}
+}
+
 </style>
 </head>
 
@@ -9356,6 +9442,85 @@ body,button,input,select,textarea{font-family:var(--sans)}
      Filled by paintIndiaBoard() from /api/ticker — the response the rail is
      already fetching, so no extra request. The server-rendered numbers below are
      the 6 AM build and are replaced the moment the live path answers. #}
+  {# ── THE DAY ────────────────────────────────────────────────────────────
+     Semafor's one genuinely portable idea is the Semaform: an article broken
+     into labelled blocks by KIND of claim — the news, the view, room for
+     disagreement — so a reader knows what they are reading before they read
+     it. This page already sorts every figure into fact / model / result /
+     view; it just used those as small chips rather than as structure.
+
+     So the day summary is built that way. What the tape did (fact), how broad
+     it was (fact), where the money went (fact), what that reads as (model),
+     and — the block most financial pages will not print — the case against
+     that reading. #}
+  {% set _b = stock_screen.breadth or {} %}
+  {% if _b.get('counted') %}
+  <div class="dayblocks rv">
+    <div class="dayblock">
+      <span class="db-lab db-fact">The tape</span>
+      <div class="db-body">
+        <div class="db-big" id="dayNifty">&mdash;</div>
+        <p class="db-note">Nifty 50, live. The index is one number; the two blocks
+          beside it are what is underneath it.</p>
+      </div>
+    </div>
+
+    <div class="dayblock">
+      <span class="db-lab db-fact">The breadth</span>
+      <div class="db-body">
+        <div class="db-big">
+          <b class="up">{{ _b.advancing }}</b> up
+          <span class="db-vs">/</span>
+          <b class="dn">{{ _b.declining }}</b> down
+        </div>
+        {# The bar is the point: 321 and 412 are two numbers, the split is one
+           picture. Widths are the real proportions, not a fixed ratio. #}
+        <div class="db-bar" role="img"
+             aria-label="{{ _b.advancing }} advancing against {{ _b.declining }} declining of {{ _b.counted }}">
+          <span class="db-up" style="width:{{ (_b.advancing / _b.counted * 100)|round(1) }}%"></span>
+          <span class="db-dn" style="width:{{ (_b.declining / _b.counted * 100)|round(1) }}%"></span>
+        </div>
+        <p class="db-note">Of {{ _b.counted }} screened.
+          <b>{{ _b.above200 }}%</b> hold their 200-day average,
+          <b>{{ _b.above50 }}%</b> their 50-day.
+          <b>{{ _b.at_52w_high }}</b> sit at a 52-week high.</p>
+      </div>
+    </div>
+
+    <div class="dayblock">
+      <span class="db-lab db-model">What it reads as</span>
+      <div class="db-body">
+        <div class="db-big" id="dayRegime">&mdash;</div>
+        <p class="db-note">
+          {% if _b.advancing and _b.declining and _b.declining > _b.advancing %}
+          More names fell than rose, so an index that held up was carried by a few
+          of them rather than by the market.
+          {% elif _b.advancing and _b.declining %}
+          More names rose than fell, which is the version of a green index worth
+          having &mdash; the move is in the market, not in five stocks.
+          {% endif %}
+          The median name is {{ _b.median_1m }}% over a month against the index&rsquo;s
+          {{ _b.nifty_1m }}%.
+        </p>
+      </div>
+    </div>
+
+    <div class="dayblock db-wide">
+      <span class="db-lab db-view">Room for disagreement</span>
+      <div class="db-body">
+        <p class="db-note db-arg">
+          Breadth is a count, not a weight: {{ _b.counted }} names each count once, so a
+          day where the largest twenty carry the index and four hundred small names drift
+          reads here as weak and in your portfolio as fine. The 200-day figure is
+          slow by construction and will still look healthy some way into a real
+          decline. And none of this says anything about tomorrow &mdash; it is a
+          description of a day that has already happened.
+        </p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="subhead">
     <span class="subeyebrow">Market state</span>
     <h3>India at a glance<span id="indiaAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></h3>
@@ -9891,7 +10056,11 @@ body,button,input,select,textarea{font-family:var(--sans)}
          checkable, and an unfalsifiable finding is decoration. #}
       <p class="fnd-r">{{ f.rule }}</p>
       <p class="fnd-s">
-        {% for n in f.names %}<a href="#stocks" class="sym">{{ n.sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+        {# data-stock opens THAT company's sheet. Without it these were bare
+           #stocks links that dumped the reader at the top of a 750-row screen
+           to find the name themselves — a link answering a different question
+           from the one that was clicked. The href stays as the no-JS path. #}
+        {% for n in f.names %}<a href="#stocks" class="sym" data-stock="{{ n.sym }}">{{ n.sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
       </p>
       {# "+N more" used to be a bare <span>. The other N names were never
          serialised, so it was a dead label offering an expansion that did not
@@ -9902,7 +10071,7 @@ body,button,input,select,textarea{font-family:var(--sans)}
       <details class="fnd-all">
         <summary>+{{ f.count - f.names|length }} more &mdash; show all {{ f.count }}</summary>
         <p class="fnd-s">
-          {% for sym in f.all_syms %}<a href="#stocks" class="sym">{{ sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
+          {% for sym in f.all_syms %}<a href="#stocks" class="sym" data-stock="{{ sym }}">{{ sym }}</a>{% if not loop.last %} · {% endif %}{% endfor %}
         </p>
       </details>
       {% endif %}
@@ -9931,7 +10100,7 @@ body,button,input,select,textarea{font-family:var(--sans)}
     {% for m in findings.multi[:12] %}
     <div class="card fnd fnd-multi">
       <h4 class="fnd-t">
-        <a href="#stocks" class="sym">{{ m.sym }}</a>
+        <a href="#stocks" class="sym" data-stock="{{ m.sym }}">{{ m.sym }}</a>
         <span class="fnd-n">{{ m.n }} rules</span>
       </h4>
       <p class="fnd-r">{{ m.name or '' }}{% if m.sector %} &middot; {{ m.sector }}{% endif %}{% if m.comp is not none %} &middot; composite {{ m.comp|round|int }}{% endif %}</p>
