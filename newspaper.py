@@ -5072,7 +5072,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   transition:background .15s,color .15s,border-color .15s,opacity .15s}
 .whatifchip:hover{color:var(--text)}
 .whatifchip[aria-pressed="true"]{opacity:.42;text-decoration:line-through}
-.whatifout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.whatifout{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:12px}
 .whatifout .wo{border-top:1px solid var(--line);padding-top:11px}
 .whatifout .wo .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
 .whatifout .wo .v{font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -5300,7 +5300,7 @@ h1.hl em{font-style:italic;font-weight:400;color:var(--lime)}
    overflow:hidden on the grid clips the outermost two, and the grid's own
    border-top replaces the row of top shadows it just clipped. Shadows take no
    layout space, so this costs nothing in alignment. */
-.matters-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));
+.matters-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(228px,100%),1fr));
   border-top:1px solid var(--line);overflow:hidden}
 
 .mcard{position:relative;display:flex;flex-direction:column;
@@ -5544,7 +5544,17 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .ncard .tone.red{background:rgba(255,92,92,.16);color:var(--down)}
 .ncard .tone.green{background:rgba(60,220,130,.14);color:var(--up)}
 
-.ltgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+/* Every auto-fit/auto-fill grid below uses minmax(min(Npx,100%),1fr) rather
+   than minmax(Npx,1fr). A bare pixel floor is a floor the track cannot go
+   under, so on a 320px phone — where about 288px is actually available inside
+   the gutters — a 340px card simply hung off the side and dragged the whole
+   document with it. Measured: the page came out 356px wide at a 320 viewport,
+   and the IPO cards were the widest of ten grids doing it.
+
+   min(Npx,100%) makes the floor "whichever is smaller, the design width or the
+   space there is", which is what was meant in the first place. It needs no
+   media query and cannot be got wrong again by adding an eleventh grid. */
+.ltgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:16px}
 .lt{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;
   transition:border-color .35s,transform .35s var(--ease)}
 .lt:hover{transform:translateY(-3px);border-color:var(--line2)}
@@ -5663,7 +5673,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .sheet-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
   flex-wrap:wrap;padding-right:38px;margin-bottom:18px}
 .sheet-sym{font-size:22px;font-weight:700;letter-spacing:-.5px}
-.sheet-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;
+.sheet-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));gap:1px;
   background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:26px}
 .sheet-kpi>div{background:var(--surface);padding:14px}
 .sheet-kpi b{display:block;font-family:var(--mono);font-size:18px}
@@ -5703,7 +5713,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   text-transform:uppercase;color:var(--dim)}
 .wy-p{margin:0 0 10px;font-size:12.5px;line-height:1.65;color:var(--muted)}
 .wy-p:last-child{margin-bottom:0}
-.wy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 18px}
+.wy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:6px 18px}
 .wy-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);
   padding:5px 0;font-family:var(--mono);font-size:11px}
 .wy-k{color:var(--dim)}
@@ -5768,7 +5778,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fundcat-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .fundcat-h h3{font-size:17px;margin:0}
 .fundcat-b{color:var(--muted);font-size:13px;margin:4px 0 12px;max-width:74ch}
-.fund-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.fund-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:14px}
 .fund-card{padding:16px}
 .fund-card-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
 .fund-card-h strong{font-size:14px}
@@ -5777,7 +5787,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   white-space:nowrap;padding-top:2px}
 
 /* ═══════════ DAILY BRIEF ═══════════ */
-.ev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px}
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:12px}
 .ev{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:15px 17px;
   display:flex;flex-direction:column;gap:9px}
 .ev-top{background:var(--surface2);border-top:2px solid var(--lime)}
@@ -5814,7 +5824,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .res-g{margin-bottom:18px}
 .res-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);margin:0 0 9px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-.res-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:9px}
+.res-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));gap:9px}
 .res-i{display:block;background:var(--bg2);border:1px solid var(--line);border-radius:8px;
   padding:10px 13px;text-decoration:none;transition:border-color .15s}
 .res-i:hover{border-color:var(--line2)}
@@ -5884,7 +5894,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .fm-src a{color:var(--blue)}
 
 /* ═══════════════════ FINANCE CAREERS ═══════════════════ */
-.jsnap{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));
+.jsnap{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(104px,100%),1fr));
   gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;
   overflow:hidden;margin:14px 0}
 .jsnap-i{background:var(--bg2);padding:12px 10px;text-align:center}
@@ -5898,7 +5908,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .jf-count{font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:auto}
 .jsub{font-size:15px;margin:22px 0 2px;letter-spacing:-.01em}
 .jsub-n{color:var(--dim);font-size:12px;line-height:1.6;margin:0 0 12px;max-width:76ch}
-.jgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:12px}
+.jgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr));gap:12px}
 .jgrid-quiet{opacity:.72}
 .jcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;
   padding:14px 16px;display:flex;flex-direction:column;gap:10px}
@@ -5956,7 +5966,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0 0;max-width:78ch}
 
 /* ═══════════════════ SWP ═══════════════════ */
-.swp-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;
+.swp-in{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(148px,100%),1fr));gap:12px;
   margin-bottom:22px}
 .swp-in label{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);
   font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim)}
@@ -6197,7 +6207,7 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .dh-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .dh-name{font-weight:500;font-size:14px}
 .dh-src{color:var(--dim);font-size:12px;margin-left:auto}
-.dh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+.dh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(140px,100%),1fr));
   gap:10px 18px;margin-top:12px;font-size:12px}
 .dh-grid dt{color:var(--dim);font-family:var(--mono);font-size:10px;
   letter-spacing:1px;text-transform:uppercase}
@@ -6288,7 +6298,7 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .cmp-sum li{list-style:none;font-size:var(--t-body-sm);line-height:1.7;color:var(--muted)}
 .cmp-sum b{color:var(--text)}
 /* Findings. Cards rather than a table: each is a short argument, not a row. */
-.fnd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.fnd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px}
 .fnd{padding:16px 18px}
 .fnd-warn{border-left:2px solid var(--gold)}
 .fnd-t{font-size:14px;margin:0 0 8px;font-weight:600;line-height:1.35}
@@ -6375,7 +6385,7 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
   margin-top:auto;padding-top:10px;flex-wrap:wrap}
 .ncard-f .readmore{margin-top:0}
 /* ── smart reads ── */
-.sr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.sr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:14px}
 .sr{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--bg2);
   display:flex;flex-direction:column}
 .sr-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:9px;
@@ -6398,7 +6408,7 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
 .sr .readmore{margin-top:auto;padding-top:12px}
 @media(max-width:640px){.sr-grid{grid-template-columns:1fr}}
 /* ── podcasts ── */
-.pod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.pod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:14px}
 .pod{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--bg2);
   display:flex;flex-direction:column;gap:8px}
 .pod-h{display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -6439,7 +6449,7 @@ main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--
    section, which duplicated the ticker and has been removed. */
 
 /* ═══════════════════ 01 PICKS ═══════════════════ */
-.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.pick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:14px}
 .pick{position:relative;background:linear-gradient(160deg,var(--surface),var(--pick-edge));border:1px solid var(--line);
   border-radius:18px;padding:22px;overflow:hidden;transition:border-color .35s,transform .35s var(--ease)}
 .pick:hover{border-color:var(--lime-line);transform:translateY(-4px)}
@@ -6653,7 +6663,7 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
 .sd-h .co{color:var(--muted);font-size:13px}
 .sd-sub{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.6px;
   margin-bottom:18px;display:flex;flex-wrap:wrap;gap:4px 12px}
-.sd-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+.sd-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(112px,100%),1fr));
   gap:9px;margin-bottom:20px}
 .sd-sc{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
 .sd-sc .k{font-family:var(--mono);font-size:9px;letter-spacing:1.3px;text-transform:uppercase;
@@ -6708,7 +6718,7 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
 }
 
 /* ═══════════════════ 03 SIGNAL LOG ═══════════════════ */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:1px;background:var(--line);
   border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
 .kpi{background:var(--surface);padding:20px 18px}
 .kpi .v{font-family:var(--mono);font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:-1.2px;line-height:1}
@@ -6781,7 +6791,7 @@ table.t tbody tr:last-child td{border-bottom:none}
    and a list of what was NOT measured, and none of that survives being flattened
    into columns. The verdict colour is a left border rather than a filled card —
    an APPLY should read as confident, not as an advertisement. */
-.ipo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.ipo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:14px}
 .ipo-card{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--line2);
   border-radius:14px;padding:17px 19px;transition:border-color .25s,transform .25s}
 .ipo-card:hover{transform:translateY(-2px)}
@@ -6867,7 +6877,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 /* Paper-wallet tier framework. Three cards explaining WHY a tier exists, above
    the rule list that states WHAT its caps are. Separated because they answer
    different questions and a reader needs the first to make sense of the second. */
-.wal-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.wal-tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px}
 .wal-tier{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .wal-tier-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
   flex-wrap:wrap;margin-bottom:8px}
@@ -6925,7 +6935,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 /* India at a glance. Tabular numerals and a fixed decimal count so the column
    of figures aligns on the decimal point — a board of market levels that jitters
    as digits change width reads as unreliable whatever the numbers say. */
-.ib-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;
+.ib-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(148px,100%),1fr));gap:1px;
   background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .ib{background:var(--bg);padding:13px 15px;display:flex;flex-direction:column;gap:3px}
 .ib-k{font-family:var(--mono);font-size:9px;letter-spacing:1.3px;text-transform:uppercase;
@@ -7121,7 +7131,7 @@ table.t tbody tr:last-child td{border-bottom:none}
 .mini .s{font-family:var(--mono);font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--lime);display:block;margin-bottom:5px}
 .mini a{font-size:13.5px;font-weight:600;line-height:1.42;transition:color .25s}
 .mini a:hover{color:var(--lime)}
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:14px}
 .ncard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;
   transition:border-color .35s,transform .35s var(--ease)}
 .ncard:hover{border-color:var(--line2);transform:translateY(-3px)}
@@ -7356,7 +7366,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .ctlbar input[type=search]{flex:1 1 200px}
 .ctlbar .ghost{color:var(--dim);font-family:var(--mono);font-size:11px;margin-left:auto}
 
-.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:1px;
   background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
 .perf-cell{background:var(--surface);padding:18px 16px}
 .perf-cell .v{font-family:var(--mono);font-size:25px;font-weight:700;letter-spacing:-1px;line-height:1.1}
@@ -7365,7 +7375,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .perf-cell .sub{font-size:11px;color:var(--muted);margin-top:4px}
 
 
-.brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.brk{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:16px}
 .brk-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
 .brk-card h4,.brk-card .fh4{font-family:var(--mono);font-size:11px;color:var(--dim);text-transform:uppercase;
   letter-spacing:1.2px;margin-bottom:12px}
@@ -7550,7 +7560,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .gym-prompt{font-family:var(--mono);font-size:clamp(28px,7vw,52px);font-weight:700;color:var(--lime);
   letter-spacing:2px;text-align:center;padding:22px 0}
 
-.gym-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.gym-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:10px}
 .gym-opt{padding:16px 14px;font-family:var(--mono);font-size:16px;font-weight:600;background:var(--bg2);
   border:1px solid var(--line2);color:var(--text);border-radius:12px;cursor:pointer;
   transition:all .2s var(--ease);text-align:center}
@@ -7577,7 +7587,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .gym-meta{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
   margin-bottom:16px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.6px}
 .gym-meta .prog{color:var(--lime)}
-.gym-score{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:1px;background:var(--line);
+.gym-score{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(110px,100%),1fr));gap:1px;background:var(--line);
   border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:20px}
 .gym-score div{background:var(--surface);padding:14px 12px;text-align:center}
 .gym-score .v{font-family:var(--mono);font-size:21px;font-weight:700}
@@ -7793,7 +7803,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    cannot be scanned. Collapses to stacked below 720px where two columns
    would give the definition about twenty characters of measure. */
 .metdefs{display:flex;flex-direction:column;gap:0;margin:0}
-.metdef{display:grid;grid-template-columns:minmax(140px,1fr) 3fr;gap:clamp(16px,3vw,44px);
+.metdef{display:grid;grid-template-columns:minmax(min(140px,100%),1fr) 3fr;gap:clamp(16px,3vw,44px);
   padding:16px 0;border-top:1px solid var(--line)}
 .metdef:first-child{border-top:0}
 .metdef dt{font:600 clamp(15px,1.6vw,17px)/1.3 var(--disp);color:var(--text);letter-spacing:-.01em}
@@ -8045,6 +8055,49 @@ a.mprov{opacity:.78}
      lands underneath it. */
   body{padding-bottom:66px}
   .fab{bottom:76px}
+}
+
+
+/* ── KEYBOARD FOCUS ON INPUTS ─────────────────────────────────────────────
+   WCAG 2.4.7. There is a global :focus-visible outline, but five input rules
+   set `outline:none` on :focus and lean on a border-colour change instead.
+   Those selectors are more specific, so they win — verified in the browser: a
+   keyboard-focused email field matched :focus-visible and still computed
+   outline-style:none. A tinted 1px border is not a focus indicator; on this
+   ground it is nearly invisible, and it is the only cue a keyboard user gets.
+
+   Restored as a ring rather than by unpicking each rule, so a new input cannot
+   reintroduce the same bug by copying an existing one. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible{
+  outline:2px solid var(--lime) !important;
+  outline-offset:2px;
+}
+
+
+/* ── 320px ────────────────────────────────────────────────────────────────
+   The narrowest phone still in real use — iPhone SE 1st gen, Galaxy Fold
+   closed, and every Android budget device. Measured at 320: the document came
+   out 356px wide, so the whole page could be dragged sideways.
+
+   The driver was the masthead again. At 375 the brand, the clock and the two
+   buttons fit once the date and the word "Search" are hidden; at 320 they do
+   not, and the theme button was pushed 12px past the edge. The brand gives up
+   the space, because a wordmark can lose two points and stay a wordmark while
+   a clock that wraps stops being readable. */
+@media(max-width:400px){
+  .brand{font-size:14px;gap:6px}
+  .stamp{gap:6px}
+  .stamp .live{font-size:9.5px}
+  .cmdk-hint{padding-inline:8px}
+}
+/* The phone bar's longest label — "Portfolio" — was clipping into an ellipsis
+   at this width. Six labels have to fit six equal columns, so the type gives
+   way rather than the word. */
+@media(max-width:380px){
+  .botnav-a .botnav-t{font-size:8.5px;letter-spacing:.02em}
+  .botnav-a{padding-inline:1px}
 }
 
 </style>
@@ -9467,7 +9520,7 @@ a.mprov{opacity:.78}
      carried no information at all. Flooring at 10x is what stops a quiet day
      — where the best spike is 2.2x — from drawing that as a full bar. #}
   <div class="tblwrap rv">
-    <table class="volboard">
+    <table class="volboard" aria-label="Volume spikes: names trading at twice their own average volume or more">
       <thead>
         <tr>
           <th>Symbol</th><th>Volume vs its own average</th><th class="r">1W</th>
