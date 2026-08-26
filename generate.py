@@ -554,12 +554,20 @@ def generate() -> None:
             # the most common case and calling it "accumulation" would be an
             # invented fact — it gets named as what it is.
             r = dict(r)
-            if isinstance(mv, (int, float)) and mv >= 3:
+            # +/-2%, not 3%, to match insights.py's published
+            # `volume_without_price` rule EXACTLY. Findings already flags
+            # "volume spike >= 2x, 1-week move within +/-2%" as a finding; a
+            # board using its own threshold would have quietly disagreed with
+            # it about which names are churning, and two rules on one page
+            # giving different answers to one question is worse than either
+            # rule alone. Same number, two views: the board is the whole
+            # population, Findings is the slice worth reading about.
+            if isinstance(mv, (int, float)) and mv > 2:
                 r["vread"], r["vclass"] = "Bought into", "up"
-            elif isinstance(mv, (int, float)) and mv <= -3:
+            elif isinstance(mv, (int, float)) and mv < -2:
                 r["vread"], r["vclass"] = "Sold into", "dn"
             else:
-                r["vread"], r["vclass"] = "Churn, no direction", ""
+                r["vread"], r["vclass"] = "Volume, no price", ""
             volspikes.append(r)
         print(f"[generate] Volume board: {len(volspikes)} of {len(_vc)} "
               f"at 2x+ on 5cr+, from {len(_rows)} screened")

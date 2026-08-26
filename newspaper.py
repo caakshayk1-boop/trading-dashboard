@@ -2315,6 +2315,24 @@ METRICS = [
 METRICS_BY_KEY = {m["key"]: m for m in METRICS}
 assert len(METRICS_BY_KEY) == len(METRICS), "duplicate metric key"
 
+# ── THE SIX FRESHNESS TIERS ─────────────────────────────────────────────────
+#
+# Every dataset on the page carries one of these badges. The definitions used
+# to sit in a 660-character paragraph at the foot of Data Health, which is the
+# one place a reader is not looking when they hit a STALE badge 4,000 pixels
+# higher up. They live here now, render in How to Read This next to everything
+# else that needed defining, and Data Health links to them.
+FRESHNESS = [
+    ("LIVE",        "Built within a quarter of its refresh interval."),
+    ("FRESH",       "Built within its refresh interval."),
+    ("STALE",       "Older than its refresh interval, and still valid — a "
+                    "weekly screen on a Thursday is stale by design, not broken."),
+    ("DEGRADED",    "Valid data behind a known problem: a newer attempt failed, "
+                    "coverage is thin, or the vintage cannot be read."),
+    ("FAILED",      "The build broke and there is nothing valid to fall back on."),
+    ("UNAVAILABLE", "Never published."),
+]
+
 PROV_TIERS = {
     "fact":   ("Fact",   "an observed value — a close, a flow, a filing"),
     "model":  ("Model",  "computed by the engine from facts"),
@@ -2600,6 +2618,7 @@ def page_context(page: str, drop=()) -> dict:
         # sites, and the error path is the one that would silently drop it.
         "metrics": METRICS,
         "prov_tiers": PROV_TIERS,
+        "freshness": FRESHNESS,
         # The same list again, trimmed to what the badge stamper needs and
         # serialised here rather than in the template: json.dumps escapes for a
         # <script> context, and hand-building this in Jinja is how a stray
@@ -8474,15 +8493,15 @@ a.mprov{opacity:.78}
   <div class="subhead" style="margin-top:clamp(26px,3vw,40px)">
     <span class="subeyebrow">Market state</span>
     <h3>Moving this week, by sector<span class="dh dh-STALE">1-WEEK SCREEN</span></h3>
-    <p class="subdesc">The five best and five worst names in each sector over <strong>one week</strong> — not today. Drawn from the stock screen's own rows, so they carry the screen's build date, not the 6&nbsp;AM heat snapshot's. Use it to see whether a hot sector is broad or is one name carrying it.</p>
+    <p class="subdesc">Best and worst five in each of {{ movers|length }} sectors over
+      <strong>one week</strong>, from the screen's own rows{% if stock_screen.built_on %}
+      (built {{ stock_screen.built_on }}){% endif %}. The median says whether the sector
+      moved or two names carried it.</p>
   </div>
-  <p class="sdesc" style="margin-bottom:10px;max-width:70ch">
-    Best and worst five in each of {{ movers|length }} sectors over one week, taken from the
-    stock screen's own rows &mdash; so these are the screen's sectors, not the index tiles
-    above, and they carry the screen's date{% if stock_screen.built_on %}
-    ({{ stock_screen.built_on }}){% endif %}, not the 6 AM snapshot's.
-    The median tells you whether a sector moved or a couple of names carried it.
-  </p>
+  {# The paragraph that used to sit here repeated the subhead above it almost
+     word for word — same source, same date caveat, same median explanation, in
+     two consecutive paragraphs. It was the only genuine adjacent duplication on
+     the page and it is gone; the count and the build date live in the subhead. #}
   <div class="fnd-grid rv" id="sectorMoversWeek">
     {% for m in movers %}
     <details class="card fnd sec-movers">
@@ -9095,6 +9114,9 @@ a.mprov{opacity:.78}
     or a size, none of it has been published to the ledger, and none of it touches the
     win rate. Volume from the weekly screen &mdash; same vintage as the stock screen
     {%- if stock_screen.built_on %}, built {{ stock_screen.built_on }}{% endif %}.
+    The <b>Volume, no price</b> rows are the same population <a href="#findings">Findings</a>
+    reports as &ldquo;unusual volume, no price response&rdquo; &mdash; one rule, two views,
+    so the two can never disagree about which names those are.
     <a href="#method">What these columns mean &rarr;</a>
   </p>
 </section>
@@ -10839,19 +10861,13 @@ a.mprov{opacity:.78}
     {% endfor %}
   </ul>
 
+  {# The six badge definitions used to be spelled out here, in a paragraph at
+     the foot of the last section — which is the one place nobody is looking
+     when they hit a STALE badge four thousand pixels higher up. They are in
+     How to Read This with every other definition now. #}
   <p class="sdesc" style="margin-top:22px;max-width:70ch">
-    <b>LIVE</b> built within a quarter of its refresh interval ·
-    <b>FRESH</b> built within its refresh interval ·
-    <b>STALE</b> older than its refresh interval, still valid ·
-    <b>DEGRADED</b> valid data behind a known problem — a failed newer attempt,
-    thin coverage, or a vintage that cannot be read ·
-    <b>FAILED</b> the build broke and there is nothing valid to fall back on ·
-    <b>UNAVAILABLE</b> never published.
-    <br><br>
-    A failed rebuild never overwrites the last dataset that passed validation, and a
-    partial rebuild is never published as a complete one. When a newer attempt fails,
-    the section keeps serving the last good build and says so here — it does not go
-    blank, and it does not pretend the failure did not happen.
+    A failed rebuild never overwrites the last dataset that passed validation.
+    <a href="#method">What each badge means &rarr;</a>
   </p>
 </section>
 {% endif %}
@@ -10954,6 +10970,26 @@ a.mprov{opacity:.78}
   </dl>
   {% endif %}
   {% endfor %}
+
+  <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
+    <h3>How fresh is fresh</h3>
+    <p class="subdesc">Every dataset carries one of six badges. They describe the BUILD,
+      not the market: a weekly screen is stale by Thursday and still perfectly usable.</p>
+  </div>
+  <dl class="metdefs rv">
+    {% for name, meaning in freshness %}
+    <div class="metdef" id="fresh-{{ name|lower }}">
+      <dt><span class="dh dh-{{ name }}">{{ name }}</span></dt>
+      <dd><p class="md-what">{{ meaning }}</p></dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <p class="lv-3 rv" style="margin-top:14px">
+    A failed rebuild never overwrites the last dataset that passed validation, and a
+    partial rebuild is never published as a complete one. When a newer attempt fails the
+    section keeps serving the last good build and says so &mdash; it does not go blank,
+    and it does not pretend the failure did not happen.
+  </p>
 
   <p class="lv-sys rv" style="margin-top:clamp(26px,3vw,40px)">
     Nothing on this page is investment advice. The ledger publishes losses at the same
