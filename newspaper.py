@@ -3750,14 +3750,31 @@ def _fii_dii_trend(con, before_date: str, days: int = 7) -> list[dict]:
         "SELECT date, payload FROM newspaper_market_intel "
         "WHERE date <= ? ORDER BY date DESC LIMIT ?",
         (before_date, days)).fetchall()
-    out = []
+    out, seen = [], set()
     for d, payload in rows:
         try:
             fd = (json.loads(payload) or {}).get("fii_dii")
         except (json.JSONDecodeError, TypeError):
             fd = None
-        if fd:
-            out.append({"date": d, **fd})
+        if not fd:
+            continue
+        # `d` is the CACHE row's date — the day this build ran. `fd` carries
+        # NSE's own TRADE date, and because it is spread second it wins. That is
+        # correct: a flow belongs to the session it happened in, not to the day
+        # a build noticed it.
+        #
+        # But it means two builds can carry the SAME trade date. NSE publishes
+        # after the close, so a build that runs before the next day's figures
+        # land re-reads yesterday's — and the series then plotted one session
+        # twice, side by side, as if it were two. Rows are walked newest-cache
+        # first, so the first sighting of a trade date is the most recently
+        # built version of it and later duplicates are dropped.
+        row = {"date": d, **fd}
+        key = str(row.get("date"))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(row)
     out.reverse()
     return out
 
@@ -4984,9 +5001,22 @@ TEMPLATE = r"""<!DOCTYPE html>
 
    Scoped to the light themes only. The dark theme was designed around
    contrast and shadow and is left exactly as it was. */
+/* THE SECTION CARD. Authoritative, because these theme-scoped selectors
+   compute to (0,3,0) and out-rank anything set on `main section.sec` at
+   (0,1,2) — the fourth time in this file that a rule written elsewhere lost
+   silently to this block. The rule for this codebase: if a property is set
+   HERE, change it HERE. Do not add specificity to beat it.
+
+   Card padding, not broadsheet rhythm: 104px of air inside a bounded white
+   card is not generous, it is a card that looks empty. */
 :root:not([data-theme]) .sec,
 :root[data-theme="light"] .sec{
-  padding-block:clamp(52px,7vw,104px);
+  padding-block:clamp(18px,2.6vw,34px);
+  padding-inline:clamp(14px,2.2vw,30px);
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin-bottom:clamp(12px,1.6vw,18px);
 }
 :root:not([data-theme]) .shead,
 :root[data-theme="light"] .shead{
@@ -6213,7 +6243,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 
 /* ═══════════════════ SECTIONS ═══════════════════ */
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
-.sec{padding:clamp(56px,8vw,104px) 0;border-bottom:1px solid var(--line)}
+.sec{border-bottom:0}
 .sec:last-child{border-bottom:none}
 .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
 /* The eyebrow takes the pillar's hue, so "12 / PAPER WALLET" is the same
@@ -8400,34 +8430,38 @@ select:focus-visible{
    by a chip. Same data, same markup, same everything — a different surface for
    a different hand.
    ══════════════════════════════════════════════════════════════════════════ */
-@media(max-width:760px){
-  /* Scoped exactly like the palette blocks it is overriding. A bare `:root`
-     inside a media query LOSES to `:root:not([data-theme])` — media queries do
-     not add specificity — which is the third time that trap has bitten in this
-     file. If a token is defined in those blocks, it must be re-defined with
-     the same selectors or it silently keeps the desktop value. */
-  :root:not([data-theme]),
-  :root[data-theme="light"]{
-    --bg:#EAEFF5;          /* tinted, so a white card has somewhere to sit */
-    --surface:#FFFFFF;
-    --surface2:#F5F7FA;
-    --line:rgba(20,26,36,.11);
-    --line2:rgba(20,26,36,.20);
-  }
-  body{background:var(--bg)}
+/* ══════════════════════════════════════════════════════════════════════════
+   THE APP SURFACE — EVERY SCREEN, NOT JUST PHONES.
+   This was written inside a max-width:760px query, which meant a desktop
+   reader saw none of it and reported, correctly, that nothing had changed.
+   The card-and-chip layout is the design now, at every width; the phone rules
+   further down only adjust density, not the system.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root:not([data-theme]),
+:root[data-theme="light"]{
+  --bg:#EAEFF5;            /* tinted, so a white card has somewhere to sit */
+  --surface:#FFFFFF;
+  --surface2:#F5F7FA;
+  --surface3:#E3E9F1;
+  --line:rgba(20,26,36,.11);
+  --line2:rgba(20,26,36,.20);
+}
+body{background:var(--bg)}
 
-  /* Sections become cards again. On a phone a card IS the grouping device —
-     there is no column of air to spare, so the edge has to do that work. */
-  main section.sec{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:6px;
-    padding:16px 14px 18px;
-    margin-bottom:12px;
-  }
-  .shead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:16px}
+/* A section is a card. This is the single change that makes the page read as
+   a product rather than a scroll: a bounded white surface with its own
+   heading, on a ground that is not white. */
+/* The card itself is defined in the light-theme block above — see the note
+   there about why it cannot be set from here. */
+.shead{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:18px}
+.tblwrap,.tw{border:0}
+/* Cards inside a card need to stop being cards, or it is boxes all the way
+   down. Inside a section they are rule-separated blocks. */
+main section.sec .card{background:transparent;border:0;border-top:1px solid var(--line);border-radius:0}
+
+@media(max-width:760px){
+  main section.sec{border-radius:6px}
   .stitle{font-size:clamp(22px,6.4vw,28px);line-height:1.08}
-  .tblwrap,.tw{border:0}
 
   /* ── ROWS BECOME CARDS ──────────────────────────────────────────────
      data-label comes from the column heading at runtime. The header row is
@@ -8498,6 +8532,63 @@ select:focus-visible{
   .editionbar{font-size:12.5px;padding:9px 12px;gap:9px;align-items:center}
   .editionbar #editionReload{flex:none;white-space:nowrap;padding:7px 11px;font-size:11px}
 }
+
+
+/* ── THE LEGEND, PROPERLY ─────────────────────────────────────────────────
+   Four kinds of claim, four solid chips. They were tinted outlines that read
+   as decoration; on a white card a filled chip reads as a STATUS, which is
+   what these are — and status chips are the thing Chittorgarh's layout gets
+   right and this page did not.
+
+   Colour on this page now means exactly two things and they never overlap:
+   a chip says where a number came from, and up/down says which way it went. */
+.pill{
+  font:700 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 7px;border-radius:3px;border:0;color:#fff;
+  white-space:nowrap;flex:none;
+}
+.pill-fact  {background:#1F6FB2}   /* observed */
+.pill-model {background:#6A4CC4}   /* computed */
+.pill-result{background:#0E7A55}   /* what happened */
+.pill-view  {background:#B4762A}   /* opinion, labelled */
+
+/* The legend strip itself becomes a real key: a bounded card at the top of the
+   page that a reader can return to, not a line of grey text they scroll past. */
+.prov-legend{
+  background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;
+  padding:14px 16px;
+  display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+}
+.prov-legend .pl-lead{
+  font:700 10px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text);width:100%;margin-bottom:2px;
+}
+.prov-legend .pl-item{
+  display:flex;align-items:center;gap:8px;
+  font:400 12.5px/1.45 var(--sans);color:var(--muted);
+}
+
+/* Freshness badges get the same treatment — they are statuses too, and the
+   whole point of a data-health badge is that it is legible at a glance. */
+.dh{
+  font:700 8.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 6px;border-radius:3px;border:0;color:#fff;margin-left:8px;
+  vertical-align:middle;
+}
+.dh-LIVE{background:#0E7A55}
+.dh-FRESH{background:#1F6FB2}
+.dh-STALE{background:#8A7320}
+.dh-DEGRADED{background:#B4762A}
+.dh-FAILED,.dh-UNAVAILABLE{background:#B4231A}
+
+/* The metric badges app.js stamps on every KPI follow the same key, so a
+   reader learns four colours once and they hold everywhere on the page. */
+a.mprov{opacity:1;color:#fff;border:0;font-weight:700}
+.mprov-fact{background:#1F6FB2}
+.mprov-model{background:#6A4CC4}
+.mprov-result{background:#0E7A55}
+.mprov-view{background:#B4762A}
 
 </style>
 </head>
@@ -9332,67 +9423,18 @@ select:focus-visible{
     <div class="kpi"><div class="v {{ 'up' if fd.get('net_cr', 0) >= 0 else 'dn' }}">
       &#8377;{{ '{:,.0f}'.format(fd.get('net_cr', 0)) }} Cr</div><div class="k">Combined</div></div>
   </div>
-  {# ── SMART MONEY FLOW ────────────────────────────────────────────────────
-     The trend used to print as a run-on line of numbers — "25-Aug: FII +1,200
-     / DII -300 · 24-Aug: ..." — which is a series pretending to be a sentence.
-     Whether the two sides have been on opposite sides all week, and which way
-     the gap is widening, is a SHAPE, and a shape needs a chart.
+  {# Smart money flow was here and is removed.
 
-     Paired bars from a shared zero line: FII above the axis when buying, below
-     when selling, DII mirrored beside it. Bars scale to the largest absolute
-     flow in the window, so the tallest bar is always full height and the rest
-     are read against it.
+     It plotted the last few sessions of FII vs DII as paired bars. Two reasons
+     it went: with six sessions it was a chart of almost nothing, and it was
+     wrong — _fii_dii_trend could return the SAME trade date twice, because NSE
+     publishes after the close and a build that runs before the next figures
+     land re-reads yesterday's. The chart drew one session as two bars side by
+     side. That bug is fixed at the source regardless, since the figures above
+     read the same series.
 
-     The series comes from fii_dii_trend, which get_market_intel() has been
-     assembling from cached daily rows all along — NSE publishes today only and
-     has no public history endpoint, so it accumulates one cached session at a
-     time. A second store was written for this chart before that was noticed
-     and then deleted: two histories of one series is how they end up
-     disagreeing. It says how many sessions it holds rather than implying a
-     window it does not own. #}
-  {% set flow = market_intel.get('fii_dii_trend') or [] %}
-  {% if flow %}
-  {# A cached row can carry a null leg — NSE sometimes publishes one side
-     before the other — and |abs on None raises, which would take the whole
-     page down for a missing number. Defaulted to 0 before the max. #}
-  {% set _mx = [] %}
-  {% for f in flow %}{% if _mx.append((f.get('fii_cr') or 0) | abs) %}{% endif %}
-  {% if _mx.append((f.get('dii_cr') or 0) | abs) %}{% endif %}{% endfor %}
-  {% set peak = ([1] + _mx) | max %}
-  <div class="smf rv">
-    <div class="smf-head">
-      <span class="smf-t">Smart money flow</span>
-      <span class="smf-k">
-        <span class="smf-key"><i class="sw-fii"></i>FII</span>
-        <span class="smf-key"><i class="sw-dii"></i>DII</span>
-        <span class="lv-sys">{{ flow|length }} session{{ '' if flow|length == 1 else 's' }} ·
-          &#8377;{{ inr(peak) }} Cr full height</span>
-      </span>
-    </div>
-    <div class="smf-chart" role="img"
-         aria-label="FII and DII net flow over the last {{ flow|length }} sessions">
-      {% for f in flow %}
-      {% set fv = f.get('fii_cr') or 0 %}{% set dv = f.get('dii_cr') or 0 %}
-      <div class="smf-day" title="{{ f.get('date') }} · FII {{ '{:+,.0f}'.format(fv) }} Cr · DII {{ '{:+,.0f}'.format(dv) }} Cr">
-        <div class="smf-pair">
-          <span class="smf-bar sw-fii {{ 'neg' if fv < 0 else '' }}"
-                style="height:{{ (fv|abs / peak * 100)|round(1) }}%"></span>
-          <span class="smf-bar sw-dii {{ 'neg' if dv < 0 else '' }}"
-                style="height:{{ (dv|abs / peak * 100)|round(1) }}%"></span>
-        </div>
-        <span class="smf-d">{{ (f.get('date') or '')[:6] }}</span>
-      </div>
-      {% endfor %}
-    </div>
-    <p class="lv-sys" style="margin-top:10px">
-      Bars sit above the line on a net buy and below it on a net sell. NSE publishes
-      these once, after the close, so no bar here is live. History is accumulated one
-      session at a time from this page&rsquo;s own builds &mdash; there is no public
-      endpoint for it, and borrowing an unattributable one would be the exact thing
-      this page argues against.
-    </p>
-  </div>
-  {% endif %}
+     The two numbers that matter — today's FII and DII net — are in the tiles
+     above, dated, and they were never the thing that was broken. #}
   {% endif %}
 
   {% set ca = market_intel.get('corporate_actions') or [] %}

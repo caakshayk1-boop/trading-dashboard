@@ -398,6 +398,40 @@ def _():
     assert "setTimeout" in code, "the observer callback needs a timer that runs when hidden"
 
 
+@check("nothing competes with the theme-scoped section rules")
+def _():
+    """The specificity trap, which has cost four debugging rounds in this file.
+
+    `:root:not([data-theme]) .sec` computes to (0,3,0). Anything written as
+    `.sec` (0,1,0) or `main section.sec` (0,1,2) loses to it silently — the
+    rule is in the stylesheet, looks right, and never applies. It has happened
+    to the eyebrow colour, the card background, the mobile palette and the
+    section padding.
+
+    The rule for this codebase: if the theme block sets a property, change it
+    THERE. This fails the build if someone sets one of those properties from a
+    weaker selector instead, which is the moment the confusion starts rather
+    than an hour later in a browser.
+    """
+    OWNED = ("background", "padding", "border-radius", "border:")
+
+    m = re.search(r':root:not\(\[data-theme\]\) \.sec,\s*'
+                  r':root\[data-theme="light"\] \.sec\{(.*?)\}', TEMPLATE, re.S)
+    assert m, "the theme-scoped .sec block is gone — the card system lives there"
+    owned_here = [p for p in OWNED if p in m.group(1)]
+    assert owned_here, "the theme block no longer sets the card properties"
+
+    # Any weaker rule setting the same properties is the bug this catches.
+    for pat in (r'\n\.sec\{([^}]*)\}', r'\nmain section\.sec\{([^}]*)\}'):
+        for weak in re.finditer(pat, TEMPLATE):
+            body = weak.group(1)
+            clash = [p for p in owned_here if p in body]
+            assert not clash, (
+                f"a weaker selector sets {clash} on .sec — it will lose to the "
+                f":root:not([data-theme]) block at (0,3,0). Change it there instead."
+            )
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
