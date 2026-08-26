@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-26T00:39:23",
+ "generated_at": "2026-08-26T00:46:40",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -232,7 +232,12 @@
    "issue_size_shares": 17683000.0,
    "issue_size_cr": 175.06,
    "subscription_x": 0.23044941469207714,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 0.57,
+    "HNI": 0.36,
+    "Retail": 0.29,
+    "Total": 0.35
+   },
    "lot_size": 151.0,
    "min_investment": 14949.0,
    "fresh_issue_cr": null,
@@ -282,6 +287,8 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/annu-projects-ipo/2500/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1312/annu-projects-ltd",
+   "allotment_date": "Aug 31, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 34% year on year.",
     "Profit grew faster than revenue (56% against 34%), so margins widened rather than bought growth.",
