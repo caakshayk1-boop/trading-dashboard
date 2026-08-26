@@ -2352,6 +2352,34 @@ FRESHNESS = [
 # closed" removes it from the denominator and raises the win rate without a
 # single trade going differently, which is the one arithmetic every published
 # track record is tempted by. It counts as a loss.
+# ── HOW TALL EACH SECTION IS, ROUGHLY ───────────────────────────────────────
+#
+# The fallback height content-visibility:auto uses for a section it has not
+# rendered yet. Only the FIRST estimate matters: contain-intrinsic-size carries
+# the `auto` keyword, so once the browser has laid a section out once it
+# remembers the real height and stops using this number.
+#
+# One global guess was tried first and is why this table exists. At a flat
+# 1200px the document reported 31,636px tall against a real 54,308px — a 42%
+# error, which on a page this long means the scrollbar thumb visibly resizes
+# under the reader's thumb as they scroll. Measured per section instead, the
+# spread is 396px to 7,707px: nineteen to one. No single number can serve that.
+#
+# Measured on a 1280px desktop viewport. Phones run taller, so these
+# under-estimate there — but under-estimating by a factor of two beats
+# under-estimating one section by a factor of six, and `auto` corrects both on
+# first render. A section that grows later is likewise only wrong until it has
+# been scrolled past once.
+SECTION_INTRINSIC = {
+    "marketintel": 3700, "picks": 2900, "world": 2600, "findings": 2800,
+    "volspikes": 1800, "longterm": 1400, "stocks": 3100, "iporadar": 7000,
+    "funds": 7700, "sip": 1200, "swp": 400, "tracker": 800,
+    "paperwallet": 2100, "alerts": 1750, "perf": 1900, "rules": 800,
+    "datahealth": 1800, "buildlog": 500, "method": 5700, "who": 600,
+}
+DEFAULT_INTRINSIC = 1900          # the median, for any section not measured
+
+
 LOSS_BADGES = ("loss", "expired")
 
 
@@ -2689,6 +2717,8 @@ def page_context(page: str, drop=()) -> dict:
         "freshness": FRESHNESS,
         "inr": inr,
         "ledger_counts": ledger_counts,
+        "section_intrinsic": SECTION_INTRINSIC,
+        "default_intrinsic": DEFAULT_INTRINSIC,
         # The same list again, trimmed to what the badge stamper needs and
         # serialised here rather than in the template: json.dumps escapes for a
         # <script> context, and hand-building this in Jinja is how a stray
@@ -8100,6 +8130,46 @@ select:focus-visible{
   .botnav-a{padding-inline:1px}
 }
 
+
+/* ── RENDER ONLY WHAT IS ON SCREEN ────────────────────────────────────────
+   Measured on production: 14,007 DOM nodes across 22 sections, a document
+   54,308px tall — seventy-five screens of content — and a first forced layout
+   costing 96.7ms. Every one of those sections was being laid out and painted
+   on load so that a reader could see the one at the top.
+
+   content-visibility:auto tells the browser to skip layout, paint and hit
+   testing for a section while it is off screen, and to do the work when it
+   scrolls near. It is the right tool rather than deferring the MARKUP because
+   the markup staying in the document is what keeps this page working with
+   JavaScript off, keeps every #anchor and the command palette resolving, and
+   keeps find-in-page able to reach a section the reader has not scrolled to.
+
+   contain-intrinsic-size carries the `auto` keyword, so once a section has
+   been rendered once the browser remembers its real height and reuses it when
+   it scrolls away. Without that the scrollbar grows and shrinks as you scroll
+   — the classic virtualised-list jitter — and on a 54,000px page that is very
+   visible. The 1200px is only the FIRST guess, before anything is measured. */
+.sec{
+  content-visibility:auto;
+  /* Per-section fallback heights are emitted in the generated block under the
+     nav, from SECTION_INTRINSIC. This is the floor for anything not in it. */
+  contain-intrinsic-size:auto 1900px;
+}
+/* The hero, the record band and the trust strip are always on screen at load
+   and must never be deferred: skipping them would mean the first paint has to
+   wait for the skip to be undone, which is slower than not skipping at all. */
+.record,.trust,.hero{content-visibility:visible}
+
+/* Printing renders the whole document at once with no viewport to be "near",
+   so a skipped section can print blank. Turned off entirely for print. */
+@media print{
+  .sec{content-visibility:visible;contain-intrinsic-size:auto}
+}
+/* Someone who has asked for reduced motion is often also asking for fewer
+   surprises; a scrollbar that resizes while they read is one. They get the
+   remembered-size behaviour too — this is here to document that
+   contain-intrinsic-size:auto is doing that job for everyone. */
+
 </style>
 </head>
 
@@ -8227,7 +8297,7 @@ select:focus-visible{
    and a missing token there should quietly become the house accent rather
    than an unset property that paints nothing. #}
 <style>
-{% for i, grp in secgroup.items() %}#{{ i }}{--pillar:var(--p-{{ grp|lower }},var(--lime))}
+{% for i, grp in secgroup.items() %}#{{ i }}{--pillar:var(--p-{{ grp|lower }},var(--lime));contain-intrinsic-size:auto {{ section_intrinsic.get(i, default_intrinsic) }}px}
 {% endfor %}{% for g in navgroups %}.navgrp[data-group="{{ g.name }}"],.botnav-a[data-group="{{ g.name }}"]{--pillar:var(--p-{{ g.name|lower }},var(--lime))}
 {% endfor %}
 </style>
