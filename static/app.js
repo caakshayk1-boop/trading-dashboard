@@ -3080,44 +3080,10 @@ var TV_ALIASES = (function () {
     })();
 
 
-    /* ═══════ hero equity curve ═══════
-       The record, above the fold. Same data as the performance section below;
-       this one just has to be readable in one glance. */
-    function paintHeroCurve(j){
-      var box = el('heroCurve');
-      if (!box || !j || !j.ok) return;
-      var pts = (j.equity_curve || []).filter(function(p){ return isFinite(p.cum_r); });
-      if (pts.length < 5) return;
+    /* The hero equity curve was removed with its markup — the same series is
+       drawn in The Record band by drawCurve(). Two curves, one dataset, a few
+       hundred pixels apart. Callers of paintHeroCurve are gone too. */
 
-      var W = 600, H = 96, PAD = 6;
-      var ys = pts.map(function(p){ return p.cum_r; });
-      var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
-      if (hi === lo) hi = lo + 1;
-      var x = function(i){ return (i / (pts.length - 1)) * W; };
-      var y = function(v){ return PAD + (1 - (v - lo) / (hi - lo)) * (H - PAD * 2); };
-
-      var d = '';
-      pts.forEach(function(p, i){ d += (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.cum_r).toFixed(1) + ' '; });
-      var line = el('hcLine'), area = el('hcArea'), dot = el('hcDot');
-      line.setAttribute('d', d);
-      area.setAttribute('d', d + 'L' + W + ' ' + H + ' L0 ' + H + ' Z');
-      dot.setAttribute('cx', x(pts.length - 1).toFixed(1));
-      dot.setAttribute('cy', y(ys[ys.length - 1]).toFixed(1));
-
-      // Dash length drives the draw-in. Measured, not guessed, because the path
-      // length depends on how volatile the curve actually is.
-      try { line.style.setProperty('--len', Math.ceil(line.getTotalLength())); } catch(e){}
-
-      var last = ys[ys.length - 1];
-      var tot = el('hcTotal');
-      tot.textContent = (last > 0 ? '+' : '') + last.toFixed(1) + 'R';
-      tot.style.color = last >= 0 ? 'var(--lime)' : 'var(--down)';
-      line.setAttribute('stroke', last >= 0 ? 'var(--lime)' : 'var(--down)');
-      dot.setAttribute('fill', last >= 0 ? 'var(--lime)' : 'var(--down)');
-      el('hcFrom').textContent = pts[0].date || '';
-      el('hcTo').textContent = (pts[pts.length - 1].date || '') + ' · ' + pts.length + ' closed';
-      box.hidden = false;
-    }
 
     /* ═══════ long-term conviction ═══════ */
     function loadLongTerm(){
@@ -3492,7 +3458,8 @@ var TV_ALIASES = (function () {
             ' No figure is shown rather than a stale one.');
           return;
         }
-        paintHeroCurve(j);
+        // paintHeroCurve(j) was here. renderStats -> renderRecord -> drawCurve
+        // now draws the only copy of this series.
         fillTfSelect(el('perfTf'), (j.by_timeframe || []).map(function(b){ return { timeframe: b.key }; }));
         renderStats(j);
       }).catch(guard('perfNotice', 'Performance could not be loaded'));

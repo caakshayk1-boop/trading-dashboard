@@ -6213,26 +6213,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 }
 
 /* ═══════════ HERO EQUITY CURVE ═══════════ */
-.herocurve{margin-top:34px;max-width:640px;background:var(--surface);
-  border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.herocurve[hidden]{display:none}
-.hc-h{display:flex;justify-content:space-between;align-items:baseline;
-  padding:12px 16px 8px}
-.hc-t{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--dim)}
-.hc-v{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--lime)}
-.herocurve svg{display:block;width:100%;height:96px}
-#hcLine{stroke-dasharray:var(--len,0);stroke-dashoffset:var(--len,0);
-  animation:hcDraw 1.1s var(--ease) .25s forwards}
-@keyframes hcDraw{to{stroke-dashoffset:0}}
-#hcDot{opacity:0;animation:hcPop .3s var(--ease) 1.3s forwards}
-@keyframes hcPop{to{opacity:1}}
-.hc-f{display:flex;justify-content:space-between;gap:10px;padding:8px 16px 12px;
-  font-family:var(--mono);font-size:9.5px;color:var(--dim);letter-spacing:.4px}
-@media(prefers-reduced-motion:reduce){
-  #hcLine{animation:none;stroke-dashoffset:0}#hcDot{animation:none;opacity:1}
-}
-@media(max-width:640px){.herocurve{margin-top:26px}.herocurve svg{height:74px}}
+/* .herocurve CSS removed with the element — see the note in the markup. */
 
 /* Trade idea symbols open the chart, same as the long-term cards. The name
    was plain text on the one card type where you most want the chart. */
@@ -6878,7 +6859,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px;min-width:900px}
    involved in table headers at all; it still backs scroll-padding-top and
    section scroll-margin for anchor jumps, where being a few px out is invisible
    rather than a header landing in the middle of a table. */
-table.t th{position:sticky;top:0;z-index:5;background:var(--bg2);text-align:left;font-size:9.5px;letter-spacing:1.4px;
+table.t th{position:sticky;top:0;z-index:5;background:var(--surface);text-align:left;font-size:9.5px;letter-spacing:1.4px;
   text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
 table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 table.t tbody tr{transition:background .2s}
@@ -8304,7 +8285,18 @@ select:focus-visible{
   background:transparent;border:0;border-radius:0;
   border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
 }
-.tblwrap table th,.tw table th{background:transparent}
+/* A STICKY HEADER MUST BE OPAQUE.
+   The broadsheet pass set these transparent to drop the header panel, and a
+   sticky element with no background does not hide what scrolls beneath it —
+   the rows slid under the header and both drew in the same place. That is the
+   overlapping "SYMBOL COMPANY LISTED…" over the first data row.
+
+   It stays a header, so it keeps a surface. The card ground, not the old grey
+   panel, so it reads as part of the table rather than a chrome bar. */
+.tblwrap table th,.tw table th{
+  background:var(--surface);
+  box-shadow:0 1px 0 var(--line2);
+}
 .tblwrap table tbody tr:hover,.tw table tbody tr:hover{background:var(--surface2)}
 
 /* KPI tiles: hairline grid, no fills. The number is the object; the box was
@@ -9188,48 +9180,15 @@ a.mprov{opacity:1;color:#fff;border:0;font-weight:700}
 
   {% endif %}
 
-  {% if page != 'desk' %}
-  <!-- Track record, in the hero. The full performance section stays where it
-       is; this is the one-glance version, because the argument this page makes
-       is "here is the record" and the record was 17 sections down. Drawn from
-       /api/stats; hidden entirely on a static host with no ledger. -->
-  <div class="herocurve" id="heroCurve" hidden>
-    <div class="hc-h">
-      <span class="hc-t">Cumulative R · every closed signal</span>
-      <span class="hc-v" id="hcTotal">—</span>
-    </div>
-    {# What the curve IS, on the curve. It was captioned "drawdowns included —
-       that is the point", which explains the shape to someone who already knows
-       what an R-multiple is and nothing at all to anyone else. A falling line
-       with no unit and no baseline is a chart of the reader's own confusion. #}
-    <p class="hc-why">Each closed signal adds its result to a running total, measured in
-      <b>R</b> &mdash; multiples of the money that signal put at risk. A trade that hit its
-      stop is &minus;1R whatever the rupee size; one that made twice its risk is +2R. Rising
-      means the signals collectively made more than they risked; falling means the opposite.
-      <span class="hc-why-d">The line is every closed signal in order, with nothing removed
-      &mdash; the dips are real losing streaks, and a record that has none has been
-      edited.</span></p>
-    <svg viewBox="0 0 600 96" preserveAspectRatio="none" role="img"
-         aria-labelledby="hcDesc">
-      <title id="hcDesc">Cumulative R-multiple across every closed signal</title>
-      <defs>
-        <linearGradient id="hcFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="var(--lime)" stop-opacity=".22"/>
-          <stop offset="100%" stop-color="var(--lime)" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <path id="hcArea" fill="url(#hcFill)"></path>
-      <path id="hcLine" fill="none" stroke="var(--lime)" stroke-width="1.6"
-            vector-effect="non-scaling-stroke" stroke-linejoin="round"></path>
-      <circle id="hcDot" r="3" fill="var(--lime)"></circle>
-    </svg>
-    <div class="hc-f">
-      <span id="hcFrom">—</span>
-      <span id="hcNote">drawdowns included — that is the point</span>
-      <span id="hcTo">—</span>
-    </div>
-  </div>
-  {% endif %}
+  {# The hero's own equity curve was here and is removed.
+
+     A second curve was added to The Record band below without noticing this
+     one existed, so the page drew the same series twice, a few hundred pixels
+     apart. The Record's version is the one kept: it carries the zero line, the
+     shaded area against flat, the endpoint and the caption, and it sits in the
+     band whose entire purpose is the record. This one was the "one glance"
+     version of a thing that is now directly underneath it. #}
+
 </section>
 
 <main>

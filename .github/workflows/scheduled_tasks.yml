@@ -17,7 +17,11 @@ name: Scheduled Tasks — Morning and Evening Briefs
 #                     and what the world did overnight, read over breakfast.
 #                     This REPLACED the 12:30 MYT midday send rather than being
 #                     added to it: two Telegram alerts a day means two.
-# EVENING 17:00 MYT — NSE has closed (14:30 IST). What actually happened.
+# EVENING 20:00 MYT — NSE closed hours ago (17:30 IST) and the day's flows are
+#                     published. What actually happened, plus the Life page's
+#                     practice for the day. Moved from 17:00: at 20:00 the
+#                     evening read is done and the FII/DII figures NSE posts
+#                     after the close have actually landed.
 #
 # Why two hours and not ten minutes after the site build: GitHub delays
 # scheduled runs by 1.5-3 hours and both jobs drift independently, so a small
@@ -29,7 +33,7 @@ name: Scheduled Tasks — Morning and Evening Briefs
 on:
   schedule:
     - cron: '0 0 * * 1-5'     # 08:00 MYT · 05:30 IST — morning brief
-    - cron: '0 9 * * 1-5'     # 17:00 MYT · 14:30 IST — evening brief
+    - cron: '0 12 * * 1-5'    # 20:00 MYT · 17:30 IST — evening brief
     - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (data only, no Telegram)
     # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
     # to TASK=health since it was written, but that cron was never in this
@@ -101,6 +105,8 @@ jobs:
               "0 0 * * 1-5")    TASK=brief_morning ;;
               # Kept so a manual dispatch of the old name still works.
               "30 4 * * 1-5")   TASK=brief_midday  ;;
+              "0 12 * * 1-5")   TASK=brief_evening ;;
+              # The old 17:00 MYT slot, kept so a manual dispatch of it works.
               "0 9 * * 1-5")    TASK=brief_evening ;;
               "45 1 * * *")     TASK=sip_bucket    ;;
               "0 3,9,15 * * *") TASK=health        ;;

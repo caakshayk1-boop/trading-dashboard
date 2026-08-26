@@ -944,6 +944,14 @@ def build_section_brief(slot: str = "midday") -> str:
         rule("📰 *04 · THE WIRE*")
         L.append(_Wire([_news_entry(n) for n in (nw.get("news") or [])]))
 
+    # ── LIFE ───────────────────────────────────────────────────────────────
+    # Evening only. The morning brief is read before the open and is about the
+    # market; the evening one is read after it and is the right place for the
+    # rest of the day. Adding it to both would push the wire out of the
+    # morning send to say the same thing twice.
+    if evening:
+        L.extend(_life_block())
+
     # ── 09 SIP Buckets ─────────────────────────────────────────────────────
     sp = _news_get("/sip")
     if sp and sp.get("plan"):
@@ -998,6 +1006,71 @@ def build_section_brief(slot: str = "midday") -> str:
 # tail. Tickets are ranked by score, so what falls off is the weakest, and the
 # reader is told how many and where to read them.
 TG_LIMIT = 3900
+
+
+def _life_block() -> list:
+    """The Life page, in five lines. Evening only.
+
+    life.askakshay.com has its own fifteen sections and the brief has 3,900
+    characters total, most of them already spoken for by the book and the wire.
+    So this is a pointer with substance, not a second newsletter: the day's
+    practice, one line each, and a link.
+
+    Built from the SAME functions /desk renders from rather than a second set
+    of content banks — the last time this file kept its own copy of anything
+    (build_brief's markets block) it drifted from the site within a day.
+    Everything here is a local lookup; nothing makes a network call, so a slow
+    third party cannot delay the send.
+    """
+    out = []
+    try:
+        import daily_learning as _DL
+
+        rows = []
+        try:
+            dl = _DL.get_all() or {}
+        except Exception:
+            dl = {}
+
+        # get_all() returns LISTS keyed by topic — the day's selection, not a
+        # single item. Checked against the real shape rather than assumed; the
+        # first version treated them as dicts, found nothing, and logged a
+        # warning instead of printing anything, which is the right failure but
+        # still a wrong guess.
+        def first(key):
+            v = dl.get(key)
+            if isinstance(v, list) and v:
+                return v[0] if isinstance(v[0], dict) else None
+            return v if isinstance(v, dict) else None
+
+        sp = first("spanish") or {}
+        if sp.get("word"):
+            rows.append(("Spanish", f"{sp['word']} — {sp.get('meaning', '')}"))
+        vo = first("vocab") or {}
+        if vo.get("word"):
+            rows.append(("Word", f"{vo['word']} — {vo.get('meaning', '')}"))
+        fa = first("father") or {}
+        if fa.get("title"):
+            rows.append(("Father", fa["title"]))
+        wi = first("wisdom") or {}
+        if wi.get("term"):
+            rows.append(("Wisdom", f"{wi['term']} ({wi.get('tradition', '')}) — "
+                                   f"{wi.get('translation', '')}"))
+        sk = dl.get("speaking")
+        if isinstance(sk, dict) and sk.get("title"):
+            rows.append(("Drill", sk["title"]))
+
+        if not rows:
+            return out
+        out.append("━━━━━━━━━━━━━━━━━━━")
+        out.append("🌱 *LIFE* — today's practice")
+        out.append("━━━━━━━━━━━━━━━━━━━")
+        for k, v in rows[:5]:
+            out.append(f"  *{esc(k)}* — {esc(v)}")
+        out.append("_life.askakshay.com_")
+    except Exception as e:                                    # noqa: BLE001
+        log.warning("life block unavailable: %s", e)
+    return out
 
 
 def _fit(lines: list, ticket_blocks: list = None) -> str:

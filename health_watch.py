@@ -39,8 +39,18 @@ UA = {"User-Agent": "DailySignal-HealthWatch/1.0"}
 # are the point — a 200 that returns a degraded payload is the failure mode
 # this file exists for.
 CHECKS = [
+    # `wmCanvas` was the world map's canvas. The map was deliberately removed
+    # on 2026-08-26 and this check kept asserting it, so every run since has
+    # reported "200 but the payload is degraded" — a false alarm about a
+    # feature that was supposed to be gone. The smoke test had the same stale
+    # assertion and was fixed; this file was missed.
+    #
+    # Replaced with elements that are load-bearing and are not going anywhere:
+    # the ticker rail, and The Record band, which is the page's whole argument.
+    # A health check must assert what MUST be true, never what merely happened
+    # to be true the day it was written.
     ("page /", f"{SITE}/", None,
-     lambda t: 'id="tickRail"' in t and 'id="wmCanvas"' in t),
+     lambda t: 'id="tickRail"' in t and 'id="record"' in t),
     ("page /desk", f"{SITE}/desk", None,
      lambda t: 'id="gymStage"' in t),
     ("ticker", f"{SITE}/api/ticker", "json",

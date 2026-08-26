@@ -432,6 +432,28 @@ def _():
             )
 
 
+@check("sticky table headers are opaque")
+def _():
+    """A sticky header with no background does not hide what scrolls under it.
+
+    The broadsheet pass set `th{background:transparent}` to drop the header
+    panel. The headers are position:sticky inside a max-height scroll box, so
+    rows slid underneath and drew through them — "SYMBOL COMPANY LISTED…"
+    printed on top of the first data row. Reported from a screenshot, not
+    caught by any check, because nothing was measuring it.
+    """
+    for sel in (r'\.tblwrap table th,\.tw table th\{([^}]*)\}',
+                r'table\.t th\{([^}]*)\}'):
+        m = re.search(sel, TEMPLATE)
+        assert m, f"rule missing: {sel}"
+        body = m.group(1)
+        if "position:sticky" in body or "table th" in sel:
+            assert "background:transparent" not in body, \
+                f"sticky header is transparent — rows will scroll through it: {sel}"
+            assert "background:" in body, \
+                f"sticky header has no background at all: {sel}"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
