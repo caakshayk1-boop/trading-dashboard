@@ -2032,6 +2032,53 @@ var TV_ALIASES = (function () {
         '<div class="kpi"><div class="v">' + j.trades.length + '</div><div class="k">Trades sized</div></div>' +
         '</div>';
 
+      // ── THE DECISION LOG ────────────────────────────────────────────
+      //
+      // The wallet showed a position list: what is held now. It did not show
+      // what the book DID — when it sized something, what that cost, and how
+      // it ended. "Always live of the decision taken" is a different artefact
+      // from a holdings table, and it is the one that makes a mechanical
+      // allocator auditable: every decision, in the order it was taken, with
+      // the money attached.
+      //
+      // Built from the same payload the tiles above are computed from, newest
+      // first. Nothing is fetched separately, so the log cannot disagree with
+      // the totals beside it.
+      var decisions = (j.trades || []).slice().sort(function(a, b){
+        return String(b.closed_at || b.date || '').localeCompare(String(a.closed_at || a.date || ''));
+      }).slice(0, 24);
+
+      var decisionLog = decisions.length ? (
+        '<div class="dlog">' +
+        '<div class="dlog-h"><span class="dlog-t">Every decision this book took</span>' +
+        '<span class="lv-sys">newest first · ' + (j.trades || []).length + ' sized in total</span></div>' +
+        decisions.map(function(t){
+          var closed = t.status_raw !== 'OPEN' && t.closed_at;
+          var pnl = t.realized_pnl;
+          var cls = pnl > 0 ? 'up' : pnl < 0 ? 'dn' : '';
+          // What the book DID, in one verb. "OPEN" is a state; "sized" is a
+          // decision, and this is a log of decisions.
+          var verb = closed ? 'closed' : 'sized';
+          return '<div class="dlog-r">' +
+            '<span class="dl-d">' + esc(String(t.closed_at || t.date || '').slice(0, 10)) + '</span>' +
+            '<a class="dl-s sym" href="#stocks" data-stock="' + esc(t.symbol) + '">' + esc(t.symbol) + '</a>' +
+            '<span class="dl-v dl-' + verb + '">' + verb + '</span>' +
+            '<span class="dl-a num">' + (t.allocated_amount ? rupees(t.allocated_amount) : '—') + '</span>' +
+            '<span class="dl-t">' + esc(t.tier || '') + (t.grade ? ' · ' + esc(t.grade) : '') + '</span>' +
+            '<span class="dl-o num ' + cls + '">' +
+              (closed
+                ? ((pnl > 0 ? '+' : '') + (pnl === null || pnl === undefined ? '—' : rupees(pnl)))
+                : '<span class="dl-open">open</span>') +
+            '</span>' +
+            '</div>';
+        }).join('') +
+        ((j.trades || []).length > decisions.length
+          ? '<p class="lv-sys" style="margin:10px 0 0">Showing the last ' + decisions.length +
+            ' of ' + (j.trades || []).length + '. Every one of them is in the signal log.</p>'
+          : '') +
+        '</div>'
+      ) : '';
+
       var catBars = WALLET_TIER_ORDER.map(function(k){
         var c = cats[k];
         if (!c) return '';
@@ -2269,7 +2316,10 @@ var TV_ALIASES = (function () {
           '</tr></thead><tbody>' + rows + '</tbody></table></div>';
       }
 
-      box.innerHTML = kpi + catBars + rulesElog + tableHtml;
+      // Decision log directly under the tiers: the totals say WHAT the book
+      // holds, the log says HOW it got there. The position table stays below
+      // both — it answers a third question, which is what is open right now.
+      box.innerHTML = kpi + catBars + decisionLog + rulesElog + tableHtml;
       // Without this the section renders and stays invisible. The KPI row, the
       // rules list and the trades table all carry .rv, and the scroll-reveal
       // observer registered once at load over the nodes that existed then —
@@ -6726,7 +6776,11 @@ var TV_ALIASES = (function () {
   // are written by live renders, and splitting only the server-rendered ones
   // would leave the page inconsistent about where its explanations live.
   var PROSE_SELECTOR = '.sdesc, .subdesc, .lv-3';
-  var PROSE_MIN = 190;            // shorter than this is already one thought
+  // 130, not 190. Measured on the rendered page: at 190 only 20 of 49 ledes
+  // split and 26 still showed more than 150 visible characters, longest 286.
+  // A lede is a sentence that says what the thing is; anything past that is
+  // method, and method belongs behind the disclosure.
+  var PROSE_MIN = 130;
 
   function splitProse(el){
     if (el.dataset.disclosed) return;
@@ -6739,7 +6793,9 @@ var TV_ALIASES = (function () {
     // be followed by a space and a capital or a digit.
     var m = /[.?!]\s+(?=[A-Z0-9“"₹])/g, cut = -1, hit = m.exec(text);
     while (hit !== null) {
-      if (hit.index >= 60 && text.length - hit.index >= 90) { cut = hit.index + 1; break; }
+      // Remainder floor drops to 40: at 90 a two-sentence lede whose second
+      // sentence was short simply never split, which is most of the 26.
+      if (hit.index >= 45 && text.length - hit.index >= 40) { cut = hit.index + 1; break; }
       hit = m.exec(text);
     }
     if (cut === -1) return;
