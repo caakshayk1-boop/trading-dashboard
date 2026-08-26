@@ -2178,9 +2178,13 @@ METRICS = [
             "percentage lives in the bhavcopy, which nothing here reads, so "
             "delivery is never filtered on and never implied."},
     {"key": "rsi", "label": "RSI", "tier": "model",
-     "what": "14-day relative strength index.",
-     "how": "Above 70 is stretched, below 30 is washed out. Used here only as "
-            "an exclusion — an idea already vertical is not published."},
+     "what": "14-period relative strength index, on DAILY bars.",
+     "how": "The period and the bar were both missing from the column, which "
+            "is the whole question a reader has when they see 68 — is that a "
+            "day or a week? It is 14 daily closes (yfinance interval=1d, "
+            "stock_screen.rsi(c, 14)). Above 70 is stretched, below 30 is "
+            "washed out. Used here only as an exclusion: an idea already "
+            "vertical is not published."},
     {"key": "roce", "label": "ROCE", "tier": "fact",
      "what": "Return on capital employed, from the filed statements.",
      "how": "Blank rather than zero where statements are not in the feed. "
@@ -4597,6 +4601,11 @@ TEMPLATE = r"""<!DOCTYPE html>
      the one memorable thing about a product is a redesign, not a rebrand.
      Everything around it is what changed. */
   --lime:#C2F04A;
+  /* What text goes ON the brand fill. Bright lime wants black; the light
+     theme's navy wants white. A literal here is how a button becomes
+     unreadable the day the brand colour changes — which is exactly what
+     happened. */
+  --on-brand:#000;
   --lime-soft:rgba(194,240,74,.10);
   --lime-line:rgba(194,240,74,.34);
 
@@ -4766,6 +4775,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* One accent, used for links and the wordmark. Everything else that used to
      carry a hue now carries weight, size or a rule instead. */
   --lime:#123E6E;
+  --on-brand:#fff;
   --lime-soft:rgba(18,62,110,.07);
   --lime-line:rgba(18,62,110,.24);
 
@@ -4855,6 +4865,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   /* One accent, used for links and the wordmark. Everything else that used to
      carry a hue now carries weight, size or a rule instead. */
   --lime:#123E6E;
+  --on-brand:#fff;
   --lime-soft:rgba(18,62,110,.07);
   --lime-line:rgba(18,62,110,.24);
 
@@ -6818,7 +6829,7 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
   background:transparent;border:1px solid var(--line);color:var(--muted);cursor:pointer;border-radius:100px;
   transition:all .25s var(--ease)}
 .fbtn:hover{border-color:var(--line2);color:var(--text)}
-.fbtn.on{border-color:var(--lime);color:#000;background:var(--lime);font-weight:700}
+.fbtn.on{border-color:var(--lime);color:var(--on-brand);background:var(--lime);font-weight:700}
 /* No -webkit-overflow-scrolling:touch: that's a pre-iOS-13 property for
    momentum scroll on an overflow container, which modern WebKit already
    does natively. Left on, it's a known cause of exactly the bug it caused
@@ -7189,7 +7200,7 @@ table.t tbody tr:last-child td{border-bottom:none}
   font-size:13px;flex:1;min-width:130px;border-radius:9px;font-family:var(--sans);transition:border-color .25s}
 .frow select:focus{outline:none;border-color:var(--lime)}
 .fnote{font-size:11px;color:var(--dim);margin:2px 0 12px}
-.btn{background:var(--lime);color:#000;border:none;padding:10px 20px;font-size:11.5px;font-weight:700;
+.btn{background:var(--lime);color:var(--on-brand);border:none;padding:10px 20px;font-size:11.5px;font-weight:700;
   cursor:pointer;letter-spacing:1.2px;border-radius:100px;font-family:var(--sans);text-transform:uppercase;
   transition:transform .25s var(--ease),box-shadow .25s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(184,239,67,.25)}
@@ -7403,7 +7414,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .foot-in .m{font-family:var(--mono);font-size:11px;color:var(--dim);line-height:2;text-align:right}
 @media(max-width:640px){.foot-in .m{text-align:left}}
 .fab{position:fixed;right:20px;bottom:20px;z-index:400;width:46px;height:46px;border-radius:50%;
-  background:var(--lime);color:#000;border:none;cursor:pointer;font-size:17px;display:grid;place-items:center;
+  background:var(--lime);color:var(--on-brand);border:none;cursor:pointer;font-size:17px;display:grid;place-items:center;
   opacity:0;pointer-events:none;transform:translateY(14px);transition:all .35s var(--ease);
   box-shadow:0 8px 26px rgba(184,239,67,.3)}
 .fab.on{opacity:1;pointer-events:auto;transform:none}
@@ -8542,7 +8553,7 @@ main section.sec .card{background:transparent;border:0;border-top:1px solid var(
 .pill-fact  {background:#1F6FB2}   /* observed */
 .pill-model {background:#6A4CC4}   /* computed */
 .pill-result{background:#0E7A55}   /* what happened */
-.pill-view  {background:#B4762A}   /* opinion, labelled */
+.pill-view  {background:#8A5A18}   /* opinion, labelled */
 
 /* The legend strip itself becomes a real key: a bounded card at the top of the
    page that a reader can return to, not a line of grey text they scroll past. */
@@ -8571,7 +8582,7 @@ main section.sec .card{background:transparent;border:0;border-top:1px solid var(
 .dh-LIVE{background:#0E7A55}
 .dh-FRESH{background:#1F6FB2}
 .dh-STALE{background:#8A7320}
-.dh-DEGRADED{background:#B4762A}
+.dh-DEGRADED{background:#8A5A18}
 .dh-FAILED,.dh-UNAVAILABLE{background:#B4231A}
 
 /* The metric badges app.js stamps on every KPI follow the same key, so a
@@ -8580,7 +8591,33 @@ a.mprov{opacity:1;color:#fff;border:0;font-weight:700}
 .mprov-fact{background:#1F6FB2}
 .mprov-model{background:#6A4CC4}
 .mprov-result{background:#0E7A55}
-.mprov-view{background:#B4762A}
+.mprov-view{background:#8A5A18}
+
+
+/* A period under a column head. "RSI 68" is unreadable without knowing whether
+   that is a day or a week, and the answer belongs in the column, not in a
+   glossary the reader has to go and find. */
+.th-sub{display:block;font-weight:400;font-size:8px;letter-spacing:.06em;
+  color:var(--dim);text-transform:none;margin-top:2px}
+
+
+/* ── WHAT SITS ON THE BRAND COLOUR ────────────────────────────────────────
+   Every primary button was color:#000 on background:var(--lime). That was
+   readable while --lime was a bright olive. It is now a dark navy, and black
+   text on dark navy measured 1.94:1 — Subscribe, Add to book, + Track, the
+   active filter chip and the back-to-top button were all effectively
+   unreadable, on every page, since the palette changed.
+
+   The lesson is not "check the buttons". It is that changing a token means
+   checking everything painted ON that token, and nothing was measuring it.
+   The audit that found this walks 9,264 text elements and composites the full
+   stack of translucent backgrounds down to the page before computing a ratio —
+   the first two passes reported false failures because they treated a 7% tint
+   as opaque. */
+.btn,.fbtn.on,.fab{color:var(--on-brand)}
+/* Metadata that had faded to 1.26:1 — an age stamp nobody could read is not a
+   quieter age stamp, it is a missing one. */
+.dh-age{color:var(--muted)}
 
 </style>
 </head>
@@ -10094,7 +10131,7 @@ a.mprov{opacity:1;color:#fff;border:0;font-weight:700}
     <table>
       <thead>
         <tr>
-          <th>Symbol</th><th class="r">Turnover</th><th class="r">RSI</th>
+          <th>Symbol</th><th class="r">Turnover</th><th class="r">RSI(14)<span class="th-sub">daily</span></th>
           <th class="r">1M</th><th class="r">6M</th><th class="r">ROCE</th><th class="r">From 52w high</th>
         </tr>
       </thead>

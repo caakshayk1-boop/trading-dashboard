@@ -454,6 +454,64 @@ def _():
                 f"sticky header has no background at all: {sel}"
 
 
+@check("text on a filled background is readable against it")
+def _():
+    """Changing a token means checking everything painted ON it.
+
+    Every primary button was `color:#000` on `background:var(--lime)`. That
+    was fine while --lime was a bright olive. It became a dark navy and black
+    on navy measures 1.94:1 — Subscribe, Add to book, + Track, the active
+    filter chip and the back-to-top button were unreadable on every page, and
+    nothing noticed because nothing was measuring it.
+
+    This checks the pairs where a literal foreground sits on a known token or
+    literal background. It cannot catch every combination — a full audit needs
+    a rendered page — but it catches the class of mistake that actually
+    happened.
+    """
+    def lum(hexs):
+        hexs = hexs.lstrip("#")
+        if len(hexs) == 3:
+            hexs = "".join(c * 2 for c in hexs)
+        r, g, b = (int(hexs[i:i + 2], 16) / 255 for i in (0, 2, 4))
+        f = lambda x: x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b)
+
+    def ratio(a, b):
+        l1, l2 = lum(a), lum(b)
+        hi, lo = max(l1, l2), min(l1, l2)
+        return (hi + 0.05) / (lo + 0.05)
+
+    # EVERY palette, not just one. The first version of this test resolved a
+    # single --lime and passed judgement on it; the site has three palettes and
+    # the brand colour is a bright lime in one of them and a dark navy in the
+    # others. A literal foreground cannot be right for both, which is why the
+    # fix is a token.
+    limes = re.findall(r"--lime:(#[0-9A-Fa-f]{6});", TEMPLATE)
+    brands = re.findall(r"--on-brand:(#[0-9A-Fa-f]{3,6});", TEMPLATE)
+    assert limes, "--lime is not defined as a hex in any palette"
+    assert len(brands) == len(limes), (
+        f"{len(limes)} --lime definitions but {len(brands)} --on-brand — every "
+        f"palette that sets the brand colour must say what text goes on it"
+    )
+    for lime, on in zip(limes, brands):
+        r = ratio(on, lime)
+        assert r >= 4.5, f"--on-brand {on} on --lime {lime} is only {r:.2f}:1"
+
+    # And nothing may hardcode a foreground onto the brand fill again.
+    btn = TEMPLATE.split(".btn{")[1].split("}")[0]
+    assert "color:#000" not in btn and "color:#fff" not in btn, \
+        "primary button hardcodes a text colour on the brand fill — use --on-brand"
+
+    # The filled status chips, which carry white text by design.
+    for name in ("pill-fact", "pill-model", "pill-result", "pill-view"):
+        c = re.search(rf"\.{name}\s*{{background:(#[0-9A-Fa-f]{{6}})}}", TEMPLATE)
+        if not c:
+            continue
+        r = ratio("#ffffff", c.group(1))
+        assert r >= 4.5, f".{name} is white on {c.group(1)} — only {r:.2f}:1"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
