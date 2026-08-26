@@ -1381,13 +1381,11 @@ var TV_ALIASES = (function () {
       var hk = el('heroOpenK'); if (hk) hk.textContent = openLbl;
       bar('live', 'LIVE LEDGER · ' + logged + ' signals' +
                   ' · latest ' + stamp +
-                  // "0 tracked" is correct and reads as broken. A tracked
-                  // position is one actually HELD; it is zero because nothing
-                  // has ever been confirmed as held — this ledger cannot place
-                  // a trade. Saying "held" and pairing it with the setup count
-                  // makes the zero self-explaining instead of alarming.
-                  ' · ' + tracked + ' held' +
-                  (tracked === 0 ? ' (nothing bought — this ledger cannot trade)' : '') +
+                  // The held count is DROPPED from this bar. It was always
+                  // zero — nothing has ever been confirmed as held, because
+                  // this ledger cannot place a trade — and a permanent zero in
+                  // a status bar is noise that reads as a fault. The Portfolio
+                  // section states the same thing where it means something.
                   ' · ' + otxt +
                   (h.writes_enabled ? '' : ' · read-only (EDIT_KEY not set)'));
       // Wiring the page is NOT part of deciding whether the ledger is up. The
@@ -1823,20 +1821,80 @@ var TV_ALIASES = (function () {
        good response. A failed fetch therefore leaves the 6 AM map in place,
        still labelled as a 6 AM map — degrading to correct-but-old rather
        than to blank. */
+    // Nifty and the regime reading, into the day summary. Deliberately reads
+    // the SAME payloads the tiles beside it read — a summary that fetches its
+    // own copy of a number is a summary that will one day disagree with the
+    // thing it is summarising.
+    // The ticker and the heat map race. Whichever lands second must not leave
+    // the other's half of this block empty, so both call it.
+    window.__onTickerPaint = function(){
+      try { paintDayBlocks(window.__lastHeat); } catch (e) { /* non-fatal */ }
+    };
+
+    function paintDayBlocks(heatPayload){
+      var n = el('dayNifty');
+      if (n){
+        var t = (window.__tickerPayload && window.__tickerPayload.segments) || [];
+        var india = t.filter(function(s){ return s.key === 'india'; })[0];
+        var nifty = india && (india.items || []).filter(function(i){
+          return /^nifty 50$/i.test(String(i.name || ''));
+        })[0];
+        if (nifty){
+          var p = Number(nifty.change_pct);
+          n.innerHTML = esc(nifty.price) + ' <span class="' +
+            (p > 0 ? 'up' : p < 0 ? 'dn' : '') + '">' +
+            (p > 0 ? '+' : '') + (isFinite(p) ? p.toFixed(2) : '—') + '%</span>';
+        }
+      }
+      var r = el('dayRegime');
+      if (r && heatPayload && Array.isArray(heatPayload.heat) && heatPayload.heat.length){
+        var up = heatPayload.heat.filter(function(x){ return Number(x.pct) > 0; }).length;
+        var tot = heatPayload.heat.length;
+        r.innerHTML = up + ' of ' + tot + ' <span class="db-vs">sectors up</span>';
+      }
+    }
+
     function loadSectorHeat(){
       var grid = el('heatGrid');
       if (!grid) return;
       api('/markets?heat=1').then(function(j){
         if (!j || !j.ok || !Array.isArray(j.heat) || !j.heat.length) return;
-        grid.innerHTML = j.heat.map(function(s){
+        // CUBES, not cards. Eleven bordered cards each holding one percentage
+        // is a list wearing a grid's clothes: you read it name by name. A
+        // treemap-style block coloured by size of move is read in one look —
+        // which side of the market is green, and how strongly. Same data,
+        // same source, an order of magnitude less work for the reader.
+        //
+        // Colour steps rather than a continuous gradient: five buckets a
+        // reader can actually name ("strong up", "flat") beat 200 shades
+        // nobody can tell apart. Sorted strongest-first so the extremes are
+        // adjacent and comparable.
+        var heat = j.heat.slice().sort(function(a, b){
+          return (Number(b.pct) || 0) - (Number(a.pct) || 0);
+        });
+        // Keep `rv` so the class list matches what the template shipped, and
+        // reveal it explicitly below. Replacing className without revealing
+        // left the cubes at opacity 0 — invisible — which is precisely what
+        // test_engine_regressions' reveal check exists to catch, and it caught
+        // it.
+        grid.className = 'heatcubes rv';
+        grid.innerHTML = heat.map(function(s){
           var pct = Number(s.pct) || 0;
-          var cls = pct >= 0.3 ? 'rk-low' : pct <= -0.3 ? 'rk-high' : 'rk-medium';
-          return '<div class="card fund-card" style="padding:14px 16px">' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
-            '<strong>' + esc(s.name) + '</strong>' +
-            '<span class="rk ' + cls + '">' + (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%</span>' +
-            '</div></div>';
+          var a = Math.abs(pct);
+          var step = a >= 1.5 ? 3 : a >= 0.7 ? 2 : a >= 0.2 ? 1 : 0;
+          var dir = step === 0 ? 'flat' : (pct > 0 ? 'up' : 'dn');
+          return '<div class="hcube h-' + dir + ' s-' + step + '" ' +
+            'title="' + esc(s.name) + ' ' + (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%">' +
+            '<span class="hc-n">' + esc(s.name) + '</span>' +
+            '<span class="hc-p">' + (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%</span>' +
+            '</div>';
         }).join('');
+        // The day blocks' live half. Server-rendered breadth is already
+        // correct with JS off; these two need the tape.
+        reveal(grid);
+        window.__lastHeat = j;
+        try { paintDayBlocks(j); } catch (e) { /* blocks keep their static half */ }
+
         var tag = el('heatAsOf');
         if (tag){
           // Only claims LIVE once real quotes have actually landed.
@@ -4362,6 +4420,12 @@ var TV_ALIASES = (function () {
 
     function paintTicker(j){
       if (!j || !j.ok || !j.segments || !j.segments.length) return;
+      // Kept so the day summary can read the SAME payload the rail is drawing
+      // rather than fetching its own copy of Nifty. Two fetches of one number
+      // is two numbers that can disagree, and they will disagree at exactly
+      // the moment the market is moving.
+      window.__tickerPayload = j;
+      try { if (window.__onTickerPaint) window.__onTickerPaint(j); } catch (e) { /* non-fatal */ }
       var rail = document.getElementById('tickRail');
       if (!rail) return;
 

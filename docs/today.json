@@ -1,5 +1,5 @@
 {
- "build_id": "20260827T012900",
+ "build_id": "20260827T014208",
  "date": "2026-08-27",
  "date_str": "Thursday, August 27 2026",
  "picks": [
@@ -286,6 +286,34 @@
  ],
  "engine": [
   {
+   "date": "2026-08-27",
+   "tag": "CADENCE",
+   "verdict": "logged",
+   "title": "Multibagger ideas refresh weekly, not daily",
+   "body": "The five names on the multibagger ticker come from the newest row of the Saturday scan and hold until the next Saturday. The prices beside them are live and tick all week, which made a fixed list of names read as a stalled feed. The scan is running on schedule; the cadence was simply never stated anywhere a reader could see it.",
+   "evidence": [
+    [
+     "Scan cron",
+     "Saturday 09:30 IST",
+     "daily_scan.yml",
+     "weekly"
+    ],
+    [
+     "Names change",
+     "once a week",
+     "on the scan",
+     "by design"
+    ],
+    [
+     "Prices change",
+     "every refresh",
+     "from the tape",
+     "live"
+    ]
+   ],
+   "note": "The segment is labelled WEEKLY on the rail now, and the ticker query already drops the whole segment if the newest scan is more than 31 days old \u2014 so a scan that genuinely stops disappears rather than quietly serving month-old ideas as current."
+  },
+  {
    "date": "2026-08-09",
    "tag": "SELECTION",
    "verdict": "adopted",
@@ -417,7 +445,7 @@
    "sector": "Healthcare"
   },
   "AXON": {
-   "price": 608.385,
+   "price": 609.25,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
@@ -481,7 +509,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 203.82,
+   "price": 204.3301,
    "sector": "Technology"
   },
   "DEEPAKNTR": {
@@ -497,7 +525,7 @@
    "sector": "Real Estate"
   },
   "DUOL": {
-   "price": 139.85,
+   "price": 140.14,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -601,7 +629,7 @@
    "sector": "Technology"
   },
   "MRK": {
-   "price": 153.72,
+   "price": 154.0001,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -609,7 +637,7 @@
    "sector": "Energy"
   },
   "MSFT": {
-   "price": 494.66,
+   "price": 494.59,
    "sector": ""
   },
   "NATIONALUM": {
