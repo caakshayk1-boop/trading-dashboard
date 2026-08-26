@@ -222,7 +222,7 @@ MIN_SECTOR_SIZE = 8
 def sector_movers(rows: list[dict], window: str = "r1w") -> list[dict]:
     """Best and worst performers within each sector.
 
-    Deliberately built on the SCREEN's own sector labels rather than on the
+    Deliberately built on the SCREEN's own industry labels rather than on the
     heat map's NSE index tiles, and the two must not be conflated. The tiles
     are NSE sector indices (^CNXIT, ^NSEBANK, ^CNXPSUBANK...); these rows carry
     Yahoo's sector taxonomy. Mapping one onto the other is lossy in one
@@ -238,7 +238,22 @@ def sector_movers(rows: list[dict], window: str = "r1w") -> list[dict]:
     rows = [r for r in (rows or []) if isinstance(r, dict)]
     buckets: dict[str, list[dict]] = {}
     for r in rows:
-        sec = r.get("sector")
+        # `ind` — the NSE industry — not `sector`, which is Yahoo's.
+        #
+        # Two reasons, and the first one only became visible when this board
+        # was put next to the live one. That board groups by `ind` (via the
+        # sector map the page ships), this one grouped by `sector`, and the two
+        # sat adjacent under one heading sharing exactly two labels out of
+        # twenty-one. A reader comparing "Financial Services today" with
+        # "Financial Services this week" was comparing two different baskets
+        # that happen to share a name, which is worse than not offering the
+        # comparison at all.
+        #
+        # Second: coverage. `ind` is populated on 750 of 750 screened rows at
+        # 22 industries; `sector` on 623 at 11. Grouping on the sparser field
+        # silently dropped 127 names out of the board and coarsened what was
+        # left. `sector` stays as the fallback for a row with no industry.
+        sec = r.get("ind") or r.get("sector")
         if not sec or _f(r, window) is None:
             continue
         buckets.setdefault(str(sec), []).append(r)
