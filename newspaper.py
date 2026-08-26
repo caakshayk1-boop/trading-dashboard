@@ -2333,6 +2333,32 @@ FRESHNESS = [
     ("UNAVAILABLE", "Never published."),
 ]
 
+def inr(n) -> str:
+    """Indian digit grouping. 10000000 -> '1,00,00,000'.
+
+    Python's own separator groups in threes all the way up, so the mandate
+    printed as "10,000,000" — a number the reader has to stop and count the
+    digits of to tell a crore from a million. Last three digits group in three,
+    everything above them in twos, which is what every Indian statement, broker
+    note and bank app does.
+    """
+    try:
+        n = int(round(float(n)))
+    except (TypeError, ValueError):
+        return "—"
+    sign, n = ("-" if n < 0 else ""), abs(n)
+    t = str(n)
+    if len(t) <= 3:
+        return sign + t
+    head, tail = t[:-3], t[-3:]
+    parts = []
+    while len(head) > 2:
+        parts.insert(0, head[-2:]); head = head[:-2]
+    if head:
+        parts.insert(0, head)
+    return sign + ",".join(parts) + "," + tail
+
+
 PROV_TIERS = {
     "fact":   ("Fact",   "an observed value — a close, a flow, a filing"),
     "model":  ("Model",  "computed by the engine from facts"),
@@ -2619,6 +2645,7 @@ def page_context(page: str, drop=()) -> dict:
         "metrics": METRICS,
         "prov_tiers": PROV_TIERS,
         "freshness": FRESHNESS,
+        "inr": inr,
         # The same list again, trimmed to what the badge stamper needs and
         # serialised here rather than in the template: json.dumps escapes for a
         # <script> context, and hand-building this in Jinja is how a stray
@@ -7825,6 +7852,17 @@ a.mprov{opacity:.78}
   border-bottom:1px dotted color-mix(in srgb,var(--pillar,var(--text)) 45%,transparent)}
 .tblwrap table a.sym:hover,.tblwrap table a.sym:focus-visible{border-bottom-style:solid}
 
+
+/* The book's reconciliation line. Eight orders under a header reading
+   "deployed 71.7%" could not be tied together by eye, which is what made the
+   book look like it was ignoring most of the crore. */
+.mandate-total{display:flex;flex-wrap:wrap;gap:6px 20px;padding:12px 16px;
+  border-top:1px solid var(--line2);background:var(--surface2);
+  font:400 12.5px/1.5 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.mandate-total b{color:var(--text);font-weight:700}
+.mandate-total span:first-child{color:var(--dim);text-transform:uppercase;
+  letter-spacing:.1em;font-size:10px;align-self:center}
+
 </style>
 </head>
 
@@ -8670,17 +8708,28 @@ a.mprov{opacity:.78}
      never print an empty book, because "0 to place" is a claim about the
      market and "sizing did not run" is a claim about this page. #}
   {% if mandate %}
+  {# The heading above this block reads "Top 5 trade ideas" and names the
+     RANKING. This is a different artefact with a different count — eight
+     orders under a heading promising five — and with nothing separating them
+     the section looked like it contradicted itself. Its own heading now. #}
+  <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
+    <h3>What the ₹{{ inr(mandate.capital) }} book would place today
+      <span class="dh dh-LIVE">{{ mandate.admitted|length }} ORDERS</span></h3>
+    <p class="subdesc">Not the five above &mdash; that is a weekly ranking. This is the
+      book: what the rulebook would buy right now, at what size, with the exits already
+      decided. Every row shows what it costs, and they add up to the deployed figure.</p>
+  </div>
   <div class="mandate rv">
     <div class="mandate-head">
       <div>
         <span class="pv-tag">MANDATE</span>
-        <b>{{ '{:,}'.format(mandate.capital) }}</b> &middot; Indian listed equity, no intraday
+        <b>&#8377;{{ inr(mandate.capital) }}</b> &middot; Indian listed equity, no intraday
       </div>
       <div class="mandate-state">
         <span><i>{{ mandate.admitted|length }}</i> to place</span>
         <span>heat <i>{{ mandate.state.heat_pct }}%</i></span>
         <span>deployed <i>{{ mandate.state.deployed_pct }}%</i></span>
-        <span>cash <i>{{ '{:,}'.format(mandate.state.cash) }}</i></span>
+        <span>cash <i>&#8377;{{ inr(mandate.state.cash) }}</i></span>
       </div>
     </div>
 
@@ -8698,8 +8747,8 @@ a.mprov{opacity:.78}
         <div class="mrow-nums">
           <span>buy <b>{{ t.qty }}</b> @ <b>{{ '{:,.2f}'.format(t.entry) }}</b></span>
           <span class="mstop">stop <b>{{ '{:,.2f}'.format(t.stop) }}</b> ({{ t.stop_pct }}%)</span>
-          <span>{{ '{:,}'.format(t.notional) }} &middot; {{ t.notional_pct }}%</span>
-          <span>risk {{ '{:,}'.format(t.risk_amount) }}</span>
+          <span>&#8377;{{ inr(t.notional) }} &middot; {{ t.notional_pct }}%</span>
+          <span>risk &#8377;{{ inr(t.risk_amount) }}</span>
           <span>hold {{ t.hold_days }}</span>
         </div>
         {# The ladder is the point. 20% at T1, half the remainder at T2, the
@@ -8717,6 +8766,21 @@ a.mprov{opacity:.78}
     </div>
     {% else %}
     <p class="mandate-empty">Nothing clears the mandate today. Cash is the position.</p>
+    {% endif %}
+
+    {% if mandate.admitted %}
+    {# The reconciliation. Eight orders and a header reading "deployed 71.7%"
+       could not be tied together by eye, which is what made the book look like
+       it was ignoring most of the crore. #}
+    {% set _placed = mandate.admitted | sum(attribute='notional') %}
+    {% set _risked = mandate.admitted | sum(attribute='risk_amount') %}
+    <div class="mandate-total">
+      <span>{{ mandate.admitted|length }} orders</span>
+      <span>&#8377;{{ inr(_placed) }} of &#8377;{{ inr(mandate.capital) }}
+        &middot; <b>{{ '%.1f'|format(_placed / mandate.capital * 100) }}%</b> deployed</span>
+      <span>&#8377;{{ inr(mandate.capital - _placed) }} stays in cash</span>
+      <span>&#8377;{{ inr(_risked) }} at risk if every stop hits</span>
+    </div>
     {% endif %}
 
     <div class="mandate-foot">
