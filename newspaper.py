@@ -7520,6 +7520,13 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 /* Rejected is deliberately not red. It is not a failure state — it is a test
    that returned a negative, which is the point of publishing it. */
 .elog-v.rejected{color:var(--muted)}
+/* A change that was neither adopted nor rejected — a cadence or a fact about
+   how something already runs, written down so it stops being folklore. The
+   verdict list is validated by test_engine_regressions, which is how this
+   arrived unstyled and was caught before it shipped. */
+.elog-v.logged{color:var(--p-markets);
+  border-color:color-mix(in srgb,var(--p-markets) 30%,transparent);
+  background:color-mix(in srgb,var(--p-markets) 8%,transparent)}
 .elog-b{min-width:0}
 /* The rule stays visible; the evidence is one click away. Marker suppressed
    and rebuilt so the whole title row is the hit target, not a 10px triangle. */

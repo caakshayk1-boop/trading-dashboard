@@ -1872,6 +1872,11 @@ var TV_ALIASES = (function () {
         var heat = j.heat.slice().sort(function(a, b){
           return (Number(b.pct) || 0) - (Number(a.pct) || 0);
         });
+        // Keep `rv` so the class list matches what the template shipped, and
+        // reveal it explicitly below. Replacing className without revealing
+        // left the cubes at opacity 0 — invisible — which is precisely what
+        // test_engine_regressions' reveal check exists to catch, and it caught
+        // it.
         grid.className = 'heatcubes rv';
         grid.innerHTML = heat.map(function(s){
           var pct = Number(s.pct) || 0;
@@ -1886,6 +1891,7 @@ var TV_ALIASES = (function () {
         }).join('');
         // The day blocks' live half. Server-rendered breadth is already
         // correct with JS off; these two need the tape.
+        reveal(grid);
         window.__lastHeat = j;
         try { paintDayBlocks(j); } catch (e) { /* blocks keep their static half */ }
 

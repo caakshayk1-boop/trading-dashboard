@@ -306,7 +306,14 @@ def test_engine_log_copy_is_markup_safe() -> None:
           f"{len(bad)} field(s) would corrupt the built page: {bad[:3]}")
 
     # Every entry needs a verdict the stylesheet actually styles.
-    styled = {"adopted", "rejected"}
+    #
+    # Read from the stylesheet rather than hardcoded. The literal set said
+    # {"adopted", "rejected"}, so adding a styled third verdict still failed —
+    # the test was asserting its own copy of the answer instead of the thing it
+    # was meant to check, and the fix for a real miss looked identical to the
+    # fix for a stale test.
+    styled = set(re.findall(r"\.elog-v\.([a-z-]+)\{", newspaper.TEMPLATE))
+    assert styled, "no .elog-v verdict classes found in the stylesheet at all"
     unknown = [c["verdict"] for c in changes if c.get("verdict") not in styled]
     check("every verdict has a matching CSS class", not unknown,
           f"unstyled verdicts: {unknown}")
