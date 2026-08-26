@@ -7906,6 +7906,147 @@ a.mprov{opacity:.78}
 .mandate-total span:first-child{color:var(--dim);text-transform:uppercase;
   letter-spacing:.1em;font-size:10px;align-self:center}
 
+
+/* ── SMART MONEY FLOW ─────────────────────────────────────────────────────
+   Paired bars growing from a shared baseline, FII beside DII. The two are
+   almost always on opposite sides, and that opposition is the whole point of
+   the chart — a run of numbers cannot show it, and a single line hides which
+   side is doing the moving.
+
+   Bars grow DOWN when the flow is negative (`.neg` flips align-self), so a
+   selling day reads as a bar hanging below the line the way it would on any
+   flow chart, without a second axis or a transform. */
+.smf{margin-top:18px;border:1px solid var(--line);border-radius:10px;
+  background:var(--surface);padding:16px 18px 14px}
+.smf-head{display:flex;justify-content:space-between;align-items:baseline;
+  gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.smf-t{font:600 13px/1.2 var(--disp);color:var(--text);letter-spacing:-.01em}
+.smf-k{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.smf-key{display:inline-flex;align-items:center;gap:6px;
+  font:400 11px/1 var(--mono);color:var(--muted)}
+.smf-key i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.sw-fii{background:var(--p-markets)}
+.sw-dii{background:var(--gold)}
+/* The zero line is the chart's spine: the row is centred on it, bars above are
+   buys and bars below are sells. */
+.smf-chart{display:flex;align-items:center;gap:clamp(3px,1vw,10px);
+  min-height:150px;overflow-x:auto;padding-bottom:4px}
+.smf-day{flex:1 1 0;min-width:26px;display:flex;flex-direction:column;
+  align-items:center;gap:7px}
+.smf-pair{display:flex;align-items:flex-end;justify-content:center;gap:3px;
+  height:120px;width:100%;border-bottom:1px solid var(--line2);position:relative}
+.smf-bar{flex:1 1 0;max-width:14px;min-height:2px;border-radius:2px 2px 0 0;
+  align-self:flex-end;transition:opacity .15s var(--ease)}
+/* A net sell hangs below the baseline rather than being drawn upward in a
+   different colour — direction has to be readable without the legend. */
+.smf-bar.neg{align-self:flex-start;border-radius:0 0 2px 2px;
+  transform:translateY(120px);opacity:.85}
+.smf-day:hover .smf-bar{opacity:.72}
+.smf-d{font:400 9.5px/1 var(--mono);color:var(--dim);white-space:nowrap}
+@media(max-width:600px){
+  .smf{padding:13px 12px 11px}
+  .smf-chart{gap:4px}
+  .smf-day{min-width:22px}
+}
+
+
+/* ── THE RECORD ───────────────────────────────────────────────────────────
+   A broadsheet band, not a card. Rules above and below rather than a border
+   and a shadow, because the thing it is imitating is a newspaper's boxed
+   standfirst — the piece of the page that says "this is the argument" — and
+   that has never been a rounded rectangle.
+
+   Two columns on a wide screen: the claim on the left in the editorial serif,
+   the evidence on the right in the data face. Deliberately NOT centred; a
+   centred claim reads as a slogan, a left-set one reads as a masthead. */
+.record{max-width:1400px;margin:clamp(40px,6vw,72px) auto 0;padding:0 var(--gut)}
+.record-in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+  gap:clamp(28px,5vw,72px);align-items:start;
+  border-top:2px solid var(--text);border-bottom:1px solid var(--line2);
+  padding:clamp(24px,3vw,38px) 0}
+.record-eyebrow{display:block;font:600 10px/1 var(--mono);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--p-ledger);margin-bottom:14px}
+.record-h{font-family:var(--serif);font-weight:600;
+  font-size:clamp(28px,3.6vw,44px);line-height:1.06;letter-spacing:-.02em;
+  color:var(--text);margin:0 0 16px;text-wrap:balance}
+.record-h em{font-style:italic;color:var(--p-ledger)}
+.record-p{font:400 15px/1.65 var(--sans);color:var(--muted);max-width:52ch;margin:0 0 18px}
+.record-cta{display:inline-flex;align-items:center;gap:7px;
+  font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text);text-decoration:none;
+  border-bottom:2px solid var(--p-ledger);padding-bottom:5px;
+  transition:gap .15s var(--ease)}
+.record-cta:hover,.record-cta:focus-visible{gap:12px}
+
+/* Six figures on a hairline grid. Rules instead of card edges: on a page this
+   dense another six bordered boxes would be noise, and the numbers are the
+   point rather than the containers. */
+.record-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line)}
+.rec{background:var(--surface);padding:16px 14px;display:flex;
+  flex-direction:column;gap:5px;min-width:0}
+.rec-v{font:700 clamp(22px,2.6vw,30px)/1 var(--disp);letter-spacing:-.03em;
+  color:var(--text);font-variant-numeric:tabular-nums}
+.rec-v.up{color:var(--up)}
+.rec-v.dn{color:var(--down)}
+.rec-k{font:400 10.5px/1.3 var(--mono);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--dim)}
+.record-foot{padding:14px 0 0;max-width:none}
+.record-foot b{color:var(--text);font-weight:600;margin-right:8px}
+.record-foot a{color:var(--muted);text-decoration:none;
+  border-bottom:1px dotted var(--line2)}
+.record-foot a:hover{color:var(--text)}
+@media(max-width:900px){
+  .record-in{grid-template-columns:1fr;gap:24px}
+}
+@media(max-width:560px){
+  .record-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+
+/* ── MOBILE BOTTOM NAV ────────────────────────────────────────────────────
+   Phones only. Above 760px the header nav is reachable and a second one would
+   be clutter; below it, the header nav is a horizontal scroller full of
+   dropdowns, which on a page this long means nobody navigates and everybody
+   scrolls to the bottom looking for something.
+
+   safe-area-inset-bottom because iOS puts a home indicator exactly where a
+   fixed bar goes, and a 44px minimum because that is the smallest thing a
+   thumb hits reliably. */
+.botnav{display:none}
+@media(max-width:760px){
+  .botnav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;
+    background:color-mix(in srgb,var(--bg) 92%,transparent);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--line2);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    /* Height lives on the BAR, not on the links. A min-height on the anchors
+       was measuring 30px in the browser while reporting 44 in the source —
+       the links are flex children and their own minimum was not deciding the
+       row. Setting it here and letting them stretch is both more robust and
+       one fewer place for the tap target to be wrong. */
+    min-height:54px;align-items:stretch;
+  }
+  .botnav-a{
+    flex:1 1 0;min-width:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;padding:9px 2px;text-decoration:none;
+    color:var(--dim);border-top:2px solid transparent;
+  }
+  .botnav-a .botnav-t{
+    font:600 9.5px/1.1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+  /* The pillar hue again, so the bar agrees with the header and the section
+     eyebrows about which part of the paper you are in. */
+  .botnav-a.here{color:var(--pillar,var(--text));border-top-color:var(--pillar,var(--lime))}
+  /* The bar covers the last of the page otherwise, and the back-to-top button
+     lands underneath it. */
+  body{padding-bottom:66px}
+  .fab{bottom:76px}
+}
+
 </style>
 </head>
 
@@ -8034,7 +8175,7 @@ a.mprov{opacity:.78}
    than an unset property that paints nothing. #}
 <style>
 {% for i, grp in secgroup.items() %}#{{ i }}{--pillar:var(--p-{{ grp|lower }},var(--lime))}
-{% endfor %}{% for g in navgroups %}.navgrp[data-group="{{ g.name }}"]{--pillar:var(--p-{{ g.name|lower }},var(--lime))}
+{% endfor %}{% for g in navgroups %}.navgrp[data-group="{{ g.name }}"],.botnav-a[data-group="{{ g.name }}"]{--pillar:var(--p-{{ g.name|lower }},var(--lime))}
 {% endfor %}
 </style>
 
@@ -8043,6 +8184,27 @@ a.mprov{opacity:.78}
    METRICS list that writes the definitions in How to Read This — a badge and
    its definition therefore cannot disagree. #}
 <script type="application/json" id="metricProv">{{ metrics_json }}</script>
+
+{# ── MOBILE BOTTOM NAV ──────────────────────────────────────────────────────
+   The header nav is a horizontal scroller with six dropdown menus. That works
+   on a desktop and is two taps and a horizontal drag on a phone, on a page
+   this long — which in practice means nobody navigates at all and everybody
+   scrolls.
+
+   Five destinations, thumb-height, always there. It jumps to the FIRST section
+   of each pillar rather than opening a menu: on a phone the useful question is
+   "take me to markets", not "show me the four things filed under markets".
+   The full menu is still in the header for anyone who wants the specific one.
+
+   Built from navgroups, so it cannot drift from the header, and hidden above
+   760px where the header nav is already usable. #}
+<nav class="botnav" aria-label="Sections">
+  {% for g in navgroups %}{% if g.links %}
+  <a class="botnav-a" data-group="{{ g.name }}" href="#{{ g.links[0].id }}">
+    <span class="botnav-t">{{ g.name }}</span>
+  </a>
+  {% endif %}{% endfor %}
+</nav>
 
 <!-- Live-layer status. Hidden until the API probe resolves one way or the other. -->
 <div class="livebar" id="livebar">
@@ -8267,6 +8429,51 @@ a.mprov{opacity:.78}
       <div class="k">Markets Advancing</div>
     </div>
   </div>
+
+  <!-- ══════════ THE RECORD ══════════
+       The single most differentiated thing on this page, and until now it was
+       four numbers in the hero rail competing with the market board.
+       Every screener publishes what it likes today; almost none publish what
+       happened to what they liked last month. That asymmetry IS the product,
+       so it gets its own band, above every screen and every idea.
+
+       NOT a new nav section. The nav is six groups and stays six — this is a
+       homepage element that ends in a link to the Signal Log, which is where
+       the detail already lives. Adding an eighteenth destination to prove the
+       ledger matters would have been the opposite of the point.
+
+       Server-rendered from the same wins/losses the hero uses, so it is right
+       with JavaScript off. app.js enriches expectancy, cumulative R and
+       drawdown from /api/stats — the same endpoint Performance renders from,
+       so the two can never quote different figures. -->
+  <section class="record rv" id="record" aria-labelledby="recordTitle">
+    <div class="record-in">
+      <div class="record-lede">
+        <span class="record-eyebrow">The record</span>
+        <h2 class="record-h" id="recordTitle">Every call, scored.<br><em>Including the bad ones.</em></h2>
+        <p class="record-p">
+          Publishing what looks good today is free. This is the part that costs
+          something: what actually happened to it. Nothing is removed after the fact,
+          and a signal that failed stays on the page at the size it failed by.
+        </p>
+        <a class="record-cta" href="#alerts">Open the signal log &rarr;</a>
+      </div>
+      <div class="record-grid">
+        <div class="rec"><span class="rec-v">{{ closed }}</span><span class="rec-k">Closed &amp; scored</span></div>
+        <div class="rec"><span class="rec-v">{{ winrate }}%</span><span class="rec-k">Win rate</span></div>
+        <div class="rec"><span class="rec-v" id="recExp">&mdash;</span><span class="rec-k">Expectancy / trade</span></div>
+        <div class="rec"><span class="rec-v" id="recTotal">&mdash;</span><span class="rec-k">Cumulative R</span></div>
+        <div class="rec"><span class="rec-v" id="recDD">&mdash;</span><span class="rec-k">Max drawdown</span></div>
+        <div class="rec"><span class="rec-v">{{ opens }}</span><span class="rec-k">Still open</span></div>
+      </div>
+    </div>
+    <p class="record-foot lv-sys">
+      <b>Numbers first. Evidence always. Losses stay visible.</b>
+      Not investment advice, and not a recommendation to buy or sell anything.
+      <a href="#method">How every figure here is computed &rarr;</a>
+    </p>
+  </section>
+
 
   <!-- ══════════ TODAY IN 60 SECONDS ══════════
        The page had eleven equally-loud sections and no answer to "why open
@@ -8653,11 +8860,66 @@ a.mprov{opacity:.78}
     <div class="kpi"><div class="v {{ 'up' if fd.get('net_cr', 0) >= 0 else 'dn' }}">
       &#8377;{{ '{:,.0f}'.format(fd.get('net_cr', 0)) }} Cr</div><div class="k">Combined</div></div>
   </div>
-  {% set trend = market_intel.get('fii_dii_trend') or [] %}
-  {% if trend|length > 1 %}
-  <p class="mono-dim" style="font-size:11px">
-    {% for t in trend %}{{ t.get('date', '—') }}: FII {{ '{:+,.0f}'.format(t.get('fii_cr', 0)) }} / DII {{ '{:+,.0f}'.format(t.get('dii_cr', 0)) }}{% if not loop.last %} &middot; {% endif %}{% endfor %}
-  </p>
+  {# ── SMART MONEY FLOW ────────────────────────────────────────────────────
+     The trend used to print as a run-on line of numbers — "25-Aug: FII +1,200
+     / DII -300 · 24-Aug: ..." — which is a series pretending to be a sentence.
+     Whether the two sides have been on opposite sides all week, and which way
+     the gap is widening, is a SHAPE, and a shape needs a chart.
+
+     Paired bars from a shared zero line: FII above the axis when buying, below
+     when selling, DII mirrored beside it. Bars scale to the largest absolute
+     flow in the window, so the tallest bar is always full height and the rest
+     are read against it.
+
+     The series comes from fii_dii_trend, which get_market_intel() has been
+     assembling from cached daily rows all along — NSE publishes today only and
+     has no public history endpoint, so it accumulates one cached session at a
+     time. A second store was written for this chart before that was noticed
+     and then deleted: two histories of one series is how they end up
+     disagreeing. It says how many sessions it holds rather than implying a
+     window it does not own. #}
+  {% set flow = market_intel.get('fii_dii_trend') or [] %}
+  {% if flow %}
+  {# A cached row can carry a null leg — NSE sometimes publishes one side
+     before the other — and |abs on None raises, which would take the whole
+     page down for a missing number. Defaulted to 0 before the max. #}
+  {% set _mx = [] %}
+  {% for f in flow %}{% if _mx.append((f.get('fii_cr') or 0) | abs) %}{% endif %}
+  {% if _mx.append((f.get('dii_cr') or 0) | abs) %}{% endif %}{% endfor %}
+  {% set peak = ([1] + _mx) | max %}
+  <div class="smf rv">
+    <div class="smf-head">
+      <span class="smf-t">Smart money flow</span>
+      <span class="smf-k">
+        <span class="smf-key"><i class="sw-fii"></i>FII</span>
+        <span class="smf-key"><i class="sw-dii"></i>DII</span>
+        <span class="lv-sys">{{ flow|length }} session{{ '' if flow|length == 1 else 's' }} ·
+          &#8377;{{ inr(peak) }} Cr full height</span>
+      </span>
+    </div>
+    <div class="smf-chart" role="img"
+         aria-label="FII and DII net flow over the last {{ flow|length }} sessions">
+      {% for f in flow %}
+      {% set fv = f.get('fii_cr') or 0 %}{% set dv = f.get('dii_cr') or 0 %}
+      <div class="smf-day" title="{{ f.get('date') }} · FII {{ '{:+,.0f}'.format(fv) }} Cr · DII {{ '{:+,.0f}'.format(dv) }} Cr">
+        <div class="smf-pair">
+          <span class="smf-bar sw-fii {{ 'neg' if fv < 0 else '' }}"
+                style="height:{{ (fv|abs / peak * 100)|round(1) }}%"></span>
+          <span class="smf-bar sw-dii {{ 'neg' if dv < 0 else '' }}"
+                style="height:{{ (dv|abs / peak * 100)|round(1) }}%"></span>
+        </div>
+        <span class="smf-d">{{ (f.get('date') or '')[:6] }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="lv-sys" style="margin-top:10px">
+      Bars sit above the line on a net buy and below it on a net sell. NSE publishes
+      these once, after the close, so no bar here is live. History is accumulated one
+      session at a time from this page&rsquo;s own builds &mdash; there is no public
+      endpoint for it, and borrowing an unattributable one would be the exact thing
+      this page argues against.
+    </p>
+  </div>
   {% endif %}
   {% endif %}
 

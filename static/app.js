@@ -3636,8 +3636,41 @@ var TV_ALIASES = (function () {
       wrap.style.display = '';
     }
 
+    // THE RECORD band, fed from the SAME payload Performance renders from.
+    //
+    // Recomputing these three locally was the obvious shortcut and it is how a
+    // trust block ends up quoting an expectancy the section it links to does
+    // not publish. One endpoint, one set of figures.
+    //
+    // Expectancy and cumulative R are signed and the sign is the whole story,
+    // so a negative expectancy prints in the loss colour rather than being
+    // quietly rendered in the same ink as a positive one. A public ledger that
+    // colours its bad number like its good one is not publishing it.
+    function renderRecord(j){
+      var h = (j && j.headline) || {}, t = (j && j.totals) || {};
+      function put(id, val, opts){
+        var e = el(id);
+        if (!e) return;
+        if (val === null || val === undefined || !isFinite(val)) { e.textContent = '—'; return; }
+        opts = opts || {};
+        var n = Number(val);
+        e.textContent = (opts.sign && n > 0 ? '+' : '') + n.toFixed(opts.dp === undefined ? 2 : opts.dp) +
+                        (opts.suffix || '');
+        e.className = 'rec-v ' + (n > 0 ? 'up' : n < 0 ? 'dn' : '');
+      }
+      put('recExp', h.expectancy_r, {sign: true, suffix: 'R'});
+      // Cumulative R is not in the payload as one field — it is expectancy
+      // across the trades it was measured over, which is the only definition
+      // that stays consistent with the number printed beside it.
+      var total = (typeof h.expectancy_r === 'number' && typeof h.trades === 'number')
+        ? h.expectancy_r * h.trades : null;
+      put('recTotal', total, {sign: true, dp: 1, suffix: 'R'});
+      put('recDD', h.max_drawdown_r, {sign: false, dp: 1, suffix: 'R'});
+    }
+
     function renderStats(j){
       var h = j.headline, t = j.totals;
+      try { renderRecord(j); } catch (e) { /* the band keeps its server-rendered half */ }
       // Both read from the payload renderStats already has. Guarded so a
       // malformed block cannot take the headline figures down with it.
       try { renderWhen(j.equity_curve); } catch (e) { /* non-fatal */ }
@@ -6416,8 +6449,17 @@ var TV_ALIASES = (function () {
   // mark the group too, or a collapsed nav stops telling you where you are.
   function markNavGroup(id){
     var link = document.querySelector('.navgrp-menu a[href="#' + id + '"]');
+    var group = null;
     [].slice.call(document.querySelectorAll('.navgrp')).forEach(function(g){
-      g.classList.toggle('here', !!link && g.contains(link));
+      var on = !!link && g.contains(link);
+      g.classList.toggle('here', on);
+      if (on) group = g.getAttribute('data-group');
+    });
+    // The phone bar tracks the same pillar as the header. Derived from the
+    // header's own match rather than from a second lookup table, so the two
+    // cannot disagree about which section belongs where.
+    [].slice.call(document.querySelectorAll('.botnav-a')).forEach(function(a){
+      a.classList.toggle('here', !!group && a.getAttribute('data-group') === group);
     });
   }
   window.__markNavGroup = markNavGroup;
