@@ -7816,6 +7816,15 @@ a.mprov{opacity:.78}
   max-width:26ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 
+
+/* A symbol that opens a detail sheet has to look like it does. Inheriting the
+   table's ink made these read as plain text, so the affordance existed and was
+   invisible — the same click worked in the sector boards, where the symbol is
+   styled, and appeared not to work here. */
+.tblwrap table a.sym{color:var(--pillar,var(--text));text-decoration:none;
+  border-bottom:1px dotted color-mix(in srgb,var(--pillar,var(--text)) 45%,transparent)}
+.tblwrap table a.sym:hover,.tblwrap table a.sym:focus-visible{border-bottom-style:solid}
+
 </style>
 </head>
 
@@ -9091,7 +9100,13 @@ a.mprov{opacity:.78}
         {% set _vs = v.get('vol_spike') %}{% set _w = v.get('r1w') %}
         {% set _px = v.get('price') %}{% set _to = v.get('turnover_cr') %}
         <tr>
-          <td><b>{{ v.get('sym', '&mdash;') }}</b><span class="tsub">{{ (v.get('name') or '')[:30] }}</span></td>
+          {# Every symbol on the page should open that company's sheet. The
+             handler in app.js is delegated on the document and keyed only on
+             data-stock, so this costs one attribute; the href is the no-JS
+             fallback. It was already true in the sector boards and nowhere
+             else, which made the same symbol clickable in one table and inert
+             in the next. #}
+          <td><a href="#stocks" class="sym" data-stock="{{ v.get('sym') }}"><b>{{ v.get('sym', '&mdash;') }}</b></a><span class="tsub">{{ (v.get('name') or '')[:30] }}</span></td>
           <td>
             <span class="volbar">
               <span class="volbar-fill {{ v.get('vclass') }}"
@@ -9241,7 +9256,7 @@ a.mprov{opacity:.78}
         {% set _r6m = b.get('r6m') %}{% set _roce = b.get('roce') %}
         {% set _fh = b.get('from_high') %}{% set _to = b.get('turnover_cr') %}
         <tr>
-          <td><b>{{ b.get('sym', '—') }}</b><span class="tsub">{{ (b.get('name') or '')[:34] }}</span></td>
+          <td><a href="#stocks" class="sym" data-stock="{{ b.get('sym') }}"><b>{{ b.get('sym', '—') }}</b></a><span class="tsub">{{ (b.get('name') or '')[:34] }}</span></td>
           <td class="r num">{% if _to is not none %}&#8377;{{ '{:,.0f}'.format(_to) }}cr{% else %}&mdash;{% endif %}</td>
           <td class="r num">{% if _rsi is not none %}{{ '%.0f'|format(_rsi) }}{% else %}&mdash;{% endif %}</td>
           <td class="r num {{ 'up' if (_r1m or 0) > 0 else 'down' }}">{% if _r1m is not none %}{{ '%+.1f'|format(_r1m) }}%{% else %}&mdash;{% endif %}</td>
