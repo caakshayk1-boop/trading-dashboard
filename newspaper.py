@@ -8388,6 +8388,117 @@ select:focus-visible{
   @keyframes rcdraw{to{stroke-dashoffset:0}}
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PHONE: THE APP SURFACE
+   Desktop keeps the broadsheet — rules, newsprint, serif. A phone is not a
+   broadsheet, and pretending otherwise is why a sixteen-column ledger row was
+   a horizontal scroll nobody performed.
+
+   Below 760px the page becomes what an Indian finance app looks like: a
+   tinted ground, white cards with a small radius, dense type, status carried
+   by a chip. Same data, same markup, same everything — a different surface for
+   a different hand.
+   ══════════════════════════════════════════════════════════════════════════ */
+@media(max-width:760px){
+  /* Scoped exactly like the palette blocks it is overriding. A bare `:root`
+     inside a media query LOSES to `:root:not([data-theme])` — media queries do
+     not add specificity — which is the third time that trap has bitten in this
+     file. If a token is defined in those blocks, it must be re-defined with
+     the same selectors or it silently keeps the desktop value. */
+  :root:not([data-theme]),
+  :root[data-theme="light"]{
+    --bg:#EAEFF5;          /* tinted, so a white card has somewhere to sit */
+    --surface:#FFFFFF;
+    --surface2:#F5F7FA;
+    --line:rgba(20,26,36,.11);
+    --line2:rgba(20,26,36,.20);
+  }
+  body{background:var(--bg)}
+
+  /* Sections become cards again. On a phone a card IS the grouping device —
+     there is no column of air to spare, so the edge has to do that work. */
+  main section.sec{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:16px 14px 18px;
+    margin-bottom:12px;
+  }
+  .shead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:16px}
+  .stitle{font-size:clamp(22px,6.4vw,28px);line-height:1.08}
+  .tblwrap,.tw{border:0}
+
+  /* ── ROWS BECOME CARDS ──────────────────────────────────────────────
+     data-label comes from the column heading at runtime. The header row is
+     hidden because every cell now carries its own header. */
+  table.t-cards thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  table.t-cards,table.t-cards tbody{display:block;width:100%;min-width:0}
+  table.t-cards tr{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:0 10px;
+    border:1px solid var(--line);border-radius:6px;
+    background:var(--surface);
+    padding:10px 12px;margin-bottom:8px;
+  }
+  table.t-cards td{
+    display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+    border:0;border-top:1px solid var(--line);padding:6px 0;
+    font-size:12.5px;min-width:0;
+  }
+  table.t-cards td::before{
+    content:attr(data-label);
+    font:600 9px/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+    color:var(--dim);flex:none;
+  }
+  /* The first two cells are the card's headline — usually date and symbol —
+     so they span the full width, lose their label, and get real weight. */
+  table.t-cards td:nth-child(1),
+  table.t-cards td:nth-child(2){
+    grid-column:1/-1;border-top:0;padding-top:0;
+    font-size:15px;font-weight:600;
+  }
+  table.t-cards td:nth-child(1)::before{font-size:9px}
+  table.t-cards td:nth-child(2)::before{display:none}
+  table.t-cards td:nth-child(2){font-family:var(--disp);letter-spacing:-.01em}
+  /* Status is the thing you scan for, so it goes last and full width. */
+  table.t-cards td:last-child{grid-column:1/-1;justify-content:flex-start;gap:10px}
+  /* A "nothing matches" row is a message, not a record. */
+  table.t-cards tr.t-cards-msg{display:block;text-align:center}
+  table.t-cards tr.t-cards-msg td{display:block;border:0}
+  table.t-cards tr.t-cards-msg td::before{display:none}
+
+  /* Filter chips scroll sideways instead of wrapping into four rows. */
+  .filters,.ctlbar{
+    display:flex;flex-wrap:nowrap;overflow-x:auto;gap:7px;
+    padding-bottom:6px;overscroll-behavior-x:contain;
+  }
+  .filters::-webkit-scrollbar,.ctlbar::-webkit-scrollbar{display:none}
+  .fbtn{flex:none;min-height:36px}
+}
+
+/* ── SORTABLE LEDGER HEADERS ──────────────────────────────────────────────
+   Desktop only in practice, since the phone hides the header row entirely —
+   which is correct: sorting a list you read as cards belongs in a control, and
+   the filter chips already are that control. */
+.t th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+.t th.sortable:hover{color:var(--text)}
+.t th.sortable[aria-sort]{color:var(--lime)}
+.t th.sortable[aria-sort=descending]::after{content:" \25BE"}
+.t th.sortable[aria-sort=ascending]::after{content:" \25B4"}
+
+
+/* The edition banner, at two lengths. Desktop has room for the full
+   explanation; a phone does not, and eleven lines of caveat above the fold is
+   a worse first impression than the staleness it is warning about. */
+.ed-short{display:none}
+@media(max-width:760px){
+  .ed-long{display:none}
+  .ed-short{display:inline}
+  .editionbar{font-size:12.5px;padding:9px 12px;gap:9px;align-items:center}
+  .editionbar #editionReload{flex:none;white-space:nowrap;padding:7px 11px;font-size:11px}
+}
+
 </style>
 </head>
 
@@ -8566,10 +8677,19 @@ select:focus-visible{
      now. A banner that overstates staleness while live numbers tick beside it
      teaches the reader to distrust both the banner and the numbers — the
      opposite of what it is for. #}
-  <span><b>New edition published<span id="editionWhen"></span>.</b>
-    This tab was built for {{ date_str }}. Live data &mdash; the ticker, heat map and
-    signal ledger &mdash; is still current; the written brief, trade ideas, screens and
-    IPO cards are yesterday&rsquo;s.</span>
+  {# Two lengths, one truth. On a phone this banner ran to eleven lines and ate
+     a third of the first screen — the reader's first impression of the site was
+     a paragraph about staleness, before a single number. The short form says
+     the thing that matters; the long form is one tap away and still says every
+     word it always did. #}
+  <span class="ed-txt">
+    <b>New edition published<span id="editionWhen"></span>.</b>
+    <span class="ed-long">This tab was built for {{ date_str }}. Live data &mdash; the
+      ticker, heat map and signal ledger &mdash; is still current; the written brief,
+      trade ideas, screens and IPO cards are yesterday&rsquo;s.</span>
+    <span class="ed-short">Live data here is still current. The brief, ideas and
+      screens are yesterday&rsquo;s.</span>
+  </span>
   <button type="button" id="editionReload">Load the new edition</button>
 </div>
 <!-- ══════════ TICKER ══════════
