@@ -8217,7 +8217,11 @@ a.mprov{opacity:.78}
           </div>
         </details>
       </div>
-      <div class="kn" id="heroRateNote">{{ closed }} closed{{ ' · too few to measure' if closed < 30 else '' }}</div>
+      {# The window, not just the count. This rail scores the last N alerts and
+         the Performance section scores a different span, so "65 closed" and
+         "34 closed" read as a contradiction unless each says what it is over.
+         They agree to within half a point once you can see that. #}
+      <div class="kn" id="heroRateNote">{{ closed }} closed of the last {{ alerts|length }} signals{{ ' · too few to measure' if closed < 30 else '' }}</div>
     </div>
     <div class="stat">
       <div class="v" id="heroOpen" style="color:var(--blue)" data-count="{{ opens }}">{{ opens }}</div>
@@ -10678,7 +10682,12 @@ a.mprov{opacity:.78}
       <span class="snum">{{ secnum['perf'] }} / {{ seclabel['perf'] }}</span>
       <h2 class="stitle">Does this actually work?</h2>
     </div>
-    <p class="sdesc">Win rate, expectancy and drawdown over the full ledger — closed signals only.
+    {# It said "over the full ledger". It is not: /api/stats scores the window
+       the basis line directly below this prints — 34 closed of 68 signals as
+       this was written — while the ledger holds many times that. Two claims a
+       centimetre apart, and the wrong one was the larger type. The window is
+       whatever the basis line says, so this stops naming one. #}
+    <p class="sdesc">Win rate, expectancy and drawdown over the window named below — closed signals only.
       Open signals are excluded, because counting them is how a 50% system starts looking like an 80% one.</p>
   </div>
 
