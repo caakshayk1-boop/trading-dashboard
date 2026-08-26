@@ -23,6 +23,10 @@ from jinja2 import Template
 
 # Import everything from newspaper
 from newspaper import (
+    # The single definition of wins/losses/closed/win-rate. Imported rather
+    # than reimplemented: this file had two copies of that arithmetic and the
+    # template had a third, and two of the three dropped expiries.
+    ledger_counts,
     fetch_global_news,
     fetch_markets,
     market_regime,
@@ -857,10 +861,9 @@ def generate() -> None:
     # A signal that resolved is closed. If it did not reach a target it is not
     # a win. Expiries and time stops count in the denominator, which is the
     # only reading that cannot flatter the record.
-    _wins   = sum(1 for a in alerts if a.get("badge") == "win")
-    _losses = sum(1 for a in alerts if a.get("badge") in ("loss", "expired"))
-    _closed = _wins + _losses
-    _winrate = int(_wins / _closed * 100 + 0.5) if _closed else 0
+    _c = ledger_counts(alerts)
+    _wins, _losses = _c["wins"], _c["losses"]
+    _closed, _winrate = _c["closed"], _c["winrate"]
     print(f"[generate] Hero win rate: {_winrate}% over {_closed} closed "
           f"({_wins}W, {_losses}L incl. expiries) — last {len(alerts)} alerts")
     matters = what_matters(
@@ -1121,16 +1124,16 @@ def generate() -> None:
     # a failed card must never fail the daily build.
     try:
         import og_card
-        wins = sum(1 for a in alerts if a.get("badge") == "win")
-        losses = sum(1 for a in alerts if a.get("badge") == "loss")
-        closed = wins + losses
-        wr = round(wins / closed * 100, 1) if closed else None
+        # The THIRD copy of this arithmetic lived here and, like the
+        # template's, dropped expiries — so the card advertised a win rate the
+        # page it links to does not publish. Same function as both of them now.
+        _oc = ledger_counts(alerts)
+        wr = float(_oc["winrate"]) if _oc["closed"] else None
         adv = sum(1 for m in markets if m.get("up"))
         ok = og_card.render(
             str(out_dir / "og.png"),
             now.strftime("%A, %B %d %Y"),
-            wr, len(alerts),
-            sum(1 for a in alerts if a.get("badge") == "open"),
+            wr, len(alerts), _oc["opens"],
             f"{adv}/{len(markets)}" if markets else "",
         )
         print(f"[generate] {'✅' if ok else '⚠️ '} social card")

@@ -327,6 +327,44 @@ def _():
         ".navgrp-menu must be position:fixed — .nav-in clips absolute children"
 
 
+@check("the win rate has exactly one definition, and expiries are in it")
+def _():
+    """Three copies of this arithmetic, two of them wrong.
+
+    generate.py counted expiries as losses; a {% set %} block in the template
+    recomputed the same figure WITHOUT them and, being what actually renders,
+    silently outranked the generator; the social card had a third copy, also
+    without them. The hero published 24% over 55 closed while the same build's
+    own feed supported 20% over 65.
+
+    An expired signal resolved and did not reach its target. Dropping it from
+    the denominator raises the win rate without a single trade going
+    differently, which is the one arithmetic a published track record must
+    never be allowed to do by accident.
+    """
+    from newspaper import ledger_counts, LOSS_BADGES
+
+    assert "expired" in LOSS_BADGES, "expiries must count in the denominator"
+
+    rows = ([{"badge": "win"}] * 13 + [{"badge": "loss"}] * 42
+            + [{"badge": "expired"}] * 10 + [{"badge": "open"}] * 135)
+    c = ledger_counts(rows)
+    assert c["closed"] == 65, f"expected 65 closed, got {c['closed']}"
+    assert c["winrate"] == 20, f"expected 20%, got {c['winrate']}%"
+    assert c["opens"] == 135
+
+    # Nothing may recompute it. The template must READ the shared function.
+    assert "ledger_counts(alerts)" in TEMPLATE, \
+        "the template must call ledger_counts, not recompute the win rate"
+    for bad in ('selectattr("badge","eq","loss")',
+                "selectattr('badge','eq','loss')"):
+        assert bad not in TEMPLATE, f"the template recomputes losses: {bad}"
+
+    gen = pathlib.Path(__file__).with_name("generate.py").read_text(encoding="utf-8")
+    assert gen.count('a.get("badge") == "win"') == 0, \
+        "generate.py counts wins itself again — use ledger_counts"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

@@ -2333,6 +2333,48 @@ FRESHNESS = [
     ("UNAVAILABLE", "Never published."),
 ]
 
+# ── ONE DEFINITION OF "CLOSED" ──────────────────────────────────────────────
+#
+# This number was computed in THREE places and two of them were wrong.
+#
+#   generate.py:860   counted expiries as losses — correct, and shadowed
+#   newspaper.py      a {% set %} in the template recomputed it WITHOUT
+#                     expiries, and the template is what renders, so the
+#                     correct figure never reached the page
+#   generate.py:1124  the social card, also without expiries
+#
+# That is the "win rates different, fix which is genuine" complaint: the hero
+# printed 24% over 55 closed while /api/stats printed 20.6% and the underlying
+# feed supports 20.0% over 65. Fixing the generator alone did nothing, because
+# the template's own {% set %} silently outranked it.
+#
+# An expired signal RESOLVED and did not reach its target. Calling it "not
+# closed" removes it from the denominator and raises the win rate without a
+# single trade going differently, which is the one arithmetic every published
+# track record is tempted by. It counts as a loss.
+LOSS_BADGES = ("loss", "expired")
+
+
+def ledger_counts(alerts: list) -> dict:
+    """Wins, losses, opens and the win rate over a list of alert rows.
+
+    The single source. Called by the template, by the generator's hero
+    numbers and by the social card, so the three cannot drift apart again.
+
+    Rounding is half-up via +0.5 rather than Python's round(), which is
+    half-to-even: 24.5% has to print the same on the page and on the card.
+    """
+    alerts = alerts or []
+    wins = sum(1 for a in alerts if a.get("badge") == "win")
+    losses = sum(1 for a in alerts if a.get("badge") in LOSS_BADGES)
+    opens = sum(1 for a in alerts if a.get("badge") == "open")
+    closed = wins + losses
+    return {
+        "wins": wins, "losses": losses, "opens": opens, "closed": closed,
+        "winrate": int(wins / closed * 100 + 0.5) if closed else 0,
+    }
+
+
 def inr(n) -> str:
     """Indian digit grouping. 10000000 -> '1,00,00,000'.
 
@@ -2646,6 +2688,7 @@ def page_context(page: str, drop=()) -> dict:
         "prov_tiers": PROV_TIERS,
         "freshness": FRESHNESS,
         "inr": inr,
+        "ledger_counts": ledger_counts,
         # The same list again, trimmed to what the badge stamper needs and
         # serialised here rather than in the template: json.dumps escapes for a
         # <script> context, and hand-building this in Jinja is how a stray
@@ -7874,11 +7917,17 @@ a.mprov{opacity:.78}
 <div class="vgrid"></div>
 <div class="progress" id="prog"></div>
 
-{% set wins   = alerts | selectattr("badge","eq","win")  | list | length %}
-{% set losses = alerts | selectattr("badge","eq","loss") | list | length %}
-{% set opens  = alerts | selectattr("badge","eq","open") | list | length %}
-{% set closed = wins + losses %}
-{% set winrate = ((wins / closed * 100) | round(0) | int) if closed > 0 else 0 %}
+{# These used to be five {% set %} lines doing the arithmetic here, and they
+   excluded `expired` from the denominator — so the hero printed 24% over 55
+   while the same build's feed supported 20% over 65, and fixing the generator
+   changed nothing because this block outranked it. One function now, shared
+   with the generator and the social card. #}
+{% set _counts = ledger_counts(alerts) %}
+{% set wins    = _counts.wins %}
+{% set losses  = _counts.losses %}
+{% set opens   = _counts.opens %}
+{% set closed  = _counts.closed %}
+{% set winrate = _counts.winrate %}
 {% set advancers = markets | selectattr("up") | list | length %}
 
 <!-- ══════════ COMMAND PALETTE ══════════
