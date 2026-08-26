@@ -450,269 +450,6 @@ def _rotate(items: list, seed: date = None):
     return items[d.toordinal() % len(items)]
 
 
-def _get_markets() -> str:
-    # news.askakshay.com first, so Telegram and the site quote the same tape.
-    # The yfinance cache stays as the fallback: it is what this ran on before,
-    # it is already warm from newspaper.py, and 6 AM is the wrong time to have
-    # no markets section because one host was slow.
-    from_api = _news_markets()
-    if from_api:
-        return from_api
-
-    log.warning("markets: news API unavailable, falling back to yfinance cache")
-    markets = get_cached_markets()
-    lines = []
-    for m in markets:
-        arrow = "↑" if m["change_pct"] > 0.05 else ("↓" if m["change_pct"] < -0.05 else "→")
-        lines.append(f"`{m['name']:<10}` {m['price']:<12} {arrow} {m['change_pct']:+.1f}%")
-    return "\n".join(lines) if lines else "—"
-
-
-def _get_jobs() -> str:
-    """
-    Fetch Senior FP&A / Senior Manager Finance jobs — Dubai + Malaysia.
-    Uses shared content_cache to avoid duplicate API calls with newspaper.py.
-    """
-    jobs = get_cached_jobs()
-    results = [(j["city"], j["title"], j["link"]) for j in jobs]
-
-    if not results:
-        return (
-            "*🇦🇪 Dubai — Senior FP&A / Finance Manager:*\n"
-            "• [LinkedIn Dubai](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Dubai&f_TPR=r86400)\n"
-            "• [Bayt Dubai](https://www.bayt.com/en/uae/jobs/senior-fp-a-manager-jobs/)\n\n"
-            "*🇲🇾 Malaysia — Senior FP&A / Regional (23–25K MYR):*\n"
-            "• [LinkedIn Malaysia](https://www.linkedin.com/jobs/search/?keywords=Senior+FP%26A+Manager&location=Malaysia&f_TPR=r86400)\n"
-            "• [JobStreet Malaysia](https://www.jobstreet.com.my/en/job-search/fp-a-manager-jobs/)"
-        )
-
-    dubai_lines = [f"• {t} [↗]({u})" for city, t, u in results if city == "Dubai"]
-    my_lines    = [f"• {t} [↗]({u})" for city, t, u in results if city == "Malaysia"]
-    out = ""
-    if dubai_lines:
-        out += "*🇦🇪 Dubai:*\n" + "\n".join(dubai_lines)
-    if my_lines:
-        if out:
-            out += "\n\n"
-        out += "*🇲🇾 Malaysia (23–25K MYR):*\n" + "\n".join(my_lines)
-    out += (
-        "\n\n[→ LinkedIn Dubai](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Dubai) · "
-        "[→ LinkedIn MY](https://linkedin.com/jobs/search/?keywords=Senior+FP%26A&location=Malaysia)"
-    )
-    return out
-
-def _get_global_headline() -> Optional[str]:
-    """
-    One business headline, from news.askakshay.com.
-
-    Was feedparser against feeds.reuters.com, which no longer resolves. See
-    `_news_headline` for why that mattered more than it looked.
-    """
-    return _news_headline()
-
-
-def _get_quote() -> str:
-    return get_cached_quote()
-
-
-def _lichess_game_headers() -> dict:
-    """Headers for Lichess game export (NDJSON)."""
-    h = {"Accept": "application/x-ndjson"}
-    token = os.environ.get("LICHESS_TOKEN", "")
-    if token:
-        h["Authorization"] = f"Bearer {token}"
-    return h
-
-
-def _get_yesterday_games() -> list:
-    """Fetch all games played yesterday IST by LICHESS_USER."""
-    ist = timezone(timedelta(hours=5, minutes=30))
-    now = datetime.now(ist)
-    yest = now - timedelta(days=1)
-    day_start = datetime(yest.year, yest.month, yest.day, 0, 0, 0, tzinfo=ist)
-    day_end   = datetime(yest.year, yest.month, yest.day, 23, 59, 59, tzinfo=ist)
-    since_ms  = int(day_start.timestamp() * 1000)
-    until_ms  = int(day_end.timestamp() * 1000)
-    try:
-        r = requests.get(
-            f"https://lichess.org/api/games/user/{LICHESS_USER}",
-            params={"since": since_ms, "until": until_ms,
-                    "opening": "true", "pgnInJson": "true", "max": 50},
-            headers=_lichess_game_headers(),
-            timeout=15, stream=True,
-        )
-        games = []
-        for line in r.iter_lines():
-            if line:
-                try:
-                    games.append(json.loads(line))
-                except Exception:
-                    pass
-        return games
-    except Exception as e:
-        log.warning(f"Lichess games fetch: {e}")
-        return []
-
-
-def _analyze_games(games: list) -> str:
-    """
-    Summarise yesterday's games for AKK_010.
-    Shows W/L/D, time controls, openings played, a short verdict.
-    """
-    if not games:
-        return ""
-
-    total = len(games)
-    wins = draws = losses = 0
-    openings_w: list[str] = []
-    openings_b: list[str] = []
-    speeds: dict[str, int] = {}
-
-    for g in games:
-        players   = g.get("players", {})
-        white_id  = players.get("white", {}).get("user", {}).get("name", "").lower()
-        is_white  = white_id == LICHESS_USER.lower()
-        winner    = g.get("winner", "")
-        status    = g.get("status", "")
-
-        if not winner or status == "draw":
-            draws += 1
-        elif (winner == "white" and is_white) or (winner == "black" and not is_white):
-            wins += 1
-        else:
-            losses += 1
-
-        op = g.get("opening", {})
-        op_name = op.get("name", "")
-        eco     = op.get("eco", "")
-        if op_name:
-            label = f"{eco} {op_name.split(':')[0].strip()}" if eco else op_name.split(":")[0].strip()
-            (openings_w if is_white else openings_b).append(label)
-
-        speed = g.get("speed", "")
-        if speed:
-            speeds[speed] = speeds.get(speed, 0) + 1
-
-    pct = wins / total * 100
-    icon = "✅" if pct >= 55 else ("⚖️" if pct >= 45 else "❌")
-    lines = [
-        f"{icon} *{total} game{'s' if total > 1 else ''}* — {wins}W · {draws}D · {losses}L ({pct:.0f}% WR)"
-    ]
-
-    tc = " · ".join(f"{v}× {k}" for k, v in sorted(speeds.items(), key=lambda x: -x[1]))
-    if tc:
-        lines.append(f"⏱ {tc}")
-
-    seen_w = list(dict.fromkeys(openings_w))[:3]
-    seen_b = list(dict.fromkeys(openings_b))[:3]
-    if seen_w:
-        lines.append(f"♙ White: {' | '.join(seen_w)}")
-    if seen_b:
-        lines.append(f"♟ Black: {' | '.join(seen_b)}")
-
-    if losses > wins and total >= 3:
-        lines.append("_Rough session. Review the losses — find the pattern before playing again._")
-    elif wins > losses:
-        lines.append("_Good session. Openings holding._")
-    else:
-        lines.append("_Balanced._")
-
-    lines.append(f"[→ Review on Lichess](https://lichess.org/@/{LICHESS_USER})")
-    return "\n".join(lines)
-
-
-def _get_opening_study_focus() -> str:
-    """
-    Scan last 14 days of games for AKK_010's weakest opening (≥2 games, lowest WR).
-    Returns a one-liner study tip + Lichess link.
-    """
-    try:
-        ist = timezone(timedelta(hours=5, minutes=30))
-        since_ms = int((datetime.now(ist) - timedelta(days=14)).timestamp() * 1000)
-        r = requests.get(
-            f"https://lichess.org/api/games/user/{LICHESS_USER}",
-            params={"since": since_ms, "opening": "true", "max": 40},
-            headers=_lichess_game_headers(),
-            timeout=12, stream=True,
-        )
-        games = []
-        for line in r.iter_lines():
-            if line:
-                try:
-                    games.append(json.loads(line))
-                except Exception:
-                    pass
-
-        op_stats: dict[str, list[int]] = {}  # name → [wins, total]
-        for g in games:
-            white_id = g.get("players", {}).get("white", {}).get("user", {}).get("name", "").lower()
-            is_white = white_id == LICHESS_USER.lower()
-            winner   = g.get("winner", "")
-            won = (winner == "white" and is_white) or (winner == "black" and not is_white)
-            op_name = g.get("opening", {}).get("name", "Unknown").split(":")[0].strip()
-            if op_name not in op_stats:
-                op_stats[op_name] = [0, 0]
-            op_stats[op_name][1] += 1
-            if won:
-                op_stats[op_name][0] += 1
-
-        # weakest: ≥2 games, lowest win rate
-        weak = [(n, w, t) for n, (w, t) in op_stats.items() if t >= 2]
-        if not weak:
-            return ""
-        weak.sort(key=lambda x: x[1] / x[2])
-        name, w, t = weak[0]
-        wr = w / t * 100
-        slug = name.replace(" ", "_").replace("'", "")
-        return (
-            f"📚 *Study focus:* {name} — {w}/{t} = {wr:.0f}% WR\n"
-            f"[→ Opening explorer](https://lichess.org/opening/{slug}) · "
-            f"[→ Practice](https://lichess.org/study/search?q={name.replace(' ', '+')})"
-        )
-    except Exception as e:
-        log.warning(f"opening study focus: {e}")
-        return ""
-
-
-def _get_chess_puzzle() -> str:
-    """Daily puzzle from Lichess, rated relative to AKK_010's puzzle rating (1646)."""
-    import re
-    MY_PUZZLE_RATING = 1646
-    try:
-        r = requests.get(
-            "https://lichess.org/api/puzzle/daily",
-            headers={"Accept": "application/json"},
-            timeout=10,
-        )
-        if r.status_code != 200:
-            return ""
-        data   = r.json()
-        puzzle = data.get("puzzle", {})
-        pid    = puzzle.get("id", "")
-        rating = puzzle.get("rating", 0)
-        themes = [t for t in puzzle.get("themes", [])
-                  if t not in ("master", "masterVsMaster", "puzzleOfTheDay")]
-
-        def fmt_theme(t: str) -> str:
-            return re.sub(r'([A-Z])', r' \1', t).strip().title()
-
-        theme_str = " · ".join(fmt_theme(t) for t in themes[:3])
-        tip = next((THEME_TIPS[t] for t in themes if t in THEME_TIPS),
-                   "Calculate 3 moves deep before touching a piece.")
-
-        diff = rating - MY_PUZZLE_RATING
-        level = "🔴 stretch" if diff > 150 else ("🟡 at level" if diff > -150 else "🟢 comfort zone")
-
-        return (
-            f"Rating: *{rating:,}* ({level}) · _{theme_str}_\n"
-            f"💡 _{tip}_\n"
-            f"[→ Solve on Lichess](https://lichess.org/training/{pid})"
-        )
-    except Exception as e:
-        log.warning(f"chess puzzle fetch failed: {e}")
-        return ""
-
-
 def _build_signal_recap() -> str:
     """
     Yesterday and today's signals, read from news.askakshay.com.
@@ -913,85 +650,19 @@ def _push_to_gist(content: str, brief_date: str):
 # BUILD & SEND
 # ────────────────────────────────────────────────────────────────────────────
 
-def build_brief() -> str:
-    now      = datetime.now(IST)
-    today    = now.date()          # IST date — not UTC date
-    weekday  = now.strftime("%A")
-    datestr  = now.strftime("%d %B %Y")
-
-    markets        = _get_markets()
-    jobs           = _get_jobs()
-    quote          = _get_quote()
-    chess          = _get_chess_puzzle()
-    study_focus    = _get_opening_study_focus()
-    yesterday_games = _get_yesterday_games()
-    game_analysis  = _analyze_games(yesterday_games)
-
-    habit_name, habit_time, habit_why = _rotate(HABITS, today)
-    hack                              = _rotate(PRODUCTIVITY, today)
-    topic, body                       = _rotate(LEARNING, today)
-    lesson_title, lesson_body         = _rotate(LIFE_LESSONS, today)
-
-    headline    = _get_global_headline()
-    global_note = f"\n🌍 _{headline}_" if headline else ""
-    # Chess — yesterday's games + today's puzzle + study focus
-    games_block = (
-        f"\n━━━━━━━━━━━━━━━━━━━\n♟️ *YESTERDAY'S GAMES*\n━━━━━━━━━━━━━━━━━━━\n{game_analysis}"
-    ) if game_analysis else ""
-
-    puzzle_parts = [chess]
-    if study_focus:
-        puzzle_parts.append(study_focus)
-    chess_block = (
-        f"\n━━━━━━━━━━━━━━━━━━━\n♟️ *CHESS*\n━━━━━━━━━━━━━━━━━━━\n" +
-        "\n\n".join(p for p in puzzle_parts if p)
-    ) if any(puzzle_parts) else ""
-
-    brief = f"""🌅 *GOOD MORNING, AKSHAY*
-{weekday} · {datestr} · 6 AM MYT
-
-━━━━━━━━━━━━━━━━━━━
-💼 *OPPORTUNITIES*
-━━━━━━━━━━━━━━━━━━━
-Senior FP&A · Finance Manager · Regional · Controller
-
-*New jobs (last 24h):*
-{jobs}
-
-━━━━━━━━━━━━━━━━━━━
-📊 *MARKETS*
-━━━━━━━━━━━━━━━━━━━
-{markets}{global_note}
-
-━━━━━━━━━━━━━━━━━━━
-✅ *HABIT FOCUS*
-━━━━━━━━━━━━━━━━━━━
-*{habit_name}* · {habit_time}
-↳ _{habit_why}_
-
-━━━━━━━━━━━━━━━━━━━
-⚡ *PRODUCTIVITY*
-━━━━━━━━━━━━━━━━━━━
-{hack}
-
-━━━━━━━━━━━━━━━━━━━
-🧠 *LEARN TODAY*
-━━━━━━━━━━━━━━━━━━━
-*{topic}*
-{body}
-
-━━━━━━━━━━━━━━━━━━━
-📖 *CASE STUDY*
-━━━━━━━━━━━━━━━━━━━
-*{lesson_title}*
-{lesson_body}{games_block}{chess_block}
-
-━━━━━━━━━━━━━━━━━━━
-💬 *QUOTE*
-━━━━━━━━━━━━━━━━━━━
-{quote}"""
-
-    return brief
+# build_brief() lived here and was deleted 2026-08-26.
+#
+# It produced the "GOOD MORNING, AKSHAY" brief — Opportunities, Markets, Habit
+# Focus, Productivity, Learn Today, Case Study, Chess, Quote — assembled from
+# its own yfinance calls and its own rotating content banks. Nothing called it.
+# Every caller had already moved to build_section_brief(), which reads
+# news.askakshay.com so that Telegram and the site quote the same tape instead
+# of two independent views of it that drift apart by the afternoon.
+#
+# It is deleted rather than kept "just in case" because a second brief builder
+# is exactly the kind of thing that gets accidentally re-wired and then sends a
+# markets block sourced from somewhere the site has never heard of. The old
+# layout is in git history if any single block is ever wanted back.
 
 
 # ── Telegram formatting helpers ─────────────────────────────────────────────
@@ -1026,6 +697,96 @@ def rate(v, digits: int = 1) -> str:
     """A LEVEL, so it carries no sign: a 34.8% win rate is not "up 34.8%"."""
     n = num(v)
     return "—" if n is None else f"{n:.{digits}f}%"
+
+
+def _inr(n) -> str:
+    """Indian digit grouping. 10000000 -> '1,00,00,000'.
+
+    Python's own thousands separator groups in threes all the way up, so a
+    crore printed with it reads '10,000,000' — a number this reader has to
+    stop and count the digits of. The last three digits group in three and
+    everything above them in twos, which is the grouping every Indian
+    statement, broker note and bank app uses.
+    """
+    try:
+        n = int(round(float(n)))
+    except (TypeError, ValueError):
+        return "—"
+    sign, n = ("-" if n < 0 else ""), abs(n)
+    t = str(n)
+    if len(t) <= 3:
+        return sign + t
+    head, tail = t[:-3], t[-3:]
+    parts = []
+    while len(head) > 2:
+        parts.insert(0, head[-2:]); head = head[:-2]
+    if head:
+        parts.insert(0, head)
+    return sign + ",".join(parts) + "," + tail
+
+
+def _useful_summary(summary, title) -> str:
+    """A summary worth printing, or "".
+
+    Several feeds set the summary to the headline with its punctuation stripped
+    — "Flint Water - WV News" arrives with the summary "Flint Water WV News".
+    Printing that costs a line and adds nothing, and two lines that say the same
+    thing is exactly the "nonsense text" a reader learns to skip past. Compared
+    on letters only, so punctuation and the trailing source name cannot make an
+    identical sentence look different.
+    """
+    summ = str(summary or "").strip()
+    if not summ:
+        return ""
+    norm = lambda t: "".join(c for c in str(t).lower() if c.isalnum())
+    a, b = norm(summ), norm(title)
+    if not a or a == b or a in b or b.startswith(a) or a.startswith(b):
+        return ""
+    return summ
+
+
+def _world_entry(e: dict) -> tuple:
+    """One world event as (headline, detail). Detail is droppable, headline is not.
+
+    `also` is how many independent outlets carried the same event. It is the
+    cheapest honest signal there is of whether something is an event or one
+    outlet's angle, and it costs nothing to print.
+    """
+    tone = {"red": "🔴", "green": "🟢"}.get(str(e.get("tone") or ""), "🔵")
+    src = esc(e.get("source") or "")
+    also = e.get("also") or 0
+    where = ", ".join(str(p) for p in (e.get("places") or [])[:2])
+    tail = " · ".join(x for x in (
+        src,
+        f"+{also} outlets" if also else "",
+        esc(where) if where else "",
+    ) if x)
+    head = f"{tone} *{esc(str(e.get('title') or '')[:160])}*"
+    summ = _useful_summary(e.get("summary"), e.get("title"))
+    body = f"    {esc(summ[:230])}\n    _{tail}_" if summ else f"    _{tail}_"
+    return (head, body)
+
+
+def _news_entry(n: dict) -> tuple:
+    """One wire story as (headline, detail)."""
+    head = f"• *{esc(str(n.get('title') or '')[:160])}*"
+    summ = _useful_summary(n.get("summary"), n.get("title"))
+    src = esc(n.get("source") or "")
+    body = f"    {esc(summ[:210])}\n    _{src}_" if summ else f"    _{src}_"
+    return (head, body)
+
+
+class _Wire:
+    """A run of wire entries that can give ground when the message is too long.
+
+    Telegram hard-caps at 4096 characters and a detailed wire is the section
+    most able to blow through it. Rather than truncating mid-story — which is
+    how the old block ended up printing half-sentences — the run gives ground
+    in a defined order, and says how many it dropped.
+    """
+
+    def __init__(self, entries: list):
+        self.entries = entries
 
 
 def _mandate_book() -> Optional[dict]:
@@ -1092,51 +853,96 @@ def build_section_brief(slot: str = "midday") -> str:
         rule("📊 *01 · MARKET INTEL*")
         L.append(mk)
 
-    # ── 02 Trade Ideas — the mandate's order book ──────────────────────────
+    # ── 02 Trade Ideas — the mandate's order book, as a TABLE ──────────────
+    #
+    # This block used to print one four-line paragraph per ticket. Eight of
+    # those is thirty-two lines of prose in which no two numbers line up, and
+    # the header said "deployed 71.7%" over a list that never showed what any
+    # single ticket consumed — so the five or eight ideas visible could not be
+    # reconciled against the crore they were supposedly filling. That is the
+    # "shows top 5 trades but shows below 1 crore utilisation" complaint, and
+    # it was a presentation bug, not a sizing one.
+    #
+    # A fenced block is the only fixed-width type Telegram has, so the columns
+    # actually align and the TOTAL row proves the book adds up. Every ticket
+    # carries what it costs and what state it is in.
     book = _mandate_book()
     if book:
         st = book["state"]
-        rule("🎯 *02 · TRADE IDEAS* — Rs 1 crore mandate")
-        L.append(f"*{len(book['admitted'])} to place* · heat {st['heat_pct']}% · "
-                 f"deployed {st['deployed_pct']}% · cash Rs {st['cash']:,}")
-        # In the EVENING the market is shut, so the full book is not actionable
-        # tonight and it is the first thing that should give way to the recap.
-        # Summarised deliberately rather than left to the length guard, which
-        # was trimming eight tickets down to one — a book showing 1 of 8 reads
-        # as a bug, and "here is tomorrow's board, one line" reads as a choice.
+        cap = book.get("capital") or 0
+        rule("🎯 *02 · TRADE IDEAS* — the ₹1 crore book")
+
+        # The book, top down: what it holds, what is free, what a bad day costs.
+        # Heat is printed against its cap because heat alone means nothing —
+        # 5.7% is comfortable at a 6% cap and reckless at a 2% one.
+        L.append("```\n" + "\n".join([
+            f"{'BOOK':<10}{_inr(cap):>13}",
+            f"{'DEPLOYED':<10}{_inr(st['deployed']):>13}  {st['deployed_pct']:>5.1f}%",
+            f"{'CASH':<10}{_inr(st['cash']):>13}  {100 - st['deployed_pct']:>5.1f}%",
+            f"{'AT RISK':<10}{_inr(st['heat']):>13}  {st['heat_pct']:>5.1f}%  "
+            f"cap {st['deployed_cap'] and round(st['heat_cap'] / cap * 100, 1) or 0}%",
+        ]) + "\n```")
+
+        if st.get("at_capacity"):
+            L.append("⛔ *At capacity* — nothing new can be sized until a position closes.")
+
+        # In the EVENING the market is shut, so the board is not actionable
+        # tonight; one line beats a table nobody can act on for fourteen hours.
         if evening:
             L.append("_Placed at tomorrow's open. Full board: news.askakshay.com_")
-            ticket_blocks_enabled = False
-        else:
-            ticket_blocks_enabled = True
+        elif book["admitted"]:
+            L.append(f"*TO PLACE — {len(book['admitted'])}*")
+            hdr = f"{'SYMBOL':<11}{'QTY':>6}{'ENTRY':>10}{'ALLOC':>11}{'%BK':>6}{'R:R':>6}"
+            rows, placed = [hdr, "-" * len(hdr)], 0
+            for t in book["admitted"]:
+                placed += t.get("notional") or 0
+                rows.append(
+                    f"{str(t['symbol'])[:11]:<11}{t['qty']:>6}"
+                    f"{t['entry']:>10,.2f}{_inr(t.get('notional')):>11}"
+                    f"{t.get('notional_pct', 0):>5.1f}%{t.get('reward_risk', 0):>6.1f}")
+            rows.append("-" * len(hdr))
+            rows.append(f"{'TOTAL':<11}{'':>6}{'':>10}{_inr(placed):>11}"
+                        f"{(placed / cap * 100 if cap else 0):>5.1f}%")
+            L.append("```\n" + "\n".join(rows) + "\n```")
+            # The exits, once, rather than repeated inside every ticket. They
+            # are the same ladder for every row in the tier and printing them
+            # eight times taught the reader to skip them.
+            L.append("_Ladder: T1 books half, the rest runs to T2, then the stop "
+                     "trails to T1 and never lower. Levels per name on the site._")
 
-        # Engine names carry underscores — top5_pick, ai_longterm — and an
-        # unbalanced _ makes Telegram reject the WHOLE message with a 400.
-        for t in (book["admitted"] if ticket_blocks_enabled else []):
-            ticket_blocks.append([
-                f"\n*{esc(t['symbol'])}* — {esc(t['horizon_label'])} · {esc(t['engine'])}",
-                f"  buy `{t['qty']}` @ `{t['entry']:,.2f}`  ·  stop `{t['stop']:,.2f}` ({t['stop_pct']}%)",
-                f"  target +{t['final_gain_pct']}% · {t['reward_risk']}:1 · hold {esc(t['hold_days'])}",
-                *[f"    {leg['label']} sell `{leg['qty']}` @ `{leg['price']:,.2f}` (+{leg['gain_pct']}%)"
-                  for leg in t["legs"]],
-            ])
-        L.append(_BOOK)
+        # LIVE STATUS: what the rules did with everything they saw. A board that
+        # only shows what it admitted is a board you cannot audit — the count
+        # that was refused, and why, is the part that says the caps are real.
+        remarks = []
         if book["deferred"]:
-            L.append(f"\n_{len(book['deferred'])} more valid, waiting on a cap._")
+            why = {}
+            for d in book["deferred"]:
+                why[d.get("cap", "CAP")] = why.get(d.get("cap", "CAP"), 0) + 1
+            remarks.append("held: " + ", ".join(
+                f"{v} at the {k.lower()} cap" for k, v in sorted(why.items())))
         if book["duplicates"]:
-            L.append(f"_{len(book['duplicates'])} dropped as duplicate names._")
+            remarks.append(f"{len(book['duplicates'])} dropped as duplicate names")
+        if book.get("rejected"):
+            remarks.append(f"{len(book['rejected'])} failed the rules outright")
+        if remarks:
+            L.append("_Also seen — " + " · ".join(remarks) + "._")
 
-    # ── 03 World · 04 Findings ─────────────────────────────────────────────
+    # ── 03 World · 04 The Wire — DETAILED, not a list of headlines ─────────
+    #
+    # Both blocks used to print four titles truncated mid-sentence and nothing
+    # else, which is a summary of a summary: enough to know something happened
+    # and not enough to know what. Each item now carries its source, what the
+    # story actually says, and — for world events — how many independent
+    # outlets carried it, which is the only cheap signal of whether a headline
+    # is an event or one outlet's angle.
     w = _news_get("/world")
     if w and (w.get("top") or []):
         rule("🌍 *03 · WORLD* — last 24h")
-        for e in (w.get("top") or [])[:4]:
-            L.append(f"  • {esc(str(e.get('title',''))[:150])}")
+        L.append(_Wire([_world_entry(e) for e in (w.get("top") or [])]))
     nw = _news_get("/news")
     if nw and (nw.get("news") or []):
         rule("📰 *04 · THE WIRE*")
-        for n in (nw.get("news") or [])[:4]:
-            L.append(f"  • {esc(str(n.get('title',''))[:130])} — {esc(n.get('source'))}")
+        L.append(_Wire([_news_entry(n) for n in (nw.get("news") or [])]))
 
     # ── 09 SIP Buckets ─────────────────────────────────────────────────────
     sp = _news_get("/sip")
@@ -1194,27 +1000,42 @@ def build_section_brief(slot: str = "midday") -> str:
 TG_LIMIT = 3900
 
 
-def _fit(lines: list, ticket_blocks: list) -> str:
-    """Join the brief, dropping whole ticket blocks until it fits."""
-    def render(keep: int) -> str:
+def _fit(lines: list, ticket_blocks: list = None) -> str:
+    """Join the brief, giving ground in the wire runs until it fits.
+
+    The order matters and it is the opposite of what it used to be. The old
+    fitter dropped whole ticket blocks, which is how a board of eight ideas
+    printed one — a board showing 1 of 8 reads as a bug. The book is now a
+    single table and never gives ground; the wire does, and it gives up COUNT
+    before it gives up DEPTH. Six stories a reader can understand beat twelve
+    headlines they cannot, which is the whole point of a detailed brief.
+
+    `ticket_blocks` is vestigial and ignored; it is kept in the signature so an
+    older caller cannot fail on an argument count.
+    """
+    def render(keep: int, detailed: bool) -> str:
         out = []
         for item in lines:
-            if item is _BOOK:
-                for b in ticket_blocks[:keep]:
-                    out.extend(b)
-                gone = len(ticket_blocks) - keep
-                if gone:
-                    out.append(f"\n_{gone} more on the board — news.askakshay.com_")
+            if isinstance(item, _Wire):
+                for head, body in item.entries[:keep]:
+                    out.append(head)
+                    if detailed and body:
+                        out.append(body)
+                gone = len(item.entries) - keep
+                if gone > 0:
+                    out.append(f"_+{gone} more — news.askakshay.com_")
             else:
                 out.append(item)
         return "\n".join(out)
 
-    keep = len(ticket_blocks)
-    text = render(keep)
-    while len(text) > TG_LIMIT and keep > 0:
-        keep -= 1
-        text = render(keep)
-    return text
+    for detailed in (True, False):
+        for keep in range(10, 1, -1):
+            text = render(keep, detailed)
+            if len(text) <= TG_LIMIT:
+                return text
+    # Nothing fit even stripped bare. Send the shortest honest version rather
+    # than a hard slice, which would cut inside a Markdown pair and 400.
+    return render(2, False)
 
 
 class _BookMarker:
