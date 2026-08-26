@@ -3666,6 +3666,65 @@ var TV_ALIASES = (function () {
         ? h.expectancy_r * h.trades : null;
       put('recTotal', total, {sign: true, dp: 1, suffix: 'R'});
       put('recDD', h.max_drawdown_r, {sign: false, dp: 1, suffix: 'R'});
+      try { drawCurve(j.equity_curve); } catch (e) { /* the figures stand alone */ }
+    }
+
+    // The equity curve. Hand-built SVG rather than a charting library: it is
+    // one polyline, one baseline and a dot, and 300 lines of code is not worth
+    // 40 KB of dependency on a page that ships no third-party requests at all.
+    function drawCurve(curve){
+      var fig = el('recordCurve'), plot = el('recordCurvePlot');
+      if (!fig || !plot) return;
+      curve = (curve || []).filter(function(p){ return typeof p.cum_r === 'number'; });
+      // Two points is not a curve. Below that the figures say it better.
+      if (curve.length < 3) { fig.hidden = true; return; }
+
+      var W = 1000, H = 220, PAD = 10;
+      var vals = curve.map(function(p){ return p.cum_r; });
+      var lo = Math.min.apply(null, vals.concat([0]));
+      var hi = Math.max.apply(null, vals.concat([0]));
+      var span = (hi - lo) || 1;
+      var x = function(i){ return PAD + (i / (curve.length - 1)) * (W - PAD * 2); };
+      var y = function(v){ return PAD + (1 - (v - lo) / span) * (H - PAD * 2); };
+
+      var pts = curve.map(function(p, i){ return x(i) + ',' + y(p.cum_r); });
+      var zeroY = y(0);
+      var last = vals[vals.length - 1];
+      var dir = last < 0 ? 'dn' : 'up';
+
+      // Area between the curve and ZERO, not between the curve and the floor —
+      // the shaded region is "money lost against flat", which is the quantity
+      // a reader actually cares about.
+      var area = 'M' + x(0) + ',' + zeroY + ' L' + pts.join(' L') +
+                 ' L' + x(curve.length - 1) + ',' + zeroY + ' Z';
+
+      plot.innerHTML =
+        '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" ' +
+        'role="img" aria-label="Cumulative R across ' + curve.length +
+        ' closed signals, currently ' + last.toFixed(1) + ' R">' +
+          '<path class="rc-fill ' + dir + '" d="' + area + '"/>' +
+          '<line class="rc-zero" x1="' + PAD + '" y1="' + zeroY +
+            '" x2="' + (W - PAD) + '" y2="' + zeroY + '"/>' +
+          '<polyline class="rc-line" points="' + pts.join(' ') + '"/>' +
+          '<circle class="rc-end" cx="' + x(curve.length - 1) + '" cy="' +
+            y(last) + '" r="4"/>' +
+        '</svg>';
+
+      // Hand the drawing animation its own length so the dash trick works
+      // without measuring in JS on every resize.
+      var line = plot.querySelector('.rc-line');
+      if (line && line.getTotalLength) {
+        try { line.style.setProperty('--len', Math.ceil(line.getTotalLength())); }
+        catch (e) { /* Safari can throw on a detached node */ }
+      }
+
+      var now = el('recordCurveNow');
+      if (now) {
+        now.textContent = (last > 0 ? '+' : '') + last.toFixed(2) + 'R after ' +
+                          curve.length + ' closed';
+        now.className = 'rcurve-now ' + dir;
+      }
+      fig.hidden = false;
     }
 
     function renderStats(j){
@@ -6538,6 +6597,67 @@ var TV_ALIASES = (function () {
   // hand-written in fourteen places. A label typed next to the markup is a
   // label that drifts when the heading above it is reworded; this one cannot,
   // and a table added later is covered without anyone remembering to.
+  // ── LONG EXPLANATIONS BECOME DISCLOSURES ────────────────────────────
+  //
+  // Sixty-six explanatory paragraphs, several of them 600+ characters, sat
+  // between the reader and the numbers they describe. The instruction was to
+  // move them, not delete them — the explanations are the reason to trust this
+  // page and cutting them would be cutting the differentiator.
+  //
+  // So: the first sentence stays visible, and the rest goes behind a
+  // disclosure that says what it holds. A reader who wants the number reads
+  // one line; a reader who wants the method clicks once and gets every word
+  // that was there before. Nothing is removed from the document, so
+  // find-in-page and screen readers still reach all of it.
+  //
+  // Done in JS rather than in the template because a third of these paragraphs
+  // are written by live renders, and splitting only the server-rendered ones
+  // would leave the page inconsistent about where its explanations live.
+  var PROSE_SELECTOR = '.sdesc, .subdesc, .lv-3';
+  var PROSE_MIN = 190;            // shorter than this is already one thought
+
+  function splitProse(el){
+    if (el.dataset.disclosed) return;
+    if (el.querySelector('details, .pill, ul, ol, table')) return;  // not plain prose
+    var text = (el.textContent || '').trim();
+    if (text.length < PROSE_MIN) return;
+
+    // Split after the first sentence that leaves a worthwhile remainder.
+    // Abbreviations ("Rs.", "e.g.") would split badly, so require the period to
+    // be followed by a space and a capital or a digit.
+    var m = /[.?!]\s+(?=[A-Z0-9“"₹])/g, cut = -1, hit = m.exec(text);
+    while (hit !== null) {
+      if (hit.index >= 60 && text.length - hit.index >= 90) { cut = hit.index + 1; break; }
+      hit = m.exec(text);
+    }
+    if (cut === -1) return;
+
+    var lead = text.slice(0, cut).trim();
+    var rest = text.slice(cut).trim();
+
+    // Rebuild: lead as the visible paragraph, rest inside a disclosure. The
+    // original NODE is kept and repopulated rather than replaced, so anything
+    // holding a reference to it (the live renders do) still points at it.
+    el.textContent = lead + ' ';
+    var d = document.createElement('details');
+    d.className = 'why';
+    var sum = document.createElement('summary');
+    sum.textContent = 'Why, and how it is measured';
+    var body = document.createElement('p');
+    body.className = 'why-body';
+    body.textContent = rest;
+    d.appendChild(sum); d.appendChild(body);
+    el.appendChild(d);
+    el.dataset.disclosed = '1';
+  }
+
+  function discloseProse(root){
+    [].slice.call((root || document).querySelectorAll(PROSE_SELECTOR)).forEach(function(el){
+      try { splitProse(el); } catch (e) { /* leave the paragraph exactly as it was */ }
+    });
+  }
+  window.__discloseProse = discloseProse;
+
   window.__renameTables = function(){ nameTables(document); };
   function nameTables(root){
     [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
@@ -6582,6 +6702,7 @@ var TV_ALIASES = (function () {
     try { wireNavGroups(); } catch (e) { console.warn('nav wiring failed', e); }
     try { stampMetricBadges(document); } catch (e) { console.warn('metric badges failed', e); }
     try { nameTables(document); } catch (e) { console.warn('table naming failed', e); }
+    try { discloseProse(document); } catch (e) { console.warn('prose disclosure failed', e); }
 
     // Most KPI tiles arrive later, from the wallet and performance responses.
     // A MutationObserver rather than a timer: the renders are network-bound and
@@ -6609,6 +6730,7 @@ var TV_ALIASES = (function () {
           queued = false;
           try { stampMetricBadges(document); } catch (e) { /* never break a render */ }
           try { nameTables(document); } catch (e) { /* never break a render */ }
+          try { discloseProse(document); } catch (e) { /* never break a render */ }
         }, 0);
       }).observe(document.body, {childList: true, subtree: true});
     }
