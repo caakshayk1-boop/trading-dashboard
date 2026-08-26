@@ -5266,7 +5266,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14
 a{color:inherit;text-decoration:none}
 .up{color:var(--up)} .dn{color:var(--down)}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-::selection{background:var(--lime);color:#000}
+::selection{background:var(--lime);color:var(--on-brand)}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:9px}
@@ -5509,7 +5509,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 /* Skip link — WCAG 2.4.1. Eighteen sections is a lot of tab stops to wade
    through before reaching content. */
 .skip{position:absolute;left:-9999px;top:0;z-index:999;
-  background:var(--lime);color:#000;font-family:var(--mono);font-size:13px;
+  background:var(--lime);color:var(--on-brand);font-family:var(--mono);font-size:13px;
   font-weight:700;padding:12px 20px;border-radius:0 0 8px 0}
 .skip:focus{left:0}
 
@@ -5739,7 +5739,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
   font-family:var(--mono);font-size:13px;min-height:46px}
 .sub-form input[type=email]::placeholder{color:var(--dim)}
 .sub-form input[type=email]:focus{border-color:var(--lime);outline:none}
-.sub-form button{background:var(--lime);color:#000;border:none;border-radius:10px;
+.sub-form button{background:var(--lime);color:var(--on-brand);border:none;border-radius:10px;
   padding:13px 22px;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.5px;
   cursor:pointer;min-height:46px;transition:transform .16s var(--ease),opacity .16s}
 .sub-form button:hover:not(:disabled){transform:translateY(-1px)}
@@ -6120,7 +6120,7 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 .swp-toggle button{background:none;border:none;color:var(--dim);cursor:pointer;
   font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;
   padding:9px 13px;min-height:38px;transition:background .18s,color .18s}
-.swp-toggle button.on{background:var(--lime);color:var(--bg)}
+.swp-toggle button.on{background:var(--lime);color:var(--on-brand)}
 #swpChart{display:block;width:100%;height:auto;margin-top:6px}
 .legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font-family:var(--mono);
   font-size:11px;letter-spacing:.6px;color:var(--dim)}
@@ -7266,7 +7266,7 @@ table.t tbody tr:last-child td{border-bottom:none}
   border:1px solid var(--line);color:var(--muted);cursor:pointer;border-radius:100px;
   font-family:var(--sans);transition:all .28s var(--ease);white-space:nowrap}
 .tab:hover{border-color:var(--line2);color:var(--text)}
-.tab.on{background:var(--lime);border-color:var(--lime);color:#000;font-weight:700}
+.tab.on{background:var(--lime);border-color:var(--lime);color:var(--on-brand);font-weight:700}
 /* The Way — Arabic phrase card */
 .arabic-hero{text-align:center;padding:26px 18px;background:var(--bg);border:1px solid var(--line);
   border-radius:14px;margin:14px 0 4px}
@@ -7674,7 +7674,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   letter-spacing:.5px;background:transparent;border:1px solid var(--line);color:var(--muted);
   cursor:pointer;border-radius:100px;font-family:var(--sans);transition:all .28s var(--ease);white-space:nowrap}
 .gym-tab:hover{border-color:var(--line2);color:var(--text)}
-.gym-tab.on{background:var(--lime);border-color:var(--lime);color:#000}
+.gym-tab.on{background:var(--lime);border-color:var(--lime);color:var(--on-brand)}
 .gym-tab .tdot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex:none}
 .gym-tab.on .tdot{background:#000}
 
@@ -7692,7 +7692,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   transition:all .2s var(--ease);text-align:center}
 .gym-opt:hover:not(:disabled){border-color:var(--lime);color:var(--lime)}
 .gym-opt:disabled{cursor:default;opacity:.55}
-.gym-opt.right{background:var(--lime);border-color:var(--lime);color:#000;opacity:1}
+.gym-opt.right{background:var(--lime);border-color:var(--lime);color:var(--on-brand);opacity:1}
 .gym-opt.wrong{background:rgba(255,92,92,.15);border-color:var(--down);color:var(--down);opacity:1}
 
 .gym-input{display:flex;gap:9px;flex-wrap:wrap}
@@ -7700,7 +7700,7 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
   background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;min-width:0}
 .gym-input input:focus{outline:none;border-color:var(--lime)}
 .gym-btn{padding:14px 24px;font-size:13px;font-weight:700;letter-spacing:.6px;background:var(--lime);
-  border:none;color:#000;border-radius:12px;cursor:pointer;font-family:var(--sans);transition:opacity .2s}
+  border:none;color:var(--on-brand);border-radius:12px;cursor:pointer;font-family:var(--sans);transition:opacity .2s}
 .gym-btn:hover{opacity:.85}
 .gym-btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--muted)}
 .gym-btn.ghost:hover{border-color:var(--lime);color:var(--lime);opacity:1}
@@ -8745,6 +8745,77 @@ body,button,input,select,textarea{font-family:var(--sans)}
   .heatcubes{grid-template-columns:repeat(auto-fit,minmax(min(104px,100%),1fr));gap:3px}
   .hcube{min-height:62px;padding:10px 9px}
   .hc-p{font-size:14px}
+}
+
+
+/* ── THE SUBSCRIBE BLOCK ──────────────────────────────────────────────────
+   It was a white card with a navy bar down one edge and a navy button — the
+   bar read as an alert stripe, the button was still black-on-navy until the
+   sweep above, and the whole thing looked like a warning rather than an
+   invitation. Six other brand-filled elements had the same unreadable text,
+   including this button; the first fix caught three of nine because the test
+   only checked one of them.
+
+   Inverted instead: the block IS the brand colour, the type is white on it,
+   and the button is white with brand-coloured text. One block, high contrast
+   both ways, and it stops competing with the section cards around it. */
+.sub-cta{
+  background:var(--lime);
+  border:0;border-left:0;border-radius:8px;
+  color:var(--on-brand);
+  padding:clamp(20px,2.6vw,30px);
+}
+/* Everything in here is --on-brand, never a literal. My first version set
+   white and the contrast test failed it immediately: white is 10.8:1 on the
+   light theme's navy and 1.3:1 on the dark theme's bright lime. The token is
+   the only thing that is correct in both. */
+.sub-cta h3{color:var(--on-brand)}
+.sub-cta p,.sub-cta .mono-dim,.sub-cta small{color:var(--on-brand);opacity:.84}
+.sub-cta .sub-form input[type=email]{
+  background:var(--on-brand);
+  border:1px solid var(--on-brand);
+  color:var(--lime);
+}
+.sub-cta .sub-form input[type=email]::placeholder{color:var(--lime);opacity:.6}
+.sub-cta .sub-form input[type=email]:focus-visible{
+  outline:2px solid var(--on-brand);outline-offset:2px;
+}
+/* Reversed out: the plate is whatever the text on the brand would be, and the
+   text is the brand. 10.8:1 in light, and the same figure inverted in dark. */
+.sub-cta .sub-form button{
+  background:var(--on-brand);color:var(--lime);font-weight:700;
+}
+.sub-cta .sub-form button:hover:not(:disabled){opacity:.9}
+.sub-cta a{color:var(--on-brand);text-decoration-color:currentColor}
+
+
+/* ── FUND CATEGORIES: SUMMARY, THEN DETAIL ───────────────────────────────
+   Six categories, three cards each, three CAGR bars per card and a paragraph
+   of category facts is the whole mutual-fund section open at once — several
+   screens of it for a reader who mostly wants to know which fund leads.
+   One line per category now; everything else is one click down. */
+details.fundcat{border-top:1px solid var(--line);padding:0}
+details.fundcat:first-of-type{border-top:0}
+.fundcat-sum{
+  list-style:none;cursor:pointer;
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:14px 0;min-height:44px;
+}
+.fundcat-sum::-webkit-details-marker{display:none}
+.fundcat-sum::before{
+  content:'+';font:400 15px/1 var(--mono);color:var(--lime);flex:none;
+  width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--lime-line);align-self:center;
+}
+details.fundcat[open] .fundcat-sum::before{content:'\2212'}
+.fc-name{font:600 14px/1.3 var(--disp);color:var(--text);letter-spacing:-.01em}
+.fc-lead{font:400 13px/1.4 var(--sans);color:var(--muted);flex:1 1 200px;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fc-r3{font:700 14px/1 var(--mono);color:var(--up);font-variant-numeric:tabular-nums}
+.fc-r3 i{font-style:normal;font-size:11px;color:var(--dim);margin-left:3px}
+.fc-n{font:400 11px/1 var(--mono);color:var(--dim);flex:none}
+@media(max-width:600px){
+  .fc-lead{flex-basis:100%;order:3}
 }
 
 </style>
@@ -11009,11 +11080,26 @@ body,button,input,select,textarea{font-family:var(--sans)}
 
   {% for cat in fund_screen.categories %}
   {% if cat.funds %}
-  <div class="fundcat rv">
-    <div class="fundcat-h">
-      <h3>{{ cat.label }}</h3>
-      <span class="ghost">{{ cat.screened }} screened</span>
-    </div>
+  {# SUMMARY FIRST, DETAIL ON REQUEST.
+     Six categories, three fund cards each, three CAGR bars per card and a
+     paragraph of category facts is the entire mutual-fund section open at
+     once — several screens of it, on a page that already runs long, for a
+     reader who mostly wants to know which fund leads.
+
+     One line per category now: the leader, its 3-year return, how many were
+     screened. Everything that was here is still here, one click down. The
+     first category is open so the pattern is visible without guessing that
+     the rows expand. #}
+  <details class="fundcat rv"{% if loop.first %} open{% endif %}>
+    <summary class="fundcat-sum">
+      <span class="fc-name">{{ cat.label }}</span>
+      {% if cat.funds and cat.funds[0] %}
+      <span class="fc-lead">{{ cat.funds[0].name[:44] }}</span>
+      {% set _r3 = cat.funds[0].get('r3') %}
+      {% if _r3 is not none %}<span class="fc-r3 num">{{ '%.1f'|format(_r3) }}%<i>3Y</i></span>{% endif %}
+      {% endif %}
+      <span class="fc-n">{{ cat.screened }} screened</span>
+    </summary>
     <p class="fundcat-b">{{ cat.blurb }}</p>
 
     {% set facts = cat.get('facts') %}
@@ -11184,7 +11270,7 @@ body,button,input,select,textarea{font-family:var(--sans)}
       </div>
       {% endfor %}
     </div>
-  </div>
+  </details>
   {% endif %}
   {% endfor %}
 

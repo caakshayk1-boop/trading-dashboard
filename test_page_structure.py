@@ -498,10 +498,26 @@ def _():
         r = ratio(on, lime)
         assert r >= 4.5, f"--on-brand {on} on --lime {lime} is only {r:.2f}:1"
 
-    # And nothing may hardcode a foreground onto the brand fill again.
-    btn = TEMPLATE.split(".btn{")[1].split("}")[0]
-    assert "color:#000" not in btn and "color:#fff" not in btn, \
-        "primary button hardcodes a text colour on the brand fill — use --on-brand"
+    # And NOTHING may hardcode a foreground onto the brand fill again.
+    #
+    # The first version of this checked only `.btn`. Six other rules —
+    # ::selection, .tab.on, .gym-tab.on, .gym-opt.right, .swp-toggle and the
+    # Subscribe button — were still black on navy and the test passed happily,
+    # so the Subscribe button stayed unreadable and had to be reported by hand.
+    # Checking one instance of a class of bug is not checking the class.
+    offenders = re.findall(r"[^{}]*\{[^{}]*background:var\(--lime\)[^{}]*\}", TEMPLATE)
+    bad = []
+    for rule in offenders:
+        # (?<![-a-z]) so `border-color:` and `outline-color:` do not match —
+        # the first run flagged four rules whose only sin was a coloured
+        # border, which would have sent me editing correct code.
+        m = re.search(r"(?<![-a-z])color:(#[0-9A-Fa-f]{3,6}|var\(--(?!on-brand)[a-z-]+\))", rule)
+        if m:
+            bad.append(rule.strip().split("{")[0][:44] + " -> " + m.group(1))
+    assert not bad, (
+        "these are filled with the brand colour but hardcode their text colour; "
+        "use var(--on-brand): " + "; ".join(bad[:6])
+    )
 
     # The filled status chips, which carry white text by design.
     for name in ("pill-fact", "pill-model", "pill-result", "pill-view"):
