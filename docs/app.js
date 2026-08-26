@@ -6527,9 +6527,52 @@ var TV_ALIASES = (function () {
   }
   window.__stampMetricBadges = stampMetricBadges;
 
+  // ── TABLE NAMES AND HEADER SCOPE ────────────────────────────────────
+  //
+  // Sixteen tables, none with a caption or an accessible name: a screen
+  // reader announces "table" and the user has to read cells to work out
+  // which of sixteen they are in. Thirteen <th> also lacked scope, so
+  // header-to-cell association was left to the browser's heuristics.
+  //
+  // Derived from each table's own nearest preceding heading rather than
+  // hand-written in fourteen places. A label typed next to the markup is a
+  // label that drifts when the heading above it is reworded; this one cannot,
+  // and a table added later is covered without anyone remembering to.
+  function nameTables(root){
+    [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
+      if (!t.getAttribute('aria-label') && !t.caption) {
+        var sec = t.closest('section') || document;
+        var node = t, head = null;
+        // Walk back through previous siblings and up through ancestors —
+        // the heading is usually a sibling of the table's wrapper, not of
+        // the table itself.
+        while (node && node !== sec && !head) {
+          var p = node.previousElementSibling;
+          while (p && !head) {
+            head = p.matches && p.matches('h1,h2,h3,h4') ? p
+                 : (p.querySelector ? p.querySelector('h1,h2,h3,h4') : null);
+            p = p.previousElementSibling;
+          }
+          node = node.parentElement;
+        }
+        var label = head && head.textContent ? head.textContent.replace(/\s+/g, ' ').trim() : '';
+        if (label) t.setAttribute('aria-label', label.slice(0, 90));
+      }
+      // Column headers unless the row says otherwise. Every <th> in these
+      // tables sits in a <thead> row, so col is correct and stated rather
+      // than inferred.
+      [].slice.call(t.querySelectorAll('th')).forEach(function(th){
+        if (!th.getAttribute('scope')) {
+          th.setAttribute('scope', th.closest('tbody') && th.cellIndex === 0 ? 'row' : 'col');
+        }
+      });
+    });
+  }
+
   ready(function () {
     try { wireNavGroups(); } catch (e) { console.warn('nav wiring failed', e); }
     try { stampMetricBadges(document); } catch (e) { console.warn('metric badges failed', e); }
+    try { nameTables(document); } catch (e) { console.warn('table naming failed', e); }
 
     // Most KPI tiles arrive later, from the wallet and performance responses.
     // A MutationObserver rather than a timer: the renders are network-bound and
@@ -6544,6 +6587,7 @@ var TV_ALIASES = (function () {
         requestAnimationFrame(function(){
           queued = false;
           try { stampMetricBadges(document); } catch (e) { /* never break a render */ }
+          try { nameTables(document); } catch (e) { /* never break a render */ }
         });
       }).observe(document.body, {childList: true, subtree: true});
     }
