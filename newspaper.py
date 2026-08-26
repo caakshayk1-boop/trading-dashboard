@@ -4423,7 +4423,7 @@ TEMPLATE = r"""<!DOCTYPE html>
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
 }catch(e){}})();
 </script>
-<meta name="theme-color" content="#E9ECF0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#F3F2EE" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#FBFAF7">
 <meta name="color-scheme" content="light dark">
 
@@ -4718,33 +4718,39 @@ TEMPLATE = r"""<!DOCTYPE html>
      The bias is cool on purpose: warm cream under dense red/green financial
      tables muddies both, and a slate-tinted sheet lets the semantic colours
      sit on it cleanly. */
-  --bg:#E9ECF0;
-  --bg2:#E2E6EB;
-  --surface:#F8FAFC;
-  --surface2:#EFF2F6;
-  --surface3:#DDE2E9;
-  --overlay:#F8FAFC;
+  --bg:#F3F2EE;
+  --bg2:#EAE9E4;
+  --surface:#FAF9F6;
+  --surface2:#EFEEE9;
+  --surface3:#E2E1DB;
+  --overlay:#FAF9F6;
 
-  --line:rgba(22,29,42,.13);
-  --line2:rgba(22,29,42,.24);
+  /* Rules, not edges. A broadsheet separates things with hairlines and space;
+     it does not put a rounded box round every idea. These are darker than the
+     borders they replace because a hairline has to be seen to be doing the job
+     a card outline used to do. */
+  --line:rgba(17,17,17,.16);
+  --line2:rgba(17,17,17,.30);
 
   /* Ink on paper, blue-black rather than neutral so it belongs to the ground.
      Measured against --bg2, the darkest sheet these three regularly
      print on — a contrast figure quoted against pure white is a figure that is
      never true where the text actually sits.
      Computed: 13.6:1 / 7.4:1 / 4.9:1. --dim is metadata only, never body. */
-  --text:#161D2A;
-  --muted:#3D4757;
-  --dim:#54606F;
+  --text:#111111;
+  --muted:#3A3A38;
+  --dim:#5C5C58;
 
   /* THE MARK. Was an olive lime chosen to survive a dark ground; on rag paper
      it read as tired. Deep ink-teal instead — far enough from --up green that
      the wordmark is never mistaken for a P&L colour, which is the whole reason
      a brand hue and a semantic hue have to be different colours.
      #0B5C63 computes 6.3:1 on --bg2. */
-  --lime:#0B5C63;
-  --lime-soft:rgba(11,92,99,.08);
-  --lime-line:rgba(11,92,99,.26);
+  /* One accent, used for links and the wordmark. Everything else that used to
+     carry a hue now carries weight, size or a rule instead. */
+  --lime:#123E6E;
+  --lime-soft:rgba(18,62,110,.07);
+  --lime-line:rgba(18,62,110,.24);
 
   /* PILLAR HUES. Six sections of the paper, six colours — carried by the nav
      button, the section number and the rule beside a heading. This is the
@@ -4752,25 +4758,30 @@ TEMPLATE = r"""<!DOCTYPE html>
      which part of the paper you are standing in, so colour is navigation
      rather than decoration. None of them is used for a value; values only
      ever get --up/--down/--gold. */
-  --p-today:#B04A16;
-  --p-markets:#1A4FB0;
-  --p-research:#6438B8;
-  --p-portfolio:#0B6E5F;
-  --p-ledger:#A8123F;
-  --p-about:#54606F;
+  /* Pulled back hard. These were six saturated hues painting every eyebrow and
+     nav chip, which on a page carrying real semantic colour — gains, losses,
+     provenance — meant colour had four different jobs and therefore none.
+     Colour now means ONE thing: where a number came from, and whether it went
+     up or down. The pillars keep an identity, at the weight of a pencil mark. */
+  --p-today:#6B4A2A;
+  --p-markets:#2A4A6B;
+  --p-research:#4A3A6B;
+  --p-portfolio:#2A5450;
+  --p-ledger:#6B2A3A;
+  --p-about:#4A4A48;
   /* The Life page runs its own five pillars off the same idea. */
-  --p-career:#9A4A00;
-  --p-learning:#1A4FB0;
-  --p-practice:#0B6E5F;
-  --p-drills:#6438B8;
-  --p-mind:#A8123F;
+  --p-career:#6B4A2A;
+  --p-learning:#2A4A6B;
+  --p-practice:#2A5450;
+  --p-drills:#4A3A6B;
+  --p-mind:#6B2A3A;
 
-  --orb-a:rgba(11,92,99,.06);
-  --orb-b:rgba(26,79,176,.04);
-  --pick-edge:#F8FAFC;
-  --on-up:#F8FAFC;
-  --rank-ink:rgba(22,29,42,.055);
-  --scroll-thumb:#C9D0DA;
+  --orb-a:rgba(18,62,110,.04);
+  --orb-b:rgba(17,17,17,.03);
+  --pick-edge:#FAF9F6;
+  --on-up:#FAF9F6;
+  --rank-ink:rgba(17,17,17,.05);
+  --scroll-thumb:#CFCEC8;
   --up:#0A6B45;   --up-soft:rgba(10,107,69,.12);
   --down:#B4231A; --down-soft:rgba(180,35,26,.11);
   --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
@@ -4796,33 +4807,39 @@ TEMPLATE = r"""<!DOCTYPE html>
      The bias is cool on purpose: warm cream under dense red/green financial
      tables muddies both, and a slate-tinted sheet lets the semantic colours
      sit on it cleanly. */
-  --bg:#E9ECF0;
-  --bg2:#E2E6EB;
-  --surface:#F8FAFC;
-  --surface2:#EFF2F6;
-  --surface3:#DDE2E9;
-  --overlay:#F8FAFC;
+  --bg:#F3F2EE;
+  --bg2:#EAE9E4;
+  --surface:#FAF9F6;
+  --surface2:#EFEEE9;
+  --surface3:#E2E1DB;
+  --overlay:#FAF9F6;
 
-  --line:rgba(22,29,42,.13);
-  --line2:rgba(22,29,42,.24);
+  /* Rules, not edges. A broadsheet separates things with hairlines and space;
+     it does not put a rounded box round every idea. These are darker than the
+     borders they replace because a hairline has to be seen to be doing the job
+     a card outline used to do. */
+  --line:rgba(17,17,17,.16);
+  --line2:rgba(17,17,17,.30);
 
   /* Ink on paper, blue-black rather than neutral so it belongs to the ground.
      Measured against --bg2, the darkest sheet these three regularly
      print on — a contrast figure quoted against pure white is a figure that is
      never true where the text actually sits.
      Computed: 13.6:1 / 7.4:1 / 4.9:1. --dim is metadata only, never body. */
-  --text:#161D2A;
-  --muted:#3D4757;
-  --dim:#54606F;
+  --text:#111111;
+  --muted:#3A3A38;
+  --dim:#5C5C58;
 
   /* THE MARK. Was an olive lime chosen to survive a dark ground; on rag paper
      it read as tired. Deep ink-teal instead — far enough from --up green that
      the wordmark is never mistaken for a P&L colour, which is the whole reason
      a brand hue and a semantic hue have to be different colours.
      #0B5C63 computes 6.3:1 on --bg2. */
-  --lime:#0B5C63;
-  --lime-soft:rgba(11,92,99,.08);
-  --lime-line:rgba(11,92,99,.26);
+  /* One accent, used for links and the wordmark. Everything else that used to
+     carry a hue now carries weight, size or a rule instead. */
+  --lime:#123E6E;
+  --lime-soft:rgba(18,62,110,.07);
+  --lime-line:rgba(18,62,110,.24);
 
   /* PILLAR HUES. Six sections of the paper, six colours — carried by the nav
      button, the section number and the rule beside a heading. This is the
@@ -4830,25 +4847,30 @@ TEMPLATE = r"""<!DOCTYPE html>
      which part of the paper you are standing in, so colour is navigation
      rather than decoration. None of them is used for a value; values only
      ever get --up/--down/--gold. */
-  --p-today:#B04A16;
-  --p-markets:#1A4FB0;
-  --p-research:#6438B8;
-  --p-portfolio:#0B6E5F;
-  --p-ledger:#A8123F;
-  --p-about:#54606F;
+  /* Pulled back hard. These were six saturated hues painting every eyebrow and
+     nav chip, which on a page carrying real semantic colour — gains, losses,
+     provenance — meant colour had four different jobs and therefore none.
+     Colour now means ONE thing: where a number came from, and whether it went
+     up or down. The pillars keep an identity, at the weight of a pencil mark. */
+  --p-today:#6B4A2A;
+  --p-markets:#2A4A6B;
+  --p-research:#4A3A6B;
+  --p-portfolio:#2A5450;
+  --p-ledger:#6B2A3A;
+  --p-about:#4A4A48;
   /* The Life page runs its own five pillars off the same idea. */
-  --p-career:#9A4A00;
-  --p-learning:#1A4FB0;
-  --p-practice:#0B6E5F;
-  --p-drills:#6438B8;
-  --p-mind:#A8123F;
+  --p-career:#6B4A2A;
+  --p-learning:#2A4A6B;
+  --p-practice:#2A5450;
+  --p-drills:#4A3A6B;
+  --p-mind:#6B2A3A;
 
-  --orb-a:rgba(11,92,99,.06);
-  --orb-b:rgba(26,79,176,.04);
-  --pick-edge:#F8FAFC;
-  --on-up:#F8FAFC;
-  --rank-ink:rgba(22,29,42,.055);
-  --scroll-thumb:#C9D0DA;
+  --orb-a:rgba(18,62,110,.04);
+  --orb-b:rgba(17,17,17,.03);
+  --pick-edge:#FAF9F6;
+  --on-up:#FAF9F6;
+  --rank-ink:rgba(17,17,17,.05);
+  --scroll-thumb:#CFCEC8;
   --up:#0A6B45;   --up-soft:rgba(10,107,69,.12);
   --down:#B4231A; --down-soft:rgba(180,35,26,.11);
   --gold:#8A6A00; --gold-soft:rgba(138,106,0,.13);
@@ -4980,31 +5002,58 @@ TEMPLATE = r"""<!DOCTYPE html>
   max-width:64ch;
   color:var(--muted);
 }
-/* Cards are WHITE ON PAPER now.
-   The previous pass stripped their frames because on a pure-white ground a
-   card had nowhere lighter to go and needed four borders to exist. Softening
-   the ground to paper removes that constraint: a white card against a paper
-   ground reads as raised on its own, which is how a card works in print. */
+/* NO CARDS. A broadsheet groups with a rule and a column of air, and this page
+   was drawing twenty-three outlined, shadowed boxes to say "these belong
+   together" — which a hairline says more quietly and without adding
+   twenty-three competing rectangles to a page that already carries a great
+   deal of structure.
+
+   These are the authoritative light-theme rules and they out-specify anything
+   set on a bare `.card`, which is why the treatment is rewritten HERE rather
+   than layered on top: two card systems fighting on specificity is how the
+   last one ended up invisible. */
 :root:not([data-theme]) .card,
 :root[data-theme="light"] .card{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:10px;
-  box-shadow:0 1px 2px rgba(20,21,24,.04);
-  padding:clamp(16px,2vw,22px);
+  background:transparent;
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  box-shadow:none;
+  padding:18px 0 20px;
 }
 :root:not([data-theme]) .card:hover,
 :root[data-theme="light"] .card:hover{
-  border-color:var(--line2);
-  box-shadow:0 6px 18px rgba(20,21,24,.07);
+  border-color:var(--line);
+  box-shadow:none;
 }
-/* Tables sit on paper too, so they get the same lift. */
+/* A table IS its own container on paper. Rules top and bottom, nothing round
+   the outside, and the row rules carry the rest. */
 :root:not([data-theme]) .tblwrap,
 :root[data-theme="light"] .tblwrap{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:10px;
-  overflow:hidden;
+  background:transparent;
+  border:0;
+  border-top:1px solid var(--line2);
+  border-bottom:1px solid var(--line2);
+  border-radius:0;
+}
+/* SCROLLS, and did not before.
+   .tblwrap has no base rule anywhere in this file — its only declaration was
+   the theme rule above, which carried `overflow:hidden`. So a table wider than
+   the screen was being CLIPPED: the columns past the edge were unreachable at
+   any viewport, on every device, silently.
+
+   Removing that hidden in the broadsheet rewrite turned a silent clip into a
+   500px document overflow at 320px, which is how it was finally caught — and
+   only because the check was run with content-visibility disabled as a
+   control. With sections skipped the overflow does not reach the document and
+   the page measures clean.
+
+   auto, not hidden: a wide table should be reachable, not amputated.
+   overscroll-behavior-x stops a sideways flick inside a table from triggering
+   the browser's back gesture, which on iOS navigates away mid-read. */
+.tblwrap{
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
 }
 /* Tables lose their outer box for the same reason and keep their row rules. */
 :root:not([data-theme]) table,
@@ -8170,6 +8219,175 @@ select:focus-visible{
    remembered-size behaviour too — this is here to document that
    contain-intrinsic-size:auto is doing that job for everyone. */
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BROADSHEET PASS
+   A newspaper does not put a rounded box round every idea. It uses a rule, a
+   change of type, and space. Twenty-three card surfaces on this page each drew
+   an outline and a shadow to say "these things belong together" — which a
+   hairline and 24px of air say better and quieter.
+
+   What is deliberately NOT touched: the provenance pills, and up/down. Colour
+   now has exactly one job on this page — where a number came from, and which
+   way it went. Everything that used to compete with that is ink now.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Cards become rule-separated blocks. Kept as a class rather than unpicked at
+   23 call sites so the markup, the JS that builds cards, and every future card
+   inherit the change. */
+/* .card and .tblwrap are defined in the light-theme block above, which
+   out-specifies anything set here — see the note there. Only the hover
+   transform, which that block does not set, remains. */
+.card:hover{transform:none}
+
+/* Section headings: the serif does the work. This is the single biggest
+   change to how the page reads — the display face was carrying data and the
+   serif was decorating headings, and a broadsheet is the other way round. */
+.stitle{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:clamp(30px,5.2vw,58px);
+  line-height:1.01;
+  letter-spacing:-.028em;
+}
+.shead{
+  border-bottom:1px solid var(--line2);
+  padding-bottom:clamp(14px,2vw,20px);
+  margin-bottom:clamp(20px,3vw,32px);
+  align-items:flex-start;
+}
+/* The eyebrow loses its coloured bar for a single hairline. The pillar hue is
+   still there, at the weight it should always have been. */
+.snum::before{width:16px;height:1px;border-radius:0;opacity:.9}
+.snum{letter-spacing:.18em;font-size:10px}
+
+/* Subheads get a rule above rather than a box around. */
+.subhead{
+  border-top:1px solid var(--line);
+  padding-top:16px;
+  margin-top:clamp(26px,3.4vw,40px);
+}
+.subeyebrow{color:var(--dim);letter-spacing:.18em}
+
+/* Tables lose the panel and keep the grid. On paper a table IS the container. */
+.tw{
+  background:transparent;border:0;border-radius:0;
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
+}
+.tblwrap table th,.tw table th{background:transparent}
+.tblwrap table tbody tr:hover,.tw table tbody tr:hover{background:var(--surface2)}
+
+/* KPI tiles: hairline grid, no fills. The number is the object; the box was
+   never the object. */
+.kpi-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));
+  gap:0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);
+}
+.kpi{
+  background:transparent;border:0;border-radius:0;
+  border-left:1px solid var(--line);
+  padding:16px 16px 15px;
+}
+.kpi:first-child{border-left:0;padding-left:0}
+.kpi .v{font-family:var(--disp);letter-spacing:-.03em}
+
+/* The Record band, restated in the same language. */
+.record-in{border-top:3px solid var(--text);border-bottom:1px solid var(--line2)}
+.record-grid{background:transparent;border:0;border-top:1px solid var(--line);gap:0}
+.rec{background:transparent;border-left:1px solid var(--line);padding:15px 15px 14px}
+.rec:nth-child(3n+1){border-left:0;padding-left:0}
+.record-h{font-size:clamp(26px,3.4vw,40px)}
+.record-h em{color:var(--text);font-style:italic}
+.record-cta{border-bottom-width:1px;border-bottom-color:var(--text)}
+
+/* Smart money flow: a chart on paper, not a widget in a box. */
+.smf{background:transparent;border:0;border-top:1px solid var(--line2);
+  border-bottom:1px solid var(--line);border-radius:0;padding:16px 0 12px}
+
+
+/* ── "WHY, AND HOW IT IS MEASURED" ────────────────────────────────────────
+   The disclosure that now holds every explanation longer than one sentence.
+
+   Styled to be found, not hidden. The whole argument of this page is that its
+   methods are inspectable, so the control that opens a method has to look like
+   an offer — a rule, a marker, and a label that says what is behind it. A
+   caret in 9px grey would have been "hiding the prose", which is the opposite
+   of what was asked for.
+
+   With JavaScript off no split happens and the full paragraph renders as it
+   always did. Nothing here removes text from the document: find-in-page and
+   screen readers still reach every word, open or closed. */
+.why{margin-top:10px;border-top:1px solid var(--line)}
+.why>summary{
+  list-style:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 0 0;
+  font:600 11px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);
+  transition:color .15s var(--ease);
+}
+.why>summary::-webkit-details-marker{display:none}
+/* A plus that becomes a minus. Unambiguous at 11px in a way a caret is not,
+   and it needs no icon font. */
+.why>summary::before{
+  content:'+';font:400 15px/1 var(--mono);color:var(--lime);
+  width:15px;height:15px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--lime-line);flex:none;
+}
+.why[open]>summary::before{content:'\2212'}
+.why>summary:hover,.why>summary:focus-visible{color:var(--text)}
+.why[open]>summary{color:var(--text)}
+/* On a phone the summary is the control that opens every explanation on the
+   page, and it measured 26px tall — under every platform's 44px minimum. The
+   padding goes on the summary rather than the marker so the whole line is the
+   target, not just the plus sign. */
+@media(max-width:760px){
+  .why>summary{padding:13px 0;min-height:44px}
+}
+.why-body{
+  margin:10px 0 12px;
+  font:400 14px/1.68 var(--sans);color:var(--muted);
+  max-width:66ch;
+  border-left:2px solid var(--line2);padding-left:15px;
+}
+/* The lede that remains visible carries more weight than it did when it was
+   the first third of a wall of text. */
+.sdesc,.subdesc{font-size:14px;line-height:1.6;max-width:56ch}
+
+
+/* ── THE EQUITY CURVE ─────────────────────────────────────────────────────
+   The most honest object on the page: every closed signal in order, and where
+   that leaves you. It currently goes down, and it is drawn at full size at the
+   top of the page rather than tucked into Performance, because a ledger that
+   publishes its losses quietly has not really published them.
+
+   Zero is a solid rule, not a faint one — it is the only line on the chart
+   that means anything, and where the curve sits relative to it is the entire
+   message. */
+.rcurve{margin:0 0 18px;padding:0;grid-column:1/-1}
+.rcurve-cap{
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  flex-wrap:wrap;margin-bottom:9px;
+  font:400 11px/1.4 var(--mono);color:var(--dim);letter-spacing:.03em;
+}
+.rcurve-now{font-weight:600;font-variant-numeric:tabular-nums}
+.rcurve-now.up{color:var(--up)} .rcurve-now.dn{color:var(--down)}
+.rcurve-plot{width:100%;height:120px}
+.rcurve-plot svg{display:block;width:100%;height:100%;overflow:visible}
+.rc-zero{stroke:var(--text);stroke-width:1;opacity:.55}
+.rc-line{fill:none;stroke:var(--text);stroke-width:1.75;
+  stroke-linejoin:round;stroke-linecap:round}
+.rc-fill{stroke:none}
+.rc-fill.dn{fill:var(--down);opacity:.10}
+.rc-fill.up{fill:var(--up);opacity:.10}
+.rc-end{fill:var(--text)}
+@media(max-width:640px){ .rcurve-plot{height:96px} }
+@media (prefers-reduced-motion:no-preference){
+  .rc-line{stroke-dasharray:var(--len,0);stroke-dashoffset:var(--len,0);
+    animation:rcdraw 1.1s var(--ease) .25s forwards}
+  @keyframes rcdraw{to{stroke-dashoffset:0}}
+}
+
 </style>
 </head>
 
@@ -8581,6 +8799,17 @@ select:focus-visible{
         </p>
         <a class="record-cta" href="#alerts">Open the signal log &rarr;</a>
       </div>
+      {# The curve. Drawn from the same /api/stats payload the six figures below
+         come from, so it cannot show a different story to the numbers beside
+         it. Empty until that resolves — a fabricated placeholder curve on a
+         page about not fabricating things would be indefensible. #}
+      <figure class="rcurve" id="recordCurve" hidden>
+        <figcaption class="rcurve-cap">
+          <span>Cumulative R, every closed signal in order</span>
+          <span class="rcurve-now" id="recordCurveNow"></span>
+        </figcaption>
+        <div class="rcurve-plot" id="recordCurvePlot"></div>
+      </figure>
       <div class="record-grid">
         <div class="rec"><span class="rec-v">{{ closed }}</span><span class="rec-k">Closed &amp; scored</span></div>
         <div class="rec"><span class="rec-v">{{ winrate }}%</span><span class="rec-k">Win rate</span></div>
