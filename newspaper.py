@@ -8818,6 +8818,82 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
   .fc-lead{flex-basis:100%;order:3}
 }
 
+
+/* ── THE DECISION LOG ─────────────────────────────────────────────────────
+   Not a holdings table. Holdings say what is there now; this says what the
+   book DID, in the order it did it, with the money attached — which is the
+   only way a mechanical allocator can be audited rather than trusted.
+
+   Grid, not table: six fixed columns that stay aligned down the page and
+   collapse to two rows on a phone without needing the card treatment. */
+.dlog{margin:18px 0 4px;border-top:1px solid var(--line2)}
+.dlog-h{display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;flex-wrap:wrap;padding:12px 0 10px}
+.dlog-t{font:600 13px/1.2 var(--disp);color:var(--text);letter-spacing:-.01em}
+.dlog-r{
+  display:grid;
+  grid-template-columns:84px minmax(72px,1fr) 62px minmax(80px,1fr) minmax(90px,1fr) minmax(84px,auto);
+  gap:10px;align-items:baseline;
+  padding:9px 0;border-top:1px solid var(--line);
+  font:400 12px/1.4 var(--mono);
+}
+.dl-d{color:var(--dim)}
+.dl-s{font-weight:700;color:var(--text);text-decoration:none;
+  border-bottom:1px dotted var(--line2)}
+.dl-s:hover{border-bottom-style:solid}
+/* The verb is the point of the row, so it is the only coloured thing in it
+   until the outcome. */
+.dl-v{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.dl-sized{color:var(--p-markets)}
+.dl-closed{color:var(--dim)}
+.dl-a,.dl-o{font-variant-numeric:tabular-nums}
+.dl-t{color:var(--dim);font-size:11px}
+.dl-o{text-align:right;font-weight:700}
+.dl-o.up{color:var(--up)} .dl-o.dn{color:var(--down)}
+.dl-open{color:var(--dim);font-weight:400}
+@media(max-width:700px){
+  .dlog-r{grid-template-columns:1fr 1fr 1fr;gap:4px 10px}
+  .dl-s{grid-column:1/3;font-size:13px}
+  .dl-o{grid-column:3;grid-row:1}
+  .dl-d,.dl-v,.dl-t{font-size:10px}
+}
+
+
+/* ── MULTI-COLUMN, WHERE IT ACTUALLY HELPS ───────────────────────────────
+   The WSJ ask was multi-column text. A broadsheet runs continuous columns
+   because its page is fixed and tall; this page is a responsive card grid,
+   and setting a card's contents in columns means a reader scrolls DOWN to the
+   bottom of column one and then back UP to the top of column two. On a
+   scrolling page that is worse than one column, not better.
+
+   So columns go where the shape is right: long-form prose that is read in one
+   sitting and sits inside a bounded block — the disclosure bodies and the
+   definition list. Both are finite, both are read straight through, and both
+   currently run to a single very long measure on a wide screen.
+
+   Only above 1100px, where two columns are each still 45+ characters. Below
+   that a second column is narrower than a phone. */
+@media(min-width:1100px){
+  .why[open] .why-body{
+    columns:2;column-gap:38px;column-rule:1px solid var(--line);
+    max-width:none;
+  }
+  /* A heading or a figure orphaned at the foot of column one is the classic
+     multi-column failure; this keeps each definition whole. */
+  .metdefs{columns:2;column-gap:44px;column-rule:1px solid var(--line)}
+  .metdef{break-inside:avoid;display:block;padding:14px 0}
+  .metdef dt{margin-bottom:6px}
+  .metdef .md-what,.metdef .md-how{max-width:none}
+}
+/* Print is the one place a real broadsheet column makes sense: the page stops
+   scrolling and becomes a sheet. */
+@media print{
+  .sdesc,.subdesc,.why-body{columns:2;column-gap:32px}
+  .why{display:block}
+  .why>summary{display:none}
+  .why-body{border:0;padding:0}
+}
+
 </style>
 </head>
 
@@ -12558,11 +12634,7 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
     <!-- Copy rewritten when this stopped being a finance-only section. It used
          to name five money mastheads, which was accurate then and would have
          been quietly wrong the moment the other four categories landed. -->
-    <p class="sdesc">Analysis, not headlines, and deliberately not all about money
-      &mdash; markets and personal finance alongside habits and focus, health and
-      longevity, psychology and relationships, and the longer essays on thinking
-      and living well. Every card carries the publisher&rsquo;s own summary, so you
-      know what a piece argues before you open it.</p>
+    <p class="sdesc">Analysis, not headlines, and deliberately not all about money.</p>
   </div>
 
   <div class="sr-grid">
@@ -12698,12 +12770,7 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
       <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
       <h2 class="stitle">What&rsquo;s worth listening to.</h2>
     </div>
-    <p class="sdesc">Long-form Indian podcasts across everything &mdash; business,
-      investing and money, society, politics and geopolitics, health, psychology,
-      philosophy, education, comedy and culture. Thirty-four channels, up to twenty
-      episodes, newest first, with what each one says it covers. Titles, dates and
-      takeaways come from the shows themselves. Shorts are excluded per video, not
-      per channel.</p>
+    <p class="sdesc">Long-form Indian podcasts &mdash; business, money, society, health, psychology and culture. Thirty-four channels, newest first.</p>
   </div>
 
   <div class="prov{{ ' stale' if podcasts.is_fallback else '' }} rv">
