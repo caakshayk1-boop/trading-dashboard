@@ -2283,10 +2283,21 @@ var TV_ALIASES = (function () {
         // No engine switch. One engine, one record — see the note on
         // #alertVer above.
         ''  +
+        // Sortable on the columns a reader actually re-orders by. Date,
+        // symbol, R:R and P&L — not on Grade or TF, where the useful control
+        // is the filter chip that already exists and sorting would just
+        // scatter the group you were looking at.
         '<div class="tw tw-tall rv"><table class="t" id="alertTable"><thead><tr>' +
-          '<th scope="col">Date</th><th scope="col">Symbol</th><th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th><th scope="col">Entry</th><th scope="col">SL</th>' +
-          '<th scope="col">T1</th><th scope="col">T2</th><th scope="col">RR</th><th scope="col">B/E WR</th>' +
-          '<th scope="col">Last</th><th scope="col">Exit</th><th scope="col">P&amp;L</th><th scope="col">Closed</th><th scope="col">Status</th>' +
+          '<th scope="col" class="sortable" data-k="date">Date</th>' +
+          '<th scope="col" class="sortable" data-k="symbol">Symbol</th>' +
+          '<th scope="col">Signal</th><th scope="col">TF</th><th scope="col">Grade</th>' +
+          '<th scope="col">Entry</th><th scope="col">SL</th>' +
+          '<th scope="col">T1</th><th scope="col">T2</th>' +
+          '<th scope="col" class="sortable" data-k="rr">RR</th><th scope="col">B/E WR</th>' +
+          '<th scope="col">Last</th><th scope="col">Exit</th>' +
+          '<th scope="col" class="sortable" data-k="pnl">P&amp;L</th>' +
+          '<th scope="col" class="sortable" data-k="closed_at">Closed</th>' +
+          '<th scope="col">Status</th>' +
         '</tr></thead><tbody></tbody></table></div>';
         // No #sheet here — it is in the static section markup. Two copies
         // would give two elements with the same id and openSheet() would fill
@@ -2747,6 +2758,45 @@ var TV_ALIASES = (function () {
     // A budget, not an editorial decision — see the note inside renderAlerts.
     var ALERT_RENDER_CAP = 60;
     var alertsShowAll = false;
+    // Ledger sort. Its own small state rather than reaching into the stock
+    // screen's sorter, which is bound to that section's closure — sharing it
+    // would mean one table's click changing the other's order.
+    var alSortKey = null, alSortDir = -1;
+
+    // What each sortable column actually sorts ON. The displayed cell is
+    // formatted text ("+12.4%", "Rs 1,886.30"), and sorting formatted text
+    // puts Rs 9 above Rs 1,000 — so every key reads the underlying value.
+    var AL_SORT = {
+      date:      function(a){ return a.date || ''; },
+      closed_at: function(a){ return a.closed_at || ''; },
+      symbol:    function(a){ return (a.symbol || '').toUpperCase(); },
+      // Local coercion: `num` lives in another IIFE and this file has no module
+      // system, so reaching across scopes is a ReferenceError the linter
+      // catches and the browser would not until someone clicked the column.
+      rr:        function(a){ var v = Number(a.rr);     return isFinite(v) ? v : null; },
+      pnl:       function(a){ var v = Number(a.pnl_pct); return isFinite(v) ? v : null; }
+    };
+
+    function sortAlerts(rows){
+      if (!alSortKey || !AL_SORT[alSortKey]) return rows;
+      var get = AL_SORT[alSortKey];
+      // Copy before sorting: allRows is the source of truth for every other
+      // filter and reordering it in place would make the sort sticky in ways
+      // nothing else expects.
+      return rows.slice().sort(function(x, y){
+        var a = get(x), b = get(y);
+        // Rows with no value sort last in BOTH directions. An open trade has
+        // no P&L, and it should not top the list just because you clicked
+        // ascending — "no value yet" is not "the smallest value".
+        var an = (a === null || a === undefined || a === '' || (typeof a === 'number' && !isFinite(a)));
+        var bn = (b === null || b === undefined || b === '' || (typeof b === 'number' && !isFinite(b)));
+        if (an && bn) return 0;
+        if (an) return 1;
+        if (bn) return -1;
+        if (a === b) return 0;
+        return (a > b ? 1 : -1) * alSortDir;
+      });
+    }
 
     // Full setup logic for engines a reader is likely to ask "why did this
     // fire" about, shown on hover over the engine tag. Read fresh at render
@@ -2776,7 +2826,7 @@ var TV_ALIASES = (function () {
       var pnlMin = pnlMinEl && pnlMinEl.value !== '' ? Number(pnlMinEl.value) : null;
       var pnlMax = pnlMaxEl && pnlMaxEl.value !== '' ? Number(pnlMaxEl.value) : null;
 
-      var rows = allRows.filter(function(r){
+      var rows = sortAlerts(allRows.filter(function(r){
         if (badge !== 'all' && r.badge !== badge) return false;
         // "All" means every real outcome — it deliberately does not include
         // VOID/CANCELLED (signals withdrawn or never valid, not trades that
@@ -2793,7 +2843,7 @@ var TV_ALIASES = (function () {
         if (pnlMin !== null && (r.pnl_pct === null || r.pnl_pct === undefined || r.pnl_pct < pnlMin)) return false;
         if (pnlMax !== null && (r.pnl_pct === null || r.pnl_pct === undefined || r.pnl_pct > pnlMax)) return false;
         return true;
-      });
+      }));
 
       // ── Render cap ───────────────────────────────────────────────────────
       // The FILTERED set is already complete at this point; this caps only how
@@ -2890,6 +2940,30 @@ var TV_ALIASES = (function () {
       });
       var clear = document.getElementById('archClear');
       if (clear) clear.addEventListener('click', function(ev){ ev.preventDefault(); selectDay(null); });
+
+      // Sorting. Bound once, not on every render — renderAlerts runs on every
+      // keystroke in the search box, and re-binding here would stack a new
+      // listener each time until one click sorted the table eleven times.
+      var tbl = el('alertTable');
+      if (tbl && !tbl.dataset.sortBound){
+        tbl.dataset.sortBound = '1';
+        tbl.addEventListener('click', function(ev){
+          var th = ev.target.closest ? ev.target.closest('th.sortable') : null;
+          if (!th || !th.dataset.k) return;
+          if (alSortKey === th.dataset.k){
+            alSortDir = -alSortDir;
+          } else {
+            alSortKey = th.dataset.k;
+            // Text reads A to Z, numbers and dates read newest/best first.
+            alSortDir = (th.dataset.k === 'symbol') ? 1 : -1;
+          }
+          [].slice.call(tbl.querySelectorAll('th.sortable')).forEach(function(h){
+            if (h === th) h.setAttribute('aria-sort', alSortDir < 0 ? 'descending' : 'ascending');
+            else h.removeAttribute('aria-sort');
+          });
+          renderAlerts();
+        });
+      }
 
       // Spell out the full span. The table always held every signal, but with
       // the newest first it read as though the history stopped a week back.
@@ -6658,6 +6732,48 @@ var TV_ALIASES = (function () {
   }
   window.__discloseProse = discloseProse;
 
+  // ── WIDE TABLES BECOME CARDS ON A PHONE ─────────────────────────────
+  //
+  // A sixteen-column ledger row is not a row on a 375px screen; it is a
+  // horizontal scroll nobody performs. Filters and sorting do not help,
+  // because the problem is that the data is unreadable once you find it.
+  //
+  // Each cell is labelled with its own column heading and the row becomes a
+  // small card — the pattern every Indian finance app uses, and the reason
+  // Chittorgarh's phone layout reads better than this one did.
+  //
+  // Labels are copied from the <th> at runtime rather than typed into
+  // seventeen cell constructions. Same argument as the table names: a label
+  // written beside the markup drifts when the header above it is reworded.
+  // Only tables with more than six columns get it — a four-column table is
+  // perfectly readable as a table and a card would make it longer, not
+  // clearer.
+  var CARD_MIN_COLS = 7;
+
+  function labelCells(root){
+    [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
+      var heads = [].slice.call(t.querySelectorAll('thead th'))
+                    .map(function(h){ return (h.textContent || '').replace(/\s+/g, ' ').trim(); });
+      if (heads.length < CARD_MIN_COLS) return;
+      t.classList.add('t-cards');
+      [].slice.call(t.querySelectorAll('tbody tr')).forEach(function(tr){
+        // A colspan row is a message ("nothing matches those filters"), not a
+        // record. Labelling its single cell "Date" would be nonsense.
+        var cells = tr.children;
+        if (cells.length === 1 && cells[0].hasAttribute('colspan')) {
+          tr.classList.add('t-cards-msg');
+          return;
+        }
+        for (var i = 0; i < cells.length; i++){
+          if (!cells[i].getAttribute('data-label') && heads[i]) {
+            cells[i].setAttribute('data-label', heads[i]);
+          }
+        }
+      });
+    });
+  }
+  window.__labelCells = labelCells;
+
   window.__renameTables = function(){ nameTables(document); };
   function nameTables(root){
     [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
@@ -6703,6 +6819,7 @@ var TV_ALIASES = (function () {
     try { stampMetricBadges(document); } catch (e) { console.warn('metric badges failed', e); }
     try { nameTables(document); } catch (e) { console.warn('table naming failed', e); }
     try { discloseProse(document); } catch (e) { console.warn('prose disclosure failed', e); }
+    try { labelCells(document); } catch (e) { console.warn('cell labelling failed', e); }
 
     // Most KPI tiles arrive later, from the wallet and performance responses.
     // A MutationObserver rather than a timer: the renders are network-bound and
@@ -6731,6 +6848,7 @@ var TV_ALIASES = (function () {
           try { stampMetricBadges(document); } catch (e) { /* never break a render */ }
           try { nameTables(document); } catch (e) { /* never break a render */ }
           try { discloseProse(document); } catch (e) { /* never break a render */ }
+          try { labelCells(document); } catch (e) { /* never break a render */ }
         }, 0);
       }).observe(document.body, {childList: true, subtree: true});
     }
