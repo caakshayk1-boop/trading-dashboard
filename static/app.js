@@ -6593,11 +6593,23 @@ var TV_ALIASES = (function () {
       new MutationObserver(function(){
         if (queued) return;
         queued = true;
-        requestAnimationFrame(function(){
+        // setTimeout, NOT requestAnimationFrame.
+        //
+        // rAF does not run while the document is hidden — a backgrounded tab,
+        // a phone with the screen off, a preview pane. This coalescer used rAF
+        // and the symptom was exact: two tables rendered from live responses
+        // kept their scope (server-side) and never got their accessible name,
+        // because the callback that names them never ran. Calling the pass by
+        // hand fixed them instantly, which is what proved it was timing and
+        // not the lookup.
+        //
+        // Anything that reacts to DOM changes has to survive the page being
+        // hidden, because "hidden" is where a lot of rendering finishes.
+        setTimeout(function(){
           queued = false;
           try { stampMetricBadges(document); } catch (e) { /* never break a render */ }
           try { nameTables(document); } catch (e) { /* never break a render */ }
-        });
+        }, 0);
       }).observe(document.body, {childList: true, subtree: true});
     }
   });

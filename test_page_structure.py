@@ -365,6 +365,39 @@ def _():
         "generate.py counts wins itself again — use ledger_counts"
 
 
+@check("the DOM observer does not coalesce with requestAnimationFrame")
+def _():
+    """rAF does not run while the document is hidden.
+
+    A backgrounded tab, a phone with its screen off, an embedded preview pane —
+    in all of them requestAnimationFrame is paused, and a lot of rendering
+    finishes in exactly those states. The MutationObserver that stamps metric
+    badges and names tables was coalesced with rAF, so two live-rendered tables
+    never received an accessible name: the callback simply never fired. Calling
+    the pass by hand fixed them instantly, which is what proved it was timing
+    rather than the heading lookup.
+
+    Scroll handlers and animations may keep rAF — pausing those while hidden is
+    correct. Anything reacting to DOM CHANGES may not.
+    """
+    js = pathlib.Path(__file__).with_name("static") / "app.js"
+    src = js.read_text(encoding="utf-8")
+
+    i = src.find("new MutationObserver(")
+    assert i != -1, "the MutationObserver went missing"
+    body = src[i:i + 900]
+    # Comments are stripped first. The callback's own comment explains why it
+    # is NOT using rAF, and naming the thing you avoided must not fail the
+    # check that you avoided it — this test failed on its own explanation the
+    # first time it ran.
+    code = "\n".join(ln.split("//")[0] for ln in body.splitlines())
+    assert "requestAnimationFrame" not in code, (
+        "the MutationObserver callback coalesces with requestAnimationFrame, "
+        "which never fires while the page is hidden"
+    )
+    assert "setTimeout" in code, "the observer callback needs a timer that runs when hidden"
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
