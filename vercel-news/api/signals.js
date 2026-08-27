@@ -16,6 +16,7 @@
 import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
 import { distinctTargets } from "./_levels.js";
 import { simulateWallet, START_DATE as WALLET_START_DATE } from "./_paper_wallet.js";
+import { quoteAll } from "./ticker.js";
 
 // The ₹50L paper wallet (?wallet=1) lives in this file rather than its own
 // api/paper_wallet.js — Vercel's free Hobby plan caps a deployment at 12
@@ -219,6 +220,7 @@ async function handleWallet(res) {
     }));
 
     const result = simulateWallet(rows, badgeOf, currencyOf);
+    await markToMarket(result);
     // 600s, same as the main signals response and for the same reason: this
     // reads the whole ledger to simulate the wallet, so a 60-second cache put
     // ~450 KB on the wire up to 1,440 times a day. The sync-budget test caught
@@ -227,6 +229,72 @@ async function handleWallet(res) {
     json(res, 200, { ok: true, generated_at: new Date().toISOString(), ...result }, 600);
   } catch (e) {
     fail(res, 500, `paper_wallet query failed: ${e.message}`);
+  }
+}
+
+/** Mark the book's OPEN positions to live prices.
+ *
+ * The crore book reported `realized_pnl` and nothing else, from six closed
+ * trades — while 55.1% of the capital (Rs 55.10 lakh across 20 open
+ * positions) sat in the market unpriced. A book that is 55% invested was
+ * showing a P&L that ignored 55% of itself. That is what "Rs 1,00,00,000
+ * doesn't appear to be live P&L" was: not a rendering fault, a missing
+ * calculation.
+ *
+ * Prices come from the same Yahoo spark feed the ticker rail already uses, so
+ * the number on the book and the number on the rail cannot disagree. Twenty
+ * positions is exactly one batch — spark's hard cap is 20 symbols — so this
+ * costs a single request per cache miss, and it is Yahoo rather than Turso, so
+ * it does not touch the sync budget that blocked the account.
+ *
+ * FAILS VISIBLE, NOT SILENT. A position whose quote is missing is counted in
+ * `unmarked`, not silently valued at cost. A total that quietly treats an
+ * unpriced holding as flat is the same class of lie as the missing number it
+ * replaces — the reader must be able to see the mark is partial.
+ */
+async function markToMarket(result) {
+  const open = (result.trades || []).filter(
+    (t) => t.badge === "open" && (t.allocated_qty || 0) > 0 && t.entry > 0);
+  result.wallet.unrealized_pnl = null;
+  result.wallet.marked_at = null;
+  result.wallet.marked = 0;
+  result.wallet.unmarked = open.length;
+  result.wallet.total_pnl = result.wallet.realized_pnl;
+  if (!open.length) {
+    result.wallet.unrealized_pnl = 0;
+    result.wallet.total_pnl = result.wallet.realized_pnl;
+    return;
+  }
+  try {
+    // .NS only. The book is Indian listed equity by mandate; anything else
+    // that reaches here has no reliable Yahoo mapping and is better left
+    // UNMARKED and counted than mapped by guesswork onto a different company —
+    // that is exactly how SILVER was once quoted as SILVER.NS at Rs 233.
+    const defs = open.map((t) => [t.symbol, `${t.symbol}.NS`, "\u20b9", 2]);
+    const quotes = await quoteAll(defs, defs.map((d) => d[1]));
+    let unreal = 0, marked = 0;
+    for (const t of open) {
+      const q = quotes.get(`${t.symbol}.NS`);
+      if (!q || !(q.price > 0)) { t.mark_price = null; continue; }
+      t.mark_price = q.price;
+      // Direction matters: a SHORT gains when the price falls.
+      const dir = String(t.side || "").toUpperCase() === "SHORT" ? -1 : 1;
+      t.unrealized_pnl = Math.round(dir * (q.price - t.entry) * t.allocated_qty);
+      t.unrealized_pnl_pct = Number((dir * ((q.price / t.entry - 1) * 100)).toFixed(2));
+      unreal += t.unrealized_pnl;
+      marked += 1;
+    }
+    result.wallet.unrealized_pnl = unreal;
+    result.wallet.unrealized_pnl_pct = Number(((unreal / result.capital) * 100).toFixed(2));
+    result.wallet.total_pnl = result.wallet.realized_pnl + unreal;
+    result.wallet.total_pnl_pct =
+      Number(((result.wallet.total_pnl / result.capital) * 100).toFixed(2));
+    result.wallet.marked = marked;
+    result.wallet.unmarked = open.length - marked;
+    result.wallet.marked_at = new Date().toISOString();
+  } catch {
+    // Quotes down. realized_pnl still stands and unrealized stays null, which
+    // the page renders as "not marked" rather than as zero.
   }
 }
 

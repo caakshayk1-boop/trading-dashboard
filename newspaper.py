@@ -8407,6 +8407,12 @@ select:focus-visible{
 }
 .kpi:first-child{border-left:0;padding-left:0}
 .kpi .v{font-family:var(--disp);letter-spacing:-.03em}
+/* The total is the answer to the question the book is asking, so it is the
+   one tile that reads as a conclusion rather than a component. Rule, not a
+   fill — a coloured panel here would fight the up/down colour the number
+   itself carries. */
+.kpi-total{border-left:2px solid var(--line2);padding-left:14px}
+.kpi-total .v{font-size:clamp(24px,3vw,32px)}
 
 /* The Record band, restated in the same language. */
 .record-in{border-top:3px solid var(--text);border-bottom:1px solid var(--line2)}

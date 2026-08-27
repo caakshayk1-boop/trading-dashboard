@@ -2011,21 +2011,48 @@ var TV_ALIASES = (function () {
         // Open risk, marked live. Separate tile from Realized on purpose: one
         // is money banked, the other is money still on the table, and a single
         // blended figure would hide which is which.
+        //
+        // The SERVER mark is authoritative now. This used to compute the
+        // figure client-side from window.__ledgerPx — the ticker rail's quote
+        // map, which only ever holds the symbols the rail happens to show. On
+        // a book of twenty positions that marked a handful and read as a dash,
+        // which is why Rs 1,00,00,000 looked like it had no live P&L at all.
+        // api/signals?wallet=1 now quotes every open position in one batch.
+        // The client path stays as the fallback for a cached payload written
+        // before the server mark existed.
         (function(){
-          var px = window.__ledgerPx || {}, sum = 0, marked = 0, openN = 0;
-          (j.trades || []).forEach(function(t){
-            if (t.realized_pnl !== null || t.status_raw !== 'OPEN') return;
-            openN++;
-            var q = px[t.symbol];
-            if (!q || typeof q.price !== 'number' || !t.allocated_qty) return;
-            sum += (t.side === 'SHORT' ? (t.entry - q.price) : (q.price - t.entry)) * t.allocated_qty;
-            marked++;
-          });
+          var sum, marked, openN;
+          if (typeof w.unrealized_pnl === 'number') {
+            sum = w.unrealized_pnl; marked = w.marked; openN = w.marked + w.unmarked;
+          } else {
+            var px = window.__ledgerPx || {};
+            sum = 0; marked = 0; openN = 0;
+            (j.trades || []).forEach(function(t){
+              if (t.realized_pnl !== null || t.status_raw !== 'OPEN') return;
+              openN++;
+              var q = px[t.symbol];
+              if (!q || typeof q.price !== 'number' || !t.allocated_qty) return;
+              sum += (t.side === 'SHORT' ? (t.entry - q.price) : (q.price - t.entry)) * t.allocated_qty;
+              marked++;
+            });
+          }
           if (!openN) return '';
           var val = marked ? ((sum > 0 ? '+' : '') + rupees(sum)) : '—';
           return '<div class="kpi"><div class="v ' + (marked && sum > 0 ? 'up' : marked && sum < 0 ? 'dn' : '') +
             '">' + val + '</div><div class="k">Unrealised · ' + marked + '/' + openN +
             ' marked</div></div>';
+        })() +
+        // TOTAL. The question this book exists to answer is "what is the crore
+        // doing", and neither half answers it alone. Rendered only when the
+        // mark is COMPLETE — a total that silently prices unmarked holdings at
+        // cost is worse than no total, because it looks like an answer.
+        (function(){
+          if (typeof w.total_pnl !== 'number' || w.unmarked > 0) return '';
+          return '<div class="kpi kpi-total"><div class="v ' +
+            (w.total_pnl > 0 ? 'up' : w.total_pnl < 0 ? 'dn' : '') + '">' +
+            (w.total_pnl > 0 ? '+' : '') + rupees(w.total_pnl) +
+            '</div><div class="k">Total P&amp;L · ' + fmt(w.total_pnl_pct, 2) +
+            '% of capital</div></div>';
         })() +
         '<div class="kpi"><div class="v">' + (w.win_rate === null ? '—' : fmt(w.win_rate, 1) + '%') +
           '</div><div class="k">Win rate (' + w.closed_trades + ' closed)</div></div>' +

@@ -257,7 +257,11 @@ function seg(key, label, icon, items) {
 /** symbol → {price, prev} for every symbol in `defs`, batched 20 at a time. */
 // `priority` holds the Yahoo symbols whose absence is VISIBLE to a reader —
 // the open ledger rows. They get the retry budget before decorative movers.
-async function quoteAll(defs, priority = []) {
+// Exported so the crore book can mark its open positions to the same feed the
+// rail already uses. Sharing it rather than adding an api/quotes.js is
+// deliberate: Vercel's Hobby plan caps this deployment at 12 functions and it
+// is at the cap. An import costs nothing; a route costs the whole site.
+export async function quoteAll(defs, priority = []) {
   const symbols = [...new Set(defs.map((d) => d[1]))];
   const chunks = [];
   for (let i = 0; i < symbols.length; i += CHUNK) {
