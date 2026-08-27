@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-S5HCM3ZQHZ4z9F372ItEUg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-YJTxuRDnk0BcvLUIIPpxyw'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="S5HCM3ZQHZ4z9F372ItEUg">
+<script nonce="YJTxuRDnk0BcvLUIIPpxyw">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="S5HCM3ZQHZ4z9F372ItEUg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-27","dateModified":"2026-08-27T10:50:44.886249+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="YJTxuRDnk0BcvLUIIPpxyw">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-27","dateModified":"2026-08-27T18:35:55.741363+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -105,10 +105,6 @@
    the pinned static instance is 24KB. It is only ever used at display sizes,
    so one optical size is the right one. Regenerate with
    tools_fetch_fonts.py — the reasoning lives in that file's docstring. */
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/BricolageGrotesque-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/BricolageGrotesque-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/BricolageGrotesque-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/BricolageGrotesque-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Onest';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Onest-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:'Onest';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Onest-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Onest';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/Onest-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
@@ -265,7 +261,7 @@
      A page where every metric looks equally important is a page with no
      hierarchy, which is the single loudest complaint about this site.
 
-       --disp   Bricolage Grotesque. Headlines and the numbers that ARE the
+       --disp   Onest, tight-tracked. Headlines and the numbers that ARE the
                 point. Variable width axis, so a headline can be set tight
                 without faking it with letter-spacing.
        --serif  Newsreader. The editorial voice — section titles and pull
@@ -276,7 +272,17 @@
                 grotesk goes cold.
        --mono   JetBrains Mono. Data, and only data. If it is in mono it is a
                 measurement. */
-  --disp:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  /* RETIRED AS A SEPARATE FACE, 2026-08-27. Measured on production: Bricolage
+     was on 80 elements and Newsreader on 49, against Onest's 3,081 and
+     JetBrains Mono's 4,592. Two whole families — eight woff2 files — for 129
+     elements between them, on a page whose brief is "WSJ or a Bloomberg
+     terminal, not too many fonts".
+     --disp stays as a TOKEN because 16 call sites use it and they are all
+     correct about their intent: big, tight-tracked, data-carrying headline
+     numbers. It now resolves to Onest, which is a grotesque and does that job.
+     Three families, each with one job: serif argues, sans speaks, mono
+     measures. That is the WSJ split; four was one face pretending. */
+  --disp:'Onest','Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
   --sans:'Onest','Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
   /* Editorial display face. Newsreader carries the headlines and nothing
@@ -1169,6 +1175,36 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
    The header pays for it instead: the topbar shrinks, and the livebar (a long
    diagnostic string that ellipsises to nothing useful at this width anyway)
    drops out. Net sticky height is lower than before AND the prices are there. */
+/* ── CHROME BUDGET ──────────────────────────────────────────────────────────
+   Measured on production, 1280x720: topbar 61 + trust 32.4 + nav 46.4 +
+   livebar 42.6 + ticker 38.8 = 221.2px of a 720px viewport. Thirty-one
+   percent of the screen, permanently, before one number is read — and the
+   whole point of this page is the numbers.
+
+   The scroll-collapse that fixes it already existed. It was written inside
+   @media(max-width:560px), so it ran only on phones and never on the desktop
+   where the stack is tallest. That is the second time a change landed behind
+   a phone-only breakpoint and read as "nothing happened".
+
+   What survives a scroll-down is what a terminal keeps on screen: the PRICES
+   and the way back to a section. The masthead, the trust strip and the
+   livebar diagnostic are all orientation — read once on arrival, dead weight
+   for the next twenty minutes. 221px -> 85px, and scrolling up restores
+   everything. */
+.headstack .topbar,.headstack .trust,.headstack .livebar{
+  transition:margin-top .2s var(--ease),opacity .16s linear}
+.headstack.compact .topbar{margin-top:-62px}
+.headstack.compact .trust,
+.headstack.compact .livebar{opacity:0;pointer-events:none;
+  height:0;margin:0;padding:0;overflow:hidden;border:0}
+/* The nav stays but loses its padding — a terminal keeps its section keys. */
+.headstack.compact .nav{transition:height .2s var(--ease)}
+.headstack.compact .nav .nav-in{padding-top:2px;padding-bottom:2px}
+@media(prefers-reduced-motion:reduce){
+  .headstack .topbar,.headstack .trust,.headstack .livebar,
+  .headstack.compact .nav{transition:none}
+}
+
 @media(max-width:560px){
   .headstack .tickwrap{display:block}
   .topbar-in{height:48px}
@@ -1185,16 +1221,16 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
      scrolling UP brings the whole header back. Standard mobile pattern, and it
      is what makes a four-row sticky stack affordable on a 390px screen:
      ~146px of chrome while reading becomes ~30px of ticker. */
-  .headstack .topbar,
-  .headstack .nav,
-  .headstack .livebar{transition:margin-top .22s var(--ease),opacity .18s linear}
+  /* Phone keeps the harsher version: the nav goes too. At 390px a nav row is
+     a horizontal scroller nobody scrolls mid-read, and the FAB already opens
+     the section list. Desktop keeps its nav because there it is one click. */
+  .headstack .nav{transition:margin-top .22s var(--ease),opacity .18s linear}
   .headstack.compact .topbar{margin-top:-48px}
-  .headstack.compact .nav,
-  .headstack.compact .livebar{opacity:0;pointer-events:none;
+  .headstack.compact .nav{opacity:0;pointer-events:none;
     margin-top:0;height:0;overflow:hidden;border:0}
 }
 @media(prefers-reduced-motion:reduce){
-  .headstack .topbar,.headstack .nav,.headstack .livebar{transition:none}
+  .headstack .nav{transition:none}
 }
 
 /* ═══════════════════ WORLD MAP ═══════════════════ */
@@ -3431,16 +3467,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    serif is what makes the page read as a publication rather than a control
    panel, and replacing it would have cost the thing the redesign was for.
 
-   Bricolage takes the DATA. Every headline number on this page was set in
+   --disp takes the DATA. Every headline number on this page was set in
    JetBrains Mono at 40px with -1.5px tracking: a monospace face stretched
    three times past the size it was drawn for, where the even advance widths
-   that make a table readable turn a headline gappy. Bricolage is a display
+   that make a table readable turn a headline gappy. --disp is a display
    grotesque with a width axis, so a big number can be set tight and still
    keep tabular figures.
 
    Mono stays exactly where it belongs — inside tables, in row data, and
    anywhere digits must line up in a column. If it is small and it is data,
-   it is mono. If it is large and it is data, it is Bricolage. */
+   it is mono. If it is large and it is data, it is --disp. */
 .stat .v,
 .kpi .v,
 .hero-stat .v,
@@ -4365,7 +4401,7 @@ details.fundcat:first-of-type{border-top:0}
 }
 .fundcat-sum::-webkit-details-marker{display:none}
 .fundcat-sum::before{
-  content:'+';font:400 15px/1 var(--mono);color:var(--lime);flex:none;
+  content:'+';font:400 14px/1 var(--mono);color:var(--lime);flex:none;
   width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
   border:1px solid var(--lime-line);align-self:center;
 }
@@ -4417,7 +4453,7 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
   .dlog-r{grid-template-columns:1fr 1fr 1fr;gap:4px 10px}
   .dl-s{grid-column:1/3;font-size:13px}
   .dl-o{grid-column:3;grid-row:1}
-  .dl-d,.dl-v,.dl-t{font-size:10px}
+  .dl-d,.dl-v,.dl-t{font-size:11px}
 }
 
 
@@ -4508,7 +4544,7 @@ details.ipo-card{padding:0}
 }
 .ipo-sum::-webkit-details-marker{display:none}
 .ipo-sum::before{
-  content:'+';font:400 15px/1 var(--mono);color:var(--dim);flex:none;
+  content:'+';font:400 14px/1 var(--mono);color:var(--dim);flex:none;
   width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
   border:1px solid var(--line2);align-self:center;
 }
@@ -4532,7 +4568,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   font:400 12px/1.55 var(--sans);color:var(--muted);max-width:70ch;
 }
 .sv-tag{
-  font:700 10px/1 var(--mono);letter-spacing:.1em;
+  font:700 11px/1 var(--mono);letter-spacing:.1em;
   color:var(--p-research);flex:none;
 }
 
@@ -4586,7 +4622,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Thursday, August 27 2026</span>
-      <span class="live" id="istClock"><i></i>10:50 MYT</span>
+      <span class="live" id="istClock"><i></i>18:35 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -4604,11 +4640,11 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      it. One sequence now, top to bottom, nav and headings the same. -->
 
 
-<div class="trust bad">
+<div class="trust warn">
   <div class="trust-in">
     <span class="trust-dot" aria-hidden="true"></span>
     <span class="trust-txt">
-      <b>7 of 12</b> datasets current &middot; worst <b>unavailable</b>
+      <b>11 of 12</b> datasets current &middot; worst <b>degraded</b>
     </span>
     <a class="trust-link" href="#datahealth">How fresh is this? &rarr;</a>
   </div>
@@ -4752,7 +4788,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260827T105044">
+<div class="editionbar" id="editionbar" data-build="20260827T183555">
   
   
   <span class="ed-txt">
@@ -4785,8 +4821,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24208</span>
-      <span class="c dn">▼ -0.52%</span>
+      <span class="p">₹24091</span>
+      <span class="c dn">▼ -0.48%</span>
     </div>
     
     
@@ -4806,36 +4842,36 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4681.5</span>
-      <span class="c up">▲ +0.94%</span>
+      <span class="p">$4634.4</span>
+      <span class="c up">▲ +0.79%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$81.69</span>
-      <span class="c dn">▼ -0.81%</span>
+      <span class="p">$82.27</span>
+      <span class="c up">▲ +0.05%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.40</span>
-      <span class="c up">▲ +1.98%</span>
+      <span class="p">₹95.53</span>
+      <span class="c up">▲ +2.12%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78750</span>
-      <span class="c up">▲ +0.23%</span>
+      <span class="p">$79573</span>
+      <span class="c up">▲ +0.69%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹77473</span>
-      <span class="c dn">▼ -0.24%</span>
+      <span class="p">₹76934</span>
+      <span class="c dn">▼ -0.7%</span>
     </div>
     
     <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
@@ -4843,8 +4879,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹24208</span>
-      <span class="c dn">▼ -0.52%</span>
+      <span class="p">₹24091</span>
+      <span class="c dn">▼ -0.48%</span>
     </div>
     
     
@@ -4864,36 +4900,36 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4681.5</span>
-      <span class="c up">▲ +0.94%</span>
+      <span class="p">$4634.4</span>
+      <span class="c up">▲ +0.79%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$81.69</span>
-      <span class="c dn">▼ -0.81%</span>
+      <span class="p">$82.27</span>
+      <span class="c up">▲ +0.05%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.40</span>
-      <span class="c up">▲ +1.98%</span>
+      <span class="p">₹95.53</span>
+      <span class="c up">▲ +2.12%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78750</span>
-      <span class="c up">▲ +0.23%</span>
+      <span class="p">$79573</span>
+      <span class="c up">▲ +0.69%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹77473</span>
-      <span class="c dn">▼ -0.24%</span>
+      <span class="p">₹76934</span>
+      <span class="c dn">▼ -0.7%</span>
     </div>
     
   </div>
@@ -5184,7 +5220,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">01 / FINANCE CAREERS</span> 
-<span class="dh dh-DEGRADED" title="Careers feed · 18h old — partial coverage — 13/22 records.">DEGRADED<span class="dh-age">18h old</span></span>
+<span class="dh dh-DEGRADED" title="Careers feed · 26h old — older than its daily refresh; partial coverage — 13/22 records.">DEGRADED<span class="dh-age">26h old</span></span>
       <h2 class="stitle">Where the next role is.</h2>
     </div>
     <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
@@ -7376,7 +7412,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">03 / DAILY BRIEF</span> 
-<span class="dh dh-LIVE" title="Daily Brief · just built.">LIVE<span class="dh-age">just built</span></span>
+<span class="dh dh-LIVE" title="Daily Brief · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">Everything important today.</h2>
     </div>
     <p class="sdesc">168 articles from
@@ -7387,10 +7423,10 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 
   <div class="prov rv">
     <span class="pv-tag">DAILY</span>
-    <span>~3 min read</span>
+    <span>~2 min read</span>
     <span>Built <b>2026-08-27</b></span>
     
-    <span>6 written up, 2 rejected by the fact check</span>
+    <span>4 written up, 4 rejected by the fact check</span>
   </div>
 
   
@@ -7401,112 +7437,107 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <article class="ev ev-top">
     <div class="ev-h">
       <span class="ev-cat">India</span>
-      <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Gold fluctuates around $4,600 as Fed rate outlook dominates</h3>
-    <div class="ev-m">
-      <span>4 sources</span>
-      <span>&middot;</span><span>High confidence</span>
-      
-    </div>
-    <ul class="ev-b"><li>Gold rose above $4,600 per ounce before pulling back to near $4,640.</li><li>The price movement followed a three‑month high reached in the prior session.</li><li>Investors are focusing on the Federal Reserve’s interest‑rate path ahead of the Jackson Hole meeting.</li><li>Upcoming remarks from Fed Chair Kevin Warsh are drawing additional attention.</li></ul>
-    
-    <div class="ev-why"><span>Why it matters</span><p>Gold’s price swings reflect market sensitivity to U.S. monetary policy expectations, which can influence broader risk sentiment.</p></div>
-    
-    
-    <div class="ev-w">Watch next: Comments from Fed Chair Kevin Warsh and outcomes of the Jackson Hole gathering.</div>
-    <div class="ev-s">
-      <a href="https://www.bloomberg.com/news/articles/2026-08-26/gold-consolidates-above-4-600-as-investors-weigh-fed-rate-path" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.livemint.com/market/gold-rally-eases-as-traders-turn-focus-to-fed-interest-rate-path-11787775547971.html" target="_blank" rel="noopener">Livemint</a><a href="https://www.thehindubusinessline.com/markets/gold/gold-consolidates-after-5-day-rally-as-investors-eye-fed-rate-clues/article71391692.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/commodities/news/gold-firms-eyes-on-fed-chair-warshs-comments/articleshow/133553846.cms" target="_blank" rel="noopener">Economic Times</a>
-    </div>
-  </article>
-  
-  <article class="ev ev-top">
-    <div class="ev-h">
-      <span class="ev-cat">India</span>
-      <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
-    </div>
-    <h3 class="ev-t">Asian Stocks Mixed After Nvidia Earnings</h3>
+    <h3 class="ev-t">Sensex drops 539 points, Nifty slips below 24,100 on expiry</h3>
     <div class="ev-m">
       <span>3 sources</span>
-      <span>&middot;</span><span>High confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      
     </div>
-    <ul class="ev-b"><li>Livemint: From Gift Nifty to Nvidia earnings, crude oil prices: 7 key things that changed for Indian stock market overnight</li><li>Economic Times: Global Market Today: Nasdaq futures, Asian stocks rise on Nvidia outlook</li><li>Livemint: Indexes end close to flat after hot inflation data ahead of Nvidia earnings</li><li>Economic Times: Nvidia earnings: Chipmaker forecasts Q3 revenue at $108 billion, above analysts' estimates as Q2 profit, revenue double YoY</li></ul>
+    <ul class="ev-b"><li>Sensex fell 539 points (0.7%) and moved below the 77,000 level on Thursday.</li><li>Nifty closed at 24,090.85, down 117 points (0.48%).</li><li>The decline occurred during the first monthly expiry under the new closing auction session.</li><li>HDFC Bank and NTPC were the biggest losers, while Kotak Mahindra Bank, ICICI Bank and Tech Mahindra posted gains.</li><li>A SEBI study shows weekly options premium turnover ratio fell to 3.4 times by FY26 end, down from over 20 times before November 2024.</li></ul>
+    
+    <div class="ev-why"><span>Why it matters</span><p>The sharp sell‑off highlights market sensitivity to the new closing auction mechanism and recent regulatory curbs on options trading. Weakness in major banks may signal broader risk aversion.</p></div>
     
     
-    
+    <div class="ev-w">Watch next: Monitor the next monthly expiry and any further regulatory updates affecting options turnover.</div>
     <div class="ev-s">
-      <a href="https://www.wsj.com/finance/stocks/asian-stocks-mixed-after-nvidia-earnings-25af2b68?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.livemint.com/market/stock-market-news/from-gift-nifty-to-nvidia-earnings-crude-oil-prices-7-key-things-that-changed-for-indian-stock-market-overnight-11787793341891.html" target="_blank" rel="noopener">Livemint</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-nasdaq-futures-asian-stocks-rise-on-nvidia-outlook/articleshow/133553546.cms" target="_blank" rel="noopener">Economic Times</a>
+      <a href="https://economictimes.indiatimes.com/markets/stocks/news/sensex-sharply-tumbles-500-points-on-first-monthly-expiry-after-cas-nifty-closes-below-24100-what-lies-ahead/articleshow/133564797.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.thehindubusinessline.com/markets/sensex-nifty50-today-stock-market-live-updates-27th-august-2026/article71392989.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://www.livemint.com/market/stock-market-news/sensex-nifty-weekly-options-expiry-days-sebi-bse-nse-fpi-11787814382416.html" target="_blank" rel="noopener">Livemint</a>
     </div>
   </article>
   
   <article class="ev ev-top">
     <div class="ev-h">
       <span class="ev-cat">Technology</span>
-      <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Meta settles teen addiction lawsuit, shares rise</h3>
+    <h3 class="ev-t">Nasdaq Futures Buoyed by Nvidia Earnings, Software as Oil Falls</h3>
     <div class="ev-m">
-      <span>3 sources</span>
-      <span>&middot;</span><span>High confidence</span>
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>WSJ Markets: Asian Stocks Mixed After Nvidia Earnings</li><li>Livemint: NVIDIA Q2 results | Share price up 11% YTD; is it a stock to buy after earnings and amid AI boom?</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.wsj.com/finance/stocks/asian-stocks-mixed-after-nvidia-earnings-25af2b68?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.livemint.com/market/stock-market-news/nvidia-q2-results-share-price-up-11-ytd-is-it-a-stock-to-buy-after-earnings-and-amid-ai-boom-11787814177405.html" target="_blank" rel="noopener">Livemint</a>
+    </div>
+  </article>
+  
+  <article class="ev ev-top">
+    <div class="ev-h">
+      <span class="ev-cat">World</span>
+      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">European chips rise as Nvidia results boost tech stocks</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
       
     </div>
-    <ul class="ev-b"><li>Meta agreed to pay $18 billion to settle a state‑led child‑safety lawsuit.</li><li>Livemint reports a separate federal case settled for $16.68 billion, showing differing figures.</li><li>Shares moved higher after the settlement, with reports of a 0.65% rise and a 4% jump.</li><li>The agreement adds new child‑safety measures for Facebook and Instagram.</li><li>Analysts say the settlement removes a cloud over Meta’s stock.</li></ul>
+    <ul class="ev-b"><li>European semiconductor shares edged higher after Nvidia's strong earnings.</li><li>Overall European markets were flat, with tech gains offset by declines in consumer, chemicals and auto sectors.</li><li>Investors monitored Middle East diplomatic talks and falling oil prices for energy supply implications.</li></ul>
     
-    <div class="ev-why"><span>Why it matters</span><p>The deal addresses accusations that Meta’s platforms foster teen addiction and could improve investor sentiment toward the company.</p></div>
+    <div class="ev-why"><span>Why it matters</span><p>Nvidia's performance is influencing European tech equities, while sectoral weakness and geopolitical factors shape broader market sentiment.</p></div>
     
     
-    <div class="ev-mi">
-      <span class="ev-chip ev-positive">Meta equity &middot; Positive</span>
-    </div>
-    
-    <div class="ev-w">Watch next: Track further developments in youth‑mental‑health litigation and Meta’s upcoming earnings report.</div>
+    <div class="ev-w">Watch next: Watch for further developments in Middle East talks and their impact on energy markets.</div>
     <div class="ev-s">
-      <a href="https://www.wsj.com/finance/investing/meta-settles-for-18-billion-c8b5636b?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.marketwatch.com/story/metas-stock-rises-as-the-company-settles-in-social-media-addiction-trial-78abdfbf?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a><a href="https://www.livemint.com/market/meta-shares-jump-4-as-facebook-parent-settles-major-teen-addiction-lawsuit-11787754449421.html" target="_blank" rel="noopener">Livemint</a>
+      <a href="https://www.wsj.com/finance/stocks/nikkei-rises-0-7-led-by-chip-stocks-1cae7bf0?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-european-shares-steady-as-nvidia-boost-offsets-consumer-auto-weakness/articleshow/133564044.cms" target="_blank" rel="noopener">Economic Times</a>
     </div>
   </article>
   
   <article class="ev ev-top">
     <div class="ev-h">
       <span class="ev-cat">India</span>
-      <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">RBI Is Intervening Whenever the Rupee Weakens in Strategy Shift</h3>
+    <h3 class="ev-t">Gold Steadies Near $4,600 as Investors Weigh Fed Rate Path</h3>
     <div class="ev-m">
-      <span>3 sources</span>
-      <span>&middot;</span><span>High confidence</span>
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
       <span>&middot;</span><span class="ev-raw"
         title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>Economic Times: RBI is showing up whenever rupee weakens in intervention shift</li><li>BusinessLine: RBI ramps up rupee support as rise in forex reserves gives comfort</li></ul>
+    <ul class="ev-b"><li>BusinessLine: Today’s Gold Rate, Aug 27: Check gold rates in Delhi, Mumbai, Chennai</li></ul>
     
     
     
     <div class="ev-s">
-      <a href="https://www.bloomberg.com/news/articles/2026-08-27/rbi-is-showing-up-whenever-rupee-weakens-in-intervention-shift" target="_blank" rel="noopener">Bloomberg</a><a href="https://economictimes.indiatimes.com/markets/forex/forex-news/rbi-is-showing-up-whenever-rupee-weakens-in-intervention-shift/articleshow/133553971.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.thehindubusinessline.com/markets/forex/rbi-ramps-up-rupee-support-as-rise-in-forex-reserves-gives-comfort/article71394819.ece" target="_blank" rel="noopener">BusinessLine</a>
+      <a href="https://www.bloomberg.com/news/articles/2026-08-26/gold-consolidates-above-4-600-as-investors-weigh-fed-rate-path" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.thehindubusinessline.com/gold-rate-today/gold-price-today-in-delhi-mumbai-kolkata-chennai-bengaluru-hyderabad-pune-gold-rates-metro-cities-august-27-2026/article71395549.ece" target="_blank" rel="noopener">BusinessLine</a>
     </div>
   </article>
   
   <article class="ev ev-top">
     <div class="ev-h">
-      <span class="ev-cat">Markets & Economy</span>
+      <span class="ev-cat">India</span>
       <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Fed Governor Lisa Cook denies mortgage fraud, rejects Trump’s dismissal threat</h3>
+    <h3 class="ev-t">Stock Market Today: Nvidia’s Bullish Forecast Lifts Market Spirits</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
-      
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>Lisa Cook publicly denied any mortgage fraud allegations.</li><li>She stated President Trump lacks legal basis to remove her from office.</li><li>Her attorney described the issue as an inadvertent error listing an Atlanta apartment as a primary residence.</li><li>Federal Reserve lawyers emphasized there was no intentional wrongdoing.</li></ul>
-    
-    <div class="ev-why"><span>Why it matters</span><p>The dispute pits a Federal Reserve official against the President, raising questions about executive authority over independent agency officials. It also highlights scrutiny of personal financial disclosures for high‑level policymakers.</p></div>
+    <ul class="ev-b"><li>BusinessLine: Nvidia surge lifts sentiment, but Nifty stays range-bound; HDFC Bank drags</li></ul>
     
     
-    <div class="ev-w">Watch next: Potential legal challenges or congressional hearings regarding the President’s claim to dismiss a Federal Reserve governor.</div>
+    
     <div class="ev-s">
-      <a href="https://www.marketwatch.com/story/feds-lisa-cook-denies-committing-mortgage-fraud-says-trump-has-no-grounds-to-remove-her-from-office-4ea60c9d?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a><a href="https://www.ft.com/content/fba48322-ea6e-4905-ae68-1d57209129ac?syn-25a6b1a6=1" target="_blank" rel="noopener">Financial Times</a>
+      <a href="https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-08-27-2026?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.thehindubusinessline.com/markets/nvidia-surge-lifts-sentiment-but-nifty-stays-range-bound-hdfc-bank-drags/article71394944.ece" target="_blank" rel="noopener">BusinessLine</a>
     </div>
   </article>
   
@@ -7521,23 +7552,22 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       
   <article class="ev">
     <div class="ev-h">
-      <span class="ev-cat">Technology</span>
-      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
+      <span class="ev-cat">World</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">US stocks dip amid hotter inflation, await Nvidia earnings</h3>
+    <h3 class="ev-t">Nvidia stock is climbing after another set of blockbuster results. Here’s what Wall Street is saying.</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
-      
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>U.S. equities slipped after inflation readings came in hotter than expected.</li><li>The rise in inflation added uncertainty to the Federal Reserve’s rate outlook.</li><li>Investors remained cautious ahead of artificial‑intelligence leader Nvidia’s earnings report.</li><li>Attention is also on Fed Chair Kevin Warsh’s upcoming Jackson Hole speech for policy clues.</li></ul>
-    
-    <div class="ev-why"><span>Why it matters</span><p>Higher inflation can push the Fed to keep rates elevated, affecting borrowing costs. Nvidia’s results are a barometer for the AI sector’s momentum.</p></div>
+    <ul class="ev-b"><li>Bloomberg: Bessent’s Treasury Twist Makes November Refunding a Wall Street Wildcard</li></ul>
     
     
-    <div class="ev-w">Watch next: Nvidia’s earnings release and Fed Chair Kevin Warsh’s Jackson Hole remarks.</div>
+    
     <div class="ev-s">
-      <a href="https://www.wsj.com/finance/investing/u-s-stocks-tick-down-as-traders-weigh-inflation-data-f49901a5?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-end-near-flat-as-hot-inflation-data-clouds-fed-rate-outlook/articleshow/133550754.cms" target="_blank" rel="noopener">Economic Times</a>
+      <a href="https://www.bloomberg.com/news/articles/2026-08-26/bessent-s-treasury-twist-makes-november-refunding-a-wall-street-wildcard" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.marketwatch.com/story/nvidia-stock-is-climbing-after-another-set-of-blockbuster-results-heres-what-wall-street-is-saying-a2260a62?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a>
     </div>
   </article>
   
@@ -7546,42 +7576,20 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">India</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Government raises Rs 3,000 crore via Hindustan Copper OFS</h3>
-    <div class="ev-m">
-      <span>3 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      
-    </div>
-    <ul class="ev-b"><li>The disinvestment sale generated nearly Rs 3,000 crore for the treasury.</li><li>Retail investors participated strongly, exceeding the government's expectations.</li><li>A full greenshoe option was exercised, selling over 5.8 crore shares.</li><li>The proceeds raise total fiscal-year disinvestment collections to Rs 52,716 crore.</li><li>Hindustan Copper shares climbed about 5.6% to roughly ₹562.60 after the offer opened.</li></ul>
-    
-    <div class="ev-why"><span>Why it matters</span><p>The funds bolster government finances and demonstrate market appetite for state‑owned asset sales, while the share rally reflects investor confidence in Hindustan Copper.</p></div>
-    
-    
-    <div class="ev-w">Watch next: Monitor subsequent price movements of Hindustan Copper and any further disinvestment announcements.</div>
-    <div class="ev-s">
-      <a href="https://economictimes.indiatimes.com/news/economy/finance/government-mobilises-about-rs-3000-crore-from-hindustan-copper-ofs/articleshow/133542152.cms" target="_blank" rel="noopener">ET Economy</a><a href="https://www.thehindubusinessline.com/markets/hindustan-copper-shares-up-56-ofs-opened-for-retail-investors-today/article71392239.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/stocks/news/stocks-in-news-tata-power-jio-financial-services-bharat-electronics-and-hindustan-copper/articleshow/133550824.cms" target="_blank" rel="noopener">Economic Times</a>
-    </div>
-  </article>
-  
-  <article class="ev">
-    <div class="ev-h">
-      <span class="ev-cat">Markets & Economy</span>
-      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">TWG denies fraud amid regulator probes and takeover doubts</h3>
+    <h3 class="ev-t">China to Ship 1.2 Mt Urea to India</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       
     </div>
-    <ul class="ev-b"><li>TWG Global says there has been no fraud.</li><li>The firm says it is defending against multipronged attacks as regulators and U.S. prosecutors investigate.</li><li>Investors are questioning a $4.1 billion takeover of Brighthouse Financial.</li><li>Skepticism about the Brighthouse deal is linked to perceived parallels with Mark Walter’s troubles.</li></ul>
+    <ul class="ev-b"><li>China will supply at least 1.2 million tonnes of urea to India.</li><li>The shipment fulfills a large portion of India's recent fertilizer tender.</li><li>The delivery follows China's easing of export controls, easing global urea market tightness.</li></ul>
     
-    <div class="ev-why"><span>Why it matters</span><p>The scrutiny of TWG could affect confidence in large insurance transactions, while doubts over the Brighthouse acquisition may influence deal pricing and completion.</p></div>
+    <div class="ev-why"><span>Why it matters</span><p>India's fertilizer needs are met by a major foreign supplier, reducing supply constraints. The move also signals broader availability of urea as China relaxes export limits.</p></div>
     
     
-    <div class="ev-w">Watch next: Outcome of regulatory investigations into TWG and shareholder vote on the Brighthouse deal.</div>
+    
     <div class="ev-s">
-      <a href="https://www.bloomberg.com/news/videos/2026-08-26/mark-walter-s-twg-says-there-has-been-no-fraud-video" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.wsj.com/finance/investing/mark-walters-troubles-are-disrupting-the-insurance-worlds-hottest-trade-7aa61866?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a>
+      <a href="https://www.bloomberg.com/news/articles/2026-08-27/china-to-supply-bulk-of-india-s-fertilizer-tender-in-major-sale" target="_blank" rel="noopener">Bloomberg</a><a href="https://economictimes.indiatimes.com/news/economy/agriculture/china-to-supply-bulk-of-indias-fertiliser-tender-in-major-sale/articleshow/133563164.cms" target="_blank" rel="noopener">ET Economy</a>
     </div>
   </article>
   
@@ -7590,36 +7598,20 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">Technology</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Meta's $18bn settlement may hasten reckoning for social media on child safety</h3>
+    <h3 class="ev-t">Nvidia posts $96bn quarter, revenue doubles</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+      
     </div>
-    <ul class="ev-b"><li>Financial Times: Meta to pay up to $18bn to settle children’s social media harm case</li><li>BBC Business: Meta to pay up to $18bn to settle claims its platforms harm children</li></ul>
+    <ul class="ev-b"><li>Quarter revenue reached $96bn, double the prior period</li><li>Revenue beat analysts' forecasts</li><li>Company forecasts about 70% revenue growth for next year</li><li>Nvidia highlighted accelerating demand for AI hardware</li><li>It defended its financial support of AI companies</li></ul>
+    
+    <div class="ev-why"><span>Why it matters</span><p>The results show rapid growth in AI chip demand and Nvidia's expanding role in financing AI startups, influencing the broader tech ecosystem.</p></div>
     
     
-    
-    <div class="ev-s">
-      <a href="https://www.ft.com/content/21dcbd96-ee57-445c-a9ba-0938c49b91c0?syn-25a6b1a6=1" target="_blank" rel="noopener">Financial Times</a><a href="https://www.bbc.co.uk/news/articles/cd68q3wynnqo?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">BBC Business</a>
+    <div class="ev-mi">
+      <span class="ev-chip ev-unclear">Tech equities &middot; Unclear</span>
     </div>
-  </article>
-  
-  <article class="ev">
-    <div class="ev-h">
-      <span class="ev-cat">Technology</span>
-      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Nvidia Reports Blowout Quarter, Says Demand for AI Chips Is Getting Even Hotter</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
-    </div>
-    <ul class="ev-b"><li>BBC Business: Nvidia revenue doubles on continued AI demand</li></ul>
-    
     
     
     <div class="ev-s">
@@ -7632,7 +7624,28 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">Technology</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">OpenAI says it took a week to detect its AI models had hacked Hugging Face</h3>
+    <h3 class="ev-t">Nvidia’s $100 Billion Shows Why AI Is Still the Trade</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>WSJ Markets: Nvidia’s $279 Billion Supply-Chain Gamble</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.bloomberg.com/news/newsletters/2026-08-27/nvidia-s-100-billion-shows-why-ai-is-still-the-trade" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.wsj.com/tech/ai/nvidias-279-billion-supply-chain-gamble-cbe316d2?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a>
+    </div>
+  </article>
+  
+  <article class="ev">
+    <div class="ev-h">
+      <span class="ev-cat">Technology</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">What to know about Hugging Face, the open-source AI startup reportedly catching Nvidia’s eye</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
@@ -7644,70 +7657,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     
     <div class="ev-s">
-      <a href="https://www.ft.com/content/3fc189d6-28e7-4a2b-b77e-5c94bf513955?syn-25a6b1a6=1" target="_blank" rel="noopener">Financial Times</a><a href="https://www.bbc.co.uk/news/articles/cj9xj89dk40o?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">BBC Business</a>
-    </div>
-  </article>
-  
-  <article class="ev">
-    <div class="ev-h">
-      <span class="ev-cat">Business</span>
-      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Can Lumino Industries IPO deliver long-term growth for high-risk investors?</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
-    </div>
-    <ul class="ev-b"><li>BusinessLine: Lumino Industries IPO: All you need to know before investing</li></ul>
-    
-    
-    
-    <div class="ev-s">
-      <a href="https://economictimes.indiatimes.com/markets/ipos/fpos/can-lumino-industries-ipo-deliver-long-term-growth-for-high-risk-investors/articleshow/133553642.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.thehindubusinessline.com/markets/all-you-need-to-know-about-lumino-industries-ipo/article71391271.ece" target="_blank" rel="noopener">BusinessLine</a>
-    </div>
-  </article>
-  
-  <article class="ev">
-    <div class="ev-h">
-      <span class="ev-cat">World</span>
-      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Crude oil prices extend losses on hopes of talks to ease Middle East supply disruptions; Brent at $87/bbl</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
-    </div>
-    <ul class="ev-b"><li>Economic Times: Oil prices extend losses on expectations talks to ease Middle East supply woes</li></ul>
-    
-    
-    
-    <div class="ev-s">
-      <a href="https://www.livemint.com/market/commodities/crude-oil-prices-extend-losses-as-hopes-for-talks-to-ease-middle-east-supply-disruptions-brent-at-87bbl-11787795492889.html" target="_blank" rel="noopener">Livemint</a><a href="https://economictimes.indiatimes.com/markets/commodities/news/oil-prices-extend-losses-on-expectations-talks-to-ease-middle-east-supply-woes/articleshow/133553824.cms" target="_blank" rel="noopener">Economic Times</a>
-    </div>
-  </article>
-  
-  <article class="ev">
-    <div class="ev-h">
-      <span class="ev-cat">Business</span>
-      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Deepa Jewellers IPO: Price band set at ₹168- ₹177 per share; check key dates, issue details</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
-    </div>
-    <ul class="ev-b"><li>BusinessLine: Purple Style Labs IPO: Price band set at ₹546-575/share, issue to open Aug 31</li></ul>
-    
-    
-    
-    <div class="ev-s">
-      <a href="https://www.livemint.com/market/ipo/deepa-jewellers-ipo-price-band-set-at-rs-168-rs-177-per-share-check-key-dates-issue-details-11787798193728.html" target="_blank" rel="noopener">Livemint</a><a href="https://www.thehindubusinessline.com/markets/purple-style-labs-ipo-price-band-set-at-546-575share-issue-to-open-aug-31/article71391749.ece" target="_blank" rel="noopener">BusinessLine</a>
+      <a href="https://www.bbc.co.uk/news/articles/cj9xj89dk40o?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">BBC Business</a><a href="https://www.marketwatch.com/story/what-to-know-about-hugging-face-the-open-source-ai-startup-reportedly-catching-nvidias-eye-243771f8?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a>
     </div>
   </article>
   
@@ -7716,19 +7666,103 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">India</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Dividend alert! Last day to buy Paras Defence, MCX, Honasa among 33 stocks for dividend rewards. Do you own any?</h3>
+    <h3 class="ev-t">A91 Partners and Sixth Sense-backed Pushp Brand gets SEBI nod for IPO, to offer 74.45 lakh shares via OFS</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       <span>&middot;</span><span class="ev-raw"
         title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>Economic Times: Stock split alert! Last day to buy 2 multibagger microcap stocks which rallied up to 540% in a year</li><li>Livemint: Stocks to buy for short term: Amol Athawale of Kotak Securities bullish on 3 stocks; do you own any?</li></ul>
+    <ul class="ev-b"><li>BusinessLine: Fintech firm Paramotor Digital Technology secures SEBI nod for IPO</li><li>Economic Times: Pushp Brand gets Sebi nod for IPO; A91 Partners, Sixth Sense to partially divest stake</li></ul>
     
     
     
     <div class="ev-s">
-      <a href="https://economictimes.indiatimes.com/markets/stocks/news/dividend-alert-last-day-to-buy-paras-defence-mcx-honasa-among-33-stocks-for-dividend-rewards-do-you-own-any/articleshow/133553979.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.livemint.com/market/stock-market-news/stocks-to-buy-for-short-term-amol-athawale-of-kotak-securities-bullish-on-3-stocks-do-you-own-any-11787754452058.html" target="_blank" rel="noopener">Livemint</a>
+      <a href="https://economictimes.indiatimes.com/markets/ipos/fpos/a91-partners-and-sixth-sense-backed-pushp-brand-gets-sebi-nod-for-ipo-to-offer-74-45-lakh-shares-via-ofs/articleshow/133561043.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.thehindubusinessline.com/markets/fintech-firm-paramotor-digital-technology-secures-sebi-nod-for-ipo/article71395907.ece" target="_blank" rel="noopener">BusinessLine</a>
+    </div>
+  </article>
+  
+  <article class="ev">
+    <div class="ev-h">
+      <span class="ev-cat">India</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">Aragen Life Sciences files draft papers with SEBI; eyes ₹800-cr via fresh issue</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>Economic Times: Aragen Life Sciences files draft papers with Sebi to raise funds through IPO</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.thehindubusinessline.com/markets/aragen-life-sciences-files-draft-papers-with-sebi-eyes-800-cr-via-fresh-issue/article71395794.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/ipos/fpos/aragen-life-sciences-files-draft-papers-with-sebi-to-raise-funds-through-ipo/articleshow/133564164.cms" target="_blank" rel="noopener">Economic Times</a>
+    </div>
+  </article>
+  
+  <article class="ev">
+    <div class="ev-h">
+      <span class="ev-cat">Business</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">Prudential offloads 2% stake in ICICI Prudential AMC; stock slides 3.8% in bulk deal</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>Livemint: BIG DEAL | ICICI Prudential raises stake in SBI Cards and Payment Services to 7.30%</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.livemint.com/market/stock-market-news/big-deal-icici-prudential-raises-stake-in-sbi-cards-and-payment-services-to-730-11787818758122.html" target="_blank" rel="noopener">Livemint</a><a href="https://www.thehindubusinessline.com/markets/prudential-offloads-2-stake-in-icici-prudential-amc-stock-slides-38-in-bulk-deal/article71395770.ece" target="_blank" rel="noopener">BusinessLine</a>
+    </div>
+  </article>
+  
+  <article class="ev">
+    <div class="ev-h">
+      <span class="ev-cat">India</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">Buy Prestige, says Sumeet Bagadia - Check share price target, recommendation reason | Raksha Bandhan Stock Pick 2026</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>Livemint: Stock market holiday: Is the Indian stock market open or closed tomorrow for Raksha Bandhan?</li><li>Livemint: Stock to buy for multibagger returns | Brokerage gives ₹90 target in 12 months for ₹33 stock</li><li>Economic Times: Systematix initiates coverage on Timex Group India with Buy rating. Check target price</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.livemint.com/market/stock-market-news/buy-prestige-says-sumeet-bagadia-check-share-price-target-recommendation-reason-raksha-bandhan-stock-pick-2026-11787819980347.html" target="_blank" rel="noopener">Livemint</a><a href="https://economictimes.indiatimes.com/markets/stocks/news/systematix-initiates-coverage-on-timex-group-india-with-buy-rating-check-target-price/articleshow/133560972.cms" target="_blank" rel="noopener">Economic Times</a>
+    </div>
+  </article>
+  
+  <article class="ev">
+    <div class="ev-h">
+      <span class="ev-cat">Markets & Economy</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">HDFC Bank shares fall 2% to fresh 52-week low, tumble 30% in 10 months. What lies ahead?</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>BusinessLine: HDFC Bank US class action: Bank calls lawsuit ‘without merit’, shares under pressure</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.thehindubusinessline.com/markets/stock-markets/hdfc-bank-shares-under-pressure-as-us-class-action-weighs-on-stock/article71394994.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/stocks/news/hdfc-bank-shares-fall-2-to-fresh-52-week-low-tumble-30-in-10-months-what-lies-ahead/articleshow/133563941.cms" target="_blank" rel="noopener">Economic Times</a>
     </div>
   </article>
   
@@ -7748,7 +7782,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">04 / SMART READS</span> 
-<span class="dh dh-LIVE" title="Smart Reads · 4 min old.">LIVE<span class="dh-age">4 min old</span></span>
+<span class="dh dh-LIVE" title="Smart Reads · 6 min old.">LIVE<span class="dh-age">6 min old</span></span>
       <h2 class="stitle">Worth the ten minutes.</h2>
     </div>
     <!-- Copy rewritten when this stopped being a finance-only section. It used
@@ -7761,6 +7795,80 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <article class="sr rv" style="--d:0.0s">
       <div class="sr-h">
+        <span class="sr-src">Livemint</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-money">MONEY</span>
+        <span class="sr-date">Aug 27, 2026</span>
+      </div>
+      <h3 class="sr-t"><a href="https://www.livemint.com/money/personal-finance/rbis-new-framework-to-ease-loan-comparisons-how-will-transparency-benefit-borrowers-11787542311151.html" target="_blank" rel="noopener">RBI's new framework to ease loan comparisons: How will transparency benefit borrowers?</a></h3>
+      <p class="sr-s">The RBI proposed clearer rules for banks and NBFCs on loan spreads and APRs to enhance transparency in borrowing. The draft intends to establish a unified framework by 2027, allowing better comparison of loan costs, including a ceiling on APR for small loans.&amp;nbsp;</p>
+
+      
+      
+      <dl class="sr-x">
+        <dt>What happened &middot; from the article</dt>
+        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
+          <li>The RBI drafted clearer rules for banks and NBFCs on loan spreads and APRs to improve borrowing transparency.</li><li>The draft aims to create a unified framework by 2027 that includes a ceiling on APR for small loans and enables better cost comparison.</li>
+        </ul></dd>
+        
+        <div class="sr-why">
+          <dt>Why it matters &middot; interpretation</dt>
+          <dd class="sr-interp">A standardized framework will allow borrowers to compare loan offers more easily, potentially reducing hidden costs and fostering competition among lenders. By capping APRs on small loans, the RBI seeks to protect vulnerable consumers from excessively high borrowing costs, which could improve financial inclusion and reduce default risk.</dd>
+        </div>
+        
+        
+        <dt>What to watch &middot; interpretation</dt>
+        <dd class="sr-interp">The RBI's release of the final rulebook for the loan spread and APR framework, expected before the end of the calendar year.</dd>
+        
+      </dl>
+      <p class="sr-read">22 sec read &middot; no recommendation, by design</p>
+      
+
+      <a class="readmore" href="https://www.livemint.com/money/personal-finance/rbis-new-framework-to-ease-loan-comparisons-how-will-transparency-benefit-borrowers-11787542311151.html" target="_blank" rel="noopener">Read more &rarr;</a>
+    </article>
+    
+    <article class="sr rv" style="--d:0.04s">
+      <div class="sr-h">
+        <span class="sr-src">Economic Times</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-money">MONEY</span>
+        <span class="sr-date">Aug 27, 2026</span>
+      </div>
+      <h3 class="sr-t"><a href="https://economictimes.indiatimes.com/wealth/invest/gold-rate-today-august-27-2026-check-24k-22k-20k-18k-gold-jewellery-prices-from-malabar-gold-diamonds-joyalukkas-kalyan-jewellers-tanishq-ibja-in-delhi-mumbai-hyderabad-more-cities/articleshow/133561052.cms" target="_blank" rel="noopener">Gold rate today (August 27, 2026): Check 24k, 22k, 20k, 18k gold jewellery prices from Malabar Gold &amp; Diamonds, Joyalukkas, Kalyan Jewel</a></h3>
+      <p class="sr-s">On August 27, 2026, gold prices dipped significantly across major Indian jewelry brands, including Tanishq, Malabar Gold &amp; Diamonds, Joyalukkas, and Kalyan Jewellers, reflecting a decline from yesterday's trading. The Indian Bullion and Jewellers Association (IBJA) also reported reduced gold and silver rates. Custo</p>
+
+      
+      
+      <dl class="sr-x">
+        <dt>What happened &middot; from the article</dt>
+        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
+          <li>Gold prices fell significantly on August 27, 2026 at Tanishq, Malabar Gold & Diamonds, Joyalukkas and Kalyan Jewellers.</li><li>The Indian Bullion and Jewellers Association also reported lower gold and silver rates.</li>
+        </ul></dd>
+        
+        <div class="sr-why">
+          <dt>Why it matters &middot; interpretation</dt>
+          <dd class="sr-interp">The decline in gold prices reduces the cost basis for jewelry manufacturers and retailers, which can translate into lower retail prices for consumers and affect profit margins across the Indian jewelry sector. The IBJA's reporting of reduced bullion rates underscores a broader market trend that may influence pricing strategies and inventory decisions for jewelers.</dd>
+        </div>
+        
+        
+        <dt>What to watch &middot; interpretation</dt>
+        <dd class="sr-interp">Monitor the gold and silver rates published by the Indian Bullion and Jewellers Association for the next trading day.</dd>
+        
+      </dl>
+      <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
+      
+
+      <a class="readmore" href="https://economictimes.indiatimes.com/wealth/invest/gold-rate-today-august-27-2026-check-24k-22k-20k-18k-gold-jewellery-prices-from-malabar-gold-diamonds-joyalukkas-kalyan-jewellers-tanishq-ibja-in-delhi-mumbai-hyderabad-more-cities/articleshow/133561052.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+    </article>
+    
+    <article class="sr rv" style="--d:0.08s">
+      <div class="sr-h">
         <span class="sr-src">Livemint Opinion</span>
         <!-- The category, not a constant "SMART READS" label. The point of the
              mix is that a reader can see at a glance it is not nine money
@@ -7769,34 +7877,54 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="sr-tag sr-money">MONEY</span>
         <span class="sr-date">Aug 27, 2026</span>
       </div>
-      <h3 class="sr-t"><a href="https://www.livemint.com/opinion/online-views/central-banks-scouting-for-new-paradigm-of-public-engagement-policy-toolkit-mpc-11787754596772.html" target="_blank" rel="noopener">Central banks are scouting for a new paradigm of public engagement as part of their policy toolkit</a></h3>
-      <p class="sr-s">Extreme uncertainty amid global flux has put central banks in a dilemma over their use of words as a strategic tool. Recent mix-ups over RBI signals—think of its forex swap window and MPC record—suggest India needs a debate of its own.</p>
+      <h3 class="sr-t"><a href="https://www.livemint.com/opinion/online-views/anticanons-of-taxation-economys-interests-above-the-government-s-convenience-taxes-11787746813713.html" target="_blank" rel="noopener">Anti-canons of taxation: place the economy's interests above the government’s convenience</a></h3>
+      <p class="sr-s">For the sake of better outcomes, taxation mustn’t aim to maximize revenue. Rather, policymakers must assess the economic impact of taxes, make no ‘heads I win, tails I amend’ retrospective tweaks and ensure that tax policy is neither penny-wise nor cadre-shaped.</p>
 
       
       
       <dl class="sr-x">
         <dt>What happened &middot; from the article</dt>
         <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Central banks face a dilemma over using language as a strategic policy tool because of extreme uncertainty.</li><li>Recent mix-ups over RBI signals, including its forex swap window and monetary policy committee record, highlight the need for a debate in India.</li>
+          <li>The article argues taxation must not aim to maximize revenue.</li><li>It urges policymakers to assess economic impact, avoid retrospective tweaks, and keep tax policy neither penny‑wise nor cadre‑shaped.</li>
         </ul></dd>
         
         <div class="sr-why">
           <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">How central banks communicate can shape market expectations and policy effectiveness; unclear or contradictory signals risk misinterpretation, which can affect financial stability and the credibility of institutions like the RBI, especially in a volatile global environment.</dd>
+          <dd class="sr-interp">If tax rules focus on revenue alone, they can distort economic behavior and reduce overall welfare. By evaluating the broader economic effects and avoiding ad‑hoc adjustments, governments can design taxes that support growth while still raising needed funds, leading to more sustainable fiscal outcomes.</dd>
         </div>
         
         
         <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">The next official RBI clarification regarding its forex swap window schedule</dd>
+        <dd class="sr-interp">Watch for any legislative proposals or regulatory guidance that explicitly reference assessing economic impact in new tax measures.</dd>
         
       </dl>
-      <p class="sr-read">20 sec read &middot; no recommendation, by design</p>
+      <p class="sr-read">21 sec read &middot; no recommendation, by design</p>
       
 
-      <a class="readmore" href="https://www.livemint.com/opinion/online-views/central-banks-scouting-for-new-paradigm-of-public-engagement-policy-toolkit-mpc-11787754596772.html" target="_blank" rel="noopener">Read more &rarr;</a>
+      <a class="readmore" href="https://www.livemint.com/opinion/online-views/anticanons-of-taxation-economys-interests-above-the-government-s-convenience-taxes-11787746813713.html" target="_blank" rel="noopener">Read more &rarr;</a>
     </article>
     
-    <article class="sr rv" style="--d:0.04s">
+    <article class="sr rv" style="--d:0.12s">
+      <div class="sr-h">
+        <span class="sr-src">Peter Attia</span>
+        <!-- The category, not a constant "SMART READS" label. The point of the
+             mix is that a reader can see at a glance it is not nine money
+             pieces, and a tag that says the same thing on every card cannot
+             show that. -->
+        <span class="sr-tag sr-health">HEALTH</span>
+        <span class="sr-date">Aug 27, 2026</span>
+      </div>
+      <h3 class="sr-t"><a href="https://peterattiamd.com/glp-1-medications-beyond-weight-loss/" target="_blank" rel="noopener">GLP-1 medications beyond weight loss: how far could their benefits extend?</a></h3>
+      <p class="sr-s">What the evidence says about their growing list of established and emerging uses
+The post GLP-1 medications beyond weight loss: how far could their benefits extend? appeared first on Peter Attia MD.</p>
+
+      
+      
+
+      <a class="readmore" href="https://peterattiamd.com/glp-1-medications-beyond-weight-loss/" target="_blank" rel="noopener">Read more &rarr;</a>
+    </article>
+    
+    <article class="sr rv" style="--d:0.16s">
       <div class="sr-h">
         <span class="sr-src">NYT Well</span>
         <!-- The category, not a constant "SMART READS" label. The point of the
@@ -7815,81 +7943,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <a class="readmore" href="https://www.nytimes.com/2026/08/26/well/intrinsic-capacity-longevity-measure.html" target="_blank" rel="noopener">Read more &rarr;</a>
     </article>
     
-    <article class="sr rv" style="--d:0.08s">
-      <div class="sr-h">
-        <span class="sr-src">Livemint</span>
-        <!-- The category, not a constant "SMART READS" label. The point of the
-             mix is that a reader can see at a glance it is not nine money
-             pieces, and a tag that says the same thing on every card cannot
-             show that. -->
-        <span class="sr-tag sr-money">MONEY</span>
-        <span class="sr-date">Aug 26, 2026</span>
-      </div>
-      <h3 class="sr-t"><a href="https://www.livemint.com/money/personal-finance/hybrid-fund-performance-multi-asset-allocation-schemes-lead-3-year-sip-returns-balanced-advantage-lags-11787763647455.html" target="_blank" rel="noopener">Hybrid fund performance: Multi-asset allocation schemes lead 3-year SIP returns, balanced advantage lags</a></h3>
-      <p class="sr-s">Hybrid funds offer exposure to multiple asset classes through a single scheme. But how have different hybrid fund categories performed? Here’s a look at the top and bottom performers based on 3-year SIP returns.&amp;nbsp;</p>
-
-      
-      
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Multi-asset allocation hybrid funds posted the highest 3-year SIP returns.</li><li>Balanced advantage hybrid funds recorded the lowest 3-year SIP returns.</li>
-        </ul></dd>
-        
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">The divergence in performance highlights how allocation choices within hybrid funds can significantly affect long-term returns, guiding investors toward schemes that better match their risk-return preferences.</dd>
-        </div>
-        
-        
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">The next quarterly update of 3-year SIP returns for hybrid fund categories.</dd>
-        
-      </dl>
-      <p class="sr-read">20 sec read &middot; no recommendation, by design</p>
-      
-
-      <a class="readmore" href="https://www.livemint.com/money/personal-finance/hybrid-fund-performance-multi-asset-allocation-schemes-lead-3-year-sip-returns-balanced-advantage-lags-11787763647455.html" target="_blank" rel="noopener">Read more &rarr;</a>
-    </article>
-    
-    <article class="sr rv" style="--d:0.12s">
-      <div class="sr-h">
-        <span class="sr-src">ET Opinion</span>
-        <!-- The category, not a constant "SMART READS" label. The point of the
-             mix is that a reader can see at a glance it is not nine money
-             pieces, and a tag that says the same thing on every card cannot
-             show that. -->
-        <span class="sr-tag sr-money">MONEY</span>
-        <span class="sr-date">Aug 26, 2026</span>
-      </div>
-      <h3 class="sr-t"><a href="https://economictimes.indiatimes.com/opinion/et-editorial/oil-shock-could-outlast-conflicts/articleshow/133547505.cms" target="_blank" rel="noopener">Oil shock could outlast conflicts</a></h3>
-      <p class="sr-s">Global oil prices are experiencing fluctuations as geopolitical tensions persist. The aspirations for a quick resolution of these conflicts remain unfulfilled, exacerbating the strain on energy markets. Regaining stability to pre-conflict pricing seems unlikely in the coming year, with the global market adapting to hei</p>
-
-      
-      
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Geopolitical tensions continue, preventing a quick resolution and keeping oil markets strained.</li><li>Analysts say returning to pre‑conflict price levels is unlikely this year as the market adapts.</li>
-        </ul></dd>
-        
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">The ongoing volatility in oil prices reflects persistent geopolitical risk, which keeps energy markets under strain and makes a return to pre‑conflict pricing unlikely in the coming year. This sustained uncertainty can affect global energy costs and economic planning.</dd>
-        </div>
-        
-        
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">Track global oil price movements over the next month for signs of continued volatility.</dd>
-        
-      </dl>
-      <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
-      
-
-      <a class="readmore" href="https://economictimes.indiatimes.com/opinion/et-editorial/oil-shock-could-outlast-conflicts/articleshow/133547505.cms" target="_blank" rel="noopener">Read more &rarr;</a>
-    </article>
-    
-    <article class="sr rv" style="--d:0.16s">
+    <article class="sr rv" style="--d:0.2s">
       <div class="sr-h">
         <span class="sr-src">The Marginalian</span>
         <!-- The category, not a constant "SMART READS" label. The point of the
@@ -7904,28 +7958,26 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 
       
       
+      <dl class="sr-x">
+        <dt>What happened &middot; from the article</dt>
+        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
+          <li>AI researcher Margaret Boden discussed the three elements that constitute creativity.</li><li>She referenced Ada Lovelace's criticism that the Analytical Engine cannot originate anything on its own.</li>
+        </ul></dd>
+        
+        <div class="sr-why">
+          <dt>Why it matters &middot; interpretation</dt>
+          <dd class="sr-interp">Understanding the components of creativity is crucial for developing AI systems that can generate novel ideas rather than merely following pre‑programmed instructions, highlighting the gap between current computational capabilities and true inventive thought.</dd>
+        </div>
+        
+        
+        <dt>What to watch &middot; interpretation</dt>
+        <dd class="sr-interp">Future publications or talks by Margaret Boden that elaborate on the three elements of creativity</dd>
+        
+      </dl>
+      <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
+      
 
       <a class="readmore" href="https://www.themarginalian.org/2026/08/26/margaret-boden-creativity/" target="_blank" rel="noopener">Read more &rarr;</a>
-    </article>
-    
-    <article class="sr rv" style="--d:0.2s">
-      <div class="sr-h">
-        <span class="sr-src">Peter Attia</span>
-        <!-- The category, not a constant "SMART READS" label. The point of the
-             mix is that a reader can see at a glance it is not nine money
-             pieces, and a tag that says the same thing on every card cannot
-             show that. -->
-        <span class="sr-tag sr-health">HEALTH</span>
-        <span class="sr-date">Aug 24, 2026</span>
-      </div>
-      <h3 class="sr-t"><a href="https://peterattiamd.com/ama88/" target="_blank" rel="noopener">#405 ‒ AMA #88: Metabolic liver health: how to assess risk, catch dysfunction early, and prevent or reverse liver disease</a></h3>
-      <p class="sr-s">“The disease can be reversible and that's why we make so much hay about intervening early. We address the metabolic drivers, and we see that steatosis and fibrosis in the earlier stages can regress, especially the earlier the fibrosis is caught.”‒ Peter Attia
-The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
-
-      
-      
-
-      <a class="readmore" href="https://peterattiamd.com/ama88/" target="_blank" rel="noopener">Read more &rarr;</a>
     </article>
     
     <article class="sr rv" style="--d:0.24s">
@@ -8068,7 +8120,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
   <div class="shead rv">
     <div>
       <span class="snum">06 / PODCASTS</span> 
-<span class="dh dh-LIVE" title="Podcasts · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
+<span class="dh dh-LIVE" title="Podcasts · 5 min old.">LIVE<span class="dh-age">5 min old</span></span>
       <h2 class="stitle">What&rsquo;s worth listening to.</h2>
     </div>
     <p class="sdesc">Long-form Indian podcasts &mdash; business, money, society, health, psychology and culture. Thirty-four channels, newest first.</p>
@@ -8076,7 +8128,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
 
   <div class="prov rv">
     <span class="pv-tag">DAILY</span>
-    <span>2 episodes from 1 shows</span>
+    <span>20 episodes from 20 shows</span>
     <span>Built <b>2026-08-27</b> · 0.0d old</span>
     
   </div>
@@ -8085,6 +8137,104 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     
     <article class="pod rv" style="--d:0.0s">
       <div class="pod-h">
+        <span class="pod-cat">Politics</span>
+        <span class="pod-date">2026-08-27</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=42JO38KXR7c" target="_blank" rel="noopener">Air Marshal Jeetendra Mishra Shares the Inside Story of the Bahawalpur Strike</a></h3>
+      <div class="pod-s">ANI Podcast (clips)</div>
+      
+      <ul class="pod-k">
+        <li>Air Marshal Jeetendra Mishra shares the inside story of the Bahawalpur Strike.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.05s">
+      <div class="pod-h">
+        <span class="pod-cat">Education</span>
+        <span class="pod-date">2026-08-27</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=MClx1aSGaDA" target="_blank" rel="noopener">The Hindu Newspaper Analysis & PIB | 30-31 August 2026 | Current Affairs for UPSC CSE | Drishti IAS</a></h3>
+      <div class="pod-s">Drishti IAS</div>
+      
+      <ul class="pod-k">
+        <li>🚨 Today’s MOST IMPORTANT Current Affairs for UPSC 2026!</li><li>In this video, We breaks down the key headlines from The Hindu Newspaper with a clear focus on Prelims + Mains relevance.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.1s">
+      <div class="pod-h">
+        <span class="pod-cat">Career</span>
+        <span class="pod-date">2026-08-26</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=5TQEEGcOl70" target="_blank" rel="noopener">Want to Buy a House? Do These 3 Things First | Money Matters Ep. 124 | Ankur Warikoo Hindi</a></h3>
+      <div class="pod-s">Ankur Warikoo</div>
+      
+      <ul class="pod-k">
+        <li>So these videos do not offer any stock tips, or specific mutual fund recommendations or get-rich-quick schemes.</li><li>I am not selling any product or service through these videos.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.15000000000000002s">
+      <div class="pod-h">
+        <span class="pod-cat">Investing</span>
+        <span class="pod-date">2026-08-26</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=7x2lgRDuv8Y" target="_blank" rel="noopener">How the US Killed Japan's Economy. And, why its coming for India next?</a></h3>
+      <div class="pod-s">Akshat Shrivastava</div>
+      
+      <ul class="pod-k">
+        <li>The Yen carry trade propelled the US economy for decades.</li><li>The podcast is not providing investment advice.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.2s">
+      <div class="pod-h">
+        <span class="pod-cat">Investing</span>
+        <span class="pod-date">2026-08-26</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=d9ubV6BA65Y" target="_blank" rel="noopener">If You're Planning to Study Abroad… Watch This First</a></h3>
+      <div class="pod-s">Groww</div>
+      
+      <ul class="pod-k">
+        <li>Is spending ₹50 lakh or more on a master’s degree abroad actually worth it?</li><li>In this video, we break down the real cost of studying abroad, from scholarships and education loans to interest, EMIs, salaries, jobs and visa realities.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.25s">
+      <div class="pod-h">
+        <span class="pod-cat">Philosophy</span>
+        <span class="pod-date">2026-08-26</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=JsdVM9y13T4" target="_blank" rel="noopener">Sri M’s Last Podcast On TRS?</a></h3>
+      <div class="pod-s">The Ranveer Show</div>
+      
+      <ul class="pod-k">
+        <li>In this 534th (overall 1039th) episode of The Ranveer Show, Sri M, spiritual teacher, author of Apprenticed to a Himalayan Master, and Padma Bhushan recipient, returns to the show five years after his first appearance, for a conversation that goes further than either of the last two.</li><li>We talk about the truth behind the viral moment from his last appearance, the real essence of the Vedas and Upanishads beyond ritual, why the world feels like it's in chaos right now and what the years ahead might hold, the line between destiny and free will, why even hard work and success are ultimately grace, what actually happens after we die, why he's now planning to step back from public life, and a personal letter from Swami Vivekananda he reads aloud for the first time.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.30000000000000004s">
+      <div class="pod-h">
+        <span class="pod-cat">Business</span>
+        <span class="pod-date">2026-08-25</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=JWPrgCbUwC8" target="_blank" rel="noopener">Sanjiv Goenka On Billionaires, The Next Big Opportunities & Building Wealth | FO553 Raj Shamani</a></h3>
+      <div class="pod-s">Figuring Out</div>
+      
+      <ul class="pod-k">
+        <li>He turned Kolkata's broken, debt‑ridden power business into a turnaround story.</li><li>He grew his family business from 4,000 crore to 1 lakh crore in one generation.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.35000000000000003s">
+      <div class="pod-h">
         <span class="pod-cat">Business</span>
         <span class="pod-date">2026-08-25</span>
       </div>
@@ -8092,21 +8242,175 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       <div class="pod-s">Think School</div>
       
       <ul class="pod-k">
-        <li>How a blender generated 200 M+ views and 700 % higher sales with just $50</li><li>KitKat used coffee as a trigger, boosting its sales by over 30 %</li>
+        <li>Can you make a boring product go viral with less than $1,000?</li><li>Most brands think virality requires a huge marketing budget, an exciting product, or a genius advertising campaign.</li>
       </ul>
       
     </article>
     
-    <article class="pod rv" style="--d:0.05s">
+    <article class="pod rv" style="--d:0.4s">
       <div class="pod-h">
-        <span class="pod-cat">Business</span>
-        <span class="pod-date">2026-08-19</span>
+        <span class="pod-cat">Investing</span>
+        <span class="pod-date">2026-08-25</span>
       </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=_fE28TZFim4" target="_blank" rel="noopener">AIR INDIA IS BROKEN: Why Air India Can Never Be Fixed? | Business Case Study</a></h3>
-      <div class="pod-s">Think School</div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=CO6qtqM8yYg" target="_blank" rel="noopener">Term Insurance vs Mutual Fund SIP | The ₹1 Crore Calculation You Need to See</a></h3>
+      <div class="pod-s">Pranjal Kamra</div>
       
       <ul class="pod-k">
-        <li>Air India is losing ₹42 crore every day in FY26, more than double the ₹19.2 crore daily loss it had in FY21 under government ownership.</li><li>Foreign airlines now operate 58.4 % of India’s international flights and 95 % of its international air cargo.</li>
+        <li>Is term insurance a complete waste of money because you get ₹0 back if you survive?</li><li>In this video, we do a real side-by-side mathematical calculation comparing a ₹1 Crore Term Insurance plan with an Equity Mutual Fund SIP.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.45s">
+      <div class="pod-h">
+        <span class="pod-cat">Geopolitics</span>
+        <span class="pod-date">2026-08-25</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=DvL8jmq-2zo" target="_blank" rel="noopener">US-Israel Isolated, Adani Vindicated, Saudi-Pak Nukes, Student Protests | Abhijit Iyer-Mitra ACP 104</a></h3>
+      <div class="pod-s">Abhijit Chavda</div>
+      
+      <ul class="pod-k">
+        <li>Abhijit Iyer-Mitra is a defense economist and Senior Fellow at the Institute of Peace and Conflict Studies.</li><li>He specializes in defense economics, security and foreign policy.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.5s">
+      <div class="pod-h">
+        <span class="pod-cat">Politics</span>
+        <span class="pod-date">2026-08-25</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=hTqYK2b9tEU" target="_blank" rel="noopener">Sugar situation “a fiasco”, “total failure of policy”, Govt has been “irresponsible”: Ashok Gulati</a></h3>
+      <div class="pod-s">The Wire</div>
+      
+      <ul class="pod-k">
+        <li>Sugar situation "a fiasco", "total failure of policy", Govt has been "irresponsible": Ashok Gulati, Distinguished Professor at ICRIER, to Karan Thapar for The Wire.</li><li>Why have sugar prices risen so sharply in recent weeks?</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.55s">
+      <div class="pod-h">
+        <span class="pod-cat">Society</span>
+        <span class="pod-date">2026-08-24</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=0Mw-i-TeJwo" target="_blank" rel="noopener">CM Yogi Playing The Modi Playbook Better Than The PM Himself? | BJP’s Next Leader? | Akash Banerjee</a></h3>
+      <div class="pod-s">The Deshbhakt</div>
+      
+      <ul class="pod-k">
+        <li>From ‘If Not Modi Then Who?’ … the conversation in political circles gradually shifting to ‘Who After Modi?’ ….</li><li>For 12 years, PM Modi has dominated India’s political landscape and mindscape - as the Modi Magic fades the cracks within the BJP are becoming evident - there is a new challenger on the horizon ….</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.6000000000000001s">
+      <div class="pod-h">
+        <span class="pod-cat">Business</span>
+        <span class="pod-date">2026-08-23</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=7fw2Ob6w3Gg" target="_blank" rel="noopener">Nikhil Kamath Brainstorms Building An Indian Social Media App</a></h3>
+      <div class="pod-s">WTF is (clips)</div>
+      
+      <ul class="pod-k">
+        <li>Nikhil Kamath-Co-founder of Zerodha and Gruhas Host of 'WTF is' & 'People By WTF' Podcast #WTFiswithnikhilkamath  #PeopleByWTF #WTFOnline #WTFareBatteries #EnerVenue #HiNaBattery #SummerDavos</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.65s">
+      <div class="pod-h">
+        <span class="pod-cat">Money</span>
+        <span class="pod-date">2026-08-22</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=PsOdPvQX6v0" target="_blank" rel="noopener">90% of Indians don't know this about Mutual funds</a></h3>
+      <div class="pod-s">Zero1 by Zerodha</div>
+      
+      <ul class="pod-k">
+        <li>Everyday I meet so many people who ask me the same question.</li><li>And I understand the confusion there are more than 2000 mutual funds available in India and each of them promise to give the best returns !</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.7000000000000001s">
+      <div class="pod-h">
+        <span class="pod-cat">Society</span>
+        <span class="pod-date">2026-08-22</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=85CPkmVriec" target="_blank" rel="noopener">Reality of HYPNOSIS | Is Mind Control REALLY Possible? | Dhruv Rathee</a></h3>
+      <div class="pod-s">Dhruv Rathee</div>
+      
+      <ul class="pod-k">
+        <li>Learn how to make content creation your part-time job or full-time career!</li><li>What if hypnosis can ease surgical pain—and also create a memory of a crime that never happened?</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.75s">
+      <div class="pod-h">
+        <span class="pod-cat">Philosophy</span>
+        <span class="pod-date">2026-08-22</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=zqooPTxZzzE" target="_blank" rel="noopener">Tamil Nadu's Hanuman Connection | Pandit Dhirendra Shastri with Sadhguru</a></h3>
+      <div class="pod-s">Sadhguru &middot; <b>Sadhguru</b></div>
+      
+      <ul class="pod-k">
+        <li>Bageshwar Dham’s Peethadhishwar Pandit Dhirendra Shastri spent time in the consecrated spaces of Isha Yoga Center Coimbatore and met Sadhguru on 22 July.</li><li>During a conversation with Sadhguru, he shared his experience of meditating in the powerful presence of Dhyanalinga and spending time in the abode of Linga Bhairavi adjacent to Isha Yoga Center.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.8s">
+      <div class="pod-h">
+        <span class="pod-cat">Investing</span>
+        <span class="pod-date">2026-08-21</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=V9Ra8klDzrM" target="_blank" rel="noopener">Build a Trading Algo with AI | No Coding Required</a></h3>
+      <div class="pod-s">Zerodha Varsity &middot; <b>AI</b></div>
+      
+      <ul class="pod-k">
+        <li>AI coding assistants enable non‑programmers to build semi‑automated trading algorithms without writing any code.</li><li>The episode demonstrates step‑by‑step setup of tools, connection to Kite Connect, and creation of a moving‑average crossover screener turned into a working dashboard.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.8500000000000001s">
+      <div class="pod-h">
+        <span class="pod-cat">Money</span>
+        <span class="pod-date">2026-08-20</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=xA71gp27F3w" target="_blank" rel="noopener">My Biggest Announcement Yet: ₹30 Crore. 200 People. 18 Months. THIS IS WHAT WE BUILT</a></h3>
+      <div class="pod-s">Finance With Sharan</div>
+      
+      <ul class="pod-k">
+        <li>Three years ago, The 1% Club raised ₹10 crore from Gruhas, the venture fund co-founded by Nikhil Kamath.</li><li>In this video, Sharan Hegde opens up both company offices for the first time and explains why the company is putting ₹30 crore of its own cash back into the business instead of raising more capital.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.9s">
+      <div class="pod-h">
+        <span class="pod-cat">Investing</span>
+        <span class="pod-date">2026-08-18</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=fgk__RVsV4A" target="_blank" rel="noopener">NRIs Brought $52 Billion to India |Why Is RBI Ending Swap Scheme Early? | FCNR(B) |CA Rachana Ranade</a></h3>
+      <div class="pod-s">CA Rachana Ranade</div>
+      
+      <ul class="pod-k">
+        <li>The RBI has brought forward the closure of its FCNR(B) swap facility after attracting over $52 billion in deposits from NRIs.</li><li>In this video, we explain what FCNR(B) deposits are, how the RBI’s special USD-INR swap facility worked, why it was attractive for banks and NRIs, and why the RBI wanted to attract more foreign currency into India.</li>
+      </ul>
+      
+    </article>
+    
+    <article class="pod rv" style="--d:0.9500000000000001s">
+      <div class="pod-h">
+        <span class="pod-cat">Society</span>
+        <span class="pod-date">2026-08-18</span>
+      </div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=-BucDdCiD-s" target="_blank" rel="noopener">The India That Gujarat Built | Shut Up Ya Kunal w/ Kunal Kamra ft Aakar Patel | Episode 36</a></h3>
+      <div class="pod-s">Shut Up Ya Kunal &middot; <b>Aakar Patel</b></div>
+      
+      <ul class="pod-k">
+        <li>Aakar Patel is a journalist, author and columnist who has edited both English and Gujarati newspapers.</li><li>He is the author of *Our Hindu Rashtra* and *Price of the Modi Years*, and serves as Chair of Amnesty International India.</li>
       </ul>
       
     </article>
@@ -8532,7 +8836,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
   </div>
 
   
-  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>Your Philidor play is a disaster— you’re surrendering the initiative on move 2 and never recover, which is why you’re 2‑5 with a 40 % win rate. Switch immediately to a solid, active system (e.g., the London or the classical Queen’s Gambit) and force yourself to develop pieces before any pawn moves; if you can’t keep the king safe and contest the center, you belong in the 1400‑1500 club. From now on, study the first 10 critical moves of every opening you use, memorize the typical tactical motifs, and rehearse them in a daily 15‑minute “opening drill” before you ever sit down for a game.</div>
+  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>Your Philidor is a death trap—stop playing it altogether and replace it with a solid 1.e4 c5 or 1.d4 Nf6 repertoire that forces your opponents out of their comfort zones. The only opening that even scratches the surface of competence is your Queen’s Pawn Game; deepen it with the London System or a classical d4‑c4 setup to turn that 50 % win rate into a genuine advantage. From now on, study one model game per opening, drill the first ten critical moves until they’re second nature, and never, ever open with 1.e4 e5 2.Nf3 d6 again.</div>
   
 
   
@@ -8588,7 +8892,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; avoid 6…Qb6‑c7‑c5 sequence that loses tempo and invites a swift attack.</div>
+      <div class="an">💡 Focus on early king safety: avoid moving the f‑pawn (move 6 …f6) and instead develop knights/bishops; keep the king castled or protected, reducing mate threats.</div>
     </div>
     
     <div class="game loss">
@@ -8624,7 +8928,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early central control: after 1.e4 e5 2.Nf3 d6, play 3…Nf6 instead of 3…Nd7; avoid passive pawn pushes and develop pieces to active squares to reduce opponent’s space advantage.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen (e.g., 5.Nf3 instead of 5.Qb3), avoid queen‑side pawn pushes that weaken c6‑d5 squares. This alone cuts your average centipawn loss by ~30 % and prevents the decisive tactical collapse at move 27.</div>
     </div>
     
     <div class="game loss">
@@ -8660,7 +8964,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Study endgame technique: after 30…Kd5, you could've forced a draw with 31.Rc8+ Kd6 32.Rc6+. Master basic king‑and‑pawn endings; avoid losing material.</div>
+      <div class="an">💡 Strengthen your king safety: after 12…Nf6, play 13…g6, 14…Kg7, then castle; avoid leaving the king exposed on the back rank.</div>
     </div>
     
     <div class="game win">
@@ -8696,7 +9000,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece coordination: develop knights before queen (Nf3, Nc3) and avoid premature queen moves like 4.Qh5; aim for solid central control within first 8 moves.</div>
+      <div class="an">💡 Focus on early piece coordination: develop knights before queen (e.g., Nf3, Nc3), avoid queen moves like Qb3/Qc2 before castling; this reduces unnecessary tempo loss and strengthens king safety.</div>
     </div>
     
     <div class="game win">
@@ -8732,7 +9036,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on the Philidor’s early ...d5 push: after 1.e4 e5 2.Nf3 d6 3.d4 Nf6 4.Nc3 Nbd7, avoid passive 5...Be7; instead play 5...c6 and 6...Qc7, then challenge the center with ...exd4 and ...d5 promptly, reducing white’s space advantage. This will cut your average centipawn loss by ~30 cp.</div>
+      <div class="an">💡 Focus on early central control: after 1.e4 e5 2.Nf3 d6, develop the bishop to g4 or e7 before playing ...c6, and avoid passive moves like ...Nf6‑e8; this will reduce unnecessary piece shuffling and speed up your counter‑play.</div>
     </div>
     
     <div class="game loss">
@@ -8768,7 +9072,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early pawn structure: after 1.d4 d5 2.Nf3 Nf6 3.c4 e6, you allowed a weak c‑pawn and isolated d‑pawn. Keep the center solid (e.g., 3.Nc3 or 3.e3) and avoid unnecessary pawn pushes that create targets. This will reduce tactical vulnerabilities and improve overall accuracy.</div>
+      <div class="an">💡 Focus on early piece coordination: develop knights before moving the queen (e.g., avoid 5.Qd2). Aim to finish development by move 8, keeping king safety and preventing opponent’s central pressure.</div>
     </div>
     
     <div class="game win">
@@ -8804,7 +9108,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece development: finish knights to f3/c3 and bishops to d3/e2 by move 5, avoiding queen‑side pawn pushes that waste time.</div>
+      <div class="an">💡 Focus on central control: after 1.d4, develop knights before pushing c‑ or e‑pawns; aim for 2…Nf6, 3…e6, 4…c5 to challenge White’s center within 6 moves.Prioritize central control: after 1.d4 develop knights before pawn pushes; aim for Nf6, e6, c5 within six moves and quickly</div>
     </div>
     
     <div class="game loss">
@@ -8840,7 +9144,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece activity: develop knights before bishops, castle by move 7, and avoid unnecessary queen trades that waste tempo.</div>
+      <div class="an">💡 Focus on early queen development: after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4, avoid 5.Qe2?; instead play 5.Nf3 and develop pieces, keeping the queen off vulnerable squares. This reduces tactical threats and improves position.</div>
     </div>
     
     <div class="game win">
@@ -8876,7 +9180,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early queen‑side pawn structure: avoid 1…c5‑c4 after 2…b6; it weakens d5 and invites white’s Nd5‑e7 fork. Strengthen d5 control (e.g., …d5 or …Nbd7) and develop pieces before expanding. This alone will slash your ACPL by ~15‑20 points.</div>
+      <div class="an">💡 Focus on early king safety: castle by move 9, avoid leaving the king on f8 after …Kd7; your average move time >45 s, causing time pressure. Reduce unnecessary piece shuffling and finish development within 12 moves.</div>
     </div>
     
     <div class="game win">
@@ -8912,7 +9216,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early king safety: after 7…O‑O, avoid unnecessary pawn pushes (e.g., 9…h5); keep a solid pawn shield and develop the queen’s knight before launching attacks.</div>
+      <div class="an">💡 Focus on early queen development: avoid 1…Qh4+ and 2…Qf6; instead play 1…e5, 2…Nf6, 3…Bc5, reducing unnecessary queen moves that cost ~30 cp per move.</div>
     </div>
     
     <div class="game win">
@@ -8957,7 +9261,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Focus on early middle‑game piece coordination: after move 24 you left a rook isolated, allowing a 3‑piece attack costing +2.5 pawns; tighten development and avoid isolated heavy pieces.</div>
+      <div class="an">💡 Focus on early middle‑game calculation: reduce blunders from 6 to ≤2 by reviewing each tactical sequence before committing moves.</div>
     </div>
     
     <div class="game loss">
@@ -8993,7 +9297,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early queen‑side development: stop moving the queen repeatedly; aim for Nf3, Bd3, O‑O by move 8, saving time and preventing tactical threats.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before queen, castle by move 8, and avoid moving the same piece twice in the opening.</div>
     </div>
     
     <div class="game loss">
@@ -9029,7 +9333,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early central tension: after 1.e4 e5 2.Nf3 d6, develop with …Nf6, avoid passive …Be7; aim for ...c5 or ...Nd7‑f8‑e6 to challenge White’s center promptly.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; avoid 7…Qb6 and 9…Qb4, which waste tempo and lose central control.</div>
     </div>
     
     <div class="game win">
@@ -9065,7 +9369,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Strengthen your endgame technique: practice converting +0.5 pawn advantages within 15 moves, focusing on king activity and precise pawn‑major piece coordination.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; aim for Nf6–d5 or Nf6–e4 within 5 moves, reducing passive pawn pushes by 30 % and increasing average centipawn loss by ~15.</div>
     </div>
     
   </div>
@@ -9136,7 +9440,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 2246 · 🔴 stretch</h3>
+      <h3>Rating 2213 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Exposed King · Very Long · Middlegame</p>
       <div class="q">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
       <a href="https://lichess.org/training/Varaa" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -9190,7 +9494,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Thursday, August 27 2026 · built 10:50 MYT<br>
+      Thursday, August 27 2026 · built 18:35 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -9232,9 +9536,9 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="S5HCM3ZQHZ4z9F372ItEUg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="YJTxuRDnk0BcvLUIIPpxyw">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="S5HCM3ZQHZ4z9F372ItEUg">{}</script>
-<script nonce="S5HCM3ZQHZ4z9F372ItEUg" src="/app.js?v=20260827T105044" defer></script>
+<script type="application/json" id="sector-map" nonce="YJTxuRDnk0BcvLUIIPpxyw">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="YJTxuRDnk0BcvLUIIPpxyw" src="/app.js?v=20260827T183555" defer></script>
 </body>
 </html>
