@@ -8958,6 +8958,22 @@ details.ipo-card[open] .ipo-sum::before{content:'\2212'}
 details.ipo-card > *:not(summary){padding-inline:14px}
 details.ipo-card > *:last-child{padding-bottom:14px}
 
+
+/* The screen's vintage, on the section rather than in a provenance strip
+   seventeen lines down. Every technical column here is as old as this date,
+   and a reader who checks a number against a live chart deserves to meet that
+   fact before the number, not after. */
+.screen-vintage{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  margin:12px 0 0;padding:10px 12px;
+  background:var(--surface2);border-left:3px solid var(--p-research);border-radius:0 4px 4px 0;
+  font:400 12px/1.55 var(--sans);color:var(--muted);max-width:70ch;
+}
+.sv-tag{
+  font:700 10px/1 var(--mono);letter-spacing:.1em;
+  color:var(--p-research);flex:none;
+}
+
 </style>
 </head>
 
@@ -10536,6 +10552,27 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     <div>
       <span class="snum">{{ secnum['stocks'] }} / {{ seclabel['stocks'] }}</span> {{ dh('Stock screen') }}
       <h2 class="stitle">Which {{ stock_screen.count or '—' }}, and why.</h2>
+      {# THE DECISION ON STALENESS, stated on the section rather than buried.
+         Every technical column here — price, RSI, turnover, the moving-average
+         stack — comes from the weekly build and is as old as the price date.
+         Four trading days by Thursday, which is enough for RSI to move ten
+         points and for a reader checking against a live chart to conclude the
+         number is broken.
+
+         It stays weekly. The alternative was overlaying live prices from the
+         ticker, and the ticker carries about fifty symbols against this
+         screen's 750 — six per cent of rows live and the rest not, in one
+         table, is worse than a table that is consistently one vintage and
+         says so. What changes is that the vintage is now impossible to miss:
+         here, and on every priced column head. #}
+      {% if stock_screen.price_date %}
+      <p class="screen-vintage">
+        <span class="sv-tag">PRICED TO {{ stock_screen.price_date }}</span>
+        <span>Rebuilt weekly. Price, RSI and turnover are from that date &mdash; a live
+          chart will differ, and by more the further you are from it. Fundamentals
+          come from annual filings and do not move in a week.</span>
+      </p>
+      {% endif %}
     </div>
     <div style="text-align:right">
       <p class="sdesc">The NSE Total Market &mdash; every listed name of any size
@@ -11910,7 +11947,18 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div>
     <h3>You just read a losing month in public.</h3>
     <p>Most people showing you signals do not show you the stops. If that is the kind of record you want in your inbox, this is where you say so.</p>
-    <p class="fine">One email a day at 6 AM MYT. Not investment advice — a public log of what I actually did.</p>
+    {# This said "One email a day at 6 AM MYT". Nothing sends it. There is no
+       mail path anywhere in this repository — no SMTP, no ESP, no send step in
+       any workflow — so every address collected here has been joining a list
+       that has never mailed anyone.
+
+       On a page whose entire argument is that it does not overstate, that was
+       the worst sentence on it. The copy now says what is actually true: the
+       list exists, the daily email does not yet. It goes back to a promise the
+       day there is a sender behind it. #}
+    <p class="fine">The daily email is not sending yet &mdash; this puts you on the list
+      for when it does, and nothing else. No advice, no forwarding, no third party:
+      the address sits in my own database until there is something to send.</p>
   </div>
   <div>
     <form class="sub-form" id="subEnd" novalidate>

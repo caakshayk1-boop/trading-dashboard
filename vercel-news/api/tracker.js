@@ -63,7 +63,14 @@ export default async function handler(req, res) {
       if (!process.env.EDIT_KEY) {
         return fail(res, 401, "Writes are disabled — EDIT_KEY is not set on this deployment.");
       }
-      await ensureMigrated();
+      // MIGRATION MOVED BELOW THE AUTH CHECK.
+      //
+      // ensureMigrated() ran here, before the key was ever compared, so an
+      // unauthenticated POST could make the process run ALTER TABLE. The write
+      // itself was always refused — the guarantee held — but schema changes
+      // are not something an anonymous caller should be able to trigger at
+      // all, and it is why an unauthenticated probe returned 500 instead of a
+      // clean 401. Nothing touches the schema until the caller is known.
       // Body is read here, once, before any auth branch — login validates
       // against body.key, not a header/cookie, so the auth check can no
       // longer gate the parse the way it did when every action came in via
@@ -107,6 +114,10 @@ export default async function handler(req, res) {
         return fail(res, 401, "Wrong edit key.");
       }
       await recordAuthSuccess();
+      // NOW migrate — the caller is authenticated, so a schema change is
+      // attributable. write() needs the added columns, and moving the call
+      // above the auth check is what let an anonymous POST run DDL.
+      await ensureMigrated();
       return await write(body, res);
     }
 
@@ -162,8 +173,15 @@ const NEW_COLUMNS = [
 async function ensureColumns() {
   const existing = await columns("stock_tracker");
   for (const [name, ddl] of NEW_COLUMNS) {
-    if (!existing.has(name)) {
+    if (existing.has(name)) continue;
+    try {
       await db().execute(`ALTER TABLE stock_tracker ADD COLUMN ${name} ${ddl}`);
+    } catch (e) {
+      // "duplicate column" means the column is already there and this process
+      // had a stale view of the schema — which is the outcome, not a failure.
+      // Belt and braces alongside the cache fix in _db.js: two instances can
+      // race this migration, and losing that race must not 500 a request.
+      if (!/duplicate column/i.test(String(e && e.message))) throw e;
     }
   }
 }

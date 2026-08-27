@@ -47,7 +47,19 @@ export async function columns(table = "all_signals") {
     const rs = await db().execute(`PRAGMA table_info(${table})`);
     cols = new Set(rs.rows.map((r) => str(r.name || r[1])));
   } catch {
-    cols = new Set();
+    // DO NOT CACHE A FAILURE.
+    //
+    // This used to fall through to _colCache.set(table, new Set()) — an empty
+    // set stored as if it were the answer. On a warm serverless instance that
+    // is permanent for the life of the process: every later caller believes
+    // the table has no columns at all.
+    //
+    // The visible symptom was a 500 on /api/tracker reading
+    // "duplicate column name: side" — the migration saw an empty column set,
+    // tried to add all ten, and the first one already existed. A read path
+    // that caches its own failure is worse than one that just fails, because
+    // it converts a transient error into a permanent wrong answer.
+    return new Set();
   }
   _colCache.set(table, cols);
   return cols;
