@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-D9p2tC5u00KoZYTBVZisUg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-S5HCM3ZQHZ4z9F372ItEUg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="D9p2tC5u00KoZYTBVZisUg">
+<script nonce="S5HCM3ZQHZ4z9F372ItEUg">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="D9p2tC5u00KoZYTBVZisUg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-27","dateModified":"2026-08-27T09:44:25.491628+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="S5HCM3ZQHZ4z9F372ItEUg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-27","dateModified":"2026-08-27T10:50:44.886249+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -4586,7 +4586,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Thursday, August 27 2026</span>
-      <span class="live" id="istClock"><i></i>09:44 MYT</span>
+      <span class="live" id="istClock"><i></i>10:50 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -4670,14 +4670,13 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     <div class="navgrp" data-group="Ledger">
       <button type="button" class="navgrp-btn" aria-expanded="false"
               aria-controls="navmenu-5">
-        Ledger<i>5</i>
+        Ledger<i>4</i>
       </button>
       <div class="navgrp-menu" id="navmenu-5" hidden>
         <a href="#alerts" aria-label="Ledger — Signal Log"><i>10</i>Signal Log</a>
         <a href="#perf" aria-label="Ledger — Performance"><i>11</i>Performance</a>
         <a href="#rules" aria-label="Ledger — Engine Log"><i>12</i>Engine Log</a>
         <a href="#datahealth" aria-label="Ledger — Data Health"><i>13</i>Data Health</a>
-        <a href="#buildlog" aria-label="Ledger — Build Log"><i>14</i>Build Log</a>
         
       </div>
     </div>
@@ -4688,8 +4687,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         About<i>2</i>
       </button>
       <div class="navgrp-menu" id="navmenu-6" hidden>
-        <a href="#method" aria-label="About — How to Read This"><i>15</i>How to Read This</a>
-        <a href="#who" aria-label="About — Who"><i>16</i>Who</a>
+        <a href="#method" aria-label="About — How to Read This"><i>14</i>How to Read This</a>
+        <a href="#who" aria-label="About — Who"><i>15</i>Who</a>
         
       </div>
     </div>
@@ -4713,7 +4712,6 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 #perf{--pillar:var(--p-ledger,var(--lime));contain-intrinsic-size:auto 1900px}
 #rules{--pillar:var(--p-ledger,var(--lime));contain-intrinsic-size:auto 800px}
 #datahealth{--pillar:var(--p-ledger,var(--lime));contain-intrinsic-size:auto 1800px}
-#buildlog{--pillar:var(--p-ledger,var(--lime));contain-intrinsic-size:auto 500px}
 #method{--pillar:var(--p-about,var(--lime));contain-intrinsic-size:auto 5700px}
 #who{--pillar:var(--p-about,var(--lime));contain-intrinsic-size:auto 600px}
 .navgrp[data-group="Today"],.botnav-a[data-group="Today"]{--pillar:var(--p-today,var(--lime))}
@@ -4769,7 +4767,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260827T094425">
+<div class="editionbar" id="editionbar" data-build="20260827T105044">
   
   
   <span class="ed-txt">
@@ -4823,15 +4821,15 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4675.2</span>
-      <span class="c up">▲ +0.8%</span>
+      <span class="p">$4681.5</span>
+      <span class="c up">▲ +0.94%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$81.97</span>
-      <span class="c dn">▼ -0.47%</span>
+      <span class="p">$81.69</span>
+      <span class="c dn">▼ -0.81%</span>
     </div>
     
     
@@ -4844,8 +4842,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78726</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$78750</span>
+      <span class="c up">▲ +0.23%</span>
     </div>
     
     
@@ -4881,15 +4879,15 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4675.2</span>
-      <span class="c up">▲ +0.8%</span>
+      <span class="p">$4681.5</span>
+      <span class="c up">▲ +0.94%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$81.97</span>
-      <span class="c dn">▼ -0.47%</span>
+      <span class="p">$81.69</span>
+      <span class="c dn">▼ -0.81%</span>
     </div>
     
     
@@ -4902,8 +4900,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78726</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$78750</span>
+      <span class="c up">▲ +0.23%</span>
     </div>
     
     
@@ -5126,15 +5124,15 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     <div class="regime">
       <div class="rg-l">
         <span class="rg-k">Market regime</span>
-        <span class="rg-v dn">Risk-off · 14<i>/100</i></span>
+        <span class="rg-v dn">Risk-off · 13<i>/100</i></span>
       </div>
-      <div class="rg-bar" style="--rg:14%"><i></i><b></b></div>
+      <div class="rg-bar" style="--rg:13%"><i></i><b></b></div>
       <div class="rg-why">
         Risk appetite across 8 instruments,
         weighted by move size. Moved most by
         <b class="up">USD/INR
           +1.98%</b> and <b class="up">Gold
-          +0.8%</b>.
+          +0.94%</b>.
         
         50 is neutral; risk assets push up, havens push down.
         
@@ -5148,7 +5146,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <a class="db" href="#marketintel">
         <span class="db-k">Market</span>
         <span class="db-v">Risk-off</span>
-        <span class="db-s">14/100 regime</span>
+        <span class="db-s">13/100 regime</span>
       </a>
       <a class="db" href="#world">
         <span class="db-k">World</span>
@@ -5178,7 +5176,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <article class="mcard mc-risk">
           <div class="mc-tag"><i></i>Risk</div>
           <h3 class="mc-head">USD/INR +1.98% while 4 of 5 risk assets fell</h3>
-          <p class="mc-why">A haven bid against a soft tape is what pushes the regime reading down. It sits at 14/100 — risk-off.</p>
+          <p class="mc-why">A haven bid against a soft tape is what pushes the regime reading down. It sits at 13/100 — risk-off.</p>
           <a class="mc-cta" href="#marketintel">Market intel &rarr;</a>
         </article>
         
@@ -5656,7 +5654,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="up">3M <b>+27.9%</b></span>
       </div>
       <div class="scorebar" style="--w:80%"><i></i></div>
-      <div class="th">27.9% three‑month rise, 17.0% monthly gain, price 8.9% above 20‑day average on 1.39× volume, composite 80/100.</div>
+      <div class="th">27.9% three‑month gain, 17.0% one‑month rise, price 8.9% above its 20‑day average with 1.39× volume, composite 80/100.</div>
 
       
       
@@ -5726,7 +5724,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <input type="hidden" name="entry_price" value="108.54">
         <input type="hidden" name="target_price" value="153.86">
         <input type="hidden" name="stop_loss" value="99.71">
-        <input type="hidden" name="thesis" value="27.9% three‑month rise, 17.0% monthly gain, price 8.9% above 20‑day average on 1.39× volume, composite 80/100.">
+        <input type="hidden" name="thesis" value="27.9% three‑month gain, 17.0% one‑month rise, price 8.9% above its 20‑day average with 1.39× volume, composite 80/100.">
         <input type="hidden" name="timeframe" value="3-6 months">
         <button type="submit" class="btn btn-sm">+ Track</button>
       </form>
@@ -5750,7 +5748,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="up">3M <b>+30.1%</b></span>
       </div>
       <div class="scorebar" style="--w:79%"><i></i></div>
-      <div class="th">30.1% three‑month rise, price 7.4% above its 20‑day average on 0.93× typical volume, composite 79/100.</div>
+      <div class="th">30.1% three‑month rise, 24.9% one‑month gain, price 7.4% above 20‑day average, volume 0.93× norm, composite 79/100.</div>
 
       
       
@@ -5820,7 +5818,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <input type="hidden" name="entry_price" value="4032.0">
         <input type="hidden" name="target_price" value="7705.0">
         <input type="hidden" name="stop_loss" value="3755.53">
-        <input type="hidden" name="thesis" value="30.1% three‑month rise, price 7.4% above its 20‑day average on 0.93× typical volume, composite 79/100.">
+        <input type="hidden" name="thesis" value="30.1% three‑month rise, 24.9% one‑month gain, price 7.4% above 20‑day average, volume 0.93× norm, composite 79/100.">
         <input type="hidden" name="timeframe" value="6-12 months">
         <button type="submit" class="btn btn-sm">+ Track</button>
       </form>
@@ -5844,7 +5842,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="dn">3M <b>-9.5%</b></span>
       </div>
       <div class="scorebar" style="--w:78%"><i></i></div>
-      <div class="th">31.4% one‑month surge, 9.5% three‑month decline, price 7.4% above 20‑day average on 0.76× volume, composite 78.</div>
+      <div class="th">31.4% one‑month gain, 9.5% three‑month decline, price 7.4% above 20‑day average, volume 0.76× norm, composite 78.</div>
 
       
       
@@ -5914,7 +5912,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <input type="hidden" name="entry_price" value="37.39">
         <input type="hidden" name="target_price" value="58.78">
         <input type="hidden" name="stop_loss" value="33.41">
-        <input type="hidden" name="thesis" value="31.4% one‑month surge, 9.5% three‑month decline, price 7.4% above 20‑day average on 0.76× volume, composite 78.">
+        <input type="hidden" name="thesis" value="31.4% one‑month gain, 9.5% three‑month decline, price 7.4% above 20‑day average, volume 0.76× norm, composite 78.">
         <input type="hidden" name="timeframe" value="no estimate">
         <button type="submit" class="btn btn-sm">+ Track</button>
       </form>
@@ -5938,7 +5936,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="up">3M <b>+16.5%</b></span>
       </div>
       <div class="scorebar" style="--w:72%"><i></i></div>
-      <div class="th">26.4% one‑month gain, 16.5% three‑month rise, price 4.5% above 20‑day average on 0.58× volume, score 72.</div>
+      <div class="th">26.4% one‑month gain, 16.5% three‑month rise, price 4.5% above 20‑day average, volume 0.58× norm, score 72/100.</div>
 
       
       
@@ -6008,7 +6006,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <input type="hidden" name="entry_price" value="496.37">
         <input type="hidden" name="target_price" value="549.2">
         <input type="hidden" name="stop_loss" value="475.18">
-        <input type="hidden" name="thesis" value="26.4% one‑month gain, 16.5% three‑month rise, price 4.5% above 20‑day average on 0.58× volume, score 72.">
+        <input type="hidden" name="thesis" value="26.4% one‑month gain, 16.5% three‑month rise, price 4.5% above 20‑day average, volume 0.58× norm, score 72/100.">
         <input type="hidden" name="timeframe" value="1-3 months">
         <button type="submit" class="btn btn-sm">+ Track</button>
       </form>
@@ -6032,7 +6030,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="up">3M <b>+6.1%</b></span>
       </div>
       <div class="scorebar" style="--w:72%"><i></i></div>
-      <div class="th">+20% in a month against +6% over three — the trend is accelerating, not maturing.</div>
+      <div class="th">19.6% one‑month gain, 6.1% three‑month rise, price 13% above its 20‑day average on 0.66× typical volume, composite 72.</div>
 
       
       
@@ -6102,7 +6100,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <input type="hidden" name="entry_price" value="35.23">
         <input type="hidden" name="target_price" value="66.74">
         <input type="hidden" name="stop_loss" value="31.18">
-        <input type="hidden" name="thesis" value="+20% in a month against +6% over three — the trend is accelerating, not maturing.">
+        <input type="hidden" name="thesis" value="19.6% one‑month gain, 6.1% three‑month rise, price 13% above its 20‑day average on 0.66× typical volume, composite 72.">
         <input type="hidden" name="timeframe" value="over a year at this pace">
         <button type="submit" class="btn btn-sm">+ Track</button>
       </form>
@@ -6140,35 +6138,35 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">Economic Times · LEAD</span>
-        <h2><a href="https://economictimes.indiatimes.com/markets/ipos/fpos/can-lumino-industries-ipo-deliver-long-term-growth-for-high-risk-investors/articleshow/133553642.cms" target="_blank">Can Lumino Industries IPO deliver long-term growth for high-risk investors?</a></h2>
-        <p>Lumino Industries plans a ₹700 crore initial public offering to reduce debt and boost manufacturing capacity. The company expects to benefit from increased demand for wires and cables. However, its debt has risen significantly due to expansion and working capital needs. Raw material price volatility and customer concentration present key operational risks. The issue is suitable for long-term inves</p>
-        <a class="readmore" href="https://economictimes.indiatimes.com/markets/ipos/fpos/can-lumino-industries-ipo-deliver-long-term-growth-for-high-risk-investors/articleshow/133553642.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
+        <h2><a href="https://economictimes.indiatimes.com/markets/ipos/fpos/augmont-enterprises-ipo-allotment-today-gmp-at-40-hints-at-strong-listing-heres-how-to-check-status/articleshow/133554336.cms" target="_blank">Augmont Enterprises IPO allotment today; GMP at 40% hints at strong listing. Here’s how to check status</a></h2>
+        <p>Following the allotment, shares for successful applicants are expected to be credited to their demat accounts ahead of the company’s market debut. Augmont Enterprises is scheduled to list on both the BSE and NSE on August 31, 2026.</p>
+        <a class="readmore" href="https://economictimes.indiatimes.com/markets/ipos/fpos/augmont-enterprises-ipo-allotment-today-gmp-at-40-hints-at-strong-listing-heres-how-to-check-status/articleshow/133554336.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
       </div>
       <div class="lead-s">
         
         
         <div class="mini">
           <span class="s">ET Economy</span>
-          <a href="https://economictimes.indiatimes.com/news/economy/foreign-trade/india-china-may-build-framework-for-investments-xi-jinping-visit-brics-summit/articleshow/133550479.cms" target="_blank">India, China may build new framework for investments</a>
-          <p class="mini-s">India and China are exploring new frameworks for business exchanges and investments. Beijing may unveil an investment package for &hellip;</p>
+          <a href="https://economictimes.indiatimes.com/news/economy/foreign-trade/eu-ambassador-highlights-strong-india-eu-ties-as-free-trade-agreement-nears-signing-amid-global-challenges/articleshow/133553975.cms" target="_blank">India-EU ties stronger than ever, FTA breakthrough driven by realism, pragmatism: EU Ambassador</a>
+          <p class="mini-s">India-EU relations are stronger than ever due to increased strategic understanding and comfort.  The India-EU Free Trade Agreement&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">Livemint</span>
-          <a href="https://www.livemint.com/market/stock-market-news/stocks-to-buy-for-short-term-amol-athawale-of-kotak-securities-bullish-on-3-stocks-do-you-own-any-11787754452058.html" target="_blank">Stocks to buy for short term: Amol Athawale of Kotak Securities bullish on 3 stocks; do you own any?</a>
-          <p class="mini-s">Amol Athawale from Kotak Securities highlights three stocks poised for growth in the coming weeks amidst a fluctuating market. Wit&hellip;</p>
+          <a href="https://www.livemint.com/market/ipo/deepa-jewellers-ipo-price-band-set-at-rs-168-rs-177-per-share-check-key-dates-issue-details-11787798193728.html" target="_blank">Deepa Jewellers IPO: Price band set at  ₹168- ₹177 per share; check key dates, issue details</a>
+          <p class="mini-s">Deepa Jewellers IPO price band has been set between  ₹168 and  ₹177 per share, with the subscription date from 1 September to 3 Se&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">BusinessLine</span>
-          <a href="https://www.thehindubusinessline.com/markets/options-turnover-on-nse-plunges-to-lowest-this-year/article71394810.ece" target="_blank">Options turnover on NSE plunges to lowest this year</a>
-          <p class="mini-s">Decline reflects cumulative impact of measures aimed at cooling India’s once-frenetic derivatives market</p>
+          <a href="https://www.thehindubusinessline.com/markets/sensex-nifty50-today-stock-market-live-updates-27th-august-2026/article71392989.ece" target="_blank">Sensex today | Stock Market Live: Stock to buy today: Bank of Maharashtra (₹85.60) – BUY</a>
+          <p class="mini-s">Sensex, Nifty, Share Prices LIVE: Bank of Maharashtra share price can rise to ₹97</p>
         </div>
         
         <div class="mini">
           <span class="s">Bloomberg</span>
-          <a href="https://www.bloomberg.com/news/articles/2026-08-26/latest-oil-market-news-and-analysis-for-aug-27" target="_blank">Latest Oil Market News and Analysis for Aug. 27</a>
-          <p class="mini-s">Oil edged lower after a choppy session in which traders weighed diplomatic progress in the Middle East against rising Russia-Ukrai&hellip;</p>
+          <a href="https://www.bloomberg.com/news/articles/2026-08-27/australia-s-capex-drops-as-data-center-spending-hits-air-pocket" target="_blank">Australia’s Capex Drops as Data Center Spending Hits Air Pocket</a>
+          <p class="mini-s">Australian businesses pulled back on investment in the three months through June, with a decline in spending on data centers at th&hellip;</p>
         </div>
         
         <div class="mini">
@@ -6184,7 +6182,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">WSJ Markets</span>
-        <h3><a href="https://www.wsj.com/livecoverage/nvidia-earnings-stock-market-today-08-26-2026?mod=rss_markets_main" target="_blank">Nvidia Earnings Today: Shares Climb Postmarket After Chip Giant’s Results</a></h3>
+        <h3><a href="https://www.wsj.com/livecoverage/nvidia-earnings-stock-market-today-08-26-2026?mod=rss_markets_main" target="_blank">Stock Market News, Aug. 26, 2026: Nvidia Shares Climb Postmarket After Chip Giant’s Results</a></h3>
         <p>Earnings beat expectations for the 15th straight quarter</p>
         <div class="ncard-f">
           <span class="ts">Aug 26 08:11</span>
@@ -6214,61 +6212,61 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       
       <div class="ncard rv" style="--d:0.15000000000000002s">
         <span class="s">MarketWatch</span>
-        <h3><a href="https://www.marketwatch.com/story/crowdstrikes-stock-soars-after-ai-fuels-the-cybersecurity-companys-best-quarter-ever-6aeae1d5?mod=mw_rss_topstories" target="_blank">CrowdStrike’s stock soars after AI fuels the cybersecurity company’s ‘best quarter in history’</a></h3>
-        <p>Shares of CrowdStrike Holdings were roaring after the cybersecurity company revealed a record-breaking quarter, one partially boosted by fears about the power of artificial intelli&hellip;</p>
+        <h3><a href="https://www.marketwatch.com/story/my-main-goal-is-to-help-people-im-single-74-with-10-million-burning-a-hole-in-my-pocket-what-should-i-do-0e6112e1?mod=mw_rss_topstories" target="_blank">‘My main goal is to help people’: I’m single, 74, with $10 million burning a hole in my pocket. What should I do?</a></h3>
+        <p>“I also own my home and an SUV outright, with no outstanding debt.”</p>
         <div class="ncard-f">
-          <span class="ts">Aug 27 00:43</span>
-          <a class="readmore" href="https://www.marketwatch.com/story/crowdstrikes-stock-soars-after-ai-fuels-the-cybersecurity-companys-best-quarter-ever-6aeae1d5?mod=mw_rss_topstories" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 27 02:41</span>
+          <a class="readmore" href="https://www.marketwatch.com/story/my-main-goal-is-to-help-people-im-single-74-with-10-million-burning-a-hole-in-my-pocket-what-should-i-do-0e6112e1?mod=mw_rss_topstories" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.2s">
         <span class="s">Economic Times</span>
-        <h3><a href="https://economictimes.indiatimes.com/markets/stocks/news/pnb-housing-outshines-peers-on-strong-loan-growth/articleshow/133553609.cms" target="_blank">PNB Housing outshines peers on strong loan growth</a></h3>
-        <p>PNB Housing Finance shares have seen significant gains this year.  The company is focusing on affordable and emerging housing segments.  This strategic shift aims to improve its va&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/markets/expert-view/etmarkets-smart-talk-two-year-market-consolidation-may-set-stage-for-next-bull-run-uti-amcs-ajay-tyagi/articleshow/133554185.cms" target="_blank">ETMarkets Smart Talk | Two-year market consolidation may set stage for next bull run: UTI AMC’s Ajay Tyagi</a></h3>
+        <p>Tyagi, however, remains cautious on pockets of the mid- and small-cap universe, where valuations are above long-term averages. He sees large caps as relatively more attractive on v&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Aug 27 01:06</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/markets/stocks/news/pnb-housing-outshines-peers-on-strong-loan-growth/articleshow/133553609.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 27 02:34</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/markets/expert-view/etmarkets-smart-talk-two-year-market-consolidation-may-set-stage-for-next-bull-run-uti-amcs-ajay-tyagi/articleshow/133554185.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
         <span class="s">ET Economy</span>
-        <h3><a href="https://economictimes.indiatimes.com/news/economy/agriculture/bulk-sugar-users-in-a-soup-as-govt-refuses-to-ease-stock-limit-order/articleshow/133550008.cms" target="_blank">Bulk sugar users in a soup as Govt refuses to ease stock limit order</a></h3>
-        <p>The government has rejected requests for more time to sell excess sugar stocks. Bulk sugar users must now liquidate any surplus by August 31. This action aims to suppress sugar pri&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/news/economy/foreign-trade/india-china-may-build-framework-for-investments-xi-jinping-visit-brics-summit/articleshow/133550479.cms" target="_blank">India, China may build new framework for investments</a></h3>
+        <p>India and China are exploring new frameworks for business exchanges and investments. Beijing may unveil an investment package for India during President Xi Jinping's visit. This in&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Aug 26 19:00</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/news/economy/agriculture/bulk-sugar-users-in-a-soup-as-govt-refuses-to-ease-stock-limit-order/articleshow/133550008.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 27 00:00</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/news/economy/foreign-trade/india-china-may-build-framework-for-investments-xi-jinping-visit-brics-summit/articleshow/133550479.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">Livemint</span>
-        <h3><a href="https://www.livemint.com/market/stock-market-news/breakout-stocks-to-buy-or-sell-sumeet-bagadia-recommends-five-shares-to-buy-today-27-august-2026-11787792140826.html" target="_blank">Breakout stocks to buy or sell: Sumeet Bagadia recommends five shares to buy today —27 August 2026</a></h3>
-        <p>Breakout stocks to buy or sell: Sumeet Bagadia recommends five breakout stocks to buy today —Rossell Techsys, Yatharth Hospital &amp;amp; Trauma Cre Srvcs, Indigo Paints, Lumax Ind&hellip;</p>
+        <h3><a href="https://www.livemint.com/market/stock-market-news/stocks-to-watch-jio-financial-services-bel-tata-power-among-shares-to-be-in-focus-today-details-here-11787796939759.html" target="_blank">Stocks to watch: Jio Financial Services, BEL, Tata Power among shares to be in focus today. Details here</a></h3>
+        <p>Stock market today: Gift Nifty was trading near the 24,358.5 mark, down over 70 points from the previous close of Nifty futures.</p>
         <div class="ncard-f">
-          <span class="ts">Aug 27 01:13</span>
-          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/breakout-stocks-to-buy-or-sell-sumeet-bagadia-recommends-five-shares-to-buy-today-27-august-2026-11787792140826.html" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 27 02:41</span>
+          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/stocks-to-watch-jio-financial-services-bel-tata-power-among-shares-to-be-in-focus-today-details-here-11787796939759.html" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">BusinessLine</span>
-        <h3><a href="https://www.thehindubusinessline.com/markets/sensex-nifty50-today-stock-market-live-updates-27th-august-2026/article71392989.ece" target="_blank">Sensex today | Stock Market Live: Stock to buy today: Bank of Maharashtra (₹85.60) – BUY</a></h3>
-        <p>Sensex, Nifty, Share Prices LIVE: Bank of Maharashtra share price can rise to ₹97</p>
+        <h3><a href="https://www.thehindubusinessline.com/markets/forex/rbi-ramps-up-rupee-support-as-rise-in-forex-reserves-gives-comfort/article71394819.ece" target="_blank">RBI ramps up rupee support as rise in forex reserves gives comfort</a></h3>
+        <p>The extra money strengthens the RBI’s hand just as pressure starts to mount again on Asia’s worst-performing currency this quarter</p>
         <div class="ncard-f">
-          <span class="ts">Aug 27 01:27</span>
-          <a class="readmore" href="https://www.thehindubusinessline.com/markets/sensex-nifty50-today-stock-market-live-updates-27th-august-2026/article71392989.ece" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 27 01:57</span>
+          <a class="readmore" href="https://www.thehindubusinessline.com/markets/forex/rbi-ramps-up-rupee-support-as-rise-in-forex-reserves-gives-comfort/article71394819.ece" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Bloomberg</span>
-        <h3><a href="https://www.bloomberg.com/news/articles/2026-08-26/gold-consolidates-above-4-600-as-investors-weigh-fed-rate-path" target="_blank">Gold Consolidates Near $4,600 as Investors Weigh Fed Rate Path</a></h3>
-        <p>Gold consolidated near $4,600 an ounce as investors weighed the Federal Reserve’s approach to stubborn inflation ahead of the annual Jackson Hole gathering this week.</p>
+        <h3><a href="https://www.bloomberg.com/news/articles/2026-08-26/latest-oil-market-news-and-analysis-for-aug-27" target="_blank">Latest Oil Market News and Analysis for Aug. 27</a></h3>
+        <p>Oil fell for a fourth day as traders weighed progress on increasing energy flows through the Strait of Hormuz against rising Russia-Ukraine tensions that are curbing output.</p>
         <div class="ncard-f">
-          <span class="ts">Aug 26 23:48</span>
-          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-08-26/gold-consolidates-above-4-600-as-investors-weigh-fed-rate-path" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Aug 26 22:02</span>
+          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-08-26/latest-oil-market-news-and-analysis-for-aug-27" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -6474,7 +6472,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <div class="ipo-arg ipo-arg-y"><b>What the numbers support</b>
           <ul><li>Return on net worth of 20% — well above the ~14% a typical listed peer earns.</li><li>Effectively debt-free at 0.24 debt to equity, so the balance sheet is not a constraint.</li></ul></div>
         <div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
-          <ul><li>More of the issue is existing holders selling (₹76 Cr) than new money into the business (₹60 Cr).</li><li>Institutions are taking it at 0.83x while retail bids 66.91x — the money with research access is the money staying out.</li></ul></div>
+          <ul><li>More of the issue is existing holders selling (₹76 Cr) than new money into the business (₹60 Cr).</li></ul></div>
       </div>
       <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
         analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
@@ -6490,19 +6488,6 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       
 
       
-      
-      <div class="ipo-cats">
-        
-        <span class="ipo-cat-cold">QIB <b>0.83x</b></span>
-        
-        <span class="ipo-cat-hot">HNI <b>84.61x</b></span>
-        
-        <span class="ipo-cat-hot">Retail <b>66.91x</b></span>
-        
-        <span class="ipo-cat-hot">Total <b>51.82x</b></span>
-        
-        <span class="ipo-cat-src">via ipopremium.in</span>
-      </div>
       
 
       <div class="ipo-score">
@@ -6576,7 +6561,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <div class="ipo-arg ipo-arg-y"><b>What the numbers support</b>
           <ul><li>Revenue grew 25% year on year.</li><li>Profit grew faster than revenue (32% against 25%), so margins widened rather than bought growth.</li></ul></div>
         <div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
-          <ul><li>Debt to equity of 1.88 — leverage magnifies both directions from here.</li><li>Institutions are taking it at 0.49x while retail bids 6.98x — the money with research access is the money staying out.</li></ul></div>
+          <ul><li>Debt to equity of 1.88 — leverage magnifies both directions from here.</li><li>Institutions are taking it at 0.49x while retail bids 7.05x — the money with research access is the money staying out.</li></ul></div>
       </div>
       <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
         analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
@@ -6597,11 +6582,11 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         
         <span class="ipo-cat-cold">QIB <b>0.49x</b></span>
         
-        <span class="">HNI <b>6.92x</b></span>
+        <span class="">HNI <b>6.94x</b></span>
         
-        <span class="">Retail <b>6.98x</b></span>
+        <span class="">Retail <b>7.05x</b></span>
         
-        <span class="">Total <b>5.12x</b></span>
+        <span class="">Total <b>5.15x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -6677,7 +6662,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <div class="ipo-args">
         
         <div class="ipo-arg ipo-arg-n"><b>What they argue against</b>
-          <ul><li>More of the issue is existing holders selling (₹1,607 Cr) than new money into the business (₹150 Cr).</li><li>Institutions are taking it at 0.62x while retail bids 5.37x — the money with research access is the money staying out.</li></ul></div>
+          <ul><li>More of the issue is existing holders selling (₹1,607 Cr) than new money into the business (₹150 Cr).</li><li>Institutions are taking it at 0.62x while retail bids 5.41x — the money with research access is the money staying out.</li></ul></div>
       </div>
       <p class="ipo-args-src">Read from this company&rsquo;s own filed figures, not from any
         analyst&rsquo;s view. Margin and debt/equity are computed from the two rows above them;
@@ -6698,13 +6683,13 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         
         <span class="ipo-cat-cold">QIB <b>0.62x</b></span>
         
-        <span class="ipo-cat-hot">HNI <b>12.87x</b></span>
+        <span class="ipo-cat-hot">HNI <b>12.91x</b></span>
         
-        <span class="">Retail <b>5.37x</b></span>
+        <span class="">Retail <b>5.41x</b></span>
         
-        <span class="">Employee <b>6.26x</b></span>
+        <span class="">Employee <b>6.32x</b></span>
         
-        <span class="">Total <b>5.62x</b></span>
+        <span class="">Total <b>5.65x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -6799,7 +6784,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         
         <span class="ipo-cat-cold">HNI <b>0.39x</b></span>
         
-        <span class="ipo-cat-cold">Retail <b>0.51x</b></span>
+        <span class="ipo-cat-cold">Retail <b>0.52x</b></span>
         
         <span class="ipo-cat-cold">Total <b>0.47x</b></span>
         
@@ -6885,7 +6870,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       
       <div class="ipo-gmp">
         <span class="ipo-gmp-k">Grey market</span>
-        <span class="ipo-gmp-v">₹50</span>
+        <span class="ipo-gmp-v">₹50 (60.98%)</span>
         <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
       </div>
       
@@ -8770,7 +8755,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    2026-08-27 01:48. Lot size, minimum application, the
+    2026-08-27 02:54. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -9777,7 +9762,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <div><dt>Last attempt</dt>
           <dd>2026-08-26 08:54
             </dd></div>
-        <div><dt>Age</dt><dd>17h old</dd></div>
+        <div><dt>Age</dt><dd>18h old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
         
         <div><dt>Published coverage</dt>
@@ -9797,9 +9782,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:47</dd></div>
+          <dd>2026-08-27 02:53</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:47
+          <dd>2026-08-27 02:53
             </dd></div>
         <div><dt>Age</dt><dd>just built</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -9819,9 +9804,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:45</dd></div>
+          <dd>2026-08-27 02:51</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:45
+          <dd>2026-08-27 02:51
             </dd></div>
         <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -9841,9 +9826,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:44</dd></div>
+          <dd>2026-08-27 02:50</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:44
+          <dd>2026-08-27 02:50
             </dd></div>
         <div><dt>Age</dt><dd>4 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -9864,9 +9849,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:45</dd></div>
+          <dd>2026-08-27 02:51</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:45
+          <dd>2026-08-27 02:51
             </dd></div>
         <div><dt>Age</dt><dd>3 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -9886,9 +9871,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:44</dd></div>
+          <dd>2026-08-27 02:50</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:44
+          <dd>2026-08-27 02:50
             </dd></div>
         <div><dt>Age</dt><dd>4 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -9909,9 +9894,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:44</dd></div>
+          <dd>2026-08-27 02:50</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:44
+          <dd>2026-08-27 02:50
             </dd></div>
         <div><dt>Age</dt><dd>4 min old</dd></div>
         <div><dt>Expected</dt><dd>weekly</dd></div>
@@ -9932,9 +9917,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-08-27 01:44</dd></div>
+          <dd>2026-08-27 02:50</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-08-27 01:44
+          <dd>2026-08-27 02:50
             </dd></div>
         <div><dt>Age</dt><dd>4 min old</dd></div>
         <div><dt>Expected</dt><dd>daily</dd></div>
@@ -9964,38 +9949,6 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      the numbers. -->
 
 
-<section class="sec" id="buildlog">
-  <div class="shead rv">
-    <div>
-      <span class="snum">14 / BUILD LOG</span>
-      <h2 class="stitle">What shipped, and when.</h2>
-    </div>
-    <p class="sdesc">Read straight from this repository&rsquo;s history. The Engine Log
-      records what the <em>ledger</em> forced the rules to change; this records what the
-      <em>site</em> shipped. Nothing is curated into it, so a quiet month looks like a
-      quiet month.</p>
-  </div>
-  <div class="rows-log rv">
-    
-    <div class="logrow">
-      <div class="logmeta">
-        <span class="logdate">2026-08-27</span>
-        <span class="pill pill-model">Fixed</span>
-        <code class="logsha">289c76b</code>
-      </div>
-      <div class="logbody">
-        <b>two sections I added could vanish from the page but not from the nav</b>
-        <span>The build failed on "nav order does not match document order", and it was mine.</span>
-      </div>
-    </div>
-    
-  </div>
-  <p class="lv-sys rv" style="margin-top:14px">
-    1 product changes in history &middot; chore and data commits excluded
-  </p>
-</section>
-
-
 <!-- ══════════ HOW TO READ THIS ══════════
      The consolidation. Every number on the page defined once, with the tier
      that says where it came from, generated from the METRICS list at the top
@@ -10009,7 +9962,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 <section class="sec" id="method">
   <div class="shead rv">
     <div>
-      <span class="snum">15 / HOW TO READ THIS</span>
+      <span class="snum">14 / HOW TO READ THIS</span>
       <h2 class="stitle">Every number, defined once.</h2>
     </div>
     <p class="sdesc">What each figure on this page measures, how it is computed, and which
@@ -10441,7 +10394,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 <section class="sec" id="who">
   <div class="shead rv">
     <div>
-      <span class="snum">16 / WHO</span>
+      <span class="snum">15 / WHO</span>
       <h2 class="stitle">Who is publishing this.</h2>
     </div>
     <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
@@ -10564,7 +10517,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Thursday, August 27 2026 · built 09:44 MYT<br>
+      Thursday, August 27 2026 · built 10:50 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -10606,9 +10559,9 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="D9p2tC5u00KoZYTBVZisUg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="S5HCM3ZQHZ4z9F372ItEUg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="D9p2tC5u00KoZYTBVZisUg">{}</script>
-<script nonce="D9p2tC5u00KoZYTBVZisUg" src="/app.js?v=20260827T094425" defer></script>
+<script type="application/json" id="sector-map" nonce="S5HCM3ZQHZ4z9F372ItEUg">{}</script>
+<script nonce="S5HCM3ZQHZ4z9F372ItEUg" src="/app.js?v=20260827T105044" defer></script>
 </body>
 </html>

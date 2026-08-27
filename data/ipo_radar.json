@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-27T01:48:28",
+ "generated_at": "2026-08-27T02:54:46",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -19,12 +19,7 @@
    "issue_size_shares": 18145406.0,
    "issue_size_cr": 135.73,
    "subscription_x": 29.781617286491137,
-   "subscription_by_category": {
-    "QIB": 0.83,
-    "HNI": 84.61,
-    "Retail": 66.91,
-    "Total": 51.82
-   },
+   "subscription_by_category": null,
    "lot_size": 283.0,
    "min_investment": 14999.0,
    "fresh_issue_cr": 60.0,
@@ -72,15 +67,12 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1311/hy-tech-engineers-ltd",
-   "allotment_date": "Aug 28, 2026",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 20% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.24 debt to equity, so the balance sheet is not a constraint."
    ],
    "reads_against": [
-    "More of the issue is existing holders selling (\u20b976 Cr) than new money into the business (\u20b960 Cr).",
-    "Institutions are taking it at 0.83x while retail bids 66.91x \u2014 the money with research access is the money staying out."
+    "More of the issue is existing holders selling (\u20b976 Cr) than new money into the business (\u20b960 Cr)."
    ]
   },
   {
@@ -101,9 +93,9 @@
    "subscription_x": 3.2530591273543448,
    "subscription_by_category": {
     "QIB": 0.49,
-    "HNI": 6.92,
-    "Retail": 6.98,
-    "Total": 5.12
+    "HNI": 6.94,
+    "Retail": 7.05,
+    "Total": 5.15
    },
    "lot_size": 100.0,
    "min_investment": 13800.0,
@@ -160,7 +152,7 @@
    ],
    "reads_against": [
     "Debt to equity of 1.88 \u2014 leverage magnifies both directions from here.",
-    "Institutions are taking it at 0.49x while retail bids 6.98x \u2014 the money with research access is the money staying out."
+    "Institutions are taking it at 0.49x while retail bids 7.05x \u2014 the money with research access is the money staying out."
    ]
   },
   {
@@ -181,10 +173,10 @@
    "subscription_x": 3.6690747050898334,
    "subscription_by_category": {
     "QIB": 0.62,
-    "HNI": 12.87,
-    "Retail": 5.37,
-    "Employee": 6.26,
-    "Total": 5.62
+    "HNI": 12.91,
+    "Retail": 5.41,
+    "Employee": 6.32,
+    "Total": 5.65
    },
    "lot_size": 15.0,
    "min_investment": 14820.0,
@@ -238,7 +230,7 @@
    "reads_for": null,
    "reads_against": [
     "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr).",
-    "Institutions are taking it at 0.62x while retail bids 5.37x \u2014 the money with research access is the money staying out."
+    "Institutions are taking it at 0.62x while retail bids 5.41x \u2014 the money with research access is the money staying out."
    ]
   },
   {
@@ -260,7 +252,7 @@
    "subscription_by_category": {
     "QIB": 0.58,
     "HNI": 0.39,
-    "Retail": 0.51,
+    "Retail": 0.52,
     "Total": 0.47
    },
    "lot_size": 151.0,
@@ -345,7 +337,7 @@
    "face_value": 5.0,
    "anchor_cr": null,
    "listing_date": "Sep 3, 2026",
-   "gmp_text": "\u20b950",
+   "gmp_text": "\u20b950 (60.98%)",
    "revenue_cr": 2089.31,
    "revenue_growth_pct": 7.0,
    "pat_cr": 160.0,
@@ -386,7 +378,6 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/lumino-industries-ipo/2013/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1305/lumino-industries-ltd",
-   "allotment_date": "Sep 1, 2026",
    "reads_for": [
     "Profit grew faster than revenue (28% against 7%), so margins widened rather than bought growth.",
     "Return on net worth of 25% \u2014 well above the ~14% a typical listed peer earns."
@@ -460,6 +451,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/priority-jewels-ipo/2435/",
    "reads_for": [
     "Revenue grew 24% year on year.",
     "Profit grew faster than revenue (68% against 24%), so margins widened rather than bought growth."

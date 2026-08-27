@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-D9p2tC5u00KoZYTBVZisUg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-S5HCM3ZQHZ4z9F372ItEUg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="D9p2tC5u00KoZYTBVZisUg">
+<script nonce="S5HCM3ZQHZ4z9F372ItEUg">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="D9p2tC5u00KoZYTBVZisUg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-27","dateModified":"2026-08-27T09:44:25.491628+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="S5HCM3ZQHZ4z9F372ItEUg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-08-27","dateModified":"2026-08-27T10:50:44.886249+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -4586,7 +4586,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Thursday, August 27 2026</span>
-      <span class="live" id="istClock"><i></i>09:44 MYT</span>
+      <span class="live" id="istClock"><i></i>10:50 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -4752,7 +4752,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260827T094425">
+<div class="editionbar" id="editionbar" data-build="20260827T105044">
   
   
   <span class="ed-txt">
@@ -4806,15 +4806,15 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4675.2</span>
-      <span class="c up">▲ +0.8%</span>
+      <span class="p">$4681.5</span>
+      <span class="c up">▲ +0.94%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$81.97</span>
-      <span class="c dn">▼ -0.47%</span>
+      <span class="p">$81.69</span>
+      <span class="c dn">▼ -0.81%</span>
     </div>
     
     
@@ -4827,8 +4827,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78726</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$78750</span>
+      <span class="c up">▲ +0.23%</span>
     </div>
     
     
@@ -4864,15 +4864,15 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4675.2</span>
-      <span class="c up">▲ +0.8%</span>
+      <span class="p">$4681.5</span>
+      <span class="c up">▲ +0.94%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$81.97</span>
-      <span class="c dn">▼ -0.47%</span>
+      <span class="p">$81.69</span>
+      <span class="c dn">▼ -0.81%</span>
     </div>
     
     
@@ -4885,8 +4885,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$78726</span>
-      <span class="c up">▲ +0.2%</span>
+      <span class="p">$78750</span>
+      <span class="c up">▲ +0.23%</span>
     </div>
     
     
@@ -5184,7 +5184,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">01 / FINANCE CAREERS</span> 
-<span class="dh dh-DEGRADED" title="Careers feed · 17h old — partial coverage — 13/22 records.">DEGRADED<span class="dh-age">17h old</span></span>
+<span class="dh dh-DEGRADED" title="Careers feed · 18h old — partial coverage — 13/22 records.">DEGRADED<span class="dh-age">18h old</span></span>
       <h2 class="stitle">Where the next role is.</h2>
     </div>
     <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
@@ -7379,7 +7379,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 <span class="dh dh-LIVE" title="Daily Brief · just built.">LIVE<span class="dh-age">just built</span></span>
       <h2 class="stitle">Everything important today.</h2>
     </div>
-    <p class="sdesc">171 articles from
+    <p class="sdesc">168 articles from
       10 wires, clustered into 15 events and
       ranked by what actually matters &mdash; not by how many outlets syndicated it.
       Sources kept on every one.</p>
@@ -7390,7 +7390,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     <span>~3 min read</span>
     <span>Built <b>2026-08-27</b></span>
     
-    <span>4 written up, 4 rejected by the fact check</span>
+    <span>6 written up, 2 rejected by the fact check</span>
   </div>
 
   
@@ -7403,19 +7403,41 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">India</span>
       <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
     </div>
-    <h3 class="ev-t">Gold Consolidates Near $4,600 as Investors Weigh Fed Rate Path</h3>
+    <h3 class="ev-t">Gold fluctuates around $4,600 as Fed rate outlook dominates</h3>
     <div class="ev-m">
       <span>4 sources</span>
+      <span>&middot;</span><span>High confidence</span>
+      
+    </div>
+    <ul class="ev-b"><li>Gold rose above $4,600 per ounce before pulling back to near $4,640.</li><li>The price movement followed a three‑month high reached in the prior session.</li><li>Investors are focusing on the Federal Reserve’s interest‑rate path ahead of the Jackson Hole meeting.</li><li>Upcoming remarks from Fed Chair Kevin Warsh are drawing additional attention.</li></ul>
+    
+    <div class="ev-why"><span>Why it matters</span><p>Gold’s price swings reflect market sensitivity to U.S. monetary policy expectations, which can influence broader risk sentiment.</p></div>
+    
+    
+    <div class="ev-w">Watch next: Comments from Fed Chair Kevin Warsh and outcomes of the Jackson Hole gathering.</div>
+    <div class="ev-s">
+      <a href="https://www.bloomberg.com/news/articles/2026-08-26/gold-consolidates-above-4-600-as-investors-weigh-fed-rate-path" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.livemint.com/market/gold-rally-eases-as-traders-turn-focus-to-fed-interest-rate-path-11787775547971.html" target="_blank" rel="noopener">Livemint</a><a href="https://www.thehindubusinessline.com/markets/gold/gold-consolidates-after-5-day-rally-as-investors-eye-fed-rate-clues/article71391692.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/commodities/news/gold-firms-eyes-on-fed-chair-warshs-comments/articleshow/133553846.cms" target="_blank" rel="noopener">Economic Times</a>
+    </div>
+  </article>
+  
+  <article class="ev ev-top">
+    <div class="ev-h">
+      <span class="ev-cat">India</span>
+      <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+    </div>
+    <h3 class="ev-t">Asian Stocks Mixed After Nvidia Earnings</h3>
+    <div class="ev-m">
+      <span>3 sources</span>
       <span>&middot;</span><span>High confidence</span>
       <span>&middot;</span><span class="ev-raw"
         title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>Livemint: Gold Rally Eases as Traders Turn Focus to Fed Interest Rate Path</li><li>BusinessLine: Gold consolidates after 5-day rally as investors eye Fed rate clues</li><li>BusinessLine: Today’s Gold Rate, Aug 26: Check gold rates in Delhi, Mumbai, Chennai</li><li>Economic Times: US stocks today: US stocks end near flat as hot inflation data clouds Fed rate outlook</li></ul>
+    <ul class="ev-b"><li>Livemint: From Gift Nifty to Nvidia earnings, crude oil prices: 7 key things that changed for Indian stock market overnight</li><li>Economic Times: Global Market Today: Nasdaq futures, Asian stocks rise on Nvidia outlook</li><li>Livemint: Indexes end close to flat after hot inflation data ahead of Nvidia earnings</li><li>Economic Times: Nvidia earnings: Chipmaker forecasts Q3 revenue at $108 billion, above analysts' estimates as Q2 profit, revenue double YoY</li></ul>
     
     
     
     <div class="ev-s">
-      <a href="https://www.bloomberg.com/news/articles/2026-08-26/gold-consolidates-above-4-600-as-investors-weigh-fed-rate-path" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.livemint.com/market/gold-rally-eases-as-traders-turn-focus-to-fed-interest-rate-path-11787775547971.html" target="_blank" rel="noopener">Livemint</a><a href="https://www.thehindubusinessline.com/markets/gold/gold-consolidates-after-5-day-rally-as-investors-eye-fed-rate-clues/article71391692.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-end-near-flat-as-hot-inflation-data-clouds-fed-rate-outlook/articleshow/133550754.cms" target="_blank" rel="noopener">Economic Times</a>
+      <a href="https://www.wsj.com/finance/stocks/asian-stocks-mixed-after-nvidia-earnings-25af2b68?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.livemint.com/market/stock-market-news/from-gift-nifty-to-nvidia-earnings-crude-oil-prices-7-key-things-that-changed-for-indian-stock-market-overnight-11787793341891.html" target="_blank" rel="noopener">Livemint</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-nasdaq-futures-asian-stocks-rise-on-nvidia-outlook/articleshow/133553546.cms" target="_blank" rel="noopener">Economic Times</a>
     </div>
   </article>
   
@@ -7424,19 +7446,45 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">Technology</span>
       <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
     </div>
-    <h3 class="ev-t">Meta dodges ‘Big Tobacco’ nightmare with $18 billion settlement in child-safety lawsuit</h3>
+    <h3 class="ev-t">Meta settles teen addiction lawsuit, shares rise</h3>
     <div class="ev-m">
-      <span>4 sources</span>
+      <span>3 sources</span>
+      <span>&middot;</span><span>High confidence</span>
+      
+    </div>
+    <ul class="ev-b"><li>Meta agreed to pay $18 billion to settle a state‑led child‑safety lawsuit.</li><li>Livemint reports a separate federal case settled for $16.68 billion, showing differing figures.</li><li>Shares moved higher after the settlement, with reports of a 0.65% rise and a 4% jump.</li><li>The agreement adds new child‑safety measures for Facebook and Instagram.</li><li>Analysts say the settlement removes a cloud over Meta’s stock.</li></ul>
+    
+    <div class="ev-why"><span>Why it matters</span><p>The deal addresses accusations that Meta’s platforms foster teen addiction and could improve investor sentiment toward the company.</p></div>
+    
+    
+    <div class="ev-mi">
+      <span class="ev-chip ev-positive">Meta equity &middot; Positive</span>
+    </div>
+    
+    <div class="ev-w">Watch next: Track further developments in youth‑mental‑health litigation and Meta’s upcoming earnings report.</div>
+    <div class="ev-s">
+      <a href="https://www.wsj.com/finance/investing/meta-settles-for-18-billion-c8b5636b?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.marketwatch.com/story/metas-stock-rises-as-the-company-settles-in-social-media-addiction-trial-78abdfbf?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a><a href="https://www.livemint.com/market/meta-shares-jump-4-as-facebook-parent-settles-major-teen-addiction-lawsuit-11787754449421.html" target="_blank" rel="noopener">Livemint</a>
+    </div>
+  </article>
+  
+  <article class="ev ev-top">
+    <div class="ev-h">
+      <span class="ev-cat">India</span>
+      <span class="ev-dots" title="Importance 5 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+    </div>
+    <h3 class="ev-t">RBI Is Intervening Whenever the Rupee Weakens in Strategy Shift</h3>
+    <div class="ev-m">
+      <span>3 sources</span>
       <span>&middot;</span><span>High confidence</span>
       <span>&middot;</span><span class="ev-raw"
         title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>WSJ Markets: Meta Settles for $18 Billion</li><li>Economic Times: Meta shares hit 5% intraday high after $16.68 billion settlement over alleged harm to young users</li><li>Livemint: Meta shares jump 4% as Facebook parent settles major teen addiction lawsuit</li></ul>
+    <ul class="ev-b"><li>Economic Times: RBI is showing up whenever rupee weakens in intervention shift</li><li>BusinessLine: RBI ramps up rupee support as rise in forex reserves gives comfort</li></ul>
     
     
     
     <div class="ev-s">
-      <a href="https://www.wsj.com/finance/investing/meta-settles-for-18-billion-c8b5636b?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.marketwatch.com/story/metas-stock-rises-as-the-company-settles-in-social-media-addiction-trial-78abdfbf?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/meta-shares-hit-5-intraday-high-after-16-68-billion-settlement-over-alleged-harm-to-young-users/articleshow/133544340.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.livemint.com/market/meta-shares-jump-4-as-facebook-parent-settles-major-teen-addiction-lawsuit-11787754449421.html" target="_blank" rel="noopener">Livemint</a>
+      <a href="https://www.bloomberg.com/news/articles/2026-08-27/rbi-is-showing-up-whenever-rupee-weakens-in-intervention-shift" target="_blank" rel="noopener">Bloomberg</a><a href="https://economictimes.indiatimes.com/markets/forex/forex-news/rbi-is-showing-up-whenever-rupee-weakens-in-intervention-shift/articleshow/133553971.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.thehindubusinessline.com/markets/forex/rbi-ramps-up-rupee-support-as-rise-in-forex-reserves-gives-comfort/article71394819.ece" target="_blank" rel="noopener">BusinessLine</a>
     </div>
   </article>
   
@@ -7445,67 +7493,20 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">Markets & Economy</span>
       <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Fed Governor Lisa Cook rejects fraud claims, challenges Trump's authority</h3>
+    <h3 class="ev-t">Fed Governor Lisa Cook denies mortgage fraud, rejects Trump’s dismissal threat</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       
     </div>
-    <ul class="ev-b"><li>Lisa Cook denied committing mortgage fraud in a public statement.</li><li>She asserted that President Trump has no legal basis to remove her from office.</li><li>Cook's attorney described the mortgage paperwork mistake as an inadvertent error involving her Atlanta apartment listed as a primary residence.</li><li>Federal Reserve lawyers denied any intentional wrongdoing in the matter.</li></ul>
+    <ul class="ev-b"><li>Lisa Cook publicly denied any mortgage fraud allegations.</li><li>She stated President Trump lacks legal basis to remove her from office.</li><li>Her attorney described the issue as an inadvertent error listing an Atlanta apartment as a primary residence.</li><li>Federal Reserve lawyers emphasized there was no intentional wrongdoing.</li></ul>
     
-    <div class="ev-why"><span>Why it matters</span><p>The dispute pits a Federal Reserve official against the president, raising questions about the limits of executive power over independent agencies.</p></div>
+    <div class="ev-why"><span>Why it matters</span><p>The dispute pits a Federal Reserve official against the President, raising questions about executive authority over independent agency officials. It also highlights scrutiny of personal financial disclosures for high‑level policymakers.</p></div>
     
     
-    <div class="ev-w">Watch next: Potential legal or congressional actions concerning the president's attempt to dismiss a Fed governor.</div>
+    <div class="ev-w">Watch next: Potential legal challenges or congressional hearings regarding the President’s claim to dismiss a Federal Reserve governor.</div>
     <div class="ev-s">
       <a href="https://www.marketwatch.com/story/feds-lisa-cook-denies-committing-mortgage-fraud-says-trump-has-no-grounds-to-remove-her-from-office-4ea60c9d?mod=mw_rss_topstories" target="_blank" rel="noopener">MarketWatch</a><a href="https://www.ft.com/content/fba48322-ea6e-4905-ae68-1d57209129ac?syn-25a6b1a6=1" target="_blank" rel="noopener">Financial Times</a>
-    </div>
-  </article>
-  
-  <article class="ev ev-top">
-    <div class="ev-h">
-      <span class="ev-cat">Technology</span>
-      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Investors Brace for Less-Than-Perfect Nvidia Results, Pull Stocks Lower</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
-    </div>
-    <ul class="ev-b"><li>Bloomberg: Stocks Churn in Late Hours After Nvidia’s Results: Markets Wrap</li><li>WSJ Markets: U.S. Stocks Mixed as Investors Brace for Chip Giant’s Results</li></ul>
-    
-    
-    
-    <div class="ev-s">
-      <a href="https://www.wsj.com/finance/stocks/investors-brace-for-less-than-perfect-nvidia-results-pull-stocks-lower-2ef52443?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.bloomberg.com/news/articles/2026-08-25/asian-stocks-set-to-gain-as-oil-extends-declines-markets-wrap" target="_blank" rel="noopener">Bloomberg</a>
-    </div>
-  </article>
-  
-  <article class="ev ev-top">
-    <div class="ev-h">
-      <span class="ev-cat">Technology</span>
-      <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Nvidia beats expectations, shares rise postmarket</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      
-    </div>
-    <ul class="ev-b"><li>Nvidia reported Q2 results, beating expectations for the 15th straight quarter</li><li>Shares climbed in postmarket trading after the earnings release</li><li>Analysts had expected $2.09 earnings per share and $92 billion in revenue for the quarter</li><li>Investors are watching data‑centre growth and new platform announcements</li><li>Competition from Amazon and Google developing alternative chips was highlighted</li></ul>
-    
-    <div class="ev-why"><span>Why it matters</span><p>The beat extends Nvidia's streak of outperformance and moves its stock higher, while competitive pressure from major cloud providers could shape future market dynamics.</p></div>
-    
-    
-    <div class="ev-mi">
-      <span class="ev-chip ev-positive">Nvidia stock &middot; Positive</span>
-    </div>
-    
-    <div class="ev-w">Watch next: Developments from Amazon and Google on alternative chip offerings</div>
-    <div class="ev-s">
-      <a href="https://www.wsj.com/livecoverage/nvidia-earnings-stock-market-today-08-26-2026?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://www.livemint.com/market/nvidia-q2-earnings-preview-key-expectations-and-how-the-stock-could-move-after-results-11787746929922.html" target="_blank" rel="noopener">Livemint</a>
     </div>
   </article>
   
@@ -7523,19 +7524,20 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">Technology</span>
       <span class="ev-dots" title="Importance 4 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Stocks, Futures Rise on Nvidia Outlook; Oil Drops: Markets Wrap</h3>
+    <h3 class="ev-t">US stocks dip amid hotter inflation, await Nvidia earnings</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+      
     </div>
-    <ul class="ev-b"><li>Economic Times: Global Market Today: Nasdaq futures, Asian stocks rise on Nvidia outlook</li></ul>
+    <ul class="ev-b"><li>U.S. equities slipped after inflation readings came in hotter than expected.</li><li>The rise in inflation added uncertainty to the Federal Reserve’s rate outlook.</li><li>Investors remained cautious ahead of artificial‑intelligence leader Nvidia’s earnings report.</li><li>Attention is also on Fed Chair Kevin Warsh’s upcoming Jackson Hole speech for policy clues.</li></ul>
+    
+    <div class="ev-why"><span>Why it matters</span><p>Higher inflation can push the Fed to keep rates elevated, affecting borrowing costs. Nvidia’s results are a barometer for the AI sector’s momentum.</p></div>
     
     
-    
+    <div class="ev-w">Watch next: Nvidia’s earnings release and Fed Chair Kevin Warsh’s Jackson Hole remarks.</div>
     <div class="ev-s">
-      <a href="https://www.bloomberg.com/news/articles/2026-08-26/nasdaq-futures-rise-on-bullish-nvidia-sales-growth-markets-wrap" target="_blank" rel="noopener">Bloomberg</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-today-nasdaq-futures-asian-stocks-rise-on-nvidia-outlook/articleshow/133553546.cms" target="_blank" rel="noopener">Economic Times</a>
+      <a href="https://www.wsj.com/finance/investing/u-s-stocks-tick-down-as-traders-weigh-inflation-data-f49901a5?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a><a href="https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-stocks-today-us-stocks-end-near-flat-as-hot-inflation-data-clouds-fed-rate-outlook/articleshow/133550754.cms" target="_blank" rel="noopener">Economic Times</a>
     </div>
   </article>
   
@@ -7544,24 +7546,20 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">India</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Govt raises Rs 3,000 crore via Hindustan Copper OFS</h3>
+    <h3 class="ev-t">Government raises Rs 3,000 crore via Hindustan Copper OFS</h3>
     <div class="ev-m">
-      <span>4 sources</span>
+      <span>3 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       
     </div>
-    <ul class="ev-b"><li>The government sold over 5.8 crore Hindustan Copper shares, exercising its full greenshoe option.</li><li>The disinvestment raised nearly Rs 3,000 crore, adding to Rs 52,716 crore collected this fiscal year.</li><li>Retail investors participated strongly, and Hindustan Copper shares rose about 5.6% after the OFS opened.</li><li>The stock traded at ₹554.55 before climbing to ₹562.60, above the prior close of ₹532.65.</li></ul>
+    <ul class="ev-b"><li>The disinvestment sale generated nearly Rs 3,000 crore for the treasury.</li><li>Retail investors participated strongly, exceeding the government's expectations.</li><li>A full greenshoe option was exercised, selling over 5.8 crore shares.</li><li>The proceeds raise total fiscal-year disinvestment collections to Rs 52,716 crore.</li><li>Hindustan Copper shares climbed about 5.6% to roughly ₹562.60 after the offer opened.</li></ul>
     
-    <div class="ev-why"><span>Why it matters</span><p>The proceeds boost fiscal revenues and the share price jump reflects market appetite for the offering.</p></div>
+    <div class="ev-why"><span>Why it matters</span><p>The funds bolster government finances and demonstrate market appetite for state‑owned asset sales, while the share rally reflects investor confidence in Hindustan Copper.</p></div>
     
     
-    <div class="ev-mi">
-      <span class="ev-chip ev-positive">Hindustan Copper stock &middot; Positive</span>
-    </div>
-    
-    <div class="ev-w">Watch next: Monitor further retail demand and price movement in Hindustan Copper after the OFS.</div>
+    <div class="ev-w">Watch next: Monitor subsequent price movements of Hindustan Copper and any further disinvestment announcements.</div>
     <div class="ev-s">
-      <a href="https://economictimes.indiatimes.com/news/economy/finance/government-mobilises-about-rs-3000-crore-from-hindustan-copper-ofs/articleshow/133542152.cms" target="_blank" rel="noopener">ET Economy</a><a href="https://www.thehindubusinessline.com/markets/hindustan-copper-shares-up-56-ofs-opened-for-retail-investors-today/article71392239.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/stocks/news/stocks-in-news-tata-power-jio-financial-services-bharat-electronics-and-hindustan-copper/articleshow/133550824.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.livemint.com/market/stock-market-news/top-gainers-losers-on-26-aug-sbfc-finance-capri-global-hindustan-copper-sail-ola-vedanta-among-top-gainers-11787739634109.html" target="_blank" rel="noopener">Livemint</a>
+      <a href="https://economictimes.indiatimes.com/news/economy/finance/government-mobilises-about-rs-3000-crore-from-hindustan-copper-ofs/articleshow/133542152.cms" target="_blank" rel="noopener">ET Economy</a><a href="https://www.thehindubusinessline.com/markets/hindustan-copper-shares-up-56-ofs-opened-for-retail-investors-today/article71392239.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://economictimes.indiatimes.com/markets/stocks/news/stocks-in-news-tata-power-jio-financial-services-bharat-electronics-and-hindustan-copper/articleshow/133550824.cms" target="_blank" rel="noopener">Economic Times</a>
     </div>
   </article>
   
@@ -7570,39 +7568,18 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">Markets & Economy</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Dolly Parton's entrepreneurship fuels wealth beyond music</h3>
+    <h3 class="ev-t">TWG denies fraud amid regulator probes and takeover doubts</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       
     </div>
-    <ul class="ev-b"><li>Dolly Parton achieved fame through country music and film roles</li><li>She is noted for her entrepreneurial zeal alongside her entertainment career</li><li>Her business ventures have generated a substantial personal fortune</li></ul>
+    <ul class="ev-b"><li>TWG Global says there has been no fraud.</li><li>The firm says it is defending against multipronged attacks as regulators and U.S. prosecutors investigate.</li><li>Investors are questioning a $4.1 billion takeover of Brighthouse Financial.</li><li>Skepticism about the Brighthouse deal is linked to perceived parallels with Mark Walter’s troubles.</li></ul>
     
-    <div class="ev-why"><span>Why it matters</span><p>The case shows how artists can leverage brand and business skills to create lasting financial success beyond their primary creative work.</p></div>
-    
-    
-    
-    <div class="ev-s">
-      <a href="https://www.ft.com/content/c36f89d0-0d53-41f6-a0eb-89c5921e14df?syn-25a6b1a6=1" target="_blank" rel="noopener">Financial Times</a><a href="https://www.bbc.co.uk/news/articles/c0klj72p66lo?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">BBC Business</a>
-    </div>
-  </article>
-  
-  <article class="ev">
-    <div class="ev-h">
-      <span class="ev-cat">Markets & Economy</span>
-      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
-    </div>
-    <h3 class="ev-t">Mark Walter’s Troubles Are Disrupting the Insurance World’s Hottest Trade</h3>
-    <div class="ev-m">
-      <span>2 sources</span>
-      <span>&middot;</span><span>Medium confidence</span>
-      <span>&middot;</span><span class="ev-raw"
-        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
-    </div>
-    <ul class="ev-b"><li>Bloomberg: Mark Walter’s TWG Says ‘There Has Been No Fraud’</li></ul>
+    <div class="ev-why"><span>Why it matters</span><p>The scrutiny of TWG could affect confidence in large insurance transactions, while doubts over the Brighthouse acquisition may influence deal pricing and completion.</p></div>
     
     
-    
+    <div class="ev-w">Watch next: Outcome of regulatory investigations into TWG and shareholder vote on the Brighthouse deal.</div>
     <div class="ev-s">
       <a href="https://www.bloomberg.com/news/videos/2026-08-26/mark-walter-s-twg-says-there-has-been-no-fraud-video" target="_blank" rel="noopener">Bloomberg</a><a href="https://www.wsj.com/finance/investing/mark-walters-troubles-are-disrupting-the-insurance-worlds-hottest-trade-7aa61866?mod=rss_markets_main" target="_blank" rel="noopener">WSJ Markets</a>
     </div>
@@ -7694,22 +7671,43 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   
   <article class="ev">
     <div class="ev-h">
-      <span class="ev-cat">Technology</span>
+      <span class="ev-cat">World</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Indexes end close to flat after hot inflation data ahead of Nvidia earnings</h3>
+    <h3 class="ev-t">Crude oil prices extend losses on hopes of talks to ease Middle East supply disruptions; Brent at $87/bbl</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       <span>&middot;</span><span class="ev-raw"
         title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>BusinessLine: Gold rally takes a breather ahead of US inflation data</li></ul>
+    <ul class="ev-b"><li>Economic Times: Oil prices extend losses on expectations talks to ease Middle East supply woes</li></ul>
     
     
     
     <div class="ev-s">
-      <a href="https://www.thehindubusinessline.com/markets/gold/gold-rally-takes-a-breather-ahead-of-us-inflation-data/article71392300.ece" target="_blank" rel="noopener">BusinessLine</a><a href="https://www.livemint.com/market/indexes-end-close-to-flat-after-hot-inflation-data-ahead-of-nvidia-earnings-11787774565346.html" target="_blank" rel="noopener">Livemint</a>
+      <a href="https://www.livemint.com/market/commodities/crude-oil-prices-extend-losses-as-hopes-for-talks-to-ease-middle-east-supply-disruptions-brent-at-87bbl-11787795492889.html" target="_blank" rel="noopener">Livemint</a><a href="https://economictimes.indiatimes.com/markets/commodities/news/oil-prices-extend-losses-on-expectations-talks-to-ease-middle-east-supply-woes/articleshow/133553824.cms" target="_blank" rel="noopener">Economic Times</a>
+    </div>
+  </article>
+  
+  <article class="ev">
+    <div class="ev-h">
+      <span class="ev-cat">Business</span>
+      <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
+    </div>
+    <h3 class="ev-t">Deepa Jewellers IPO: Price band set at ₹168- ₹177 per share; check key dates, issue details</h3>
+    <div class="ev-m">
+      <span>2 sources</span>
+      <span>&middot;</span><span>Medium confidence</span>
+      <span>&middot;</span><span class="ev-raw"
+        title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
+    </div>
+    <ul class="ev-b"><li>BusinessLine: Purple Style Labs IPO: Price band set at ₹546-575/share, issue to open Aug 31</li></ul>
+    
+    
+    
+    <div class="ev-s">
+      <a href="https://www.livemint.com/market/ipo/deepa-jewellers-ipo-price-band-set-at-rs-168-rs-177-per-share-check-key-dates-issue-details-11787798193728.html" target="_blank" rel="noopener">Livemint</a><a href="https://www.thehindubusinessline.com/markets/purple-style-labs-ipo-price-band-set-at-546-575share-issue-to-open-aug-31/article71391749.ece" target="_blank" rel="noopener">BusinessLine</a>
     </div>
   </article>
   
@@ -7718,19 +7716,19 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <span class="ev-cat">India</span>
       <span class="ev-dots" title="Importance 3 of 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span>
     </div>
-    <h3 class="ev-t">Rupee slide, valuation rules put foreign asset disclosure scheme out of reach for many</h3>
+    <h3 class="ev-t">Dividend alert! Last day to buy Paras Defence, MCX, Honasa among 33 stocks for dividend rewards. Do you own any?</h3>
     <div class="ev-m">
       <span>2 sources</span>
       <span>&middot;</span><span>Medium confidence</span>
       <span>&middot;</span><span class="ev-raw"
         title="No model wrote this. The headline is the highest-tier outlet's own and the bullets are the other outlets' headlines.">from headlines</span>
     </div>
-    <ul class="ev-b"><li>The rupee's depreciation and strict valuation rules hinder foreign income disclosure.  A one-time voluntary disclosure window allows regularization of overseas assets up to one crore.  However, many exceed this limit due</li></ul>
+    <ul class="ev-b"><li>Economic Times: Stock split alert! Last day to buy 2 multibagger microcap stocks which rallied up to 540% in a year</li><li>Livemint: Stocks to buy for short term: Amol Athawale of Kotak Securities bullish on 3 stocks; do you own any?</li></ul>
     
     
     
     <div class="ev-s">
-      <a href="https://economictimes.indiatimes.com/markets/forex/forex-news/rupee-slide-valuation-rules-put-foreign-asset-disclosure-scheme-out-of-reach-for-many/articleshow/133553250.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://economictimes.indiatimes.com/news/economy/policy/rupee-slide-valuation-rules-put-foreign-asset-disclosure-scheme-out-of-reach-for-many/articleshow/133548823.cms" target="_blank" rel="noopener">ET Economy</a>
+      <a href="https://economictimes.indiatimes.com/markets/stocks/news/dividend-alert-last-day-to-buy-paras-defence-mcx-honasa-among-33-stocks-for-dividend-rewards-do-you-own-any/articleshow/133553979.cms" target="_blank" rel="noopener">Economic Times</a><a href="https://www.livemint.com/market/stock-market-news/stocks-to-buy-for-short-term-amol-athawale-of-kotak-securities-bullish-on-3-stocks-do-you-own-any-11787754452058.html" target="_blank" rel="noopener">Livemint</a>
     </div>
   </article>
   
@@ -7771,13 +7769,31 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <span class="sr-tag sr-money">MONEY</span>
         <span class="sr-date">Aug 27, 2026</span>
       </div>
-      <h3 class="sr-t"><a href="https://www.livemint.com/opinion/online-views/mint-quick-edit-who-controls-the-energy-world-s-most-famous-chokepoint-oil-prices-say-11787757878661.html" target="_blank" rel="noopener">Mint Quick Edit | Who controls the energy world’s most famous chokepoint? What oil prices say</a></h3>
-      <p class="sr-s">Crude oil market prices have fallen in recent days. News of America’s latest effort to isolate Iran’s economy was outweighed by that of Iran’s talks with Oman on maritime passage in and out of the Gulf. What to make of this?</p>
+      <h3 class="sr-t"><a href="https://www.livemint.com/opinion/online-views/central-banks-scouting-for-new-paradigm-of-public-engagement-policy-toolkit-mpc-11787754596772.html" target="_blank" rel="noopener">Central banks are scouting for a new paradigm of public engagement as part of their policy toolkit</a></h3>
+      <p class="sr-s">Extreme uncertainty amid global flux has put central banks in a dilemma over their use of words as a strategic tool. Recent mix-ups over RBI signals—think of its forex swap window and MPC record—suggest India needs a debate of its own.</p>
 
       
       
+      <dl class="sr-x">
+        <dt>What happened &middot; from the article</dt>
+        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
+          <li>Central banks face a dilemma over using language as a strategic policy tool because of extreme uncertainty.</li><li>Recent mix-ups over RBI signals, including its forex swap window and monetary policy committee record, highlight the need for a debate in India.</li>
+        </ul></dd>
+        
+        <div class="sr-why">
+          <dt>Why it matters &middot; interpretation</dt>
+          <dd class="sr-interp">How central banks communicate can shape market expectations and policy effectiveness; unclear or contradictory signals risk misinterpretation, which can affect financial stability and the credibility of institutions like the RBI, especially in a volatile global environment.</dd>
+        </div>
+        
+        
+        <dt>What to watch &middot; interpretation</dt>
+        <dd class="sr-interp">The next official RBI clarification regarding its forex swap window schedule</dd>
+        
+      </dl>
+      <p class="sr-read">20 sec read &middot; no recommendation, by design</p>
+      
 
-      <a class="readmore" href="https://www.livemint.com/opinion/online-views/mint-quick-edit-who-controls-the-energy-world-s-most-famous-chokepoint-oil-prices-say-11787757878661.html" target="_blank" rel="noopener">Read more &rarr;</a>
+      <a class="readmore" href="https://www.livemint.com/opinion/online-views/central-banks-scouting-for-new-paradigm-of-public-engagement-policy-toolkit-mpc-11787754596772.html" target="_blank" rel="noopener">Read more &rarr;</a>
     </article>
     
     <article class="sr rv" style="--d:0.04s">
@@ -7817,17 +7833,17 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <dl class="sr-x">
         <dt>What happened &middot; from the article</dt>
         <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>The article examines 3-year SIP returns across hybrid fund categories.</li><li>It finds that multi-asset allocation schemes posted the highest returns while balanced advantage funds underperformed.</li>
+          <li>Multi-asset allocation hybrid funds posted the highest 3-year SIP returns.</li><li>Balanced advantage hybrid funds recorded the lowest 3-year SIP returns.</li>
         </ul></dd>
         
         <div class="sr-why">
           <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">Hybrid funds combine equity, debt, and other assets, so their relative performance signals how different allocation strategies have fared in recent market conditions, informing investors about which hybrid structures may be delivering better risk‑adjusted returns.</dd>
+          <dd class="sr-interp">The divergence in performance highlights how allocation choices within hybrid funds can significantly affect long-term returns, guiding investors toward schemes that better match their risk-return preferences.</dd>
         </div>
         
         
         <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">The next quarterly performance report for multi-asset allocation hybrid funds versus balanced advantage funds.</dd>
+        <dd class="sr-interp">The next quarterly update of 3-year SIP returns for hybrid fund categories.</dd>
         
       </dl>
       <p class="sr-read">20 sec read &middot; no recommendation, by design</p>
@@ -7854,17 +7870,17 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <dl class="sr-x">
         <dt>What happened &middot; from the article</dt>
         <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Geopolitical tensions continue, keeping oil prices volatile.</li><li>A quick resolution to the conflicts is not expected, limiting a return to pre‑conflict pricing within the next year.</li>
+          <li>Geopolitical tensions continue, preventing a quick resolution and keeping oil markets strained.</li><li>Analysts say returning to pre‑conflict price levels is unlikely this year as the market adapts.</li>
         </ul></dd>
         
         <div class="sr-why">
           <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">The ongoing volatility in oil prices reflects sustained geopolitical risk, which hampers energy market stability and may affect global inflation, trade balances, and corporate cost structures, influencing broader economic conditions.</dd>
+          <dd class="sr-interp">The ongoing volatility in oil prices reflects persistent geopolitical risk, which keeps energy markets under strain and makes a return to pre‑conflict pricing unlikely in the coming year. This sustained uncertainty can affect global energy costs and economic planning.</dd>
         </div>
         
         
         <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">Monitor monthly Brent crude price movements for signs of sustained deviation from pre‑conflict levels.</dd>
+        <dd class="sr-interp">Track global oil price movements over the next month for signs of continued volatility.</dd>
         
       </dl>
       <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
@@ -7888,24 +7904,6 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 
       
       
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Margaret Boden, described as an AI prophet, discusses the three elements that constitute creativity.</li><li>She references Ada Lovelace's critique of the Analytical Engine's lack of originality.</li>
-        </ul></dd>
-        
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">Understanding the components of creativity as defined by a leading AI scholar helps clarify how artificial intelligence can contribute to innovative processes, informing both research directions and practical applications in fields that rely on generative technologies.</dd>
-        </div>
-        
-        
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">Upcoming publications or talks by Margaret Boden that elaborate on the three elements of creativity.</dd>
-        
-      </dl>
-      <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
-      
 
       <a class="readmore" href="https://www.themarginalian.org/2026/08/26/margaret-boden-creativity/" target="_blank" rel="noopener">Read more &rarr;</a>
     </article>
@@ -7925,24 +7923,6 @@ details.ipo-card > *:last-child{padding-bottom:14px}
 The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
 
       
-      
-      <dl class="sr-x">
-        <dt>What happened &middot; from the article</dt>
-        <dd class="sr-fact"><ul style="padding-left:16px;margin:0">
-          <li>Peter Attia emphasized that metabolic liver disease is reversible when intervened early.</li><li>He noted that addressing metabolic drivers can cause steatosis and early‑stage fibrosis to regress.</li>
-        </ul></dd>
-        
-        <div class="sr-why">
-          <dt>Why it matters &middot; interpretation</dt>
-          <dd class="sr-interp">Early detection and reversal of liver steatosis and fibrosis could reduce long‑term healthcare costs and lessen the burden on pharmaceutical and diagnostic companies that target metabolic liver conditions, making it a notable factor for investors monitoring the health‑care sector.</dd>
-        </div>
-        
-        
-        <dt>What to watch &middot; interpretation</dt>
-        <dd class="sr-interp">Watch for forthcoming updates from Peter Attia on the outcomes of early‑intervention strategies for metabolic liver disease.</dd>
-        
-      </dl>
-      <p class="sr-read">26 sec read &middot; no recommendation, by design</p>
       
 
       <a class="readmore" href="https://peterattiamd.com/ama88/" target="_blank" rel="noopener">Read more &rarr;</a>
@@ -8096,7 +8076,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
 
   <div class="prov rv">
     <span class="pv-tag">DAILY</span>
-    <span>20 episodes from 20 shows</span>
+    <span>2 episodes from 1 shows</span>
     <span>Built <b>2026-08-27</b> · 0.0d old</span>
     
   </div>
@@ -8105,104 +8085,6 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     
     <article class="pod rv" style="--d:0.0s">
       <div class="pod-h">
-        <span class="pod-cat">Education</span>
-        <span class="pod-date">2026-08-27</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=CVFhWYQYtzM" target="_blank" rel="noopener">Our Changing Earth | NCERT Geography Series | Class 7 | Chapter 3 | Buniyad | Drishti IAS</a></h3>
-      <div class="pod-s">Drishti IAS</div>
-      
-      <ul class="pod-k">
-        <li>The lecture explains forces that shape the Earth’s surface, including lithospheric plates, earthquakes, volcanoes, and major landforms.</li><li>The chapter shows how the Earth’s surface continuously changes due to various natural processes.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.05s">
-      <div class="pod-h">
-        <span class="pod-cat">Career</span>
-        <span class="pod-date">2026-08-26</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=5TQEEGcOl70" target="_blank" rel="noopener">Want to Buy a House? Do These 3 Things First | Money Matters Ep. 124 | Ankur Warikoo Hindi</a></h3>
-      <div class="pod-s">Ankur Warikoo</div>
-      
-      <ul class="pod-k">
-        <li>So these videos do not offer any stock tips, or specific mutual fund recommendations or get-rich-quick schemes.</li><li>I am not selling any product or service through these videos.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.1s">
-      <div class="pod-h">
-        <span class="pod-cat">Investing</span>
-        <span class="pod-date">2026-08-26</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=7x2lgRDuv8Y" target="_blank" rel="noopener">How the US Killed Japan's Economy. And, why its coming for India next?</a></h3>
-      <div class="pod-s">Akshat Shrivastava</div>
-      
-      <ul class="pod-k">
-        <li>Is the Yen carry trade, that propelled the US economy for decades, going to end soon?</li><li>Watch the video till the end to understand macroeconomics of the world.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.15000000000000002s">
-      <div class="pod-h">
-        <span class="pod-cat">Investing</span>
-        <span class="pod-date">2026-08-26</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=d9ubV6BA65Y" target="_blank" rel="noopener">If You're Planning to Study Abroad… Watch This First</a></h3>
-      <div class="pod-s">Groww</div>
-      
-      <ul class="pod-k">
-        <li>Is spending ₹50 lakh or more on a master’s degree abroad actually worth it?</li><li>In this video, we break down the real cost of studying abroad, from scholarships and education loans to interest, EMIs, salaries, jobs and visa realities.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.2s">
-      <div class="pod-h">
-        <span class="pod-cat">Politics</span>
-        <span class="pod-date">2026-08-26</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=ZO9tB-WJlO4" target="_blank" rel="noopener">“Make Politicians’ Kids Study In Government Schools Only…” Abhijit Iyer-Mitra</a></h3>
-      <div class="pod-s">ANI Podcast (clips)</div>
-      
-      <ul class="pod-k">
-        <li>“Make Politicians’ Kids Study In Government Schools Only…” Abhijit Iyer-Mitra #ANIPodcast #SmitaPrakash #SamosaCaucus #AbhijitIyerMitra #Education #School #Kids #Politics #India Tune in here: linktr.ee/podcastwithsmitaprakash</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.25s">
-      <div class="pod-h">
-        <span class="pod-cat">Philosophy</span>
-        <span class="pod-date">2026-08-26</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=JsdVM9y13T4" target="_blank" rel="noopener">Sri M’s Last Podcast On TRS?</a></h3>
-      <div class="pod-s">The Ranveer Show</div>
-      
-      <ul class="pod-k">
-        <li>Sri M says he is now planning to step back from public life.</li><li>The episode includes Sri M reading aloud a personal letter from Swami Vivekananda for the first time.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.30000000000000004s">
-      <div class="pod-h">
-        <span class="pod-cat">Business</span>
-        <span class="pod-date">2026-08-25</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=JWPrgCbUwC8" target="_blank" rel="noopener">Sanjiv Goenka On Billionaires, The Next Big Opportunities & Building Wealth | FO553 Raj Shamani</a></h3>
-      <div class="pod-s">Figuring Out</div>
-      
-      <ul class="pod-k">
-        <li>He turned Kolkata’s debt‑riddled power business into a successful turnaround.</li><li>He says the “burn‑money‑to‑grow” unicorn culture is a fundamentally flawed way to build lasting companies.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.35000000000000003s">
-      <div class="pod-h">
         <span class="pod-cat">Business</span>
         <span class="pod-date">2026-08-25</span>
       </div>
@@ -8210,175 +8092,21 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       <div class="pod-s">Think School</div>
       
       <ul class="pod-k">
-        <li>A blender generated over 200 million views and a 700 % sales boost using only $50.</li><li>KitKat’s coffee‑flavored trigger lifted its sales by more than 30 %.</li>
+        <li>How a blender generated 200 M+ views and 700 % higher sales with just $50</li><li>KitKat used coffee as a trigger, boosting its sales by over 30 %</li>
       </ul>
       
     </article>
     
-    <article class="pod rv" style="--d:0.4s">
-      <div class="pod-h">
-        <span class="pod-cat">Investing</span>
-        <span class="pod-date">2026-08-25</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=CO6qtqM8yYg" target="_blank" rel="noopener">Term Insurance vs Mutual Fund SIP | The ₹1 Crore Calculation You Need to See</a></h3>
-      <div class="pod-s">Pranjal Kamra</div>
-      
-      <ul class="pod-k">
-        <li>Is term insurance a complete waste of money because you get ₹0 back if you survive?</li><li>In this video, we do a real side-by-side mathematical calculation comparing a ₹1 Crore Term Insurance plan with an Equity Mutual Fund SIP.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.45s">
-      <div class="pod-h">
-        <span class="pod-cat">Geopolitics</span>
-        <span class="pod-date">2026-08-25</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=DvL8jmq-2zo" target="_blank" rel="noopener">US-Israel Isolated, Adani Vindicated, Saudi-Pak Nukes, Student Protests | Abhijit Iyer-Mitra ACP 104</a></h3>
-      <div class="pod-s">Abhijit Chavda</div>
-      
-      <ul class="pod-k">
-        <li>Abhijit Iyer-Mitra is a defense economist and Senior Fellow at the Institute of Peace and Conflict Studies.</li><li>He specializes in defense economics, security and foreign policy.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.5s">
-      <div class="pod-h">
-        <span class="pod-cat">Politics</span>
-        <span class="pod-date">2026-08-25</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=hTqYK2b9tEU" target="_blank" rel="noopener">Sugar situation “a fiasco”, “total failure of policy”, Govt has been “irresponsible”: Ashok Gulati</a></h3>
-      <div class="pod-s">The Wire</div>
-      
-      <ul class="pod-k">
-        <li>Sugar situation is described as a “fiasco” and a “total failure of policy.”</li><li>The government’s handling of the crisis is called “irresponsible.”</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.55s">
-      <div class="pod-h">
-        <span class="pod-cat">Society</span>
-        <span class="pod-date">2026-08-24</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=0Mw-i-TeJwo" target="_blank" rel="noopener">CM Yogi Playing The Modi Playbook Better Than The PM Himself? | BJP’s Next Leader? | Akash Banerjee</a></h3>
-      <div class="pod-s">The Deshbhakt</div>
-      
-      <ul class="pod-k">
-        <li>From ‘If Not Modi Then Who?’ … the conversation in political circles gradually shifting to ‘Who After Modi?’ ….</li><li>For 12 years, PM Modi has dominated India’s political landscape and mindscape - as the Modi Magic fades the cracks within the BJP are becoming evident - there is a new challenger on the horizon ….</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.6000000000000001s">
+    <article class="pod rv" style="--d:0.05s">
       <div class="pod-h">
         <span class="pod-cat">Business</span>
-        <span class="pod-date">2026-08-23</span>
+        <span class="pod-date">2026-08-19</span>
       </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=7fw2Ob6w3Gg" target="_blank" rel="noopener">Nikhil Kamath Brainstorms Building An Indian Social Media App</a></h3>
-      <div class="pod-s">WTF is (clips)</div>
+      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=_fE28TZFim4" target="_blank" rel="noopener">AIR INDIA IS BROKEN: Why Air India Can Never Be Fixed? | Business Case Study</a></h3>
+      <div class="pod-s">Think School</div>
       
       <ul class="pod-k">
-        <li>Nikhil Kamath is the co‑founder of Zerodha and Gruhas and hosts the “WTF is” and “People By WTF” podcasts.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.65s">
-      <div class="pod-h">
-        <span class="pod-cat">Money</span>
-        <span class="pod-date">2026-08-22</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=PsOdPvQX6v0" target="_blank" rel="noopener">90% of Indians don't know this about Mutual funds</a></h3>
-      <div class="pod-s">Zero1 by Zerodha</div>
-      
-      <ul class="pod-k">
-        <li>Everyday I meet so many people who ask me the same question.</li><li>And I understand the confusion there are more than 2000 mutual funds available in India and each of them promise to give the best returns !</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.7000000000000001s">
-      <div class="pod-h">
-        <span class="pod-cat">Society</span>
-        <span class="pod-date">2026-08-22</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=85CPkmVriec" target="_blank" rel="noopener">Reality of HYPNOSIS | Is Mind Control REALLY Possible? | Dhruv Rathee</a></h3>
-      <div class="pod-s">Dhruv Rathee</div>
-      
-      <ul class="pod-k">
-        <li>Learn how to make content creation your part-time job or full-time career!</li><li>What if hypnosis can ease surgical pain—and also create a memory of a crime that never happened?</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.75s">
-      <div class="pod-h">
-        <span class="pod-cat">Philosophy</span>
-        <span class="pod-date">2026-08-22</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=zqooPTxZzzE" target="_blank" rel="noopener">Tamil Nadu's Hanuman Connection | Pandit Dhirendra Shastri with Sadhguru</a></h3>
-      <div class="pod-s">Sadhguru &middot; <b>Sadhguru</b></div>
-      
-      <ul class="pod-k">
-        <li>Bageshwar Dham’s Peethadhishwar Pandit Dhirendra Shastri spent time in the consecrated spaces of Isha Yoga Center Coimbatore and met Sadhguru on 22 July.</li><li>During a conversation with Sadhguru, he shared his experience of meditating in the powerful presence of Dhyanalinga and spending time in the abode of Linga Bhairavi adjacent to Isha Yoga Center.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.8s">
-      <div class="pod-h">
-        <span class="pod-cat">Investing</span>
-        <span class="pod-date">2026-08-21</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=V9Ra8klDzrM" target="_blank" rel="noopener">Build a Trading Algo with AI | No Coding Required</a></h3>
-      <div class="pod-s">Zerodha Varsity &middot; <b>AI</b></div>
-      
-      <ul class="pod-k">
-        <li>Algo trading has traditionally seemed out of reach for non-programmers.</li><li>AI coding assistants are changing that.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.8500000000000001s">
-      <div class="pod-h">
-        <span class="pod-cat">Money</span>
-        <span class="pod-date">2026-08-20</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=xA71gp27F3w" target="_blank" rel="noopener">My Biggest Announcement Yet: ₹30 Crore. 200 People. 18 Months. THIS IS WHAT WE BUILT</a></h3>
-      <div class="pod-s">Finance With Sharan</div>
-      
-      <ul class="pod-k">
-        <li>Three years ago, The 1% Club raised ₹10 crore from Gruhas, the venture fund co-founded by Nikhil Kamath.</li><li>In this video, Sharan Hegde opens up both company offices for the first time and explains why the company is putting ₹30 crore of its own cash back into the business instead of raising more capital.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.9s">
-      <div class="pod-h">
-        <span class="pod-cat">Investing</span>
-        <span class="pod-date">2026-08-18</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=fgk__RVsV4A" target="_blank" rel="noopener">NRIs Brought $52 Billion to India |Why Is RBI Ending Swap Scheme Early? | FCNR(B) |CA Rachana Ranade</a></h3>
-      <div class="pod-s">CA Rachana Ranade</div>
-      
-      <ul class="pod-k">
-        <li>The RBI has brought forward the closure of its FCNR(B) swap facility after attracting over $52 billion in deposits from NRIs.</li><li>In this video, we explain what FCNR(B) deposits are, how the RBI’s special USD-INR swap facility worked, why it was attractive for banks and NRIs, and why the RBI wanted to attract more foreign currency into India.</li>
-      </ul>
-      
-    </article>
-    
-    <article class="pod rv" style="--d:0.9500000000000001s">
-      <div class="pod-h">
-        <span class="pod-cat">Society</span>
-        <span class="pod-date">2026-08-18</span>
-      </div>
-      <h3 class="pod-t"><a href="https://www.youtube.com/watch?v=-BucDdCiD-s" target="_blank" rel="noopener">The India That Gujarat Built | Shut Up Ya Kunal w/ Kunal Kamra ft Aakar Patel | Episode 36</a></h3>
-      <div class="pod-s">Shut Up Ya Kunal &middot; <b>Aakar Patel</b></div>
-      
-      <ul class="pod-k">
-        <li>Aakar Patel is a journalist, author and columnist who has edited both English and Gujarati newspapers.</li><li>He is the author of *Our Hindu Rashtra* and *Price of the Modi Years*, and serves as Chair of Amnesty International India.</li>
+        <li>Air India is losing ₹42 crore every day in FY26, more than double the ₹19.2 crore daily loss it had in FY21 under government ownership.</li><li>Foreign airlines now operate 58.4 % of India’s international flights and 95 % of its international air cargo.</li>
       </ul>
       
     </article>
@@ -8804,7 +8532,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
   </div>
 
   
-  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>Your Philidor play is a liability—stop feeding the opponent the comfortable 3…d6‑e5 setup and switch to a more combative line like the Hanham or even abandon the defense for a solid 1.e4 c5. The Queen’s Pawn Game shows you can hold your own when you control the center early; double‑down on 1.d4 d5 systems that lead to active piece play and avoid passive pawn moves. From now on, study the critical middlegame themes of the Philidor (counter‑attacking on the c‑file and timely …f5 breaks) and rehearse the main‑line French/Carlsbad structures to turn those 40 % results into a consistent 60 %+ win rate.</div>
+  <div class="verdict rv">🤖 <b>Coach's verdict</b><br>Your Philidor play is a disaster— you’re surrendering the initiative on move 2 and never recover, which is why you’re 2‑5 with a 40 % win rate. Switch immediately to a solid, active system (e.g., the London or the classical Queen’s Gambit) and force yourself to develop pieces before any pawn moves; if you can’t keep the king safe and contest the center, you belong in the 1400‑1500 club. From now on, study the first 10 critical moves of every opening you use, memorize the typical tactical motifs, and rehearse them in a daily 15‑minute “opening drill” before you ever sit down for a game.</div>
   
 
   
@@ -8860,7 +8588,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Strengthen your king safety: after 12…g6, avoid moving the f‑pawn; instead develop the bishop to e7 and castle early, reducing mating threats.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; avoid 6…Qb6‑c7‑c5 sequence that loses tempo and invites a swift attack.</div>
     </div>
     
     <div class="game loss">
@@ -8896,7 +8624,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early pawn structure: avoid 3…d6‑e5‑d5‑exd5 sequence; instead play 3…Nf6, 4…Be7, 5…c6, maintaining a solid center and preventing White’s strong e4‑e5 push. This reduces unnecessary piece exchanges and improves endgame chances.</div>
+      <div class="an">💡 Focus on early central control: after 1.e4 e5 2.Nf3 d6, play 3…Nf6 instead of 3…Nd7; avoid passive pawn pushes and develop pieces to active squares to reduce opponent’s space advantage.</div>
     </div>
     
     <div class="game loss">
@@ -8932,7 +8660,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Focus on defending against early queen raids: after 1.e4 e5 2.d4 exd4 3.c3 dxc3 4.Bc4, keep the king safe; avoid 5.Qf3? and instead develop knights, castle quickly, and neutralize Black’s queen threats within 8 moves.</div>
+      <div class="an">💡 Study endgame technique: after 30…Kd5, you could've forced a draw with 31.Rc8+ Kd6 32.Rc6+. Master basic king‑and‑pawn endings; avoid losing material.</div>
     </div>
     
     <div class="game win">
@@ -8968,7 +8696,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early development: avoid moving the same piece twice (e.g., queen → e2, then queen → d3) – saves ~3 seconds per move and reduces tactical oversights.</div>
+      <div class="an">💡 Focus on early piece coordination: develop knights before queen (Nf3, Nc3) and avoid premature queen moves like 4.Qh5; aim for solid central control within first 8 moves.</div>
     </div>
     
     <div class="game win">
@@ -9004,7 +8732,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Strengthen your endgame technique: practice converting +1.5 pawn advantages with rook vs bishop; aim for ≤30 % ACPL and ≥90 % accuracy in rook‑bishop endings.</div>
+      <div class="an">💡 Focus on the Philidor’s early ...d5 push: after 1.e4 e5 2.Nf3 d6 3.d4 Nf6 4.Nc3 Nbd7, avoid passive 5...Be7; instead play 5...c6 and 6...Qc7, then challenge the center with ...exd4 and ...d5 promptly, reducing white’s space advantage. This will cut your average centipawn loss by ~30 cp.</div>
     </div>
     
     <div class="game loss">
@@ -9040,7 +8768,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early pawn structure: after 1.d4 d5 2.c4, you let Black exchange on d4 and end up with isolated queenside pawns. Keep the c‑pawn, play 2.Nf3 or 2.e3, then develop knights before committing c4. This will prevent the weak isolated pawn and give you more central control.</div>
+      <div class="an">💡 Focus on early pawn structure: after 1.d4 d5 2.Nf3 Nf6 3.c4 e6, you allowed a weak c‑pawn and isolated d‑pawn. Keep the center solid (e.g., 3.Nc3 or 3.e3) and avoid unnecessary pawn pushes that create targets. This will reduce tactical vulnerabilities and improve overall accuracy.</div>
     </div>
     
     <div class="game win">
@@ -9076,7 +8804,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Increase opening preparation: study 3–4 main lines of the Queen’s Pawn Game, memorize typical move orders, and avoid unnecessary piece exchanges early.</div>
+      <div class="an">💡 Focus on early piece development: finish knights to f3/c3 and bishops to d3/e2 by move 5, avoiding queen‑side pawn pushes that waste time.</div>
     </div>
     
     <div class="game loss">
@@ -9112,7 +8840,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early queen development: after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5, avoid 5.Qd2? and instead play 5.Nf3 (or 5.Ng3) to keep the queen safe and prevent Black’s quick …Qb6‑+ tactics that cost you material.</div>
+      <div class="an">💡 Focus on early piece activity: develop knights before bishops, castle by move 7, and avoid unnecessary queen trades that waste tempo.</div>
     </div>
     
     <div class="game win">
@@ -9148,7 +8876,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early king‑side development: on move 3 you played …c5 instead of …Nf6, delaying castling and allowing White to seize central space. Prioritize …Nf6, …g6, …Bg7, then castle within 5 moves. This alone will cut your average centipawn loss by ~15 pts.</div>
+      <div class="an">💡 Focus on early queen‑side pawn structure: avoid 1…c5‑c4 after 2…b6; it weakens d5 and invites white’s Nd5‑e7 fork. Strengthen d5 control (e.g., …d5 or …Nbd7) and develop pieces before expanding. This alone will slash your ACPL by ~15‑20 points.</div>
     </div>
     
     <div class="game win">
@@ -9184,7 +8912,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early king safety: after 9…Be6, avoid allowing 10.Qxe5+; instead play 10…Kd8 or 10…Qd7, reducing tactical threats and lowering ACPL by ~15.</div>
+      <div class="an">💡 Focus on early king safety: after 7…O‑O, avoid unnecessary pawn pushes (e.g., 9…h5); keep a solid pawn shield and develop the queen’s knight before launching attacks.</div>
     </div>
     
     <div class="game win">
@@ -9229,7 +8957,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       
-      <div class="an">💡 Focus on early middle‑game tactics: reduce blunders from 6 to ≤2 by checking each candidate move with a forced‑move scan, especially before move 30 where you missed the fork at 28…Nf5. Use a simple “check‑capture‑threat” checklist each turn.</div>
+      <div class="an">💡 Focus on early middle‑game piece coordination: after move 24 you left a rook isolated, allowing a 3‑piece attack costing +2.5 pawns; tighten development and avoid isolated heavy pieces.</div>
     </div>
     
     <div class="game loss">
@@ -9265,7 +8993,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece development: finish knights and bishops by move 6, then castle; you lost 2 central pawns and a rook by move 30 due to delayed development.</div>
+      <div class="an">💡 Focus on early queen‑side development: stop moving the queen repeatedly; aim for Nf3, Bd3, O‑O by move 8, saving time and preventing tactical threats.</div>
     </div>
     
     <div class="game loss">
@@ -9301,7 +9029,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Strengthen your central pawn structure: after 1.e4 e5 2.Nf3 d6, avoid early ...Nd7; instead develop ...Nf6 and support ...c5, preventing White’s d4 breakthrough and reducing passive pawn tension.</div>
+      <div class="an">💡 Focus on early central tension: after 1.e4 e5 2.Nf3 d6, develop with …Nf6, avoid passive …Be7; aim for ...c5 or ...Nd7‑f8‑e6 to challenge White’s center promptly.</div>
     </div>
     
     <div class="game win">
@@ -9337,7 +9065,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
       </div>
       
       <div class="mv" style="color:var(--dim)">Not analysed on Lichess — request computer analysis on the game to get best move, accuracy and key facts here.</div>
-      <div class="an">💡 Focus on early piece activity: develop knights before moving the queen; aim to complete development by move 8 and avoid queen excursions that waste >2 seconds per move.</div>
+      <div class="an">💡 Strengthen your endgame technique: practice converting +0.5 pawn advantages within 15 moves, focusing on king activity and precise pawn‑major piece coordination.</div>
     </div>
     
   </div>
@@ -9408,7 +9136,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     
     <div class="essay" style="--ac:var(--gold);--d:.08s">
       <div class="meta">🧩 Today's puzzle</div>
-      <h3>Rating 2091 · 🔴 stretch</h3>
+      <h3>Rating 2246 · 🔴 stretch</h3>
       <p style="font-family:var(--mono);font-size:12px;color:var(--dim)">Exposed King · Very Long · Middlegame</p>
       <div class="q">💡 One piece, two threats. Find the square that attacks both simultaneously.</div>
       <a href="https://lichess.org/training/Varaa" target="_blank" class="btn btn-sm" style="display:inline-block;margin-top:6px">→ Solve on Lichess</a>
@@ -9462,7 +9190,7 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Thursday, August 27 2026 · built 09:44 MYT<br>
+      Thursday, August 27 2026 · built 10:50 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -9504,9 +9232,9 @@ The post #405 ‒ AMA #88: Metabolic liver health: how to asse</p>
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="D9p2tC5u00KoZYTBVZisUg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="S5HCM3ZQHZ4z9F372ItEUg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="D9p2tC5u00KoZYTBVZisUg">{}</script>
-<script nonce="D9p2tC5u00KoZYTBVZisUg" src="/app.js?v=20260827T094425" defer></script>
+<script type="application/json" id="sector-map" nonce="S5HCM3ZQHZ4z9F372ItEUg">{}</script>
+<script nonce="S5HCM3ZQHZ4z9F372ItEUg" src="/app.js?v=20260827T105044" defer></script>
 </body>
 </html>
