@@ -1,5 +1,5 @@
 {
- "build_id": "20260827T185729",
+ "build_id": "20260827T210526",
  "date": "2026-08-27",
  "date_str": "Thursday, August 27 2026",
  "picks": [
@@ -574,10 +574,6 @@
    "price": 84.27,
    "sector": "Financial Services"
   },
-  "IGL": {
-   "price": 147.17,
-   "sector": "Utilities"
-  },
   "INDHOTEL": {
    "price": 718.5,
    "sector": "Consumer Cyclical"
@@ -649,6 +645,10 @@
   "NATIONALUM": {
    "price": 389.3,
    "sector": "Basic Materials"
+  },
+  "NAUKRI": {
+   "price": 1330.0,
+   "sector": "Communication Services"
   }
  },
  "ipos": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "26h old",
+    "age": "28h old",
     "note": "older than its daily refresh"
    }
   ]
