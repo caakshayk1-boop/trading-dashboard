@@ -673,6 +673,21 @@ def run_price_alerts(time_str: str, markets: set | None = None):
 
     logging.info(f"price_alerts: done | {len(alerts)} alerts | {len(updates)} closed")
 
+    # Returned, not just logged. The slot summary used to report only what was
+    # NEWLY found — "BREAKOUTS: 3, SWING: 2" — and said nothing at all about
+    # the book already open. A scan that finds nothing sent "no qualifying
+    # signals" even on a day it closed four positions and warned on two more,
+    # which reads as a quiet day when it was the opposite.
+    try:
+        with _conn() as c:
+            still_open = c.execute(
+                "SELECT COUNT(*) FROM all_signals WHERE status IN ('OPEN','T1_HIT')"
+            ).fetchone()[0]
+    except Exception:                                   # noqa: BLE001
+        still_open = None
+    return {"alerts": len(alerts), "closed": len(updates), "expired": expired,
+            "flagged": len(flags), "open_after": still_open}
+
 
 def _quality_fields(sig, extra_meta=None):
     """Gate verdict → the columns log_batch_to_all_signals persists.
@@ -718,6 +733,22 @@ def _quality_fields(sig, extra_meta=None):
 # listed here: _requested_slot() rejects anything not in this set, so a
 # slot added to the workflow and to SLOT_MARKETS but not to this line
 # fails the job outright, every run, with a clean-looking error.
+# What a no-entry slot MEANS, in the reader's terms. "position-management-only
+# — no entries by design" is accurate and still reads as a failure at 18:30 on
+# a phone: the operator reported "Telegram bot didn't give any signals" on a
+# day the midday slot worked exactly as designed. A slot that generates nothing
+# has to say WHERE the entries come from instead, or it looks broken every time
+# it succeeds.
+MODE_NOTE = {
+    "position-management-only":
+        "_Midday is position management only — it manages the open book and "
+        "files no new entries. Intraday generation was removed on 2026-07-30: "
+        "it measured -0.005R over 583 trades against +0.171R on daily closes. "
+        "New entries come from the EOD scan after the close._",
+    "us position check":
+        "_US position check — grading only, no entries._",
+}
+
 VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full",
                "none", "us"}
 
@@ -1406,7 +1437,8 @@ def main():
         # slot passes None, which grades everything — the manual-run path, and
         # deliberately unchanged so an operator running this by hand still
         # sees the whole book.
-        _safe("price_alerts", run_price_alerts, time_str, SLOT_MARKETS.get(slot))
+        book = _safe("price_alerts", run_price_alerts, time_str,
+                     SLOT_MARKETS.get(slot), default={}) or {}
         _safe("markets",      run_markets,      time_str)
 
         mode = None   # set by slots that generate no signals by design
@@ -1520,16 +1552,34 @@ def main():
         nums  = {k: v for k, v in counts.items() if isinstance(v, (int, float))}
         total = sum(nums.values())
         parts = [f"{k.upper()}: {v}" for k, v in nums.items() if v > 0]
+        # What happened to the EXISTING book, alongside what is new. Built
+        # even when nothing new fired, because that is exactly the day the
+        # existing book is the whole story.
+        ex = []
+        if book.get("closed"):
+            _c = book["closed"]
+            _e = book.get("expired") or 0
+            ex.append(f"{_c} closed" + (f" ({_e} on time stop)" if _e else ""))
+        if book.get("flagged"):
+            ex.append(f"{book['flagged']} near stop")
+        if book.get("open_after") is not None:
+            ex.append(f"{book['open_after']} still open")
+        existing = ("\n_Existing book:_ " + " · ".join(ex)) if ex else ""
+
         if total == 0:
             _send(
                 f"✅ *{slot.upper()} scan complete* — {time_str}\n"
-                + (f"_{mode.replace('-', ' ')} — no entries by design._" if mode
-                   else "_No qualifying signals. Regime/score/RR filters not met._")
+                + (MODE_NOTE.get(mode, f"_{mode.replace('-', ' ')} — no entries by design._")
+                   if mode
+                   else "_No new signals. Regime/score/RR filters not met._")
+                + existing
             )
         else:
             _send(
                 f"✅ *{slot.upper()} scan done* — {time_str}\n"
+                + "_New:_\n"
                 + "\n".join(f"  • {p}" for p in parts)
+                + existing
             )
 
         return 0
