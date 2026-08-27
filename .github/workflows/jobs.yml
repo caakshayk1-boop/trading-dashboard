@@ -38,6 +38,17 @@ name: Jobs — daily senior-finance discovery
 on:
   schedule:
     - cron: '0 8 * * *'       # 16:00 MYT / 13:30 IST — 16h30m before newspaper.yml
+    # RETRY. On 2026-08-27 this cron produced no run at all — the history skips
+    # from 08-26T08:53Z straight to nothing — and the Careers feed went 28h old
+    # and DEGRADED while the site still called it a daily refresh. The same day
+    # GitHub also dropped both scan crons and the morning brief, so this is the
+    # platform, not this workflow.
+    #
+    # No stand-down guard is needed here, unlike the scans: this job REBUILDS
+    # docs/jobs.json from scratch and sends nothing, so a second run on a day
+    # the first worked simply writes the same file again. Cheap, and idempotent
+    # by construction.
+    - cron: '0 11 * * *'      # 19:00 MYT — retry if the 08:00 cron was dropped
   workflow_dispatch:
 
 concurrency:
