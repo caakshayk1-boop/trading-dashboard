@@ -948,6 +948,12 @@ def build_section_brief(slot: str = "midday") -> str:
         rule("📰 *04 · THE WIRE*")
         L.append(_Wire([_news_entry(n) for n in (nw.get("news") or [])]))
 
+    # ── 05 Careers ─────────────────────────────────────────────────────────
+    # BOTH slots, unlike Life. A role that opens is time-critical in a way the
+    # day's reading is not, and the Dubai search is a standing priority rather
+    # than an evening indulgence.
+    L.extend(_careers_block())
+
     # ── LIFE ───────────────────────────────────────────────────────────────
     # Evening only. The morning brief is read before the open and is about the
     # market; the evening one is read after it and is the right place for the
@@ -1010,6 +1016,109 @@ def build_section_brief(slot: str = "midday") -> str:
 # tail. Tickets are ranked by score, so what falls off is the weakest, and the
 # reader is told how many and where to read them.
 TG_LIMIT = 3900
+
+
+def _careers_block() -> list:
+    """What happened to the roles — new ones, and the standing pipeline.
+
+    The brief's own docstring has always said it sends "Dubai jobs". It did
+    not: the sections ran 01, 02, 03, 04, then straight to 09. The Dubai search
+    is the operator's second priority and it had no line in either daily send.
+
+    Every field this needs already exists in docs/jobs.json. The feed grades
+    each role NEW / ACTIVE / AGING / STALE, so "new and existing" is a read,
+    not a new calculation.
+
+    Three things, in the order they matter:
+      NEW      — what appeared since the last run. The only part that is news.
+      CLOSING  — a deadline inside seven days, because that is the line that
+                 changes what he does today.
+      STANDING — how big the live pipeline is, so an empty NEW day still says
+                 something true instead of nothing.
+
+    Reads the file only. jobs.yml owns the scrape on its own clock and a brief
+    must never sit inside a twenty-source crawl.
+    """
+    import json as _json
+    import os as _os
+    from datetime import date as _date, datetime as _dt
+
+    path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                         "docs", "jobs.json")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = _json.load(fh)
+    except Exception as e:                              # noqa: BLE001
+        log.warning("careers block: %s", e)
+        return []
+
+    rows = [j for j in (data.get("jobs") or []) if not j.get("is_excluded")]
+    if not rows:
+        return []
+
+    new  = [j for j in rows if j.get("status") == "NEW"]
+    live = [j for j in rows if j.get("status") in ("NEW", "ACTIVE", "AGING")]
+
+    def _closes_in(j):
+        cd = j.get("closing_date")
+        if not cd:
+            return None
+        try:
+            return (_dt.strptime(str(cd)[:10], "%Y-%m-%d").date() - _date.today()).days
+        except ValueError:
+            return None
+
+    closing = sorted(
+        [(d, j) for j in live for d in [_closes_in(j)] if d is not None and 0 <= d <= 7],
+        key=lambda t: t[0])
+
+    head = ["\u2501" * 19, "\U0001F4BC *05 \u00b7 CAREERS* \u2014 new & existing roles", "\u2501" * 19]
+    # essential = the counts, which are the answer to "what happened to new and
+    # existing roles". detail = the named rows, which are the nice-to-have.
+    # Split so a heavy day loses the rows and keeps the answer — see _Opt.
+    essential, detail = list(head), []
+
+    if new:
+        essential.append(f"  *NEW today: {len(new)}*")
+        # Best first. A list of sixteen is not a brief; the top few by
+        # opportunity score are, and the count carries the rest.
+        top = sorted(new, key=lambda j: j.get("opportunity_score") or 0, reverse=True)[:4]
+        for j in top:
+            tier = j.get("tier") or "-"
+            detail.append(f"    \u2022 [{tier}] {j.get('title')} \u2014 {j.get('company')}"
+                          f" \u00b7 {j.get('location') or j.get('country')}"
+                          f" \u00b7 {j.get('opportunity_score')}")
+        if len(new) > len(top):
+            detail.append(f"    _+{len(new) - len(top)} more on the page._")
+    else:
+        essential.append("  *NEW today: none.* Nothing new cleared the screen.")
+
+    if closing:
+        # A deadline is never optional detail — it is the line that changes
+        # what he does today, so the nearest one rides in `essential`.
+        d0, j0 = closing[0]
+        when0 = "today" if d0 == 0 else ("tomorrow" if d0 == 1 else f"in {d0}d")
+        essential.append(f"  *Closing within 7 days: {len(closing)}* \u2014 "
+                         f"soonest {j0.get('company')} {when0}")
+        for d, j in closing[1:3]:
+            when = "today" if d == 0 else ("tomorrow" if d == 1 else f"in {d}d")
+            detail.append(f"    \u2022 {j.get('title')} \u2014 {j.get('company')} \u00b7 {when}")
+
+    st = data.get("stats") or {}
+    by = st.get("by_country") or {}
+    where = " \u00b7 ".join(f"{k} {v}" for k, v in by.items() if v)
+    essential.append(f"  *Standing pipeline: {len(live)} live* \u00b7 "
+                     f"{sum(1 for j in live if j.get('tier') == 'S')} S-tier \u00b7 "
+                     f"{sum(1 for j in live if j.get('application_priority') == 'APPLY NOW')} to apply now")
+    if where:
+        detail.append(f"    {where}")
+    # Coverage, stated rather than implied. 13 of 22 sources is a real limit on
+    # what "none today" means, and hiding it makes an incomplete scrape read as
+    # an empty market — so it stays in essential even when the rows go.
+    ok, att = st.get("sources_ok"), st.get("sources_attempted")
+    if ok and att and ok < att:
+        essential.append(f"    _{ok}/{att} sources answered \u2014 partial coverage._")
+    return [_Opt(essential, detail)]
 
 
 def _life_block() -> list:
@@ -1077,20 +1186,39 @@ def _life_block() -> list:
     return out
 
 
+class _Opt:
+    """A section that can give up its DETAIL without disappearing.
+
+    `essential` always prints. `extra` prints only while there is room. The
+    careers block uses it: on a heavy day the reader keeps "NEW today: 8 ·
+    closing in 7d: 5 · 48 live" and loses the four role lines under it, which
+    is a far better trade than losing the section and being told nothing.
+    """
+
+    def __init__(self, essential: list, extra: list = None):
+        self.essential = essential
+        self.extra = extra or []
+
+
 def _fit(lines: list, ticket_blocks: list = None) -> str:
-    """Join the brief, giving ground in the wire runs until it fits.
+    """Join the brief, giving ground until it fits.
 
     The order matters and it is the opposite of what it used to be. The old
     fitter dropped whole ticket blocks, which is how a board of eight ideas
     printed one — a board showing 1 of 8 reads as a bug. The book is now a
-    single table and never gives ground; the wire does, and it gives up COUNT
-    before it gives up DEPTH. Six stories a reader can understand beat twelve
-    headlines they cannot, which is the whole point of a detailed brief.
+    single table and never gives ground.
+
+    Three levers, spent cheapest-first:
+      1. OPTIONAL DETAIL — a section keeps its summary, loses its rows.
+      2. WIRE COUNT      — fewer stories.
+      3. WIRE DEPTH      — headlines without bodies. Six stories a reader can
+                           understand beat twelve they cannot, so depth is
+                           surrendered last of the three.
 
     `ticket_blocks` is vestigial and ignored; it is kept in the signature so an
     older caller cannot fail on an argument count.
     """
-    def render(keep: int, detailed: bool) -> str:
+    def render(keep: int, detailed: bool, extras: bool) -> str:
         out = []
         for item in lines:
             if isinstance(item, _Wire):
@@ -1101,18 +1229,44 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
                 gone = len(item.entries) - keep
                 if gone > 0:
                     out.append(f"_+{gone} more — news.askakshay.com_")
+            elif isinstance(item, _Opt):
+                out.extend(item.essential)
+                if extras:
+                    out.extend(item.extra)
             else:
                 out.append(item)
         return "\n".join(out)
 
-    for detailed in (True, False):
-        for keep in range(10, 1, -1):
-            text = render(keep, detailed)
-            if len(text) <= TG_LIMIT:
-                return text
-    # Nothing fit even stripped bare. Send the shortest honest version rather
-    # than a hard slice, which would cut inside a Markdown pair and 400.
-    return render(2, False)
+    for extras in (True, False):
+        for detailed in (True, False):
+            for keep in range(10, 1, -1):
+                text = render(keep, detailed, extras)
+                if len(text) <= TG_LIMIT:
+                    return text
+
+    # Nothing fit even stripped bare. This used to `return render(2, False)`
+    # unconditionally — handing back a string it had just measured as too long.
+    # Telegram rejects a sendMessage over 4096 OUTRIGHT, so the brief did not
+    # arrive truncated, it did not arrive at all, and the only trace was a
+    # send error nobody reads. A fitter that gives up must say so and must
+    # still produce something sendable.
+    text = render(2, False, False)
+    if len(text) <= TG_LIMIT:
+        return text
+    log.error("daily_brief: %d chars after every reduction (limit %d) — "
+              "hard-trimming. A section has grown beyond what the fitter can "
+              "absorb; give it an _Opt split.", len(text), TG_LIMIT)
+    # Cut on a LINE boundary. Slicing mid-string can land inside a Markdown
+    # pair, and an unbalanced * makes Telegram 400 the whole message — the
+    # same silent non-delivery, one step later.
+    kept, total = [], 0
+    tail = "\n_Trimmed — news.askakshay.com_"
+    for line in text.split("\n"):
+        if total + len(line) + 1 > TG_LIMIT - len(tail):
+            break
+        kept.append(line)
+        total += len(line) + 1
+    return "\n".join(kept) + tail
 
 
 class _BookMarker:
