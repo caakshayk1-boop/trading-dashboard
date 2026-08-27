@@ -3,9 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "THE DAILY SIGNAL — live layer over the Turso signal ledger",
+  "description": "THE DAILY SIGNAL \u2014 live layer over the Turso signal ledger",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test && node test_sync_budget.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.15.7"

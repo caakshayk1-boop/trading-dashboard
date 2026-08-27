@@ -173,7 +173,18 @@ export default async function handler(req, res) {
       version: versioned ? version : "unversioned",
       generated_at: new Date().toISOString(),
       signals: rows,
-    }, 60);
+      // 600s, not 60. THIS ENDPOINT IS WHY THE ACCOUNT GOT BLOCKED.
+      //
+      // Turso's free tier caps SYNCS — bytes moved between the app and the
+      // database — at 3 GB a month, and hitting ANY limit blocks the whole
+      // account. Rows Read was only 13.65M of 500M; syncs was 3.22 GB of 3 GB.
+      // The metered resource was never row count, it was bandwidth.
+      //
+      // This query pulls ~454 KB (22 columns over up to 800 rows). At a
+      // 60-second edge cache that is up to 1,440 round trips a day — 638 MB
+      // a day at worst, against a 100 MB/day budget. At 600s it is a tenth of
+      // that, and the ledger changes a few times a day, not every minute.
+    }, 600);
   } catch (e) {
     fail(res, 500, `signals query failed: ${e.message}`);
   }
@@ -208,7 +219,12 @@ async function handleWallet(res) {
     }));
 
     const result = simulateWallet(rows, badgeOf, currencyOf);
-    json(res, 200, { ok: true, generated_at: new Date().toISOString(), ...result }, 60);
+    // 600s, same as the main signals response and for the same reason: this
+    // reads the whole ledger to simulate the wallet, so a 60-second cache put
+    // ~450 KB on the wire up to 1,440 times a day. The sync-budget test caught
+    // this one — the first pass raised the response above and missed that this
+    // handler has its own.
+    json(res, 200, { ok: true, generated_at: new Date().toISOString(), ...result }, 600);
   } catch (e) {
     fail(res, 500, `paper_wallet query failed: ${e.message}`);
   }

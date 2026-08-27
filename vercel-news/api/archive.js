@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         total_r: d.has_r ? Math.round(d.total_r * 100) / 100 : null,
       }));
 
-    json(res, 200, { ok: true, generated_at: new Date().toISOString(), days: out }, 300);
+    json(res, 200, { ok: true, generated_at: new Date().toISOString(), days: out }, 1800);
   } catch (e) {
     fail(res, 500, `archive query failed: ${e.message}`);
   }

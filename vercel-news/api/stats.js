@@ -123,7 +123,7 @@ export default async function handler(req, res) {
       // what sets each scanner's R:R floor, so the site shows the same
       // arithmetic the scanner acts on.
       engine_floors: engineFloors(closed),
-    }, 300);
+    }, 1800);
   } catch (e) {
     fail(res, 500, `stats query failed: ${e.message}`);
   }
