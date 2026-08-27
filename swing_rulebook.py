@@ -416,6 +416,26 @@ def size_signal(sig: dict, sectors: dict, capital: float = CAPITAL):
     def no(reason, detail):
         return None, Rejected(sid, sym, engine, date, reason, detail)
 
+    # LONG ONLY. Checked before everything else because direction is not a
+    # matter of degree: a short that clears every other gate is still a trade
+    # this book will not place.
+    #
+    # The instruction was "never focus on sell calls for any type of trade
+    # including commodities, but record in the signal log". So the row is NOT
+    # dropped from the ledger — the engines keep filing shorts and the log
+    # keeps every one, which is what makes it possible to ask later whether
+    # refusing them cost anything. What changes is that no capital follows one
+    # and nothing is put in front of the reader as an action.
+    #
+    # 204 of 783 ledger rows are SELL. Only one is open today (HDFCBANK,
+    # equity_measured, 2026-08-27); the other 203 are cf_1h and commodity rows
+    # from v1. Small today, and the reason to gate it here rather than in each
+    # engine is that a new engine inherits the rule without anyone remembering.
+    if str(sig.get("action") or "BUY").upper() in ("SELL", "SHORT"):
+        return no("SHORT_NOT_TAKEN",
+                  f"{sym} is a SELL and this book is long-only \u2014 recorded in "
+                  f"the signal log, but no capital follows a short")
+
     if not is_indian_equity(sym):
         return no("NOT_EQUITY_INDIA",
                   f"{sym} is not in the NSE universe — the feed calls it "

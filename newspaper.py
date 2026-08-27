@@ -8401,6 +8401,12 @@ select:focus-visible{
    more, and that is the single most useful thing this row can say. */
 .mrow[data-live="gone"]{opacity:.62}
 .mrow[data-live="gone"] .mlive{border-color:var(--dn,#c0392b)}
+.markline{margin:-8px 0 18px;font-family:var(--mono);font-size:11px;color:var(--dim);
+  letter-spacing:.03em}
+.markstamp{display:inline-flex;align-items:center;gap:6px}
+.markstamp::before{content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--dim);flex:none}
+.markstamp.on::before{background:var(--up,#0a7c3f)}
 .kpi-total{border-left:2px solid var(--line2);padding-left:14px}
 .kpi-total .v{font-size:clamp(24px,3vw,32px)}
 

@@ -257,6 +257,39 @@ def _send(msg):
         return False
 
 
+def longs_only(signals, key="action"):
+    """The subset a long-only book can act on. Logging is NOT affected.
+
+    The instruction was "never focus on sell calls for any type of trade
+    including commodities, but record in the signal log". Both halves matter,
+    and they pull in opposite directions:
+
+      RECORD  — every engine keeps filing shorts and the ledger keeps every
+                one. That is what makes it answerable later whether refusing
+                them cost anything. Deleting them would destroy the evidence
+                for the very decision being taken.
+      DO NOT  — nothing short is put in front of a reader as an action, and
+      ACT       swing_rulebook refuses to size one (SHORT_NOT_TAKEN).
+
+    So this filters the ALERT list only, and always after the batch has been
+    written. Call it on what goes to Telegram, never on what goes to the DB.
+
+    204 of 783 ledger rows are SELL — 186 cf_1h and 17 commodity from v1, plus
+    one live equity_measured. The engines that can still produce them are
+    commodity and equity_measured.
+    """
+    keep, dropped = [], 0
+    for s in signals or []:
+        act = str((s.get(key) if isinstance(s, dict) else None) or "BUY").upper()
+        if act in ("SELL", "SHORT"):
+            dropped += 1
+            continue
+        keep.append(s)
+    if dropped:
+        logging.info(f"longs-only: {dropped} short signal(s) logged but not alerted")
+    return keep
+
+
 def _send_chunked(header, blocks, footer=None):
     """Send `blocks` across as many messages as Telegram's size limit needs.
 
@@ -985,10 +1018,21 @@ def run_commodity_scan(time_str):
         log_commodity_signals(sigs)
         blocks, rows = [], []
         for s in sigs:
-            arrow = "▲ BUY" if s["action"] == "BUY" else "▼ SELL"
-            col   = "📈" if s["action"] == "BUY" else "📉"
+            # EVERY signal is logged; only the longs get a block. Commodities
+            # were called out by name in the instruction — "including
+            # commodities" — because this is the engine that files the most
+            # shorts: 17 of the 204 SELL rows in the ledger, and the only
+            # non-v1 source of them besides equity_measured.
+            if str(s.get("action") or "BUY").upper() in ("SELL", "SHORT"):
+                rows.append({
+                    "symbol": s["symbol"], "signal_type": "commodity", "action": s["action"],
+                    "entry": s["price"], "sl": s["sl"], "t1": s["target1"],
+                    "t2": s["target2"], "t3": s.get("target3", s["target2"]),
+                    "rr": s["rr"], "timeframe": s.get("timeframe", "Daily"), "score": 0,
+                })
+                continue
             blocks.append(
-                f"{col} *{s['symbol']}* `{s['timeframe']}` | {arrow} @ {s['price']}\n"
+                f"\U0001F4C8 *{s['symbol']}* `{s['timeframe']}` | \u25b2 BUY @ {s['price']}\n"
                 f"  SL {s['sl']} | T1 {s['target1']} | T2 {s['target2']} | RR {s['rr']}"
             )
             rows.append({
@@ -998,7 +1042,12 @@ def run_commodity_scan(time_str):
                 "rr": s["rr"], "timeframe": s.get("timeframe", "Daily"), "score": 0,
             })
         ids  = log_batch_to_all_signals(rows)
-        sent = _send_chunked(f"🥇 *Commodity Signals* ({len(sigs)}) — {time_str}\n", blocks)
+        if len(blocks) < len(sigs):
+            logging.info(f"longs-only: {len(sigs) - len(blocks)} commodity short(s) "
+                         f"logged but not alerted")
+        sent = (_send_chunked(f"\U0001F947 *Commodity Signals* ({len(blocks)}) — {time_str}\n"
+                              "_Long only \u2014 shorts are recorded, not alerted_\n", blocks)
+                if blocks else True)
         _record_delivery(ids, sent, mark_alerts_sent)
     return sigs
 
@@ -1095,11 +1144,13 @@ def run_measured_equity_scan(time_str):
         logging.error(f"measured equity DB log failed: {e}")
         ids = []
 
+    # Logged above in full; only the longs are alerted. See longs_only.
+    alertable = longs_only(signals, key="bias")
     sent = _send_chunked(
-        f"\U0001F4CF *Measured Equity Signals* ({len(signals)}) — {time_str}\n"
-        "_Daily close · weekly regime · structural targets_\n",
-        [format_alert(s) for s in signals],
-        footer="\n_Backtested +0.171R/trade · not SEBI advice_")
+        f"\U0001F4CF *Measured Equity Signals* ({len(alertable)}) — {time_str}\n"
+        "_Daily close · weekly regime · structural targets · long only_\n",
+        [format_alert(s) for s in alertable],
+        footer="\n_Backtested +0.171R/trade · not SEBI advice_") if alertable else True
     _record_delivery(ids, sent, mark_alerts_sent)
     return signals
 
