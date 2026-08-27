@@ -1,5 +1,5 @@
 {
- "build_id": "20260827T210526",
+ "build_id": "20260827T213123",
  "date": "2026-08-27",
  "date_str": "Thursday, August 27 2026",
  "picks": [
@@ -410,6 +410,10 @@
  ],
  "picks_week": null,
  "open_context": {
+  "ABCAPITAL": {
+   "price": 410.0,
+   "sector": "Financial Services"
+  },
   "ABREL": {
    "price": 1393.4,
    "sector": "Real Estate"
@@ -446,12 +450,16 @@
    "price": 1529.2,
    "sector": "Industrials"
   },
+  "AUBANK": {
+   "price": 1091.0,
+   "sector": "Financial Services"
+  },
   "AUROPHARMA": {
    "price": 1637.0,
    "sector": "Healthcare"
   },
   "AXON": {
-   "price": 607.48,
+   "price": 603.25,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
@@ -515,7 +523,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 205.62,
+   "price": 233.78,
    "sector": "Technology"
   },
   "DEEPAKNTR": {
@@ -531,7 +539,7 @@
    "sector": "Real Estate"
   },
   "DUOL": {
-   "price": 140.88,
+   "price": 141.94,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -542,6 +550,10 @@
    "price": 2974.1001,
    "sector": "Industrials"
   },
+  "EXIDEIND": {
+   "price": 437.75,
+   "sector": "Consumer Cyclical"
+  },
   "FLUOROCHEM": {
    "price": 4672.1001,
    "sector": "Basic Materials"
@@ -549,6 +561,10 @@
   "FSL": {
    "price": 268.5,
    "sector": "Technology"
+  },
+  "GRANULES": {
+   "price": 832.3,
+   "sector": "Healthcare"
   },
   "GRASIM": {
    "price": 3258.0,
@@ -561,6 +577,10 @@
   "HCLTECH": {
    "price": 1282.0,
    "sector": "Technology"
+  },
+  "HDFCBANK": {
+   "price": 711.0,
+   "sector": "Financial Services"
   },
   "HEG": {
    "price": 710.2,
@@ -610,8 +630,8 @@
    "price": 2158.1001,
    "sector": "Healthcare"
   },
-  "M&MFIN": {
-   "price": 383.35,
+  "MANAPPURAM": {
+   "price": 348.0,
    "sector": "Financial Services"
   },
   "MARICO": {
@@ -629,26 +649,6 @@
   "MPHASIS": {
    "price": 2413.6001,
    "sector": "Technology"
-  },
-  "MRK": {
-   "price": 153.1,
-   "sector": "Healthcare"
-  },
-  "MRPL": {
-   "price": 170.8,
-   "sector": "Energy"
-  },
-  "MSFT": {
-   "price": 496.37,
-   "sector": ""
-  },
-  "NATIONALUM": {
-   "price": 389.3,
-   "sector": "Basic Materials"
-  },
-  "NAUKRI": {
-   "price": 1330.0,
-   "sector": "Communication Services"
   }
  },
  "ipos": {
@@ -779,8 +779,8 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "28h old",
-    "note": "older than its daily refresh"
+    "age": "14 min old",
+    "note": "partial coverage \u2014 13/22 records"
    }
   ]
  },
