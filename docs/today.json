@@ -1,26 +1,26 @@
 {
- "build_id": "20260827T022115",
+ "build_id": "20260827T094425",
  "date": "2026-08-27",
  "date_str": "Thursday, August 27 2026",
  "picks": [
   {
-   "symbol": "SAP",
-   "name": "SAP",
-   "ext20": 9.4,
-   "vol_ratio": 0.76,
-   "price": 218.68,
-   "change_1d": 0.73,
-   "mom_1m": 49.4,
-   "mom_3m": 24.3,
-   "score": 87,
-   "target": 276.56,
-   "stop_loss": 199.89,
+   "symbol": "HOOD",
+   "name": "HOOD",
+   "ext20": 8.86,
+   "vol_ratio": 1.39,
+   "price": 108.54,
+   "change_1d": -3.17,
+   "mom_1m": 17.0,
+   "mom_3m": 27.9,
+   "score": 80,
+   "target": 153.86,
+   "stop_loss": 99.71,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "26% to go at its recent 8.1%/month",
-   "rr": 3.08,
-   "atr": 5.67,
-   "high_52w": 276.56,
+   "horizon_basis": "42% to go at its recent 9.3%/month",
+   "rr": 5.13,
+   "atr": 5.86,
+   "high_52w": 153.86,
    "timeframe": "3-6 months",
    "currency": "$",
    "factors": [
@@ -32,12 +32,12 @@
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 20.0
+     "e": 15.7
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 15.0
+     "e": 5.8
     },
     {
      "k": "1-month thrust",
@@ -47,48 +47,104 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 6.9
+     "e": 8.0
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.0
+     "e": 5.4
     }
    ],
-   "ema20": 199.89,
-   "tv": "SAP",
-   "thesis": "49.4% one\u2011month gain, 24.3% three\u2011month gain, price 9.4% above 20\u2011day average on 0.76\u00d7 volume, composite 87."
+   "ema20": 99.71,
+   "tv": "HOOD",
+   "thesis": "27.9% three\u2011month rise, 17.0% monthly gain, price 8.9% above 20\u2011day average on 1.39\u00d7 volume, composite 80/100."
   },
   {
-   "symbol": "AXON",
-   "name": "AXON",
-   "ext20": 6.09,
-   "vol_ratio": 0.72,
-   "price": 627.75,
-   "change_1d": 2.2,
-   "mom_1m": 27.6,
-   "mom_3m": 62.6,
-   "score": 85,
-   "target": 794.29,
-   "stop_loss": 566.95,
+   "symbol": "KAYNES.NS",
+   "name": "KAYNES",
+   "ext20": 7.36,
+   "vol_ratio": 0.93,
+   "price": 4032.0,
+   "change_1d": 2.44,
+   "mom_1m": 24.9,
+   "mom_3m": 30.1,
+   "score": 79,
+   "target": 7705.0,
+   "stop_loss": 3755.53,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "91% to go at its recent 10.0%/month",
+   "rr": 13.29,
+   "atr": 151.61,
+   "high_52w": 7705.0,
+   "timeframe": "6-12 months",
+   "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 23.4
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 16.3
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 10.6
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 8.6
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.3
+    }
+   ],
+   "ema20": 3755.53,
+   "tv": "NSE:KAYNES",
+   "thesis": "30.1% three\u2011month rise, price 7.4% above its 20\u2011day average on 0.93\u00d7 typical volume, composite 79/100."
+  },
+  {
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 7.41,
+   "vol_ratio": 0.76,
+   "price": 37.39,
+   "change_1d": -2.78,
+   "mom_1m": 31.4,
+   "mom_3m": -9.5,
+   "score": 78,
+   "target": 58.78,
+   "stop_loss": 33.41,
    "target_basis": "the 52-week high",
    "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "27% to go at its recent 20.9%/month",
-   "rr": 2.74,
-   "atr": 40.53,
-   "high_52w": 794.29,
-   "timeframe": "about a month",
+   "horizon_basis": "three-month drift is flat or negative \u2014 no pace to extrapolate",
+   "rr": 5.37,
+   "atr": 2.66,
+   "high_52w": 58.78,
+   "timeframe": "no estimate",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 20.2
+     "e": 23.5
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 19.3
+     "e": 19.1
     },
     {
      "k": "Averages stacked",
@@ -103,7 +159,7 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 10.0
+     "e": 0.0
     },
     {
      "k": "Volume confirming",
@@ -111,45 +167,45 @@
      "e": 0.0
     }
    ],
-   "ema20": 591.7,
-   "tv": "AXON",
-   "thesis": "62.6% three\u2011month surge, 27.6% one\u2011month rise, price 6.1% above its 20\u2011day average on 0.72\u00d7 typical volume, composite 85/100."
+   "ema20": 34.81,
+   "tv": "SMCI",
+   "thesis": "31.4% one\u2011month surge, 9.5% three\u2011month decline, price 7.4% above 20\u2011day average on 0.76\u00d7 volume, composite 78."
   },
   {
-   "symbol": "CRM",
-   "name": "CRM",
-   "ext20": 8.56,
-   "vol_ratio": 1.05,
-   "price": 209.17,
-   "change_1d": 1.82,
-   "mom_1m": 33.3,
+   "symbol": "MSFT",
+   "name": "MSFT",
+   "ext20": 4.46,
+   "vol_ratio": 0.58,
+   "price": 496.37,
+   "change_1d": 0.95,
+   "mom_1m": 26.4,
    "mom_3m": 16.5,
-   "score": 83,
-   "target": 267.75,
-   "stop_loss": 192.67,
+   "score": 72,
+   "target": 549.2,
+   "stop_loss": 475.18,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "28% to go at its recent 5.5%/month",
-   "rr": 3.55,
-   "atr": 7.77,
-   "high_52w": 267.75,
-   "timeframe": "3-6 months",
+   "horizon_basis": "11% to go at its recent 5.5%/month",
+   "rr": 2.49,
+   "atr": 9.1,
+   "high_52w": 549.2,
+   "timeframe": "1-3 months",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
+     "e": 16.1
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 18.9
+     "e": 15.8
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 12.7
+     "e": 15.0
     },
     {
      "k": "1-month thrust",
@@ -164,87 +220,31 @@
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 1.7
+     "e": 0.0
     }
    ],
-   "ema20": 192.67,
-   "tv": "CRM",
-   "thesis": "33.3% one\u2011month gain, 16.5% three\u2011month rise, price 8.6% above 20\u2011day average, volume 1.05\u00d7 norm, composite 83."
+   "ema20": 475.18,
+   "tv": "MSFT",
+   "thesis": "26.4% one\u2011month gain, 16.5% three\u2011month rise, price 4.5% above 20\u2011day average on 0.58\u00d7 volume, score 72."
   },
   {
-   "symbol": "DUOL",
-   "name": "DUOL",
-   "ext20": 6.82,
-   "vol_ratio": 0.93,
-   "price": 146.13,
-   "change_1d": -0.61,
-   "mom_1m": 21.1,
-   "mom_3m": 37.1,
-   "score": 82,
-   "target": 355.0,
-   "stop_loss": 131.88,
-   "target_basis": "the 52-week high",
-   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "143% to go at its recent 12.4%/month",
-   "rr": 14.66,
-   "atr": 9.5,
-   "high_52w": 355.0,
-   "timeframe": "6-12 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 22.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 16.7
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 12.7
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 0.3
-    }
-   ],
-   "ema20": 136.8,
-   "tv": "DUOL",
-   "thesis": "Three\u2011month gain of 37.1% alongside a 6.8% price premium over the 20\u2011day average, with volume at 0.93\u00d7 norm."
-  },
-  {
-   "symbol": "SMCI",
-   "name": "SMCI",
-   "ext20": 9.47,
-   "vol_ratio": 0.84,
-   "price": 37.24,
-   "change_1d": 2.03,
-   "mom_1m": 19.4,
-   "mom_3m": 4.7,
-   "score": 81,
-   "target": 58.78,
-   "stop_loss": 34.02,
+   "symbol": "CELH",
+   "name": "CELH",
+   "ext20": 13.0,
+   "vol_ratio": 0.66,
+   "price": 35.23,
+   "change_1d": -0.31,
+   "mom_1m": 19.6,
+   "mom_3m": 6.1,
+   "score": 72,
+   "target": 66.74,
+   "stop_loss": 31.18,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "58% to go at its recent 1.6%/month",
-   "rr": 6.68,
-   "atr": 2.55,
-   "high_52w": 58.78,
+   "horizon_basis": "89% to go at its recent 2.0%/month",
+   "rr": 7.77,
+   "atr": 1.84,
+   "high_52w": 66.74,
    "timeframe": "over a year at this pace",
    "currency": "$",
    "factors": [
@@ -261,7 +261,7 @@
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 14.3
+     "e": 5.4
     },
     {
      "k": "1-month thrust",
@@ -271,7 +271,7 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 1.3
+     "e": 1.7
     },
     {
      "k": "Volume confirming",
@@ -279,9 +279,9 @@
      "e": 0.0
     }
    ],
-   "ema20": 34.02,
-   "tv": "SMCI",
-   "thesis": "19.4% one\u2011month rise, 4.7% three\u2011month rise, price 9.5% above its 20\u2011day average, volume 0.84\u00d7 norm, composite 81/100."
+   "ema20": 31.18,
+   "tv": "CELH",
+   "thesis": "+20% in a month against +6% over three \u2014 the trend is accelerating, not maturing."
   }
  ],
  "engine": [
@@ -403,402 +403,73 @@
   }
  ],
  "picks_week": null,
- "open_context": {
-  "ABREL": {
-   "price": 1392.3,
-   "sector": "Real Estate"
-  },
-  "AFFLE": {
-   "price": 1686.8,
-   "sector": "Communication Services"
-  },
-  "AIAENG": {
-   "price": 4235.5,
-   "sector": "Industrials"
-  },
-  "ALKEM": {
-   "price": 5303.5,
-   "sector": "Healthcare"
-  },
-  "ANANTRAJ": {
-   "price": 606.35,
-   "sector": "Real Estate"
-  },
-  "ANTHEM": {
-   "price": 923.05,
-   "sector": "Healthcare"
-  },
-  "ASAHIINDIA": {
-   "price": 951.15,
-   "sector": "Consumer Cyclical"
-  },
-  "ASHOKLEY": {
-   "price": 179.05,
-   "sector": "Industrials"
-  },
-  "ASTRAL": {
-   "price": 1526.1,
-   "sector": "Industrials"
-  },
-  "AUROPHARMA": {
-   "price": 1623.0,
-   "sector": "Healthcare"
-  },
-  "AXON": {
-   "price": 607.285,
-   "sector": "Industrials"
-  },
-  "BAJAJFINSV": {
-   "price": 2010.0,
-   "sector": "Financial Services"
-  },
-  "BAJFINANCE.NS": {
-   "price": 1085.0,
-   "sector": "Financial Services"
-  },
-  "BANKBARODA": {
-   "price": 242.5,
-   "sector": "Financial Services"
-  },
-  "BANKINDIA": {
-   "price": 145.95,
-   "sector": "Financial Services"
-  },
-  "BDL": {
-   "price": 1363.0,
-   "sector": "Industrials"
-  },
-  "BHARTIARTL": {
-   "price": 1902.1,
-   "sector": "Communication Services"
-  },
-  "BRIGADE": {
-   "price": 655.1,
-   "sector": "Real Estate"
-  },
-  "CANBK": {
-   "price": 129.45,
-   "sector": "Financial Services"
-  },
-  "CDSL": {
-   "price": 1434.0,
-   "sector": "Financial Services"
-  },
-  "CEATLTD": {
-   "price": 3584.3,
-   "sector": "Consumer Cyclical"
-  },
-  "CEMPRO": {
-   "price": 1287.1,
-   "sector": "Industrials"
-  },
-  "CHALET": {
-   "price": 912.45,
-   "sector": "Consumer Cyclical"
-  },
-  "COFORGE.NS": {
-   "price": 1880.0,
-   "sector": "Technology"
-  },
-  "CREDITACC": {
-   "price": 1440.2,
-   "sector": "Financial Services"
-  },
-  "CRISIL": {
-   "price": 4513.3999,
-   "sector": "Financial Services"
-  },
-  "CRM": {
-   "price": 205.17,
-   "sector": "Technology"
-  },
-  "DEEPAKNTR": {
-   "price": 1776.7,
-   "sector": "Basic Materials"
-  },
-  "DIXON": {
-   "price": 14735.0,
-   "sector": "Technology"
-  },
-  "DLF": {
-   "price": 672.5,
-   "sector": "Real Estate"
-  },
-  "DUOL": {
-   "price": 141.42,
-   "sector": "Technology"
-  },
-  "ECLERX": {
-   "price": 1944.0,
-   "sector": "Technology"
-  },
-  "ESCORTS": {
-   "price": 3067.0,
-   "sector": "Industrials"
-  },
-  "FLUOROCHEM": {
-   "price": 4732.1001,
-   "sector": "Basic Materials"
-  },
-  "FSL": {
-   "price": 270.05,
-   "sector": "Technology"
-  },
-  "GRASIM": {
-   "price": 3299.8999,
-   "sector": "Basic Materials"
-  },
-  "GVT&D": {
-   "price": 4340.0,
-   "sector": "Industrials"
-  },
-  "HCLTECH": {
-   "price": 1298.5,
-   "sector": "Technology"
-  },
-  "HEG": {
-   "price": 713.55,
-   "sector": "Industrials"
-  },
-  "HINDCOPPER": {
-   "price": 556.05,
-   "sector": "Basic Materials"
-  },
-  "IFCI": {
-   "price": 85.44,
-   "sector": "Financial Services"
-  },
-  "IGL": {
-   "price": 148.72,
-   "sector": "Utilities"
-  },
-  "INDHOTEL": {
-   "price": 721.0,
-   "sector": "Consumer Cyclical"
-  },
-  "IPCALAB": {
-   "price": 1952.4,
-   "sector": "Healthcare"
-  },
-  "J&KBANK": {
-   "price": 152.04,
-   "sector": "Financial Services"
-  },
-  "JSWDULUX": {
-   "price": 3106.0,
-   "sector": ""
-  },
-  "JSWSTEEL": {
-   "price": 1341.0,
-   "sector": "Basic Materials"
-  },
-  "KIRLOSENG": {
-   "price": 2036.6,
-   "sector": "Industrials"
-  },
-  "KPRMILL": {
-   "price": 1136.0,
-   "sector": "Consumer Cyclical"
-  },
-  "LALPATHLAB": {
-   "price": 1937.3,
-   "sector": "Healthcare"
-  },
-  "LUPIN": {
-   "price": 2185.0,
-   "sector": "Healthcare"
-  },
-  "M&MFIN": {
-   "price": 385.35,
-   "sector": "Financial Services"
-  },
-  "MARICO": {
-   "price": 833.0,
-   "sector": "Consumer Defensive"
-  },
-  "MARUTI": {
-   "price": 13520.0,
-   "sector": "Consumer Cyclical"
-  },
-  "MOTHERSON": {
-   "price": 165.0,
-   "sector": "Consumer Cyclical"
-  },
-  "MPHASIS": {
-   "price": 2400.0,
-   "sector": "Technology"
-  },
-  "MRK": {
-   "price": 153.5,
-   "sector": "Healthcare"
-  },
-  "MRPL": {
-   "price": 173.61,
-   "sector": "Energy"
-  },
-  "MSFT": {
-   "price": 494.53,
-   "sector": ""
-  },
-  "NATIONALUM": {
-   "price": 399.3,
-   "sector": "Basic Materials"
-  }
- },
+ "open_context": {},
  "ipos": {
-  "count": 31,
-  "months": 12,
-  "built_on": "2026-08-22",
-  "summary": {
-   "count": 31,
-   "up": 19,
-   "down": 12,
-   "up_pct": 61.3,
-   "median_pct": 17.4
-  },
-  "rows": [
-   {
-    "sym": "RUBICON",
-    "months_listed": 10.2,
-    "first_close": 628.2,
-    "last_close": 1724.7,
-    "since_listing_pct": 174.5,
-    "high": 1804.1,
-    "low": 577.25,
-    "from_high_pct": -4.4,
-    "below_first_ever": true,
-    "sessions": 211,
-    "listed_on": "2025-10-16"
-   },
-   {
-    "sym": "UTLSOLAR",
-    "months_listed": 9.0,
-    "first_close": 208.44,
-    "last_close": 477.4,
-    "since_listing_pct": 129.0,
-    "high": 483.95,
-    "low": 174.83,
-    "from_high_pct": -1.4,
-    "below_first_ever": true,
-    "sessions": 190,
-    "listed_on": "2025-11-20"
-   },
-   {
-    "sym": "ATLANTAELE",
-    "months_listed": 10.7,
-    "first_close": 823.35,
-    "last_close": 1846.9,
-    "since_listing_pct": 124.3,
-    "high": 2151.5,
-    "low": 726.3,
-    "from_high_pct": -14.2,
-    "below_first_ever": true,
-    "sessions": 224,
-    "listed_on": "2025-09-29"
-   },
-   {
-    "sym": "PARKHOSPS",
-    "months_listed": 8.1,
-    "first_close": 147.95,
-    "last_close": 274.55,
-    "since_listing_pct": 85.6,
-    "high": 299.3,
-    "low": 143.92,
-    "from_high_pct": -8.3,
-    "below_first_ever": true,
-    "sessions": 171,
-    "listed_on": "2025-12-17"
-   },
-   {
-    "sym": "AEQUS",
-    "months_listed": 8.4,
-    "first_close": 151.29,
-    "last_close": 259.22,
-    "since_listing_pct": 71.3,
-    "high": 262.45,
-    "low": 115.11,
-    "from_high_pct": -1.2,
-    "below_first_ever": true,
-    "sessions": 176,
-    "listed_on": "2025-12-10"
-   }
-  ],
-  "worst": [
-   {
-    "sym": "VIKRAMSOLR",
-    "months_listed": 11.9,
-    "first_close": 356.4,
-    "last_close": 173.23,
-    "since_listing_pct": -51.4,
-    "high": 378.8,
-    "low": 156.8,
-    "from_high_pct": -54.3,
-    "below_first_ever": true,
-    "sessions": 248,
-    "listed_on": "2025-08-26"
-   },
-   {
-    "sym": "PINELABS",
-    "months_listed": 9.2,
-    "first_close": 250.89,
-    "last_close": 156.91,
-    "since_listing_pct": -37.5,
-    "high": 250.89,
-    "low": 137.94,
-    "from_high_pct": -37.5,
-    "below_first_ever": true,
-    "sessions": 194,
-    "listed_on": "2025-11-14"
-   },
-   {
-    "sym": "WAKEFIT",
-    "months_listed": 8.2,
-    "first_close": 192.29,
-    "last_close": 141.36,
-    "since_listing_pct": -26.5,
-    "high": 215.8,
-    "low": 113.04,
-    "from_high_pct": -34.5,
-    "below_first_ever": true,
-    "sessions": 172,
-    "listed_on": "2025-12-15"
-   }
-  ]
+  "count": 0,
+  "months": null,
+  "built_on": null,
+  "summary": {},
+  "rows": [],
+  "worst": []
  },
  "data_health": {
-  "worst": "DEGRADED",
-  "current": 11,
+  "worst": "UNAVAILABLE",
+  "current": 7,
   "total": 12,
   "degraded": [
    {
+    "dataset": "Fund screen",
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
+   },
+   {
+    "dataset": "New listings",
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
+   },
+   {
+    "dataset": "Signal ledger",
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
+   },
+   {
+    "dataset": "Stock screen",
+    "status": "UNAVAILABLE",
+    "age": "unknown vintage",
+    "note": "never published"
+   },
+   {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "9h old",
+    "age": "17h old",
     "note": "partial coverage \u2014 13/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Endgame: King Activity",
-   "body": "In the endgame, the king becomes a fighting piece. Centralise your king immediately. A king on e4 controls d3, d4, d5, e3, e5, f3, f4, f5 \u2014 8 squares. A king on a1 controls only 3. Rule: when queens are off the board, march your king to the centre. Opposition matters: two kings facing each other, one move apart \u2014 the side NOT to move has the opposition.",
-   "index": 8,
+   "title": "Endgame: Pawn Endgames",
+   "body": "If you're a pawn up in a king+pawn endgame, you usually win. Key concepts: 1. Opposition \u2014 control the square in front of your pawn. 2. The square of the pawn \u2014 if the opposing king can't enter the square, your pawn promotes. 3. Key squares \u2014 a pawn on e4's key squares are d6, e6, f6. Reach them with your king and you win.",
+   "index": 9,
    "total": 20
   },
   "wisdom": {
-   "title": "Your Daughter Will Watch Everything",
-   "body": "She'll watch how you handle a setback. How you speak about money. How you treat waiters. How you react when you're wrong. How you love her mother. You are her first example of what a man is. Be the man you'd want her to marry someday. That's the bar.",
-   "index": 18,
+   "title": "Being Present",
+   "body": "Your daughter doesn't need a perfect father. She needs a present one. Put the phone down for 20 minutes when you get home. Look her in the eyes. Play on the floor. These moments are the whole point. Work can wait. She is growing every day whether you show up or not.",
+   "index": 1,
    "total": 18
   },
   "book": {
    "book": "The Psychology of Money",
    "author": "Morgan Housel",
-   "chapter": "Wealth Is What You Don't See",
-   "lesson": "We judge wealth by what we see: cars, clothes, houses. But wealth is actually the money not spent \u2014 it's invisible. The person driving a \u20b91 crore car might have zero savings. The person in the modest apartment might have \u20b910 crore liquid. Housel's key insight: spending money to show people how much money you have is the fastest way to have less money. True wealth is options \u2014 the ability to wake up and say 'I can do what I want, when I want, with who I want.' That requires unspent money, not displayed money.",
-   "key_quote": "Rich is a current income. Wealthy is accumulated assets. They are not the same.",
-   "action": "Track your net worth monthly, not your lifestyle. Net worth = financial freedom. Lifestyle = just looking free.",
-   "index": 6,
+   "chapter": "You Are Not a Spreadsheet. You Are a Person with Emotions.",
+   "lesson": "The financial advice that is mathematically optimal is often behaviourally impossible. A 100% equity portfolio maximises long-run returns \u2014 but if you panic and sell at the bottom of every crash, you'd have been better off in a balanced fund. Housel's argument: the best investment strategy is the one you can actually stick to. Reasonable > rational. A plan that accounts for human psychology beats a theoretically perfect plan that you'll abandon when the market drops 40%. Know your emotional tolerances. Build them into your plan.",
+   "key_quote": "The highest return is earned by the investor who can survive the worst years, not the one with the best spreadsheet.",
+   "action": "Ask yourself: if my portfolio dropped 40% tomorrow, what would I do? Build a strategy you'd actually execute in that scenario.",
+   "index": 7,
    "total": 48,
    "crux": [
     "Doing well with money has little to do with intelligence and everything to do with behaviour.",
@@ -836,199 +507,199 @@
   },
   "way": {
    "minimalism": {
-    "title": "Maintenance Is The Tell",
-    "body": "If you own more than you can maintain, you do not own it \u2014 you are storing it on its way to landfill. Count what you actually maintain.",
-    "action": "Identify one thing you own but never maintain. Decide: maintain it or release it.",
-    "index": 20,
+    "title": "One In, One Out",
+    "body": "Nothing enters the house until something leaves it. Not a rule about tidiness \u2014 a rule about equilibrium. Without it, possessions only ever accumulate, because buying is a decision and discarding never is.",
+    "action": "Buy nothing today without naming what it replaces.",
+    "index": 1,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Praise Publicly, Correct Privately",
-    "body": "Reverse it and you buy resentment that outlasts the correction by years. This costs nothing and is violated constantly.",
-    "action": "Send one specific public thank-you today. Not generic \u2014 specific.",
-    "index": 6,
+    "title": "Punctuality Is A Statement About Whose Time Matters",
+    "body": "Being late says your time is worth more than theirs, whatever you intended. Arrive five minutes early and use the wait. Note that Gulf meetings may start late \u2014 you still arrive on time.",
+    "action": "Add 10 minutes of buffer to every appointment this week.",
+    "index": 7,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Walk Without Input",
-    "body": "No podcast, no music, no call. Boredom is the raw material of original thought, and it has been almost entirely eliminated from modern life.",
-    "action": "Twenty minutes of walking with nothing in your ears.",
-    "index": 4,
+    "title": "The Evening Shutdown",
+    "body": "A defined end to the workday \u2014 review tomorrow's three priorities, close the laptop, say a phrase that marks the boundary. Without a ritual end, work bleeds into every remaining hour.",
+    "action": "Pick a shutdown phrase. Use it tonight.",
+    "index": 5,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Pareto Principle",
-    "body": "80% of results come from 20% of inputs \u2014 and the distribution is often sharper than that. The work is identifying the 20%, which requires measuring rather than assuming.",
-    "action": "Find the 20% of your effort producing most of the result. Cut something from the rest.",
-    "index": 16,
+    "title": "Map Is Not The Territory",
+    "body": "The model is a simplification and will be wrong at the edges. A financial model is a map. Treating its outputs as facts is how forecasts become fiction.",
+    "action": "Name the assumption in your current model most likely to be wrong.",
+    "index": 17,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0634\u0643\u0631\u0627\u064b \u062c\u0632\u064a\u0644\u0627\u064b",
-    "translit": "shukran jazeelan",
-    "meaning": "Thank you very much",
-    "use": "Stronger than plain shukran. Use after someone has genuinely helped you.",
-    "index": 2,
+    "script": "\u0645\u0646 \u0641\u0636\u0644\u0643",
+    "translit": "min fadlak",
+    "meaning": "Please",
+    "use": "min fadlik to a woman. Attach it to every request and you will be treated differently.",
+    "index": 3,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Write The One-Line Summary",
-    "body": "Every analysis compresses to one sentence with a number in it. 'Margin fell 340bps because freight doubled.' If you cannot write that line, the analysis is not finished.",
-    "action": "Compress your most recent piece of work to one sentence with one number.",
-    "index": 8,
+    "title": "The Pre-Mortem",
+    "body": "Imagine the project failed. Write why. Doing this before starting surfaces risks that no optimistic planning session will ever reach.",
+    "action": "Pre-mortem your current priority. List three causes of death.",
+    "index": 9,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Stress Is Physiological, Not Just Mental",
-    "body": "Chronic cortisol elevation drives visceral fat, impairs sleep, and suppresses immune function. The body does not distinguish financial stress from physical threat.",
-    "action": "Five minutes of slow exhale-biased breathing. Exhale twice as long as inhale.",
-    "index": 18,
+    "title": "Muscle Is A Glucose Sink",
+    "body": "Skeletal muscle disposes of most post-meal glucose. More muscle means better glycaemic control independent of diet \u2014 the metabolic argument for lifting, separate from strength.",
+    "action": "A short walk or 20 bodyweight squats after your largest meal.",
+    "index": 19,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Brian Chesky",
-   "quote": "If we tried to think of a good idea, we wouldn't have been able to think of Airbnb.",
-   "index": 79,
+   "name": "Kevin Systrom",
+   "quote": "Do what you love and the money will follow is bad advice. Do what creates the most value.",
+   "index": 80,
    "total": 96
   },
   "lesson": {
-   "tradition": "Learning",
-   "lesson": "Tell me and I forget. Teach me and I remember. Involve me and I learn.",
-   "source": "Benjamin Franklin"
+   "tradition": "Purpose",
+   "lesson": "The two most important days in your life are the day you were born and the day you find out why.",
+   "source": "Mark Twain"
   },
   "case": {
-   "title": "Uber's Unit Economics Crisis",
-   "story": "Uber was losing $58 per trip in China. Lost $1B in 6 months and sold to DiDi. In the US, cost per ride was subsidized by VC money, not customer economics.",
-   "lesson": "When you measure success by growth, not economics, you build a machine that grows its losses. Know your unit economics before you scale, not after."
+   "title": "Canva: Design for the Masses",
+   "story": "Melanie Perkins was rejected by 100 VCs. Then she raised $3M. Canva now has 170M users and a $40B valuation. Key: removed complexity that designers love but others hate.",
+   "lesson": "Simplify what experts have made complex. The mass market doesn't want power \u2014 they want results. Dumb down the interface without dumbing down the output."
   },
   "fpna": {
-   "title": "80/20 of Month-End",
-   "body": "20% of accounts drive 80% of variance. Focus commentary there. The rest is noise.",
-   "index": 15,
+   "title": "Cost Centre vs Profit Centre",
+   "body": "Cost centres are budgeted, profit centres are managed to a P&L. Knowing the difference changes how you frame every problem.",
+   "index": 16,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 1: Strategy + Finance",
-   "body": "CFOs translate business strategy into financial reality. They ask: what's the ROI, what's the IRR, what's the payback period? Practice building business cases. Every investment decision has a financial model behind it.",
-   "index": 6,
+   "title": "CFO Step 2: Investor Relations",
+   "body": "Listed company CFOs speak to markets quarterly. Practice presenting results: 'Revenue grew 18% YoY driven by X. EBITDA margin expanded 200bps due to Y. FY26 guidance: Z.' Short, precise, numbers-first. Record yourself.",
+   "index": 7,
    "total": 15
   },
   "money_hack": {
-   "title": "Index Funds over Active",
-   "body": "85% of large-cap active funds underperform Nifty over 10 years. Index at 0.1% expense ratio."
+   "title": "Term Insurance First",
+   "body": "\u20b91Cr term insurance (\u20b910\u201315K/year at 25). Non-negotiable. Buy this before any investment."
   },
   "dubai": {
-   "title": "Interviews here are panels",
-   "body": "Expect three rounds: recruiter screen, hiring manager, then a panel with the CFO and a business head. The business head is the one to convince \u2014 they decide whether finance is useful or overhead.",
-   "targets": "Answer the business head in their language, not in accounting standards.",
-   "action_label": "Prep",
-   "action": "Have one story about a decision you changed with a number.",
-   "index": 28,
+   "title": "The offer letter clauses to read twice",
+   "body": "Probation length (usually six months, terminable on 14 days), annual leave (30 calendar days is standard, 22 working days is not the same thing), flight allowance, and whether the visa is sponsored for family from day one or after probation.",
+   "targets": "Family sponsorship after probation means six months of separation nobody mentioned.",
+   "action_label": "Check",
+   "action": "Ask about family visa timing before you accept, in writing.",
+   "index": 29,
    "total": 30
   },
   "daughter": {
    "months": 8,
-   "days": 244,
+   "days": 245,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "2-minute rule: if it takes under 2 min, do it now. Don't queue it.",
+  "productivity": "Time-block your calendar. Unblocked time = wasted time.",
   "father": [
    {
-    "title": "Introduce water in an open cup",
-    "do": "Offer a few sips from a small open cup, held by you. Expect most of it to spill.",
-    "why": "Open-cup drinking develops different oral motor patterns than a bottle or spout. Starting now, badly, is easier than starting later, correctly."
+    "title": "Notice what she is not doing",
+    "do": "Once a week, check the milestone list rather than assuming.",
+    "why": "Sitting, transferring objects hand to hand, responding to her name, and babbling with consonants are the seven-month markers. Knowing the list means concerns get raised early, when intervention works best."
    },
    {
-    "title": "Massage after the bath",
-    "do": "Two minutes of firm, slow strokes on legs and back after bathing.",
-    "why": "Sustained touch by a father has measurable effects on infant stress response, and it gives you a reliable daily block of contact that is not feeding or settling."
+    "title": "Talk to her about your day",
+    "do": "Tell her what happened at work, in full sentences, as if she understands.",
+    "why": "The content is irrelevant and the exposure is not. It also forces you to articulate the day, which is a decent end-of-work ritual in its own right."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Anuvrata",
-    "translation": "The lesser vows",
-    "teaching": "Householders take limited versions of the great vows rather than the monastic form \u2014 the tradition explicitly designs for people with jobs and families.",
-    "apply": "Do not adopt a practice you cannot sustain alongside work and a seven-month-old. A small vow kept beats a large one abandoned."
+    "term": "Pratikramana",
+    "translation": "Ritual review and turning back",
+    "teaching": "A periodic practice of reviewing one's conduct, acknowledging where one fell short, and resolving to correct it. Structurally, an audit.",
+    "apply": "You already run a monthly close on the business. Run a fifteen-minute one on yourself: what did I get wrong, what am I changing, what is the date."
    },
    {
     "tradition": "Buddhism",
-    "term": "Kalama Sutta",
-    "translation": "Test it yourself",
-    "teaching": "The Buddha told the Kalamas not to accept teaching on authority, tradition, or scripture \u2014 but to test whether it leads to benefit when practised.",
-    "apply": "Apply it to strategy advice, including from people senior to you. What is the evidence, and what would falsify it? Deference is not evidence."
+    "term": "Mudita",
+    "translation": "Sympathetic joy",
+    "teaching": "The third sublime state: genuine pleasure at another's success. Named separately because it is rarer and harder than compassion for suffering.",
+    "apply": "Pick the peer whose progress you find least comfortable and find the thing they did well. Envy is the most common emotion in a competitive finance function and the least admitted."
    }
   ],
   "spanish": [
    {
-    "word": "desde entonces",
-    "meaning": "since then",
-    "es": "Desde entonces todo cambi\u00f3.",
-    "en": "Since then everything changed.",
-    "tag": "Everyday"
+    "word": "estar al d\u00eda",
+    "meaning": "to be up to date",
+    "es": "Estoy al d\u00eda con los reportes.",
+    "en": "I am up to date with the reports.",
+    "tag": "Idiom"
    },
    {
-    "word": "valer la pena el esfuerzo",
-    "meaning": "to be worth the effort",
-    "es": "Vale la pena el esfuerzo.",
-    "en": "It is worth the effort.",
-    "tag": "Idiom"
+    "word": "la ganancia",
+    "meaning": "the profit",
+    "es": "La ganancia creci\u00f3 un 12% este a\u00f1o.",
+    "en": "Profit grew 12% this year.",
+    "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Extrapolate",
-    "say": "ik-STRAP-uh-layt",
-    "meaning": "To extend a trend beyond known data.",
-    "example": "Do not extrapolate a festive quarter across the year.",
-    "note": "Naming the error is often the fastest way to kill a bad forecast."
+    "word": "Precipitate",
+    "say": "pri-SIP-i-tayt",
+    "meaning": "To cause something to happen suddenly.",
+    "example": "The covenant test precipitated the refinancing.",
+    "note": "As a verb it means trigger; as an adjective (pri-SIP-i-tit) it means hasty. Different stress."
    },
    {
-    "word": "Marginal",
-    "say": "MAR-ji-nuhl",
-    "meaning": "Relating to the next unit; or barely sufficient.",
-    "example": "The marginal store adds revenue but no profit.",
-    "note": "In economics it means 'the next one'. Most people misuse it to mean 'small'."
+    "word": "Preclude",
+    "say": "pri-KLOOD",
+    "meaning": "To prevent from happening.",
+    "example": "The lease terms preclude subletting.",
+    "note": "More precise than 'stop' when something is ruled out in advance."
    }
   ],
   "speaking": {
-   "title": "One-minute summary",
-   "drill": "At the end of the day, summarise it out loud in 60 seconds as if to a CFO.",
-   "why": "Daily practice at compressing information is the underlying skill in every senior finance conversation."
+   "title": "Slow the Q&A",
+   "drill": "Have someone ask you three questions in a row. Pause two seconds before each answer.",
+   "why": "Rapid answers read as reflexive. A deliberate pause reads as considered, and buys you the sentence you actually want."
   },
   "interview_tech": [
    {
-    "q": "Gross margin fell 180bps. Walk me through the bridge.",
-    "a": "Decompose into four drivers: mix \u2014 did the sales split shift toward lower-margin categories; price \u2014 did you discount more, measured as markdown as a percent of gross sales; cost \u2014 did landed cost rise from FX, freight or supplier price; and shrink/wastage. Quantify each in basis points so they sum to 180. The bridge is the answer, not the total. In retail the most common culprit is markdown depth on aged stock, which is really an buying error surfacing one season late.",
-    "who": "Target \u00b7 Tesco \u00b7 Max Fashion"
+    "q": "What is the difference between EBITDA and free cash flow, and which do you manage to?",
+    "a": "EBITDA ignores working capital movements, capex, tax and interest. A retailer can grow EBITDA while burning cash by stuffing stores with inventory and opening capital-hungry sites. Free cash flow = EBITDA \u2212 capex \u2212 change in working capital \u2212 tax \u2212 interest. Manage the business to free cash flow; report EBITDA because that is what lenders and multiples use. Where they diverge for more than two quarters, something structural is wrong.",
+    "who": "Berkshire \u00b7 Amazon \u00b7 Al-Futtaim"
    },
    {
-    "q": "Auditors propose an adjustment you disagree with. What do you do?",
-    "a": "Separate judgement from fact. If it is a factual error, show the evidence and it goes away. If it is a judgement \u2014 provisioning, impairment, lease term \u2014 set out your basis in a technical memo: the standard, the specific paragraph, the assumptions and their support. Escalate to the engagement partner if needed, and involve the audit committee chair early rather than late. If they still disagree and it is material, you record it. What you never do is trade an adjustment against a different one.",
-    "who": "Any listed group"
+    "q": "What breaks first when a retailer scales from 60 to 200 stores?",
+    "a": "Not the finance system \u2014 the master data and the operating cadence. Specifically: SKU and price master governance, because inconsistent data makes every report wrong; the supply chain's ability to replenish without central stock-outs; and the management reporting rhythm, because a weekly review that works for 60 stores becomes noise at 200 without exception-based reporting. Finance's job is to install store-level P&L discipline and exception thresholds before the growth, not after.",
+    "who": "Landmark Group \u00b7 Americana \u00b7 Alshaya"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you were wrong about a person.",
-    "a": "A quieter question than it looks \u2014 it tests self-awareness and whether you revise judgements. Both directions work: someone you underestimated who turned out strong, or someone you backed who did not work out. The second is braver and lands better if you own the hiring or promotion decision. End with what you changed about how you assess people, ideally something structural like a different interview question or a probation checkpoint.",
-    "who": "Amazon \u00b7 Unilever \u00b7 Alshaya"
+    "q": "How do you decide what to delegate?",
+    "a": "Give a rule. Something like: delegate anything where the cost of a mistake is recoverable and the learning value is high; keep anything where your specific judgement is the reason the answer is right, and anything you would have to redo. The failure mode interviewers probe is the controller who keeps the technical work because it is comfortable and delegates only the admin \u2014 which caps the team's growth and yours.",
+    "who": "GE \u00b7 Unilever \u00b7 Group CFOs"
    },
    {
-    "q": "If we hire you and in a year it has not worked, what is the most likely reason?",
-    "a": "A genuinely good question and a rare one. Answer honestly with the real risk, not a disguised strength: a mismatch on decision-making pace, an unclear boundary between your scope and someone else's, or a business where the data foundations are worse than described so the first year goes on plumbing rather than insight. Then say what you would do in month one to check for it. Naming the failure mode makes you look like someone who has thought about the job rather than the offer.",
-    "who": "Senior search processes"
+    "q": "Tell me about a time you disagreed with your CEO.",
+    "a": "They are testing whether you have spine and judgement, not whether you win. Use STAR and pick a disagreement where you were partly wrong \u2014 it reads as honest. Cover: what the disagreement was, what evidence you brought, how you escalated it appropriately, what the decision was, and crucially what you did after the decision went against you. The signal they want: you argue hard privately and commit fully publicly.",
+    "who": "Majid Al Futtaim \u00b7 Unilever \u00b7 Amazon"
    }
   ]
  }
