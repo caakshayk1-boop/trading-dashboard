@@ -1209,6 +1209,29 @@ def run_multibagger_scan(time_str):
     logging.info("Running potential multibagger scan (weekly)...")
     mbs = scan_multibaggers(top_n=15)
     logging.info(f"Multibagger scan: {len(mbs)} candidates")
+
+    # Record the ATTEMPT, not just the outcome. Without this a week where
+    # nothing clears the R:R 2.0 gate writes nothing at all, and the section
+    # keeps serving the last batch that DID qualify with no hint it is old.
+    # That is what "the multibaggers never change" was: the ledger's last
+    # multibagger row is 2026-08-01 while magic and ai_longterm — same
+    # Saturday job, same slot — both logged 2026-08-22. The screen was
+    # running fine and qualifying nobody, silently, for four weeks.
+    #
+    # Deliberately NOT a loosened gate. On 2026-08-27 the screen took 11 raw
+    # candidates and rejected 10 for R:R below 2.0 (CHENNPETRO 1.29,
+    # FLUOROCHEM 1.07, GLAXO 0.59 — a 0.59 needs a 63% win rate merely to
+    # break even). Publishing those to make the section look busy is exactly
+    # the trade this screen exists to refuse. An empty week is a real result
+    # and now says so.
+    try:
+        from newspaper import record_job_status
+        record_job_status("multibagger", "ok" if mbs else "empty",
+                          f"{len(mbs)} qualified — R:R 2.0 floor",
+                          records=len(mbs), expected=15)
+    except Exception as _e:                             # noqa: BLE001
+        logging.warning(f"multibagger: could not record the attempt ({_e})")
+
     if mbs:
         log_multibaggers(mbs)
         blocks = []

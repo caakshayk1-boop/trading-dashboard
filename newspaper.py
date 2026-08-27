@@ -4566,10 +4566,6 @@ TEMPLATE = r"""<!DOCTYPE html>
    the pinned static instance is 24KB. It is only ever used at display sizes,
    so one optical size is the right one. Regenerate with
    tools_fetch_fonts.py — the reasoning lives in that file's docstring. */
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/BricolageGrotesque-600-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/BricolageGrotesque-600-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/BricolageGrotesque-800-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
-@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:800;font-display:swap;src:url('/fonts/BricolageGrotesque-800-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Onest';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Onest-400-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
 @font-face{font-family:'Onest';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/Onest-400-latin.woff2') format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Onest';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/Onest-500-latin-ext.woff2') format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
@@ -4726,7 +4722,7 @@ TEMPLATE = r"""<!DOCTYPE html>
      A page where every metric looks equally important is a page with no
      hierarchy, which is the single loudest complaint about this site.
 
-       --disp   Bricolage Grotesque. Headlines and the numbers that ARE the
+       --disp   Onest, tight-tracked. Headlines and the numbers that ARE the
                 point. Variable width axis, so a headline can be set tight
                 without faking it with letter-spacing.
        --serif  Newsreader. The editorial voice — section titles and pull
@@ -4737,7 +4733,17 @@ TEMPLATE = r"""<!DOCTYPE html>
                 grotesk goes cold.
        --mono   JetBrains Mono. Data, and only data. If it is in mono it is a
                 measurement. */
-  --disp:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  /* RETIRED AS A SEPARATE FACE, 2026-08-27. Measured on production: Bricolage
+     was on 80 elements and Newsreader on 49, against Onest's 3,081 and
+     JetBrains Mono's 4,592. Two whole families — eight woff2 files — for 129
+     elements between them, on a page whose brief is "WSJ or a Bloomberg
+     terminal, not too many fonts".
+     --disp stays as a TOKEN because 16 call sites use it and they are all
+     correct about their intent: big, tight-tracked, data-carrying headline
+     numbers. It now resolves to Onest, which is a grotesque and does that job.
+     Three families, each with one job: serif argues, sans speaks, mono
+     measures. That is the WSJ split; four was one face pretending. */
+  --disp:'Onest','Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
   --sans:'Onest','Fira Sans',-apple-system,BlinkMacSystemFont,sans-serif;
   /* Editorial display face. Newsreader carries the headlines and nothing
@@ -5630,6 +5636,36 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
    The header pays for it instead: the topbar shrinks, and the livebar (a long
    diagnostic string that ellipsises to nothing useful at this width anyway)
    drops out. Net sticky height is lower than before AND the prices are there. */
+/* ── CHROME BUDGET ──────────────────────────────────────────────────────────
+   Measured on production, 1280x720: topbar 61 + trust 32.4 + nav 46.4 +
+   livebar 42.6 + ticker 38.8 = 221.2px of a 720px viewport. Thirty-one
+   percent of the screen, permanently, before one number is read — and the
+   whole point of this page is the numbers.
+
+   The scroll-collapse that fixes it already existed. It was written inside
+   @media(max-width:560px), so it ran only on phones and never on the desktop
+   where the stack is tallest. That is the second time a change landed behind
+   a phone-only breakpoint and read as "nothing happened".
+
+   What survives a scroll-down is what a terminal keeps on screen: the PRICES
+   and the way back to a section. The masthead, the trust strip and the
+   livebar diagnostic are all orientation — read once on arrival, dead weight
+   for the next twenty minutes. 221px -> 85px, and scrolling up restores
+   everything. */
+.headstack .topbar,.headstack .trust,.headstack .livebar{
+  transition:margin-top .2s var(--ease),opacity .16s linear}
+.headstack.compact .topbar{margin-top:-62px}
+.headstack.compact .trust,
+.headstack.compact .livebar{opacity:0;pointer-events:none;
+  height:0;margin:0;padding:0;overflow:hidden;border:0}
+/* The nav stays but loses its padding — a terminal keeps its section keys. */
+.headstack.compact .nav{transition:height .2s var(--ease)}
+.headstack.compact .nav .nav-in{padding-top:2px;padding-bottom:2px}
+@media(prefers-reduced-motion:reduce){
+  .headstack .topbar,.headstack .trust,.headstack .livebar,
+  .headstack.compact .nav{transition:none}
+}
+
 @media(max-width:560px){
   .headstack .tickwrap{display:block}
   .topbar-in{height:48px}
@@ -5646,16 +5682,16 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
      scrolling UP brings the whole header back. Standard mobile pattern, and it
      is what makes a four-row sticky stack affordable on a 390px screen:
      ~146px of chrome while reading becomes ~30px of ticker. */
-  .headstack .topbar,
-  .headstack .nav,
-  .headstack .livebar{transition:margin-top .22s var(--ease),opacity .18s linear}
+  /* Phone keeps the harsher version: the nav goes too. At 390px a nav row is
+     a horizontal scroller nobody scrolls mid-read, and the FAB already opens
+     the section list. Desktop keeps its nav because there it is one click. */
+  .headstack .nav{transition:margin-top .22s var(--ease),opacity .18s linear}
   .headstack.compact .topbar{margin-top:-48px}
-  .headstack.compact .nav,
-  .headstack.compact .livebar{opacity:0;pointer-events:none;
+  .headstack.compact .nav{opacity:0;pointer-events:none;
     margin-top:0;height:0;overflow:hidden;border:0}
 }
 @media(prefers-reduced-motion:reduce){
-  .headstack .topbar,.headstack .nav,.headstack .livebar{transition:none}
+  .headstack .nav{transition:none}
 }
 
 /* ═══════════════════ WORLD MAP ═══════════════════ */
@@ -7892,16 +7928,16 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    serif is what makes the page read as a publication rather than a control
    panel, and replacing it would have cost the thing the redesign was for.
 
-   Bricolage takes the DATA. Every headline number on this page was set in
+   --disp takes the DATA. Every headline number on this page was set in
    JetBrains Mono at 40px with -1.5px tracking: a monospace face stretched
    three times past the size it was drawn for, where the even advance widths
-   that make a table readable turn a headline gappy. Bricolage is a display
+   that make a table readable turn a headline gappy. --disp is a display
    grotesque with a width axis, so a big number can be set tight and still
    keep tabular figures.
 
    Mono stays exactly where it belongs — inside tables, in row data, and
    anywhere digits must line up in a column. If it is small and it is data,
-   it is mono. If it is large and it is data, it is Bricolage. */
+   it is mono. If it is large and it is data, it is --disp. */
 .stat .v,
 .kpi .v,
 .hero-stat .v,
@@ -8826,7 +8862,7 @@ details.fundcat:first-of-type{border-top:0}
 }
 .fundcat-sum::-webkit-details-marker{display:none}
 .fundcat-sum::before{
-  content:'+';font:400 15px/1 var(--mono);color:var(--lime);flex:none;
+  content:'+';font:400 14px/1 var(--mono);color:var(--lime);flex:none;
   width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
   border:1px solid var(--lime-line);align-self:center;
 }
@@ -8878,7 +8914,7 @@ details.fundcat[open] .fundcat-sum::before{content:'\2212'}
   .dlog-r{grid-template-columns:1fr 1fr 1fr;gap:4px 10px}
   .dl-s{grid-column:1/3;font-size:13px}
   .dl-o{grid-column:3;grid-row:1}
-  .dl-d,.dl-v,.dl-t{font-size:10px}
+  .dl-d,.dl-v,.dl-t{font-size:11px}
 }
 
 
@@ -8969,7 +9005,7 @@ details.ipo-card{padding:0}
 }
 .ipo-sum::-webkit-details-marker{display:none}
 .ipo-sum::before{
-  content:'+';font:400 15px/1 var(--mono);color:var(--dim);flex:none;
+  content:'+';font:400 14px/1 var(--mono);color:var(--dim);flex:none;
   width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;
   border:1px solid var(--line2);align-self:center;
 }
@@ -8993,7 +9029,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   font:400 12px/1.55 var(--sans);color:var(--muted);max-width:70ch;
 }
 .sv-tag{
-  font:700 10px/1 var(--mono);letter-spacing:.1em;
+  font:700 11px/1 var(--mono);letter-spacing:.1em;
   color:var(--p-research);flex:none;
 }
 

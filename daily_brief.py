@@ -23,6 +23,10 @@ import db
 log = logging.getLogger(__name__)
 
 IST = timezone(timedelta(hours=5, minutes=30))
+# The reader is in Malaysia. The brief's slots are pinned to MYT, so "was
+# today's brief sent?" must be asked on the MYT calendar — in UTC the 08:00 MYT
+# send belongs to the previous day and every catch-up would re-send it.
+MYT = timezone(timedelta(hours=8))
 OBS_REPO = os.environ.get("OBSIDIAN_GITHUB_REPO", "caakshayk1-boop/obsidian-brain")
 
 
@@ -1161,7 +1165,37 @@ def _build_apex_digest() -> str:
         return ""
 
 
-def send_brief(slot: str = "midday"):
+def _brief_job(slot: str) -> str:
+    """job_runs key for one slot's send. Morning and evening are separate keys
+    so a delivered morning never satisfies a missing evening."""
+    return f"brief_{'morning' if slot in ('morning', 'midday') else slot}"
+
+
+def brief_already_sent(slot: str) -> bool:
+    """Did THIS slot already go out today (MYT)?
+
+    The reader's day is the Malaysian one, so the date is taken in MYT. Taking
+    it in UTC would make the 08:00 MYT send belong to the previous UTC day and
+    a catch-up at 10:00 MYT would think the slot was still unsent.
+
+    Returns False whenever the answer cannot be established — no record, an
+    unreadable timestamp, a database that will not answer. A catch-up that
+    duplicates a brief is a mild annoyance; one that stays silent because a
+    lookup failed is the exact failure it exists to prevent.
+    """
+    try:
+        from newspaper import get_job_status
+        st = get_job_status(_brief_job(slot))
+        if not st or st.get("status") != "ok":
+            return False
+        run_at = datetime.fromisoformat(str(st["run_at"]).replace("Z", "+00:00"))
+        return run_at.astimezone(MYT).date() == datetime.now(MYT).date()
+    except Exception as e:                              # noqa: BLE001
+        log.warning("brief_already_sent(%s): %s — assuming NOT sent", slot, e)
+        return False
+
+
+def send_brief(slot: str = "midday", catch_up: bool = False):
     """
     One of the two daily sends. `slot` is "morning" (08:00 MYT) or "evening"
     (17:00 MYT); "midday" is still accepted and is what the morning slot
@@ -1175,11 +1209,28 @@ def send_brief(slot: str = "midday"):
     the race anyway the brief degrades rather than breaks: every news.askakshay
     call falls back to the local yfinance cache.
     """
+    # A catch-up run exists because GitHub's scheduler is best-effort: on
+    # 2026-08-27 the 22:43 UTC morning cron produced NO RUN AT ALL (not a late
+    # one — none), and the brief only went out because it was dispatched by
+    # hand. Later crons re-attempt the same slot and this is what stops them
+    # sending it twice on the days the first one worked.
+    if catch_up and brief_already_sent(slot):
+        log.info("daily_brief: %s already delivered today — catch-up stands down", slot)
+        return
+
     log.info("daily_brief: building %s...", slot)
     brief    = build_section_brief(slot)
     today    = datetime.now(IST).date().isoformat()   # IST date
     _save_to_db(brief)
     _post(brief)
+    # Recorded only AFTER _post returns. Stamping it before the send is how a
+    # catch-up would stand down for a brief that never left the building.
+    try:
+        from newspaper import record_job_status
+        record_job_status(_brief_job(slot), "ok",
+                          f"{slot} brief delivered · {len(brief)} chars")
+    except Exception as e:                              # noqa: BLE001
+        log.warning("daily_brief: could not record the %s send (%s)", slot, e)
 
     # APEX P&L rides the evening send only. Two alerts a day means two, and a
     # digest that arrives as its own notification is a third.

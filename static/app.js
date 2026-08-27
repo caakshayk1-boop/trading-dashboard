@@ -4768,9 +4768,12 @@ var TV_ALIASES = (function () {
       var last = window.scrollY, ticking = false;
       function apply(){
         ticking = false;
-        if (!window.matchMedia('(max-width:560px)').matches){
-          stack.classList.remove('compact'); last = window.scrollY; return;
-        }
+        // Every width, not just phones. This was gated on max-width:560px and
+        // so the whole behaviour was invisible on the desktop where the stack
+        // is TALLEST: five bars — topbar 61 + trust 32 + nav 46 + livebar 43
+        // + ticker 39 — is 221px of a 720px viewport, 31% of the screen
+        // permanently spent on chrome before a single number is read.
+        // Compact keeps the ticker and the nav and drops the rest.
         var y = window.scrollY, dy = y - last;
         if (Math.abs(dy) < 6) return;          // ignore jitter and rubber-band
         if (y < 120) stack.classList.remove('compact');

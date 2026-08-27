@@ -511,6 +511,46 @@ def _note_resignal(c, existing_id, symbol, new_entry, new_action, reason=None):
     )
 
 
+def _cross_engine_duplicate(c, symbol, entry, today, signal_type):
+    """The same position, filed by a DIFFERENT engine, today, at the same entry.
+
+    is_duplicate() keys on symbol + signal_type, so it cannot see this: two
+    engines that independently pick the same name on the same day write two
+    rows with identical entry, stop and targets. That is one position, and
+    counting it twice inflates expectancy, doubles the engine's apparent hit
+    count, and — on the crore book — would allocate capital to it twice.
+
+    Fifteen such pairs are in the live ledger. SONACOMS on 2026-08-25 is the
+    clearest: `ohl` and `breakout` both filed 808.80 / 796.67 and both booked
+    the identical -1.50%. The pair reads as two independent losses. It is one.
+
+    A hardcoded magic<->magicmagic check already existed in
+    _log_magic_to_ledger. It was correct and far too narrow: the same collision
+    happens across ohl/breakout, ai_longterm/breakout, multibagger/breakout and
+    ai_4h/4h. This generalises it to every engine and moves it to the write
+    path, where a new engine inherits it without anyone remembering to.
+
+    Keyed on the ENTRY PRICE, deliberately. Two engines wanting the same symbol
+    at different levels are two real trades with different risk — those stay.
+    Rounded to 2dp because the engines compute entry independently and float
+    noise in the 6th decimal must not defeat the match.
+    """
+    if entry is None:
+        return None
+    try:
+        row = c.execute(
+            "SELECT id, signal_type FROM all_signals "
+            "WHERE symbol=? AND date=? AND signal_type<>? AND entry IS NOT NULL "
+            "AND ROUND(entry, 2)=ROUND(?, 2) ORDER BY id LIMIT 1",
+            (symbol, today, signal_type, float(entry))).fetchone()
+    except Exception as e:                              # noqa: BLE001
+        # A failed lookup must never cost the scan its signals. Logging one
+        # duplicate is strictly better than losing the whole batch.
+        log.warning(f"cross-engine duplicate check failed for {symbol} ({e}) — logging it")
+        return None
+    return (row[0], row[1]) if row else None
+
+
 def duplicate_symbols(candidates, signal_type="swing"):
     """Batch form of is_duplicate — returns the set of symbols to skip.
 
@@ -674,6 +714,16 @@ def log_to_all_signals(symbol, signal_type, action, entry, sl, t1, t2, t3, rr,
         # were stored as NSE equities and /api/ticker quoted SILVER as
         # SILVER.NS — a different company, at ₹233.
         _mkt, _atype = _classify(symbol)
+        # One position, two engines. See _cross_engine_duplicate.
+        clash = _cross_engine_duplicate(c, symbol, entry, today, signal_type)
+        if clash:
+            _note_resignal(c, clash[0], symbol, entry, action,
+                           reason=f"also picked by {signal_type} at the same entry")
+            c.commit()
+            _db.sync(c)
+            log.info(f"all_signals SKIPPED: {symbol} {signal_type} — {clash[1]} "
+                     f"already filed this position today at {entry} (id={clash[0]})")
+            return None
         c.execute("""INSERT INTO all_signals
             (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
              rr,score,status,sent_at,metadata,engine_version,market,asset_type,remarks)
@@ -710,6 +760,7 @@ def log_batch_to_all_signals(rows, date=None):
     today = date or _today_ist()
     ids = []
     rejected = 0
+    collided = 0
     with _conn() as c:
         for r in rows:
             # An allocation has no levels to order. Validating one means
@@ -727,6 +778,17 @@ def log_batch_to_all_signals(rows, date=None):
                 continue
             # Same as log_to_all_signals: classify rather than inherit the
             # 'NSE'/'Equity' schema defaults. See symbols.classify.
+            clash = _cross_engine_duplicate(c, r["symbol"], r.get("entry"),
+                                            today, r["signal_type"])
+            if clash:
+                _note_resignal(c, clash[0], r["symbol"], r.get("entry"),
+                               r.get("action", "BUY"),
+                               reason=f"also picked by {r['signal_type']} at the same entry")
+                log.info(f"all_signals batch SKIPPED: {r['symbol']} {r['signal_type']} — "
+                         f"{clash[1]} already filed this position today (id={clash[0]})")
+                ids.append(None)   # keeps ids aligned with the input list
+                collided += 1
+                continue
             _mkt, _atype = _classify(r["symbol"])
             c.execute("""INSERT INTO all_signals
                 (date,signal_type,symbol,action,timeframe,entry,sl,target1,target2,target3,
@@ -744,7 +806,10 @@ def log_batch_to_all_signals(rows, date=None):
         _db.sync(c)
     if rejected:
         log.warning(f"all_signals batch: {rejected}/{len(rows)} row(s) rejected by ordering validation")
-    written = len(ids) - rejected
+    if collided:
+        log.warning(f"all_signals batch: {collided}/{len(rows)} row(s) already filed today "
+                    f"by another engine at the same entry — noted, not double-logged")
+    written = len(ids) - rejected - collided
     log.info(f"all_signals batch logged: {written}/{len(rows)} row(s) "
              f"({', '.join(r['symbol'] for r in rows[:8])}"
              f"{'…' if len(rows) > 8 else ''})")
