@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-27T10:41:44",
+ "generated_at": "2026-08-27T10:51:00",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -18,8 +18,13 @@
    "price_high": 53.0,
    "issue_size_shares": 18145406.0,
    "issue_size_cr": 135.73,
-   "subscription_x": 171.45557768175593,
-   "subscription_by_category": null,
+   "subscription_x": 172.01804026870494,
+   "subscription_by_category": {
+    "QIB": 249.71,
+    "HNI": 412.25,
+    "Retail": 171.0,
+    "Total": 245.18
+   },
    "lot_size": 283.0,
    "min_investment": 14999.0,
    "fresh_issue_cr": 60.0,
@@ -27,7 +32,7 @@
    "face_value": 5.0,
    "anchor_cr": 40.72,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b944",
+   "gmp_text": "\u20b945",
    "revenue_cr": 193.44,
    "revenue_growth_pct": 16.0,
    "pat_cr": 22.59,
@@ -62,14 +67,17 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 171.5x, but the book is small (about Rs.136 Cr).",
+   "verdict_why": "Subscribed 172.0x, but the book is small (about Rs.136 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1311/hy-tech-engineers-ltd",
+   "allotment_date": "Aug 28, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 20% \u2014 well above the ~14% a typical listed peer earns.",
-    "Effectively debt-free at 0.24 debt to equity, so the balance sheet is not a constraint."
+    "Effectively debt-free at 0.24 debt to equity, so the balance sheet is not a constraint.",
+    "Institutions are in at 249.71x, which is where the research budgets are."
    ],
    "reads_against": [
     "More of the issue is existing holders selling (\u20b976 Cr) than new money into the business (\u20b960 Cr)."
@@ -90,8 +98,13 @@
    "price_high": 138.0,
    "issue_size_shares": 29583600.0,
    "issue_size_cr": 582.8,
-   "subscription_x": 48.11324517638151,
-   "subscription_by_category": null,
+   "subscription_x": 48.23426831082086,
+   "subscription_by_category": {
+    "QIB": 139.69,
+    "HNI": 87.11,
+    "Retail": 24.51,
+    "Total": 70.78
+   },
    "lot_size": 100.0,
    "min_investment": 13800.0,
    "fresh_issue_cr": 398.8,
@@ -99,7 +112,7 @@
    "face_value": 10.0,
    "anchor_cr": 174.54,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b942",
+   "gmp_text": "\u20b946",
    "revenue_cr": 2839.67,
    "revenue_growth_pct": 25.0,
    "pat_cr": 63.52,
@@ -134,14 +147,17 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 48.1x, but the book is small (about Rs.583 Cr).",
+   "verdict_why": "Subscribed 48.2x, but the book is small (about Rs.583 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/skyways-air-ipo/2510/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1164/skyways-air-services-ltd",
+   "allotment_date": "Aug 28, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 25% year on year.",
-    "Profit grew faster than revenue (32% against 25%), so margins widened rather than bought growth."
+    "Profit grew faster than revenue (32% against 25%), so margins widened rather than bought growth.",
+    "Institutions are in at 139.69x, which is where the research budgets are."
    ],
    "reads_against": [
     "Debt to equity of 1.88 \u2014 leverage magnifies both directions from here."
@@ -162,8 +178,14 @@
    "price_high": 988.0,
    "issue_size_shares": 13124929.0,
    "issue_size_cr": 1757.0,
-   "subscription_x": 58.16497750197353,
-   "subscription_by_category": null,
+   "subscription_x": 58.210814321357475,
+   "subscription_by_category": {
+    "QIB": 181.2,
+    "HNI": 77.47,
+    "Retail": 13.3,
+    "Employee": 16.02,
+    "Total": 74.86
+   },
    "lot_size": 15.0,
    "min_investment": 14820.0,
    "fresh_issue_cr": 150.0,
@@ -171,7 +193,7 @@
    "face_value": 2.0,
    "anchor_cr": 526.2,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b9285",
+   "gmp_text": "\u20b9275",
    "revenue_cr": 872.26,
    "revenue_growth_pct": 15.0,
    "pat_cr": 109.9,
@@ -211,7 +233,11 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1302/symbiotec-pharmalab-ltd",
-   "reads_for": null,
+   "allotment_date": "Aug 28, 2026",
+   "category_source": "ipopremium.in",
+   "reads_for": [
+    "Institutions are in at 181.20x, which is where the research budgets are."
+   ],
    "reads_against": [
     "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr)."
    ]
@@ -231,7 +257,7 @@
    "price_high": 99.0,
    "issue_size_shares": 17683000.0,
    "issue_size_cr": 175.06,
-   "subscription_x": 0.4404472657354521,
+   "subscription_x": 0.4565267205790873,
    "subscription_by_category": null,
    "lot_size": 151.0,
    "min_investment": 14949.0,
@@ -277,7 +303,7 @@
     ]
    },
    "verdict": "AVOID",
-   "verdict_why": "Only 0.44x subscribed with the book about to close.",
+   "verdict_why": "Only 0.46x subscribed with the book about to close.",
    "verdict_caveat": "An undersubscribed mainboard issue usually lists at or below its band.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/annu-projects-ipo/2500/",
@@ -304,7 +330,7 @@
    "price_high": 82.0,
    "issue_size_shares": 63205127.0,
    "issue_size_cr": 700.0,
-   "subscription_x": 0.6356467885904256,
+   "subscription_x": 0.6431565591190095,
    "subscription_by_category": {
     "QIB": 0.04,
     "HNI": 1.66,
@@ -615,9 +641,6 @@
    "risks": null,
    "use_of_proceeds": null,
    "enriched_source": "chittorgarh.com",
-   "issue_size_cr": 825.0,
-   "enriched_url": "https://www.chittorgarh.com/ipo/augmont-enterprises-ipo/2673/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1303/augmont-enterprises-ltd",
    "reads_for": [
     "Revenue grew 42% year on year.",
     "Profit grew faster than revenue (53% against 42%), so margins widened rather than bought growth.",
