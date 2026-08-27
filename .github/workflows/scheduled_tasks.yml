@@ -32,8 +32,21 @@ name: Scheduled Tasks — Morning and Evening Briefs
 # Mon-Fri: a market brief on a Sunday is noise. Change `1-5` to `*` for daily.
 on:
   schedule:
-    - cron: '0 0 * * 1-5'     # 08:00 MYT · 05:30 IST — morning brief
-    - cron: '0 12 * * 1-5'    # 20:00 MYT · 17:30 IST — evening brief
+    # 06:43 UTC-previous-day, NOT 00:00. Two changes, both measured:
+    #
+    # 1. EARLIER, to absorb drift. GitHub's scheduler is best-effort and this
+    #    repo runs 1.5-3h late. Observed: the 2026-08-26 morning brief was
+    #    cron'd for 00:00 UTC and actually started 01:13 — 73 minutes late,
+    #    so it landed at 09:13 MYT instead of 08:00.
+    # 2. OFF-PEAK MINUTE. :00 of the hour is the single most contended slot on
+    #    the whole platform; every scheduled workflow in the world asks for it.
+    #    :43 queues far shorter.
+    #
+    # 22:43 UTC + ~75min observed drift ≈ 07:58 MYT. UTC Sun-Thu evening IS
+    # MYT Mon-Fri morning, hence 0-4 rather than 1-5 — get that wrong and the
+    # brief sends on Sunday and skips Friday.
+    - cron: '43 22 * * 0-4'   # ~08:00 MYT after drift · morning brief
+    - cron: '43 10 * * 1-5'   # ~20:00 MYT after drift · evening brief
     - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (data only, no Telegram)
     # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
     # to TASK=health since it was written, but that cron was never in this
@@ -102,9 +115,13 @@ jobs:
             TASK="$INPUT"
           else
             case "$SCHEDULE" in
+              "43 22 * * 0-4")  TASK=brief_morning ;;
+              # The old on-the-hour slots, kept so a manual dispatch of either
+              # still resolves rather than falling through to TASK=none.
               "0 0 * * 1-5")    TASK=brief_morning ;;
               # Kept so a manual dispatch of the old name still works.
               "30 4 * * 1-5")   TASK=brief_midday  ;;
+              "43 10 * * 1-5")  TASK=brief_evening ;;
               "0 12 * * 1-5")   TASK=brief_evening ;;
               # The old 17:00 MYT slot, kept so a manual dispatch of it works.
               "0 9 * * 1-5")    TASK=brief_evening ;;
@@ -117,6 +134,10 @@ jobs:
             esac
           fi
           echo "cron '$SCHEDULE' input '$INPUT' → task $TASK"
+          # How late was this? The whole reason the crons moved is that the
+          # drift was invisible until someone noticed the brief arriving at the
+          # wrong time. Printed every run so it is measurable, not folklore.
+          echo "fired at $(date -u '+%H:%M UTC') / $(TZ=Asia/Kuala_Lumpur date '+%H:%M MYT')"
           echo "task=$TASK" >> $GITHUB_OUTPUT
 
       - name: Run morning brief
