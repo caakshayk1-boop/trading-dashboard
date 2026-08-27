@@ -135,6 +135,39 @@ var TV_ALIASES = (function () {
     // Referencing it from here threw on every keystroke and the palette
     // silently returned nothing — its own copy, because a shared helper that
     // is not actually shared is worse than a duplicated four-liner.
+    /* ── is the market open, and when was this priced? ────────────────────
+       "the P&L is not moving, doesn't make any sense" — and it did not make
+       sense, because nothing on the page said WHY it was still. Three reasons
+       a live number legitimately sits still, none of them visible:
+         · NSE is closed. At 19:33 IST there is no tape to move.
+         · The wallet response is cached 600s, so it steps every 10 minutes
+           rather than ticking.
+         · A weekend or a holiday.
+       A frozen number with no timestamp reads as broken. The same number
+       labelled "marked 19:33 · NSE closed" reads as correct. This is the
+       label. */
+    window.nseState = function(){
+        // IST regardless of where the reader is — the exchange's clock is the
+        // only one that decides this, and the operator reads from MYT.
+        var ist = new Date(Date.now() + (330 - new Date().getTimezoneOffset()) * 60000);
+        var day = ist.getUTCDay ? ist.getDay() : ist.getDay();
+        var mins = ist.getHours() * 60 + ist.getMinutes();
+        if (day === 0 || day === 6) return {open:false, why:'NSE closed \u00b7 weekend'};
+        if (mins < 555)  return {open:false, why:'NSE opens 09:15 IST'};
+        if (mins > 930)  return {open:false, why:'NSE closed 15:30 IST'};
+        return {open:true, why:'NSE open'};
+    };
+    window.markStamp = function(iso){
+        var st = window.nseState(), when = '';
+        if (iso){
+            var d = new Date(iso);
+            if (!isNaN(d)) when = 'marked ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ' \u00b7 ';
+        }
+        return '<span class="markstamp' + (st.open ? ' on' : '') + '">' + when + st.why +
+               (st.open ? ' \u00b7 refreshes every 10 min' : ' \u00b7 prices resume at the open') +
+               '</span>';
+    };
+
     function esc(v){
       return String(v == null ? '' : v)
         .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2059,7 +2092,7 @@ var TV_ALIASES = (function () {
         '<div class="kpi"><div class="v">' + j.trades.length + '</div><div class="k">Trades sized</div></div>' +
         '</div>' +
         // Why the number is standing still, in one line. See markStamp.
-        '<div class="markline rv">' + markStamp(w.marked_at) +
+        '<div class="markline rv">' + window.markStamp(w.marked_at) +
           (typeof w.unmarked === 'number' && w.unmarked > 0
             ? ' \u00b7 <b>' + w.unmarked + ' unpriced</b>' : '') + '</div>';
 
@@ -4879,39 +4912,6 @@ var TV_ALIASES = (function () {
        past its limit is not an order any more, and one that has fallen through
        its stop was never going to be. Both are dimmed and labelled rather than
        silently left looking placeable. */
-    /* ── is the market open, and when was this priced? ────────────────────
-       "the P&L is not moving, doesn't make any sense" — and it did not make
-       sense, because nothing on the page said WHY it was still. Three reasons
-       a live number legitimately sits still, none of them visible:
-         · NSE is closed. At 19:33 IST there is no tape to move.
-         · The wallet response is cached 600s, so it steps every 10 minutes
-           rather than ticking.
-         · A weekend or a holiday.
-       A frozen number with no timestamp reads as broken. The same number
-       labelled "marked 19:33 · NSE closed" reads as correct. This is the
-       label. */
-    function nseState(){
-        // IST regardless of where the reader is — the exchange's clock is the
-        // only one that decides this, and the operator reads from MYT.
-        var ist = new Date(Date.now() + (330 - new Date().getTimezoneOffset()) * 60000);
-        var day = ist.getUTCDay ? ist.getDay() : ist.getDay();
-        var mins = ist.getHours() * 60 + ist.getMinutes();
-        if (day === 0 || day === 6) return {open:false, why:'NSE closed \u00b7 weekend'};
-        if (mins < 555)  return {open:false, why:'NSE opens 09:15 IST'};
-        if (mins > 930)  return {open:false, why:'NSE closed 15:30 IST'};
-        return {open:true, why:'NSE open'};
-    }
-    function markStamp(iso){
-        var st = nseState(), when = '';
-        if (iso){
-            var d = new Date(iso);
-            if (!isNaN(d)) when = 'marked ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) + ' \u00b7 ';
-        }
-        return '<span class="markstamp' + (st.open ? ' on' : '') + '">' + when + st.why +
-               (st.open ? ' \u00b7 refreshes every 10 min' : ' \u00b7 prices resume at the open') +
-               '</span>';
-    }
-
     function markMandate(){
       var px = window.__ledgerPx || {};
       var rows = document.querySelectorAll('.mrow[data-sym]');
@@ -4961,7 +4961,7 @@ var TV_ALIASES = (function () {
           line.className = 'markline';
           host.parentNode.insertBefore(line, host);
         }
-        line.innerHTML = markStamp(null) +
+        line.innerHTML = window.markStamp(null) +
           ' \u00b7 <b>' + placeable + ' of ' + rows.length +
           '</b> still at or near the limit' +
           (marked < rows.length ? ' \u00b7 ' + (rows.length - marked) + ' unpriced' : '');
