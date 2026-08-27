@@ -528,6 +528,34 @@ def _():
         assert r >= 4.5, f".{name} is white on {c.group(1)} — only {r:.2f}:1"
 
 
+@check("every data-guarded section can also be dropped from the nav")
+def _():
+    """A template guard without an empty_sections entry breaks the build.
+
+    Sections written as `{% if 'x' in secs and x %}` disappear from the DOM
+    when their data is empty. If empty_sections() does not also drop them, the
+    nav still advertises them and the pre-publish check fails with "nav order
+    does not match document order" — on CI only, because locally the data
+    usually happens to be there.
+
+    That is exactly how Volume and Build Log broke the build the day they were
+    added. This makes the omission a test failure at the moment it is written
+    instead of a red build twenty minutes later.
+    """
+    guarded = set(re.findall(r"\{%\s*if\s*'([a-z0-9]+)'\s+in secs and ", TEMPLATE))
+    assert guarded, "no data-guarded sections found — has the guard style changed?"
+
+    src = pathlib.Path(__file__).with_name("newspaper.py").read_text(encoding="utf-8")
+    body = src[src.index("def empty_sections("):src.index("\ndef ", src.index("def empty_sections(") + 10)]
+    droppable = set(re.findall(r'drop\.add\("([a-z0-9]+)"\)', body))
+
+    missing = sorted(guarded - droppable)
+    assert not missing, (
+        f"these sections vanish from the DOM when their data is empty but are "
+        f"never dropped from the nav: {missing} — add them to empty_sections()"
+    )
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:

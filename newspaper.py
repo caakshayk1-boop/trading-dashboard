@@ -2613,7 +2613,8 @@ PAGE_META = {
 def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
                    stock_screen=None, market_intel=None, careers=None,
                    brief=None, health=None, ipos=None, findings=None,
-                   iporadar=None) -> set:
+                   iporadar=None, volspikes=None, buildlog=None,
+                   evidence=None, book=None) -> set:
     """Sections that must not be advertised in the nav on this build.
 
     A helper rather than an inline check so the decision has one home. Only
@@ -2672,6 +2673,28 @@ def empty_sections(fund_screen=None, podcasts=None, smart_reads=None,
     # reader that the section is usually empty and to stop opening it.
     if not ((findings or {}).get("hidden") or (findings or {}).get("contradictions")):
         drop.add("findings")
+    # Added 2026-08-27, after both broke the build. Volume and Build Log were
+    # added with `{% if 'x' in secs and x %}` guards in the template and never
+    # registered here — so on a build where either was empty the DOM dropped
+    # the section while the nav still advertised it, and the pre-publish check
+    # failed with "nav order does not match document order". Locally both were
+    # always populated, which is why it only ever failed on CI.
+    #
+    # A template data-guard without a matching entry here is the same bug every
+    # time. test_page_structure now fails the build when one is missing.
+    if not volspikes:
+        drop.add("volspikes")
+    if not buildlog:
+        drop.add("buildlog")
+    # Found by the test above the moment it was written, and neither of these
+    # is new — both have been latent since long before this session, waiting
+    # for a build where their data happened to be empty. `perf` needs the
+    # per-engine evidence table and `book` needs the current book; without
+    # either the section vanishes from the DOM while the nav keeps its link.
+    if not ((evidence or {}).get("engines") if isinstance(evidence, dict) else evidence):
+        drop.add("perf")
+    if not book:
+        drop.add("book")
     return drop
 
 

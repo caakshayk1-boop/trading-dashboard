@@ -1034,7 +1034,8 @@ def generate() -> None:
         ctx.update(page_context(pg, drop=empty_sections(fund_screen, podcasts, smart_reads,
                                                         stock_screen, market_intel, careers,
                                                         brief, health, ipos, findings,
-                                                        iporadar)))
+                                                        iporadar, volspikes, buildlog,
+                                                        evidence, book)))
         (out_dir / fname).write_text(tpl.render(**ctx), encoding="utf-8")
         kb = (out_dir / fname).stat().st_size // 1024
         print(f"[generate] ✅ {fname} ({kb}KB, {len(ctx['secs'])} sections)")
