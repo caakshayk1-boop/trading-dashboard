@@ -2031,19 +2031,25 @@ ENGINE_CHANGES = [
         "date": "2026-08-27",
         "tag": "CADENCE",
         "verdict": "logged",
-        "title": "Multibagger ideas refresh weekly, not daily",
-        "body": ("The five names on the multibagger ticker come from the newest row "
-                 "of the Saturday scan and hold until the next Saturday. The prices "
-                 "beside them are live and tick all week, which made a fixed list of "
-                 "names read as a stalled feed. The scan is running on schedule; the "
-                 "cadence was simply never stated anywhere a reader could see it."),
-        "evidence": [("Scan cron", "Saturday 09:30 IST", "daily_scan.yml", "weekly"),
-                     ("Names change", "once a week", "on the scan", "by design"),
-                     ("Prices change", "every refresh", "from the tape", "live")],
-        "note": ("The segment is labelled WEEKLY on the rail now, and the ticker query "
-                 "already drops the whole segment if the newest scan is more than 31 "
-                 "days old — so a scan that genuinely stops disappears rather than "
-                 "quietly serving month-old ideas as current."),
+        "title": "The multibagger screen qualified nobody for four weeks",
+        "body": ("Corrects what this entry said on 2026-08-27. It read \u2018the scan is "
+                 "running on schedule\u2019 and blamed the fixed list on cadence. The "
+                 "ledger says otherwise: the last multibagger row is 2026-08-01, "
+                 "while magic, magicmagic and ai_longterm \u2014 the same Saturday job, "
+                 "the same slot \u2014 all logged 2026-08-22. Twenty-six days, three "
+                 "Saturdays, nothing written."),
+        "evidence": [("Last multibagger row", "2026-08-01", "all_signals", "26 days"),
+                     ("Siblings, same job", "2026-08-22", "all_signals", "current"),
+                     ("Raw candidates today", "11", "weekly screen", "ran fine"),
+                     ("Cleared the R:R floor", "1 of 11", "R:R \u2265 2.0", "10 rejected")],
+        "note": ("The screen is not broken. Run on 2026-08-27 it took 11 candidates and "
+                 "rejected 10 for R:R below 2.0 \u2014 CHENNPETRO 1.29, FLUOROCHEM 1.07, "
+                 "GLAXO 0.59, which needs a 63% win rate merely to break even. The "
+                 "defect was that a week qualifying nobody wrote nothing at all, so the "
+                 "page served the 1 August list as though it were current. The attempt "
+                 "is recorded either way now. The gate is NOT loosened: publishing a "
+                 "0.59 R:R to keep the section busy is the exact trade this screen "
+                 "exists to refuse, and an empty week is a real result."),
     },
     {
         "date": "2026-08-09",
