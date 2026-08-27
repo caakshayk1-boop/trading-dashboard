@@ -3351,29 +3351,30 @@ var TV_ALIASES = (function () {
 
         body.innerHTML = (j.buckets || []).map(function(b){
           var hs = (b.holdings || []).map(function(h){
-            var live = h.status === 'held' && h.qty && h.buy_price;
-            var val  = live ? h.qty * (h.last_price || h.buy_price) : null;
-            var cost = live ? h.qty * h.buy_price : null;
-            var pct  = live && cost ? (val / cost - 1) * 100 : null;
-            // Qty is the whole point of the rework: the bucket now proposes a
-            // buyable number of shares, not a rupee slice that may not cover
-            // one share of the name it is pointed at.
+            // A SIP bucket is an INSTRUCTION, not a position. Four columns were
+            // removed on 2026-08-27 because they were answering a different
+            // question from the one this table asks:
+            //   Ref px  — the same number as Bought at, under a second name.
+            //   Last    — a live tick on a monthly instruction nobody trades.
+            //   P&L     — the bucket header already carries it, per bucket,
+            //             which is the level the cost basis actually lives at.
+            //   Status  — every row in a proposed bucket is 'proposed'. A
+            //             column with one value is a column carrying no
+            //             information.
+            // What is left is what you take to a broker: how many shares, at
+            // what price, for how much.
+            var qty = h.proposed_qty || h.qty || 0;
+            var px  = h.buy_price || h.ref_price;
             return '<tr>' +
               '<td class="mono-dim">' + (h.rank || '') + '</td>' +
               '<td><a class="sym" href="https://www.tradingview.com/chart/?symbol=NSE:' +
                   encodeURIComponent(h.symbol) + '" target="_blank" rel="noopener">' +
                   esc(h.symbol) + '</a></td>' +
               '<td class="num">' + fmt(h.score, 1) + '</td>' +
-              '<td class="num">' + (h.ref_price ? inr(h.ref_price, 2) : '—') + '</td>' +
               '<td class="num" style="font-weight:700">' +
-                  (h.proposed_qty ? h.proposed_qty + '<span class="mono-dim" style="font-size:10px"> sh</span>' : '—') + '</td>' +
-              '<td class="num">' + inr(h.allocated) + '</td>' +
-              '<td class="num">' + (h.buy_price ? inr(h.buy_price, 2) : '—') + '</td>' +
-              '<td class="num">' + (h.last_price ? inr(h.last_price, 2) : '—') + '</td>' +
-              '<td class="' + (pct > 0 ? 'pnl-u' : pct < 0 ? 'pnl-d' : 'num') + '">' +
-                  (pct === null ? '—' : (pct > 0 ? '+' : '') + fmt(pct, 1) + '%') + '</td>' +
-              '<td><span class="badge badge-' + (h.status === 'held' ? 'open' : 'cancelled') +
-                  '">' + esc(h.status) + '</span></td>' +
+                  (qty ? qty + '<span class="mono-dim" style="font-size:10px"> sh</span>' : '—') + '</td>' +
+              '<td class="num">' + (px ? inr(px, 2) : '—') + '</td>' +
+              '<td class="num">' + inr(qty && px ? Math.round(qty * px) : h.allocated) + '</td>' +
               '<td class="mono-dim" style="font-size:10px">' + esc(h.rationale || '') + '</td>' +
               '</tr>';
           }).join('');
@@ -3384,8 +3385,15 @@ var TV_ALIASES = (function () {
             ? '' : ' · ' + (b.pnl > 0 ? '+' : '') + fmt(b.pnl_pct, 1) + '%';
           // Whole shares never spend the month to the rupee. Show the gap
           // rather than let the numbers quietly not add up.
-          var left = (b.cash_left > 0)
-            ? ' · ' + inr(b.proposed_cost) + ' deployable, ' + inr(b.cash_left) + ' idle' : '';
+          // Whole shares almost never spend a round number exactly. Rather than
+          // report Rs 10,000 with Rs 640 quietly idle, state the amount that
+          // actually buys this bucket — Rs 10,000 becomes "transfer Rs 10,500"
+          // — because the instruction has to be executable as written.
+          var cost = b.proposed_cost || 0;
+          var left = cost
+            ? ' · transfer ' + inr(Math.ceil(cost / 500) * 500) +
+              ' to buy ' + inr(cost)
+            : '';
           return '<div class="rv" style="margin-bottom:26px">' +
             '<div style="display:flex;justify-content:space-between;align-items:baseline;' +
                  'flex-wrap:wrap;gap:8px;margin-bottom:8px">' +
@@ -3395,10 +3403,10 @@ var TV_ALIASES = (function () {
                 inr(b.monthly_amount) + ' · year ' + b.sip_year + ' · ' +
                 b.held + '/' + b.names + ' held' + left + pl + xir + '</span>' +
             '</div>' +
-            '<div class="tw"><table class="t" style="min-width:960px"><thead><tr>' +
-              '<th scope="col">#</th><th scope="col">Symbol</th><th scope="col">Score</th><th scope="col">Ref px</th><th scope="col">Buy qty</th>' +
-              '<th scope="col">Cost</th><th scope="col">Bought at</th>' +
-              '<th scope="col">Last</th><th scope="col">P&amp;L</th><th scope="col">Status</th><th scope="col">Why</th>' +
+            '<div class="tw"><table class="t" style="min-width:640px"><thead><tr>' +
+              '<th scope="col">#</th><th scope="col">Symbol</th><th scope="col">Score</th>' +
+              '<th scope="col">Buy qty</th><th scope="col">Buy at</th>' +
+              '<th scope="col">Cost</th><th scope="col">Why</th>' +
             '</tr></thead><tbody>' + hs + '</tbody></table></div></div>';
         }).join('');
         reveal(sec);

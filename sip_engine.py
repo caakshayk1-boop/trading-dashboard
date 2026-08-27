@@ -418,6 +418,74 @@ def allocate_whole_shares(picks: list[dict], budget: float,
     return picks
 
 
+def repair_bucket_quantities(bucket: str | None = None) -> int:
+    """Price an already-committed bucket that was written without share counts.
+
+    build_bucket() is idempotent per calendar month, and rightly so — a month
+    already committed must not silently re-pick different names. But that same
+    guarantee FREEZES a bucket written by the older code, which divided the
+    month into equal rupee slices and stored no quantity and no price at all.
+    The live 2026-08 bucket is one: four names, Rs 2,500 each, proposed_qty
+    NULL, ref_price NULL. The section rendered a row of dashes and would have
+    done so forever, because the only function that could fill them refuses to
+    touch a month that exists.
+
+    This fills in the missing numbers WITHOUT re-picking. The names stay
+    exactly as they were recommended; they simply acquire the share counts they
+    should always have had. Re-running the screen would quietly rewrite history
+    for a month already published.
+
+    A name whose share price exceeds its own slice gets qty 0 rather than being
+    dropped: it WAS recommended, and a bucket that silently loses a name is a
+    worse record than one that shows the recommendation could not be executed.
+    JSWDULUX at Rs 2,983 in a Rs 2,500 slot is exactly that case.
+
+    Returns the number of holdings updated.
+    """
+    init_sip_db()
+    with _db.connect() as c:
+        rows = c.execute(
+            "SELECT bucket, symbol, allocated, rank FROM sip_holdings "
+            "WHERE (proposed_qty IS NULL OR ref_price IS NULL) "
+            + ("AND bucket = ? " if bucket else "")
+            + "ORDER BY bucket, rank",
+            ((bucket,) if bucket else ())).fetchall()
+    if not rows:
+        return 0
+
+    by_bucket: dict[str, list] = {}
+    for b, sym, alloc, rank in rows:
+        by_bucket.setdefault(b, []).append(
+            {"symbol": sym, "allocated": alloc, "rank": rank})
+
+    fixed = 0
+    for bname, picks in by_bucket.items():
+        prices = ref_prices([p["symbol"] for p in picks])
+        if not prices:
+            log.warning(f"sip repair {bname}: no prices available — left as-is")
+            continue
+        # The budget is what the bucket was actually given, not today's
+        # monthly_amount: a bucket from an earlier SIP year ran at a lower
+        # step-up and repricing it at today's figure would invent money.
+        budget = sum(p["allocated"] or 0 for p in picks)
+        priced = [p for p in picks if prices.get(p["symbol"])]
+        allocate_whole_shares(priced, budget, prices)
+        with _db.connect() as c:
+            for p in picks:
+                px = prices.get(p["symbol"])
+                c.execute(
+                    "UPDATE sip_holdings SET ref_price=?, proposed_qty=?, allocated=? "
+                    "WHERE bucket=? AND symbol=?",
+                    (px, p.get("proposed_qty", 0), p.get("allocated", 0.0),
+                     bname, p["symbol"]))
+                fixed += 1
+            c.commit()
+            _db.sync(c)
+        log.info(f"sip repair {bname}: " + ", ".join(
+            f"{p['symbol']}x{p.get('proposed_qty', 0)}" for p in picks))
+    return fixed
+
+
 def build_bucket(on: date | None = None, names: int = NAMES_PER_BUCKET,
                  dry_run: bool = False, candidates=None) -> dict:
     """Propose this month's bucket. Idempotent — an existing bucket is returned

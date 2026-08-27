@@ -234,6 +234,15 @@ def run_sip_bucket():
     import sip_engine
     log.info("SIP: building/refreshing this month's bucket")
     b = sip_engine.build_bucket()
+    # Buckets written before the whole-shares rework carry no quantity and no
+    # price, and build_bucket() will never revisit a month that exists. Price
+    # them in place, names untouched — see repair_bucket_quantities.
+    try:
+        r = sip_engine.repair_bucket_quantities()
+        if r:
+            log.info(f"SIP: priced {r} holding(s) in earlier buckets")
+    except Exception as e:                              # noqa: BLE001
+        log.warning(f"SIP: quantity repair failed ({e})")
     n = sip_engine.refresh_prices()
     log.info(f"SIP: bucket {b.get('bucket')} — {len(b.get('holdings', []))} names, "
              f"{n} prices refreshed")
