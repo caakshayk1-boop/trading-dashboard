@@ -10062,11 +10062,24 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      orders under a heading promising five — and with nothing separating them
      the section looked like it contradicted itself. Its own heading now. #}
   <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
-    <h3>What the ₹{{ inr(mandate.capital) }} book would place today
+    <h3>Orders to place &mdash; the ₹{{ inr(mandate.capital) }} book
       <span class="dh dh-LIVE">{{ mandate.admitted|length }} ORDERS</span></h3>
-    <p class="subdesc">Not the five above &mdash; that is a weekly ranking. This is the
-      book: what the rulebook would buy right now, at what size, with the exits already
-      decided. Every row shows what it costs, and they add up to the deployed figure.</p>
+    <p class="subdesc">Not the five above &mdash; that is a weekly ranking. This is what
+      the rulebook would BUY right now, at what size, with the exits already decided.
+      Every row shows what it costs, and they add up to the deployed figure.</p>
+    {# ₹1,00,00,000 appears in exactly two places on this page and they answer
+       different questions — which is why a reader asks "if these are the top 5
+       trades, why is there a separate wallet?". Neither is redundant, but
+       nothing said so, and two identical headline numbers under two different
+       headings read as the same thing printed twice.
+       ORDERS TO PLACE (here)  — nothing bought. Entry, size, exits.
+       POSITIONS HELD (wallet) — what the same capital already owns, marked to
+                                 live prices, with realised and unrealised P&L.
+       Same crore, two moments in its life. Stated, and linked. #}
+    <p class="subdesc" style="margin-top:6px">
+      <b>Nothing here is bought yet.</b> What this same ₹{{ inr(mandate.capital) }}
+      already <i>holds</i>, marked to live prices, is
+      <a href="#paperwallet">the paper wallet &rarr;</a></p>
   </div>
   <div class="mandate rv">
     <div class="mandate-head">
@@ -11843,13 +11856,23 @@ details.ipo-card > *:last-child{padding-bottom:14px}
          live response. It was hardcoded ₹50,00,000 here while _paper_wallet.js
          ran at a crore, so the headline and every number under it disagreed.
          test_page_structure.py asserts this fallback equals CAPITAL. #}
-      <h2 class="stitle"><span id="pwCapital">₹1,00,00,000</span>, sized by the rules below.</h2>
+      <h2 class="stitle">Positions held &mdash; <span id="pwCapital">₹1,00,00,000</span>.</h2>
     </div>
-    <p class="sdesc">A mechanical capital allocator, not a recommendation — every signal this
+    {# The other half of the pair. See the note in the order book: the same
+       crore appears in both places and they are different moments in its life.
+       Named on both ends and linked both ways, so neither reads as a stray
+       second wallet. #}
+    <p class="sdesc"><b>This is what the book already owns</b>, marked to live prices.
+      What it would BUY today &mdash; nothing bought yet, entry and size and exits &mdash;
+      is <a href="#picks">the order book &rarr;</a></p>
+    <p class="sdesc" style="margin-top:8px">A mechanical capital allocator, not a recommendation — every signal this
       ledger produces from here on gets sized by its horizon and grade, nothing more. Started
       2026-08-17; no history before that date is replayed in.</p>
     <p class="sdesc" style="margin-top:8px">Every position shows its <b>side</b>, stop and both
-      targets: this book takes real shorts, and a short's stop sits <i>above</i> its entry.
+      targets. <b>Long only as of 2026-08-27</b> — the rulebook refuses to size a short
+      (SHORT_NOT_TAKEN) though every one an engine files is still recorded in the signal
+      log. Shorts opened before that date are still shown and still graded, and a
+      short's stop sits <i>above</i> its entry.
       Winners are booked on a ladder &mdash; <b>half off at T1, the rest at T2</b> &mdash; so a
       row that reached the far target is banked at the blend of the two, not as though the whole
       position ran to T2. Rows booked that way are marked &frac12;, and the ledger's

@@ -4611,8 +4611,14 @@ var TV_ALIASES = (function () {
        ticker response. A scrolling rail is the wrong shape for "what is the
        Nifty at" — it moves, it wraps, and reading one number means waiting for
        it to come round again. */
+    // NIFTY 50 IS DELIBERATELY NOT HERE. "The tape" sits about four hundred
+    // pixels above this board and is a dedicated block for exactly that
+    // number — bigger, live, and with a sentence explaining what it does and
+    // does not tell you. Printing 24,091 twice on one screen, once explained
+    // and once not, is the duplication the reader keeps reporting. One number,
+    // one place, and the place that explains it wins. Sensex is promoted to
+    // hero in its stead.
     var IB_ROWS = [
-      { name: 'Nifty 50',   key: 'NIFTY',  hero: true },
       { name: 'Sensex',     key: 'SENSEX', hero: true },
       { name: 'Bank Nifty', key: 'BANKNIFTY' },
       { name: 'USD/INR',    key: 'USDINR' },
