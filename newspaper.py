@@ -486,6 +486,24 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
     THREE — EVERY CARD HANDS OFF. Each carries the section that proves it.
     A claim with no route to its evidence is an assertion.
 
+    FOUR — EVERY CARD IS FALSIFIABLE, AND SAYS WHAT IT IS. Added when these
+    became decision cards rather than observations. Two more keys on every one:
+
+      basis   FACT | MODEL | RESULT — the same provenance vocabulary the rest
+              of the page uses. A price that moved is a FACT; a regime score
+              or a screen rank is a MODEL; a closed trade is a RESULT. The
+              reader should never have to guess which of the three they are
+              being handed, and the three carry very different weight.
+
+      unless  What would make this reading wrong. Not a disclaimer — a named
+              condition a reader can watch for and check against tomorrow's
+              page. A card that cannot state one is an opinion.
+
+    Deliberately NOT added: an instruction. No card says buy, sell, apply or
+    avoid. The site publishes measurements and the reasoning over them; telling
+    a reader what to do with their money is a different product with different
+    obligations, and it is not this one.
+
     Returns [] when nothing qualifies. The template renders the whole block
     only when this is non-empty.
     """
@@ -517,6 +535,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "why": f"A haven bid against a soft tape is what pushes the regime "
                    f"reading down. It sits at {regime['score']}/100 — "
                    f"{regime['label'].lower()}.",
+            "basis": "FACT",
+            "unless": f"Risk assets recovering while the haven bid holds turns "
+                      f"this into a liquidity story rather than a risk one.",
             "href": "#marketintel", "cta": "Market intel",
         })
     elif regime and regime.get("score", 50) <= 30:
@@ -525,6 +546,10 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "head": f"{regime['label']} · {regime['score']}/100",
             "why": "Risk appetite across the priced board, weighted by move "
                    "size. 50 is neutral.",
+            "basis": "MODEL",
+            "unless": "The score weights whatever priced this morning. A fuller "
+                      "board can move it several points with nothing having "
+                      "changed about risk.",
             "href": "#marketintel", "cta": "Market intel",
         })
 
@@ -539,6 +564,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "head": f"{r['name']} {pct(r):+.2f}% — the day's strongest risk asset",
             "why": f"{up_n} of {len(priced)} priced instruments advanced. "
                    f"Breadth is what separates a move from a rotation.",
+            "basis": "FACT",
+            "unless": "Breadth under half the board would make this one name "
+                      "moving, not momentum.",
             "href": "#world", "cta": "Full board",
         })
 
@@ -554,6 +582,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "why": "Under half the board reported. Read today's regime score "
                    "as a sketch, not a measurement — including the cards "
                    "beside this one.",
+            "basis": "FACT",
+            "unless": "A full board tomorrow restores every reading on this "
+                      "page, this one included.",
             "href": "#datahealth", "cta": "Data health",
         })
     elif (fii is not None and dii is not None
@@ -566,6 +597,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "why": f"{buyer} money is absorbing {seller} selling. Flows on "
                    f"opposite sides is the setup that resolves violently in "
                    f"whichever direction gives up first.",
+            "basis": "FACT",
+            "unless": "Both sides buying, or both selling, ends the standoff. "
+                      "Which way it ends is the thing worth waiting for.",
             "href": "#marketintel", "cta": "The flows",
         })
     elif engine_changes:
@@ -575,6 +609,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "head": f"Engine changed — {ec.get('title', '')}",
             "why": f"{ec.get('date', '')} · {ec.get('tag', '')}. Every rule "
                    f"change is logged before it affects a signal, not after.",
+            "basis": "FACT",
+            "unless": "A rule change reaches the record only once enough "
+                      "signals have closed under it. It has not yet.",
             "href": "#rules", "cta": "Engine log",
         })
 
@@ -588,6 +625,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "why": (f"Then {rest}. " if rest else "")
                    + "Ranked once per ISO week — these are ideas, not ledger "
                      "signals, and they never touch the win rate.",
+            "basis": "MODEL",
+            "unless": "Re-ranked every ISO week. A name can leave these five "
+                      "without anything happening to the business.",
             "href": "#picks", "cta": "All five",
         })
 
@@ -602,6 +642,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
             "head": f"{closed} closed signals · {winrate:g}% winners",
             "why": "Logged when it fires, scored when it closes. Losers "
                    "included — that is the point of publishing it.",
+            "basis": "RESULT",
+            "unless": "Measured over a different window this can change sign. "
+                      "The window is part of the claim, not a detail under it.",
             "href": "#perf", "cta": "Full record",
         })
     elif closed:
@@ -611,6 +654,9 @@ def what_matters(*, regime: dict, markets: list[dict], market_intel: dict | None
                     f"too few to measure",
             "why": "A win rate under 30 closed trades is a running tally, not "
                    "an edge. It is reported here as a count on purpose.",
+            "basis": "RESULT",
+            "unless": "Thirty closed trades is where a tally becomes a "
+                      "measurement. This is not there yet.",
             "href": "#perf", "cta": "Full record",
         })
 
@@ -2457,6 +2503,42 @@ def inr(n) -> str:
     return sign + ",".join(parts) + "," + tail
 
 
+def inr_short(n, *, unit_only: bool = False) -> str:
+    """Large rupee amounts in the units Indians actually say them in.
+
+    "₹1,00,00,000" is correctly grouped and still unreadable as a headline: the
+    reader counts digit groups to work out whether it is a crore or ten lakh,
+    which is exactly the work a headline number exists to save. Every Indian
+    broker statement, news ticker and bank app writes the same figure "₹1 Cr".
+
+    Bands, and why they stop where they do:
+      >= 1 crore   ->  "1 Cr", "1.35 Cr"
+      >= 1 lakh    ->  "28.3 L"
+      below that   ->  full grouped digits, because "0.67 L" is worse than
+                       "67,262" for a number a reader may want exactly.
+
+    Trailing zeros are trimmed, so a round crore reads "1 Cr" and not "1.00 Cr".
+
+    NOT for prices, stops or targets. A stop at "₹1,759.39" is an instruction
+    with a paise in it and rounding it to "1.76 K" would make it wrong. This is
+    for capital, cash, turnover and issue sizes — figures whose magnitude is
+    the message.
+    """
+    try:
+        v = float(n)
+    except (TypeError, ValueError):
+        return "\u2014"
+    sign, v = ("-" if v < 0 else ""), abs(v)
+    if v >= 1e7:
+        num, unit = v / 1e7, "Cr"
+    elif v >= 1e5:
+        num, unit = v / 1e5, "L"
+    else:
+        return sign + inr(v)
+    txt = f"{num:.2f}".rstrip("0").rstrip(".")
+    return unit if unit_only else f"{sign}{txt} {unit}"
+
+
 PROV_TIERS = {
     "fact":   ("Fact",   "an observed value — a close, a flow, a filing"),
     "model":  ("Model",  "computed by the engine from facts"),
@@ -2767,6 +2849,7 @@ def page_context(page: str, drop=()) -> dict:
         "prov_tiers": PROV_TIERS,
         "freshness": FRESHNESS,
         "inr": inr,
+        "inr_short": inr_short,
         "ledger_counts": ledger_counts,
         "section_intrinsic": SECTION_INTRINSIC,
         "default_intrinsic": DEFAULT_INTRINSIC,
@@ -2774,8 +2857,15 @@ def page_context(page: str, drop=()) -> dict:
         # serialised here rather than in the template: json.dumps escapes for a
         # <script> context, and hand-building this in Jinja is how a stray
         # apostrophe in a metric label breaks JSON.parse for the whole page.
+        # `what` and `how` travel with the badge now. They were held back to keep
+        # the payload small, which meant the only way to read how a number was
+        # computed was to follow the badge to the glossary at the foot of a
+        # 45,000px page — losing your place to answer a question about the
+        # number you were looking at. That is a jump, not a disclosure. The
+        # whole dictionary is ~6KB and it buys the method at the point of use.
         "metrics_json": json.dumps(
-            [{"key": m["key"], "label": m["label"], "tier": m["tier"]}
+            [{"key": m["key"], "label": m["label"], "tier": m["tier"],
+              "what": m.get("what", ""), "how": m.get("how", "")}
              for m in METRICS], separators=(",", ":")),
         # Supplied here for the same reason engine_changes is: three render
         # call sites, and the provenance strip must not be the one that
@@ -4693,6 +4783,25 @@ TEMPLATE = r"""<!DOCTYPE html>
   --t-data:15px;
   --t-data-sm:12.5px;
 
+  /* Tables. Two densities, and both of them are now a DECISION. Before this,
+     five table dialects in this file rendered at three different sizes
+     (11px / 12px / 13px) that nobody had chosen — they were whatever the
+     rule that happened to win the cascade said. A six-column volume board
+     and an eighteen-column screener genuinely do not want the same size, so
+     the scale names the two cases instead of pretending one fits both.
+
+     Size is the ONLY thing a table is allowed to vary. Family, weight, case,
+     tracking, colour, rules, padding and numeric alignment are shared by
+     every table on the page — those were the parts that were drifting, and
+     drift in those is what reads as amateur. */
+  --t-table:13px;         /* default — up to ~8 columns */
+  --t-table-dense:12px;   /* the wide screener, the wallet, the alert log */
+  --t-table-h:11px;       /* every column header, at both densities */
+  --tbl-pad-y:12px;       /* body cell, vertical */
+  --tbl-pad-y-h:11px;     /* header cell, vertical */
+  --tbl-pad-x:14px;       /* both, horizontal */
+  --tbl-track:.12em;      /* header tracking — was 1.4px here, .13em there */
+
   /* Spacing. One scale, used everywhere. */
   --s1:4px;  --s2:8px;  --s3:12px; --s4:16px; --s5:20px;
   --s6:24px; --s7:32px; --s8:40px; --s9:48px; --s10:64px; --s11:80px;
@@ -4964,6 +5073,11 @@ TEMPLATE = r"""<!DOCTYPE html>
 .mandate-state{ display:flex; flex-wrap:wrap; gap:6px 16px;
   font:500 var(--t-caption)/1.4 var(--mono); color:var(--dim); }
 .mandate-state i{ font-style:normal; color:var(--text); font-weight:600; }
+/* Set apart from the four figures beside it because it is not a figure — it
+   says why the figure a reader is looking for is not in this row. */
+.mandate-state .mandate-pnl{ color:var(--dim); }
+.mandate-state .mandate-pnl a{ color:var(--lime); border-bottom:1px solid transparent; }
+.mandate-state .mandate-pnl a:hover{ border-bottom-color:var(--lime); }
 
 .mandate-rows{ display:flex; flex-direction:column; gap:2px; }
 .mrow{
@@ -5467,6 +5581,36 @@ h1.hl em{font-style:italic;font-weight:400;color:var(--lime)}
 .mc-head{font-size:var(--t-h4);font-weight:600;line-height:1.35;color:var(--text);
   letter-spacing:-.1px;margin:0 0 var(--s2);font-variant-numeric:tabular-nums}
 .mc-why{font-size:var(--t-body-sm);line-height:1.6;color:var(--muted);margin:0 0 var(--s3)}
+
+/* ── THE DECISION CARD'S TWO NEW PARTS ────────────────────────────────────
+   A card used to be a heading, a paragraph and a link — an observation. The
+   two pieces below are what make it a decision: what KIND of claim it is, and
+   what would make it wrong.
+
+   The basis chip is pushed to the far end of the tag row rather than sitting
+   beside the tag, because it answers a different question. "Risk" says which
+   reading this is; "FACT" says how much weight it carries. Adjacent, they read
+   as one compound label. */
+.mc-basis{margin-left:auto;font-size:9px;letter-spacing:1.3px;padding:2px 6px;
+  border-radius:3px;border:1px solid currentColor;opacity:.85;font-weight:700}
+/* Three grades, three hues, none of them the semantic up/down pair — a
+   provenance chip must never be mistakable for a gain or a loss. FACT borrows
+   the information blue, MODEL the machine violet already reserved for
+   generated content, RESULT the gold that means "measured, and it cost
+   something to measure". */
+.mb-fact{color:var(--blue)}
+.mb-model{color:var(--violet)}
+.mb-result{color:var(--gold)}
+
+/* The falsifier. Set quieter than the reading it qualifies but NOT hidden:
+   the whole point is that a reader sees the failure condition at the same
+   moment they see the claim. Left rule rather than a box — it is an aside to
+   the paragraph above it, not a separate component. */
+.mc-unless{font-size:var(--t-caption);line-height:1.55;color:var(--dim);
+  margin:0 0 var(--s3);padding-left:9px;border-left:2px solid var(--line2)}
+.mc-unless span{font-family:var(--mono);font-size:var(--t-overline);
+  letter-spacing:1.2px;text-transform:uppercase;color:var(--mc,var(--muted));
+  margin-right:6px}
 
 /* margin-top:auto pins every CTA to the bottom of its column. Without it the
    links sit directly under their own paragraph, so a card whose reading wraps
@@ -6296,7 +6440,12 @@ input[type=checkbox],input[type=radio]{min-width:24px;min-height:24px;accent-col
 main{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding:0 var(--gut)}
 .sec{border-bottom:0}
 .sec:last-child{border-bottom:none}
-.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
+/* Was clamp(26px,4vw,44px). Measured on the rendered page: the gap after a
+   .shead or .subhead was the most common large space on the document — 40px,
+   fourteen times over, on top of the 12px between sections and 18px of section
+   padding. Trimmed to a 20-28px band, which still separates a heading from its
+   content without costing most of a phone screen per section. */
+.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:clamp(20px,2.4vw,28px)}
 /* The eyebrow takes the pillar's hue, so "12 / PAPER WALLET" is the same
    colour as the PORTFOLIO button that got you here. --pillar is set per
    section by the generated block under the nav; the fallback keeps every
@@ -6924,14 +7073,34 @@ table.t th.sortable[aria-sort=ascending]::after{content:" ▴"}
    top of THAT box and the header behaves. It must override the viewport
    offset set on `table.t th` below. */
 .tw-tall table.t th{top:0;z-index:5;box-shadow:inset 0 -1px 0 var(--line2)}
-table.t{width:100%;border-collapse:collapse;font-size:12px;min-width:900px}
+table.t{width:100%;border-collapse:collapse;font-size:var(--t-table-dense);min-width:900px}
 /* top:0, scoped to the .tw box above — see the note there. --headh is no longer
    involved in table headers at all; it still backs scroll-padding-top and
    section scroll-margin for anchor jumps, where being a few px out is invisible
    rather than a header landing in the middle of a table. */
-table.t th{position:sticky;top:0;z-index:5;background:var(--surface);text-align:left;font-size:11px;letter-spacing:1.4px;
-  text-transform:uppercase;color:var(--dim);font-weight:600;padding:13px 14px;border-bottom:1px solid var(--line);z-index:2}
-table.t td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+/* The header was set in the SANS face here and the mono face in .tblwrap —
+   the same row of column labels, two typefaces, decided by which selector
+   won. Mono is the right answer for both: these labels sit directly above
+   columns of tabular figures, and a mono label matches the grid its column
+   is set on. Tracking moves 1.4px -> --tbl-track for the same reason: .13em
+   was used four rules away and the two were never the same number. */
+table.t th{position:sticky;top:0;z-index:5;background:var(--surface);text-align:left;
+  font:600 var(--t-table-h)/1.35 var(--mono);letter-spacing:var(--tbl-track);
+  text-transform:uppercase;color:var(--dim);
+  padding:var(--tbl-pad-y-h) var(--tbl-pad-x);
+  /* --line2, not --line. The light theme already used --line2 here, so the
+     header rule was HEAVIER than the row rules on paper and LIGHTER than
+     them on screen: the same table had its hierarchy inverted between the
+     two themes. Both now read header-heavy, rows-light. */
+  border-bottom:1px solid var(--line2);z-index:2}
+/* rgba(255,255,255,.04) was hardcoded here, and it is the single worst line
+   in the old table CSS. Four percent white is below the visible threshold on
+   this ground, so in DARK mode the row rules were effectively absent and the
+   table read as a floating block of digits. In LIGHT mode the theme override
+   (higher specificity) replaced it with a real value, so the same table had
+   row rules on paper and none on screen. A hardcoded white alpha cannot
+   survive a theme switch — that is what the token is for. */
+table.t td{padding:var(--tbl-pad-y) var(--tbl-pad-x);border-bottom:1px solid var(--line);vertical-align:middle}
 table.t tbody tr{transition:background .2s}
 table.t tbody tr:hover{background:rgba(255,255,255,.025)}
 table.t tbody tr:last-child td{border-bottom:none}
@@ -7002,6 +7171,12 @@ table.t tbody tr:last-child td{border-bottom:none}
 .ipo-fin-h{font-family:var(--mono);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;
   color:var(--lime);margin-bottom:9px}
 .ipo-fin-g{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+/* The sector, in the eyebrow beside the financial year. Chittorgarh's own
+   classification of the issue, which the site had been reporting as
+   unavailable — it is not a labelled field anywhere on the page, it is the
+   heading of the "Recently Listed IPOs in ..." block. Set apart from the
+   uppercase eyebrow around it because it is a proper noun, not a label. */
+.ipo-sector{text-transform:none;letter-spacing:0;color:var(--muted);font-family:var(--sans)}
 .ipo-fin-g>div{display:flex;flex-direction:column;gap:1px}
 .ipo-fin-g .k{font-family:var(--mono);font-size:11px;letter-spacing:1px;
   text-transform:uppercase;color:var(--dim)}
@@ -7110,6 +7285,44 @@ table.t tbody tr:last-child td{border-bottom:none}
    a fall in expected volatility as a loss. */
 .ib-vix .ib-v{color:var(--blue)}
 @media(max-width:520px){.ib-hero{grid-column:span 2}}
+/* ── THE FIRST 60 SECONDS ─────────────────────────────────────────────────
+   An ordered index, set as a list and not as cards on purpose: a numbered
+   column is read top-to-bottom in one pass, and a grid of four boxes is
+   scanned in whatever order the eye lands. The whole point of this block is
+   the ORDER, so the shape has to carry it.
+
+   Rules top and bottom, nothing round the outside — the same treatment the
+   tables use. It sits above the decision board and belongs to the masthead
+   group rather than to the content below it. */
+.sixty{margin:0 0 var(--s6);border-top:1px solid var(--line2);
+  border-bottom:1px solid var(--line2);padding:var(--s4) 0}
+.sixty-h{display:flex;align-items:baseline;gap:var(--s3);flex-wrap:wrap;
+  margin-bottom:var(--s3)}
+.sixty-t{font-family:var(--mono);font-size:var(--t-overline);font-weight:700;
+  letter-spacing:1.6px;text-transform:uppercase;color:var(--lime)}
+.sixty-n{font-size:var(--t-caption);color:var(--dim)}
+.sixty-l{list-style:none;display:flex;flex-direction:column;gap:1px}
+.sixty-r a{display:flex;align-items:center;gap:var(--s3);padding:9px 8px;
+  border-radius:5px;transition:background var(--m-micro) var(--ease)}
+.sixty-r a:hover{background:var(--surface2)}
+/* The numeral is the reading order, so it is set in the ghosted rank ink the
+   pick cards already use for exactly the same job. */
+.sixty-i{font-family:var(--mono);font-size:var(--t-label);font-weight:700;
+  letter-spacing:1px;color:var(--dim);flex:0 0 auto}
+/* The headline takes the row and pushes the basis chip to the far edge, so the
+   chips form a column a reader can scan on its own — five FACTs and one MODEL
+   is itself information about the day. */
+.sixty-x{flex:1 1 auto;font-size:var(--t-body-sm);line-height:1.45;
+  color:var(--text);font-variant-numeric:tabular-nums}
+.sixty-r a:hover .sixty-x{color:var(--lime)}
+@media(max-width:560px){
+  /* The chip drops below the headline rather than squeezing it — at 375px a
+     three-column row leaves the headline about eleven characters. */
+  .sixty-r a{flex-wrap:wrap;gap:var(--s2) var(--s3)}
+  .sixty-x{flex:1 1 100%;order:2}
+  .sixty-r .mc-basis{order:1;margin-left:0}
+}
+
 .dboard{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 0 26px;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .db{display:flex;flex-direction:column;gap:3px;padding:15px 18px;text-decoration:none;
@@ -7987,11 +8200,55 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    badge is a footnote marker, and a legend that competes with the number it
    annotates has defeated itself. */
 .kpi .k{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-a.mprov{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+/* The badge is a <button> now, not an <a> — it opens the method under the
+   number instead of jumping to the glossary at the foot of the page. Both
+   selectors are kept: `a.mprov` still matches the hand-written badges in the
+   template, and dropping it would have unstyled them. */
+a.mprov,button.mprov{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
   padding:3px 5px;border-radius:3px;border:1px solid;text-decoration:none;flex:none;
   transition:opacity .15s var(--ease)}
-a.mprov:hover,a.mprov:focus-visible{opacity:1}
-a.mprov{opacity:.78}
+a.mprov:hover,a.mprov:focus-visible,
+button.mprov:hover,button.mprov:focus-visible{opacity:1}
+a.mprov,button.mprov{opacity:.78}
+button.mprov{cursor:pointer;font-family:var(--mono);background:none}
+/* The caret earns the click. A chip that reads "RESULT" looks like a label;
+   the same chip with a caret reads as something that opens. */
+button.mprov::after{content:" +";opacity:.7}
+button.mprov[aria-expanded="true"]::after{content:" \2212"}
+button.mprov:focus-visible{outline:2px solid var(--lime);outline-offset:2px}
+
+/* THE METHOD, IN PLACE.
+   Two paragraphs and a way out: WHAT the number is, HOW it is arrived at, and
+   a link to the full glossary entry for anyone who wants its neighbours too.
+   The jump the badge used to perform is still available — it is just no longer
+   the only way to answer the question.
+
+   The panel takes the full width of its tile and pushes the tiles below it
+   down rather than floating over them: a popover covering the numbers beside
+   the one being explained makes comparison impossible at the exact moment the
+   reader is trying to understand a comparison. */
+.mpanel{
+  flex:1 1 100%;margin-top:8px;padding:10px 12px;
+  background:var(--surface2);border-left:2px solid var(--line2);border-radius:0 5px 5px 0;
+  text-align:left;
+}
+.mpanel-what{font:500 var(--t-body-sm)/1.55 var(--sans);color:var(--text);margin:0}
+.mpanel-how{font:400 var(--t-caption)/1.6 var(--sans);color:var(--muted);margin:6px 0 0}
+.mpanel-more{display:inline-block;margin-top:8px;font:600 var(--t-overline)/1 var(--mono);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.mpanel-more:hover{color:var(--lime)}
+
+/* "5 days old" is only bad news if the dataset refreshes daily. Three of the
+   twelve here are weekly, and their age was being read as staleness by every
+   reader who did not also read the Expected column. The verdict travels with
+   the number now. */
+.dh-within{display:inline-block;margin-left:6px;font:400 var(--t-label)/1 var(--mono);
+  letter-spacing:.06em;color:var(--up)}
+.dh-over{display:inline-block;margin-left:6px;font:400 var(--t-label)/1 var(--mono);
+  letter-spacing:.06em;color:var(--gold)}
+/* The tile becomes a column so the panel can sit under the label rather than
+   beside it — .kpi is a flex row and an unset panel would try to share it. */
+.kpi:has(.mpanel),.stat:has(.mpanel){flex-wrap:wrap}
 .mprov-fact  {color:var(--p-markets); border-color:color-mix(in srgb,var(--p-markets) 30%,transparent); background:color-mix(in srgb,var(--p-markets) 7%,transparent)}
 .mprov-model {color:var(--p-research);border-color:color-mix(in srgb,var(--p-research) 30%,transparent);background:color-mix(in srgb,var(--p-research) 7%,transparent)}
 .mprov-result{color:var(--up);        border-color:color-mix(in srgb,var(--up) 30%,transparent);        background:var(--up-soft)}
@@ -8035,19 +8292,62 @@ a.mprov{opacity:.78}
 
    Scoped to .tblwrap so table.t keeps its own rules untouched — it works, and
    changing a table that works is a separate decision. */
-.tblwrap table{width:100%;border-collapse:collapse;font-size:13px}
+.tblwrap table{width:100%;border-collapse:collapse;font-size:var(--t-table)}
 .tblwrap table th{
-  text-align:left;padding:11px 14px;white-space:nowrap;
-  font:600 11px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  /* STICKY, and was not. Measured: of 18 tables, these were the only two whose
+     headers scrolled away — including the volume board and the breakout
+     screen, both of which run past twenty rows. `--surface2` is already opaque
+     here, which is what test_page_structure's "sticky table headers are
+     opaque" check requires: a translucent sticky header smears the rows
+     passing under it. */
+  position:sticky;top:0;z-index:5;
+  text-align:left;padding:var(--tbl-pad-y-h) var(--tbl-pad-x);white-space:nowrap;
+  /* line-height was 1 here and unset (so 1.6 from body) on table.t. A header
+     that is 11px/1 sits optically higher in its cell than one at 11px/1.6,
+     which is why the two tables' header rows never lined up when they were
+     stacked in the same section. */
+  font:600 var(--t-table-h)/1.35 var(--mono);letter-spacing:var(--tbl-track);
+  text-transform:uppercase;
   color:var(--dim);background:var(--surface2);
   border-bottom:1px solid var(--line2);
 }
 .tblwrap table th.r,.tblwrap table td.r{text-align:right}
+
+/* The filter box that app.js inserts above any table of eight rows or more.
+   Sits outside the scroll wrapper so it stays put while the table scrolls
+   sideways under it. */
+.tfilter{display:flex;align-items:center;gap:var(--s3);margin:0 0 var(--s2)}
+.tfilter input{
+  flex:0 1 260px;background:var(--surface);color:var(--text);
+  border:1px solid var(--line);border-radius:6px;padding:7px 10px;
+  font:400 var(--t-body-sm)/1.2 var(--sans);
+}
+.tfilter input:focus{outline:none;border-color:var(--lime)}
+.tfilter input::placeholder{color:var(--dim)}
+.tfilter-n{font:400 var(--t-caption)/1 var(--mono);color:var(--dim)}
+
+/* Sortable headers, generic. The cursor and the caret are the whole
+   affordance — without them a sortable column is indistinguishable from a
+   fixed one and nobody clicks it. */
+table th.sortable{cursor:pointer;user-select:none}
+table th.sortable:hover{color:var(--text)}
+table th.sortable:focus-visible{outline:2px solid var(--lime);outline-offset:-2px}
+/* A dimmed caret on every sortable header, full strength on the active one:
+   the reader can see WHICH columns sort before clicking, rather than
+   discovering it. */
+table th.sortable::after{content:" \2195";opacity:.28;font-size:9px}
+table th.sortable[aria-sort]{color:var(--lime)}
+table th.sortable[aria-sort=ascending]::after{content:" \25B4";opacity:1}
+table th.sortable[aria-sort=descending]::after{content:" \25BE";opacity:1}
+/* border-TOP here, border-BOTTOM on table.t. Same visual intent, opposite
+   mechanics, so the two disagreed about which end of the table carries a
+   rule and needed opposite :first-child / :last-child exceptions to look
+   the same. Both are border-bottom now and the exception is the same one. */
 .tblwrap table td{
-  padding:12px 14px;border-top:1px solid var(--line);vertical-align:middle;
+  padding:var(--tbl-pad-y) var(--tbl-pad-x);border-bottom:1px solid var(--line);vertical-align:middle;
   color:var(--text);
 }
-.tblwrap table tbody tr:first-child td{border-top:0}
+.tblwrap table tbody tr:last-child td{border-bottom:0}
 .tblwrap table tbody tr:hover{background:var(--surface2)}
 /* Digits in a column have to line up or the column cannot be compared down its
    own length, which is the only reason to put them in a column. */
@@ -8353,7 +8653,11 @@ select:focus-visible{
 .subhead{
   border-top:1px solid var(--line);
   padding-top:16px;
-  margin-top:clamp(26px,3.4vw,40px);
+  /* Was clamp(26px,3.4vw,40px) — this is the rule that actually won, and the
+     40px measured between a subhead and the block above it fourteen times on
+     one page. The rule above it already draws the separation; the space was
+     doing the same job twice. */
+  margin-top:clamp(20px,2.2vw,26px);
 }
 .subeyebrow{color:var(--dim);letter-spacing:.18em}
 
@@ -8753,6 +9057,19 @@ body,button,input,select,textarea{font-family:var(--sans)}
 .dayblock{background:var(--surface);padding:16px 18px 18px;display:flex;
   flex-direction:column;gap:10px;min-width:0}
 .dayblock.db-wide{grid-column:1/-1}
+/* The flow block's three figures, stacked. app.js rewrites this container's
+   innerHTML with the same .kpi markup the old three-up row used, so the
+   children are fixed and only the container can change — which is why this is
+   a column rule here rather than a different markup shape there. Stacked
+   because the block is one column of a four-column grid: three KPIs side by
+   side inside ~280px gives each about ninety pixels, and "₹-1,200 Cr" does not
+   fit in ninety pixels. */
+.dbflow{display:flex;flex-direction:column;gap:7px}
+.dbflow .kpi{display:flex;align-items:baseline;justify-content:space-between;
+  gap:10px;padding:0;background:none;border:0}
+.dbflow .kpi .v{font:700 var(--t-data)/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.dbflow .kpi .k{font:400 var(--t-label)/1 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dim)}
 .db-lab{
   align-self:flex-start;
   font:700 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
@@ -9034,6 +9351,64 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   font:700 11px/1 var(--mono);letter-spacing:.1em;
   color:var(--p-research);flex:none;
 }
+
+/* ══════════════════ TABLE SYSTEM — NUMERIC ALIGNMENT ══════════════════════
+   The defect, stated exactly: `.num` is declared FOUR times in this file
+   (two theme rules, a tabular-figures rule, a font-family rule) and not one
+   of them ever set text-align. It carried the mono face and tabular figures
+   and stopped there. So every numeric column on the page was mono, was
+   tabular — and was ragged left, which is the one thing tabular figures
+   exist to prevent. Lining the digits up inside a cell is pointless if the
+   cells themselves do not line up.
+
+   It looked right in exactly two places, and only by accident. The plain
+   .tblwrap renderer emits a `.r` class alongside `.num`, and `.r` DID carry
+   the alignment. The sortable `table.t` renderer emits `.num` on its own.
+   Two renderers, one convention each, and the convention that mattered was
+   the one nobody had written down.
+
+   Measured on the live page before this rule: 1,473 of 1,610 numeric cells
+   ragged left. The volume board looked professional and the stock screener
+   beside it did not, from one missing declaration.
+
+   Safe as a blanket rule because `.num` has always been applied
+   semantically. Of 2,052 cells carrying it, 304 are not bare numerals — and
+   every one of those is still a right-edge value: "nil", "closed",
+   "not measured", an F-score of "6/9", an ISO date, or a stacked money cell
+   like "Rs 3,00,000 / 3.0%". No prose column carries `.num`: Symbol,
+   Company, Reading, Risk, Setup and Action have none and are untouched.
+
+   Scoped to table cells on purpose. `.num` is also worn by KPI values, hero
+   stats and the record curve, which live in flex and grid containers that
+   already position them — a blanket text-align would move all of those. */
+table td.num,table th.num{text-align:right}
+
+/* Mirroring `.num` onto the <th> has one side effect worth naming, because
+   it was measured rather than predicted: `.tblwrap table .num` also carries
+   letter-spacing:-.01em. That is correct for a column of digits — tightening
+   figures helps them read as one number — and wrong for the uppercase label
+   above them, which needs its tracking open to stay legible at 11px. Nine
+   headers went from +1.32px to -0.11px before this rule caught it.
+
+   The .tblwrap-scoped selector is listed explicitly: `.tblwrap table .num`
+   is (0,2,1) and would outrank a bare `table th.num` at (0,1,2). */
+.tblwrap table th.num,
+table.t th.num,
+table th.num{letter-spacing:var(--tbl-track)}
+
+/* A column header has to point the same way as the column beneath it. Left
+   labels over right figures detach at exactly the width where a column gets
+   wide enough for the gap to matter, and this page has an eighteen-column
+   table. The headers carry no class of their own in either renderer, so the
+   class is mirrored onto them from the first body row at render time —
+   window.alignTableHeaders() in app.js. This rule is what it switches on;
+   the function sets no styles itself. */
+
+/* Row hover. table.t had one, the plain tables had a different one, and the
+   two were different colours. A hover that changes between two tables in
+   the same section reads as two components rather than one. */
+.tblwrap table tbody tr:hover,
+table.t tbody tr:hover{background:var(--surface2)}
 
 </style>
 </head>
@@ -9525,6 +9900,44 @@ details.ipo-card > *:last-child{padding-bottom:14px}
        The numbered 60-second list below is kept as the {% raw %}{% else %}{% endraw %} branch, not
        deleted: the two legacy Flask routes render this same template without
        `matters`, and that path must still get its summary. #}
+    {# ══════════ THE FIRST 60 SECONDS ══════════
+       An index with substance, and the answer to a real gap: the ordered
+       summary this page used to open with now only renders on the two legacy
+       Flask routes, because it sits in the {% raw %}{% else %}{% endraw %} branch below and the static
+       build always passes `matters`. Every reader of news.askakshay.com has
+       been arriving to eighteen destinations and no reading order.
+
+       NOT a third interpretation layer. A previous pass rejected a "So what?"
+       decision strip for duplicating What Matters Now, and that reasoning
+       stands — so this carries no content of its own. It is the SAME cards,
+       headline only, numbered, one line each. Front page above the fold, the
+       reasoning below it. Anything that needs a second line belongs in the
+       card, not here.
+
+       Which is also why there is no read-time estimate: the constraint is the
+       length of this list, and the list is bounded at five by what_matters()
+       itself. A minute is a promise the markup can keep rather than a number
+       printed next to it. #}
+    {% if matters %}
+    <nav class="sixty" aria-label="The first 60 seconds">
+      <div class="sixty-h">
+        <span class="sixty-t">The first 60 seconds</span>
+        <span class="sixty-n">{{ matters|length }} reading{{ '' if matters|length == 1 else 's' }}, one line each &middot; the rest of the page is the evidence</span>
+      </div>
+      <ol class="sixty-l">
+        {% for c in matters %}
+        <li class="sixty-r">
+          <a href="{{ c.href }}">
+            <span class="sixty-i">{{ '%02d'|format(loop.index) }}</span>
+            <span class="sixty-x">{{ c.head }}</span>
+            {% if c.basis %}<span class="mc-basis mb-{{ c.basis|lower }}">{{ c.basis }}</span>{% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ol>
+    </nav>
+    {% endif %}
+
     {# ══════════ DECISION BOARD ══════════
        Four states, one line each, above everything else on the page.
 
@@ -9568,9 +9981,18 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       <div class="matters-g">
         {% for c in matters %}
         <article class="mcard mc-{{ c.kind }}">
-          <div class="mc-tag"><i></i>{{ c.tag }}</div>
+          <div class="mc-tag"><i></i>{{ c.tag }}
+            {# The provenance chip. A price that moved and a model's score are
+               not the same kind of claim, and until this chip existed the card
+               presented them in identical type. #}
+            {% if c.basis %}<span class="mc-basis mb-{{ c.basis|lower }}">{{ c.basis }}</span>{% endif %}
+          </div>
           <h3 class="mc-head">{{ c.head }}</h3>
           <p class="mc-why">{{ c.why }}</p>
+          {# The falsifier. Deliberately rendered as part of the card rather
+             than hidden behind a toggle: a reading whose failure condition is
+             one click away is a reading presented as more certain than it is. #}
+          {% if c.unless %}<p class="mc-unless"><span>Unless</span>{{ c.unless }}</p>{% endif %}
           <a class="mc-cta" href="{{ c.href }}">{{ c.cta }} &rarr;</a>
         </article>
         {% endfor %}
@@ -9670,7 +10092,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['marketintel'] }} / {{ seclabel['marketintel'] }}</span> {{ dh('Market Intelligence') }}
-      <h2 class="stitle">What moved the tape today.</h2>
+      <h2 class="stitle">What moved the tape today</h2>
     </div>
     <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
       straight from NSE's and Yahoo's own feeds, no ranking or "top N by importance" applied.</p>
@@ -9800,6 +10222,42 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       </div>
     </div>
 
+    {# WHERE THE MONEY WENT — the fourth fact the comment at the top of this
+       block names ("what the tape did, how broad it was, where the money went")
+       and the one that was never built. The grid is auto-fit across four
+       columns, so with three blocks the fourth cell rendered as a flat grey
+       rectangle roughly a third of the width of the section: the most
+       prominent empty space on the page, directly under the headline numbers.
+
+       Not new data. This is the FII/DII block that used to sit ~170 lines
+       below under its own heading, moved here. It belongs beside breadth —
+       "more names fell than rose" and "institutions were net sellers" are the
+       same question asked of prices and of flows, and they were four screens
+       apart. Moving it fills the hole and removes a whole subhead, a
+       description and a KPI row from further down.
+
+       #fiiGrid and #fiiAsOf keep their ids: app.js overwrites the innerHTML of
+       the first from /api/markets?heat=1 and restamps the second with the
+       flow's own trade date. Renaming either here would have left the block
+       silently frozen at the 6 AM snapshot. #}
+    {% set _fd = market_intel.get('fii_dii') if market_intel else None %}
+    {% if _fd and _fd.get('fii_cr') is not none and _fd.get('dii_cr') is not none %}
+    <div class="dayblock">
+      <span class="db-lab db-fact">Where the money went</span>
+      <div class="db-body">
+        <div class="dbflow" id="fiiGrid">
+          <div class="kpi"><div class="v {{ 'up' if _fd.get('fii_cr', 0) >= 0 else 'dn' }}">&#8377;{{ '{:,.0f}'.format(_fd.get('fii_cr', 0)) }} Cr</div><div class="k">FII net</div></div>
+          <div class="kpi"><div class="v {{ 'up' if _fd.get('dii_cr', 0) >= 0 else 'dn' }}">&#8377;{{ '{:,.0f}'.format(_fd.get('dii_cr', 0)) }} Cr</div><div class="k">DII net</div></div>
+          <div class="kpi"><div class="v {{ 'up' if _fd.get('net_cr', 0) >= 0 else 'dn' }}">&#8377;{{ '{:,.0f}'.format(_fd.get('net_cr', 0)) }} Cr</div><div class="k">Combined</div></div>
+        </div>
+        <p class="db-note">Net rupees bought and sold by foreign and domestic
+          institutions. They are usually on opposite sides &mdash; the size of the
+          gap says more than the direction of either one.
+          <span id="fiiAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></p>
+      </div>
+    </div>
+    {% endif %}
+
     <div class="dayblock db-wide">
       <span class="db-lab db-view">Room for disagreement</span>
       <div class="db-body">
@@ -9922,27 +10380,14 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   </div>
   {% endif %}
 
-  {% set fd = market_intel.get('fii_dii') %}
-  {% if fd and fd.get('fii_cr') is not none and fd.get('dii_cr') is not none %}
-  {# Same treatment as the sector map: the server-rendered figures below are
-     the build-time cache, and app.js replaces them from /api/markets?heat=1
-     with the flow's own TRADE date. FII is not a live number — NSE publishes
-     it once after the close — so what the live path buys is not freshness but
-     an honest date on it. #}
-  <div class="subhead">
-    <span class="subeyebrow">Market state</span>
-    <h3>FII / DII net flow
-      <span id="fiiAsOf" class="dh dh-STALE">6 AM SNAPSHOT</span></h3>
-    <p class="subdesc">Net rupees bought or sold by foreign and domestic institutions. They are usually on opposite sides; the size of the gap matters more than the direction of either one.</p>
-  </div>
-  <div class="kpi-row rv" style="margin-bottom:10px" id="fiiGrid">
-    <div class="kpi"><div class="v {{ 'up' if fd.get('fii_cr', 0) >= 0 else 'dn' }}">
-      &#8377;{{ '{:,.0f}'.format(fd.get('fii_cr', 0)) }} Cr</div><div class="k">FII net</div></div>
-    <div class="kpi"><div class="v {{ 'up' if fd.get('dii_cr', 0) >= 0 else 'dn' }}">
-      &#8377;{{ '{:,.0f}'.format(fd.get('dii_cr', 0)) }} Cr</div><div class="k">DII net</div></div>
-    <div class="kpi"><div class="v {{ 'up' if fd.get('net_cr', 0) >= 0 else 'dn' }}">
-      &#8377;{{ '{:,.0f}'.format(fd.get('net_cr', 0)) }} Cr</div><div class="k">Combined</div></div>
-  </div>
+  {# The FII / DII subhead and KPI row that stood here are GONE, not disabled.
+     They now render as the "Where the money went" block inside .dayblocks at
+     the top of this section, which is where the flow belongs: beside breadth,
+     answering the same question of money that breadth answers of prices.
+
+     Removing it rather than hiding it is the point of the change — a heading,
+     a description and a three-up KPI row is roughly 180px of vertical space,
+     and it was duplicating a block the reader had already passed. #}
   {# Smart money flow was here and is removed.
 
      It plotted the last few sessions of FII vs DII as paired bars. Two reasons
@@ -10024,7 +10469,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['picks'] }} / {{ seclabel['picks'] }}</span> {{ dh('Trade ideas') }}
-      <h2 class="stitle">{% if top5|length >= 5 %}Top 5 trade ideas.{% elif top5 %}Top {{ top5|length }} trade ideas.{% else %}No trade ideas clear the bar this week.{% endif %}</h2>
+      <h2 class="stitle">{% if top5|length >= 5 %}Top 5 trade ideas{% elif top5 %}Top {{ top5|length }} trade ideas{% else %}No trade ideas clear the bar this week{% endif %}</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
       Every level is taken from structure &mdash; the target from the 52-week high or a measured
@@ -10062,7 +10507,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
      orders under a heading promising five — and with nothing separating them
      the section looked like it contradicted itself. Its own heading now. #}
   <div class="subhead rv" style="margin-top:clamp(26px,3vw,40px)">
-    <h3>Orders to place &mdash; the ₹{{ inr(mandate.capital) }} book
+    <h3>Orders to place &mdash; the ₹{{ inr_short(mandate.capital) }} book
       <span class="dh dh-LIVE">{{ mandate.admitted|length }} ORDERS</span></h3>
     <p class="subdesc">Not the five above &mdash; that is a weekly ranking. This is what
       the rulebook would BUY right now, at what size, with the exits already decided.
@@ -10077,7 +10522,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
                                  live prices, with realised and unrealised P&L.
        Same crore, two moments in its life. Stated, and linked. #}
     <p class="subdesc" style="margin-top:6px">
-      <b>Nothing here is bought yet.</b> What this same ₹{{ inr(mandate.capital) }}
+      <b>Nothing here is bought yet.</b> What this same ₹{{ inr_short(mandate.capital) }}
       already <i>holds</i>, marked to live prices, is
       <a href="#paperwallet">the paper wallet &rarr;</a></p>
   </div>
@@ -10085,13 +10530,23 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     <div class="mandate-head">
       <div>
         <span class="pv-tag">MANDATE</span>
-        <b>&#8377;{{ inr(mandate.capital) }}</b> &middot; Indian listed equity, no intraday
+        <b>&#8377;{{ inr_short(mandate.capital) }}</b> &middot; Indian listed equity, no intraday
       </div>
       <div class="mandate-state">
         <span><i>{{ mandate.admitted|length }}</i> to place</span>
         <span>heat <i>{{ mandate.state.heat_pct }}%</i></span>
         <span>deployed <i>{{ mandate.state.deployed_pct }}%</i></span>
-        <span>cash <i>&#8377;{{ inr(mandate.state.cash) }}</i></span>
+        <span>cash <i>&#8377;{{ inr_short(mandate.state.cash) }}</i></span>
+        {# WHERE THE P&L IS. This row lists what the book is doing — orders,
+           heat, deployment, cash — and a reader scanning it looks for a P&L
+           beside them and finds none. The paragraph above does say "nothing
+           here is bought yet", but it is above the fold of this block and the
+           question gets asked at THIS row.
+
+           The answer belongs where the question is asked, so it is a fifth
+           item in the same row rather than a better sentence higher up. #}
+        <span class="mandate-pnl">no P&amp;L here &mdash; nothing is bought
+          <a href="#paperwallet">see the wallet &rarr;</a></span>
       </div>
     </div>
 
@@ -10115,8 +10570,8 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <div class="mrow-nums">
           <span>buy <b>{{ t.qty }}</b> @ <b>{{ '{:,.2f}'.format(t.entry) }}</b></span>
           <span class="mstop">stop <b>{{ '{:,.2f}'.format(t.stop) }}</b> ({{ t.stop_pct }}%)</span>
-          <span>&#8377;{{ inr(t.notional) }} &middot; {{ t.notional_pct }}%</span>
-          <span>risk &#8377;{{ inr(t.risk_amount) }}</span>
+          <span>&#8377;{{ inr_short(t.notional) }} &middot; {{ t.notional_pct }}%</span>
+          <span>risk &#8377;{{ inr_short(t.risk_amount) }}</span>
           <span>hold {{ t.hold_days }}</span>
         </div>
         {# The ladder is the point. 20% at T1, half the remainder at T2, the
@@ -10144,10 +10599,10 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     {% set _risked = mandate.admitted | sum(attribute='risk_amount') %}
     <div class="mandate-total">
       <span>{{ mandate.admitted|length }} orders</span>
-      <span>&#8377;{{ inr(_placed) }} of &#8377;{{ inr(mandate.capital) }}
+      <span>&#8377;{{ inr_short(_placed) }} of &#8377;{{ inr_short(mandate.capital) }}
         &middot; <b>{{ '%.1f'|format(_placed / mandate.capital * 100) }}%</b> deployed</span>
-      <span>&#8377;{{ inr(mandate.capital - _placed) }} stays in cash</span>
-      <span>&#8377;{{ inr(_risked) }} at risk if every stop hits</span>
+      <span>&#8377;{{ inr_short(mandate.capital - _placed) }} stays in cash</span>
+      <span>&#8377;{{ inr_short(_risked) }} at risk if every stop hits</span>
     </div>
     {% endif %}
 
@@ -10266,7 +10721,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['world'] }} / {{ seclabel['world'] }}</span> {{ dh('World news') }}
-      <h2 class="stitle">The world, last 24h.</h2>
+      <h2 class="stitle">The world, last 24h</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
       actually changes a decision.</p>
@@ -10359,7 +10814,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['findings'] }} / {{ seclabel['findings'] }}</span>
-      <h2 class="stitle">What the data says that nobody looked for.</h2>
+      <h2 class="stitle">What the data says that nobody looked for</h2>
     </div>
     <p class="sdesc">Deterministic scans across {{ findings.universe }} companies and the
       market's own internals. Every finding states the rule that produced it, so it can be
@@ -10497,7 +10952,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['volspikes'] }} / {{ seclabel['volspikes'] }}</span>
-      <h2 class="stitle">Who actually showed up.</h2>
+      <h2 class="stitle">Who actually showed up</h2>
     </div>
     <p class="sdesc">Names trading at twice their own average volume or more. Volume is the
       only thing on this page that tells you whether a move had participation behind it.</p>
@@ -10582,7 +11037,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['longterm'] }} / {{ seclabel['longterm'] }}</span>
-      <h2 class="stitle">Own the business.</h2>
+      <h2 class="stitle">Own the business</h2>
     </div>
     <p class="sdesc">Five NSE names screened on return on capital, growth, leverage and what
       you pay — the chart only votes on whether the trend is intact. Two to three years.
@@ -10631,7 +11086,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['stocks'] }} / {{ seclabel['stocks'] }}</span> {{ dh('Stock screen') }}
-      <h2 class="stitle">Which {{ stock_screen.count or '—' }}, and why.</h2>
+      <h2 class="stitle">Which {{ stock_screen.count or '—' }}, and why</h2>
       {# THE DECISION ON STALENESS, stated on the section rather than buried.
          Every technical column here — price, RSI, turnover, the moving-average
          stack — comes from the weekly build and is as old as the price date.
@@ -11034,7 +11489,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['iporadar'] }} / {{ seclabel['iporadar'] }}</span>
-      <h2 class="stitle">Open books, and whether to apply.</h2>
+      <h2 class="stitle">Open books, and whether to apply</h2>
     </div>
     <p class="sdesc">Mainboard NSE issues only &mdash; SME is a different asset class and is
       filtered out by series, not by size. Verdicts are driven by <b>subscription demand</b>,
@@ -11116,16 +11571,18 @@ details.ipo-card > *:last-child{padding-bottom:14px}
          while these are accounting figures — turning them into points would
          assert a valuation view this site has no basis for. Published so a
          reader can form theirs. #}
-      {% if r.revenue_cr or r.pat_cr or r.roe_pct or r.pe_post_issue %}
+      {% if r.revenue_cr or r.pat_cr or r.roe_pct or r.pe_post_issue or r.roce_pct %}
       <div class="ipo-fin">
-        <div class="ipo-fin-h">Business performance{% if r.fy_label %} · {{ r.fy_label }}{% endif %}</div>
+        <div class="ipo-fin-h">Business performance{% if r.fy_label %} · {{ r.fy_label }}{% endif %}{% if r.sector %} · <span class="ipo-sector">{{ r.sector }}</span>{% endif %}</div>
         <div class="ipo-fin-g">
           {% if r.revenue_cr %}<div><span class="k">Revenue</span><span class="v">₹{{ '{:,.0f}'.format(r.revenue_cr) }} Cr{% if r.revenue_growth_pct %} <i class="{{ 'up' if r.revenue_growth_pct > 0 else 'dn' }}">{{ '%+.0f'|format(r.revenue_growth_pct) }}%</i>{% endif %}</span></div>{% endif %}
           {% if r.pat_cr %}<div><span class="k">PAT</span><span class="v">₹{{ '{:,.0f}'.format(r.pat_cr) }} Cr{% if r.pat_growth_pct %} <i class="{{ 'up' if r.pat_growth_pct > 0 else 'dn' }}">{{ '%+.0f'|format(r.pat_growth_pct) }}%</i>{% endif %}</span></div>{% endif %}
           {% if r.pat_margin_pct %}<div><span class="k">PAT margin</span><span class="v {{ 'dn' if r.pat_margin_pct < 2 else '' }}">{{ '%.2f'|format(r.pat_margin_pct) }}%</span></div>{% endif %}
           {% if r.roe_pct %}<div><span class="k">ROE</span><span class="v">{{ '%.0f'|format(r.roe_pct) }}%</span></div>{% endif %}
+          {% if r.roce_pct %}<div><span class="k">ROCE</span><span class="v">{{ '%.0f'|format(r.roce_pct) }}%</span></div>{% endif %}
+          {% if r.ebitda_margin_pct %}<div><span class="k">EBITDA margin</span><span class="v">{{ '%.1f'|format(r.ebitda_margin_pct) }}%</span></div>{% endif %}
           {% if r.debt_to_equity is not none and r.debt_to_equity != 0 %}<div><span class="k">Debt / equity</span><span class="v">{{ '%.2f'|format(r.debt_to_equity) }}</span></div>{% endif %}
-          {% if r.pe_post_issue %}<div><span class="k">P/E post-issue</span><span class="v">{{ '%.1f'|format(r.pe_post_issue) }}x{% if r.peer_pe %} <i class="mono-dim">vs {{ '%.0f'|format(r.peer_pe) }}x peers</i>{% endif %}</span></div>{% endif %}
+          {% if r.pe_post_issue %}<div><span class="k">P/E post-issue</span><span class="v">{{ '%.1f'|format(r.pe_post_issue) }}x{% if r.peer_pe %} <i class="mono-dim">vs {{ '%.0f'|format(r.peer_pe) }}x median of {{ r.peer_pe_n }} peer{{ '' if r.peer_pe_n == 1 else 's' }}</i>{% endif %}</span></div>{% endif %}
         </div>
         {% if r.pat_margin_pct and r.pat_margin_pct < 2 %}
         <p class="ipo-fin-w">A PAT margin under 2% means a high-volume, low-margin model:
@@ -11337,7 +11794,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['funds'] }} / {{ seclabel['funds'] }}</span> {{ dh('Fund screen') }}
-      <h2 class="stitle">Where the SIP goes.</h2>
+      <h2 class="stitle">Where the SIP goes</h2>
     </div>
     <p class="sdesc">Top three by three-year return in each category, from
       {{ fund_screen.source }}. Direct plans only &mdash; same portfolio, same
@@ -11598,7 +12055,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['sip'] }} / {{ seclabel['sip'] }}</span>
-      <h2 class="stitle">One bucket a month.</h2>
+      <h2 class="stitle">One bucket a month</h2>
     </div>
     <div style="text-align:right">
       <span class="slink" id="sipPlan">—</span>
@@ -11621,7 +12078,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv" style="margin-top:34px;border-top:1px solid var(--line);padding-top:22px">
     <div>
       <span class="snum">THE ARITHMETIC</span>
-      <h2 class="stitle" style="font-size:24px">Where the step-up takes it.</h2>
+      <h2 class="stitle" style="font-size:24px">Where the step-up takes it</h2>
     </div>
   </div>
   <div class="tw rv"><table class="t" id="sipProj"><thead><tr>
@@ -11652,7 +12109,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['swp'] }} / {{ seclabel['swp'] }}</span>
-      <h2 class="stitle">And what it pays out.</h2>
+      <h2 class="stitle">And what it pays out</h2>
     </div>
     <p class="sdesc">Accumulate to retirement, then draw down. Withdrawals are grossed up
       for capital gains tax, so the monthly figure is what lands in the bank, not what
@@ -11747,7 +12204,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['tracker'] }} / {{ seclabel['tracker'] }}</span>
-      <h2 class="stitle">The book.</h2>
+      <h2 class="stitle">The book</h2>
       <p class="sdesc">Real capital, actually held &mdash; not the paper wallet and not a signal
         list. Risk before profit: each position shows what it can lose to its stop before it shows
         what it has made, because the first number is the one that is certain.</p>
@@ -11856,7 +12313,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
          live response. It was hardcoded ₹50,00,000 here while _paper_wallet.js
          ran at a crore, so the headline and every number under it disagreed.
          test_page_structure.py asserts this fallback equals CAPITAL. #}
-      <h2 class="stitle">Positions held &mdash; <span id="pwCapital">₹1,00,00,000</span>.</h2>
+      <h2 class="stitle">Positions held &mdash; <span id="pwCapital">₹1 Cr</span></h2>
     </div>
     {# The other half of the pair. See the note in the order book: the same
        crore appears in both places and they are different moments in its life.
@@ -11888,7 +12345,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['alerts'] }} / {{ seclabel['alerts'] }}</span> {{ dh('Signal ledger') }}
-      <h2 class="stitle">Every signal, scored.</h2>
+      <h2 class="stitle">Every signal, scored</h2>
     </div>
     <div style="text-align:right">
       <p class="sdesc">Nothing hidden. Every Telegram alert ever sent, with entry, stop, target and outcome.</p>
@@ -12258,7 +12715,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['rules'] }} / {{ seclabel['rules'] }}</span>
-      <h2 class="stitle">What the ledger changed.</h2>
+      <h2 class="stitle">What the ledger changed</h2>
     </div>
     <p class="sdesc">Every rule the engine follows because the record forced it — with the number
       that forced it. Including the ideas that were tested and thrown away.</p>
@@ -12371,7 +12828,24 @@ details.ipo-card > *:last-child{padding-bottom:14px}
         <div><dt>Last attempt</dt>
           <dd>{{ d.last_attempted_update[:16].replace('T',' ') if d.last_attempted_update else '—' }}
             {% if d.attempt_status %}· {{ d.attempt_status }}{% endif %}</dd></div>
-        <div><dt>Age</dt><dd>{{ d.freshness_age }}</dd></div>
+        {# AGE, JUDGED AGAINST ITS OWN CADENCE.
+           "5 days old" beside a quiet "weekly" reads as broken, and three of
+           the twelve datasets are weekly. They were being reported as stale by
+           a reader's eye while the row's own status said FRESH — the loudest
+           number on the row disagreeing with the verdict two columns along.
+
+           freshness_age_hours and expected_refresh_hours are both already in
+           the payload, so the ratio needs no new data. Under 1.0 the dataset
+           is inside its cycle and the row says so in the same breath as the
+           age. #}
+        <div><dt>Age</dt><dd>{{ d.freshness_age }}
+          {% if d.freshness_age_hours is not none and d.expected_refresh_hours %}
+            {% if d.freshness_age_hours <= d.expected_refresh_hours %}
+              <span class="dh-within">within its {{ d.expected_refresh }} cycle</span>
+            {% else %}
+              <span class="dh-over">past its {{ d.expected_refresh }} cycle</span>
+            {% endif %}
+          {% endif %}</dd></div>
         <div><dt>Expected</dt><dd>{{ d.expected_refresh }}</dd></div>
         {# Two coverage figures, never merged. The published dataset's size and
            the latest ATTEMPT's size are different numbers about different
@@ -12420,7 +12894,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['buildlog'] }} / {{ seclabel['buildlog'] }}</span>
-      <h2 class="stitle">What shipped, and when.</h2>
+      <h2 class="stitle">What shipped, and when</h2>
     </div>
     <p class="sdesc">Read straight from this repository&rsquo;s history. The Engine Log
       records what the <em>ledger</em> forced the rules to change; this records what the
@@ -12462,7 +12936,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['method'] }} / {{ seclabel['method'] }}</span>
-      <h2 class="stitle">Every number, defined once.</h2>
+      <h2 class="stitle">Every number, defined once</h2>
     </div>
     <p class="sdesc">What each figure on this page measures, how it is computed, and which
       of the four kinds of claim it is. If a number here disagrees with a number above,
@@ -12533,7 +13007,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['who'] }} / {{ seclabel['who'] }}</span>
-      <h2 class="stitle">Who is publishing this.</h2>
+      <h2 class="stitle">Who is publishing this</h2>
     </div>
     <p class="sdesc">Most AI builders lack domain knowledge. Most finance operators
       can&rsquo;t build. Both, here.</p>
@@ -12569,7 +13043,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['careers'] }} / {{ seclabel['careers'] }}</span> {{ dh('Careers feed') }}
-      <h2 class="stitle">Where the next role is.</h2>
+      <h2 class="stitle">Where the next role is</h2>
     </div>
     <p class="sdesc">Senior finance openings in Dubai, Saudi, Malaysia and Oman, scored against
       the actual CV &mdash; multi-country retail P&amp;L, IFRS/MPERS consolidation, D365, Board
@@ -12730,7 +13204,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['interview'] }} / {{ seclabel['interview'] }}</span>
-      <h2 class="stitle">CFO in three years.</h2>
+      <h2 class="stitle">CFO in three years</h2>
     </div>
     <p class="sdesc">Four questions a day — two technical, two not — plus two field notes.
       Weighted to retail, the Gulf, and the controller-to-CFO jump. The non-technical ones
@@ -12796,7 +13270,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['brief'] }} / {{ seclabel['brief'] }}</span> {{ dh('Daily Brief') }}
-      <h2 class="stitle">Everything important today.</h2>
+      <h2 class="stitle">Everything important today</h2>
     </div>
     <p class="sdesc">{{ brief.stats.articles }} articles from
       {{ brief.stats.sources }} wires, clustered into {{ brief.stats.events }} events and
@@ -12876,7 +13350,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['smartreads'] }} / {{ seclabel['smartreads'] }}</span> {{ dh('Smart Reads') }}
-      <h2 class="stitle">Worth the ten minutes.</h2>
+      <h2 class="stitle">Worth the ten minutes</h2>
     </div>
     <!-- Copy rewritten when this stopped being a finance-only section. It used
          to name five money mastheads, which was accurate then and would have
@@ -12950,7 +13424,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['book'] }} / {{ seclabel['book'] }}</span>
-      <h2 class="stitle">{{ book.book }}.</h2>
+      <h2 class="stitle">{{ book.book }}</h2>
     </div>
     <p class="sdesc">{{ book.author }} &middot; chapter {{ book.index }} of {{ book.total }}.
       One chapter a day, and where the book has been read properly, the whole thing
@@ -13015,7 +13489,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['podcasts'] }} / {{ seclabel['podcasts'] }}</span> {{ dh('Podcasts') }}
-      <h2 class="stitle">What&rsquo;s worth listening to.</h2>
+      <h2 class="stitle">What&rsquo;s worth listening to</h2>
     </div>
     <p class="sdesc">Long-form Indian podcasts &mdash; business, money, society, health, psychology and culture. Thirty-four channels, newest first.</p>
   </div>
@@ -13059,7 +13533,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['language'] }} / {{ seclabel['language'] }}</span>
-      <h2 class="stitle">Two tongues, sharper.</h2>
+      <h2 class="stitle">Two tongues, sharper</h2>
     </div>
     <p class="sdesc">Spanish from zero, and English that survives a board room. Two words each,
       one delivery drill. Say them out loud — reading them does nothing.</p>
@@ -13128,7 +13602,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['wisdom'] }} / {{ seclabel['wisdom'] }}</span>
-      <h2 class="stitle">Jainism and Buddhism.</h2>
+      <h2 class="stitle">Jainism and Buddhism</h2>
     </div>
     <p class="sdesc">Operating instructions, not theology. Each one carries the source idea and
       the thing to do with it today.</p>
@@ -13152,7 +13626,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['mind'] }} / {{ seclabel['mind'] }}</span>
-      <h2 class="stitle">Sharpen the operator.</h2>
+      <h2 class="stitle">Sharpen the operator</h2>
     </div>
     <p class="sdesc">One quote, one lesson from the world, one rule for being a better person and a better dad.</p>
   </div>
@@ -13183,7 +13657,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['way'] }} / {{ seclabel['way'] }}</span>
-      <h2 class="stitle">Simple living. High thinking.</h2>
+      <h2 class="stitle">Simple living. High thinking</h2>
     </div>
     <p class="sdesc">Own less. Behave well. Sit still. Think in models. One phrase of Arabic,
       one honest rep. Six tracks, rotating daily on different cycles — the combination never repeats.</p>
@@ -13291,7 +13765,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['review'] }} / {{ seclabel['review'] }}</span>
-      <h2 class="stitle">Look back, or none of it compounds.</h2>
+      <h2 class="stitle">Look back, or none of it compounds</h2>
     </div>
     <p class="sdesc">Week {{ review.week }} of {{ review.year }}.
       {% if review.is_review_day %}Review day — do it now.{% else %}{{ review.days_left }} day{{ '' if review.days_left == 1 else 's' }} until the weekend review.{% endif %}
@@ -13345,7 +13819,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['desk'] }} / {{ seclabel['desk'] }}</span>
-      <h2 class="stitle">Compound the skill.</h2>
+      <h2 class="stitle">Compound the skill</h2>
     </div>
     <p class="sdesc">FP&amp;A, the CFO ladder, a case study, a book, and one hack — rotating daily.
       Seven tabs, one discipline.</p>
@@ -13419,7 +13893,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['chess'] }} / {{ seclabel['chess'] }}</span>
-      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess.{% else %}Your last session.{% endif %}</h2>
+      <h2 class="stitle">{% if lichess_summary.is_yesterday %}Yesterday&rsquo;s chess{% else %}Your last session{% endif %}</h2>
     </div>
     <div style="text-align:right">
       <p class="sdesc">AKK_010 on Lichess. Pattern over volume — review the turning point, not the result.
@@ -13595,7 +14069,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
   <div class="shead rv">
     <div>
       <span class="snum">{{ secnum['gym'] }} / {{ seclabel['gym'] }}</span>
-      <h2 class="stitle">Six minutes. Sharper.</h2>
+      <h2 class="stitle">Six minutes. Sharper</h2>
     </div>
     <p class="sdesc">A new set every day, same set for the whole day. Numbers under time
       pressure, estimation, recall, and the two calculations a trading desk actually runs.

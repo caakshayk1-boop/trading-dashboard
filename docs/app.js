@@ -1992,6 +1992,31 @@ var TV_ALIASES = (function () {
       return (n < 0 ? '-₹' : '₹') + Math.abs(n).toLocaleString('en-IN');
     }
 
+    /* Crore / lakh, matching inr_short() in newspaper.py. The two must agree:
+       the template paints the 6 AM figure and this repaints the same element
+       from the API, so a mismatch shows up as the headline changing shape a
+       second after the page loads.
+
+       "₹1,00,00,000" is correctly grouped and still makes the reader count
+       digit groups to tell a crore from ten lakh — which is the work a
+       headline number exists to save. Below a lakh it falls back to full
+       digits, because "₹0.67 L" is worse than "₹67,262" for a figure someone
+       may want exactly.
+
+       For ALLOCATIONS only — capital, cash, deployed, P&L. Never prices:
+       tradePrice() above exists for those and rounding a stop would make it a
+       wrong instruction rather than a shorter one. */
+    function rupeesShort(v){
+      if (v === null || v === undefined) return '—';
+      var n = Number(v);
+      if (!isFinite(n)) return '—';
+      var sign = n < 0 ? '-' : '', a = Math.abs(n), num, unit;
+      if (a >= 1e7)      { num = a / 1e7; unit = ' Cr'; }
+      else if (a >= 1e5) { num = a / 1e5; unit = ' L';  }
+      else return sign + '₹' + Math.round(a).toLocaleString('en-IN');
+      return sign + '₹' + String(num.toFixed(2)).replace(/\.?0+$/, '') + unit;
+    }
+
     // Per-share PRICES, not allocations. rupees() is wrong for these twice
     // over: it rounds to whole units (₹137 for a ₹137.80 entry) and it
     // hardcodes ₹, which would print a US equity's dollar entry in rupees —
@@ -2031,16 +2056,16 @@ var TV_ALIASES = (function () {
       // The headline used to be a hardcoded ₹50,00,000 in the template while the
       // allocator ran at a crore. One source now: whatever the API says.
       var capEl = el('pwCapital');
-      if (capEl && typeof j.capital === 'number') capEl.textContent = rupees(j.capital);
+      if (capEl && typeof j.capital === 'number') capEl.textContent = rupeesShort(j.capital);
       window.__onLedgerPx = function(){
         if (window.__walletPayload) renderPaperWallet(window.__walletPayload);
       };
 
       var kpi = '<div class="kpi-row rv" style="margin-bottom:16px">' +
-        '<div class="kpi"><div class="v">' + rupees(w.deployed_amount) + '</div><div class="k">Deployed (' + fmt(w.deployed_pct, 1) + '%)</div></div>' +
-        '<div class="kpi"><div class="v">' + rupees(w.cash_amount) + '</div><div class="k">Cash (' + fmt(w.cash_pct, 1) + '%)</div></div>' +
+        '<div class="kpi"><div class="v">' + rupeesShort(w.deployed_amount) + '</div><div class="k">Deployed (' + fmt(w.deployed_pct, 1) + '%)</div></div>' +
+        '<div class="kpi"><div class="v">' + rupeesShort(w.cash_amount) + '</div><div class="k">Cash (' + fmt(w.cash_pct, 1) + '%)</div></div>' +
         '<div class="kpi"><div class="v ' + (w.realized_pnl > 0 ? 'up' : w.realized_pnl < 0 ? 'dn' : '') + '">' +
-          (w.realized_pnl > 0 ? '+' : '') + rupees(w.realized_pnl) + '</div><div class="k">Realized P&amp;L</div></div>' +
+          (w.realized_pnl > 0 ? '+' : '') + rupeesShort(w.realized_pnl) + '</div><div class="k">Realized P&amp;L</div></div>' +
         // Open risk, marked live. Separate tile from Realized on purpose: one
         // is money banked, the other is money still on the table, and a single
         // blended figure would hide which is which.
@@ -6927,12 +6952,64 @@ var TV_ALIASES = (function () {
       if (k.querySelector('.pill')) return;
       var m = dict[metricKey(k.textContent)];
       if (!m) return;
-      var a = document.createElement('a');
-      a.className = 'mprov mprov-' + m.tier;
-      a.href = '#metric-' + m.key;
-      a.textContent = TIER_WORD[m.tier] || m.tier;
-      a.title = TIER_WORD[m.tier] + ' — what this number is, and how it is computed';
-      k.appendChild(a);
+
+      /* PROGRESSIVE DISCLOSURE, not a jump.
+       *
+       * This badge used to be <a href="#metric-KEY"> — a link to the glossary
+       * at the foot of a 45,000-pixel page. Answering "how is this computed?"
+       * therefore cost the reader their place, and the way back was the browser
+       * button. That is a footnote pretending to be a disclosure.
+       *
+       * It is a button now. The method opens directly under the number it
+       * describes, and closes again. The glossary link survives INSIDE the
+       * panel for anyone who wants the full entry and its neighbours — the
+       * jump is still available, it is just no longer the only option.
+       *
+       * <button>, not a <div> with a click handler: it has to be reachable by
+       * keyboard and announce its own state, and aria-expanded on a real
+       * button is the whole implementation of that.
+       */
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mprov mprov-' + m.tier;
+      b.textContent = TIER_WORD[m.tier] || m.tier;
+      b.setAttribute('aria-expanded', 'false');
+      b.title = TIER_WORD[m.tier] + ' — what this number is, and how it is computed';
+      var panelId = 'mp-' + m.key + '-' + Math.random().toString(36).slice(2, 7);
+      b.setAttribute('aria-controls', panelId);
+      b.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        var open = b.getAttribute('aria-expanded') === 'true';
+        var host = k.closest('.kpi, .stat') || k;
+        var existing = host.querySelector('.mpanel');
+        if (open){
+          if (existing) existing.remove();
+          b.setAttribute('aria-expanded', 'false');
+          return;
+        }
+        if (!existing){
+          var panel = document.createElement('div');
+          panel.className = 'mpanel';
+          panel.id = panelId;
+          var w = document.createElement('p');
+          w.className = 'mpanel-what';
+          w.textContent = m.what || '';
+          var h = document.createElement('p');
+          h.className = 'mpanel-how';
+          h.textContent = m.how || '';
+          panel.appendChild(w);
+          if (m.how) panel.appendChild(h);
+          var more = document.createElement('a');
+          more.className = 'mpanel-more';
+          more.href = '#metric-' + m.key;
+          more.textContent = 'Full definition \u2192';
+          panel.appendChild(more);
+          host.appendChild(panel);
+        }
+        b.setAttribute('aria-expanded', 'true');
+      });
+      k.appendChild(b);
     });
   }
   window.__stampMetricBadges = stampMetricBadges;
@@ -7057,6 +7134,186 @@ var TV_ALIASES = (function () {
   }
   window.__labelCells = labelCells;
 
+  /* A column header has to point the same way as the column beneath it.
+   *
+   * Neither renderer puts an alignment class on <th>. The sortable tables
+   * emit `.num` on body cells only; the plain tables emit `.r` on both but
+   * are the minority. The result was a left-aligned label sitting over a
+   * right-aligned column of figures — and this page has an eighteen-column
+   * table, where the label ends up a long way from its own numbers.
+   *
+   * Mirrored from the first real body row rather than guessed from the
+   * header text: the body cell is where the renderer already recorded "this
+   * column is numeric", so mirroring it cannot disagree with the cells. A
+   * heuristic on the label ("Price looks numeric") could, and would be wrong
+   * on "1W", "6/9" and "From 52w high".
+   *
+   * Sets a class and nothing else — the styling is `table th.num` in CSS.
+   */
+  function alignTableHeaders(root){
+    [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
+      var head = t.tHead && t.tHead.rows.length
+               ? t.tHead.rows[t.tHead.rows.length - 1] : null;
+      if (!head) return;
+      var body = t.tBodies && t.tBodies[0];
+      if (!body) return;
+      // The first row that is an actual record. A colspan message row
+      // ("nothing matches those filters") carries no column information.
+      var row = null;
+      for (var i = 0; i < body.rows.length; i++){
+        var r = body.rows[i];
+        if (r.cells.length > 1 && !r.classList.contains('t-cards-msg')) { row = r; break; }
+      }
+      if (!row) return;
+      // A count mismatch means a colspan in one of the two rows, so a header
+      // index no longer identifies the column under it. Skip the table
+      // rather than mirror onto the wrong header.
+      if (row.cells.length !== head.cells.length) return;
+      for (var c = 0; c < head.cells.length; c++){
+        var cell = row.cells[c];
+        head.cells[c].classList.toggle(
+          'num', cell.classList.contains('num') || cell.classList.contains('r')
+        );
+      }
+    });
+  }
+  window.__alignTableHeaders = alignTableHeaders;
+
+  /* ── SORT AND FILTER ON EVERY TABLE ───────────────────────────────────────
+   *
+   * Measured before this: 18 tables on the page, ONE of them sortable. The
+   * stock screen had 16 sortable columns and everything else had none — a
+   * 90-row IPO history, a 61-row alert log, a 56-row SWP schedule and a
+   * 33-row wallet, all of them fixed in whatever order the server emitted.
+   *
+   * The screen's existing sorter cannot be reused: it sorts the underlying
+   * array and repaints, so it only works where app.js owns the data. Most of
+   * these tables are server-rendered and there is no array to sort. This one
+   * sorts the <tr> elements themselves, which works regardless of where the
+   * rows came from.
+   *
+   * Tables that ALREADY have th.sortable are skipped outright — that is the
+   * stock screen, and double-wiring it would sort the DOM underneath a
+   * renderer that is about to repaint it from its own model.
+   */
+  function cellSortValue(td){
+    if (!td) return '';
+    // An explicit data-sort wins: a date cell may display "2d" and sort by
+    // its timestamp, and the rendered text cannot express that.
+    if (td.dataset && td.dataset.sort !== undefined) {
+      var d = parseFloat(td.dataset.sort);
+      return isNaN(d) ? td.dataset.sort.toLowerCase() : d;
+    }
+    var t = (td.textContent || '').trim();
+    if (t === '' || t === '—' || t === '-') return null;   // blanks sort last
+    // Strip currency, grouping, percent and multiplier so "₹2,390cr", "+32.1%"
+    // and "15.1×" compare as numbers. Indian grouping included.
+    var n = parseFloat(t.replace(/[₹$,%\s]/g, '').replace(/[×xX]$/, '')
+                        .replace(/(cr|L|K|Cr|bps)$/i, ''));
+    return isNaN(n) ? t.toLowerCase() : n;
+  }
+
+  function makeSortable(table){
+    if (table.dataset.sortWired) return;
+    var head = table.tHead && table.tHead.rows.length
+             ? table.tHead.rows[table.tHead.rows.length - 1] : null;
+    var body = table.tBodies && table.tBodies[0];
+    if (!head || !body || body.rows.length < 3) return;
+    // Already has a real sorter of its own.
+    if (table.querySelector('th.sortable')) return;
+    // A colspan anywhere in the header breaks the index->column mapping.
+    for (var c = 0; c < head.cells.length; c++){
+      if (head.cells[c].colSpan > 1) return;
+    }
+    table.dataset.sortWired = '1';
+    [].slice.call(head.cells).forEach(function(th, i){
+      th.classList.add('sortable');
+      th.tabIndex = 0;
+      th.setAttribute('role', 'columnheader');
+      th.dataset.col = String(i);
+    });
+    var dir = {};
+    function sortBy(i){
+      var rows = [].slice.call(body.rows).filter(function(r){
+        return !r.classList.contains('t-cards-msg') && r.cells.length > i;
+      });
+      var d = dir[i] = (dir[i] === 1 ? -1 : 1);
+      rows.forEach(function(r, n){ r.__i = n; });          // stable tiebreak
+      rows.sort(function(a, b){
+        var x = cellSortValue(a.cells[i]), y = cellSortValue(b.cells[i]);
+        if (x === null && y === null) return a.__i - b.__i;
+        if (x === null) return 1;                          // blanks last, always
+        if (y === null) return -1;
+        if (typeof x === 'number' && typeof y === 'number') {
+          return x === y ? a.__i - b.__i : (x - y) * d;
+        }
+        var r = String(x).localeCompare(String(y));
+        return r === 0 ? a.__i - b.__i : r * d;
+      });
+      rows.forEach(function(r){ body.appendChild(r); });
+      [].slice.call(head.cells).forEach(function(th, n){
+        if (n === i) th.setAttribute('aria-sort', d === 1 ? 'ascending' : 'descending');
+        else th.removeAttribute('aria-sort');
+      });
+    }
+    head.addEventListener('click', function(ev){
+      var th = ev.target.closest && ev.target.closest('th');
+      if (th && th.dataset.col) sortBy(Number(th.dataset.col));
+    });
+    head.addEventListener('keydown', function(ev){
+      if (ev.key !== 'Enter' && ev.key !== ' ') return;
+      var th = ev.target.closest && ev.target.closest('th');
+      if (th && th.dataset.col){ ev.preventDefault(); sortBy(Number(th.dataset.col)); }
+    });
+  }
+
+  /* A filter box, for tables long enough that scanning is the slow part.
+   * Eight rows is the floor: below that the eye beats a search box, and a
+   * control that is never worth using is clutter with a placeholder. */
+  function makeFilterable(table){
+    if (table.dataset.filterWired) return;
+    var body = table.tBodies && table.tBodies[0];
+    if (!body || body.rows.length < 8) return;
+    var wrap = table.closest('.tw, .tblwrap, .tw-tall');
+    if (!wrap || !wrap.parentNode) return;
+    table.dataset.filterWired = '1';
+    var bar = document.createElement('div');
+    bar.className = 'tfilter';
+    var id = 'tf' + Math.random().toString(36).slice(2, 8);
+    var input = document.createElement('input');
+    input.type = 'search'; input.id = id;
+    input.placeholder = 'Filter ' + body.rows.length + ' rows';
+    input.setAttribute('aria-label', 'Filter this table');
+    var count = document.createElement('span');
+    count.className = 'tfilter-n';
+    bar.appendChild(input); bar.appendChild(count);
+    wrap.parentNode.insertBefore(bar, wrap);
+    var t;
+    input.addEventListener('input', function(){
+      // Coalesced on a timer, not rAF: rAF does not run in a hidden document
+      // and the filter would silently stop applying. Same rule as the
+      // observer pass below.
+      clearTimeout(t);
+      t = setTimeout(function(){
+        var q = input.value.trim().toLowerCase(), shown = 0;
+        [].slice.call(body.rows).forEach(function(r){
+          var hit = !q || (r.textContent || '').toLowerCase().indexOf(q) >= 0;
+          r.hidden = !hit;
+          if (hit) shown++;
+        });
+        count.textContent = q ? shown + ' of ' + body.rows.length : '';
+      }, 90);
+    });
+  }
+
+  function wireTableControls(root){
+    [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
+      try { makeSortable(t); } catch (e) { /* a table that will not sort still renders */ }
+      try { makeFilterable(t); } catch (e) { /* ditto */ }
+    });
+  }
+  window.__wireTableControls = wireTableControls;
+
   window.__renameTables = function(){ nameTables(document); };
   function nameTables(root){
     [].slice.call((root || document).querySelectorAll('table')).forEach(function(t){
@@ -7103,6 +7360,8 @@ var TV_ALIASES = (function () {
     try { nameTables(document); } catch (e) { console.warn('table naming failed', e); }
     try { discloseProse(document); } catch (e) { console.warn('prose disclosure failed', e); }
     try { labelCells(document); } catch (e) { console.warn('cell labelling failed', e); }
+    try { alignTableHeaders(document); } catch (e) { console.warn('header alignment failed', e); }
+    try { wireTableControls(document); } catch (e) { console.warn('table controls failed', e); }
 
     // Most KPI tiles arrive later, from the wallet and performance responses.
     // A MutationObserver rather than a timer: the renders are network-bound and
@@ -7132,6 +7391,8 @@ var TV_ALIASES = (function () {
           try { nameTables(document); } catch (e) { /* never break a render */ }
           try { discloseProse(document); } catch (e) { /* never break a render */ }
           try { labelCells(document); } catch (e) { /* never break a render */ }
+          try { alignTableHeaders(document); } catch (e) { /* never break a render */ }
+          try { wireTableControls(document); } catch (e) { /* never break a render */ }
         }, 0);
       }).observe(document.body, {childList: true, subtree: true});
     }

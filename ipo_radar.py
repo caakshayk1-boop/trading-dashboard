@@ -303,13 +303,16 @@ FINANCIAL_FIELDS = {
     "roe_pct": "return on equity percent",
     "debt_to_equity": "debt to equity ratio",
     "pe_post_issue": "post-issue price to earnings ratio",
-    "peer_pe": "average price to earnings of listed peers",
+    "peer_pe": "median price to earnings of the LISTED peers Chittorgarh names",
+    "peer_pe_n": "how many peers that median is over — a median of one is not one",
+    "eps_post_issue": "post-issue earnings per share in rupees",
+    "pb_ratio": "price to book value, newest financial year",
+    "roce_pct": "return on capital employed percent, newest financial year",
+    "ebitda_margin_pct": "EBITDA as a percent of revenue, newest financial year",
     "fy_label": "the financial year these figures cover, e.g. FY26",
-    "strengths": "the two or three strongest points in the company's favour, "
-                 "as a single semicolon-separated string",
-    "risks": "the two or three most serious risks or weaknesses, as a single "
-             "semicolon-separated string",
-    "use_of_proceeds": "what the fresh issue money is for, one short phrase",
+    "sector": "the industry Chittorgarh files the issue under",
+    "use_of_proceeds": "what the fresh issue money is for — the filed objects, "
+                       "verbatim, largest first, with their amounts",
 }
 
 
@@ -351,6 +354,74 @@ def _num(s):
         return float(str(s).replace(",", "").strip(" .")) if s is not None else None
     except (TypeError, ValueError):
         return None
+
+
+def _table_cell(text: str, label: str, col: int):
+    """One numbered cell out of a Chittorgarh markdown table row, by label.
+
+    Every table on the page is rendered by Jina as `| [Label](url) | a | b |`,
+    so a row is addressable by its label and a column index. Returns None
+    rather than raising on anything that is not a number — a blank cell is
+    normal (an unlisted company has no P/E) and a missing figure must leave the
+    field empty, never guess it.
+    """
+    m = re.search(re.escape(label) + r"\]\([^)]*\)[^|\n]*((?:\|[^|\n]*)+)",
+                  text, re.I)
+    if not m:
+        return None
+    cells = [c.strip() for c in m.group(1).split("|") if c.strip() != ""]
+    try:
+        return float(cells[col].replace(",", "").replace("%", "").replace("\u20b9", ""))
+    except (ValueError, IndexError):
+        return None
+
+
+def _peer_pe(detail_url: str) -> tuple[float | None, int]:
+    """Median P/E of the listed peers Chittorgarh names for this issue.
+
+    The one field here that costs a SECOND fetch. Peer comparison lives on the
+    /ipo-recommendation/ page, not the /ipo/ detail page, and the two share a
+    slug so the URL is a substitution rather than another search. Ten live
+    issues a build, so ten extra requests against a keyless provider.
+
+    MEDIAN, not mean, and the field was renamed to say so. One issue's peer set
+    priced at 107x, 230x and 69x has a mean of 135x — a number no peer trades
+    anywhere near, and it would have been published as "vs 135x peers". The
+    median is 107x and describes the group.
+
+    Two guards, both from a real page rather than caution:
+
+      * A NEGATIVE P/E is a loss-making peer, not a cheap one. ESDS's only
+        peer prices at -805x, and a "peer P/E" of -805 next to a post-issue
+        41.6x invites exactly the wrong reading. Non-positive values are
+        dropped.
+      * A median of ONE survivor is that one company, not a peer group. Below
+        two usable peers this returns None and the card renders no comparison,
+        which is what ESDS now correctly does.
+    """
+    import crawler
+    import statistics
+    url = detail_url.replace("/ipo/", "/ipo-recommendation/")
+    page = crawler.fetch(url, timeout=50)
+    if not page.ok:
+        return None, 0
+    m = re.search(r"^## Peer Comparison\s*$", page.content, re.M)
+    if not m:
+        return None, 0
+    pes = []
+    for row in re.finditer(r"^\|\s*(?:\[)?([^|\]]+?)(?:\]\([^)]*\))?\s*\|(.+)\|\s*$",
+                           page.content[m.end():m.end() + 3000], re.M):
+        cols = [c.strip() for c in row.group(2).split("|")]
+        if len(cols) < 5:
+            continue
+        try:
+            pes.append(float(cols[3].replace(",", "")))
+        except ValueError:
+            continue          # the issuer's own row is blank — it is unlisted
+    usable = [v for v in pes if v > 0]
+    if len(usable) < 2:
+        return None, len(usable)
+    return round(statistics.median(usable), 2), len(usable)
 
 
 def _financials(text: str) -> dict:
@@ -402,6 +473,72 @@ def _financials(text: str) -> dict:
     m = re.search(r"RoNW\]\([^)]*\)[^|]*\|\s*([\d.]+)%", text, re.I)
     if m:
         out["roe_pct"] = float(m.group(1))
+
+    # ── VALUATION AND CAPITAL EFFICIENCY ────────────────────────────────────
+    # Declared in FINANCIAL_FIELDS since the module was written and never once
+    # populated: pe_post_issue and peer_pe sat at None on all 100 rows. The card
+    # already had the markup to render both — `P/E post-issue 22.3x vs 107x
+    # peers` — so this was a missing parser behind finished UI, not a missing
+    # feature.
+    #
+    # Two tables, two different column orders, which is the whole reason this
+    # needs a column index rather than reusing row() above:
+    #
+    #   Key Performance Indicator   | KPI | Mar 31, 2026 | Mar 31, 2025 |
+    #                               -> newest financial year is column 0
+    #   IPO Valuation               | Metric | Pre IPO | Post IPO |
+    #                               -> the post-issue figure is column 1
+    #
+    # Taking column 0 from the valuation table would publish the PRE-issue
+    # multiple labelled as post-issue — a wrong number that looks right, which
+    # is worse than the None it replaces. Post-issue is the one that matters:
+    # it is the multiple a buyer at the offer price actually pays.
+    for field, label, col in (
+        ("pe_post_issue",     "P/E (x)",              1),
+        ("eps_post_issue",    "EPS",                  1),
+        ("roce_pct",          "ROCE",                 0),
+        ("ebitda_margin_pct", "EBITDA Margin",        0),
+        ("pb_ratio",          "Price to Book Value",  0),
+    ):
+        v = _table_cell(text, label, col)
+        if v is not None:
+            out[field] = v
+
+    # The sector, which the site has been calling unavailable. It is not in any
+    # feed and it is not a labelled field on the page — it is the heading of the
+    # "Recently Listed IPOs in <sector>" block, which is Chittorgarh's own
+    # classification of this issue.
+    m = re.search(r"^## Recently Listed IPOs in (.+?)\s*$", text, re.M)
+    if m:
+        out["sector"] = m.group(1).strip()
+
+    # Objects of the issue, VERBATIM. The filed wording is long and the
+    # temptation is to compress "Funding capital expenditure requirement of the
+    # Company towards procurement of machinery and equipment" into "capex" —
+    # but that is a paraphrase of a legal document, and this module's rule is
+    # that it reports what a source says rather than what it means. Truncated
+    # at a word boundary, largest first, capped at three, with the rest counted.
+    m = re.search(r"^## IPO Objects of the Issue\s*$", text, re.M)
+    if m:
+        objs = []
+        for row_m in re.finditer(
+                r"^\|\s*(\d+)\s*\|\s*(.+?)\s*\|\s*([\d,.]*)\s*\|$",
+                text[m.end():m.end() + 2500], re.M):
+            amt = row_m.group(3).replace(",", "")
+            objs.append((float(amt) if amt else None, row_m.group(2).strip()))
+        if objs:
+            with_amt = sorted([o for o in objs if o[0] is not None],
+                              key=lambda o: -o[0])
+            shown, parts = with_amt[:3], []
+            for amt, txt in shown:
+                if len(txt) > 90:
+                    txt = txt[:90].rsplit(" ", 1)[0] + "\u2026"
+                parts.append(f"{txt} (\u20b9{amt:,.2f} Cr)")
+            rest = len(objs) - len(shown)
+            if rest > 0:
+                parts.append(f"and {rest} other object{'' if rest == 1 else 's'}")
+            if parts:
+                out["use_of_proceeds"] = "; ".join(parts)
     m = re.search(r"financial year ending with\s*\w+\s*\d{1,2},\s*(\d{4})", text, re.I)
     if m:
         out["fy_label"] = f"FY{m.group(1)[2:]}"
@@ -513,6 +650,43 @@ def _read_numbers(r: dict) -> tuple[list, list]:
         elif sub["QIB"] >= 10:
             good.append(f"Institutions are in at {sub['QIB']:.2f}x, which is where "
                         "the research budgets are.")
+
+    # ── VALUATION, AND WHY IT LEADS ─────────────────────────────────────────
+    # insert(0) rather than append: both lists are cut to four below, and what
+    # an issue is PRICED at against its own listed peers outranks any single
+    # accounting ratio for someone deciding whether to apply. Appended, this
+    # line was the one that got cut on exactly the rows that had the most to
+    # say.
+    #
+    # Bands are +/-30% around the peer median and are named in the sentence, so
+    # a reader can disagree with the threshold instead of with an assertion —
+    # the rule this whole function is built on. Between 0.7x and 1.3x no line is
+    # emitted at all: "priced roughly in line with peers" is not a finding.
+    pe, ppe, pn = r.get("pe_post_issue"), r.get("peer_pe"), r.get("peer_pe_n")
+    if pe and ppe and pe > 0 and ppe > 0:
+        peers = f"{pn} listed peer{'' if pn == 1 else 's'}"
+        if pe < ppe * 0.7:
+            good.insert(0, f"Priced at {pe:.1f}x post-issue earnings against a "
+                           f"{ppe:.0f}x median for its {peers} — a discount of "
+                           f"more than 30% to the group it will trade beside.")
+        elif pe > ppe * 1.3:
+            bad.insert(0, f"Priced at {pe:.1f}x post-issue earnings against a "
+                          f"{ppe:.0f}x median for its {peers} — a premium of "
+                          f"more than 30%, which the business has to earn "
+                          f"before the listing does.")
+
+    # Return on capital is the ratio that says whether growth is worth funding,
+    # and it is now parsed where it was not before. 20% and 8% are the same
+    # bands the equity screen uses, so a name reads the same way in both places.
+    roce = r.get("roce_pct")
+    if roce is not None and roce >= 20:
+        good.append(f"Return on capital employed of {roce:.0f}% — above the 20% "
+                    "bar the stock screen uses for a compounder.")
+    elif roce is not None and roce < 8:
+        bad.append(f"Return on capital employed is {roce:.0f}%. Below about 8% "
+                   "the business earns less on its capital than it costs to "
+                   "carry, so growth consumes value rather than adding it.")
+
     return good[:4], bad[:4]
 
 
@@ -690,6 +864,16 @@ def enrich(rows, key=None, previous=None):
                         r[k] = v
             except Exception as e:                    # noqa: BLE001
                 log.warning(f"financials {r['symbol']}: {e}")
+            # Separate try: the peer table is on a second page, so a failure
+            # here must not cost the row the valuation figures the first page
+            # already gave it. Same fail-soft rule as everything else in enrich.
+            try:
+                med, n = _peer_pe(url)
+                if med is not None:
+                    r["peer_pe"] = med
+                    r["peer_pe_n"] = n
+            except Exception as e:                    # noqa: BLE001
+                log.warning(f"peer pe {r['symbol']}: {e}")
         except Exception as e:                        # noqa: BLE001
             log.warning(f"enrich {r['symbol']}: {type(e).__name__} {e} — keeping previous")
 

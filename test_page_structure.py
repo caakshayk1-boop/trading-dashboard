@@ -300,9 +300,14 @@ def _():
     reader sees for the first few hundred milliseconds, and on a slow network
     for much longer, so it still has to be right.
     """
-    m = re.search(r'<span id="pwCapital">₹([\d,]+)</span>', TEMPLATE)
+    # Two accepted forms, because the headline now renders in crore/lakh:
+    # "₹1 Cr" (inr_short) or the older grouped "₹1,00,00,000". Both are parsed
+    # back to an integer and compared against CAPITAL — the invariant is
+    # unchanged, only the notation the page prints it in.
+    m = re.search(r'<span id="pwCapital">₹([\d,.]+)\s*(Cr|L)?</span>', TEMPLATE)
     assert m, "#pwCapital placeholder missing from the wallet heading"
-    shown = int(m.group(1).replace(",", ""))
+    raw, unit = m.group(1).replace(",", ""), m.group(2)
+    shown = int(round(float(raw) * {"Cr": 1e7, "L": 1e5, None: 1}[unit]))
 
     js = pathlib.Path(__file__).with_name("vercel-news") / "api" / "_paper_wallet.js"
     src = js.read_text(encoding="utf-8")
