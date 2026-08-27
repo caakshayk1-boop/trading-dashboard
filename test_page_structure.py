@@ -289,6 +289,35 @@ def _():
         "\n    ".join(offenders)
 
 
+@check("the page template compiles as Jinja")
+def _():
+    """The cheapest check on this page, and the one that was missing.
+
+    Deleting a block and leaving its {% endif %} behind is a COMPILE error, not
+    a rendering bug: Jinja reports "unknown tag 'endif'" at the next section
+    boundary, which can be 1,500 lines from the edit, and the whole page fails
+    to build. Nothing in this file caught it — 23 structural checks, every
+    Python suite and eslint all passed on a template that could not render.
+
+    It shipped on 2026-08-28, failed the "Generate newspaper HTML" step in CI,
+    and cost a build. Everything below this line runs on TEMPLATE as text and
+    so cannot notice.
+    """
+    from jinja2 import Template
+    try:
+        Template(TEMPLATE)
+    except Exception as e:                                # noqa: BLE001
+        line = getattr(e, "lineno", None)
+        ctx = ""
+        if line:
+            rows = TEMPLATE.split("\n")
+            lo, hi = max(0, line - 4), min(len(rows), line + 2)
+            ctx = "\n    " + "\n    ".join(
+                f"{i+1:6}{'>>' if i+1 == line else '  '} {rows[i][:100]}"
+                for i in range(lo, hi))
+        raise AssertionError(f"template does not compile: {e}{ctx}") from None
+
+
 @check("wallet headline fallback matches the allocator's CAPITAL")
 def _():
     """One capital, or none.

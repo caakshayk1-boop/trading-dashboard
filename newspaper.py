@@ -10400,7 +10400,12 @@ table.t tbody tr:hover{background:var(--surface2)}
 
      The two numbers that matter — today's FII and DII net — are in the tiles
      above, dated, and they were never the thing that was broken. #}
-  {% endif %}
+
+  {# The {% raw %}{% endif %}{% endraw %} that stood here closed the `{% raw %}{% if fd %}{% endraw %}` guard on the
+     FII / DII block, and that guard went with the block. Left behind it was an
+     unmatched tag, which Jinja reports as "unknown tag 'endif'" 1,500 lines
+     later at the next real section boundary — a compile error, so the whole
+     page fails to render rather than one block going missing. #}
 
   {% set ca = market_intel.get('corporate_actions') or [] %}
   {% if ca %}
