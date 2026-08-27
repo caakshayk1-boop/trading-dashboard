@@ -39,7 +39,32 @@ on:
     # 03:00 UTC = 08:30 IST, Tue-Sat so it covers Mon-Fri US sessions. The US
     # close is 20:00 UTC (summer) / 21:00 UTC (winter), so even 3h of the cron
     # drift this repo sees still lands well after it.
-    - cron: '0 3 * * 2-6'        # 08:30 IST — US positions, after the US close
+    # US SLOT RETIRED 2026-08-27, on the operator's instruction: "us session we
+    # dont need". The Rs 1 crore mandate is Indian listed equity only, so a US
+    # position check alerts on instruments the rulebook will not size. The arm
+    # below is kept so a manual dispatch of `us` still works for anyone holding
+    # legacy US rows — the schedule is gone, the capability is not.
+    #
+    # CATCH-UPS. GitHub's scheduler DROPS runs, it does not merely delay them:
+    # on 2026-08-27 neither the 03:00 nor the 05:00 cron produced a run at all,
+    # and the workflow list simply skips from 08-26T11:16Z to nothing. A green
+    # history with a missing day looks identical to a quiet day.
+    #
+    # These re-attempt the two slots that matter ~2h and ~4h later. They are
+    # not double scans: --catch-up stands down when job_runs already carries a
+    # completed run for that slot on that IST date.
+    # The midday retries sit at 11:00 and 11:30 IST, NOT the 12:30/14:30 that
+    # looked more generous. test_engine_regressions enforces
+    # cron_IST + 3h drift <= 14:30, an hour before the bell, and 12:30 IST
+    # fails it: worst case it surfaces AT 15:30, the close. A retry that can
+    # only arrive after the market shuts is not a retry, it is a log entry.
+    # 06:00 UTC is the last actionable weekday slot on this repo, full stop.
+    - cron: '30 5 * * 1-5'       # 11:00 IST — midday retry (1st)
+    - cron: '0 6 * * 1-5'        # 11:30 IST — midday retry (2nd, the last one
+                                 # that can still clear the drift rule)
+    # EOD is measurement, not execution, so its retries may sit late.
+    - cron: '0 13 * * 1-5'       # 18:30 IST — EOD retry (1st)
+    - cron: '0 15 * * 1-5'       # 20:30 IST — EOD retry (2nd)
     #
     # The 30-minute intraday tier (10:00–14:30 IST, 9 runs/day) was removed on
     # 2026-07-30. It fired unmeasured signals and nothing ever established that
@@ -51,6 +76,13 @@ on:
     #   python backtest.py --asset equity      # +0.171R
     #   python backtest.py --asset cf          # -0.029R
   workflow_dispatch:              # manual trigger from GitHub UI
+    inputs:
+      slot:
+        description: 'Scan slot (blank = pick from the IST clock)'
+        required: false
+        default: ''
+        type: choice
+        options: ['', midday, eod, weekend, us, full]
 
 concurrency:
   group: scanner
@@ -118,21 +150,37 @@ jobs:
       - name: Run scanner
         env:
           SCHEDULE: ${{ github.event.schedule }}
+          INPUT_SLOT: ${{ github.event.inputs.slot }}
         run: |
           # These strings must match the `cron:` values above EXACTLY. They are
           # a second copy of the schedule, so moving a cron without moving its
           # arm here falls through to SLOT="" — which does not fail, it quietly
           # runs the clock-based fallback, i.e. the wrong scan or none at all.
+          # --once goes on EVERY scheduled arm, primary and retry alike, and
+          # that is the whole design. The failure is a DROPPED run, but drift
+          # is real too: a "primary" delayed to 08:00 UTC would land after both
+          # retries and scan the slot a second time. With --once the rule is
+          # simply "one completed scan per slot per IST day" and whichever cron
+          # arrives first does the work. There is no primary any more, only
+          # four chances at the same job.
+          # A manual dispatch never passes it — asking by hand means run it.
+          ONCE="--once"
           case "$SCHEDULE" in
             "0 5 * * 1-5")  SLOT=midday  ;;
+            "30 5 * * 1-5") SLOT=midday  ;;
+            "0 6 * * 1-5")  SLOT=midday  ;;
             "0 11 * * 1-5") SLOT=eod     ;;
+            "0 13 * * 1-5") SLOT=eod     ;;
+            "0 15 * * 1-5") SLOT=eod     ;;
             "0 4 * * 6")    SLOT=weekend ;;
-            "0 3 * * 2-6")  SLOT=us      ;;
             *)              SLOT=""      ;;
           esac
+          # An explicit dispatch input always wins over the cron table.
+          if [ -n "$INPUT_SLOT" ]; then SLOT="$INPUT_SLOT"; ONCE=""; fi
+          echo "fired at $(date -u '+%H:%M UTC') / $(TZ=Asia/Kolkata date '+%H:%M IST')"
           if [ -n "$SLOT" ]; then
-            echo "cron '$SCHEDULE' → slot $SLOT"
-            python standalone_scan.py --slot "$SLOT"
+            echo "cron '$SCHEDULE' input '$INPUT_SLOT' → slot $SLOT $ONCE"
+            python standalone_scan.py --slot "$SLOT" $ONCE
           else
             echo "no schedule match (manual run) → slot from IST clock"
             python standalone_scan.py

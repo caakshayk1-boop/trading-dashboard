@@ -752,6 +752,50 @@ def _requested_slot(argv=None):
     return None
 
 
+def _once_requested(argv=None) -> bool:
+    """True when --once is on the command line: run this slot only if it has
+    not already completed today.
+
+    Every SCHEDULED arm passes it; a manual dispatch never does. GitHub drops
+    runs rather than merely delaying them — on 2026-08-27 neither the 03:00
+    nor the 05:00 cron produced a run at all and no signals went out — so each
+    slot gets several crons and this is what keeps that to one scan.
+
+    It covers drift as well as drops, which is why it is not called
+    --catch-up: a "primary" delayed to 08:00 UTC would land after its own
+    retries and scan the slot a second time. There is no primary, only several
+    chances at the same job, and the first one to arrive does it.
+    """
+    argv = sys.argv[1:] if argv is None else argv
+    return "--once" in argv or "--catch-up" in argv or "--catchup" in argv
+
+
+def _scan_job(slot: str) -> str:
+    """job_runs key for one slot on one day. Per slot, not per day: a completed
+    midday must never satisfy a missing EOD."""
+    return f"scan_{slot}"
+
+
+def scan_already_ran(slot: str, today_ist: str) -> bool:
+    """Did THIS slot already complete today (IST)?
+
+    IST because the scan's whole calendar is the NSE session. Returns False
+    whenever the answer cannot be established — no record, an unreadable
+    stamp, a database that will not answer. A catch-up that re-scans is noise;
+    one that stays silent because a lookup failed is the outage it exists to
+    cover.
+    """
+    try:
+        from job_runs import latest
+        st = latest(_scan_job(slot))
+        if not st or st.get("status") != "ok":
+            return False
+        return str(st.get("detail", "")).startswith(today_ist)
+    except Exception as e:                              # noqa: BLE001
+        logging.warning("scan_already_ran(%s): %s — assuming NOT run", slot, e)
+        return False
+
+
 def _slot(now_ist, is_holiday=False):
     """Return scan slot based on IST time, weekday, holiday."""
     wd = now_ist.weekday()  # 0=Mon … 5=Sat … 6=Sun
@@ -1338,6 +1382,11 @@ def main():
         logging.info("Sunday or post-holiday non-morning — no scan.")
         return 0
 
+    if _once_requested() and scan_already_ran(slot, today_str):
+        logging.info(f"{slot} already completed today ({today_str}) — "
+                     f"standing down (--once).")
+        return 0
+
     logging.info(f"=== Scan started: {time_str} | Slot: {slot} ===")
     _send(f"🔄 *SwingDesk Pro* — {time_str}\n_Slot: {slot.upper()} starting..._")
 
@@ -1443,6 +1492,22 @@ def main():
 
         log_scan_meta(slot, counts)
         logging.info(f"=== Scan finished: {slot} | {counts} ===")
+
+        # Stamp the slot as done so a later catch-up cron stands down. Written
+        # HERE — after the engines have run and log_scan_meta has settled, and
+        # before the Telegram summary, which is best-effort. Stamping at the
+        # top would mark a slot complete that then crashed, and the catch-up
+        # would decline to cover the exact failure it exists for. The IST date
+        # leads the detail string because scan_already_ran() reads it back.
+        try:
+            from job_runs import record
+            record(_scan_job(slot), "ok",
+                   f"{today_str} · {slot} · " +
+                   ", ".join(f"{k}:{v}" for k, v in counts.items()),
+                   records=sum(v for v in counts.values() if isinstance(v, int)))
+        except Exception as _e:                         # noqa: BLE001
+            logging.warning(f"could not stamp {slot} as complete ({_e}) — "
+                            f"a catch-up may re-scan")
 
         # ── Export all JSON for dashboard (always runs, even if no signals) ──
         from tracker import export_signals_json

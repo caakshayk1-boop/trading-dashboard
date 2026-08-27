@@ -8393,6 +8393,14 @@ select:focus-visible{
    one tile that reads as a conclusion rather than a component. Rule, not a
    fill — a coloured panel here would fight the up/down colour the number
    itself carries. */
+.mlive{font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+  padding:2px 7px;border:1px solid var(--line);border-radius:3px;white-space:nowrap}
+.mlive .mlv{font-weight:700}
+.mlive .mdrift{margin-left:6px}
+/* An order whose price has already run past the entry is not an order any
+   more, and that is the single most useful thing this row can say. */
+.mrow[data-live="gone"]{opacity:.62}
+.mrow[data-live="gone"] .mlive{border-color:var(--dn,#c0392b)}
 .kpi-total{border-left:2px solid var(--line2);padding-left:14px}
 .kpi-total .v{font-size:clamp(24px,3vw,32px)}
 
@@ -10071,9 +10079,15 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     {% if mandate.admitted %}
     <div class="mandate-rows">
       {% for t in mandate.admitted %}
-      <div class="mrow">
+      {# data-sym / data-entry are what the live mark hangs off. The book is
+         rendered at BUILD time, so without them every price on it is the
+         price at 04:00 UTC and the reader has no way to tell whether the
+         market has already run past the entry. See markMandate() in app.js. #}
+      <div class="mrow" data-sym="{{ t.symbol }}" data-entry="{{ t.entry }}"
+           data-stop="{{ t.stop }}" data-qty="{{ t.qty }}">
         <div class="mrow-top">
           <span class="msym">{{ t.symbol }}</span>
+          <span class="mlive" hidden></span>
           <span class="mhz">{{ t.horizon_label }}</span>
           <span class="meng">{{ t.engine }}</span>
           <span class="mrr">{{ t.reward_risk }}:1</span>

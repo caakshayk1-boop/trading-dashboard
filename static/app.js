@@ -4571,6 +4571,7 @@ var TV_ALIASES = (function () {
       if (j.ledger){
         window.__ledgerPx = j.ledger;
         if (window.__onLedgerPx) window.__onLedgerPx();
+        markMandate();
       }
       // Live sector movers. The heat map names eleven sectors and, until now,
       // could not name one stock inside any of them — the drill-down underneath
@@ -4785,33 +4786,116 @@ var TV_ALIASES = (function () {
     })();
 
 
-    /* ── mobile: collapse the header chrome on scroll-down ──
-       Keeps the ticker pinned while reading. The rail was hidden outright on
-       phones for a while; that saved 30px and cost the one row people open
-       this page for. */
+    /* ── collapse the header chrome while reading ──
+       Keeps the ticker pinned. The rail was hidden outright on phones for a
+       while; that saved 30px and cost the one row people open this page for.
+
+       TWO BEHAVIOURS, and the difference is the input device, not the width.
+
+       PHONE — direction-sensitive. Scroll down, the chrome goes; flick up, it
+       comes back. Touch scrolling is directionally decisive: a person who
+       swipes up means it. This is the version that shipped and works.
+
+       DESKTOP — MONOTONIC, and it has to be. The direction-sensitive rule was
+       promoted to every width on 2026-08-27 and made the desktop page
+       unreadable: a trackpad or a wheel reverses direction constantly, and
+       every reversal re-expanded a 444px header, so the article shoved itself
+       up and down under the cursor. "The screen keeps on moving" was exactly
+       right and it was this.
+
+       The header is in flow, so changing its height MOVES everything below it.
+       That is unavoidable — what must be avoided is doing it often. So on a
+       pointer device the state changes at most twice per journey: it collapses
+       once past 240px and re-expands only on the way back above 100px. The
+       gap between those two numbers is hysteresis; without it the boundary
+       itself becomes a flicker zone. Direction is ignored entirely, because
+       direction is the thing that was noisy. */
     (function(){
       var stack = document.querySelector('.headstack');
       if (!stack) return;
       var last = window.scrollY, ticking = false;
+      // Coarse pointer OR a narrow screen gets the phone behaviour. Asking
+      // about the pointer rather than only the width is the point: the bug was
+      // a mouse wheel, not a viewport size.
+      var touchy = window.matchMedia('(max-width:560px), (pointer:coarse)');
       function apply(){
         ticking = false;
-        // Every width, not just phones. This was gated on max-width:560px and
-        // so the whole behaviour was invisible on the desktop where the stack
-        // is TALLEST: five bars — topbar 61 + trust 32 + nav 46 + livebar 43
-        // + ticker 39 — is 221px of a 720px viewport, 31% of the screen
-        // permanently spent on chrome before a single number is read.
-        // Compact keeps the ticker and the nav and drops the rest.
-        var y = window.scrollY, dy = y - last;
-        if (Math.abs(dy) < 6) return;          // ignore jitter and rubber-band
-        if (y < 120) stack.classList.remove('compact');
-        else if (dy > 0) stack.classList.add('compact');
-        else stack.classList.remove('compact');
+        var y = window.scrollY;
+        if (touchy.matches){
+          var dy = y - last;
+          if (Math.abs(dy) < 6) return;        // ignore jitter and rubber-band
+          if (y < 120) stack.classList.remove('compact');
+          else if (dy > 0) stack.classList.add('compact');
+          else stack.classList.remove('compact');
+          last = y;
+          return;
+        }
+        // Monotonic. Two thresholds, 140px apart, direction irrelevant.
+        if (y > 240) stack.classList.add('compact');
+        else if (y < 100) stack.classList.remove('compact');
         last = y;
       }
       window.addEventListener('scroll', function(){
         if (!ticking){ ticking = true; requestAnimationFrame(apply); }
       }, {passive:true});
+      // Switching between a trackpad and a touchscreen mid-session is rare;
+      // resizing across the breakpoint is not. Re-evaluate rather than leaving
+      // the header stuck in the other mode's state.
+      if (touchy.addEventListener) touchy.addEventListener('change', apply);
     })();
+
+    /* ── the crore ORDER BOOK, marked live ───────────────────────────────
+       There are two books and they answer different questions. The paper
+       wallet (?wallet=1) holds positions and now carries realised and
+       unrealised P&L. THIS one — "what the Rs 1 crore book would place today"
+       — holds ORDERS that have not triggered, and it is rendered by Jinja at
+       build time. Every price on it was therefore the price at 04:00 UTC, and
+       WOCKPHARMA showed a fixed 1,886.30 while the tape had it at 1,962.
+
+       The quotes were already on the page. /api/ticker returns a `ledger` map
+       of every OPEN NSE equity — all six mandate names are in it — and the
+       book simply never read it. No new request, no new endpoint.
+
+       The useful fact for an ORDER is not the P&L, because nothing is bought
+       yet. It is whether the entry is still there: a name that has already run
+       past its limit is not an order any more, and one that has fallen through
+       its stop was never going to be. Both are dimmed and labelled rather than
+       silently left looking placeable. */
+    function markMandate(){
+      var px = window.__ledgerPx || {};
+      var rows = document.querySelectorAll('.mrow[data-sym]');
+      for (var i = 0; i < rows.length; i++){
+        var row = rows[i];
+        var q = px[row.getAttribute('data-sym')];
+        var chip = row.querySelector('.mlive');
+        if (!chip) continue;
+        var entry = parseFloat(row.getAttribute('data-entry'));
+        var stop  = parseFloat(row.getAttribute('data-stop'));
+        if (!q || typeof q.price !== 'number' || !(entry > 0)){
+          // No quote is not "unchanged". Leave the chip hidden so the row
+          // reads as un-marked rather than as marked-and-flat.
+          chip.hidden = true;
+          row.removeAttribute('data-live');
+          continue;
+        }
+        var drift = (q.price / entry - 1) * 100;
+        var gone  = q.price > entry * 1.015 || (stop > 0 && q.price <= stop);
+        chip.innerHTML = 'LTP <span class="mlv">' + fmtMoney(q.price) + '</span>' +
+          '<span class="mdrift ' + (drift > 0 ? 'up' : drift < 0 ? 'dn' : '') + '">' +
+          (drift > 0 ? '+' : '') + drift.toFixed(1) + '% vs entry</span>';
+        chip.hidden = false;
+        row.setAttribute('data-live', gone ? 'gone' : 'live');
+        chip.title = gone
+          ? (stop > 0 && q.price <= stop
+              ? 'Through the stop before entry — this order is void.'
+              : 'Price has run past the limit. The entry is no longer there.')
+          : 'Entry is still available at or near the limit.';
+      }
+    }
+    function fmtMoney(n){
+      return '\u20b9' + n.toLocaleString('en-IN', {minimumFractionDigits: 2,
+                                                   maximumFractionDigits: 2});
+    }
 
     // A marquee you cannot stop is a marquee you cannot read.
     (function(){
