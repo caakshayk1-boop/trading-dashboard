@@ -1184,8 +1184,11 @@ def brief_already_sent(slot: str) -> bool:
     lookup failed is the exact failure it exists to prevent.
     """
     try:
-        from newspaper import get_job_status
-        st = get_job_status(_brief_job(slot))
+        # job_runs, NOT newspaper: importing newspaper pulls in flask, which
+        # this cron does not install. That import failure is what made the
+        # first version of this guard unable to ever stand down.
+        from job_runs import latest
+        st = latest(_brief_job(slot))
         if not st or st.get("status") != "ok":
             return False
         run_at = datetime.fromisoformat(str(st["run_at"]).replace("Z", "+00:00"))
@@ -1226,9 +1229,11 @@ def send_brief(slot: str = "midday", catch_up: bool = False):
     # Recorded only AFTER _post returns. Stamping it before the send is how a
     # catch-up would stand down for a brief that never left the building.
     try:
-        from newspaper import record_job_status
-        record_job_status(_brief_job(slot), "ok",
-                          f"{slot} brief delivered · {len(brief)} chars")
+        from job_runs import record
+        if not record(_brief_job(slot), "ok",
+                      f"{slot} brief delivered · {len(brief)} chars"):
+            log.warning("daily_brief: %s went out but was NOT recorded — a "
+                        "catch-up may re-send it", slot)
     except Exception as e:                              # noqa: BLE001
         log.warning("daily_brief: could not record the %s send (%s)", slot, e)
 

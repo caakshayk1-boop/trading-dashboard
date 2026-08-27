@@ -3267,21 +3267,11 @@ def _stamp_fund_payload(data: dict, fallback: bool) -> dict:
 
 
 def _migrate_job_runs(con) -> None:
-    """job_runs, plus the two columns that make a partial build legible.
-
-    ALTER per column inside its own try because SQLite has no ADD COLUMN IF
-    NOT EXISTS and this runs on every write. Idempotent by construction: the
-    second call raises "duplicate column name" and is swallowed, which is the
-    established migration shape in tracker.py.
-    """
-    con.execute("""CREATE TABLE IF NOT EXISTS job_runs (
-        job TEXT PRIMARY KEY, run_at TEXT, status TEXT, detail TEXT)""")
-    for ddl in ("ALTER TABLE job_runs ADD COLUMN records INTEGER",
-                "ALTER TABLE job_runs ADD COLUMN expected INTEGER"):
-        try:
-            con.execute(ddl)
-        except Exception:
-            pass
+    """Kept as a thin alias. The implementation moved to job_runs.py so cron
+    jobs can record their own outcome without importing flask — see that
+    module's header for the failure that forced the split."""
+    from job_runs import _migrate
+    _migrate(con)
 
 
 def record_job_status(job: str, status: str, detail: str = "",
@@ -3309,17 +3299,8 @@ def record_job_status(job: str, status: str, detail: str = "",
     A free-text detail string could never do this: "only 50 companies priced"
     is unparseable, so no badge, test or API could act on it.
     """
-    try:
-        with _db() as con:
-            _migrate_job_runs(con)
-            con.execute(
-                "INSERT OR REPLACE INTO job_runs "
-                "(job, run_at, status, detail, records, expected) VALUES (?,?,?,?,?,?)",
-                (job, datetime.now(timezone.utc).isoformat(), status, detail[:500],
-                 records, expected))
-            con.commit()
-    except Exception as e:
-        log.warning(f"record_job_status({job}): {e}")
+    from job_runs import record
+    record(job, status, detail, records, expected)
 
 
 def get_job_status(job: str, served_generated_at: str | None = None) -> dict:
@@ -3339,24 +3320,19 @@ def get_job_status(job: str, served_generated_at: str | None = None) -> dict:
     IST-stamped payload against a UTC attempt by up to 5.5 hours.
     """
     try:
-        with _db() as con:
-            _migrate_job_runs(con)
-            row = con.execute(
-                "SELECT run_at, status, detail, records, expected "
-                "FROM job_runs WHERE job=?", (job,)).fetchone()
+        from job_runs import latest
+        row = latest(job)
         if not row:
             return {}
-        out = {"run_at": row[0], "status": row[1], "detail": row[2],
-               "records": row[3], "expected": row[4],
-               "attempted_after_serve": False}
+        out = {**row, "attempted_after_serve": False}
         # The attempt's own coverage, kept separate from the SERVED payload's
         # coverage on purpose. Collapsing them is exactly the contradiction
         # the audit found: one number describing two different builds.
-        out["attempt_coverage"] = (f"{row[3]}/{row[4]}"
-                                   if row[3] is not None and row[4] else None)
-        if row[1] == "failed" and served_generated_at:
+        out["attempt_coverage"] = (f"{row['records']}/{row['expected']}"
+                                   if row["records"] is not None and row["expected"] else None)
+        if row["status"] == "failed" and served_generated_at:
             try:
-                attempt_ts = datetime.fromisoformat(str(row[0]).replace("Z", "+00:00"))
+                attempt_ts = datetime.fromisoformat(str(row["run_at"]).replace("Z", "+00:00"))
                 served_ts = datetime.fromisoformat(str(served_generated_at).replace("Z", "+00:00"))
                 out["attempted_after_serve"] = attempt_ts > served_ts
             except ValueError:

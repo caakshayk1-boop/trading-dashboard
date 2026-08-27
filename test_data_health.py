@@ -388,9 +388,46 @@ def _():
 
 @check("get_job_status returns the attempt coverage separately from the payload's")
 def _():
+    # The read moved to job_runs.py on 2026-08-27 so cron jobs could record
+    # their own outcome without importing flask (newspaper.py pulls it in, and
+    # that import failure silently disabled the brief's catch-up guard). The
+    # BEHAVIOUR is unchanged and still asserted — only its address moved.
     src = (ROOT / "newspaper.py").read_text()
+    jr = (ROOT / "job_runs.py").read_text()
     assert '"attempt_coverage"' in src
-    assert "SELECT run_at, status, detail, records, expected" in src
+    assert "SELECT run_at, status, detail, records, expected" in jr
+
+
+@check("newspaper delegates to job_runs rather than keeping a second copy")
+def _():
+    # Two implementations of the same table is how they drift. newspaper.py
+    # must own the served-vintage comparison and nothing else.
+    src = (ROOT / "newspaper.py").read_text()
+    assert "from job_runs import latest" in src
+    assert "from job_runs import record" in src
+    assert "INSERT OR REPLACE INTO job_runs" not in src, \
+        "newspaper.py still writes job_runs directly — that is the fork"
+
+
+@check("job_runs imports nothing that a cron job would not have")
+def _():
+    # The whole reason the module exists. flask, jinja2 or anything web-shaped
+    # in here re-creates the exact failure it was split out to fix.
+    # Parsed, not grepped. A substring scan matched the module's own docstring
+    # ("extracted FROM NEWSPAPER.py") and failed a module that imports nothing
+    # of the kind — a test that reads prose as code.
+    import ast
+    tree = ast.parse((ROOT / "job_runs.py").read_text())
+    banned = {"flask", "jinja2", "newspaper", "generate"}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names = [a.name.split(".")[0] for a in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            names = [(node.module or "").split(".")[0]]
+        else:
+            continue
+        hit = banned.intersection(names)
+        assert not hit, f"job_runs.py imports {sorted(hit)} — that is the failure it exists to prevent"
 
 
 @check("the stock screen workflow records coverage on FAILURE, not only success")

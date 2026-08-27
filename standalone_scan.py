@@ -1225,7 +1225,7 @@ def run_multibagger_scan(time_str):
     # the trade this screen exists to refuse. An empty week is a real result
     # and now says so.
     try:
-        from newspaper import record_job_status
+        from job_runs import record as record_job_status
         record_job_status("multibagger", "ok" if mbs else "empty",
                           f"{len(mbs)} qualified — R:R 2.0 floor",
                           records=len(mbs), expected=15)
