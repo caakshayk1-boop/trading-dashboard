@@ -10635,9 +10635,11 @@ details.ipo-card > *:last-child{padding-bottom:14px}
       {% if stock_screen.price_date %}
       <p class="screen-vintage">
         <span class="sv-tag">PRICED TO {{ stock_screen.price_date }}</span>
-        <span>Rebuilt weekly. Price, RSI and turnover are from that date &mdash; a live
-          chart will differ, and by more the further you are from it. Fundamentals
-          come from annual filings and do not move in a week.</span>
+        <span>Rebuilt nightly at 02:30 IST. Price, RSI and turnover are from that
+          date &mdash; an intraday chart will differ. Fundamentals come from annual
+          filings and do not move in a week; they are re-read each night anyway
+          rather than kept on a second clock that could disagree with the prices
+          beside them.</span>
       </p>
       {% endif %}
     </div>
@@ -10981,7 +10983,7 @@ details.ipo-card > *:last-child{padding-bottom:14px}
     history, because an EPS CAGR across a merger or bonus is not a growth rate.
     Returns are total returns off a split- and dividend-adjusted close.
     <br><br>
-    Screen rebuilt weekly. A high score means &ldquo;ranked well on published
+    Screen rebuilt nightly. A high score means &ldquo;ranked well on published
     numbers&rdquo; and nothing more.
   </p>
 </section>

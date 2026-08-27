@@ -14,7 +14,28 @@ name: Stock Screen — weekly NSE Total Market research screen
 
 on:
   schedule:
-    - cron: '0 21 * * 6'      # Sunday 02:30 IST — after the fund screen
+    # DAILY as of 2026-08-27, not Sunday-only.
+    #
+    # The screen carries two kinds of column and they age at completely
+    # different rates. Fundamentals — ROCE, three-year compounding, leverage —
+    # come from annual filings and genuinely do not move in a week. Price, RSI,
+    # turnover and vol_spike move every session, and TWO published sections are
+    # built entirely from them: the volume board ("Who actually showed up") and
+    # the breakout table ("Breaking out, and liquid enough to leave").
+    #
+    # On a Sunday cadence both spent the week describing last Friday while
+    # reading as today: on 2026-08-27 the volume board was showing 08-21
+    # volumes under a heading that says "names trading at twice their own
+    # average volume". That is not staleness, it is a wrong answer.
+    #
+    # Cost measured, not assumed: the last full 750-name run took 10m27s. Daily
+    # is ~315 minutes a month. Re-reading unchanged fundamentals every day is
+    # waste, but it is cheap waste and far less risky than splitting the
+    # payload into two clocks that can disagree with each other.
+    - cron: '0 21 * * *'      # 02:30 IST daily — after the fund screen
+    # And a retry, because GitHub drops scheduled runs outright — it dropped
+    # three of this repo's workflows on 2026-08-27 alone.
+    - cron: '0 1 * * *'       # 06:30 IST — retry if the 02:30 run was dropped
   workflow_dispatch:
     inputs:
       limit:

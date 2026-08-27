@@ -153,7 +153,10 @@ def _register_health(*, now, news, markets, regime, smart_reads, brief, market_i
     # dividing a dataset by its own length always yields 100% and would report
     # a 50-row screen as complete coverage of a 50-row universe.
     _job = (stock_screen or {}).get("job_status") or {}
-    cached("Stock screen", "Yahoo Finance + statements", stock_screen, 168,
+    # 24, not 168: the screen rebuilds nightly as of 2026-08-27. Leaving this
+    # at a week would have marked a two-day-old screen FRESH — the freshness
+    # badge must describe the promise the schedule actually makes.
+    cached("Stock screen", "Yahoo Finance + statements", stock_screen, 24,
            record_count=(stock_screen or {}).get("count"),
            expected_records=_job.get("expected") or (stock_screen or {}).get("attempted"))
 
