@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-27T13:33:26",
+ "generated_at": "2026-08-27T14:39:28",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -27,7 +27,7 @@
    "face_value": 5.0,
    "anchor_cr": 40.72,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b945",
+   "gmp_text": "\u20b945 (84.91%)",
    "revenue_cr": 193.44,
    "revenue_growth_pct": 16.0,
    "pat_cr": 22.59,
@@ -99,7 +99,7 @@
    "face_value": 10.0,
    "anchor_cr": 174.54,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b946",
+   "gmp_text": "\u20b944 (31.88%)",
    "revenue_cr": 2839.67,
    "revenue_growth_pct": 25.0,
    "pat_cr": 63.52,
@@ -163,13 +163,7 @@
    "issue_size_shares": 13124929.0,
    "issue_size_cr": 1757.0,
    "subscription_x": 58.32175549292495,
-   "subscription_by_category": {
-    "QIB": 181.2,
-    "HNI": 77.56,
-    "Retail": 13.65,
-    "Employee": 16.32,
-    "Total": 75.06
-   },
+   "subscription_by_category": null,
    "lot_size": 15.0,
    "min_investment": 14820.0,
    "fresh_issue_cr": 150.0,
@@ -177,7 +171,7 @@
    "face_value": 2.0,
    "anchor_cr": 526.2,
    "listing_date": "Sep 1, 2026",
-   "gmp_text": "\u20b9265",
+   "gmp_text": "\u20b9267 (27.02%)",
    "revenue_cr": 872.26,
    "revenue_growth_pct": 15.0,
    "pat_cr": 109.9,
@@ -217,11 +211,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/symbiotec-pharmalab-ipo/2815/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1302/symbiotec-pharmalab-ltd",
-   "allotment_date": "Aug 28, 2026",
-   "category_source": "ipopremium.in",
-   "reads_for": [
-    "Institutions are in at 181.20x, which is where the research budgets are."
-   ],
+   "reads_for": null,
    "reads_against": [
     "More of the issue is existing holders selling (\u20b91,607 Cr) than new money into the business (\u20b9150 Cr)."
    ]
@@ -330,7 +320,7 @@
    "face_value": 5.0,
    "anchor_cr": 207.0,
    "listing_date": "Sep 3, 2026",
-   "gmp_text": "\u20b956 (68.29%)",
+   "gmp_text": "\u20b955 (67.07%)",
    "revenue_cr": 2089.31,
    "revenue_growth_pct": 7.0,
    "pat_cr": 160.0,
@@ -391,7 +381,7 @@
    "price_band": "Rs.190 to Rs.200",
    "price_low": 190.0,
    "price_high": 200.0,
-   "issue_size_shares": 4575000.0,
+   "issue_size_shares": 3202500.0,
    "issue_size_cr": 91.5,
    "subscription_x": null,
    "subscription_by_category": null,
@@ -649,7 +639,7 @@
    "ofs_cr": 555.0,
    "face_value": 4.0,
    "anchor_cr": 194.55,
-   "gmp_text": "\u20b9310",
+   "gmp_text": "\u20b9330",
    "revenue_cr": 455.86,
    "revenue_growth_pct": 19.0,
    "pat_cr": 71.07,
@@ -666,8 +656,19 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 650.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/tempsens-instruments-india-ipo/2668/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1304/tempsens-instruments",
+   "subscription_by_category": {
+    "QIB": 302.88,
+    "HNI": 314.44,
+    "Retail": 60.69,
+    "Employee": 124.95,
+    "Total": 184.07
+   },
+   "allotment_date": "Aug 25, 2026",
+   "category_source": "ipopremium.in",
    "reads_for": [
-    "Effectively debt-free at 0.16 debt to equity, so the balance sheet is not a constraint."
+    "Effectively debt-free at 0.16 debt to equity, so the balance sheet is not a constraint.",
+    "Institutions are in at 302.88x, which is where the research budgets are."
    ],
    "reads_against": [
     "More of the issue is existing holders selling (\u20b9555 Cr) than new money into the business (\u20b995 Cr)."
