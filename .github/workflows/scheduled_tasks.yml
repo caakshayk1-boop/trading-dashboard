@@ -197,8 +197,16 @@ jobs:
         continue-on-error: true
         run: |
           python -c "
-          from daily_brief import send_brief
+          import logging; logging.basicConfig(level=logging.INFO, format='%(levelname)s %(message)s')
+          from daily_brief import send_brief, brief_already_sent, _brief_job
+          from job_runs import latest
+          before = latest(_brief_job('morning'))
+          print('job_runs before:', before or 'NO RECORD')
+          stood_down = brief_already_sent('morning')
+          print('decision:', 'STAND DOWN' if stood_down else 'SEND')
           send_brief(slot='morning', catch_up=True)
+          after = latest(_brief_job('morning'))
+          print('job_runs after :', after or 'NO RECORD')
           "
 
       - name: Evening brief catch-up
@@ -206,8 +214,16 @@ jobs:
         continue-on-error: true
         run: |
           python -c "
-          from daily_brief import send_brief
+          import logging; logging.basicConfig(level=logging.INFO, format='%(levelname)s %(message)s')
+          from daily_brief import send_brief, brief_already_sent, _brief_job
+          from job_runs import latest
+          before = latest(_brief_job('evening'))
+          print('job_runs before:', before or 'NO RECORD')
+          stood_down = brief_already_sent('evening')
+          print('decision:', 'STAND DOWN' if stood_down else 'SEND')
           send_brief(slot='evening', catch_up=True)
+          after = latest(_brief_job('evening'))
+          print('job_runs after :', after or 'NO RECORD')
           "
 
       - name: Run SIP bucket
