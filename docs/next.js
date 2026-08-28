@@ -264,6 +264,10 @@
     const cv = await get('/conviction.json');
     if (cv.ok && (cv.data.picks || []).length) {
       const c = cv.data;
+      // Five symbols, one call. The slate is priced at the morning build; this
+      // is what it is worth now.
+      const cvpx = await quotes(c.picks.map(x => x.sym));
+      c.picks.forEach(x => { x._live = cvpx[x.sym] || null; });
       out += sec('Today’s conviction', c.picks.map(convictionCard).join('') +
         `<details class="meth"><summary>How these five were chosen</summary>
            <p>${esc(c.method)}</p>
@@ -297,7 +301,8 @@
     ${(p.reasons || []).length ? `<div class="reads">${p.reasons.map(x =>
         `<div class="read read-for">${esc(x)}</div>`).join('')}</div>` : ''}
     <div class="kv">
-      <div><span class="kk">Price</span><span class="vv">₹${esc(p.price)}</span></div>
+      <div><span class="kk">${p._live ? 'Live' : 'Price'}</span><span class="vv${p._live ? ' lv' : ''}">₹${p._live ? p._live.price.toFixed(2) : esc(p.price)}</span></div>
+      <div><span class="kk">Today</span><span class="vv ${p._live ? dir(p._live.change_pct) : ''}">${p._live && p._live.change_pct != null ? pct(p._live.change_pct) : '—'}</span></div>
       <div><span class="kk">1M</span><span class="vv ${dir(p.r1m)}">${pct(p.r1m)}</span></div>
       <div><span class="kk">3M</span><span class="vv ${dir(p.r3m)}">${pct(p.r3m)}</span></div>
       <div><span class="kk">ROCE</span><span class="vv ${dir(p.roce)}">${p.roce != null ? p.roce.toFixed(1) + '%' : '—'}</span></div>
@@ -458,8 +463,18 @@
               <div><span class="kk">Risk</span><span class="vv">${o.risk_pct != null ? o.risk_pct + '%' : (d.capital ? (Number(o.risk_amount) / d.capital * 100).toFixed(2) + '%' : '—')}</span></div>
               <div><span class="kk">Hold</span><span class="vv" style="font-size:11px">${esc(o.hold_days || o.horizon || '—')}</span></div>
             </div>
+            ${(o.legs || []).length ? `<div class="ladder">
+              ${o.legs.map(l => `<div class="leg">
+                <span class="leg-l">${esc(l.label)}</span>
+                <span class="leg-p">₹${esc(l.price)}</span>
+                <span class="leg-q">${esc(l.qty)} sh</span>
+                <span class="leg-g up">+${esc(l.gain_pct)}%</span>
+                <span class="leg-r">${esc(l.r_multiple)}R</span>
+              </div>`).join('')}
+            </div>` : ''}
+            ${o.trail_note ? `<div class="trail"><span>Trailing stop</span>${esc(o.trail_note)}</div>` : ''}
             <div class="card-foot">
-              <span class="mono" style="font-size:11px;color:var(--dim)">${sh != null ? 'sized at ' + sh.toFixed(1) + '% — scale to your own book' : ''}</span>
+              <span class="mono" style="font-size:11px;color:var(--dim)">${sh != null ? 'sized at ' + sh.toFixed(1) + '% — scale to your own book' : ''}${o.hold_days ? ' · hold ' + esc(o.hold_days) : ''}</span>
               ${symLinks(o.symbol)}
             </div>
           </article>`; }).join('') : `<div class="empty">No orders clear the mandate today.</div>`));
@@ -562,7 +577,11 @@
           Object.entries(PRESETS).map(([k, [l]]) =>
             `<button type="button" class="chip" data-p="${k}" aria-pressed="${scrPreset === k}">${esc(l)}</button>`).join('')}
         </div>` +
-        sec(PRESETS[scrPreset][0], rows.length ? screenTable(rows.slice(0, 60))
+        // 40, not 60: /api/signals?px= takes 40 symbols a call, so a 40-row
+        // page is exactly one request and every visible row can carry a live
+        // mark. A 60-row page would leave a third of the screen showing the
+        // morning close beside two thirds showing live — worse than either.
+        sec(PRESETS[scrPreset][0], rows.length ? screenTable(rows.slice(0, 40))
           : `<div class="empty">Nothing matches. Try a different preset or clear the search.</div>`,
           `${rows.length} of ${SCREEN.length}`));
 
@@ -579,9 +598,34 @@
         b.addEventListener('click', () => { scrPreset = b.dataset.p; draw(); }));
       main.querySelectorAll('[data-sym]').forEach(el =>
         el.addEventListener('click', () => openStock(el.dataset.sym)));
+
+      /* Live marks for the rows actually on screen. Fired after paint so the
+       * table is readable immediately and the quotes fill in — a screen that
+       * waits for a network call before showing 750 names it already has is
+       * slower for no reason. Stamped by symbol, so a re-render mid-flight
+       * cannot write a price into the wrong row. */
+      const shown = rows.slice(0, 40).map(r => r.sym);
+      const token = ++drawToken;
+      quotes(shown).then(q => {
+        if (token !== drawToken) return;          // a newer draw has replaced this one
+        for (const sym of shown) {
+          const live = q[sym];
+          if (!live) continue;
+          const cell = main.querySelector(`[data-sym="${CSS.escape(sym)}"] [data-px]`);
+          if (!cell) continue;
+          cell.textContent = '₹' + live.price.toFixed(2);
+          cell.classList.add('lv');
+          const day = main.querySelector(`[data-sym="${CSS.escape(sym)}"] [data-day]`);
+          if (day && live.change_pct != null) {
+            day.textContent = pct(live.change_pct);
+            day.className = 'x ' + dir(live.change_pct);
+          }
+        }
+      });
     };
     draw();
   };
+  let drawToken = 0;
 
   // Turnover is out. It says how much traded, which almost never changes a
   // decision — where price sits against its own 50 and 200 day, and whether
@@ -589,7 +633,7 @@
   const screenTable = rows => `<div class="rank">
     <div class="rank-r rank-head scr-r">
       <span class="i">#</span><span class="s">Name</span>
-      <span class="x">Price</span><span class="x">vs 50D</span>
+      <span class="x">Price</span><span class="x">Today</span><span class="x">vs 50D</span>
       <span class="x">vs 200D</span><span class="x">RSI</span><span class="m">1M</span>
     </div>
     ${rows.map((r, i) => {
@@ -598,7 +642,8 @@
       return `<div class="rank-r scr-r" data-sym="${esc(r.sym)}" role="button" tabindex="0">
         <span class="i">${i + 1}</span>
         <span class="s"><b>${esc(r.sym)}</b><span>${esc(r.name || '')}</span></span>
-        <span class="x">₹${esc(r.price ?? '—')}</span>
+        <span class="x" data-px>₹${esc(r.price ?? '—')}</span>
+        <span class="x" data-day style="color:var(--dim)">·</span>
         <span class="x ${dir(v50)}">${v50 == null ? '—' : pct(v50)}</span>
         <span class="x ${dir(v200)}">${v200 == null ? '—' : pct(v200)}</span>
         <span class="x" style="color:${(r.rsi ?? 50) > 70 ? 'var(--warn)' : (r.rsi ?? 50) < 35 ? 'var(--accent)' : 'var(--dim)'}">${r.rsi != null ? Math.round(r.rsi) : '—'}</span>
