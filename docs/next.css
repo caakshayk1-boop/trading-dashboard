@@ -500,3 +500,19 @@ h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
   padding:9px 11px;border-left:2px solid var(--warn);background:var(--raised);border-radius:0 6px 6px 0}
 .trail span{display:block;font:600 9px/1 var(--mono);letter-spacing:.12em;
   text-transform:uppercase;color:var(--warn);margin-bottom:4px}
+
+/* The trailing rule. Steps, because it is a sequence — do this, then this. */
+.trail .tr-s{display:flex;flex-direction:column;gap:1px;margin-bottom:7px}
+.trail .tr-s b{font:500 12.5px/1.35 var(--mono);color:var(--text);font-weight:500}
+.trail .tr-s i{font-style:normal;font-size:11px;color:var(--dim)}
+.trail .tr-n{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
+  font-size:11px;line-height:1.5;color:var(--dim)}
+.trail .tr-n b{color:var(--warn)}
+
+/* Level table — eight columns, so it scrolls sideways inside its own box
+   rather than squeezing the name to nothing on a phone. */
+.rank{overflow-x:auto}
+.lvl-r{grid-template-columns:20px minmax(120px,1fr) repeat(5,auto) 52px;gap:8px;
+  cursor:pointer;min-width:520px}
+.lvl-r:hover{background:var(--raised)}
+.lvl-r .x{font:500 11.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:42px}
