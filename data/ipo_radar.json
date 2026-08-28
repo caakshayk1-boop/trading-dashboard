@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-28T16:47:44",
+ "generated_at": "2026-08-28T16:54:13",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -348,7 +348,7 @@
    "price_low": 546.0,
    "price_high": 575.0,
    "issue_size_shares": 6849816.0,
-   "issue_size_cr": 393.9,
+   "issue_size_cr": 680.0,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 26.0,
@@ -402,6 +402,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/purple-style-labs-ipo/2622/",
    "reads_for": null,
    "reads_against": [
     "Net margin is -50.33%. A high-volume, low-margin model: a small move in input costs or realisations swings profit far more than it swings revenue.",
@@ -552,7 +553,6 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
    "reads_for": [
     "Return on net worth of 22% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.12 debt to equity, so the balance sheet is not a constraint.",
@@ -625,7 +625,7 @@
    "ofs_cr": 75.73,
    "face_value": 5.0,
    "anchor_cr": 40.72,
-   "gmp_text": "\u20b940",
+   "gmp_text": "\u20b945 (84.91%)",
    "revenue_cr": 193.44,
    "revenue_growth_pct": 16.0,
    "pat_cr": 22.59,
@@ -647,12 +647,6 @@
    "issue_size_cr": 135.73,
    "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1311/hy-tech-engineers-ltd",
-   "subscription_by_category": {
-    "QIB": 249.71,
-    "HNI": 412.96,
-    "Total": 247.39
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 22.3x post-issue earnings against a 107x median for its 3 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Return on net worth of 20% \u2014 well above the ~14% a typical listed peer earns.",
