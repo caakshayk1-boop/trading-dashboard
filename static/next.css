@@ -194,8 +194,15 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
 .heat-t:hover{transform:translateY(-2px)}
 .heat-t .hs{font:500 11px/1.25 var(--ui);color:var(--text);opacity:.92;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.heat-t .hv{font:500 15px/1 var(--mono);font-variant-numeric:tabular-nums}
-.heat-t .hn{font:400 9.5px/1 var(--mono);color:var(--text);opacity:.55}
+/* The number is --text at FULL strength, never the semantic red or green.
+   Measured on the strongest down tile: the semantic #FF6B6B on its own red
+   tint is 3.45:1, because the tint and the ink are the same hue. --text is
+   8.14:1 on the same ground, and nothing is lost — the tile's colour and the
+   leading +/- both carry direction already, so the hue was doing a third
+   time what two other cues do better. */
+.heat-t .hv{font:500 15px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--text)}
+/* .55 composited to 3.64:1 on that same tile. .78 is 5.63. */
+.heat-t .hn{font:400 9.5px/1 var(--mono);color:var(--text);opacity:.78}
 /* Five steps each way. A continuous gradient reads as decoration; five steps
    read as a scale, and the reader can tell two tiles apart. */
 .h-p3{background:color-mix(in srgb,var(--up) 40%,transparent)}
