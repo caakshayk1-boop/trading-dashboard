@@ -123,7 +123,8 @@
   // names" is half an answer, and the drill-down data is already in the
   // digest — no extra request, no 1.26 MB download.
   window.__sectors = {};
-  const heatmap = sectors => !sectors || !sectors.length ? '' :
+  window.__heatKey = 'r1w';
+  const heatmap = (sectors, key) => { window.__heatKey = key || 'r1w'; return !sectors || !sectors.length ? '' :
     `<div class="heat">${sectors.map(s => {
       window.__sectors[s.name] = s;
       // Width carries the sector's weight in names, so a 105-name move and a
@@ -135,7 +136,7 @@
         <span class="hs">${esc(s.name)}</span>
         <span class="hv">${pct(s.median)}</span>
         <span class="hn">${s.n} names · ${s.up} up</span>
-      </button>`; }).join('')}</div>`;
+      </button>`; }).join('')}</div>`; };
 
   // One delegated listener for every heat tile on every route.
   document.addEventListener('click', ev => {
@@ -146,16 +147,17 @@
   function openSector(name) {
     const s = window.__sectors[name];
     if (!s) return;
-    const list = (rows, cls) => rows && rows.length ? `<div class="rank">${rows.map((r, i) => `
-        <div class="rank-r">
+    const k = window.__heatKey;
+    const list = rows => rows && rows.length ? `<div class="rank">${rows.map((r, i) => `
+        <div class="rank-r" data-sym="${esc(r.sym)}" role="button" tabindex="0">
           <span class="i">${i + 1}</span>
           <span class="s"><b>${esc(r.sym)}</b><span>${esc(r.name || '')}</span></span>
           <span class="x" style="color:var(--dim)">${r.rsi != null ? 'RSI ' + Math.round(r.rsi) : ''}</span>
-          <span class="m ${dir(r.r1w)}">${pct(r.r1w)}</span>
+          <span class="m ${dir(r[k])}">${pct(r[k])}</span>
         </div>`).join('')}</div>` : `<div class="empty">No names.</div>`;
     sheet(`${esc(name)}`,
-      `<p class="hint" style="margin:0 0 14px">Median <b class="${dir(s.median)}">${pct(s.median)}</b> on the week
-        across <b>${s.n}</b> names, <b>${s.up}</b> of them up.</p>` +
+      `<p class="hint" style="margin:0 0 14px">Median <b class="${dir(s.median)}">${pct(s.median)}</b>
+        ${k === 'r1d' ? 'today' : 'on the week'} across <b>${s.n}</b> names, <b>${s.up}</b> of them up.</p>` +
       sec('Led the sector', list(s.top)) +
       sec('Held it back', list(s.bottom)));
   }
@@ -198,6 +200,32 @@
   // Every column is labelled. The first version printed "₹1,036cr" and "16.1"
   // with no header, and the honest reading of that is: nobody can tell what
   // either number is. A figure without its unit is decoration.
+  /* Levels, not turnover. Turnover says how much traded, which almost never
+   * changes a decision; where price sits against its own 50-day and 200-day,
+   * and whether it is stretched on the daily AND the monthly, does. */
+  const levelTable = rows => !rows || !rows.length ?
+    `<div class="empty">Nothing qualifies today.</div>` :
+    `<div class="rank">
+      <div class="rank-r lvl-r rank-head">
+        <span class="i">#</span><span class="s">Name</span>
+        <span class="x">Price</span><span class="x">vs 50D</span><span class="x">vs 200D</span>
+        <span class="x">RSI D</span><span class="x">RSI M</span><span class="m">1W</span>
+      </div>
+      ${rows.map((r, i) => {
+        const v50 = r.sma50 ? (r.price - r.sma50) / r.sma50 * 100 : null;
+        const v200 = r.sma200 ? (r.price - r.sma200) / r.sma200 * 100 : null;
+        const hot = v => v == null ? 'var(--dim)' : v > 70 ? 'var(--warn)' : v < 35 ? 'var(--accent)' : 'var(--dim)';
+        return `<div class="rank-r lvl-r" data-sym="${esc(r.sym)}" role="button" tabindex="0">
+          <span class="i">${i + 1}</span>
+          <span class="s"><b>${esc(r.sym)}</b><span>${esc(r.name || r.sector || '')}</span></span>
+          <span class="x" data-px>₹${esc(r.price ?? '—')}</span>
+          <span class="x ${dir(v50)}">${v50 == null ? '—' : pct(v50)}</span>
+          <span class="x ${dir(v200)}">${v200 == null ? '—' : pct(v200)}</span>
+          <span class="x" style="color:${hot(r.rsi)}">${r.rsi != null ? Math.round(r.rsi) : '—'}</span>
+          <span class="x" style="color:${hot(r.rsi_m)}">${r.rsi_m != null ? Math.round(r.rsi_m) : '—'}</span>
+          <span class="m ${dir(r.r1w)}">${pct(r.r1w)}</span>
+        </div>`; }).join('')}</div>`;
+
   const COLHEAD = {
     turnover_cr: 'Turnover', vol_spike: 'Volume vs avg', rsi: 'RSI',
     r1w: '1 week', r1m: '1 month', from_high: 'From high'
@@ -250,8 +278,19 @@
         ${tile((d.picks || []).length, 'Ideas this week', 'ranked once per ISO week')}
       </div>`);
 
-    out += sec('Where the money went', heatmap((pu.sectors || []).slice(0, 11)) +
-      `<p class="hint">Median one-week move per sector. Tile width is how many names it holds.</p>`);
+    // Today, over the 250 largest — not a week over all 750. A daily paper's
+    // front page should answer "what happened today", and a 750-name median is
+    // dominated by the 500 small and micro caps most readers never trade.
+    // Falls back to the week when the screen predates r1d, and SAYS which one
+    // it is showing — an unlabelled heat map is the reader guessing.
+    const dayMap = (pu.sectors_day || []).length;
+    out += sec(dayMap ? 'Where the money went today' : 'Where the money went this week',
+      heatmap(dayMap ? pu.sectors_day : (pu.sectors || []).slice(0, 11), dayMap ? 'r1d' : 'r1w') +
+      `<p class="hint">${dayMap
+        ? `Median move <b>today</b> per sector, across the <b>${pu.day_universe || 250} largest</b> by market cap. Tile width is how many names it holds.`
+        : 'Median move over the <b>week</b>, across all 750 screened names — today\'s figures arrive with the next screen build.'}
+        Tap a sector for the names behind it.</p>`,
+      dayMap ? 'today · large caps' : 'this week · all 750');
 
     const wire = n.ok ? n.data : [];
     out += sec('The wire', wire.length ? `<div class="wire">${wire.slice(0, 6).map(x => `
@@ -385,9 +424,11 @@
     const pu = p.ok ? p.data : {};
 
     out += sec('Breadth', breadthWidget(pu.breadth) || `<div class="empty">Screen not built yet.</div>`);
-    out += sec('Sector heat', heatmap(pu.sectors) +
-      `<p class="hint">Median one-week move. Width is the number of names in the sector.</p>`,
-      pu.sectors ? `${pu.sectors.length} sectors` : '');
+    out += sec('Sector heat — the week, all 750', heatmap(pu.sectors, 'r1w') +
+      `<p class="hint">Median move over the <b>past week</b> across the full <b>${pu.universe || 750}-name</b>
+        screen — the wider, slower view. The front page shows today over the largest 250.
+        Width is how many names the sector holds; tap one for the names behind it.</p>`,
+      pu.sectors ? `${pu.sectors.length} sectors · one week` : '');
 
     // /api/ticker, not /api/markets: markets returns a curated NINE, the
     // ticker returns all 71 across eleven segments — Asia, India, Europe, US,
@@ -428,7 +469,7 @@
 
     const pu = p.ok ? p.data : {};
     out += sec('Breaking to 52-week highs',
-      rankList((pu.breakouts || []).slice(0, 10), 'r1w', pct, 'turnover_cr'),
+      levelTable((pu.breakouts || []).slice(0, 12)),
       pu.breakouts ? `${pu.breakouts.length} names` : '');
 
     if (mn.ok) {
@@ -779,6 +820,7 @@
         </div>
         ${open && live && isFinite(Number(r.sl)) && isFinite(Number(r.target1))
           ? progressToTarget(Number(r.entry), Number(r.sl), Number(r.target1), live.price, r.action) : ''}
+        ${open ? trailPlan(r.entry, r.sl, r.target1, r.target2, r.action) : ''}
         <div class="card-foot">
           <span class="mono" style="font-size:11px;color:var(--dim)">${esc(String(r.alert_date || r.date || '').slice(0, 10))}
             ${r.status ? ' · ' + esc(String(r.status).replace(/_/g, ' ').toLowerCase()) : ''}</span>
@@ -810,6 +852,44 @@
       }));
     };
     draw();
+  };
+
+  /* THE TRAILING RULE, ON EVERY TRADE.
+   *
+   * The engines write entry, stop and targets. None of them writes a trailing
+   * level, so this DERIVES the management rule from the levels that were
+   * actually sent — it invents no price the signal did not carry.
+   *
+   * It is shown as a RULE, and it deliberately does NOT re-grade anything.
+   * exit_rule_study.py simulated this over 470 closed trades on the same bars,
+   * every trade subject to the rule in both directions:
+   *
+   *     baseline            +0.194R
+   *     break-even @ 1.0R   +0.166R   <- worse
+   *     break-even @ 0.5R   +0.220R   (+0.026R, about a quarter of one SE)
+   *
+   * Trailing does not pay on this ledger: the same volatility that carries a
+   * trade to +1R carries winners back through entry and scratches them. So the
+   * ledger stays scored on the stop the signal was sent with, and this is
+   * published as what to DO with an open position — not as an edge, and not as
+   * a silent rewrite of the record.
+   */
+  const trailPlan = (entry, sl, t1, t2, action) => {
+    const e = Number(entry), s0 = Number(sl), a = Number(t1), b = Number(t2);
+    if (![e, s0, a].every(Number.isFinite)) return '';
+    const short = /SELL|SHORT/i.test(String(action || ''));
+    const f = v => '₹' + Number(v).toFixed(2);
+    const steps = [
+      [`Stop stays at ${f(s0)}`, 'until the first target prints'],
+      [`After T1, trail to ${f(e)}`, 'break-even — never back below it'],
+    ];
+    if (Number.isFinite(b)) steps.push([`After T2, trail to ${f(a)}`, 'locking the first target in']);
+    return `<div class="trail"><span>Trailing rule</span>
+      ${steps.map(([t, k]) => `<div class="tr-s"><b>${esc(t)}</b><i>${esc(k)}</i></div>`).join('')}
+      <div class="tr-n">Published as a management rule. The ledger is still scored on the
+        stop the signal was sent with — a break-even trail measured
+        <b>worse</b> than the fixed stop over 470 closed trades.</div>
+    </div>`;
   };
 
   /* Where price sits between the stop and the first target. The number says
@@ -846,6 +926,34 @@
   }
 
   window.addEventListener('hashchange', render);
+
+  /* LIVE, AROUND THE CLOCK.
+   *
+   * The page was a snapshot: whatever the data said when you opened it, until
+   * you reloaded. A market page left open on a second monitor should not go
+   * quietly stale.
+   *
+   * setInterval, not requestAnimationFrame — rAF does not run in a hidden tab
+   * or on a phone with the screen off, which is exactly when a page is left
+   * open. The same trap is documented in app.js on the broadsheet.
+   *
+   * Sixty seconds while visible. When the tab is hidden the timer keeps
+   * running but the refresh is SKIPPED, and one runs immediately on return —
+   * so a tab left open overnight makes ~0 requests and is current the moment
+   * it is looked at again, instead of replaying eight hours of them.
+   */
+  let lastRefresh = Date.now();
+  async function refresh(force) {
+    if (!force && document.visibilityState === 'hidden') return;
+    if (document.getElementById('sheet')?.open) return;   // never yank an open card
+    lastRefresh = Date.now();
+    try { await R[routeOf()](); } catch (e) { /* a failed refresh keeps what is on screen */ }
+  }
+  setInterval(() => refresh(false), 60000);
+  document.addEventListener('visibilitychange', () => {
+    // Back on screen after more than a minute away: refresh at once.
+    if (document.visibilityState === 'visible' && Date.now() - lastRefresh > 60000) refresh(true);
+  });
 
   /* ── theme ─────────────────────────────────────────────────────────────── */
   const root = document.documentElement;

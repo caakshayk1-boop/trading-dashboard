@@ -508,6 +508,10 @@ def technicals(px: dict, bench: dict | None) -> dict:
         "sma50": sma(c, 50) if n >= MIN_BARS["sma50"] else None,
         "sma200": sma(c, 200) if n >= MIN_BARS["sma200"] else None,
         "rsi14": rsi(c, 14) if n >= MIN_BARS["rsi"] else None,
+        # Sampled every 21 trading days from the most recent bar backwards, so
+        # the newest monthly close is always the latest price rather than
+        # whatever a fixed calendar grid happened to land on.
+        "rsi_m": (rsi(c[::-1][::21][::-1], 14) if n >= 15 * 21 else None),
         "atr14": atr(h, l, c, 14) if n >= MIN_BARS["atr"] else None,
     }
     t.update(macd(c) if n >= MIN_BARS["macd"] else
@@ -516,7 +520,7 @@ def technicals(px: dict, bench: dict | None) -> dict:
     t["atr_pct"] = (t["atr14"] / last) if t["atr14"] and last else None
 
     # Returns. Trading-day counts, not calendar — 250 bars is a year.
-    for key, bars in (("r1w", 5), ("r1m", 21), ("r3m", 63),
+    for key, bars in (("r1d", 1), ("r1w", 5), ("r1m", 21), ("r3m", 63),
                       ("r6m", 126), ("r1y", 250), ("r3y", 750)):
         need = MIN_BARS.get(key, bars)
         t[key] = pct_change(c, bars) if n >= need else None
@@ -1936,6 +1940,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "piotroski_bits": r.get("piotroski_bits"),
             # Technicals
             "rsi": _round(t.get("rsi14"), 1, 1),
+            "rsi_m": _round(t.get("rsi_m"), 1, 1),
             "sma20": _round(t.get("sma20"), 1, 1),
             "sma50": _round(t.get("sma50"), 1, 1),
             "sma200": _round(t.get("sma200"), 1, 1),
@@ -1950,6 +1955,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "high52": _round(t.get("high52"), 1, 1),
             "low52": _round(t.get("low52"), 1, 1),
             "from_high": _pct(t.get("from_high52")),
+            "r1d": _pct(t.get("r1d")),
             "r1w": _pct(t.get("r1w")), "r1m": _pct(t.get("r1m")),
             "r3m": _pct(t.get("r3m")), "r6m": _pct(t.get("r6m")),
             "r1y": _pct(t.get("r1y")), "r3y": _pct(t.get("r3y")),
