@@ -354,3 +354,123 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
 .meth summary::-webkit-details-marker{display:none}
 .meth p{padding:0 14px 12px;font-size:12.5px;line-height:1.6;color:var(--muted);margin:0}
 .meth .hint{padding-top:0}
+
+/* ══════════════════ TERMINAL PASS ═════════════════════════════════════════
+   The brief was "robotic / sci-fi". Taken as INSTRUMENT, not as neon: a
+   machine that reports honestly looks precise, not decorated. So the moves
+   are a scanline sweep on the header, a monospaced live clock, a hairline
+   grid behind the tiles, and a cyan that only ever marks live data. No glow
+   on text — glow on a number is the fastest way to make a number look
+   invented. */
+:root{ --grid:rgba(120,180,255,.05); --live:#4CE0D2; }
+:root[data-theme="light"]{ --grid:rgba(12,17,24,.045); --live:#0E8F86; }
+
+/* Faint engineering grid. Fixed, so content scrolls over a still surface —
+   a grid that scrolls with the page reads as wallpaper and induces motion. */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),
+                   linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:46px 46px}
+.bar,.tabs,main,.foot{position:relative;z-index:1}
+
+/* The header runs a slow scan. 9 seconds, 1px, and it stops for anyone who
+   asked for less motion. */
+.bar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--live),transparent);
+  opacity:.55;animation:scan 9s linear infinite}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* Live clock. Tabular so the seconds do not shuffle the layout every tick —
+   a clock that reflows once a second is a layout shift once a second. */
+.stat-live{display:inline-flex;align-items:baseline;gap:7px;font-variant-numeric:tabular-nums}
+.clk-d{color:var(--dim)}
+.clk-t{color:var(--live);font-weight:500;letter-spacing:.04em}
+.clk-z{font-size:9px;color:var(--dim);letter-spacing:.1em}
+.brand-dot{background:var(--live);box-shadow:0 0 0 3px color-mix(in srgb,var(--live) 18%,transparent);
+  animation:pip 2.6s ease-in-out infinite}
+@keyframes pip{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* Heat tiles are buttons now. */
+.heat-t{border:0;text-align:left;cursor:pointer;font:inherit;
+  outline:1px solid transparent;transition:transform .18s,outline-color .18s}
+.heat-t:hover,.heat-t:focus-visible{outline-color:var(--live);transform:translateY(-2px)}
+.heat-t::after{content:"→";position:absolute;right:9px;bottom:8px;font:600 11px/1 var(--mono);
+  color:var(--text);opacity:0;transition:opacity .18s}
+.heat-t:hover::after{opacity:.55}
+
+/* ── SHEET ────────────────────────────────────────────────────────────────
+   <dialog> for the focus trap and Escape. Bottom sheet on a phone because
+   that is where the thumb is; centred on a desk. */
+.sheet{border:0;padding:0;background:transparent;max-width:none;max-height:none;
+  width:100%;height:100%;margin:0}
+.sheet::backdrop{background:rgba(4,7,11,.72);backdrop-filter:blur(4px)}
+.sheet-in{position:fixed;left:0;right:0;bottom:0;max-height:88vh;overflow-y:auto;
+  background:var(--bg);border-top:1px solid var(--live);border-radius:16px 16px 0 0;
+  padding:0 var(--gut) calc(24px + env(safe-area-inset-bottom));
+  animation:sheetUp .26s cubic-bezier(.2,.9,.25,1)}
+@keyframes sheetUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.sheet-h{position:sticky;top:0;background:var(--bg);display:flex;align-items:center;gap:12px;
+  padding:16px 0 12px;border-bottom:1px solid var(--line);z-index:2}
+.sheet-h h2{font:800 19px/1.2 var(--disp);letter-spacing:-.01em;flex:1;min-width:0}
+.sheet-h h2 small{display:block;font:400 12px/1.4 var(--ui);color:var(--muted);margin-top:3px}
+.sheet-b{padding-top:14px}
+@media(min-width:760px){
+  .sheet-in{left:50%;transform:translateX(-50%);bottom:auto;top:6vh;width:min(720px,92vw);
+    border-radius:14px;border:1px solid var(--line2);max-height:84vh}
+  @keyframes sheetUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}
+                     to{opacity:1;transform:translateX(-50%)}}
+}
+@media(prefers-reduced-motion:reduce){
+  .sheet-in{animation:none} .bar::after{animation:none} .brand-dot{animation:none}}
+
+/* ── SCORES ──────────────────────────────────────────────────────────────── */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-bottom:16px}
+.sc-t{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:11px 12px}
+.sc-l{display:block;font:400 9.5px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
+.sc-v{display:block;font:500 21px/1.1 var(--mono);margin:6px 0 7px;font-variant-numeric:tabular-nums}
+.mini-bar{display:block;height:3px;border-radius:2px;background:var(--raised);overflow:hidden}
+.mini-bar i{display:block;height:100%;background:var(--live);
+  animation:grow .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{width:0!important}}
+@media(prefers-reduced-motion:reduce){.mini-bar i{animation:none}}
+
+.two{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:640px){.two{grid-template-columns:1fr 1fr}}
+.pane{border:1px solid var(--line);border-radius:10px;padding:13px 14px;background:var(--surface)}
+.pane h4{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
+.pane-ok h4{color:var(--up)} .pane-risk h4{color:var(--warn)}
+.pane .read{padding-left:17px;margin-bottom:9px}
+.pane .read b{display:block;color:var(--text);font-weight:500;font-size:13px}
+.pane .read span{display:block;font-size:11.5px;color:var(--dim);margin-top:2px}
+h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);margin:18px 0 9px}
+.yoy{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.yy{background:var(--surface);display:flex;justify-content:space-between;align-items:baseline;
+  gap:12px;padding:10px 13px;font-size:13px}
+.yy span{color:var(--muted)}
+.yy b{font:500 13px/1 var(--mono);font-variant-numeric:tabular-nums}
+
+/* ── SCREEN TOOLS ─────────────────────────────────────────────────────────── */
+.tools{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.scr-in,.scr-sel{background:var(--surface);color:var(--text);border:1px solid var(--line);
+  border-radius:8px;padding:11px 12px;font:400 13.5px/1.2 var(--ui);min-height:42px}
+.scr-in{flex:1 1 190px} .scr-sel{flex:0 1 190px;font-family:var(--mono);font-size:12px}
+.scr-in:focus,.scr-sel:focus{outline:none;border-color:var(--live)}
+.scr-r{grid-template-columns:20px minmax(0,1fr) repeat(4,auto) 56px;gap:9px;cursor:pointer}
+.scr-r:hover{background:var(--raised)}
+.scr-r .x{font:500 11.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:44px}
+.segh{font:600 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--live);
+  margin:16px 0 7px}
+.segh:first-child{margin-top:0}
+
+/* Live mark on the stock card. Cyan is reserved for live data on this page,
+   so a reader can tell at a glance which numbers are moving and which are the
+   morning's close. */
+.livebox{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--live);
+  border-radius:0 8px 8px 0;padding:10px 13px;margin:0 0 14px}
+.lv-k{font:600 9px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--live)}
+.lv-p{font:500 17px/1 var(--mono);font-variant-numeric:tabular-nums}
+.lv-c{font:500 12px/1 var(--mono)}
+.lv-s{font-size:11px;color:var(--dim)}

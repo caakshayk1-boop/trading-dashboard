@@ -119,17 +119,65 @@
   const heatClass = v => v >= 1.5 ? 'h-p3' : v >= .6 ? 'h-p2' : v > .1 ? 'h-p1'
                        : v <= -1.5 ? 'h-n3' : v <= -.6 ? 'h-n2' : v < -.1 ? 'h-n1' : 'h-z';
 
+  // Tiles are buttons. A heat map that shows a median and refuses "which
+  // names" is half an answer, and the drill-down data is already in the
+  // digest — no extra request, no 1.26 MB download.
+  window.__sectors = {};
   const heatmap = sectors => !sectors || !sectors.length ? '' :
     `<div class="heat">${sectors.map(s => {
+      window.__sectors[s.name] = s;
       // Width carries the sector's weight in names, so a 105-name move and a
       // 12-name move are not the same rectangle.
       const grow = Math.max(1, Math.round(s.n / 8));
-      return `<div class="heat-t ${heatClass(s.median)}" style="flex-grow:${grow}"
-                   title="${esc(s.name)} · median ${pct(s.median)} over ${s.n} names">
+      return `<button type="button" class="heat-t ${heatClass(s.median)}" style="flex-grow:${grow}"
+                   data-sector="${esc(s.name)}"
+                   title="${esc(s.name)} — open the names behind this move">
         <span class="hs">${esc(s.name)}</span>
         <span class="hv">${pct(s.median)}</span>
         <span class="hn">${s.n} names · ${s.up} up</span>
-      </div>`; }).join('')}</div>`;
+      </button>`; }).join('')}</div>`;
+
+  // One delegated listener for every heat tile on every route.
+  document.addEventListener('click', ev => {
+    const t = ev.target.closest && ev.target.closest('.heat-t');
+    if (t && t.dataset.sector) openSector(t.dataset.sector);
+  });
+
+  function openSector(name) {
+    const s = window.__sectors[name];
+    if (!s) return;
+    const list = (rows, cls) => rows && rows.length ? `<div class="rank">${rows.map((r, i) => `
+        <div class="rank-r">
+          <span class="i">${i + 1}</span>
+          <span class="s"><b>${esc(r.sym)}</b><span>${esc(r.name || '')}</span></span>
+          <span class="x" style="color:var(--dim)">${r.rsi != null ? 'RSI ' + Math.round(r.rsi) : ''}</span>
+          <span class="m ${dir(r.r1w)}">${pct(r.r1w)}</span>
+        </div>`).join('')}</div>` : `<div class="empty">No names.</div>`;
+    sheet(`${esc(name)}`,
+      `<p class="hint" style="margin:0 0 14px">Median <b class="${dir(s.median)}">${pct(s.median)}</b> on the week
+        across <b>${s.n}</b> names, <b>${s.up}</b> of them up.</p>` +
+      sec('Led the sector', list(s.top)) +
+      sec('Held it back', list(s.bottom)));
+  }
+
+  /* A bottom sheet on a phone, a centred dialog on a desk. <dialog> gives the
+   * focus trap and Escape for free — reimplementing either by hand is how
+   * modals end up unreachable by keyboard. */
+  function sheet(title, html) {
+    let d = document.getElementById('sheet');
+    if (!d) {
+      d = document.createElement('dialog');
+      d.id = 'sheet'; d.className = 'sheet';
+      document.body.appendChild(d);
+      d.addEventListener('click', e => { if (e.target === d) d.close(); });
+    }
+    d.innerHTML = `<div class="sheet-in">
+      <div class="sheet-h"><h2>${title}</h2>
+        <button type="button" class="icon-btn" data-x aria-label="Close">✕</button></div>
+      <div class="sheet-b">${html}</div></div>`;
+    d.querySelector('[data-x]').addEventListener('click', () => d.close());
+    if (!d.open) d.showModal();
+  }
 
   const breadthWidget = b => {
     if (!b || !b.counted) return '';
@@ -336,15 +384,23 @@
       `<p class="hint">Median one-week move. Width is the number of names in the sector.</p>`,
       pu.sectors ? `${pu.sectors.length} sectors` : '');
 
-    if (m.ok) {
-      const rows = m.data.markets || [];
-      out += sec('The board', `<div class="board">${rows.map(r => `
+    // /api/ticker, not /api/markets: markets returns a curated NINE, the
+    // ticker returns all 71 across eleven segments — Asia, India, Europe, US,
+    // commodities, FX (USD/INR, MYR/INR, USD/MYR, AED/INR), crypto. The board
+    // was showing a twelfth of what the origin already computes.
+    const tk = await get('/api/ticker');
+    if (tk.ok) {
+      const segs = (tk.data.segments || []).filter(sg => (sg.items || []).length);
+      out += sec('The board', segs.map(sg => `
+        <div class="segh">${esc(sg.icon || '')} ${esc(sg.label)}</div>
+        <div class="board">${sg.items.map(r => `
           <div class="board-row">
             <span class="n">${esc(r.name || r.symbol || '')}</span>
             <span class="p">${esc(r.price ?? '—')}</span>
             <span class="c ${dir(r.change_pct)}">${pct(r.change_pct)}</span>
-          </div>`).join('')}</div>`, `${rows.length} live`);
-    } else { out += sec('The board', fail('The live board', m.error)); }
+          </div>`).join('')}</div>`).join(''),
+        `${tk.data.live ?? 0} of ${tk.data.total ?? 0} live`);
+    } else { out += sec('The board', fail('The live board', tk.error)); }
 
     out += sec('Biggest movers, one week',
       rankList((pu.movers_up || []).slice(0, 8), 'r1w', pct, 'turnover_cr'));
@@ -448,42 +504,180 @@
 
   // The tool. Filters run over the pulse digest, not over screen.json — the
   // answers are already computed, so a chip is a re-render and not a download.
-  let screenFilter = 'volume';
-  R['/screen'] = async () => {
-    const chips = [['volume', 'Who showed up'], ['breakouts', '52-week highs'],
-                   ['movers_up', 'Top gainers'], ['movers_dn', 'Top fallers']];
-    const bar = () => `<div class="chips" role="group" aria-label="Screen filter">${
-      chips.map(([k, l]) => `<button type="button" class="chip" data-f="${k}"
-        aria-pressed="${screenFilter === k}">${esc(l)}</button>`).join('')}</div>`;
+  /* THE SCREEN — all 750 names, not the digest.
+   *
+   * The digest answers four fixed questions in 23 KB. A screener has to answer
+   * the reader's question, which means the whole file: screen.json, 1.26 MB
+   * raw and ~260 KB over the wire. It is fetched ONLY when this route opens
+   * and cached for the session, so every other route still costs nothing —
+   * which is the whole reason the digest exists and why both can coexist.
+   */
+  let SCREEN = null;
+  let scrQ = '', scrPreset = 'all', scrSort = 'comp';
+  const PRESETS = {
+    all:        ['Everything',     () => true],
+    breakout:   ['Breaking out',   r => (r.setup?.tags || []).some(t => /BREAKOUT/.test(t))],
+    rsleader:   ['RS leaders',     r => (r.setup?.tags || []).includes('RS LEADER')],
+    volume:     ['Volume spike',   r => (r.vol_spike ?? 0) >= 2],
+    oversold:   ['Oversold',       r => (r.rsi ?? 99) < 35],
+    quality:    ['High quality',   r => (r.q ?? 0) >= 70],
+    value:      ['Cheap',          r => (r.v ?? 0) >= 70],
+    debtfree:   ['Debt-free',      r => (r.de ?? 9) <= 0.1],
+    compounder: ['Compounders',    r => (r.roce ?? 0) >= 20 && (r.rev_cagr ?? 0) >= 12],
+  };
+  const SORTS = { comp: 'Composite', q: 'Quality', g: 'Growth', v: 'Value',
+                  tech: 'Technical', r1m: '1M return', roce: 'ROCE', mcap_cr: 'Size' };
 
-    paint(head('Screen', 'The 750-name universe, already reduced to the four questions worth asking of it.') +
-      bar() + `<div class="sk" style="height:280px"></div>`);
-    const p = await get('/pulse.json');
-    if (!p.ok) { paint(head('Screen', '') + fail('The screen', p.error)); return; }
-    const pu = p.data;
+  R['/screen'] = async () => {
+    const shell = body => head('Screen',
+      'Every one of the 750 names, searchable. Tap any row for the full card.') + body;
+    if (!SCREEN) paint(shell(`<div class="note">Loading the full universe — about 260 KB, once per session.</div>` +
+      `<div class="sk" style="height:320px"></div>`));
+
+    if (!SCREEN) {
+      const r = await get('/screen.json');
+      if (!r.ok) { paint(shell(fail('The screen', r.error))); return; }
+      SCREEN = (r.data.rows || []).filter(x => x && x.sym);
+    }
 
     const draw = () => {
-      const key = screenFilter;
-      const rows = pu[key] || [];
-      const valKey = key === 'volume' ? 'vol_spike' : 'r1w';
-      const fmt = key === 'volume' ? (v => (v || 0).toFixed(1) + '×') : pct;
-      const subK = key === 'volume' ? 'turnover_cr' : 'turnover_cr';
-      const blurb = {
-        volume: 'Names trading at twice their own average volume or more. Volume is who turned up; price is what they decided.',
-        breakouts: 'Names printing a new 52-week high, ordered by turnover — a breakout nobody traded is a print, not a move.',
-        movers_up: 'Biggest one-week gainers across the screened universe.',
-        movers_dn: 'Biggest one-week fallers. Shown because a screen that only lists winners is a brochure.'
-      }[key];
-      main.innerHTML = head('Screen', 'The 750-name universe, already reduced to the four questions worth asking of it.') +
-        bar() + sec(chips.find(c => c[0] === key)[1],
-          rankList(rows, valKey, fmt, subK) + `<p class="hint">${esc(blurb)}</p>`,
-          `${rows.length} names · from ${pu.universe} screened`);
-      main.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
-        screenFilter = b.dataset.f; draw();
-      }));
+      const q = scrQ.trim().toLowerCase();
+      const rows = SCREEN
+        .filter(PRESETS[scrPreset][1])
+        .filter(r => !q || (r.sym || '').toLowerCase().includes(q)
+                        || (r.name || '').toLowerCase().includes(q)
+                        || (r.sector || '').toLowerCase().includes(q))
+        .sort((a, b) => (b[scrSort] ?? -1e9) - (a[scrSort] ?? -1e9));
+
+      main.innerHTML = shell(
+        `<div class="tools">
+          <input type="search" id="scrq" class="scr-in" placeholder="Symbol, company or sector"
+                 value="${esc(scrQ)}" aria-label="Search the screen">
+          <select id="scrs" class="scr-sel" aria-label="Rank by">
+            ${Object.entries(SORTS).map(([k, l]) =>
+              `<option value="${k}"${scrSort === k ? ' selected' : ''}>Rank by ${esc(l)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="chips" role="group" aria-label="Screen preset">${
+          Object.entries(PRESETS).map(([k, [l]]) =>
+            `<button type="button" class="chip" data-p="${k}" aria-pressed="${scrPreset === k}">${esc(l)}</button>`).join('')}
+        </div>` +
+        sec(PRESETS[scrPreset][0], rows.length ? screenTable(rows.slice(0, 60))
+          : `<div class="empty">Nothing matches. Try a different preset or clear the search.</div>`,
+          `${rows.length} of ${SCREEN.length}`));
+
+      const inp = main.querySelector('#scrq');
+      inp.addEventListener('input', () => {
+        // Coalesced: 750 rows re-filtered on every keystroke is 750 rows of
+        // work per keystroke, and the phone feels it.
+        clearTimeout(inp._t);
+        inp._t = setTimeout(() => { scrQ = inp.value; const at = inp.selectionStart; draw();
+          const n = main.querySelector('#scrq'); n.focus(); n.setSelectionRange(at, at); }, 160);
+      });
+      main.querySelector('#scrs').addEventListener('change', e => { scrSort = e.target.value; draw(); });
+      main.querySelectorAll('.chip').forEach(b =>
+        b.addEventListener('click', () => { scrPreset = b.dataset.p; draw(); }));
+      main.querySelectorAll('[data-sym]').forEach(el =>
+        el.addEventListener('click', () => openStock(el.dataset.sym)));
     };
     draw();
   };
+
+  // Turnover is out. It says how much traded, which almost never changes a
+  // decision — where price sits against its own 50 and 200 day, and whether
+  // it is stretched, does.
+  const screenTable = rows => `<div class="rank">
+    <div class="rank-r rank-head scr-r">
+      <span class="i">#</span><span class="s">Name</span>
+      <span class="x">Price</span><span class="x">vs 50D</span>
+      <span class="x">vs 200D</span><span class="x">RSI</span><span class="m">1M</span>
+    </div>
+    ${rows.map((r, i) => {
+      const v50 = r.sma50 ? (r.price - r.sma50) / r.sma50 * 100 : null;
+      const v200 = r.sma200 ? (r.price - r.sma200) / r.sma200 * 100 : null;
+      return `<div class="rank-r scr-r" data-sym="${esc(r.sym)}" role="button" tabindex="0">
+        <span class="i">${i + 1}</span>
+        <span class="s"><b>${esc(r.sym)}</b><span>${esc(r.name || '')}</span></span>
+        <span class="x">₹${esc(r.price ?? '—')}</span>
+        <span class="x ${dir(v50)}">${v50 == null ? '—' : pct(v50)}</span>
+        <span class="x ${dir(v200)}">${v200 == null ? '—' : pct(v200)}</span>
+        <span class="x" style="color:${(r.rsi ?? 50) > 70 ? 'var(--warn)' : (r.rsi ?? 50) < 35 ? 'var(--accent)' : 'var(--dim)'}">${r.rsi != null ? Math.round(r.rsi) : '—'}</span>
+        <span class="m ${dir(r.r1m)}">${pct(r.r1m)}</span>
+      </div>`; }).join('')}</div>`;
+
+  /* THE CARD. Same fields the broadsheet's modal shows, from the same
+   * screen.json — the 3.1 MB screen-detail.json is not needed for any of it,
+   * and downloading it would undo the point of this surface. */
+  function openStock(sym) {
+    const r = (SCREEN || []).find(x => x.sym === sym);
+    if (!r) return;
+    const bar = (v, max = 100) => `<span class="mini-bar"><i style="width:${Math.max(0, Math.min(100, (v ?? 0) / max * 100)).toFixed(0)}%"></i></span>`;
+    const score = (k, l) => r[k] == null ? '' : `<div class="sc-t">
+      <span class="sc-l">${esc(l)}</span><span class="sc-v">${Number(r[k]).toFixed(1)}</span>${bar(r[k])}</div>`;
+    const why = [];
+    for (const t of (r.setup?.tags || [])) {
+      if (/52W BREAKOUT/.test(t)) why.push(['Broke to a 52-week high', 'close above the prior 52-week range']);
+      else if (/50D BREAKOUT/.test(t)) why.push(['Broke its 50-day high', 'close above the prior 50-day range']);
+      else if (/20D BREAKOUT/.test(t)) why.push(['Broke its 20-day high', 'close above the prior 20-day range']);
+      else if (t === 'RS LEADER') why.push(['Leads the market on relative strength', 'outperforming the index over 3 and 12 months']);
+      else if (t === 'TREND INTACT') why.push(['Trend intact', 'price above the 50-day, 50 above the 200']);
+      else if (t === 'OVERSOLD') why.push(['Oversold', `RSI ${r.rsi != null ? Math.round(r.rsi) : '—'}`]);
+      else if (t === 'VOLUME') why.push(['Trading above its own average volume', `${(r.vol_spike ?? 0).toFixed(1)}x its average`]);
+    }
+    if ((r.roce ?? 0) >= 20) why.push([`Earns ${Math.round(r.roce)}% on capital employed`, 'ROCE, invested capital']);
+    if ((r.de ?? 9) <= 0.1) why.push(['Effectively debt-free', `D/E ${r.de}`]);
+    const flags = (r.risk?.flags || []);
+    const yoy = (l, v, unit = '%') => v == null ? '' :
+      `<div class="yy"><span>${esc(l)}</span><b class="${dir(v)}">${v > 0 ? '+' : ''}${Number(v).toFixed(1)}${unit}</b></div>`;
+
+    sheet(`${esc(r.sym)} <small>${esc(r.name || '')}</small>`, `
+      <p class="hint" style="margin:0 0 12px">₹${esc(r.price)} · ${esc(r.ind || r.sector || '')} ·
+        ₹${r.mcap_cr != null ? Math.round(r.mcap_cr).toLocaleString('en-IN') : '—'} cr ·
+        accounts to ${esc(r.fy || '—')}</p>
+      <div class="tags">${(r.setup?.tags || []).map(t => `<span class="pill pill-ac">${esc(t)}</span>`).join('')}
+        ${r.risk?.level ? `<span class="pill ${r.risk.level === 'LOW' ? 'pill-up' : r.risk.level === 'HIGH' ? 'pill-dn' : 'pill-wn'}">RISK ${esc(r.risk.level)}</span>` : ''}</div>
+      <div class="scores">
+        ${score('comp', 'Composite')}${score('q', 'Quality')}${score('g', 'Growth')}
+        ${score('em', 'Earnings mom.')}${score('cf', 'Cash flow')}${score('v', 'Value')}${score('tech', 'Technical')}
+      </div>
+      <div class="two">
+        <div class="pane pane-ok"><h4>Why now</h4>${why.length ? why.map(([t, k]) =>
+          `<div class="read read-for"><b>${esc(t)}</b><span>${esc(k)}</span></div>`).join('')
+          : '<p class="hint">No setup is firing on this name today.</p>'}</div>
+        <div class="pane pane-risk"><h4>What can go wrong</h4>${flags.length ? flags.map(f =>
+          `<div class="read read-against"><b>${esc(f.t)}</b><span>${esc(f.k || '')}</span></div>`).join('')
+          : '<p class="hint">No flags raised by the risk screen.</p>'}</div>
+      </div>
+      <h4 class="sh">Latest year on year</h4>
+      <div class="yoy">${yoy('Revenue', r.rev_yoy)}${yoy('EBITDA', r.ebitda_yoy)}${yoy('Profit', r.pat_yoy)}
+        ${yoy('EPS', r.eps_yoy)}${yoy('EBIT margin', r.margin_delta, 'pt')}</div>
+      <h4 class="sh">Cash quality</h4>
+      <div class="yoy">${yoy('Cash conversion (CFO/PAT)', r.cfo_pat, 'x')}${yoy('Free cash / profit', r.fcf_pat, 'x')}
+        ${yoy('ROCE', r.roce)}${yoy('Debt / equity', r.de, '')}</div>
+      <h4 class="sh">Where price sits</h4>
+      <div class="yoy">${yoy('vs 50-day', r.sma50 ? (r.price - r.sma50) / r.sma50 * 100 : null)}
+        ${yoy('vs 200-day', r.sma200 ? (r.price - r.sma200) / r.sma200 * 100 : null)}
+        ${yoy('From 52w high', r.from_high)}${yoy('RSI', r.rsi, '')}</div>
+      <div class="card-foot" style="margin-top:14px">${symLinks(r.sym)}</div>`);
+
+    /* One live quote, for the name actually being read. Marking all 750 is not
+     * possible — Yahoo takes 20 symbols a call — and marking the 60 on screen
+     * would re-fetch on every keystroke. The card is where the price matters,
+     * and it is one symbol. */
+    quotes([r.sym]).then(q => {
+      const live = q[r.sym];
+      if (!live) return;
+      const host = document.querySelector('#sheet .hint');
+      if (!host) return;
+      const mv = r.price ? (live.price - r.price) / r.price * 100 : null;
+      host.insertAdjacentHTML('afterend',
+        `<div class="livebox"><span class="lv-k">Live</span>
+          <b class="lv-p">₹${live.price.toFixed(2)}</b>
+          ${live.change_pct != null ? `<span class="lv-c ${dir(live.change_pct)}">${pct(live.change_pct)} today</span>` : ''}
+          ${mv != null ? `<span class="lv-s">${pct(mv)} vs the ${esc(String(r.last_date || 'screen'))} close</span>` : ''}
+        </div>`);
+    });
+  }
 
   let sigFilter = 'all';
   R['/signals'] = async () => {
@@ -618,6 +812,24 @@
     document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'dark' ? '#0B0F14' : '#F7F8FA');
     try { localStorage.setItem('sig:theme', next); } catch (e) { /* private mode */ }
   });
+
+  /* ── live clock, in MYT ────────────────────────────────────────────────
+   * The header carried the EDITION date, which is the day the paper was
+   * built — correct, and read as "the site is a day stale" every morning
+   * between midnight MYT and the 6 AM build. A running clock says the page
+   * is alive; the edition date moves to where it belongs, beside the data
+   * that actually carries it. */
+  const clockEl = document.getElementById('edition');
+  function tickClock() {
+    if (!clockEl) return;
+    const t = new Date().toLocaleTimeString('en-GB', {
+      timeZone: 'Asia/Kuala_Lumpur', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const d = new Date().toLocaleDateString('en-GB', {
+      timeZone: 'Asia/Kuala_Lumpur', day: '2-digit', month: 'short' });
+    clockEl.innerHTML = `<span class="clk-d">${d}</span><span class="clk-t">${t}</span><span class="clk-z">MYT</span>`;
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
 
   /* ── edition stamp and data health ─────────────────────────────────────── */
   get('/edition.json').then(r => {

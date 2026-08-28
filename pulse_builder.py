@@ -43,13 +43,32 @@ def build_pulse(screen: dict, *, min_sector: int = 4) -> dict:
         s, v = r.get("sector"), _num(r.get("r1w"))
         if s and v is not None:
             by_sector.setdefault(s, []).append(v)
+    # Rows per sector too, so a tile can be OPENED. A heat map that only shows
+    # a median answers "which sector moved" and refuses the obvious next
+    # question, "which names moved it" — and shipping 1.26 MB to answer that
+    # would undo the reason this digest exists. Five each way is ~10 rows per
+    # sector: about 6 KB for all eleven.
+    rows_by_sector: dict[str, list] = {}
+    for r in rows:
+        s = r.get("sector")
+        if s and _num(r.get("r1w")) is not None:
+            rows_by_sector.setdefault(s, []).append(r)
+
     for s, vals in by_sector.items():
         if len(vals) < min_sector:
             continue
+        srt = sorted(rows_by_sector.get(s, []), key=lambda r: -(_num(r.get("r1w")) or 0))
+        slim = lambda r: {
+            "sym": r.get("sym"), "name": (r.get("name") or "")[:40],
+            "price": _num(r.get("price")), "r1w": _num(r.get("r1w")),
+            "r1m": _num(r.get("r1m")), "rsi": _num(r.get("rsi")),
+        }
         out["sectors"].append({
             "name": s, "n": len(vals),
             "median": round(statistics.median(vals), 2),
             "up": sum(1 for v in vals if v > 0),
+            "top": [slim(r) for r in srt[:5]],
+            "bottom": [slim(r) for r in srt[-5:][::-1]],
         })
     out["sectors"].sort(key=lambda x: -x["median"])
 
