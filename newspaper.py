@@ -5415,8 +5415,14 @@ a{color:inherit;text-decoration:none}
    normal flow and no magic offsets can drift apart. */
 .headstack{position:sticky;top:0;z-index:300;background:var(--bg)}
 .topbar{background:var(--bg);border-bottom:1px solid var(--line);}
+/* Three members now — wordmark, nav, stamp — so the spacing is done by gap and
+   the nav's own flex-grow rather than by space-between, which would have
+   pushed the nav into the middle of the gap instead of letting it start
+   directly after the wordmark. */
 .topbar-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);height:60px;
-  display:flex;align-items:center;justify-content:space-between;gap:18px;}
+  display:flex;align-items:center;gap:22px;}
+.topbar-in .brand{flex:0 0 auto}
+.topbar-in .stamp{flex:0 0 auto;margin-left:auto}
 .brand{display:flex;align-items:baseline;gap:9px;font-weight:700;font-size:16px;letter-spacing:-.4px;white-space:nowrap;}
 .brand b{color:var(--lime);font-weight:800}
 .brand .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);align-self:center;
@@ -5426,15 +5432,54 @@ a{color:inherit;text-decoration:none}
   color:var(--muted);letter-spacing:.4px;text-transform:uppercase;}
 .stamp .live{color:var(--lime);display:inline-flex;align-items:center;gap:6px}
 .stamp .live i{width:5px;height:5px;border-radius:50%;background:var(--lime);animation:pulse 1.8s infinite}
-@media(max-width:720px){.stamp span.d{display:none}}
+/* THE LONG DATE LEAVES THE MASTHEAD, AT EVERY WIDTH.
+   Not a breakpoint, because a breakpoint cannot fix this: .topbar-in caps at
+   max-width 1400, so a wider viewport gives this row no more space. Measured
+   with the nav in it — at 1280 the groups want 735px and get 572; at 1512,
+   where the container is at its cap and the date is showing, they want 733 and
+   get 701. The date and six nav groups do not fit in 1400px together at any
+   viewport size, so "sometimes" would just mean the nav scrolls on the wide
+   screens instead of the narrow ones.
 
-/* ═══════════════════ NAV ═══════════════════ */
-.nav{background:var(--bg);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line);}
-.nav-in{max-width:1400px;margin:0 auto;padding:0 var(--gut);display:flex;gap:2px;
+   Chosen over shrinking the nav because navigation you have to scroll to see
+   is not navigation, and the date is the most duplicated string on the page:
+   the hero prints "COMPILED 6:00 AM MYT · FRIDAY, AUGUST 28 2026" a few
+   hundred pixels below, it is in <title>, and the live clock beside it here
+   keeps the time. Left in the DOM rather than deleted — it is the accessible
+   dateline for the masthead and costs nothing hidden. */
+.stamp span.d{display:none}
+
+/* ═══════════════════ NAV ═══════════════════
+   The nav is INSIDE the topbar row now, between the wordmark and the stamp.
+
+   It was its own 46px band, and the sticky stack it belonged to measured 221px
+   on desktop and 247px on a phone — a third of a 812px screen spent on chrome
+   before a single number. The row it now shares was 60px tall and mostly
+   empty: a wordmark on the left, a date on the right, and about 700px of
+   nothing between them at 1400px wide.
+
+   So it loses the things that made it a band — its own background, its own
+   full-width border, its own max-width and gutters. Those belong to
+   .topbar-in now, which is already doing them. */
+.nav{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0;
+  flex:1 1 auto;min-width:0;}
+/* margin:0 and no max-width: it is a flex child of .topbar-in, so centring it
+   again would centre it inside its own share of a row that is already centred.
+   overflow-x:auto stays — at 900px six groups still outrun the space between
+   the wordmark and the date, and scrolling them is better than wrapping the
+   masthead to two lines. The dropdowns are position:fixed and so are not
+   clipped by it; that was checked, and it is the reason they are fixed. */
+.nav-in{margin:0;padding:0;display:flex;gap:2px;
   overflow-x:auto;scrollbar-width:none;}
+/* THE PHONE KEEPS ONE NAV, NOT TWO.
+   .botnav is a fixed bottom bar at <=760px and has been all along, so a phone
+   was carrying both: 46px of nav at the top AND a bar at the bottom, the same
+   six destinations twice. The top one goes. Nothing is lost — .botnav has the
+   same six, and every anchor still exists in the DOM for the scroll spy, the
+   command palette and deep links. */
+@media(max-width:760px){ .nav{display:none} }
 .nav-in::-webkit-scrollbar{display:none}
-.nav a{position:relative;padding:11px 13px;font-size:11px;font-weight:500;letter-spacing:1.1px;
+.nav a{position:relative;padding:11px 11px;font-size:11px;font-weight:500;letter-spacing:1.1px;
   text-transform:uppercase;color:var(--dim);white-space:nowrap;transition:color .25s var(--ease);}
 .nav a i{font-style:normal;font-family:var(--mono);font-size:11px;color:#33363c;margin-right:5px;transition:color .25s}
 .nav a::after{content:'';position:absolute;left:13px;right:13px;bottom:0;height:2px;background:var(--lime);
@@ -7704,15 +7749,23 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
    Everything below drives the /api-backed sections. On a static host the
    API probe fails and these components stay hidden, leaving the daily
    snapshot exactly as it renders today. */
-.livebar{display:none;align-items:center;gap:10px;
-  padding:8px var(--gut);font-family:var(--mono);font-size:11px;letter-spacing:.4px;
-  border-bottom:1px solid var(--line);background:var(--bg)}
-.livebar.on{display:flex}
+/* Inline on the trust line now, so it drops the band's padding, border and
+   background. It keeps display:none until app.js adds .on — a ledger bar that
+   renders before it has checked anything says "Checking live ledger…" in the
+   masthead of a page that may have no ledger at all. */
+.livebar{display:none;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.4px;
+  padding-left:10px;border-left:1px solid var(--line2)}
+.livebar.on{display:inline-flex}
 .livebar .pip{width:6px;height:6px;border-radius:50%;background:var(--up);flex:none;
   animation:pulse 2.4s var(--ease) infinite}
 .livebar.stale .pip{background:var(--gold);animation:none}
 .livebar.off .pip{background:var(--dim);animation:none}
-.livebar .msg{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* flex:1 belonged to a full-width band. On a shared line it would eat the
+   space the trust text and the link need, so it sizes to its content and
+   truncates only when it genuinely has to. */
+.livebar .msg{color:var(--muted);min-width:0;max-width:64ch;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .livebar button{font:inherit;color:var(--lime);background:none;border:1px solid var(--lime-line);
   border-radius:999px;padding:3px 11px;cursor:pointer;flex:none}
 .livebar button:hover{background:var(--lime-soft)}
@@ -7981,8 +8034,12 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 /* Mobile: tables become the pain point on a phone, so give them a real scroll
    affordance and stop the control bars from stacking into a wall. */
 @media(max-width:640px){
-  .livebar{font-size:11px;padding:7px 14px}
-  .livebar .msg{white-space:normal}
+  /* Both of these were written for a full-width band, where padding made the
+     band and wrapping the message was free. It is a group on the trust line
+     now: the padding re-introduced the band's height and `white-space:normal`
+     let one line of text stand 31px tall inside a 45px group. The base rule's
+     nowrap-and-truncate is correct at every width. */
+  .livebar{font-size:11px;padding:0}
   .perf-cell .v{font-size:19px}
   .ctlbar input[type=search]{flex:1 1 100%}
   .ctlbar .ghost{margin-left:0;width:100%}
@@ -8030,6 +8087,26 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);margin-top:2
 .trust.warn .trust-dot{background:var(--gold)}
 .trust.bad  .trust-dot{background:var(--down)}
 .trust-link{margin-left:auto;color:var(--lime);text-decoration:none;font-weight:500;white-space:nowrap}
+/* PHONE: the merged line must not cost more than the two bands it replaced.
+   Measured at 375px straight after the merge: 128px, against 66px before —
+   the dataset text, the ledger message and both links each took a row. The
+   ledger message is the flexible one (it is the longest and the least urgent
+   of the three), so it takes the second row alone and truncates there, and
+   the border that separates it from the trust text on one line becomes a
+   divider that would sit at the start of a row, so it goes. */
+@media(max-width:760px){
+  .trust-in{gap:5px 10px}
+  /* The ledger group takes the second row on its own — three items and a
+     button do not share 343px with the dataset count. flex-wrap:nowrap on the
+     group itself is the part that matters: without it the message and the
+     Refresh button stacked INSIDE the group and it stood 45px tall for one
+     line of text. */
+  .livebar{flex:1 1 100%;padding-left:0;border-left:0;flex-wrap:nowrap;order:2}
+  .livebar .msg{max-width:none;flex:1 1 auto}
+  /* Back on row one, hard right, beside the dataset count it qualifies —
+     order:2 on the ledger group is what frees it to sit there. */
+  .trust-link{margin-left:auto;order:1}
+}
 .trust-link:hover{text-decoration:underline}
 
 /* ── EXPLAIN THIS ─────────────────────────────────────────────────────────
@@ -9459,6 +9536,30 @@ table.t tbody tr:hover{background:var(--surface2)}
 <header class="topbar">
   <div class="topbar-in">
     <a href="#top" class="brand"><span class="dot"></span>THE DAILY <b>SIGNAL</b></a>
+<nav class="nav">
+  <div class="nav-in" id="navin">
+    {# Six destinations, not seventeen links. Seventeen anchors in a row is an
+       index, not navigation — a first-time reader cannot tell which of them is
+       the point. Each group is a button that opens its sections.
+
+       The anchors still exist in the DOM inside each menu, so the scroll spy,
+       the command palette and every deep link keep working unchanged. This is
+       a disclosure layer over the same list, not a different list. #}
+    {% for g in navgroups %}
+    <div class="navgrp" data-group="{{ g.name }}">
+      <button type="button" class="navgrp-btn" aria-expanded="false"
+              aria-controls="navmenu-{{ loop.index }}">
+        {{ g.name }}<i>{{ g.links|length }}</i>
+      </button>
+      <div class="navgrp-menu" id="navmenu-{{ loop.index }}" hidden>
+        {% for n in g.links %}<a href="#{{ n.id }}" aria-label="{{ n.group }} — {{ n.label }}"><i>{{ n.n }}</i>{{ n.label }}</a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
+  </div>
+</nav>
     <div class="stamp">
       <button type="button" class="cmdk-hint" id="cmdkOpen" aria-label="Search">
         <span>⌘K</span><span>Search</span>
@@ -9498,34 +9599,27 @@ table.t tbody tr:hover{background:var(--surface2)}
       <b>{{ health.current }} of {{ health.total }}</b> datasets current
       {%- if health.current != health.total %} &middot; worst <b>{{ (health.worst or 'unknown')|lower }}</b>{% endif %}
     </span>
+    {# THE LIVE LEDGER, ON THE SAME LINE.
+       It had its own 43px band directly under this one, and the two were
+       answering the same question: is what you are reading current? One says
+       it of the build's datasets, the other of the live ledger behind them.
+       Stacked, they cost 75px of a 221px sticky header to say "the data is
+       fine" twice.
+
+       #livebar, #livemsg and #liverefresh keep their ids and #livebar keeps
+       taking the on/stale/off classes — app.js drives all three and renaming
+       any of them would leave the bar frozen on "Checking live ledger…". #}
+    <span class="livebar" id="livebar">
+      <span class="pip"></span>
+      <span class="msg" id="livemsg">Checking live ledger&hellip;</span>
+      <button type="button" id="liverefresh">Refresh</button>
+    </span>
     <a class="trust-link" href="#datahealth">How fresh is this? &rarr;</a>
   </div>
 </div>
 {% endif %}
-<nav class="nav">
-  <div class="nav-in" id="navin">
-    {# Six destinations, not seventeen links. Seventeen anchors in a row is an
-       index, not navigation — a first-time reader cannot tell which of them is
-       the point. Each group is a button that opens its sections.
-
-       The anchors still exist in the DOM inside each menu, so the scroll spy,
-       the command palette and every deep link keep working unchanged. This is
-       a disclosure layer over the same list, not a different list. #}
-    {% for g in navgroups %}
-    <div class="navgrp" data-group="{{ g.name }}">
-      <button type="button" class="navgrp-btn" aria-expanded="false"
-              aria-controls="navmenu-{{ loop.index }}">
-        {{ g.name }}<i>{{ g.links|length }}</i>
-      </button>
-      <div class="navgrp-menu" id="navmenu-{{ loop.index }}" hidden>
-        {% for n in g.links %}<a href="#{{ n.id }}" aria-label="{{ n.group }} — {{ n.label }}"><i>{{ n.n }}</i>{{ n.label }}</a>
-        {% endfor %}
-      </div>
-    </div>
-    {% endfor %}
-    <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
-  </div>
-</nav>
+{# The nav used to stand here as its own 46px band under the trust strip.
+   It is now inside .topbar-in beside the wordmark — see the note there. #}
 
 {# ── PILLAR HUES ────────────────────────────────────────────────────────────
    One rule per section and one per nav group, generated from SECTION_MAP so
@@ -9570,11 +9664,8 @@ table.t tbody tr:hover{background:var(--surface2)}
 </nav>
 
 <!-- Live-layer status. Hidden until the API probe resolves one way or the other. -->
-<div class="livebar" id="livebar">
-  <span class="pip"></span>
-  <span class="msg" id="livemsg">Checking live ledger…</span>
-  <button type="button" id="liverefresh">Refresh</button>
-</div>
+{# The live-ledger bar used to stand here as its own 43px band. It is now a
+   group inside the trust strip — see the note there. #}
 
 <!-- A tab left open overnight kept serving the previous edition: the clock
      ticked, the ledger bar refreshed, but the masthead still read yesterday's
