@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-28T11:48:58",
+ "generated_at": "2026-08-28T13:30:13",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -18,7 +18,7 @@
    "price_high": 99.0,
    "issue_size_shares": 17683000.0,
    "issue_size_cr": 175.06,
-   "subscription_x": 2.1869766442345755,
+   "subscription_x": 2.1879842786857435,
    "subscription_by_category": {
     "QIB": 1.72,
     "HNI": 3.55,
@@ -104,9 +104,9 @@
    "subscription_x": 2.858714515358857,
    "subscription_by_category": {
     "QIB": 0.06,
-    "HNI": 8.18,
-    "Employee": 1.84,
-    "Total": 5.12
+    "HNI": 8.2,
+    "Employee": 1.86,
+    "Total": 5.15
    },
    "lot_size": 182.0,
    "min_investment": 14924.0,
@@ -158,7 +158,7 @@
    "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/lumino-industries-ipo/2013/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1305/lumino-industries-ltd",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1305/lumino-industries-ltd-mainboard",
    "category_source": "ipopremium.in",
    "reads_for": [
     "Profit grew faster than revenue (28% against 7%), so margins widened rather than bought growth.",
@@ -185,8 +185,8 @@
    "subscription_x": 1.5433727447275314,
    "subscription_by_category": {
     "QIB": 0.01,
-    "HNI": 3.7,
-    "Total": 2.21
+    "HNI": 3.72,
+    "Total": 2.25
    },
    "lot_size": 34.0,
    "min_investment": 14586.0,
@@ -195,7 +195,7 @@
    "face_value": 1.0,
    "anchor_cr": 216.0,
    "listing_date": "Sep 4, 2026",
-   "gmp_text": "\u20b9345",
+   "gmp_text": "\u20b9360",
    "revenue_cr": 480.65,
    "revenue_growth_pct": 28.0,
    "pat_cr": 120.82,
@@ -267,8 +267,8 @@
    "subscription_x": 1.367704918032787,
    "subscription_by_category": {
     "QIB": 0.44,
-    "HNI": 1.24,
-    "Total": 1.93
+    "HNI": 1.26,
+    "Total": 1.97
    },
    "lot_size": 75.0,
    "min_investment": 15000.0,
@@ -277,7 +277,7 @@
    "face_value": 10.0,
    "anchor_cr": 27.45,
    "listing_date": "Sep 4, 2026",
-   "gmp_text": "\u20b937",
+   "gmp_text": "\u20b940",
    "revenue_cr": 147.4,
    "revenue_growth_pct": 24.0,
    "pat_cr": 6.48,
@@ -347,7 +347,7 @@
    "price_band": "Rs.546 to Rs.575",
    "price_low": 546.0,
    "price_high": 575.0,
-   "issue_size_shares": 12454212.0,
+   "issue_size_shares": 6849816.0,
    "issue_size_cr": 680.0,
    "subscription_x": null,
    "subscription_by_category": null,
@@ -553,6 +553,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
    "reads_for": [
     "Return on net worth of 22% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.12 debt to equity, so the balance sheet is not a constraint.",
@@ -625,7 +626,7 @@
    "ofs_cr": 75.73,
    "face_value": 5.0,
    "anchor_cr": 40.72,
-   "gmp_text": "\u20b945 (84.91%)",
+   "gmp_text": "\u20b945",
    "revenue_cr": 193.44,
    "revenue_growth_pct": 16.0,
    "pat_cr": 22.59,
@@ -647,6 +648,12 @@
    "issue_size_cr": 135.73,
    "enriched_url": "https://www.chittorgarh.com/ipo/hy-tech-engineers-ipo/2591/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1311/hy-tech-engineers-ltd",
+   "subscription_by_category": {
+    "QIB": 249.71,
+    "HNI": 412.96,
+    "Total": 247.39
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 22.3x post-issue earnings against a 107x median for its 3 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Return on net worth of 20% \u2014 well above the ~14% a typical listed peer earns.",
@@ -670,7 +677,7 @@
    "ofs_cr": 184.0,
    "face_value": 10.0,
    "anchor_cr": 174.54,
-   "gmp_text": "\u20b937 (26.81%)",
+   "gmp_text": "\u20b939",
    "revenue_cr": 2839.67,
    "revenue_growth_pct": 25.0,
    "pat_cr": 63.52,
@@ -691,6 +698,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 582.8,
    "enriched_url": "https://www.chittorgarh.com/ipo/skyways-air-ipo/2510/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1164/skyways-air-services-ltd",
+   "subscription_by_category": {
+    "QIB": 139.69,
+    "HNI": 87.24,
+    "Total": 71.25
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 31.6x post-issue earnings against a 182x median for its 4 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 25% year on year.",
@@ -713,7 +727,7 @@
    "ofs_cr": 205.0,
    "face_value": 5.0,
    "anchor_cr": 246.3,
-   "gmp_text": "\u20b9293",
+   "gmp_text": "\u20b9300",
    "revenue_cr": 94282.47,
    "revenue_growth_pct": 42.0,
    "pat_cr": 348.3,
