@@ -1080,6 +1080,69 @@ def generate() -> None:
     else:
         print("[generate] ❌ static/app.js MISSING — the page will have no behaviour")
 
+    # ── FEEDS FOR /next.html ────────────────────────────────────────────────
+    # Three payloads the mobile surface reads instead of the ones the
+    # broadsheet uses. Each exists because the obvious source was the wrong
+    # size or the wrong content:
+    #
+    #   pulse.json  screen.json is 1.26 MB and 88 fields over 750 names. A
+    #               phone needs the ANSWERS — sector medians, volume spikes,
+    #               breakouts, breadth — which are ~9 KB. 140x smaller, and the
+    #               client does no arithmetic at all.
+    #   ipo.json    today.json ships five OLD listings. The decision-relevant
+    #               half of the radar — books open now, issues upcoming, and
+    #               what is awaiting listing — was never published anywhere.
+    #   news.json   the wire is rendered server-side into index.html and exists
+    #               in no machine-readable form. Every other surface therefore
+    #               has no news at all.
+    try:
+        from pulse_builder import build_pulse
+        _pulse = build_pulse(stock_screen)
+        (out_dir / "pulse.json").write_text(json.dumps(_pulse, default=str), encoding="utf-8")
+        print(f"[generate] ✅ pulse.json ({len(json.dumps(_pulse)) // 1024}KB · "
+              f"{len(_pulse['sectors'])} sectors, {len(_pulse['volume'])} volume spikes, "
+              f"{len(_pulse['breakouts'])} breakouts)")
+    except Exception as e:                                    # noqa: BLE001
+        print(f"[generate] ❌ pulse.json FAILED: {e} — Markets will render empty")
+
+    try:
+        _r = iporadar if "iporadar" in dir() else None
+        if _r:
+            _keep = ("symbol", "company", "price_band", "price_low", "price_high",
+                     "open_date", "close_date", "listing_date", "lot_size",
+                     "min_investment", "issue_size_cr", "subscription_x", "gmp_text",
+                     "verdict", "verdict_why", "verdict_caveat", "score", "sector",
+                     "reads_for", "reads_against", "pe_post_issue", "peer_pe",
+                     "peer_pe_n", "roce_pct", "revenue_cr", "pat_cr", "days_left",
+                     "enriched_url", "phase", "since_listing_pct", "listed_on",
+                     "last_close", "from_high_pct", "sym")
+            def _trim(rows):
+                return [{k: v for k, v in r.items() if k in _keep} for r in (rows or [])]
+            _ipo = {
+                "generated_at": _r.get("generated_at"),
+                "counts": _r.get("counts"),
+                "open": _trim(_r.get("open")),
+                "upcoming": _trim(_r.get("upcoming")),
+                "awaiting_listing": _trim(_r.get("awaiting_listing")),
+                # Context, not the headline: the 90-name history is what the old
+                # surface led with, and it is the least actionable thing here.
+                "recent_listed": _trim((_r.get("recent_listed") or [])[:24]),
+            }
+            (out_dir / "ipo.json").write_text(json.dumps(_ipo, default=str), encoding="utf-8")
+            print(f"[generate] ✅ ipo.json ({len(json.dumps(_ipo)) // 1024}KB · "
+                  f"{len(_ipo['open'])} open, {len(_ipo['upcoming'])} upcoming)")
+    except Exception as e:                                    # noqa: BLE001
+        print(f"[generate] ❌ ipo.json FAILED: {e} — the IPO tab will render empty")
+
+    try:
+        _news = [{"title": n.get("title"), "summary": n.get("summary"),
+                  "source": n.get("source"), "link": n.get("link")}
+                 for n in (news or [])][:18]
+        (out_dir / "news.json").write_text(json.dumps(_news, default=str), encoding="utf-8")
+        print(f"[generate] ✅ news.json ({len(json.dumps(_news)) // 1024}KB · {len(_news)} stories)")
+    except Exception as e:                                    # noqa: BLE001
+        print(f"[generate] ❌ news.json FAILED: {e} — Today will show no wire")
+
     (out_dir / "today.json").write_text(
         json.dumps(today_json, default=str, indent=1), encoding="utf-8")
     print(f"[generate] ✅ today.json ({len(today_json['picks'])} picks, "

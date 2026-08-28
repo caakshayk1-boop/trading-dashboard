@@ -179,3 +179,119 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
 .foot b{color:var(--muted);font-weight:500}
 .foot-link a{color:var(--accent)}
 @media(min-width:760px){.foot{padding-bottom:44px}}
+
+/* ══════════════════ WIDGETS ══════════════════════════════════════════════ */
+
+/* ── SECTOR HEAT ──────────────────────────────────────────────────────────
+   A treemap-ish strip rather than a grid of equal squares: the tile carries
+   the sector's WEIGHT (how many names) in its width and its MOVE in its
+   colour, so a big red sector and a small red sector do not read the same.
+   Colour alone never carries it — every tile prints its own number. */
+.heat{display:flex;flex-wrap:wrap;gap:3px;border-radius:var(--r);overflow:hidden}
+.heat-t{flex:1 1 auto;min-width:82px;padding:11px 10px 10px;border-radius:6px;
+  display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden;
+  transition:transform .18s var(--ease,ease)}
+.heat-t:hover{transform:translateY(-2px)}
+.heat-t .hs{font:500 11px/1.25 var(--ui);color:var(--text);opacity:.92;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.heat-t .hv{font:500 15px/1 var(--mono);font-variant-numeric:tabular-nums}
+.heat-t .hn{font:400 9.5px/1 var(--mono);color:var(--text);opacity:.55}
+/* Five steps each way. A continuous gradient reads as decoration; five steps
+   read as a scale, and the reader can tell two tiles apart. */
+.h-p3{background:color-mix(in srgb,var(--up) 40%,transparent)}
+.h-p2{background:color-mix(in srgb,var(--up) 26%,transparent)}
+.h-p1{background:color-mix(in srgb,var(--up) 14%,transparent)}
+.h-z {background:var(--raised)}
+.h-n1{background:color-mix(in srgb,var(--down) 14%,transparent)}
+.h-n2{background:color-mix(in srgb,var(--down) 26%,transparent)}
+.h-n3{background:color-mix(in srgb,var(--down) 40%,transparent)}
+
+/* ── BREADTH BAR ──────────────────────────────────────────────────────────
+   The split as one shape. Two numbers are a fact; the bar is the reading. */
+.breadth{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px}
+.breadth-n{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.breadth-n b{font:500 22px/1 var(--mono)}
+.breadth-bar{height:8px;border-radius:5px;background:var(--raised);overflow:hidden;display:flex}
+.breadth-bar i{display:block;height:100%;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.breadth-bar .bu{background:var(--up)} .breadth-bar .bd{background:var(--down)}
+.breadth-sub{margin-top:9px;font:400 11.5px/1.5 var(--mono);color:var(--dim)}
+
+/* ── THE WIRE ─────────────────────────────────────────────────────────────
+   Headline first, source second, summary third — the order a reader scans.
+   The whole card is the target: a 12px link on a phone is not a target. */
+.wire{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden}
+.wire a{background:var(--surface);padding:14px 15px;display:grid;gap:5px;
+  transition:background .16s var(--ease,ease)}
+.wire a:hover{background:var(--raised)}
+.wire .wt{font:600 14.5px/1.4 var(--ui);color:var(--text)}
+.wire .ws{font:400 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.wire .wd{font-size:12.5px;color:var(--muted);line-height:1.5}
+
+/* ── IPO ──────────────────────────────────────────────────────────────────
+   The verdict is the headline. A reader deciding whether to apply wants the
+   call and the reason before the mechanics. */
+.ipo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 16px;display:grid;gap:10px}
+.ipo + .ipo{margin-top:9px}
+.ipo-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ipo-h .co{font-size:12.5px;color:var(--muted);flex:1 1 100%;order:3;line-height:1.4}
+.v-apply{color:var(--up);background:var(--up-soft)} .v-avoid{color:var(--down);background:var(--down-soft)}
+.v-watch{color:var(--warn);background:var(--warn-soft)}
+.ipo-why{font-size:13px;color:var(--muted);line-height:1.55}
+.ipo-caveat{font-size:12px;color:var(--dim);line-height:1.5;padding-left:9px;border-left:2px solid var(--line2)}
+/* Reads, for and against. Two columns on a desk, stacked on a phone. */
+.reads{display:grid;gap:7px}
+.read{font-size:12.5px;line-height:1.5;padding-left:16px;position:relative;color:var(--muted)}
+.read::before{position:absolute;left:0;top:0;font:500 12px/1.5 var(--mono)}
+.read-for::before{content:"+";color:var(--up)}
+.read-against::before{content:"−";color:var(--down)}
+/* Subscription, as a shape. 1x is the line that matters. */
+.subs{display:flex;align-items:center;gap:9px}
+.subs-bar{flex:1;height:6px;border-radius:4px;background:var(--raised);overflow:hidden;position:relative}
+.subs-bar i{display:block;height:100%;background:var(--accent);transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.subs-bar::after{content:"";position:absolute;left:calc(var(--one,10%) - 1px);top:0;bottom:0;width:2px;background:var(--line2)}
+.subs-v{font:500 13px/1 var(--mono);white-space:nowrap}
+
+/* ── FILTER CHIPS — the tool ─────────────────────────────────────────────── */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;
+  scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;font:500 11.5px/1 var(--ui);padding:9px 13px;border-radius:99px;
+  border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;
+  white-space:nowrap;min-height:36px;transition:all .16s var(--ease,ease)}
+.chip:hover{border-color:var(--line2);color:var(--text)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+/* ── RANK LIST — movers, volume, breakouts ───────────────────────────────── */
+.rank{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden}
+.rank-r{background:var(--surface);display:grid;
+  grid-template-columns:22px 1fr auto auto;gap:11px;align-items:center;padding:11px 13px}
+.rank-r .i{font:400 10px/1 var(--mono);color:var(--dim);text-align:right}
+.rank-r .s{min-width:0}
+.rank-r .s b{font:500 13px/1.3 var(--mono);display:block}
+.rank-r .s span{font-size:11px;color:var(--dim);display:block;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.rank-r .x{font:500 12.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.rank-r .m{font:500 13px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:58px}
+
+/* ── ENTRANCE — one orchestrated reveal, not scattered effects ───────────── */
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sec{animation:rise .34s cubic-bezier(.2,.8,.2,1) both}
+.sec:nth-child(2){animation-delay:.04s} .sec:nth-child(3){animation-delay:.08s}
+.sec:nth-child(4){animation-delay:.12s} .sec:nth-child(5){animation-delay:.16s}
+@media(prefers-reduced-motion:reduce){.sec{animation:none}
+  .breadth-bar i,.subs-bar i{transition:none}}
+
+/* ── EMPTY / COUNT ────────────────────────────────────────────────────────── */
+.hint{font-size:12px;color:var(--dim);margin-top:9px;line-height:1.5}
+
+/* Data health, in the footer. It answers "can I trust this page", which is a
+   question about the page you are on rather than a place to navigate to — so
+   it stopped being a tab. */
+.foot-health{display:inline-flex;align-items:center;gap:7px}
+.foot-health b{color:var(--text);font-weight:500}
+.foot-health .dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--dim)}
+.foot-health .dot.ok{background:var(--up)}
+.foot-health .dot.warn{background:var(--warn)}

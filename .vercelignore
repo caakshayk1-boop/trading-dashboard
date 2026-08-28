@@ -38,6 +38,12 @@
 !docs/next.html
 !docs/next.css
 !docs/next.js
+# Feeds for the mobile surface. pulse.json is the 9KB digest that replaces a
+# 1.26MB screen.json download; ipo.json is the half of the radar that was never
+# published; news.json is the wire, which existed only inside index.html.
+!docs/pulse.json
+!docs/ipo.json
+!docs/news.json
 # The Nifty 500 research screen #stocks fetches lazily. Same by-name rule: omit
 # it and the section falls back to its server-rendered top 25 forever, with the
 # only symptom a console warning nobody reads.
