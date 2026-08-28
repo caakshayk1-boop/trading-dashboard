@@ -92,7 +92,7 @@
       return `<div class="heat-t ${heatClass(s.median)}" style="flex-grow:${grow}"
                    title="${esc(s.name)} · median ${pct(s.median)} over ${s.n} names">
         <span class="hs">${esc(s.name)}</span>
-        <span class="hv ${dir(s.median)}">${pct(s.median)}</span>
+        <span class="hv">${pct(s.median)}</span>
         <span class="hn">${s.n} names · ${s.up} up</span>
       </div>`; }).join('')}</div>`;
 
