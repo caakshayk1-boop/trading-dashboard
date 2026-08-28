@@ -1346,6 +1346,31 @@ def test_screen_json_is_allow_listed_in_all_three_places() -> None:
           "!docs/screen.json" in ign)
     check("build.js copies screen.json into public/", '"screen.json"' in bld)
 
+    # The mobile-first surface. Three files, three allow-lists each, and the
+    # failure mode is graded: miss it in generate.py and the file is stale;
+    # miss it in .vercelignore or build.js and it 404s with the page still
+    # serving — an unstyled shell or an inert one, with no error anywhere.
+    #
+    # Matched as a WHOLE LINE, not a substring. `"!docs/next.css" in ign` also
+    # matches `# !docs/next.css` — so the first version of this check passed
+    # against a commented-out allow-list entry, which is the exact break it
+    # exists to catch. A test that cannot fail is not a test.
+    ign_lines = {ln.strip() for ln in ign.splitlines()}
+    for f in ("next.html", "next.css", "next.js"):
+        check(f"generate.py writes docs/{f}", f'"{f}"' in gen)
+        check(f".vercelignore allow-lists docs/{f} by name", f"!docs/{f}" in ign_lines)
+        check(f"build.js copies {f} into public/", f'"{f}"' in bld)
+
+    # The shell must reference both its assets, and generate.py must stamp the
+    # build id onto them. Unversioned, a returning reader runs yesterday's
+    # renderer against today's JSON — which does not fail loudly, it renders
+    # confidently from keys that have moved.
+    nxt = pathlib.Path("static/next.html").read_text(encoding="utf-8")
+    check("next.html loads its stylesheet", 'href="/next.css"' in nxt)
+    check("next.html loads its renderer", 'src="/next.js"' in nxt)
+    check("generate.py stamps the build id on next.html assets",
+          "next.css?v=" in gen and "next.js?v=" in gen)
+
 
 
 def test_duplicate_open_positions_collapse_per_engine() -> None:

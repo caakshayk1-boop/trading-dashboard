@@ -37,7 +37,8 @@ if (existsSync(source)) {
   // the build log says it was written, this list is why.
   for (const f of ["desk.html", "robots.txt", "sitemap.xml", "manifest.webmanifest",
                    "icon.svg", "og.png", "share.png", "today.json", "app.js", "screen.json", "screen-detail.json",
-                   "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js", "data-health.json"]) {
+                   "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js", "data-health.json",
+                   "next.html", "next.css", "next.js"]) {
     const src = join(here, "..", "docs", f);
     if (existsSync(src)) copyFileSync(src, join(publicDir, f));
   }

@@ -1052,13 +1052,26 @@ def generate() -> None:
     # v2.html/v2.js retired 2026-08-25 — the client-rendered ledger was dropped
     # in favour of restyling the server-rendered page. v2-core.js stays: it is
     # the shared machinery life.askakshay.com renders from.
-    for _v2 in ("v2-core.js", "life.html", "life.js"):
+    # next.* is the mobile-first surface at /next.html. Same by-name rule as
+    # everything else here: a file reaches the web only if generate.py writes
+    # it, .vercelignore names it AND vercel-news/build.js copies it. Two out of
+    # three is a silent 404.
+    for _v2 in ("v2-core.js", "life.html", "life.js", "next.html", "next.css", "next.js"):
         _src = pathlib.Path(__file__).parent / "static" / _v2
         if _src.exists():
-            (out_dir / _v2).write_text(_src.read_text(encoding="utf-8"), encoding="utf-8")
+            _body = _src.read_text(encoding="utf-8")
+            # Stamp the build id onto next.html's own two assets, the same way
+            # the broadsheet stamps app.js. Without it a reader who visited
+            # yesterday runs yesterday's renderer against today's JSON until
+            # they hard-reload — and the failure mode is not a blank page, it
+            # is a page that renders confidently from keys that have moved.
+            if _v2 == "next.html":
+                _body = (_body.replace('href="/next.css"', f'href="/next.css?v={build_id}"')
+                              .replace('src="/next.js"',  f'src="/next.js?v={build_id}"'))
+            (out_dir / _v2).write_text(_body, encoding="utf-8")
             print(f"[generate] ✅ {_v2} ({_src.stat().st_size // 1024}KB)")
         else:
-            print(f"[generate] ❌ static/{_v2} MISSING — /v2 will 404")
+            print(f"[generate] ❌ static/{_v2} MISSING — that surface will 404")
 
     _appjs = pathlib.Path(__file__).parent / "static" / "app.js"
     if _appjs.exists():

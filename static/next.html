@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Signal — the daily read</title>
+<meta name="description" content="Indian markets, a public signal ledger and a paper book of orders. Rebuilt every morning before the open.">
+<meta name="theme-color" content="#0B0F14">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="/icon.svg">
+
+<!-- Only two faces load, both already on this origin, both preloaded.
+     Body text uses the system stack on purpose: it needs no download, so the
+     first paint carries no webfont dependency and no reflow. The 0.303 CLS on
+     the current page comes from exactly that reflow. -->
+<link rel="preload" href="/fonts/BricolageGrotesque-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-500-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/next.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar" role="banner">
+  <a class="brand" href="#/">
+    <span class="brand-dot" aria-hidden="true"></span>
+    <span class="brand-name">SIGNAL</span>
+  </a>
+  <div class="bar-right">
+    <span class="stat-live" id="edition" aria-live="polite">—</span>
+    <button type="button" class="icon-btn" id="themeBtn" aria-label="Switch theme">
+      <span aria-hidden="true">◐</span>
+    </button>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs" aria-label="Sections">
+  <a href="#/"          data-route="/"          ><span>Today</span></a>
+  <a href="#/markets"   data-route="/markets"   ><span>Markets</span></a>
+  <a href="#/research"  data-route="/research"  ><span>Research</span></a>
+  <a href="#/portfolio" data-route="/portfolio" ><span>Book</span></a>
+  <a href="#/ledger"    data-route="/ledger"    ><span>Ledger</span></a>
+  <a href="#/method"    data-route="/method"    ><span>Method</span></a>
+</nav>
+
+<main id="main" tabindex="-1"></main>
+
+<footer class="foot">
+  <p>Built by <b>Akshay Kothari</b> · CA · FP&amp;A</p>
+  <p>A public ledger — wins <i>and</i> losses. Not investment advice.</p>
+  <p class="foot-link"><a href="/">The full broadsheet edition →</a></p>
+</footer>
+
+<script src="/next.js" defer></script>
+</body>
+</html>
