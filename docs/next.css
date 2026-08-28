@@ -302,3 +302,55 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
 .foot-health .dot{width:7px;height:7px;border-radius:50%;flex:none;background:var(--dim)}
 .foot-health .dot.ok{background:var(--up)}
 .foot-health .dot.warn{background:var(--warn)}
+
+/* ── OUTBOUND DETAIL LINKS ────────────────────────────────────────────────
+   Screener.in for the filings, TradingView for the chart. Linking out rather
+   than building a modal over a 3.1 MB detail file: this surface exists so a
+   phone does not download 3.1 MB, and both destinations already render their
+   half better than a modal would. 32px tall so they are real tap targets. */
+.lnks{display:flex;gap:6px;margin-top:6px}
+.lnks a{font:500 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent);border:1px solid var(--line);border-radius:5px;
+  padding:7px 8px;min-height:30px;display:inline-flex;align-items:center}
+.lnks a:hover{border-color:var(--accent);background:var(--accent-soft)}
+
+/* Column headers on the rank lists. "₹1,036cr" and "16.1" with no header is
+   two numbers nobody can identify — the honest fix is a label, not a tooltip. */
+.rank-head{background:var(--raised)!important;padding-top:9px;padding-bottom:9px}
+.rank-head span{font:600 9.5px/1 var(--mono)!important;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim)!important}
+
+.card-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding-top:9px;border-top:1px solid var(--line)}
+.card-foot .lnks{margin-top:0;margin-left:auto}
+
+/* ── STOP → ENTRY → TARGET ────────────────────────────────────────────────
+   Where price sits inside the risk the signal defined. The number says how
+   far; this says how far relative to what was risked, which is the only
+   framing in which "+3%" means anything. */
+.prog{display:grid;gap:5px}
+.prog-bar{position:relative;height:7px;border-radius:4px;background:var(--raised);overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--accent);
+  transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.prog-bar em{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--text);opacity:.55}
+.prog-l{display:flex;justify-content:space-between;
+  font:400 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+@media(prefers-reduced-motion:reduce){.prog-bar i{transition:none}}
+
+/* ── DAILY CONVICTION ─────────────────────────────────────────────────────
+   The model's sentence is marked VIEW and set apart from the measured rows
+   beside it. The site's rule is that AI interpretation must never wear raw
+   data's clothes, and a violet rule is the cheapest way to keep that true. */
+.cv-view{font-size:13px;line-height:1.55;color:var(--muted);
+  padding:9px 11px;border-left:2px solid #A78BFA;background:var(--raised);border-radius:0 6px 6px 0}
+.cv-view span{display:block;font:600 9px/1 var(--mono);letter-spacing:.13em;
+  text-transform:uppercase;color:#A78BFA;margin-bottom:5px}
+.meth{margin-top:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.meth summary{cursor:pointer;padding:12px 14px;font:600 11px/1 var(--mono);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);list-style:none;min-height:42px;
+  display:flex;align-items:center}
+.meth summary::after{content:" +";margin-left:auto;color:var(--accent)}
+.meth[open] summary::after{content:" −"}
+.meth summary::-webkit-details-marker{display:none}
+.meth p{padding:0 14px 12px;font-size:12.5px;line-height:1.6;color:var(--muted);margin:0}
+.meth .hint{padding-top:0}

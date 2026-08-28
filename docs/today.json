@@ -1,7 +1,7 @@
 {
- "build_id": "20260828T213730",
- "date": "2026-08-28",
- "date_str": "Friday, August 28 2026",
+ "build_id": "20260829T001526",
+ "date": "2026-08-29",
+ "date_str": "Saturday, August 29 2026",
  "picks": [
   {
    "symbol": "SAP",
@@ -434,10 +434,6 @@
    "price": 606.15,
    "sector": "Real Estate"
   },
-  "ANTHEM": {
-   "price": 900.1,
-   "sector": "Healthcare"
-  },
   "ASAHIINDIA": {
    "price": 952.7,
    "sector": "Consumer Cyclical"
@@ -450,16 +446,12 @@
    "price": 1532.3,
    "sector": "Industrials"
   },
-  "AUBANK": {
-   "price": 1077.1,
-   "sector": "Financial Services"
-  },
   "AUROPHARMA": {
    "price": 1645.3,
    "sector": "Healthcare"
   },
   "AXON": {
-   "price": 612.25,
+   "price": 604.02,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
@@ -481,10 +473,6 @@
   "BDL": {
    "price": 1306.0,
    "sector": "Industrials"
-  },
-  "BHARTIARTL": {
-   "price": 1882.4,
-   "sector": "Communication Services"
   },
   "BRIGADE": {
    "price": 642.25,
@@ -523,7 +511,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 257.69,
+   "price": 259.41,
    "sector": "Technology"
   },
   "DEEPAKNTR": {
@@ -539,7 +527,7 @@
    "sector": "Real Estate"
   },
   "DUOL": {
-   "price": 145.77,
+   "price": 145.415,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -553,10 +541,6 @@
   "EXIDEIND": {
    "price": 444.6,
    "sector": "Consumer Cyclical"
-  },
-  "FLUOROCHEM": {
-   "price": 4771.2002,
-   "sector": "Basic Materials"
   },
   "FSL": {
    "price": 269.3,
@@ -582,21 +566,9 @@
    "price": 720.3,
    "sector": "Financial Services"
   },
-  "HEG": {
-   "price": 737.35,
-   "sector": "Industrials"
-  },
   "HINDCOPPER": {
    "price": 533.55,
    "sector": "Basic Materials"
-  },
-  "IFCI": {
-   "price": 89.96,
-   "sector": "Financial Services"
-  },
-  "INDHOTEL": {
-   "price": 706.4,
-   "sector": "Consumer Cyclical"
   },
   "IPCALAB": {
    "price": 1950.3,
@@ -638,10 +610,6 @@
    "price": 829.65,
    "sector": "Consumer Defensive"
   },
-  "MARUTI": {
-   "price": 13376.0,
-   "sector": "Consumer Cyclical"
-  },
   "MOTHERSON": {
    "price": 165.6,
    "sector": "Consumer Cyclical"
@@ -649,6 +617,38 @@
   "MPHASIS": {
    "price": 2455.0,
    "sector": "Technology"
+  },
+  "MRK": {
+   "price": 147.585,
+   "sector": "Healthcare"
+  },
+  "MRPL": {
+   "price": 168.53,
+   "sector": "Energy"
+  },
+  "MSFT": {
+   "price": 516.2,
+   "sector": ""
+  },
+  "NATIONALUM": {
+   "price": 394.95,
+   "sector": "Basic Materials"
+  },
+  "NAUKRI": {
+   "price": 1354.0,
+   "sector": "Communication Services"
+  },
+  "NESTLEIND": {
+   "price": 1454.6,
+   "sector": "Consumer Defensive"
+  },
+  "NIACL": {
+   "price": 186.34,
+   "sector": "Financial Services"
+  },
+  "NMDC": {
+   "price": 86.76,
+   "sector": "Basic Materials"
   }
  },
  "ipos": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "19h old",
+    "age": "21h old",
     "note": "partial coverage \u2014 13/22 records"
    }
   ]
