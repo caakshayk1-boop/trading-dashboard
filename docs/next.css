@@ -1,0 +1,181 @@
+/* next.css — the mobile-first surface.
+ *
+ * Written against the 28 Aug 2026 audit of the broadsheet page: performance 25
+ * on mobile, 14,197 DOM nodes, 286 KB of inline CSS, Style & Layout eating
+ * 2,917 ms of a 5,300 ms main thread. Every rule below is chosen to keep this
+ * file small enough that selector matching is never the bottleneck again.
+ *
+ * Rules that are not negotiable here:
+ *   - Nothing that arrives late may move anything already on screen. Every
+ *     async block reserves its height first. CLS is a promise not to move what
+ *     someone is reading.
+ *   - Body text uses no webfont. The system stack paints on the first frame.
+ *   - Two self-hosted faces, latin only. The broadsheet ships latin AND
+ *     latin-ext for four families and pays ~100 KB for glyphs it never sets.
+ */
+
+/* ── FACES ───────────────────────────────────────────────────────────────── */
+@font-face{font-family:'Bricolage';font-style:normal;font-weight:800;font-display:swap;
+  src:url('/fonts/BricolageGrotesque-800-latin.woff2') format('woff2')}
+@font-face{font-family:'Bricolage';font-style:normal;font-weight:600;font-display:swap;
+  src:url('/fonts/BricolageGrotesque-600-latin.woff2') format('woff2')}
+@font-face{font-family:'JBMono';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/fonts/JetBrainsMono-400-latin.woff2') format('woff2')}
+@font-face{font-family:'JBMono';font-style:normal;font-weight:500;font-display:swap;
+  src:url('/fonts/JetBrainsMono-500-latin.woff2') format('woff2')}
+
+/* ── TOKENS ──────────────────────────────────────────────────────────────── */
+:root{
+  --disp:'Bricolage',system-ui,sans-serif;
+  --ui:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'JBMono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* Dark is the default: this is opened before the open and after the close. */
+  --bg:#0B0F14; --surface:#141A22; --raised:#1B222C; --line:rgba(255,255,255,.08);
+  --line2:rgba(255,255,255,.16);
+  /* --dim measured, not eyeballed: #6C7684 gave 4.18:1 on the ground and
+     3.80:1 on a card — under the 4.5 bar on both, and it carries the tab
+     labels and the edition stamp. #818B98 is 5.56 and 5.06. */
+  --text:#E9EDF3; --muted:#9BA6B4; --dim:#818B98;
+
+  /* Accent is BLUE, not the broadsheet's lime. A brand colour adjacent to
+     green competes with "up" on a page whose whole job is up and down. */
+  --accent:#4C8DFF; --accent-soft:rgba(76,141,255,.13); --on-accent:#06101F;
+  --up:#2BD07C; --down:#FF6B6B; --warn:#F0B429;
+  --up-soft:rgba(43,208,124,.13); --down-soft:rgba(255,107,107,.13); --warn-soft:rgba(240,180,41,.13);
+
+  --r:10px;
+  --gut:clamp(16px,4vw,28px);
+  --barh:52px; --tabh:56px;
+}
+:root[data-theme="light"]{
+  --bg:#F7F8FA; --surface:#FFFFFF; --raised:#EFF2F6; --line:rgba(12,17,24,.10);
+  --line2:rgba(12,17,24,.18);
+  --text:#0E1319; --muted:#4C5765; --dim:#68717F;   /* 4.64 on paper, 4.93 on card */
+  --accent:#1F63D6; --accent-soft:rgba(31,99,214,.09); --on-accent:#FFFFFF;
+  --up:#0E7C48; --down:#C23B2E; --warn:#8A6208;
+  --up-soft:rgba(14,124,72,.10); --down-soft:rgba(194,59,46,.09); --warn-soft:rgba(138,98,8,.10);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+body{background:var(--bg);color:var(--text);font:400 16px/1.55 var(--ui);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom))}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:8px;top:8px;z-index:99;background:var(--accent);color:var(--on-accent);
+  padding:10px 14px;border-radius:var(--r)}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ── HEADER ──────────────────────────────────────────────────────────────── */
+.bar{position:sticky;top:0;z-index:40;height:var(--barh);display:flex;align-items:center;
+  justify-content:space-between;gap:12px;padding:0 var(--gut);
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-name{font:800 17px/1 var(--disp);letter-spacing:.06em}
+.brand-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.bar-right{display:flex;align-items:center;gap:10px}
+.stat-live{font:400 11px/1 var(--mono);color:var(--dim);letter-spacing:.04em}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--line);
+  border-radius:8px;background:none;color:var(--muted);cursor:pointer;font-size:14px}
+.icon-btn:hover{color:var(--text);border-color:var(--line2)}
+
+/* ── TABS — bottom on a phone, where the thumb is ─────────────────────────── */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:41;height:calc(var(--tabh) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  display:grid;grid-template-columns:repeat(6,1fr);
+  background:color-mix(in srgb,var(--bg) 94%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--line)}
+.tabs a{display:grid;place-items:center;font:500 10.5px/1 var(--ui);letter-spacing:.02em;
+  color:var(--dim);position:relative;min-height:44px}
+.tabs a[aria-current="page"]{color:var(--accent)}
+.tabs a[aria-current="page"]::before{content:"";position:absolute;top:0;left:22%;right:22%;height:2px;
+  background:var(--accent);border-radius:0 0 2px 2px}
+@media(min-width:760px){
+  body{padding-bottom:0}
+  .tabs{position:sticky;top:var(--barh);bottom:auto;height:46px;padding:0 var(--gut);
+    grid-template-columns:repeat(6,max-content);gap:4px;border-top:0;border-bottom:1px solid var(--line);
+    max-width:980px;margin:0 auto;justify-content:start}
+  .tabs a{padding:0 14px;font-size:12.5px;min-height:46px}
+  .tabs a[aria-current="page"]::before{top:auto;bottom:0;left:14px;right:14px;border-radius:2px 2px 0 0}
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────────────────── */
+main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
+.route-h{margin-bottom:18px}
+.route-h h1{font:800 clamp(26px,6.4vw,36px)/1.06 var(--disp);letter-spacing:-.02em;text-wrap:balance}
+.route-h p{color:var(--muted);font-size:14.5px;margin-top:7px;max-width:60ch}
+.sec{margin-top:30px}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.sec-h h2{font:600 12px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.sec-h .sec-n{margin-left:auto;font:400 11px/1 var(--mono);color:var(--dim)}
+
+/* ── THE READOUT — the one big number per block ───────────────────────────── */
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 15px;min-height:96px;display:flex;flex-direction:column;gap:6px}
+.tile .v{font:500 clamp(22px,5vw,28px)/1.05 var(--mono);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tile .k{font:400 11px/1.35 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-top:auto}
+.tile .sub{font-size:12.5px;color:var(--muted);line-height:1.4}
+.up{color:var(--up)} .dn{color:var(--down)} .wn{color:var(--warn)} .ac{color:var(--accent)}
+
+/* ── CARD — a row of the ledger, an order, an idea ────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 16px;display:grid;gap:9px}
+.card + .card{margin-top:9px}
+.card-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.sym{font:500 15px/1 var(--mono);letter-spacing:.02em}
+.card-h .spacer{margin-left:auto}
+.pill{font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+.pill-up{color:var(--up);border-color:transparent;background:var(--up-soft)}
+.pill-dn{color:var(--down);border-color:transparent;background:var(--down-soft)}
+.pill-wn{color:var(--warn);border-color:transparent;background:var(--warn-soft)}
+.pill-ac{color:var(--accent);border-color:transparent;background:var(--accent-soft)}
+.card-body{font-size:13.5px;color:var(--muted);line-height:1.55}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:9px 14px;
+  padding-top:10px;border-top:1px solid var(--line)}
+.kv div{display:flex;flex-direction:column;gap:2px}
+.kv .kk{font:400 9.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.kv .vv{font:500 13.5px/1.2 var(--mono);font-variant-numeric:tabular-nums}
+
+/* ── BOARD — the live market rail ─────────────────────────────────────────── */
+.board{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden}
+.board-row{background:var(--surface);display:grid;grid-template-columns:1fr auto auto;
+  gap:12px;align-items:center;padding:12px 14px}
+.board-row .n{font-size:13.5px;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board-row .p{font:500 13.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.board-row .c{font:500 12.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:66px}
+
+/* ── SKELETON — reserves the exact height the content will take ───────────── */
+.sk{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  position:relative;overflow:hidden}
+.sk::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--text) 6%,transparent),transparent);
+  transform:translateX(-100%);animation:sweep 1.3s infinite}
+@keyframes sweep{to{transform:translateX(100%)}}
+@media(prefers-reduced-motion:reduce){.sk::after{animation:none}}
+.sk-tile{min-height:96px} .sk-card{min-height:104px;margin-bottom:9px} .sk-row{height:45px;border-radius:0;border:0}
+
+/* ── STATES — a failure says what failed ──────────────────────────────────── */
+.note{border:1px solid var(--line);border-left:3px solid var(--warn);background:var(--surface);
+  border-radius:0 var(--r) var(--r) 0;padding:13px 15px;font-size:13.5px;color:var(--muted)}
+.note b{color:var(--text)}
+.note.err{border-left-color:var(--down)}
+.empty{padding:26px 16px;text-align:center;color:var(--dim);font-size:13.5px;
+  border:1px dashed var(--line2);border-radius:var(--r)}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+.foot{max-width:980px;margin:0 auto;padding:26px var(--gut) 34px;border-top:1px solid var(--line);
+  font:400 12px/1.7 var(--mono);color:var(--dim)}
+.foot b{color:var(--muted);font-weight:500}
+.foot-link a{color:var(--accent)}
+@media(min-width:760px){.foot{padding-bottom:44px}}
