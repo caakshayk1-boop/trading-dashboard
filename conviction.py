@@ -118,7 +118,42 @@ def select(screen: dict) -> list[dict]:
                 picked.append(r)
             if len(picked) == MIN_PICKS:
                 break
+    # ── LEVELS ──────────────────────────────────────────────────────────────
+    # A pick without an entry, a stop and a target is an opinion. These are
+    # derived from the name's own volatility, not from a round number:
+    #
+    #   entry  the last close — this is a watch list, not a limit order, and
+    #          pretending to know tomorrow's fill would be a fabricated price
+    #   stop   2 x ATR below, floored at the 20-day average. Two ATR is the
+    #          usual noise band; the 20-day is the level the trend itself
+    #          would break, and whichever is CLOSER to price is the honest
+    #          stop because it is the one that triggers first
+    #   T1/T2  2R and 3.5R off that risk, so the reward is stated in the same
+    #          units the ledger scores in
+    def levels(r):
+        px = _n(r.get("price"))
+        atrp = _n(r.get("atr_pct"))
+        s20 = _n(r.get("sma20"))
+        if px is None:
+            return {}
+        band = px * (atrp / 100) * 2 if atrp else px * 0.06
+        stop = px - band
+        if s20 is not None and s20 < px:
+            stop = max(stop, s20)          # the closer stop wins
+        risk = px - stop
+        if risk <= 0:
+            return {}
+        return {
+            "entry": round(px, 2), "stop": round(stop, 2),
+            "stop_pct": round(-risk / px * 100, 2),
+            "t1": round(px + 2 * risk, 2), "t2": round(px + 3.5 * risk, 2),
+            "t1_pct": round(2 * risk / px * 100, 1),
+            "t2_pct": round(3.5 * risk / px * 100, 1),
+            "rr": 3.5,
+        }
+
     return [{
+        **levels(r),
         "sym": r.get("sym"), "name": (r.get("name") or "")[:48],
         "sector": r.get("sector"), "price": _n(r.get("price")),
         "score": r["_s"], "rsi": _n(r.get("rsi")),
