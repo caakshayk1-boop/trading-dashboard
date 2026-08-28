@@ -99,10 +99,17 @@ export default async function handler(req, res) {
         const hit = quotes.get(yh);
         // A missing quote is reported as missing, never as zero — a zero here
         // becomes a -100% P&L on the card that reads it.
-        if (hit && Number.isFinite(hit.price_raw)) {
+        // quoteAll's entries are { price, prev, basis } — NOT the shaped
+        // { price_raw, change_pct } the ticker route emits downstream. Reading
+        // price_raw here returned undefined for every symbol and the endpoint
+        // answered 200 with an empty map: a success response carrying nothing,
+        // which is the failure that looks most like working.
+        if (hit && Number.isFinite(hit.price)) {
+          const prev = Number.isFinite(hit.prev) ? hit.prev : null;
           out[bare.replace(/\.NS$/, "")] = {
-            price: hit.price_raw,
-            change_pct: Number.isFinite(hit.change_pct) ? hit.change_pct : null,
+            price: hit.price,
+            change_pct: prev && prev !== 0 ? ((hit.price - prev) / prev) * 100 : null,
+            basis: hit.basis || "market",
           };
         }
       }
