@@ -71,6 +71,48 @@ export default async function handler(req, res) {
 
   if (q.wallet) return handleWallet(res);
 
+  /* ?px=SYM1,SYM2 — last traded price for arbitrary NSE symbols.
+   *
+   * Lives on THIS route rather than its own file for one hard reason: this
+   * Vercel project sits exactly at the free plan's 12-function cap, and a
+   * thirteenth route file breaks the whole deployment with no visible error.
+   * The comment above handleWallet says the same thing; this is the second
+   * feature to land here for the same cause.
+   *
+   * /api/ticker cannot serve this — it returns a fixed 46-instrument board and
+   * ignores a symbols argument. quoteAll is the shared fetcher underneath both.
+   *
+   * Capped at 40 symbols per call. Yahoo's spark endpoint takes 20 per request
+   * and quoteAll chunks it, so 40 is two round trips; letting a caller ask for
+   * 500 would be a free way to make this function time out.
+   */
+  if (q.px) {
+    const syms = String(q.px).toUpperCase().split(",")
+      .map((x) => x.trim().replace(/[^A-Z0-9&.-]/g, ""))
+      .filter(Boolean).slice(0, 40);
+    if (!syms.length) return fail(res, 400, "px needs at least one symbol");
+    try {
+      const defs = syms.map((x) => [x, x.endsWith(".NS") ? x : `${x}.NS`]);
+      const quotes = await quoteAll(defs, defs.map((d) => d[1]));
+      const out = {};
+      for (const [bare, yh] of defs) {
+        const hit = quotes.get(yh);
+        // A missing quote is reported as missing, never as zero — a zero here
+        // becomes a -100% P&L on the card that reads it.
+        if (hit && Number.isFinite(hit.price_raw)) {
+          out[bare.replace(/\.NS$/, "")] = {
+            price: hit.price_raw,
+            change_pct: Number.isFinite(hit.change_pct) ? hit.change_pct : null,
+          };
+        }
+      }
+      res.setHeader("Cache-Control", "public, max-age=45, stale-while-revalidate=120");
+      return res.status(200).json({ ok: true, at: new Date().toISOString(), quotes: out });
+    } catch (e) {
+      return fail(res, 502, `quotes unavailable: ${e.message}`);
+    }
+  }
+
   const where = [];
   const args = [];
 

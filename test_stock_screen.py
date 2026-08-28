@@ -1364,7 +1364,7 @@ def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     # trap expensive: the evidence says the file was written.
     wf = pathlib.Path(".github/workflows/newspaper.yml").read_text(encoding="utf-8")
     for f in ("next.html", "next.css", "next.js",
-              "pulse.json", "ipo.json", "news.json"):
+              "pulse.json", "ipo.json", "news.json", "conviction.json"):
         check(f"generate.py writes docs/{f}", f'"{f}"' in gen)
         check(f".vercelignore allow-lists docs/{f} by name", f"!docs/{f}" in ign_lines)
         check(f"build.js copies {f} into public/", f'"{f}"' in bld)

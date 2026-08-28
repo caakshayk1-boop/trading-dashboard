@@ -1134,6 +1134,20 @@ def generate() -> None:
     except Exception as e:                                    # noqa: BLE001
         print(f"[generate] ❌ ipo.json FAILED: {e} — the IPO tab will render empty")
 
+    # conviction.json — 3-5 names a day, ranked by arithmetic and explained by a
+    # model AFTER the ranking is fixed (conviction.py refuses to let the model
+    # reorder). Appended to data/conviction_log.json so the slate can be graded
+    # later instead of being silently rewritten every morning.
+    try:
+        import conviction
+        _cv = conviction.build(stock_screen)
+        (out_dir / "conviction.json").write_text(json.dumps(_cv, default=str), encoding="utf-8")
+        _n_log = conviction.append_log(_cv)
+        print(f"[generate] ✅ conviction.json ({len(_cv['picks'])} picks · "
+              f"{len({p['sector'] for p in _cv['picks']})} sectors · log {_n_log} days)")
+    except Exception as e:                                    # noqa: BLE001
+        print(f"[generate] ❌ conviction.json FAILED: {e} — Today loses its daily slate")
+
     try:
         _news = [{"title": n.get("title"), "summary": n.get("summary"),
                   "source": n.get("source"), "link": n.get("link")}
