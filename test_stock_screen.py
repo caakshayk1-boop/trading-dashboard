@@ -1356,10 +1356,18 @@ def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     # against a commented-out allow-list entry, which is the exact break it
     # exists to catch. A test that cannot fail is not a test.
     ign_lines = {ln.strip() for ln in ign.splitlines()}
+    # FOUR places, not three. The first version of this block checked
+    # generate.py, .vercelignore and build.js, passed clean — and next.* still
+    # 404'd in production, because the workflow's `git add` is a fourth
+    # allow-list and the runner is destroyed with anything it did not stage.
+    # The build log said "✅ next.html (2KB)", which is exactly what makes this
+    # trap expensive: the evidence says the file was written.
+    wf = pathlib.Path(".github/workflows/newspaper.yml").read_text(encoding="utf-8")
     for f in ("next.html", "next.css", "next.js"):
         check(f"generate.py writes docs/{f}", f'"{f}"' in gen)
         check(f".vercelignore allow-lists docs/{f} by name", f"!docs/{f}" in ign_lines)
         check(f"build.js copies {f} into public/", f'"{f}"' in bld)
+        check(f"newspaper.yml git-adds docs/{f}", f"docs/{f}" in wf)
 
     # The shell must reference both its assets, and generate.py must stamp the
     # build id onto them. Unversioned, a returning reader runs yesterday's
