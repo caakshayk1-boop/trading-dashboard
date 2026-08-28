@@ -139,9 +139,21 @@
       </button>`; }).join('')}</div>`; };
 
   // One delegated listener for every heat tile on every route.
+  // One delegated listener for every heat tile AND every symbol, bound once.
+  // Per-route binding is what left most of the site dead: a row rendered by a
+  // route that forgot to bind was unclickable, and every route forgot.
   document.addEventListener('click', ev => {
-    const t = ev.target.closest && ev.target.closest('.heat-t');
-    if (t && t.dataset.sector) openSector(t.dataset.sector);
+    if (!ev.target.closest) return;
+    const t = ev.target.closest('.heat-t');
+    if (t && t.dataset.sector) { openSector(t.dataset.sector); return; }
+    if (ev.target.closest('a')) return;          // never hijack a real link
+    const n = ev.target.closest('[data-sym]');
+    if (n && n.dataset.sym) openStock(n.dataset.sym);
+  });
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    const n = ev.target.closest && ev.target.closest('[data-sym]');
+    if (n && n.dataset.sym) { ev.preventDefault(); openStock(n.dataset.sym); }
   });
 
   function openSector(name) {
@@ -158,8 +170,11 @@
     sheet(`${esc(name)}`,
       `<p class="hint" style="margin:0 0 14px">Median <b class="${dir(s.median)}">${pct(s.median)}</b>
         ${k === 'r1d' ? 'today' : 'on the week'} across <b>${s.n}</b> names, <b>${s.up}</b> of them up.</p>` +
-      sec('Led the sector', list(s.top)) +
-      sec('Held it back', list(s.bottom)));
+      // "Held it back" implied losses. When a sector is broadly up its weakest
+      // five are still positive — that is the +0.60% sitting under a "losers"
+      // heading. Strongest and weakest; the numbers say whether either is red.
+      sec('Strongest five', list(s.top)) +
+      sec('Weakest five', list(s.bottom)));
   }
 
   /* A bottom sheet on a phone, a centred dialog on a desk. <dialog> gives the
@@ -209,7 +224,7 @@
       <div class="rank-r lvl-r rank-head">
         <span class="i">#</span><span class="s">Name</span>
         <span class="x">Price</span><span class="x">vs 50D</span><span class="x">vs 200D</span>
-        <span class="x">RSI D</span><span class="x">RSI M</span><span class="m">1W</span>
+        <span class="x">RSI 14D</span><span class="x">RSI 1M</span><span class="m">1W</span>
       </div>
       ${rows.map((r, i) => {
         const v50 = r.sma50 ? (r.price - r.sma50) / r.sma50 * 100 : null;
@@ -327,7 +342,7 @@
     paint(out);
   };
 
-  const convictionCard = p => `<article class="card cv">
+  const convictionCard = p => `<article class="card cv" data-sym="${esc(p.sym)}" role="button" tabindex="0">
     <div class="card-h">
       <span class="sym">${esc(p.sym)}</span>
       <span class="pill pill-ac">${esc(p.score)}</span>
@@ -346,8 +361,15 @@
       <div><span class="kk">3M</span><span class="vv ${dir(p.r3m)}">${pct(p.r3m)}</span></div>
       <div><span class="kk">ROCE</span><span class="vv ${dir(p.roce)}">${p.roce != null ? p.roce.toFixed(1) + '%' : '—'}</span></div>
       <div><span class="kk">Piotroski</span><span class="vv">${p.piotroski != null ? p.piotroski + '/9' : '—'}</span></div>
-      <div><span class="kk">RSI</span><span class="vv">${p.rsi != null ? Math.round(p.rsi) : '—'}</span></div>
+      <div><span class="kk">RSI 14D</span><span class="vv">${p.rsi != null ? Math.round(p.rsi) : '—'}</span></div>
     </div>
+    ${p.entry ? `<div class="kv lv-plan">
+      <div><span class="kk">Entry</span><span class="vv">₹${esc(p.entry)}</span></div>
+      <div><span class="kk">Stop</span><span class="vv dn">₹${esc(p.stop)} <i>${esc(p.stop_pct)}%</i></span></div>
+      <div><span class="kk">Target 1</span><span class="vv up">₹${esc(p.t1)} <i>+${esc(p.t1_pct)}%</i></span></div>
+      <div><span class="kk">Target 2</span><span class="vv up">₹${esc(p.t2)} <i>+${esc(p.t2_pct)}%</i></span></div>
+    </div>
+    ${trailPlan(p.entry, p.stop, p.t1, p.t2, 'BUY')}` : ''}
     <div class="card-foot">
       <span class="mono" style="font-size:11px;color:var(--dim)">₹${p.turnover_cr != null ? Math.round(p.turnover_cr) : '—'} cr traded · not advice</span>
       ${symLinks(p.sym)}
@@ -356,7 +378,7 @@
 
   const ideaCard = (p, lead) => {
     const cur = p.currency || '₹';
-    return `<article class="card">
+    return `<article class="card" data-sym="${esc(p.symbol || '')}" role="button" tabindex="0">
       <div class="card-h">
         <span class="sym">${esc(p.symbol || '')}</span>
         ${p.score != null ? `<span class="pill pill-ac">${esc(p.score)}/100</span>` : ''}
@@ -383,7 +405,7 @@
     const sub = Number(r.subscription_x);
     const pctOfTen = isFinite(sub) ? Math.min(100, sub / 10 * 100) : 0;
     const forr = r.reads_for || [], agn = r.reads_against || [];
-    return `<article class="ipo">
+    return `<article class="ipo" data-sym="${esc(r.symbol || r.sym || '')}" role="button" tabindex="0">
       <div class="ipo-h">
         <span class="sym">${esc(r.symbol || r.sym || '')}</span>
         ${r.verdict ? `<span class="pill ${cls}">${esc(r.verdict)}</span>` : ''}
@@ -448,10 +470,8 @@
         `${tk.data.live ?? 0} of ${tk.data.total ?? 0} live`);
     } else { out += sec('The board', fail('The live board', tk.error)); }
 
-    out += sec('Biggest movers, one week',
-      rankList((pu.movers_up || []).slice(0, 8), 'r1w', pct, 'turnover_cr'));
-    out += sec('Biggest fallers, one week',
-      rankList((pu.movers_dn || []).slice(0, 8), 'r1w', pct, 'turnover_cr'));
+    out += sec('Biggest movers, one week', levelTable((pu.movers_up || []).slice(0, 8)));
+    out += sec('Biggest fallers, one week', levelTable((pu.movers_dn || []).slice(0, 8)));
     paint(out);
   };
 
@@ -489,7 +509,7 @@
           const live = px[o.symbol];
           const move = live ? pnlOf(o.entry, live.price, 'BUY') : null;
           const sh = shareOf(o.notional);
-          return `<article class="card">
+          return `<article class="card" data-sym="${esc(o.symbol || '')}" role="button" tabindex="0">
             <div class="card-h"><span class="sym">${esc(o.symbol || '')}</span>
               ${o.engine ? `<span class="pill">${esc(o.engine)}</span>` : ''}
               <span class="spacer"></span>
@@ -675,7 +695,7 @@
     <div class="rank-r rank-head scr-r">
       <span class="i">#</span><span class="s">Name</span>
       <span class="x">Price</span><span class="x">Today</span><span class="x">vs 50D</span>
-      <span class="x">vs 200D</span><span class="x">RSI</span><span class="m">1M</span>
+      <span class="x">vs 200D</span><span class="x">RSI 14D</span><span class="m">1M</span>
     </div>
     ${rows.map((r, i) => {
       const v50 = r.sma50 ? (r.price - r.sma50) / r.sma50 * 100 : null;
@@ -694,9 +714,28 @@
   /* THE CARD. Same fields the broadsheet's modal shows, from the same
    * screen.json — the 3.1 MB screen-detail.json is not needed for any of it,
    * and downloading it would undo the point of this surface. */
-  function openStock(sym) {
+  /* Any symbol, from any route.
+   *
+   * openStock needed SCREEN, and SCREEN was only fetched by the Screen route —
+   * so a name on Today, Markets, Ideas or a sector drill-down looked clickable
+   * and did nothing. That is why COFORGE, QPOWER and ATHERENERG would not
+   * open. The universe is now fetched on first use from wherever the reader
+   * is, and cached for the session. */
+  async function openStock(sym) {
+    if (!SCREEN) {
+      sheet(esc(sym), `<div class="sk" style="height:210px"></div>
+        <p class="hint">Loading the screen — about 260 KB, once per session.</p>`);
+      const r0 = await get('/screen.json');
+      if (!r0.ok) { sheet(esc(sym), fail('The company card', r0.error)); return; }
+      SCREEN = (r0.data.rows || []).filter(x => x && x.sym);
+    }
     const r = (SCREEN || []).find(x => x.sym === sym);
-    if (!r) return;
+    if (!r) {
+      sheet(esc(sym), `<div class="empty">${esc(sym)} is not in the 750-name screen,
+        so there is no card for it — it may be an index, a commodity, or a name
+        outside the screened universe.</div>`);
+      return;
+    }
     const bar = (v, max = 100) => `<span class="mini-bar"><i style="width:${Math.max(0, Math.min(100, (v ?? 0) / max * 100)).toFixed(0)}%"></i></span>`;
     const score = (k, l) => r[k] == null ? '' : `<div class="sc-t">
       <span class="sc-l">${esc(l)}</span><span class="sc-v">${Number(r[k]).toFixed(1)}</span>${bar(r[k])}</div>`;
@@ -767,12 +806,29 @@
 
   let sigFilter = 'all';
   R['/signals'] = async () => {
-    paint(head('Signals', 'Every alert the engine has sent, with the levels it sent them at. Scored when it closes — losers included, which is the point of publishing it.') +
-      skel('sk-card', 4));
+    const intro = 'Every alert this site has sent since it launched, with the levels it was sent at. Scored when it closes — losers included, which is the point of publishing it.';
+    paint(head('Signals', intro) + skel('sk-card', 4));
     const a = await get('/alerts.json');
-    const base = head('Signals', 'Every alert the engine has sent, with the levels it sent them at. Scored when it closes — losers included, which is the point of publishing it.');
+    const base = head('Signals', intro);
     if (!a.ok) { paint(base + fail('The signal ledger', a.error)); return; }
-    const all = Array.isArray(a.data) ? a.data : (a.data.rows || []);
+    /* DAY ONE IS TODAY.
+     *
+     * This surface starts its record from launch. Everything before it was
+     * published under a different engine configuration and a ledger that has
+     * been re-graded twice, and carrying that history here would mean showing
+     * a win rate this site never produced.
+     *
+     * Nothing is deleted. alerts.json is untouched and news.askakshay.com
+     * still carries all 200 signals and the full performance record — this is
+     * a filter on what THIS page counts, not a rewrite of the ledger.
+     *
+     * Anything sent on or after LAUNCH counts. When there is nothing yet, the
+     * page says so rather than showing an empty table that reads as a fault.
+     */
+    const LAUNCH = '2026-08-29';
+    const dayOf = r => String(r.alert_date || r.date || '').slice(0, 10);
+    const every = Array.isArray(a.data) ? a.data : (a.data.rows || []);
+    const all = every.filter(r => dayOf(r) >= LAUNCH);
 
     // Filter on the row's OWN badge, not on arithmetic over pnl_pct.
     // `Number(null) <= 0` is true, so the first version put all 138 open
@@ -800,7 +856,7 @@
       const shown = open ? unreal : (r.pnl_pct == null ? null : Number(r.pnl_pct));
       const pill = shown == null ? `<span class="pill pill-ac">open</span>`
         : `<span class="pill ${shown > 0 ? 'pill-up' : 'pill-dn'}">${pct(shown)}${open ? ' live' : ''}</span>`;
-      return `<article class="card">
+      return `<article class="card" data-sym="${esc(r.symbol || '')}" role="button" tabindex="0">
         <div class="card-h">
           <span class="sym">${esc(r.symbol || '')}</span>
           ${r.action ? `<span class="pill ${/SELL|SHORT/i.test(r.action) ? 'pill-dn' : 'pill-up'}">${esc(r.action)}</span>` : ''}
@@ -835,9 +891,20 @@
         const b = (r.badge || '').toLowerCase();
         return sigFilter === 'all' ? true : b === sigFilter;
       }).slice(0, 30);
+      if (!all.length) {
+        main.innerHTML = base + `<div class="note">
+          <b>No signals yet — the record starts today.</b> This page counts only what the
+          engine sends from <b>${esc(LAUNCH)}</b> onward, so its win rate is earned here
+          rather than inherited. The scanner publishes at 10:30 and 16:30 IST on weekdays;
+          the first entries will appear after those runs.
+          <br><br>The full history of ${every.length} earlier signals is unchanged and still
+          published on <a href="/" style="color:var(--accent)">the broadsheet edition</a>.
+        </div>`;
+        return;
+      }
       main.innerHTML = base +
         sec('The record', `<div class="grid">
-          ${tile(all.length, 'Signals published', 'the most recent 200', 'ac')}
+          ${tile(all.length, 'Signals published', 'since ' + esc(LAUNCH), 'ac')}
           ${tile(opens.length, 'Still open', 'marked to live prices')}
           ${tile(closed.length ? Math.round(wins / (wins + losses) * 100) + '%' : '—', 'Win rate',
                  `${wins}W / ${losses}L closed`, (wins + losses) && wins / (wins + losses) >= .5 ? 'up' : 'dn')}

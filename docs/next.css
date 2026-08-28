@@ -516,3 +516,13 @@ h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
   cursor:pointer;min-width:520px}
 .lvl-r:hover{background:var(--raised)}
 .lvl-r .x{font:500 11.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:42px}
+
+/* Cards that open a company. The cursor and the lift say so — a card that
+   does something must look like it does something. */
+.card[data-sym],.ipo[data-sym]{cursor:pointer;transition:border-color .16s,transform .16s}
+.card[data-sym]:hover,.ipo[data-sym]:hover{border-color:var(--line2);transform:translateY(-1px)}
+.card[data-sym]:focus-visible,.ipo[data-sym]:focus-visible{outline:2px solid var(--live);outline-offset:2px}
+/* The plan block on a conviction card — separated from the measured stats
+   above it, because levels are a proposal and the stats are facts. */
+.kv.lv-plan{border-top:1px solid var(--line2);margin-top:2px;padding-top:11px}
+.kv.lv-plan .vv i{font-style:normal;font-size:10.5px;opacity:.75}
