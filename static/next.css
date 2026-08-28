@@ -371,7 +371,15 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),
                    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
   background-size:46px 46px}
-.bar,.tabs,main,.foot{position:relative;z-index:1}
+/* main and .foot are STATIC, so they need position:relative for z-index to
+   apply at all. .bar and .tabs are deliberately absent: both are already
+   positioned (sticky / fixed) and carry their own z-index, and including them
+   here overwrote that — .bar stopped sticking, and .tabs became `relative`
+   with top:52px, which paints it 52px down while it still occupies its
+   original space. That is what put the tab row on top of the H1, and it also
+   un-fixed the bottom tab bar on a phone. Never set `position` on an element
+   whose position is the thing making it work. */
+main,.foot{position:relative;z-index:1}
 
 /* The header runs a slow scan. 9 seconds, 1px, and it stops for anyone who
    asked for less motion. */
@@ -457,7 +465,7 @@ h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
   border-radius:8px;padding:11px 12px;font:400 13.5px/1.2 var(--ui);min-height:42px}
 .scr-in{flex:1 1 190px} .scr-sel{flex:0 1 190px;font-family:var(--mono);font-size:12px}
 .scr-in:focus,.scr-sel:focus{outline:none;border-color:var(--live)}
-.scr-r{grid-template-columns:20px minmax(0,1fr) repeat(4,auto) 56px;gap:9px;cursor:pointer}
+.scr-r{grid-template-columns:20px minmax(0,1fr) repeat(5,auto) 52px;gap:8px;cursor:pointer}
 .scr-r:hover{background:var(--raised)}
 .scr-r .x{font:500 11.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right;min-width:44px}
 .segh{font:600 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--live);
@@ -474,3 +482,21 @@ h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
 .lv-p{font:500 17px/1 var(--mono);font-variant-numeric:tabular-nums}
 .lv-c{font:500 12px/1 var(--mono)}
 .lv-s{font-size:11px;color:var(--dim)}
+
+/* A live price is tinted; the morning close is not. One glance tells you
+   which numbers are moving. */
+.vv.lv,.x.lv{color:var(--live)}
+/* The exit ladder. Each leg is a real instruction — how many shares, at what
+   price, for what multiple of the risk. */
+.ladder{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:8px;overflow:hidden}
+.leg{background:var(--surface);display:grid;
+  grid-template-columns:30px 1fr auto auto 42px;gap:9px;align-items:baseline;padding:9px 11px;
+  font:400 12px/1 var(--mono);font-variant-numeric:tabular-nums}
+.leg-l{font-weight:500;color:var(--accent)}
+.leg-q{color:var(--dim);font-size:11px}
+.leg-r{text-align:right;color:var(--dim)}
+.trail{font-size:12px;line-height:1.55;color:var(--muted);
+  padding:9px 11px;border-left:2px solid var(--warn);background:var(--raised);border-radius:0 6px 6px 0}
+.trail span{display:block;font:600 9px/1 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--warn);margin-bottom:4px}
