@@ -706,3 +706,199 @@ body::before{display:none}
 .kv .vv i{opacity:1;font-size:10px}
 /* --live is also used as a value colour; on white it needs the darker token. */
 .vv.lv,.x.lv,.clk-t{color:var(--live)}
+
+/* ═══════════════════ TRADING SIGNAL BRIEF ════════════════════════════════
+   A dark-first research surface, scoped to .brief so it changes nothing else
+   on the site. The rest of the app stays light by default; this one page is
+   dark because a trade thesis is read in a dark room at 6am and because the
+   chart needs a dark ground to carry its levels.
+
+   Two families only: Newsreader for editorial headlines, Manrope for data
+   and UI. Both already self-hosted here.                                    */
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/fonts/Newsreader-400-latin.woff2') format('woff2')}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;
+  src:url('/fonts/Newsreader-600-latin.woff2') format('woff2')}
+@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;
+  src:url('/fonts/Newsreader-400i-latin.woff2') format('woff2')}
+
+.brief{
+  --b-bg:#0A0C0F; --b-sur:#13161B; --b-hi:#191D23;
+  --b-line:rgba(255,255,255,.08); --b-line2:rgba(255,255,255,.15);
+  --b-ink:#F3F5F8; --b-mut:#98A0AB; --b-dim:#6E7681;
+  /* One primary accent, two controlled directional tones, gold for levels.
+     Nothing is bright: a saturated green on every positive number is how a
+     research page starts reading like a casino. */
+  --b-acc:#7A9BEE; --b-bull:#4E9E72; --b-bear:#C15F54; --b-gold:#C9A961;
+  --b-serif:'Newsreader',Georgia,serif;
+  background:var(--b-bg);color:var(--b-ink);
+  margin:-20px calc(var(--gut) * -1) -40px;padding:0 var(--gut) 64px;
+  font-family:var(--ui);
+}
+.brief ::selection{background:var(--b-acc);color:#0A0C0F}
+.b-wrap{max-width:1180px;margin:0 auto}
+
+/* ── HERO ────────────────────────────────────────────────────────────────── */
+.b-hero{padding:clamp(44px,7vw,88px) 0 clamp(28px,4vw,44px);border-bottom:1px solid var(--b-line)}
+.b-eyebrow{font:500 11px/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--b-acc)}
+.b-hero h1{font:400 clamp(34px,5.6vw,60px)/1.08 var(--b-serif);letter-spacing:-.02em;
+  margin:20px 0 0;text-wrap:balance;color:var(--b-ink);max-width:18ch}
+.b-hero .b-sub{font-size:clamp(15px,1.7vw,18px);line-height:1.6;color:var(--b-mut);
+  margin-top:18px;max-width:56ch}
+
+/* ── STATUS ──────────────────────────────────────────────────────────────── */
+.b-status{display:grid;gap:22px;padding:clamp(26px,4vw,40px) 0;border-bottom:1px solid var(--b-line)}
+@media(min-width:900px){.b-status{grid-template-columns:auto 1fr;gap:44px;align-items:center}}
+.b-dir{display:flex;align-items:center;gap:16px}
+/* The direction is a rule and a word, not a slab of colour. */
+.b-dir-mark{width:3px;align-self:stretch;min-height:64px;border-radius:2px;background:var(--b-bull)}
+.b-dir.is-short .b-dir-mark{background:var(--b-bear)}
+.b-dir-l{font:400 clamp(30px,4vw,44px)/1 var(--b-serif);letter-spacing:.01em;color:var(--b-bull)}
+.b-dir.is-short .b-dir-l{color:var(--b-bear)}
+.b-dir-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.b-tag{font:500 10.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 8px;border:1px solid var(--b-line2);border-radius:4px;color:var(--b-mut)}
+.b-tag.is-live{color:var(--b-bull);border-color:transparent;background:rgba(78,158,114,.14);
+  display:inline-flex;align-items:center;gap:6px}
+.b-tag.is-live i{width:6px;height:6px;border-radius:50%;background:var(--b-bull);
+  animation:bpulse 2.4s ease-in-out infinite}
+@keyframes bpulse{0%,100%{opacity:1}50%{opacity:.35}}
+/* 132px, not 112: "Risk / reward" and "Confidence" both wrapped to two lines
+   at the smaller track and pushed their values out of alignment with the row. */
+.b-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;
+  background:var(--b-line);border:1px solid var(--b-line);border-radius:10px;overflow:hidden}
+.b-m{background:var(--b-sur);padding:14px 15px}
+.b-m .k{display:block;font:500 10px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--b-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.b-m .v{display:block;font:500 17px/1.2 var(--mono);margin-top:8px;font-variant-numeric:tabular-nums}
+.b-m .v.up{color:var(--b-bull)} .b-m .v.dn{color:var(--b-bear)} .b-m .v.gold{color:var(--b-gold)}
+
+/* ── SECTION RHYTHM ──────────────────────────────────────────────────────── */
+.b-sec{padding:clamp(38px,6vw,72px) 0;border-bottom:1px solid var(--b-line)}
+.b-lab{font:500 11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--b-dim)}
+.b-h2{font:400 clamp(24px,3.2vw,36px)/1.16 var(--b-serif);letter-spacing:-.015em;
+  margin:14px 0 0;text-wrap:balance;max-width:24ch}
+.b-p{font-size:15.5px;line-height:1.65;color:var(--b-mut);margin-top:14px;max-width:62ch}
+
+/* ── THE TRADE IN ONE VIEW ───────────────────────────────────────────────── */
+.b-view{display:grid;gap:1px;background:var(--b-line);border:1px solid var(--b-line);
+  border-radius:12px;overflow:hidden;margin-top:26px}
+@media(min-width:700px){.b-view{grid-template-columns:1fr 1fr}}
+@media(min-width:1000px){.b-view{grid-template-columns:repeat(4,1fr)}}
+.b-vi{background:var(--b-sur);padding:17px 18px}
+.b-vi dt{font:500 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--b-dim)}
+.b-vi dd{margin:9px 0 0;font:500 16px/1.3 var(--mono);font-variant-numeric:tabular-nums}
+.b-vi dd.txt{font-family:var(--ui);font-weight:500;font-size:15px}
+
+/* ── PRICE STRUCTURE ─────────────────────────────────────────────────────── */
+.b-chart{margin-top:26px;background:var(--b-sur);border:1px solid var(--b-line);
+  border-radius:12px;padding:clamp(18px,3vw,30px)}
+/* Inset top and bottom: a level sits at 0% or 100% and is translated -50%, so
+   the outermost two lines print half outside the box — the 200-day was landing
+   on the caption. The inset is the label's own height. */
+.b-ladder{position:relative;height:clamp(300px,40vw,400px);margin:12px 0 22px;
+  padding:14px 0}
+.b-ladder .b-lvl,.b-ladder .b-band{margin-top:14px}
+.b-band{position:absolute;left:0;right:0;border-radius:4px}
+.b-band.risk{background:linear-gradient(180deg,rgba(193,95,84,.13),rgba(193,95,84,.03))}
+.b-band.reward{background:linear-gradient(180deg,rgba(78,158,114,.03),rgba(78,158,114,.13))}
+.b-lvl{position:absolute;left:0;right:0;display:flex;align-items:center;gap:10px;
+  transform:translateY(-50%);opacity:0;animation:blvl .5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes blvl{from{opacity:0;transform:translateY(-50%) translateX(-6px)}to{opacity:1;transform:translateY(-50%)}}
+.b-lvl-line{flex:1;height:1px;background:var(--b-line2)}
+.b-lvl.is-key .b-lvl-line{background:var(--b-gold);opacity:.55}
+.b-lvl.is-stop .b-lvl-line{background:var(--b-bear);opacity:.6}
+.b-lvl.is-target .b-lvl-line{background:var(--b-bull);opacity:.5}
+.b-lvl.is-now .b-lvl-line{background:var(--b-acc);height:2px;opacity:.9}
+.b-lvl-tag{font:500 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  color:var(--b-dim);white-space:nowrap;min-width:74px}
+.b-lvl-val{font:500 12.5px/1 var(--mono);font-variant-numeric:tabular-nums;
+  color:var(--b-mut);white-space:nowrap;text-align:right;min-width:76px}
+.b-lvl.is-now .b-lvl-tag,.b-lvl.is-now .b-lvl-val{color:var(--b-acc)}
+.b-lvl.is-stop .b-lvl-val{color:var(--b-bear)} .b-lvl.is-target .b-lvl-val{color:var(--b-bull)}
+.b-lvl.is-key .b-lvl-val{color:var(--b-gold)}
+.b-cap{font-size:12.5px;line-height:1.55;color:var(--b-dim);margin-top:14px}
+@media(prefers-reduced-motion:reduce){.b-lvl{animation:none;opacity:1}.b-tag.is-live i{animation:none}}
+
+/* ── THESIS ──────────────────────────────────────────────────────────────── */
+.b-steps{display:grid;gap:1px;background:var(--b-line);border-top:1px solid var(--b-line);
+  border-bottom:1px solid var(--b-line);margin-top:30px}
+.b-step{background:var(--b-bg);padding:clamp(24px,3.4vw,38px) 0;display:grid;gap:14px}
+@media(min-width:800px){.b-step{grid-template-columns:150px 1fr;gap:36px;align-items:start}}
+.b-step-n{font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--b-dim);padding-top:6px}
+.b-step-n b{color:var(--b-acc);font-weight:500}
+.b-step h3{font:400 clamp(20px,2.5vw,28px)/1.2 var(--b-serif);letter-spacing:-.012em;max-width:22ch}
+.b-step p{font-size:15px;line-height:1.65;color:var(--b-mut);margin-top:11px;max-width:58ch}
+.b-mini{display:flex;gap:18px;flex-wrap:wrap;margin-top:15px}
+.b-mini div{display:flex;flex-direction:column;gap:4px}
+.b-mini .k{font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--b-dim)}
+.b-mini .v{font:500 14px/1 var(--mono);font-variant-numeric:tabular-nums}
+
+/* ── SCORE ───────────────────────────────────────────────────────────────── */
+.b-score{display:grid;gap:30px;margin-top:26px}
+@media(min-width:820px){.b-score{grid-template-columns:230px 1fr;gap:52px;align-items:center}}
+.b-score-big{font:400 clamp(64px,9vw,104px)/1 var(--b-serif);letter-spacing:-.03em}
+.b-score-big span{font-size:.32em;color:var(--b-dim);letter-spacing:0}
+.b-bars{display:grid;gap:15px}
+.b-bar-r{display:grid;grid-template-columns:104px 1fr 38px;gap:14px;align-items:center}
+.b-bar-r .n{font-size:13.5px;color:var(--b-mut)}
+.b-bar-r .t{height:2px;background:var(--b-hi);position:relative;overflow:hidden}
+.b-bar-r .t i{display:block;height:100%;background:var(--b-acc);width:0;
+  transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.b-bar-r .s{font:500 13px/1 var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){.b-bar-r .t i{transition:none}}
+
+/* ── PLAN / SCENARIOS / RISK ─────────────────────────────────────────────── */
+.b-plan{display:grid;gap:1px;background:var(--b-line);border:1px solid var(--b-line);
+  border-radius:12px;overflow:hidden;margin-top:26px}
+.b-pr{background:var(--b-sur);padding:18px 20px;display:grid;gap:7px}
+@media(min-width:760px){.b-pr{grid-template-columns:170px 1fr auto;gap:24px;align-items:baseline}}
+.b-pr .st{font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--b-dim)}
+.b-pr .tx{font-size:14.5px;line-height:1.55;color:var(--b-mut)}
+.b-pr .px{font:500 16px/1 var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.b-pr.is-invalid{background:rgba(193,95,84,.07);border-left:2px solid var(--b-bear)}
+.b-pr.is-invalid .st{color:var(--b-bear)}
+.b-scen{display:grid;gap:12px;margin-top:26px}
+@media(min-width:860px){.b-scen{grid-template-columns:repeat(3,1fr)}}
+.b-sc{background:var(--b-sur);border:1px solid var(--b-line);border-radius:11px;padding:20px}
+.b-sc h4{font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.b-sc.bull h4{color:var(--b-bull)} .b-sc.neu h4{color:var(--b-gold)} .b-sc.bear h4{color:var(--b-bear)}
+.b-sc p{font-size:14px;line-height:1.6;color:var(--b-mut)}
+.b-sc .lvl{display:block;margin-top:11px;font:500 13px/1 var(--mono);color:var(--b-ink)}
+
+.b-risk{display:grid;gap:22px;margin-top:26px}
+@media(min-width:860px){.b-risk{grid-template-columns:300px 1fr;gap:40px;align-items:start}}
+.b-inputs{display:grid;gap:13px}
+.b-in label{display:block;font:500 10px/1 var(--mono);letter-spacing:.13em;
+  text-transform:uppercase;color:var(--b-dim);margin-bottom:7px}
+.b-in input{width:100%;background:var(--b-bg);color:var(--b-ink);border:1px solid var(--b-line2);
+  border-radius:8px;padding:12px 13px;font:500 15px/1 var(--mono);min-height:46px}
+.b-in input:focus{outline:none;border-color:var(--b-acc)}
+.b-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;
+  background:var(--b-line);border:1px solid var(--b-line);border-radius:11px;overflow:hidden}
+.b-o{background:var(--b-sur);padding:16px 17px}
+.b-o .k{display:block;font:500 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--b-dim)}
+.b-o .v{display:block;font:500 18px/1.2 var(--mono);margin-top:8px;font-variant-numeric:tabular-nums}
+
+/* ── HISTORY + DISCLAIMER ────────────────────────────────────────────────── */
+.b-hist{margin-top:26px;overflow-x:auto;border:1px solid var(--b-line);border-radius:11px}
+.b-hist table{width:100%;border-collapse:collapse;min-width:560px}
+.b-hist th{font:500 10px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--b-dim);
+  text-align:left;padding:13px 16px;background:var(--b-hi);border-bottom:1px solid var(--b-line)}
+.b-hist td{padding:13px 16px;border-bottom:1px solid var(--b-line);font-size:13.5px;color:var(--b-mut)}
+.b-hist tbody tr:last-child td{border-bottom:0}
+.b-hist .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.b-disc{margin-top:26px;padding:18px 20px;border:1px solid var(--b-line);border-radius:11px;
+  background:var(--b-sur);font-size:13px;line-height:1.65;color:var(--b-dim)}
+.b-disc b{color:var(--b-mut);font-weight:500}
+.b-reveal{opacity:0;transform:translateY(10px)}
+.b-reveal.in{opacity:1;transform:none;transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
+@media(prefers-reduced-motion:reduce){.b-reveal,.b-reveal.in{opacity:1;transform:none;transition:none}}
+
+/* Seven tabs now, not six. */
+@media(min-width:760px){.tabs{grid-template-columns:repeat(7,max-content)}}
+.tabs{grid-template-columns:repeat(7,1fr)}
+.brief-link{font:500 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent);border:1px solid var(--line);border-radius:5px;padding:7px 9px;
+  min-height:30px;display:inline-flex;align-items:center}
+.brief-link:hover{border-color:var(--accent);background:var(--accent-soft)}
