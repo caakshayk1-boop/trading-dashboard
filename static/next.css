@@ -36,7 +36,11 @@
   /* --dim measured, not eyeballed: #6C7684 gave 4.18:1 on the ground and
      3.80:1 on a card — under the 4.5 bar on both, and it carries the tab
      labels and the edition stamp. #818B98 is 5.56 and 5.06. */
-  --text:#E9EDF3; --muted:#9BA6B4; --dim:#818B98;
+  /* Lifted a step each. Nothing was failing 4.5:1, but --muted and --dim were
+     carrying most of the page's words, so the whole thing read hazy — the
+     complaint was "opacity is bad" and it was really "too little of this page
+     is set in the ink meant for reading". */
+  --text:#F2F5F9; --muted:#B3BDCA; --dim:#8D97A5;
 
   /* Accent is BLUE, not the broadsheet's lime. A brand colour adjacent to
      green competes with "up" on a page whose whole job is up and down. */
@@ -72,6 +76,8 @@ a{color:inherit;text-decoration:none}
 .num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
 /* ── HEADER ──────────────────────────────────────────────────────────────── */
+.bar-in{max-width:1280px;margin:0 auto;width:100%;display:flex;align-items:center;
+  justify-content:space-between;gap:12px}
 .bar{position:sticky;top:0;z-index:40;height:var(--barh);display:flex;align-items:center;
   justify-content:space-between;gap:12px;padding:0 var(--gut);
   background:color-mix(in srgb,var(--bg) 88%,transparent);
@@ -102,13 +108,17 @@ a{color:inherit;text-decoration:none}
   body{padding-bottom:0}
   .tabs{position:sticky;top:var(--barh);bottom:auto;height:46px;padding:0 var(--gut);
     grid-template-columns:repeat(6,max-content);gap:4px;border-top:0;border-bottom:1px solid var(--line);
-    max-width:980px;margin:0 auto;justify-content:start}
+    max-width:1280px;margin:0 auto;justify-content:start}
   .tabs a{padding:0 14px;font-size:12.5px;min-height:46px}
   .tabs a[aria-current="page"]::before{top:auto;bottom:0;left:14px;right:14px;border-radius:2px 2px 0 0}
 }
 
 /* ── LAYOUT ──────────────────────────────────────────────────────────────── */
-main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
+/* 1280, not 980. Measured at a 1280 viewport the page used 77% of it and left
+   300px of empty gutter each side; at 1440 it was worse. A data page that
+   makes the reader scroll while a third of the screen sits empty is wasting
+   the one thing a desktop has over a phone. */
+main{max-width:1280px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
 .route-h{margin-bottom:18px}
 .route-h h1{font:800 clamp(26px,6.4vw,36px)/1.06 var(--disp);letter-spacing:-.02em;text-wrap:balance}
 .route-h p{color:var(--muted);font-size:14.5px;margin-top:7px;max-width:60ch}
@@ -174,7 +184,7 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
   border:1px dashed var(--line2);border-radius:var(--r)}
 
 /* ── FOOTER ──────────────────────────────────────────────────────────────── */
-.foot{max-width:980px;margin:0 auto;padding:26px var(--gut) 34px;border-top:1px solid var(--line);
+.foot{max-width:1280px;margin:0 auto;padding:26px var(--gut) 34px;border-top:1px solid var(--line);
   font:400 12px/1.7 var(--mono);color:var(--dim)}
 .foot b{color:var(--muted);font-weight:500}
 .foot-link a{color:var(--accent)}
@@ -362,7 +372,9 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
    grid behind the tiles, and a cyan that only ever marks live data. No glow
    on text — glow on a number is the fastest way to make a number look
    invented. */
-:root{ --grid:rgba(120,180,255,.05); --live:#4CE0D2; }
+/* Halved. The grid is meant to be felt, not seen; at .05 over a dark ground it
+   was adding a visible haze across every surface. */
+:root{ --grid:rgba(120,180,255,.028); --live:#4CE0D2; }
 :root[data-theme="light"]{ --grid:rgba(12,17,24,.045); --live:#0E8F86; }
 
 /* Faint engineering grid. Fixed, so content scrolls over a still surface —
@@ -370,7 +382,7 @@ main{max-width:980px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),
                    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:46px 46px}
+  background-size:64px 64px}
 /* main and .foot are STATIC, so they need position:relative for z-index to
    apply at all. .bar and .tabs are deliberately absent: both are already
    positioned (sticky / fixed) and carry their own z-index, and including them
@@ -526,3 +538,57 @@ h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
    above it, because levels are a proposal and the stats are facts. */
 .kv.lv-plan{border-top:1px solid var(--line2);margin-top:2px;padding-top:11px}
 .kv.lv-plan .vv i{font-style:normal;font-size:10.5px;opacity:.75}
+
+
+/* ── WIDE LAYOUT ──────────────────────────────────────────────────────────
+   At 1280 a single column of cards is a 1,200px-wide paragraph. Card lists go
+   two-up above 1000px; the tables stay full width because a table that has to
+   scroll sideways in half a screen is worse than a wide one. */
+@media(min-width:1000px){
+  .cards-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+  .cards-2 .card,.cards-2 .ipo{margin-top:0}
+  .cards-2 .card + .card,.cards-2 .ipo + .ipo{margin-top:0}
+  .wire{grid-template-columns:1fr 1fr}
+  .two{grid-template-columns:1fr 1fr}
+  /* Tiles get real estate rather than stretching: four across, not two. */
+  .grid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+}
+@media(min-width:1300px){ .grid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))} }
+
+/* ── HEADER CTA ───────────────────────────────────────────────────────────
+   One primary action in the masthead, and only one. A header with three
+   equally-weighted buttons has no primary action at all. */
+.btn-cta{background:var(--text);color:var(--bg);font:600 12px/1 var(--ui);
+  padding:9px 14px;border-radius:7px;white-space:nowrap;min-height:34px;
+  display:inline-flex;align-items:center;transition:opacity .16s}
+.btn-cta:hover{opacity:.86}
+@media(max-width:560px){.btn-cta{display:none}}
+
+/* ── JOIN ─────────────────────────────────────────────────────────────────── */
+.join{display:grid;gap:28px;padding:24px 0 8px}
+@media(min-width:900px){.join{grid-template-columns:1.15fr .85fr;gap:56px;padding:48px 0 24px;align-items:start}}
+.join h1{font:800 clamp(30px,5vw,46px)/1.05 var(--disp);letter-spacing:-.028em;text-wrap:balance}
+.join-sub{font-size:clamp(15px,2vw,17px);line-height:1.6;color:var(--muted);margin-top:14px;max-width:52ch}
+.join-ul{list-style:none;margin:26px 0 0;display:grid;gap:13px}
+.join-ul li{font-size:14px;line-height:1.55;color:var(--muted);padding-left:20px;position:relative}
+.join-ul li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;
+  border-radius:50%;background:var(--live)}
+.join-ul b{color:var(--text);font-weight:600}
+.join-r form{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+.join-r label{display:block;font:600 10px/1 var(--mono);letter-spacing:.13em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.join-r input[type=email]{width:100%;background:var(--bg);color:var(--text);
+  border:1px solid var(--line2);border-radius:9px;padding:14px;font:400 15px/1.2 var(--ui);min-height:50px}
+.join-r input[type=email]:focus{outline:none;border-color:var(--live)}
+.btn-primary{width:100%;margin-top:12px;background:var(--live);color:#06231F;border:0;
+  border-radius:9px;padding:14px;font:600 15px/1 var(--ui);cursor:pointer;min-height:50px;
+  transition:opacity .16s}
+.btn-primary:hover{opacity:.9}
+.btn-primary:disabled{opacity:.55;cursor:default}
+.join-note{margin-top:11px;font-size:12px;line-height:1.5;color:var(--dim)}
+.join-note.bad{color:var(--down)}
+.join-ok{font-size:14px;line-height:1.6;color:var(--muted)}
+.join-ok b{display:block;color:var(--live);font-size:16px;margin-bottom:7px}
+/* The honeypot. Off-screen rather than display:none — some bots skip hidden
+   fields, and one that is merely positioned away still gets filled. */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
