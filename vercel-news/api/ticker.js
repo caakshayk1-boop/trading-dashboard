@@ -154,11 +154,25 @@ export default async function handler(req, res) {
     // keyed by Yahoo symbol and de-duplicates.
     const ledgerNonEq = await openLedgerNonEquities();
 
-    const quotes = await quoteAll(
-      [...defs, ...movers, ...ledgerDefs],
-      ledgerDefs.map((d) => d[1])        // ledger quotes retry first
+    // Quotes and shapes fetched TOGETHER, not one after the other. Both are
+    // network-bound against the same host; awaiting them in sequence would add
+    // a whole round trip to a route that has 15 seconds for all of it.
+    // The series covers the headline board only (~56 symbols, three chunks) —
+    // the movers are already framed by their own move, and quoting a sparkline
+    // for all 50 Nifty constituents would double this route's fetch count for
+    // ten rendered rows.
+    const [quotes, series] = await Promise.all([
+      quoteAll(
+        [...defs, ...movers, ...ledgerDefs],
+        ledgerDefs.map((d) => d[1])      // ledger quotes retry first
+      ),
+      sparkSeries(defs.map((d) => d[1])),
+    ]);
+    // Closes only for the row payload; the timestamps stay server-side.
+    const closesBySym = new Map(
+      [...series].map(([k, pairs]) => [k, pairs.map((x) => x[1])])
     );
-    const pick = (list) => list.map((d) => shape(d, quotes)).filter(Boolean);
+    const pick = (list) => list.map((d) => shape(d, quotes, closesBySym)).filter(Boolean);
 
     // Up-only and down-only, not "top and bottom five". On a strong day the
     // bottom five are all green, and a segment headed 🔻 LOSERS full of green
@@ -196,7 +210,7 @@ export default async function handler(req, res) {
     // indices and majors. Counting 50 Nifty constituents would make it a
     // breadth reading of one exchange wearing a global label.
     const headline = [...ASIA, ...INDIA, ...EUROPE, ...US_INDICES,
-                      ...COMMODITIES, ...FX, ...CRYPTO].map((d) => shape(d, quotes))
+                      ...COMMODITIES, ...FX, ...CRYPTO].map((d) => shape(d, quotes, closesBySym))
                       .filter(Boolean);
 
     json(res, 200, {
@@ -281,7 +295,12 @@ export async function quoteAll(defs, priority = []) {
       if (!cur) return;
       try {
         const p = await spot(c[4]);
-        out.set(c[1], { ...cur, price: p, basis: "spot" });
+        // futPrice is kept because the 52-week extremes on this row came from
+        // the FUTURES meta, and spot carries a cost-of-carry difference against
+        // them. Measuring a spot price inside a futures range would print gold
+        // as further from its high than it is. shape() ranges on futPrice and
+        // says which feed it used.
+        out.set(c[1], { ...cur, price: p, futPrice: cur.price, basis: "spot" });
       } catch { /* spot down — the futures quote already in the map stands */ }
     })
   );
@@ -315,11 +334,126 @@ async function spark(symbols) {
   return out;
 }
 
+/**
+ * A month of daily closes for each symbol, batched the same 20 at a time.
+ *
+ * SEPARATE FROM THE QUOTE CALL, DELIBERATELY. The quote call is pinned to
+ * range=1d because chartPreviousClose is the close before the requested
+ * window — ask for a month and the "daily" change becomes a monthly one, which
+ * is the exact bug that had this site printing Nifty +3.29% on a +1.60% day.
+ * So: 1d for the change, 1mo for the shape, and never one response doing both.
+ *
+ * Failure is silent and total per chunk. A missing series renders no sparkline;
+ * it never renders a flat line, which would read as "this market did not move".
+ */
+export async function sparkSeries(symbols, range = "1mo", interval = "1d") {
+  const uniq = [...new Set(symbols)];
+  const chunks = [];
+  for (let i = 0; i < uniq.length; i += CHUNK) chunks.push(uniq.slice(i, i + CHUNK));
+
+  const out = new Map();
+  const results = await Promise.all(chunks.map(async (batch) => {
+    const got = new Map();
+    try {
+      const url = `${SPARK}?symbols=${batch.map(encodeURIComponent).join(",")}` +
+                  `&range=${encodeURIComponent(range)}&interval=${encodeURIComponent(interval)}`;
+      const r = await fetch(url, { headers: UA, signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const j = await r.json();
+      for (const row of j?.spark?.result || []) {
+        const resp = row?.response?.[0];
+        const sym = str(resp?.meta?.symbol);
+        const closes = resp?.indicators?.quote?.[0]?.close;
+        const ts = resp?.timestamp;
+        if (!sym || !Array.isArray(closes)) continue;
+        // Yahoo pads the series with nulls on holidays. Dropping them keeps the
+        // line continuous; keeping them would draw a gap that is not a gap.
+        const pairs = [];
+        for (let i = 0; i < closes.length; i++) {
+          const v = num(closes[i]);
+          if (v !== null && v > 0) pairs.push([Array.isArray(ts) ? num(ts[i]) : null, v]);
+        }
+        if (pairs.length >= 3) got.set(sym, pairs);
+      }
+    } catch { /* a dead chunk simply has no sparkline */ }
+    return got;
+  }));
+  for (const r of results) for (const [k, v] of r) out.set(k, v);
+
+  /* Spark silently drops symbols from a batch — it answers 200 with fewer
+   * results than asked for. The quote path has carried a retry for this since
+   * the "live price not coming for all" report; the series path shipped
+   * without one and four of the sixteen India rows rendered with no sparkline
+   * while every other row had one. A hole that looks like a rendering bug is
+   * worse than a slower response, so the misses get one pass each on the
+   * single-symbol chart endpoint, bounded and time-boxed. */
+  const missing = uniq.filter((s) => !out.has(s)).slice(0, 12);
+  if (missing.length) {
+    const started = Date.now();
+    await Promise.all(missing.map(async (sym) => {
+      if (Date.now() - started > 5000) return;
+      try {
+        const r = await fetch(
+          `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}` +
+          `?range=${encodeURIComponent(range)}&interval=${encodeURIComponent(interval)}`,
+          { headers: UA, signal: AbortSignal.timeout(4500) });
+        if (!r.ok) return;
+        const res = (await r.json())?.chart?.result?.[0];
+        const closes = res?.indicators?.quote?.[0]?.close, ts = res?.timestamp;
+        if (!Array.isArray(closes)) return;
+        const pairs = [];
+        for (let i = 0; i < closes.length; i++) {
+          const v = num(closes[i]);
+          if (v !== null && v > 0) pairs.push([Array.isArray(ts) ? num(ts[i]) : null, v]);
+        }
+        if (pairs.length >= 3) out.set(sym, pairs);
+      } catch { /* genuinely unavailable — the row renders with no sparkline */ }
+    }));
+  }
+  return out;
+}
+
 function readMeta(meta) {
   const price = num(meta.regularMarketPrice);
   if (price === null) return null;
   const prev = num(meta.chartPreviousClose) ?? num(meta.previousClose) ?? price;
-  return { price, prev, basis: "market" };
+
+  // EVERYTHING BELOW WAS ALREADY IN THIS PAYLOAD AND WAS BEING THROWN AWAY.
+  // The board rendered name/price/change and nothing else, so a reader could
+  // see that Nifty moved +0.35% and not whether that was near a 52-week high
+  // or halfway down a range. Yahoo's spark meta carries the 52-week extremes,
+  // the day's range, volume, the currency, the exchange clock and the session
+  // window on the SAME response — no extra request, no new function.
+  //
+  // Volume is null-ed when it reads 0: indices report 0, and a "0" in a volume
+  // column reads as "no trading happened" rather than "not published".
+  const vol = num(meta.regularMarketVolume);
+  const per = meta.currentTradingPeriod && meta.currentTradingPeriod.regular;
+  const nowS = Math.floor(Date.now() / 1000);
+  return {
+    price, prev, basis: "market",
+    w52h: num(meta.fiftyTwoWeekHigh),
+    w52l: num(meta.fiftyTwoWeekLow),
+    dayH: num(meta.regularMarketDayHigh),
+    dayL: num(meta.regularMarketDayLow),
+    volume: vol && vol > 0 ? vol : null,
+    ccy: str(meta.currency) || null,
+    tz: str(meta.exchangeTimezoneName) || null,
+    fullName: str(meta.longName) || str(meta.shortName) || null,
+    kind: str(meta.instrumentType) || null,
+    asOf: num(meta.regularMarketTime),
+    // Session is only asserted when Yahoo actually gave us the window. An
+    // unknown session must stay unknown — printing "CLOSED" on a live market
+    // is worse than printing nothing.
+    session: per && num(per.start) && num(per.end)
+      ? (nowS >= per.start && nowS <= per.end ? "open" : "closed")
+      : null,
+    // The window itself, so the page can say "opens in 3h 12m" from a real
+    // exchange calendar instead of a hardcoded table of market hours that goes
+    // wrong on every holiday.
+    sessStart: per ? num(per.start) : null,
+    sessEnd: per ? num(per.end) : null,
+  };
 }
 
 // Spark silently omits a symbol now and then — USD/MYR dropped out of an
@@ -388,10 +522,27 @@ async function spot(code) {
   return p;
 }
 
-function shape([name, symbol, prefix, dp], quotes) {
+const r2 = (v) => (Number.isFinite(v) ? Math.round(v * 100) / 100 : null);
+
+function shape([name, symbol, prefix, dp], quotes, series) {
   const q = quotes.get(symbol);
   if (!q || q.price === null) return null;
   const pct = q.prev ? ((q.price - q.prev) / q.prev) * 100 : 0;
+
+  // The 52-week range as a POSITION, not two loose numbers. 0 = sitting on the
+  // 52-week low, 100 = sitting on the high. Null when either extreme is
+  // missing — a bar drawn from a guessed range is a lie with a nice gradient.
+  const hasRange = Number.isFinite(q.w52h) && Number.isFinite(q.w52l) && q.w52h > q.w52l;
+  // Range maths uses the price from the SAME feed the range came from. For
+  // metals that is the futures quote, not the spot price shown in the row.
+  const rangePx = Number.isFinite(q.futPrice) ? q.futPrice : q.price;
+  const rangePos = hasRange
+    ? Math.max(0, Math.min(100, ((rangePx - q.w52l) / (q.w52h - q.w52l)) * 100))
+    : null;
+
+  const trend = series && series.get(symbol);
+  const closes = trend && trend.length >= 3 ? trend : null;
+
   return {
     name,
     symbol,
@@ -400,6 +551,40 @@ function shape([name, symbol, prefix, dp], quotes) {
     change_pct: Math.round(pct * 100) / 100,
     up: pct >= 0,
     basis: q.basis || "market",
+
+    // ── the context the board was missing ──────────────────────────────────
+    full_name: q.fullName || null,
+    kind: q.kind || null,
+    ccy: q.ccy || null,
+    session: q.session || null,
+    as_of: Number.isFinite(q.asOf) ? new Date(q.asOf * 1000).toISOString() : null,
+    session_start: Number.isFinite(q.sessStart) ? q.sessStart : null,
+    session_end: Number.isFinite(q.sessEnd) ? q.sessEnd : null,
+
+    w52_high: r2(q.w52h),
+    w52_low: r2(q.w52l),
+    w52_high_f: Number.isFinite(q.w52h) ? prefix + fmtNum(q.w52h, dp) : null,
+    w52_low_f: Number.isFinite(q.w52l) ? prefix + fmtNum(q.w52l, dp) : null,
+    range_pos: rangePos === null ? null : Math.round(rangePos * 10) / 10,
+    from_high_pct: Number.isFinite(q.w52h) && q.w52h > 0
+      ? r2(((rangePx - q.w52h) / q.w52h) * 100) : null,
+    from_low_pct: Number.isFinite(q.w52l) && q.w52l > 0
+      ? r2(((rangePx - q.w52l) / q.w52l) * 100) : null,
+    // "market" = the row's price and its range are the same feed. "spot" = the
+    // price is spot and the range is the futures contract; the page says so.
+    range_basis: Number.isFinite(q.futPrice) ? "futures" : "market",
+
+    day_high: Number.isFinite(q.dayH) ? prefix + fmtNum(q.dayH, dp) : null,
+    day_low: Number.isFinite(q.dayL) ? prefix + fmtNum(q.dayL, dp) : null,
+    day_range_pos: Number.isFinite(q.dayH) && Number.isFinite(q.dayL) && q.dayH > q.dayL
+      ? Math.round(((q.price - q.dayL) / (q.dayH - q.dayL)) * 1000) / 10 : null,
+    volume: Number.isFinite(q.volume) ? q.volume : null,
+
+    // A month of real daily closes, for the sparkline and the month-to-date
+    // move. Absent rather than faked when the series call dropped the symbol.
+    trend: closes ? closes.map((v) => r2(v)) : null,
+    trend_pct: closes && closes[0] > 0
+      ? r2(((q.price - closes[0]) / closes[0]) * 100) : null,
   };
 }
 

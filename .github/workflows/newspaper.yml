@@ -187,6 +187,14 @@ jobs:
       - name: Smoke test the rendered page
         run: python smoke_test.py https://news.askakshay.com
 
+      # smoke_test.py covers the broadsheet. /next.html is a second surface
+      # with an interactive markets board and a trading brief whose widgets are
+      # all JavaScript — a broken slider or a dead tooltip leaves a page that
+      # still looks finished. Runs against production for the same reason the
+      # step above does: that is what a reader gets.
+      - name: Check /next.html's interactive layer
+        run: node test_next_ui.mjs https://news.askakshay.com
+
       # No deploy step here on purpose. The Vercel project vercel-news is
       # connected to this repository, so the push above is what ships the site.
       # A CLI deploy would publish the same commit a second time.

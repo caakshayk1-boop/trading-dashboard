@@ -34,12 +34,33 @@
   src:url('/fonts/JetBrainsMono-400-latin.woff2') format('woff2')}
 @font-face{font-family:'JBMono';font-style:normal;font-weight:500;font-display:swap;
   src:url('/fonts/JetBrainsMono-500-latin.woff2') format('woff2')}
+/* Newsreader was declared inside the brief block and used on that one page.
+   It is promoted here because the brief is the look the rest of the site is
+   being brought up to — a serif headline over mono data is what separates a
+   research page from a dashboard. It carries HEADLINES ONLY (h1 and section
+   headlines), never body copy, so the download is small and the page still
+   paints its text on the first frame from the system stack. next.html
+   preloads the 400 weight for the same reason it preloads the other two. */
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/fonts/Newsreader-400-latin.woff2') format('woff2')}
+@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;
+  src:url('/fonts/Newsreader-600-latin.woff2') format('woff2')}
+@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;
+  src:url('/fonts/Newsreader-400i-latin.woff2') format('woff2')}
 
 /* ── TOKENS ──────────────────────────────────────────────────────────────── */
 :root{
   --disp:'Manrope',system-ui,sans-serif;
   --ui:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --mono:'JBMono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+
+  /* One motion vocabulary for the whole site. Three durations, two curves.
+     Everything that moves picks from here, so nothing on the page animates at
+     a speed nothing else uses — which is what makes motion read as noise. */
+  --t-fast:140ms; --t-mid:220ms; --t-slow:380ms;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
 
   /* LIGHT IS THE DEFAULT NOW. The reference site is a white page with
      near-black type and black buttons, and that is the look this was asked to
@@ -109,19 +130,27 @@ a{color:inherit;text-decoration:none}
 /* ── TABS — bottom on a phone, where the thumb is ─────────────────────────── */
 .tabs{position:fixed;left:0;right:0;bottom:0;z-index:41;height:calc(var(--tabh) + env(safe-area-inset-bottom));
   padding-bottom:env(safe-area-inset-bottom);
-  display:grid;grid-template-columns:repeat(6,1fr);
+  /* AUTO-FLOW, not repeat(6). A seventh tab (Brief) was added to the markup
+     and this rule still declared six columns, so the seventh sat outside the
+     grid and pushed the bar to 454px inside a 390px phone — the whole page
+     scrolled sideways. Auto-flow takes however many tabs the markup has. */
+  display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);
   background:color-mix(in srgb,var(--bg) 94%,transparent);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-top:1px solid var(--line)}
 .tabs a{display:grid;place-items:center;font:500 10.5px/1 var(--ui);letter-spacing:.02em;
-  color:var(--dim);position:relative;min-height:44px}
+  color:var(--dim);position:relative;min-height:44px;min-width:0;padding:0 2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Seven labels in 375px is 53px each. The type steps down rather than the
+   labels truncating — "Marke…" is worse than 9.5px type. */
+@media(max-width:400px){.tabs a{font-size:9.5px;letter-spacing:0}}
 .tabs a[aria-current="page"]{color:var(--accent)}
 .tabs a[aria-current="page"]::before{content:"";position:absolute;top:0;left:22%;right:22%;height:2px;
   background:var(--accent);border-radius:0 0 2px 2px}
 @media(min-width:760px){
   body{padding-bottom:0}
   .tabs{position:sticky;top:var(--barh);bottom:auto;height:46px;padding:0 var(--gut);
-    grid-template-columns:repeat(6,max-content);gap:4px;border-top:0;border-bottom:1px solid var(--line);
+    grid-auto-columns:max-content;gap:4px;border-top:0;border-bottom:1px solid var(--line);
     max-width:1280px;margin:0 auto;justify-content:start}
   .tabs a{padding:0 14px;font-size:12.5px;min-height:46px}
   .tabs a[aria-current="page"]::before{top:auto;bottom:0;left:14px;right:14px;border-radius:2px 2px 0 0}
@@ -133,13 +162,31 @@ a{color:inherit;text-decoration:none}
    makes the reader scroll while a third of the screen sits empty is wasting
    the one thing a desktop has over a phone. */
 main{max-width:1280px;margin:0 auto;padding:20px var(--gut) 40px;min-height:60vh}
-.route-h{margin-bottom:18px}
-.route-h h1{font:800 clamp(26px,6.4vw,36px)/1.06 var(--disp);letter-spacing:-.02em;text-wrap:balance}
-.route-h p{color:var(--muted);font-size:14.5px;margin-top:7px;max-width:60ch}
-.sec{margin-top:30px}
+/* THE PAGE HEAD, rebuilt to the brief's rhythm: a mono eyebrow, a serif
+   headline set light and large, one line of standfirst, then a rule. The old
+   head was an 800-weight sans headline with a 14.5px grey line under it and
+   18px of air — a dashboard title. This is a masthead. */
+.route-h{margin-bottom:clamp(22px,3vw,34px);padding-bottom:clamp(18px,2.4vw,26px);
+  border-bottom:1px solid var(--line)}
+.route-h .eyebrow{display:block;font:500 10.5px/1 var(--mono);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:clamp(12px,1.6vw,18px)}
+.route-h h1{font:400 clamp(30px,5.4vw,48px)/1.07 var(--serif);letter-spacing:-.018em;
+  text-wrap:balance;max-width:20ch}
+.route-h p{color:var(--muted);font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.6;
+  margin-top:clamp(11px,1.4vw,16px);max-width:64ch}
+
+/* Sections breathe like the brief's do, and carry an optional serif headline
+   under the mono label — the label says what the block IS, the headline says
+   what it MEANS. A block with nothing to mean simply omits it. */
+.sec{margin-top:clamp(32px,4.4vw,56px)}
 .sec-h{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
-.sec-h h2{font:600 12px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
-.sec-h .sec-n{margin-left:auto;font:400 11px/1 var(--mono);color:var(--dim)}
+.sec-h h2{font:600 11px/1 var(--mono);letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+.sec-h .sec-n{margin-left:auto;font:400 11px/1 var(--mono);color:var(--dim);
+  font-variant-numeric:tabular-nums;flex:none}
+.sec-lead{font:400 clamp(19px,2.3vw,27px)/1.2 var(--serif);letter-spacing:-.015em;
+  color:var(--text);margin:-4px 0 16px;max-width:32ch;text-wrap:balance}
+.sec-note{font-size:13.5px;line-height:1.6;color:var(--muted);margin-top:12px;max-width:70ch}
+.sec-note b{color:var(--text);font-weight:600}
 
 /* ── THE READOUT — the one big number per block ───────────────────────────── */
 .grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
@@ -624,22 +671,35 @@ h4.sh{font:600 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
    large-and-heavy reads as shouting. */
 body{font-family:var(--ui);font-size:16px;line-height:1.5;letter-spacing:-.005em}
 
-.route-h{margin-bottom:26px}
+/* THE HEAD. Large and light, and now SERIF — the brief page proved that a
+   serif headline over monospaced data is the whole difference between a
+   research document and a dashboard, and this is the page that gets brought up
+   to it rather than the brief being brought down.
+
+   Weight stays at 400. Large-and-light reads as composed; large-and-heavy
+   reads as shouting, which is the note the previous pass got right. */
 .route-h h1{
-  font:400 clamp(30px,4.4vw,46px)/1.15 var(--disp);
-  letter-spacing:-.024em;color:var(--text);
+  font:400 clamp(30px,4.6vw,48px)/1.08 var(--serif);
+  letter-spacing:-.018em;color:var(--text);
 }
-.route-h p{font-size:17px;line-height:1.6;color:var(--dim);margin-top:12px;max-width:60ch}
-.join h1{font-weight:400;letter-spacing:-.026em}
+.route-h p{font-size:clamp(15px,1.5vw,17px);line-height:1.6;color:var(--dim);
+  margin-top:clamp(11px,1.4vw,16px);max-width:64ch}
+.join h1{font-family:var(--serif);font-weight:400;letter-spacing:-.02em}
 .sheet-h h2{font-weight:500;letter-spacing:-.015em;font-size:22px}
 .brand-name{font:700 17px/1 var(--disp);letter-spacing:-.02em}
 
-/* Section headings: their sections are titled in plain sentence case, not in
-   tracked-out monospace capitals. The mono eyebrow was a terminal habit. */
-.sec{margin-top:44px}
-.sec-h{align-items:baseline;margin-bottom:14px;gap:12px}
-.sec-h h2{font:500 15px/1.3 var(--ui);letter-spacing:-.01em;text-transform:none;color:var(--text)}
-.sec-h .sec-n{font:400 13px/1 var(--ui);color:var(--dim);letter-spacing:0;text-transform:none}
+/* SECTION HEADINGS, two parts. The mono label in tracked-out capitals says
+   what the block IS; the serif lead under it says what it MEANS. The previous
+   pass replaced the mono label with sentence-case sans and left nothing in the
+   second role, so every section on the site opened with a small grey line and
+   then a wall of data. Both roles are back, and they are the brief's. */
+.sec-h{align-items:baseline;margin-bottom:11px;gap:12px}
+.sec-h h2{font:600 10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim)}
+.sec-h .sec-n{font:400 11.5px/1 var(--mono);color:var(--dim);letter-spacing:.03em;
+  text-transform:none;font-variant-numeric:tabular-nums}
+.sec-lead{font:400 clamp(20px,2.4vw,28px)/1.18 var(--serif);letter-spacing:-.015em;
+  color:var(--text);margin:0 0 17px;max-width:32ch;text-wrap:balance}
 
 /* Surfaces: hairline borders at 9% and NO shadows, which is what makes their
    page feel flat and calm rather than layered. */
@@ -715,12 +775,7 @@ body::before{display:none}
 
    Two families only: Newsreader for editorial headlines, Manrope for data
    and UI. Both already self-hosted here.                                    */
-@font-face{font-family:'Newsreader';font-style:normal;font-weight:400;font-display:swap;
-  src:url('/fonts/Newsreader-400-latin.woff2') format('woff2')}
-@font-face{font-family:'Newsreader';font-style:normal;font-weight:600;font-display:swap;
-  src:url('/fonts/Newsreader-600-latin.woff2') format('woff2')}
-@font-face{font-family:'Newsreader';font-style:italic;font-weight:400;font-display:swap;
-  src:url('/fonts/Newsreader-400i-latin.woff2') format('woff2')}
+/* Faces are declared once, at the top of this file. */
 
 .brief{
   --b-bg:#0A0C0F; --b-sur:#13161B; --b-hi:#191D23;
@@ -765,9 +820,15 @@ body::before{display:none}
 @keyframes bpulse{0%,100%{opacity:1}50%{opacity:.35}}
 /* 132px, not 112: "Risk / reward" and "Confidence" both wrapped to two lines
    at the smaller track and pushed their values out of alignment with the row. */
-.b-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;
-  background:var(--b-line);border:1px solid var(--b-line);border-radius:10px;overflow:hidden}
-.b-m{background:var(--b-sur);padding:14px 15px}
+/* The 1px GAP used to be the separator, with the container's own colour
+   showing through it. That works only while the last row is full: nine metrics
+   in a five-column grid left one cell empty and the container colour showed as
+   a lighter rectangle that read as a broken tile. Borders on the cells instead
+   — an empty cell is then simply surface, and invisible at any column count. */
+.b-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:0;
+  background:var(--b-sur);border:1px solid var(--b-line);border-radius:10px;overflow:hidden}
+.b-m{background:var(--b-sur);padding:14px 15px;
+  border-right:1px solid var(--b-line);border-bottom:1px solid var(--b-line)}
 .b-m .k{display:block;font:500 10px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;
   color:var(--b-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .b-m .v{display:block;font:500 17px/1.2 var(--mono);margin-top:8px;font-variant-numeric:tabular-nums}
@@ -902,3 +963,519 @@ body::before{display:none}
   color:var(--accent);border:1px solid var(--line);border-radius:5px;padding:7px 9px;
   min-height:30px;display:inline-flex;align-items:center}
 .brief-link:hover{border-color:var(--accent);background:var(--accent-soft)}
+
+/* ═══════════════ SHARED INSTRUMENTS ══════════════════════════════════════
+   Everything below is used by more than one route. It exists because the
+   board was three columns — name, price, change — on a page whose whole
+   argument is that it shows you more than a ticker does.                    */
+
+/* ── SPARKLINE ────────────────────────────────────────────────────────────
+   A month of real daily closes, drawn as one <path>. Never rendered from a
+   flat or fabricated series: no series means no sparkline, because a flat
+   line reads as "this did not move" rather than "this was not measured". */
+.spark{display:block;width:100%;height:26px;overflow:visible}
+.spark path{fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
+  vector-effect:non-scaling-stroke}
+.spark .ln{stroke:var(--dim);opacity:.9}
+.spark.up .ln{stroke:var(--up)} .spark.dn .ln{stroke:var(--down)}
+.spark .fill{fill:currentColor;opacity:.07;stroke:none}
+.spark.up{color:var(--up)} .spark.dn{color:var(--down)}
+.spark .dot{fill:currentColor;stroke:var(--surface);stroke-width:1.5}
+
+/* ── 52-WEEK RANGE BAR ────────────────────────────────────────────────────
+   Position, not two loose numbers. The marker is where price sits between the
+   year's low and its high; the tick marks the midpoint so "above or below the
+   middle of its range" is readable without arithmetic. */
+.rng{display:flex;align-items:center;gap:8px;min-width:0}
+.rng-t{position:relative;flex:1;height:4px;border-radius:3px;background:var(--raised);
+  border:1px solid var(--line);min-width:52px}
+.rng-t::before{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;
+  background:var(--line2)}
+.rng-f{position:absolute;left:0;top:0;bottom:0;border-radius:3px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--down) 32%,transparent),
+                                   color-mix(in srgb,var(--up) 40%,transparent));
+  transition:width var(--t-slow) var(--ease-out)}
+.rng-m{position:absolute;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;
+  background:var(--text);border:1.5px solid var(--surface);
+  transition:left var(--t-slow) var(--ease-out)}
+.rng-e{font:400 10px/1 var(--mono);color:var(--dim);font-variant-numeric:tabular-nums;
+  white-space:nowrap;flex:none}
+
+/* ── THE BOARD, v2 ────────────────────────────────────────────────────────
+   One row now carries: name, session state, a month of shape, the live price,
+   the day's move, and where that price sits in its own 52-week range. Tapping
+   the row opens the rest — the extremes, the day's range, the month, volume
+   and the exact time the quote was taken.
+
+   Grid, not flex: every row's columns line up down the whole segment, which
+   is the difference between a table and a list of pills. */
+/* NAMED AREAS, not auto-placement. The range bar spans the full row on a
+   narrow viewport and sits inline on a wide one; with auto-placement a
+   full-width span pushes the price and the change onto a third row, which is
+   exactly what it did the first time this was written. */
+.mk{background:var(--surface);display:grid;
+  grid-template-columns:minmax(0,1.35fr) 96px 100px 78px;
+  grid-template-areas:"n sp p c" "rng rng rng rng";
+  align-items:center;gap:0 14px;padding:11px 14px;width:100%;text-align:left;
+  border:0;border-radius:0;font:inherit;color:inherit;cursor:pointer;
+  transition:background var(--t-fast) var(--ease)}
+.mk:hover{background:var(--raised)}
+.mk[aria-expanded="true"]{background:var(--raised)}
+.mk-n{grid-area:n;display:flex;align-items:center;gap:7px;min-width:0}
+.mk-nm{font-size:13.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-sp{grid-area:sp;width:100%;height:26px;display:flex;align-items:center}
+/* An empty cell reads as a rendering fault. Four of the sixteen India rows
+   have no sparkline because Yahoo publishes no daily close history for those
+   tickers at all — verified, not assumed — so the cell says so. */
+.mk-nosp{font:400 9px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--dim);opacity:.6}
+.mk-p{grid-area:p;font:500 13.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.mk-c{grid-area:c;font:500 12.5px/1 var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+/* Direction is never colour alone: every change carries its own sign, and the
+   caret is a second, non-colour cue for the same fact. */
+.mk-c::before{content:"";display:inline-block;width:0;height:0;margin-right:5px;
+  border-left:3.5px solid transparent;border-right:3.5px solid transparent;vertical-align:middle}
+.mk-c.up::before{border-bottom:5px solid var(--up)}
+.mk-c.dn::before{border-top:5px solid var(--down)}
+.mk-c.fl::before{display:none}
+/* The 52-week bar spans the full row underneath on a phone, and shares the
+   name column on a desk. */
+.mk-rng{grid-area:rng;margin-top:9px;min-width:0}
+.mk-chev{flex:none;width:14px;text-align:center;color:var(--dim);font-size:10px;
+  transition:transform var(--t-mid) var(--ease)}
+.mk[aria-expanded="true"] .mk-chev{transform:rotate(90deg)}
+
+/* SESSION — a real exchange window, from the quote's own trading period.
+   "LIVE" here means the exchange is inside its regular session right now, not
+   that this page just refreshed. */
+.sess{font:500 9px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 5px;border-radius:4px;flex:none;border:1px solid transparent}
+.sess.is-open{color:var(--up);background:var(--up-soft)}
+.sess.is-open i{display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--up);margin-right:4px;animation:mkpulse 2.4s ease-in-out infinite}
+.sess.is-closed{color:var(--dim);border-color:var(--line2)}
+@keyframes mkpulse{0%,100%{opacity:1}50%{opacity:.3}}
+@media(prefers-reduced-motion:reduce){.sess.is-open i{animation:none}}
+
+/* THE DRAWER — height and opacity only, both compositor-friendly. */
+.mk-d{background:var(--raised);overflow:hidden;display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows var(--t-mid) var(--ease)}
+.mk-d.open{grid-template-rows:1fr}
+.mk-d > div{min-height:0;overflow:hidden}
+.mk-dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+  gap:14px 18px;padding:15px 14px 17px}
+.mk-dg > div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mk-dg .k{font:400 9.5px/1.2 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
+.mk-dg .v{font:500 13.5px/1.2 var(--mono);font-variant-numeric:tabular-nums;color:var(--text)}
+.mk-dg .v.na{color:var(--dim);font-weight:400}
+.mk-foot{grid-column:1/-1;font-size:11.5px;line-height:1.55;color:var(--dim);
+  padding-top:4px;border-top:1px solid var(--line)}
+
+.segh{display:flex;align-items:baseline;gap:9px;margin:22px 0 9px;
+  font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.segh .cnt{margin-left:auto;font-weight:400;letter-spacing:.05em;text-transform:none;
+  font-variant-numeric:tabular-nums}
+.segh .when{font-weight:400;letter-spacing:.04em;text-transform:none;color:var(--dim)}
+
+@media(max-width:719px){
+  .mk{grid-template-columns:minmax(0,1fr) 86px 70px;
+    grid-template-areas:"n p c" "rng rng rng";gap:0 10px;padding:11px 12px}
+  .mk-sp{display:none}
+  .mk-p{font-size:13px} .mk-c{font-size:12px}
+  .mk-dg{grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:13px 16px;padding:14px 12px 16px}
+}
+@media(min-width:1040px){
+  /* The name column was 1.05fr against a 0.9fr range and ran to ~600px on a
+     1440 screen — most of it empty, with the sparkline stranded in the middle
+     of the row. Fixed name track, and the slack goes to the range bar, which
+     is the element that actually reads better wider. */
+  .mk{grid-template-columns:minmax(150px,.55fr) 104px minmax(190px,1.15fr) 112px 86px;
+    grid-template-areas:"n sp rng p c";gap:0 18px}
+  .mk-rng{margin-top:0}
+}
+@media(min-width:1300px){.mk{grid-template-columns:minmax(170px,.5fr) 118px minmax(240px,1.2fr) 120px 90px}}
+
+/* ── SMART TOOLTIP ────────────────────────────────────────────────────────
+   One component, hover AND focus AND tap. Hover alone is unusable on a phone
+   and invisible to a keyboard, so the trigger is a real <button> and the tip
+   is toggled by class, not by :hover. */
+/* The visible ring stays 14px; the TARGET is 24px. A 14px button is under
+   every touch-target minimum there is, and the fix is the box, not the mark —
+   growing the ring would make a help affordance louder than the data. */
+.tipb{background:none;margin:0;cursor:help;color:var(--dim);
+  font:500 9.5px/1 var(--mono);display:inline-grid;place-items:center;
+  width:24px;height:24px;padding:0;border:0;border-radius:50%;position:relative;
+  transition:color var(--t-fast) var(--ease)}
+.tipb::before{content:"";position:absolute;width:14px;height:14px;border-radius:50%;
+  border:1px solid var(--line2);transition:border-color var(--t-fast) var(--ease)}
+.tipb:hover::before,.tipb[aria-expanded="true"]::before{border-color:currentColor}
+.tipb:hover,.tipb[aria-expanded="true"]{color:var(--text)}
+/* POSITION: FIXED, NOT ABSOLUTE.
+   An absolutely-positioned card that is merely visibility:hidden still takes
+   part in its ancestor's scrollable overflow. Every closed tooltip near the
+   right edge of a 390px phone therefore widened the document to 458px and the
+   whole page scrolled sideways with nothing visible to explain it — the
+   markets route was doing exactly that. A fixed element contributes nothing to
+   document overflow, so a closed tip now costs the layout nothing at all.
+   The trade is that the card no longer follows the page, so a scroll closes
+   any open tip rather than leaving it stranded. */
+.tipc{--ax:50%;position:fixed;top:0;left:0;
+  width:max-content;max-width:min(74vw,260px);z-index:60;
+  background:var(--text);color:var(--bg);padding:9px 11px;border-radius:7px;
+  font:400 12px/1.45 var(--ui);letter-spacing:.005em;
+  opacity:0;visibility:hidden;pointer-events:none;transform:translateY(4px);
+  transition:opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease),visibility var(--t-fast)}
+.tipc b{display:block;font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  opacity:.6;margin-bottom:5px}
+.tipc.on{opacity:1;visibility:visible;transform:translateY(0)}
+/* The arrow tracks the trigger even when the card has been nudged inboard. */
+.tipc::after{content:"";position:absolute;top:100%;left:var(--ax);margin-left:-5px;
+  border:5px solid transparent;border-top-color:var(--text)}
+.tipc.below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--text)}
+
+/* ── DATA STATE ───────────────────────────────────────────────────────────
+   Six states, each with a word as well as a colour. A page that shows a stale
+   number in the same treatment as a live one is lying by omission. */
+.dstate{display:inline-flex;align-items:center;gap:6px;font:500 9.5px/1 var(--mono);
+  letter-spacing:.12em;text-transform:uppercase;padding:4px 7px;border-radius:5px;
+  border:1px solid var(--line2);color:var(--dim);white-space:nowrap}
+.dstate i{width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+.dstate.live{color:var(--up);border-color:transparent;background:var(--up-soft)}
+.dstate.live i{animation:mkpulse 2.4s ease-in-out infinite}
+.dstate.delayed{color:var(--warn);border-color:transparent;background:var(--warn-soft)}
+.dstate.stale{color:var(--warn);border-color:transparent;background:var(--warn-soft)}
+.dstate.closed{color:var(--dim)}
+.dstate.nodata{color:var(--dim);border-style:dashed}
+.dstate.error{color:var(--down);border-color:transparent;background:var(--down-soft)}
+@media(prefers-reduced-motion:reduce){.dstate.live i{animation:none}}
+
+/* ═══════════ BRIEF — THE INTERACTIVE LAYER ═══════════════════════════════
+   Added to the existing brief, not instead of it. Every section that was
+   there is still there; these are the instruments that turn a research page
+   into something you can interrogate.                                       */
+
+/* ── QUICK NAV — where you are in the argument ───────────────────────────── */
+.b-qnav{position:sticky;top:calc(var(--barh) + 46px);z-index:30;margin:0 0 -1px;
+  display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;
+  background:color-mix(in srgb,var(--b-bg) 92%,transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--b-line);padding:8px 0}
+.b-qnav::-webkit-scrollbar{display:none}
+.b-qnav a{flex:none;padding:8px 13px;border-radius:6px;white-space:nowrap;
+  font:500 10.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--b-dim);min-height:32px;display:inline-flex;align-items:center;gap:7px;
+  transition:color var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
+.b-qnav a:hover{color:var(--b-ink);background:var(--b-hi)}
+.b-qnav a[aria-current="true"]{color:var(--b-ink);background:var(--b-hi)}
+.b-qnav a .kb{font-size:9px;opacity:.5;border:1px solid currentColor;border-radius:3px;
+  padding:1px 3px;line-height:1}
+@media(max-width:759px){.b-qnav{top:var(--barh)}}
+
+/* ── TRADE JOURNEY — the narrative spine ─────────────────────────────────── */
+.b-jr{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;
+  margin:26px 0 0;padding:0;overflow-x:auto;scrollbar-width:none}
+.b-jr::-webkit-scrollbar{display:none}
+.b-jn{position:relative;padding:16px 10px 0;text-align:center;min-width:96px}
+.b-jn::before{content:"";position:absolute;top:5px;left:0;right:0;height:1px;background:var(--b-line2)}
+.b-jn:first-child::before{left:50%} .b-jn:last-child::before{right:50%}
+.b-jn i{position:absolute;top:1px;left:50%;margin-left:-5px;width:9px;height:9px;border-radius:50%;
+  background:var(--b-bg);border:1.5px solid var(--b-line2);
+  transition:background var(--t-mid) var(--ease),border-color var(--t-mid) var(--ease),
+             transform var(--t-mid) var(--ease-out)}
+.b-jn b{display:block;font:500 9.5px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--b-dim);transition:color var(--t-mid) var(--ease)}
+.b-jn span{display:block;font-size:11px;line-height:1.4;color:var(--b-dim);opacity:.7;margin-top:4px}
+.b-jn.done i{background:var(--b-line2);border-color:var(--b-line2)}
+.b-jn.on i{background:var(--b-acc);border-color:var(--b-acc);transform:scale(1.25)}
+.b-jn.on b{color:var(--b-acc)}
+.b-jn.done b{color:var(--b-mut)}
+
+/* ── THE CHART — real closes, real levels ────────────────────────────────── */
+.b-px{position:relative;margin-top:22px;border:1px solid var(--b-line);border-radius:12px;
+  background:var(--b-sur);overflow:hidden}
+.b-px-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding:14px 16px 0;font:500 10px/1 var(--mono);letter-spacing:.13em;
+  text-transform:uppercase;color:var(--b-dim)}
+.b-px-h .rgs{margin-left:auto;display:flex;gap:2px}
+.b-px-h .rgs button{background:none;border:1px solid transparent;border-radius:5px;
+  color:var(--b-dim);font:500 10px/1 var(--mono);letter-spacing:.1em;padding:6px 9px;
+  min-height:28px;cursor:pointer;transition:color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),background var(--t-fast) var(--ease)}
+.b-px-h .rgs button:hover{color:var(--b-ink);background:var(--b-hi)}
+.b-px-h .rgs button[aria-pressed="true"]{color:var(--b-ink);border-color:var(--b-line2)}
+.b-px-c{position:relative;touch-action:pan-y}
+.b-px-c svg{display:block;width:100%;height:clamp(240px,32vw,340px)}
+.b-px-c .grid line{stroke:var(--b-line);stroke-width:1}
+.b-px-c .price{fill:none;stroke:var(--b-acc);stroke-width:1.75;
+  stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.b-px-c .parea{fill:url(#bgrad);stroke:none}
+/* Every overlay starts hidden and is revealed by the scroll story, in the
+   order the argument is made. Opacity and transform only — no layout. */
+.b-ov{opacity:0;transition:opacity var(--t-slow) var(--ease)}
+.b-ov.on{opacity:1}
+.b-px-c .lvl{stroke-width:1;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+.b-px-c .lvl.t{stroke:var(--b-bull)} .b-px-c .lvl.s{stroke:var(--b-bear)}
+.b-px-c .lvl.e{stroke:var(--b-ink);stroke-dasharray:none;opacity:.55}
+.b-px-c .lvl.k{stroke:var(--b-gold)}
+.b-px-c .zone.r{fill:var(--b-bear);opacity:.09}
+.b-px-c .zone.g{fill:var(--b-bull);opacity:.09}
+.b-px-c text.ltag{font:500 9px var(--mono);letter-spacing:.08em;fill:var(--b-dim)}
+.b-px-c .cross{stroke:var(--b-line2);stroke-width:1;pointer-events:none}
+.b-px-c .cdot{fill:var(--b-acc);stroke:var(--b-sur);stroke-width:2;pointer-events:none}
+.b-px-hit{position:absolute;inset:0;cursor:crosshair}
+/* The floating read-out. Small on purpose: a tooltip that covers the chart is
+   worse than no tooltip. */
+.b-px-t{position:absolute;top:10px;left:0;z-index:5;pointer-events:none;
+  background:var(--b-hi);border:1px solid var(--b-line2);border-radius:8px;padding:8px 10px;
+  font:500 11px/1.5 var(--mono);font-variant-numeric:tabular-nums;color:var(--b-ink);
+  white-space:nowrap;opacity:0;transform:translateY(-3px);
+  transition:opacity var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
+.b-px-t.on{opacity:1;transform:translateY(0)}
+.b-px-t i{display:block;font-style:normal;color:var(--b-dim);font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.b-px-t em{font-style:normal;color:var(--b-mut)}
+.b-px-f{display:flex;gap:14px;flex-wrap:wrap;padding:10px 16px 14px;border-top:1px solid var(--b-line);
+  font:500 9.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--b-dim)}
+.b-px-f span{display:inline-flex;align-items:center;gap:6px}
+.b-px-f i{width:14px;height:0;border-top:2px solid currentColor;display:inline-block}
+.b-px-f .t{color:var(--b-bull)} .b-px-f .s{color:var(--b-bear)}
+.b-px-f .e{color:var(--b-ink)} .b-px-f .k{color:var(--b-gold)} .b-px-f .p{color:var(--b-acc)}
+
+/* ── THE LADDER, now interactive ─────────────────────────────────────────── */
+.b-lvl{cursor:default}
+.b-lvl.hot .b-lvl-line{opacity:1;height:2px}
+.b-lvl.hot .b-lvl-tag,.b-lvl.hot .b-lvl-val{color:var(--b-ink)}
+.b-lvl-d{font:500 10.5px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--b-dim);
+  flex:none;min-width:96px;text-align:right;opacity:0;transition:opacity var(--t-fast) var(--ease)}
+.b-lvl:hover .b-lvl-d,.b-lvl.hot .b-lvl-d,.b-lvl:focus-within .b-lvl-d{opacity:1}
+.b-lvl:hover .b-lvl-line{opacity:1}
+
+/* ── ENTRY STATE ─────────────────────────────────────────────────────────── */
+.b-zone{margin-top:24px;border:1px solid var(--b-line);border-radius:12px;background:var(--b-sur);
+  padding:clamp(18px,3vw,26px)}
+.b-zone-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.b-zst{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  padding:7px 11px;border-radius:6px;border:1px solid transparent}
+.b-zst.wait{color:var(--b-gold);background:rgba(201,169,97,.14)}
+.b-zst.active{color:var(--b-bull);background:rgba(78,158,114,.15)}
+.b-zst.missed{color:var(--b-mut);border-color:var(--b-line2)}
+.b-zst.invalid{color:var(--b-bear);background:rgba(193,95,84,.15)}
+.b-zt{position:relative;height:6px;border-radius:4px;background:var(--b-hi);margin:22px 0 10px}
+.b-zt .band{position:absolute;top:0;bottom:0;background:rgba(78,158,114,.28);border-radius:4px}
+.b-zt .stop{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--b-bear)}
+.b-zt .tgt{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--b-bull)}
+.b-zt .now{position:absolute;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;
+  background:var(--b-acc);border:2px solid var(--b-sur);
+  transition:left var(--t-slow) var(--ease-out)}
+.b-zl{display:flex;justify-content:space-between;font:500 10px/1 var(--mono);color:var(--b-dim);
+  letter-spacing:.09em;text-transform:uppercase}
+
+/* ── CONFIDENCE, as an instrument ────────────────────────────────────────── */
+.b-conf{display:grid;gap:26px;margin-top:26px}
+@media(min-width:860px){.b-conf{grid-template-columns:280px 1fr;gap:40px;align-items:start}}
+.b-dial{position:relative;display:grid;place-items:center;aspect-ratio:1;max-width:240px}
+.b-dial svg{width:100%;height:100%;transform:rotate(-90deg)}
+.b-dial .trk{fill:none;stroke:var(--b-hi);stroke-width:10}
+.b-dial .seg{fill:none;stroke-width:10;stroke-linecap:butt;cursor:pointer;
+  transition:stroke-width var(--t-fast) var(--ease),opacity var(--t-fast) var(--ease)}
+.b-dial .seg:hover,.b-dial .seg.hot{stroke-width:15}
+.b-dial .seg.dim{opacity:.28}
+.b-dial-c{position:absolute;text-align:center;pointer-events:none}
+.b-dial-c b{display:block;font:400 clamp(38px,6vw,54px)/1 var(--b-serif);color:var(--b-ink);
+  font-variant-numeric:tabular-nums}
+.b-dial-c i{display:block;font:500 9.5px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--b-dim);font-style:normal;margin-top:8px}
+.b-cbtns{display:flex;gap:2px;margin-top:14px;justify-content:center}
+.b-cbtns button{background:none;border:1px solid var(--b-line2);color:var(--b-dim);cursor:pointer;
+  font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 12px;border-radius:6px;min-height:32px;
+  transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.b-cbtns button[aria-pressed="true"]{color:var(--b-ink);border-color:var(--b-ink)}
+.b-crow{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  padding:13px 0;border-bottom:1px solid var(--b-line);cursor:pointer;width:100%;
+  background:none;border-left:0;border-right:0;border-top:0;text-align:left;
+  font:inherit;color:inherit;transition:opacity var(--t-fast) var(--ease)}
+.b-crow:last-of-type{border-bottom:0}
+.b-crow .dot{width:9px;height:9px;border-radius:2px;flex:none}
+.b-crow .nm{font:500 12px/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--b-mut)}
+.b-crow .why{font-family:var(--ui);font-size:12.5px;line-height:1.5;letter-spacing:0;
+  text-transform:none;color:var(--b-dim);margin-top:5px;max-width:52ch;
+  display:none}
+.b-crow.open .why{display:block}
+.b-crow .tr{position:relative;height:4px;border-radius:3px;background:var(--b-hi);min-width:60px}
+.b-crow .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;width:0;
+  transition:width var(--t-slow) var(--ease-out)}
+.b-crow .sc{font:500 14px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--b-ink);
+  min-width:34px;text-align:right}
+.b-crow.dim{opacity:.4}
+
+/* ── CONFLUENCE MATRIX ───────────────────────────────────────────────────── */
+.b-mx{margin-top:24px;border:1px solid var(--b-line);border-radius:12px;overflow:hidden}
+.b-mxh,.b-mxr{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(56px,.7fr))}
+.b-mxh{background:var(--b-hi);font:500 9.5px/1 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--b-dim)}
+.b-mxh span{padding:11px 12px;text-align:center}
+.b-mxh span:first-child{text-align:left}
+.b-mxr{background:none;border:0;border-top:1px solid var(--b-line);width:100%;
+  font:inherit;color:inherit;text-align:left;cursor:pointer;align-items:center;
+  transition:background var(--t-fast) var(--ease)}
+.b-mxr:hover{background:var(--b-hi)}
+.b-mxr .f{padding:13px 12px;font:500 11.5px/1 var(--mono);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--b-mut)}
+.b-mxr .c{padding:13px 12px;display:grid;place-items:center}
+.b-mxr .c u{display:block;width:9px;height:9px;border-radius:50%;background:var(--b-line2);
+  text-decoration:none;transition:transform var(--t-mid) var(--ease-out)}
+.b-mxr .c.hit u{background:currentColor;transform:scale(1.5)}
+.b-mxr .c.bull{color:var(--b-bull)} .b-mxr .c.neu{color:var(--b-gold)} .b-mxr .c.bear{color:var(--b-bear)}
+.b-mxd{grid-column:1/-1;padding:0 12px;font-size:13px;line-height:1.6;color:var(--b-mut);
+  display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--t-mid) var(--ease)}
+.b-mxd > span{min-height:0;overflow:hidden;display:block}
+.b-mxr.open .b-mxd{grid-template-rows:1fr;padding-bottom:14px}
+
+/* ── REGIME GAUGE ────────────────────────────────────────────────────────── */
+.b-rg{margin-top:24px;display:grid;gap:22px}
+@media(min-width:760px){.b-rg{grid-template-columns:1fr 1fr;gap:34px}}
+.b-rgb{border:1px solid var(--b-line);border-radius:12px;background:var(--b-sur);padding:20px}
+.b-rgb h4{font:500 9.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--b-dim)}
+.b-rgv{font:400 clamp(22px,3vw,30px)/1.1 var(--b-serif);color:var(--b-ink);margin-top:11px}
+.b-rgt{position:relative;height:4px;border-radius:3px;margin:20px 0 9px;
+  background:linear-gradient(90deg,var(--b-acc),var(--b-gold),var(--b-bear))}
+.b-rgt i{position:absolute;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;
+  background:var(--b-ink);border:2px solid var(--b-sur);transition:left var(--t-slow) var(--ease-out)}
+.b-rgl{display:flex;justify-content:space-between;font:500 9.5px/1 var(--mono);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--b-dim)}
+.b-rgn{font-size:12.5px;line-height:1.6;color:var(--b-dim);margin-top:13px}
+
+/* ── SCENARIOS ───────────────────────────────────────────────────────────── */
+.b-scb{display:flex;gap:2px;margin-top:24px;flex-wrap:wrap}
+.b-scb button{background:none;border:1px solid var(--b-line2);border-radius:7px;cursor:pointer;
+  color:var(--b-dim);font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  padding:11px 15px;min-height:38px;
+  transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),
+             background var(--t-fast) var(--ease)}
+.b-scb button:hover{color:var(--b-ink)}
+.b-scb button[aria-pressed="true"]{color:var(--b-ink);border-color:currentColor}
+.b-scb button.bull[aria-pressed="true"]{color:var(--b-bull);background:rgba(78,158,114,.12)}
+.b-scb button.base[aria-pressed="true"]{color:var(--b-acc);background:rgba(122,155,238,.12)}
+.b-scb button.bear[aria-pressed="true"]{color:var(--b-bear);background:rgba(193,95,84,.12)}
+.b-scp{margin-top:22px;border:1px solid var(--b-line);border-radius:12px;background:var(--b-sur);
+  padding:clamp(20px,3vw,28px)}
+.b-scp h4{font:400 clamp(19px,2.4vw,25px)/1.22 var(--b-serif);color:var(--b-ink);max-width:30ch}
+.b-scp p{font-size:14.5px;line-height:1.62;color:var(--b-mut);margin-top:12px;max-width:62ch}
+.b-scg{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;
+  background:var(--b-line);border:1px solid var(--b-line);border-radius:10px;overflow:hidden;
+  margin-top:22px}
+.b-scg > div{background:var(--b-sur);padding:14px 15px}
+.b-scg .k{display:block;font:500 9.5px/1.2 var(--mono);letter-spacing:.11em;
+  text-transform:uppercase;color:var(--b-dim)}
+.b-scg .v{display:block;font:500 16px/1.2 var(--mono);margin-top:8px;font-variant-numeric:tabular-nums}
+
+/* ── RISK / REWARD, proportional and adjustable ──────────────────────────── */
+.b-rr{margin-top:24px;display:grid;gap:26px}
+@media(min-width:900px){.b-rr{grid-template-columns:1fr 1fr;gap:40px;align-items:start}}
+.b-rrb{display:grid;gap:12px}
+.b-rrb .row{display:grid;grid-template-columns:74px 1fr auto;gap:12px;align-items:center}
+.b-rrb .row .k{font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--b-dim)}
+.b-rrb .row .b{height:26px;border-radius:5px;transition:width var(--t-slow) var(--ease-out);min-width:2px}
+.b-rrb .row .b.loss{background:linear-gradient(90deg,rgba(193,95,84,.75),rgba(193,95,84,.35))}
+.b-rrb .row .b.gain{background:linear-gradient(90deg,rgba(78,158,114,.75),rgba(78,158,114,.35))}
+.b-rrb .row .v{font:500 13.5px/1 var(--mono);font-variant-numeric:tabular-nums}
+.b-sl{display:grid;gap:16px}
+.b-sl label{display:block;font:500 9.5px/1 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--b-dim);margin-bottom:9px}
+.b-sl .lv{float:right;color:var(--b-ink);font-size:11px;letter-spacing:.04em}
+.b-sl input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:none;
+  height:24px;cursor:pointer}
+.b-sl input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:3px;background:var(--b-hi)}
+.b-sl input[type=range]::-moz-range-track{height:4px;border-radius:3px;background:var(--b-hi)}
+.b-sl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
+  border-radius:50%;background:var(--b-ink);border:0;margin-top:-6px}
+.b-sl input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;
+  background:var(--b-ink);border:0}
+.b-sl input[type=range]:focus-visible{outline:2px solid var(--b-acc);outline-offset:3px;border-radius:4px}
+.b-reset{background:none;border:1px solid var(--b-line2);border-radius:6px;color:var(--b-dim);
+  font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:9px 12px;
+  min-height:32px;cursor:pointer;justify-self:start}
+.b-reset:hover{color:var(--b-ink);border-color:var(--b-ink)}
+.b-sim{font-size:12.5px;line-height:1.6;color:var(--b-gold);margin-top:14px;
+  border-left:2px solid var(--b-gold);padding-left:12px}
+
+/* ── LEDGER TIMELINE ─────────────────────────────────────────────────────── */
+.b-tl{margin-top:24px;display:grid;gap:0}
+.b-tli{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:15px 0;
+  border-top:1px solid var(--b-line);opacity:0;transform:translateY(6px);
+  transition:opacity var(--t-slow) var(--ease),transform var(--t-slow) var(--ease-out)}
+.b-tli.in{opacity:1;transform:none}
+.b-tli .w{font:500 11px/1.4 var(--mono);color:var(--b-dim);font-variant-numeric:tabular-nums}
+.b-tli .t{font-size:14px;line-height:1.55;color:var(--b-mut)}
+.b-tli .t b{color:var(--b-ink);font-weight:600}
+
+/* ── SKELETON, brief-flavoured ───────────────────────────────────────────── */
+.b-sk{background:var(--b-sur);border:1px solid var(--b-line);border-radius:12px;
+  position:relative;overflow:hidden}
+.b-sk::after{content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);
+  animation:sweep 1.4s infinite}
+@media(prefers-reduced-motion:reduce){.b-sk::after{animation:none}}
+
+/* ── MICRO-INTERACTION BASELINE ──────────────────────────────────────────── */
+.brief .b-m,.brief .b-vi,.brief .b-sc,.brief .b-scg > div{
+  transition:background var(--t-fast) var(--ease)}
+.brief .b-m:hover,.brief .b-vi:hover{background:var(--b-hi)}
+.brief button:focus-visible,.brief a:focus-visible,.brief input:focus-visible{
+  outline:2px solid var(--b-acc);outline-offset:2px}
+.b-reveal{opacity:0;transform:translateY(14px);
+  transition:opacity var(--t-slow) var(--ease),transform var(--t-slow) var(--ease-out)}
+.b-reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .b-reveal,.b-tli{opacity:1;transform:none;transition:none}
+  .b-ov{opacity:1}
+}
+
+/* ── CHART LABELS AND CROSSHAIR ───────────────────────────────────────────
+   Labels are HTML, not <text>. The svg is stretched with
+   preserveAspectRatio="none" so it fills any box without a measurement pass,
+   and stretched SVG text is unreadable — so the geometry lives in the svg and
+   every word lives above it, positioned by percentage. */
+.b-px-labs{position:absolute;inset:0;pointer-events:none}
+.b-px-lab{position:absolute;right:10px;transform:translateY(-50%);
+  font:500 9px/1 var(--mono);letter-spacing:.11em;
+  background:color-mix(in srgb,var(--b-sur) 88%,transparent);
+  padding:3px 6px;border-radius:4px;white-space:nowrap;color:var(--b-dim)}
+.b-px-lab b{font-weight:500;font-variant-numeric:tabular-nums}
+.b-px-lab.t{color:var(--b-bull)} .b-px-lab.s{color:var(--b-bear)}
+.b-px-lab.e{color:var(--b-ink)} .b-px-lab.k{color:var(--b-gold)}
+.b-px-dot{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;
+  background:var(--b-acc);border:2px solid var(--b-sur);pointer-events:none;opacity:0;
+  transition:opacity var(--t-fast) var(--ease)}
+.b-px-c svg{height:clamp(230px,30vw,330px)}
+@media(max-width:559px){
+  .b-px-lab{font-size:8.5px;right:6px;padding:2px 4px}
+  .b-px-t{font-size:10.5px;padding:7px 9px}
+}
+
+/* The tooltip inherits the SITE's ink-on-paper treatment, which is a black
+   card. Inside the brief the ground is already near-black, so the card is
+   inverted there instead — otherwise it reads as a hole in the page. */
+.brief .tipb{color:var(--b-dim)}
+.brief .tipb::before{border-color:var(--b-line2)}
+.brief .tipb:hover,.brief .tipb[aria-expanded="true"]{color:var(--b-ink)}
+/* The card lives on <body>, outside .brief, so it cannot be selected by a
+   descendant rule. openTip() tags it instead when its trigger is in the brief. */
+.tipc.on-dark{background:#191D23;color:#F3F5F8;border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 8px 26px rgba(0,0,0,.45)}
+.tipc.on-dark::after{border-top-color:#191D23}
+.tipc.on-dark.below::after{border-top-color:transparent;border-bottom-color:#191D23}
+.tipc.on-dark b{color:#98A0AB;opacity:1}
+
+/* ── TOUCH TARGETS ────────────────────────────────────────────────────────
+   Two elements were under the 24px minimum once they became interactive.
+
+   .b-lvl is a 13px row on the ladder. It is now focusable and hoverable, so
+   it needs a target. min-height grows it symmetrically — the row is already
+   centred on its own level by translateY(-50%), so the line does not move. */
+.b-lvl{min-height:26px}
+/* .lnks a ("Details", "Chart" on a signal card) was 19px tall and has been
+   since it was written — it only surfaced once every target on the page was
+   measured. Padding, not font size: the type is correct, the box was not. */
+.lnks a{display:inline-flex;align-items:center;min-height:26px;padding:3px 0}

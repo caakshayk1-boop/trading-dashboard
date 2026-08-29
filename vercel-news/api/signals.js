@@ -16,7 +16,7 @@
 import { db, num, str, badgeOf, json, fail, columns, optional, currencyOf } from "./_db.js";
 import { distinctTargets } from "./_levels.js";
 import { simulateWallet, START_DATE as WALLET_START_DATE } from "./_paper_wallet.js";
-import { quoteAll } from "./ticker.js";
+import { quoteAll, sparkSeries } from "./ticker.js";
 
 // The ₹50L paper wallet (?wallet=1) lives in this file rather than its own
 // api/paper_wallet.js — Vercel's free Hobby plan caps a deployment at 12
@@ -86,6 +86,52 @@ export default async function handler(req, res) {
    * and quoteAll chunks it, so 40 is two round trips; letting a caller ask for
    * 500 would be a free way to make this function time out.
    */
+  /* ?series=SYMBOL[&range=6mo] — daily closes for one instrument.
+   *
+   * This exists so the trading brief can draw a chart out of prices that
+   * actually happened. Before it, /brief carried a "level map" with a caption
+   * apologising that no feed here serves price history — which was true of the
+   * ROUTES, not of the upstream: Yahoo's spark endpoint returns the close
+   * series on the same call shape the rail already uses.
+   *
+   * On this route rather than its own file for the same hard reason as ?px and
+   * ?wallet above: the deployment sits exactly at Hobby's 12-function cap and a
+   * thirteenth route file breaks the whole deploy with no visible error.
+   *
+   * ONE symbol per call, and only ranges Yahoo actually accepts. Closes only —
+   * no open/high/low is served here, so nothing downstream can draw a candle
+   * it does not have the data for.
+   */
+  if (q.series) {
+    const RANGES = new Set(["1mo", "3mo", "6mo", "1y", "2y", "5y"]);
+    const range = RANGES.has(String(q.range)) ? String(q.range) : "6mo";
+    const bare = String(q.series).toUpperCase().trim().replace(/[^A-Z0-9&.=^-]/g, "");
+    if (!bare) return fail(res, 400, "series needs a symbol");
+    // A bare NSE ticker gets the .NS suffix; anything already carrying an
+    // exchange marker (^NSEI, GC=F, USDINR=X, BTC-USD) is passed through as-is.
+    const yh = /[.=^]/.test(bare) || /-USD$/.test(bare) ? bare : `${bare}.NS`;
+    try {
+      const got = await sparkSeries([yh], range, "1d");
+      const pairs = got.get(yh);
+      if (!pairs || pairs.length < 3) {
+        // 200 with points:[] would be a success response carrying nothing —
+        // the failure mode that looks most like working. Say it plainly.
+        return fail(res, 404, `no price history for ${bare}`);
+      }
+      res.setHeader("Cache-Control", "public, max-age=900, stale-while-revalidate=3600");
+      return res.status(200).json({
+        ok: true, symbol: bare, yahoo: yh, range, interval: "1d",
+        at: new Date().toISOString(),
+        points: pairs.map(([t, c]) => ({
+          t: t ? new Date(t * 1000).toISOString().slice(0, 10) : null,
+          c: Math.round(c * 100) / 100,
+        })),
+      });
+    } catch (e) {
+      return fail(res, 502, `series unavailable: ${e.message}`);
+    }
+  }
+
   if (q.px) {
     const syms = String(q.px).toUpperCase().split(",")
       .map((x) => x.trim().replace(/[^A-Z0-9&.-]/g, ""))

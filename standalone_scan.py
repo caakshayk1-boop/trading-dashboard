@@ -10,8 +10,10 @@ Schedule (IST):
     16:30 — EOD: Breakouts (daily candle closed) + AI daily + commodities
 
   SATURDAY 09:30:
-    Full routine scan (all of above) + Potential Multibaggers
-    + ai_longterm + magic / magicmagic recovery screens
+    Full routine scan + Potential Multibaggers + ai_longterm
+    + magic / magicmagic recovery screens.
+    NO commodity scan — COMEX is closed all day Saturday, so it would only
+    ever re-read Thursday's close. See the weekend branch for the evidence.
 
 NSE holidays: scan skipped automatically.
 
@@ -1545,7 +1547,24 @@ def main():
             _safe("fno_alerts",                run_fno_alerts,     time_str, signals)
             breakouts = _safe("breakout_scan", run_breakout_scan,  time_str)
             tlm_daily = _safe("tlm_daily",     run_tlm_scan,       time_str, interval="1d")
-            comms     = _safe("commodity_scan",run_commodity_scan, time_str)
+            # NO COMMODITY SCAN ON SATURDAY.
+            #
+            # This branch used to call run_commodity_scan and it produced a
+            # natural gas signal on Saturday 2026-08-29. Commodity futures are
+            # shut all day Saturday — CME runs Sunday 18:00 ET to Friday 17:00
+            # ET — so the scan was reading Thursday's close and publishing an
+            # entry nobody could take until Sunday evening, by which point the
+            # market has had a whole session to gap away from it.
+            #
+            # Checked, not assumed: Yahoo's daily series for NG=F contains bars
+            # for Mon-Fri only, with no Saturday bar anywhere in it, and even
+            # Friday 2026-08-28 came back with a null close.
+            #
+            # The justification for COMEX in the weekend slot was that it
+            # "trades nearly around the clock". That is true from Sunday
+            # evening to Friday evening and false on the one day this slot
+            # runs. The `holiday` slot below KEEPS its commodity scan on
+            # purpose — an NSE holiday falls on a weekday, when COMEX is open.
             mbs       = _safe("multibagger",   run_multibagger_scan, time_str)
             lt        = _safe("ai_longterm",   run_ai_longterm_scan, time_str)
             # Third weekly engine on the same Saturday clock. It was only ever
@@ -1555,7 +1574,7 @@ def main():
             counts    = {
                 "4h": len(sigs_4h), "ai_4h": len(tlm_4h),
                 "swing": len(signals), "breakouts": len(breakouts),
-                "ai_daily": len(tlm_daily), "commodities": len(comms),
+                "ai_daily": len(tlm_daily),
                 "multibaggers": len(mbs), "longterm": len(lt),
                 "magic": len(mgc),
             }

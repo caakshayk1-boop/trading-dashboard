@@ -103,14 +103,280 @@
 
   /* ── shell ─────────────────────────────────────────────────────────────── */
   const main = document.getElementById('main');
-  const paint = html => { main.innerHTML = html; };
+  /* Every route repaints <main> wholesale, so listeners bound to nodes inside
+   * it die with them. Listeners bound to WINDOW or DOCUMENT do not — the brief
+   * binds a scroll handler and a keyboard handler that would otherwise stack
+   * up one copy per repaint, and the page repaints itself every 60 seconds.
+   * paint() fires a teardown first so those can remove themselves. */
+  const paint = html => {
+    main.dispatchEvent(new CustomEvent('sig:teardown'));
+    main.innerHTML = html;
+  };
 
-  const head = (title, sub) =>
-    `<div class="route-h"><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div>`;
-  const sec = (label, body, n) =>
-    `<section class="sec"><div class="sec-h"><h2>${esc(label)}</h2>${n ? `<span class="sec-n">${esc(n)}</span>` : ''}</div>${body}</section>`;
+  // A mono eyebrow, a serif headline, one line of standfirst — the brief's
+  // masthead rhythm, now the rhythm of every route. `eyebrow` defaults to the
+  // product name so a route that says nothing still gets the structure.
+  const head = (title, sub, eyebrow) =>
+    `<div class="route-h"><span class="eyebrow">${esc(eyebrow || 'Signal')}</span>
+      <h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div>`;
+  // `lead` is the serif line under the label: the label says what the block
+  // IS, the lead says what it MEANS. Blocks with nothing to add omit it.
+  const sec = (label, body, n, lead) =>
+    `<section class="sec"><div class="sec-h"><h2>${esc(label)}</h2>${n ? `<span class="sec-n">${esc(n)}</span>` : ''}</div>${lead ? `<p class="sec-lead">${esc(lead)}</p>` : ''}${body}</section>`;
   const tile = (v, k, sub, cls) =>
     `<div class="tile"><div class="v ${cls || ''}">${v}</div>${sub ? `<div class="sub">${sub}</div>` : ''}<div class="k">${esc(k)}</div></div>`;
+
+  /* ── ANIMATED NUMBER ─────────────────────────────────────────────────────
+   * One implementation, used everywhere a figure is worth watching arrive.
+   *
+   * Rules it keeps: it animates only when the value MEANINGFULLY changes, it
+   * preserves the caller's decimal precision, it uses tabular numerals so the
+   * element never changes width mid-count, and it does nothing at all under
+   * prefers-reduced-motion — the final value is written on the first frame.
+   *
+   * rAF is used because this is genuinely frame-driven, and it is safe here
+   * for the same reason it is unsafe elsewhere on this site: it drives a
+   * one-shot count that is allowed not to run in a hidden tab, rather than a
+   * layout the page depends on. If the tab is hidden the value is simply
+   * already correct.
+   */
+  const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function countTo(el, to, opts) {
+    const o = opts || {};
+    const dp = o.dp == null ? 0 : o.dp;
+    const pre = o.pre || '', post = o.post || '';
+    const write = v => { el.textContent = pre + v.toFixed(dp) + post; };
+    const from = Number(el.dataset.cv);
+    if (!Number.isFinite(to)) { el.textContent = o.blank || '—'; delete el.dataset.cv; return; }
+    el.dataset.cv = String(to);
+    // "Meaningfully" = different at the precision actually displayed.
+    if (REDUCED || !Number.isFinite(from) || from.toFixed(dp) === to.toFixed(dp)) { write(to); return; }
+    const t0 = performance.now(), ms = Math.min(900, 260 + Math.abs(to - from) * 6);
+    let done = false;
+    const step = now => {
+      const k = Math.min(1, (now - t0) / ms);
+      write(from + (to - from) * (1 - Math.pow(1 - k, 3)));   // easeOutCubic
+      if (k < 1) requestAnimationFrame(step); else done = true;
+    };
+    requestAnimationFrame(step);
+    /* rAF DOES NOT RUN IN A HIDDEN TAB — not in the preview pane, and not in a
+     * real reader's background tab either. Without this guard a page opened in
+     * the background renders every animated figure stuck on its start value,
+     * so the confidence score reads 0 and the loss reads nothing. The timer
+     * keeps running where rAF does not; if the chain never finished, the final
+     * value is written outright. */
+    setTimeout(() => { if (!done) write(to); }, ms + 140);
+  }
+
+  /* ── SPARKLINE ───────────────────────────────────────────────────────────
+   * One <path> from real daily closes. A series that is missing, too short or
+   * genuinely flat draws NOTHING — a flat line reads as "this market did not
+   * move", which is a different claim from "this was not measured".
+   */
+  const sparkline = (series, w, h) => {
+    if (!Array.isArray(series) || series.length < 3) return '';
+    const W = w || 96, H = h || 26;
+    const lo = Math.min.apply(null, series), hi = Math.max.apply(null, series);
+    const span = hi - lo;
+    if (!(span > 0)) return '';
+    const n = series.length, pad = 2;
+    const X = i => (i / (n - 1)) * W;
+    const Y = v => pad + (1 - (v - lo) / span) * (H - pad * 2);
+    const d = series.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+    const cls = series[n - 1] > series[0] ? 'up' : series[n - 1] < series[0] ? 'dn' : '';
+    return `<svg class="spark ${cls}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"
+      aria-hidden="true" focusable="false"><path class="fill" d="${d} L${W} ${H} L0 ${H} Z"/>
+      <path class="ln" d="${d}"/></svg>`;
+  };
+
+  /* ── 52-WEEK RANGE BAR ───────────────────────────────────────────────────
+   * Where the price sits between the year's low and its high. Rendered only
+   * when the API gave BOTH extremes; a bar drawn from a guessed range is a
+   * lie with a gradient on it.
+   */
+  const rangeBar = r => r.range_pos == null ? '' : `<div class="rng"
+      title="${esc(r.w52_low_f || '')} low · ${esc(r.w52_high_f || '')} high">
+      <span class="rng-e">${esc(r.w52_low_f || '—')}</span>
+      <span class="rng-t"><span class="rng-f" style="width:${r.range_pos}%"></span
+        ><span class="rng-m" style="left:${r.range_pos}%"></span></span>
+      <span class="rng-e">${esc(r.w52_high_f || '—')}</span></div>`;
+
+  /* ── TIME ────────────────────────────────────────────────────────────────
+   * "in 3h 12m" / "14m ago", from a real epoch. Used for the exchange session
+   * window, which comes from the quote's own trading period rather than a
+   * hardcoded table of market hours that goes wrong on every holiday.
+   */
+  const dur = secs => {
+    const m = Math.round(Math.abs(secs) / 60);
+    if (m < 1) return 'under a minute';
+    if (m < 60) return m + 'm';
+    const h = Math.floor(m / 60), rm = m % 60;
+    if (h < 24) return rm ? h + 'h ' + rm + 'm' : h + 'h';
+    return Math.round(h / 24) + 'd';
+  };
+  const clockAt = (epochSec, tz) => {
+    if (!Number.isFinite(epochSec)) return '';
+    try {
+      return new Date(epochSec * 1000).toLocaleTimeString('en-GB',
+        { timeZone: tz || undefined, hour: '2-digit', minute: '2-digit' });
+    } catch (e) { return ''; }
+  };
+
+  /* Volume, at the scale a reader actually thinks in. Never "0" — an index
+   * reports 0 because it has no volume, not because nothing traded. */
+  const vol = v => !Number.isFinite(v) || v <= 0 ? null
+    : v >= 1e9 ? (v / 1e9).toFixed(2) + 'B'
+    : v >= 1e6 ? (v / 1e6).toFixed(2) + 'M'
+    : v >= 1e3 ? (v / 1e3).toFixed(1) + 'K' : String(Math.round(v));
+
+  /* ── SMART TOOLTIPS ──────────────────────────────────────────────────────
+   * A real <button>, toggled by class. Hover alone is invisible to a keyboard
+   * and unusable on a phone, so every tip opens on click/Enter as well and
+   * closes on Escape. Definitions live in one place so the same term never
+   * gets two explanations on two pages.
+   */
+  const TIPS = {
+    range52: ['52-week range', 'Where the current price sits between the lowest and highest price of the past year. 0% is the year’s low, 100% its high.'],
+    session: ['Session', 'Whether the exchange is inside its regular trading hours right now, taken from the exchange’s own published session window — not from this page’s refresh.'],
+    basis: ['Price basis', 'Which feed the number came from. “Spot” means the price is a spot quote while the 52-week range belongs to the futures contract, so the two are not from the same series.'],
+    rr: ['Risk / reward', 'Potential reward relative to the risk you have defined. 3 : 1 means the first target is three times as far from entry as the stop is.'],
+    confidence: ['Confidence', 'A composite score built from the five components shown beside it. A component with no data is left out of the mean rather than filled in.'],
+    invalidation: ['Invalidation', 'The price at which the reason for the trade no longer exists. Not a target and not a suggestion — a level at which the position is closed.'],
+    expectancy: ['Expectancy', 'The average result per closed trade, measured in units of the risk taken (R). Negative expectancy means the engine is losing money per trade on this sample.'],
+    regime: ['Market regime', 'Whether price is trending or ranging, and how volatile it has been, measured from the recent daily closes of this instrument.'],
+    zone: ['Entry zone', 'The band of prices at which the published entry is valid. Above it the move has already happened; below it the setup has not triggered.'],
+  };
+  /* ONE CARD, PARENTED TO <body>, NOT ONE PER TRIGGER.
+   *
+   * Two problems killed the per-trigger version, and the portal fixes both.
+   *
+   * 1. A transformed ancestor becomes the containing block for a fixed
+   *    descendant. `.sec` carries a translateY(8px) from the reveal pass, so
+   *    every tooltip inside a section was positioned against the section
+   *    rather than the viewport and landed thousands of pixels off screen.
+   * 2. N hidden cards is N elements taking part in layout. Absolutely
+   *    positioned and merely visibility:hidden, they widened the document to
+   *    458px inside a 390px phone.
+   *
+   * A single card on <body> has no transformed ancestor and no hidden copies.
+   * The trigger carries only a key; the card is filled on open. */
+  const tipCard = document.createElement('div');
+  tipCard.className = 'tipc';
+  tipCard.id = 'tipcard';
+  tipCard.setAttribute('role', 'tooltip');
+  document.body.appendChild(tipCard);
+  let tipOwner = null;
+  let tipOpenedAt = 0;
+
+  const tip = key => TIPS[key]
+    ? `<button type="button" class="tipb" data-tip="${esc(key)}" aria-describedby="tipcard"
+        aria-expanded="false" aria-label="What is ${esc(TIPS[key][0])}?">?</button>` : '';
+
+  /* HOVER OPENS, CLICK PINS. Without the distinction the two gestures fought:
+   * moving the mouse onto a help mark opened the card, and the click that
+   * followed saw it already open and closed it again — so on a desktop the
+   * tooltip could not be clicked open at all. Pinned cards survive the pointer
+   * leaving; Escape, an outside click and a scroll all unpin. */
+  let tipPinned = false;
+  const closeTips = () => {
+    if (tipOwner) tipOwner.setAttribute('aria-expanded', 'false');
+    tipOwner = null;
+    tipPinned = false;
+    tipCard.classList.remove('on');
+  };
+
+  const openTip = b => {
+    const t = TIPS[b.dataset.tip];
+    if (!t) return;
+    tipOwner = b;
+    tipOpenedAt = Date.now();
+    b.setAttribute('aria-expanded', 'true');
+    tipCard.innerHTML = `<b>${esc(t[0])}</b>${esc(t[1])}`;
+    // Inside the brief the ground is near-black, so the card inverts there.
+    tipCard.classList.toggle('on-dark', !!b.closest('.brief'));
+    tipCard.classList.add('on');
+
+    const pad = 10;
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
+    const tb = b.getBoundingClientRect();
+    tipCard.classList.remove('below');
+    tipCard.style.left = '0px'; tipCard.style.top = '0px';
+    const cb = tipCard.getBoundingClientRect();
+    const x = Math.max(pad, Math.min(tb.left + tb.width / 2 - cb.width / 2, vw - pad - cb.width));
+    const below = tb.top - cb.height - 10 < pad;
+    const y = below ? tb.bottom + 10 : tb.top - cb.height - 10;
+    tipCard.classList.toggle('below', below);
+    tipCard.style.left = x.toFixed(0) + 'px';
+    tipCard.style.top = Math.max(pad, Math.min(y, vh - pad - cb.height)).toFixed(0) + 'px';
+    tipCard.style.setProperty('--ax', (tb.left + tb.width / 2 - x).toFixed(0) + 'px');
+  };
+
+  document.addEventListener('click', ev => {
+    const b = ev.target.closest && ev.target.closest('.tipb');
+    const wasPinnedHere = b && b === tipOwner && tipPinned;
+    closeTips();
+    if (b && !wasPinnedHere) { openTip(b); tipPinned = true; }
+  });
+  // Hover is an ADDITION to the click behaviour, never the only way in.
+  document.addEventListener('pointerover', ev => {
+    const b = ev.target.closest && ev.target.closest('.tipb');
+    if (b && ev.pointerType === 'mouse' && b !== tipOwner) openTip(b);
+  });
+  document.addEventListener('pointerout', ev => {
+    const b = ev.target.closest && ev.target.closest('.tipb');
+    if (b && ev.pointerType === 'mouse' && b === tipOwner && !tipPinned) closeTips();
+  });
+  // Keyboard users get the same card on focus, and lose it on blur.
+  document.addEventListener('focusin', ev => {
+    const b = ev.target.closest && ev.target.closest('.tipb');
+    if (b && b !== tipOwner) openTip(b);
+  });
+  document.addEventListener('focusout', ev => {
+    const b = ev.target.closest && ev.target.closest('.tipb');
+    if (b && b === tipOwner && !tipPinned) closeTips();
+  });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeTips(); });
+  // A fixed card cannot follow the page, so scrolling closes it rather than
+  // leaving it hanging over unrelated content.
+  /* The 250ms grace matters: clicking a help mark can itself scroll the page —
+   * the browser brings a partly-visible trigger into view, and the brief's own
+   * section jump animates for a beat afterwards. Without it the card opened and
+   * closed in the same gesture and the tooltip looked broken. */
+  window.addEventListener('scroll', () => {
+    if (tipOwner && Date.now() - tipOpenedAt > 250) closeTips();
+  }, { passive: true });
+
+  /* ── THE LEDGER: LIVE FIRST, BUILD ARTEFACT AS THE FALLBACK ──────────────
+   *
+   * alerts.json is written by generate.py at build time. Everything the
+   * scanner publishes AFTER that build is in Turso and invisible to this page
+   * until the next one — which on 2026-08-29 meant the Saturday weekly screen
+   * (12 magic + 7 magicmagic) ran at 10:48 UTC, five hours after the 05:41
+   * build, and the site showed none of it. alerts.json held zero rows dated
+   * that day while /api/signals held twenty.
+   *
+   * So the API is asked first. Every field this page reads is on it, and the
+   * two it lacks — alert_date and tv — already had fallbacks at every use
+   * (`r.alert_date || r.date`, and chartUrl() defaults to NSE:<symbol>).
+   * It is also uncapped, where alerts.json is trimmed to 200 rows.
+   *
+   * alerts.json remains as the fallback rather than being deleted: if Turso is
+   * unreachable the page still renders this morning's ledger instead of an
+   * error. The caller is told which source answered so it can say so — a page
+   * showing yesterday's data must never look like a page showing today's.
+   */
+  async function ledger() {
+    const live = await get('/api/signals?limit=400');
+    if (live.ok) {
+      const rows = live.data.signals || live.data.rows || [];
+      if (rows.length) return { ok: true, rows, live: true, at: live.data.generated_at };
+    }
+    const snap = await get('/alerts.json');
+    if (!snap.ok) return { ok: false, error: live.error || snap.error };
+    const rows = Array.isArray(snap.data) ? snap.data : (snap.data.rows || []);
+    return { ok: true, rows, live: false, error: live.error };
+  }
 
   /* ── shared widgets ────────────────────────────────────────────────────── */
 
@@ -198,6 +464,126 @@
     if (!d.open) d.showModal();
   }
 
+  /* ── A BOARD ROW ─────────────────────────────────────────────────────────
+   * The old row was name / price / change. Everything else on the response was
+   * being discarded, so a reader could see that Nifty moved +0.35% and not
+   * whether that was a fifth of the way up its year or a whisker off the high.
+   *
+   * Collapsed, a row carries: name, exchange session, a month of shape, the
+   * live price, the day's move and the 52-week position. Expanded, it carries
+   * the rest. Nothing here is computed on the client from a guess — every
+   * field is either present in the payload or printed as "Not measured".
+   */
+  let mkSeq = 0;
+  /* THE DRAWER IS BUILT ON FIRST OPEN, NOT ON PAINT.
+   *
+   * Rendering all sixty-six drawers up front put 4,063 nodes on the markets
+   * route against 649 before — a six-fold increase for detail that nobody had
+   * asked to see yet. The row's data is parked in a map and the drawer's
+   * markup is produced the first time it is opened, which keeps the route at
+   * roughly the DOM it had while carrying far more information than it did.
+   * The map is rebuilt on every paint, so it cannot outgrow the page. */
+  let MKDATA = new Map();
+
+  const mkRow = r => {
+    const id = 'mkd' + (++mkSeq);
+    MKDATA.set(id, r);
+    /* The chip marks what is OPEN and nothing else. A "CLOSED" badge on all
+     * sixteen India rows under a segment header that already says Closed is
+     * sixteen repetitions of one fact, and it crowded out the instrument name.
+     * The state is still stated in words twice — in the segment header and in
+     * the row's own Session field — so nothing is carried by absence alone. */
+    const sess = r.session === 'open' ? `<span class="sess is-open"><i></i>Live</span>` : '';
+    return `<button type="button" class="mk" aria-expanded="false" aria-controls="${id}">
+        <span class="mk-n"><span class="mk-chev" aria-hidden="true">›</span>
+          <span class="mk-nm">${esc(r.name || r.symbol || '')}</span>${sess}</span>
+        <span class="mk-sp">${sparkline(r.trend)
+          || '<span class="mk-nosp" title="No daily close history is published for this instrument">no history</span>'}</span>
+        <span class="mk-rng">${rangeBar(r)}</span>
+        <span class="mk-p">${esc(r.price ?? '—')}</span>
+        <span class="mk-c ${dir(r.change_pct) || 'fl'}">${pct(r.change_pct)}</span>
+      </button>
+      <div class="mk-d" id="${id}"><div></div></div>`;
+  };
+
+  /* Everything below is either present in the payload or printed as
+   * "Not measured". Nothing here is inferred on the client. */
+  const mkDrawer = r => {
+    const na = '<span class="v na">Not measured</span>';
+    const cell = (k, v) => `<div><span class="k">${esc(k)}</span>${
+      v == null || v === '' ? na : `<span class="v">${v}</span>`}</div>`;
+    const signed = v => Number.isFinite(v) ? `<span class="v ${dir(v)}">${pct(v)}</span>` : na;
+
+    // The session window is the exchange's own, so this holds on a holiday.
+    const nowS = Date.now() / 1000;
+    let when = null;
+    if (r.session === 'open' && Number.isFinite(r.session_end))
+      when = `Closes ${clockAt(r.session_end, r.tz)} · in ${dur(r.session_end - nowS)}`;
+    else if (r.session === 'closed' && Number.isFinite(r.session_start))
+      when = `Closed · last session opened ${clockAt(r.session_start, r.tz)}`;
+
+    const asOf = r.as_of ? new Date(r.as_of) : null;
+    const staleMin = asOf ? (Date.now() - asOf.getTime()) / 60000 : null;
+
+    return `<div class="mk-dg">
+      ${cell('52-week high', r.w52_high_f)}
+      ${cell('52-week low', r.w52_low_f)}
+      <div><span class="k">From 52w high</span>${signed(r.from_high_pct)}</div>
+      <div><span class="k">Above 52w low</span>${signed(r.from_low_pct)}</div>
+      ${cell('Position in range', r.range_pos == null ? null : r.range_pos.toFixed(1) + '%')}
+      ${cell("Day's range", r.day_low && r.day_high ? `${esc(r.day_low)} – ${esc(r.day_high)}` : null)}
+      <div><span class="k">Past month</span>${signed(r.trend_pct)}</div>
+      ${cell('Volume', vol(r.volume))}
+      ${cell('Session', when || r.session)}
+      ${cell('Quoted at', asOf ? `${asOf.toLocaleTimeString('en-GB',
+          { hour: '2-digit', minute: '2-digit' })} · ${dur((Date.now() - asOf.getTime()) / 1000)} ago` : null)}
+      ${cell('Instrument', r.full_name ? `${esc(r.full_name)}${r.kind ? ` · ${esc(r.kind.toLowerCase())}` : ''}` : null)}
+      ${cell('Currency', r.ccy)}
+      ${r.range_basis === 'futures' ? `<div class="mk-foot"><b>The price and the range are
+        different feeds.</b> This row's price is a spot quote; its 52-week high and low belong to the
+        futures contract, which carries a cost of carry against spot. The range position is measured
+        on the futures series so the two halves agree with each other.</div>` : ''}
+      ${staleMin != null && staleMin > 90 && r.session === 'open' ? `<div class="mk-foot">
+        This quote is <b>${dur(staleMin * 60)}</b> old while the exchange is open — the upstream feed
+        has not updated it.</div>` : ''}
+    </div>`;
+  };
+
+  /* One delegated toggle for every board row on the page. */
+  document.addEventListener('click', ev => {
+    const b = ev.target.closest && ev.target.closest('.mk');
+    if (!b) return;
+    const id = b.getAttribute('aria-controls');
+    const d = document.getElementById(id);
+    if (!d) return;
+    const inner = d.firstElementChild;
+    if (inner && !inner.innerHTML) {
+      const r = MKDATA.get(id);
+      if (r) inner.innerHTML = mkDrawer(r);
+    }
+    const open = b.getAttribute('aria-expanded') === 'true';
+    b.setAttribute('aria-expanded', open ? 'false' : 'true');
+    d.classList.toggle('open', !open);
+  });
+
+  /* The segment's own clock: how many of its markets are trading right now,
+   * and when the next one opens or closes. Both from the exchange's published
+   * session window, so a public holiday is handled by the data rather than by
+   * a table of market hours that nobody maintains. */
+  const segWhen = items => {
+    const known = items.filter(x => x.session);
+    if (!known.length) return '';
+    const open = known.filter(x => x.session === 'open').length;
+    if (open) return `<span class="when">${open} of ${known.length} trading now</span>`;
+    const nowS = Date.now() / 1000;
+    // The next regular open across the segment, where the feed published one
+    // in the future. Yahoo's window is the CURRENT session, so a past start is
+    // simply not a forecast and is skipped rather than guessed forward.
+    const next = known.map(x => x.session_start).filter(t => Number.isFinite(t) && t > nowS).sort((a, b) => a - b)[0];
+    return next ? `<span class="when">Opens in ${dur(next - nowS)}</span>`
+                : `<span class="when">Closed</span>`;
+  };
+
   const breadthWidget = b => {
     if (!b || !b.counted) return '';
     const up = b.up / b.counted * 100, dn = b.down / b.counted * 100;
@@ -271,14 +657,14 @@
   const R = {};
 
   R['/'] = async () => {
-    paint(head('Today', 'India’s markets, in one screen — rebuilt every morning before the open.') +
+    paint(head('Today', 'India’s markets, in one screen — rebuilt every morning before the open.', 'The morning edition') +
       sec('The tape', `<div class="grid">${skel('sk-tile', 4)}</div>`) +
       sec('Where the money went', `<div class="sk" style="height:104px"></div>`) +
       sec('The wire', skel('sk-card', 3)));
 
     const [t, p, n, m] = await Promise.all(
       [get('/today.json'), get('/pulse.json'), get('/news.json'), get('/api/markets')]);
-    let out = head('Today', 'India’s markets, in one screen — rebuilt every morning before the open.');
+    let out = head('Today', 'India’s markets, in one screen — rebuilt every morning before the open.', 'The morning edition');
     if (!t.ok && !p.ok) { paint(out + fail('Today', t.error || p.error)); return; }
 
     const d = t.ok ? t.data : {}, pu = p.ok ? p.data : {}, br = pu.breadth || {};
@@ -438,16 +824,17 @@
   };
 
   R['/markets'] = async () => {
-    paint(head('Markets', 'The board live, and what the 750-name screen underneath it did.') +
+    paint(head('Markets', 'The board live, and what the 750-name screen underneath it did.', 'The board') +
       sec('Breadth', `<div class="sk" style="height:104px"></div>`) +
       sec('Sector heat', `<div class="sk" style="height:120px"></div>`) +
       sec('The board', `<div class="board">${skel('sk-row', 8)}</div>`));
 
     const [m, p] = await Promise.all([get('/api/markets'), get('/pulse.json')]);
-    let out = head('Markets', 'The board live, and what the 750-name screen underneath it did.');
+    let out = head('Markets', 'The board live, and what the 750-name screen underneath it did.', 'The board');
     const pu = p.ok ? p.data : {};
 
-    out += sec('Breadth', breadthWidget(pu.breadth) || `<div class="empty">Screen not built yet.</div>`);
+    out += sec('Breadth', breadthWidget(pu.breadth) || `<div class="empty">Screen not built yet.</div>`,
+      '', 'How many names went up, out of every name measured.');
     out += sec('Sector heat — the week, all 750', heatmap(pu.sectors, 'r1w') +
       `<p class="hint">Median move over the <b>past week</b> across the full <b>${pu.universe || 750}-name</b>
         screen — the wider, slower view. The front page shows today over the largest 250.
@@ -461,33 +848,38 @@
     const tk = await get('/api/ticker');
     if (tk.ok) {
       const segs = (tk.data.segments || []).filter(sg => (sg.items || []).length);
-      out += sec('The board', segs.map(sg => `
-        <div class="segh">${esc(sg.icon || '')} ${esc(sg.label)}</div>
-        <div class="board">${sg.items.map(r => `
-          <div class="board-row">
-            <span class="n">${esc(r.name || r.symbol || '')}</span>
-            <span class="p">${esc(r.price ?? '—')}</span>
-            <span class="c ${dir(r.change_pct)}">${pct(r.change_pct)}</span>
-          </div>`).join('')}</div>`).join(''),
-        `${tk.data.live ?? 0} of ${tk.data.total ?? 0} live`);
+      MKDATA = new Map();   // one map per paint; the route repaints every 60s
+      out += sec('The board',
+        segs.map(sg => `<div class="segh">${esc(sg.icon || '')} ${esc(sg.label)}
+            ${segWhen(sg.items)}<span class="cnt">${sg.items.length}</span></div>
+          <div class="board">${sg.items.map(mkRow).join('')}</div>`).join('') +
+        `<p class="sec-note"><b>Every row opens.</b> The line under each name is the past month of
+          real daily closes; the bar beside it is where the price sits between its own 52-week low
+          and high ${tip('range52')}. Tap a row for the extremes, the day's range, volume, the exchange session ${tip('session')} and
+          the exact time the quote was taken. A figure this site cannot measure says
+          <b>Not measured</b> — it is never filled in.</p>`,
+        `${tk.data.live ?? 0} of ${tk.data.total ?? 0} live`,
+        'Forty-six instruments, each with the year behind it.');
     } else { out += sec('The board', fail('The live board', tk.error)); }
 
-    out += sec('Biggest movers, one week', levelTable((pu.movers_up || []).slice(0, 8)));
-    out += sec('Biggest fallers, one week', levelTable((pu.movers_dn || []).slice(0, 8)));
+    out += sec('Biggest movers, one week', levelTable((pu.movers_up || []).slice(0, 8)),
+      '', 'What actually moved, over a week rather than a day.');
+    out += sec('Biggest fallers, one week', levelTable((pu.movers_dn || []).slice(0, 8)),
+      '', 'The other half of the same week.');
     paint(out);
   };
 
   R['/ideas'] = async () => {
-    paint(head('Ideas', 'Ranked names, and the orders a fully-sized book would place against them. Sizes are shown as a share of the book, so they scale to whatever you run.') +
+    paint(head('Ideas', 'Ranked names, and the orders a fully-sized book would place against them. Sizes are shown as a share of the book, so they scale to whatever you run.', 'Ranked ideas') +
       sec('Trade ideas', skel('sk-card', 3)));
     const [t, mn, p] = await Promise.all([get('/today.json'), get('/mandate.json'), get('/pulse.json')]);
-    let out = head('Ideas', 'Ranked names, and the orders a fully-sized book would place against them. Sizes are shown as a share of the book, so they scale to whatever you run.');
+    let out = head('Ideas', 'Ranked names, and the orders a fully-sized book would place against them. Sizes are shown as a share of the book, so they scale to whatever you run.', 'Ranked ideas');
     if (!t.ok) { paint(out + fail('Ideas', t.error)); return; }
 
     const picks = t.data.picks || [];
     out += sec('Trade ideas', picks.length ? `<div class="cards-2">${picks.map(x => ideaCard(x, false)).join('')}</div>`
       : `<div class="empty">Nothing clears the bar this week. That is a result, not a gap.</div>`,
-      `${picks.length} ranked`);
+      `${picks.length} ranked`, 'Names that cleared every floor, and the levels that define each one.');
 
     const pu = p.ok ? p.data : {};
     out += sec('Breaking to 52-week highs',
@@ -546,10 +938,10 @@
   };
 
   R['/ipo'] = async () => {
-    paint(head('IPO', 'Books open now, what is coming, and how the last year of listings actually did.') +
+    paint(head('IPO', 'Books open now, what is coming, and how the last year of listings actually did.', 'Primary market') +
       sec('Open now', skel('sk-card', 2)));
     const io = await get('/ipo.json');
-    let out = head('IPO', 'Books open now, what is coming, and how the last year of listings actually did.');
+    let out = head('IPO', 'Books open now, what is coming, and how the last year of listings actually did.', 'Primary market');
     if (!io.ok) { paint(out + fail('The IPO radar', io.error)); return; }
     const d = io.data, c = d.counts || {};
 
@@ -608,7 +1000,8 @@
 
   R['/screen'] = async () => {
     const shell = body => head('Screen',
-      'Every one of the 750 names, searchable. Tap any row for the full card.') + body;
+      'Every one of the 750 names, searchable. Tap any row for the full card.',
+      'The full universe') + body;
     if (!SCREEN) paint(shell(`<div class="note">Loading the full universe — about 260 KB, once per session.</div>` +
       `<div class="sk" style="height:320px"></div>`));
 
@@ -809,9 +1202,13 @@
   let sigFilter = 'all';
   R['/signals'] = async () => {
     const intro = 'Every alert this site has sent since it launched, with the levels it was sent at. Scored when it closes — losers included, which is the point of publishing it.';
-    paint(head('Signals', intro) + skel('sk-card', 4));
-    const a = await get('/alerts.json');
-    const base = head('Signals', intro);
+    paint(head('Signals', intro, 'The public ledger') + skel('sk-card', 4));
+    const a = await ledger();
+    const base = head('Signals', intro, 'The public ledger')
+      + (a.live ? '' : `<div class="note"><b>Showing this morning's snapshot, not the live ledger.</b>
+          The live signal feed did not answer${a.error ? ` — ${esc(a.error)}` : ''}, so this page is
+          reading the copy written at the last build. Anything the scanner has published since is
+          missing from it.</div>`);
     if (!a.ok) { paint(base + fail('The signal ledger', a.error)); return; }
     /* DAY ONE IS TODAY.
      *
@@ -820,16 +1217,16 @@
      * been re-graded twice, and carrying that history here would mean showing
      * a win rate this site never produced.
      *
-     * Nothing is deleted. alerts.json is untouched and news.askakshay.com
-     * still carries all 200 signals and the full performance record — this is
-     * a filter on what THIS page counts, not a rewrite of the ledger.
+     * Nothing is deleted. The ledger still carries every earlier signal and
+     * the full performance record — this is a filter on what THIS page counts,
+     * not a rewrite of the ledger.
      *
      * Anything sent on or after LAUNCH counts. When there is nothing yet, the
      * page says so rather than showing an empty table that reads as a fault.
      */
     const LAUNCH = '2026-08-29';
     const dayOf = r => String(r.alert_date || r.date || '').slice(0, 10);
-    const every = Array.isArray(a.data) ? a.data : (a.data.rows || []);
+    const every = a.rows;
     const all = every.filter(r => dayOf(r) >= LAUNCH);
 
     // Filter on the row's OWN badge, not on arithmetic over pnl_pct.
@@ -901,7 +1298,7 @@
           rather than inherited. The scanner publishes at 10:30 and 16:30 IST on weekdays;
           the first entries will appear after those runs.
           <br><br>The full history of ${every.length} earlier signals is unchanged and still
-          published on <a href="/" style="color:var(--accent)">the broadsheet edition</a>.
+          in the ledger — it is simply older than this page's counting window.
         </div>`;
         return;
       }
@@ -1066,94 +1463,284 @@
     });
   };
 
-  /* ══════════════ TRADING SIGNAL BRIEF ══════════════════════════════════
-   * One open signal, presented as research rather than as an alert.
+  /* ══════════════════════════════════════════════════════════════════════
+   * THE TRADING SIGNAL BRIEF
    *
-   * EVERY NUMBER IS REAL. The signal, its levels and its R:R come from the
-   * ledger; the score components come from the same screen the rest of the
-   * site uses; the history and the win rate come from /api/stats. Nothing on
-   * this page is illustrative.
+   * A research document you can interrogate, not a page you read. Everything
+   * on it is derived from three real sources — the published ledger, the
+   * 750-name screen, and six months of actual daily closes — and anything
+   * those three cannot answer is printed as unmeasured rather than filled in.
    *
-   * THERE ARE NO CANDLESTICKS, deliberately. No endpoint here serves OHLC, so
-   * a candle chart would mean drawing price action that never happened — on
-   * the one page whose entire job is to be trusted. What is drawn instead is
-   * the thing the brief actually needs a chart for: where price sits between
-   * the level that invalidates the trade and the levels it is aiming at.
-   */
+   * WHAT CHANGED, AND WHY THE CAPTION CHANGED WITH IT.
+   * This page used to carry a "level map" and a caption explaining that no
+   * feed here served price history. That was true of the ROUTES, not of the
+   * upstream: the same spark endpoint the market rail already calls returns a
+   * close series. /api/signals?series= now exposes it, so the chart is drawn
+   * from prices that happened. There are still no candles, because there is
+   * still no open/high/low — and the caption says exactly that, rather than
+   * implying the chart is complete.
+   *
+   * WHAT IS DELIBERATELY ABSENT.
+   *   · Scenario probabilities. The engine publishes no probability model, so
+   *     the scenarios carry the ledger's own base rate — labelled as a base
+   *     rate over N closed trades — and never a per-trade percentage.
+   *   · An intraday development timeline. The ledger records the signal date
+   *     and the send time; it does not record "momentum confirmed at 09:24".
+   *     The timeline shows what is recorded and says so.
+   * ══════════════════════════════════════════════════════════════════════ */
+
   let briefSym = null;                 // set when arriving from a signal card
+  let briefRange = '6mo';              // the chart window the reader last chose
+
+  /* Realised volatility and trend persistence, both computed from the real
+   * close series. Returns null rather than a number when the series is too
+   * short to support one — 20 closes is the floor for a 20-day mean. */
+  function regimeOf(closes) {
+    if (!Array.isArray(closes) || closes.length < 30) return null;
+    const rets = [];
+    for (let i = 1; i < closes.length; i++) {
+      if (closes[i - 1] > 0) rets.push(closes[i] / closes[i - 1] - 1);
+    }
+    if (rets.length < 20) return null;
+    const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
+    const varr = rets.reduce((a, b) => a + (b - mean) * (b - mean), 0) / (rets.length - 1);
+    const vol = Math.sqrt(varr) * Math.sqrt(252) * 100;      // annualised, %
+
+    // Trend persistence: over the last 60 closes, the share that sat above
+    // their own trailing 20-day mean. 50% is a coin flip and reads as a range;
+    // a sustained trend pins it high or low.
+    const W = 20, look = Math.min(60, closes.length - W);
+    let above = 0;
+    for (let i = closes.length - look; i < closes.length; i++) {
+      let s = 0; for (let k = i - W; k < i; k++) s += closes[k];
+      if (closes[i] > s / W) above++;
+    }
+    const persist = (above / look) * 100;
+    const net = (closes[closes.length - 1] / closes[0] - 1) * 100;
+    const trending = persist >= 66 || persist <= 34;
+    return {
+      vol, persist, net, look,
+      label: trending ? (persist >= 66 ? 'TRENDING UP' : 'TRENDING DOWN') : 'RANGING',
+      volLabel: vol >= 45 ? 'HIGH VOLATILITY' : vol >= 22 ? 'NORMAL VOLATILITY' : 'LOW VOLATILITY',
+    };
+  }
+
+  /* THE CHART. One <svg> in a fixed 1000×340 user space, stretched to fit with
+   * preserveAspectRatio="none" — so it fills any width at any height without a
+   * measurement pass, and without ResizeObserver, which never fires in a
+   * hidden tab. Strokes stay a constant visual width through
+   * vector-effect:non-scaling-stroke, and every LABEL is HTML positioned by
+   * percentage rather than SVG text, because stretched text is unreadable.
+   *
+   * The overlays are emitted hidden. The scroll story turns them on in the
+   * order the argument is made. */
+  function priceChart(pts, levels, cur) {
+    const W = 1000, H = 340, PADT = 14, PADB = 14;
+    const cs = pts.map(p => p.c);
+    const lv = levels.filter(l => Number.isFinite(l.v));
+    const lo = Math.min.apply(null, cs.concat(lv.map(l => l.v)));
+    const hi = Math.max.apply(null, cs.concat(lv.map(l => l.v)));
+    const span = (hi - lo) || 1;
+    const X = i => (i / Math.max(1, pts.length - 1)) * W;
+    const Y = v => PADT + (1 - (v - lo) / span) * (H - PADT - PADB);
+    const yp = v => ((Y(v) / H) * 100);              // percent, for HTML labels
+    const d = cs.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(2)).join(' ');
+
+    const line = (l, i) => `<line class="lvl ${l.c} b-ov" data-ov="${l.step}" x1="0" x2="${W}"
+        y1="${Y(l.v).toFixed(2)}" y2="${Y(l.v).toFixed(2)}"/>`;
+    const zone = (a, b, cls, step) => {
+      if (!Number.isFinite(a) || !Number.isFinite(b)) return '';
+      const y1 = Math.min(Y(a), Y(b)), h = Math.abs(Y(a) - Y(b));
+      return `<rect class="zone ${cls} b-ov" data-ov="${step}" x="0" y="${y1.toFixed(2)}"
+        width="${W}" height="${Math.max(1, h).toFixed(2)}"/>`;
+    };
+    const lab = l => `<span class="b-px-lab ${l.c} b-ov" data-ov="${l.step}"
+        style="top:${yp(l.v).toFixed(2)}%">${esc(l.k)} <b>${esc(l.f)}</b></span>`;
+
+    return {
+      html: `<div class="b-px-c" id="pxc">
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <defs><linearGradient id="bgrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#7A9BEE" stop-opacity=".16"/>
+            <stop offset="100%" stop-color="#7A9BEE" stop-opacity="0"/></linearGradient></defs>
+          ${zone(cur.stop, cur.entry, 'r', 6)}
+          ${zone(cur.entry, cur.t2, 'g', 7)}
+          <path class="parea" d="${d} L${W} ${H} L0 ${H} Z"/>
+          <path class="price" d="${d}"/>
+          ${lv.map(line).join('')}
+          <line class="cross" id="pxcross" x1="0" x2="0" y1="0" y2="${H}" style="opacity:0"/>
+        </svg>
+        <div class="b-px-labs">${lv.map(lab).join('')}</div>
+        <span class="b-px-dot" id="pxdot"></span>
+        <div class="b-px-t" id="pxt"></div>
+        <div class="b-px-hit" id="pxhit" role="img"
+          aria-label="${esc(pts.length)} daily closes from ${esc(pts[0].t || '')} to ${esc(pts[pts.length - 1].t || '')}, with the published entry, stop and targets overlaid"></div>
+      </div>`,
+      X, Y, lo, hi, span, W, H,
+    };
+  }
+
   R['/brief'] = async () => {
+    /* SKELETON, shaped like the thing that replaces it — an instrument header,
+     * a metric rail, a chart. Grey boxes of the wrong shape are why a loading
+     * state feels like a broken page. */
     paint(`<div class="brief"><div class="b-wrap">
       <div class="b-hero"><div class="b-eyebrow">Trading signal brief</div>
-      <h1>Loading the current setup.</h1></div>
-      <div class="sk" style="height:220px;margin-top:24px"></div></div></div>`);
+        <div class="b-sk" style="height:54px;max-width:16ch;margin-top:20px"></div>
+        <div class="b-sk" style="height:20px;max-width:46ch;margin-top:18px;border:0"></div></div>
+      <div class="b-sk" style="height:88px;margin-top:26px"></div>
+      <div class="b-sk" style="height:300px;margin-top:26px"></div></div></div>`);
 
     const [a, sc, st] = await Promise.all(
-      [get('/alerts.json'), get('/screen.json'), get('/api/stats')]);
+      [ledger(), get('/screen.json'), get('/api/stats')]);
     if (!a.ok) { paint(fail('The signal brief', a.error)); return; }
-    const rows = Array.isArray(a.data) ? a.data : (a.data.rows || []);
+    const rows = a.rows;
     const open = rows.filter(r => (r.badge || '').toLowerCase() === 'open'
                                && r.entry && r.sl && r.target1);
     if (!open.length) { paint(`<div class="brief"><div class="b-wrap"><div class="b-hero">
       <div class="b-eyebrow">Trading signal brief</div>
       <h1>No setup is live right now.</h1>
       <p class="b-sub">The engine publishes when a setup clears its floors, and not otherwise.
-        An empty brief is a result, not a fault.</p></div></div></div>`); return; }
+        An empty brief is a result, not a fault.</p>
+      <p style="margin-top:22px"><span class="dstate nodata"><i></i>No data</span></p>
+      </div></div></div>`); return; }
 
-    // Highest reward-to-risk among open setups, or the one the reader clicked.
     if (sc.ok) SCREEN = SCREEN || (sc.data.rows || []).filter(x => x && x.sym);
     const inScreen = sym => (SCREEN || []).some(x => x.sym === sym);
-    /* Prefer a setup the screen can actually explain. Several signals are US
-     * names that the 750-name NSE screen does not cover, and featuring one
-     * leaves every thesis component blank — a brief with an empty argument.
-     * Highest reward-to-risk among the names we have data for; if none
-     * qualify, the best available still renders, just with fewer components. */
     const ranked = open.slice().sort((x, y) => (y.rr || 0) - (x.rr || 0));
     const sig = (briefSym && open.find(r => r.symbol === briefSym))
              || ranked.find(r => inScreen(r.symbol)) || ranked[0];
     briefSym = null;
     const row = (SCREEN || []).find(x => x.sym === sig.symbol) || {};
-    const q = await quotes([sig.symbol]);
+
+    /* The live quote and six months of closes, fetched together. Sequential
+     * awaits would put two round trips on the critical path for no reason. */
+    const [q, ser] = await Promise.all([
+      quotes([sig.symbol]),
+      get('/api/signals?series=' + encodeURIComponent(sig.symbol) + '&range=' + briefRange),
+    ]);
     const live = q[sig.symbol];
+    const pts = ser.ok && Array.isArray(ser.data.points) ? ser.data.points : null;
+    const closes = pts ? pts.map(p => p.c) : null;
 
     const cur = sig.currency || '₹';
     const N = v => Number(v);
     const entry = N(sig.entry), stop = N(sig.sl), t1 = N(sig.target1), t2 = N(sig.target2 || sig.target1);
-    const last = live ? live.price : (N(row.price) || entry);
+    const last = live ? live.price : (N(row.price) || (closes ? closes[closes.length - 1] : entry));
     const isShort = /SELL|SHORT/i.test(sig.action || '');
-    const risk = Math.abs(entry - stop), rr = Number(sig.rr) || (Math.abs(t1 - entry) / (risk || 1));
-    const f = v => Number.isFinite(v) ? cur + v.toLocaleString('en-IN', {maximumFractionDigits: 2}) : '—';
+    const risk = Math.abs(entry - stop);
+    /* TWO REWARD-TO-RISK NUMBERS, BECAUSE THERE ARE TWO TARGETS.
+     *
+     * The ledger publishes one `rr` field and it is measured to TARGET 2. The
+     * calculator on this page measures to target 1, because that is the level
+     * the trade plan acts on. Printing the ledger's 4.4 in the header while the
+     * calculator said 2.5 put two different answers to the same question on one
+     * page with nothing to tell them apart.
+     *
+     * Both are now derived from the published levels — the auditable route —
+     * and each says which target it belongs to. The ledger's own field is kept
+     * only as a cross-check: if it disagrees with the arithmetic on its own
+     * levels, the page says so rather than choosing a winner silently. */
+    const rrT1 = Math.abs(t1 - entry) / (risk || 1);
+    const rrT2 = Math.abs(t2 - entry) / (risk || 1);
+    const rr = rrT1;
+    const rrLedger = Number(sig.rr);
+    // 0.15 is wider than rounding (the ledger stores one decimal) and narrower
+    // than the gap between a T1 and a T2 reading on any real setup.
+    const rrDisagrees = Number.isFinite(rrLedger)
+      && Math.abs(rrLedger - rrT1) > 0.15 && Math.abs(rrLedger - rrT2) > 0.15;
+    const f = v => Number.isFinite(v) ? cur + v.toLocaleString('en-IN', { maximumFractionDigits: 2 }) : '—';
+    const dist = v => Number.isFinite(v) && Number.isFinite(last) && last
+      ? `${v >= last ? '+' : '−'}${f(Math.abs(v - last)).replace(cur, cur)} · ${pct((v - last) / last * 100)}` : '—';
+
+    /* ── DATA STATE. Six of them, and the page never wears the wrong one. */
+    const sigDate = new Date((sig.alert_date || sig.date || '') + 'T00:00:00');
+    const ageDays = Number.isFinite(sigDate.getTime())
+      ? Math.round((Date.now() - sigDate.getTime()) / 86400000) : null;
+    const state = !live ? (row.price ? 'delayed' : 'nodata')
+      : ageDays != null && ageDays > 21 ? 'stale' : 'live';
+    const stateChip = {
+      live: ['live', 'Live', 'The price beside the entry is a live quote taken on this page load.'],
+      delayed: ['delayed', 'Last close', 'The live quote did not answer. The price shown is the last close from the screen build.'],
+      stale: ['stale', 'Ageing signal', `This setup was published ${ageDays} days ago and is still open. The levels stand; the thesis has had time to change.`],
+      nodata: ['nodata', 'No price', 'Neither the live quote nor the screen carries a price for this name right now.'],
+    }[state];
 
     /* ── SCORE. Five components, each a rule over the screen's own fields.
      * A score with no visible derivation is a number asking to be believed. */
-    // Number(undefined) is NaN and NaN != null, so a `v == null` guard lets it
-    // straight through — which is how Confidence rendered "NaN / 100".
     const clamp = (v, lo, hi) => Number.isFinite(v)
       ? Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)) : null;
-    const comp = {
-      Trend: row.sma200 && row.price ? clamp((row.price - row.sma200) / row.sma200 * 100, -8, 32) : null,
-      Momentum: clamp(N(row.r1m), -6, 26),
-      Structure: row.setup ? Math.min(100, ((row.setup.tags || []).length) * 26 + (row.brk52w ? 22 : 0)) : null,
-      Volume: clamp(N(row.vol_spike), .7, 4),
-      'Risk / reward': clamp(rr, 1, 5),
-    };
-    const have = Object.values(comp).filter(v => Number.isFinite(v));
+    const COMPS = [
+      ['Structure', 'is-target', row.setup ? Math.min(100, ((row.setup.tags || []).length) * 26 + (row.brk52w ? 22 : 0)) : null,
+        row.brk52w ? 'Price is at a 52-week high, and the screen tags this as a completed breakout.'
+                   : `The screen tags ${(row.setup && (row.setup.tags || []).length) || 0} structural conditions on this name. A 52-week breakout is not one of them.`],
+      ['Momentum', 'is-now', clamp(N(row.r1m), -6, 26),
+        Number.isFinite(N(row.r1m)) ? `One month return is ${pct(N(row.r1m))}, three month ${pct(N(row.r3m))}, RSI ${row.rsi != null ? Math.round(row.rsi) : '—'}.`
+                                    : 'No return history on the screen for this name, so momentum is unscored rather than assumed.'],
+      ['Trend', 'is-key', row.sma200 && row.price ? clamp((row.price - row.sma200) / row.sma200 * 100, -8, 32) : null,
+        row.sma200 && row.price ? `Price sits ${pct((row.price - row.sma200) / row.sma200 * 100)} against its 200-day average, with the 50-day ${row.sma50 > row.sma200 ? 'above' : 'below'} it.`
+                                : 'No 200-day average on the screen for this name.'],
+      ['Volume', '', clamp(N(row.vol_spike), .7, 4),
+        Number.isFinite(N(row.vol_spike)) ? `Volume is running at ${N(row.vol_spike).toFixed(2)}× its own recent average. Above 1.0 means participation is confirming the move.`
+                                          : 'No volume ratio published for this name.'],
+      ['Risk / reward', 'is-stop', clamp(rr, 1, 5),
+        `The first target is ${rr.toFixed(1)} times as far from entry as the stop is. Anything under 1.5 is a setup that has to win more often than it loses to break even.`],
+    ];
+    const have = COMPS.map(c => c[2]).filter(v => Number.isFinite(v));
     const score = have.length ? Math.round(have.reduce((x, y) => x + y, 0) / have.length) : null;
     const conviction = score == null ? 'UNSCORED' : score >= 70 ? 'HIGH CONVICTION'
                      : score >= 50 ? 'MODERATE CONVICTION' : 'LOW CONVICTION';
 
-    /* ── THE LADDER. Every level placed on one scale, so distance is real. */
-    const pts = [
-      {k: 'Target 2', v: t2, c: 'is-target'}, {k: 'Target 1', v: t1, c: 'is-target'},
-      {k: '52-week high', v: N(row.high52), c: 'is-key'},
-      {k: 'Now', v: last, c: 'is-now'}, {k: 'Entry', v: entry, c: ''},
-      {k: '200-day', v: N(row.sma200), c: 'is-key'},
-      {k: 'Stop', v: stop, c: 'is-stop'},
+    /* ── THE LADDER. Every level on one scale, so distance is real. */
+    const pts_ = [
+      { k: 'Target 2', v: t2, c: 'is-target', step: 7 }, { k: 'Target 1', v: t1, c: 'is-target', step: 7 },
+      { k: '52-week high', v: N(row.high52), c: 'is-key', step: 2 },
+      { k: 'Now', v: last, c: 'is-now', step: 1 }, { k: 'Entry', v: entry, c: '', step: 5 },
+      { k: '200-day', v: N(row.sma200), c: 'is-key', step: 3 },
+      { k: 'Stop', v: stop, c: 'is-stop', step: 6 },
     ].filter(x => Number.isFinite(x.v)).sort((x, y) => y.v - x.v);
-    const hi = Math.max(...pts.map(p => p.v)), lo = Math.min(...pts.map(p => p.v));
-    const at = v => ((hi - v) / ((hi - lo) || 1)) * 100;
-    const ladder = pts.map((p, i) => `<div class="b-lvl ${p.c}" style="top:${at(p.v).toFixed(1)}%;animation-delay:${(i * 60)}ms">
+    const hiL = Math.max.apply(null, pts_.map(p => p.v)), loL = Math.min.apply(null, pts_.map(p => p.v));
+    const at = v => ((hiL - v) / ((hiL - loL) || 1)) * 100;
+    const ladder = pts_.map((p, i) => `<div class="b-lvl ${p.c}" tabindex="0" data-lvl="${esc(p.k)}"
+        style="top:${at(p.v).toFixed(1)}%;animation-delay:${(i * 60)}ms">
         <span class="b-lvl-tag">${esc(p.k)}</span><span class="b-lvl-line"></span>
+        <span class="b-lvl-d">${p.k === 'Now' ? 'current' : dist(p.v)}</span>
         <span class="b-lvl-val">${f(p.v)}</span></div>`).join('');
+
+    /* ── THE CHART, from real closes. */
+    const chartLevels = [
+      { k: 'T2', v: t2, f: f(t2), c: 't', step: 7 }, { k: 'T1', v: t1, f: f(t1), c: 't', step: 7 },
+      { k: 'ENTRY', v: entry, f: f(entry), c: 'e', step: 5 },
+      { k: 'STOP', v: stop, f: f(stop), c: 's', step: 6 },
+      { k: '200D', v: N(row.sma200), f: f(N(row.sma200)), c: 'k', step: 3 },
+    ].filter(l => Number.isFinite(l.v));
+    const CH = pts ? priceChart(pts, chartLevels, { entry, stop, t1, t2 }) : null;
+
+    /* ── ENTRY STATE. Published levels only — no invented zone width. */
+    const zoneState = (() => {
+      if (!Number.isFinite(last)) return ['wait', 'Unpriced', 'No live price, so the setup cannot be placed against its own levels right now.'];
+      const beyondStop = isShort ? last >= stop : last <= stop;
+      if (beyondStop) return ['invalid', 'Invalidated', `Price is beyond the published stop at ${f(stop)}. The structure that produced this setup is gone.`];
+      const better = isShort ? last >= entry : last <= entry;
+      if (better) return ['active', 'At or better', `Price is at or better than the published entry of ${f(entry)}. The trade plan's condition is met.`];
+      const wayThrough = Math.abs(last - entry) > Math.abs(t1 - entry) * 0.5;
+      if (wayThrough) return ['missed', 'Extended', `Price has already travelled ${pct(Math.abs(last - entry) / entry * 100)} past the entry, more than half the distance to the first target. Entering here buys a worse price against the same stop.`];
+      return ['wait', 'Waiting', `Price is past the entry but not far. The plan calls for entry at or better than ${f(entry)}, so this is a wait rather than a chase.`];
+    })();
+    const zLo = Math.min(stop, entry, t1, last), zHi = Math.max(stop, entry, t1, last);
+    const zAt = v => ((v - zLo) / ((zHi - zLo) || 1)) * 100;
+
+    /* ── REGIME, from the real series. */
+    const reg = regimeOf(closes);
+
+    /* ── CONFLUENCE. The same five components, expressed as a stance. */
+    const stance = v => !Number.isFinite(v) ? null : v >= 60 ? 0 : v >= 40 ? 1 : 2;
+    const MATRIX = COMPS.map(c => [c[0], stance(c[2]), c[3]]);
+
+    /* ── BASE RATE, not a probability. */
+    const S = st.ok ? st.data : null;
+    const H = S && S.headline ? S.headline : null;
+    const closedRows = rows.filter(r => r.pnl_pct != null && (r.badge || '') !== 'open').slice(0, 8);
 
     const thesis = [
       ['Market structure', 'The trend is doing the heavy lifting.',
@@ -1161,7 +1748,8 @@
           ? `Price sits ${pct((row.price - row.sma200) / row.sma200 * 100)} against its 200-day average, with the 50-day ${row.sma50 > row.sma200 ? 'above' : 'below'} it. ${row.sma50 > row.sma200 ? 'The longer structure is intact, so the setup is with the trend rather than against it.' : 'The longer structure has not confirmed, which is why this is sized as a smaller idea.'}`
           : 'Trend data is not available for this name, so the structure leg of the thesis is unscored rather than assumed.',
         [['vs 200-day', row.sma200 ? pct((row.price - row.sma200) / row.sma200 * 100) : '—'],
-         ['50 vs 200', row.sma50 && row.sma200 ? (row.sma50 > row.sma200 ? 'above' : 'below') : '—']]],
+         ['50 vs 200', row.sma50 && row.sma200 ? (row.sma50 > row.sma200 ? 'above' : 'below') : '—'],
+         ['Sector', row.sector ? esc(row.sector) : '—']]],
       ['Momentum', 'Momentum confirms the move.',
         `One-month return is ${pct(N(row.r1m))} and RSI reads ${row.rsi != null ? Math.round(row.rsi) : '—'} on the daily. ${N(row.rsi) > 70 ? 'That is extended, which argues for the entry zone rather than chasing the print.' : 'That leaves room before the move is stretched.'}`,
         [['1 month', pct(N(row.r1m))], ['3 month', pct(N(row.r3m))],
@@ -1170,79 +1758,144 @@
         `Entry sits at ${f(entry)} with the invalidation ${f(stop)} — ${pct(-Math.abs(risk / entry * 100))} away. The first target at ${f(t1)} is ${pct(Math.abs(t1 - entry) / entry * 100)} from entry.`,
         [['Entry', f(entry)], ['Stop', f(stop)], ['Target 1', f(t1)]]],
       ['Risk', 'The setup is attractive because the risk is defined.',
-        `Reward to risk is ${rr.toFixed(1)} to one. The stop is a price, not an intention: below ${f(stop)} the reason for the trade is gone and the position is closed.`,
-        [['Risk / reward', rr.toFixed(1) + ' : 1'], ['Risk per share', f(risk)]]],
+        `Reward to risk is ${rrT1.toFixed(1)} to one against the first target and ${rrT2.toFixed(1)} to one against the second. The stop is a price, not an intention: below ${f(stop)} the reason for the trade is gone and the position is closed.`,
+        [['R:R to T1', rrT1.toFixed(1) + ' : 1'], ['R:R to T2', rrT2.toFixed(1) + ' : 1'], ['Risk per share', f(risk)],
+         ['Daily ATR', Number.isFinite(N(row.atr_pct)) ? N(row.atr_pct).toFixed(2) + '%' : '—']]],
     ];
 
-    const S = st.ok ? st.data : null;
-    const H = S && S.headline ? S.headline : null;
-    const closed = (rows.filter(r => r.pnl_pct != null && (r.badge || '') !== 'open')).slice(0, 8);
+    const SECTIONS = [
+      ['b-overview', 'Overview', '1', 'Signal', 'the setup exists'],
+      ['b-chart', 'Chart', '2', 'Entry', 'where it starts'],
+      ['b-thesis', 'Thesis', '3', 'Confirmation', 'why it should work'],
+      ['b-plan', 'Trade plan', '4', 'Target', 'what it is worth'],
+      ['b-risk', 'Risk', '5', 'Sizing', 'what it costs'],
+      ['b-history', 'History', '6', 'Exit', 'what happened before'],
+    ];
 
     paint(`<div class="brief"><div class="b-wrap">
 
-      <header class="b-hero">
+      <header class="b-hero" id="b-overview">
         <div class="b-eyebrow">Trading signal brief</div>
         <h1>${esc(sig.symbol)} is ${last > entry ? 'holding above' : 'testing'} its entry zone.</h1>
         <p class="b-sub">A ${conviction.toLowerCase().replace(' conviction', '-conviction')} setup built from price
-          structure, momentum, volume and defined risk. Every figure below comes from the published ledger
-          and the same screen the rest of this site runs on.</p>
+          structure, momentum, volume and defined risk. Every figure below comes from the published ledger,
+          the same 750-name screen the rest of this site runs on, and ${pts ? `${pts.length} real daily closes` : 'the published levels'}.</p>
       </header>
+
+      <nav class="b-qnav" id="qnav" aria-label="Sections of this brief">
+        ${SECTIONS.map(([id, lab, key]) => `<a href="#${id}" data-jump="${id}">
+          <span class="kb" aria-hidden="true">${key}</span>${esc(lab)}</a>`).join('')}
+      </nav>
 
       <section class="b-status">
         <div class="b-dir ${isShort ? 'is-short' : ''}">
           <span class="b-dir-mark"></span>
-          <div><div class="b-dir-l">${isShort ? 'SHORT' : 'LONG'}</div>
+          <div><div class="b-dir-l">${isShort ? '▼ SHORT' : '▲ LONG'}</div>
             <div class="b-dir-meta">
               <span class="b-tag">${esc(sig.symbol)}</span>
               <span class="b-tag">${esc(sig.timeframe || '1D')}</span>
-              <span class="b-tag">${esc(conviction)}</span>
-              ${live ? `<span class="b-tag is-live"><i></i>Live</span>` : `<span class="b-tag">Last close</span>`}
+              <span class="b-tag"><span id="convN" data-cv="">${score == null ? '—' : '0'}</span> CONFIDENCE</span>
+              <span class="dstate ${stateChip[0]}"><i></i>${esc(stateChip[1])}</span>
             </div></div>
         </div>
         <div class="b-metrics">
           <div class="b-m"><span class="k">Entry</span><span class="v">${f(entry)}</span></div>
-          <div class="b-m"><span class="k">Current</span><span class="v ${last >= entry ? 'up' : 'dn'}">${f(last)}</span></div>
+          <div class="b-m"><span class="k">Current</span><span class="v ${last >= entry ? 'up' : 'dn'}" id="curPx">${f(last)}</span></div>
+          <div class="b-m"><span class="k">Day</span><span class="v ${live && live.change_pct >= 0 ? 'up' : 'dn'}">${live && Number.isFinite(live.change_pct) ? pct(live.change_pct) : '—'}</span></div>
           <div class="b-m"><span class="k">Stop</span><span class="v dn">${f(stop)}</span></div>
           <div class="b-m"><span class="k">Target 1</span><span class="v up">${f(t1)}</span></div>
           <div class="b-m"><span class="k">Target 2</span><span class="v up">${f(t2)}</span></div>
-          <div class="b-m"><span class="k">Risk / reward</span><span class="v gold">${rr.toFixed(1)} : 1</span></div>
-          <div class="b-m"><span class="k">Confidence</span><span class="v">${score == null ? '—' : score + ' / 100'}</span></div>
+          <div class="b-m"><span class="k">R:R to T1</span><span class="v gold">${rrT1.toFixed(1)} : 1</span></div>
+          <div class="b-m"><span class="k">R:R to T2</span><span class="v gold">${rrT2.toFixed(1)} : 1</span></div>
+          <div class="b-m"><span class="k">Signal age</span><span class="v">${ageDays == null ? '—' : ageDays + 'd'}</span></div>
+          <div class="b-m"><span class="k">Sector</span><span class="v" style="font-family:var(--ui);font-size:14px">${esc(row.sector || 'Not on screen')}</span></div>
         </div>
       </section>
+      <p class="b-p" style="margin-top:14px;font-size:13px">${esc(stateChip[2])}
+        Reward to risk is shown against <b style="color:var(--b-ink)">both</b> targets, because they are
+        different numbers and the trade plan acts on the first one. The ledger's own published field
+        reads ${Number.isFinite(rrLedger) ? rrLedger.toFixed(1) : '—'}, which is the reading to target 2.
+        ${rrDisagrees ? `<b style="color:var(--b-gold)">It agrees with neither figure computed from its own
+          published levels, so the arithmetic above is what this page shows and the ledger field is the
+          one to distrust.</b>` : ''}</p>
+
+      <nav class="b-jr" id="journey" aria-label="Where you are in this brief">
+        ${SECTIONS.map(([id, , , node, sub]) => `<div class="b-jn" data-node="${id}">
+          <i aria-hidden="true"></i><b>${esc(node)}</b><span>${esc(sub)}</span></div>`).join('')}
+      </nav>
 
       <section class="b-sec b-reveal">
         <div class="b-lab">The trade in one view</div>
         <h2 class="b-h2">Everything that defines the position.</h2>
         <dl class="b-view">
-          <div class="b-vi"><dt>Setup</dt><dd class="txt">${esc((row.setup?.tags || ['Engine signal'])[0] || 'Engine signal')}</dd></div>
+          <div class="b-vi"><dt>Setup</dt><dd class="txt">${esc((row.setup && (row.setup.tags || [])[0]) || sig.signal_type || 'Engine signal')}</dd></div>
           <div class="b-vi"><dt>Direction</dt><dd class="txt">${isShort ? 'Short' : 'Long'}</dd></div>
           <div class="b-vi"><dt>Entry</dt><dd>${f(entry)}</dd></div>
           <div class="b-vi"><dt>Stop</dt><dd>${f(stop)}</dd></div>
           <div class="b-vi"><dt>Target 1</dt><dd>${f(t1)}</dd></div>
           <div class="b-vi"><dt>Target 2</dt><dd>${f(t2)}</dd></div>
-          <div class="b-vi"><dt>Risk / reward</dt><dd>${rr.toFixed(1)} : 1</dd></div>
+          <div class="b-vi"><dt>R:R to T1</dt><dd>${rrT1.toFixed(1)} : 1</dd></div>
           <div class="b-vi"><dt>Horizon</dt><dd class="txt">${esc(sig.timeframe === '1D' ? 'Swing' : (sig.timeframe || 'Swing'))}</dd></div>
         </dl>
+
+        <div class="b-zone">
+          <div class="b-zone-h">
+            <span class="b-zst ${zoneState[0]}">${esc(zoneState[1])}</span>
+            <span class="b-lab" style="letter-spacing:.16em">Entry state ${tip('zone')}</span>
+          </div>
+          <div class="b-zt">
+            <span class="band" style="left:${Math.min(zAt(entry), zAt(t1)).toFixed(1)}%;width:${Math.abs(zAt(t1) - zAt(entry)).toFixed(1)}%"></span>
+            <span class="stop" style="left:${zAt(stop).toFixed(1)}%"></span>
+            <span class="tgt" style="left:${zAt(t1).toFixed(1)}%"></span>
+            <span class="now" id="zNow" style="left:${zAt(last).toFixed(1)}%"></span>
+          </div>
+          <div class="b-zl"><span>Stop ${f(stop)}</span><span>Entry ${f(entry)}</span><span>Target 1 ${f(t1)}</span></div>
+          <p class="b-p" style="font-size:13.5px">${esc(zoneState[2])}</p>
+        </div>
       </section>
 
-      <section class="b-sec b-reveal">
+      <section class="b-sec b-reveal" id="b-chart">
         <div class="b-lab">Price structure</div>
-        <h2 class="b-h2">Where price sits, and where the thesis ends.</h2>
-        <div class="b-chart">
+        <h2 class="b-h2">Where price has been, and where the thesis ends.</h2>
+        ${CH ? `<div class="b-px">
+          <div class="b-px-h"><span>${esc(sig.symbol)} · daily closes</span>
+            <span class="rgs" role="group" aria-label="Chart window">
+              ${['3mo', '6mo', '1y'].map(r => `<button type="button" data-range="${r}"
+                aria-pressed="${r === briefRange}">${r.replace('mo', 'M').replace('1y', '1Y')}</button>`).join('')}
+            </span></div>
+          ${CH.html}
+          <div class="b-px-f">
+            <span class="p"><i></i>Close</span><span class="e"><i></i>Entry</span>
+            <span class="s"><i></i>Stop</span><span class="t"><i></i>Targets</span>
+            ${Number.isFinite(N(row.sma200)) ? '<span class="k"><i></i>200-day</span>' : ''}
+          </div>
+        </div>
+        <p class="b-cap"><b>Closing prices, not candles.</b> The line is ${pts.length} real daily closes
+          from ${esc(pts[0].t || '')} to ${esc(pts[pts.length - 1].t || '')}. No feed on this site serves
+          open-high-low-close data, so there are no candles and no wicks — a chart that drew them would be
+          inventing the intraday range on the one page whose job is to be trusted. The levels over it are
+          the published ones, on the same scale, so the distance between the stop and the target is the
+          actual distance.</p>`
+        : `<div class="b-px"><div class="b-px-h"><span>${esc(sig.symbol)} · daily closes</span>
+             <span class="rgs"><span class="dstate nodata"><i></i>No history</span></span></div>
+           <div style="padding:26px 16px"><p class="b-p" style="margin:0">The price series for this
+             instrument did not load${ser.error ? ` — ${esc(ser.error)}` : ''}. The level map below is
+             drawn from the published levels alone, which is what this section showed before a series
+             was available at all.</p></div></div>`}
+
+        <div class="b-chart" style="margin-top:${pts ? '26px' : '18px'}">
           <div class="b-ladder">
             <div class="b-band risk" style="top:${at(entry).toFixed(1)}%;height:${Math.abs(at(stop) - at(entry)).toFixed(1)}%"></div>
             <div class="b-band reward" style="top:${at(t2).toFixed(1)}%;height:${Math.abs(at(entry) - at(t2)).toFixed(1)}%"></div>
             ${ladder}
           </div>
-          <p class="b-cap"><b>This is a level map, not a candle chart.</b> No feed on this site
-            serves open-high-low-close history, and drawing candles without it would mean
-            inventing price action on the one page whose job is to be trusted. Every line
-            above is a real published level, placed on a single linear scale so the distance
-            between them is the actual distance.</p>
+          <p class="b-cap"><b>The ladder is every published level on one linear scale.</b> Hover or focus a
+            level to read its distance from the current price, in currency and in per cent. Colour is never
+            the only cue — each line is named.</p>
         </div>
       </section>
 
-      <section class="b-sec b-reveal">
+      <section class="b-sec b-reveal" id="b-thesis">
         <div class="b-lab">Why this trade</div>
         <h2 class="b-h2">Four things had to line up.</h2>
         <div class="b-steps">
@@ -1256,18 +1909,106 @@
       </section>
 
       <section class="b-sec b-reveal">
-        <div class="b-lab">Signal score</div>
+        <div class="b-lab">Signal score ${tip('confidence')}</div>
         <h2 class="b-h2">How the setup scores, component by component.</h2>
-        <div class="b-score">
-          <div><div class="b-score-big">${score == null ? '—' : score}<span> / 100</span></div>
-            <p class="b-p" style="margin-top:8px;font-size:13.5px">The mean of the components
-              beside it. A component with no data is left out rather than filled in.</p></div>
-          <div class="b-bars">${Object.entries(comp).map(([k, v]) => `
-            <div class="b-bar-r"><span class="n">${esc(k)}</span>
-              <span class="t"><i data-w="${Number.isFinite(v) ? v.toFixed(0) : 0}"></i></span>
-              <span class="s">${Number.isFinite(v) ? Math.round(v) : '—'}</span></div>`).join('')}
+        <div class="b-conf">
+          <div>
+            <div class="b-dial" id="dial">
+              <svg viewBox="0 0 120 120" role="img" aria-label="Confidence ${score == null ? 'unscored' : score + ' out of 100'}">
+                <circle class="trk" cx="60" cy="60" r="50"/>
+                ${(() => {
+                  const R = 50, C = 2 * Math.PI * R;
+                  const n = COMPS.length, seg = C / n, gap = 3;
+                  const col = ['#4E9E72', '#7A9BEE', '#C9A961', '#98A0AB', '#C15F54'];
+                  return COMPS.map(([nm, , v], i) => {
+                    const len = Number.isFinite(v) ? (seg - gap) * (v / 100) : 0;
+                    return `<circle class="seg" data-seg="${i}" cx="60" cy="60" r="${R}"
+                      stroke="${col[i]}" stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}"
+                      stroke-dashoffset="${(-i * seg).toFixed(2)}"><title>${esc(nm)}: ${Number.isFinite(v) ? Math.round(v) : 'not measured'}</title></circle>`;
+                  }).join('');
+                })()}
+              </svg>
+              <div class="b-dial-c"><b id="dialN" data-cv="">${score == null ? '—' : '0'}</b>
+                <i id="dialL">${esc(conviction)}</i></div>
+            </div>
+            <div class="b-cbtns" role="group" aria-label="Confidence view">
+              <button type="button" id="cvScore" aria-pressed="true">Score</button>
+              <button type="button" id="cvComp" aria-pressed="false">Components</button>
+            </div>
+          </div>
+          <div id="crows">
+            ${COMPS.map(([nm, , v, why], i) => {
+              const col = ['#4E9E72', '#7A9BEE', '#C9A961', '#98A0AB', '#C15F54'][i];
+              return `<button type="button" class="b-crow" data-seg="${i}" aria-expanded="false">
+                <span class="dot" style="background:${col}" aria-hidden="true"></span>
+                <span><span class="nm">${esc(nm)}</span><span class="why">${esc(why)}</span>
+                  <span class="tr"><i data-w="${Number.isFinite(v) ? v.toFixed(0) : 0}" style="background:${col}"></i></span></span>
+                <span class="sc">${Number.isFinite(v) ? Math.round(v) : '—'}</span></button>`;
+            }).join('')}
+            <p class="b-p" style="font-size:13px">The score is the mean of the components that could be
+              measured. A component with no data is left out rather than filled in${have.length < COMPS.length
+                ? `, which is why the denominator here is <b style="color:var(--b-ink)">${have.length}</b>,
+                   not ${COMPS.length} — ${COMPS.length - have.length} component${COMPS.length - have.length > 1 ? 's are' : ' is'}
+                   unmeasured for this name`
+                : `. All ${COMPS.length} could be measured for this name`}.</p>
           </div>
         </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Confluence</div>
+        <h2 class="b-h2">Which factors agree, and which do not.</h2>
+        <div class="b-mx">
+          <div class="b-mxh"><span>Factor</span><span>Bullish</span><span>Neutral</span><span>Bearish</span></div>
+          ${MATRIX.map(([nm, st_, why], i) => `<button type="button" class="b-mxr" data-mx="${i}" aria-expanded="false">
+            <span class="f">${esc(nm)}</span>
+            ${[0, 1, 2].map(k => `<span class="c ${['bull', 'neu', 'bear'][k]} ${st_ === k ? 'hit' : ''}"
+              >${st_ === k ? `<u aria-label="${['Bullish', 'Neutral', 'Bearish'][k]}"></u>` : '<u></u>'}</span>`).join('')}
+            <span class="b-mxd"><span>${st_ == null ? 'Not measured — this factor has no data on the screen for this name, so it takes no stance.' : esc(why)}</span></span>
+          </button>`).join('')}
+        </div>
+        <p class="b-p" style="font-size:13px">A stance is scored, not asserted: 60 and above reads bullish,
+          40 to 60 neutral, below 40 bearish, on the same component scores shown above. Tap a row for the
+          reason.</p>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Market regime ${tip('regime')}</div>
+        <h2 class="b-h2">Whether this is the kind of market the setup is built for.</h2>
+        ${reg ? `<div class="b-rg">
+          <div class="b-rgb"><h4>Structure</h4>
+            <div class="b-rgv">${esc(reg.label)}</div>
+            <div class="b-rgt"><i style="left:${reg.persist.toFixed(1)}%"></i></div>
+            <div class="b-rgl"><span>Below the mean</span><span>Above the mean</span></div>
+            <p class="b-rgn">Over the last ${reg.look} closes, price finished above its own trailing
+              20-day average <b style="color:var(--b-ink)">${reg.persist.toFixed(0)}%</b> of the time.
+              Sustained above 66% or below 34% reads as a trend; in between reads as a range.</p></div>
+          <div class="b-rgb"><h4>Volatility</h4>
+            <div class="b-rgv">${esc(reg.volLabel)}</div>
+            <div class="b-rgt"><i style="left:${Math.max(0, Math.min(100, reg.vol / 60 * 100)).toFixed(1)}%"></i></div>
+            <div class="b-rgl"><span>0%</span><span>60%+</span></div>
+            <p class="b-rgn">Realised volatility is
+              <b style="color:var(--b-ink)">${reg.vol.toFixed(1)}%</b> annualised — the standard deviation
+              of daily returns across this window, scaled by the square root of 252.
+              ${Number.isFinite(N(row.atr_pct)) ? `The screen's own daily ATR for this name is ${N(row.atr_pct).toFixed(2)}%.` : ''}</p></div>
+        </div>`
+        : `<p class="b-p">Regime is not measured for this name — it needs at least 30 daily closes and the
+            series did not load. It is left blank rather than guessed from the levels.</p>`}
+      </section>
+
+      <section class="b-sec b-reveal" id="b-plan">
+        <div class="b-lab">Scenarios</div>
+        <h2 class="b-h2">Three ways this resolves.</h2>
+        <div class="b-scb" role="group" aria-label="Scenario">
+          <button type="button" class="bull" data-sc="0" aria-pressed="false">Bullish</button>
+          <button type="button" class="base" data-sc="1" aria-pressed="true">Base case</button>
+          <button type="button" class="bear" data-sc="2" aria-pressed="false">Bearish</button>
+        </div>
+        <div class="b-scp" id="scPane"></div>
+        <p class="b-p" style="font-size:13px">These are scenarios, not forecasts. No probability is
+          attached to any of them, because the engine publishes no probability model — what is shown
+          instead is the ledger's own base rate over every closed signal, which describes the engine's
+          history and not this trade.</p>
       </section>
 
       <section class="b-sec b-reveal">
@@ -1289,41 +2030,82 @@
           <div class="b-pr"><span class="st">Target 2</span>
             <span class="tx">Extended target, carried only by the remainder.</span>
             <span class="px" style="color:var(--b-bull)">${f(t2)}</span></div>
-          <div class="b-pr is-invalid"><span class="st">Invalidation</span>
+          <div class="b-pr is-invalid"><span class="st">Invalidation ${tip('invalidation')}</span>
             <span class="tx">Below ${f(stop)} the structure that produced this setup is gone. The position is
               closed at that price — not re-argued, not averaged into, not widened.</span>
             <span class="px" style="color:var(--b-bear)">${f(stop)}</span></div>
         </div>
       </section>
 
-      <section class="b-sec b-reveal">
-        <div class="b-lab">What would change our view</div>
-        <h2 class="b-h2">The thesis is only valid while the structure holds.</h2>
-        <div class="b-scen">
-          <div class="b-sc bull"><h4>Confirms</h4>
-            <p>A close above the entry zone with volume holding, and the 50-day staying above the 200-day.</p>
-            <span class="lvl">Above ${f(entry)}</span></div>
-          <div class="b-sc neu"><h4>Wait</h4>
-            <p>Price between the entry and the stop with no close either side. The setup is unresolved and
-              carries no edge until it resolves.</p>
-            <span class="lvl">${f(stop)} – ${f(entry)}</span></div>
-          <div class="b-sc bear"><h4>Invalidates</h4>
-            <p>A close below the stop. Momentum and structure would both have failed, and the reason for
-              the position no longer exists.</p>
-            <span class="lvl">Below ${f(stop)}</span></div>
+      <section class="b-sec b-reveal" id="b-risk">
+        <div class="b-lab">Risk and position size ${tip('rr')}</div>
+        <h2 class="b-h2">What this costs if it is wrong.</h2>
+        <div class="b-rr">
+          <div>
+            <div class="b-rrb" id="rrBars">
+              <div class="row"><span class="k">Loss</span><span class="b loss" id="barL"></span><span class="v" id="barLv" style="color:var(--b-bear)"></span></div>
+              <div class="row"><span class="k">Gain T1</span><span class="b gain" id="barG"></span><span class="v" id="barGv" style="color:var(--b-bull)"></span></div>
+              <div class="row"><span class="k">Gain T2</span><span class="b gain" id="barG2"></span><span class="v" id="barG2v" style="color:var(--b-bull)"></span></div>
+            </div>
+            <div class="b-metrics" style="margin-top:22px" id="rkOut"></div>
+            <p class="b-p" style="font-size:13px">Position size is the risk amount divided by the distance
+              from entry to stop, rounded down to whole shares. It is arithmetic on the numbers you set —
+              not a recommendation, and it takes no account of your other positions, liquidity in the name,
+              or what you can afford to lose.</p>
+          </div>
+          <div>
+            <div class="b-sl">
+              <div><label for="rkA">Account size<span class="lv" id="lvA"></span></label>
+                <input id="rkA" type="number" value="1000000" min="0" step="10000"
+                  style="width:100%;background:var(--b-hi);border:1px solid var(--b-line2);border-radius:7px;
+                  color:var(--b-ink);font:500 15px/1 var(--mono);padding:12px 13px;min-height:44px"></div>
+              <div><label for="rkP">Risk per trade<span class="lv" id="lvP"></span></label>
+                <input id="rkP" type="range" min="0.1" max="5" step="0.1" value="1"></div>
+              <!-- step="any", NOT a rounded step. A range input SNAPS its value to
+                   min + n·step, so a step of 1.85 moved the published entry of
+                   ₹1,847.40 to ₹1,847.79 the instant the page loaded — the
+                   calculator then showed a risk per share that was not the
+                   published one, and the simulation warning stayed silent
+                   because the drift was under half a per cent. The published
+                   levels have to survive first paint exactly. -->
+              <div><label for="slE">Entry<span class="lv" id="lvE"></span></label>
+                <input id="slE" type="range" min="${(entry * 0.85).toFixed(2)}" max="${(entry * 1.15).toFixed(2)}"
+                  step="any" value="${entry}"></div>
+              <div><label for="slS">Stop<span class="lv" id="lvS"></span></label>
+                <input id="slS" type="range" min="${(Math.min(stop, entry) * 0.8).toFixed(2)}" max="${(Math.max(stop, entry) * 1.05).toFixed(2)}"
+                  step="any" value="${stop}"></div>
+              <div><label for="slT">Target 1<span class="lv" id="lvT"></span></label>
+                <input id="slT" type="range" min="${(Math.min(t1, entry) * 0.95).toFixed(2)}" max="${(Math.max(t1, entry) * 1.4).toFixed(2)}"
+                  step="any" value="${t1}"></div>
+              <button type="button" class="b-reset" id="rkReset">Reset to published</button>
+            </div>
+            <p class="b-sim" id="rkSim" hidden>You are looking at a <b>simulation</b>. One or more levels
+              have been moved off the published values, so the risk, reward and size below describe a trade
+              this site has not signalled.</p>
+          </div>
         </div>
       </section>
 
-      <section class="b-sec b-reveal">
-        <div class="b-lab">Position sizing</div>
-        <h2 class="b-h2">What this costs if it is wrong.</h2>
-        <div class="b-risk">
-          <div class="b-inputs">
-            <div class="b-in"><label for="rkA">Account size</label><input id="rkA" type="number" value="1000000" min="0" step="10000"></div>
-            <div class="b-in"><label for="rkP">Risk per trade %</label><input id="rkP" type="number" value="1" min="0.1" max="10" step="0.1"></div>
-          </div>
-          <div class="b-out" id="rkOut"></div>
+      <section class="b-sec b-reveal" id="b-history">
+        <div class="b-lab">What the ledger records</div>
+        <h2 class="b-h2">This signal's own paper trail.</h2>
+        <div class="b-tl" id="tl">
+          ${[
+            [String(sig.alert_date || sig.date || '').slice(0, 10),
+             `<b>Signal published.</b> ${esc(sig.signal_type || 'engine')} engine, ${esc(sig.timeframe || '1D')} timeframe, entry ${f(entry)} with the stop at ${f(stop)}.`],
+            sig.sent_at ? [String(sig.sent_at).slice(0, 10) + ' ' + String(sig.sent_at).slice(11, 16),
+             `<b>Sent.</b> The alert left the engine at this time and has not been amended since.`] : null,
+            [ageDays == null ? '—' : ageDays + ' days',
+             `<b>Still open.</b> The ledger carries no exit for this row, so it is marked open and counts toward no closed result yet.`],
+            [f(last),
+             `<b>Marked at the current price.</b> ${Number.isFinite(last) && Number.isFinite(entry)
+               ? `That is ${pct((last - entry) / entry * 100)} against the published entry — unrealised, and not a booked result.` : 'No current price is available.'}`],
+          ].filter(Boolean).map(([w, t]) => `<div class="b-tli"><span class="w">${esc(w)}</span><span class="t">${t}</span></div>`).join('')}
         </div>
+        <p class="b-p" style="font-size:13px">The ledger records when a signal was generated, when it was
+          sent, and how it closed. It does <b style="color:var(--b-ink)">not</b> record intraday development
+          — there is no row saying momentum confirmed at 09:24 — so none is shown. A timeline of events that
+          were never logged would be a story, not a record.</p>
       </section>
 
       <section class="b-sec b-reveal">
@@ -1336,13 +2118,14 @@
           <div class="b-m"><span class="k">Losses</span><span class="v dn">${H.losses}</span></div>
           <div class="b-m"><span class="k">Expectancy</span><span class="v ${H.expectancy_r >= 0 ? 'up' : 'dn'}">${H.expectancy_r}R</span></div>
         </div>
-        <p class="b-p">Measured over ${H.trades} closed signals since ${esc((S.totals || {}).first_date || '')}.
-          Expectancy is <b style="color:var(--b-ink)">${H.expectancy_r}R</b> — the engine is currently losing
-          money per trade on this sample, and that is published here for the same reason the winners are.</p>` : ''}
-        ${closed.length ? `<div class="b-hist"><table>
+        <p class="b-p">${tip('expectancy')} Measured over ${H.trades} closed signals since ${esc((S.totals || {}).first_date || '')}.
+          Expectancy is <b style="color:var(--b-ink)">${H.expectancy_r}R</b>${H.expectancy_r < 0
+            ? ' — the engine is currently losing money per trade on this sample, and that is published here for the same reason the winners are.'
+            : ' per closed trade on this sample.'}</p>` : ''}
+        ${closedRows.length ? `<div class="b-hist"><table>
           <thead><tr><th>Date</th><th>Asset</th><th>Direction</th>
             <th class="num">Entry</th><th class="num">Exit</th><th>Result</th><th class="num">P&amp;L</th></tr></thead>
-          <tbody>${closed.map(r => `<tr>
+          <tbody>${closedRows.map(r => `<tr>
             <td>${esc(String(r.alert_date || r.date || '').slice(0, 10))}</td>
             <td style="color:var(--b-ink)">${esc(r.symbol)}</td>
             <td>${esc(r.action || '')}</td>
@@ -1353,39 +2136,300 @@
           </tr>`).join('')}</tbody></table></div>` : ''}
         <div class="b-disc"><b>Past performance does not guarantee future results.</b>
           This is a published research setup, not advice and not a recommendation to buy or sell.
-          Every figure is drawn from this site's own ledger and screen. A signal is a thesis with a
-          defined invalidation — it is not a forecast, and it carries no guarantee of any outcome.
-          Position sizing is your decision and your risk.</div>
+          Every figure is drawn from this site's own ledger, its own screen and real published closing
+          prices. A signal is a thesis with a defined invalidation — it is not a forecast, and it carries
+          no guarantee of any outcome. Position sizing is your decision and your risk.</div>
       </section>
     </div></div>`);
 
-    /* Bars fill and sections reveal after paint. IntersectionObserver does not
-     * fire in a hidden tab, so a plain timeout does the reveal — the same trap
-     * documented in app.js on the broadsheet. */
-    setTimeout(() => {
-      main.querySelectorAll('.b-bar-r .t i').forEach(i => { i.style.width = i.dataset.w + '%'; });
-      main.querySelectorAll('.b-reveal').forEach((el, n) =>
-        setTimeout(() => el.classList.add('in'), n * 70));
-    }, 60);
+    /* ══ WIRING ═══════════════════════════════════════════════════════════
+     * Everything below runs after paint and touches only opacity, transform
+     * and width. No layout is animated, nothing runs on an idle loop, and
+     * every listener is attached to an element that exists in this paint —
+     * the route re-paints wholesale, so the old ones go with the old nodes. */
 
-    // Risk calculator, wired to the real levels above.
-    const calc = () => {
-      const acct = Number(document.getElementById('rkA').value) || 0;
-      const rp = Number(document.getElementById('rkP').value) || 0;
-      const amt = acct * rp / 100;
-      const qty = risk > 0 ? Math.floor(amt / risk) : 0;
-      const loss = qty * risk, win1 = qty * Math.abs(t1 - entry);
-      document.getElementById('rkOut').innerHTML = `
-        <div class="b-o"><span class="k">Risk amount</span><span class="v">${f(amt)}</span></div>
-        <div class="b-o"><span class="k">Position size</span><span class="v">${qty.toLocaleString('en-IN')} sh</span></div>
-        <div class="b-o"><span class="k">Notional</span><span class="v">${f(qty * entry)}</span></div>
-        <div class="b-o"><span class="k">If stopped</span><span class="v" style="color:var(--b-bear)">−${f(loss)}</span></div>
-        <div class="b-o"><span class="k">At target 1</span><span class="v" style="color:var(--b-bull)">+${f(win1)}</span></div>
-        <div class="b-o"><span class="k">Risk / reward</span><span class="v" style="color:var(--b-gold)">${rr.toFixed(1)} : 1</span></div>`;
+    const $ = id => document.getElementById(id);
+
+    /* ── numbers arrive, they do not appear ─────────────────────────────── */
+    if (score != null) {
+      countTo($('convN'), score, { dp: 0 });
+      countTo($('dialN'), score, { dp: 0 });
+    }
+    setTimeout(() => {
+      main.querySelectorAll('.b-crow .tr i').forEach(i => { i.style.width = i.dataset.w + '%'; });
+    }, 80);
+
+    /* ── the reveal, and the chart story it drives ──────────────────────────
+     * IntersectionObserver where it works, and a hard failsafe where it does
+     * not: an observer that never fires would leave the whole page at opacity
+     * 0, which is a blank screen, not a subtle animation. */
+    const reveals = [...main.querySelectorAll('.b-reveal')];
+    const tls = [...main.querySelectorAll('.b-tli')];
+    const ovs = [...main.querySelectorAll('.b-ov')];
+    const revealAll = () => {
+      reveals.forEach(e => e.classList.add('in'));
+      tls.forEach(e => e.classList.add('in'));
+      ovs.forEach(e => e.classList.add('on'));
     };
-    ['rkA', 'rkP'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+    // The chart's overlays come on in the order the argument is made: the
+    // price line, then the levels that frame it, then the risk band, then the
+    // reward band. Step 1 is always on — it is the price itself.
+    const stepOn = n => ovs.forEach(e => { if (Number(e.dataset.ov) <= n) e.classList.add('on'); });
+
+    if ('IntersectionObserver' in window && !REDUCED) {
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        // Each section that arrives advances the chart one more step.
+        const step = Number(e.target.dataset.step);
+        if (Number.isFinite(step)) stepOn(step);
+        io.unobserve(e.target);
+      }), { rootMargin: '0px 0px -12% 0px', threshold: .08 });
+      reveals.forEach((e, i) => { e.dataset.step = String(3 + i); io.observe(e); });
+      tls.forEach(e => io.observe(e));
+      // If nothing has revealed within 2.5s the observer is not firing — a
+      // hidden tab, a prerender, a browser that throttles it. Show everything.
+      setTimeout(() => { if (!main.querySelector('.b-reveal.in')) revealAll(); }, 2500);
+      // The chart's own levels never wait on scroll: the reader who lands on
+      // #b-chart directly must see them.
+      setTimeout(() => stepOn(2), 400);
+    } else { revealAll(); }
+
+    /* ── quick nav: where you are, and the keys that take you there ─────── */
+    /* Three sticky layers stack above the content on a desk — the bar, the
+     * route tabs and this brief's own section nav. A fixed 96px offset cleared
+     * two of them and parked the section label underneath the third. The
+     * offset is measured from the elements themselves so it stays correct when
+     * any of the three changes height. */
+    const stickyOffset = () => {
+      let h = 0;
+      for (const sel of ['.bar', '.tabs', '#qnav']) {
+        const e = document.querySelector(sel);
+        if (e && getComputedStyle(e).position === 'sticky') h += e.getBoundingClientRect().height;
+      }
+      return h + 18;
+    };
+    const jump = id => {
+      const el = $(id); if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - stickyOffset();
+      window.scrollTo({ top, behavior: REDUCED ? 'auto' : 'smooth' });
+    };
+    const qlinks = [...main.querySelectorAll('#qnav a')];
+    const jnodes = [...main.querySelectorAll('.b-jn')];
+    qlinks.forEach(a => a.addEventListener('click', ev => { ev.preventDefault(); jump(a.dataset.jump); }));
+
+    // One scroll listener for the whole page, throttled to one frame. Reading
+    // getBoundingClientRect for six elements per frame is cheap; doing it per
+    // element per scroll event is not.
+    let ticking = false;
+    const markActive = () => {
+      ticking = false;
+      let active = SECTIONS[0][0];
+      for (const [id] of SECTIONS) {
+        const el = $(id); if (!el) continue;
+        if (el.getBoundingClientRect().top <= stickyOffset() + 24) active = id;
+      }
+      qlinks.forEach(a => a.setAttribute('aria-current', a.dataset.jump === active ? 'true' : 'false'));
+      let seen = false;
+      jnodes.forEach(n => {
+        const isNow = n.dataset.node === active;
+        n.classList.toggle('on', isNow);
+        n.classList.toggle('done', !seen && !isNow);
+        if (isNow) seen = true;
+      });
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(markActive); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    markActive();
+
+    // 1–6 jump to a section, Escape closes any open overlay. Ignored while a
+    // field has focus, so typing "1" into the account box does not navigate.
+    const onKey = ev => {
+      if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+      const t = ev.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+      const i = '123456'.indexOf(ev.key);
+      if (i >= 0 && SECTIONS[i]) { ev.preventDefault(); jump(SECTIONS[i][0]); }
+    };
+    document.addEventListener('keydown', onKey);
+    // The route repaints wholesale; the listener must not outlive its markup.
+    main.addEventListener('sig:teardown', () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('keydown', onKey);
+    }, { once: true });
+
+    /* ── the ladder reads its own distances ─────────────────────────────── */
+    main.querySelectorAll('.b-lvl').forEach(el => {
+      const on = () => el.classList.add('hot'), off = () => el.classList.remove('hot');
+      el.addEventListener('pointerenter', on); el.addEventListener('pointerleave', off);
+      el.addEventListener('focus', on); el.addEventListener('blur', off);
+    });
+
+    /* ── the chart: crosshair, read-out, and the window switch ──────────── */
+    if (CH) {
+      const hit = $('pxhit'), tip = $('pxt'), dot = $('pxdot'), cross = $('pxcross');
+      const read = clientX => {
+        const b = hit.getBoundingClientRect();
+        const k = Math.max(0, Math.min(1, (clientX - b.left) / (b.width || 1)));
+        const i = Math.round(k * (pts.length - 1));
+        const p = pts[i];
+        if (!p) return;
+        const xPct = (i / Math.max(1, pts.length - 1)) * 100;
+        const yPct = (CH.Y(p.c) / CH.H) * 100;
+        cross.setAttribute('x1', ((i / Math.max(1, pts.length - 1)) * CH.W).toFixed(1));
+        cross.setAttribute('x2', ((i / Math.max(1, pts.length - 1)) * CH.W).toFixed(1));
+        cross.style.opacity = '1';
+        dot.style.left = xPct + '%'; dot.style.top = yPct + '%'; dot.style.opacity = '1';
+        const dpc = i > 0 && pts[i - 1].c ? (p.c / pts[i - 1].c - 1) * 100 : null;
+        tip.innerHTML = `<i>${esc(p.t || '')}</i>${f(p.c)}` +
+          (dpc == null ? '' : ` <em>${pct(dpc)}</em>`) +
+          `<br><em>vs entry ${pct((p.c - entry) / entry * 100)}</em>`;
+        tip.classList.add('on');
+        // Flip the card to the other side near the right edge so it never
+        // hangs off the chart.
+        tip.style.left = xPct > 62 ? 'auto' : `calc(${xPct}% + 14px)`;
+        tip.style.right = xPct > 62 ? `calc(${(100 - xPct)}% + 14px)` : 'auto';
+      };
+      const clear = () => { tip.classList.remove('on'); dot.style.opacity = '0'; cross.style.opacity = '0'; };
+      hit.addEventListener('pointermove', e => read(e.clientX));
+      hit.addEventListener('pointerdown', e => read(e.clientX));
+      hit.addEventListener('pointerleave', clear);
+      hit.addEventListener('pointercancel', clear);
+
+      main.querySelectorAll('.b-px-h .rgs button').forEach(b =>
+        b.addEventListener('click', () => { briefRange = b.dataset.range; R['/brief'](); }));
+    }
+
+    /* ── confidence: segments, rows, and the two views ──────────────────── */
+    const segs = [...main.querySelectorAll('.b-dial .seg')];
+    const crows = [...main.querySelectorAll('.b-crow')];
+    const focusSeg = i => {
+      segs.forEach((s, k) => { s.classList.toggle('hot', k === i); s.classList.toggle('dim', i != null && k !== i); });
+      crows.forEach((r, k) => r.classList.toggle('dim', i != null && k !== i));
+      const dl = $('dialL'), dn = $('dialN');
+      if (i == null) { dl.textContent = conviction; if (score != null) countTo(dn, score, { dp: 0 }); }
+      else {
+        dl.textContent = COMPS[i][0].toUpperCase();
+        const v = COMPS[i][2];
+        if (Number.isFinite(v)) countTo(dn, Math.round(v), { dp: 0 }); else dn.textContent = '—';
+      }
+    };
+    segs.forEach((s, i) => {
+      s.addEventListener('pointerenter', () => focusSeg(i));
+      s.addEventListener('pointerleave', () => focusSeg(null));
+    });
+    crows.forEach((r, i) => {
+      r.addEventListener('pointerenter', () => focusSeg(i));
+      r.addEventListener('pointerleave', () => focusSeg(null));
+      r.addEventListener('click', () => {
+        const open = r.classList.toggle('open');
+        r.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      r.addEventListener('focus', () => focusSeg(i));
+      r.addEventListener('blur', () => focusSeg(null));
+    });
+    const cvS = $('cvScore'), cvC = $('cvComp');
+    const setView = comp => {
+      cvS.setAttribute('aria-pressed', comp ? 'false' : 'true');
+      cvC.setAttribute('aria-pressed', comp ? 'true' : 'false');
+      segs.forEach(s => { s.style.strokeWidth = comp ? '15' : ''; });
+      crows.forEach(r => {
+        r.classList.toggle('open', comp);
+        r.setAttribute('aria-expanded', comp ? 'true' : 'false');
+      });
+    };
+    cvS.addEventListener('click', () => setView(false));
+    cvC.addEventListener('click', () => setView(true));
+
+    /* ── confluence rows ────────────────────────────────────────────────── */
+    main.querySelectorAll('.b-mxr').forEach(r => r.addEventListener('click', () => {
+      const open = r.classList.toggle('open');
+      r.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }));
+
+    /* ── scenarios ──────────────────────────────────────────────────────── */
+    const baseRate = H && Number.isFinite(Number(H.win_rate)) ? Number(H.win_rate) : null;
+    const SC = [
+      ['Continuation through both targets.',
+       `Price clears ${f(t1)} and carries to ${f(t2)}. That needs the structure that produced this setup to hold — the 50-day above the 200-day, volume staying at or above its recent average, and no close back under ${f(entry)}.`,
+       [['Requires', `Above ${f(t1)}`], ['Target', f(t2)], ['Move from here', Number.isFinite(last) ? pct((t2 - last) / last * 100) : '—'],
+        ['R multiple', ((Math.abs(t2 - entry)) / (risk || 1)).toFixed(1) + 'R']]],
+      ['The published plan, run as written.',
+       `Entry at ${f(entry)}, first target ${f(t1)}, stop ${f(stop)}. On the published trailing rule the stop moves to entry once ${f(t1)} prints, so the remainder rides to ${f(t2)} with no capital at risk.`,
+       [['Requires', `Entry at or better than ${f(entry)}`], ['Target', f(t1)],
+        ['Move from here', Number.isFinite(last) ? pct((t1 - last) / last * 100) : '—'],
+        ['R multiple', rrT1.toFixed(1) + 'R']]],
+      ['The stop does its job.',
+       `A close beyond ${f(stop)} and the position closes for a defined loss of ${f(risk)} a share. This is the outcome the whole structure is built to make survivable: it is a known number decided before entry, not a decision taken while losing.`,
+       [['Requires', `Close beyond ${f(stop)}`], ['Loss', '−' + f(risk) + ' / share'],
+        ['Move from here', Number.isFinite(last) ? pct((stop - last) / last * 100) : '—'],
+        ['R multiple', '−1.0R']]],
+    ];
+    const scPane = $('scPane');
+    const drawSc = i => {
+      const [h, body, grid] = SC[i];
+      scPane.innerHTML = `<h4>${esc(h)}</h4><p>${esc(body)}</p>
+        <div class="b-scg">${grid.map(([k, v]) => `<div><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join('')}
+          <div><span class="k">Engine base rate</span><span class="v">${baseRate == null ? '—' : baseRate + '%'}</span></div></div>
+        ${baseRate == null ? '' : `<p style="font-size:12.5px;color:var(--b-dim);margin-top:14px;line-height:1.6">
+          ${baseRate}% is the share of <b style="color:var(--b-mut)">all ${H.trades} closed signals</b> that
+          ended in profit. It describes the engine's history, not this trade, and it is the same number
+          whichever scenario is selected.</p>`}`;
+      main.querySelectorAll('.b-scb button').forEach((b, k) =>
+        b.setAttribute('aria-pressed', k === i ? 'true' : 'false'));
+    };
+    main.querySelectorAll('.b-scb button').forEach(b =>
+      b.addEventListener('click', () => drawSc(Number(b.dataset.sc))));
+    drawSc(1);
+
+    /* ── risk, reward and size — one calculator, live ───────────────────── */
+    const ids = ['rkA', 'rkP', 'slE', 'slS', 'slT'];
+    const calc = () => {
+      const acct = Number($('rkA').value) || 0;
+      const rp = Number($('rkP').value) || 0;
+      const e2 = Number($('slE').value), s2 = Number($('slS').value), t1b = Number($('slT').value);
+      const risk2 = Math.abs(e2 - s2);
+      const rr2 = risk2 > 0 ? Math.abs(t1b - e2) / risk2 : 0;
+      const amt = acct * rp / 100;
+      const qty = risk2 > 0 ? Math.floor(amt / risk2) : 0;
+      const loss = qty * risk2, g1 = qty * Math.abs(t1b - e2), g2 = qty * Math.abs(t2 - e2);
+
+      $('lvA').textContent = f(acct);
+      $('lvP').textContent = rp.toFixed(1) + '% · ' + f(amt);
+      $('lvE').textContent = f(e2); $('lvS').textContent = f(s2); $('lvT').textContent = f(t1b);
+
+      const peak = Math.max(loss, g1, g2, 1);
+      $('barL').style.width = (loss / peak * 100).toFixed(1) + '%';
+      $('barG').style.width = (g1 / peak * 100).toFixed(1) + '%';
+      $('barG2').style.width = (g2 / peak * 100).toFixed(1) + '%';
+      countTo($('barLv'), loss, { dp: 0, pre: '−' + cur });
+      countTo($('barGv'), g1, { dp: 0, pre: '+' + cur });
+      countTo($('barG2v'), g2, { dp: 0, pre: '+' + cur });
+
+      $('rkOut').innerHTML = `
+        <div class="b-m"><span class="k">Position size</span><span class="v">${qty.toLocaleString('en-IN')} sh</span></div>
+        <div class="b-m"><span class="k">Notional</span><span class="v">${f(qty * e2)}</span></div>
+        <div class="b-m"><span class="k">Risk amount</span><span class="v">${f(amt)}</span></div>
+        <div class="b-m"><span class="k">R:R to T1</span><span class="v gold">${rr2.toFixed(1)} : 1</span></div>
+        <div class="b-m"><span class="k">Risk per share</span><span class="v">${f(risk2)}</span></div>
+        <div class="b-m"><span class="k">Of account</span><span class="v">${acct > 0 ? (qty * e2 / acct * 100).toFixed(1) + '%' : '—'}</span></div>`;
+
+      // Say so, loudly, the moment the numbers stop being the published ones.
+      // A tenth of a per cent, not half of one. The wider tolerance existed to
+      // absorb the slider's own snapping; with step="any" there is nothing to
+      // absorb, and a reader who has moved a level deserves to be told.
+      const tol = 0.001 * entry;
+      const moved = Math.abs(e2 - entry) > tol || Math.abs(s2 - stop) > tol
+                 || Math.abs(t1b - t1) > tol;
+      $('rkSim').hidden = !moved;
+    };
+    ids.forEach(id => $(id).addEventListener('input', calc));
+    $('rkReset').addEventListener('click', () => {
+      $('slE').value = entry; $('slS').value = stop; $('slT').value = t1; calc();
+    });
     calc();
   };
+
 
   /* ── router ────────────────────────────────────────────────────────────── */
   const routeOf = () => {
