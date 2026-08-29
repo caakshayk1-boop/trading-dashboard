@@ -1,624 +1,888 @@
 [
   {
-    "symbol": "SYK",
-    "price": 330.25,
-    "wma200": 321.8852,
-    "pct_above": 2.6,
+    "symbol": "CRM",
+    "price": 256.0,
+    "wma200": 233.9849,
+    "pct_above": 9.4,
+    "type": "\ud83d\ude80 FRESH CROSS",
+    "fresh_cross": true
+  },
+  {
+    "symbol": "NOW",
+    "price": 144.71,
+    "wma200": 142.2171,
+    "pct_above": 1.8,
     "type": "\ud83d\ude80 FRESH CROSS",
     "fresh_cross": true
   },
   {
     "symbol": "AMD",
-    "price": 521.95,
-    "wma200": 162.7557,
-    "pct_above": 220.7,
+    "price": 465.58,
+    "wma200": 173.3265,
+    "pct_above": 168.6,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "LRCX",
-    "price": 305.21,
-    "wma200": 107.6133,
-    "pct_above": 183.6,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "KLAC",
-    "price": 210.52,
-    "wma200": 81.7847,
-    "pct_above": 157.4,
+    "price": 301.9,
+    "wma200": 114.4943,
+    "pct_above": 163.7,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "INTC",
-    "price": 92.32,
-    "wma200": 36.9411,
-    "pct_above": 149.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "CAT",
-    "price": 888.73,
-    "wma200": 391.8374,
-    "pct_above": 126.8,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "SOXX",
-    "price": 527.01,
-    "wma200": 232.3937,
-    "pct_above": 126.8,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "TSM",
-    "price": 403.41,
-    "wma200": 184.3817,
-    "pct_above": 118.8,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "ASML",
-    "price": 1757.09,
-    "wma200": 861.7008,
-    "pct_above": 103.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "AVGO",
-    "price": 381.92,
-    "wma200": 187.3705,
-    "pct_above": 103.8,
+    "price": 89.47,
+    "wma200": 38.6758,
+    "pct_above": 131.3,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "PANW",
-    "price": 323.79,
-    "wma200": 159.756,
-    "pct_above": 102.7,
+    "price": 371.59,
+    "wma200": 166.749,
+    "pct_above": 122.8,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "GE",
-    "price": 353.73,
-    "wma200": 176.5553,
-    "pct_above": 100.4,
+    "symbol": "TSM",
+    "price": 417.52,
+    "wma200": 193.2689,
+    "pct_above": 116.0,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "GS",
-    "price": 1061.23,
-    "wma200": 536.8002,
-    "pct_above": 97.7,
+    "symbol": "SOXX",
+    "price": 508.62,
+    "wma200": 242.9358,
+    "pct_above": 109.4,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "CSCO",
-    "price": 114.17,
-    "wma200": 58.5259,
-    "pct_above": 95.1,
+    "symbol": "KLAC",
+    "price": 175.54,
+    "wma200": 85.6905,
+    "pct_above": 104.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "CAT",
+    "price": 800.25,
+    "wma200": 408.174,
+    "pct_above": 96.1,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "NVDA",
-    "price": 206.84,
-    "wma200": 107.5329,
-    "pct_above": 92.4,
+    "price": 217.55,
+    "wma200": 112.6356,
+    "pct_above": 93.1,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "MS",
-    "price": 214.48,
-    "wma200": 115.2677,
+    "symbol": "ASML",
+    "price": 1696.16,
+    "wma200": 893.4338,
+    "pct_above": 89.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "AVGO",
+    "price": 368.79,
+    "wma200": 196.042,
+    "pct_above": 88.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "GS",
+    "price": 1033.99,
+    "wma200": 555.5311,
     "pct_above": 86.1,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "USO",
-    "price": 136.69,
-    "wma200": 77.927,
-    "pct_above": 75.4,
+    "symbol": "GE",
+    "price": 342.58,
+    "wma200": 184.4476,
+    "pct_above": 85.7,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "RTX",
-    "price": 212.79,
-    "wma200": 121.3867,
-    "pct_above": 75.3,
+    "symbol": "DIVISLAB.NS",
+    "price": 9239.0,
+    "wma200": 4993.3927,
+    "pct_above": 85.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "CSCO",
+    "price": 109.93,
+    "wma200": 60.4348,
+    "pct_above": 81.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MS",
+    "price": 214.77,
+    "wma200": 118.2612,
+    "pct_above": 81.6,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "GOOGL",
-    "price": 319.74,
-    "wma200": 184.6629,
-    "pct_above": 73.1,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "ADI",
-    "price": 371.86,
-    "wma200": 221.2353,
-    "pct_above": 68.1,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "JPM",
-    "price": 353.21,
-    "wma200": 211.8277,
-    "pct_above": 66.7,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "LLY",
-    "price": 1196.03,
-    "wma200": 720.1003,
-    "pct_above": 66.1,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "PM",
-    "price": 193.0,
-    "wma200": 119.344,
-    "pct_above": 61.7,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "XLK",
-    "price": 175.88,
-    "wma200": 108.8428,
-    "pct_above": 61.6,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "JNJ",
-    "price": 263.4,
-    "wma200": 165.539,
-    "pct_above": 59.1,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "BAC",
-    "price": 62.05,
-    "wma200": 39.1316,
-    "pct_above": 58.6,
+    "price": 346.59,
+    "wma200": 190.9815,
+    "pct_above": 81.5,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "SLV",
-    "price": 52.59,
-    "wma200": 33.3209,
-    "pct_above": 57.8,
+    "price": 60.02,
+    "wma200": 34.3348,
+    "pct_above": 74.8,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "TXN",
-    "price": 279.58,
-    "wma200": 179.9751,
-    "pct_above": 55.3,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "ABBV",
-    "price": 259.36,
-    "wma200": 170.8114,
-    "pct_above": 51.8,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "MMM",
-    "price": 172.62,
-    "wma200": 116.0529,
-    "pct_above": 48.7,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "QQQ",
-    "price": 684.23,
-    "wma200": 466.6419,
-    "pct_above": 46.6,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "DE",
-    "price": 628.16,
-    "wma200": 433.8471,
-    "pct_above": 44.8,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "EEM",
-    "price": 63.33,
-    "wma200": 43.8961,
-    "pct_above": 44.3,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "XLI",
-    "price": 182.66,
-    "wma200": 126.7412,
-    "pct_above": 44.1,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "XOM",
-    "price": 156.94,
-    "wma200": 109.7353,
-    "pct_above": 43.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "GILD",
-    "price": 129.31,
-    "wma200": 90.7474,
-    "pct_above": 42.5,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "GLD",
-    "price": 371.9,
-    "wma200": 261.4296,
-    "pct_above": 42.3,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "WMT",
-    "price": 109.47,
-    "wma200": 77.681,
-    "pct_above": 40.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "CB",
-    "price": 359.75,
-    "wma200": 255.4002,
-    "pct_above": 40.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "XLE",
-    "price": 59.62,
-    "wma200": 42.8635,
-    "pct_above": 39.1,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "IWM",
-    "price": 291.17,
-    "wma200": 209.4941,
-    "pct_above": 39.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "SPY",
-    "price": 738.93,
-    "wma200": 534.8456,
-    "pct_above": 38.2,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "VTI",
-    "price": 364.8,
-    "wma200": 264.351,
-    "pct_above": 38.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "AMGN",
-    "price": 376.04,
-    "wma200": 277.2701,
-    "pct_above": 35.6,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "EFA",
-    "price": 103.41,
-    "wma200": 76.7732,
-    "pct_above": 34.7,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "IBB",
-    "price": 188.14,
-    "wma200": 139.924,
-    "pct_above": 34.5,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "AXP",
-    "price": 326.17,
-    "wma200": 242.9584,
-    "pct_above": 34.2,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "XLF",
-    "price": 56.31,
-    "wma200": 42.5741,
-    "pct_above": 32.3,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "ARKK",
-    "price": 71.89,
-    "wma200": 54.6361,
-    "pct_above": 31.6,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "KO",
-    "price": 82.25,
-    "wma200": 62.7897,
-    "pct_above": 31.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "CVX",
-    "price": 194.79,
-    "wma200": 148.7592,
-    "pct_above": 30.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "MRK",
-    "price": 131.07,
-    "wma200": 100.2717,
-    "pct_above": 30.7,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "AMZN",
-    "price": 232.11,
-    "wma200": 178.5594,
-    "pct_above": 30.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "PLD",
-    "price": 147.63,
-    "wma200": 113.5776,
-    "pct_above": 30.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "VZ",
-    "price": 46.38,
-    "wma200": 35.9973,
-    "pct_above": 28.8,
+    "symbol": "RTX",
+    "price": 211.71,
+    "wma200": 124.4058,
+    "pct_above": 70.2,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "SHOP",
-    "price": 113.75,
-    "wma200": 88.484,
-    "pct_above": 28.6,
+    "price": 152.9,
+    "wma200": 91.3892,
+    "pct_above": 67.3,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "NEE",
-    "price": 89.78,
-    "wma200": 71.2784,
-    "pct_above": 26.0,
+    "symbol": "XLK",
+    "price": 185.69,
+    "wma200": 111.9694,
+    "pct_above": 65.8,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "V",
-    "price": 355.74,
-    "wma200": 282.6139,
-    "pct_above": 25.9,
+    "symbol": "JPM",
+    "price": 357.62,
+    "wma200": 218.1289,
+    "pct_above": 63.9,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "META",
-    "price": 595.19,
-    "wma200": 473.7913,
-    "pct_above": 25.6,
+    "symbol": "USO",
+    "price": 129.7,
+    "wma200": 79.3478,
+    "pct_above": 63.5,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "XLC",
-    "price": 106.3,
-    "wma200": 85.0847,
-    "pct_above": 24.9,
+    "symbol": "EICHERMOT.NS",
+    "price": 8059.0,
+    "wma200": 4938.8643,
+    "pct_above": 63.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "JNJ",
+    "price": 268.04,
+    "wma200": 167.5605,
+    "pct_above": 60.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ADI",
+    "price": 361.78,
+    "wma200": 227.2963,
+    "pct_above": 59.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "LLY",
+    "price": 1174.61,
+    "wma200": 740.6261,
+    "pct_above": 58.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "GILD",
+    "price": 145.68,
+    "wma200": 92.7201,
+    "pct_above": 57.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "PM",
+    "price": 191.89,
+    "wma200": 122.2723,
+    "pct_above": 56.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "COFORGE.NS",
+    "price": 2014.6,
+    "wma200": 1290.417,
+    "pct_above": 56.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "BAC",
+    "price": 62.32,
+    "wma200": 39.9552,
+    "pct_above": 56.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "AMGN",
+    "price": 432.42,
+    "wma200": 280.5943,
+    "pct_above": 54.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "GLD",
+    "price": 408.89,
+    "wma200": 267.5841,
+    "pct_above": 52.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ARKK",
+    "price": 84.59,
+    "wma200": 55.7364,
+    "pct_above": 51.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "TITAN.NS",
+    "price": 5169.2002,
+    "wma200": 3443.123,
+    "pct_above": 50.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "EEM",
+    "price": 67.14,
+    "wma200": 44.7561,
+    "pct_above": 50.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "QQQ",
+    "price": 716.43,
+    "wma200": 477.8844,
+    "pct_above": 49.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "AAPL",
+    "price": 319.7,
+    "wma200": 213.6706,
+    "pct_above": 49.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MMM",
+    "price": 174.34,
+    "wma200": 117.911,
+    "pct_above": 47.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "IBB",
+    "price": 208.95,
+    "wma200": 141.9479,
+    "pct_above": 47.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ABBV",
+    "price": 255.48,
+    "wma200": 174.0481,
+    "pct_above": 46.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "AMZN",
+    "price": 266.43,
+    "wma200": 182.4423,
+    "pct_above": 46.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MRK",
+    "price": 148.35,
+    "wma200": 101.6837,
+    "pct_above": 45.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "XLE",
+    "price": 62.68,
+    "wma200": 43.4852,
+    "pct_above": 44.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "DE",
+    "price": 630.33,
+    "wma200": 440.66,
+    "pct_above": 43.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "TXN",
+    "price": 258.64,
+    "wma200": 182.3847,
+    "pct_above": 41.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ADANIPORTS.NS",
+    "price": 1707.5,
+    "wma200": 1204.4544,
+    "pct_above": 41.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "JSWSTEEL.NS",
+    "price": 1334.9,
+    "wma200": 942.924,
+    "pct_above": 41.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "XOM",
+    "price": 156.71,
+    "wma200": 110.7554,
+    "pct_above": 41.5,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "SPY",
+    "price": 769.35,
+    "wma200": 545.2431,
+    "pct_above": 41.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "VTI",
+    "price": 379.36,
+    "wma200": 269.4222,
+    "pct_above": 40.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "KO",
+    "price": 89.66,
+    "wma200": 63.7419,
+    "pct_above": 40.7,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "SBIN.NS",
+    "price": 1047.5,
+    "wma200": 753.5477,
+    "pct_above": 39.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "IWM",
+    "price": 295.75,
+    "wma200": 212.8751,
+    "pct_above": 38.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "APOLLOHOSP.NS",
+    "price": 8838.5,
+    "wma200": 6390.1005,
+    "pct_above": 38.3,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "EFA",
+    "price": 107.72,
+    "wma200": 78.1907,
+    "pct_above": 37.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "VZ",
+    "price": 50.1,
+    "wma200": 36.4926,
+    "pct_above": 37.3,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "XLI",
+    "price": 177.14,
+    "wma200": 129.2244,
+    "pct_above": 37.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "BAJFINANCE.NS",
+    "price": 1079.9,
+    "wma200": 789.0252,
+    "pct_above": 36.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "PERSISTENT.NS",
+    "price": 5875.0,
+    "wma200": 4321.8329,
+    "pct_above": 35.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "CVX",
+    "price": 201.86,
+    "wma200": 148.9229,
+    "pct_above": 35.5,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "BLK",
-    "price": 1055.67,
-    "wma200": 845.7146,
-    "pct_above": 24.8,
+    "price": 1164.48,
+    "wma200": 861.0173,
+    "pct_above": 35.2,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "T",
-    "price": 24.13,
-    "wma200": 19.5147,
-    "pct_above": 23.7,
+    "symbol": "AXP",
+    "price": 333.2,
+    "wma200": 248.0572,
+    "pct_above": 34.3,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "LIN",
-    "price": 512.28,
-    "wma200": 415.973,
-    "pct_above": 23.2,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "HON",
-    "price": 243.15,
-    "wma200": 200.266,
-    "pct_above": 21.4,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "COST",
-    "price": 935.03,
-    "wma200": 771.6927,
-    "pct_above": 21.2,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "XLV",
-    "price": 162.57,
-    "wma200": 136.7011,
-    "pct_above": 18.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "CDNS",
-    "price": 326.24,
-    "wma200": 274.8321,
-    "pct_above": 18.7,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "BRK-B",
-    "price": 494.93,
-    "wma200": 420.7384,
-    "pct_above": 17.6,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "MA",
-    "price": 539.66,
-    "wma200": 463.7545,
-    "pct_above": 16.4,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "QCOM",
-    "price": 166.97,
-    "wma200": 145.2017,
-    "pct_above": 15.0,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "BKNG",
-    "price": 177.46,
-    "wma200": 154.3927,
-    "pct_above": 14.9,
-    "type": "\ud83d\udcc8 WEEKLY TREND",
-    "fresh_cross": false
-  },
-  {
-    "symbol": "SBUX",
-    "price": 103.25,
-    "wma200": 90.15,
-    "pct_above": 14.5,
+    "symbol": "XLF",
+    "price": 58.1,
+    "wma200": 43.2708,
+    "pct_above": 34.3,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "TGT",
-    "price": 136.78,
-    "wma200": 122.3471,
-    "pct_above": 11.8,
+    "price": 163.18,
+    "wma200": 121.922,
+    "pct_above": 33.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "V",
+    "price": 381.6,
+    "wma200": 286.7344,
+    "pct_above": 33.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MARICO.NS",
+    "price": 829.65,
+    "wma200": 625.374,
+    "pct_above": 32.7,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "BHARTIARTL.NS",
+    "price": 1882.4,
+    "wma200": 1419.5367,
+    "pct_above": 32.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MSFT",
+    "price": 513.53,
+    "wma200": 390.6301,
+    "pct_above": 31.5,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "T",
+    "price": 26.01,
+    "wma200": 19.8024,
+    "pct_above": 31.3,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "CB",
+    "price": 339.92,
+    "wma200": 259.41,
+    "pct_above": 31.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "BKNG",
+    "price": 205.63,
+    "wma200": 157.8633,
+    "pct_above": 30.3,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "XLC",
+    "price": 112.99,
+    "wma200": 86.6984,
+    "pct_above": 30.3,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "WMT",
+    "price": 103.09,
+    "wma200": 79.1544,
+    "pct_above": 30.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "TATASTEEL.NS",
+    "price": 186.5,
+    "wma200": 144.1044,
+    "pct_above": 29.4,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "SUNPHARMA.NS",
+    "price": 1920.0,
+    "wma200": 1485.43,
+    "pct_above": 29.3,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MA",
+    "price": 595.3,
+    "wma200": 470.8305,
+    "pct_above": 26.4,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "TECHM.NS",
+    "price": 1640.9,
+    "wma200": 1302.5832,
+    "pct_above": 26.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "XLV",
+    "price": 171.16,
+    "wma200": 137.9624,
+    "pct_above": 24.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "NESTLEIND.NS",
+    "price": 1454.6,
+    "wma200": 1173.2229,
+    "pct_above": 24.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "LT.NS",
+    "price": 4045.8,
+    "wma200": 3268.1982,
+    "pct_above": 23.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ICICIBANK.NS",
+    "price": 1422.8,
+    "wma200": 1155.9388,
+    "pct_above": 23.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "PLD",
+    "price": 140.7,
+    "wma200": 114.8165,
+    "pct_above": 22.5,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "TSLA",
-    "price": 313.03,
-    "wma200": 282.5602,
-    "pct_above": 10.8,
+    "price": 348.75,
+    "wma200": 285.3471,
+    "pct_above": 22.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "CDNS",
+    "price": 340.39,
+    "wma200": 279.2515,
+    "pct_above": 21.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "COST",
+    "price": 945.47,
+    "wma200": 784.0881,
+    "pct_above": 20.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "SBUX",
+    "price": 107.85,
+    "wma200": 90.3287,
+    "pct_above": 19.4,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "META",
+    "price": 578.02,
+    "wma200": 485.0259,
+    "pct_above": 19.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "BRK-B",
+    "price": 505.0,
+    "wma200": 426.475,
+    "pct_above": 18.4,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "TMO",
-    "price": 568.26,
-    "wma200": 525.9356,
-    "pct_above": 8.0,
+    "price": 622.18,
+    "wma200": 528.4477,
+    "pct_above": 17.7,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "PIDILITIND.NS",
+    "price": 1629.5,
+    "wma200": 1398.428,
+    "pct_above": 16.5,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "LIN",
+    "price": 489.51,
+    "wma200": 421.4109,
+    "pct_above": 16.2,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "BAJAJFINSV.NS",
+    "price": 2002.0,
+    "wma200": 1726.3864,
+    "pct_above": 16.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "SAP",
+    "price": 221.54,
+    "wma200": 191.4849,
+    "pct_above": 15.7,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MARUTI.NS",
+    "price": 13376.0,
+    "wma200": 11671.0688,
+    "pct_above": 14.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "AXISBANK.NS",
+    "price": 1265.0,
+    "wma200": 1105.6351,
+    "pct_above": 14.4,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "NEE",
+    "price": 81.84,
+    "wma200": 71.6973,
+    "pct_above": 14.1,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "MELI",
-    "price": 1801.4399,
-    "wma200": 1698.0388,
-    "pct_above": 6.1,
+    "price": 1966.25,
+    "wma200": 1724.2333,
+    "pct_above": 14.0,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
-    "symbol": "SPGI",
-    "price": 426.4,
-    "wma200": 412.1709,
-    "pct_above": 3.5,
+    "symbol": "NFLX",
+    "price": 81.72,
+    "wma200": 72.2702,
+    "pct_above": 13.1,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
   },
   {
     "symbol": "MDT",
-    "price": 83.21,
-    "wma200": 80.5722,
+    "price": 91.23,
+    "wma200": 80.9815,
+    "pct_above": 12.7,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "KOTAKBANK.NS",
+    "price": 423.7,
+    "wma200": 378.0951,
+    "pct_above": 12.1,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "QCOM",
+    "price": 164.19,
+    "wma200": 146.5733,
+    "pct_above": 12.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ONGC.NS",
+    "price": 232.25,
+    "wma200": 213.7923,
+    "pct_above": 8.6,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "HON",
+    "price": 217.43,
+    "wma200": 201.3468,
+    "pct_above": 8.0,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "CIPLA.NS",
+    "price": 1423.5,
+    "wma200": 1321.5333,
+    "pct_above": 7.7,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "SPGI",
+    "price": 442.89,
+    "wma200": 414.8476,
+    "pct_above": 6.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "MPHASIS.NS",
+    "price": 2455.0,
+    "wma200": 2342.013,
+    "pct_above": 4.8,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ABT",
+    "price": 112.47,
+    "wma200": 108.245,
+    "pct_above": 3.9,
+    "type": "\ud83d\udcc8 WEEKLY TREND",
+    "fresh_cross": false
+  },
+  {
+    "symbol": "ORCL",
+    "price": 150.85,
+    "wma200": 146.0958,
     "pct_above": 3.3,
     "type": "\ud83d\udcc8 WEEKLY TREND",
     "fresh_cross": false
