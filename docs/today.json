@@ -1,25 +1,137 @@
 {
- "build_id": "20260829T134311",
- "date": "2026-08-29",
- "date_str": "Saturday, August 29 2026",
+ "build_id": "20260830T075205",
+ "date": "2026-08-30",
+ "date_str": "Sunday, August 30 2026",
  "picks": [
+  {
+   "symbol": "CRWD",
+   "name": "CRWD",
+   "ext20": 6.95,
+   "vol_ratio": 1.49,
+   "price": 218.4,
+   "change_1d": -4.19,
+   "mom_1m": 17.9,
+   "mom_3m": 11.7,
+   "score": 83,
+   "target": 252.73,
+   "stop_loss": 204.21,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "16% to go at its recent 3.9%/month",
+   "rr": 2.42,
+   "atr": 11.82,
+   "high_52w": 229.08,
+   "timeframe": "3-6 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 22.4
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 17.3
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 13.4
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 3.3
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 6.5
+    }
+   ],
+   "ema20": 204.21,
+   "tv": "CRWD",
+   "thesis": "17.9% one\u2011month gain, price 7% above 20\u2011day average on 1.49\u00d7 volume, composite 83/100 indicates accelerating momentum."
+  },
+  {
+   "symbol": "MDB",
+   "name": "MDB",
+   "ext20": 8.57,
+   "vol_ratio": 0.88,
+   "price": 446.62,
+   "change_1d": 1.37,
+   "mom_1m": 37.1,
+   "mom_3m": 10.6,
+   "score": 83,
+   "target": 518.18,
+   "stop_loss": 411.38,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "16% to go at its recent 3.5%/month",
+   "rr": 2.03,
+   "atr": 22.54,
+   "high_52w": 473.1,
+   "timeframe": "3-6 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 25.0
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 3.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 411.38,
+   "tv": "MDB",
+   "thesis": "37.1% one\u2011month rise, 10.6% three\u2011month gain, price 8.6% above 20\u2011day average, volume 0.88\u00d7 norm, composite 83."
+  },
   {
    "symbol": "SAP",
    "name": "SAP",
-   "ext20": 9.4,
-   "vol_ratio": 0.76,
-   "price": 218.68,
-   "change_1d": 0.73,
-   "mom_1m": 49.4,
-   "mom_3m": 24.3,
-   "score": 87,
+   "ext20": 6.97,
+   "vol_ratio": 0.98,
+   "price": 221.54,
+   "change_1d": 0.17,
+   "mom_1m": 22.5,
+   "mom_3m": 13.0,
+   "score": 82,
    "target": 276.56,
-   "stop_loss": 199.89,
+   "stop_loss": 207.1,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "26% to go at its recent 8.1%/month",
-   "rr": 3.08,
-   "atr": 5.67,
+   "horizon_basis": "25% to go at its recent 4.3%/month",
+   "rr": 3.81,
+   "atr": 5.73,
    "high_52w": 276.56,
    "timeframe": "3-6 months",
    "currency": "$",
@@ -27,7 +139,7 @@
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
+     "e": 22.4
     },
     {
      "k": "Above 50-day avg",
@@ -47,48 +159,48 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 6.9
+     "e": 3.7
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.0
+     "e": 0.9
     }
    ],
-   "ema20": 199.89,
+   "ema20": 207.1,
    "tv": "SAP",
-   "thesis": "49.4% one\u2011month gain, 24.3% three\u2011month gain, price 9.4% above 20\u2011day average on 0.76\u00d7 volume, composite 87."
+   "thesis": "22.5% one\u2011month gain, 13% three\u2011month gain, price 7% above 20\u2011day average, volume 0.98\u00d7 norm, composite 82/100."
   },
   {
-   "symbol": "AXON",
-   "name": "AXON",
-   "ext20": 6.09,
-   "vol_ratio": 0.72,
-   "price": 627.75,
-   "change_1d": 2.2,
-   "mom_1m": 27.6,
-   "mom_3m": 62.6,
-   "score": 85,
-   "target": 794.29,
-   "stop_loss": 566.95,
-   "target_basis": "the 52-week high",
-   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "27% to go at its recent 20.9%/month",
-   "rr": 2.74,
-   "atr": 40.53,
-   "high_52w": 794.29,
-   "timeframe": "about a month",
+   "symbol": "NEM",
+   "name": "NEM",
+   "ext20": 6.35,
+   "vol_ratio": 1.0,
+   "price": 127.98,
+   "change_1d": -3.26,
+   "mom_1m": 33.6,
+   "mom_3m": 18.3,
+   "score": 82,
+   "target": 144.66,
+   "stop_loss": 120.34,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "13% to go at its recent 6.1%/month",
+   "rr": 2.18,
+   "atr": 4.69,
+   "high_52w": 135.29,
+   "timeframe": "1-3 months",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 20.2
+     "e": 20.9
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 19.3
+     "e": 20.0
     },
     {
      "k": "Averages stacked",
@@ -103,165 +215,53 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 10.0
+     "e": 5.2
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.0
+     "e": 1.1
     }
    ],
-   "ema20": 591.7,
-   "tv": "AXON",
-   "thesis": "62.6% three\u2011month surge, 27.6% one\u2011month rise, price 6.1% above its 20\u2011day average on 0.72\u00d7 typical volume, composite 85/100."
+   "ema20": 120.34,
+   "tv": "NEM",
+   "thesis": "33.6% one\u2011month gain, 18.3% three\u2011month rise, price 6.3% above its 20\u2011day average on normal volume, composite 82."
   },
   {
-   "symbol": "CRM",
-   "name": "CRM",
-   "ext20": 8.56,
-   "vol_ratio": 1.05,
-   "price": 209.17,
-   "change_1d": 1.82,
-   "mom_1m": 33.3,
-   "mom_3m": 16.5,
-   "score": 83,
-   "target": 267.75,
-   "stop_loss": 192.67,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "28% to go at its recent 5.5%/month",
-   "rr": 3.55,
-   "atr": 7.77,
-   "high_52w": 267.75,
-   "timeframe": "3-6 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 18.9
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 12.7
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 4.7
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 1.7
-    }
-   ],
-   "ema20": 192.67,
-   "tv": "CRM",
-   "thesis": "33.3% one\u2011month gain, 16.5% three\u2011month rise, price 8.6% above 20\u2011day average, volume 1.05\u00d7 norm, composite 83."
-  },
-  {
-   "symbol": "DUOL",
-   "name": "DUOL",
-   "ext20": 6.82,
-   "vol_ratio": 0.93,
-   "price": 146.13,
-   "change_1d": -0.61,
-   "mom_1m": 21.1,
-   "mom_3m": 37.1,
-   "score": 82,
-   "target": 355.0,
-   "stop_loss": 131.88,
-   "target_basis": "the 52-week high",
-   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "143% to go at its recent 12.4%/month",
-   "rr": 14.66,
-   "atr": 9.5,
-   "high_52w": 355.0,
-   "timeframe": "6-12 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 22.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 16.7
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 12.7
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 0.3
-    }
-   ],
-   "ema20": 136.8,
-   "tv": "DUOL",
-   "thesis": "Three\u2011month gain of 37.1% alongside a 6.8% price premium over the 20\u2011day average, with volume at 0.93\u00d7 norm."
-  },
-  {
-   "symbol": "SMCI",
-   "name": "SMCI",
-   "ext20": 9.47,
-   "vol_ratio": 0.84,
-   "price": 37.24,
-   "change_1d": 2.03,
-   "mom_1m": 19.4,
-   "mom_3m": 4.7,
+   "symbol": "FCX",
+   "name": "FCX",
+   "ext20": 6.35,
+   "vol_ratio": 1.23,
+   "price": 76.45,
+   "change_1d": -2.51,
+   "mom_1m": 20.5,
+   "mom_3m": 14.3,
    "score": 81,
-   "target": 58.78,
-   "stop_loss": 34.02,
-   "target_basis": "the 52-week high",
+   "target": 85.86,
+   "stop_loss": 71.89,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "58% to go at its recent 1.6%/month",
-   "rr": 6.68,
-   "atr": 2.55,
-   "high_52w": 58.78,
-   "timeframe": "over a year at this pace",
+   "horizon_basis": "12% to go at its recent 4.8%/month",
+   "rr": 2.06,
+   "atr": 2.81,
+   "high_52w": 80.24,
+   "timeframe": "1-3 months",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 25.0
+     "e": 20.9
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 20.0
+     "e": 17.5
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 14.3
+     "e": 15.0
     },
     {
      "k": "1-month thrust",
@@ -271,17 +271,17 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 1.3
+     "e": 4.1
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.0
+     "e": 3.7
     }
    ],
-   "ema20": 34.02,
-   "tv": "SMCI",
-   "thesis": "19.4% one\u2011month rise, 4.7% three\u2011month rise, price 9.5% above its 20\u2011day average, volume 0.84\u00d7 norm, composite 81/100."
+   "ema20": 71.89,
+   "tv": "FCX",
+   "thesis": "20.5% one\u2011month gain, 14.3% three\u2011month rise, price 6.3% above 20\u2011day average, volume 1.23\u00d7 norm, score 81/100."
   }
  ],
  "engine": [
@@ -411,7 +411,7 @@
  "picks_week": null,
  "open_context": {
   "ABCAPITAL": {
-   "price": 410.0,
+   "price": 405.55,
    "sector": "Financial Services"
   },
   "ABREL": {
@@ -434,16 +434,20 @@
    "price": 605.25,
    "sector": "Real Estate"
   },
+  "APOLLOTYRE": {
+   "price": 443.5,
+   "sector": "Consumer Cyclical"
+  },
   "ASAHIINDIA": {
    "price": 951.25,
    "sector": "Consumer Cyclical"
   },
   "ASHOKLEY": {
-   "price": 177.4,
+   "price": 175.77,
    "sector": "Industrials"
   },
   "ASTRAL": {
-   "price": 1529.2,
+   "price": 1532.3,
    "sector": "Industrials"
   },
   "AUROPHARMA": {
@@ -451,31 +455,27 @@
    "sector": "Healthcare"
   },
   "AXON": {
-   "price": 611.2,
+   "price": 600.73,
    "sector": "Industrials"
   },
   "BAJAJFINSV": {
-   "price": 2011.0,
-   "sector": "Financial Services"
-  },
-  "BAJFINANCE.NS": {
-   "price": 1083.0,
+   "price": 2002.0,
    "sector": "Financial Services"
   },
   "BANKBARODA": {
-   "price": 241.0,
+   "price": 241.9,
    "sector": "Financial Services"
   },
   "BANKINDIA": {
-   "price": 144.6,
+   "price": 144.0,
    "sector": "Financial Services"
   },
   "BDL": {
-   "price": 1348.6,
+   "price": 1306.0,
    "sector": "Industrials"
   },
   "BRIGADE": {
-   "price": 656.75,
+   "price": 642.25,
    "sector": "Real Estate"
   },
   "CANBK": {
@@ -483,7 +483,7 @@
    "sector": "Financial Services"
   },
   "CDSL": {
-   "price": 1410.8,
+   "price": 1414.7,
    "sector": "Financial Services"
   },
   "CEATLTD": {
@@ -491,19 +491,23 @@
    "sector": "Consumer Cyclical"
   },
   "CEMPRO": {
-   "price": 1251.2,
+   "price": 1268.1,
    "sector": "Industrials"
   },
   "CHALET": {
-   "price": 910.3,
+   "price": 901.2,
    "sector": "Consumer Cyclical"
   },
+  "COCHINSHIP": {
+   "price": 1535.0,
+   "sector": "Industrials"
+  },
   "COFORGE.NS": {
-   "price": 1901.8,
+   "price": 2014.6,
    "sector": "Technology"
   },
   "CREDITACC": {
-   "price": 1425.9,
+   "price": 1391.7,
    "sector": "Financial Services"
   },
   "CRISIL": {
@@ -511,7 +515,11 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 252.05,
+   "price": 256.0,
+   "sector": "Technology"
+  },
+  "CRWD": {
+   "price": 218.4,
    "sector": "Technology"
   },
   "DEEPAKNTR": {
@@ -519,31 +527,39 @@
    "sector": "Basic Materials"
   },
   "DIXON": {
-   "price": 14711.0,
+   "price": 14650.0,
    "sector": "Technology"
   },
   "DLF": {
-   "price": 676.15,
+   "price": 679.8,
    "sector": "Real Estate"
   },
   "DUOL": {
-   "price": 142.86,
+   "price": 146.98,
    "sector": "Technology"
   },
   "ECLERX": {
    "price": 1940.9,
    "sector": "Technology"
   },
+  "EIDPARRY": {
+   "price": 795.3,
+   "sector": "Basic Materials"
+  },
   "ESCORTS": {
    "price": 2974.1001,
    "sector": "Industrials"
   },
   "EXIDEIND": {
-   "price": 437.75,
+   "price": 444.6,
    "sector": "Consumer Cyclical"
   },
+  "FCX": {
+   "price": 76.45,
+   "sector": "Basic Materials"
+  },
   "FSL": {
-   "price": 268.5,
+   "price": 269.3,
    "sector": "Technology"
   },
   "GRANULES": {
@@ -555,20 +571,32 @@
    "sector": "Basic Materials"
   },
   "GVT&D": {
-   "price": 4407.7998,
+   "price": 4339.2002,
    "sector": "Industrials"
   },
   "HCLTECH": {
-   "price": 1282.0,
+   "price": 1316.1,
    "sector": "Technology"
   },
   "HDFCBANK": {
-   "price": 711.0,
+   "price": 720.3,
    "sector": "Financial Services"
   },
   "HINDCOPPER": {
-   "price": 536.3,
+   "price": 533.55,
    "sector": "Basic Materials"
+  },
+  "HINDZINC": {
+   "price": 622.0,
+   "sector": "Basic Materials"
+  },
+  "HSCL": {
+   "price": 672.95,
+   "sector": "Basic Materials"
+  },
+  "IDBI": {
+   "price": 92.66,
+   "sector": "Financial Services"
   },
   "IPCALAB": {
    "price": 1959.8,
@@ -576,6 +604,14 @@
   },
   "J&KBANK": {
    "price": 152.17,
+   "sector": "Financial Services"
+  },
+  "JKTYRE": {
+   "price": 378.75,
+   "sector": "Consumer Cyclical"
+  },
+  "JMFINANCIL": {
+   "price": 129.29,
    "sector": "Financial Services"
   },
   "JSWDULUX": {
@@ -587,7 +623,7 @@
    "sector": "Basic Materials"
   },
   "KIRLOSENG": {
-   "price": 2100.2,
+   "price": 2123.1001,
    "sector": "Industrials"
   },
   "KPRMILL": {
@@ -598,57 +634,21 @@
    "price": 1936.4,
    "sector": "Healthcare"
   },
-  "LUPIN": {
-   "price": 2158.1001,
-   "sector": "Healthcare"
-  },
   "MANAPPURAM": {
-   "price": 348.0,
+   "price": 348.9,
    "sector": "Financial Services"
   },
-  "MARICO": {
-   "price": 833.5,
-   "sector": "Consumer Defensive"
-  },
-  "MOTHERSON": {
-   "price": 166.0,
+  "MARUTI": {
+   "price": 13376.0,
    "sector": "Consumer Cyclical"
   },
-  "MPHASIS": {
-   "price": 2413.6001,
-   "sector": "Technology"
-  },
-  "MRK": {
-   "price": 149.54,
-   "sector": "Healthcare"
-  },
-  "MRPL": {
-   "price": 170.8,
-   "sector": "Energy"
-  },
-  "MSFT": {
-   "price": 505.06,
+  "MDB": {
+   "price": 446.62,
    "sector": ""
   },
-  "NATIONALUM": {
-   "price": 389.3,
-   "sector": "Basic Materials"
-  },
-  "NAUKRI": {
-   "price": 1330.0,
-   "sector": "Communication Services"
-  },
-  "NESTLEIND": {
-   "price": 1450.0,
-   "sector": "Consumer Defensive"
-  },
-  "NIACL": {
-   "price": 185.2,
-   "sector": "Financial Services"
-  },
-  "NMDC": {
-   "price": 85.72,
-   "sector": "Basic Materials"
+  "MOTHERSON": {
+   "price": 165.6,
+   "sector": "Consumer Cyclical"
   }
  },
  "ipos": {
@@ -773,14 +773,26 @@
  },
  "data_health": {
   "worst": "DEGRADED",
-  "current": 11,
+  "current": 9,
   "total": 12,
   "degraded": [
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "8h old",
+    "age": "9h old",
     "note": "partial coverage \u2014 13/22 records"
+   },
+   {
+    "dataset": "Fund screen",
+    "status": "DEGRADED",
+    "age": "7 days old",
+    "note": "older than its weekly refresh"
+   },
+   {
+    "dataset": "New listings",
+    "status": "STALE",
+    "age": "7 days old",
+    "note": "older than its weekly refresh"
    }
   ]
  },
@@ -942,7 +954,7 @@
   },
   "daughter": {
    "months": 8,
-   "days": 247,
+   "days": 248,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -950,91 +962,91 @@
   "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
   "father": [
    {
-    "title": "Put her in front of a mirror",
-    "do": "Hold her at a mirror and name both of you.",
-    "why": "Self-recognition does not arrive until around 18 months, so she is currently treating the reflection as another baby \u2014 which is exactly why it holds her attention and drives social behaviours."
+    "title": "Stop at eye contact",
+    "do": "When she catches your eye across the room, stop and respond \u2014 smile, wave, say her name.",
+    "why": "Social referencing is beginning: she checks your face to decide how to feel about things. Responding consistently makes you a reliable reference point."
    },
    {
-    "title": "Ask her mother what she needs",
-    "do": "Ask directly, once, and act on the answer without negotiating it.",
-    "why": "The most reliable predictor of a child's early environment is the functioning of the partnership around them. This is a fatherhood task, not a marital one."
+    "title": "Let her lead the play",
+    "do": "Follow what she reaches for instead of redirecting to the toy you chose. Sit on the floor at her level for 15 minutes.",
+    "why": "Serve-and-return interaction builds the circuitry for attention and self-regulation. Following her focus teaches that her signals produce a response \u2014 the root of secure attachment."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Anekantavada",
-    "translation": "Many-sidedness",
-    "teaching": "Reality has more facets than any single viewpoint can hold. The classic image is blind men describing an elephant \u2014 each is accurate and each is incomplete.",
-    "apply": "In a disagreement, state the other person's position better than they did before you argue against it. If you cannot, you have not understood it yet."
+    "term": "Aparigraha",
+    "translation": "Non-attachment / non-possessiveness",
+    "teaching": "Accumulation beyond need becomes a burden that owns you. The vow is not poverty; it is limiting want deliberately.",
+    "apply": "Set a ceiling before you need one. Decide what income is enough now, in a number, so that lifestyle does not silently absorb every increment."
    },
    {
     "tradition": "Buddhism",
-    "term": "Impermanence of success",
-    "translation": "Anicca applied upward",
-    "teaching": "Impermanence is usually offered as consolation in difficulty. It applies symmetrically: the good quarter, the promotion, the peak are equally conditioned.",
-    "apply": "On a good week, note it explicitly and hold it lightly. The habit of not over-identifying with wins is what makes losses survivable."
+    "term": "Dana",
+    "translation": "Generosity, listed first",
+    "teaching": "In the traditional sequence of practices, generosity comes before ethics and meditation \u2014 as the foundation rather than the reward.",
+    "apply": "Give something away before you feel you have surplus. Time or attention counts; the point is that it precedes abundance rather than following it."
    }
   ],
   "spanish": [
    {
-    "word": "ponerse las pilas",
-    "meaning": "to get moving / step up",
-    "es": "Hay que ponerse las pilas este trimestre.",
-    "en": "We need to step up this quarter.",
+    "word": "a la larga",
+    "meaning": "in the long run",
+    "es": "A la larga, la disciplina gana.",
+    "en": "In the long run, discipline wins.",
     "tag": "Idiom"
    },
    {
-    "word": "la reuni\u00f3n",
-    "meaning": "the meeting",
-    "es": "La reuni\u00f3n empieza a las nueve.",
-    "en": "The meeting starts at nine.",
+    "word": "el plazo",
+    "meaning": "the deadline",
+    "es": "No podemos cumplir ese plazo.",
+    "en": "We cannot meet that deadline.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Salutary",
-    "say": "SAL-yuh-ter-ee",
-    "meaning": "Producing a good effect, usually unpleasantly.",
-    "example": "The audit finding was a salutary reminder about access controls.",
-    "note": "The useful shock. Slightly formal, lands well in written commentary."
+    "word": "Countenance",
+    "say": "KOWN-tuh-nuhns",
+    "meaning": "To tolerate or approve of.",
+    "example": "The board will not countenance another delay.",
+    "note": "Formal, strong. One use per document, maximum."
    },
    {
-    "word": "Attenuate",
-    "say": "uh-TEN-yoo-ayt",
-    "meaning": "To reduce in force or effect.",
-    "example": "Hedging attenuates the FX impact but does not remove it.",
-    "note": "The honest word when something is dampened rather than solved."
+    "word": "Requisite",
+    "say": "REK-wi-zit",
+    "meaning": "Required for a purpose.",
+    "example": "She has the requisite experience for the controller role.",
+    "note": "Slightly more formal than 'required'. Common in job specs and board papers."
    }
   ],
   "speaking": {
-   "title": "Kill the upspeak on numbers",
-   "drill": "Say ten figures aloud, dropping pitch on the last syllable of each.",
-   "why": "Rising pitch on a number makes it sound like an estimate. You rarely want that."
+   "title": "Handle 'I do not know'",
+   "drill": "Rehearse: 'I do not have that number in front of me. I will have it to you by Thursday.' Say it without apology.",
+   "why": "Senior people say this comfortably. Guessing to avoid it is how credibility is actually lost."
   },
   "interview_tech": [
    {
-    "q": "What is ROIC and why would a CFO care more than about net margin?",
-    "a": "ROIC = NOPAT \u00f7 invested capital. Net margin tells you profitability per rupee of sales; ROIC tells you profitability per rupee of capital committed \u2014 which is the only question when you are deciding where to put the next AED 50M. A 3% margin business turning capital four times beats an 8% margin business turning it once. In retail this is exactly the discount-versus-premium format argument, and it is why space productivity matters more than headline margin.",
-    "who": "Costco \u00b7 Walmart \u00b7 Berkshire"
+    "q": "Model the impact of a 10% AED appreciation on a UAE retailer sourcing from China.",
+    "a": "Buying gets cheaper in AED terms, so landed cost falls and gross margin expands \u2014 but only after existing stock at old cost clears, so the benefit lags by roughly one inventory turn. If the AED is pegged to the USD, the real question is USD/CNY, not AED specifically. On the revenue side, a stronger currency makes the destination more expensive for tourists, which matters in Dubai where tourist spend is a meaningful share of mall retail. Net effect is usually positive on margin, mildly negative on footfall.",
+    "who": "Chalhoub \u00b7 Majid Al Futtaim"
    },
    {
-    "q": "How do you test goodwill for impairment, and why does retail make it harder?",
-    "a": "Goodwill is not amortised \u2014 it is tested annually at the cash-generating unit level. Compare the CGU's carrying amount to its recoverable amount, the higher of fair value less costs of disposal and value in use. Retail is harder for two reasons: defining the CGU, because a single store may not generate independent cash inflows once you have click-and-collect and online returns routed through it; and the discount rate, because store-level risk differs from group WACC. Auditors challenge the growth rate beyond year five hardest \u2014 keep it at or below long-run GDP for the market.",
-    "who": "Big Four \u00b7 Majid Al Futtaim \u00b7 Tesco"
+    "q": "A supplier offers 5% discount for payment in 10 days instead of 60. Take it?",
+    "a": "Annualise it. You forgo 5% to accelerate payment by 50 days. The implied annual cost of not taking it is roughly 5/95 \u00d7 365/50 \u2248 38%. Unless your marginal cost of capital exceeds 38%, take the discount \u2014 this is one of the highest-return decisions in working capital. The caveat is liquidity: if taking it forces you onto an overdraft at 9% you still win, but if it breaches a covenant or leaves no buffer, the arithmetic is not the whole answer.",
+    "who": "Walmart \u00b7 Lulu \u00b7 P&G"
    }
   ],
   "interview_soft": [
    {
-    "q": "Why do you want to be a CFO, and why in retail?",
-    "a": "Structure: motive, evidence, specificity. Weak answers say 'growth' and 'leadership'. Strong answer names the work: 'I want the seat where capital allocation is decided, not just reported. In FP&A I model the store investment case; the CFO decides which twelve of thirty get built. Retail because the feedback loop is daily \u2014 you see whether the decision worked in the sales line the next week, which is not true in most industries.' Then one proof point with a number attached.",
-    "who": "Standard opener, every CFO search"
+    "q": "What is your biggest professional failure?",
+    "a": "Pick a real one with a number, not a disguised strength. The structure: what you owned, what specifically you got wrong, what it cost, what you changed in your process, and evidence the change held. The disqualifying answers are 'I work too hard' and any failure where the fault lands on someone else. If you cannot name the cost in money or time, it was not a real failure and they will know.",
+    "who": "Amazon (Bar Raiser) \u00b7 P&G \u00b7 Nestl\u00e9"
    },
    {
-    "q": "How do you build a finance team, and how do you handle an underperformer?",
-    "a": "Building: hire for one clear gap, not a generalist; define what good looks like in writing before the first review, not after. Underperformance: the honest answer is that you probably waited too long once, and learned from it. Structure \u2014 early specific feedback with examples, an agreed plan with dates, documented check-ins, and a decision at the end of it either way. The failure mode they are probing for is a manager who avoids the conversation and lets the team carry someone for a year.",
-    "who": "GE \u00b7 Unilever \u00b7 Al-Futtaim"
+    "q": "Where do you see yourself in five years?",
+    "a": "Answer the real question: are you a flight risk and do you understand the ladder. Be specific about the next rung rather than the summit \u2014 'Financial Controller for a multi-market group, then Finance Director with commercial ownership, then CFO. What I need in between is treasury depth and a full M&A cycle, which is part of why this role interests me.' Naming what you lack reads as self-aware, not weak.",
+    "who": "Universal"
    }
   ]
  }
