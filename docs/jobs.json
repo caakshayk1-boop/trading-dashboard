@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-08-29T13:48:08Z",
- "next_refresh": "2026-08-30T13:48:08Z",
+ "generated_at": "2026-08-29T15:23:42Z",
+ "next_refresh": "2026-08-30T15:23:42Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 18,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "ConnectTimeout: HTTPSConnectionPool(host='www.afuturewithus.com', port=443): Max retries exceeded with url: /search/?q=finance%20manager&startrow=0 (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.afuturewithus.com', port=443) at 0x7f2a94f78e50>, 'Connection to www.afuturewithus.com timed out. (connect tim",
-   "last_success": "2026-08-28T21:18:05Z"
+   "status": "ok",
+   "jobs_found": 33,
+   "detail": "",
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 5,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Emaar",
@@ -72,7 +72,7 @@
    "status": "ok",
    "jobs_found": 1,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Jumeirah",
@@ -80,7 +80,7 @@
    "status": "ok",
    "jobs_found": 1,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Americana Restaurants",
@@ -88,7 +88,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Etihad Airways",
@@ -96,7 +96,7 @@
    "status": "ok",
    "jobs_found": 10,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Aldar",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-08-29T13:48:08Z"
+   "last_success": "2026-08-29T15:23:42Z"
   },
   {
    "name": "Alshaya Group",
@@ -191,10 +191,10 @@
   },
   "duplicates_removed": 0,
   "stale_removed": 0,
-  "sources_ok": 12,
+  "sources_ok": 13,
   "sources_attempted": 22,
-  "urls_verified": 47,
-  "urls_unverified": 35,
+  "urls_verified": 69,
+  "urls_unverified": 13,
   "urls_broken": 0
  },
  "jobs": [
@@ -211,8 +211,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -221,7 +221,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-Head-of-Financial-Planning-and-Analysis/1425484333/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1425484333/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -287,8 +287,8 @@
     "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
-    "Asks for 12+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
+    "Asks for 12+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper.",
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": {
     "strong": [
@@ -318,8 +318,8 @@
    "employment_type": null,
    "posted_date": "2026-08-27",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -328,7 +328,7 @@
    "source_url": "https://www.afuturewithus.com/job/Head-of-Finance%2C-Al-Futtaim-Health%2C-Dubai/1409736733/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1409736733/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -380,7 +380,7 @@
     "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": {
     "strong": [
@@ -412,8 +412,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Aldar",
    "sources": [
@@ -510,8 +510,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -615,8 +615,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-08-11",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -720,8 +720,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-06-24",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -825,8 +825,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -1022,8 +1022,8 @@
    "employment_type": null,
    "posted_date": "2026-08-04",
    "closing_date": "2026-09-04",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -1032,7 +1032,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-Finance-Manager-Al-Futtaim-Automotive-Finance/1422953533/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1422953533/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -1084,8 +1084,7 @@
     "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it."
    ],
    "watch_out": [
-    "Posted 2026-08-04 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Posted 2026-08-04 — this req is aging and may already be filled."
    ],
    "resume_match": {
     "strong": [
@@ -1114,8 +1113,8 @@
    "employment_type": null,
    "posted_date": "2026-08-05",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -1124,7 +1123,7 @@
    "source_url": "https://www.afuturewithus.com/job/FP&A-Manager%2C-Healthcare%2C-HealthHub%2C-Dubai/1284528401/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1284528401/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -1180,7 +1179,7 @@
    ],
    "watch_out": [
     "Posted 2026-08-05 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Emiratisation/Saudization preference is stated — a non-national applicant is at a disadvantage even though it is not a hard bar."
    ],
    "resume_match": null,
    "duplicate_group": "7a2802ebccf224cbe2f3b0faa52654b1ba662c0a",
@@ -1200,8 +1199,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -1210,7 +1209,7 @@
    "source_url": "https://www.afuturewithus.com/job/Abu-Dhabi-HR-Business-Partner-Retail-UAE/1423696933/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1423696933/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -1275,7 +1274,7 @@
    ],
    "watch_out": [
     "Posted 2026-08-06 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "5644177b530146d34df69cc24bc5e64be966ae7c",
@@ -1295,8 +1294,8 @@
    "employment_type": null,
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -1392,8 +1391,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1490,8 +1489,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Aldar",
    "sources": [
@@ -1583,8 +1582,8 @@
    "employment_type": null,
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -1681,8 +1680,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1691,7 +1690,7 @@
    "source_url": "https://www.afuturewithus.com/job/AVP-Compliance-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1426376933/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1426376933/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -1751,7 +1750,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "f924fd27e41a6608cb029bf3538bb12ec46f914d",
@@ -1872,8 +1871,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1882,7 +1881,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-Senior-Financial-Analyst/1425618133/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1425618133/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -1948,7 +1947,6 @@
     "Real-estate exposure is on his record — 3 years as Asst Manager Accounts at Emami Realty in Kolkata before the retail move."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -2263,8 +2261,8 @@
    "employment_type": null,
    "posted_date": "2026-06-03",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -2548,8 +2546,8 @@
    "employment_type": null,
    "posted_date": "2026-08-21",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -2643,8 +2641,8 @@
    "employment_type": null,
    "posted_date": "2026-08-04",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -2653,7 +2651,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-Document-Controller-I-Real-Estate-I-Asset-Development/1422925033/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1422925033/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -2713,8 +2711,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-08-04 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Posted 2026-08-04 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "034107ebdf993b721afcfa9e4fa46ac6e67b0824",
@@ -2831,8 +2828,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3034,7 +3031,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-business-support-manager-voco-sharjah-pre-opening-at-ihg-hotels-resorts-4446743894",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-business-support-manager-voco-sharjah-pre-opening-at-ihg-hotels-resorts-4446743894",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3099,7 +3096,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "6dce6f738e8026b4566a7931ffb70168c807f1ec",
@@ -3215,8 +3212,8 @@
    "employment_type": null,
    "posted_date": "2026-08-20",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -3313,8 +3310,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-08-03",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3580,8 +3577,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-18",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -3975,7 +3972,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-manufacturing-industry-in-melaka-at-asia-recruit-permanent-contract-executive%C2%A0recruitment-4440473030",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-manufacturing-industry-in-melaka-at-asia-recruit-permanent-contract-executive%C2%A0recruitment-4440473030",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4037,7 +4034,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "02eae44f26a95d12691df8a7b2f888920a849d91",
@@ -4057,8 +4054,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-27",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4340,8 +4337,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -4519,8 +4516,8 @@
    "employment_type": null,
    "posted_date": "2026-08-21",
    "closing_date": "2026-08-30",
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Emaar",
    "sources": [
@@ -4595,8 +4592,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4683,8 +4680,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5047,8 +5044,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-29",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5120,8 +5117,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5222,8 +5219,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5232,7 +5229,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-UAE-National_Assistant-Manager-Finance-Control-Corporate-Services-Dubai/1426403133/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1426403133/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5295,7 +5292,7 @@
     "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "7d226667a84314c9dbc7f9bb95aca4ea3b8c33cc",
@@ -5315,8 +5312,8 @@
    "employment_type": null,
    "posted_date": "2026-08-23",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5325,7 +5322,7 @@
    "source_url": "https://www.afuturewithus.com/job/Medical-Core-System-Transformation-Lead-I-Dubai-I-Financial-Services-I-Orient-Insurance-PJSC/1382585233/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1382585233/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5385,7 +5382,6 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
     "Asks for 12+ years; he has 10+ total and 7+ post-qualification, so this is a stretch on paper."
    ],
    "resume_match": null,
@@ -5406,8 +5402,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5416,7 +5412,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-UAE-National_Senior-Accountant-Transformation-Corporate-Services-Dubai/1425488433/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1425488433/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5480,7 +5476,6 @@
     "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -5499,11 +5494,11 @@
    "region": "GCC",
    "department": null,
    "employment_type": null,
-   "posted_date": "2026-07-31",
+   "posted_date": "2026-08-29",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
-   "status": "AGING",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
+   "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -5511,7 +5506,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-UAE-National_Senior-Accountant-R2R-Corporate-Services-Dubai/1421095033/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1421095033/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5573,8 +5568,7 @@
     "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023."
    ],
    "watch_out": [
-    "Posted 2026-07-31 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "927781e2a22969de35d3711c53c6da1d131c47b2",
@@ -5594,8 +5588,8 @@
    "employment_type": null,
    "posted_date": "2026-08-13",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5604,7 +5598,7 @@
    "source_url": "https://www.afuturewithus.com/job/Sales-Manager-Commercial-Vehicles-Al-Futtaim-Automotive-FAMCO/1394515033/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1394515033/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5665,7 +5659,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "472515f7f54a871ea804381dbe4e5ed9812f204a",
@@ -5685,8 +5679,8 @@
    "employment_type": null,
    "posted_date": "2026-08-15",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5695,7 +5689,7 @@
    "source_url": "https://www.afuturewithus.com/job/UAE-National-Process-&-Compliance-Manager-Automotive-Finance/1393666533/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1393666533/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5757,7 +5751,6 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -5778,8 +5771,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-13",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5788,7 +5781,7 @@
    "source_url": "https://www.afuturewithus.com/job/Risk-Manager-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1425660833/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1425660833/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5849,7 +5842,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "334c0ae0a0f156154bd4011d433a45fbfd3b8799",
@@ -5869,8 +5862,8 @@
    "employment_type": null,
    "posted_date": "2026-08-10",
    "closing_date": "2026-09-11",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5879,7 +5872,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-Senior-Accountant-GBS-Controlling-Corporate-Services-Dubai/1424817233/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1424817233/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -5941,7 +5934,6 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -5962,8 +5954,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -6052,8 +6044,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6122,8 +6114,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -6198,8 +6190,8 @@
    "employment_type": null,
    "posted_date": "2026-08-07",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6208,7 +6200,7 @@
    "source_url": "https://www.afuturewithus.com/job/Senior-Governance%2C-Risk-Compliance-Specialist-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1424348533/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1424348533/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -6269,8 +6261,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-08-07 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Posted 2026-08-07 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "8b1e92c90850716a0219990e7a9ead9ae5d8bdfb",
@@ -6290,8 +6281,8 @@
    "employment_type": null,
    "posted_date": "2026-08-05",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6300,7 +6291,7 @@
    "source_url": "https://www.afuturewithus.com/job/Business-Development-Manager-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1423416233/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1423416233/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -6359,8 +6350,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "Posted 2026-08-05 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Posted 2026-08-05 — this req is aging and may already be filled."
    ],
    "resume_match": null,
    "duplicate_group": "300cecbf325f1018f66a12ea140445221039ffb4",
@@ -6380,8 +6370,8 @@
    "employment_type": null,
    "posted_date": "2026-08-22",
    "closing_date": "2026-08-31",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6390,7 +6380,7 @@
    "source_url": "https://www.afuturewithus.com/job/AI-Product-Owner-Insurance%C2%A0I-Dubai-Financial-Services-Orient-Insurance-PJSC/1418790533/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1418790533/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -6451,7 +6441,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "641da856dcb731760048bed31287eed3e0aa23c9",
@@ -6471,8 +6461,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -6556,8 +6546,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6566,7 +6556,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-UAE-National_Senior-Accountant-I2P-Corporate-Services-Dubai/1425482233/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1425482233/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -6628,7 +6618,6 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
     "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
@@ -6649,8 +6638,8 @@
    "employment_type": null,
    "posted_date": "2026-08-24",
    "closing_date": "2026-11-27",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6659,7 +6648,7 @@
    "source_url": "https://www.afuturewithus.com/job/Dubai-Part-Time-UAE-National-Branch-Accountant-Automotive-Finance/1429215033/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1429215033/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -6720,8 +6709,8 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly.",
+    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
    ],
    "resume_match": null,
    "duplicate_group": "c7594a3bda6fcd88e9ff1bfd97098d611761870c",
@@ -6741,8 +6730,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-12",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6751,7 +6740,7 @@
    "source_url": "https://www.afuturewithus.com/job/Outbound-Sales-Renewal-&-Cross-Sell-Specialist-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1425620033/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1425620033/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -6809,7 +6798,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "85a9eea97c52061c3ad822356e481ea853130440",
@@ -6829,8 +6818,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Chalhoub Group",
    "sources": [
@@ -6899,8 +6888,8 @@
    "employment_type": null,
    "posted_date": "2026-08-21",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Americana Restaurants",
    "sources": [
@@ -6991,8 +6980,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-13",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -7079,8 +7068,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2025-09-16",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -7169,8 +7158,8 @@
    "employment_type": null,
    "posted_date": "2026-08-03",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -7179,7 +7168,7 @@
    "source_url": "https://www.afuturewithus.com/job/UAE-National-I-Junior-Insurance-Executive-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1372354633/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1372354633/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -7240,7 +7229,7 @@
    ],
    "watch_out": [
     "Posted 2026-08-03 — this req is aging and may already be filled.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Emiratisation/Saudization preference is stated — a non-national applicant is at a disadvantage even though it is not a hard bar."
    ],
    "resume_match": null,
    "duplicate_group": "b28fa539fcc1c2d00f4c645354aa901081a88b9f",
@@ -7260,8 +7249,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-08-28T21:18:05Z",
-   "last_verified_at": "2026-08-28T21:18:05Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7270,7 +7259,7 @@
    "source_url": "https://www.afuturewithus.com/job/Financial-Crime-Investigator-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1426385333/",
    "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1426385333/?locale=en_GB",
    "is_direct_apply": true,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
@@ -7330,7 +7319,7 @@
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
    "duplicate_group": "60253fa36aeaf701892013931a43fc8d38c7a64b",
@@ -7350,8 +7339,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-13",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -7449,8 +7438,8 @@
    "employment_type": null,
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -7529,8 +7518,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -7614,8 +7603,8 @@
    "employment_type": null,
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Americana Restaurants",
    "sources": [
@@ -7685,8 +7674,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-08-29T13:48:08Z",
-   "last_verified_at": "2026-08-29T13:48:08Z",
+   "scraped_at": "2026-08-29T15:23:42Z",
+   "last_verified_at": "2026-08-29T15:23:42Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
