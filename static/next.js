@@ -1113,12 +1113,16 @@
 
   /* ── theme ─────────────────────────────────────────────────────────────── */
   const root = document.documentElement;
+  // Light is the default; the toggle is the only thing that changes it, and
+  // the choice persists. Deliberately not following prefers-color-scheme: the
+  // page is designed light first, and an OS set to dark should not silently
+  // serve a different design than the one a first-time reader is shown.
   const saved = (() => { try { return localStorage.getItem('sig:theme'); } catch (e) { return null; } })();
-  if (saved) root.setAttribute('data-theme', saved);
+  root.setAttribute('data-theme', saved === 'dark' ? 'dark' : 'light');
   document.getElementById('themeBtn').addEventListener('click', () => {
     const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'dark' ? '#0B0F14' : '#F7F8FA');
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'dark' ? '#0B0F14' : '#FFFFFF');
     try { localStorage.setItem('sig:theme', next); } catch (e) { /* private mode */ }
   });
 
