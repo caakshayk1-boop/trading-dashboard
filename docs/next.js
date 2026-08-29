@@ -146,6 +146,8 @@
     if (!ev.target.closest) return;
     const t = ev.target.closest('.heat-t');
     if (t && t.dataset.sector) { openSector(t.dataset.sector); return; }
+    const bl = ev.target.closest('[data-brief]');
+    if (bl) { briefSym = bl.dataset.brief; return; }   // the href does the routing
     if (ev.target.closest('a')) return;          // never hijack a real link
     const n = ev.target.closest('[data-sym]');
     if (n && n.dataset.sym) openStock(n.dataset.sym);
@@ -880,6 +882,7 @@
         <div class="card-foot">
           <span class="mono" style="font-size:11px;color:var(--dim)">${esc(String(r.alert_date || r.date || '').slice(0, 10))}
             ${r.status ? ' · ' + esc(String(r.status).replace(/_/g, ' ').toLowerCase()) : ''}</span>
+          ${open ? `<a class="brief-link" href="#/brief" data-brief="${esc(r.symbol)}">Full brief →</a>` : ''}
           ${symLinks(r.symbol, r.tv)}
         </div>
         ${r.remarks ? `<div class="card-body">${esc(String(r.remarks).slice(0, 180))}</div>` : ''}
@@ -1061,6 +1064,327 @@
         btn.disabled = false; btn.textContent = 'Get the morning brief';
       }
     });
+  };
+
+  /* ══════════════ TRADING SIGNAL BRIEF ══════════════════════════════════
+   * One open signal, presented as research rather than as an alert.
+   *
+   * EVERY NUMBER IS REAL. The signal, its levels and its R:R come from the
+   * ledger; the score components come from the same screen the rest of the
+   * site uses; the history and the win rate come from /api/stats. Nothing on
+   * this page is illustrative.
+   *
+   * THERE ARE NO CANDLESTICKS, deliberately. No endpoint here serves OHLC, so
+   * a candle chart would mean drawing price action that never happened — on
+   * the one page whose entire job is to be trusted. What is drawn instead is
+   * the thing the brief actually needs a chart for: where price sits between
+   * the level that invalidates the trade and the levels it is aiming at.
+   */
+  let briefSym = null;                 // set when arriving from a signal card
+  R['/brief'] = async () => {
+    paint(`<div class="brief"><div class="b-wrap">
+      <div class="b-hero"><div class="b-eyebrow">Trading signal brief</div>
+      <h1>Loading the current setup.</h1></div>
+      <div class="sk" style="height:220px;margin-top:24px"></div></div></div>`);
+
+    const [a, sc, st] = await Promise.all(
+      [get('/alerts.json'), get('/screen.json'), get('/api/stats')]);
+    if (!a.ok) { paint(fail('The signal brief', a.error)); return; }
+    const rows = Array.isArray(a.data) ? a.data : (a.data.rows || []);
+    const open = rows.filter(r => (r.badge || '').toLowerCase() === 'open'
+                               && r.entry && r.sl && r.target1);
+    if (!open.length) { paint(`<div class="brief"><div class="b-wrap"><div class="b-hero">
+      <div class="b-eyebrow">Trading signal brief</div>
+      <h1>No setup is live right now.</h1>
+      <p class="b-sub">The engine publishes when a setup clears its floors, and not otherwise.
+        An empty brief is a result, not a fault.</p></div></div></div>`); return; }
+
+    // Highest reward-to-risk among open setups, or the one the reader clicked.
+    if (sc.ok) SCREEN = SCREEN || (sc.data.rows || []).filter(x => x && x.sym);
+    const inScreen = sym => (SCREEN || []).some(x => x.sym === sym);
+    /* Prefer a setup the screen can actually explain. Several signals are US
+     * names that the 750-name NSE screen does not cover, and featuring one
+     * leaves every thesis component blank — a brief with an empty argument.
+     * Highest reward-to-risk among the names we have data for; if none
+     * qualify, the best available still renders, just with fewer components. */
+    const ranked = open.slice().sort((x, y) => (y.rr || 0) - (x.rr || 0));
+    const sig = (briefSym && open.find(r => r.symbol === briefSym))
+             || ranked.find(r => inScreen(r.symbol)) || ranked[0];
+    briefSym = null;
+    const row = (SCREEN || []).find(x => x.sym === sig.symbol) || {};
+    const q = await quotes([sig.symbol]);
+    const live = q[sig.symbol];
+
+    const cur = sig.currency || '₹';
+    const N = v => Number(v);
+    const entry = N(sig.entry), stop = N(sig.sl), t1 = N(sig.target1), t2 = N(sig.target2 || sig.target1);
+    const last = live ? live.price : (N(row.price) || entry);
+    const isShort = /SELL|SHORT/i.test(sig.action || '');
+    const risk = Math.abs(entry - stop), rr = Number(sig.rr) || (Math.abs(t1 - entry) / (risk || 1));
+    const f = v => Number.isFinite(v) ? cur + v.toLocaleString('en-IN', {maximumFractionDigits: 2}) : '—';
+
+    /* ── SCORE. Five components, each a rule over the screen's own fields.
+     * A score with no visible derivation is a number asking to be believed. */
+    // Number(undefined) is NaN and NaN != null, so a `v == null` guard lets it
+    // straight through — which is how Confidence rendered "NaN / 100".
+    const clamp = (v, lo, hi) => Number.isFinite(v)
+      ? Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)) : null;
+    const comp = {
+      Trend: row.sma200 && row.price ? clamp((row.price - row.sma200) / row.sma200 * 100, -8, 32) : null,
+      Momentum: clamp(N(row.r1m), -6, 26),
+      Structure: row.setup ? Math.min(100, ((row.setup.tags || []).length) * 26 + (row.brk52w ? 22 : 0)) : null,
+      Volume: clamp(N(row.vol_spike), .7, 4),
+      'Risk / reward': clamp(rr, 1, 5),
+    };
+    const have = Object.values(comp).filter(v => Number.isFinite(v));
+    const score = have.length ? Math.round(have.reduce((x, y) => x + y, 0) / have.length) : null;
+    const conviction = score == null ? 'UNSCORED' : score >= 70 ? 'HIGH CONVICTION'
+                     : score >= 50 ? 'MODERATE CONVICTION' : 'LOW CONVICTION';
+
+    /* ── THE LADDER. Every level placed on one scale, so distance is real. */
+    const pts = [
+      {k: 'Target 2', v: t2, c: 'is-target'}, {k: 'Target 1', v: t1, c: 'is-target'},
+      {k: '52-week high', v: N(row.high52), c: 'is-key'},
+      {k: 'Now', v: last, c: 'is-now'}, {k: 'Entry', v: entry, c: ''},
+      {k: '200-day', v: N(row.sma200), c: 'is-key'},
+      {k: 'Stop', v: stop, c: 'is-stop'},
+    ].filter(x => Number.isFinite(x.v)).sort((x, y) => y.v - x.v);
+    const hi = Math.max(...pts.map(p => p.v)), lo = Math.min(...pts.map(p => p.v));
+    const at = v => ((hi - v) / ((hi - lo) || 1)) * 100;
+    const ladder = pts.map((p, i) => `<div class="b-lvl ${p.c}" style="top:${at(p.v).toFixed(1)}%;animation-delay:${(i * 60)}ms">
+        <span class="b-lvl-tag">${esc(p.k)}</span><span class="b-lvl-line"></span>
+        <span class="b-lvl-val">${f(p.v)}</span></div>`).join('');
+
+    const thesis = [
+      ['Market structure', 'The trend is doing the heavy lifting.',
+        row.sma200 && row.price
+          ? `Price sits ${pct((row.price - row.sma200) / row.sma200 * 100)} against its 200-day average, with the 50-day ${row.sma50 > row.sma200 ? 'above' : 'below'} it. ${row.sma50 > row.sma200 ? 'The longer structure is intact, so the setup is with the trend rather than against it.' : 'The longer structure has not confirmed, which is why this is sized as a smaller idea.'}`
+          : 'Trend data is not available for this name, so the structure leg of the thesis is unscored rather than assumed.',
+        [['vs 200-day', row.sma200 ? pct((row.price - row.sma200) / row.sma200 * 100) : '—'],
+         ['50 vs 200', row.sma50 && row.sma200 ? (row.sma50 > row.sma200 ? 'above' : 'below') : '—']]],
+      ['Momentum', 'Momentum confirms the move.',
+        `One-month return is ${pct(N(row.r1m))} and RSI reads ${row.rsi != null ? Math.round(row.rsi) : '—'} on the daily. ${N(row.rsi) > 70 ? 'That is extended, which argues for the entry zone rather than chasing the print.' : 'That leaves room before the move is stretched.'}`,
+        [['1 month', pct(N(row.r1m))], ['3 month', pct(N(row.r3m))],
+         ['RSI 14D', row.rsi != null ? Math.round(row.rsi) : '—']]],
+      ['Levels', 'Price is approaching a level that matters.',
+        `Entry sits at ${f(entry)} with the invalidation ${f(stop)} — ${pct(-Math.abs(risk / entry * 100))} away. The first target at ${f(t1)} is ${pct(Math.abs(t1 - entry) / entry * 100)} from entry.`,
+        [['Entry', f(entry)], ['Stop', f(stop)], ['Target 1', f(t1)]]],
+      ['Risk', 'The setup is attractive because the risk is defined.',
+        `Reward to risk is ${rr.toFixed(1)} to one. The stop is a price, not an intention: below ${f(stop)} the reason for the trade is gone and the position is closed.`,
+        [['Risk / reward', rr.toFixed(1) + ' : 1'], ['Risk per share', f(risk)]]],
+    ];
+
+    const S = st.ok ? st.data : null;
+    const H = S && S.headline ? S.headline : null;
+    const closed = (rows.filter(r => r.pnl_pct != null && (r.badge || '') !== 'open')).slice(0, 8);
+
+    paint(`<div class="brief"><div class="b-wrap">
+
+      <header class="b-hero">
+        <div class="b-eyebrow">Trading signal brief</div>
+        <h1>${esc(sig.symbol)} is ${last > entry ? 'holding above' : 'testing'} its entry zone.</h1>
+        <p class="b-sub">A ${conviction.toLowerCase().replace(' conviction', '-conviction')} setup built from price
+          structure, momentum, volume and defined risk. Every figure below comes from the published ledger
+          and the same screen the rest of this site runs on.</p>
+      </header>
+
+      <section class="b-status">
+        <div class="b-dir ${isShort ? 'is-short' : ''}">
+          <span class="b-dir-mark"></span>
+          <div><div class="b-dir-l">${isShort ? 'SHORT' : 'LONG'}</div>
+            <div class="b-dir-meta">
+              <span class="b-tag">${esc(sig.symbol)}</span>
+              <span class="b-tag">${esc(sig.timeframe || '1D')}</span>
+              <span class="b-tag">${esc(conviction)}</span>
+              ${live ? `<span class="b-tag is-live"><i></i>Live</span>` : `<span class="b-tag">Last close</span>`}
+            </div></div>
+        </div>
+        <div class="b-metrics">
+          <div class="b-m"><span class="k">Entry</span><span class="v">${f(entry)}</span></div>
+          <div class="b-m"><span class="k">Current</span><span class="v ${last >= entry ? 'up' : 'dn'}">${f(last)}</span></div>
+          <div class="b-m"><span class="k">Stop</span><span class="v dn">${f(stop)}</span></div>
+          <div class="b-m"><span class="k">Target 1</span><span class="v up">${f(t1)}</span></div>
+          <div class="b-m"><span class="k">Target 2</span><span class="v up">${f(t2)}</span></div>
+          <div class="b-m"><span class="k">Risk / reward</span><span class="v gold">${rr.toFixed(1)} : 1</span></div>
+          <div class="b-m"><span class="k">Confidence</span><span class="v">${score == null ? '—' : score + ' / 100'}</span></div>
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">The trade in one view</div>
+        <h2 class="b-h2">Everything that defines the position.</h2>
+        <dl class="b-view">
+          <div class="b-vi"><dt>Setup</dt><dd class="txt">${esc((row.setup?.tags || ['Engine signal'])[0] || 'Engine signal')}</dd></div>
+          <div class="b-vi"><dt>Direction</dt><dd class="txt">${isShort ? 'Short' : 'Long'}</dd></div>
+          <div class="b-vi"><dt>Entry</dt><dd>${f(entry)}</dd></div>
+          <div class="b-vi"><dt>Stop</dt><dd>${f(stop)}</dd></div>
+          <div class="b-vi"><dt>Target 1</dt><dd>${f(t1)}</dd></div>
+          <div class="b-vi"><dt>Target 2</dt><dd>${f(t2)}</dd></div>
+          <div class="b-vi"><dt>Risk / reward</dt><dd>${rr.toFixed(1)} : 1</dd></div>
+          <div class="b-vi"><dt>Horizon</dt><dd class="txt">${esc(sig.timeframe === '1D' ? 'Swing' : (sig.timeframe || 'Swing'))}</dd></div>
+        </dl>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Price structure</div>
+        <h2 class="b-h2">Where price sits, and where the thesis ends.</h2>
+        <div class="b-chart">
+          <div class="b-ladder">
+            <div class="b-band risk" style="top:${at(entry).toFixed(1)}%;height:${Math.abs(at(stop) - at(entry)).toFixed(1)}%"></div>
+            <div class="b-band reward" style="top:${at(t2).toFixed(1)}%;height:${Math.abs(at(entry) - at(t2)).toFixed(1)}%"></div>
+            ${ladder}
+          </div>
+          <p class="b-cap"><b>This is a level map, not a candle chart.</b> No feed on this site
+            serves open-high-low-close history, and drawing candles without it would mean
+            inventing price action on the one page whose job is to be trusted. Every line
+            above is a real published level, placed on a single linear scale so the distance
+            between them is the actual distance.</p>
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Why this trade</div>
+        <h2 class="b-h2">Four things had to line up.</h2>
+        <div class="b-steps">
+          ${thesis.map(([lab, h, body, mini], i) => `<article class="b-step">
+            <div class="b-step-n"><b>0${i + 1}</b> / ${esc(lab.toUpperCase())}</div>
+            <div><h3>${esc(h)}</h3><p>${body}</p>
+              <div class="b-mini">${(mini || []).map(([k, v]) =>
+                `<div><span class="k">${esc(k)}</span><span class="v">${v}</span></div>`).join('')}</div>
+            </div></article>`).join('')}
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Signal score</div>
+        <h2 class="b-h2">How the setup scores, component by component.</h2>
+        <div class="b-score">
+          <div><div class="b-score-big">${score == null ? '—' : score}<span> / 100</span></div>
+            <p class="b-p" style="margin-top:8px;font-size:13.5px">The mean of the components
+              beside it. A component with no data is left out rather than filled in.</p></div>
+          <div class="b-bars">${Object.entries(comp).map(([k, v]) => `
+            <div class="b-bar-r"><span class="n">${esc(k)}</span>
+              <span class="t"><i data-w="${Number.isFinite(v) ? v.toFixed(0) : 0}"></i></span>
+              <span class="s">${Number.isFinite(v) ? Math.round(v) : '—'}</span></div>`).join('')}
+          </div>
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Trade plan</div>
+        <h2 class="b-h2">What to do, and when to stop doing it.</h2>
+        <div class="b-plan">
+          <div class="b-pr"><span class="st">Before entry</span>
+            <span class="tx">Price holding the entry zone on a close, not an intraday wick. No entry if the stop is already broken.</span>
+            <span class="px">—</span></div>
+          <div class="b-pr"><span class="st">Entry</span>
+            <span class="tx">${isShort ? 'Sell' : 'Buy'} at or better than the published level.</span>
+            <span class="px">${f(entry)}</span></div>
+          <div class="b-pr"><span class="st">Stop</span>
+            <span class="tx">Invalidation. A close beyond this removes the reason for the trade.</span>
+            <span class="px" style="color:var(--b-bear)">${f(stop)}</span></div>
+          <div class="b-pr"><span class="st">Target 1</span>
+            <span class="tx">First profit level. The published trailing rule moves the stop to entry once this prints.</span>
+            <span class="px" style="color:var(--b-bull)">${f(t1)}</span></div>
+          <div class="b-pr"><span class="st">Target 2</span>
+            <span class="tx">Extended target, carried only by the remainder.</span>
+            <span class="px" style="color:var(--b-bull)">${f(t2)}</span></div>
+          <div class="b-pr is-invalid"><span class="st">Invalidation</span>
+            <span class="tx">Below ${f(stop)} the structure that produced this setup is gone. The position is
+              closed at that price — not re-argued, not averaged into, not widened.</span>
+            <span class="px" style="color:var(--b-bear)">${f(stop)}</span></div>
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">What would change our view</div>
+        <h2 class="b-h2">The thesis is only valid while the structure holds.</h2>
+        <div class="b-scen">
+          <div class="b-sc bull"><h4>Confirms</h4>
+            <p>A close above the entry zone with volume holding, and the 50-day staying above the 200-day.</p>
+            <span class="lvl">Above ${f(entry)}</span></div>
+          <div class="b-sc neu"><h4>Wait</h4>
+            <p>Price between the entry and the stop with no close either side. The setup is unresolved and
+              carries no edge until it resolves.</p>
+            <span class="lvl">${f(stop)} – ${f(entry)}</span></div>
+          <div class="b-sc bear"><h4>Invalidates</h4>
+            <p>A close below the stop. Momentum and structure would both have failed, and the reason for
+              the position no longer exists.</p>
+            <span class="lvl">Below ${f(stop)}</span></div>
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Position sizing</div>
+        <h2 class="b-h2">What this costs if it is wrong.</h2>
+        <div class="b-risk">
+          <div class="b-inputs">
+            <div class="b-in"><label for="rkA">Account size</label><input id="rkA" type="number" value="1000000" min="0" step="10000"></div>
+            <div class="b-in"><label for="rkP">Risk per trade %</label><input id="rkP" type="number" value="1" min="0.1" max="10" step="0.1"></div>
+          </div>
+          <div class="b-out" id="rkOut"></div>
+        </div>
+      </section>
+
+      <section class="b-sec b-reveal">
+        <div class="b-lab">Signal history</div>
+        <h2 class="b-h2">The record, including the part that hurts.</h2>
+        ${H ? `<div class="b-metrics" style="margin-top:22px">
+          <div class="b-m"><span class="k">Closed</span><span class="v">${H.trades}</span></div>
+          <div class="b-m"><span class="k">Win rate</span><span class="v">${H.win_rate}%</span></div>
+          <div class="b-m"><span class="k">Wins</span><span class="v up">${H.wins}</span></div>
+          <div class="b-m"><span class="k">Losses</span><span class="v dn">${H.losses}</span></div>
+          <div class="b-m"><span class="k">Expectancy</span><span class="v ${H.expectancy_r >= 0 ? 'up' : 'dn'}">${H.expectancy_r}R</span></div>
+        </div>
+        <p class="b-p">Measured over ${H.trades} closed signals since ${esc((S.totals || {}).first_date || '')}.
+          Expectancy is <b style="color:var(--b-ink)">${H.expectancy_r}R</b> — the engine is currently losing
+          money per trade on this sample, and that is published here for the same reason the winners are.</p>` : ''}
+        ${closed.length ? `<div class="b-hist"><table>
+          <thead><tr><th>Date</th><th>Asset</th><th>Direction</th>
+            <th class="num">Entry</th><th class="num">Exit</th><th>Result</th><th class="num">P&amp;L</th></tr></thead>
+          <tbody>${closed.map(r => `<tr>
+            <td>${esc(String(r.alert_date || r.date || '').slice(0, 10))}</td>
+            <td style="color:var(--b-ink)">${esc(r.symbol)}</td>
+            <td>${esc(r.action || '')}</td>
+            <td class="num">${esc(r.entry ?? '—')}</td>
+            <td class="num">${esc(r.exit_price ?? '—')}</td>
+            <td style="color:${(r.badge === 'win') ? 'var(--b-bull)' : 'var(--b-bear)'}">${esc(r.status || r.badge || '')}</td>
+            <td class="num" style="color:${Number(r.pnl_pct) > 0 ? 'var(--b-bull)' : 'var(--b-bear)'}">${pct(r.pnl_pct)}</td>
+          </tr>`).join('')}</tbody></table></div>` : ''}
+        <div class="b-disc"><b>Past performance does not guarantee future results.</b>
+          This is a published research setup, not advice and not a recommendation to buy or sell.
+          Every figure is drawn from this site's own ledger and screen. A signal is a thesis with a
+          defined invalidation — it is not a forecast, and it carries no guarantee of any outcome.
+          Position sizing is your decision and your risk.</div>
+      </section>
+    </div></div>`);
+
+    /* Bars fill and sections reveal after paint. IntersectionObserver does not
+     * fire in a hidden tab, so a plain timeout does the reveal — the same trap
+     * documented in app.js on the broadsheet. */
+    setTimeout(() => {
+      main.querySelectorAll('.b-bar-r .t i').forEach(i => { i.style.width = i.dataset.w + '%'; });
+      main.querySelectorAll('.b-reveal').forEach((el, n) =>
+        setTimeout(() => el.classList.add('in'), n * 70));
+    }, 60);
+
+    // Risk calculator, wired to the real levels above.
+    const calc = () => {
+      const acct = Number(document.getElementById('rkA').value) || 0;
+      const rp = Number(document.getElementById('rkP').value) || 0;
+      const amt = acct * rp / 100;
+      const qty = risk > 0 ? Math.floor(amt / risk) : 0;
+      const loss = qty * risk, win1 = qty * Math.abs(t1 - entry);
+      document.getElementById('rkOut').innerHTML = `
+        <div class="b-o"><span class="k">Risk amount</span><span class="v">${f(amt)}</span></div>
+        <div class="b-o"><span class="k">Position size</span><span class="v">${qty.toLocaleString('en-IN')} sh</span></div>
+        <div class="b-o"><span class="k">Notional</span><span class="v">${f(qty * entry)}</span></div>
+        <div class="b-o"><span class="k">If stopped</span><span class="v" style="color:var(--b-bear)">−${f(loss)}</span></div>
+        <div class="b-o"><span class="k">At target 1</span><span class="v" style="color:var(--b-bull)">+${f(win1)}</span></div>
+        <div class="b-o"><span class="k">Risk / reward</span><span class="v" style="color:var(--b-gold)">${rr.toFixed(1)} : 1</span></div>`;
+    };
+    ['rkA', 'rkP'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+    calc();
   };
 
   /* ── router ────────────────────────────────────────────────────────────── */
