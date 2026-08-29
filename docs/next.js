@@ -322,7 +322,7 @@
       // is what it is worth now.
       const cvpx = await quotes(c.picks.map(x => x.sym));
       c.picks.forEach(x => { x._live = cvpx[x.sym] || null; });
-      out += sec('Today’s conviction', c.picks.map(convictionCard).join('') +
+      out += sec('Today’s conviction', `<div class="cards-2">${c.picks.map(convictionCard).join('')}</div>` +
         `<details class="meth"><summary>How these five were chosen</summary>
            <p>${esc(c.method)}</p>
            <p class="hint">Ranked ${esc(c.date)} over ${esc(c.universe)} screened names. The slate is
@@ -483,7 +483,7 @@
     if (!t.ok) { paint(out + fail('Ideas', t.error)); return; }
 
     const picks = t.data.picks || [];
-    out += sec('Trade ideas', picks.length ? picks.map(x => ideaCard(x, false)).join('')
+    out += sec('Trade ideas', picks.length ? `<div class="cards-2">${picks.map(x => ideaCard(x, false)).join('')}</div>`
       : `<div class="empty">Nothing clears the bar this week. That is a result, not a gap.</div>`,
       `${picks.length} ranked`);
 
@@ -558,12 +558,12 @@
         ${tile(c.apply ?? '—', 'Rated apply', 'on public demand only', c.apply ? 'up' : '')}
       </div>`);
 
-    out += sec('Open now', (d.open || []).length ? d.open.map(ipoCard).join('')
+    out += sec('Open now', (d.open || []).length ? `<div class="cards-2">${d.open.map(ipoCard).join('')}</div>`
       : `<div class="empty">No mainboard book is open today.</div>`);
 
-    if ((d.upcoming || []).length) out += sec('Upcoming', d.upcoming.map(ipoCard).join(''));
+    if ((d.upcoming || []).length) out += sec('Upcoming', `<div class="cards-2">${d.upcoming.map(ipoCard).join('')}</div>`);
     if ((d.awaiting_listing || []).length)
-      out += sec('Awaiting listing', d.awaiting_listing.map(ipoCard).join(''));
+      out += sec('Awaiting listing', `<div class="cards-2">${d.awaiting_listing.map(ipoCard).join('')}</div>`);
 
     const rec = (d.recent_listed || []).slice().sort((a, b) =>
       (b.since_listing_pct ?? -1e9) - (a.since_listing_pct ?? -1e9));
@@ -912,7 +912,7 @@
         </div>`) +
         `<div class="chips" role="group" aria-label="Signal filter">${chips.map(([k, l]) =>
           `<button type="button" class="chip" data-s="${k}" aria-pressed="${sigFilter === k}">${esc(l)}</button>`).join('')}</div>` +
-        sec('Alerts', rows.length ? rows.map(card).join('')
+        sec('Alerts', rows.length ? `<div class="cards-2">${rows.map(card).join('')}</div>`
           : `<div class="empty">No signals with that state.</div>`, `${rows.length} shown`);
       main.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
         sigFilter = b.dataset.s; draw();
@@ -972,6 +972,95 @@
         <em style="left:${entryAt.toFixed(1)}%"></em></span>
       <span class="prog-l"><span>stop</span><span>entry</span><span>target</span></span>
     </div>`;
+  };
+
+  /* ── JOIN ────────────────────────────────────────────────────────────────
+   * An honest early-access capture, not a fake login.
+   *
+   * It posts to /api/subscribe, which already exists and already does the
+   * hard parts: RFC-ish validation, a honeypot, a minimum time-on-page, one
+   * row per address, and a per-IP hourly cap enforced in SQL because lambdas
+   * do not share memory. The raw IP is never stored — it is salted and hashed
+   * only so the rate limit can work.
+   *
+   * There is deliberately no password field. A password box that does not
+   * authenticate anything is the worst thing this page could ship: it teaches
+   * a reader to hand over a credential to a form that cannot check it. Real
+   * accounts need a session store and a thirteenth serverless function, and
+   * this project is at Vercel's twelve-function cap — see the note in
+   * api/signals.js. That is a decision to take deliberately, not a box to draw.
+   */
+  const MOUNTED_AT = Date.now();
+  R['/join'] = async () => {
+    paint(`<div class="join">
+      <div class="join-l">
+        <h1>Get it before the open.</h1>
+        <p class="join-sub">One email each morning: what moved, the sector heat, the books
+          open today and the names the engine put up — with the levels it put them up at.</p>
+        <ul class="join-ul">
+          <li><b>Free.</b> No card, no trial that expires into a charge.</li>
+            <li><b>The record is public.</b> Every signal is scored when it closes — losers
+            included, which is the point of publishing it.</li>
+          <li><b>One email a day.</b> Unsubscribe in one click, and the list is a table
+            we own rather than a mailing vendor's.</li>
+        </ul>
+      </div>
+      <div class="join-r">
+        <form id="joinF" novalidate>
+          <label for="joinE">Email address</label>
+          <input id="joinE" name="email" type="email" inputmode="email" autocomplete="email"
+                 placeholder="you@example.com" required>
+          <!-- Bots fill this. Humans never see it. -->
+          <div class="hp" aria-hidden="true">
+            <label for="joinW">Website</label>
+            <input id="joinW" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <button type="submit" class="btn-primary" id="joinB">Get the morning brief</button>
+          <p class="join-note" id="joinM">We send one email a day. Nothing else, ever.</p>
+        </form>
+      </div>
+    </div>`);
+
+    const f = document.getElementById('joinF');
+    f.addEventListener('submit', async ev => {
+      ev.preventDefault();
+      const btn = document.getElementById('joinB');
+      const msg = document.getElementById('joinM');
+      const email = document.getElementById('joinE').value.trim();
+      // Validate here as well as on the server: a round trip to be told the
+      // address has no @ in it is a round trip wasted.
+      if (!/^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(email)) {
+        msg.className = 'join-note bad';
+        msg.textContent = 'That address does not look right — check for a typo.';
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Sending…';
+      msg.className = 'join-note'; msg.textContent = 'One moment.';
+      try {
+        const r = await fetch('/api/subscribe', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email, website: document.getElementById('joinW').value,
+            elapsed: Date.now() - MOUNTED_AT,
+          }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok && j.ok !== false) {
+          f.innerHTML = `<div class="join-ok"><b>You are on the list.</b>
+            The next brief goes out before tomorrow's open. If it does not arrive,
+            check the spam folder once and mark it "not spam" — that is the only
+            thing that keeps it landing.</div>`;
+        } else {
+          msg.className = 'join-note bad';
+          msg.textContent = j.error || 'That did not go through. Try again in a moment.';
+          btn.disabled = false; btn.textContent = 'Get the morning brief';
+        }
+      } catch (e) {
+        msg.className = 'join-note bad';
+        msg.textContent = 'No connection. Your address was not sent — try again.';
+        btn.disabled = false; btn.textContent = 'Get the morning brief';
+      }
+    });
   };
 
   /* ── router ────────────────────────────────────────────────────────────── */

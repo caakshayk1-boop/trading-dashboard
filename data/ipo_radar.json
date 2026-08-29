@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-29T03:32:30",
+ "generated_at": "2026-08-29T05:01:21",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -112,7 +112,7 @@
    "face_value": 1.0,
    "anchor_cr": 216.0,
    "listing_date": "Sep 4, 2026",
-   "gmp_text": "\u20b9360",
+   "gmp_text": "\u20b9370",
    "revenue_cr": 480.65,
    "revenue_growth_pct": 28.0,
    "pat_cr": 120.82,
@@ -182,7 +182,11 @@
    "issue_size_shares": 3202500.0,
    "issue_size_cr": 91.5,
    "subscription_x": 1.367704918032787,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 0.44,
+    "HNI": 1.26,
+    "Total": 1.97
+   },
    "lot_size": 75.0,
    "min_investment": 15000.0,
    "fresh_issue_cr": null,
@@ -235,6 +239,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/priority-jewels-ipo/2435/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1315/priority-jewels-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 24% year on year.",
     "Profit grew faster than revenue (68% against 24%), so margins widened rather than bought growth."
@@ -558,7 +563,7 @@
    "ofs_cr": 1607.0,
    "face_value": 2.0,
    "anchor_cr": 526.2,
-   "gmp_text": "\u20b9260",
+   "gmp_text": "\u20b9262",
    "revenue_cr": 872.26,
    "revenue_growth_pct": 15.0,
    "pat_cr": 109.9,
@@ -607,7 +612,7 @@
    "ofs_cr": 75.73,
    "face_value": 5.0,
    "anchor_cr": 40.72,
-   "gmp_text": "\u20b940",
+   "gmp_text": "\u20b936",
    "revenue_cr": 193.44,
    "revenue_growth_pct": 16.0,
    "pat_cr": 22.59,
@@ -658,7 +663,7 @@
    "ofs_cr": 184.0,
    "face_value": 10.0,
    "anchor_cr": 174.54,
-   "gmp_text": "\u20b937",
+   "gmp_text": "\u20b939",
    "revenue_cr": 2839.67,
    "revenue_growth_pct": 25.0,
    "pat_cr": 63.52,
