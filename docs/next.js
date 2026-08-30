@@ -1490,6 +1490,18 @@
    * ══════════════════════════════════════════════════════════════════════ */
 
   let briefSym = null;                 // set when arriving from a signal card
+  /* WHAT THE READER IS LOOKING AT, kept across refreshes.
+   *
+   * briefSym was consumed on first use and set back to null. The page repaints
+   * itself every 60 seconds, and on that repaint the symbol was gone — so the
+   * brief fell back to "highest reward-to-risk open setup" and silently swapped
+   * a different company in while someone was reading. Click JMFINANCIL, scroll
+   * for a minute, find yourself reading JKTYRE.
+   *
+   * briefPick holds the choice for as long as the reader is on this route.
+   * render() clears it when they leave, so arriving fresh still picks the best
+   * available setup rather than resurrecting an old one. */
+  let briefPick = null;
   let briefRange = '6mo';              // the chart window the reader last chose
 
   /* Realised volatility and trend persistence, both computed from the real
@@ -1608,9 +1620,18 @@
     if (sc.ok) SCREEN = SCREEN || (sc.data.rows || []).filter(x => x && x.sym);
     const inScreen = sym => (SCREEN || []).some(x => x.sym === sym);
     const ranked = open.slice().sort((x, y) => (y.rr || 0) - (x.rr || 0));
-    const sig = (briefSym && open.find(r => r.symbol === briefSym))
-             || ranked.find(r => inScreen(r.symbol)) || ranked[0];
+    const want = briefSym || briefPick;
+    const askedFor = briefSym;          // set only when the reader just clicked
     briefSym = null;
+    const hit = want ? open.find(r => r.symbol === want) : null;
+    const sig = hit || ranked.find(r => inScreen(r.symbol)) || ranked[0];
+    briefPick = sig.symbol;
+    /* A requested symbol that cannot be shown is SAID, not substituted. The
+     * brief needs an open row carrying an entry, a stop and a first target;
+     * a name whose signal has closed, or which never published all three, has
+     * no brief to show. Quietly rendering a different company instead is the
+     * failure that looks most like working. */
+    const missed = askedFor && !hit ? askedFor : null;
     const row = (SCREEN || []).find(x => x.sym === sig.symbol) || {};
 
     /* The live quote and six months of closes, fetched together. Sequential
@@ -1701,8 +1722,16 @@
     ].filter(x => Number.isFinite(x.v)).sort((x, y) => y.v - x.v);
     const hiL = Math.max.apply(null, pts_.map(p => p.v)), loL = Math.min.apply(null, pts_.map(p => p.v));
     const at = v => ((hiL - v) / ((hiL - loL) || 1)) * 100;
+
+    /* Label de-collision happens AFTER paint, in spaceLadder(), because it
+     * needs the ladder's real pixel height. The first attempt did it here in
+     * percent and applied it with translateY(<percent>) — which resolves
+     * against the ELEMENT'S OWN height, not the container, so a -3.3% nudge on
+     * a 12px label moved it a third of a pixel and the labels still sat on top
+     * of each other. Percentages and transforms do not mean what they look
+     * like they mean. */
     const ladder = pts_.map((p, i) => `<div class="b-lvl ${p.c}" tabindex="0" data-lvl="${esc(p.k)}"
-        style="top:${at(p.v).toFixed(1)}%;animation-delay:${(i * 60)}ms">
+        style="top:${at(p.v).toFixed(2)}%;animation-delay:${(i * 60)}ms">
         <span class="b-lvl-tag">${esc(p.k)}</span><span class="b-lvl-line"></span>
         <span class="b-lvl-d">${p.k === 'Now' ? 'current' : dist(p.v)}</span>
         <span class="b-lvl-val">${f(p.v)}</span></div>`).join('');
@@ -1781,6 +1810,10 @@
           structure, momentum, volume and defined risk. Every figure below comes from the published ledger,
           the same 750-name screen the rest of this site runs on, and ${pts ? `${pts.length} real daily closes` : 'the published levels'}.</p>
       </header>
+
+      ${missed ? `<div class="b-miss"><b>${esc(missed)} has no brief to show.</b>
+        A brief needs an open signal carrying an entry, a stop and a first target — that name
+        has none right now, so this is the best open setup instead, not a substitute for it.</div>` : ''}
 
       <nav class="b-qnav" id="qnav" aria-label="Sections of this brief">
         ${SECTIONS.map(([id, lab, key]) => `<a href="#${id}" data-jump="${id}">
@@ -2150,6 +2183,62 @@
 
     const $ = id => document.getElementById(id);
 
+    /* ── THE LADDER'S LABELS, SPACED IN REAL PIXELS ─────────────────────────
+     * The ladder is a linear price scale, so two levels a rupee apart land two
+     * pixels apart. On JKTYRE the current price (₹380.25) and the entry
+     * (₹378.75) are 0.4% apart across a ₹363-599 range and their labels printed
+     * exactly on top of each other.
+     *
+     * Only the TEXT moves. Every rule stays on its true price, because that is
+     * the one claim this chart makes — that the distance between the stop and
+     * the target is the actual distance. A reader still sees two lines almost
+     * touching, and can now read both numbers.
+     *
+     * Measured rather than computed in percent: the box is clamp(300px,40vw,
+     * 400px), so its height is only knowable after layout, and the required
+     * gap is the label's own rendered height rather than a guessed fraction.
+     */
+    const spaceLadder = () => {
+      const box = main.querySelector('.b-ladder');
+      if (!box) return;
+      const rows = [...box.querySelectorAll('.b-lvl')];   // DOM order = high → low
+      if (rows.length < 2) return;
+      rows.forEach(r => r.style.setProperty('--lnudge', '0px'));
+      const H = box.clientHeight;
+      if (!H) return;
+      const tag = rows[0].querySelector('.b-lvl-tag');
+      const gap = Math.max(14, (tag ? tag.getBoundingClientRect().height : 12) + 3);
+      const tops = rows.map(r => parseFloat(r.style.top) / 100 * H);
+      /* A label is centred on its row, so its own half-height is the margin it
+       * needs at each end. Without this the bottom label hung 19px below the
+       * box and sat 3px off the caption — the crowding just moved rather than
+       * being resolved.
+       *
+       * Two passes, the standard shape: push down until nothing overlaps, then,
+       * if the pile has run past the bottom, pull back up from the last row.
+       * Each pass clamps to the usable band, so labels stay inside the box. */
+      const half = gap / 2;
+      const lo = half, hi = Math.max(half, H - half);
+      const lab = tops.slice();
+      lab[0] = Math.max(lo, lab[0]);
+      for (let i = 1; i < lab.length; i++) {
+        lab[i] = Math.max(lab[i], lab[i - 1] + gap);
+      }
+      if (lab[lab.length - 1] > hi) {
+        lab[lab.length - 1] = hi;
+        for (let i = lab.length - 2; i >= 0; i--) {
+          lab[i] = Math.min(lab[i], lab[i + 1] - gap);
+        }
+      }
+      rows.forEach((r, i) => r.style.setProperty('--lnudge', (lab[i] - tops[i]).toFixed(1) + 'px'));
+    };
+    setTimeout(spaceLadder, 90);
+    // The box is sized in vw, so its height changes with the window. Debounced,
+    // and torn down with the route — resize fires in bursts.
+    let ladderT = 0;
+    const onResize = () => { clearTimeout(ladderT); ladderT = setTimeout(spaceLadder, 120); };
+    window.addEventListener('resize', onResize);
+
     /* ── numbers arrive, they do not appear ─────────────────────────────── */
     if (score != null) {
       countTo($('convN'), score, { dp: 0 });
@@ -2255,6 +2344,8 @@
     // The route repaints wholesale; the listener must not outlive its markup.
     main.addEventListener('sig:teardown', () => {
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      clearTimeout(ladderT);
       document.removeEventListener('keydown', onKey);
     }, { once: true });
 
@@ -2439,6 +2530,9 @@
 
   async function render() {
     const path = routeOf();
+    // Leaving the brief forgets which signal was pinned, so coming back by the
+    // tab picks the best current setup rather than resurrecting an old one.
+    if (path !== '/brief') briefPick = null;
     document.querySelectorAll('.tabs a').forEach(a =>
       a.dataset.route === path ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
     // Scroll first, then paint: painting first lets the old route's height

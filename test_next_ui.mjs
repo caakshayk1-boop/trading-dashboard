@@ -185,6 +185,57 @@ try {
   const planTop = await p.locator("#b-plan").evaluate(e => Math.round(e.getBoundingClientRect().top));
   ok("a section jump clears the sticky stack", planTop > 90 && planTop < 240, planTop);
 
+
+  /* THE BRIEF MUST NOT SWAP THE INSTRUMENT UNDER THE READER.
+   * briefSym was consumed on first use, so the 60-second repaint fell back to
+   * "highest reward-to-risk" and quietly changed which company was on screen
+   * while someone was reading it. */
+  await p.goto(SITE + "#/signals", { waitUntil: "domcontentloaded" });
+  await p.waitForTimeout(SETTLE);
+  const nLinks = await p.locator("a.brief-link").count();
+  ok("signal cards offer a Full brief link", nLinks > 0, nLinks);
+  if (nLinks > 1) {
+    const link = p.locator("a.brief-link").nth(1);   // deliberately not the default pick
+    const wanted = await link.evaluate(a => a.dataset.brief);
+    await link.click();
+    await p.waitForTimeout(SETTLE + 1500);
+    const opened = (await p.locator(".b-hero h1").innerText()).split(" ")[0];
+    ok("the brief opens the symbol that was clicked", opened === wanted, { opened, wanted });
+    await p.evaluate(() => window.dispatchEvent(new HashChangeEvent("hashchange")));
+    await p.waitForTimeout(SETTLE + 1500);
+    const after = (await p.locator(".b-hero h1").innerText()).split(" ")[0];
+    ok("a repaint does not swap the instrument", after === wanted, { after, wanted });
+  }
+
+  /* LADDER LABELS MUST NOT OVERLAP — AND THE RULES MUST NOT MOVE.
+   * Two levels a rupee apart land two pixels apart on a linear scale, so their
+   * labels printed on top of each other. Only the text may be nudged: the rule
+   * stays on its true price, which is the whole claim the chart makes. */
+  const lvls = await p.locator(".b-lvl").evaluateAll(els => els.map(e => {
+    const tag = e.querySelector(".b-lvl-tag").getBoundingClientRect();
+    const line = e.querySelector(".b-lvl-line").getBoundingClientRect();
+    return { name: e.dataset.lvl, top: tag.top, bottom: tag.bottom, rule: line.top,
+             trueTop: parseFloat(e.style.top) };
+  }));
+  lvls.sort((a, b) => a.top - b.top);
+  let clash = null;
+  for (let i = 1; i < lvls.length; i++)
+    if (lvls[i].top < lvls[i - 1].bottom - 0.5) clash = [lvls[i - 1].name, lvls[i].name];
+  ok("no two ladder labels overlap", clash === null, clash);
+  // Ordering by rule position must still match ordering by price.
+  const byRule = lvls.slice().sort((a, b) => a.rule - b.rule).map(x => x.name);
+  const byPrice = lvls.slice().sort((a, b) => a.trueTop - b.trueTop).map(x => x.name);
+  ok("the rules still sit in true price order",
+     JSON.stringify(byRule) === JSON.stringify(byPrice), { byRule, byPrice });
+  // A nudged label must not be pushed onto the caption underneath it.
+  const capGap = await p.evaluate(() => {
+    const rows = [...document.querySelectorAll(".b-lvl .b-lvl-tag")]
+      .map(e => e.getBoundingClientRect().bottom);
+    const cap = document.querySelector(".b-chart .b-cap");
+    return cap ? Math.round(cap.getBoundingClientRect().top - Math.max(...rows)) : 99;
+  });
+  ok("the lowest label clears the caption", capGap >= 8, capGap + "px");
+
   ok("no JS errors on either route", errs.length === 0, errs.slice(0, 3));
   await ctx.close();
 

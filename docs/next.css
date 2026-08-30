@@ -857,7 +857,9 @@ body::before{display:none}
 /* Inset top and bottom: a level sits at 0% or 100% and is translated -50%, so
    the outermost two lines print half outside the box — the 200-day was landing
    on the caption. The inset is the label's own height. */
-.b-ladder{position:relative;height:clamp(300px,40vw,400px);margin:12px 0 22px;
+/* Bottom margin is 30px, not 22px: a de-collided label can be pushed to the
+   very bottom of the band, and the caption sat 3px under it. */
+.b-ladder{position:relative;height:clamp(300px,40vw,400px);margin:12px 0 30px;
   padding:14px 0}
 .b-ladder .b-lvl,.b-ladder .b-band{margin-top:14px}
 .b-band{position:absolute;left:0;right:0;border-radius:4px}
@@ -1479,3 +1481,25 @@ body::before{display:none}
    since it was written — it only surfaced once every target on the page was
    measured. Padding, not font size: the type is correct, the box was not. */
 .lnks a{display:inline-flex;align-items:center;min-height:26px;padding:3px 0}
+
+/* ── LADDER LABELS ────────────────────────────────────────────────────────
+   --lnudge moves only the TEXT of a level, never its rule. Two levels a
+   rupee apart genuinely belong a couple of pixels apart on a linear scale;
+   the line keeps that truth and the words step aside so both can be read.
+   The line itself deliberately does NOT inherit the nudge. */
+/* --lnudge is set in PIXELS by spaceLadder(). It was a percentage first, and
+   translateY(<percent>) resolves against the element's own height — a -3.3%
+   nudge on a 12px label is a third of a pixel, so nothing moved. */
+.b-lvl-tag,.b-lvl-val,.b-lvl-d{transform:translateY(var(--lnudge,0px));
+  transition:transform var(--t-mid) var(--ease)}
+/* A nudged label needs a hairline back to its own rule, or it reads as
+   belonging to the line it was pushed next to. */
+.b-lvl-tag::after{content:"";position:absolute;left:100%;width:6px;top:50%;
+  height:1px;background:currentColor;opacity:0;transition:opacity var(--t-fast) var(--ease)}
+.b-lvl{--lnudge:0px}
+.b-lvl:hover .b-lvl-line,.b-lvl.hot .b-lvl-line{opacity:1}
+/* The "no brief for that name" note, under the hero. */
+.b-miss{margin-top:20px;border:1px solid var(--b-line2);border-left:3px solid var(--b-gold);
+  border-radius:0 8px 8px 0;background:var(--b-sur);padding:14px 16px;
+  font-size:13.5px;line-height:1.6;color:var(--b-mut);max-width:70ch}
+.b-miss b{color:var(--b-ink);font-weight:600}

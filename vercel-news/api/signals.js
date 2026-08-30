@@ -107,12 +107,24 @@ export default async function handler(req, res) {
     const range = RANGES.has(String(q.range)) ? String(q.range) : "6mo";
     const bare = String(q.series).toUpperCase().trim().replace(/[^A-Z0-9&.=^-]/g, "");
     if (!bare) return fail(res, 400, "series needs a symbol");
-    // A bare NSE ticker gets the .NS suffix; anything already carrying an
-    // exchange marker (^NSEI, GC=F, USDINR=X, BTC-USD) is passed through as-is.
-    const yh = /[.=^]/.test(bare) || /-USD$/.test(bare) ? bare : `${bare}.NS`;
+    // Anything already carrying an exchange marker (^NSEI, GC=F, USDINR=X,
+    // BTC-USD) is passed through as-is. Everything else is tried as an NSE
+    // ticker FIRST, because this ledger is overwhelmingly NSE — and then as a
+    // bare ticker, because it is not exclusively so.
+    //
+    // Appending .NS unconditionally 404'd every non-Indian name in the ledger.
+    // Checked against Yahoo: NEM.NS returns 0 closes and NEM returns 63;
+    // RELIANCE.NS returns 67 and RELIANCE returns 0. Neither suffix is right
+    // on its own, so both are tried, most-likely first.
+    const marked = /[.=^]/.test(bare) || /-USD$/.test(bare);
+    const candidates = marked ? [bare] : [`${bare}.NS`, bare];
     try {
-      const got = await sparkSeries([yh], range, "1d");
-      const pairs = got.get(yh);
+      let yh = null, pairs = null;
+      for (const c of candidates) {
+        const got = await sparkSeries([c], range, "1d");
+        const hit = got.get(c);
+        if (hit && hit.length >= 3) { yh = c; pairs = hit; break; }
+      }
       if (!pairs || pairs.length < 3) {
         // 200 with points:[] would be a success response carrying nothing —
         // the failure mode that looks most like working. Say it plainly.
