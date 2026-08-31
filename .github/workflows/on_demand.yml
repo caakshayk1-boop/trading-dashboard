@@ -38,6 +38,9 @@ env:
   GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
   UPSTOX_API_KEY:    ${{ secrets.UPSTOX_API_KEY }}
   UPSTOX_API_SECRET: ${{ secrets.UPSTOX_API_SECRET }}
+  # Long-lived Analytics Token — see daily_scan.yml for why the OAuth pair
+  # above cannot work on an ephemeral runner.
+  UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
 
 jobs:
   run:
