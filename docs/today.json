@@ -1,7 +1,7 @@
 {
- "build_id": "20260830T075205",
- "date": "2026-08-30",
- "date_str": "Sunday, August 30 2026",
+ "build_id": "20260831T081049",
+ "date": "2026-08-31",
+ "date_str": "Monday, August 31 2026",
  "picks": [
   {
    "symbol": "CRWD",
@@ -652,128 +652,128 @@
   }
  },
  "ipos": {
-  "count": 31,
+  "count": 30,
   "months": 12,
-  "built_on": "2026-08-22",
+  "built_on": "2026-08-29",
   "summary": {
-   "count": 31,
-   "up": 19,
-   "down": 12,
-   "up_pct": 61.3,
-   "median_pct": 17.4
+   "count": 30,
+   "up": 21,
+   "down": 9,
+   "up_pct": 70.0,
+   "median_pct": 16.7
   },
   "rows": [
    {
     "sym": "RUBICON",
-    "months_listed": 10.2,
+    "months_listed": 10.4,
     "first_close": 628.2,
-    "last_close": 1724.7,
-    "since_listing_pct": 174.5,
-    "high": 1804.1,
+    "last_close": 1804.4,
+    "since_listing_pct": 187.2,
+    "high": 1841.0,
     "low": 577.25,
-    "from_high_pct": -4.4,
+    "from_high_pct": -2.0,
     "below_first_ever": true,
-    "sessions": 211,
+    "sessions": 216,
     "listed_on": "2025-10-16"
    },
    {
     "sym": "UTLSOLAR",
-    "months_listed": 9.0,
+    "months_listed": 9.3,
     "first_close": 208.44,
-    "last_close": 477.4,
-    "since_listing_pct": 129.0,
+    "last_close": 443.35,
+    "since_listing_pct": 112.7,
     "high": 483.95,
     "low": 174.83,
-    "from_high_pct": -1.4,
+    "from_high_pct": -8.4,
     "below_first_ever": true,
-    "sessions": 190,
+    "sessions": 194,
     "listed_on": "2025-11-20"
    },
    {
     "sym": "ATLANTAELE",
-    "months_listed": 10.7,
+    "months_listed": 11.0,
     "first_close": 823.35,
-    "last_close": 1846.9,
-    "since_listing_pct": 124.3,
+    "last_close": 1745.1,
+    "since_listing_pct": 112.0,
     "high": 2151.5,
     "low": 726.3,
-    "from_high_pct": -14.2,
+    "from_high_pct": -18.9,
     "below_first_ever": true,
-    "sessions": 224,
+    "sessions": 229,
     "listed_on": "2025-09-29"
    },
    {
     "sym": "PARKHOSPS",
-    "months_listed": 8.1,
+    "months_listed": 8.4,
     "first_close": 147.95,
-    "last_close": 274.55,
-    "since_listing_pct": 85.6,
+    "last_close": 290.15,
+    "since_listing_pct": 96.1,
     "high": 299.3,
     "low": 143.92,
-    "from_high_pct": -8.3,
+    "from_high_pct": -3.1,
     "below_first_ever": true,
-    "sessions": 171,
+    "sessions": 175,
     "listed_on": "2025-12-17"
    },
    {
-    "sym": "AEQUS",
-    "months_listed": 8.4,
-    "first_close": 151.29,
-    "last_close": 259.22,
-    "since_listing_pct": 71.3,
-    "high": 262.45,
-    "low": 115.11,
-    "from_high_pct": -1.2,
-    "below_first_ever": true,
-    "sessions": 176,
-    "listed_on": "2025-12-10"
+    "sym": "PIRAMALFIN",
+    "months_listed": 9.7,
+    "first_close": 1323.0,
+    "last_close": 2278.4,
+    "since_listing_pct": 72.2,
+    "high": 2278.4,
+    "low": 1323.0,
+    "from_high_pct": 0.0,
+    "below_first_ever": false,
+    "sessions": 204,
+    "listed_on": "2025-11-07"
    }
   ],
   "worst": [
    {
-    "sym": "VIKRAMSOLR",
-    "months_listed": 11.9,
-    "first_close": 356.4,
-    "last_close": 173.23,
-    "since_listing_pct": -51.4,
-    "high": 378.8,
-    "low": 156.8,
-    "from_high_pct": -54.3,
-    "below_first_ever": true,
-    "sessions": 248,
-    "listed_on": "2025-08-26"
-   },
-   {
     "sym": "PINELABS",
-    "months_listed": 9.2,
+    "months_listed": 9.5,
     "first_close": 250.89,
-    "last_close": 156.91,
-    "since_listing_pct": -37.5,
+    "last_close": 169.67,
+    "since_listing_pct": -32.4,
     "high": 250.89,
     "low": 137.94,
-    "from_high_pct": -37.5,
+    "from_high_pct": -32.4,
     "below_first_ever": true,
-    "sessions": 194,
+    "sessions": 198,
     "listed_on": "2025-11-14"
    },
    {
     "sym": "WAKEFIT",
-    "months_listed": 8.2,
+    "months_listed": 8.4,
     "first_close": 192.29,
-    "last_close": 141.36,
-    "since_listing_pct": -26.5,
+    "last_close": 144.71,
+    "since_listing_pct": -24.7,
     "high": 215.8,
     "low": 113.04,
-    "from_high_pct": -34.5,
+    "from_high_pct": -32.9,
     "below_first_ever": true,
-    "sessions": 172,
+    "sessions": 177,
     "listed_on": "2025-12-15"
+   },
+   {
+    "sym": "PWL",
+    "months_listed": 9.3,
+    "first_close": 155.24,
+    "last_close": 119.46,
+    "since_listing_pct": -23.0,
+    "high": 155.24,
+    "low": 79.56,
+    "from_high_pct": -23.0,
+    "below_first_ever": true,
+    "sessions": 197,
+    "listed_on": "2025-11-18"
    }
   ]
  },
  "data_health": {
   "worst": "DEGRADED",
-  "current": 9,
+  "current": 10,
   "total": 12,
   "degraded": [
    {
@@ -785,267 +785,260 @@
    {
     "dataset": "Fund screen",
     "status": "DEGRADED",
-    "age": "7 days old",
-    "note": "older than its weekly refresh"
-   },
-   {
-    "dataset": "New listings",
-    "status": "STALE",
-    "age": "7 days old",
+    "age": "8 days old",
     "note": "older than its weekly refresh"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Strategy: Open Files for Rooks",
-   "body": "Rooks need open files to be active. An open file has no pawns. A semi-open file has only enemy pawns. Double rooks on an open file (called 'Rooks on 7th') is a deadly battery. Strategy: open files by pawn trades, then occupy them immediately. Don't leave your rooks passive on the back rank.",
-   "index": 11,
+   "title": "Middlegame: Piece Coordination",
+   "body": "Good chess is about all your pieces working together. Ask: which of my pieces is worst placed? Improve it. A knight on the rim is dim (a1, h1 etc). A bishop blocked by its own pawns is a 'tall pawn.' Rooks need open files. Queen needs safety. Coordinate: every piece pointing at the same sector = overwhelming attack.",
+   "index": 13,
    "total": 20
   },
   "wisdom": {
-   "title": "Regulate Yourself First",
-   "body": "You cannot be a calm parent if you're running on stress, sleep debt, and financial anxiety. Your regulation is their regulation \u2014 babies co-regulate with caregivers. Deep breath before you pick her up. Shoulders down. Slow exhale. Your nervous system sets the tone for the room.",
-   "index": 3,
+   "title": "Simplicity is the Path to Happiness",
+   "body": "Happiness research consistently shows: strong relationships + meaningful work + enough (not excessive) money = high life satisfaction. You're already building all three. Don't confuse complexity for progress. The man who simplifies wins. Less decisions, less noise, less comparison.",
+   "index": 5,
    "total": 18
   },
   "book": {
-   "book": "Zero to One",
-   "author": "Peter Thiel",
-   "chapter": "Competition Is for Losers",
-   "lesson": "Thiel's most contrarian idea: competition is not virtuous. Monopoly is. Competitive markets destroy profit margins as businesses race to the bottom on price. A monopoly earns outsized profits because it has no competition. Google has 90%+ search market share and 25%+ net margins. A restaurant in a crowded market has 5% margins. Thiel argues: don't compete. Create something so different that you have no competition. Ask not 'how do I beat my competitors?' but 'how do I build something where there are no competitors?'",
-   "key_quote": "If you are competing, you are not monopolising. If you are not monopolising, you are not building a truly great business.",
-   "action": "Ask about your current work or business: who are my direct competitors? If you have many, that's a warning sign. Find the niche where you can be the only one.",
-   "index": 9,
+   "book": "Good to Great",
+   "author": "Jim Collins",
+   "chapter": "The Hedgehog Concept: Do One Thing Brilliantly",
+   "lesson": "The fox knows many things. The hedgehog knows one big thing. Collins studied 1,435 Fortune 500 companies over 40 years to find which ones went from good to great. The great ones were all hedgehogs: they found the intersection of three circles \u2014 what they are deeply passionate about, what they can be the best in the world at, and what drives their economic engine. They focused there relentlessly and ignored everything else. Good-to-great companies didn't diversify into new businesses. They went deeper into their hedgehog concept until they dominated it.",
+   "key_quote": "Greatness comes from doing one thing so well that the world cannot ignore you.",
+   "action": "Draw your three circles: Passion / Best-in-world potential / Economic driver. Where they overlap is your hedgehog. Do you spend most of your time there?",
+   "index": 11,
    "total": 48,
    "crux": [
-    "Progress is either 0\u21921 (new things) or 1\u2192n (copying). Copying does not create new value.",
-    "The contrarian question: what important truth do very few people agree with you on?",
-    "Competition is for losers. Perfect competition drives profit to zero by definition.",
-    "Monopoly is the condition of every genuinely valuable business. All happy companies are different.",
-    "Four monopoly traits: proprietary technology, network effects, economies of scale, branding.",
-    "Proprietary tech must be 10x better than the alternative, not marginally better.",
-    "Start with a small market you can dominate, then expand. Big markets are a red flag.",
-    "Last-mover advantage beats first-mover. What matters is the last big cash flow.",
-    "Power law: one investment returns more than all others combined. This applies to careers too.",
-    "Definite optimism builds the future. Indefinite optimism just expects it to arrive.",
-    "Sales matters as much as product, and engineers systematically underrate it.",
-    "Seven questions every business must answer: engineering, timing, monopoly, people, distribution, durability, secret.",
-    "Secrets still exist. The belief that everything is known is why so little gets found.",
-    "Founders should ask: will this still be valuable in 10 years?"
+    "Good is the enemy of great. Most organisations never become great because they become good enough.",
+    "Level 5 Leadership: extreme personal humility combined with intense professional will.",
+    "First Who, Then What. Get the right people on the bus before setting direction.",
+    "Confront the brutal facts while never losing faith \u2014 the Stockdale Paradox.",
+    "The Hedgehog Concept: the intersection of what you're deeply passionate about, what you can be best in the world at, and what drives your economics.",
+    "One economic denominator \u2014 profit per X \u2014 clarifies the entire business.",
+    "A culture of discipline, not a tyrant imposing discipline.",
+    "Technology accelerates momentum; it never creates it.",
+    "The Flywheel: relentless pushing in a consistent direction until momentum compounds.",
+    "The Doom Loop is the opposite \u2014 new programmes, new directions, no accumulation.",
+    "Great companies had no miracle moment. Transformation looked dramatic only from outside.",
+    "Stop-doing lists matter more than to-do lists.",
+    "Compensation gets the right people on the bus; it does not motivate the wrong ones."
    ],
    "learnings": [
-    "If you're competing on the same axis as everyone else, the margin is already gone.",
-    "Small dominated market first. Broad ambition second.",
-    "Power laws mean concentration beats diversification for effort allocation.",
-    "Distribution is not an afterthought. A product nobody hears about does not exist."
+    "Who beats what. Wrong people make the right strategy fail.",
+    "Facing bad news early is a competitive advantage.",
+    "Momentum accumulates from consistent direction, not from bursts of intensity.",
+    "Greatness is mostly a series of unglamorous, consistent decisions."
    ],
    "examples": [
-    "PayPal targeted eBay power sellers \u2014 20,000 people \u2014 rather than 'online payments'. Domination first, expansion after.",
-    "Google has held roughly two-thirds of search since 2002 and prints margins that a competitive market would have erased.",
-    "Facebook started at one university with 100% of that market, then expanded campus by campus."
+    "Walgreens beat the market 15x from 1975\u20132000 by fixating on profit per customer visit \u2014 one metric, relentlessly.",
+    "Darwin Smith at Kimberly-Clark sold the paper mills \u2014 the company's historic core \u2014 to enter consumer paper against P&G. Shareholder returns beat the market 4x.",
+    "Nucor's flywheel: mini-mill technology \u2192 lower cost \u2192 market share \u2192 more mills. Same push for decades."
    ],
    "adapt": [
-    "Codex's edge is not 'AI automation'. It is a specific workflow for a specific buyer at $47. Dominate that.",
-    "The faceless FP&A page competes in a narrower niche than generic finance content. That narrowness is the asset.",
-    "10x, not 10%: a signals product must be clearly better than a free Telegram channel, not slightly.",
-    "Distribution for the Dubai search is the network, not the CV. Applications without referrals are 1\u2192n."
+    "Hedgehog: CA precision + FP&A + building with AI. That intersection is narrower and stronger than 'finance content'.",
+    "Economic denominator for Codex: profit per customer, not downloads.",
+    "Brutal fact: 1H signals have no measurable edge. Faith: the daily equity engine does. Hold both.",
+    "Stop-doing list beats the roadmap. Deleting three TradeFlow pages was the flywheel push."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Decision Fatigue Is The Real Cost",
-    "body": "A cluttered wardrobe costs you a decision every morning. Obama and Jobs wore the same thing daily for a reason \u2014 not style, bandwidth. Every trivial choice you delete is one more available for the choices that matter.",
-    "action": "Choose tomorrow's clothes tonight. Notice the morning it buys back.",
-    "index": 3,
+    "title": "The Empty Surface",
+    "body": "Keep one surface in your home completely empty. A desk, a counter, a shelf. It becomes a visual reference point \u2014 the moment things start accumulating elsewhere, you notice.",
+    "action": "Clear one surface fully. Keep it clear for a week.",
+    "index": 5,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Ask One More Question",
-    "body": "Most people wait to talk. The one who asks a second follow-up is remembered as the best conversationalist in the room, having said almost nothing.",
-    "action": "Ask a second follow-up before offering your own view.",
-    "index": 9,
+    "title": "Dress One Notch Above The Room",
+    "body": "Not two \u2014 two reads as trying. One notch signals you took the occasion seriously. In the Gulf, conservative beats fashionable in every professional setting.",
+    "action": "Check tomorrow's outfit against the room you will be in.",
+    "index": 11,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Voluntary Discomfort",
-    "body": "The Stoics practised poverty deliberately \u2014 plain food, cold, hard beds. Not self-punishment. Rehearsal, so that losing comfort stops being frightening.",
-    "action": "Cold shower. Or skip one meal. Notice it is survivable.",
-    "index": 7,
+    "title": "Silence Is A Position",
+    "body": "You are not required to have an opinion on everything you encounter. 'I don't know enough about that' is a complete and unusually strong answer.",
+    "action": "Decline to have an opinion on one thing today.",
+    "index": 9,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Bottleneck Theory",
-    "body": "A system moves at the speed of its slowest constraint. Optimising anything else produces zero throughput gain and feels productive, which is why it is so common.",
-    "action": "Identify the real bottleneck in your week. Work only on that.",
-    "index": 19,
+    "title": "Inversion",
+    "body": "Solve the problem backwards. Instead of 'how do I succeed?', ask 'how would I guarantee failure?' \u2014 then avoid that. The failure list is concrete and short; the success list is vague and infinite.",
+    "action": "Invert your biggest current goal. Write the three surest ways to fail it.",
+    "index": 1,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0627\u0644\u062d\u0645\u062f \u0644\u0644\u0647",
-    "translit": "al-hamdu lillah",
-    "meaning": "Praise be to God",
-    "use": "The standard answer to 'how are you'. Also used on hearing good news.",
-    "index": 5,
+    "script": "\u064a\u0639\u0637\u064a\u0643 \u0627\u0644\u0639\u0627\u0641\u064a\u0629",
+    "translit": "ya'teek al-'aafya",
+    "meaning": "May God give you strength",
+    "use": "Khaleeji. Said to someone who has worked hard or is finishing a shift. Warm and very local.",
+    "index": 7,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Recall, Don't Reread",
-    "body": "Close the material and write what you remember. Retrieval builds memory; rereading builds only the feeling of knowing, which is why students who reread do worse.",
-    "action": "Close the last thing you studied. Write everything you recall. Then check.",
-    "index": 11,
+    "title": "Name The Assumption",
+    "body": "Every model rests on two or three assumptions doing all the work. Find them. The rest is arithmetic and does not deserve your review time.",
+    "action": "Find the two assumptions carrying your current model.",
+    "index": 13,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "VO2max Is The Strongest Predictor",
-    "body": "Cardiorespiratory fitness predicts all-cause mortality better than smoking status, blood pressure, or cholesterol. Moving from the bottom quartile to merely above-average is the single largest risk reduction available to you \u2014 larger than any drug.",
-    "action": "One 20-minute session where holding a conversation is difficult.",
-    "index": 1,
+    "title": "Strength Is Longevity, Not Vanity",
+    "body": "Muscle mass and grip strength both independently predict lifespan. After 30 you lose 3\u20138% of muscle per decade unless you resist it, and the decline accelerates. Sarcopenia is what puts people in care homes.",
+    "action": "Two sets of a compound lift. Squat, hinge, push, or pull.",
+    "index": 3,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Patrick Collison",
-   "quote": "Move with urgency and focus. The world rewards those who ship.",
-   "index": 82,
+   "name": "Melinda Gates",
+   "quote": "A woman with a voice is by definition a strong woman.",
+   "index": 84,
    "total": 96
   },
   "lesson": {
    "tradition": "Stoicism",
-   "lesson": "You have power over your mind \u2014 not outside events. Realize this, and you will find strength.",
+   "lesson": "Waste no more time arguing about what a good man should be. Be one.",
    "source": "Marcus Aurelius"
   },
   "case": {
-   "title": "Alibaba: Jack Ma's 1001st Try",
-   "story": "Jack Ma was rejected from Harvard 10 times. KFC rejected him. Failed at multiple businesses. Alibaba launched in 1999 and became a $600B company.",
-   "lesson": "Resilience is the most under-rated competitive advantage. Most people quit. The gap between failure and success is usually just one more attempt."
+   "title": "Razorpay: B2B Sales Playbook",
+   "story": "Razorpay started with a landing page and no product. Collected emails. Launched 3 months later. Grew from $0 to $7.5B valuation by making checkout dead simple for developers.",
+   "lesson": "Validate before you build. A landing page with a waitlist tells you more than 3 months of product development."
   },
   "fpna": {
-   "title": "Power BI for FP&A",
-   "body": "Replace Excel pivots. Connect to ERP source. Saves 5+ hours/month on month-end decks.",
-   "index": 18,
+   "title": "Sensitivity Analysis",
+   "body": "Which assumption, if wrong, blows up your model? Identify it. Test it. Present the range.",
+   "index": 20,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 4: Board Communication",
-   "body": "CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings.",
-   "index": 9,
+   "title": "Dubai FC Reality",
+   "body": "AED 30K+ FC roles at ADNOC, Emirates, MAF, DP World: they want Big 4 background OR 8+ years in a listed company + CA/ACCA + ERP experience. Your edge: FP&A depth + IFRS knowledge + Power BI automation. Highlight cost savings you drove.",
+   "index": 11,
    "total": 15
   },
   "money_hack": {
-   "title": "Gold via SGB",
-   "body": "Sovereign Gold Bonds: 2.5% interest + gold price appreciation. No storage cost."
+   "title": "Direct Funds Only",
+   "body": "Regular mutual funds cost 1\u20131.5% more per year. Over 20 years = 30% of corpus gone."
   },
   "dubai": {
-   "title": "The stack that clears AED 30K",
-   "body": "CA or ACCA, plus SAP or Oracle, plus Power BI, plus IFRS 9 and 16. That is the whole gate. Miss one and you are competing on price.",
-   "targets": "Targets: ADNOC \u00b7 Emirates \u00b7 Majid Al Futtaim \u00b7 DP World \u00b7 FAB \u00b7 Emaar.",
-   "action_label": "Keyword tip",
-   "action": "Put \"IFRS 16 implementation\" and \"rolling forecast\" in the cover letter. Recruiters grep for exactly those two strings.",
-   "index": 1,
+   "title": "The package is not the salary",
+   "body": "Gulf offers split into basic, housing, transport and a school allowance. Gratuity accrues on BASIC only \u2014 21 days' basic per year for the first five. An offer that is 40% basic and 60% allowances quietly halves your end-of-service.",
+   "targets": "Ask for the split in writing before you counter.",
+   "action_label": "Negotiation lever",
+   "action": "Push basic up, not total up. Same headline number, materially more gratuity.",
+   "index": 3,
    "total": 30
   },
   "daughter": {
    "months": 8,
-   "days": 248,
+   "days": 249,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
+  "productivity": "Weekly review: 15 min every Sunday. What worked, what's next week's #1.",
   "father": [
    {
-    "title": "Stop at eye contact",
-    "do": "When she catches your eye across the room, stop and respond \u2014 smile, wave, say her name.",
-    "why": "Social referencing is beginning: she checks your face to decide how to feel about things. Responding consistently makes you a reliable reference point."
+    "title": "Take a photo of the ordinary",
+    "do": "Photograph something unremarkable \u2014 her on the floor, mid-task \u2014 rather than a milestone.",
+    "why": "You will have hundreds of milestone photos and almost none of the texture of daily life at seven months, which is what you will actually want later."
    },
    {
-    "title": "Let her lead the play",
-    "do": "Follow what she reaches for instead of redirecting to the toy you chose. Sit on the floor at her level for 15 minutes.",
-    "why": "Serve-and-return interaction builds the circuitry for attention and self-regulation. Following her focus teaches that her signals produce a response \u2014 the root of secure attachment."
+    "title": "Say goodbye properly",
+    "do": "Never slip out unseen. Say you are leaving, say you will be back, then go \u2014 even if she cries.",
+    "why": "Disappearing without warning teaches vigilance. A predictable goodbye, repeated, teaches that departures end in returns. The crying is not the failure; it is the process."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Aparigraha",
-    "translation": "Non-attachment / non-possessiveness",
-    "teaching": "Accumulation beyond need becomes a burden that owns you. The vow is not poverty; it is limiting want deliberately.",
-    "apply": "Set a ceiling before you need one. Decide what income is enough now, in a number, so that lifestyle does not silently absorb every increment."
+    "term": "Ahimsa",
+    "translation": "Non-violence in thought, word and act",
+    "teaching": "The most demanding version is not physical \u2014 it is refusing to injure with speech or intent, including toward yourself.",
+    "apply": "Notice the sentence you would not say to a colleague, then check whether you say it to yourself about your own work. The standard should be the same."
    },
    {
     "tradition": "Buddhism",
-    "term": "Dana",
-    "translation": "Generosity, listed first",
-    "teaching": "In the traditional sequence of practices, generosity comes before ethics and meditation \u2014 as the foundation rather than the reward.",
-    "apply": "Give something away before you feel you have surplus. Time or attention counts; the point is that it precedes abundance rather than following it."
+    "term": "Right Intention",
+    "translation": "The direction before the act",
+    "teaching": "The second element of the path, sitting between right view and right speech \u2014 the resolve that shapes what follows.",
+    "apply": "Before a difficult conversation, name your intention in one sentence. If it is 'to be proved right', the conversation will fail regardless of your evidence."
    }
   ],
   "spanish": [
    {
-    "word": "a la larga",
-    "meaning": "in the long run",
-    "es": "A la larga, la disciplina gana.",
-    "en": "In the long run, discipline wins.",
+    "word": "echar una mano",
+    "meaning": "to lend a hand",
+    "es": "\u00bfMe echas una mano con esto?",
+    "en": "Can you lend me a hand with this?",
     "tag": "Idiom"
    },
    {
-    "word": "el plazo",
-    "meaning": "the deadline",
-    "es": "No podemos cumplir ese plazo.",
-    "en": "We cannot meet that deadline.",
+    "word": "crecer",
+    "meaning": "to grow",
+    "es": "La empresa creci\u00f3 m\u00e1s r\u00e1pido de lo esperado.",
+    "en": "The company grew faster than expected.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Countenance",
-    "say": "KOWN-tuh-nuhns",
-    "meaning": "To tolerate or approve of.",
-    "example": "The board will not countenance another delay.",
-    "note": "Formal, strong. One use per document, maximum."
+    "word": "Spurious",
+    "say": "SPYOOR-ee-uhs",
+    "meaning": "False; not genuine, despite appearing so.",
+    "example": "That correlation is spurious \u2014 both track store openings.",
+    "note": "The exact word for a relationship in the data that is real-looking and meaningless."
    },
    {
-    "word": "Requisite",
-    "say": "REK-wi-zit",
-    "meaning": "Required for a purpose.",
-    "example": "She has the requisite experience for the controller role.",
-    "note": "Slightly more formal than 'required'. Common in job specs and board papers."
+    "word": "Untoward",
+    "say": "un-TOR-d",
+    "meaning": "Unexpected and inconvenient or inappropriate.",
+    "example": "Nothing untoward emerged from the review.",
+    "note": "Standard audit and legal register for 'we found nothing concerning'."
    }
   ],
   "speaking": {
-   "title": "Handle 'I do not know'",
-   "drill": "Rehearse: 'I do not have that number in front of me. I will have it to you by Thursday.' Say it without apology.",
-   "why": "Senior people say this comfortably. Guessing to avoid it is how credibility is actually lost."
+   "title": "Present standing",
+   "drill": "Deliver a two-minute update standing up, even alone at your desk.",
+   "why": "Posture changes breath, breath changes voice. It transfers to seated delivery after about a week."
   },
   "interview_tech": [
    {
-    "q": "Model the impact of a 10% AED appreciation on a UAE retailer sourcing from China.",
-    "a": "Buying gets cheaper in AED terms, so landed cost falls and gross margin expands \u2014 but only after existing stock at old cost clears, so the benefit lags by roughly one inventory turn. If the AED is pegged to the USD, the real question is USD/CNY, not AED specifically. On the revenue side, a stronger currency makes the destination more expensive for tourists, which matters in Dubai where tourist spend is a meaningful share of mall retail. Net effect is usually positive on margin, mildly negative on footfall.",
-    "who": "Chalhoub \u00b7 Majid Al Futtaim"
+    "q": "How would you decide between renting and buying a distribution centre?",
+    "a": "Compare NPV of both over the same horizon at the same discount rate. Rent is an operating commitment \u2014 now on balance sheet under IFRS 16 anyway \u2014 with flexibility to exit. Buying ties up capital and carries residual value risk, but fixes occupancy cost and creates an asset. The real question is strategic, not arithmetic: how confident are you in the network design over 15 years. If the answer is 'not very', pay the premium for optionality.",
+    "who": "Amazon \u00b7 Lulu \u00b7 DP World"
    },
    {
-    "q": "A supplier offers 5% discount for payment in 10 days instead of 60. Take it?",
-    "a": "Annualise it. You forgo 5% to accelerate payment by 50 days. The implied annual cost of not taking it is roughly 5/95 \u00d7 365/50 \u2248 38%. Unless your marginal cost of capital exceeds 38%, take the discount \u2014 this is one of the highest-return decisions in working capital. The caveat is liquidity: if taking it forces you onto an overdraft at 9% you still win, but if it breaches a covenant or leaves no buffer, the arithmetic is not the whole answer.",
-    "who": "Walmart \u00b7 Lulu \u00b7 P&G"
+    "q": "Your group operates in a country that introduces 15% VAT. What breaks?",
+    "a": "Systems and margin, in that order. Systems: tax codes on every SKU, correct treatment of zero-rated versus exempt lines, input recovery on mixed-use costs, and the reverse charge on imported services \u2014 all of which must be in the ERP before go-live, not after. Margin: if you absorb VAT rather than pass it through, gross margin falls by roughly the VAT rate on the absorbed portion. Cash: output VAT is collected before it is remitted, so there is a temporary working capital benefit that people mistake for profit.",
+    "who": "Gulf CFOs post-2018 \u00b7 PwC"
    }
   ],
   "interview_soft": [
    {
-    "q": "What is your biggest professional failure?",
-    "a": "Pick a real one with a number, not a disguised strength. The structure: what you owned, what specifically you got wrong, what it cost, what you changed in your process, and evidence the change held. The disqualifying answers are 'I work too hard' and any failure where the fault lands on someone else. If you cannot name the cost in money or time, it was not a real failure and they will know.",
-    "who": "Amazon (Bar Raiser) \u00b7 P&G \u00b7 Nestl\u00e9"
+    "q": "Why Dubai? Why now?",
+    "a": "They are screening for whether you have thought about it or are just leaving somewhere. Be concrete: the Gulf retail market's scale and the concentration of regional HQs; UAE corporate tax making the finance function genuinely more technical than it was; and the specific fit between your multi-country consolidation experience and a group operating across GCC markets. Do not lead with tax-free income or lifestyle \u2014 every candidate says it and none of it is about the job.",
+    "who": "Every Gulf search firm"
    },
    {
-    "q": "Where do you see yourself in five years?",
-    "a": "Answer the real question: are you a flight risk and do you understand the ladder. Be specific about the next rung rather than the summit \u2014 'Financial Controller for a multi-market group, then Finance Director with commercial ownership, then CFO. What I need in between is treasury depth and a full M&A cycle, which is part of why this role interests me.' Naming what you lack reads as self-aware, not weak.",
+    "q": "How do you prioritise when everything is urgent?",
+    "a": "Give a working rule, not a philosophy. Something like: anything with a statutory deadline is non-negotiable; then anything that changes a decision being made this week; then anything that compounds \u2014 process fixes that stop the same fire recurring; then everything else. The part interviewers actually want: what you stopped doing and who you told. Prioritisation without explicit de-prioritisation is just a longer list.",
     "who": "Universal"
    }
   ]
