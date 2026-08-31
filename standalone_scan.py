@@ -1456,9 +1456,38 @@ def main():
             logging.info(f"--slot {requested} ignored — market closed today.")
             return 0
         if requested != clock_slot:
-            logging.warning(
-                f"slot override: workflow asked for {requested!r}, clock says "
-                f"{clock_slot!r} (run is {now.strftime('%H:%M')} IST — cron delayed)")
+            # THE OVERRIDE NOW HAPPENS. It used to only be announced.
+            #
+            # This branch logged "slot override: workflow asked for 'midday',
+            # clock says 'eod'" and then kept `slot = requested` regardless, so
+            # nothing was overridden and the message described behaviour the
+            # code did not have.
+            #
+            # It matters because these crons land late. On 2026-08-31 all three
+            # midday crons fired between 16:45 and 18:28 IST — hours after the
+            # 15:30 close — and the 16:30 EOD cron did not fire at all. Each
+            # late run asked for 'midday', was told the clock said 'eod', kept
+            # 'midday' anyway, found midday already done and stood down under
+            # --once. Net result: no EOD scan, no ledger settlement and no
+            # alerts on a full trading day.
+            #
+            # A cron that arrives after its window has closed should do the work
+            # the clock is actually in, not re-run a window that has passed or
+            # refuse to run at all. Only a LATER clock overrides: a run that
+            # arrives early keeps what the workflow asked for, and the
+            # non-intraday slots (weekend, holiday) are never reinterpreted.
+            _ORDER = {"morning": 0, "midday": 1, "eod": 2, "full": 3}
+            if _ORDER.get(clock_slot, -1) > _ORDER.get(requested, -1):
+                logging.warning(
+                    f"slot override: workflow asked for {requested!r}, clock says "
+                    f"{clock_slot!r} (run is {now.strftime('%H:%M')} IST — cron "
+                    f"delayed). Running {clock_slot!r}.")
+                slot = clock_slot
+            else:
+                logging.info(
+                    f"workflow asked for {requested!r}, clock says {clock_slot!r} "
+                    f"(run is {now.strftime('%H:%M')} IST — early). "
+                    f"Keeping {requested!r}.")
     else:
         slot = clock_slot
 
