@@ -960,6 +960,9 @@ def check_weekly_trend(symbol):
         return True
 
 
+_FALLBACK_ANNOUNCED = False
+
+
 @with_retry(max_retries=3)
 def fetch_data(symbol):
     try:
@@ -970,7 +973,17 @@ def fetch_data(symbol):
                 return df
     except Exception:
         pass
-    # fallback
+    # Fallback to Yahoo. SAY SO ONCE PER RUN: this fell through on every CI run
+    # for months — the OAuth token cannot persist on an ephemeral runner — and
+    # because it was silent, nobody knew the broker feed was never in use.
+    global _FALLBACK_ANNOUNCED
+    if not _FALLBACK_ANNOUNCED:
+        _FALLBACK_ANNOUNCED = True
+        try:
+            from upstox_provider import token_source
+            logging.warning("price source: Yahoo (Upstox credential: %s)", token_source())
+        except Exception:
+            logging.warning("price source: Yahoo (Upstox unavailable)")
     return _yf_download(symbol, period="1y", interval="1d",
                        progress=False, auto_adjust=True)
 

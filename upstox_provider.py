@@ -78,12 +78,39 @@ def exchange_code_for_token(code):
 
 
 def get_token():
-    """Return cached token or None (caller must trigger login flow)."""
+    """The long-lived Analytics Token if one is configured, else the OAuth cache.
+
+    WHY THE ENVIRONMENT COMES FIRST
+    -------------------------------
+    The OAuth path stores its token in cache/upstox_token.json. cache/* is
+    gitignored and no workflow caches that file, and Actions runners are
+    ephemeral — so on every CI run _load_token() found nothing,
+    is_authenticated() returned False, and fetch_data() fell through to
+    yfinance without saying so. Upstox has therefore never supplied a single
+    bar to the automated scanner, while send_login_reminder.py asked for a
+    daily login that could not survive the run it was meant to serve.
+
+    Upstox's Analytics Token is read-only, valid for a year and needs no daily
+    login, which is exactly the shape this pipeline needs. Set it as
+    UPSTOX_ACCESS_TOKEN and the OAuth dance is not used at all.
+    """
+    env = (os.environ.get("UPSTOX_ACCESS_TOKEN") or "").strip()
+    if env:
+        return env
     return _load_token()
 
 
+def token_source():
+    """Which credential is in play — for logging, so a silent fallback cannot
+    happen again. The fallback itself was correct; being silent about it was
+    not."""
+    if (os.environ.get("UPSTOX_ACCESS_TOKEN") or "").strip():
+        return "analytics-token"
+    return "oauth-cache" if _load_token() else "none"
+
+
 def is_authenticated():
-    return _load_token() is not None
+    return get_token() is not None
 
 
 # ── Instrument key lookup ──────────────────────────────────────────────────────

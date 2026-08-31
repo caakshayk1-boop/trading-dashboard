@@ -93,6 +93,10 @@ env:
   TELEGRAM_CHAT_ID:    ${{ secrets.TELEGRAM_CHAT_ID }}
   UPSTOX_API_KEY:      ${{ secrets.UPSTOX_API_KEY }}
   UPSTOX_API_SECRET:   ${{ secrets.UPSTOX_API_SECRET }}
+  # The long-lived Analytics Token. The OAuth pair above cannot work on an
+  # ephemeral runner — its token is written to cache/, which is gitignored
+  # and cached by nothing — so the scanner silently used Yahoo on every run.
+  UPSTOX_ACCESS_TOKEN: ${{ secrets.UPSTOX_ACCESS_TOKEN }}
   TURSO_URL:           ${{ secrets.TURSO_URL }}
   TURSO_TOKEN:         ${{ secrets.TURSO_TOKEN }}
   GROQ_API_KEY:        ${{ secrets.GROQ_API_KEY }}
