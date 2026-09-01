@@ -45,8 +45,29 @@ on:
     # 22:43 UTC + ~75min observed drift ≈ 07:58 MYT. UTC Sun-Thu evening IS
     # MYT Mon-Fri morning, hence 0-4 rather than 1-5 — get that wrong and the
     # brief sends on Sunday and skips Friday.
-    - cron: '43 22 * * 0-4'   # ~08:00 MYT after drift · morning brief
-    - cron: '43 10 * * 1-5'   # ~20:00 MYT after drift · evening brief
+    # ── REAL TIMES, NOT TIMES CHOSEN TO SURVIVE A GUESS ─────────────────────
+    # These were '43 22 * * 0-4' and '43 10 * * 1-5': set ~75 minutes early so
+    # that GitHub's observed drift would carry them to 08:00 and 20:00 MYT.
+    #
+    # Measured on 1 Sep 2026, that guess lost outright. The 22:43 UTC morning
+    # cron produced NO RUN AT ALL; the brief reached Telegram at 14:14 MYT off
+    # a catch-up, six hours late. The evening brief landed 23:09 MYT. Tuning
+    # the guess cannot fix this, because the error is not a constant — it is a
+    # queue, and sometimes it is a dropped run, where no offset helps.
+    #
+    # So the offset is gone. These now state the intended time honestly, and
+    # PUNCTUALITY IS SOMEBODY ELSE'S JOB: src/watchdog.js on the Cloudflare
+    # Worker ticks every 20 minutes, notices the slot passed unserved, and
+    # dispatches the catch-up task — which stands down harmlessly if this cron
+    # did fire. Cloudflare cron is an invocation of a running service, not a
+    # queued job on a shared build fleet, and it keeps time.
+    #
+    # DAY-OF-WEEK CHANGED WITH THE HOUR, AND HAD TO. At 22:43 UTC the MYT day
+    # was already tomorrow, so Mon-Fri MYT meant '0-4' in UTC. At 00:00 UTC the
+    # two calendars agree and it is '1-5'. Carrying '0-4' across this edit
+    # would have sent the brief on Sunday and skipped Friday.
+    - cron: '0 0 * * 1-5'     # 08:00 MYT · morning brief
+    - cron: '0 13 * * 1-5'    # 21:00 MYT · evening brief
     # CATCH-UP. Drift was never the whole story. On 2026-08-27 the 22:43 UTC
     # morning cron produced NO RUN AT ALL — not a late one, none — and the
     # brief went out only because it was dispatched by hand. GitHub's
@@ -58,10 +79,14 @@ on:
     # sends: send_brief(catch_up=True) checks job_runs for a delivery stamped
     # today in MYT and stands down when it finds one. On a normal day they cost
     # one Turso read each and post nothing.
-    - cron: '17 1 * * 1-5'    # ~10:00 MYT · morning catch-up (1st)
-    - cron: '17 3 * * 1-5'    # ~12:00 MYT · morning catch-up (2nd)
-    - cron: '17 13 * * 1-5'   # ~22:00 MYT · evening catch-up (1st)
-    - cron: '17 15 * * 1-5'   # ~00:00 MYT · evening catch-up (2nd)
+    # Re-pointed to sit 2h and 4h after the slots ABOVE, not after the old
+    # ones. A catch-up anchored to a slot that has moved is just a second
+    # random time. The Worker watchdog now covers the first ~12 minutes, so
+    # these are the deep backstop for a multi-hour GitHub outage.
+    - cron: '0 2 * * 1-5'     # 10:00 MYT · morning catch-up (1st)
+    - cron: '0 4 * * 1-5'     # 12:00 MYT · morning catch-up (2nd)
+    - cron: '0 15 * * 1-5'    # 23:00 MYT · evening catch-up (1st)
+    - cron: '0 17 * * 1-5'    # 01:00 MYT · evening catch-up (2nd)
     - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (data only, no Telegram)
     # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
     # to TASK=health since it was written, but that cron was never in this
@@ -134,6 +159,11 @@ jobs:
               # The old on-the-hour slots, kept so a manual dispatch of either
               # still resolves rather than falling through to TASK=none.
               "0 0 * * 1-5")    TASK=brief_morning ;;
+              "0 13 * * 1-5")   TASK=brief_evening ;;
+              "0 2 * * 1-5")    TASK=brief_morning_catchup ;;
+              "0 4 * * 1-5")    TASK=brief_morning_catchup ;;
+              "0 15 * * 1-5")   TASK=brief_evening_catchup ;;
+              "0 17 * * 1-5")   TASK=brief_evening_catchup ;;
               # Kept so a manual dispatch of the old name still works.
               "30 4 * * 1-5")   TASK=brief_midday  ;;
               "43 10 * * 1-5")  TASK=brief_evening ;;

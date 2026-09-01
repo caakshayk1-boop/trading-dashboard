@@ -24,10 +24,22 @@ on:
     # NOTE: this MOVES the existing slot, it does not add scans. The 30-minute
     # intraday tier was removed on 2026-07-30 for a measured reason (see below)
     # and re-adding actionable slots needs a backtest, not a schedule edit.
-    - cron: '0 5 * * 1-5'        # 10:30 IST — midday position check (Mon-Fri)
-    - cron: '0 11 * * 1-5'       # 16:30 IST — EOD + measured equity + ledger
-                                 # After the close BY DESIGN: measurement and
-                                 # ledger settlement, not tradeable alerts.
+    # ── THE TWO SLOTS THE OPERATOR ASKED FOR, IN HIS CLOCK ──────────────────
+    # "signals - opening 1pm MYT, closing 9pm MYT with all updates".
+    # MYT is UTC+8, so 13:00 MYT = 05:00 UTC and 21:00 MYT = 13:00 UTC.
+    #
+    # These are now the REAL times, not times chosen to land near the target
+    # after an assumed delay. The previous schedule set crons 75 minutes early
+    # and hoped GitHub's drift made up the difference; when the drift was 6
+    # hours, or the run was dropped outright, the guess simply lost. Punctuality
+    # is now the Cloudflare watchdog's job (src/watchdog.js in the signal repo):
+    # it ticks every 20 minutes, sees the slot pass unserved, and dispatches.
+    # These crons are attempt one, not the mechanism.
+    - cron: '0 5 * * 1-5'        # 13:00 MYT / 10:30 IST — signals OPEN
+    - cron: '0 13 * * 1-5'       # 21:00 MYT / 18:30 IST — signals CLOSE,
+                                 # measured equity + ledger settlement. Three
+                                 # hours after the bell, so every close is
+                                 # final: measurement, not tradeable alerts.
     - cron: '0 4 * * 6'          # 09:30 IST — Saturday full + multibaggers
     # US positions, graded after the US close and delivered in the IST morning.
     #
@@ -62,9 +74,11 @@ on:
     - cron: '30 5 * * 1-5'       # 11:00 IST — midday retry (1st)
     - cron: '0 6 * * 1-5'        # 11:30 IST — midday retry (2nd, the last one
                                  # that can still clear the drift rule)
-    # EOD is measurement, not execution, so its retries may sit late.
-    - cron: '0 13 * * 1-5'       # 18:30 IST — EOD retry (1st)
-    - cron: '0 15 * * 1-5'       # 20:30 IST — EOD retry (2nd)
+    # EOD is measurement, not execution, so its retries may sit late. The old
+    # first retry was 13:00 UTC, which is now the primary slot itself — keeping
+    # it would have been a duplicate cron for the same minute.
+    - cron: '0 15 * * 1-5'       # 23:00 MYT / 20:30 IST — EOD retry (1st)
+    - cron: '0 17 * * 1-5'       # 01:00 MYT / 22:30 IST — EOD retry (2nd)
     #
     # The 30-minute intraday tier (10:00–14:30 IST, 9 runs/day) was removed on
     # 2026-07-30. It fired unmeasured signals and nothing ever established that
@@ -83,6 +97,21 @@ on:
         default: ''
         type: choice
         options: ['', midday, eod, weekend, us, full]
+      # THE ONCE-GUARD USED TO BE DROPPED BY THE ACT OF NAMING A SLOT.
+      #
+      # `if [ -n "$INPUT_SLOT" ]; then SLOT=...; ONCE=""; fi` read as "asking
+      # by hand means run it", which is right for a human at the UI and wrong
+      # for the pipeline watchdog, which names a slot on every dispatch. It
+      # would have re-scanned a slot that had already completed and sent the
+      # day's alerts a second time — the precise failure --once exists to stop.
+      #
+      # Forcing is now something you ASK for rather than something you get for
+      # free by naming a slot.
+      force:
+        description: 'Re-run a slot that already completed today (drops --once)'
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: scanner
@@ -155,6 +184,7 @@ jobs:
         env:
           SCHEDULE: ${{ github.event.schedule }}
           INPUT_SLOT: ${{ github.event.inputs.slot }}
+          INPUT_FORCE: ${{ github.event.inputs.force }}
         run: |
           # These strings must match the `cron:` values above EXACTLY. They are
           # a second copy of the schedule, so moving a cron without moving its
@@ -167,20 +197,23 @@ jobs:
           # simply "one completed scan per slot per IST day" and whichever cron
           # arrives first does the work. There is no primary any more, only
           # four chances at the same job.
-          # A manual dispatch never passes it — asking by hand means run it.
+          # --once is now the default on EVERY path, dispatch included. See the
+          # `force` input above for why naming a slot no longer drops it.
           ONCE="--once"
           case "$SCHEDULE" in
             "0 5 * * 1-5")  SLOT=midday  ;;
             "30 5 * * 1-5") SLOT=midday  ;;
             "0 6 * * 1-5")  SLOT=midday  ;;
-            "0 11 * * 1-5") SLOT=eod     ;;
             "0 13 * * 1-5") SLOT=eod     ;;
             "0 15 * * 1-5") SLOT=eod     ;;
+            "0 17 * * 1-5") SLOT=eod     ;;
             "0 4 * * 6")    SLOT=weekend ;;
             *)              SLOT=""      ;;
           esac
-          # An explicit dispatch input always wins over the cron table.
-          if [ -n "$INPUT_SLOT" ]; then SLOT="$INPUT_SLOT"; ONCE=""; fi
+          # An explicit dispatch input always wins over the cron table, but it
+          # no longer implies "run it regardless" — only force:true does.
+          if [ -n "$INPUT_SLOT" ]; then SLOT="$INPUT_SLOT"; fi
+          if [ "${INPUT_FORCE:-false}" = "true" ]; then ONCE=""; echo "force: --once dropped"; fi
           echo "fired at $(date -u '+%H:%M UTC') / $(TZ=Asia/Kolkata date '+%H:%M IST')"
           if [ -n "$SLOT" ]; then
             echo "cron '$SCHEDULE' input '$INPUT_SLOT' → slot $SLOT $ONCE"
