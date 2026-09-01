@@ -1379,7 +1379,15 @@ def send_brief(slot: str = "midday", catch_up: bool = False):
     brief    = build_section_brief(slot)
     today    = datetime.now(IST).date().isoformat()   # IST date
     _save_to_db(brief)
-    _post(brief)
+    # _post RETURNS False on rejection, it does not raise. Reading it is the
+    # whole point: without this the line below stamped "delivered" for a brief
+    # Telegram had refused, the catch-up stood down on that stamp, and the run
+    # stayed green — the exact failure the comment below was written to stop.
+    if not _post(brief):
+        log.error("daily_brief: Telegram REJECTED the %s brief (%d chars) — "
+                  "NOT recording it, so the catch-up will re-send", slot, len(brief))
+        raise RuntimeError(f"{slot} brief was not delivered to Telegram")
+
     # Recorded only AFTER _post returns. Stamping it before the send is how a
     # catch-up would stand down for a brief that never left the building.
     try:
