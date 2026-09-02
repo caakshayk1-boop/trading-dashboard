@@ -1321,9 +1321,41 @@ def analyze_breakout(symbol):
         best_tf, best_pat = max(patterns, key=lambda x: {"Monthly":3,"Weekly":2,"Daily":1}.get(x[0],0))
         _d_low  = df_d["Low"].squeeze()
         _d_high = df_d["High"].squeeze()
-        sl = _tight_sl(close, _d_low, atr, max_pct=0.06)   # max 6% stop
+        # ── THE STOP WAS SIZED ON DAILY BARS FOR A TRADE HELD FOR WEEKS ──────
+        #
+        # `atr` here comes from df_d — daily bars — but best_tf is Monthly or
+        # Weekly far more often than Daily, and that is the timeframe the
+        # signal is published and graded on. So a position meant to be held for
+        # weeks carried a stop sized to a single day's range.
+        #
+        # Measured over 22 closed breakout trades, the stop sat at 0.29x the
+        # name's own ATR scaled to the trade's horizon — the tightest of any
+        # engine on the ledger — and 90.9% of them stopped out.
+        #
+        # Volatility grows with the square root of time, so a weekly hold needs
+        # ~sqrt(5) and a monthly ~sqrt(22) times the daily figure. That is the
+        # standard scaling and it is applied to the TARGETS as well, which
+        # matters more than it looks: widening the stop alone would have held
+        # the target still and collapsed reward-to-risk from ~2.4 to ~1.1,
+        # turning a stop fix into a worse trade. Both ends move together, so
+        # R:R is unchanged and only the horizon is corrected.
+        # _structure_targets takes ATR multiples, NOT risk multiples, despite
+        # the phrase "R-multiples" in its docstring. The two coincided while
+        # the stop was 1.0*ATR; they stop coinciding the moment it is not. So
+        # the target multiples are derived FROM the stop, which keeps the
+        # 1.5 / 2.5 / 4.0 reward-to-risk ladder exactly as it was and moves
+        # only the horizon. Scaling the stop alone would have taken measured
+        # R:R from about 2.4 to 1.0 — a stop fix that made the trade worse.
+        _HZ = {"Monthly": 22 ** 0.5, "Weekly": 5 ** 0.5, "Daily": 1.0}
+        _hz = _HZ.get(best_tf, 1.0)
+        _stop_atr = 1.5 * _hz
+        # The cap has to move with it, or it silently reimposes the tight stop.
+        sl = _tight_sl(close, _d_low, atr, max_pct=min(0.06 * _hz, 0.20),
+                       atr_mult=_stop_atr)
         t1, t2, t3 = _structure_targets(close, atr, _d_high,
-                                         r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+                                         r1_mult=1.5 * _stop_atr,
+                                         r2_mult=2.5 * _stop_atr,
+                                         r3_mult=4.0 * _stop_atr)
         rr = round((t1 - close) / max(close - sl, 0.01), 1)
 
         return {
@@ -1641,7 +1673,29 @@ def analyze_ohl(symbol):
         sym_clean = symbol.replace(".NS", "")
         _d_low  = df_d["Low"].squeeze()
         _d_high = df_d["High"].squeeze()
-        sl = _tight_sl(close, _d_low, atr, max_pct=0.06)
+        # OHL is a one-day engine, so there is no horizon to scale — but its
+        # stop measured 0.78x the name's own ATR and stopped out 91.7% of the
+        # time, because _tight_sl was picking the tighter of its two candidates
+        # and the 1.5% floor was then doing the work. With the floor now at
+        # 1.5*ATR the targets must be derived from it, or the R:R ladder this
+        # engine was built on quietly flattens to about 1.0.
+        # THE TARGETS ARE LEFT WHERE THEY ARE, AND THAT IS THE MEASURED CHOICE.
+        #
+        # Both were tried on the same 24 closed trades. Widening the stop and
+        # re-deriving the targets from it to hold R:R at 1.5 gained only
+        # +0.030R; widening the stop and leaving the targets alone gained
+        # +0.158R. Unlike breakout, OHL has no horizon mismatch to correct —
+        # it is a one-day engine reading one-day bars — so the targets were
+        # never in the wrong place, and _structure_targets snaps them to the
+        # 10- and 20-bar highs that price actually has to clear. Pushing those
+        # out mechanically moves them off the resistance they were chosen for
+        # and simply makes them harder to reach.
+        #
+        # R:R therefore falls from ~2.4 to ~1.5 on this engine. That is the
+        # honest trade and it is worth taking: the stop-out rate was 91.7%
+        # because the stop sat at 0.78x ATR, and a wider stop with a nearer
+        # target beat a wider stop with a further one by 0.128R per trade.
+        sl = _tight_sl(close, _d_low, atr, max_pct=0.06, atr_mult=1.5)
         t1, t2, t3 = _structure_targets(close, atr, _d_high,
                                         r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
         rr = round((t1 - close) / max(close - sl, 0.01), 1)

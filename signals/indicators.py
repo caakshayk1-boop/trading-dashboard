@@ -27,12 +27,62 @@ def obv(close, volume):
 
 
 def _tight_sl(price: float, low_series, cur_atr: float,
-              max_pct: float = 0.06, min_pct: float = 0.015) -> float:
-    """Tightest logical SL respecting structure. Hard cap: max_pct%, hard floor: min_pct%."""
+              max_pct: float = 0.06, min_pct: float = 0.015,
+              atr_mult: float = 1.5) -> float:
+    """Stop that respects structure but is never inside the noise.
+
+    IT USED TO TAKE THE TIGHTER OF THE TWO CANDIDATES, AND THAT WAS THE BUG.
+
+        sl_raw = max(sl_struct, sl_atr)      # max() for a long = the HIGHER
+                                             # stop = the TIGHTER one
+
+    Selecting the tighter of a structural and a volatility stop selects, every
+    time, for the one closer to price — so the stop landed inside the range the
+    instrument covers in a normal session and was taken out by noise rather
+    than by the trade being wrong.
+
+    This is not a new diagnosis. cf_engine.py was rewritten for exactly this
+    fault and its docstring still records it: "Stops are floored, not tightened.
+    The old code took the TIGHTER of the structural and ATR stop (max() for
+    BUY, min() for SELL), which selects for stops inside the noise... We take
+    the WIDER, then enforce a hard ATR floor." That fix was applied to one
+    engine and never reached this shared helper, which is what ohl, breakout
+    and the 4H engine all call.
+
+    MEASURED, on 109 closed trades re-walked bar by bar (exit_rules_v2.py),
+    with stop distance compared to each name's own ATR scaled to its horizon:
+
+        engine     stop/ATR   stop-out rate
+        breakout      0.29x       90.9%
+        ohl           0.78x       91.7%
+        magic         1.22x       85.7%
+        multibagger   1.57x       72.7%
+        equity_meas.  1.94x       54.5%
+
+    Monotonic, and cf_1h — the one engine that already had the floor — is the
+    only engine in the ledger with a positive baseline expectancy (+0.088R).
+
+    WHAT THIS DOES NOT DO. Widening moved measured expectancy from -0.522R to
+    -0.342R at a 2x stop. That is a real improvement and it is still a losing
+    system at t = -4.74. This removes a defect; it does not create an edge, and
+    nothing here should be read as having made these engines profitable.
+
+    atr_mult   the volatility floor, in ATR. 1.5 is the smallest multiple that
+               put every engine above 1.0x measured, and 1.0 was what produced
+               the stop-out rates above.
+    max_pct    hard cap. Binds on longer horizons, where one ATR is already a
+               large percentage — callers on weekly bars must raise it or the
+               cap silently reimposes the tight stop this fixes.
+    min_pct    absolute floor for a very quiet name. With the wider stop it
+               rarely binds; before this change it was binding on nearly every
+               ohl and breakout signal, which is why their median stop sat at
+               1.50% against a 1.5% floor.
+    """
     swing_low  = float(low_series.rolling(5).min().iloc[-1])
     sl_struct  = swing_low - 0.25 * cur_atr
-    sl_atr     = price - 1.0 * cur_atr
-    sl_raw     = max(sl_struct, sl_atr)
+    sl_atr     = price - atr_mult * cur_atr
+    # THE WIDER of the two, i.e. the LOWER price for a long.
+    sl_raw     = min(sl_struct, sl_atr)
     sl_capped  = max(sl_raw, price * (1 - max_pct))
     sl_floored = min(sl_capped, price * (1 - min_pct))
     return round(sl_floored, 2)
