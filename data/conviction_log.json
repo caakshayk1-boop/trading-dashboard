@@ -351,70 +351,69 @@
  },
  {
   "date": "2026-09-02",
-  "generated_at": "2026-09-02T05:19:59+05:30",
+  "generated_at": "2026-09-02T14:00:03+05:30",
   "picks": [
+   {
+    "sym": "MARKSANS",
+    "sector": "Healthcare",
+    "price": 333.4,
+    "score": 75.04,
+    "reasons": [
+     "Piotroski 7/9",
+     "+40% over three months",
+     "at a 52-week high",
+     "\u20b9134 cr traded"
+    ],
+    "view": "Piotroski 7/9, up 40% in three months, at 52\u2011week high, \u20b9134\u202fcr traded."
+   },
    {
     "sym": "MCX",
     "sector": "Financial Services",
-    "price": 3400.0,
-    "score": 78.78,
+    "price": 3275.9,
+    "score": 68.63,
     "reasons": [
      "ROCE 59%",
      "Piotroski 7/9",
-     "+20% over three months",
-     "1% off its high"
+     "+18% over three months",
+     "5% off its high"
     ],
-    "view": "Return on capital employed 59%,"
+    "view": "ROCE 59%, Piotroski 7/9, up 18% in three months, 5% below its high."
    },
    {
     "sym": "QPOWER",
     "sector": "Industrials",
-    "price": 1435.8,
-    "score": 78.3,
+    "price": 1472.6,
+    "score": 61.43,
     "reasons": [
      "ROCE 39%",
-     "+38% over three months",
-     "at a 52-week high",
-     "\u20b986 cr traded"
+     "+37% over three months",
+     "1% off its high",
+     "\u20b913 cr traded"
     ],
     "view": null
    },
    {
-    "sym": "OFSS",
-    "sector": "Technology",
-    "price": 12540.0,
-    "score": 76.62,
+    "sym": "CUPID",
+    "sector": "Consumer Defensive",
+    "price": 278.9,
+    "score": 60.1,
     "reasons": [
-     "ROCE 47%",
-     "+25% over three months",
-     "at a 52-week high",
-     "\u20b9611 cr traded"
+     "ROCE 29%",
+     "+103% over three months",
+     "5% off its high",
+     "\u20b9154 cr traded"
     ],
     "view": null
    },
    {
-    "sym": "ALIVUS",
-    "sector": "Healthcare",
-    "price": 1400.7,
-    "score": 73.21,
-    "reasons": [
-     "ROCE 23%",
-     "+35% over three months",
-     "at a 52-week high",
-     "\u20b9171 cr traded"
-    ],
-    "view": null
-   },
-   {
-    "sym": "VARROC",
+    "sym": "ATHERENERG",
     "sector": "Consumer Cyclical",
-    "price": 862.0,
-    "score": 72.03,
+    "price": 1713.0,
+    "score": 57.78,
     "reasons": [
-     "Piotroski 7/9",
-     "+46% over three months",
-     "at a 52-week high",
-     "\u20b954 cr traded"
+     "+66% over three months",
+     "1% off its high",
+     "\u20b9370 cr traded"
     ],
     "view": null
    }
