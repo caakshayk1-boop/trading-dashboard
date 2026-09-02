@@ -102,26 +102,60 @@ ENGINE_VERSION = "v2"
 # without this there is no way to tell which product a row came from or why it
 # exists. Applied as a DEFAULT: any caller can pass its own `remarks=` for
 # something more specific (which the weekly and monthly loggers do).
+# EACH ENTRY NOW CARRIES THE ENGINE'S EXIT RULE, NOT ONLY ITS DESCRIPTION.
+#
+# This map is the one place both sites read an engine's plain-English identity
+# from — news.askakshay.com renders it as the "Relates to" column, and it
+# travels with every row into the ledger. So it is also the only place a rule
+# can be stated once and appear on both sites without a second copy to keep in
+# step, which is why the stop and target rule is appended here rather than
+# written into either front end.
+#
+# The figures in brackets are MEASURED, from exit_rules_v2.py over 113 closed
+# trades: stop distance in units of the name's own ATR scaled to the trade's
+# holding horizon, and the resulting stop-out rate. They are stated because an
+# engine's rule means little without the evidence that the rule is sane.
 REMARKS = {
-    "cf_1h":            "Commodity 1h channel scan — intraday horizon",
-    "commodity":        "Commodity scan — intraday/swing horizon",
-    "breakout":         "Breakout scan — swing horizon",
-    "equity_measured":  "Daily-close equity engine — the measured swing edge",
-    "magic":            "Magic-levels screen — daily-close swing",
-    # Present in the live ledger (24 rows) and absent from the first draft of
-    # this map, which is exactly how a row ends up with a blank "Relates to".
-    "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing",
-    "ohl":              "Open-High-Low intraday engine — long-only, entry at open near the day's low",
-    "multibagger":      "Weekly multibagger scan — research idea, not a trade",
-    "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop",
-    "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks",
-    "sip_bucket":       "Monthly SIP allocation — what the SIP was told to buy",
+    "cf_1h":            "Commodity 1h channel scan — intraday horizon. Entry on the 1h bar, "
+                        "gated by 4H EMA alignment and RSI 45-75 long / 25-55 short; targets "
+                        "from swing pivots and day levels, R:R measured not asserted; stop is "
+                        "the WIDER of structural and ATR with a hard ATR floor. "
+                        "[the only engine with a positive baseline: +0.088R over 12 closed]",
+    "commodity":        "Commodity scan — intraday/swing horizon. Structural stop, ATR floor. "
+                        "[3.51% median stop, 81.8% stop-out — thin sample, 11 closed]",
+    "breakout":         "Breakout scan — swing horizon. Stop and targets scale to the HOLDING "
+                        "horizon (sqrt-of-time: x2.24 weekly, x4.69 monthly) off daily ATR, "
+                        "floored at 1.5xATR, capped 6-20%; R:R ladder held at 1.5/2.5/4.0. "
+                        "[was 0.29xATR and 90.9% stop-out — sized for a day on a weeks-long "
+                        "trade; corrected 2026-09-02, measured -0.552R to -0.195R]",
+    "equity_measured":  "Daily-close equity engine — the measured swing edge. Structural stop "
+                        "on the completed daily bar. [1.94xATR, 54.5% stop-out — the widest "
+                        "stop and the lowest stop-out rate of the equity engines]",
+    "magic":            "Magic-levels screen — daily-close swing. [1.22xATR, 85.7% stop-out "
+                        "over 7 closed — marginal, and too few to act on]",
+    "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing. [1.19xATR, 4 "
+                        "closed; counted with magic as one family until each has a sample]",
+    "ohl":              "Open-High-Low intraday engine — long-only, entry at open near the "
+                        "day's low. Stop floored at 1.5xATR; targets stay snapped to the 10- "
+                        "and 20-bar highs rather than being pushed out with the stop, so R:R "
+                        "is ~1.5 rather than the ~2.4 a tighter stop implied. "
+                        "[was 0.78xATR and 91.7% stop-out; corrected 2026-09-02, measured "
+                        "-0.638R to -0.480R]",
+    "multibagger":      "Weekly multibagger scan — research idea, not a trade. No exit rule is "
+                        "claimed and none should be inferred. [1.57xATR, 72.7% stop-out]",
+    "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop. "
+                        "The stop is the thesis breaking, not a volatility band.",
+    "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks. "
+                        "[7 closed, 100% stop-out — the worst record of any engine]",
+    "sip_bucket":       "Monthly SIP allocation — what the SIP was told to buy. No stop and no "
+                        "time horizon: it is an allocation, not a trade, and it is excluded "
+                        "from every expectancy figure on both sites.",
     # Older engine names still present in the ledger. Found by the backfill
     # reporting them as unmapped rather than filling them with something
     # generic — 60 rows across these four.
-    "4h":               "4-hour channel scan — intraday/swing horizon",
-    "ai_4h":            "AI channel breakout scan (4H) — intraday/swing horizon",
-    "ai_daily":         "AI channel breakout scan (daily close)",
+    "4h":               "4-hour channel scan — intraday/swing horizon. Retired.",
+    "ai_4h":            "AI channel breakout scan (4H) — intraday/swing horizon. Retired.",
+    "ai_daily":         "AI channel breakout scan (daily close). Retired.",
     "intraday":         "Intraday momentum tier — retired 2026-07-30, unmeasured",
 }
 
