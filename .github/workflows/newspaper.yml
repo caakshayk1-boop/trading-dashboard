@@ -104,7 +104,14 @@ jobs:
       - name: Generate newspaper HTML
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Read by exactly one function, sync_tracker_to_obsidian, which writes
+          # into the obsidian-brain repo. generate.py never calls it — that
+          # function is reachable only from the Flask route POST /tracker/obsidian —
+          # so this is currently unused. It is wired to GH_PAT rather than the
+          # built-in secrets.GITHUB_TOKEN because the built-in token is scoped to
+          # this repo alone and could never reach obsidian-brain: the day anything
+          # does call that function from CI, it would have failed silently.
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           OBSIDIAN_GITHUB_REPO: caakshayk1-boop/obsidian-brain
           TURSO_URL: ${{ secrets.TURSO_URL }}
           TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
