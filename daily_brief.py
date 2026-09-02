@@ -819,6 +819,69 @@ def _mandate_book() -> Optional[dict]:
         return None
 
 
+def _pat_expiry_line(warn_within_days: int = 14) -> Optional[str]:
+    """One line in the brief when the GitHub PAT is close to expiring, or dead.
+
+    Why this lives in the brief rather than in monitoring: the PAT that writes
+    this brief into the Obsidian vault also drives five workflows, and
+    obsidian_sync swallows auth failures at log.debug. The day it lapses, the
+    workflow still goes green and the vault silently stops updating — which is
+    precisely how the vault drifted 108 commits behind before anyone noticed.
+    The brief is the one thing that gets read every morning, so it is the
+    cheapest place to put a warning that cannot be missed.
+
+    Silent on a healthy token, so it costs nothing against Telegram's 4096-char
+    cap on the ~76 days of the cycle when there is nothing to say.
+
+    Returns None on any failure. A brief that cannot reach GitHub is still a
+    brief worth sending.
+    """
+    token = os.environ.get("GH_PAT") or os.environ.get("GITHUB_TOKEN") or ""
+    if not token:
+        return None
+    try:
+        r = requests.get(
+            "https://api.github.com/user",
+            timeout=8,
+            headers={"Authorization": f"Bearer {token}",
+                     "Accept": "application/vnd.github+json",
+                     "User-Agent": "daily-brief/2.0"},
+        )
+    except Exception as e:
+        log.warning("pat expiry check failed: %s", e)
+        return None
+
+    # 401 is the failure this whole check exists to catch: the token is gone or
+    # revoked, and every vault write is already failing quietly.
+    if r.status_code == 401:
+        return ("\u26a0\ufe0f *GITHUB TOKEN DEAD* \u2014 vault sync and 5 workflows are "
+                "failing silently. Rotate: `~/Workspace/_System/Scripts/rotate-github-pat.sh`")
+    if r.status_code != 200:
+        log.warning("pat expiry check -> HTTP %s", r.status_code)
+        return None
+
+    raw = r.headers.get("github-authentication-token-expiration", "").strip()
+    if not raw:
+        return None                      # a token with no expiry set — nothing to warn about
+    try:
+        # GitHub sends e.g. "2026-12-01 09:03:24 UTC"; also tolerate ISO-8601.
+        cleaned = raw.replace(" UTC", "").replace("T", " ").split("+")[0].strip()
+        exp = datetime.strptime(cleaned, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+    except Exception as e:
+        log.warning("pat expiry unparseable (%r): %s", raw, e)
+        return None
+
+    left = (exp - datetime.now(timezone.utc)).days
+    if left > warn_within_days:
+        return None
+    if left < 0:
+        return ("\u26a0\ufe0f *GITHUB TOKEN EXPIRED* \u2014 vault sync is failing silently. "
+                "Rotate: `~/Workspace/_System/Scripts/rotate-github-pat.sh`")
+    day = "day" if left == 1 else "days"
+    return (f"\u26a0\ufe0f *GitHub token expires in {left} {day}* ({exp:%d %b}) \u2014 rotate before it "
+            "takes the vault sync down quietly: `~/Workspace/_System/Scripts/rotate-github-pat.sh`")
+
+
 def build_section_brief(slot: str = "midday") -> str:
     """
     The whole of news.askakshay.com, in one Telegram message.
@@ -847,6 +910,13 @@ def build_section_brief(slot: str = "midday") -> str:
     }.get(slot, "🌤 *MIDDAY — THE DAILY SIGNAL*")
     L = [f"{title}\n{istNow()} IST · news.askakshay.com\n"]
     ticket_blocks: list = []
+
+    # Infrastructure warning ahead of any market content: if the token that
+    # writes this brief into the vault is about to lapse, that matters more
+    # than today's numbers, and it is silent on every healthy day.
+    _pat = _pat_expiry_line()
+    if _pat:
+        L.append(_pat)
 
     def rule(s):
         L.append(f"━━━━━━━━━━━━━━━━━━━\n{s}\n━━━━━━━━━━━━━━━━━━━")
