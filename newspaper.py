@@ -11408,6 +11408,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <button type="button" class="fbtn" data-preset="oversold">Oversold</button>
     <button type="button" class="fbtn" data-preset="debtfree">Debt-free</button>
     <button type="button" class="fbtn" data-preset="piotroski_high" title="Piotroski F-score 7+ on at least 6 of 9 computable criteria">High F-Score</button>
+    <button type="button" class="fbtn" data-preset="midcap_quality" title="Market cap 5,000-50,000 Cr, 3-year price CAGR above 12%, monthly RSI 46 or higher">Mid-cap quality</button>
     <button type="button" class="fbtn" data-preset="rsi_oversold">RSI &lt;30</button>
     <button type="button" class="fbtn" data-preset="rsi_neutral">RSI 30-50</button>
     <button type="button" class="fbtn" data-preset="rsi_bullish">RSI 50-70</button>

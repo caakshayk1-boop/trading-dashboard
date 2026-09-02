@@ -5814,6 +5814,32 @@ var TV_ALIASES = (function () {
       piotroski_high: function(r){
         var p = num(r, 'piotroski'), of = num(r, 'piotroski_of');
         return p !== null && of !== null && of >= 6 && p >= 7;
+      },
+      /* Mid-cap quality — the one idea worth keeping out of the retired
+         akk-webhook screener, expressed against numbers this screen already
+         publishes rather than ported as code.
+
+         Three conditions, and each earns its place:
+           mcap 5,000-50,000 Cr  big enough to have a real float and coverage,
+                                 small enough to still re-rate. Deliberately
+                                 WIDER at the bottom than the Cap dropdown's
+                                 'Mid' band (15,000-50,000), so it reaches the
+                                 upper small-caps the dropdown calls 's'.
+           3Y price CAGR > 12%   the stock has actually compounded, not just
+                                 looked cheap for three years.
+           monthly RSI >= 46     the long-timeframe trend is not broken. 46
+                                 rather than 50 admits names consolidating
+                                 just under the midline instead of demanding
+                                 they already be strong.
+
+         r3y_cagr is present on 634/750 rows and rsi_m on 703/750, so a null
+         on either is a missing input, not a failing stock — hence the explicit
+         null checks, which exclude rather than silently pass. */
+      midcap_quality: function(r){
+        var mc = num(r, 'mcap_cr'), c3 = num(r, 'r3y_cagr'), rm = num(r, 'rsi_m');
+        return mc !== null && mc >= 5000 && mc <= 50000
+            && c3 !== null && c3 > 12
+            && rm !== null && rm >= 46;
       }
     };
 
