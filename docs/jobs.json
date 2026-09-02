@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-02T12:43:48Z",
- "next_refresh": "2026-09-03T12:43:48Z",
+ "generated_at": "2026-09-02T14:48:32Z",
+ "next_refresh": "2026-09-03T14:48:32Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 19,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "GMG",
@@ -24,7 +24,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Al-Futtaim",
@@ -32,15 +32,15 @@
    "status": "ok",
    "jobs_found": 32,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Abdul Latif Jameel",
    "kind": "employer",
-   "status": "error",
-   "jobs_found": 0,
-   "detail": "ReadTimeout: HTTPSConnectionPool(host='careers.alj.com', port=443): Read timed out. (read timeout=30)",
-   "last_success": "2026-09-01T15:17:59Z"
+   "status": "ok",
+   "jobs_found": 2,
+   "detail": "",
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 8,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Emaar",
@@ -80,7 +80,7 @@
    "status": "ok",
    "jobs_found": 1,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Americana Restaurants",
@@ -88,7 +88,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Etihad Airways",
@@ -96,15 +96,15 @@
    "status": "ok",
    "jobs_found": 9,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Aldar",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 9,
+   "jobs_found": 10,
    "detail": "",
-   "last_success": "2026-09-02T12:43:48Z"
+   "last_success": "2026-09-02T14:48:32Z"
   },
   {
    "name": "Alshaya Group",
@@ -180,20 +180,20 @@
   }
  ],
  "stats": {
-  "total_active": 54,
+  "total_active": 55,
   "high_fit": 10,
   "s_tier": 1,
   "by_country": {
-   "UAE": 44,
+   "UAE": 45,
    "Saudi Arabia": 0,
    "Malaysia": 10,
    "Oman": 0
   },
   "duplicates_removed": 0,
-  "stale_removed": 2,
-  "sources_ok": 11,
+  "stale_removed": 0,
+  "sources_ok": 12,
   "sources_attempted": 22,
-  "urls_verified": 71,
+  "urls_verified": 72,
   "urls_unverified": 11,
   "urls_broken": 0
  },
@@ -211,8 +211,8 @@
    "employment_type": null,
    "posted_date": "2026-08-27",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -305,8 +305,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -403,8 +403,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Landmark Group",
    "sources": [
@@ -515,8 +515,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -620,8 +620,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-08-11",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -725,8 +725,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-06-24",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -830,8 +830,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -911,8 +911,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Aldar",
    "sources": [
@@ -1016,8 +1016,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-16",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1114,8 +1114,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-04",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1292,8 +1292,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -1387,8 +1387,8 @@
    "employment_type": null,
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -1484,8 +1484,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1582,8 +1582,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -1675,8 +1675,8 @@
    "employment_type": null,
    "posted_date": "2026-07-20",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Landmark Group",
    "sources": [
@@ -1773,8 +1773,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-25",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Chalhoub Group",
    "sources": [
@@ -1847,8 +1847,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1937,8 +1937,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2032,8 +2032,8 @@
    "employment_type": null,
    "posted_date": "2026-06-03",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -2110,6 +2110,99 @@
    "exclusion_reason": null
   },
   {
+   "id": "fa3e8d7ecbff1f63bbc010f61d41fe3d7279a572",
+   "company": "Aldar",
+   "company_group": "Aldar",
+   "title": "Associate – Asset Management (Residential/Commercial)",
+   "normalized_title": "associate asset management residential commercial",
+   "location": "Abu Dhabi",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Portfolio Management",
+   "employment_type": "Experienced hires",
+   "posted_date": "2026-09-02",
+   "closing_date": null,
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
+   "status": "NEW",
+   "source": "Aldar",
+   "sources": [
+    "Aldar"
+   ],
+   "source_url": "https://jobs.lever.co/aldar/65b61c65-e958-4301-9019-a9d1f44da59b",
+   "application_url": "https://jobs.lever.co/aldar/65b61c65-e958-4301-9019-a9d1f44da59b/apply",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": null,
+   "experience_max": null,
+   "description": "JOB PURPOSE \n\n Support residential/commercial asset performance through analysis, reporting and execution support.\n\n Monitor NOI, occupancy, leasing and asset performance against approved targets.\n\n Support asset enhancement, commercialization and value-creation initiatives.\n\n Leverage AI, analytics and market insights to strengthen asset-level analysis and decision support.\n\n ROLES AND RESPONSIBILITIES \n\n Asset Performance & Analysis \n\n Monitor asset performance across NOI, occupancy, rental growth and key operational KPIs.\n\n Prepare asset performance reports, dashboards and variance analysis to support management decisions.\n\n Identify performance gaps and provide analysis to support corrective and value-enhancement actions.\n\n Maintain accurate asset-level financial, operational and performance data.\n\n Leasing & Commercial Support \n\n Track leasing activity, renewals, expiries, occupancy, pricing and tenant/customer trends.\n\n Conduct market research and benchmarking on rents, occupancy, supply, pricing and competitor performance.\n\n Support analysis of commercialization and ancillary revenue opportunities.\n\n Provide analytical inputs to leasing, pricing and retention decisions.\n\n Asset Enhancement & Value Creation \n\n Support enhancement and repositioning initiatives, tracking delivery, CAPEX and performance against business cases.\n\n Assist in preparing financial and commercial analysis for enhancement and value-creation initiatives.\n\n Monitor realized outcomes against approved investment assumptions and targets.\n\n Support analysis for hold, enhance, reposition or exit recommendations.\n\n Operational & Partner Coordination \n\n Monitor property/facility managers and external operators against agreed performance and service KPIs.\n\n Support coordination of operational issues, asset requirements and performance improvement actions.\n\n Assist with JV, governance and relevant asset documentation and reporting.\n\n Support compliance, ESG and sustainability data requirements across assigned assets.\n\n Analytics, AI & Decision Support \n\n Use AI and advanced analytics to enhance asset analysis, reporting, forecasting and market intelligence.\n\n Develop asset-level insights and recommendations for the Director/Associate Director – Asset Management.\n\n Support benchmarking and trend analysis to identify risks and value-creation opportunities.\n\n Collaborate with Investment & Capital Planning and Portfolio Performance & Intelligence on data and reporting.\n\n RELATED YEARS OF EXPERIENCE \n\n Min. 2+ years in real estate, property management, investment banking or a related analytical role.\n\n FIELD OF EXPERIENCE \n\n Real estate, property management, investment analysis.\n\n TECHNICAL AND INTERPERSONAL SKILLS \n\n Strong analytical and quantitative skills; advanced Excel.\n\n PowerPoint proficiency for executive presentations.\n\n Financial modeling fundamentals.\n\n Research, data compilation and benchmarking skills.\n\n Strong written and verbal communication.\n\n Ability to coordinate across multiple internal teams.\n\n Application of AI and analytics to asset performance, forecasting and decision support.\n\n QUALIFICATION \n\n Bachelor's in Engineering, Finance, Economics, Real Estate or related. MBA or CFA progress advantageous.",
+   "responsibilities": [
+    "Support residential/commercial asset performance through analysis, reporting and execution support",
+    "Monitor NOI, occupancy, leasing and asset performance against approved targets",
+    "Support asset enhancement, commercialization and value-creation initiatives",
+    "Leverage AI, analytics and market insights to strengthen asset-level analysis and decision support",
+    "ROLES AND RESPONSIBILITIES",
+    "Asset Performance & Analysis",
+    "Monitor asset performance across NOI, occupancy, rental growth and key operational KPIs",
+    "Prepare asset performance reports, dashboards and variance analysis to support management decisions",
+    "Identify performance gaps and provide analysis to support corrective and value-enhancement actions",
+    "Maintain accurate asset-level financial, operational and performance data",
+    "Leasing & Commercial Support",
+    "Track leasing activity, renewals, expiries, occupancy, pricing and tenant/customer trends",
+    "Conduct market research and benchmarking on rents, occupancy, supply, pricing and competitor performance",
+    "Support analysis of commercialization and ancillary revenue opportunities",
+    "Provide analytical inputs to leasing, pricing and retention decisions",
+    "Asset Enhancement & Value Creation",
+    "Support enhancement and repositioning initiatives, tracking delivery, CAPEX and performance against business cases",
+    "Assist in preparing financial and commercial analysis for enhancement and value-creation initiatives",
+    "Monitor realized outcomes against approved investment assumptions and targets",
+    "Support analysis for hold, enhance, reposition or exit recommendations"
+   ],
+   "requirements": [],
+   "skills": [
+    "Forecasting",
+    "Excel",
+    "Variance Analysis"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 54,
+   "employer_score": 86,
+   "career_upside_score": 50,
+   "opportunity_score": 61,
+   "score_breakdown": {
+    "seniority": 6,
+    "functional": 16,
+    "industry": 11,
+    "geographic": 10,
+    "scope": 0,
+    "leadership": 0,
+    "qualification": 5,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "OPTIONAL",
+   "why_fit": [
+    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
+    "Real-estate exposure is on his record — 3 years as Asst Manager Accounts at Emami Realty in Kolkata before the retail move.",
+    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023."
+   ],
+   "watch_out": [
+    "The posting names a qualification he does not hold; his is CA (ICAI, 2017)."
+   ],
+   "resume_match": null,
+   "duplicate_group": "76c245cd470626af52884762c855020cb15ad54e",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "2d1e33baade98d4065ca6cf4f711fc5a08a43e18",
    "company": "Majid Al Futtaim",
    "company_group": "Majid Al Futtaim",
@@ -2122,8 +2215,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2410,8 +2503,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2500,8 +2593,8 @@
    "employment_type": null,
    "posted_date": "2026-08-20",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -2586,6 +2679,103 @@
    "exclusion_reason": null
   },
   {
+   "id": "f0f4d321ca1a87d6d81b697b62072235138919e5",
+   "company": "Majid Al Futtaim",
+   "company_group": "Majid Al Futtaim",
+   "title": "Associate - Finance | Emirati Talent",
+   "normalized_title": "associate finance",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Regular",
+   "posted_date": "2026-08-03",
+   "closing_date": null,
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
+   "status": "AGING",
+   "source": "Majid Al Futtaim",
+   "sources": [
+    "Majid Al Futtaim"
+   ],
+   "source_url": "https://careers.majidalfuttaim.com/global/en/job/21949/Associate-Finance-Emirati-Talent",
+   "application_url": "https://careers.majidalfuttaim.com/global/en/apply?jobSeqNo=MAFMAFGLOBAL21949EXTERNALENGLOBAL",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 2,
+   "experience_max": 4,
+   "description": "BUSINESS INTRODUCTION \nMajid Al Futtaim Holding is the leading shopping mall, retail, communities, entertainment developer and operator in the Middle East, North Africa, and Central Asia regions. With over 43,000 people, revenues of over US$ 11 Billion, and operations in 18 countries. Some of the iconic brands we carry include Mall of the Emirates, Carrefour, All Saints, Lego, City Center, Abercrombie & Fitch, & Vox Cinemas. We believe in making Great Moments for Everyone, Every day.\n\n JOB TITLE \nAssociate – Finance | MAF Retail | Hypermarket UAE\n\n ROLE SUMMARY \nThe Associate – Finance is responsible for financial postings covering the areas, but not limited to, payables, payroll, asset and general ledgers to ensure that precise data are updated to the system and are properly executed in line with MAF Retail’s established financial accounting principles and procedures.\n\n ROLE PROFILE \n Gather and verify financial data related to accounting\n Maintain and review purchase ledgers to ensure that all expenses are accurately posted and monitored against the set budget\n Review invoices to be paid in order to ensure accuracy and veracity of invoices\n Process payments to vendors and contractors as per the contract’s terms, including advance payment and penalties\n Prepare bank reconciliations for all accounts in different banks to ensure that entries in the journals are matched and aligned with the bank statements\n Review adjusting entries passed and ensure that suppliers’ accounts are updated and any control\n Handle and ensure that month-end and year-end closing process is completed and entries booked efficiently\n Prepare and review monthly, quarterly and annual accounting statements and managerial reports in a timely and accurate manner\n \n REQUIREMENTS \n Bachelor’s Degree in Accounting, Finance\n 2-4 years of experience in a similar role\n experience in FMCG industry and hypermarkets are a must\n Excellent Analytical skills\n \n WHAT WE OFFER \n At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!\n Work in a friendly environment, where everyone shares positive vibes and excited about our future.\n Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model.",
+   "responsibilities": [
+    "Gather and verify financial data related to accounting",
+    "Maintain and review purchase ledgers to ensure that all expenses are accurately posted and monitored against the set budget",
+    "Review invoices to be paid in order to ensure accuracy and veracity of invoices",
+    "Process payments to vendors and contractors as per the contract’s terms, including advance payment and penalties",
+    "Prepare bank reconciliations for all accounts in different banks to ensure that entries in the journals are matched and aligned with the bank statements",
+    "Review adjusting entries passed and ensure that suppliers’ accounts are updated and any control",
+    "Handle and ensure that month-end and year-end closing process is completed and entries booked efficiently",
+    "Prepare and review monthly, quarterly and annual accounting statements and managerial reports in a timely and accurate manner",
+    "Bachelor’s Degree in Accounting, Finance",
+    "2-4 years of experience in a similar role",
+    "experience in FMCG industry and hypermarkets are a must",
+    "Excellent Analytical skills",
+    "At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!",
+    "Work in a friendly environment, where everyone shares positive vibes and excited about our future",
+    "Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model"
+   ],
+   "requirements": [],
+   "skills": [
+    "financial data verification",
+    "accounting statements preparation",
+    "bank reconciliation",
+    "invoice processing",
+    "payroll processing",
+    "asset ledger management",
+    "general ledger management",
+    "purchase ledgers review",
+    "financial reporting",
+    "analytical skills",
+    "fmcg industry experience",
+    "hypermarket experience"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 41,
+   "employer_score": 90,
+   "career_upside_score": 50,
+   "opportunity_score": 55,
+   "score_breakdown": {
+    "seniority": 0,
+    "functional": 7,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "OPTIONAL",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Majid Al Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Posted 2026-08-03 — this req is aging and may already be filled."
+   ],
+   "resume_match": null,
+   "duplicate_group": "61dd8813d6dfeaa456a977e4d8a9e1aecd921d36",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "1098a9ce662b3756a43942e66d03ecaadae03a91",
    "company": "Majid Al Futtaim",
    "company_group": "Majid Al Futtaim",
@@ -2598,8 +2788,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2683,103 +2873,6 @@
    ],
    "resume_match": null,
    "duplicate_group": "b5908863e06f826db52b7d7b6f3de55b6f00519e",
-   "is_excluded": false,
-   "exclusion_reason": null
-  },
-  {
-   "id": "f0f4d321ca1a87d6d81b697b62072235138919e5",
-   "company": "Majid Al Futtaim",
-   "company_group": "Majid Al Futtaim",
-   "title": "Associate - Finance | Emirati Talent",
-   "normalized_title": "associate finance",
-   "location": "Dubai",
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Other",
-   "employment_type": "Regular",
-   "posted_date": "2026-08-03",
-   "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
-   "status": "AGING",
-   "source": "Majid Al Futtaim",
-   "sources": [
-    "Majid Al Futtaim"
-   ],
-   "source_url": "https://careers.majidalfuttaim.com/global/en/job/21949/Associate-Finance-Emirati-Talent",
-   "application_url": "https://careers.majidalfuttaim.com/global/en/apply?jobSeqNo=MAFMAFGLOBAL21949EXTERNALENGLOBAL",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 2,
-   "experience_max": 4,
-   "description": "BUSINESS INTRODUCTION \nMajid Al Futtaim Holding is the leading shopping mall, retail, communities, entertainment developer and operator in the Middle East, North Africa, and Central Asia regions. With over 43,000 people, revenues of over US$ 11 Billion, and operations in 18 countries. Some of the iconic brands we carry include Mall of the Emirates, Carrefour, All Saints, Lego, City Center, Abercrombie & Fitch, & Vox Cinemas. We believe in making Great Moments for Everyone, Every day.\n\n JOB TITLE \nAssociate – Finance | MAF Retail | Hypermarket UAE\n\n ROLE SUMMARY \nThe Associate – Finance is responsible for financial postings covering the areas, but not limited to, payables, payroll, asset and general ledgers to ensure that precise data are updated to the system and are properly executed in line with MAF Retail’s established financial accounting principles and procedures.\n\n ROLE PROFILE \n Gather and verify financial data related to accounting\n Maintain and review purchase ledgers to ensure that all expenses are accurately posted and monitored against the set budget\n Review invoices to be paid in order to ensure accuracy and veracity of invoices\n Process payments to vendors and contractors as per the contract’s terms, including advance payment and penalties\n Prepare bank reconciliations for all accounts in different banks to ensure that entries in the journals are matched and aligned with the bank statements\n Review adjusting entries passed and ensure that suppliers’ accounts are updated and any control\n Handle and ensure that month-end and year-end closing process is completed and entries booked efficiently\n Prepare and review monthly, quarterly and annual accounting statements and managerial reports in a timely and accurate manner\n \n REQUIREMENTS \n Bachelor’s Degree in Accounting, Finance\n 2-4 years of experience in a similar role\n experience in FMCG industry and hypermarkets are a must\n Excellent Analytical skills\n \n WHAT WE OFFER \n At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!\n Work in a friendly environment, where everyone shares positive vibes and excited about our future.\n Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model.",
-   "responsibilities": [
-    "Gather and verify financial data related to accounting",
-    "Maintain and review purchase ledgers to ensure that all expenses are accurately posted and monitored against the set budget",
-    "Review invoices to be paid in order to ensure accuracy and veracity of invoices",
-    "Process payments to vendors and contractors as per the contract’s terms, including advance payment and penalties",
-    "Prepare bank reconciliations for all accounts in different banks to ensure that entries in the journals are matched and aligned with the bank statements",
-    "Review adjusting entries passed and ensure that suppliers’ accounts are updated and any control",
-    "Handle and ensure that month-end and year-end closing process is completed and entries booked efficiently",
-    "Prepare and review monthly, quarterly and annual accounting statements and managerial reports in a timely and accurate manner",
-    "Bachelor’s Degree in Accounting, Finance",
-    "2-4 years of experience in a similar role",
-    "experience in FMCG industry and hypermarkets are a must",
-    "Excellent Analytical skills",
-    "At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!",
-    "Work in a friendly environment, where everyone shares positive vibes and excited about our future",
-    "Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model"
-   ],
-   "requirements": [],
-   "skills": [
-    "financial data verification",
-    "accounting statements preparation",
-    "bank reconciliation",
-    "invoice processing",
-    "payroll processing",
-    "asset ledger management",
-    "general ledger management",
-    "purchase ledgers review",
-    "financial reporting",
-    "analytical skills",
-    "fmcg industry experience",
-    "hypermarket experience"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 41,
-   "employer_score": 90,
-   "career_upside_score": 50,
-   "opportunity_score": 55,
-   "score_breakdown": {
-    "seniority": 0,
-    "functional": 7,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 3,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "C",
-   "application_priority": "OPTIONAL",
-   "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Majid Al Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Posted 2026-08-03 — this req is aging and may already be filled."
-   ],
-   "resume_match": null,
-   "duplicate_group": "61dd8813d6dfeaa456a977e4d8a9e1aecd921d36",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -2970,8 +3063,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3354,8 +3447,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-18",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -3469,7 +3562,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/manager-finance-ii-en-at-cae-4453881368",
    "application_url": "https://ae.linkedin.com/jobs/view/manager-finance-ii-en-at-cae-4453881368",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3530,7 +3623,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "HYPERION is named and his ERP depth is D365, not HYPERION — expect to address that gap directly."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "f430e9a8aae3a287e63e01c4c1c26e819094e1cc",
@@ -3641,7 +3734,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3701,7 +3794,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "0b9fd60b6804108dd31af78877de1654013b0249",
@@ -3721,8 +3814,8 @@
    "employment_type": null,
    "posted_date": "2026-08-18",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -4178,8 +4271,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-27",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4369,8 +4462,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-06-09",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -4732,8 +4825,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5004,8 +5097,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5085,8 +5178,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-29",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5158,8 +5251,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5260,8 +5353,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Aldar",
    "sources": [
@@ -5356,8 +5449,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5449,8 +5542,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5543,8 +5636,8 @@
    "employment_type": null,
    "posted_date": "2026-08-13",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5634,8 +5727,8 @@
    "employment_type": null,
    "posted_date": "2026-08-15",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5726,8 +5819,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-13",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5817,8 +5910,8 @@
    "employment_type": null,
    "posted_date": "2026-08-10",
    "closing_date": "2026-09-11",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5910,8 +6003,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -6000,8 +6093,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6070,8 +6163,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -6146,8 +6239,8 @@
    "employment_type": null,
    "posted_date": "2026-08-07",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6237,8 +6330,8 @@
    "employment_type": null,
    "posted_date": "2026-08-05",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6326,8 +6419,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6418,8 +6511,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -6503,8 +6596,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6595,8 +6688,8 @@
    "employment_type": null,
    "posted_date": "2026-08-24",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6687,8 +6780,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-12",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6775,8 +6868,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "AGING",
    "source": "Chalhoub Group",
    "sources": [
@@ -6845,8 +6938,8 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6935,8 +7028,8 @@
    "employment_type": null,
    "posted_date": "2026-08-21",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Americana Restaurants",
    "sources": [
@@ -7027,8 +7120,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-13",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -7115,8 +7208,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2025-09-16",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -7205,8 +7298,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7295,8 +7388,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7385,8 +7478,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -7470,8 +7563,8 @@
    "employment_type": null,
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -7550,8 +7643,8 @@
    "employment_type": null,
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "ACTIVE",
    "source": "Americana Restaurants",
    "sources": [
@@ -7621,8 +7714,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-02T12:43:48Z",
-   "last_verified_at": "2026-09-02T12:43:48Z",
+   "scraped_at": "2026-09-02T14:48:32Z",
+   "last_verified_at": "2026-09-02T14:48:32Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
