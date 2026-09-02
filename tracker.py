@@ -141,6 +141,19 @@ REMARKS = {
                         "is ~1.5 rather than the ~2.4 a tighter stop implied. "
                         "[was 0.78xATR and 91.7% stop-out; corrected 2026-09-02, measured "
                         "-0.638R to -0.480R]",
+    "momentum_quant":   "Quant momentum — cross-sectional rank over the 750-name screen. "
+                        "12-month and 6-month returns, each skipping the most recent month "
+                        "(it reverses) and divided by the name's ATR, z-scored across the "
+                        "universe and averaged — NSE Indices' own Nifty500 Momentum 50 "
+                        "construction. Tilted toward LOW scaled turnover: a 19-year NSE study "
+                        "found high-turnover momentum returned 8.51% CAGR against 19.43% for "
+                        "the low-turnover half. Gated on absolute momentum (up over 12 months "
+                        "AND above the 200-day), which is the standard defence against "
+                        "momentum crashes; that gate rejects ~58% of the universe. "
+                        "Stop 1.5xATR, ladder 1.5/2.5/4.0R, monthly horizon. "
+                        "[PAPER ONLY — Sharma et al. (2021) find the Indian momentum anomaly "
+                        "fading, and the strongest supporting figures are backtests. "
+                        "0 closed trades; not cleared for capital]",
     "multibagger":      "Weekly multibagger scan — research idea, not a trade. No exit rule is "
                         "claimed and none should be inferred. [1.57xATR, 72.7% stop-out]",
     "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop. "
