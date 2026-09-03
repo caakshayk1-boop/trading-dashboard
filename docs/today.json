@@ -1,5 +1,5 @@
 {
- "build_id": "20260904T000322",
+ "build_id": "20260904T005025",
  "date": "2026-09-04",
  "date_str": "Friday, September 04 2026",
  "picks": [
@@ -479,7 +479,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 266.23,
+   "price": 264.78,
    "sector": "Technology"
   },
   "CUPID": {
@@ -495,7 +495,7 @@
    "sector": "Real Estate"
   },
   "DUOL": {
-   "price": 156.64,
+   "price": 156.22,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -513,10 +513,6 @@
   "ESCORTS": {
    "price": 2978.2,
    "sector": "Industrials"
-  },
-  "FCX": {
-   "price": 72.45,
-   "sector": "Basic Materials"
   },
   "FSL": {
    "price": 265.3,
@@ -546,10 +542,6 @@
    "price": 1319.0,
    "sector": "Technology"
   },
-  "HDFCLIFE": {
-   "price": 533.5,
-   "sector": "Financial Services"
-  },
   "HFCL": {
    "price": 220.42,
    "sector": "Technology"
@@ -557,6 +549,10 @@
   "HINDCOPPER": {
    "price": 518.5,
    "sector": "Basic Materials"
+  },
+  "HINDUNILVR": {
+   "price": 1962.0,
+   "sector": "Consumer Defensive"
   },
   "HINDZINC": {
    "price": 587.95,
@@ -607,7 +603,7 @@
    "sector": "Technology"
   },
   "MRK": {
-   "price": 150.92,
+   "price": 151.48,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -623,7 +619,7 @@
    "sector": "Communication Services"
   },
   "NEM": {
-   "price": 129.25,
+   "price": 129.6,
    "sector": "Basic Materials"
   },
   "NIACL": {
@@ -649,6 +645,10 @@
   "PAYTM.NS": {
    "price": 1637.0,
    "sector": "Technology"
+  },
+  "PFOCUS": {
+   "price": 291.65,
+   "sector": "Communication Services"
   }
  },
  "ipos": {
@@ -1338,7 +1338,17 @@
     "link": "https://www.livemint.com/money/personal-finance/value-trap-a-low-p-e-does-not-always-mean-a-bargain-8-factors-investors-should-look-at-before-buying-11788445238573.html",
     "summary": "A stock\u2019s low valuation may look attractive, but it can sometimes signal deeper problems in the business. Here are eight ways a seemingly cheap stock can remain cheap and what investors should examine before assuming it is undervalued.",
     "date": "Sep 03, 2026",
-    "_sort": "2026-09-03T16:00:10+00:00"
+    "_sort": "2026-09-03T16:00:10+00:00",
+    "smart": {
+     "what_happened": [
+      "A low valuation can appear attractive to investors",
+      "Eight factors are outlined that can keep a cheap stock from being a bargain"
+     ],
+     "why_it_matters": "Understanding why a low price\u2011to\u2011earnings ratio might not indicate value helps investors avoid traps where apparent cheapness reflects deeper problems, ensuring more informed allocation decisions.",
+     "what_to_watch": "Monitor upcoming articles or analyses that detail the eight specific factors investors should evaluate.",
+     "headline": "Low P/E ratios may mask underlying business issues",
+     "read_seconds": 20
+    }
    },
    {
     "source": "NYT Well",
@@ -1351,11 +1361,11 @@
     "smart": {
      "what_happened": [
       "Leading health organizations joined forces to issue vaccine recommendations for Covid, flu and RSV this fall.",
-      "The joint guidance was issued because the federal government had not provided strong guidance."
+      "They cited a lack of strong guidance from the federal government."
      ],
-     "why_it_matters": "The coordinated recommendations provide clearer direction for healthcare providers and consumers, influencing demand for vaccine supplies, distribution logistics, and related healthcare services, which can affect revenues for pharmaceutical manufacturers, insurers, and retail pharmacies.",
-     "what_to_watch": "Watch for any official federal guidance on fall vaccine recommendations released by the CDC or HHS in the coming weeks.",
-     "headline": "Health groups issue fall vaccine recommendations for Covid, flu and RSV",
+     "why_it_matters": "The joint recommendations provide clearer direction for healthcare providers, insurers, and vaccine manufacturers, influencing demand, distribution planning, and budgeting for the upcoming flu season, which can affect revenue streams and operational costs across the health sector.",
+     "what_to_watch": "Monitor any new federal government guidance on Covid, flu and RSV vaccine recommendations for the fall season.",
+     "headline": "Health groups issue fall vaccine guidance amid weak federal direction",
      "read_seconds": 20
     }
    },
@@ -1369,12 +1379,12 @@
     "_sort": "2026-09-03T10:47:28+00:00",
     "smart": {
      "what_happened": [
-      "The article compares the retirement corpus outcomes of investing Rs\u202f10,000 per month in EPF versus NPS.",
-      "It notes that returns from both schemes depend on future market performance."
+      "The article compares the Employee Provident Fund (EPF) and the National Pension System (NPS) when each receives a Rs 10,000 monthly contribution.",
+      "It notes that the eventual retirement corpus from either scheme depends heavily on future market performance."
      ],
-     "why_it_matters": "Understanding how EPF and NPS may grow a retirement corpus is crucial for individuals planning long\u2011term savings, as the choice between the two can significantly affect the amount of wealth accumulated for retirement, especially when returns are tied to market conditions.",
-     "what_to_watch": "Track the next set of market performance data, as it will directly influence the projected corpus from both EPF and NPS investments.",
-     "headline": "EPF and NPS compare retirement corpus for Rs 10,000 monthly",
+     "why_it_matters": "Understanding how EPF and NPS can grow a retirement corpus is crucial for individuals planning long\u2011term savings, as the choice between a defined\u2011benefit scheme and a market\u2011linked pension can materially affect the amount available after retirement, influencing financial security and lifestyle decisions.",
+     "what_to_watch": "Track the annualized returns reported by EPF and NPS in their official statements to see which scheme delivers higher growth for the Rs 10,000 monthly contribution.",
+     "headline": "Comparing EPF and NPS for Rs 10,000 monthly retirement investment",
      "read_seconds": 25
     }
    },
@@ -1385,7 +1395,17 @@
     "link": "https://www.livemint.com/opinion/online-views/la-showbiz-nyc-finance-talent-clusters-still-matter-world-shrunk-by-telecom-connectivity-11788344937036.html",
     "summary": "Technology may have made geography history, but not the value of talent pools. Places like New York City, Los Angeles and Silicon Valley draw the world\u2019s most talented folks, spurring innovation that spills over to the entire US economy.",
     "date": "Sep 03, 2026",
-    "_sort": "2026-09-03T09:30:15+00:00"
+    "_sort": "2026-09-03T09:30:15+00:00",
+    "smart": {
+     "what_happened": [
+      "Technology has reduced the perceived importance of geography but talent pools remain valuable.",
+      "Cities such as New York, Los Angeles and Silicon Valley continue to attract top talent, driving innovation that benefits the broader US economy."
+     ],
+     "why_it_matters": "The persistence of talent agglomerations means that firms located in these hubs can tap into dense networks of skilled workers, fostering faster product development, higher productivity, and spillover effects that boost national economic growth, which is a key factor for investors assessing regional exposure and long\u2011term economic trends.",
+     "what_to_watch": "Quarterly hiring and talent acquisition reports from major technology firms in New York and entertainment companies in Los Angeles.",
+     "headline": "Talent clusters in LA, NYC remain important despite telecom connectivity",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -1394,7 +1414,17 @@
     "link": "https://www.themarginalian.org/2026/09/02/cristina-campo-unforgivable-fairy-tales/",
     "summary": "&#8220;If you want your children to be intelligent, read them fairy tales,&#8221; Einstein reportedly told one mother who wished for her son to become a scientist. &#8220;If you want them to be very intelligent, read them more fairy tales.&#8221; Given that the deepest measure of intelligence is a plasticity of being t",
     "date": "Sep 02, 2026",
-    "_sort": "2026-09-02T23:09:02+00:00"
+    "_sort": "2026-09-02T23:09:02+00:00",
+    "smart": {
+     "what_happened": [
+      "Einstein is quoted as telling a mother that reading fairy tales makes children intelligent.",
+      "He added that reading more fairy tales makes them very intelligent."
+     ],
+     "why_it_matters": "The quote highlights a perspective that exposure to fairy tales may foster cognitive development, suggesting that early literary experiences could influence the plasticity of intelligence, a concept the article links to the broader understanding of maturity.",
+     "what_to_watch": "Monitor upcoming research on the relationship between fairy\u2011tale exposure and measures of cognitive plasticity.",
+     "headline": "Einstein reportedly advised reading fairy tales to boost children's intelligence",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Psyche",
@@ -1451,7 +1481,7 @@
     "moves": 21,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.Bc4 e5 2.Nf3 Nc6 3.d4 exd4 4.Nxd4 Nf6, avoid 5.Qf3?; instead play 5...d6, then 6.Nc3 Be7, castle quickly. Your delayed castling (move\u202f12) let White launch a decisive attack\u2014castling by move\u202f8 would have prevented the mate. Reduce unnecessary queen moves; prioritize development and king safety.",
+    "analysis": "Focus on early king safety: avoid moving the f\u2011pawn before castling; after 6\u2026f5 you left g7\u2011h7 vulnerable, leading to forced mate. Strengthen defensive move order.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1470,11 +1500,11 @@
     "_trend": [
      {
       "day": "09/03",
-      "wins": 9,
+      "wins": 10,
       "losses": 8,
       "draws": 1,
-      "total": 18,
-      "pct": 50
+      "total": 19,
+      "pct": 53
      },
      {
       "day": "09/02",
@@ -1556,7 +1586,7 @@
     "moves": 58,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid queen\u2011side pawn pushes that weaken king safety.",
+    "analysis": "Strengthen your opening preparation: study A45 Indian Defense lines, memorize key move orders, and avoid early queen excursions that waste tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1590,7 +1620,7 @@
     "moves": 9,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Bf5, avoid 5.Ng5?\u2014instead play 5.Nf3, develop, and castle before launching attacks; this prevents premature queen sorties that waste tempo and risk tactical threats.",
+    "analysis": "Focus on early king safety: avoid 5.Nf3? after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4 Nf6 5.Nf3?\u2014instead play 5.Ng5 or 5.Nd2, preventing Black\u2019s quick ...Nxe4 and ensuring a solid pawn structure. Reduce unnecessary piece moves; aim for 0\u20111 in \u226412 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1623,7 +1653,7 @@
     "moves": 34,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: play Nf3 before Qd3, aim for c4\u2011d5 pawn break, and avoid queen moves before piece coordination (\u22642 queen moves in first 10 plies).",
+    "analysis": "Focus on early queen development: avoid moving the queen before completing piece\u2011coordination; in the first 8 moves, keep queen off\u2011center to reduce tempo loss and prevent opponent\u2019s easy attacks.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1657,7 +1687,7 @@
     "moves": 37,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side pawn structure: after 9\u2026c6, avoid 10\u2026a5?; instead play \u2026b5 and \u2026Bb7, keeping the c\u2011file closed and preventing White\u2019s minority attack. This reduces unnecessary pawn weaknesses and improves piece coordination.",
+    "analysis": "Focus on early queen\u2011side pawn structure: after 9\u2026c5, you allowed White\u2019s c4\u2011d5 tension to dominate. Aim to exchange or lock it before move\u202f15, reducing positional pressure and cutting opponent\u2019s counter\u2011play.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1691,7 +1721,7 @@
     "moves": 21,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn and queen before castling; you lost material on move\u202f9, costing ~0.5\u202fpawns. Strengthen opening fundamentals.",
+    "analysis": "Focus on early king safety: after 1.e4 d5, avoid 2.exd5 Qxd5 3.Nc3 Qa5?; instead play 2.Nc3 or 2.d4, develop pieces, and castle by move\u202f8 to prevent the rapid attack that cost you the game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1724,7 +1754,7 @@
     "moves": 58,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on time management: aim to keep each move under\u202f30\u202fseconds in the opening and under\u202f1\u202fminute in the middlegame; practice rapid\u2011play drills to avoid future timeout losses.",
+    "analysis": "Strengthen your time\u2011management: aim to keep each move under 30\u202fseconds in familiar positions; practice speed drills to avoid 58\u2011move flag\u2011loss.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1758,7 +1788,7 @@
     "moves": 19,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Study and master basic check\u2011mate patterns; avoid leaving your king exposed\u2014your 19th\u2011move mate resulted from a simple forced sequence you missed.",
+    "analysis": "Stop playing 1.d4 without a concrete plan; after 1\u2026Nf6\u202f2.c4\u202fe6\u202f3.Nf3\u202fBb4+, develop pieces, castle early, and avoid queen excursions that lead to forced mates.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1794,7 +1824,7 @@
     "moves": 43,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: after 1.d4\u202fd5\u202f2.Nf3\u202fNf6, play 3.c4 instead of 3.e3 to claim central space and avoid passive queen\u2011side structures; this alone improves your engine accuracy by ~12\u202f% and reduces average centipawn loss by ~15.",
+    "analysis": "Focus on early queen\u2011side development: move\u202fNc3 before\u202fQb3, avoid queen sorties before\u202fe4\u2011d5 clash; this saves ~0.6\u202fpawns and reduces tactical vulnerabilities.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1828,7 +1858,7 @@
     "moves": 37,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on central pawn structure: after 1.e4 e5 2.Nf3 d6, avoid passive moves like \u2026Be7; play \u2026Nbd7, \u2026c5, and exchange on d4 to reduce white\u2019s space, targeting a \u2264\u202f30\u202f% accuracy drop when you stall.",
+    "analysis": "Focus on central pawn structure: after 1.e4 e5 2.Nf3 d6, avoid passive moves like \u2026Be7; instead develop with \u2026Nf6, \u2026Nc6, and challenge White with \u2026c5 by move\u202f12 to reduce cramped space.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1862,7 +1892,7 @@
     "moves": 33,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 7\u2026Nbd7, develop the bishop to\u202fe7\u202finstead of\u202fc5, reducing opponent\u2019s central pressure and cutting average centipawn loss by ~15\u202fpts.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., Nf6, Nc6) and avoid unnecessary queen checks that waste tempo and expose you to tactics.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1896,7 +1926,7 @@
     "moves": 29,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Strengthen your opening preparation: learn the main Vienna Game lines (e.g., 1.e4 e5 2.Nc3 Nf6 3.f4 d5) and avoid early queen moves that waste time.",
+    "analysis": "Focus on early king safety: avoid moving the king to e8 after 5...Kd7; instead castle or develop pieces, reducing time pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1929,7 +1959,7 @@
     "moves": 20,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid 9\u2026Qh4? and 12\u2026Qxd5?; develop knights before queen, castle by move\u202f9, and keep pawns solid to prevent forced mate.",
+    "analysis": "Study and memorize the Philidor mainline (3\u2026d6 4\u2026Nbd7 5\u2026c6) to avoid early queen raids; stop moving the queen before move\u202f10.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1965,7 +1995,7 @@
     "moves": 33,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3, avoid 4.Bd3; instead play 4.e5 or 4.Bd2 to prevent black\u2019s \u2026c5 break and maintain central space. This alone would tighten your win\u2011rate by ~5\u20117\u202f%.",
+    "analysis": "Focus on early endgame technique: convert a +0.5 pawn advantage into a win within 12 moves, avoiding unnecessary queen exchanges.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1999,7 +2029,7 @@
     "moves": 16,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: avoid moving the same piece twice (e.g., 4.Nf3\u21926.Ng5) and bring knights to c3/f3 before queen sorties; this saves ~2\u20133 tempo and prevents unnecessary queen exchanges.",
+    "analysis": "Focus on move\u202f5: you played 5.Nc3 instead of the more precise 5.Bd3 (\u2248+0.3\u202feval). That mis\u2011placed knight cost you time and initiative.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2032,7 +2062,7 @@
     "moves": 7,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece development: stop moving the same piece repeatedly (e.g., 3.Nc3\u2011c4\u2011c3). Aim for 2\u20133 distinct developing moves within the first\u202f5\u202fplies.",
+    "analysis": "Focus on early piece development: avoid moving the same piece twice (e.g., 2.Nf3\u2011e5). Prioritize controlling central squares within the first 5 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2065,7 +2095,7 @@
     "moves": 18,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king\u2011side safety: after 1.e4 e5\u202f2.f4 exf4\u202f3.Nf3 g5\u202f4.h4, avoid 4\u2026g4; instead play 4\u2026Nf6, develop pieces, and castle by move\u202f8 to prevent quick attacks.Focus on early king\u2011side safety: after 1.e4 e5\u202f2.f4 exf4\u202f3.Nf3 g5\u202f4.h4, avoid 4\u2026g4; instead play 4\u2026Nf6, develop pieces, and castle by move\u202f8 to prevent quick attacks.",
+    "analysis": "Focus on early king\u2011side safety: after 1.e4 e5 2.f4 exf4 3.Nf3, avoid 3\u2026Qh4+; instead play 3\u2026Nf6, develop, and castle by move\u202f8 to prevent rapid attacks.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2098,7 +2128,7 @@
     "moves": 20,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1\u2026c5\u202f2.Nc3\u202fNc6\u202f3.g3\u202fg6\u202f4.Bg2\u202fBg7, avoid 5\u2026e5?; instead play 5\u2026d6, develop with \u2026Nf6, and castle before launching central pawn pushes. This prevents the decisive attack that forced your resignation.",
+    "analysis": "Focus on early king safety: after 1\u2026c5\u202f2\u202fc4\u202fNc6\u202f3\u202fg3\u202fe5, you allowed 4\u202fBg2\u202fNf6\u202f5\u202fd3\u202fd5\u202f6\u202fcxd5\u202fNxd5\u202f7\u202fNf3\u202fBb4+\u202f8\u202fNc3\u202fBxc3+\u202f9\u202fbxc3\u202fBe7\u202f10\u202f0-0\u202f0-0. Your king stayed in the center while White built a strong pawn storm; by move\u202f12 you were already under attack. Prioritize castling within 3\u20134 moves and avoid unnecessary pawn pushes that open lines toward your king. This alone could reduce your ACPL by ~15\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2132,7 +2162,7 @@
     "moves": 60,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3, prioritize\u202f\u2026a6,\u202f\u2026e6,\u202f\u2026Qc7, and\u202f\u2026b5\u202finstead of passive moves; this reduces cramped positions and creates counter\u2011play.",
+    "analysis": "Focus on early queen\u2011side development: after 1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6, prioritize\u202f...e6\u202fand\u202f...Be7\u202fover premature \u2026b5, reducing pawn\u2011storm timing errors that cost ~0.5\u202fpawns per game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2166,7 +2196,7 @@
     "moves": 73,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f7, avoid queen\u2011side pawn pushes before development; your king stayed exposed for\u202f\u224830\u202fmoves, costing the game.",
+    "analysis": "Focus on early king safety: after 9\u2026c5, you castled late (move\u202f13) leaving the king exposed; prioritize castling by move\u202f8\u20119.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2200,7 +2230,7 @@
     "moves": 39,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Strengthen your queen\u2011side development: play 2.Nf3, 3.Bd3, and 4.0\u20110; avoid early queen moves that waste time and cause tactical vulnerabilities.",
+    "analysis": "Stop playing 3\u2026Qh5 early; develop knights and bishops before queen moves\u2014save ~12\u202fseconds per move, reduce blunders dramatically.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2237,7 +2267,7 @@
     "moves": 25,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Improve your endgame technique: study rook\u2011vs\u2011pawn fundamentals, practice king activation, and memorize key Lucena and Philidor patterns for accurate conversions.",
+    "analysis": "Focus on early queen development: avoid 2\u2026Qh4 and 5\u2026Qe5; keep the queen off\u2011center, develop knights/bishops, and castle within 8\u201310 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2270,7 +2300,7 @@
     "moves": 39,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen; aim for Nf6\u2011e4\u2011c5 within 10 moves to avoid time\u2011wasting queen sorties.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., avoid 4\u2026Qb6). Faster castling and central pawn breaks will reduce unnecessary queen moves and improve time\u2011management.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2304,7 +2334,7 @@
     "moves": 23,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.d4 f5, avoid 2.Nc3 and instead play 2.g3\u202f\u2013\u202f2\u2026Nf6\u202f\u2013\u202f3.Bg2, then castle quickly; your king stayed exposed, costing you the game.",
+    "analysis": "Focus on early king safety: after 1.d4 f5, avoid 2.Nc3 (allowing 2\u2026Nf6 3.Bg5 e6 4.e4) and instead play 2.g3 or 2.c4, then castle quickly; your king was exposed by move\u202f12, leading to a forced resignation. Reduce ACPL by ~15\u202fpts by strengthening opening fundamentals.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2337,7 +2367,7 @@
     "moves": 8,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid bringing Qd1\u2011h5 or Qd1\u2011h5\u2011h4 before completing minor\u2011piece development; aim\u202f\u2264\u202f2 queen moves in the first 8 plies. This prevents premature attacks and reduces unnecessary tempo loss.",
+    "analysis": "Focus on early king safety: after 1.d4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.c4\u202fe6\u202f4.Nc3\u202fc6, avoid 5.Bg5??; instead develop with 5.e3, then castle by move\u202f7 to prevent the opponent\u2019s quick \u2026Bf5/\u2026Qb6 threats. Improving this will raise accuracy and lower ACPL.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2370,7 +2400,7 @@
     "moves": 37,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Strengthen your time management: aim to keep each move under 30\u202fseconds; the three blunders cost ~15\u202fseconds each, inflating ACPL to 69.",
+    "analysis": "Focus on early queen\u2011side safety: avoid 6\u2026Qb6\u2011c7\u2011b8\u2011c7 patterns; keep king shielded, reducing blunders from 2\u2011move tactical oversights (\u224830\u202f% of errors).",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2407,7 +2437,7 @@
     "moves": 40,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Reduce blunders: before each move, verify piece safety; aim for \u22642 blunders and <100\u202fACPL by consistently checking all captures and checks.",
+    "analysis": "Focus on early middle\u2011game safety: avoid blunders like 19.Nxe5 (loss\u202f\u20112.3\u202fpts). Reduce average centipawn loss below\u202f100 by reviewing each tactical sequence.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2444,7 +2474,7 @@
     "moves": 43,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid 5\u2026Qb6\u2011c5\u2011c4 maneuvers; instead consolidate with \u2026Nf6, \u2026d5, and complete development within 12 moves.",
+    "analysis": "Focus on early queen\u2011side pawn structure: after 1.c4\u202fc5\u202f2.Nc3\u202fe6\u202f3.g3\u202fd5, you allowed 4.cxd5\u202fexd5\u202f5.Bg2\u202fNf6\u202f6.Nf3\u202fBe7\u202f7.0\u20110\u202f0\u20110\u202f8.d3\u202fb6\u202f9.Nd5\u202fNxd5\u202f10.cxd5\u202fBb7, leaving a weak d5\u2011pawn. Strengthen d5 with \u2026c6 or exchange it earlier; avoid isolated pawns that later cost you time defending. Improving this will reduce opponent\u2019s counter\u2011play and increase endgame solidity.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2478,7 +2508,7 @@
     "moves": 22,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.d4 Nf6 2.c4 c5 3.d5 b5, avoid passive 4.e3; instead play 4.Nf3\u202fcxd4\u202f5.Nxd4, keeping central tension and preventing Black\u2019s quick \u2026a6\u2011b5\u2011Bb7 ideas. This reduces time loss (\u224830\u202f% faster) and improves positional control.",
+    "analysis": "Focus on early queen\u2011side development: after 1.d4 Nf6 2.c4 c5 3.d5 b5, avoid 4.cxb5 (which gives Black active play) and instead play 4.Nf3\u202fe6\u202f5.e4, securing central control and limiting the Benko\u2019s counter\u2011play. This alone should raise your accuracy by ~5\u20117\u202f% and cut average centipawn loss by ~15.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2511,7 +2541,7 @@
     "moves": 29,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights to f6 and c6 by move\u202f4, then castle by move\u202f6 to avoid time pressure.",
+    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f7, and avoid passive \u2026d6\u2011e5 pawn structures.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -3083,7 +3113,7 @@
     "moves": 25,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Focus on early queen\u2011side development: after 1.d4 d5\u202f2.c4\u202fc6\u202f3.Nc3\u202fNf6\u202f4.Nf3\u202fe6, play\u202f5.cxd5\u202fcxd5\u202f6.Bg5\u202fBe7\u202f7.e3\u202f0\u20110\u202finstead of 5\u2026dxc4; keep the c\u2011pawn, develop the bishop to f5, and avoid losing central control. This will reduce unnecessary piece exchanges and improve your position dramatically.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -3214,11 +3244,11 @@
    "trend": [
     {
      "day": "09/03",
-     "wins": 9,
+     "wins": 10,
      "losses": 8,
      "draws": 1,
-     "total": 18,
-     "pct": 50
+     "total": 19,
+     "pct": 53
     },
     {
      "day": "09/02",
@@ -3280,12 +3310,12 @@
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "Ciis7",
-   "rating": 1975,
+   "pid": "ka9et",
+   "rating": 2049,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Middlegame \u00b7 Advantage \u00b7 X Ray Attack",
-   "tip": "One piece, two threats. Find the square that attacks both simultaneously.",
-   "url": "https://lichess.org/training/Ciis7"
+   "themes": "Endgame \u00b7 Crushing \u00b7 Quiet Move",
+   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
+   "url": "https://lichess.org/training/ka9et"
   }
  }
 }
