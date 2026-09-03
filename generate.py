@@ -1183,9 +1183,11 @@ def generate() -> None:
             "categories": [{
                 "key": c.get("key"), "label": c.get("label"), "blurb": c.get("blurb"),
                 "funds": [{k: f.get(k) for k in
-                           ("name", "code", "house", "category", "nav", "nav_date",
-                            "r1", "r3", "r5", "dd3", "volatility", "sip10",
-                            "inception", "age_years")
+                           ("name", "code", "house", "category", "scheme_type",
+                            "isin", "url", "nav", "nav_date", "inception",
+                            "history_years", "r1", "r3", "r5", "since_inception",
+                            "dd3", "volatility", "sip10", "calendar",
+                            "rolling3y", "percentile_r3")
                            if f.get(k) is not None}
                           for f in (c.get("funds") or [])],
             } for c in _fcats],
