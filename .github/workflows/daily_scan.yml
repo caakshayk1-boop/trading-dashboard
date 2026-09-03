@@ -212,12 +212,13 @@ jobs:
           esac
           # An explicit dispatch input always wins over the cron table, but it
           # no longer implies "run it regardless" — only force:true does.
-          if [ -n "$INPUT_SLOT" ]; then SLOT="$INPUT_SLOT"; fi
+          EXPLICIT=""
+          if [ -n "$INPUT_SLOT" ]; then SLOT="$INPUT_SLOT"; EXPLICIT="--explicit"; fi
           if [ "${INPUT_FORCE:-false}" = "true" ]; then ONCE=""; echo "force: --once dropped"; fi
           echo "fired at $(date -u '+%H:%M UTC') / $(TZ=Asia/Kolkata date '+%H:%M IST')"
           if [ -n "$SLOT" ]; then
             echo "cron '$SCHEDULE' input '$INPUT_SLOT' → slot $SLOT $ONCE"
-            python standalone_scan.py --slot "$SLOT" $ONCE
+            python standalone_scan.py --slot "$SLOT" $ONCE $EXPLICIT
           else
             echo "no schedule match (manual run) → slot from IST clock"
             python standalone_scan.py

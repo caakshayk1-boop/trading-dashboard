@@ -788,6 +788,28 @@ VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full",
                "none", "us", "momentum"}
 
 
+def _explicit_slot(argv=None) -> bool:
+    """Was the slot ASKED FOR, rather than derived from the cron that fired?
+
+    The clock override below exists for one situation: a cron lands hours late
+    and its window has closed, so running the slot the clock is actually in
+    beats re-running one that has passed. That reasoning applies to a cron. It
+    does not apply to a deliberate dispatch.
+
+    On 3 Sep the watchdog's repair of the end-of-day slot arrived at 21:56 IST,
+    the clock said "full", the override converted it, full had already run, and
+    the scan stood down under --once. Every late repair of a missed slot did
+    the same thing — which is why signals stopped appearing while every run
+    reported success.
+
+    daily_scan.yml passes --explicit alongside --slot whenever the slot came
+    from the workflow input rather than the cron table, so intent survives the
+    trip and the clock stops overruling it.
+    """
+    argv = sys.argv[1:] if argv is None else argv
+    return "--explicit" in argv
+
+
 def _requested_slot(argv=None):
     """Slot named explicitly on the command line, or None.
 
@@ -1573,7 +1595,15 @@ def main():
             # opinion about it.
             _ORDER = {"morning": 0, "midday": 1, "eod": 2, "full": 3}
             both_intraday = requested in _ORDER and clock_slot in _ORDER
-            if both_intraday and _ORDER[clock_slot] > _ORDER[requested]:
+            # AN EXPLICIT REQUEST IS AN INSTRUCTION, NOT A GUESS TO CORRECT.
+            # See _explicit_slot: the override is for late crons, and applying
+            # it to a deliberate dispatch converted every watchdog repair into
+            # a slot that had already run.
+            if _explicit_slot():
+                logging.info(
+                    "slot %r was asked for explicitly; the clock says %r and does "
+                    "not override it.", requested, clock_slot)
+            elif both_intraday and _ORDER[clock_slot] > _ORDER[requested]:
                 logging.warning(
                     f"slot override: workflow asked for {requested!r}, clock says "
                     f"{clock_slot!r} (run is {now.strftime('%H:%M')} IST — cron "
