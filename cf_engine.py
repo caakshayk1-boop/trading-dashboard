@@ -72,8 +72,24 @@ class Config:
     rsi_1h_buy:  tuple = (45.0, 75.0)
     rsi_1h_sell: tuple = (25.0, 55.0)
     # Stop construction.
-    atr_mult_sl:  float = 1.5   # ATR-based stop distance
-    min_sl_atr:   float = 1.5   # hard floor: stop must be >= this * ATR
+    # Trimmed 1.5 -> 1.41 on 2026-09-03 with every other engine, on the
+    # operator's instruction to tighten stops by 5-7%.
+    #
+    # FLAGGED, BECAUSE THIS IS THE ONE ENGINE THAT IS NOT LOSING. cf_1h is the
+    # only engine on the ledger with non-negative expectancy (+0.031R over 12
+    # closed, nothing left open), and the floor below is the documented reason:
+    # it was already enforcing an ATR minimum when ohl and breakout were
+    # running stops at 0.78x and 0.29x and stopping out ~91% of the time.
+    #
+    # 1.41x is still far outside the noise band that broke those two, so this
+    # is a trim rather than a reversal. It is nonetheless the single change
+    # here most worth undoing first if the numbers move the wrong way.
+    #
+    # Its TARGETS are untouched, and not by omission: they come from real
+    # structural levels filtered by min_rr, so there is no fixed ladder to set
+    # to 1.6/2.5/3.3. R:R here is measured off the level, not asserted.
+    atr_mult_sl:  float = 1.41  # ATR-based stop distance
+    min_sl_atr:   float = 1.41  # hard floor: stop must be >= this * ATR
     day_buffer:   float = 0.0015
     # Acceptance gates.
     min_rr:       float = 1.8   # measured off structural T2, not asserted

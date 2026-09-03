@@ -26,9 +26,31 @@ def obv(close, volume):
     return ta_lib.volume.OnBalanceVolumeIndicator(close, volume).on_balance_volume()
 
 
+# ── THE HOUSE STOP AND TARGET LADDER, IN ONE PLACE ──────────────────────────
+#
+# Set 2026-09-03 on the operator's instruction: stops ~6% tighter than the
+# 1.5x floor introduced the day before, and a first target lifted from 1.5R to
+# 1.6R with the third pulled in from 4.0R to 3.3R.
+#
+# WHY 1.41 IS SAFE AND 1.0 WOULD NOT BE. The measurement that produced 1.5x
+# was that stops INSIDE the instrument's own ATR are taken out by noise:
+# breakout sat at 0.29x and ohl at 0.78x, and they stopped out 90.9% and 91.7%
+# of the time. 1.41x is 6% tighter and still comfortably outside that floor,
+# so this is a trim within the safe band rather than a reversal of it. Anything
+# below 1.0x would put the stop back inside a normal session's range and
+# re-open the fault.
+#
+# The third target moving 4.0R -> 3.3R is the more consequential half. Across
+# 118 closed trades exactly nine reached a second target and none reached a
+# third, so 4.0R was a level the ledger has never once printed. A target that
+# has never been hit is not a target, it is decoration on the card.
+ATR_STOP_MULT = 1.41       # was 1.5 (itself up from a broken 1.0-and-tighter)
+R1_MULT, R2_MULT, R3_MULT = 1.6, 2.5, 3.3    # was 1.5, 2.5, 4.0
+
+
 def _tight_sl(price: float, low_series, cur_atr: float,
               max_pct: float = 0.06, min_pct: float = 0.015,
-              atr_mult: float = 1.5) -> float:
+              atr_mult: float = ATR_STOP_MULT) -> float:
     """Stop that respects structure but is never inside the noise.
 
     IT USED TO TAKE THE TIGHTER OF THE TWO CANDIDATES, AND THAT WAS THE BUG.
@@ -94,7 +116,8 @@ MIN_TARGET_GAP_ATR = 0.5
 
 
 def _structure_targets(price: float, cur_atr: float, high_series,
-                       r1_mult: float = 1.5, r2_mult: float = 2.5, r3_mult: float = 4.0):
+                       r1_mult: float = R1_MULT, r2_mult: float = R2_MULT,
+                       r3_mult: float = R3_MULT):
     """Targets anchored to price structure + R-multiples, snapped to resistance."""
     res20  = float(high_series.rolling(20).max().iloc[-1])
     res10  = float(high_series.rolling(10).max().iloc[-2]) if len(high_series) > 11 else price * 1.05

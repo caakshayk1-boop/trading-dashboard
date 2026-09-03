@@ -125,7 +125,7 @@ REMARKS = {
                         "[3.51% median stop, 81.8% stop-out — thin sample, 11 closed]",
     "breakout":         "Breakout scan — swing horizon. Stop and targets scale to the HOLDING "
                         "horizon (sqrt-of-time: x2.24 weekly, x4.69 monthly) off daily ATR, "
-                        "floored at 1.5xATR, capped 6-20%; R:R ladder held at 1.5/2.5/4.0. "
+                        "floored at 1.41xATR, capped 6-20%; R:R ladder held at 1.6/2.5/3.3. "
                         "[was 0.29xATR and 90.9% stop-out — sized for a day on a weeks-long "
                         "trade; corrected 2026-09-02, measured -0.552R to -0.195R]",
     "equity_measured":  "Daily-close equity engine — the measured swing edge. Structural stop "
@@ -136,7 +136,7 @@ REMARKS = {
     "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing. [1.19xATR, 4 "
                         "closed; counted with magic as one family until each has a sample]",
     "ohl":              "Open-High-Low intraday engine — long-only, entry at open near the "
-                        "day's low. Stop floored at 1.5xATR; targets stay snapped to the 10- "
+                        "day's low. Stop floored at 1.41xATR; targets stay snapped to the 10- "
                         "and 20-bar highs rather than being pushed out with the stop, so R:R "
                         "is ~1.5 rather than the ~2.4 a tighter stop implied. "
                         "[was 0.78xATR and 91.7% stop-out; corrected 2026-09-02, measured "
@@ -150,7 +150,7 @@ REMARKS = {
                         "the low-turnover half. Gated on absolute momentum (up over 12 months "
                         "AND above the 200-day), which is the standard defence against "
                         "momentum crashes; that gate rejects ~58% of the universe. "
-                        "Stop 1.5xATR, ladder 1.5/2.5/4.0R, monthly horizon. "
+                        "Stop 1.41xATR, ladder 1.6/2.5/3.3R, monthly horizon. "
                         "[PAPER ONLY — Sharma et al. (2021) find the Indian momentum anomaly "
                         "fading, and the strongest supporting figures are backtests. "
                         "0 closed trades; not cleared for capital]",

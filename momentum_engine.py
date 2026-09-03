@@ -85,8 +85,10 @@ W_6M = 0.5
 WINSOR_Z = 3.0         # standard practice; one name cannot carry the ranking
 MIN_TURNOVER_CR = 1.0  # tradeable at all — below this a stop cannot be worked
 TOP_N = 5              # published per run; the ladder is ranked, not exhaustive
-STOP_ATR_MULT = 1.5    # matches the floor applied to every other engine today
-RR = (1.5, 2.5, 4.0)   # the house ladder, unchanged
+# Imported, not restated. This engine had its own copy of both numbers, which
+# is how a "house ladder" quietly becomes four different ladders.
+from signals.indicators import ATR_STOP_MULT as STOP_ATR_MULT, R1_MULT, R2_MULT, R3_MULT
+RR = (R1_MULT, R2_MULT, R3_MULT)
 
 
 def _f(v):

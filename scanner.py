@@ -31,6 +31,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from signals.indicators import (
     ema, rsi, adx, atr, macd_line, macd_signal, obv,
     _tight_sl, _structure_targets,
+    ATR_STOP_MULT, R1_MULT, R2_MULT, R3_MULT,
 )
 from signals.regime   import regime_filter, count_hh_hl
 from signals.quality  import GateConfig, qualify, rr_of, breakeven_win_rate
@@ -904,7 +905,7 @@ def compute_full_score(close, high, low, volume, setup_type, setup_score,
     cur_atr = float(atr(high, low, close).iloc[-1])
     sl2     = _tight_sl(price, low, cur_atr, max_pct=0.06)  # max 6% stop
     t1, t2, t3 = _structure_targets(price, cur_atr, high,
-                                     r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+                                     r1_mult=R1_MULT, r2_mult=R2_MULT, r3_mult=R3_MULT)
     risk    = price - sl2
     rr      = (t2 - price) / risk if risk > 0 else 0
     if rr >= 2.5:   score += 15; reasons.append(f"RR {rr:.1f}:1")
@@ -1348,14 +1349,14 @@ def analyze_breakout(symbol):
         # R:R from about 2.4 to 1.0 — a stop fix that made the trade worse.
         _HZ = {"Monthly": 22 ** 0.5, "Weekly": 5 ** 0.5, "Daily": 1.0}
         _hz = _HZ.get(best_tf, 1.0)
-        _stop_atr = 1.5 * _hz
+        _stop_atr = ATR_STOP_MULT * _hz
         # The cap has to move with it, or it silently reimposes the tight stop.
         sl = _tight_sl(close, _d_low, atr, max_pct=min(0.06 * _hz, 0.20),
                        atr_mult=_stop_atr)
         t1, t2, t3 = _structure_targets(close, atr, _d_high,
-                                         r1_mult=1.5 * _stop_atr,
-                                         r2_mult=2.5 * _stop_atr,
-                                         r3_mult=4.0 * _stop_atr)
+                                         r1_mult=R1_MULT * _stop_atr,
+                                         r2_mult=R2_MULT * _stop_atr,
+                                         r3_mult=R3_MULT * _stop_atr)
         rr = round((t1 - close) / max(close - sl, 0.01), 1)
 
         return {
@@ -1555,7 +1556,7 @@ def analyze_4h(symbol):
             sl = round(max(sl, sl_channel), 2)
 
         t1, t2, _ = _structure_targets(price, cur_atr, high,
-                                        r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+                                        r1_mult=R1_MULT, r2_mult=R2_MULT, r3_mult=R3_MULT)
 
         # For channel BO: T1 = measured move (channel width projected up)
         if path_b_valid and not path_a_valid and channel_width > 0:
@@ -1695,9 +1696,9 @@ def analyze_ohl(symbol):
         # honest trade and it is worth taking: the stop-out rate was 91.7%
         # because the stop sat at 0.78x ATR, and a wider stop with a nearer
         # target beat a wider stop with a further one by 0.128R per trade.
-        sl = _tight_sl(close, _d_low, atr, max_pct=0.06, atr_mult=1.5)
+        sl = _tight_sl(close, _d_low, atr, max_pct=0.06, atr_mult=ATR_STOP_MULT)
         t1, t2, t3 = _structure_targets(close, atr, _d_high,
-                                        r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+                                        r1_mult=R1_MULT, r2_mult=R2_MULT, r3_mult=R3_MULT)
         rr = round((t1 - close) / max(close - sl, 0.01), 1)
 
         return {
@@ -2109,7 +2110,7 @@ def analyze_tlm(symbol: str, interval: str = "4h", period: str = "60d",
         # carried no information and no gate could ever act on it. This is
         # the same helper analyze_breakout and the swing scan already use.
         t1, t2, t3 = _structure_targets(price, cur_atr, high,
-                                        r1_mult=1.5, r2_mult=2.5, r3_mult=4.0)
+                                        r1_mult=R1_MULT, r2_mult=R2_MULT, r3_mult=R3_MULT)
         risk = round(price - sl, 2)
         rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
         if rr < 1.5:
