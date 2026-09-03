@@ -240,3 +240,57 @@
 2026-09-04 04:41:46,635 ERROR 
 1 Failed download:
 2026-09-04 04:41:46,639 ERROR ['AUBANK.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:49:08,599 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:50:20,904 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:50:56,810 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:51:21,757 ERROR 
+1 Failed download:
+2026-09-04 04:51:21,758 ERROR ['ANANTRAJ.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:51:27,576 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:51:43,876 ERROR 
+1 Failed download:
+2026-09-04 04:51:43,877 ERROR ['ADANIPOWER.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:52:54,797 ERROR 
+1 Failed download:
+2026-09-04 04:52:54,799 ERROR ['IRCTC.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:54:00,996 ERROR 
+1 Failed download:
+2026-09-04 04:54:00,998 ERROR ['NCC.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:54:01,033 ERROR 
+1 Failed download:
+2026-09-04 04:54:01,033 ERROR ['RAILTEL.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:54:40,818 ERROR 
+1 Failed download:
+2026-09-04 04:54:40,819 ERROR 
+1 Failed download:
+2026-09-04 04:54:40,820 ERROR ['UCOBANK.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:54:40,820 ERROR ['PCBL.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:56:35,137 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:57:29,004 ERROR 
+1 Failed download:
+2026-09-04 04:57:29,006 ERROR ['BLUEDART.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:59:30,977 ERROR 
+1 Failed download:
+2026-09-04 04:59:30,978 ERROR ['JMFINANCIL.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 05:00:08,584 ERROR 
+1 Failed download:
+2026-09-04 05:00:08,588 ERROR ['M&MFIN.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 05:01:34,447 INFO breakout gate1 reject ANTHEM: R:R 1.60 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject ATHERENERG: R:R 1.48 < 2.0 (needs 40% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject BEML: R:R 1.60 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject BRIGADE: R:R 1.86 < 2.0 (needs 35% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject CAPLIPOINT: R:R 1.79 < 2.0 (needs 36% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject CRAFTSMAN: R:R 1.60 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject ENGINERSIN: R:R 1.87 < 2.0 (needs 35% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject INDGN: R:R 1.60 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject PTCIL: R:R 1.86 < 2.0 (needs 35% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject RBLBANK: R:R 1.60 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject SAILIFE: R:R 1.63 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject SOLARINDS: R:R 1.60 < 2.0 (needs 38% win rate to break even)
+2026-09-04 05:01:34,448 INFO breakout gate1 reject WELSPUNLIV: R:R 1.87 < 2.0 (needs 35% win rate to break even)
+2026-09-04 05:01:34,456 INFO fundamentals: warming 4 of 4 symbols
+2026-09-04 05:01:39,810 INFO fundamentals: prefetch done — 4/4 fetched, 0 already cached
+2026-09-04 05:01:39,811 INFO breakout gate2 reject IFCI: trailing PAT is negative; PE 145x > 80x
+2026-09-04 05:01:39,811 INFO breakout gate2 reject URBANCO: trailing PAT is negative
+2026-09-04 05:01:39,811 INFO breakout: 17 raw → 4 price-gated → 2 qualified → 2 published
+2026-09-04 05:01:39,811 INFO Breakout scan: 2 confirmed breakouts (from 17 raw)

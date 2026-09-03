@@ -1265,16 +1265,76 @@ def _check_breakouts(df_d, df_w, df_m):
         if wclose.iloc[-1] > w20hi and wvol.iloc[-1] > 1.3 * wavg:
             found.append(("Weekly", "20W Breakout"))
 
-        # Cup & handle (weekly): U-shape recovery + consolidation
-        if len(wclose) >= 30:
-            cup_low  = wclose.iloc[-30:-10].min()
-            cup_left = wclose.iloc[-30]
-            cup_right = wclose.iloc[-10]
-            handle_low = wclose.iloc[-10:].min()
-            if (cup_right > cup_low * 1.05 and cup_left > cup_low * 1.05
-                    and handle_low > cup_low * 0.95
-                    and wclose.iloc[-1] >= cup_right * 0.99):
+        # ── CUP & HANDLE ────────────────────────────────────────────────
+        #
+        # THE OLD TEST WAS NOT A PATTERN. It asked four things: the close 30
+        # weeks ago and the close 10 weeks ago were both 5% above the lowest
+        # close between them, the last 10 weeks had not gone 5% below that
+        # low, and today was within 1% of where it was 10 weeks ago. In a
+        # market that is not falling, that is true of almost anything —
+        # MEASURED AT 28 OF 80 NIFTY500 NAMES ON ONE DAY, 35% of the sample,
+        # and it was the ONLY pattern firing. A condition that fires on a
+        # third of the market is not a signal, it is a description of the
+        # market, and it was going out under a name that promises a specific
+        # structure.
+        #
+        # What was missing: any depth bound (a stock 5% off its low
+        # qualified), any rim symmetry, any U-shape test, any prior uptrend
+        # to recover FROM, any test that the handle is a pullback rather than
+        # merely not-a-crash, and any volume confirmation — which the 20W
+        # breakout beside it has always required.
+        #
+        # This is the O'Neil structure stated as checks. The handle length is
+        # searched over 2-8 weeks rather than fixed at 10, because a handle
+        # is defined by its shape and not by its duration.
+        if len(wclose) >= 46:
+            for _h in range(2, 9):
+                cup = wclose.iloc[-(_h + 30):-_h]
+                if len(cup) < 24:
+                    continue
+                third = max(3, len(cup) // 3)
+                left_rim  = cup.iloc[:third].max()
+                right_rim = cup.iloc[-third:].max()
+                cup_low   = cup.min()
+                rim = max(left_rim, right_rim)
+                if rim <= 0 or cup_low <= 0:
+                    continue
+
+                # A cup is a RECOVERY. 12-40% deep: shallower is noise,
+                # deeper is a broken stock rebuilding, not a base.
+                depth = (rim - cup_low) / rim
+                if not (0.12 <= depth <= 0.40):
+                    continue
+                # Both rims at roughly one level, or it is not a cup.
+                if abs(left_rim - right_rim) / rim > 0.12:
+                    continue
+                # U, not V: the low sits in the middle, not against an edge.
+                lowpos = int(cup.values.argmin()) / max(len(cup) - 1, 1)
+                if not (0.2 <= lowpos <= 0.8):
+                    continue
+                # Something to recover from.
+                prior = wclose.iloc[-(_h + 60):-(_h + 30)]
+                if len(prior) >= 10 and left_rim < prior.min() * 1.20:
+                    continue
+
+                handle = wclose.iloc[-_h:]
+                h_hi, h_lo = handle.max(), handle.min()
+                # The handle drifts down NEAR the rim: shallow, in the upper
+                # half of the cup, and it does not break out on its own.
+                if h_hi > right_rim * 1.03:
+                    continue
+                if (h_hi - h_lo) / max(h_hi, 1e-9) > 0.15:
+                    continue
+                if h_lo < cup_low + 0.5 * (right_rim - cup_low):
+                    continue
+                # The breakout is through the rim, on participation — the
+                # same volume test the 20W breakout beside this one uses.
+                if wclose.iloc[-1] < rim * 0.995:
+                    continue
+                if not (wvol.iloc[-1] > 1.2 * wavg):
+                    continue
                 found.append(("Weekly", "Cup & Handle"))
+                break
 
     if df_m is not None and len(df_m) >= 8:
         mclose = df_m["Close"].squeeze()
@@ -1405,8 +1465,29 @@ def analyze_breakout(symbol):
 def scan_breakouts(universe=None):
     """Scan confirmed breakouts: daily, weekly, monthly timeframes."""
     if universe is None:
-        raw_uni = load_nifty500()
-        universe = [s for s in raw_uni if s.replace(".NS","") in FNO_ELIGIBLE]
+        # ── F&O ELIGIBILITY WAS NEVER THE RIGHT LIQUIDITY TEST ──────────────
+        #
+        # This scanned the 179 F&O-eligible names out of Nifty500 and dropped
+        # the other 321. F&O eligibility is a DERIVATIVES admission criterion —
+        # it says a name has an options market, not that its cash shares can be
+        # bought and sold. This is a cash-equity swing engine; it never needed
+        # one.
+        #
+        # And the gate every scan already runs through tests the thing that
+        # actually matters, on this name's own numbers: MIN_TURNOVER_CR (₹25cr
+        # of average daily traded value) and MIN_MARKET_CAP_CR. A stock too
+        # thin to exit is rejected there, on measurement, rather than here by
+        # proxy.
+        #
+        # Measured 2026-09-04 across Nifty500: 17 breakouts, of which ONE was
+        # F&O-eligible. The 16 discarded included ATHERENERG (₹792cr a day),
+        # WELCORP (₹630cr) and IFCI (₹496cr) — nothing about those is
+        # illiquid. The engine was throwing away 94% of its own supply.
+        #
+        # MAX_SIGNALS_PER_SCAN still caps what is published, so a wider
+        # universe means a better-ranked five, not more noise. `fno` stays on
+        # every signal as a fact about the name.
+        universe = load_nifty500()
 
     results = []
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
