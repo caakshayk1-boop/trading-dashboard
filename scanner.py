@@ -2274,12 +2274,36 @@ def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
         support2 = round(float(wk_l.rolling(8).min().iloc[-1]), 2)
         sl       = round(max(support1, support2), 2)
 
-        t1 = round(price + range_52 * 0.30, 2)
-        t2 = round(price + range_52 * 0.65, 2)
-        t3 = round(price + range_52 * 1.10, 2)
-
         risk = round(price - sl, 2)
-        rr   = round((t2 - price) / risk, 1) if risk > 0 else 0
+
+        # ── TARGETS FLOORED AGAINST THE RISK ────────────────────────────────
+        #
+        # These come from the 52-week RANGE and were never once compared to
+        # what the trade risks. Caught on the live brief for 3 Sep: a stop
+        # 13.03% away and a first target worth 0.8x that — a trade risking
+        # thirteen per cent to make ten.
+        #
+        # The published `rr` did not show it, because it is measured off T2.
+        # A reader checking reward against risk saw the T2 number and acted on
+        # the T1 level, which is the one the trade plan uses.
+        #
+        # The range still sets the targets when it is the more ambitious of the
+        # two — a genuine multibagger runs far past 1.6R and should say so.
+        # The floor only catches the case where the range is narrow relative to
+        # a wide weekly stop, which is exactly when the trade is not worth
+        # taking at the level published.
+        _t1 = price + range_52 * 0.30
+        _t2 = price + range_52 * 0.65
+        _t3 = price + range_52 * 1.10
+        if risk > 0:
+            _t1 = max(_t1, price + R1_MULT * risk)
+            _t2 = max(_t2, price + R2_MULT * risk)
+            _t3 = max(_t3, price + R3_MULT * risk)
+        t1, t2, t3 = round(_t1, 2), round(_t2, 2), round(_t3, 2)
+
+        # Measured off T1, the level the trade plan acts on. It was measured
+        # off T2, which reads higher and is not the number a reader sizes with.
+        rr   = round((t1 - price) / risk, 1) if risk > 0 else 0
 
         # ── SCORE (0-100) ──
         score = round(
