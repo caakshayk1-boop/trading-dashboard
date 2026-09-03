@@ -131,9 +131,9 @@ REMARKS = {
     "equity_measured":  "Daily-close equity engine — the measured swing edge. Structural stop "
                         "on the completed daily bar. [1.94xATR, 54.5% stop-out — the widest "
                         "stop and the lowest stop-out rate of the equity engines]",
-    "magic":            "Magic-levels screen — daily-close swing. [1.22xATR, 85.7% stop-out "
+    "magic":            "Magic-levels screen — daily-close swing. Stop is the WIDER of the structural and ATR candidates (corrected 2026-09-03; it took the tighter, the third copy of that fault). T1 floored at 1.6R — it was 1.0R, which put twenty-odd open signals at exactly one times risk, unprofitable at any win rate this engine has printed. [1.22xATR, 85.7% stop-out "
                         "over 7 closed — marginal, and too few to act on]",
-    "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing. [1.19xATR, 4 "
+    "magicmagic":       "Magic-levels screen (v1 engine) — daily-close swing. Same levels function as magic, so the same 2026-09-03 corrections: wider stop, T1 floored at 1.6R. [1.19xATR, 4 "
                         "closed; counted with magic as one family until each has a sample]",
     "ohl":              "Open-High-Low intraday engine — long-only, entry at open near the "
                         "day's low. Stop floored at 1.41xATR; targets stay snapped to the 10- "

@@ -2982,7 +2982,20 @@ def _investtech_signals(ticker_sym: str) -> dict:
 # of 2.41 quoted off T2. A target that cannot repay the risk is not a target.
 MAGIC_SL_MAX_PCT = 0.15      # a recovery trade cannot carry a tighter stop
 MAGIC_SL_MIN_PCT = 0.04      # nor a meaninglessly tight one
-MAGIC_MIN_T1_R   = 1.0       # T1 must repay the risk
+# T1 MUST DO BETTER THAN REPAY THE RISK.
+#
+# This was 1.0, and it was not a rare fallback: on the live book, twenty-odd
+# open magic and magicmagic signals sit at EXACTLY 1.00R, because the 40%-of-
+# room target so often lands under it and gets lifted to the floor. A target at
+# exactly one times risk cannot be profitable at any win rate this ledger has
+# ever printed — magic closes at 14.3% and magicmagic at 25% — and the
+# repetition of the identical figure is the tell that it is a floor artefact
+# rather than a level anyone chose.
+#
+# It is now the house first target, so this engine pays the same 1.6R as every
+# other. The guard below still voids the setup when even the 52-week high
+# cannot clear it, so the effect is fewer signals rather than optimistic ones.
+MAGIC_MIN_T1_R   = R1_MULT   # was 1.0 — see above
 
 
 def magic_levels(df1y, price: float, hi52: float) -> dict | None:
@@ -3007,7 +3020,15 @@ def magic_levels(df1y, price: float, hi52: float) -> dict | None:
         swing_low = float(l.rolling(50).min().iloc[-1])
         sl_struct = swing_low - 0.5 * cur_atr
         sl_atr    = price - 3.0 * cur_atr
-        sl_raw    = max(sl_struct, sl_atr)          # the tighter of the two
+        # THE SAME max() FAULT, IN A THIRD PLACE.
+        #
+        # cf_engine was rewritten for it, signals/indicators._tight_sl was
+        # fixed on 2 Sep, and this copy survived both because it is written
+        # out longhand here rather than calling the shared helper. max() for a
+        # long takes the HIGHER stop, which is the tighter one — it selects,
+        # every time, for the stop closer to price and therefore further inside
+        # the noise. The comment beside it even said so.
+        sl_raw    = min(sl_struct, sl_atr)          # the WIDER of the two
         sl        = max(sl_raw, price * (1 - MAGIC_SL_MAX_PCT))
         sl        = min(sl,     price * (1 - MAGIC_SL_MIN_PCT))
         risk      = price - sl
