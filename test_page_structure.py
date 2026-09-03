@@ -186,12 +186,9 @@ def _():
             f'#{m.group(1)}: tabs {sorted(tabs)} vs panes {sorted(panes)}')
 
 
-@check("the Book section carries the whole-book depth, not just the chapter")
-def _():
-    start = TEMPLATE.index("{% if 'book' in secs and book %}")
-    sec = TEMPLATE[start:TEMPLATE.index("</section>", start)]
-    for field in ("book.crux", "book.learnings", "book.examples", "book.adapt"):
-        assert field in sec, f"{field} did not survive the move out of #desk"
+# The "Book section carries the whole-book depth" check was removed on
+# 2026-09-03 with #book itself. book_deep.py is still in the tree; nothing on
+# this page renders it. If Book ever returns, restore the check with it.
 
 
 @check("the four pillars exist, and nothing lives outside one")
@@ -212,7 +209,7 @@ def _():
     # is the "18 destinations, figure it out yourself" problem. Six named
     # groups give a first-time reader a map instead of an index.
     PILLARS = {"Today", "Markets", "Research", "Portfolio", "Ledger", "About"}
-    LIFE = {"Career", "Learning", "Practice", "Mind", "Drills"}   # the /desk page
+    LIFE = {"Practice", "Mind", "Drills"}   # the /desk page; Career and Learning retired 2026-09-03
     for _i, _l, page, group in SECTION_MAP:
         allowed = PILLARS if page == "main" else LIFE
         assert group in allowed, f"{_i} is in {group!r}, which is no pillar"
@@ -221,7 +218,10 @@ def _():
     # the site shipped), then Volume under Markets and How to Read This under
     # About. The count is asserted so a section cannot be added without someone
     # deciding which pillar it belongs to.
-    assert len(SECTION_MAP) == 35, f"section count changed: {len(SECTION_MAP)}"
+    # 29 since 2026-09-03: 35 less the six CAREER and LEARNING sections moved
+    # to career.askakshay.com. Recorded here rather than left to drift, because
+    # this count is the canary for a section appearing by accident.
+    assert len(SECTION_MAP) == 29, f"section count changed: {len(SECTION_MAP)}"
 
 
 # Sections deliberately retired, with the reason and the date. A section may
@@ -234,6 +234,14 @@ RETIRED = {
     # different counts (32 and 88) was the duplication being reported.
     # ipo_tracker.py still runs; the Radar consumes its rows.
     "ipos",
+    # 2026-09-03: the CAREER and LEARNING groups moved to
+    # career.askakshay.com — a surface built for the job search rather than
+    # bolted onto the Life page, where the search was the fourth thing on a
+    # page about something else. /desk keeps Practice, Mind and Drills.
+    # jobs.py, book_deep.py and podcasts.py still exist but nothing on this
+    # page calls them; daily_learning.py IS still called, because Language,
+    # Father and Wisdom read from it too.
+    "careers", "interview", "brief", "smartreads", "book", "podcasts",
 }
 
 
