@@ -9,8 +9,9 @@
 *
 !vercel-news
 !vercel-news/**
-# life.askakshay.com. Its build.js reads docs/desk.html, which is already
-# allow-listed below for the /desk route on news.askakshay.com.
+# life.askakshay.com. Its build.js used to read docs/desk.html; as of
+# 2026-09-03 that file is no longer generated and build.js emits a redirect to
+# career.askakshay.com instead.
 !vercel-life
 !vercel-life/**
 !docs
@@ -68,7 +69,6 @@
 !docs/manifest.webmanifest
 !docs/icon.svg
 !docs/og.png
-!docs/desk.html
 !docs/fonts
 !docs/fonts/**
 

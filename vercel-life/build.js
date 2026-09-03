@@ -1,78 +1,59 @@
-// build.js — assembles public/ for life.askakshay.com.
+// build.js — life.askakshay.com is now a redirect to career.askakshay.com.
 //
-// The Life pillar was always the second page of the daily paper: generate.py
-// renders it as docs/desk.html from the same SECTION_MAP, the same template and
-// the same build. It reached readers as news.askakshay.com/desk, one link deep
-// behind a page about trading, which is the wrong shelf for career, learning,
-// practice and mind.
+// The Life pillar used to be the second page of the daily paper: generate.py
+// rendered it as docs/desk.html and this script copied that file in as
+// index.html. On 2026-09-03 every Life section — career, learning, practice,
+// mind and drills — moved to career.askakshay.com, which renders them from
+// today.json["desk"] instead. generate.py no longer writes desk.html, so the
+// source this script used to copy does not exist any more.
 //
-// This gives it its own domain. Nothing is duplicated and nothing is forked:
-// desk.html is copied here as index.html, so the two sites cannot drift — a
-// change to the template appears on both, and there is one generator to keep
-// honest.
-//
-// Deliberately NO api/ directory. The Life page renders entirely from the
-// daily build; it holds no ledger, no positions and no market data, so it needs
-// no functions, no Turso credentials and no database reachable from it. That is
-// a smaller attack surface than news.askakshay.com by construction rather than
-// by configuration.
-import { existsSync, mkdirSync, copyFileSync, writeFileSync, statSync, readdirSync } from "node:fs";
+// Rather than delete the project and break every existing link, the site
+// becomes a permanent redirect. Three mechanisms, because each covers a case
+// the others miss: an HTTP 308 from vercel.json (fastest, and what crawlers
+// honour), a <meta http-equiv=refresh> for anything that ignores it, and a
+// canonical link so search engines transfer the ranking rather than treating
+// the two as duplicates.
+import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(here, "public");
-const target = join(publicDir, "index.html");
-const source = join(here, "..", "docs", "desk.html");
+const TARGET = "https://career.askakshay.com/";
 
 mkdirSync(publicDir, { recursive: true });
 
-if (existsSync(source)) {
-  // desk.html becomes THIS site's index. The file keeps its own name too, so a
-  // /desk link from news.askakshay.com still resolves after the split.
-  // The new client-rendered Life page is the index. The old server-rendered
-  // desk.html is kept under its own name so existing /desk links resolve —
-  // one source of truth for the data, two shells while the switch settles.
-  const lifeShell = join(here, "..", "docs", "life.html");
-  if (existsSync(lifeShell)) copyFileSync(lifeShell, target);
-  else copyFileSync(source, target);
-  copyFileSync(source, join(publicDir, "desk.html"));
+writeFileSync(join(publicDir, "index.html"), `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Moved to career.askakshay.com</title>
+<meta http-equiv="refresh" content="0; url=${TARGET}">
+<link rel="canonical" href="${TARGET}">
+<meta name="robots" content="noindex,follow">
+<style>
+  :root{color-scheme:light dark}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;
+       background:#0B0F14;color:#F2F5F9;
+       font:400 16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       text-align:center;padding:24px}
+  a{color:#5B9CFF}
+  p{max-width:44ch}
+</style>
+</head>
+<body>
+  <div>
+    <p><b>The Life page moved.</b></p>
+    <p>Career, learning, practice, mind and the drills now live at
+       <a href="${TARGET}">career.askakshay.com</a>.</p>
+    <p>Redirecting&hellip;</p>
+  </div>
+</body>
+</html>
+`, "utf8");
 
-  // Same by-name allow-list discipline as vercel-news/build.js. A docs/ file
-  // needs naming in THREE places to reach the web — written by generate.py,
-  // named in .vercelignore, and named here. today.json had the first two and
-  // still 404'd for days. If a file is missing in production and the build log
-  // says it was written, this list is why.
-  for (const f of ["app.js", "icon.svg", "og.png", "manifest.webmanifest",
-                   "robots.txt", "today.json", "edition.json", "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js"]) {
-    const src = join(here, "..", "docs", f);
-    if (existsSync(src)) copyFileSync(src, join(publicDir, f));
-  }
+writeFileSync(join(publicDir, "robots.txt"),
+  "User-agent: *\nDisallow: /\n", "utf8");
 
-  const fontSrc = join(here, "..", "docs", "fonts");
-  if (existsSync(fontSrc)) {
-    const fontOut = join(publicDir, "fonts");
-    mkdirSync(fontOut, { recursive: true });
-    let n = 0;
-    for (const f of readdirSync(fontSrc)) {
-      if (f.endsWith(".woff2")) { copyFileSync(join(fontSrc, f), join(fontOut, f)); n++; }
-    }
-    console.log(`[build] copied ${n} font files`);
-  }
-  console.log(`[build] copied docs/desk.html → public/index.html (${Math.round(statSync(target).size / 1024)}KB)`);
-} else if (existsSync(target)) {
-  console.log(`[build] using pre-staged public/index.html (${Math.round(statSync(target).size / 1024)}KB)`);
-} else {
-  // Never ship a blank domain. Say what is wrong instead of 404ing.
-  writeFileSync(
-    target,
-    `<!doctype html><meta charset="utf-8"><title>LIFE — askakshay</title>
-<body style="background:#FBFAF7;color:#17191C;font:15px/1.6 ui-monospace,monospace;padding:48px;max-width:640px">
-<h1 style="color:#5C7A0B;font-size:20px">LIFE</h1>
-<p>The daily shell was not included in this deploy.</p>
-<p style="color:#656C74">Fix: run <code>python generate.py</code>, then redeploy.</p>
-</body>`,
-    "utf8"
-  );
-  console.log("[build] ⚠️  docs/desk.html missing — wrote fallback shell");
-}
+console.log("[life] built redirect ->", TARGET);
