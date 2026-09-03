@@ -2674,11 +2674,13 @@ PAGE_META = {
         "other_hint": "career, learning, practice, mind, drills",
     },
     "desk": {
-        "title": "Life — career, learning, practice, mind and the daily drills",
-        "desc": ("The fourth pillar: the Gulf finance search and the CFO track, the "
-                 "day's reading and the book underneath it, Spanish, one thing to do "
-                 "with a seven-month-old, the thinking, and chess from yesterday's "
-                 "games. Rebuilt daily alongside the ledger."),
+        # 2026-09-03: career and learning moved to career.askakshay.com, so the
+        # title and description no longer advertise them. This is the string the
+        # browser tab and every search result show.
+        "title": "Life — practice, mind and the daily drills",
+        "desc": ("Spanish, one thing to do with a seven-month-old, the thinking, "
+                 "and chess from yesterday's games. Rebuilt daily alongside the "
+                 "ledger."),
         "path": "/desk",
         "other_label": "Signal · Research · Desk",
         # Absolute, not "/". This page is served from TWO origins now — as

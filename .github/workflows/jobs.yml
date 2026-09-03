@@ -18,26 +18,26 @@ name: Jobs — daily senior-finance discovery
 # currently breaking the Market Intel section, whose 23:00 UTC cron leaves only
 # 90 minutes of headroom.
 #
-# Moved 2026-08-18 to 08:00 UTC = 16:00 MYT, on request: Akshay is in Malaysia
-# and wants the day's roles discovered at 4 PM local, not at 02:00.
+# Moved 2026-09-03 to 01:00 UTC = 09:00 MYT, on request.
 #
-# Redoing the arithmetic the old comment demanded — this move is EARLIER, so
-# the headroom grows rather than shrinks:
-#   worst case  08:00 + 3h drift = 11:00 start, ~11:20 finish
-#   paper       00:30 UTC the NEXT day
-#   spare       13h10m AFTER the full 3h drift is already absorbed
+# THE BUILD-TIMING CONSTRAINT THIS COMMENT USED TO CARRY IS GONE. The careers
+# section was server-rendered from docs/jobs.json into the paper, so a scrape
+# that drifted past the paper build produced an empty section. On 2026-09-03
+# that section moved to career.askakshay.com, which fetches jobs.json from
+# news.askakshay.com CLIENT-side on every page load. Nothing server-renders
+# this file any more, so cron drift can no longer empty a section — it only
+# delays how early the roles appear.
 #
-# One consequence worth stating plainly: the careers section is SERVER-rendered
-# from docs/jobs.json at paper-build time (newspaper.py only reads the file).
-# So roles found at 16:00 MYT reach the page at the following 06:00 IST build,
-# not immediately. Making them appear at 16:00 would mean rebuilding the whole
-# paper mid-session — a 13:30 IST rebuild, with the Indian market still open —
-# which changes what "the 6 AM edition" means. Not done without asking.
-# Do not move this LATER without redoing the arithmetic above.
+# Arithmetic redone anyway, because the rule in this file is to redo it:
+#   worst case  01:00 + 3h observed drift = 04:00 start, ~04:20 finish
+#   paper       22:00 UTC the same day (newspaper.yml, = 06:00 MYT next day)
+#   spare       17h40m AFTER the full 3h drift is already absorbed
+#
+# Do not move this later than ~18:00 UTC without redoing the arithmetic.
 
 on:
   schedule:
-    - cron: '0 8 * * *'       # 16:00 MYT / 13:30 IST — 16h30m before newspaper.yml
+    - cron: '0 1 * * *'       # 09:00 MYT — the roles are ready with the morning
     # RETRY. On 2026-08-27 this cron produced no run at all — the history skips
     # from 08-26T08:53Z straight to nothing — and the Careers feed went 28h old
     # and DEGRADED while the site still called it a daily refresh. The same day
@@ -48,7 +48,7 @@ on:
     # docs/jobs.json from scratch and sends nothing, so a second run on a day
     # the first worked simply writes the same file again. Cheap, and idempotent
     # by construction.
-    - cron: '0 11 * * *'      # 19:00 MYT — retry if the 08:00 cron was dropped
+    - cron: '0 5 * * *'       # 13:00 MYT — retry if the 01:00 cron was dropped
   workflow_dispatch:
 
 concurrency:
