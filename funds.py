@@ -38,6 +38,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import time
 import urllib.request
 from datetime import date, datetime, timedelta
 
@@ -188,10 +189,39 @@ MIN_YEARS = 3
 MAX_NAV_AGE_DAYS = 14
 
 
-def _get(url: str, timeout: int = 25):
-    req = urllib.request.Request(url, headers={"User-Agent": "askakshay-funds/1.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.load(r)
+def _get(url: str, timeout: int = 25, tries: int = 3):
+    """Fetch with a short backoff on the failures that are worth retrying.
+
+    THE WEEK OF 29 AUGUST WAS LOST TO ONE 502. The scheme list came back
+    "HTTP Error 502: Bad Gateway", build() returned ok:False, the job exited 1,
+    and the cached screen stayed at the previous week's — which is how the site
+    was still publishing a 22 August screen on 3 September. Nobody noticed
+    because a stale screen looks exactly like a fresh one apart from a date
+    nobody reads.
+
+    mfapi.in mirrors AMFI and is a free service; an occasional 502 or timeout
+    is its normal behaviour, not an outage. Retrying three times over about six
+    seconds costs nothing and turns a lost week into a slow minute.
+
+    5xx and timeouts are retried. A 404 is not — that is a scheme code that
+    does not exist, and asking again will not change it.
+    """
+    last = None
+    for attempt in range(tries):
+        try:
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "askakshay-funds/1.0"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            last = e
+            if e.code < 500:
+                raise
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
+            last = e
+        if attempt < tries - 1:
+            time.sleep(1.5 * (attempt + 1))
+    raise last
 
 
 def _parse_nav(rows: list[dict]) -> list[tuple[date, float]]:
