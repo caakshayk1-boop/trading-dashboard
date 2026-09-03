@@ -83,9 +83,80 @@ CATEGORIES: list[tuple[str, str, tuple[str, ...], str, str]] = [
     ("hybrid",   "Balanced Advantage", ("BALANCED ADVANTAGE", "DYNAMIC ASSET"),
      "Hybrid Scheme - Dynamic Asset Allocation or Balanced Advantage",
      "Equity/debt mix moved by valuation. Gentler ride, lower ceiling."),
+
+    # ── SECTORAL, THEMATIC AND THE REST ────────────────────────────────────
+    #
+    # AMFI files every one of these under a single scheme_category,
+    # "Equity Scheme - Sectoral/ Thematic", so the category field cannot tell a
+    # pharma fund from an infrastructure one — only the NAME can. That is the
+    # same trap the Nifty 50 bucket has, and it is why each of these carries
+    # its own keywords rather than leaning on the AMFI label.
+    #
+    # THEY ARE SEPARATE CATEGORIES ON PURPOSE. Ranking a gold fund against a
+    # small-cap fund produces a leaderboard in which the top entry is whichever
+    # asset class had a good year — which is a fact about the year, not about
+    # the fund or the manager. Each of these is ranked only against its own
+    # kind, and the page says which kind that is.
+    ("multicap", "Multi Cap",          ("MULTI CAP", "MULTICAP"),
+     "Equity Scheme - Multi Cap Fund",
+     "Mandated 25% each in large, mid and small. Flexi cap with the split fixed."),
+    ("focused",  "Focused",            ("FOCUSED",),
+     "Equity Scheme - Focused Fund",
+     "At most 30 holdings. Concentration cuts both ways and shows up in drawdown."),
+    ("value",    "Value & Contra",     ("VALUE FUND", "CONTRA", "VALUE DISCOVERY", "VALUE OPP"),
+     "Equity Scheme - Value Fund",
+     "Buys what is cheap and unloved. Long stretches of underperformance are the cost."),
+    ("divyield", "Dividend Yield",     ("DIVIDEND YIELD",),
+     "Equity Scheme - Dividend Yield Fund",
+     "Screens on payout. Growth plan, so the yield compounds inside the NAV."),
+    ("infra",    "Infrastructure",     ("INFRASTRUCTURE", "INFRA FUND", "MANUFACTURING",
+                                        "TRANSPORT", "T.I.G.E.R"),
+     "Equity Scheme - Sectoral/ Thematic",
+     "Capex, power, roads, defence. A policy-cycle bet more than a company one."),
+    ("pharma",   "Pharma & Healthcare", ("PHARMA", "HEALTHCARE", "HEALTH CARE"),
+     "Equity Scheme - Sectoral/ Thematic",
+     "Regulated demand, USFDA risk. Moves on things the wider market ignores."),
+    ("tech",     "Technology",         ("TECHNOLOGY", "DIGITAL", " IT FUND", "INFO TECH"),
+     "Equity Scheme - Sectoral/ Thematic",
+     "Indian IT earns in dollars — a currency position as much as a sector one."),
+    ("banking",  "Banking & Financial", ("BANKING", "FINANCIAL SERVICES", "FINANCIAL SERV"),
+     "Equity Scheme - Sectoral/ Thematic",
+     "The largest weight in the index. A view here is close to a view on the market."),
+    ("consume",  "Consumption",        ("CONSUMPTION", "CONSUMER", "FMCG"),
+     "Equity Scheme - Sectoral/ Thematic",
+     "Domestic demand, slower and less cyclical than the rest of this shelf."),
+    ("multiasset", "Multi Asset",      ("MULTI ASSET", "MULTI-ASSET"),
+     "Hybrid Scheme - Multi Asset Allocation",
+     "Equity, debt and gold in one mandate — at least 10% in each, by rule."),
+    ("gold",     "Gold",               ("GOLD FUND", "GOLD SAVINGS", "GOLD ETF FOF",
+                                        "GOLD FOF"),
+     "Other Scheme - FoF Domestic",
+     "Not a business — no earnings, no compounding. It holds gold and moves with it."),
+    ("global",   "Global & overseas",  ("GLOBAL", "US EQUITY", "NASDAQ", "S&P 500",
+                                        "INTERNATIONAL", "WORLD", "OVERSEAS", "GREATER CHINA",
+                                        "EMERGING MARKET"),
+     "Other Scheme - FoF Overseas",
+     "Rupee returns on foreign assets, so the currency is part of the result. "
+     "Several are capped for new money under the RBI overseas limit."),
 ]
 
 EXCLUDE = ("IDCW", "DIVIDEND", "REGULAR", "BONUS", "PAYOUT", "REINVEST")
+
+
+def _is_payout_plan(name_upper: str) -> bool:
+    """Is this the IDCW/payout variant rather than the growth plan?
+
+    "DIVIDEND" is in EXCLUDE to drop payout plans, and it silently deleted an
+    entire category: every Dividend Yield fund contains the word, so the
+    dividend-yield screen matched ZERO of 5,057 direct-growth schemes and
+    published as an empty table.
+
+    Dividend Yield is a STRATEGY — it screens on payout and holds the units —
+    and has nothing to do with how the plan distributes. Masked before the
+    plan-type check so the two meanings stop colliding.
+    """
+    probe = name_upper.replace("DIVIDEND YIELD", "DIVYIELD-STRATEGY")
+    return any(x in probe for x in EXCLUDE)
 
 # Extra rejects for the Nifty 50 bucket. AMFI files every index tracker under
 # one scheme_category ("Other Scheme - Index Funds"), so the category field
@@ -158,6 +229,52 @@ def _cagr(series: list[tuple[date, float]], years: int):
     if (end_d - series[0][0]).days < 365 * years - 30:
         return None
     return round(((end_v / start) ** (1 / years) - 1) * 100, 2)
+
+
+def _sip_value(series: list[tuple[date, float]], monthly: float = 10_000.0,
+               years: int = 10):
+    """What a fixed monthly SIP would be worth today, from the NAV series.
+
+    Every fund table on the internet quotes this number and none of them shows
+    its working. It is not a return: it depends on WHEN each instalment bought,
+    so a fund that fell early and recovered late can beat a steadier one with
+    the same CAGR — which is the whole reason a SIP is not a lump sum.
+
+    Computed the only honest way: walk the actual NAV on the nearest trading
+    day to each monthly anniversary, buy units at that NAV, and value the total
+    at the latest NAV. No assumed rate, no smoothing.
+
+    Returns None rather than a shortened number when the fund is younger than
+    the window. A 10-year SIP figure on a 4-year-old fund is the most flattering
+    kind of wrong: it silently becomes a 4-year figure and gets compared against
+    real 10-year ones.
+    """
+    if not series:
+        return None
+    end_d, end_nav = series[-1]
+    if end_nav <= 0:
+        return None
+    first_d = series[0][0]
+    start_d = end_d - timedelta(days=365 * years)
+    # The fund must actually have the history. 30 days of slack for a NAV file
+    # that starts mid-month; anything more and the window is not what it says.
+    if (end_d - first_d).days < 365 * years - 30:
+        return None
+    units = 0.0
+    paid = 0.0
+    for m in range(years * 12):
+        buy_on = start_d + timedelta(days=int(30.44 * m))
+        if buy_on > end_d:
+            break
+        nav = _nav_on_or_before(series, buy_on)
+        if not nav or nav <= 0:
+            continue
+        units += monthly / nav
+        paid += monthly
+    if paid <= 0 or units <= 0:
+        return None
+    return {"invested": round(paid), "value": round(units * end_nav),
+            "months": int(paid // monthly)}
 
 
 def _volatility(series: list[tuple[date, float]], years: int = 3):
@@ -358,7 +475,7 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
     direct = [f for f in allf
               if "DIRECT" in f["schemeName"].upper()
               and "GROWTH" in f["schemeName"].upper()
-              and not any(x in f["schemeName"].upper() for x in EXCLUDE)]
+              and not _is_payout_plan(f["schemeName"].upper())]
 
     out = []
     for key, label, keywords, amfi_cat, blurb in CATEGORIES:
@@ -380,6 +497,19 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
             # Index funds all share one AMFI category, so the benchmark has to
             # be pinned by name. See _NIFTY50_REJECT for why this is not a
             # simple substring test.
+            # "MID CAP" IS A SUBSTRING OF "LARGE AND MID CAP".
+            #
+            # The mid-cap bucket matched 114 schemes against large-and-mid's
+            # 44, because every Large & Mid Cap fund contains the words "Mid
+            # Cap". So the Mid Cap table was ranking a different category's
+            # funds alongside its own — two mandates, one leaderboard, which is
+            # exactly what the category split exists to prevent.
+            if key == "midcap":
+                nm = (meta.get("scheme_name") or "").upper()
+                if any(x in nm for x in ("LARGE & MID", "LARGE AND MID",
+                                         "LARGEMID", "LARGE&MID")):
+                    continue
+
             if key == "index":
                 nm = (meta.get("scheme_name") or "").upper()
                 if not _NIFTY50_RE.search(nm):
@@ -422,6 +552,10 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
                 "r5": (r5 := _cagr(series, 5)),
                 "dd3": _max_drawdown(series, 3),
                 "volatility": _volatility(series, 3),
+                # The number every fund table quotes and none shows the working
+                # for. None when the fund is younger than the window, rather
+                # than a shortened figure passed off as ten years.
+                "sip10": _sip_value(series, 10_000.0, 10),
                 "bar_r1": _bar_pct(r1),
                 "bar_r3": _bar_pct(r3),
                 "bar_r5": _bar_pct(r5),
