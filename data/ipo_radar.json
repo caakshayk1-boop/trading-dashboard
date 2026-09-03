@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-03T11:18:57",
+ "generated_at": "2026-09-03T16:06:57",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -18,11 +18,11 @@
    "price_high": 177.0,
    "issue_size_shares": 18520085.0,
    "issue_size_cr": 459.72,
-   "subscription_x": 33.28433471012687,
+   "subscription_x": 33.34170572111305,
    "subscription_by_category": {
     "QIB": 36.73,
-    "HNI": 108.85,
-    "Total": 43.12
+    "HNI": 109.04,
+    "Total": 43.4
    },
    "lot_size": 84.0,
    "min_investment": 14868.0,
@@ -31,7 +31,7 @@
    "face_value": 2.0,
    "anchor_cr": 137.91,
    "listing_date": "Sep 8, 2026",
-   "gmp_text": "\u20b920",
+   "gmp_text": "\u20b918",
    "revenue_cr": 1927.73,
    "revenue_growth_pct": 38.0,
    "pat_cr": 104.79,
@@ -99,11 +99,11 @@
    "price_high": 239.0,
    "issue_size_shares": 3137810.0,
    "issue_size_cr": 125.0,
-   "subscription_x": 77.0451378509215,
+   "subscription_x": 77.14533575965403,
    "subscription_by_category": {
     "QIB": 9.06,
-    "HNI": 278.91,
-    "Total": 107.12
+    "HNI": 279.11,
+    "Total": 107.71
    },
    "lot_size": 62.0,
    "min_investment": 14818.0,
@@ -112,7 +112,7 @@
    "face_value": 10.0,
    "anchor_cr": 50.0,
    "listing_date": "Sep 8, 2026",
-   "gmp_text": "\u20b913",
+   "gmp_text": "\u20b912",
    "revenue_cr": 82.06,
    "revenue_growth_pct": null,
    "pat_cr": 4.96,
@@ -152,7 +152,7 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 77.0x, but the book is small (about Rs.125 Cr).",
+   "verdict_why": "Subscribed 77.1x, but the book is small (about Rs.125 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
@@ -245,6 +245,85 @@
    "reads_against": null
   },
   {
+   "symbol": "GLASSWALL",
+   "company": "Glass Wall Systems (India) Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-09-08",
+   "close_date": "2026-09-10",
+   "days_left": null,
+   "price_band": "Rs.172 to Rs.182",
+   "price_low": 172.0,
+   "price_high": 182.0,
+   "issue_size_shares": 23702094.0,
+   "issue_size_cr": 427.89,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": 82.0,
+   "min_investment": 14924.0,
+   "fresh_issue_cr": 60.0,
+   "ofs_cr": 367.89,
+   "face_value": 2.0,
+   "anchor_cr": null,
+   "listing_date": null,
+   "gmp_text": "\u20b920 (10.99%)",
+   "revenue_cr": 471.43,
+   "revenue_growth_pct": 64.0,
+   "pat_cr": 83.79,
+   "pat_growth_pct": 46.0,
+   "pat_margin_pct": 17.77,
+   "roe_pct": 32.03,
+   "debt_to_equity": 0.03,
+   "pe_post_issue": 19.1,
+   "peer_pe": null,
+   "peer_pe_n": null,
+   "eps_post_issue": 9.53,
+   "pb_ratio": 5.89,
+   "roce_pct": 43.01,
+   "ebitda_margin_pct": 23.02,
+   "fy_label": "FY26",
+   "sector": "Civil Construction",
+   "use_of_proceeds": "Funding capital expenditure requirement for setting up of a glass processing unit (GPU\u2026 (\u20b960.00 Cr); and 1 other object",
+   "score": {
+    "points": 29,
+    "of": 45,
+    "pct": 64,
+    "parts": {
+     "Size": "14/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "anchor book",
+     "listing date",
+     "sector",
+     "audited financials",
+     "valuation multiples"
+    ],
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/glass-wall-systems-ipo/2594/",
+   "reads_for": [
+    "Revenue grew 64% year on year.",
+    "Return on net worth of 32% \u2014 well above the ~14% a typical listed peer earns.",
+    "Effectively debt-free at 0.03 debt to equity, so the balance sheet is not a constraint.",
+    "Return on capital employed of 43% \u2014 above the 20% bar the stock screen uses for a compounder."
+   ],
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b9368 Cr) than new money into the business (\u20b960 Cr)."
+   ]
+  },
+  {
    "symbol": "KANOHAR",
    "company": "Kanohar Electricals Limited",
    "exchange": "NSE",
@@ -268,7 +347,7 @@
    "face_value": 2.0,
    "anchor_cr": null,
    "listing_date": null,
-   "gmp_text": "\u20b9150 (23.73%)",
+   "gmp_text": "\u20b9200 (31.65%)",
    "revenue_cr": 662.86,
    "revenue_growth_pct": 45.0,
    "pat_cr": 129.73,
@@ -386,7 +465,7 @@
    "ofs_cr": null,
    "face_value": 10.0,
    "anchor_cr": 27.45,
-   "gmp_text": "\u20b930",
+   "gmp_text": "\u20b928",
    "revenue_cr": 147.4,
    "revenue_growth_pct": 24.0,
    "pat_cr": 6.48,
@@ -408,6 +487,12 @@
    "issue_size_cr": 91.5,
    "enriched_url": "https://www.chittorgarh.com/ipo/priority-jewels-ipo/2435/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1315/priority-jewels-ltd",
+   "subscription_by_category": {
+    "QIB": 39.87,
+    "HNI": 166.49,
+    "Total": 100.45
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 24% year on year.",
     "Profit grew faster than revenue (68% against 24%), so margins widened rather than bought growth."
@@ -430,7 +515,7 @@
    "ofs_cr": null,
    "face_value": 1.0,
    "anchor_cr": 216.0,
-   "gmp_text": "\u20b9213",
+   "gmp_text": "\u20b9247",
    "revenue_cr": 480.65,
    "revenue_growth_pct": 28.0,
    "pat_cr": 120.82,
@@ -452,6 +537,12 @@
    "issue_size_cr": 720.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/esds-software-ipo/1198/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1318/esds-software-solution-ltd",
+   "subscription_by_category": {
+    "QIB": 274.97,
+    "HNI": 202.87,
+    "Total": 142.88
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 28% year on year.",
     "Profit grew faster than revenue (117% against 28%), so margins widened rather than bought growth.",
@@ -2146,7 +2237,7 @@
  "recent_window_months": 12,
  "counts": {
   "open": 2,
-  "upcoming": 2,
+  "upcoming": 3,
   "awaiting": 3,
   "listed_12m": 93,
   "listed_measured": 89,
