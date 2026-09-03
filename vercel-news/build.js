@@ -43,7 +43,7 @@ if (existsSync(source)) {
                    "icon.svg", "og.png", "share.png", "today.json", "app.js", "screen.json", "screen-detail.json",
                    "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js", "data-health.json",
                    "next.html", "next.css", "next.js",
-                   "pulse.json", "ipo.json", "news.json", "conviction.json"]) {
+                   "pulse.json", "ipo.json", "news.json", "conviction.json", "funds.json"]) {
     const src = join(here, "..", "docs", f);
     if (existsSync(src)) copyFileSync(src, join(publicDir, f));
   }

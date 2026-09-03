@@ -1162,6 +1162,40 @@ def generate() -> None:
     except Exception as e:                                    # noqa: BLE001
         print(f"[generate] ❌ conviction.json FAILED: {e} — Today loses its daily slate")
 
+    # ── funds.json ──────────────────────────────────────────────────────────
+    # The fund screen has existed for months and was rendered ONLY into the
+    # newspaper's HTML — cached in sqlite, never emitted as a feed. So
+    # signal.askakshay.com had no way to show it without recomputing the
+    # AMFI screen a second time, which would have been two rankings of the
+    # same NAVs disagreeing with each other by the hour they ran.
+    #
+    # Written here as the tenth build artefact, the same shape as the other
+    # nine, so the mirror picks it up and one screen feeds both sites.
+    try:
+        _fs = fund_screen or {}
+        _fcats = _fs.get("categories", [])
+        _funds = {
+            "ok": bool(_fcats),
+            "generated_at": _fs.get("generated_at"),
+            "basis": ("AMFI official NAV via api.mfapi.in. DIRECT + GROWTH plans only — "
+                      "per-scheme TER is not in the free feed, and Direct vs Regular is "
+                      "the one cost lever the data does show, typically 0.5-1.2% a year."),
+            "categories": [{
+                "key": c.get("key"), "label": c.get("label"), "blurb": c.get("blurb"),
+                "funds": [{k: f.get(k) for k in
+                           ("name", "code", "nav", "r1y", "r3y", "r5y", "sip10y",
+                            "cagr3", "cagr5", "since", "aum", "category")
+                           if f.get(k) is not None}
+                          for f in (c.get("funds") or [])],
+            } for c in _fcats],
+        }
+        (out_dir / "funds.json").write_text(json.dumps(_funds, default=str), encoding="utf-8")
+        print(f"[generate] ✅ funds.json ({len(json.dumps(_funds)) // 1024}KB · "
+              f"{len(_fcats)} categories · "
+              f"{sum(len(c.get('funds') or []) for c in _fcats)} funds)")
+    except Exception as e:                                    # noqa: BLE001
+        print(f"[generate] ❌ funds.json FAILED: {e} — the Funds route loses its data")
+
     try:
         _news = [{"title": n.get("title"), "summary": n.get("summary"),
                   "source": n.get("source"), "link": n.get("link")}
