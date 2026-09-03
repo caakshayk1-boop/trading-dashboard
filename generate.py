@@ -1010,26 +1010,35 @@ def generate() -> None:
             "speaking": _lc.get("speaking", []),
             "interview_tech": _lc.get("interview_tech", []),
             "interview_soft": _lc.get("interview_soft", []),
+            "cfo_field": _lc.get("cfo_field", []),
+            # 2026-09-03: the Life sections moved to career.askakshay.com, which
+            # renders them from this file client-side. These six were the only
+            # desk payloads the bot never needed and so were never written here;
+            # without them the new surface would have had to re-run generators
+            # that already ran in this pass.
+            "review": review,
+            "podcasts": podcasts,
+            "smart_reads": smart_reads,
+            "lichess_games": lichess_games,
+            "lichess_summary": lichess_summary,
+            "lichess_puzzle": lichess_puzzle,
         },
     }
 
-    pages = {"main": "index.html", "desk": "desk.html"}
+    # 2026-09-03: desk.html is no longer rendered. Every Life section moved to
+    # career.askakshay.com, which reads them out of today.json["desk"] below.
+    # SECTION_MAP has no rows for the desk page any more, so rendering it would
+    # emit an empty shell with a nav pointing at nothing.
+    pages = {"main": "index.html"}
 
     # Write output
     out_dir = pathlib.Path("docs")
     out_dir.mkdir(exist_ok=True)
-    # Chess moved to /desk in the page split, so the "would this local run
-    # clobber real Lichess data?" guard has to look there, not at index.html.
-    chess_file = out_dir / "desk.html"
-    if not os.environ.get("LICHESS_TOKEN") and chess_file.exists():
-        existing = chess_file.read_text(encoding="utf-8")
-        if "game-card" in existing and "LICHESS_TOKEN" not in existing:
-            print("[generate] ⚠️  Skipping render — desk.html has full chess data, no token locally")
-            (out_dir / "alerts.json").write_text(json.dumps(alerts, default=str, indent=2), encoding="utf-8")
-            # No edition.json write here on purpose: index.html was not
-            # rewritten, so publishing a new build id would tell every open tab
-            # to reload into the same page it already has.
-            return
+    # The LICHESS_TOKEN guard that used to sit here protected desk.html from
+    # being overwritten by a local run with no chess data. desk.html is not
+    # written any more, and the chess payload now travels in today.json, so the
+    # guard has nothing to protect. Lichess data is still FETCHED — it is part
+    # of that payload.
     for pg, fname in pages.items():
         ctx = dict(base)
         # Sections with nothing to render are dropped from the nav too,

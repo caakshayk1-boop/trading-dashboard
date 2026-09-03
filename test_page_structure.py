@@ -209,7 +209,7 @@ def _():
     # is the "18 destinations, figure it out yourself" problem. Six named
     # groups give a first-time reader a map instead of an index.
     PILLARS = {"Today", "Markets", "Research", "Portfolio", "Ledger", "About"}
-    LIFE = {"Practice", "Mind", "Drills"}   # the /desk page; Career and Learning retired 2026-09-03
+    LIFE = set()   # the /desk page is gone entirely as of 2026-09-03
     for _i, _l, page, group in SECTION_MAP:
         allowed = PILLARS if page == "main" else LIFE
         assert group in allowed, f"{_i} is in {group!r}, which is no pillar"
@@ -221,7 +221,10 @@ def _():
     # 29 since 2026-09-03: 35 less the six CAREER and LEARNING sections moved
     # to career.askakshay.com. Recorded here rather than left to drift, because
     # this count is the canary for a section appearing by accident.
-    assert len(SECTION_MAP) == 29, f"section count changed: {len(SECTION_MAP)}"
+    # 20 since 2026-09-03: the /desk page is gone entirely, so SECTION_MAP is
+    # main-page-only. 35 -> 29 when CAREER and LEARNING moved, 29 -> 20 when
+    # PRACTICE, MIND and DRILLS followed.
+    assert len(SECTION_MAP) == 20, f"section count changed: {len(SECTION_MAP)}"
 
 
 # Sections deliberately retired, with the reason and the date. A section may
@@ -242,6 +245,11 @@ RETIRED = {
     # page calls them; daily_learning.py IS still called, because Language,
     # Father and Wisdom read from it too.
     "careers", "interview", "brief", "smartreads", "book", "podcasts",
+    # 2026-09-03, second wave: the rest of /desk followed them. The page no
+    # longer exists; generate.py still writes every payload into today.json
+    # under "desk" and career.askakshay.com renders them from there.
+    "language", "father", "wisdom", "mind", "way", "review", "desk",
+    "chess", "gym",
 }
 
 

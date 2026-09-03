@@ -49,13 +49,9 @@ PAGES = {
     # "music" was in this list until 2026-08-18, when the section was removed
     # on request. The gate did its job: it refused to publish a page missing a
     # section it had been told to expect, and nothing reached production.
-    # 11 -> 9 on 2026-09-03: the CAREER and LEARNING groups (careers,
-    # interview, brief, smartreads, book, podcasts) moved to
-    # career.askakshay.com. Same story as "music" above — the gate refused to
-    # publish a page missing sections it had been told to expect, and nothing
-    # reached production. Lowered deliberately, with the reason, not to make a
-    # red build go green.
-    "/desk": {"min_sections": 9, "must": ["chess", "gym"]},
+    # /desk was removed entirely on 2026-09-03 — the whole Life page moved to
+    # career.askakshay.com. Checking a page that no longer exists would fail
+    # the build on a 404, so the entry is deleted rather than zeroed.
 }
 
 # python -m http.server has no extensionless routing, so /desk is a 404 there
