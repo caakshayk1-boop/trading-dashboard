@@ -160,7 +160,11 @@ jobs:
           # built on 2026-08-12, which predated the Piotroski field, so the
           # F-Score column was populated in the server-rendered top 25 and
           # empty for all 750 rows the moment the table lazy-loaded.
-          git add docs/index.html docs/desk.html docs/alerts.json docs/edition.json \
+          # docs/desk.html removed 2026-09-03 — the Life page moved to
+          # career.askakshay.com and generate.py no longer writes the file. A
+          # `git add` naming a path that does not exist is a fatal error, not a
+          # warning, and it fails the whole publish AFTER the page built fine.
+          git add docs/index.html docs/alerts.json docs/edition.json \
                   docs/today.json docs/mandate.json docs/app.js docs/data-health.json \
                   docs/v2-core.js \
                   docs/life.html docs/life.js \

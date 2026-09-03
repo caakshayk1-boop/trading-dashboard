@@ -35,7 +35,11 @@ if (existsSync(source)) {
   // written by generate.py, named in .vercelignore, and named here. today.json
   // had the first two and still 404'd. If a file is missing in production and
   // the build log says it was written, this list is why.
-  for (const f of ["desk.html", "robots.txt", "sitemap.xml", "manifest.webmanifest",
+  // "desk.html" removed 2026-09-03 — the Life page moved to
+  // career.askakshay.com and generate.py no longer writes it. The
+  // existsSync guard below made this a silent skip rather than a failure,
+  // which is exactly how a stale entry survives unnoticed.
+  for (const f of ["robots.txt", "sitemap.xml", "manifest.webmanifest",
                    "icon.svg", "og.png", "share.png", "today.json", "app.js", "screen.json", "screen-detail.json",
                    "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js", "data-health.json",
                    "next.html", "next.css", "next.js",
