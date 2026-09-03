@@ -1071,7 +1071,10 @@ def build_section_brief(slot: str = "midday") -> str:
         L.append(f"  {hl.get('signals','—')} signals · latest {hl.get('latest_signal_date','—')} · "
                  f"{hl.get('open_setups','—')} open setups")
 
-    L.append("\n_Full board: news.askakshay.com · Life: life.askakshay.com_")
+    # 2026-09-03: life.askakshay.com is retired and Life moved to
+    # career.askakshay.com, which is a private working surface and is not
+    # advertised here.
+    L.append("\n_Full board: news.askakshay.com_")
     L.append("_Not SEBI advice._")
     return _fit(L, ticket_blocks)
 
@@ -1250,7 +1253,6 @@ def _life_block() -> list:
         out.append("━━━━━━━━━━━━━━━━━━━")
         for k, v in rows[:5]:
             out.append(f"  *{esc(k)}* — {esc(v)}")
-        out.append("_life.askakshay.com_")
     except Exception as e:                                    # noqa: BLE001
         log.warning("life block unavailable: %s", e)
     return out

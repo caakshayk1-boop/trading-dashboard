@@ -100,17 +100,5 @@
       "source": "/day/:date",
       "destination": "/index.html"
     }
-  ],
-  "redirects": [
-    {
-      "source": "/desk",
-      "destination": "https://career.askakshay.com/",
-      "permanent": true
-    },
-    {
-      "source": "/desk.html",
-      "destination": "https://career.askakshay.com/",
-      "permanent": true
-    }
   ]
 }

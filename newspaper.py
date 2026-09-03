@@ -2656,33 +2656,14 @@ PAGE_META = {
                  "long-term conviction picks and the last 24 hours of world news, "
                  "rebuilt at 6 AM MYT daily by Akshay Kothari, CA."),
         "path": "/",
-        # The other page IS the fourth pillar, so the link says so. "The Desk"
-        # was ambiguous once DESK became a pillar name on this page.
-        "other_label": "Life",
-        "other_path": "/desk",
-        "other_hint": "career, learning, practice, mind, drills",
-    },
-    "desk": {
-        # 2026-09-03: career and learning moved to career.askakshay.com, so the
-        # title and description no longer advertise them. This is the string the
-        # browser tab and every search result show.
-        "title": "Life — practice, mind and the daily drills",
-        "desc": ("Spanish, one thing to do with a seven-month-old, the thinking, "
-                 "and chess from yesterday's games. Rebuilt daily alongside the "
-                 "ledger."),
-        "path": "/desk",
-        "other_label": "Signal · Research · Desk",
-        # Absolute, not "/". This page is served from TWO origins now — as
-        # /desk on news.askakshay.com and as the index of life.askakshay.com —
-        # and a relative "/" resolves to the Life site's own front page there,
-        # so the link back to the ledger pointed at itself. The absolute URL is
-        # correct from both origins.
-        #
-        # The main page's link to Life stays relative at /desk until
-        # life.askakshay.com has DNS; flipping it before then would publish a
-        # dead link on the busier of the two sites.
-        "other_path": "https://news.askakshay.com",
-        "other_hint": "markets, findings, the ledger and what it is worth",
+        # 2026-09-03: there is no second page. Life moved to
+        # career.askakshay.com and is deliberately NOT linked from here — the
+        # instruction was to remove it from this estate entirely, no links and
+        # no redirect. Empty strings rather than a deleted key, because the
+        # template reads all three unconditionally; the <a> is guarded below.
+        "other_label": "",
+        "other_path": "",
+        "other_hint": "",
     },
 }
 
@@ -9533,7 +9514,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
     </div>
     {% endfor %}
-    <a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>
+    {% if other_path %}<a class="nav-other" href="{{ other_path }}" title="{{ other_hint }}">{{ other_label }} &rarr;</a>{% endif %}
   </div>
 </nav>
     <div class="stamp">
