@@ -1170,6 +1170,64 @@ def run_signal_ledger(time_str, days: int = 30):
     return rep
 
 
+def run_momentum_scan(time_str):
+    """Cross-sectional momentum over the 750-name screen — see momentum_engine.
+
+    WEEKLY, NOT DAILY, AND THAT IS THE STRATEGY RATHER THAN A SCHEDULING
+    CONVENIENCE. The factor is a monthly-rebalanced one; the evidence behind it
+    is for holds measured in months. Ranking it every morning would produce a
+    stream of near-identical lists, log each as a fresh signal, and turn a slow
+    factor into a churn machine whose costs are exactly the thing the
+    low-turnover finding says eats the premium.
+
+    It reads docs/screen.json rather than fetching prices, because the weekly
+    screen has already computed every input the formula needs — returns over
+    1m/6m/1y, ATR, turnover, market cap and the 200-day — for all 750 names.
+    Recomputing them here would be a second source of truth for the same
+    numbers.
+    """
+    import json as _json
+    from momentum_engine import build as _mom_build
+    from tracker import (log_batch_to_all_signals, duplicate_symbols,
+                         mark_alerts_sent)
+    logging.info("Running quant momentum scan (750-name screen)...")
+    try:
+        with open("docs/screen.json") as fh:
+            d = _json.load(fh)
+    except Exception as e:                                    # noqa: BLE001
+        logging.error("momentum: screen.json unreadable (%s) — skipping", e)
+        return []
+    rows = next((v for v in d.values()
+                 if isinstance(v, list) and v and isinstance(v[0], dict)), None)
+    if not rows:
+        logging.error("momentum: screen.json carries no rows — skipping")
+        return []
+
+    res = _mom_build(rows)
+    logging.info("momentum: universe %d · eligible %d · rejected %d",
+                 res["universe"], res["eligible"], res["rejected_by_gates"])
+    for reason, n in (res.get("gate_failures") or {}).items():
+        logging.info("  gate: %-46s %4d", reason, n)
+
+    picks = res["picks"]
+    dupes = duplicate_symbols(picks, "momentum_quant")
+    picks = [p for p in picks
+             if str(p["symbol"]).replace(".NS", "") not in dupes]
+    if not picks:
+        logging.info("momentum: nothing new after dedupe")
+        return []
+
+    ids = log_batch_to_all_signals([dict(
+        symbol=p["symbol"], signal_type="momentum_quant", action="BUY",
+        entry=p["entry"], sl=p["sl"], t1=p["target1"], t2=p["target2"],
+        t3=p["target3"], rr=p["rr"], timeframe="1M", score=p["score"],
+        metadata=p["components"],
+    ) for p in picks])
+    logged = [i for i in (ids or []) if i]
+    logging.info("momentum: logged %d of %d", len(logged), len(picks))
+    return picks
+
+
 def run_breakout_scan(time_str):
     from scanner import scan_breakouts
     from tracker import (log_breakouts, log_batch_to_all_signals,
@@ -1570,6 +1628,8 @@ def main():
                          "measured": len(measured), "ohl": len(ohl)}
 
         elif slot == "weekend":
+            # Momentum is weekly by design — see run_momentum_scan.
+            momentum  = _safe("momentum_scan", run_momentum_scan,  time_str)
             sigs_4h   = _safe("4h_scan",       run_4h_scan,        time_str)
             tlm_4h    = _safe("tlm_4h",        run_tlm_scan,       time_str, interval="4h")
             signals   = _safe("swing_scan",    run_swing_scan,     time_str)
@@ -1601,6 +1661,7 @@ def main():
             # remembered to ask rather than every week.
             mgc       = _safe("magic",         run_magic_scan,       time_str)
             counts    = {
+                "momentum": len(momentum),
                 "4h": len(sigs_4h), "ai_4h": len(tlm_4h),
                 "swing": len(signals), "breakouts": len(breakouts),
                 "ai_daily": len(tlm_daily),
