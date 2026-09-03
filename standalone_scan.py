@@ -785,7 +785,7 @@ MODE_NOTE = {
 }
 
 VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full",
-               "none", "us"}
+               "none", "us", "momentum"}
 
 
 def _requested_slot(argv=None):
@@ -1626,6 +1626,19 @@ def main():
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
                          "swing": len(signals), "commodities": len(comms),
                          "measured": len(measured), "ohl": len(ohl)}
+
+        elif slot == "momentum":
+            # ONE ENGINE, ON ITS OWN.
+            #
+            # Momentum rides the Saturday slot with four other engines, which
+            # is right for the weekly cadence and wrong for every other reason
+            # you might want to run it: checking a change, seeing the current
+            # ranking, or re-running after a screen rebuild. Without this,
+            # doing any of those meant firing multibagger, ai_longterm, magic
+            # and the 4H scan as collateral, each writing rows and sending
+            # alerts nobody asked for.
+            momentum  = _safe("momentum_scan", run_momentum_scan,  time_str)
+            counts    = {"momentum": len(momentum)}
 
         elif slot == "weekend":
             # Momentum is weekly by design — see run_momentum_scan.

@@ -96,7 +96,7 @@ on:
         required: false
         default: ''
         type: choice
-        options: ['', midday, eod, weekend, us, full]
+        options: ['', midday, eod, weekend, us, full, momentum]
       # THE ONCE-GUARD USED TO BE DROPPED BY THE ACT OF NAMING A SLOT.
       #
       # `if [ -n "$INPUT_SLOT" ]; then SLOT=...; ONCE=""; fi` read as "asking
