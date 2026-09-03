@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-03T10:13:47",
+ "generated_at": "2026-09-03T11:08:38",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -18,11 +18,11 @@
    "price_high": 177.0,
    "issue_size_shares": 18520085.0,
    "issue_size_cr": 459.72,
-   "subscription_x": 31.883242004558834,
+   "subscription_x": 33.21694452266283,
    "subscription_by_category": {
-    "QIB": 18.01,
-    "HNI": 95.57,
-    "Total": 33.52
+    "QIB": 36.73,
+    "HNI": 108.85,
+    "Total": 43.12
    },
    "lot_size": 84.0,
    "min_investment": 14868.0,
@@ -31,7 +31,7 @@
    "face_value": 2.0,
    "anchor_cr": 137.91,
    "listing_date": "Sep 8, 2026",
-   "gmp_text": "\u20b923",
+   "gmp_text": "\u20b920",
    "revenue_cr": 1927.73,
    "revenue_growth_pct": 38.0,
    "pat_cr": 104.79,
@@ -70,7 +70,7 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 31.9x, but the book is small (about Rs.460 Cr).",
+   "verdict_why": "Subscribed 33.2x, but the book is small (about Rs.460 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/deepa-jewellers-ipo/2827/",
@@ -99,11 +99,11 @@
    "price_high": 239.0,
    "issue_size_shares": 3137810.0,
    "issue_size_cr": 125.0,
-   "subscription_x": 75.40944799079612,
+   "subscription_x": 76.89690580372935,
    "subscription_by_category": {
-    "QIB": 5.23,
-    "HNI": 240.59,
-    "Total": 90.55
+    "QIB": 9.06,
+    "HNI": 278.91,
+    "Total": 107.12
    },
    "lot_size": 62.0,
    "min_investment": 14818.0,
@@ -112,7 +112,7 @@
    "face_value": 10.0,
    "anchor_cr": 50.0,
    "listing_date": "Sep 8, 2026",
-   "gmp_text": "\u20b935",
+   "gmp_text": "\u20b913",
    "revenue_cr": 82.06,
    "revenue_growth_pct": null,
    "pat_cr": 4.96,
@@ -152,7 +152,7 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 75.4x, but the book is small (about Rs.125 Cr).",
+   "verdict_why": "Subscribed 76.9x, but the book is small (about Rs.125 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
@@ -243,6 +243,84 @@
     "Return on capital employed of 24% \u2014 above the 20% bar the stock screen uses for a compounder."
    ],
    "reads_against": null
+  },
+  {
+   "symbol": "KANOHAR",
+   "company": "Kanohar Electricals Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-09-08",
+   "close_date": "2026-09-10",
+   "days_left": null,
+   "price_band": "Rs.601 to Rs.632",
+   "price_low": 601.0,
+   "price_high": 632.0,
+   "issue_size_shares": 16949595.0,
+   "issue_size_cr": 1055.74,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": 23.0,
+   "min_investment": 14536.0,
+   "fresh_issue_cr": 300.0,
+   "ofs_cr": 755.74,
+   "face_value": 2.0,
+   "anchor_cr": null,
+   "listing_date": null,
+   "gmp_text": null,
+   "revenue_cr": 662.86,
+   "revenue_growth_pct": 45.0,
+   "pat_cr": 129.73,
+   "pat_growth_pct": 99.0,
+   "pat_margin_pct": 19.57,
+   "roe_pct": 34.8,
+   "debt_to_equity": 0.1,
+   "pe_post_issue": 38.58,
+   "peer_pe": 103.03,
+   "peer_pe_n": 6,
+   "eps_post_issue": 16.38,
+   "pb_ratio": 12.62,
+   "roce_pct": 70.13,
+   "ebitda_margin_pct": 27.59,
+   "fy_label": "FY26",
+   "sector": "Heavy Electrical Equipment",
+   "use_of_proceeds": "Funding the incremental working capital requirements of Company (\u20b9155.00 Cr); Funding the capital expenditure requirements of Company (\u20b964.18 Cr); and 1 other object",
+   "score": {
+    "points": 35,
+    "of": 45,
+    "pct": 78,
+    "parts": {
+     "Size": "20/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "anchor book",
+     "listing date",
+     "sector",
+     "audited financials",
+     "valuation multiples"
+    ],
+    "shown_not_scored": [
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/kanohar-electricals-ipo/2856/",
+   "reads_for": [
+    "Priced at 38.6x post-issue earnings against a 103x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
+    "Revenue grew 45% year on year.",
+    "Profit grew faster than revenue (99% against 45%), so margins widened rather than bought growth.",
+    "Return on net worth of 35% \u2014 well above the ~14% a typical listed peer earns."
+   ],
+   "reads_against": [
+    "More of the issue is existing holders selling (\u20b9756 Cr) than new money into the business (\u20b9300 Cr)."
+   ]
   }
  ],
  "closed": [],
@@ -357,7 +435,7 @@
    "ofs_cr": null,
    "face_value": 1.0,
    "anchor_cr": 216.0,
-   "gmp_text": "\u20b9215",
+   "gmp_text": "\u20b9213",
    "revenue_cr": 480.65,
    "revenue_growth_pct": 28.0,
    "pat_cr": 120.82,
@@ -378,6 +456,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 720.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/esds-software-ipo/1198/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1318/esds-software-solution-ltd",
+   "subscription_by_category": {
+    "QIB": 274.97,
+    "HNI": 202.87,
+    "Total": 142.88
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 28% year on year.",
     "Profit grew faster than revenue (117% against 28%), so margins widened rather than bought growth.",
@@ -2072,7 +2157,7 @@
  "recent_window_months": 12,
  "counts": {
   "open": 2,
-  "upcoming": 1,
+  "upcoming": 2,
   "awaiting": 3,
   "listed_12m": 93,
   "listed_measured": 89,
