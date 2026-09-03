@@ -586,6 +586,12 @@ def build(limit_per_cat: int = MAX_PER_CATEGORY) -> dict:
                 # for. None when the fund is younger than the window, rather
                 # than a shortened figure passed off as ten years.
                 "sip10": _sip_value(series, 10_000.0, 10),
+                # Age, from the first NAV the fund ever published. It is the
+                # one "fund fact" the NAV feed can actually answer, and it
+                # qualifies every return beside it: a 3-year number on a
+                # 3-year-old fund has never seen a bad year.
+                "inception": series[0][0].isoformat(),
+                "age_years": round((series[-1][0] - series[0][0]).days / 365.25, 1),
                 "bar_r1": _bar_pct(r1),
                 "bar_r3": _bar_pct(r3),
                 "bar_r5": _bar_pct(r5),
