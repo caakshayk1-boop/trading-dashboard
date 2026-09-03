@@ -121,7 +121,7 @@ REMARKS = {
                         "from swing pivots and day levels, R:R measured not asserted; stop is "
                         "the WIDER of structural and ATR with a hard ATR floor. "
                         "[the only engine with a positive baseline: +0.088R over 12 closed]",
-    "commodity":        "Commodity scan — intraday/swing horizon. Structural stop, ATR floor. "
+    "commodity":        "Commodity scan — intraday/swing horizon. Structural stop, ATR floor; first target floored at 1.6R from 2026-09-03 (it had published NGAS at 0.60R and XAUUSD at 0.67R — less reward than risk). "
                         "[3.51% median stop, 81.8% stop-out — thin sample, 11 closed]",
     "breakout":         "Breakout scan — swing horizon. Stop and targets scale to the HOLDING "
                         "horizon (sqrt-of-time: x2.24 weekly, x4.69 monthly) off daily ATR, "
@@ -158,7 +158,7 @@ REMARKS = {
                         "claimed and none should be inferred. [1.57xATR, 72.7% stop-out]",
     "ai_longterm":      "Own the business — multi-year compounding idea, 200DMA structure stop. "
                         "The stop is the thesis breaking, not a volatility band.",
-    "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks. "
+    "top5_pick":        "Weekly Top 5 trade ideas — the paper's front-page picks. Levels are computed upstream and were mirrored unchecked, which put MRK on the ledger at 0.65R; floored at 1.6R from 2026-09-03 and the R:R recomputed from the lifted target. "
                         "[7 closed, 100% stop-out — the worst record of any engine]",
     "sip_bucket":       "Monthly SIP allocation — what the SIP was told to buy. No stop and no "
                         "time horizon: it is an allocation, not a trade, and it is excluded "
@@ -1754,12 +1754,17 @@ def log_top5_picks(picks, week_key: str, date=None) -> list:
             if not (entry and sl and t1):
                 continue           # incomplete idea — logged as nothing, never guessed
             t2 = p.get("target2") or round(entry + (t1 - entry) * 1.6, 2)
+            # These levels are computed upstream and mirrored here unchecked,
+            # which is how MRK reached the ledger with a first target worth
+            # 0.65R. Floored to the house ladder like every other engine.
+            from signals.indicators import enforce_r_floor
+            t1, t2, _t3 = enforce_r_floor(entry, sl, t1, t2, None, "BUY")
             rows.append({
                 "symbol": p["symbol"], "signal_type": TOP5_SIGNAL_TYPE,
                 "action": "BUY", "timeframe": "1W",
                 "entry": entry, "sl": sl, "t1": t1, "t2": t2, "t3": t2,
-                "rr": p.get("rr") or (round((t1 - entry) / (entry - sl), 2)
-                                      if entry > sl else None),
+                "rr": (round((t1 - entry) / (entry - sl), 2)
+                       if entry > sl else None),
                 "score": int(round(p.get("score") or 0)),
                 "remarks": f"Weekly Top 5 trade idea · {week_key}",
                 "metadata": {"engine": "top5", "week": week_key,

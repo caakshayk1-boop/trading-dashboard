@@ -48,6 +48,52 @@ ATR_STOP_MULT = 1.41       # was 1.5 (itself up from a broken 1.0-and-tighter)
 R1_MULT, R2_MULT, R3_MULT = 1.6, 2.5, 3.3    # was 1.5, 2.5, 4.0
 
 
+def enforce_r_floor(entry, sl, t1, t2=None, t3=None, action="BUY"):
+    """Lift a target ladder so the first target repays at least R1_MULT.
+
+    WHY THIS EXISTS AS A SHARED FUNCTION RATHER THAN A FOURTH PATCH.
+    Four engines have now been found publishing a first target worth less than
+    the risk, each for its own reason and each fixed in its own file:
+    multibagger built targets from the 52-week range and never compared them to
+    the stop; magic floored at exactly 1.0R and so published twenty-odd signals
+    at precisely one times risk; commodity and top5_pick mirror levels computed
+    elsewhere and check nothing.
+
+    They share no code, so they shared no fix. This is the check written once.
+
+    It only ever moves targets AWAY from entry, and never touches the stop. A
+    target below the floor is lifted to it; everything already beyond it is left
+    exactly as the engine placed it, because a structural level the engine chose
+    is better information than a multiple of risk.
+
+    Returns (t1, t2, t3) — or the originals unchanged if the inputs cannot be
+    priced, because a signal with no usable risk is a signal to drop upstream,
+    not one to invent levels for here.
+    """
+    try:
+        entry, sl = float(entry), float(sl)
+    except (TypeError, ValueError):
+        return t1, t2, t3
+    risk = abs(entry - sl)
+    if risk <= 0:
+        return t1, t2, t3
+    long = str(action or "BUY").upper() not in ("SELL", "SHORT")
+    sign = 1.0 if long else -1.0
+
+    def lift(t, mult):
+        floor = entry + sign * mult * risk
+        if t is None:
+            return round(floor, 2)
+        try:
+            t = float(t)
+        except (TypeError, ValueError):
+            return round(floor, 2)
+        # "Further from entry" is a different comparison for a short.
+        return round(t if (t >= floor if long else t <= floor) else floor, 2)
+
+    return lift(t1, R1_MULT), lift(t2, R2_MULT), lift(t3, R3_MULT)
+
+
 def _tight_sl(price: float, low_series, cur_atr: float,
               max_pct: float = 0.06, min_pct: float = 0.015,
               atr_mult: float = ATR_STOP_MULT) -> float:

@@ -1017,6 +1017,27 @@ def run_commodity_scan(time_str):
     logging.info(f"Commodity scan: {len(sigs)} to alert ({len(raw_sigs)} raw → "
                  f"{len(raw_sigs) - len(filtered)} conflicts → {len(dupes)} deduped out)")
     if sigs:
+        # THE FLOOR IS APPLIED BEFORE ANYTHING IS SENT OR WRITTEN.
+        #
+        # Live on the book: NGAS at 0.60R and 0.67R, XAUUSD at 0.67R — first
+        # targets worth less than the trade risked. Lifting them here rather
+        # than at the logger keeps the Telegram block and the ledger row
+        # showing the same levels; lifting downstream would have alerted one
+        # number and recorded another.
+        from signals.indicators import enforce_r_floor
+        for _s in sigs:
+            _t1, _t2, _t3 = enforce_r_floor(
+                _s.get("price"), _s.get("sl"), _s.get("target1"),
+                _s.get("target2"), _s.get("target3"), _s.get("action") or "BUY")
+            _s["target1"], _s["target2"] = _t1, _t2
+            if _s.get("target3") is not None:
+                _s["target3"] = _t3
+            try:
+                _risk = abs(float(_s["price"]) - float(_s["sl"]))
+                if _risk > 0:
+                    _s["rr"] = round(abs(_t1 - float(_s["price"])) / _risk, 2)
+            except (TypeError, ValueError, KeyError):
+                pass
         log_commodity_signals(sigs)
         blocks, rows = [], []
         for s in sigs:
