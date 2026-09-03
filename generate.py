@@ -70,7 +70,7 @@ from newspaper import (
     TEMPLATE,
     TV_ALIASES,
     _learning_ctx,
-)
+    to_myt,)
 
 import data_health as dh
 
@@ -828,6 +828,11 @@ def generate() -> None:
     _lc = _learning_ctx()
     print("[generate] Rendering HTML...")
     tpl = Template(TEMPLATE)
+    # The |myt filter is registered on Flask's environment in newspaper.py for
+    # the dev server; this is the STATIC build's own environment and needs it
+    # too. Without this the template renders but every |myt raises at build
+    # time — two render paths, one filter, register on both.
+    tpl.environment.filters["myt"] = to_myt
     # ── Data health ─────────────────────────────────────────────────────────
     # Runs after every dataset is resolved and before anything renders, so the
     # page and the health page cannot disagree: both read this one snapshot.

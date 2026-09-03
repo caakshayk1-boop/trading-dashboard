@@ -25,10 +25,35 @@ log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 IST      = timezone(timedelta(hours=5, minutes=30))
+# MYT is the ONLY timezone this site displays. IST stays as the tzinfo used to
+# compute which Indian TRADING day it is — that is domain logic and must not
+# move — but no reader is ever shown an IST or UTC stamp. The site is operated
+# from Malaysia and two zones on one page makes a reader mistrust both.
+MYT      = timezone(timedelta(hours=8))
+
+
+def to_myt(value, fmt="%Y-%m-%d %H:%M"):
+    """ISO-8601 timestamp -> Malaysia time, labelled MYT.
+
+    A naive string is assumed UTC, which is what every job_status.run_at and
+    generated_at in this repo actually is. Returns the input unchanged if it
+    cannot be parsed, so a feed shape change degrades to a visible oddity
+    rather than a stack trace mid-build."""
+    if not value:
+        return "—"
+    raw = str(value).strip().replace("Z", "+00:00")
+    try:
+        dt = datetime.fromisoformat(raw)
+    except ValueError:
+        return str(value)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(MYT).strftime(fmt) + " MYT"
 GROQ_KEY = os.environ.get("GROQ_API_KEY", "")
 PORT     = int(os.environ.get("PORT", 5050))
 
 app = Flask(__name__)
+app.jinja_env.filters["myt"] = to_myt
 
 # ─────────────────────────────────────────────────────────────
 # DATABASE
@@ -10148,7 +10173,7 @@ table.t tbody tr:hover{background:var(--surface2)}
 
   <div class="prov{{ ' stale' if market_intel.get('is_fallback') else '' }} rv">
     <span class="pv-tag">DAILY</span>
-    <span>Rebuilt <b>~04:30 IST</b>, before the 6 AM edition</span>
+    <span>Rebuilt <b>~07:00 MYT</b>, before the 6 AM edition</span>
     {% if market_intel.get('built_on') %}<span>Built <b>{{ market_intel.built_on }}</b>
       {%- if market_intel.get('age_days') is not none %} · {{ market_intel.age_days }}d old{% endif %}</span>{% endif %}
     {% if market_intel.get('is_fallback') %}
@@ -10156,7 +10181,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     {% endif %}
     {% if market_intel.get('job_status', {}).get('attempted_after_serve') %}
     <span style="color:var(--gold)">&#9888; The most recent attempt
-      ({{ market_intel.job_status.run_at[:16] }} UTC) failed &mdash;
+      ({{ market_intel.job_status.run_at|myt }}) failed &mdash;
       {{ market_intel.job_status.detail[:120] }}</span>
     {% endif %}
   </div>
@@ -10540,7 +10565,7 @@ table.t tbody tr:hover{background:var(--surface2)}
 
   <div class="prov{{ ' stale' if top5_week else '' }} rv">
     <span class="pv-tag">WEEKLY</span>
-    <span>Ranked once a week, <b>Sunday morning IST</b> &mdash; the same five all week is the design, not a stalled scan</span>
+    <span>Ranked once a week, <b>Sunday morning MYT</b> &mdash; the same five all week is the design, not a stalled scan</span>
     <span>Engine <b>{{ picks_engine }}</b></span>
     <span>These are ideas, not ledger signals &mdash; they carry no entry fill and
       never touch win rate or expectancy</span>
@@ -11105,7 +11130,7 @@ table.t tbody tr:hover{background:var(--surface2)}
 
   <div class="prov rv">
     <span class="pv-tag">WEEKLY</span>
-    <span>Runs with the <b>Saturday 09:30 IST</b> scan</span>
+    <span>Runs with the <b>Saturday 12:00 MYT</b> scan</span>
     <span id="ltProv">Logged to the ledger as <b>ai_longterm</b> &mdash; in the Signal Log,
       excluded from expectancy</span>
   </div>
@@ -11156,7 +11181,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       {% if stock_screen.price_date %}
       <p class="screen-vintage">
         <span class="sv-tag">PRICED TO {{ stock_screen.price_date }}</span>
-        <span>Rebuilt nightly at 02:30 IST. Price, RSI and turnover are from that
+        <span>Rebuilt nightly at 05:00 MYT. Price, RSI and turnover are from that
           date &mdash; an intraday chart will differ. Fundamentals come from annual
           filings and do not move in a week; they are re-read each night anyway
           rather than kept on a second clock that could disagree with the prices
@@ -11250,7 +11275,7 @@ table.t tbody tr:hover{background:var(--surface2)}
        reader who is not told which columns went stale will trust both. -->
   <div class="prov{{ ' stale' if stock_screen.is_fallback else '' }} rv">
     <span class="pv-tag">WEEKLY</span>
-    <span>Rebuilt <b>Sundays 02:30 IST</b></span>
+    <span>Rebuilt <b>Sundays 05:00 MYT</b></span>
     {% if stock_screen.built_on %}<span>Built <b>{{ stock_screen.built_on }}</b>
       {%- if stock_screen.age_days is not none %} · {{ stock_screen.age_days }}d old{% endif %}</span>{% endif %}
     {% if stock_screen.price_date %}<span>Prices to <b>{{ stock_screen.price_date }}</b></span>{% endif %}
@@ -11277,7 +11302,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     {% endif %}
     {% if stock_screen.get('job_status', {}).get('attempted_after_serve') %}
     <span style="color:var(--gold)">&#9888; The most recent rebuild attempt
-      ({{ stock_screen.job_status.run_at[:16] }} UTC) failed &mdash;
+      ({{ stock_screen.job_status.run_at|myt }}) failed &mdash;
       {{ stock_screen.job_status.detail[:120] }}</span>
     {% endif %}
   </div>
@@ -11818,7 +11843,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    {{ iporadar.generated_at[:16]|replace('T', ' ') }}. Lot size, minimum application, the
+    {{ iporadar.generated_at|myt }}. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -11862,7 +11887,7 @@ table.t tbody tr:hover{background:var(--surface2)}
        the page could not tell you which. -->
   <div class="prov{{ ' stale' if fund_screen.is_fallback else '' }} rv">
     <span class="pv-tag">WEEKLY</span>
-    <span>Rebuilt <b>Sundays 01:30 IST</b>, after the week&rsquo;s last NAV publish</span>
+    <span>Rebuilt <b>Sundays 04:00 MYT</b>, after the week&rsquo;s last NAV publish</span>
     {% if fund_screen.built_on %}<span>Built <b>{{ fund_screen.built_on }}</b>
       {%- if fund_screen.age_days is not none %} · {{ fund_screen.age_days }}d old{% endif %}</span>{% endif %}
     {% if fund_screen.is_fallback %}
@@ -11871,7 +11896,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     {% endif %}
     {% if fund_screen.get('job_status', {}).get('attempted_after_serve') %}
     <span style="color:var(--gold)">&#9888; The most recent rebuild attempt
-      ({{ fund_screen.job_status.run_at[:16] }} UTC) failed &mdash;
+      ({{ fund_screen.job_status.run_at|myt }}) failed &mdash;
       {{ fund_screen.job_status.detail[:120] }}</span>
     {% endif %}
   </div>
@@ -12414,7 +12439,7 @@ table.t tbody tr:hover{background:var(--surface2)}
        headed "every signal, scored" is owed both halves of that. -->
   <div class="prov rv">
     <span class="pv-tag">IN THE LOG, OUT OF THE RATES</span>
-    <span><b>multibagger</b> &mdash; weekly, Saturday 09:30 IST · 6&ndash;12 month hold off weekly bars</span>
+    <span><b>multibagger</b> &mdash; weekly, Saturday 12:00 MYT · 6&ndash;12 month hold off weekly bars</span>
     <span><b>ai_longterm</b> &mdash; weekly, Saturday · 2&ndash;3 year hold on a 200DMA structure stop</span>
     <span><b>magic</b> and <b>magicmagic</b> &mdash; weekly Investtech-style screens,
       logged as <b>WATCH</b> with no stop, no target and no R:R</span>
