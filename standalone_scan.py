@@ -1534,13 +1534,35 @@ def main():
             # refuse to run at all. Only a LATER clock overrides: a run that
             # arrives early keeps what the workflow asked for, and the
             # non-intraday slots (weekend, holiday) are never reinterpreted.
+            # THE GUARD DID NOT DO WHAT THE PARAGRAPH ABOVE PROMISES.
+            #
+            # "the non-intraday slots (weekend, holiday) are never
+            # reinterpreted" — but an absent key returns -1, and every clock
+            # slot in the map beats -1. So a hand-dispatched `weekend`,
+            # `holiday` or `momentum` on a weekday was silently rewritten to
+            # whatever the clock said. Caught by asking for `momentum` at 09:20
+            # IST and watching it run `morning` instead: the engine under test
+            # never ran, and the log line explaining why read as if it had made
+            # a considered choice.
+            #
+            # The rule this is meant to express is about the intraday LADDER —
+            # a late `midday` should become `eod` — so both sides have to be on
+            # that ladder for the comparison to mean anything. A slot that is
+            # not a time of day is an engine selector, and the clock has no
+            # opinion about it.
             _ORDER = {"morning": 0, "midday": 1, "eod": 2, "full": 3}
-            if _ORDER.get(clock_slot, -1) > _ORDER.get(requested, -1):
+            both_intraday = requested in _ORDER and clock_slot in _ORDER
+            if both_intraday and _ORDER[clock_slot] > _ORDER[requested]:
                 logging.warning(
                     f"slot override: workflow asked for {requested!r}, clock says "
                     f"{clock_slot!r} (run is {now.strftime('%H:%M')} IST — cron "
                     f"delayed). Running {clock_slot!r}.")
                 slot = clock_slot
+            elif not both_intraday:
+                logging.info(
+                    f"workflow asked for {requested!r}; the clock says "
+                    f"{clock_slot!r} but {requested!r} is not a time-of-day "
+                    f"slot, so the clock does not override it.")
             else:
                 logging.info(
                     f"workflow asked for {requested!r}, clock says {clock_slot!r} "
