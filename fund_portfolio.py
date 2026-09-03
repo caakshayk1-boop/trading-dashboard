@@ -42,6 +42,7 @@ import logging
 import pathlib
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -54,7 +55,7 @@ SITEMAP = "https://www.etmoney.com/mf-schemes-sitemap.xml"
 URL_CACHE = pathlib.Path(__file__).parent / "data" / "fund_portfolio_urls.json"
 
 TOP_SECTORS = 3          # what the card shows
-TOP_STOCKS = 5
+TOP_STOCKS = 10         # the detail sheet has room for ten; the card still shows five
 
 # Words that carry no discriminating power between scheme names. "fund",
 # "direct", "growth" etc. appear in nearly all 1,585, so leaving them in makes
@@ -65,14 +66,40 @@ _NOISE = {
 }
 
 
-def _get(url: str, timeout: int = 30) -> str:
+def _get(url: str, timeout: int = 30, tries: int = 3) -> str:
+    """Fetch with backoff.
+
+    WHY THIS EXISTS. The single-shot version cost real data and said nothing
+    about it: one "Connection reset by peer" from ET Money — which this host
+    produced on the very next request after a successful one, so it is
+    transient, not a block — returned {} from fetch_one, and that fund simply
+    rendered with no composition. A silent hole, per fund, at random.
+
+    funds.py got the same treatment in 40bd2df after one 502 cost a whole week
+    of the screen. The lesson did not travel to this file at the time. It has
+    now.
+    """
     req = urllib.request.Request(url, headers={
         "User-Agent": _UA,
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "en-US,en;q=0.9",
     })
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read().decode("utf-8", "ignore")
+    last = None
+    for i in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read().decode("utf-8", "ignore")
+        except urllib.error.HTTPError as e:
+            # A 404 is an answer: this page does not exist and never will.
+            # Retrying it burns time and tells us nothing new.
+            if e.code < 500:
+                raise
+            last = e
+        except Exception as e:                               # noqa: BLE001
+            last = e
+        if i < tries - 1:
+            time.sleep(1.5 * (i + 1))
+    raise last if last else RuntimeError(f"unreachable: {url}")
 
 
 def _tokens(name: str) -> set[str]:

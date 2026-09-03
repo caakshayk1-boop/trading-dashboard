@@ -1187,7 +1187,7 @@ def generate() -> None:
                             "isin", "url", "nav", "nav_date", "inception",
                             "history_years", "r1", "r3", "r5", "since_inception",
                             "dd3", "volatility", "sip10", "calendar",
-                            "rolling3y", "percentile_r3")
+                            "rolling3y", "percentile_r3", "portfolio")
                            if f.get(k) is not None}
                           for f in (c.get("funds") or [])],
             } for c in _fcats],
