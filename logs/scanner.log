@@ -229,3 +229,14 @@
 2026-08-30 12:00:46,070 INFO THE DAILY SIGNAL — news.askakshay.com — started
 2026-08-30 12:00:46,071 INFO picks: warming cache for 2026-W36-v6 — scanning 160 stocks...
 2026-08-30 12:00:46,152 INFO stock screen: serving previous build, 17.5d old
+2026-09-04 04:38:49,295 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:39:00,462 ERROR 
+1 Failed download:
+2026-09-04 04:39:00,465 ERROR ['APLAPOLLO.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:39:10,865 ERROR 
+1 Failed download:
+2026-09-04 04:39:10,867 ERROR ['AWL.NS']: TypeError("'NoneType' object is not subscriptable")
+2026-09-04 04:39:34,462 INFO Universe: Nifty 500 (500 stocks)
+2026-09-04 04:41:46,635 ERROR 
+1 Failed download:
+2026-09-04 04:41:46,639 ERROR ['AUBANK.NS']: TypeError("'NoneType' object is not subscriptable")

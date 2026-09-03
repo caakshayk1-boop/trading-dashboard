@@ -1294,7 +1294,29 @@ def analyze_breakout(symbol):
         df_w = _yf_download(sym_yf, period="2y",  interval="1wk", progress=False, auto_adjust=True)
         df_m = _yf_download(sym_yf, period="3y",  interval="1mo", progress=False, auto_adjust=True)
 
-        if df_d.empty or len(df_d) < 60:
+        # ── THE PARTIAL LAST BAR SILENTLY TURNED THIS ENGINE OFF ─────────────
+        #
+        # Yahoo appends a row for the session in progress — a real Volume with
+        # NaN Open/High/Low/Close. `close = df_d["Close"].iloc[-1]` is then nan,
+        # `np.isnan(close)` is True, and this function returns None. No
+        # exception, no warning, nothing in the log except "Breakouts: 0 raw".
+        #
+        # Measured on 2026-09-04: the 2026-09-03 row is NaN-priced for EVERY NSE
+        # name — RELIANCE, TCS, AUBANK alike — so the engine returned None for
+        # the entire universe. 28 of 80 sampled names had a live pattern and not
+        # one of them could reach the ledger.
+        #
+        # _own_frame already fixes this, and also fixes the other half of the
+        # same bug class: under a ThreadPoolExecutor, concurrent yf.download
+        # calls interleave and `df["Close"].squeeze()` can return ANOTHER
+        # symbol's column. It was written after that published BPCL at another
+        # company's price — and then only ever wired into the two magic
+        # analyzers. This engine, ohl and multibagger never got it.
+        df_d = _own_frame(df_d, sym_yf)
+        df_w = _own_frame(df_w, sym_yf)
+        df_m = _own_frame(df_m, sym_yf)
+
+        if df_d is None or len(df_d) < 60:
             return None
 
         patterns = _check_breakouts(df_d, df_w, df_m)
@@ -1638,8 +1660,26 @@ def analyze_ohl(symbol):
     try:
         sym_yf = to_yahoo(symbol)
         df_d = _yf_download(sym_yf, period="3mo", interval="1d", progress=False, auto_adjust=True)
-        if df_d.empty or len(df_d) < 30:
+        # _own_frame for the column-mixing guard (see analyze_breakout): under a
+        # thread pool, df["Open"].squeeze() can hand back ANOTHER symbol's column
+        # and this engine reads four prices off it.
+        #
+        # It also drops Yahoo's NaN-priced partial bar — and for THIS engine that
+        # needs a second guard the others do not. OHL is a statement about
+        # TODAY's session: open sitting on the day's low. Falling back to the
+        # last complete bar would republish yesterday's setup as today's, so the
+        # trade date is checked instead of assumed.
+        df_d = _own_frame(df_d, sym_yf)
+        if df_d is None or len(df_d) < 30:
             return None
+        try:
+            import pytz
+            from datetime import datetime as _dt
+            _bar = df_d.index[-1].date()
+            if _bar != _dt.now(pytz.timezone("Asia/Kolkata")).date():
+                return None
+        except Exception:                                     # noqa: BLE001
+            pass                    # no usable index — fall through as before
 
         today_open = float(df_d["Open"].squeeze().iloc[-1])
         today_high = float(df_d["High"].squeeze().iloc[-1])
@@ -2208,7 +2248,11 @@ def _analyze_multibagger(symbol: str, nifty_13w: float = 0.0):
         sym_yf = to_yahoo(symbol)
         wk = _yf_download(sym_yf, period="3y", interval="1wk",
                          progress=False, auto_adjust=True)
-        if wk is None or wk.empty or len(wk) < 52:
+        # Same partial-bar and column-mixing guard as analyze_breakout —
+        # see the note there. Weekly frames carry the in-progress week with
+        # NaN prices, and every gate below reads .iloc[-1].
+        wk = _own_frame(wk, sym_yf)
+        if wk is None or len(wk) < 52:
             return None
 
         wk_c = wk["Close"].squeeze()

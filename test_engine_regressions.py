@@ -452,6 +452,7 @@ def main() -> int:
                test_buy_band_excludes_the_bleed_zone,
                test_engine_log_copy_is_markup_safe,
                test_fund_cache_survives_week_rollover,
+               test_engines_drop_the_partial_bar,
                test_alert_table_columns_match,
                test_docs_files_have_all_four_allow_lists,
                test_scan_crons_match_their_slot_arms,
@@ -466,6 +467,69 @@ def main() -> int:
     for f in FAILURES:
         print(f"  · {f}")
     return 1 if FAILURES else 0
+
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# The partial last bar that turned three engines off without saying so.
+#
+# Yahoo appends a row for the session in progress: a real Volume with NaN
+# Open/High/Low/Close. Every per-symbol engine reads `.iloc[-1]`, so `close`
+# came back nan, `np.isnan(close)` was True, and the function returned None —
+# for every symbol in the universe, on any day that row was present. The only
+# trace in the log was "Breakouts: 0 to alert (0 raw)", which reads exactly
+# like a quiet market.
+#
+# Measured 2026-09-04: the 2026-09-03 row was NaN-priced across the whole of
+# NSE, 28 of 80 sampled names had a live pattern, and none reached the ledger.
+#
+# _own_frame() has fixed this since it was written — and was wired into the two
+# magic analyzers and nowhere else. This test is about the WIRING, not the
+# helper: it asserts every per-symbol engine passes its downloaded frame
+# through it, because the failure is silent and a review will not catch it.
+# ─────────────────────────────────────────────────────────────────────────────
+def test_engines_drop_the_partial_bar() -> None:
+    print("\n[16] a NaN-priced last bar must not silently empty an engine")
+    src = open("scanner.py").read()
+
+    for fn in ("analyze_breakout", "analyze_ohl", "_analyze_multibagger"):
+        m = re.search(rf"def {re.escape(fn)}\(.*?(?=\ndef )", src, re.S)
+        if not m:
+            check(f"{fn} located", False, "function renamed or removed")
+            continue
+        body = m.group(0)
+        check(f"{fn} passes its frame through _own_frame",
+              "_own_frame(" in body,
+              "reads .iloc[-1] off a raw yfinance frame — a partial bar returns "
+              "None for the whole universe and logs nothing")
+
+    # The helper itself must keep doing the two things the wiring relies on.
+    ns: dict = {}
+    m = re.search(r"def _own_frame\(.*?(?=\ndef )", src, re.S)
+    check("_own_frame still exists", bool(m))
+    if not m:
+        return
+    import pandas as pd
+    exec("import pandas as pd, logging\n" + m.group(0), ns)
+    own = ns["_own_frame"]
+
+    df = pd.DataFrame({"Open": [1.0, 2.0, float("nan")],
+                       "High": [1.0, 2.0, float("nan")],
+                       "Low": [1.0, 2.0, float("nan")],
+                       "Close": [1.0, 2.0, float("nan")],
+                       "Volume": [10, 20, 30]},
+                      index=pd.to_datetime(["2026-09-01", "2026-09-02", "2026-09-03"]))
+    out = own(df, "X.NS")
+    check("_own_frame drops the NaN-priced bar", out is not None and len(out) == 2,
+          f"got {None if out is None else len(out)} rows")
+    check("_own_frame leaves a usable last close",
+          out is not None and float(out["Close"].iloc[-1]) == 2.0)
+
+    # A frame that is ALL partial must come back as nothing, not as an empty
+    # frame something downstream will index into.
+    allnan = df.iloc[[2]]
+    check("_own_frame returns None when every bar is partial",
+          own(allnan, "X.NS") is None)
 
 
 
