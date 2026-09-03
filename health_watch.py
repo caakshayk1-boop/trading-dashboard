@@ -51,8 +51,21 @@ CHECKS = [
     # to be true the day it was written.
     ("page /", f"{SITE}/", None,
      lambda t: 'id="tickRail"' in t and 'id="record"' in t),
-    ("page /desk", f"{SITE}/desk", None,
-     lambda t: 'id="gymStage"' in t),
+    # /desk WAS RETIRED ON 3 SEPTEMBER and this check outlived it, so the
+    # health watch alerted twice a day about a page that had been deliberately
+    # removed — "200 but the payload is degraded" at 12:56, then "404" once the
+    # rebuild dropped the file. Both alerts were correct about the page and
+    # wrong about there being a problem.
+    #
+    # An alert that fires for a change somebody made on purpose is worse than
+    # no alert: it teaches the reader to ignore the channel, and the next
+    # message on it will be the real one.
+    #
+    # The Life sections moved to career.askakshay.com, which is a separate
+    # Worker with its own deploy check (scripts/check.mjs), so it is watched
+    # where it lives rather than from here.
+    ("career.askakshay.com", "https://career.askakshay.com", None,
+     lambda t: "The Campaign" in t and 'id="scrollprog"' in t),
     ("ticker", f"{SITE}/api/ticker", "json",
      lambda j: j.get("ok") and len(j.get("segments", [])) >= 8),
     ("world", f"{SITE}/api/world", "json",
