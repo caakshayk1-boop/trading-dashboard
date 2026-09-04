@@ -294,3 +294,19 @@
 2026-09-04 05:01:39,811 INFO breakout gate2 reject URBANCO: trailing PAT is negative
 2026-09-04 05:01:39,811 INFO breakout: 17 raw → 4 price-gated → 2 qualified → 2 published
 2026-09-04 05:01:39,811 INFO Breakout scan: 2 confirmed breakouts (from 17 raw)
+2026-09-04 12:27:11,366 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-09-04 12:27:11,367 INFO screen: narrative — 1 written, 0 rejected by the guard, 0 no answer from the model
+2026-09-04 12:27:11,367 INFO screen: narrative for TCS rejected — numbers not in the facts: ['31']
+2026-09-04 12:27:11,367 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-09-04 12:27:11,367 INFO screen: narrative for TCS rejected — advice language
+2026-09-04 12:27:11,367 INFO screen: narrative — 0 written, 1 rejected by the guard, 0 no answer from the model
+2026-09-04 12:27:11,367 INFO screen: no AI callable — narrative skipped, SWOT unaffected
+2026-09-04 12:27:11,367 INFO screen: narrative — 0 written, 0 rejected by the guard, 0 no answer from the model
+2026-09-04 12:27:11,855 INFO Startup: content cache invalidated
+2026-09-04 12:27:11,857 INFO Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-09-04 12:27:11,857 INFO picks: warming cache for 2026-W36-v6 — scanning 160 stocks...
+2026-09-04 12:27:11,858 INFO Added job "_daily_6am_refresh" to job store "default"
+2026-09-04 12:27:11,859 INFO Scheduler started
+2026-09-04 12:27:11,859 INFO Scheduler: daily refresh at 06:00 MYT (22:00 UTC)
+2026-09-04 12:27:11,860 INFO THE DAILY SIGNAL — news.askakshay.com — started
+2026-09-04 12:27:11,998 WARNING stock screen: hiding it — newest build is 22.6d old

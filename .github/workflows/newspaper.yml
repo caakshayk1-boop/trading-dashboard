@@ -57,6 +57,18 @@ jobs:
           python test_fscore.py
           python test_insights.py
 
+      # Added 2026-09-04. These four suites existed and PASSED but no workflow
+      # ran them, so they were proving nothing. test_security.py in particular
+      # is 10 assertions about the published surface that nothing was checking,
+      # and test_stock_screen.py is 1,733 lines that only ran when someone
+      # remembered. A test that never runs in CI is documentation, not a gate.
+      - name: Suites that existed but were never wired to CI
+        run: |
+          python test_security.py
+          python test_cross_engine_dedupe.py
+          python test_swing_rulebook.py
+          python test_brief_fit.py
+
       - name: Lint the page script
         run: |
           node --check static/app.js
