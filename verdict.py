@@ -418,7 +418,10 @@ def verdict(row: dict) -> dict:
             "call": "AVOID",
             "label": "Ignore",
             "horizon": None,
-            "one_line": red[0]["why"] + " — " + red[0]["evidence"],
+            # The evidence is rendered separately in the red-flag block below
+            # the headline, so repeating it here printed the same sentence
+            # twice on every AVOID card.
+            "one_line": red[0]["why"],
             "because": [],
             "against": [f"{b['why']} ({b['evidence']})" for b in red],
             "red_flags": red + ([cash] if cash else []),
