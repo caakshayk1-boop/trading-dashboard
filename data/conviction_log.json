@@ -492,70 +492,69 @@
  },
  {
   "date": "2026-09-04",
-  "generated_at": "2026-09-04T08:17:30+05:30",
+  "generated_at": "2026-09-04T21:27:32+05:30",
   "picks": [
    {
-    "sym": "MARKSANS",
-    "sector": "Healthcare",
-    "price": 332.5,
-    "score": 78.61,
-    "reasons": [
-     "Piotroski 7/9",
-     "+43% over three months",
-     "at a 52-week high",
-     "\u20b9219 cr traded"
-    ],
-    "view": "Piotroski score 7/9, up 43% in three months, trading at 52\u2011week high, \u20b9219\u202fcr volume."
-   },
-   {
-    "sym": "MCX",
-    "sector": "Financial Services",
-    "price": 3286.0,
-    "score": 69.08,
-    "reasons": [
-     "ROCE 59%",
-     "Piotroski 7/9",
-     "+18% over three months",
-     "4% off its high"
-    ],
-    "view": "ROCE 59%, Piotroski 7"
-   },
-   {
-    "sym": "SOLARINDS",
-    "sector": "Basic Materials",
-    "price": 20600.0,
-    "score": 67.11,
-    "reasons": [
-     "ROCE 31%",
-     "+10% over a month",
-     "at a 52-week high",
-     "\u20b9286 cr traded"
-    ],
-    "view": null
-   },
-   {
-    "sym": "CUPID",
-    "sector": "Consumer Defensive",
-    "price": 280.7,
-    "score": 63.1,
+    "sym": "SMLMAH",
+    "sector": "Consumer Cyclical",
+    "price": 6298.5,
+    "score": 81.01,
     "reasons": [
      "ROCE 29%",
-     "+105% over three months",
-     "5% off its high",
-     "\u20b9262 cr traded"
+     "Piotroski 7/9",
+     "+67% over three months",
+     "at a 52-week high"
+    ],
+    "view": "ROCE 29%, Piotroski 7/9, up 67% in three months, trading at its 52\u2011week high."
+   },
+   {
+    "sym": "MANORAMA",
+    "sector": "Consumer Defensive",
+    "price": 1993.4,
+    "score": 78.31,
+    "reasons": [
+     "ROCE 33%",
+     "Piotroski 7/9",
+     "+34% over three months",
+     "at a 52-week high"
+    ],
+    "view": "ROCE 33%, Piotroski 7/"
+   },
+   {
+    "sym": "CHENNPETRO",
+    "sector": "Energy",
+    "price": 1452.2,
+    "score": 74.26,
+    "reasons": [
+     "ROCE 33%",
+     "Piotroski 7/9",
+     "+24% over three months",
+     "at a 52-week high"
     ],
     "view": null
    },
    {
-    "sym": "ENGINERSIN",
+    "sym": "QPOWER",
     "sector": "Industrials",
-    "price": 276.6,
-    "score": 62.92,
+    "price": 1495.3,
+    "score": 74.12,
     "reasons": [
-     "ROCE 28%",
-     "Piotroski 7/9",
-     "+16% over three months",
-     "1% off its high"
+     "ROCE 39%",
+     "+32% over three months",
+     "at a 52-week high",
+     "\u20b934 cr traded"
+    ],
+    "view": null
+   },
+   {
+    "sym": "SHILPAMED",
+    "sector": "Healthcare",
+    "price": 964.15,
+    "score": 70.47,
+    "reasons": [
+     "+70% over three months",
+     "at a 52-week high",
+     "\u20b963 cr traded"
     ],
     "view": null
    }
