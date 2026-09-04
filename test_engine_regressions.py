@@ -13,6 +13,7 @@ workflow without an install step and cannot be skipped because a fixture broke.
 from __future__ import annotations
 
 import math
+import os
 import re
 import sys
 from datetime import date, datetime, timedelta, timezone
@@ -454,6 +455,7 @@ def main() -> int:
                test_fund_cache_survives_week_rollover,
                test_engines_drop_the_partial_bar,
                test_every_logging_scan_also_delivers,
+               test_newspaper_suites_need_no_credentials,
                test_alert_table_columns_match,
                test_docs_files_have_all_four_allow_lists,
                test_scan_crons_match_their_slot_arms,
@@ -585,6 +587,42 @@ def test_every_logging_scan_also_delivers() -> None:
         italics = re.findall(r"_[^_\n]*\{[^}]*\}[^_\n]*_", m.group(0))
         check("no interpolation inside a Telegram italic span",
               not italics, str(italics[:2]))
+
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# A suite wired into a workflow that cannot satisfy its imports.
+#
+# test_brief_fit.py measures the length of a string. It imports daily_brief,
+# which imports telegram_bot, which imports config, which RAISES AT IMPORT TIME
+# when TELEGRAM_TOKEN is unset. Wiring it into newspaper.yml — a workflow that
+# builds a static page and has no business holding a bot token — turned the
+# whole newspaper build red on a missing secret, and the page stopped
+# publishing over a test that never sends anything.
+#
+# The check is mechanical: every suite newspaper.yml runs must import cleanly
+# with no credentials in the environment. Nothing in that workflow has any.
+# ─────────────────────────────────────────────────────────────────────────────
+def test_newspaper_suites_need_no_credentials() -> None:
+    print("\n[18] every suite the newspaper runs must import without secrets")
+    import subprocess
+
+    wf = open(".github/workflows/newspaper.yml", encoding="utf-8").read()
+    suites = sorted(set(re.findall(r"^\s*python (test_\w+\.py)\s*$", wf, re.M)))
+    check("newspaper.yml runs test suites", len(suites) >= 5, f"found {suites}")
+
+    env = {k: v for k, v in os.environ.items()
+           if not k.startswith(("TELEGRAM_", "TURSO_", "GROQ_", "FIRECRAWL_"))}
+    for name in suites:
+        if not os.path.exists(name):
+            check(f"{name} exists", False, "named in newspaper.yml but not in the repo")
+            continue
+        r = subprocess.run([sys.executable, "-c", f"import runpy; "
+                            f"runpy.run_path({name!r}, run_name='__not_main__')"],
+                           capture_output=True, text=True, env=env, timeout=180)
+        bad = "EnvironmentError" in r.stderr or "is not set" in r.stderr
+        check(f"{name} imports with no credentials", not bad,
+              r.stderr.strip().splitlines()[-1] if r.stderr.strip() else "")
 
 
 

@@ -19,7 +19,23 @@ Usage:
 """
 from __future__ import annotations
 
+import os
 import sys
+
+# ── THIS SUITE MEASURES TEXT LENGTH AND MUST NOT NEED A BOT TOKEN ───────────
+#
+# daily_brief imports telegram_bot, which imports config, which RAISES at
+# import time if TELEGRAM_TOKEN is unset. So merely importing the module under
+# test demanded a live credential — and when this file was wired into
+# newspaper.yml, a workflow that builds a static page and has no business
+# holding a bot token, the whole newspaper build went red on a missing secret.
+#
+# Placeholders are set only when the real ones are absent, so a local run with
+# a real .env is untouched. Nothing here sends: every check calls _fit() and
+# counts characters. A token that cannot possibly authenticate is the correct
+# thing for a test that must never reach the network.
+os.environ.setdefault("TELEGRAM_TOKEN", "test-token-not-a-real-credential")
+os.environ.setdefault("TELEGRAM_CHAT_ID", "0")
 
 import daily_brief as D
 
