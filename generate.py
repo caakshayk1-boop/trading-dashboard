@@ -1199,6 +1199,40 @@ def generate() -> None:
     except Exception as e:                                    # noqa: BLE001
         print(f"[generate] ❌ funds.json FAILED: {e} — the Funds route loses its data")
 
+    # ── WHICH ENGINES ARE ALLOWED TO PUBLISH, AND WHY ────────────────────────
+    #
+    # signals/expectancy.py derives each engine's R:R floor from its own
+    # measured win rate — breakeven_rr = (1-p)/p — and an engine whose floor
+    # reaches the cap is switched off BY ITS OWN RECORD rather than by opinion.
+    # That is the right design and it was completely invisible: the table lived
+    # in cache/engine_floors.json on a runner that is destroyed after every job,
+    # so from outside, an engine the system had disabled and an engine having a
+    # quiet day produced the identical line — "0 to alert (0 raw)".
+    #
+    # ohl currently reads 11.5% over 26 closed trades: break-even 7.67R, floor
+    # capped, disabled. Nothing anywhere said so.
+    try:
+        from signals import expectancy as _exp
+        _rep = _exp.report()
+        _eng = {
+            "ok": not _rep.get("degraded") and bool(_rep.get("engines")),
+            "computed_at": _rep.get("computed_at"),
+            "degraded": bool(_rep.get("degraded")),
+            "basis": ("Each engine must clear an R:R floor set by its own measured win "
+                      "rate: break-even R:R is (1-p)/p, plus a 15% margin. Below 25 "
+                      "closed trades the win rate is not evidence and the engine keeps "
+                      "the default 2.0. An engine whose required floor reaches 6.0 "
+                      "cannot honestly produce a qualifying setup and stops publishing "
+                      "— switched off by its own record, not by opinion."),
+            "engines": _rep.get("engines", {}),
+        }
+        (out_dir / "engines.json").write_text(json.dumps(_eng, default=str), encoding="utf-8")
+        _off = [k for k, v in _eng["engines"].items() if v.get("status") == "disabled"]
+        print(f"[generate] ✅ engines.json ({len(_eng['engines'])} engines"
+              + (f" · disabled: {', '.join(_off)}" if _off else "") + ")")
+    except Exception as e:                                    # noqa: BLE001
+        print(f"[generate] ❌ engines.json FAILED: {e}")
+
     try:
         _news = [{"title": n.get("title"), "summary": n.get("summary"),
                   "source": n.get("source"), "link": n.get("link")}

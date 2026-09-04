@@ -1275,7 +1275,7 @@ def run_breakout_scan(time_str):
     from scanner import scan_breakouts
     from tracker import (log_breakouts, log_batch_to_all_signals,
                          duplicate_symbols, mark_alerts_sent)
-    logging.info("Running breakout scan (F&O universe)...")
+    logging.info("Running breakout scan (Nifty500, liquidity-gated)...")
     raw_bos = scan_breakouts()
     # Drop NaN signals (yfinance sometimes returns NaN for price/ATR)
     def _valid(b):

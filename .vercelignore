@@ -47,6 +47,7 @@
 !docs/news.json
 !docs/conviction.json
 !docs/funds.json
+!docs/engines.json
 # The Nifty 500 research screen #stocks fetches lazily. Same by-name rule: omit
 # it and the section falls back to its server-rendered top 25 forever, with the
 # only symptom a console warning nobody reads.
