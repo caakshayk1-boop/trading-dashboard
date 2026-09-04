@@ -1,5 +1,5 @@
 {
- "build_id": "20260904T074801",
+ "build_id": "20260904T104401",
  "date": "2026-09-04",
  "date_str": "Friday, September 04 2026",
  "picks": [
@@ -779,32 +779,32 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "14h old",
+    "age": "17h old",
     "note": "partial coverage \u2014 11/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Opening: Sicilian Defence Basics",
-   "body": "After 1.e4 c5 \u2014 Black fights for the centre asymmetrically. Black gets queenside counterplay; White gets kingside attack. Most common openings at club level. Learn one variation: Sicilian Najdorf (1.e4 c5 2.Nf3 d6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 a6). It's played by Kasparov, Fischer, Carlsen. Understand the plans before memorising moves.",
-   "index": 16,
+   "title": "Opening: Italian Game Basics",
+   "body": "1.e4 e5 2.Nf3 Nc6 3.Bc4. White targets f7, the weakest square in Black's position. Giuoco Piano (3...Bc5) leads to rich middlegame. Learn: castle early, play d3, develop bishop to e3, then push d4 for centre control. Safe, instructive, good for learning. Magnus Carlsen played this at the top level.",
+   "index": 17,
    "total": 20
   },
   "wisdom": {
-   "title": "On Anger",
-   "body": "Anger is information, not instruction. It tells you a boundary was crossed or a value was violated. But acting on anger rarely solves the problem. Practice: when you feel it rising, say 'I need 5 minutes' and leave the room. Return calm. Then address the issue. You can be firm without being explosive.",
-   "index": 8,
+   "title": "Financial Peace = Emotional Peace",
+   "body": "Money stress is the #1 relationship killer. Getting to AED 30K/month isn't just ambition \u2014 it's removing a major source of family stress. Every step toward financial stability is a step toward being a calmer, more present parent and partner. The job hunt matters. The income matters. It's not selfish. It's foundational.",
+   "index": 9,
    "total": 18
   },
   "book": {
    "book": "Thinking, Fast and Slow",
    "author": "Daniel Kahneman",
-   "chapter": "System 1 vs System 2: Two Ways Your Brain Decides",
-   "lesson": "Kahneman's central framework: System 1 is fast, automatic, emotional, unconscious \u2014 it drives 95% of decisions. System 2 is slow, deliberate, logical, effortful \u2014 it's what we think we use but rarely do. The problem: System 1 is riddled with biases and heuristics that made sense in evolutionary environments but lead to poor decisions in modern ones. Loss aversion (losses feel 2\u00d7 more painful than equivalent gains feel good), anchoring (first number heard influences all subsequent judgements), availability bias (things that come to mind easily feel more probable) \u2014 all System 1 errors. Recognition is the first step to override.",
-   "key_quote": "You are not as rational as you think. Your brain is a pattern-matching machine, not a logic processor.",
-   "action": "Before your next important decision, write down your reasoning explicitly. Externalising it activates System 2 and reveals System 1 shortcuts.",
-   "index": 14,
+   "chapter": "The Planning Fallacy: Why Every Project Takes Longer",
+   "lesson": "Kahneman and Tversky proved that humans systematically underestimate how long tasks take and overestimate how much they'll accomplish. Why? We build plans based on the best-case scenario and ignore what happened on similar projects in the past (outside view). The fix: reference class forecasting. Before estimating a project's timeline, ask 'how long did similar projects actually take?' The answer from historical data is almost always longer than your optimistic internal estimate. The cure for the planning fallacy is disciplined use of the outside view.",
+   "key_quote": "Your intuitive project estimate is probably optimistic by 50-200%. Add a buffer based on historical data, not hope.",
+   "action": "For your next project, find 3 similar past projects. Average their actual completion time. Use that as your baseline estimate.",
+   "index": 15,
    "total": 48,
    "crux": [
     "Two systems: System 1 is fast, automatic, emotional. System 2 is slow, effortful, logical.",
@@ -842,102 +842,102 @@
   },
   "way": {
    "minimalism": {
-    "title": "Owning Is A Liability",
-    "body": "Every object requires storage, maintenance, insurance, cleaning, moving, and eventual disposal. The purchase price is the smallest number in that list. Accountants of all people should price the full cost.",
-    "action": "Before the next purchase, write the 5-year total cost of ownership.",
-    "index": 8,
+    "title": "Space Is A Feature",
+    "body": "Empty space in a room is not wasted space, the same way white space on a page is not wasted paper. Both exist so the things that matter can be seen.",
+    "action": "Remove one item from your most crowded shelf. Add nothing back.",
+    "index": 9,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Handle The Bill Without Theatre",
-    "body": "Decide before you arrive. Settle it quietly. The public wrestle over a bill embarrasses everyone at the table.",
-    "action": "Settle the next bill before it reaches the table.",
-    "index": 14,
+    "title": "Remember The Detail",
+    "body": "Their daughter's exam. Their father's surgery. Ask next time. This is the single highest-return social habit and almost nobody keeps notes.",
+    "action": "Write down one personal detail after your next conversation.",
+    "index": 15,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Keep A Line A Day",
-    "body": "One sentence about the day. Not a journal habit that collapses in a week \u2014 one line. In ten years it becomes the only accurate record of your life that exists.",
-    "action": "Write one line tonight. Date it.",
-    "index": 12,
+    "title": "Enough Is A Number",
+    "body": "Without a defined 'enough', more is the only direction and the target moves with every increment. AED 30K/month is a number. Undefined ambition is not a goal, it is a treadmill.",
+    "action": "Write your 'enough' figure. Date it. Revisit in a year.",
+    "index": 13,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Base Rates",
-    "body": "Before believing your case is special, ask what usually happens. Most restaurants fail. Most projects overrun. Most traders lose. Your plan starts from that number, not from zero.",
-    "action": "Find the base rate for your current bet before adjusting for your edge.",
-    "index": 4,
+    "title": "Circle Of Competence",
+    "body": "The boundary matters more than the size. Knowing precisely where your knowledge ends is worth more than extending it slightly. Most large losses happen just outside the edge.",
+    "action": "Draw your circle. Name one thing just outside it you have been treating as inside.",
+    "index": 5,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0644\u0648 \u0633\u0645\u062d\u062a",
-    "translit": "law samaht",
-    "meaning": "Excuse me / if you please",
-    "use": "Getting attention politely \u2014 a waiter, a stranger, someone in your way.",
-    "index": 10,
+    "script": "\u0639\u0641\u0648\u0627\u064b",
+    "translit": "'afwan",
+    "meaning": "You're welcome / excuse me",
+    "use": "Reply to shukran. Also used to apologise lightly or to interrupt.",
+    "index": 11,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "The Five Whys",
-    "body": "Ask why five times to get from symptom to cause. Most analysis stops at why one and fixes a symptom, which guarantees the problem returns.",
-    "action": "Take one recurring problem. Ask why five times. Write each answer.",
-    "index": 16,
+    "title": "Number Sense: Orders Of Magnitude",
+    "body": "Is that number plausible? A company with 200 staff and AED 4bn revenue implies AED 20m per head \u2014 almost certainly wrong. This check catches more errors than any other.",
+    "action": "Sanity-check five figures by per-unit magnitude.",
+    "index": 17,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Light Sets The Clock",
-    "body": "Morning daylight within an hour of waking anchors circadian rhythm and improves sleep that night more reliably than any supplement. Outdoor light is 10\u2013100x brighter than indoor, even when overcast.",
-    "action": "Ten minutes outside within an hour of waking. No sunglasses.",
-    "index": 6,
+    "title": "Walking Is Underrated",
+    "body": "8,000 steps a day is associated with a large mortality reduction versus 4,000, and the curve is steepest at the low end. The gains come from moving more, not from moving harder.",
+    "action": "Add one 15-minute walk. After a meal is best for glucose.",
+    "index": 7,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Marc Benioff",
-   "quote": "The secret to successful hiring is this: look for the people who want to change the world.",
-   "index": 87,
+   "name": "Jensen Huang",
+   "quote": "A company that cannot build a product is just a social club.",
+   "index": 88,
    "total": 96
   },
   "lesson": {
    "tradition": "Buddhism",
-   "lesson": "Peace comes from within. Do not seek it without.",
+   "lesson": "The mind is everything. What you think you become.",
    "source": "Buddha"
   },
   "case": {
-   "title": "Netflix: DVD to Streaming (2007)",
-   "story": "Netflix had a profitable DVD business. Reed Hastings cannibalized it by betting on streaming. Blockbuster laughed. Netflix is now worth $250B+.",
-   "lesson": "Disrupt yourself before someone else does. The most dangerous competitor is your own comfort."
+   "title": "Apple iPhone Launch (2007)",
+   "story": "Jobs launched iPhone against executives who said no one would pay $499 for a phone. First year: 6.1M units. iPhone now drives 52% of Apple revenue.",
+   "lesson": "Solve a problem that everyone thinks is already solved. The best products make existing products look primitive."
   },
   "fpna": {
-   "title": "Rolling Forecast",
-   "body": "Rolling 12-month forecasts beat static annual budgets. Less time defending, more time deciding.",
-   "index": 3,
+   "title": "Variance Analysis",
+   "body": "Volume variance + Price/Rate variance + Mix variance = Total variance. Always decompose before presenting.",
+   "index": 4,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Interview: Top 5 Questions",
-   "body": "1. What's your capital allocation philosophy? 2. How do you manage a cash crisis? 3. Describe a time you stopped a bad investment. 4. How do you build trust with the CEO? 5. Walk me through a fundraise or M&A you led. Practice until smooth.",
-   "index": 14,
+   "title": "Power BI for Finance Leaders",
+   "body": "Build a CFO dashboard: P&L vs Budget, Cashflow waterfall, Working Capital trend, Revenue bridge. Link to ERP via DirectQuery. Refresh daily. Present this in interviews as your personal project. It shows initiative + technical skill + commercial sense.",
+   "index": 15,
    "total": 15
   },
   "money_hack": {
-   "title": "Expense Tracking",
-   "body": "Track every expense for 30 days. You will find \u20b93\u20135K of invisible leaks."
+   "title": "Tax-Loss Harvesting",
+   "body": "Book losses at year-end to offset LTCG. Reinvest post 30 days. Saves 10\u201315% tax."
   },
   "dubai": {
-   "title": "Your CV is being read by software",
-   "body": "Most Gulf groups run Taleo or SuccessFactors. Two columns, tables, headers and a photo all parse to garbage. Single column, standard headings, .docx not PDF, no logos.",
-   "targets": "Job title in the CV header must match the job title in the posting. Literally.",
-   "action_label": "30-minute fix",
-   "action": "Rewrite the top third of the CV as: title, then five bullets, each with a number in it.",
-   "index": 6,
+   "title": "The IFRS 16 story they want",
+   "body": "Every UAE retail and logistics group is lease-heavy, so IFRS 16 is not a technical question \u2014 it is the whole job. Have one story ready: the portfolio size, the discount rate you used, how you handled the transition, and what broke.",
+   "targets": "If you have not run one, say so and describe the mechanics anyway. Bluffing gets caught in round two.",
+   "action_label": "Prep",
+   "action": "Write the story in 200 words. Say it out loud until it takes 90 seconds.",
+   "index": 7,
    "total": 30
   },
   "daughter": {
@@ -947,7 +947,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "End every meeting with: who does what by when. No action = no meeting.",
+  "productivity": "Read 10 pages of non-fiction daily. 10 \u00d7 365 = 12 books/year.",
   "father": [
    {
     "title": "Get down on the floor",
@@ -1057,8 +1057,8 @@
    "week": 36,
    "year": 2026,
    "key": "2026-W36",
-   "weekday": 4,
-   "days_left": 3,
+   "weekday": 5,
+   "days_left": 2,
    "is_review_day": false
   },
   "podcasts": {
@@ -1327,10 +1327,48 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-03",
-   "age_days": 0.1,
+   "age_days": 0.2,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "From an impossibility theorem to an impossible trinity: what gets ruled out can also provoke thought",
+    "link": "https://www.livemint.com/opinion/online-views/impossibility-theorem-impossible-trinity-what-gets-ruled-out-can-also-provoke-thought-arrow-amartya-sen-rbi-11788465558553.html",
+    "summary": "Be it Amartya Sen\u2019s tackle of Arrow\u2019s impossibility theorem on social choice or India\u2019s fuzzy-logic position on a macro trilemma in the face of a dollar in-surge, what cannot be done can also get minds whirring. It\u2019s why all eyes are on RBI.",
+    "date": "Sep 04, 2026",
+    "_sort": "2026-09-04T02:30:36+00:00",
+    "smart": {
+     "what_happened": [
+      "Amartya Sen examined Arrow\u2019s impossibility theorem in the context of social choice.",
+      "India\u2019s fuzzy\u2011logic stance on the macro trilemma has drawn all eyes to the RBI as the dollar rises."
+     ],
+     "why_it_matters": "The discussion highlights the difficulty Indian policymakers face in balancing exchange\u2011rate stability, monetary independence, and financial openness\u2014a classic macroeconomic trilemma. How the RBI navigates this tension will affect capital flows, inflation expectations, and the broader credibility of India's economic strategy.",
+     "what_to_watch": "The outcome of the RBI's next monetary policy meeting, scheduled for [date from official calendar], for any signals on how it will address the macro trilemma.",
+     "headline": "RBI faces scrutiny over India's macro trilemma amid dollar surge",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "REITs and InvITs: Despite tax-free dividends, non-resident investors may need to file ITR to claim a refund of TDS",
+    "link": "https://economictimes.indiatimes.com/wealth/tax/reits-and-invits-despite-tax-free-dividends-non-resident-investors-may-need-to-file-itr-to-claim-a-refund-of-tds/articleshow/133735763.cms",
+    "summary": "The Taxation and Other Laws (Amendment) Act, 2026 addresses existing dividend tax discrepancies for unitholders by granting unconditional exemptions. Despite this, the established withholding tax regulations for BTs have not been modified, leading to possible inconsistencies. Non-resident investors may need to submit t",
+    "date": "Sep 04, 2026",
+    "_sort": "2026-09-04T01:30:00+00:00",
+    "smart": {
+     "what_happened": [
+      "The Taxation and Other Laws (Amendment) Act, 2026 grants unconditional exemptions on dividend tax for REIT and InvIT unitholders.",
+      "Existing withholding tax regulations for BTs remain unchanged, so non-resident investors may have to submit an income tax return to claim a TDS refund."
+     ],
+     "why_it_matters": "The exemption removes dividend tax for unitholders, but the unchanged BT withholding rules create a procedural gap for non-resident investors who must navigate the ITR filing process to recover deducted tax, affecting cash flow and compliance costs.",
+     "what_to_watch": "Watch for any official tax authority notifications clarifying the ITR filing requirements for non-resident REIT and InvIT dividend refunds.",
+     "headline": "Non-resident REIT and InvIT investors may need to file ITR for TDS refund",
+     "read_seconds": 26
+    }
+   },
    {
     "source": "Livemint",
     "cat": "money",
@@ -1338,25 +1376,16 @@
     "link": "https://www.livemint.com/money/personal-finance/sebis-new-etf-pricing-rules-from-7-september-whats-changing-and-why-investors-should-care-experts-explain-11788457928760.html",
     "summary": "SEBI\u2019s new rules from 7 September will change base prices, price bands, pre-open auctions, and close-out procedures for ETFs. Here\u2019s what the changes mean for investors, including how they may affect ETF trading, price discovery, and the way investors should trade.",
     "date": "Sep 03, 2026",
-    "_sort": "2026-09-03T19:53:31+00:00"
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "\u200bMake growth piggyback on savings",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/unlocking-indias-economic-potential-transforming-savings-into-growth/articleshow/133743086.cms",
-    "summary": "Household savings are increasingly held in financial assets, not physical ones.  This shift creates a significant mismatch for long-term investment needs.  Banks face a growing deposit-to-credit gap as savings move away from traditional accounts.  India requires deeper long-term debt markets to finance its ambitious gr",
-    "date": "Sep 03, 2026",
-    "_sort": "2026-09-03T17:50:27+00:00",
+    "_sort": "2026-09-03T19:53:31+00:00",
     "smart": {
      "what_happened": [
-      "Household savings are increasingly held in financial assets rather than physical assets.",
-      "The shift is widening banks' deposit\u2011to\u2011credit gap and underscores the need for deeper long\u2011term debt markets in India."
+      "SEBI announced that from 7 September its rules will change base prices, price bands, pre\u2011open auctions and close\u2011out procedures for exchange\u2011traded funds.",
+      "The changes are intended to improve price discovery and trading efficiency for ETFs."
      ],
-     "why_it_matters": "The move of savings into financial assets creates a mismatch between available capital and long\u2011term investment needs, pressuring banks as deposits outpace credit extension. Without a robust long\u2011term debt market, financing for infrastructure and growth projects could be constrained, affecting economic expansion.",
-     "what_to_watch": "Track the volume of new long\u2011term bond issuances in India over the next quarter.",
-     "headline": "India's savings shift creates deposit\u2011credit gap, urging deeper long\u2011term debt markets",
-     "read_seconds": 26
+     "why_it_matters": "The revised pricing framework could tighten ETF price bands and alter the timing of pre\u2011open auctions, which may affect how closely ETF market prices track their underlying net asset values. Investors will need to adjust order strategies to accommodate the new close\u2011out mechanisms, potentially impacting liquidity and execution costs.",
+     "what_to_watch": "Track the price spreads of major Indian ETFs during the first trading session after 7 September to see how the new rules affect market pricing.",
+     "headline": "SEBI implements new ETF pricing rules on 7 September",
+     "read_seconds": 22
     }
    },
    {
@@ -1369,32 +1398,13 @@
     "_sort": "2026-09-03T15:35:19+00:00",
     "smart": {
      "what_happened": [
-      "Leading health organizations joined forces to issue recommendations on Covid, flu and RSV vaccines this fall.",
-      "They cited a lack of strong guidance from the federal government."
+      "Leading health organizations collaborated to issue guidance on Covid, flu and RSV vaccinations for the fall season.",
+      "They said the guidance was needed because the federal government had provided limited direction."
      ],
-     "why_it_matters": "The joint recommendations provide clearer direction for clinicians and the public at a time when federal guidance is limited, helping to shape vaccination strategies and potentially improve uptake of Covid, flu and RSV shots during the upcoming season.",
-     "what_to_watch": "Watch for any new federal guidance on Covid, flu and RSV vaccines.",
-     "headline": "Health groups issue vaccine guidance amid weak federal direction",
+     "why_it_matters": "The joint recommendations give the public and healthcare providers clearer guidance on which vaccines to prioritize amid a crowded immunization schedule, potentially improving vaccination rates and reducing the spread of multiple respiratory illnesses during the fall.",
+     "what_to_watch": "Watch for any new federal guidance on the fall vaccine rollout.",
+     "headline": "Health groups issue fall vaccine recommendations for Covid, Flu and RSV",
      "read_seconds": 20
-    }
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "EPF vs NPS: Rs 10,000/monthly investment in each; where you may get a higher retirement corpus?",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/epfo-epf-vs-nps-retirement-planning-rs-10000/monthly-investment-in-each-where-you-may-get-a-higher-corpus/articleshow/133733435.cms",
-    "summary": "The National Pension System (NPS) and the Employee Provident Fund (EPF) both serve unique purposes for retirement planning. The ultimate financial growth from these investments significantly relies on future market performance, allowing both options to potentially build substantial wealth over time.",
-    "date": "Sep 03, 2026",
-    "_sort": "2026-09-03T10:47:28+00:00",
-    "smart": {
-     "what_happened": [
-      "The article compares the Employee Provident Fund (EPF) and the National Pension System (NPS) for retirement planning.",
-      "It notes that the growth of both schemes depends on future market performance and can potentially build substantial wealth."
-     ],
-     "why_it_matters": "Understanding how EPF and NPS perform with a Rs 10,000 monthly contribution helps investors gauge which vehicle may yield a larger retirement corpus, influencing long\u2011term financial security and retirement readiness.",
-     "what_to_watch": "Monitor future market performance and any policy changes affecting EPF or NPS returns.",
-     "headline": "EPF and NPS: Rs 10,000 monthly investment comparison",
-     "read_seconds": 25
     }
    },
    {
@@ -1416,12 +1426,12 @@
     "_sort": "2026-08-31T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "William Goldsmith partnered with Radio Paradise to create an internet radio station.",
-      "The station is presented as a platform for taste, trust and the art of choosing what comes next."
+      "William Goldsmith built an internet radio station called Radio Paradise.",
+      "The station is described as a living argument for taste, trust and the art of choosing what comes next."
      ],
-     "why_it_matters": "The venture highlights a growing trend of curated digital audio experiences that rely on listener trust and personal taste, signaling potential shifts in how audiences discover and engage with music online.",
-     "what_to_watch": "Monitor listener traffic and subscription metrics for the new station over the next quarter.",
-     "headline": "William Goldsmith launches internet radio station with Radio Paradise",
+     "why_it_matters": "The launch highlights the role of curated digital platforms in shaping listener preferences, emphasizing trust and taste as differentiators in an increasingly crowded streaming landscape.",
+     "what_to_watch": "Watch for the next Greg Easley article covering Radio Paradise's impact on audience behavior.",
+     "headline": "William Goldsmith launches Radio Paradise internet station",
      "read_seconds": 20
     }
    },
@@ -1471,7 +1481,7 @@
     "moves": 29,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid\u202fQd2\u2011h6\u2011g7\u202fmate pattern; keep queen safe, develop knights/bishops, castle before queen attacks.",
+    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn before castling; after 9\u2026Qh4+ you were forced into a forced mate. Use 20\u2011move principle\u2014castle by move\u202f10 and keep pawn structure intact.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1577,7 +1587,7 @@
     "moves": 53,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3, play 3\u2026Bb4 (Winawer) instead of 3\u2026Nf6; this forces White into a more complex line where you can equalize, reducing the likelihood of losing material later.",
+    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, avoid 3.Nc3\u202fBb4? and instead play 3.Nc3 Nf6 4.e5 Nfd7 5.Bd3. Your 9...c5 mis\u2011timed; strengthen center before expanding. Reduce unnecessary queen trades; keep tension to limit opponent\u2019s counterplay.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1611,7 +1621,7 @@
     "moves": 86,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: move Nc6, Bd7, and a6\u2013b5 to challenge White\u2019s c4\u2011d4 center before launching the queen\u2011side attack.",
+    "analysis": "Focus on early queen\u2011side development: on move\u202f3, play\u202f\u2026Nf6 instead of\u202f\u2026e5; avoid premature pawn pushes that create weak squares and increase ACPL.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1653,7 +1663,7 @@
     "moves": 21,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid 5...Qb6 and 7...Qb4; they waste tempo and invite tactics. Prioritize solid piece placement (e.g., Nf6, Bd6) before queen moves. This will lower ACPL and increase accuracy.",
+    "analysis": "Focus on early queen development: avoid 4.Qd2 and 7.Qe2; instead play 4...Nf6, 5...e6, 6...Bd6, completing development within 8 moves, reducing queen moves by 70\u202f% and saving ~0.4\u202fACPL.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1686,7 +1696,7 @@
     "moves": 34,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the queen (e.g., avoid Qb3 at move\u202f4); this cuts average centipawn loss by ~15\u202fpts and prevents time\u2011wasting queen sorties.",
+    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f9, and avoid queen\u2011side pawn pushes until fully mobilized.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1720,7 +1730,7 @@
     "moves": 51,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: stop moving Qd1\u2013h5\u2013e2 repeatedly; instead prioritize piece coordination and king safety\u2014cut queen moves by \u226550% in first 15 plies.",
+    "analysis": "Focus on early pawn structure: after 1.d4\u202fNf6\u202f2.c4\u202fe6\u202f3.Nc3\u202fBb4, avoid the passive 4.e3; instead play 4.Qc2 or 4.Nf3 to maintain central tension and prevent cramped, losing positions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1754,7 +1764,7 @@
     "moves": 32,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1.d4 f5, play 2.c4\u202fNf6\u202f3.Nc3\u202fe6\u202f4.g3\u202fBb4\u202f5.Bg2\u202f0-0, then aim for e4\u2011break before committing the king; you wasted two tempi with unnecessary queen moves (Qb3, Qc2) that let Black equalize. Reduce queen shuffling, develop knights first, and push e4 by move\u202f8. This will increase your accuracy by at least 5\u202f% and lower ACPL by ~10.",
+    "analysis": "Focus on early central control: after 1.d4\u202ff5, play 2.c4\u202fNf6\u202f3.Nc3, then challenge Black with 4.e4, avoiding passive setups and reducing opponent\u2019s counter\u2011play. This will lower your average centipawn loss by ~15\u201120\u202fCP.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1787,7 +1797,7 @@
     "moves": 29,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: stop passive moves like \u2026Be7/\u2026c6; develop knights to f6/d6, castle quickly, and challenge White\u2019s center with \u2026exd4 or \u2026d5 by move\u202f7. This cuts opponent\u2019s space and prevents losing material later.",
+    "analysis": "Focus on early piece activity: after 1.e4 e5\u202f2.Nf3 d6, develop the knight to f6 before playing \u2026Be7, then contest the center with \u2026c5 by move\u202f7 to avoid passive Philidor structures. This will cut your average centipawn loss by at least\u202f30\u202fpoints.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1821,7 +1831,7 @@
     "moves": 41,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f7, and avoid leaving the queen on\u202fd1 after\u202f...e5 (lost 0.7\u202f% accuracy). Improve opening tempo to reduce ACPL below\u202f15.",
+    "analysis": "Focus on early pawn structure: after 5\u2026c5 you allowed a weak d\u2011pawn; instead play 6\u2026c6, keeping d\u2011pawn solid and preventing White\u2019s Nd5\u2011e7 fork. This alone would raise your ACPL by ~15\u202fpts.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1855,7 +1865,7 @@
     "moves": 52,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1...g6\u202f2.e4\u202fd5, you allowed White a comfortable central lead. Play 2...e5 or 2...c6 to contest the center, preventing White\u2019s strong e4\u2011d4 duo and reducing later defensive tasks.",
+    "analysis": "Focus on early king safety: after 1\u2026g6\u202f2.Nf3\u202fBg7\u202f3.c4\u202fd5, avoid allowing 7\u2026Qh4+; instead play\u202f\u2026e6\u202fand\u202f\u2026Nbd7\u202fto keep the king shielded\u2014reducing tactical threats by ~30\u202f% in similar positions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1889,7 +1899,7 @@
     "moves": 63,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on early central tension: after 1.e4 e5 2.Nf3 d6, develop the bishop to\u202fc5\u202finstead of\u202fBe7\u202fand castle promptly; this yields a more active piece placement and reduces passive maneuvering that cost you ~0.4\u202fpawns in the opening.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen; avoid 5\u2026Qb6\u2011a5\u2011c7 sequence, which wastes ~30\u202fcentipawns and invites white\u2019s central pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1923,7 +1933,7 @@
     "moves": 7,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3\u202fBb4+\u202f4.Nc3, avoid 4\u2026Bb4+ (illegal) and instead play 4\u2026Nf6, then 5\u2026c5. Your 7\u2011move win relied on opponent\u2019s blunder; improve by mastering standard French structures and timely \u2026c5 to challenge White\u2019s center.",
+    "analysis": "Focus on early queen moves; after 1.e4 e6\u202f2.d4 d5\u202f3.Nc3\u202fBb4\u202f4.e5\u202fc5\u202f5.Qg4? you wasted tempo. Prioritize development\u2014avoid queen sorties before pieces; aim for \u22642 queen moves in first 7 plies.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1956,7 +1966,7 @@
     "moves": 23,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid exposing the king with pawn pushes like\u202fg4; it prevents tactics that cost you material.",
+    "analysis": "Focus on early piece development: stop moving the same knight twice (moves\u202f2\u20134) and get bishops out before castling; this saves ~3\u202fseconds per move and avoids the cramped position that led to your resignation.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1989,7 +1999,7 @@
     "moves": 40,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on move\u202f23: you played 23\u2026Qb6? allowing 24.Rxf8+ winning material. Instead, 23\u2026Qd8 or 23\u2026Rd8 keeps equality; tighten queen\u2011side defense to avoid forced mates.",
+    "analysis": "Focus on early queen\u2011side development: after 1\u2026d5\u202f2.c4\u202fc6, play \u2026Bf5 before \u2026e6; it saves ~0.3\u202fpawns and reduces opponent\u2019s pressure on d5.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2023,7 +2033,7 @@
     "moves": 29,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9\u2026c5, avoid 10\u2026Qb6?; instead develop knights, castle promptly, and prevent White\u2019s bishop\u2011pair attack\u2014reducing tactical threats.",
+    "analysis": "Focus on early king safety: after 1.Bc4 e5 2.e3 Nc6 3.Nf3 Bc5, avoid 4...Nf6?\u202finstead play 4...d6, then 5...O-O, preventing the later forced queen\u2011side attack that cost you the game.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2057,7 +2067,7 @@
     "moves": 42,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.e4 c6 2.d4 d5, avoid 3.Qd3; instead play 3.Nc3 or 3.Nd2, keeping queen safe and preventing black\u2019s \u2026Bf5\u2011\u2026Nd7\u2011\u2026e6 plans. This alone would reduce unnecessary queen moves by ~2\u20133 per game.",
+    "analysis": "Focus on the early queen\u2011side pawn structure: after 4\u2026c6\u202f5.Nc3\u202fNd7, you repeatedly allowed \u2026c5 and \u2026c4, losing central space. Strengthen d4\u2013e5 control, develop the bishop before moving the queen, and avoid unnecessary queen exchanges that cede the initiative. This will reduce your average centipawn loss by ~15\u202fcp.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2091,7 +2101,7 @@
     "moves": 20,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4 Nf6 2.Nf3 d5 3.c4 e6, you allowed Black\u2019s ...c5, equalizing. Play 4.Nc3 before c4, keep central tension, and avoid the premature \u2026c5 break that led to your cramped position. This alone should raise your accuracy by ~3\u20114\u202f% and lower ACPL.",
+    "analysis": "Focus on early piece development: on move\u202f3 you played 3.Qc2 instead of 3.Nc3, losing a tempo and allowing Black\u2019s \u2026c5. Prioritize knights/bishops to active squares within 5 moves.",
     "is_upset": true,
     "is_collapse": false,
     "is_long": false,
@@ -2124,7 +2134,7 @@
     "moves": 43,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before queen, avoid moving the same piece twice before castling; it saved ~15\u202f% time.",
+    "analysis": "Focus on early queen development: avoid bringing Qd1\u2011h5/h4 before completing piece\u2011coordination; it cost ~0.6\u202fcp per move and led to a vulnerable king. Strengthen central piece placement first.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2158,7 +2168,7 @@
     "moves": 51,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on time management: aim to make each move within 30\u202fseconds; practice quick, solid plans in the Queen\u2019s Gambit Declined to avoid 51\u2011move timeout.",
+    "analysis": "Focus on time management: allocate ~30\u202fseconds per move after opening; avoid deep calculations on equal positions to prevent timeout.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2192,7 +2202,7 @@
     "moves": 35,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid 3\u2026Qh4+; instead play 3\u2026Nf6, then \u2026Bc5, keeping the queen safe and reducing unnecessary tempo loss.",
+    "analysis": "Focus on early queen development: avoid 2\u2026Qh4? and 5\u2026Qh5; aim for solid piece placement (Nf6, d5) within 8 moves, reducing unnecessary queen moves by\u202f\u2248\u202f30\u202f% and improving positional accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -2226,7 +2236,7 @@
     "moves": 40,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f8, and avoid queen\u2011side pawn pushes that waste tempo.",
+    "analysis": "Focus on early piece development: in the first 10 moves you moved the queen twice (e.g., Qd2, Qe3) and left knights undeveloped, losing ~0.45\u202fAP per move; prioritize knights and bishops before queen sorties.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -2316,14 +2326,14 @@
    "upsets": 1,
    "collapses": 1,
    "long_games": 11,
-   "session_summary": "Your 48\u202f% win rate masks a fatal flaw: the Philidor (C41) is costing you points\u2014ditch it immediately and replace it with a solid, theory\u2011tested line like the Classical French or Caro\u2011Kann before your next tournament. The only opening that actually works for you is the A45 Indian Defense; study its main\u2011line pawn structures and typical tactics until you can execute it flawlessly under time pressure. Fix your opening repertoire, tighten your opening preparation, and you\u2019ll stop collapsing against weaker opponents and start converting those upsets into a sustainable winning streak.",
+   "session_summary": "Your results scream \u201cyou\u2019re a hobbyist who pretends to know theory\u201d\u2014you lose every game you try the Philidor, yet you magically win the only two times you open with an obscure Indian line, a classic case of memorised tricks masking a lack of fundamentals. Drop the Philidor entirely and replace it with a solid, well\u2011studied system (e.g., the London or Caro\u2011Kann) while drilling basic endgame technique and pawn structure so you stop relying on surprise value. Finally, review the two upsets: study the opponent\u2019s rating and the exact move order that cost you the win, then create a concrete \u201cwhat\u2011if\u201d plan for each critical position to ensure you never repeat those avoidable blunders.",
    "session_date": "2026-09-03",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "ka9et",
-   "rating": 1944,
+   "rating": 1990,
    "level": "\ud83d\udd34 stretch",
    "themes": "Endgame \u00b7 Crushing \u00b7 Quiet Move",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
