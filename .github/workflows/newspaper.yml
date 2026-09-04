@@ -69,6 +69,7 @@ jobs:
           python test_swing_rulebook.py
           python test_brief_fit.py
           python test_scan_slots.py
+          python test_verdict.py
 
       - name: Lint the page script
         run: |
