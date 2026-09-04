@@ -68,6 +68,7 @@ jobs:
           python test_cross_engine_dedupe.py
           python test_swing_rulebook.py
           python test_brief_fit.py
+          python test_scan_slots.py
 
       - name: Lint the page script
         run: |

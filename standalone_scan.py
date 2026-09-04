@@ -899,11 +899,40 @@ def _slot(now_ist, is_holiday=False):
     h, m = now_ist.hour, now_ist.minute
     if 9 <= h < 10 or (h == 10 and m <= 30):
         return "morning"
-    if 11 <= h < 14:
+    # TWO holes used to fall through to "full" at the bottom, and "full" skips
+    # the measured equity scan: 10:31-10:59 (between morning and midday) and
+    # 14:00-14:59 (between midday and eod). That is 90 minutes of every trading
+    # day — including the last 90 before the 15:30 close — sitting in a slot
+    # that does not scan. Found by test_scan_slots.py sweeping every session
+    # minute, not by reading the branches. midday now runs from where morning
+    # ends until eod begins, with no gap on either side.
+    if (h == 10 and m > 30) or (11 <= h < 15):
         return "midday"
     if 15 <= h < 18:
         return "eod"
     return "full"
+
+
+# Window OPENING time for each time-of-day slot, mirroring _slot() above.
+# "full", "weekend", "holiday" and the engine-selector slots have no window and
+# are never gated by this.
+_SLOT_OPENS_IST = {"morning": (9, 0), "midday": (10, 31), "eod": (15, 0)}
+
+
+def _before_window_opens(requested, now_ist):
+    """True when an explicitly-dispatched slot is being asked for BEFORE its own
+    window has opened.
+
+    The _ORDER ladder cannot answer this: "full" sits at the top of it but
+    covers BOTH pre-market (00:00-09:00) and post-market (18:00-24:00) IST, so
+    ordering says 3 AM is "later" than midday. Comparing against the window's
+    actual opening time is the only thing that distinguishes a late cron
+    (repair it, run it) from a 3 AM watchdog (stand down).
+    """
+    open_at = _SLOT_OPENS_IST.get(requested)
+    if not open_at:
+        return False
+    return (now_ist.hour, now_ist.minute) < open_at
 
 
 # ── Individual scan runners ───────────────────────────────────────────────────
@@ -1600,6 +1629,26 @@ def main():
             # it to a deliberate dispatch converted every watchdog repair into
             # a slot that had already run.
             if _explicit_slot():
+                # ...but an explicit slot may only repair a LATE cron, never run
+                # BEFORE its own window opens.
+                #
+                # 2026-09-04: something dispatched slot=midday at 03:18 AM IST
+                # and again at 04:03 AM IST. Both ran, both marked midday
+                # complete for the day, and every real midday dispatch from
+                # 10:50 to 12:50 IST then stood down under --once. The market
+                # had not opened when the midday scan ran, so the day produced
+                # no new equity signals at all and the site showed yesterday's.
+                # The runs were green. Nothing reported a failure.
+                #
+                # Standing down here (rather than downgrading) deliberately
+                # leaves the slot unconsumed so its real window still gets it.
+                if _before_window_opens(requested, now):
+                    logging.warning(
+                        "slot %r was asked for explicitly but its window has not "
+                        "opened yet — the clock says %r (run is %s IST). Standing "
+                        "down so the real %r window is not consumed.",
+                        requested, clock_slot, now.strftime('%H:%M'), requested)
+                    return 0
                 logging.info(
                     "slot %r was asked for explicitly; the clock says %r and does "
                     "not override it.", requested, clock_slot)
