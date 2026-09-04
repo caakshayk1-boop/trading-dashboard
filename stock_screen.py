@@ -1436,6 +1436,9 @@ RISK_WEIGHT = {"high": 3, "med": 2, "low": 1}
 RISK_BANDS = ((6, "HIGH"), (3, "MEDIUM"), (0, "LOW"))
 
 
+import verdict as _verdict  # noqa: E402  (verdict layer, see verdict.py)
+
+
 def risk_flags(r: dict, t: dict, val: dict) -> dict:
     """Named risks, each carrying the figure that raised it.
 
@@ -2025,6 +2028,13 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "last_date": t.get("last_date"),
             "news": [],
         })
+
+    # One verdict per row, from the row that was just published — see
+    # verdict.py. Deliberately runs on the FINAL dict rather than the internal
+    # `r`/`t` structures, so the site, the tests and this build all read
+    # identical keys and cannot drift apart.
+    _verdict_tally = _verdict.annotate(out)
+    print(f"[verdict] {' · '.join(f'{k} {v}' for k, v in _verdict_tally.items() if v)}")
 
     out.sort(key=lambda x: (x["comp"] is None, -(x["comp"] or 0)))
     # Deltas BEFORE compaction: _compact strips nulls, and a delta needs
