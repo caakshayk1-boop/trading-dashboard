@@ -140,21 +140,39 @@ def score_universe(rows):
     for r in rows:
         r1m, r6m, r1y = _f(r.get("r1m")), _f(r.get("r6m")), _f(r.get("r1y"))
         atr = _f(r.get("atr_pct"))
+        # THE DENOMINATOR NSE ACTUALLY USES.
+        #
+        # "Adjusted for volatility" in the Nifty500 Momentum 50 methodology
+        # means the standard deviation of daily returns over the trailing year,
+        # annualised. This engine divided by ATR% because that was the only
+        # volatility the screen carried — a defensible stand-in that was never
+        # the stated formula. ATR is a range measure, sigma is a
+        # dispersion-of-returns measure: they correlate, and a stock that gaps
+        # rather than trends ranks differently under the two.
+        #
+        # sd1y is published by the screen now, so the formula is the formula.
+        # atr_pct stays as the fallback for any name with under 60 return
+        # observations, where an annualised sigma would be noise — and which
+        # denominator each name used is recorded on the signal, because a score
+        # computed two ways is two scores.
+        sd = _f(r.get("sd1y"))
+        vol = sd if sd else atr
+        vol_basis = "sd1y" if sd else ("atr_pct" if atr else None)
         price, sma200 = _f(r.get("price")), _f(r.get("sma200"))
         turn, mcap = _f(r.get("turnover_cr")), _f(r.get("mcap_cr"))
         m12 = skip_month(r1y, r1m)
         m6 = skip_month(r6m, r1m)
-        # RISK ADJUSTMENT. NSE says "adjusted for volatility"; ATR% is the
-        # volatility this screen actually carries for every name, so it is what
-        # the adjustment uses. A 40% run in a name that moves 1% a day is a
-        # different fact from the same 40% in one that moves 5%.
-        ra12 = (m12 / atr) if (m12 is not None and atr) else None
-        ra6 = (m6 / atr) if (m6 is not None and atr) else None
+        # RISK ADJUSTMENT. A 40% run in a name that moves 1% a day is a
+        # different fact from the same 40% in one that moves 5%. See the note
+        # above for which volatility measure this is and why it changed.
+        ra12 = (m12 / vol) if (m12 is not None and vol) else None
+        ra6 = (m6 / vol) if (m6 is not None and vol) else None
         # Scaled turnover: daily traded value against market cap. Low is the
         # side that paid in the 19-year study.
         scaled_turn = (turn / mcap * 1e4) if (turn is not None and mcap) else None
         prepared.append(dict(row=r, m12=m12, m6=m6, ra12=ra12, ra6=ra6,
-                             atr=atr, price=price, sma200=sma200,
+                             atr=atr, sd=sd, vol=vol, vol_basis=vol_basis,
+                             price=price, sma200=sma200,
                              turn=turn, scaled_turn=scaled_turn))
 
     z12 = zscores([p["ra12"] for p in prepared])
@@ -250,12 +268,14 @@ def build(screen_rows, top_n=TOP_N):
             symbol=r.get("sym"), name=r.get("name"), sector=r.get("sector"),
             action="BUY", signal_type="momentum_quant", timeframe="1M",
             score=round(p["score"], 3),
+            vol_basis=p.get("vol_basis"),
             components=dict(
                 mom_12m_skip1=round(p["m12"], 2) if p["m12"] is not None else None,
                 mom_6m_skip1=round(p["m6"], 2) if p["m6"] is not None else None,
                 z_12m=round(p["z12"], 2), z_6m=round(p["z6"], 2),
                 z_scaled_turnover=round(p["zturn"], 2) if p["zturn"] is not None else None,
-                atr_pct=p["atr"], scaled_turnover=round(p["scaled_turn"], 3)
+                atr_pct=p["atr"], sd1y=p.get("sd"), vol_used=p.get("vol"),
+                scaled_turnover=round(p["scaled_turn"], 3)
                 if p["scaled_turn"] is not None else None,
             ),
             **lv,
@@ -270,7 +290,8 @@ def build(screen_rows, top_n=TOP_N):
         rejected_by_gates=len(scored) - len(eligible),
         gate_failures=dict(reasons.most_common()), picks=picks,
         method=("Normalised momentum: 12-month and 6-month price returns, each "
-                "skipping the most recent month and divided by the name's ATR, "
+                "skipping the most recent month and divided by the name's "
+                "one-year annualised standard deviation of daily returns, "
                 "z-scored across the universe and averaged — NSE Indices' own "
                 "Nifty500 Momentum 50 construction. Tilted toward low scaled "
                 "turnover (BacktestIndia's 19-year NSE study found the Indian "

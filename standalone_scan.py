@@ -1297,6 +1297,40 @@ def run_momentum_scan(time_str):
     ) for p in picks])
     logged = [i for i in (ids or []) if i]
     logging.info("momentum: logged %d of %d", len(logged), len(picks))
+
+    # ── THIS ENGINE WAS THE ONLY ONE THAT NEVER REACHED TELEGRAM ────────────
+    #
+    # It logged its picks to the ledger and stopped there. mark_alerts_sent was
+    # imported at the top of this function and never called, which is the
+    # fingerprint of a send block that was intended and never written. Every
+    # other scan in this file ends with _send_chunked + _record_delivery; this
+    # one ended at the database, so a name could be ranked, sized, written to
+    # the ledger, rendered on the site — and nobody was told.
+    #
+    # The block carries the SCORE AND ITS PARTS, not just the levels. A
+    # momentum pick is a claim about relative rank, and "3rd of 750 on a
+    # z-score of +2.4" is the claim; the entry price alone hides it.
+    #
+    # Engine names and component keys carry underscores, which Telegram's
+    # Markdown reads as italics and then rejects the whole message over — so
+    # nothing here is interpolated raw into an _italic_ span.
+    def _block(p):
+        c = p.get("components") or {}
+        return (f"*{p['symbol']}* — score `{p['score']:+.2f}`\n"
+                f"   12m `{c.get('mom_12m_skip1')}%` · 6m `{c.get('mom_6m_skip1')}%` "
+                f"· sigma `{c.get('sd1y')}%`\n"
+                f"   Entry `{p['entry']}` · SL `{p['sl']}` "
+                f"({(p['entry'] - p['sl']) / p['entry'] * 100:.1f}%)\n"
+                f"   T1 `{p['target1']}` · T2 `{p['target2']}` · T3 `{p['target3']}` "
+                f"· R:R `{p['rr']}`")
+
+    sent = _send_chunked(
+        f"\U0001F3C3 *Momentum — 750-name screen* ({len(picks)}) — {time_str}\n"
+        "_Six and twelve month returns over one-year sigma, skip-month, "
+        "z-scored across the universe · long only · monthly hold_\n",
+        [_block(p) for p in picks],
+        footer="\n_PAPER — not cleared for capital until 30 closed trades at t>=2_")
+    _record_delivery(logged, sent, mark_alerts_sent)
     return picks
 
 

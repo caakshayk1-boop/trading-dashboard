@@ -453,6 +453,7 @@ def main() -> int:
                test_engine_log_copy_is_markup_safe,
                test_fund_cache_survives_week_rollover,
                test_engines_drop_the_partial_bar,
+               test_every_logging_scan_also_delivers,
                test_alert_table_columns_match,
                test_docs_files_have_all_four_allow_lists,
                test_scan_crons_match_their_slot_arms,
@@ -530,6 +531,60 @@ def test_engines_drop_the_partial_bar() -> None:
     allnan = df.iloc[[2]]
     check("_own_frame returns None when every bar is partial",
           own(allnan, "X.NS") is None)
+
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# An engine that logs but never sends.
+#
+# run_momentum_scan ranked 750 names, sized them, wrote them to the ledger and
+# stopped. It imported mark_alerts_sent at the top of the function and never
+# called it — the fingerprint of a send block that was intended and never
+# written. A name could be ranked, sized, logged and rendered on the site with
+# nobody told, and every log line said the scan had succeeded, because it had.
+#
+# This asserts the SHAPE every scan in that file shares: if a runner logs
+# signals to the ledger, it must also hand the result to _record_delivery. The
+# test is about the pairing, not about Telegram — an engine may legitimately
+# alert nothing, but it may not silently decide not to try.
+# ─────────────────────────────────────────────────────────────────────────────
+def test_every_logging_scan_also_delivers() -> None:
+    print("\n[17] a scan that writes to the ledger must also record delivery")
+    src = open("standalone_scan.py").read()
+
+    runners = re.findall(r"\ndef (run_\w*scan)\(.*?(?=\ndef )", src, re.S)
+    checked = 0
+    for name in re.findall(r"\ndef (run_\w+)\(", src):
+        m = re.search(rf"\ndef {re.escape(name)}\(.*?(?=\ndef )", src, re.S)
+        if not m:
+            continue
+        body = m.group(0)
+        logs = "log_batch_to_all_signals(" in body or "log_breakouts(" in body
+        if not logs:
+            continue
+        checked += 1
+        # Either route counts. _record_delivery is the shared helper, but
+        # run_swing_scan calls mark_alerts_sent directly with three grouped
+        # outcome lists — delivered, below-threshold, failed — which is the
+        # same invariant expressed differently, and asserting the helper by
+        # name would have flagged working code and taught nobody anything.
+        records = "_record_delivery(" in body or "mark_alerts_sent(" in body
+        check(f"{name} records what was delivered", records,
+              "writes signals to the ledger and never records whether anyone "
+              "was told — the ledger fills while the bot stays silent")
+
+    check("found scans that write to the ledger", checked >= 4, f"checked {checked}")
+
+    # And the specific one this test was written for must carry a real send.
+    m = re.search(r"\ndef run_momentum_scan\(.*?(?=\ndef )", src, re.S)
+    check("run_momentum_scan located", bool(m))
+    if m:
+        check("momentum sends its picks", "_send_chunked(" in m.group(0))
+        # Underscores in engine names and component keys have broken Telegram
+        # Markdown on this bot before. Nothing interpolated inside an italic.
+        italics = re.findall(r"_[^_\n]*\{[^}]*\}[^_\n]*_", m.group(0))
+        check("no interpolation inside a Telegram italic span",
+              not italics, str(italics[:2]))
 
 
 

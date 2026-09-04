@@ -519,6 +519,31 @@ def technicals(px: dict, bench: dict | None) -> dict:
 
     t["atr_pct"] = (t["atr14"] / last) if t["atr14"] and last else None
 
+    # ── ONE-YEAR STANDARD DEVIATION OF DAILY RETURNS, ANNUALISED ────────────
+    #
+    # This is the denominator NSE Indices actually uses for the Nifty500
+    # Momentum 50 score: "price returns adjusted for volatility", where the
+    # volatility is the standard deviation of daily returns over the trailing
+    # year, annualised by sqrt(252).
+    #
+    # The momentum engine has been dividing by atr_pct instead — the only
+    # volatility this screen carried. ATR is a range measure and standard
+    # deviation is a dispersion-of-returns measure; they correlate but they are
+    # not the same number, and a gapping stock ranks very differently under the
+    # two. Computing it here costs nothing: the close series is already in
+    # memory, so this is arithmetic on data already downloaded, not a second
+    # source of truth for the same figure.
+    if n >= 60:
+        rets = [(c[i] / c[i - 1] - 1.0)
+                for i in range(max(1, n - 250), n)
+                if c[i - 1]]
+        # Below ~60 observations an annualised sigma is a number with a
+        # confidence interval wider than the number, so it is not published.
+        t["sd1y"] = (statistics.pstdev(rets) * math.sqrt(252)
+                     if len(rets) >= 60 else None)
+    else:
+        t["sd1y"] = None
+
     # Returns. Trading-day counts, not calendar — 250 bars is a year.
     for key, bars in (("r1d", 1), ("r1w", 5), ("r1m", 21), ("r3m", 63),
                       ("r6m", 126), ("r1y", 250), ("r3y", 750)):
@@ -1437,6 +1462,47 @@ RISK_BANDS = ((6, "HIGH"), (3, "MEDIUM"), (0, "LOW"))
 
 
 import verdict as _verdict  # noqa: E402  (verdict layer, see verdict.py)
+import targets as _targets  # noqa: E402  (resistance ladder, see targets.py)
+
+
+def _ladder_for(t: dict, r: dict, px: dict) -> dict | None:
+    """Target ladder for one screen row, or None when the inputs cannot support
+    one. Missing ATR means no stop can be sized, and a ladder without a stop is
+    three numbers with no risk attached."""
+    price = t.get("price")          # technicals() names it `price`, not `last`
+    atr = t.get("atr14")
+    if not price or not atr or atr <= 0:
+        return None
+
+    # One place for the stop multiple — signals/indicators.py owns it.
+    try:
+        from signals.indicators import ATR_STOP_MULT
+    except Exception:
+        ATR_STOP_MULT = 1.41
+    stop = price - ATR_STOP_MULT * atr
+
+    # Anchors the reader already knows about, so a swing high sitting on the
+    # 52-week high reads as one strong level rather than two weak ones.
+    extra = []
+    hi52 = t.get("high52")
+    if hi52:
+        extra.append(("52-week high", hi52))
+    for label, key in (("200-day average", "sma200"), ("50-day average", "sma50")):
+        v = t.get(key)
+        if v and v > price:
+            extra.append((label, v))
+
+    # Strong fundamentals turn on a TRAIL, they do not stretch the targets.
+    # The ledger's 90th-percentile excursion is 2.28R; a bigger fixed number is
+    # a number that does not get hit.
+    roce, cagr, de = r.get("roce"), r.get("rev_cagr3"), r.get("debt_to_equity")
+    strong = ((roce or 0) >= 0.18 and (cagr or 0) >= 0.12
+              and (de is None or de <= 1.0))
+    why = (f"ROCE {roce:.0%}, revenue CAGR {cagr:.0%}"
+           if strong and roce and cagr else "quality gate passed")
+
+    return _targets.build_ladder(price, stop, atr, px.get("h"), extra=extra,
+                                 quality={"strong": strong, "why": why})
 
 
 def risk_flags(r: dict, t: dict, val: dict) -> dict:
@@ -1859,7 +1925,10 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         r = ratios(stmts, info)
         r["industry"] = u["industry"]
         t = technicals(px, bench)
-        rows.append({"u": u, "r": r, "t": t, "industry": u["industry"]})
+        # px carries the OHLC series. It is needed at row assembly to find the
+        # swing highs a target should sit on — see targets.py. Transient: the
+        # series itself is never published, only the levels derived from it.
+        rows.append({"u": u, "r": r, "t": t, "px": px, "industry": u["industry"]})
 
     if not rows:
         return {"ok": False, "error": "no rows built"}
@@ -1871,6 +1940,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     out = []
     for row in rows:
         r, t, u = row["r"], row["t"], row["u"]
+        px_row = row.get("px") or {}
         em = earnings_momentum(r.get("years") or [])
         scores = {
             "quality": score_quality(r),
@@ -1949,6 +2019,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "sma200": _round(t.get("sma200"), 1, 1),
             "macd_h": _round(t.get("hist"), 1, 2),
             "atr_pct": _pct(t.get("atr_pct"), 2),
+            "sd1y": _pct(t.get("sd1y"), 1),
             "above_mas": t.get("above_mas"),
             "stack": t.get("ma_stack"),
             "brk20": t.get("brk20"), "brk50": t.get("brk50"), "brk52w": t.get("brk52w"),
@@ -2019,6 +2090,12 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             # column that cannot be sorted is a column that gets ignored.
             "risk_lvl": {"LOW": 0, "MEDIUM": 1, "HIGH": 2}.get(rk["level"]),
             "loc": price_location(t),
+            # A target ladder anchored to levels price actually turned at, each
+            # carrying the measured share of closed trades that reached that
+            # far. Replaces three fixed R-multiples snapped to a rolling max.
+            # See targets.py for why the ledger says the old ladder was too
+            # OPTIMISTIC, not too conservative.
+            "lad": _ladder_for(t, r, px_row),
             "setup": setup_label(t, r),
             "updates": updates(r, t),
             "has_stmts": r.get("has_statements"),
