@@ -255,6 +255,48 @@ def build_ladder(price: float, stop: float, atr: float, highs=None,
     }
 
 
+def _basis_id(text: str, legend: list[str] | None) -> object:
+    """Intern a basis string against a file-level legend.
+
+    Across 750 rows there are only a few dozen distinct reasons, and most rows
+    repeat "1.6R floor - no level in range" verbatim. Storing the index and
+    shipping the strings once is the difference between +173 KB and +40 KB on
+    a file the front page fetches on first paint.
+    """
+    if legend is None:
+        return text
+    try:
+        return legend.index(text)
+    except ValueError:
+        legend.append(text)
+        return len(legend) - 1
+
+
+def compact(lad: dict | None, legend: list[str] | None = None) -> dict | None:
+    """Publication form of a ladder.
+
+    The full dict carries `trail_note`, a 250-character sentence. Repeated
+    across 750 screen rows that is most of a 394 KB addition to a file the
+    front page fetches on first paint — the same cost that got the verdict's
+    reasons dropped. The note is a pure function of `tr`, so the page renders
+    it instead of downloading it 750 times.
+    """
+    if not lad:
+        return None
+    out = {
+        "e": lad["entry"], "s": lad["stop"], "rk": lad["risk_pct"],
+        "rr": lad["rr"], "tr": 1 if lad["trail"] else 0,
+        "t": [[t["px"], t["r"], t["reach"], _basis_id(t["basis"], legend)]
+              for t in lad["targets"]],
+    }
+    if lad.get("wall"):
+        w = lad["wall"]
+        out["w"] = [w["px"], w["r"], _basis_id(w["basis"], legend)]
+    if lad.get("anchors_only"):
+        out["ao"] = 1
+    return out
+
+
 def _calibrate(path="data/all_signals.json"):
     """Recompute REACH_BY_R from the ledger. cf_1h and intraday are EXCLUDED —
     their max_profit_pct is not credible (FX pairs, 0.08% stops, 21% claimed

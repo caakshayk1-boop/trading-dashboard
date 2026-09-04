@@ -70,6 +70,7 @@ jobs:
           python test_brief_fit.py
           python test_scan_slots.py
           python test_verdict.py
+          python test_targets.py
 
       - name: Lint the page script
         run: |

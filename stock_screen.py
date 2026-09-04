@@ -1464,6 +1464,11 @@ RISK_BANDS = ((6, "HIGH"), (3, "MEDIUM"), (0, "LOW"))
 import verdict as _verdict  # noqa: E402  (verdict layer, see verdict.py)
 import targets as _targets  # noqa: E402  (resistance ladder, see targets.py)
 
+try:                       # signals/indicators.py owns this number
+    from signals.indicators import ATR_STOP_MULT as ATR_STOP_MULT_FOR_SCREEN
+except Exception:
+    ATR_STOP_MULT_FOR_SCREEN = 1.41
+
 
 def _ladder_for(t: dict, r: dict, px: dict) -> dict | None:
     """Target ladder for one screen row, or None when the inputs cannot support
@@ -1474,12 +1479,7 @@ def _ladder_for(t: dict, r: dict, px: dict) -> dict | None:
     if not price or not atr or atr <= 0:
         return None
 
-    # One place for the stop multiple — signals/indicators.py owns it.
-    try:
-        from signals.indicators import ATR_STOP_MULT
-    except Exception:
-        ATR_STOP_MULT = 1.41
-    stop = price - ATR_STOP_MULT * atr
+    stop = price - ATR_STOP_MULT_FOR_SCREEN * atr
 
     # Anchors the reader already knows about, so a swing high sitting on the
     # 52-week high reads as one strong level rather than two weak ones.
@@ -1938,6 +1938,9 @@ def build(limit: int | None = None, allow_fetch: bool = True,
 
     # 4) Score, classify, describe.
     out = []
+    # Distinct target-basis strings, shipped once at file level and referenced
+    # by index on each row — see targets.compact().
+    _basis_legend: list[str] = []
     for row in rows:
         r, t, u = row["r"], row["t"], row["u"]
         px_row = row.get("px") or {}
@@ -2095,7 +2098,7 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             # far. Replaces three fixed R-multiples snapped to a rolling max.
             # See targets.py for why the ledger says the old ladder was too
             # OPTIMISTIC, not too conservative.
-            "lad": _ladder_for(t, r, px_row),
+            "lad": _targets.compact(_ladder_for(t, r, px_row), _basis_legend),
             "setup": setup_label(t, r),
             "updates": updates(r, t),
             "has_stmts": r.get("has_statements"),
@@ -2146,6 +2149,21 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         "count": len(out),
         "attempted": len(uni),
         "weights": WEIGHTS,
+        # The target ladder's shared vocabulary: the basis strings each row
+        # references by index, plus the constants a reader needs to check the
+        # arithmetic. See targets.py.
+        "ladder": {
+            "basis": _basis_legend,
+            "reach_sample": _targets.REACH_SAMPLE_N,
+            "stop_atr_mult": ATR_STOP_MULT_FOR_SCREEN,
+            "floors": [_targets.R1_FLOOR, _targets.R2_FLOOR, _targets.R3_FLOOR],
+            "note": ("Targets sit on a level price turned at where one exists "
+                     "in range, otherwise on the R floor, which is labelled. "
+                     "`reach` is the measured share of closed trades that ran "
+                     "at least that far — cf_1h and intraday are excluded from "
+                     "that sample because their max-favourable figures are not "
+                     "credible."),
+        },
         "coverage": cov,
         "changes": delta_meta,
         # Real breadth across the screened universe, not a proxy. Dated, and
