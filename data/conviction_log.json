@@ -562,17 +562,30 @@
  },
  {
   "date": "2026-09-05",
-  "generated_at": "2026-09-05T05:14:04+05:30",
+  "generated_at": "2026-09-05T23:36:53+05:30",
   "picks": [
+   {
+    "sym": "SMLMAH",
+    "sector": "Consumer Cyclical",
+    "price": 6298.5,
+    "score": 81.01,
+    "reasons": [
+     "ROCE 29%",
+     "Piotroski 7/9",
+     "+67% over three months",
+     "at a 52-week high"
+    ],
+    "view": null
+   },
    {
     "sym": "MANORAMA",
     "sector": "Consumer Defensive",
-    "price": 1966.3,
-    "score": 80.66,
+    "price": 1993.4,
+    "score": 78.31,
     "reasons": [
      "ROCE 33%",
      "Piotroski 7/9",
-     "+30% over three months",
+     "+34% over three months",
      "at a 52-week high"
     ],
     "view": null
@@ -580,51 +593,38 @@
    {
     "sym": "CHENNPETRO",
     "sector": "Energy",
-    "price": 1440.0,
-    "score": 77.02,
+    "price": 1452.2,
+    "score": 74.26,
     "reasons": [
      "ROCE 33%",
      "Piotroski 7/9",
-     "+26% over three months",
+     "+24% over three months",
      "at a 52-week high"
+    ],
+    "view": null
+   },
+   {
+    "sym": "QPOWER",
+    "sector": "Industrials",
+    "price": 1495.3,
+    "score": 74.14,
+    "reasons": [
+     "ROCE 39%",
+     "+32% over three months",
+     "at a 52-week high",
+     "\u20b934 cr traded"
     ],
     "view": null
    },
    {
     "sym": "SHILPAMED",
     "sector": "Healthcare",
-    "price": 955.55,
-    "score": 76.39,
+    "price": 964.15,
+    "score": 70.47,
     "reasons": [
-     "+80% over three months",
+     "+70% over three months",
      "at a 52-week high",
-     "\u20b9178 cr traded"
-    ],
-    "view": null
-   },
-   {
-    "sym": "ENGINERSIN",
-    "sector": "Industrials",
-    "price": 281.95,
-    "score": 73.69,
-    "reasons": [
-     "ROCE 28%",
-     "Piotroski 7/9",
-     "+18% over three months",
-     "at a 52-week high"
-    ],
-    "view": null
-   },
-   {
-    "sym": "SOLARINDS",
-    "sector": "Basic Materials",
-    "price": 21500.0,
-    "score": 72.71,
-    "reasons": [
-     "ROCE 31%",
-     "+19% over three months",
-     "at a 52-week high",
-     "\u20b91036 cr traded"
+     "\u20b963 cr traded"
     ],
     "view": null
    }
