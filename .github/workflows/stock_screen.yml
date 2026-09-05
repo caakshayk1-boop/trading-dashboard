@@ -1,4 +1,4 @@
-name: Stock Screen — weekly NSE Total Market research screen
+name: Stock Screen — daily NSE Total Market research screen
 
 # Builds the NSE Total Market (750 names) research screen and caches it in Turso
 # (newspaper_screen, keyed by ISO week). The daily newspaper only READS that
@@ -32,10 +32,27 @@ on:
     # is ~315 minutes a month. Re-reading unchanged fundamentals every day is
     # waste, but it is cheap waste and far less risky than splitting the
     # payload into two clocks that can disagree with each other.
-    - cron: '0 21 * * *'      # 02:30 IST daily — after the fund screen
+    # ── AND THE HOUR MATTERS AS MUCH AS THE CADENCE ─────────────────────
+    #
+    # Daily since 2026-08-27, and still two sessions behind, because 02:30 IST
+    # is the wrong 02:30. Yahoo publishes an NSE daily bar for session N with
+    # NaN prices and settles it roughly a day later — measured directly: on
+    # 2026-09-04 the 09-03 bar was NaN-priced for every NSE name, and by 23:19
+    # IST on 09-05 the 09-04 bar was real. The screen drops NaN closes, as it
+    # should, so a 02:30 build looks back past the unsettled bar and lands on
+    # the one before it.
+    #
+    # The receipt: the 2026-09-05 04:24 IST build stamped every one of its 750
+    # rows last_date 2026-09-03. Two sessions old on a screen whose volume
+    # board is headed "names trading at twice their own average volume".
+    #
+    # 21:00 IST reads a session that closed ~29 hours earlier rather than ~11,
+    # which is the far side of that settle. It cannot do better than the
+    # previous close from this source, and it no longer does worse.
+    - cron: '30 15 * * *'     # 21:00 IST daily — after Yahoo settles yesterday
     # And a retry, because GitHub drops scheduled runs outright — it dropped
     # three of this repo's workflows on 2026-08-27 alone.
-    - cron: '0 1 * * *'       # 06:30 IST — retry if the 02:30 run was dropped
+    - cron: '30 17 * * *'     # 23:00 IST — retry if the 21:00 run was dropped
   workflow_dispatch:
     inputs:
       limit:
