@@ -1,43 +1,43 @@
 {
- "build_id": "20260906T020131",
+ "build_id": "20260906T073137",
  "date": "2026-09-06",
  "date_str": "Sunday, September 06 2026",
  "picks": [
   {
-   "symbol": "CRWD",
-   "name": "CRWD",
-   "ext20": 6.95,
-   "vol_ratio": 1.49,
-   "price": 218.4,
-   "change_1d": -4.19,
-   "mom_1m": 17.9,
-   "mom_3m": 11.7,
+   "symbol": "DUOL",
+   "name": "DUOL",
+   "ext20": 5.66,
+   "vol_ratio": 1.14,
+   "price": 154.46,
+   "change_1d": -2.75,
+   "mom_1m": 26.0,
+   "mom_3m": 30.9,
    "score": 83,
-   "target": 252.73,
-   "stop_loss": 204.21,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "target": 353.0,
+   "stop_loss": 146.19,
+   "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "16% to go at its recent 3.9%/month",
-   "rr": 2.42,
-   "atr": 11.82,
-   "high_52w": 229.08,
-   "timeframe": "3-6 months",
+   "horizon_basis": "129% to go at its recent 10.3%/month",
+   "rr": 24.01,
+   "atr": 7.42,
+   "high_52w": 353.0,
+   "timeframe": "over a year at this pace",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 22.4
+     "e": 19.1
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 17.3
+     "e": 17.4
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 13.4
+     "e": 15.0
     },
     {
      "k": "1-month thrust",
@@ -47,37 +47,37 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 3.3
+     "e": 8.8
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 6.5
+     "e": 2.7
     }
    ],
-   "ema20": 204.21,
-   "tv": "CRWD",
-   "thesis": "17.9% one\u2011month gain, price 7% above 20\u2011day average on 1.49\u00d7 volume, composite 83/100 indicates accelerating momentum."
+   "ema20": 146.19,
+   "tv": "DUOL",
+   "thesis": "30.9% three\u2011month gain, 26.0% one\u2011month gain, price 5.7% above 20\u2011day average, volume 1.14\u00d7 norm, composite 83."
   },
   {
-   "symbol": "MDB",
-   "name": "MDB",
-   "ext20": 8.57,
-   "vol_ratio": 0.88,
-   "price": 446.62,
-   "change_1d": 1.37,
-   "mom_1m": 37.1,
-   "mom_3m": 10.6,
-   "score": 83,
-   "target": 518.18,
-   "stop_loss": 411.38,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 9.02,
+   "vol_ratio": 0.62,
+   "price": 39.59,
+   "change_1d": 4.54,
+   "mom_1m": 34.8,
+   "mom_3m": -10.0,
+   "score": 80,
+   "target": 58.78,
+   "stop_loss": 36.31,
+   "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "16% to go at its recent 3.5%/month",
-   "rr": 2.03,
-   "atr": 22.54,
-   "high_52w": 473.1,
-   "timeframe": "3-6 months",
+   "horizon_basis": "three-month drift is flat or negative \u2014 no pace to extrapolate",
+   "rr": 5.86,
+   "atr": 2.23,
+   "high_52w": 58.78,
+   "timeframe": "no estimate",
    "currency": "$",
    "factors": [
     {
@@ -103,7 +103,7 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 3.0
+     "e": 0.0
     },
     {
      "k": "Volume confirming",
@@ -111,45 +111,157 @@
      "e": 0.0
     }
    ],
-   "ema20": 411.38,
-   "tv": "MDB",
-   "thesis": "37.1% one\u2011month rise, 10.6% three\u2011month gain, price 8.6% above 20\u2011day average, volume 0.88\u00d7 norm, composite 83."
+   "ema20": 36.31,
+   "tv": "SMCI",
+   "thesis": "34.8% one\u2011month gain, 10% three\u2011month decline, price 9% above 20\u2011day average on 0.62\u00d7 volume, composite 80."
   },
   {
-   "symbol": "SAP",
-   "name": "SAP",
-   "ext20": 6.97,
-   "vol_ratio": 0.98,
-   "price": 221.54,
-   "change_1d": 0.17,
-   "mom_1m": 22.5,
-   "mom_3m": 13.0,
-   "score": 82,
-   "target": 276.56,
-   "stop_loss": 207.1,
+   "symbol": "PAYTM.NS",
+   "name": "PAYTM",
+   "ext20": 3.47,
+   "vol_ratio": 0.63,
+   "price": 1659.5,
+   "change_1d": 1.37,
+   "mom_1m": 15.1,
+   "mom_3m": 55.6,
+   "score": 76,
+   "target": 1845.91,
+   "stop_loss": 1574.29,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "11% to go at its recent 18.5%/month",
+   "rr": 2.19,
+   "atr": 56.81,
+   "high_52w": 1732.3,
+   "timeframe": "about a month",
+   "currency": "\u20b9",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 13.7
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 17.6
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 10.0
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 1603.84,
+   "tv": "NSE:PAYTM",
+   "thesis": "Three\u2011month gain of 55.6% amid consolidating trend, price modestly 3.5% above its 20\u2011day average, volume at 0.63\u00d7."
+  },
+  {
+   "symbol": "MRK",
+   "name": "MRK",
+   "ext20": 3.32,
+   "vol_ratio": 0.75,
+   "price": 150.33,
+   "change_1d": -1.32,
+   "mom_1m": 17.1,
+   "mom_3m": 26.7,
+   "score": 70,
+   "target": 166.68,
+   "stop_loss": 143.01,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "11% to go at its recent 8.9%/month",
+   "rr": 2.23,
+   "atr": 4.88,
+   "high_52w": 156.92,
+   "timeframe": "about a month",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 13.3
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 14.2
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 15.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 20.0
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 7.6
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 0.0
+    }
+   ],
+   "ema20": 145.5,
+   "tv": "MRK",
+   "thesis": "3\u2011month gain of 26.7% with price 3.3% above its 20\u2011day average, volume at 0.75\u00d7 norm, composite 70."
+  },
+  {
+   "symbol": "COIN",
+   "name": "COIN",
+   "ext20": 5.91,
+   "vol_ratio": 0.93,
+   "price": 184.64,
+   "change_1d": -4.18,
+   "mom_1m": 27.0,
+   "mom_3m": 13.9,
+   "score": 66,
+   "target": 402.16,
+   "stop_loss": 164.76,
    "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "25% to go at its recent 4.3%/month",
-   "rr": 3.81,
-   "atr": 5.73,
-   "high_52w": 276.56,
-   "timeframe": "3-6 months",
+   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
+   "horizon_basis": "118% to go at its recent 4.6%/month",
+   "rr": 10.94,
+   "atr": 13.25,
+   "high_52w": 402.16,
+   "timeframe": "over a year at this pace",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 22.4
+     "e": 19.8
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 20.0
+     "e": 13.4
     },
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 15.0
+     "e": 8.2
     },
     {
      "k": "1-month thrust",
@@ -159,129 +271,17 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 3.7
+     "e": 4.0
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.9
+     "e": 0.4
     }
    ],
-   "ema20": 207.1,
-   "tv": "SAP",
-   "thesis": "22.5% one\u2011month gain, 13% three\u2011month gain, price 7% above 20\u2011day average, volume 0.98\u00d7 norm, composite 82/100."
-  },
-  {
-   "symbol": "NEM",
-   "name": "NEM",
-   "ext20": 6.35,
-   "vol_ratio": 1.0,
-   "price": 127.98,
-   "change_1d": -3.26,
-   "mom_1m": 33.6,
-   "mom_3m": 18.3,
-   "score": 82,
-   "target": 144.66,
-   "stop_loss": 120.34,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "13% to go at its recent 6.1%/month",
-   "rr": 2.18,
-   "atr": 4.69,
-   "high_52w": 135.29,
-   "timeframe": "1-3 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 20.9
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 5.2
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 1.1
-    }
-   ],
-   "ema20": 120.34,
-   "tv": "NEM",
-   "thesis": "33.6% one\u2011month gain, 18.3% three\u2011month rise, price 6.3% above its 20\u2011day average on normal volume, composite 82."
-  },
-  {
-   "symbol": "FCX",
-   "name": "FCX",
-   "ext20": 6.35,
-   "vol_ratio": 1.23,
-   "price": 76.45,
-   "change_1d": -2.51,
-   "mom_1m": 20.5,
-   "mom_3m": 14.3,
-   "score": 81,
-   "target": 85.86,
-   "stop_loss": 71.89,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "12% to go at its recent 4.8%/month",
-   "rr": 2.06,
-   "atr": 2.81,
-   "high_52w": 80.24,
-   "timeframe": "1-3 months",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 20.9
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 17.5
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 4.1
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 3.7
-    }
-   ],
-   "ema20": 71.89,
-   "tv": "FCX",
-   "thesis": "20.5% one\u2011month gain, 14.3% three\u2011month rise, price 6.3% above 20\u2011day average, volume 1.23\u00d7 norm, score 81/100."
+   "ema20": 174.34,
+   "tv": "COIN",
+   "thesis": "One\u2011month gain of 27% with 3\u2011month up 13.9%, price 5.9% above its 20\u2011day average, volume 0.93\u00d7 norm, composite 66/100."
   }
  ],
  "engine": [
@@ -474,6 +474,10 @@
    "price": 1972.8,
    "sector": "Technology"
   },
+  "COIN": {
+   "price": 184.64,
+   "sector": ""
+  },
   "CPPLUS": {
    "price": 3704.6001,
    "sector": "Industrials"
@@ -638,10 +642,6 @@
    "price": 128.09,
    "sector": "Basic Materials"
   },
-  "NMDC": {
-   "price": 84.7,
-   "sector": "Basic Materials"
-  },
   "OFSS": {
    "price": 12058.0,
    "sector": "Technology"
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "9h old",
+    "age": "15h old",
     "note": "partial coverage \u2014 11/22 records"
    }
   ]
@@ -942,7 +942,7 @@
   },
   "daughter": {
    "months": 8,
-   "days": 254,
+   "days": 255,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -950,103 +950,103 @@
   "productivity": "Respond to messages at set times. Real-time response is a myth.",
   "father": [
    {
-    "title": "Introduce one new texture",
-    "do": "Let her touch something unfamiliar and safe \u2014 a cold spoon, a rough towel, wet cloth.",
-    "why": "Sensory variety builds neural discrimination. At this age the mouth is a primary sense organ, so expect it to be tasted; choose accordingly."
+    "title": "Mirror her expressions",
+    "do": "Copy her face \u2014 surprise, frown, smile \u2014 and hold it so she sees it.",
+    "why": "Facial mirroring is how infants learn that internal states have external signals. It is the earliest form of emotional literacy."
    },
    {
-    "title": "Sing badly and often",
-    "do": "One song, daily, the same one. Tune is irrelevant.",
-    "why": "Melody carries language patterns \u2014 rhythm, stress, phrase boundaries \u2014 more clearly than speech. She is not judging the singing."
+    "title": "Take her outside daily",
+    "do": "Fifteen minutes outdoors, describing what you both see.",
+    "why": "Daylight anchors circadian rhythm, which is the practical route to better night sleep. The narration doubles as vocabulary exposure in a changing environment."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Asteya",
-    "translation": "Non-stealing, widely defined",
-    "teaching": "Extends beyond property to taking what was not freely given \u2014 credit, time, attention.",
-    "apply": "Attribute the idea to the person who had it, in the meeting, by name. Taking credit is the most common form and the least noticed."
+    "term": "Satya",
+    "translation": "Truthfulness",
+    "teaching": "The second great vow. Jain teaching qualifies it sharply: truth that causes harm is not virtue, so silence is sometimes the higher form of satya.",
+    "apply": "Before delivering a hard truth, ask whether you are serving accuracy or serving yourself. Both can be honest; only one is useful."
    },
    {
     "tradition": "Buddhism",
-    "term": "Beginner's Mind",
-    "translation": "Shoshin",
-    "teaching": "'In the beginner's mind there are many possibilities; in the expert's there are few.' Expertise narrows the field of what you consider.",
-    "apply": "In your area of deepest expertise, ask the question you would find embarrassing to ask. Ten years in one industry is where assumptions calcify."
+    "term": "Middle Way",
+    "translation": "Avoiding both extremes",
+    "teaching": "The Buddha rejected both indulgence and severe asceticism after trying each. The insight came from testing both, not theorising.",
+    "apply": "Applied to risk: neither all-cash nor all-in. Applied to work: neither burnout nor coasting. The middle is a position you have to keep adjusting, not one you find once."
    }
   ],
   "spanish": [
    {
-    "word": "la deuda",
-    "meaning": "the debt",
-    "es": "Reducimos la deuda a la mitad.",
-    "en": "We cut the debt in half.",
-    "tag": "Business"
+    "word": "hoy",
+    "meaning": "today",
+    "es": "Hoy tengo mucho trabajo.",
+    "en": "Today I have a lot of work.",
+    "tag": "Everyday"
    },
    {
-    "word": "no estoy seguro",
-    "meaning": "I am not sure",
-    "es": "No estoy seguro de esos n\u00fameros.",
-    "en": "I am not sure about those numbers.",
+    "word": "el equipo",
+    "meaning": "the team",
+    "es": "Mi equipo tiene cuatro personas.",
+    "en": "My team has four people.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Corroborate",
-    "say": "kuh-ROB-uh-rayt",
-    "meaning": "To confirm with independent evidence.",
-    "example": "The stock count corroborates the system balance.",
-    "note": "Independence is the point. Two reports from the same system do not corroborate anything."
+    "word": "Exigency",
+    "say": "EK-si-juhn-see",
+    "meaning": "An urgent need or demand.",
+    "example": "Cash exigencies drove the decision, not strategy.",
+    "note": "Explains a decision made under pressure without excusing it."
    },
    {
-    "word": "Tantamount",
-    "say": "TAN-tuh-mownt",
-    "meaning": "Equivalent in effect to.",
-    "example": "Approving that is tantamount to reopening the budget.",
-    "note": "Names the real consequence of a decision people are framing as minor."
+    "word": "Salience",
+    "say": "SAY-lee-uhns",
+    "meaning": "The quality of being most noticeable or important.",
+    "example": "The salience of the cash line rose sharply after the covenant test.",
+    "note": "Noun form of salient. Useful when describing shifting board attention."
    }
   ],
   "speaking": {
-   "title": "The 3-sentence answer",
-   "drill": "Answer 'how was the quarter?' in exactly three sentences: the number, the driver, the outlook. Time it \u2014 under 20 seconds.",
-   "why": "Executives interrupt long answers. Give them a complete short one and they ask for more."
+   "title": "Slow the first line",
+   "drill": "Deliver your opening sentence at half your normal pace, then return to normal.",
+   "why": "Nerves speed up the first line, which is the one that sets whether people lean in."
   },
   "interview_tech": [
    {
-    "q": "Online returns are 30% versus 8% in store. How does that change unit economics?",
-    "a": "It can invert them. Model the full return cost: outbound delivery, return shipping, inspection labour, repackaging, markdown on anything not resaleable as new, and the working capital locked in goods in transit. At 30% returns a nominally profitable online order can land negative. Fixes: better size guidance and imagery to cut the cause; charge for returns where the market allows; route returns to stores so the item re-enters saleable stock nearest demand. Report online contribution after returns, never before.",
-    "who": "Zara \u00b7 ASOS \u00b7 Namshi"
+    "q": "Sales per square foot is falling but total sales are rising. Diagnose it.",
+    "a": "You are adding space faster than sales. That is not automatically wrong \u2014 new stores ramp, so a growth phase depresses the average mechanically. Split the estate: stores open more than 24 months versus less. If mature-store density is also falling, you have a genuine productivity problem \u2014 likely range, pricing, or footfall. If mature density is flat or up and only the blended number falls, it is a mix effect and it corrects as the new stores mature. Never let a board see the blended number alone.",
+    "who": "IKEA \u00b7 Marks & Spencer \u00b7 Max Fashion"
    },
    {
-    "q": "How would you hedge FX exposure for a retailer buying in USD and selling in MYR?",
-    "a": "First separate transaction exposure (committed purchase orders) from translation exposure (consolidating a foreign subsidiary). Hedge transaction exposure with forwards matched to the payment dates on the buying calendar \u2014 typically rolling 6\u201312 months, hedging a declining percentage the further out you go. Do not hedge translation exposure with derivatives; it is an accounting effect, not a cash one. State the policy in a treasury mandate with limits, so hedging never becomes speculation with a different name.",
-    "who": "Landmark Group \u00b7 Unilever \u00b7 Shell"
+    "q": "Describe the difference between a cash flow forecast and a liquidity plan.",
+    "a": "The forecast is your best estimate of receipts and payments. The liquidity plan is what you do if the forecast is wrong \u2014 committed facilities, uncommitted lines, the order in which you would draw them, what you would stop spending, and how quickly you could release working capital. Boards ask for the forecast; the CFO's real job is the plan. Stress it: what happens to cash if sales fall 20% for two quarters while committed rent and payroll continue.",
+    "who": "Every treasurer since 2020"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you changed your mind after being convinced by someone junior.",
-    "a": "This is a culture question about ego. Pick a real instance, name the person's role, describe the argument they made and why it was better than yours, and say what you did afterwards to make sure they got the credit. The best version includes what you changed structurally so junior challenge became normal rather than exceptional.",
-    "who": "Amazon \u00b7 Google \u00b7 Unilever"
+    "q": "How do you handle a request from the CEO that you believe is unethical?",
+    "a": "Slow it down without escalating to confrontation. First assume miscommunication and restate what you understood \u2014 a surprising share of these resolve there. If it holds, state your objection privately, in writing, with the specific standard or law engaged. Offer the compliant alternative that gets closest to the commercial aim. If pressed, escalate to the audit committee chair. Say plainly that you would resign rather than sign something you believe is false \u2014 the willingness is the answer they are testing for.",
+    "who": "Every CFO search \u00b7 post-Wirecard"
    },
    {
-    "q": "Why are you leaving your current role?",
-    "a": "Never criticise the employer. Frame as pull, not push, and make it structural rather than personal: the scope you want next does not exist there in the timeframe you want it. If there is an obvious reason they will infer \u2014 a merger, a new boss, relocation \u2014 name it briefly and neutrally before they ask. Anything that sounds like a grievance transfers directly onto how they imagine you will talk about them.",
-    "who": "Universal"
+    "q": "A peer takes credit for your team's work in front of the CEO. What do you do?",
+    "a": "Not in the room. Afterwards, directly and without an audience: describe what you observed, not their motive, and say what you need going forward. If it repeats, correct it factually in the moment \u2014 'just to add, the modelling on that was Priya's team' \u2014 which is a contribution rather than an accusation. Escalating first, or absorbing it silently and resenting it, are both worse. They are testing composure and whether you protect your team.",
+    "who": "Any matrixed organisation"
    }
   ],
   "cfo_field": [
    {
-    "q": "Explain a variance in one sentence or you do not understand it yet.",
-    "a": "'Margin is down 180bps: 120 from promotional depth in electronics, 40 from freight, 20 mix.' That is a CFO answer. A table of forty lines is a controller answer. The discipline is to decompose until the drivers are additive and then name the largest two. If you cannot make the bridge add up, you have a data problem, not a communication problem.",
-    "who": "The board-meeting test"
+    "q": "The offer is decided by the non-technical questions.",
+    "a": "Everyone shortlisted can do the technical work \u2014 that is why they were shortlisted. What separates the offer is whether the panel believes you can hold a room, disagree with a CEO without theatre, and be trusted with bad news. Prepare the failure story properly: what you decided, what it cost, what you changed afterwards. A candidate with no failure story reads as someone who has never owned a decision.",
+    "who": "Why strong CVs lose"
    },
    {
-    "q": "Working capital is where a retail CFO is actually judged.",
-    "a": "EBITDA gets the headline; the cash conversion cycle gets the board's attention. DIO + DSO \u2212 DPO. Retail is inventory-heavy and often near-zero DSO, so the fight is DIO against DPO. Cutting DIO from 95 to 80 days on AED 400M COGS releases roughly AED 16.4M of cash \u2014 permanently, without selling a single extra unit. That is a bigger number than most cost programmes deliver, and it does not need a headcount conversation.",
-    "who": "Landmark \u00b7 Alshaya \u00b7 GMG"
+    "q": "A forecast that is never wrong is a forecast nobody is using.",
+    "a": "Track forecast accuracy as a metric in its own right \u2014 absolute percentage error by month, by category. Under 5% at group level is good in retail; over 15% and the business has stopped believing you. But an FP&A team that is never wrong is sandbagging, and sandbagging is more expensive than error: it prices in a buffer everyone plans around, and the buffer compounds up the hierarchy.",
+    "who": "What separates FP&A from reporting"
    }
   ],
   "review": {
@@ -1063,8 +1063,137 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-09-04T23:41:52.886496+00:00",
+   "generated_at": "2026-09-05T23:32:50.374501+00:00",
    "episodes": [
+    {
+     "show": "Figuring Out",
+     "author": "Raj Shamani",
+     "category": "Business",
+     "title": "Top CTO's Advice: The Real Reason You Are Not Growing | Sauvik Banerjjee | FO558 Raj Shamani",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=XwawXRaNfzM",
+     "takeaways": [
+      "Intelligence matters more than hard work in certain high\u2011stakes roles.",
+      "You can spot a bullshitter using the Say\u2011Do Ratio before it costs you a promotion."
+     ]
+    },
+    {
+     "show": "Ankur Warikoo",
+     "author": "warikoo",
+     "category": "Career",
+     "title": "Same Salary But 5 Different Lives",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=cK0Eoqe8e9Q",
+     "takeaways": [
+      "Same salary can have dramatically different real value depending on the Indian city you live in.",
+      "The video presents four factors to consider when choosing a city and demonstrates a tool to estimate the income needed for your desired lifestyle."
+     ]
+    },
+    {
+     "show": "Zero1 by Zerodha",
+     "author": "Zero1 by Zerodha",
+     "category": "Money",
+     "title": "The Real story behind Zero1 by Zerodha",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=gxED-fFZalA",
+     "takeaways": [
+      "Zero1 helped people change buying decisions, start family money conversations, and begin investing.",
+      "The creators received feedback on how they could improve the program."
+     ]
+    },
+    {
+     "show": "Dhruv Rathee",
+     "author": "Dhruv Rathee",
+     "category": "Society",
+     "title": "A TSUNAMI in the Himalayas | How Nepal's Worst Disaster Happened? | Dhruv Rathee",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=xQ3lxbRGgLY",
+     "takeaways": [
+      "There is a live AI workshop happening on 6\u202fSept at 7\u202fpm\u202fIST.",
+      "The video was created solely to spread awareness and educate viewers, and any errors should be reported to contact@dhruvrathee.com."
+     ]
+    },
+    {
+     "show": "Abhijit Chavda",
+     "author": "Abhijit Chavda",
+     "category": "Geopolitics",
+     "title": "#AskAbhijit 379: Ask Me Anything - Any Topic",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=QmaCrQiH6jo",
+     "takeaways": [
+      "Episode 379 of the #AskAbhijit show: Ask me your best questions in the live chat and super chat, and I shall answer them.",
+      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
+     ]
+    },
+    {
+     "show": "The Deshbhakt",
+     "author": "The Deshbhakt",
+     "category": "Society",
+     "title": "Exposed! - Farce Of Delhi Police\u2019s Facial Recognition System & Rising Threat Of Digital Dictatorship",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=6k1qX6a8seQ",
+     "takeaways": [
+      "The facial recognition system demonstrated only 2% accuracy.",
+      "It failed spectacularly and does not work."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "Inside Jamia\u2019s \u2018Admission Scam\u2019 Protest: Students Demand Answers",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=qetstUPpry4",
+     "takeaways": [
+      "Students at Jamia Millia Islamia have been protesting irregularities in the university\u2019s 2026\u201327 admission process, including concerns over spot admissions, merit and waiting lists, reserved seats, and transparency.",
+      "After a two-day sit-in was removed by university security on August 26, with several students subsequently suspended and barred from campus, students marched to the Dean of Students\u2019 Welfare (DSW) office on September 1 seeking a response to their memorandum."
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "\u201cSome Nepalese Parliamentarians Are Like Puppets, Parroting What China Wants\u201d Lobsang Sangay",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=bTW-a65NJEk",
+     "takeaways": [
+      "\u201cSome Nepalese Parliamentarians Are Like Puppets, Parroting What China Wants\u201d Lobsang Sangay #ANIPodcast #SmitaPrakash #Floods #Nepal #Tibet #China #XiJinping Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Sid Warrier",
+     "author": "Dr Sid Warrier",
+     "category": "Health",
+     "title": "In conversation with a SPINE Specialist | Sid Warrier Podcast",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=UmqDq1CDuuk",
+     "takeaways": [
+      "I sat with Dr Ram Chaddha, senior Spine specialist in Mumbai - and asked everything you need to know about keeping your Spine healthy.",
+      "Lilavati Hospital And Research Centre, Bandra, Mumbai."
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "Why Does the Kosi River Keep Changing Its Course? | The \u201cSorrow of Bihar\u201d Explained",
+     "guest": "",
+     "published": "2026-09-05",
+     "link": "https://www.youtube.com/watch?v=pScQoNN-JfA",
+     "takeaways": [
+      "Why is the Kosi River known as the \u201cSorrow of Bihar\u201d?",
+      "And why is this Himalayan river so difficult to control?"
+     ]
+    },
     {
      "show": "Zerodha Varsity",
      "author": "Zerodha Varsity",
@@ -1076,97 +1205,6 @@
      "takeaways": [
       "The Indian rupee has gone from 65 to 95 against the dollar in less than a decade \u2014 but does the number itself actually matter?",
       "In this wide-ranging conversation, former currency trader and ex-SEBI whole-time member Ananth Narayan joins Nithin Sasikumar and Pranav Agarwal to unpack what's really driving the rupee, and why the psychology around \"100\" might matter more than the fundamentals."
-     ]
-    },
-    {
-     "show": "Abhijit Chavda",
-     "author": "Abhijit Chavda",
-     "category": "Geopolitics",
-     "title": "The Islamic NATO's First Target Is India. I Said So in 2025.",
-     "guest": "",
-     "published": "2026-09-04",
-     "link": "https://www.youtube.com/watch?v=7gNQCsgCadU",
-     "takeaways": [
-      "Everybody says the Islamic NATO is aimed at Israel or Iran.",
-      "In September 2025, Saudi Arabia and Pakistan signed a mutual defence treaty, and a viewer asked me whether Saudi Arabia would ever fight India."
-     ]
-    },
-    {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "Modi-Shah Take BJP To The Basics | Use Of Brute Force \u2018New Normal\u2019 To Silence Opposition? | Akash B",
-     "guest": "",
-     "published": "2026-09-04",
-     "link": "https://www.youtube.com/watch?v=kGngz7Bvznc",
-     "takeaways": [
-      "Interesting 48 hours for a Govt that tom toms the \u201cMother of democracy\u201d tag.",
-      "Self-proclaimed extremists openly boasting about committing crimes and getting Delhi Police protection // a retired bureaucrat made to disappear by Amit Shah's police // two muslim journalists thrashed by Delhi Police // activists harassed-arrested across the nation."
-     ]
-    },
-    {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "SIR Deletions and Chest-Thumping on GDP | The Wire Wrap",
-     "guest": "",
-     "published": "2026-09-04",
-     "link": "https://www.youtube.com/watch?v=uWcUdNkSEZQ",
-     "takeaways": [
-      "The latest draft voter rolls released after the third phase of the Election Commission's special intensive revision have brought the scale of deletions back in focus.",
-      "And while the Modi government is celebrating 7.8% quarterly GDP growth figures, this number has come under scrutiny."
-     ]
-    },
-    {
-     "show": "The Ranveer Show",
-     "author": "Ranveer Allahbadia",
-     "category": "Philosophy",
-     "title": "JANMASHTAMI Round Table - Achieve SPEED In Business With Krishna | Basesh G & Nityanand Prabhu | TRS",
-     "guest": "",
-     "published": "2026-09-04",
-     "link": "https://www.youtube.com/watch?v=iUgS2cAx33M",
-     "takeaways": [
-      "Spirituality can help entrepreneurs stay grounded during difficult phases.",
-      "The episode discusses Bhagavad Gita lessons on karma, dharma, ego, charity, leadership, suffering, decision\u2011making, and building wealth with the right values."
-     ]
-    },
-    {
-     "show": "Sid Warrier",
-     "author": "Dr Sid Warrier",
-     "category": "Health",
-     "title": "In conversation with a SPINE Specialist | Sid Warrier Podcast",
-     "guest": "",
-     "published": "2026-09-04",
-     "link": "https://www.youtube.com/watch?v=Pt2fawz5dCk",
-     "takeaways": [
-      "I sat with Dr Ram Chaddha, senior Spine specialist in Mumbai - and asked everything you need to know about keeping your Spine healthy.",
-      "Lilavati Hospital And Research Centre, Bandra, Mumbai."
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "World Set to Cross 1.5\u00b0C Warming | What Does It Mean for India & the World?  | Current Affairs",
-     "guest": "",
-     "published": "2026-09-04",
-     "link": "https://www.youtube.com/watch?v=j6SJkdMB1_U",
-     "takeaways": [
-      "Is crossing the 1.5\u00b0C warming threshold now unavoidable?",
-      "A new UNEP report, \u201cLimiting Overshoot,\u201d warns that the world is likely to temporarily breach the 1.5\u00b0C global warming threshold, with temperatures potentially peaking around 1.8\u00b0C even under an optimistic scenario."
-     ]
-    },
-    {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "How AI Makes Him Crores: Second Brain, Automations & Systems | Vaibhav Sisinty | FO557 Raj Shamani",
-     "guest": "",
-     "published": "2026-09-03",
-     "link": "https://www.youtube.com/watch?v=LqY6hFLMEJw",
-     "takeaways": [
-      "He increased company revenue tenfold in 2.5 years by rebuilding his entire workflow around AI.",
-      "Overusing AI tools caused his team to become progressively worse at their own jobs."
      ]
     },
     {
@@ -1191,34 +1229,8 @@
      "published": "2026-09-03",
      "link": "https://www.youtube.com/watch?v=Dvyctc3Yypw",
      "takeaways": [
-      "In this video, we analyse 5 smallcap stocks where business growth is gaining momentum, sales are improving, and companies are expanding capacity, entering new segments, or recovering from earlier challenges.",
-      "We break down their latest quarterly results, revenue and profit growth, margins, business models, expansion plans, valuations, management guidance, and key risks that investors should track."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "India\u2019s GDP Numbers Explained: What Do 7.8% & 2.6% Really Mean? | Quick Take with Smita Prakash",
-     "guest": "Smita Prakash",
-     "published": "2026-09-03",
-     "link": "https://www.youtube.com/watch?v=joQYrKJcSxM",
-     "takeaways": [
-      "India\u2019s GDP Numbers Explained: What Do 7.8% & 2.6% Really Mean?",
-      "| Quick Take with Smita Prakash #QuickTake #SmitaPrakash #SubhashChandraGarg #India #GDP #Data #Growth Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
-     "show": "Ankur Warikoo",
-     "author": "warikoo",
-     "category": "Career",
-     "title": "4 Out of These 5 People Are Already in Trouble. They Don't Know It.",
-     "guest": "",
-     "published": "2026-09-02",
-     "link": "https://www.youtube.com/watch?v=g1bOQlw11b4",
-     "takeaways": [
-      "Four of the five people are already in trouble and don\u2019t realize it.",
-      "The episode highlights the difference between income and wealth."
+      "The video examines five small\u2011cap stocks that are seeing accelerating business growth, improving sales and expanding capacity or entering new segments.",
+      "It breaks down each company\u2019s latest quarterly results, revenue and profit growth, margins, business model, expansion plans, valuation, management guidance and key risks."
      ]
     },
     {
@@ -1230,8 +1242,7 @@
      "published": "2026-09-02",
      "link": "https://www.youtube.com/watch?v=Ex4x0qvOqAM",
      "takeaways": [
-      "The episode questions whether India's reported 7.8% GDP growth is accurate or potentially misleading.",
-      "It emphasizes that the content is not investment advice and listeners should do their own due diligence."
+      "The episode questions whether India's reported 7.8% GDP growth figure is accurate."
      ]
     },
     {
@@ -1243,21 +1254,8 @@
      "published": "2026-09-02",
      "link": "https://www.youtube.com/watch?v=yUfuFjz5T4k",
      "takeaways": [
-      "Decoding the battle between active alpha and ETFs.",
-      "Evaluating SIFs versus PMS."
-     ]
-    },
-    {
-     "show": "Dhruv Rathee",
-     "author": "Dhruv Rathee",
-     "category": "Society",
-     "title": "Cockroach Janta Party has started a REVOLUTION! | Dhruv Rathee",
-     "guest": "",
-     "published": "2026-09-02",
-     "link": "https://www.youtube.com/watch?v=mF1Th5E9KUg",
-     "takeaways": [
-      "The fastest and the most affordable way to upskill yourself in AI.",
-      "Live workshop happening on 6th Sept, 7pm IST!"
+      "Aashish explains the high-ROE structure of fund houses.",
+      "He decodes the battle between active alpha and ETFs."
      ]
     },
     {
@@ -1269,8 +1267,8 @@
      "published": "2026-08-31",
      "link": "https://www.youtube.com/watch?v=tCMzkJxBM5c",
      "takeaways": [
-      "BlackRock owns roughly 8% of major companies such as Nvidia, Apple, Microsoft, Google, and Coca\u2011Cola.",
-      "Together with Vanguard and State Street, BlackRock controls about $15\u202ftrillion in assets, exceeding the combined GDP of India, Japan and France."
+      "BlackRock owns 8.02% of Nvidia, 7.97% of Apple, 8.18% of Microsoft, 6.69% of Google, 7.5% of Coca\u2011Cola, and massive stakes in almost every S&P\u202f500 company.",
+      "Together with Vanguard and State Street, BlackRock controls $15\u202ftrillion in assets, more than the combined GDP of India, Japan and France."
      ]
     },
     {
@@ -1282,8 +1280,8 @@
      "published": "2026-08-31",
      "link": "https://www.youtube.com/watch?v=eNoOQ6Uorvg",
      "takeaways": [
-      "The video provides a business overview of Deepa Jewellers Limited, covering its business model, revenue model, and geographical presence.",
-      "It evaluates the company\u2019s valuation and discusses the major risks and litigations associated with the business."
+      "The episode reviews Deepa Jewellers Limited\u2019s business model, revenue model, and geographical presence.",
+      "It also analyzes the company\u2019s financial performance, valuation, risks, and provides a detailed breakdown of the IPO."
      ]
     },
     {
@@ -1295,21 +1293,8 @@
      "published": "2026-08-30",
      "link": "https://www.youtube.com/watch?v=dzi4pSSy7mw",
      "takeaways": [
-      "A devastating flood struck the Nepal\u2011Tibet border on 26\u202fAugust, causing extensive damage and loss of life.",
-      "Kalabhairava Karma for those who died in the floods will be conducted on 3\u202fSeptember in Sadhguru\u2019s presence at the Isha Yoga Center, Coimbatore."
-     ]
-    },
-    {
-     "show": "Zero1 by Zerodha",
-     "author": "Zero1 by Zerodha",
-     "category": "Money",
-     "title": "Foreign Trip - Tour Package or Book Everything Yourself?",
-     "guest": "",
-     "published": "2026-08-29",
-     "link": "https://www.youtube.com/watch?v=SmDqCilbBAs",
-     "takeaways": [
-      "Before you end up overpaying for your next international vacation.",
-      "Compare the costs related to tour package and independent travel to see which option makes more sense financially."
+      "Kalabhairava Karma for flood victims will be held on\u202f3\u202fSeptember with Sadhguru present at the Isha Yoga Center.",
+      "Requests to conduct the ritual should be emailed with the required details to\u202fkbkflood@sadhguru.org."
      ]
     },
     {
@@ -1321,18 +1306,39 @@
      "published": "2026-08-23",
      "link": "https://www.youtube.com/watch?v=7fw2Ob6w3Gg",
      "takeaways": [
-      "Nikhil Kamath is co\u2011founder of Zerodha and Gruhas",
-      "He hosts the \u201cWTF is\u201d and \u201cPeople By WTF\u201d podcasts"
+      "Nikhil Kamath is co\u2011founder of Zerodha and Gruhas and hosts the \u201cWTF is\u201d and \u201cPeople By WTF\u201d podcasts."
+     ]
+    },
+    {
+     "show": "Shut Up Ya Kunal",
+     "author": "Kunal Kamra",
+     "category": "Society",
+     "title": "The India That Gujarat Built | Shut Up Ya Kunal w/ Kunal Kamra ft Aakar Patel | Episode 36",
+     "guest": "Aakar Patel",
+     "published": "2026-08-18",
+     "link": "https://www.youtube.com/watch?v=-BucDdCiD-s",
+     "takeaways": [
+      "Aakar Patel is a journalist, author and columnist who has edited both English and Gujarati newspapers.",
+      "He is the author of *Our Hindu Rashtra* and *Price of the Modi Years*, and serves as Chair of Amnesty International India."
      ]
     }
    ],
    "shows": 20,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-09-04",
-   "age_days": 0.8,
+   "built_on": "2026-09-05",
+   "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "The Marginalian",
+    "cat": "ideas",
+    "title": "How to Relate to Your Worst Mistakes: The Life-Shaping Difference Between Regret and Remorse",
+    "link": "https://www.themarginalian.org/2026/09/05/regret-remorse/",
+    "summary": "You know it, that awful moment your coherent self-image shatters and a part of you, shadowy and untended, splits off to cause harm and havoc as the rest of you watches helplessly, wincing. You know the next moment, too &#8212; the desperate wish for an undo button you know cannot be had, no matter your protestations an",
+    "date": "Sep 05, 2026",
+    "_sort": "2026-09-05T21:28:32+00:00"
+   },
    {
     "source": "Livemint",
     "cat": "money",
@@ -1346,9 +1352,9 @@
       "Gold's bull run continues despite a recent loss of momentum, driven by uncertainty around the Federal Reserve and the US\u2011Iran conflict.",
       "Goldman Sachs remains optimistic as central bank gold purchases surge, supporting prices."
      ],
-     "why_it_matters": "The sustained upward pressure on gold reflects investors' search for safe\u2011haven assets amid geopolitical tensions and mixed signals from U.S. monetary policy, which can influence inflation expectations and portfolio allocations across markets.",
-     "what_to_watch": "The outcome of the Federal Reserve's next policy meeting scheduled for 2\u202fNovember\u202f2026.",
-     "headline": "Gold prices rise as central bank buying increases, Goldman Sachs predicts bull run",
+     "why_it_matters": "The sustained upward momentum in gold, backed by increasing central bank demand, suggests the metal could retain its safe\u2011haven appeal amid geopolitical tension and monetary policy uncertainty, influencing investors' portfolio allocations and inflation hedging strategies.",
+     "what_to_watch": "Monitor any new development in the US\u2011Iran conflict for its impact on gold prices.",
+     "headline": "Gold prices expected to rise as central bank buying surges, Goldman says",
      "read_seconds": 20
     }
    },
@@ -1359,7 +1365,17 @@
     "link": "https://economictimes.indiatimes.com/wealth/invest/highest-senior-citizen-fd-interest-rates-up-to-8-50-in-2026-top-5-fixed-deposit-rates-from-psu-private-and-small-finance-banks/articleshow/133798040.cms",
     "summary": "Highest senior citizen FD interest rates: Small finance banks offer senior citizens the highest fixed deposit rates currently. Equitas, ESAF, and Suryoday Small Finance Banks provide 8.50% interest. Public sector banks like Bank of India offer competitive rates on specific tenures.",
     "date": "Sep 05, 2026",
-    "_sort": "2026-09-05T11:07:14+00:00"
+    "_sort": "2026-09-05T11:07:14+00:00",
+    "smart": {
+     "what_happened": [
+      "Equitas, ESAF and Suryoday Small Finance Banks are offering senior citizen fixed deposits at 8.50% interest.",
+      "Public sector banks such as Bank of India are providing competitive rates on selected tenures."
+     ],
+     "why_it_matters": "The elevated rates give senior citizens a higher\u2011yielding, low\u2011risk savings option, improving their income streams in a low\u2011interest environment and potentially influencing the allocation of funds between bank deposits and other investment products.",
+     "what_to_watch": "Monitor the senior citizen FD rates announced by Equitas Small Finance Bank for the 2026 tenure period.",
+     "headline": "Senior citizen fixed deposit rates top 8.50% at small finance banks",
+     "read_seconds": 23
+    }
    },
    {
     "source": "NYT Well",
@@ -1380,31 +1396,12 @@
     "_sort": "2026-09-04T19:25:51+00:00",
     "smart": {
      "what_happened": [
-      "Regulators are reviewing payment structures for insurance intermediaries to curb misselling and lower distribution costs.",
-      "The proposed reforms could reduce value for policyholders but may also hurt individual agents who serve uninsured customers, while banks also engage in misselling."
+      "Regulators are rethinking intermediary payment structures to reduce misselling and lower distribution costs.",
+      "The reforms aim to improve policyholder value but could hurt individual agents who serve uninsured populations, while banks also engage in misselling."
      ],
-     "why_it_matters": "The changes aim to improve the efficiency of the insurance distribution channel and protect consumers from unsuitable products, which could reshape the market dynamics between insurers, agents, and banks, influencing how policies are sold and priced across the country.",
-     "what_to_watch": "The release of the final regulatory guidelines on intermediary payment structures by the Insurance Regulatory and Development Authority of India (IRDAI) in the next quarter.",
-     "headline": "India regulators consider changes to insurance intermediary payments",
-     "read_seconds": 26
-    }
-   },
-   {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "The Power of Being a Threshold Person: Liminality, Communitas, and the Anti-structures of Possibility",
-    "link": "https://www.themarginalian.org/2026/09/04/turner-liminality-communitas/",
-    "summary": "&#8220;All things are so very uncertain, and that\u2019s exactly what makes me feel reassured,&#8221; one of the Moomins observes in Tove Jansson&#8217;s masterwork of philosophy disguised as a children&#8217;s book. It takes a great spaciousness and sobriety of spirit to be vitalized rather than paralyzed by uncertainty. M",
-    "date": "Sep 04, 2026",
-    "_sort": "2026-09-04T05:15:35+00:00",
-    "smart": {
-     "what_happened": [
-      "\"All things are so very uncertain, and that\u2019s exactly what makes me feel reassured,\" one of the Moomins observes in Tove Jansson\u2019s masterwork.",
-      "The work is described as a philosophy disguised as a children\u2019s book."
-     ],
-     "why_it_matters": "The article highlights how embracing uncertainty, as illustrated by the Moomin quote, can foster a mindset that values openness and resilience, concepts that can influence thinking in broader cultural and organizational contexts.",
-     "what_to_watch": "Future discussions or publications that explore the application of liminality and communitas in business or social theory.",
-     "headline": "Power of Being a Threshold Person: Liminality, Communitas, and Anti-structures",
+     "why_it_matters": "The proposed changes target the cost and integrity of insurance distribution in India, potentially shifting how products reach consumers and affecting the profitability of agents who rely on commissions. By lowering distribution expenses, the reforms could enhance value for policyholders, but the impact on agents may reduce access to insurance for underserved segments, raising concerns about financial inclusion.",
+     "what_to_watch": "Monitor the rollout timeline of the proposed intermediary payment reforms by the regulator.",
+     "headline": "India regulators propose changes to insurance intermediary payments",
      "read_seconds": 26
     }
    },
@@ -1447,35 +1444,34 @@
   ],
   "lichess_games": [
    {
-    "id": "3tDnCgJX",
-    "url": "https://lichess.org/3tDnCgJX",
+    "id": "fgYbYFtK",
+    "url": "https://lichess.org/fgYbYFtK",
     "result": "Win",
     "icon": "\u2705",
     "cls": "win",
-    "my_side": "White",
-    "my_rating": 1637,
-    "opp_rating": 1586,
-    "opponent": "Rated700",
-    "me_diff": 4,
-    "opp_diff": -32,
-    "opening": "French Defense",
-    "eco": "C00",
-    "moves": 39,
-    "termination": "Checkmate",
+    "my_side": "Black",
+    "my_rating": 1641,
+    "opp_rating": 1645,
+    "opponent": "Discab",
+    "me_diff": 6,
+    "opp_diff": -5,
+    "opening": "Rapport-Jobava System, with e6",
+    "eco": "D01",
+    "moves": 24,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the same bishop twice; aim to complete development within 8\u202fplies (\u22484\u202fmoves) to avoid losing tempo and giving Black unnecessary counterplay.",
+    "analysis": "Focus on early queen development: after 1.d4\u202fd5\u202f2.Nc3\u202fe6\u202f3.Bg5, avoid 4.Qd2\u2011Qb6 lines; instead play \u2026c5 and \u2026Nc6, challenging the center before queen sorties. This reduces unnecessary queen trades and improves piece coordination, cutting opponent\u2019s tactical chances.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap -51 (1637 vs 1586)",
-     "Endgame from move 30",
-     "39 moves \u00b7 Blitz"
+     "Rating gap +4 (1641 vs 1645)",
+     "24 moves \u00b7 Blitz"
     ],
-    "standout": "Finished by checkmate on move 39 \u2014 you converted rather than letting it drift.",
+    "standout": "",
     "game_strength": null,
-    "est_fide": 1237,
+    "est_fide": 1241,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
@@ -1540,575 +1536,28 @@
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 4,
-      "loss": 8,
+      "win": 1,
+      "loss": 0,
       "draw": 0,
       "rp": {
-       "before": 1669,
-       "after": 1641
+       "before": 1641,
+       "after": 1647
       }
      }
     },
-    "_session_date": "2026-09-04",
+    "_session_date": "2026-09-05",
     "_is_yesterday": true
-   },
-   {
-    "id": "rNPUg9oI",
-    "url": "https://lichess.org/rNPUg9oI",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1643,
-    "opp_rating": 1628,
-    "opponent": "cessermaster",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 45,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: after 1.d4\u202fNf6\u202f2.Nf3\u202fe6\u202f3.Bg5, develop the queen\u2011side knight (\u2026Nc6) before committing the bishop; avoid leaving the bishop on g5 unchallenged, which cost you ~0.7\u202fpawns in the middlegame. Strengthen your opening plan with a clear c\u2011pawn push (\u2026c5) within 5\u20136 moves.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -15 (1643 vs 1628)",
-     "Endgame from move 35",
-     "45 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1243,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "okyhgiyF",
-    "url": "https://lichess.org/okyhgiyF",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1649,
-    "opp_rating": 1612,
-    "opponent": "MityaHleb",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Danish Gambit Accepted",
-    "eco": "C21",
-    "moves": 35,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 e5\u202f2.d4 exd4\u202f3.c3 dxc3\u202f4.Bc4, avoid 4\u2026Nf6?; instead play 4\u2026Bc5 or 4\u2026d5 to challenge center, preventing White\u2019s rapid attack and reducing your average centipawn loss by ~30\u202fcp.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -37 (1649 vs 1612)",
-     "Endgame from move 19",
-     "35 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1249,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "RLNqUSb4",
-    "url": "https://lichess.org/RLNqUSb4",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1645,
-    "opp_rating": 1575,
-    "opponent": "Masokotanga",
-    "me_diff": 4,
-    "opp_diff": -5,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 15,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the same bishop twice; aim for Nf3\u2013d2\u2013e4 within 4\u202fmoves to avoid wasted tempo.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -70 (1645 vs 1575)",
-     "15 moves \u00b7 Blitz"
-    ],
-    "standout": "Over in 15 moves \u2014 decided in the opening, so the opening is what to study.",
-    "game_strength": null,
-    "est_fide": 1245,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "fiSr2Ey3",
-    "url": "https://lichess.org/fiSr2Ey3",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1650,
-    "opp_rating": 1664,
-    "opponent": "Vado1972",
-    "me_diff": -5,
-    "opp_diff": 6,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 61,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Strengthen your endgame technique: practice pawn\u2011major piece versus king puzzles, focusing on avoiding stalemate traps and delivering forced mates within 20 moves.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +14 (1650 vs 1664)",
-     "Endgame from move 30",
-     "61 moves \u00b7 Blitz"
-    ],
-    "standout": "61 moves of grinding. Endgame stamina, not opening prep, settled this one.",
-    "game_strength": null,
-    "est_fide": 1250,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "t0zC30l2",
-    "url": "https://lichess.org/t0zC30l2",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1655,
-    "opp_rating": 1666,
-    "opponent": "romy85",
-    "me_diff": -5,
-    "opp_diff": 5,
-    "opening": "English Opening",
-    "eco": "A13",
-    "moves": 22,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1\u2026c5, play \u2026Nf6 and \u2026g6, then challenge White\u2019s d4\u2011c4 center with \u2026d5 before committing the queen. This prevents cramped positions and reduces forced resignations.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +11 (1655 vs 1666)",
-     "Endgame from move 22",
-     "22 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1255,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "iOoGQuRR",
-    "url": "https://lichess.org/iOoGQuRR",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1662,
-    "opp_rating": 1599,
-    "opponent": "HotelCoupeDeVille",
-    "me_diff": -7,
-    "opp_diff": 7,
-    "opening": "Caro-Kann Defense",
-    "eco": "B12",
-    "moves": 37,
-    "termination": "Time Out",
-    "speed": "Blitz",
-    "analysis": "Focus on time management: allocate \u226415\u202fseconds per move in the opening; avoid deep calculations after 12\u2026c6, saving ~30\u202fseconds per turn. This prevents timeout losses.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -63 (1662 vs 1599)",
-     "Endgame from move 24",
-     "37 moves \u00b7 Blitz"
-    ],
-    "standout": "Decided on the clock, not the board \u2014 the position was still playable when time ran out.",
-    "game_strength": null,
-    "est_fide": 1262,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "ENhgT6na",
-    "url": "https://lichess.org/ENhgT6na",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1668,
-    "opp_rating": 1647,
-    "opponent": "volkansoker",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 31,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Strengthen your king safety: avoid early queen\u2011side pawn moves; keep pieces defending g8\u2011h7, preventing the mate at move\u202f31.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Accuracy 85% vs their 91%",
-     "Average centipawn loss 59",
-     "4 inaccuracies \u00b7 1 mistake \u00b7 2 blunders",
-     "Rating gap -21 (1668 vs 1647)",
-     "Endgame from move 18",
-     "31 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": 1550,
-    "est_fide": 1268,
-    "accuracy": 85,
-    "acpl": 59,
-    "analysed": true
-   },
-   {
-    "id": "R7xWRcHy",
-    "url": "https://lichess.org/R7xWRcHy",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1675,
-    "opp_rating": 1599,
-    "opponent": "ImbaBody",
-    "me_diff": -7,
-    "opp_diff": 8,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 44,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights to f3/c3, bishops to e2/d3, and castle by move\u202f8 to avoid time\u2011wasting queen moves.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -76 (1675 vs 1599)",
-     "Endgame from move 24",
-     "44 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1275,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "lG4bwFFx",
-    "url": "https://lichess.org/lG4bwFFx",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1669,
-    "opp_rating": 1669,
-    "opponent": "wolkenbagger",
-    "me_diff": 6,
-    "opp_diff": -6,
-    "opening": "Benoni Defense",
-    "eco": "A43",
-    "moves": 20,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.d4\u202fc5\u202f2.d5\u202fe6, play 3.Nc3\u202fBb7\u202f4.e4\u202fa6\u202f5.Nf3\u202fb5\u202finstead of premature queen moves; this cuts your ACPL by ~15\u202fpts and raises accuracy above 85\u202f%.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +0 (1669 vs 1669)",
-     "20 moves \u00b7 Blitz"
-    ],
-    "standout": "Over in 20 moves \u2014 decided in the opening, so the opening is what to study.",
-    "game_strength": null,
-    "est_fide": 1269,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "5hxKMaSd",
-    "url": "https://lichess.org/5hxKMaSd",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1675,
-    "opp_rating": 1690,
-    "opponent": "AntonU",
-    "me_diff": -6,
-    "opp_diff": 5,
-    "opening": "Vienna Game",
-    "eco": "C25",
-    "moves": 30,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Study the Vienna Gambit line 1.e4 e5 2.Nc3 Nf6 3.f4 d5; avoid early queen trades and calculate 5...exf4 accurately to prevent losing material.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Accuracy 84% vs their 89%",
-     "Average centipawn loss 59",
-     "2 inaccuracies \u00b7 2 mistakes \u00b7 2 blunders",
-     "Rating gap +15 (1675 vs 1690)",
-     "Endgame from move 20",
-     "30 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": 1550,
-    "est_fide": 1275,
-    "accuracy": 84,
-    "acpl": 59,
-    "analysed": true
-   },
-   {
-    "id": "TlgGLi9Q",
-    "url": "https://lichess.org/TlgGLi9Q",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1669,
-    "opp_rating": 1676,
-    "opponent": "duolulu",
-    "me_diff": 6,
-    "opp_diff": -6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D02",
-    "moves": 31,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Strengthen your d5\u2011break: develop the queen\u2019s bishop before playing \u2026e6, then challenge White with \u2026c5\u2011d5 after solidifying c6\u2011e5 pawn structure.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +7 (1669 vs 1676)",
-     "Endgame from move 27",
-     "31 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1269,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "9HYYWe5J",
-    "url": "https://lichess.org/9HYYWe5J",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "Black",
-    "my_rating": 1674,
-    "opp_rating": 1664,
-    "opponent": "Arbona",
-    "me_diff": -5,
-    "opp_diff": 5,
-    "opening": "Philidor Defense",
-    "eco": "C41",
-    "moves": 38,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 e5\u202f2.Nf3 d6, avoid 3...Nd7 and instead play 3...Nf6. This prevents White\u2019s quick central expansion and reduces forced mates like the 38\u2011move loss.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -10 (1674 vs 1664)",
-     "Endgame from move 25",
-     "38 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1274,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "tDdeW0Cc",
-    "url": "https://lichess.org/tDdeW0Cc",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1669,
-    "opp_rating": 1665,
-    "opponent": "MM5535MI",
-    "me_diff": 5,
-    "opp_diff": -6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 41,
-    "termination": "Checkmate",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before queen (e.g., Nf3, Nc3 by move\u202f4) to avoid queen\u2011side tempo losses; aim <30\u202fACPL.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -4 (1669 vs 1665)",
-     "Endgame from move 35",
-     "41 moves \u00b7 Blitz"
-    ],
-    "standout": "Finished by checkmate on move 41 \u2014 you converted rather than letting it drift.",
-    "game_strength": null,
-    "est_fide": 1269,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "g0Xjp8oB",
-    "url": "https://lichess.org/g0Xjp8oB",
-    "result": "Loss",
-    "icon": "\u274c",
-    "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1675,
-    "opp_rating": 1674,
-    "opponent": "mario6356",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 36,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Strengthen your opening fundamentals: study queen\u2011pawn structures and typical plans, then memorize at least three reliable D00 variations to avoid early piece misplacements.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -1 (1675 vs 1674)",
-     "Endgame from move 19",
-     "36 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1275,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "KQezLO1S",
-    "url": "https://lichess.org/KQezLO1S",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1670,
-    "opp_rating": 1625,
-    "opponent": "tnrzk13",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 64,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: after 4\u2026e6, develop the light\u2011squared bishop to b4 (or g4) instead of passive \u2026c5, saving ~15\u202fcentipawns and preventing white\u2019s strong c3\u2011Nd2\u2011e4 setup.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -45 (1670 vs 1625)",
-     "Endgame from move 22",
-     "64 moves \u00b7 Blitz"
-    ],
-    "standout": "64 moves of grinding. Endgame stamina, not opening prep, settled this one.",
-    "game_strength": null,
-    "est_fide": 1270,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
-   },
-   {
-    "id": "jEC94Y2r",
-    "url": "https://lichess.org/jEC94Y2r",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "Black",
-    "my_rating": 1665,
-    "opp_rating": 1611,
-    "opponent": "Kuplinov",
-    "me_diff": 5,
-    "opp_diff": -5,
-    "opening": "Queen's Pawn Game",
-    "eco": "D02",
-    "moves": 15,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early queen development: avoid 1\u2026Qd8 (move\u202f3). Instead play 3\u2026Nf6, then ...e6 and ...Bd6, reducing queen moves by\u202f2 and saving ~15\u202fseconds per move.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap -54 (1665 vs 1611)",
-     "15 moves \u00b7 Blitz"
-    ],
-    "standout": "Over in 15 moves \u2014 decided in the opening, so the opening is what to study.",
-    "game_strength": null,
-    "est_fide": 1265,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 17,
-   "wins": 7,
-   "losses": 10,
+   "total": 1,
+   "wins": 1,
+   "losses": 0,
    "draws": 0,
-   "pct": 41,
-   "icon": "\u274c",
-   "score": "7/17",
+   "pct": 100,
+   "icon": "\u2705",
+   "score": "1/1",
    "trend": [
     {
      "day": "09/05",
@@ -2167,19 +1616,19 @@
      "pct": 54
     }
    ],
-   "weak_op": "C41 Philidor Defense (0/3 = 0% WR)",
-   "best_op": "D00 Queen's Pawn Game (5/8 = 62% WR)",
+   "weak_op": "",
+   "best_op": "",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 5,
-   "session_summary": "Your reliance on the Philidor (C41) is a fatal flaw\u2014stop playing it entirely and replace it with a solid, theory\u2011backed line like the Caro\u2011Kann or a classical Queen\u2019s Gambit to avoid being out\u2011maneuvered from move three. The only opening that actually yields results is the D00 Queen\u2019s Pawn Game; deepen your repertoire there by mastering the mainline Stonewall and the London System, and drill the typical pawn\u2011structure plans until they become second nature. From now on, allocate every practice hour to building a reliable opening repertoire and to reviewing each loss move\u2011by\u2011move, because without a disciplined opening foundation you\u2019ll never convert the 41\u202f% win rate into a competitive edge.",
-   "session_date": "2026-09-04",
+   "long_games": 0,
+   "session_summary": "Your 100\u202f% win rate is a mirage built on one isolated victory; you\u2019re already complacent and that will crumble the moment you face any real resistance. The fact that you have no identifiable \u201cweakest\u201d or \u201cbest\u201d opening shows you lack a reproducible repertoire\u2014stop hopping between novelty lines and cement a solid, test\u2011proven opening system within the next two weeks. Drill the first 10\u201315 moves of that system daily, then play 20\u2011move \u201cspeed\u2011run\u201d drills against engines to internalize pattern recognition before you ever step back onto the board.",
+   "session_date": "2026-09-05",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "MmRqv",
-   "rating": 1974,
+   "rating": 2084,
    "level": "\ud83d\udd34 stretch",
    "themes": "Endgame \u00b7 Advantage \u00b7 Long",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
