@@ -3121,6 +3121,10 @@ MAGIC_SL_MIN_PCT = 0.04      # nor a meaninglessly tight one
 # other. The guard below still voids the setup when even the 52-week high
 # cannot clear it, so the effect is fewer signals rather than optimistic ones.
 MAGIC_MIN_T1_R   = R1_MULT   # was 1.0 — see above
+# Mirrors MIN_TARGET_GAP_R in the site's src/api/_levels.js: two targets closer
+# together than this fraction of risk are not separate exits, and the read side
+# blanks the second. Generating them anyway just moves the problem downstream.
+MIN_TARGET_GAP_R = 0.5
 
 
 def magic_levels(df1y, price: float, hi52: float) -> dict | None:
