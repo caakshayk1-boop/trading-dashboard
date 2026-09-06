@@ -1754,15 +1754,49 @@ def log_top5_picks(picks, week_key: str, date=None) -> list:
             if not (entry and sl and t1):
                 continue           # incomplete idea — logged as nothing, never guessed
             t2 = p.get("target2") or round(entry + (t1 - entry) * 1.6, 2)
+            # ── A FLOOR ONLY LIFTS, AND THAT WAS HALF THE PROBLEM ───────────
+            #
             # These levels are computed upstream and mirrored here unchecked,
-            # which is how MRK reached the ledger with a first target worth
-            # 0.65R. Floored to the house ladder like every other engine.
-            from signals.indicators import enforce_r_floor
-            t1, t2, _t3 = enforce_r_floor(entry, sl, t1, t2, None, "BUY")
+            # which is how MRK reached the ledger at 0.65R. The floor fixed
+            # that end. It cannot fix the other one, by design: enforce_r_floor
+            # leaves anything already beyond the floor exactly as the engine
+            # placed it, because a structural level the engine chose beats a
+            # multiple of risk.
+            #
+            # That principle holds at 3R and breaks at 24R. Live on
+            # 2026-09-06 this engine published COIN with a first target at
+            # 10.94R and DUOL at 24.01R — a 118% move, called a FIRST target,
+            # on a ledger where 1.6R is reached about 19% of the time. A target
+            # nobody reaches is not a structural level, it is noise wearing the
+            # label of a plan.
+            #
+            # So the far number is kept and RE-LABELLED. Anything past the
+            # engine's own third rung cannot be its first: T3 becomes the
+            # upstream target, and T1/T2 are re-derived from the engine's floor
+            # so the near rungs are levels a trade can actually reach.
+            from signals.indicators import enforce_r_floor, R1_MULT, R2_MULT, R3_MULT
+            from signals import expectancy as _exp
+            t1, t2, _t3 = enforce_r_floor(entry, sl, t1, t2, None, "BUY",
+                                          engine=TOP5_SIGNAL_TYPE)
+            _t3 = None          # set only when the ladder is rebuilt below
+            _risk = entry - sl
+            if _risk > 0:
+                _floor = max(R1_MULT, float(_exp.floor_for(TOP5_SIGNAL_TYPE,
+                                                           default=R1_MULT)))
+                _ceiling = _floor + (R3_MULT - R1_MULT)
+                if (t1 - entry) / _risk > _ceiling:
+                    _t3 = t1                                   # keep the reach
+                    t1 = round(entry + _floor * _risk, 2)
+                    t2 = round(entry + (_floor + R2_MULT - R1_MULT) * _risk, 2)
+                    log.info("top5 %s: first target was %.1fR — re-laddered to "
+                             "%.1f/%.1f and the original kept as T3",
+                             p["symbol"], (_t3 - entry) / _risk, _floor,
+                             _floor + R2_MULT - R1_MULT)
             rows.append({
                 "symbol": p["symbol"], "signal_type": TOP5_SIGNAL_TYPE,
                 "action": "BUY", "timeframe": "1W",
-                "entry": entry, "sl": sl, "t1": t1, "t2": t2, "t3": t2,
+                "entry": entry, "sl": sl, "t1": t1, "t2": t2,
+                "t3": _t3 if _t3 else t2,
                 "rr": (round((t1 - entry) / (entry - sl), 2)
                        if entry > sl else None),
                 "score": int(round(p.get("score") or 0)),
