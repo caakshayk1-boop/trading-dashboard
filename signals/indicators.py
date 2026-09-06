@@ -48,7 +48,7 @@ ATR_STOP_MULT = 1.41       # was 1.5 (itself up from a broken 1.0-and-tighter)
 R1_MULT, R2_MULT, R3_MULT = 1.6, 2.5, 3.3    # was 1.5, 2.5, 4.0
 
 
-def enforce_r_floor(entry, sl, t1, t2=None, t3=None, action="BUY"):
+def enforce_r_floor(entry, sl, t1, t2=None, t3=None, action="BUY", engine=None):
     """Lift a target ladder so the first target repays at least R1_MULT.
 
     WHY THIS EXISTS AS A SHARED FUNCTION RATHER THAN A FOURTH PATCH.
@@ -91,7 +91,45 @@ def enforce_r_floor(entry, sl, t1, t2=None, t3=None, action="BUY"):
         # "Further from entry" is a different comparison for a short.
         return round(t if (t >= floor if long else t <= floor) else floor, 2)
 
-    return lift(t1, R1_MULT), lift(t2, R2_MULT), lift(t3, R3_MULT)
+    # ── THE LADDER IS PER ENGINE, NOT PER HOUSE ─────────────────────────────
+    #
+    # A single 1.6 / 2.5 / 3.3 ladder for every engine was the wrong instrument
+    # for the same reason a single R:R floor was: break-even is fixed by win
+    # rate alone, and the engines do not share one.
+    #
+    #     break-even R:R = (1 - p) / p
+    #
+    # breakout wins 27.2% of the time, so it needs 2.68R to stop losing money,
+    # and its measured floor is 3.08R. Generating its targets at 1.6R produced
+    # trades the quality gate then correctly refused — on 2026-09-04 it found
+    # 19 valid setups and published NONE. The engine was doing its job and
+    # being blocked by arithmetic it could never satisfy, because the target it
+    # was told to aim at was below the target it had to clear.
+    #
+    # T1 is now the engine's own floor. T2 and T3 step ABOVE it by the house
+    # increments — +0.9R and +1.7R — rather than scaling with it.
+    #
+    # Multiplying was the first attempt and it is wrong. It put breakout's T3
+    # at 6.35R, and the ledger says T3 at 3.3R was already reached 3.3% of the
+    # time. A target nobody will ever hit is decorative, which is the exact
+    # fault the 4.0R rung was removed for: "publishing a target without that
+    # number is what made the old 4.0R level look like a plan; it had never
+    # once been hit." Additive keeps the rungs a constant distance apart in R,
+    # so a ladder that starts higher does not also stretch.
+    #
+    # An engine with fewer than 25 closed trades has no measured break-even and
+    # keeps the house 1.6R: a win rate from 11 trades is not evidence, and
+    # raising a target on it would be inventing precision.
+    r1 = R1_MULT
+    if engine:
+        try:
+            from signals import expectancy as _exp
+            r1 = max(R1_MULT, float(_exp.floor_for(engine, default=R1_MULT)))
+        except Exception:                                     # noqa: BLE001
+            r1 = R1_MULT
+    r2 = r1 + (R2_MULT - R1_MULT)
+    r3 = r1 + (R3_MULT - R1_MULT)
+    return lift(t1, r1), lift(t2, r2), lift(t3, r3)
 
 
 def _tight_sl(price: float, low_series, cur_atr: float,

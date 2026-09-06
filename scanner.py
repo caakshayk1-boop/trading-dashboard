@@ -30,7 +30,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # any code in this file uses the canonical versions from the start.
 from signals.indicators import (
     ema, rsi, adx, atr, macd_line, macd_signal, obv,
-    _tight_sl, _structure_targets,
+    _tight_sl, _structure_targets, enforce_r_floor,
     ATR_STOP_MULT, R1_MULT, R2_MULT, R3_MULT,
 )
 from signals.regime   import regime_filter, count_hh_hl
@@ -1439,6 +1439,12 @@ def analyze_breakout(symbol):
                                          r1_mult=R1_MULT * _stop_atr,
                                          r2_mult=R2_MULT * _stop_atr,
                                          r3_mult=R3_MULT * _stop_atr)
+        # THE LADDER THIS ENGINE MUST CLEAR IS ITS OWN. breakout's measured
+        # floor is 3.08R; generating a 1.6R first target produced setups the
+        # quality gate then correctly refused — 19 valid candidates and 0
+        # published on 2026-09-04. The engine was aiming below the bar it had
+        # to clear.
+        t1, t2, t3 = enforce_r_floor(close, sl, t1, t2, t3, "BUY", engine="breakout")
         rr = round((t1 - close) / max(close - sl, 0.01), 1)
 
         return {
@@ -3127,7 +3133,7 @@ MAGIC_MIN_T1_R   = R1_MULT   # was 1.0 — see above
 MIN_TARGET_GAP_R = 0.5
 
 
-def magic_levels(df1y, price: float, hi52: float) -> dict | None:
+def magic_levels(df1y, price: float, hi52: float, engine: str = "magic") -> dict | None:
     """SL / T1 / T2 / T3 / RR for one magic candidate. None when there is no room.
 
     Returns None rather than a bad setup: if the 52-week high does not clear the
@@ -3183,16 +3189,57 @@ def magic_levels(df1y, price: float, hi52: float) -> dict | None:
             return None
         if t1 >= t2:
             t2 = (t1 + t3) / 2.0
-        if t2 >= t3:
+
+        # ── THE ENGINE'S OWN LADDER, BUT NOT PAST THE CEILING ───────────────
+        #
+        # T1 must clear what THIS engine needs to break even, derived from its
+        # own win rate — see enforce_r_floor.
+        #
+        # T3 IS DELIBERATELY EXCLUDED FROM THE LIFT. For this engine T3 is the
+        # 52-week high itself, and the whole thesis is "recovery back to the
+        # high". Lifting it to satisfy an R-multiple invents a target beyond
+        # the structural ceiling — which is a breakout, a different engine, and
+        # precisely the target-stretching the floor exists to prevent.
+        # enforce_r_floor's own docstring says it: a structural level the
+        # engine chose is better information than a multiple of risk.
+        #
+        # So the ceiling is fixed and the setup is judged against it. Where the
+        # 52-week high cannot clear the first target by a real margin, there is
+        # no trade here — that is a rejection, not a level to fudge.
+        t1, t2, _ = enforce_r_floor(price, sl, t1, t2, None, "BUY", engine=engine)
+        if t3 <= t1 + MIN_TARGET_GAP_R * risk:
             return None
+
+        # ── AND TWO TARGETS THAT ARE NOT SEPARATE EXITS ARE ONE TARGET ──────
+        # Lifting T1 routinely pushed it to within a whisker of the 70%-of-room
+        # T2. FSL published T1 327.86 and T2 339.43 against 39.66 of risk —
+        # 0.29R apart. The site's read layer blanks a pair that close, so the
+        # row reached the page with T2 empty and the card rendered it as ₹0.00
+        # with an R multiple measured from zero.
+        #
+        # The gap is in RISK, mirroring MIN_TARGET_GAP_R in the site's
+        # _levels.js, so the generator and the reader agree on what counts as a
+        # distinct target instead of one making rows the other discards.
+        if t2 is not None and (t2 - t1) < MIN_TARGET_GAP_R * risk:
+            t2 = (t1 + t3) / 2.0
+        # BOTH SIDES OF T2, not just the one below it. The first pass checked
+        # T2 against T1 alone, and COCHINSHIP came out with T2 1963.07 against
+        # T3 1970.73 — seven rupees apart on 160 of risk, 0.048R. A pair that
+        # close at the TOP of the ladder is the same defect as one at the
+        # bottom, and it survived the check written for the bottom.
+        if t2 is not None and ((t2 >= t3)
+                               or (t2 - t1) < MIN_TARGET_GAP_R * risk
+                               or (t3 - t2) < MIN_TARGET_GAP_R * risk):
+            t2 = None          # no room for a distinct second target: publish two
 
         return {
             "sl": round(sl, 2),
             "target1": round(t1, 2),
-            "target2": round(t2, 2),
+            "target2": round(t2, 2) if t2 is not None else None,
             "target3": round(t3, 2),
-            # Quoted off T2, matching the other weekly engine.
-            "rr": round((t2 - price) / risk, 2),
+            # Quoted off T2 where there is one, off T3 where there is not —
+            # never off a target that does not exist.
+            "rr": round(((t2 if t2 is not None else t3) - price) / risk, 2),
             "rr_t1": round((t1 - price) / risk, 2),
             "atr": round(cur_atr, 2),
             "swing_low": round(swing_low, 2),

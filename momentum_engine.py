@@ -219,6 +219,17 @@ def gates(p):
     return bad
 
 
+def _r1():
+    """This engine's first-target multiple: its measured floor, or the house."""
+    try:
+        from signals import expectancy as _exp
+        from signals.indicators import R1_MULT
+        return max(R1_MULT, float(_exp.floor_for("momentum_quant", default=R1_MULT)))
+    except Exception:                                         # noqa: BLE001
+        from signals.indicators import R1_MULT
+        return R1_MULT
+
+
 def levels(p):
     """Entry, stop and the target ladder, on the same rules as every engine."""
     price, atr_pct = p["price"], p["atr"]
@@ -228,10 +239,15 @@ def levels(p):
     return dict(
         entry=round(price, 2),
         sl=round(price - risk, 2),
-        target1=round(price + RR[0] * risk, 2),
-        target2=round(price + RR[1] * risk, 2),
-        target3=round(price + RR[2] * risk, 2),
-        rr=round(RR[0], 2),
+        # ── THE ENGINE'S OWN LADDER ─────────────────────────────────────────
+        # RR is the house ladder. What this engine must clear is its own floor,
+        # derived from its own win rate — see signals.indicators.enforce_r_floor.
+        # With no closed trades yet it keeps the 2.0R default, which is the
+        # floor the quality gate already applies, so targets and gate agree.
+        target1=round(price + _r1() * risk, 2),
+        target2=round(price + (_r1() + RR[1] - RR[0]) * risk, 2),
+        target3=round(price + (_r1() + RR[2] - RR[0]) * risk, 2),
+        rr=round(_r1(), 2),
         risk_pct=round(risk / price * 100, 2),
     )
 
