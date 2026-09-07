@@ -3471,3 +3471,109 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
     results.sort(key=lambda x: x["score"], reverse=True)
     logging.info(f"MagicMagic screener: {len(results)} qualified / {len(universe)} scanned")
     return results[:top_n]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LEDGE and KEEL — the base-breakout engines.
+#
+# WHY THESE RUN AT EOD AND NOWHERE ELSE.
+# Both fire on a CLOSE, not on a touch. That is not a preference: replaying 247
+# of this book's own closed signals over identical bars, an intraday stop
+# returns +0.046R (t=0.65) and a close-basis stop +0.117R (t=1.63), a paired
+# +0.071R at t=2.53. 53 of 91 measurable stop-outs were wicks no daily close
+# ever confirmed. An engine built on that finding cannot be evaluated mid-session
+# — before 15:30 IST there is no close to evaluate, and asking one of these for
+# a signal at 11:00 would be asking it to guess.
+#
+# Detection lives in signals/basebreak.py, which has no network in it and is
+# covered by test_basebreak.py. This function is the plumbing: fetch bars, hand
+# the last completed bar to each detector, and shape whatever comes back into
+# the row the ledger expects.
+# ─────────────────────────────────────────────────────────────────────────────
+def analyze_basebreak(symbol):
+    """Run both base-breakout detectors on one symbol's completed daily bar."""
+    try:
+        from signals.basebreak import prepare, DETECTORS
+        import numpy as _np
+
+        df = fetch_data(symbol)
+        if df is None or df.empty or len(df) < 120:
+            return []
+
+        o = df["Open"].squeeze().to_numpy(dtype=float)
+        h = df["High"].squeeze().to_numpy(dtype=float)
+        l = df["Low"].squeeze().to_numpy(dtype=float)
+        c = df["Close"].squeeze().to_numpy(dtype=float)
+        v = df["Volume"].squeeze().to_numpy(dtype=float)
+        if _np.isnan(c[-1]) or _np.isnan(v[-1]):
+            return []
+
+        bars = prepare(o, h, l, c, v)
+        i = len(c) - 1                      # the completed daily bar
+        out = []
+        for key, det in DETECTORS.items():
+            try:
+                s = det(bars, i)
+            except Exception:               # one detector must not kill the other
+                continue
+            if not s:
+                continue
+            entry = round(float(s["entry_ref"]), 2)
+            sl    = round(float(s["stop"]), 2)
+            t1    = round(float(s["t1"]), 2)
+            t2    = round(float(s["t2"]), 2)
+            risk  = entry - sl
+            if risk <= 0:
+                continue
+            out.append({
+                "symbol": symbol.replace(".NS", ""),
+                "engine": key,
+                "action": "BUY",
+                "price": entry, "sl": sl,
+                "target1": t1, "target2": t2,
+                # THE LEDGER'S rr IS MEASURED TO TARGET 2, which is the house
+                # convention and also the target this engine's backtest exits
+                # at. Quoting rr to T1 here would flatter it and would disagree
+                # with every other row in the book.
+                "rr": round((t2 - entry) / risk, 2),
+                "rr1": round((t1 - entry) / risk, 2),
+                "timeframe": "Daily",
+                "why": s.get("why") or [],
+                "invalidate": s.get("invalidate") or "",
+                "meta": s.get("meta") or {},
+            })
+        return out
+    except Exception as e:                                        # noqa: BLE001
+        logging.debug("basebreak %s: %s", symbol, e)
+        return []
+
+
+def scan_basebreak(universe=None):
+    """Scan the Nifty500 for LEDGE and KEEL setups on the completed daily bar.
+
+    Returns every signal found. Nothing is capped here on purpose: the caller
+    decides what to publish, and the LEDGER should carry every signal the engine
+    produced — a cap applied at detection would quietly make the recorded sample
+    a selected one, and the whole point of running these as PAPER is to build an
+    honest live sample to compare against the backtest.
+    """
+    if universe is None:
+        universe = load_nifty500()
+    found = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_basebreak, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            try:
+                rows = f.result() or []
+            except Exception:
+                continue
+            for r in rows:
+                if r["symbol"] not in SIGNAL_BLACKLIST:
+                    found.append(r)
+    by_engine = {}
+    for r in found:
+        by_engine[r["engine"]] = by_engine.get(r["engine"], 0) + 1
+    logging.info("basebreak: %d signals over %d names — %s",
+                 len(found), len(universe),
+                 ", ".join(f"{k}={n}" for k, n in sorted(by_engine.items())) or "none")
+    return found

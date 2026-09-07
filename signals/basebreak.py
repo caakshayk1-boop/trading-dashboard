@@ -38,6 +38,24 @@ import numpy as np
 # ── tunables, in one place ───────────────────────────────────────────────────
 BOX_MIN_BARS      = 10      # a range shorter than this is not a base
 BOX_MAX_BARS      = 60
+# ── DO NOT TIGHTEN THIS TO GET A TIGHTER STOP ────────────────────────────────
+# It is tempting: the box-finder takes the longest range under this cap, so
+# height is pushed toward the cap by construction and the median LEDGE stop
+# lands around 15% of entry, which looks careless for a swing engine.
+# It was swept over the same 149 names and the wide stop is where the entire
+# edge lives:
+#     cap 0.14  n=188  +0.224R  t= 3.20  median stop 15.3%   maxDD  -7.73R
+#     cap 0.12  n=194  +0.120R  t= 1.67  median stop 13.3%   maxDD -13.73R
+#     cap 0.10  n=179  -0.043R  t=-0.56  median stop 11.6%   maxDD -18.77R
+#     cap 0.08  n=150  -0.105R  t=-1.20  median stop  9.6%   maxDD -17.45R
+# A tighter stop here does not reduce risk, it moves the stop inside the noise
+# and converts an edge into a loss — the same fault this repo already found in
+# the breakout engine at 0.29x ATR with a 90.9% stop-out rate. Risk is
+# controlled by POSITION SIZE against 1R, not by moving the stop closer to
+# entry. A 15% stop means a smaller position, not a bigger loss.
+# Capping how far above the box top the breakout may close was also tried
+# (<=1.0 ATR: +0.255R, t=3.17, median stop 14.9%) — no material gain for a 15%
+# cut in signals, so it is not here either.
 BOX_MAX_HEIGHT    = 0.14    # box height as a fraction of price
 BOX_MIN_HEIGHT    = 0.025   # tighter than this is a data artefact, not a base
 FROM_HIGH_MIN     = 0.12    # must be at least this far off the 52w high

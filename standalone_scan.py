@@ -785,7 +785,7 @@ MODE_NOTE = {
 }
 
 VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full",
-               "none", "us", "momentum"}
+               "none", "us", "momentum", "basebreak"}
 
 
 def _explicit_slot(argv=None) -> bool:
@@ -1334,6 +1334,84 @@ def run_momentum_scan(time_str):
     return picks
 
 
+def run_basebreak_scan(time_str):
+    """LEDGE and KEEL — base breakouts on the completed daily bar.
+
+    RECORDS EVERYTHING, ALERTS ONLY WHAT HAS A MEASURED CASE.
+
+    Both engines are logged to the ledger in full, because the only way either
+    ever earns a live record is by having every signal it produced settled
+    honestly — filtering what gets WRITTEN would make the recorded sample a
+    selected one and the eventual expectancy meaningless.
+
+    What is SENT differs, and deliberately:
+      · LEDGE  is PAPER. Backtest n=188, +0.224R, t=3.20 over 149 names. It goes
+               out with the PAPER footer, the same as momentum.
+      · KEEL   is RESEARCH. Backtest n=42, +0.125R, t=0.52 — it does not
+               separate from zero. It is logged and never alerted, the same rule
+               this book already applies to shorts: recorded as evidence, never
+               put in front of a reader as an action.
+
+    Neither is cleared for capital. The bar is 30+ CLOSED trades at t>=2 and a
+    backtest is not a closed trade.
+    """
+    from scanner import scan_basebreak
+    from tracker import (log_batch_to_all_signals, duplicate_symbols,
+                         mark_alerts_sent)
+    logging.info("Running base-breakout scan (LEDGE + KEEL, Nifty500)...")
+    try:
+        found = scan_basebreak()
+    except Exception as e:                                        # noqa: BLE001
+        logging.error("basebreak: scan failed (%s) — skipping", e)
+        return []
+    if not found:
+        logging.info("basebreak: no setups cleared the gates today")
+        return []
+
+    published = []
+    for engine in ("ledge", "keel"):
+        rows = [r for r in found if r["engine"] == engine]
+        if not rows:
+            continue
+        # Deduped per ENGINE, not across both. LEDGE and KEEL can legitimately
+        # fire on the same name for different reasons, and collapsing them would
+        # lose one engine's evidence to the other's.
+        dupes = duplicate_symbols(rows, engine)
+        rows = [r for r in rows if r["symbol"] not in dupes]
+        if not rows:
+            logging.info("basebreak/%s: all %d were duplicates of open rows",
+                         engine, len(dupes))
+            continue
+
+        ids = log_batch_to_all_signals([dict(
+            symbol=r["symbol"], signal_type=engine, action="BUY",
+            entry=r["price"], sl=r["sl"], t1=r["target1"], t2=r["target2"],
+            t3=r["target2"], rr=r["rr"], timeframe=r["timeframe"], score=0,
+            metadata={"why": r["why"], "invalidate": r["invalidate"], **r["meta"]},
+        ) for r in rows])
+        logged = [i for i in (ids or []) if i]
+        logging.info("basebreak/%s: %d found, %d logged", engine, len(rows), len(logged))
+        published += rows
+
+        if engine != "ledge":
+            # RESEARCH. Logged above, and that is where it stops.
+            continue
+        blocks = [
+            f"*{r['symbol']}* | {r['timeframe']} | BUY \u20b9{r['price']}\n"
+            f"  SL \u20b9{r['sl']} | T1 \u20b9{r['target1']} | T2 \u20b9{r['target2']} | RR {r['rr']}\n"
+            f"  _{(r['why'] or [''])[0]}_"
+            for r in rows
+        ]
+        sent = _send_chunked(
+            f"\U0001f9f1 *LEDGE* \u2014 base breakouts ({len(rows)}) \u2014 {time_str}\n"
+            "_A Darvas box, broken on the CLOSE, in names still off their highs._\n",
+            blocks,
+            footer="\n_PAPER \u2014 backtest only (n=188, +0.224R, t=3.20). "
+                   "No live closed trade. Not cleared for capital._")
+        _record_delivery(logged, sent, mark_alerts_sent)
+    return published
+
+
 def run_breakout_scan(time_str):
     from scanner import scan_breakouts
     from tracker import (log_breakouts, log_batch_to_all_signals,
@@ -1776,12 +1854,29 @@ def main():
             # closed — the same reason measured_equity runs here and not
             # at midday.
             ohl       = _safe("ohl_scan",      run_ohl_scan,       time_str)
+            # LEDGE and KEEL fire on a CLOSE — measured over this book's own 247
+            # closed signals, a close-basis stop is worth +0.071R at t=2.53 over
+            # an intraday one, and 58% of all stop-outs here were wicks no close
+            # ever confirmed. Before 15:30 IST there is no close to evaluate, so
+            # this slot is the only one they can honestly run in.
+            basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
             # Ledger last: every alert and its outcome, to Telegram + Obsidian.
             # Runs after the scans so today's signals are already logged.
             _safe("signal_ledger", run_signal_ledger, time_str)
             counts    = {"breakouts": len(breakouts), "ai_daily": len(tlm_daily),
                          "swing": len(signals), "commodities": len(comms),
-                         "measured": len(measured), "ohl": len(ohl)}
+                         "measured": len(measured), "ohl": len(ohl),
+                         "basebreak": len(basebrk)}
+
+        elif slot == "basebreak":
+            # AN ENGINE SELECTOR, NOT A TIME OF DAY — the same shape as
+            # "momentum" above. LEDGE and KEEL already run inside the eod slot;
+            # this exists so they can be dispatched on their own without
+            # re-running six other scans and sending their alerts a second time,
+            # which is what asking for "eod" again would do.
+            # It has no entry in _SLOT_OPENS_IST, so it is never window-gated.
+            basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
+            counts    = {"basebreak": len(basebrk)}
 
         elif slot == "momentum":
             # ONE ENGINE, ON ITS OWN.
