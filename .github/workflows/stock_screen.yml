@@ -134,15 +134,40 @@ jobs:
               # Narrative is injected, not imported — no key means no prose and
               # every row still carries its rule-based SWOT.
               ai = newspaper.groq_complete if newspaper.GROQ_KEY else None
-              # Previous build for the delta columns.
+              # ── PREVIOUS BUILD FOR THE DELTA COLUMNS ────────────────────
+              #
+              # newspaper_screen is keyed by ISO WEEK and this job now runs
+              # DAILY, so "ORDER BY week DESC LIMIT 1" returns the row this
+              # week already holds — which, after the first run of the week, is
+              # a build from earlier the same day that the current run is about
+              # to overwrite. The screen was diffing against ITSELF.
+              #
+              # Measured: screen.json shipped `changes: {compared_with:
+              # 2026-09-06, new: 0, moved: 0}` on a 2026-09-06 build, with
+              # `delta` and `rank_move` null on all 750 rows. Two fields
+              # computed every day, published every day, and empty every day
+              # after the first run of each week.
+              #
+              # Take two rows and use the newest whose build date is not today.
+              # A week-old comparison is a real comparison and says so in
+              # compared_with; a same-day one is arithmetic against a copy.
               prev = None
               try:
+                  import datetime as _dt
+                  _today = _dt.datetime.now(
+                      _dt.timezone(_dt.timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d")
                   with newspaper._db() as con:
-                      row = con.execute("SELECT payload FROM newspaper_screen "
-                                        "ORDER BY week DESC LIMIT 1").fetchone()
-                  if row:
-                      prev = json.loads(row[0])
-                      print(f"diffing against the build of {prev.get('built_on')}")
+                      rows = con.execute("SELECT payload FROM newspaper_screen "
+                                         "ORDER BY week DESC LIMIT 3").fetchall()
+                  for _r in rows:
+                      cand = json.loads(_r[0])
+                      if cand.get("built_on") and cand["built_on"] != _today:
+                          prev = cand
+                          print(f"diffing against the build of {cand['built_on']}")
+                          break
+                  if prev is None:
+                      print("no build older than today to diff against — "
+                            "deltas will be published as unavailable, not as zero")
               except Exception as e:
                   print(f"no previous build to diff against: {e}")
               data = stock_screen.build(limit=limit, news_top=news, ai=ai, prev=prev)
