@@ -1128,8 +1128,21 @@ def generate() -> None:
                      "verdict", "verdict_why", "verdict_caveat", "score", "sector",
                      "reads_for", "reads_against", "pe_post_issue", "peer_pe",
                      "peer_pe_n", "roce_pct", "revenue_cr", "pat_cr", "days_left",
-                     "enriched_url", "phase", "since_listing_pct", "listed_on",
-                     "last_close", "from_high_pct", "sym")
+                     "enriched_url", "phase", "since_listing_pct",
+                     "last_close", "from_high_pct",
+                     # ── FIELDS THE RADAR COMPUTES AND THIS DROPPED ──────────
+                     # first_close is the listing price this site can defend:
+                     # ipo_radar measures from the FIRST TRADED CLOSE, not the
+                     # issue price, because NSE's issue-price data is not
+                     # reliable and a listing gain computed off a guessed one
+                     # is fabricated. high/low are the range since listing.
+                     "first_close", "high", "low", "months_listed", "sessions",
+                     "measured")
+            # `listed_on` and `sym` were in this list and are not fields the
+            # radar produces — it emits listing_date and symbol. The site read
+            # r.listed_on, found nothing, and rendered "listed —" on every row
+            # of the table since it shipped. A keep-list is a contract with the
+            # producer, and this half of it was never checked against one.
             def _trim(rows):
                 return [{k: v for k, v in r.items() if k in _keep} for r in (rows or [])]
             _ipo = {
@@ -1140,7 +1153,7 @@ def generate() -> None:
                 "awaiting_listing": _trim(_r.get("awaiting_listing")),
                 # Context, not the headline: the 90-name history is what the old
                 # surface led with, and it is the least actionable thing here.
-                "recent_listed": _trim((_r.get("recent_listed") or [])[:24]),
+                "recent_listed": _trim((_r.get("recent_listed") or [])[:60]),
             }
             (out_dir / "ipo.json").write_text(json.dumps(_ipo, default=str), encoding="utf-8")
             print(f"[generate] ✅ ipo.json ({len(json.dumps(_ipo)) // 1024}KB · "

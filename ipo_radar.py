@@ -1012,9 +1012,13 @@ def build(listing_perf=None):
     #   awaiting listing — subscription CLOSED, listingDate still "-". These are
     #     live decisions: allotment, refunds and a listing date are all still
     #     ahead. They belong beside open and upcoming, not buried in history.
-    #   recently listed — closed AND listed, inside twelve months, which is what
-    #     was actually asked for.
-    cutoff = today - timedelta(days=365)
+    #   recently listed — closed AND listed, inside TWO YEARS. One year was
+    #     the original ask and it is too short to answer the question the table
+    #     exists for: whether new issues hold their price. A listing needs more
+    #     than four quarters before "it is down 30%" means anything other than
+    #     that the market fell, and a twelve-month window silently drops every
+    #     2024 book right when its record becomes interesting.
+    cutoff = today - timedelta(days=730)
     awaiting, listed = [], []
     for r in past:
         if (r.get("securityType") or "").upper() not in MAINBOARD_SERIES:
@@ -1114,7 +1118,7 @@ def build(listing_perf=None):
         "awaiting_listing": awaiting,
         "stalled": stalled,
         "recent_listed": recent,
-        "recent_window_months": 12,
+        "recent_window_months": 24,
         "counts": {"open": sum(1 for r in rows if r["phase"] == "open"),
                    "upcoming": sum(1 for r in rows if r["phase"] == "upcoming"),
                    "awaiting": len(awaiting),
