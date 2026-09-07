@@ -1,5 +1,5 @@
 {
- "build_id": "20260907T072711",
+ "build_id": "20260907T101358",
  "date": "2026-09-07",
  "date_str": "Monday, September 07 2026",
  "picks": [
@@ -654,7 +654,7 @@
  "ipos": {
   "count": 30,
   "months": 12,
-  "built_on": "2026-09-05",
+  "built_on": "2026-09-07",
   "summary": {
    "count": 30,
    "up": 20,
@@ -665,7 +665,7 @@
   "rows": [
    {
     "sym": "RUBICON",
-    "months_listed": 10.6,
+    "months_listed": 10.7,
     "first_close": 628.2,
     "last_close": 1768.3,
     "since_listing_pct": 181.5,
@@ -717,7 +717,7 @@
    },
    {
     "sym": "SUDEEPPHRM",
-    "months_listed": 9.2,
+    "months_listed": 9.3,
     "first_close": 774.15,
     "last_close": 1329.3,
     "since_listing_pct": 71.7,
@@ -779,165 +779,165 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "14h old",
+    "age": "17h old",
     "note": "partial coverage \u2014 11/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Study Plan: 15 Min/Day",
-   "body": "15 minutes daily beats 3 hours once a week. Split: 5 min puzzles (Chess.com/Lichess tactics trainer) + 5 min play (1 game, 10+0 or 15+10) + 5 min review (analyse your game, find the turning point). After 30 days: you'll feel patterns automatically. Tactics + play + review = the triangle of improvement.",
-   "index": 19,
+   "title": "Rating Progress Reality",
+   "body": "800\u21921000: Learn not to blunder pieces for free. 1000\u21921200: Basic tactics (forks, pins). 1200\u21921500: Strategy (plans, pawn structure). 1500\u21921800: Calculation depth + endgames. 1800+: Opening theory + deep calculation. Most adults plateau at 1000-1200 because they skip tactics training. Do 10 puzzles daily \u2014 minimum. No shortcut.",
+   "index": 20,
    "total": 20
   },
   "wisdom": {
-   "title": "Wisdom from Fathers Before You",
-   "body": "Your father had flaws. His father did too. But they also gave you things you don't yet see. The goal isn't to be a perfect father \u2014 it's to be a slightly more conscious one. Break the patterns you don't want to pass on. Keep the ones that built you. Each generation improves a little. That's legacy.",
-   "index": 11,
+   "title": "On Failure",
+   "body": "You will fail your daughter sometimes. You'll be impatient. You'll miss something important. You'll get it wrong. What matters is the repair: the apology, the return, the consistent showing up after the mistake. Children don't need perfect parents. They need parents who can say sorry and mean it.",
+   "index": 12,
    "total": 18
   },
   "book": {
-   "book": "Principles",
-   "author": "Ray Dalio",
-   "chapter": "Pain + Reflection = Progress",
-   "lesson": "Dalio's formula for growth: Pain + Reflection = Progress. Every painful experience \u2014 a mistake, a failure, a loss \u2014 contains information that, if properly processed, makes you better. The mistake most people make is avoiding pain (denial, blame) or wallowing in it (self-pity, rumination) without converting it into learning. Dalio's habit after any significant setback: write down what happened, what you could have done differently, and what principle you need to update or add. He built Bridgewater's entire operating manual from 40 years of documented mistakes and learnings.",
-   "key_quote": "Your mistakes are your most valuable teachers. Only those who extract the lesson grow faster than those who don't make mistakes at all.",
-   "action": "After your next significant failure or setback, write a post-mortem: what happened, why, what you'd do differently, what principle to add.",
-   "index": 17,
+   "book": "The Lean Startup",
+   "author": "Eric Ries",
+   "chapter": "Build-Measure-Learn: Stop Building What Nobody Wants",
+   "lesson": "The biggest waste in startups \u2014 and in corporate innovation \u2014 is building products nobody wants. Ries's solution: the Build-Measure-Learn loop. Start with a hypothesis about what customers want. Build the minimum viable product (MVP) to test it \u2014 not a polished product, just enough to learn. Measure how real customers actually behave. Learn whether your hypothesis was right. Pivot or persevere based on evidence, not ego. The goal is to minimise the total time through the loop. Most teams optimise for building fast. They should optimise for learning fast.",
+   "key_quote": "Speed of learning, not speed of building, is the true competitive advantage of innovative teams.",
+   "action": "Identify one assumption behind your current project. What is the cheapest, fastest test you could run to validate or invalidate it this week?",
+   "index": 18,
    "total": 48,
    "crux": [
-    "Pain + reflection = progress. Pain alone teaches nothing.",
-    "Radical truth and radical transparency, applied consistently, beat politeness.",
-    "Embrace reality and deal with it. Wishing it were different is the expensive option.",
-    "Use the 5-step process: goals \u2192 problems \u2192 diagnosis \u2192 design \u2192 execution.",
-    "Ego and blind spots are the two barriers. Both feel like conviction from inside.",
-    "Be radically open-minded. Fear of looking wrong is more costly than being wrong.",
-    "Thoughtful disagreement: stress-test with believable people rather than argue to win.",
-    "Believability-weighted decision making \u2014 not all opinions carry equal weight.",
-    "Distinguish the machine from yourself. Look at your organisation from above as a designer.",
-    "Problems are fuel. Do not tolerate them, but do not hide them either.",
-    "Diagnose root causes before designing. Most people jump straight to solutions.",
-    "People are wired very differently. Match the person to the role's actual requirements.",
-    "Write your principles down. Undocumented principles are moods.",
-    "Everything is a machine producing outcomes. Fix the machine, not the instance."
+    "A startup is an organisation built to find a repeatable business model under extreme uncertainty.",
+    "Build\u2013Measure\u2013Learn. Speed through the loop is the core competency.",
+    "Validated learning is the unit of progress, not code shipped or hours worked.",
+    "Minimum Viable Product: the smallest thing that tests the riskiest assumption.",
+    "Two leap-of-faith assumptions: value (do they want it?) and growth (how does it spread?).",
+    "Genchi genbutsu \u2014 go and see. Talk to actual users, not to your model of them.",
+    "Vanity metrics (totals, page views) flatter. Actionable metrics (cohort retention, conversion) inform.",
+    "Cohort analysis and split testing are the only honest reads on whether you improved anything.",
+    "Innovation accounting: define the baseline, tune the engine, then pivot or persevere.",
+    "Three growth engines: sticky (retention), viral (referral), paid (unit economics). Pick one.",
+    "Pivot types: zoom-in, zoom-out, customer segment, platform, business architecture, value capture.",
+    "Small batches expose problems immediately. Large batches hide them until launch.",
+    "Stop the line \u2014 fix root causes with five whys rather than shipping over them.",
+    "The question is never 'can we build this?' It is 'should we build this?'"
    ],
    "learnings": [
-    "Reflection is the step that converts a bad experience into an asset.",
-    "Weight opinions by track record, not seniority or volume.",
-    "Diagnosis before design is the discipline almost everyone skips.",
-    "Writing principles down is what makes them testable."
+    "Shipping is not progress. Learning is progress.",
+    "Most feature work is waste because most assumptions are wrong.",
+    "A metric that only goes up is not telling you anything.",
+    "Deciding to pivot late is the expensive part, not the pivot itself."
    ],
    "examples": [
-    "Dalio's 1982 debt-crisis call was catastrophically wrong, cost him the firm, and became the origin of his entire radical-transparency method.",
-    "Bridgewater records nearly every meeting so decisions can be audited by anyone. Discomfort is the design goal.",
-    "The Dot Collector rates people live in meetings, making believability visible instead of political."
+    "Dropbox tested demand with a 3-minute video before building sync. Beta waitlist went 5,000 \u2192 75,000 overnight.",
+    "Zappos began by photographing shoes in local shops and buying at retail per order \u2014 testing willingness to buy online before holding inventory.",
+    "Ries's IMVU spent months on an IM-interoperability feature nobody used. Users didn't want to add friends; they wanted new ones."
    ],
    "adapt": [
-    "Write the trading principles down. 'Regime filter, structure stop, 48h horizon' beats remembering.",
-    "The alert flood is a machine problem, not a bad day. Diagnose the lifecycle rule, don't just clear the backlog.",
-    "Believability weighting on market opinions: the backtest outranks anyone's conviction, including yours.",
-    "Pain + reflection: the Meta restriction is only useful if the caption scoring process changes because of it."
+    "Codex at $47: test the tier with a landing page and real payment intent before building the full product.",
+    "The signal edge measurement was validated learning \u2014 t=+2.87 on daily equity, noise on 1H. That result should drive the roadmap.",
+    "Cohort the newspaper: are the same readers returning, or is it new traffic each morning? Totals won't tell you.",
+    "Five whys on the alert flood: no time stop \u2192 because no lifecycle rule \u2192 because the backtest's horizon was never ported to live code."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Sentimental \u2260 Storage",
-    "body": "You are keeping the object to keep the memory. The memory is not in the object. Photograph it, write one line about why it mattered, and release the thing.",
-    "action": "Photograph one sentimental item you have not looked at in a year.",
-    "index": 11,
+    "title": "Gifts Are Not Obligations",
+    "body": "A gift's job ended the moment it was given. Keeping something unwanted out of guilt honours nobody and costs you space every day.",
+    "action": "Release one guilt-kept item. The giver will never know.",
+    "index": 12,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Thank The Invisible People",
-    "body": "The security guard, the cleaner, the driver, the tea boy. How you treat people who cannot advance your career is the only honest read on your character \u2014 and senior people watch for it specifically.",
-    "action": "Learn the name of one person whose name you have never asked.",
-    "index": 17,
+    "title": "Do Not Correct Trivia In Public",
+    "body": "Being right about something small in front of an audience costs more in goodwill than the correction is worth. Let it go, or say it privately later.",
+    "action": "Let one minor inaccuracy pass uncorrected today.",
+    "index": 18,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The Half-Smile",
-    "body": "Thich Nhat Hanh's practice: a slight smile, held, changes state faster than most reasoning about your mood. The body leads the mind more often than the reverse.",
-    "action": "Half-smile for one full minute. Notice the shift.",
-    "index": 15,
+    "title": "Impermanence Applies To The Bad Too",
+    "body": "The difficult period ends. So does the good one. This is not pessimism \u2014 it is the only reliable source of equanimity in both directions.",
+    "action": "Name the current difficulty. Say plainly: this also ends.",
+    "index": 16,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Incentives",
-    "body": "Show me the incentive and I will show you the outcome. Never explain by malice or stupidity what the incentive structure fully predicts. Ask who gets paid for this to happen.",
-    "action": "For one recommendation you received, map who benefits from you following it.",
-    "index": 7,
+    "title": "Compounding",
+    "body": "Small consistent gains dominate large sporadic ones, and the effect is invisible until suddenly it is not. The counterintuitive part: nearly all the value arrives at the end.",
+    "action": "Identify one habit that compounds. Protect it above anything urgent.",
+    "index": 8,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0643\u064a\u0641 \u062d\u0627\u0644\u0643\u061f",
-    "translit": "kayf haalak?",
-    "meaning": "How are you?",
-    "use": "kayf haalik to a woman. In the Gulf you will also hear shloonak \u2014 more colloquial, warmer.",
-    "index": 13,
+    "script": "\u0628\u0643\u0645 \u0647\u0630\u0627\u061f",
+    "translit": "bikam haadha?",
+    "meaning": "How much is this?",
+    "use": "Alternative to kam as-si'r. Common in shops.",
+    "index": 14,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Teach One Thing",
-    "body": "Explaining to another person exposes every gap instantly. Teaching is the highest-return study method measured, and it costs ten minutes.",
-    "action": "Teach one concept to someone today. Note where you stumbled.",
-    "index": 19,
+    "title": "Review Your Own Work Cold",
+    "body": "Leave it 24 hours, then review as if a stranger wrote it and you are looking for errors. You will find them. Reviewing immediately finds nothing.",
+    "action": "Re-open yesterday's work. Find three things to fix.",
+    "index": 20,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Grip Strength As A Biomarker",
-    "body": "It correlates with cardiovascular mortality and cognitive decline, and it is trivially measurable. It is a proxy for total-body strength and neuromuscular health.",
-    "action": "Two sets of dead hangs or farmer's carries to failure.",
-    "index": 9,
+    "title": "Zone 5 Once A Week",
+    "body": "Short maximal intervals raise VO2max faster than steady work. Four minutes hard, four easy, four times. Unpleasant, brief, and disproportionately effective.",
+    "action": "One 4x4 interval session. Only if Zone 2 is already habitual.",
+    "index": 10,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Daniel Zhang",
-   "quote": "Only those who are willing to take risks will live a meaningful life.",
-   "index": 90,
+   "name": "Masayoshi Son",
+   "quote": "Statistics are like bikinis. What they reveal is suggestive, but what they conceal is vital.",
+   "index": 91,
    "total": 96
   },
   "lesson": {
    "tradition": "Buddhism",
-   "lesson": "You, yourself, as much as anybody in the entire universe, deserve your love and affection.",
+   "lesson": "No one saves us but ourselves. No one can and no one may.",
    "source": "Buddha"
   },
   "case": {
-   "title": "IKEA: Flat Pack Revolution",
-   "story": "A table leg broke during a photo shoot. An employee removed it to fit the table in a car. Ingvar Kamprad realized flat-pack was the future. IKEA now does $47B revenue.",
-   "lesson": "Your biggest breakthrough might come from solving a logistics problem, not a product problem."
+   "title": "Airbnb: From Cereal Boxes to $75B",
+   "story": "Airbnb founders were broke. They bought cereals, repackaged as 'Obama O's' and 'Cap'n McCain's' to fund the company. First investors said the idea would never work.",
+   "lesson": "Survive first. Every startup has a near-death moment. Resourcefulness separates those who make it."
   },
   "fpna": {
-   "title": "EBITDA Bridge",
-   "body": "Walk from prior period: Revenue \u00b1, COGS \u00b1, SG&A \u00b1, Other \u00b1. Bridges tell the story behind the number.",
-   "index": 6,
+   "title": "Scenario Planning",
+   "body": "Always model 3: Base, Bull (+20%), Bear (\u201320%). Present the range. Executives hate surprises.",
+   "index": 7,
    "total": 20
   },
   "cfo": {
-   "title": "FC Step 2: IFRS Mastery",
-   "body": "IFRS 16 (leases), IFRS 9 (financial instruments), IFRS 15 (revenue recognition) \u2014 these are the FC's bread and butter in Dubai/GCC. Know them technically AND practically. Interviewers will test this. Study one standard per week.",
-   "index": 2,
+   "title": "FC Step 3: Internal Controls",
+   "body": "A Controller without strong controls is a liability. Know COSO framework. Segregation of duties. Maker-checker in AP/AR. SOX lite for listed companies. Document your controls. Auditors love documented processes.",
+   "index": 3,
    "total": 15
   },
   "money_hack": {
-   "title": "No Lifestyle Inflation",
-   "body": "Got a raise? Don't upgrade lifestyle. Invest the increment for 3 years."
+   "title": "Emergency Fund",
+   "body": "6 months of expenses in a liquid FD. Job loss + medical can overlap."
   },
   "dubai": {
-   "title": "Time your application to the budget cycle",
-   "body": "UAE groups build budgets September to November and hire FP&A ahead of it. January is the second window, funded by the new year's headcount. Ramadan and July\u2013August are dead.",
-   "targets": "That makes September the highest-yield month of the year to be applying.",
-   "action_label": "Plan",
-   "action": "Have the CV, LinkedIn and referral list finished by mid-August. Not started.",
-   "index": 9,
+   "title": "The 'why Dubai' answer",
+   "body": "Every panel asks it, and 'better opportunities' loses the room. The answer that works is specific: the sector, the company's stage, and what you do about a problem they actually have.",
+   "targets": "Weak: growth and exposure. Strong: your lease portfolio doubled after the 2024 expansion.",
+   "action_label": "Homework",
+   "action": "Read the last annual report before the call. Quote one number from it.",
+   "index": 10,
    "total": 30
   },
   "daughter": {
@@ -947,7 +947,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Track energy, not just time. Hard work when energy is highest.",
+  "productivity": "Define 'done' before starting. Vague tasks never finish.",
   "father": [
    {
     "title": "Let her struggle briefly",
@@ -1050,16 +1050,16 @@
    }
   ],
   "review": {
-   "prompt": "What did you build that will still work if you stop touching it?",
-   "why": "Leverage is what runs without you. Everything else is a job.",
-   "index": 15,
+   "prompt": "Where did you optimise something that should have been deleted?",
+   "why": "Via negativa. The best improvement is often removal.",
+   "index": 16,
    "total": 20,
-   "week": 36,
+   "week": 37,
    "year": 2026,
-   "key": "2026-W36",
-   "weekday": 7,
-   "days_left": 0,
-   "is_review_day": true
+   "key": "2026-W37",
+   "weekday": 1,
+   "days_left": 6,
+   "is_review_day": false
   },
   "podcasts": {
    "ok": true,
@@ -1328,10 +1328,28 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-06",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint Opinion",
+    "cat": "money",
+    "title": "Trump's latest threat to the US Fed is a stunner: can monetary and trade policy be taken so lightly?",
+    "link": "https://www.livemint.com/opinion/online-views/donald-trump-latest-threat-us-fed-is-a-stunner-monetary-trade-policy-taken-lightly-federal-reserve-11788694740595.html",
+    "summary": "The US President\u2019s call last week for a Fed rate cut and his tirade against trade deficits made the world sit up alright, but aghast at his latest \u2018or else.\u2019 An economy cannot be run by all-caps command\u2014or as a business for that matter.",
+    "date": "Sep 07, 2026",
+    "_sort": "2026-09-07T02:00:18+00:00"
+   },
+   {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Why are Registered Investment Advisers so rare in India? The big reason may surprise investors",
+    "link": "https://economictimes.indiatimes.com/wealth/invest/why-are-registered-investment-advisers-so-rare-in-india-the-big-reason-may-surprise-investors/articleshow/133787398.cms",
+    "summary": "In the Indian investment landscape, a stark difference exists between mutual fund distributors who earn commissions and fee-only advisors who charge direct fees. This distinction has left many investors perplexed. Industry professionals have embarked on varying paths, revealing the challenges posed by regulatory comple",
+    "date": "Sep 07, 2026",
+    "_sort": "2026-09-07T01:00:00+00:00"
+   },
    {
     "source": "The Marginalian",
     "cat": "ideas",
@@ -1348,45 +1366,7 @@
     "link": "https://www.livemint.com/money/personal-finance/india-senior-living-market-grow-4x-cross-rs-1-lakh-crore-2030-tier-ii-iii-cities-new-projects-invest-real-estate-report-11788716428873.html",
     "summary": "India's senior living market is estimated to cross  \u20b91 lakh crore by 2030, nearly four times the current levels, according to a report by Colliers. The segment's expansion is drawing increased investment from real estate developers and investors, it added.&amp;nbsp;",
     "date": "Sep 06, 2026",
-    "_sort": "2026-09-06T18:31:27+00:00",
-    "smart": {
-     "what_happened": [
-      "The Colliers report estimates the senior living market will reach about \u20b91 lakh crore (\u2248\u20b91 trillion) by 2030, roughly four times its current size.",
-      "Developers and investors are focusing new senior\u2011living projects on Tier\u202fII and Tier\u202fIII cities."
-     ],
-     "why_it_matters": "The projected four\u2011fold expansion to over \u20b91 trillion highlights a substantial new demand segment for the real\u2011estate industry, prompting increased capital allocation and development activity aimed at catering to India's aging population.",
-     "what_to_watch": "Monitor announcements of senior\u2011living projects in Tier\u202fII and Tier\u202fIII cities for the next six months.",
-     "headline": "India senior living market to exceed \u20b91 trillion by 2030, report says",
-     "read_seconds": 22
-    }
-   },
-   {
-    "source": "ET Opinion",
-    "cat": "money",
-    "title": "Summer of Summitry: India\u2019s  Global South credentials get a new test",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/summer-of-summitry-indias-global-south-credentials-get-a-new-test/articleshow/133847944.cms",
-    "summary": "India's SCO participation signaled opposition to the US-Israel war on Iran.  This move aimed to burnish global south credentials and protect economic interests.  The Chabahar port bombing highlighted strategic investment risks and strained US relations.  India's statement echoed previous condemnations of military strik",
-    "date": "Sep 06, 2026",
-    "_sort": "2026-09-06T18:18:34+00:00"
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "The dollar deluge that RBI is faced with has also hauled in a new tide of woes",
-    "link": "https://www.livemint.com/opinion/online-views/dollar-deluge-rbi-faces-new-tide-of-woes-fcnr-forex-foreign-exchange-dollars-11788670611127.html",
-    "summary": "Despite India\u2019s Reserve Bank ending its scheme for FCNR(B) deposits a month ahead of schedule, the dollar inflows it sought topped $127.2 billion. If RBI now finds itself between a rock and a hard place, it is largely on account of its own errors of judgement.",
-    "date": "Sep 06, 2026",
-    "_sort": "2026-09-06T08:31:04+00:00",
-    "smart": {
-     "what_happened": [
-      "The Reserve Bank of India ended its scheme for FCNR(B) deposits a month ahead of schedule.",
-      "Dollar inflows that the RBI sought topped $127.2\u202fbillion."
-     ],
-     "why_it_matters": "The early termination of the FCNR(B) scheme comes as the RBI faces a surge of dollar inflows, creating pressure on its foreign\u2011exchange reserves and monetary\u2011policy flexibility. Managing such large inflows without the scheme in place puts the central bank in a difficult position, potentially affecting liquidity, exchange\u2011rate stability and the broader financial environment.",
-     "what_to_watch": "Watch for the RBI's next official announcement on foreign\u2011exchange management or related policy measures in the coming weeks.",
-     "headline": "RBI ends FCNR(B) scheme early as dollar inflows reach $127.2\u202fbillion",
-     "read_seconds": 21
-    }
+    "_sort": "2026-09-06T18:31:27+00:00"
    },
    {
     "source": "NYT Well",
@@ -1452,7 +1432,7 @@
     "moves": 46,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1.c4\u202fc5\u202f2.Nc3\u202fNc6\u202f3.g3\u202fg6, play \u2026d5 before \u2026e5; your pawn structure stayed passive, allowing White to dominate. Strengthen central counter\u2011play with \u2026d5 (or \u2026e5 after \u2026d6) to equalize.",
+    "analysis": "Focus on early central tension: after 1\u2026c5\u202f2\u202fc4\u202fc6\u202f3\u202fNc3\u202fe5, you allowed White\u2019s d4 break. Play \u2026d5 (or \u2026e5\u202fd5) instead, preventing White\u2019s strong pawn center and reducing later piece\u2011sacrifice threats.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1558,7 +1538,7 @@
     "moves": 25,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f8, and avoid unnecessary queen moves that waste tempo and expose tactics.",
+    "analysis": "Focus on early piece coordination: develop knights before queen moves; aim to castle by move\u202f7 and keep pawn structure intact.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1592,7 +1572,7 @@
     "moves": 35,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: after 1.d4\u202fNf6\u202f2.c4\u202fe6, develop knights before pushing pawns; avoid unnecessary queen moves that caused 5 blunders and 99\u202fACPL.",
+    "analysis": "Focus on reducing blunders: review each of the five mistakes, identify the tactical motif missed, and practice 30\u2011minute puzzles daily to lower ACPL below 60.",
     "is_upset": true,
     "is_collapse": false,
     "is_long": false,
@@ -1629,7 +1609,7 @@
     "moves": 51,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1.d4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.c4, prioritize ...e6, ...c6, ...Bd6 before moving the queen; reduce queen\u2011side piece latency by 2\u20133 tempos.",
+    "analysis": "Focus on early queen\u2011side development: after 1.d4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.c4\u202fe6, play\u202f...c6 and\u202f...Bb4 before committing ...e5; this saves ~0.4\u202fpawn\u2011evaluation and prevents White\u2019s strong Qb3\u2011c4 pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1663,7 +1643,7 @@
     "moves": 41,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f7, avoid leaving the king on f1 after 6\u2026f5; this saves ~30\u202fcp\u202faverage.",
+    "analysis": "Focus on early king safety: castle by move\u202f8, avoid queen\u2011side pawn pushes (e.g.,\u202fc4\u2011c5) that open lines; this cuts opponent\u2019s counter\u2011play and reduces time pressure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1697,7 +1677,7 @@
     "moves": 36,
     "termination": "Time Out",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid queen\u2011side pawn pushes that open lines; this cuts opponent\u2019s counter\u2011play dramatically.",
+    "analysis": "Focus on early queen development: avoid 2\u2026Qh4? and 3\u2026Qh5?; instead play 2\u2026e5 or 2\u2026d5, keeping queen safe and centralizing pieces. This reduces time\u2011pressure and improves positional accuracy.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1731,7 +1711,7 @@
     "moves": 38,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid leaving the king on\u202fe1 with open f\u2011 and g\u2011files.",
+    "analysis": "Focus on early piece activity: develop knights before bishops, castle by move\u202f10, and avoid queen excursions before completing development.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1821,14 +1801,14 @@
    "upsets": 1,
    "collapses": 0,
    "long_games": 3,
-   "session_summary": "Your 71\u202f% win rate masks a fatal over\u2011reliance on the generic D00 Queen\u2019s\u202fPawn setups\u2014those three \u201cwins\u201d are pure luck, not skill, and you\u2019ll crumble the moment Black deviates from textbook lines. Stop treating D00 as a go\u2011to; study a solid, theory\u2011backed opening (e.g., the London System or a main\u2011line Caro\u2011Kann) and drill the typical middlegame plans until they become second nature. From now on, spend 30\u202fminutes each day reviewing your lost games, annotate every mistake, and replace one D00 move per session with a proven alternative until the habit is eradicated.",
+   "session_summary": "Your 71\u202f% win rate masks a fatal over\u2011reliance on the Queen\u2019s\u202fPawn Game\u2014three of your four wins came from it, yet you\u2019ve never proven you can convert it against higher\u2011rated opponents, so it\u2019s a false safety net, not a weapon. Stop treating the opening as a crutch; study a second, more dynamic system (e.g., the Sicilian or the King's Indian) and force yourself to play it in at least half of your next ten games, tracking success rates meticulously. If you can\u2019t beat a 200\u2011point\u2011higher player with that new repertoire within a month, drop the Queen\u2019s\u202fPawn Game entirely and rebuild your opening repertoire from scratch.",
    "session_date": "2026-09-06",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "3ngI1",
-   "rating": 1753,
+   "rating": 1741,
    "level": "\ud83d\udfe1 at level",
    "themes": "Mate In2 \u00b7 Short \u00b7 Epaulette Mate",
    "tip": "Force mate in two. Find the move that limits all their responses.",
