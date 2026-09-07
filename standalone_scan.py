@@ -1854,11 +1854,11 @@ def main():
             # closed — the same reason measured_equity runs here and not
             # at midday.
             ohl       = _safe("ohl_scan",      run_ohl_scan,       time_str)
-            # LEDGE and KEEL fire on a CLOSE — measured over this book's own 247
-            # closed signals, a close-basis stop is worth +0.071R at t=2.53 over
-            # an intraday one, and 58% of all stop-outs here were wicks no close
-            # ever confirmed. Before 15:30 IST there is no close to evaluate, so
-            # this slot is the only one they can honestly run in.
+            # LEDGE and KEEL fire on a CLOSE, so before 15:30 IST there is
+            # nothing for them to evaluate — this slot is the only one they can
+            # honestly run in. (Close-basis is measured to suit THESE engines'
+            # structural stops, +0.169R -> +0.224R; it is not a general rule and
+            # the other engines keep intraday stops. See signals/basebreak.py.)
             basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
             # Ledger last: every alert and its outcome, to Telegram + Obsidian.
             # Runs after the scans so today's signals are already logged.

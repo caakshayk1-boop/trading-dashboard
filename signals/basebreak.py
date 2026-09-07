@@ -18,14 +18,32 @@ Both refuse anything that is already extended. That is the whole point: a
 breakout from a base near the lows has a stop a few percent away, and a
 breakout from an all-time high has a stop wherever you care to draw it.
 
-EVERYTHING IS CLOSE-BASIS, ENTRY AND STOP.
-Measured over this ledger's own 247 closed signals, replaying the identical
-bars: an intraday stop returns +0.046R (t=0.65) and a CLOSE-basis stop returns
-+0.117R (t=1.63) — a paired improvement of +0.071R at t=2.53. 53 of 91
-measurable stop-outs were wicks that no daily close ever confirmed, and 16 of
-those went on to make +1R. GRWRHITECH is the example that prompted this: a
-one-MONTH horizon signal stopped out by a single 1-hour spike to 6560.50 on a
-day that closed at 6951.50, above its own stop.
+WHY CLOSE-BASIS HERE, AND ONLY HERE.
+Both engines stop on a CLOSE, not on a touch. Measured over the same 149 names,
+each rule paying its own exit price:
+    LEDGE  intraday stop  n=188  +0.169R  t=2.46  maxDD -9.18R  worst -1.00R
+    LEDGE  CLOSE stop     n=188  +0.224R  t=3.20  maxDD -7.73R  worst -1.62R
+Close-basis wins here because the stop is a STRUCTURAL level — under a Darvas
+box floor, floored at 1 ATR. A close back inside the box means the base failed;
+a wick through it usually means nothing.
+
+IT DOES NOT GENERALISE, AND AN EARLIER NOTE HERE CLAIMED IT DID.
+That claim ("+0.071R at t=2.53 across every engine") came from a simulation with
+a bug: the close-basis branch returned `(x.c<=sl ? -1 : -1)`, so it was scored
+at exactly -1R on a stop — capping the very downside a close-basis stop cannot
+cap. Corrected, over 243 of this book's own closed signals with the four
+corrupt-level rows excluded:
+    intraday stop  +0.047R  t= 0.65
+    CLOSE stop     +0.022R  t= 0.28     paired -0.024R, t=-0.68 — NOT better
+Holding through an intraday breach costs more than the wicks save on engines
+whose stops are tight ATR bands rather than structure: 25% of trades then lose
+beyond -1R. The existing engines were therefore left on intraday stops.
+
+What IS true regardless: 53 of 91 measurable stop-outs in this book were wicks
+no daily close ever confirmed, and 16 of those went on to make +1R. GRWRHITECH
+is the case — a one-MONTH signal stopped by a spike to 6560.50 on a day that
+closed at 6951.50. The answer to that is a stop placed on structure, which is
+what these two engines do, not a blanket change of stop rule.
 
 NO LOOKAHEAD. Every detector reads bars[:i+1] and nothing after i. The backtest
 enters at the OPEN of bar i+1, because a scan that runs on the close cannot buy

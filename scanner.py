@@ -3477,13 +3477,13 @@ def scan_magicmagic(universe=None, top_n=15) -> list:
 # LEDGE and KEEL — the base-breakout engines.
 #
 # WHY THESE RUN AT EOD AND NOWHERE ELSE.
-# Both fire on a CLOSE, not on a touch. That is not a preference: replaying 247
-# of this book's own closed signals over identical bars, an intraday stop
-# returns +0.046R (t=0.65) and a close-basis stop +0.117R (t=1.63), a paired
-# +0.071R at t=2.53. 53 of 91 measurable stop-outs were wicks no daily close
-# ever confirmed. An engine built on that finding cannot be evaluated mid-session
-# — before 15:30 IST there is no close to evaluate, and asking one of these for
-# a signal at 11:00 would be asking it to guess.
+# Both fire on a CLOSE, not on a touch. Before 15:30 IST there is no close to
+# evaluate, so asking one of these for a signal at 11:00 would be asking it to
+# guess. Close-basis is measured to be right FOR THESE TWO — LEDGE goes from
+# +0.169R (t=2.46) on an intraday stop to +0.224R (t=3.20) on a close — because
+# their stop is a structural box floor rather than an ATR band. It is NOT right
+# in general: across this book's existing engines the same swap measures
+# -0.024R at t=-0.68, and they were left alone. See signals/basebreak.py.
 #
 # Detection lives in signals/basebreak.py, which has no network in it and is
 # covered by test_basebreak.py. This function is the plumbing: fetch bars, hand
