@@ -38,6 +38,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.basebreak import rsi, atr, swing_lows, _liquid, FROM_HIGH_MIN, ATR_FLOOR_MULT
+import alert_log
 from signals.buoy import (BACKTEST, ENGINE_STATUS, BELOW_MIN_BARS, RECLAIM_MAX_ATR,
                           VOL_MULT, STOP_ATR_MULT, TARGET_R, MA_N,
                           DIV_MIN_GAP_B, DIV_MAX_GAP_B, RSI_DIV_MIN_LIFT,
@@ -278,7 +279,12 @@ def main():
                               "is not a signal and carries no capital.")}
         os.makedirs(os.path.dirname(OUT), exist_ok=True)
         json.dump(out, open(OUT, "w"), indent=1)
-        print(f"  offline run: {seen} names, {len(hits)} fired", flush=True)
+        # The DURABLE record. buoy.json is a snapshot and is overwritten every
+        # run; this appends only what has not been alerted recently, so the
+        # forward sample counts setups rather than counting cron ticks.
+        added, dup = alert_log.record(hits, "buoy")
+        print(f"  offline run: {seen} names, {len(hits)} fired "
+              f"({len(added)} new to the log, {dup} already there)", flush=True)
         for x in top:
             print(f"    {x['symbol']:<12} entry {x['entry']:>9.2f}  stop {x['sl']:>9.2f}  "
                   f"{x['from_high_pct']:>5.1f}% off high  RSI {x['rsi']:.0f}", flush=True)
@@ -379,7 +385,9 @@ def main():
                           "signal and carries no capital.")}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(out, open(OUT, "w"), indent=1)
-    print(f"\n  scanned {counts['seen']}/{len(universe)}  fired {len(hits)}  "
+    added, dup = alert_log.record(hits, "buoy")
+    print(f"\n  logged {len(added)} new alerts, {dup} were already recorded", flush=True)
+    print(f"  scanned {counts['seen']}/{len(universe)}  fired {len(hits)}  "
           f"errors {counts['err']}  throttled {counts['thr']}  "
           f"in {time.time()-t0:.0f}s", flush=True)
     for h in top:

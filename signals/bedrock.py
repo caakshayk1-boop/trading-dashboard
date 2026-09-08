@@ -55,7 +55,10 @@ LOOKBACK        = 252     # the year the low is measured over
 BOTTOM_BAND     = 0.15    # within 15% of the 52-week low counts as "at the lows"
 TOUCH_TOL       = 0.03    # a low within 3% of the floor is a test of it
 TOUCH_GAP       = 5       # bars apart before two touches are separate occasions
-MIN_TOUCHES     = 3       # one is a low, two is chance, three is a floor
+MIN_TOUCHES     = 2       # see ANCHOR_BACKTEST: three was WORSE than two, and
+                          # two has twice the sample. The "one is a low, two is
+                          # chance, three is a floor" line was a good sentence
+                          # and the data did not support it.
 BASE_MIN        = 8       # the consolidation must be at least this long
 BASE_WINDOW     = 40      # ...and the break is measured over AT MOST this much of it
 VOL_MULT        = 1.3     # the break has to be on real volume
@@ -184,7 +187,167 @@ def bedrock_signal(bars: dict, i: int) -> dict | None:
     }
 
 
-DETECTORS = {"bedrock": bedrock_signal}
+# ── ANCHOR — the same floor, bought AT it instead of after it ────────────────
+#
+# BEDROCK entered on a close out of the base that formed on the floor. Measured,
+# that entry sat a MEDIAN 13.5% ABOVE the floor, and the stop still went under
+# the floor — so risk was 12.3% of entry against a 2.2% daily ATR. Five and a
+# half ATR of stop, on an engine whose whole premise was a small one.
+#
+# The stop rule was never the problem. The ENTRY rule was: by the time price
+# closes above a 40-bar high it has already made the move the stop is sized to
+# survive. Buying the test of the floor instead puts entry within a few percent
+# of the stop, which is what "at the lows with a small stop" actually means.
+#
+# The risk this takes on, stated: buying a floor while price is still ON it is
+# buying something that is still falling. BEDROCK at least waited for proof of
+# a turn. ANCHOR waits only for a REVERSAL BAR — a session that traded into the
+# floor zone and closed in the top third of its own range, which is the
+# earliest evidence that the sellers were met. That is a weaker signal bought
+# at a better price, and which of those wins is exactly what the backtest is
+# for. It is not assumed.
+
+ENTRY_BAND      = 0.04    # entry must be within this of the floor
+STOP_UNDER      = 0.02    # the stop sits this far under the floor
+CLOSE_STRENGTH  = 0.60    # close must be this far up the bar's own range
+RSI_MAX         = 45      # it should still be beaten down, not already recovered
+ANCHOR_VOL_MULT = 1.0     # not a breakout, so volume only has to be normal
+
+
+def anchor_signal(bars: dict, i: int) -> dict | None:
+    """A reversal bar on a floor that has held three times, bought at the floor.
+
+    Sees bars[:i+1] and nothing after i.
+    """
+    h, l, c, v = bars["high"], bars["low"], bars["close"], bars["volume"]
+    a, r = bars["atr14"], bars["rsi14"]
+    if i < LOOKBACK + 10:
+        return None
+    if not (np.isfinite(a[i]) and a[i] > 0 and np.isfinite(r[i])):
+        return None
+
+    ok, turn = _liquid(c, v, i, window=20)
+    if not ok:
+        return None
+
+    f = floor_of(l, i)
+    if not f:
+        return None
+    lvl, touches, last_touch = f
+    if touches < MIN_TOUCHES:
+        return None
+
+    entry = float(c[i])
+    # ── AT the floor, not above it ───────────────────────────────────────────
+    if not (0 <= (entry - lvl) / lvl <= ENTRY_BAND):
+        return None
+    # ── this bar has to have gone INTO the floor zone and come back ──────────
+    if l[i] > lvl * (1 + TOUCH_TOL):
+        return None
+    rng = float(h[i] - l[i])
+    if rng <= 0:
+        return None
+    if (entry - float(l[i])) / rng < CLOSE_STRENGTH:
+        return None                         # closed weak: no reversal bar
+    if c[i] <= c[i - 1]:
+        return None                         # not an up close
+    if r[i] > RSI_MAX:
+        return None                         # already recovered; not a bottom
+    if v[i] < ANCHOR_VOL_MULT * float(np.mean(v[max(0, i - 20):i])):
+        return None
+
+    stop = lvl * (1 - STOP_UNDER)
+    risk = entry - stop
+    if risk <= 0:
+        return None
+    # A stop inside one ATR is inside the noise — the fault this repo found in
+    # breakout at 0.29 ATR (90.9% stop-outs) and ohl at 0.78 ATR (91.7%). A
+    # small stop is the POINT here, so rather than widening it, a setup whose
+    # floor sits inside the day's own range is simply not taken.
+    if risk < float(a[i]):
+        return None
+    if risk / entry > 0.10:
+        return None
+
+    return {
+        "engine": "anchor", "i": i,
+        "entry": round(entry, 2), "sl": round(stop, 2),
+        "target1": round(entry + TARGET_R[0] * risk, 2),
+        "target2": round(entry + TARGET_R[1] * risk, 2),
+        "target3": round(entry + TARGET_R[2] * risk, 2),
+        "rr": TARGET_R[0],
+        "floor": round(lvl, 2), "touches": int(touches),
+        "above_floor_pct": round((entry - lvl) / lvl * 100, 2),
+        "risk_pct": round(risk / entry * 100, 2),
+        "risk_atr": round(risk / float(a[i]), 2),
+        "rsi": round(float(r[i]), 1),
+        "close_strength": round((entry - float(l[i])) / rng, 2),
+        "turnover_cr": round(turn, 2),
+    }
+
+
+DETECTORS = {"bedrock": bedrock_signal, "anchor": anchor_signal}
+
+# ── ANCHOR: THE ENTRY FIX WORKED. THE EDGE STILL IS NOT THERE ────────────────
+#
+# 192 names, 3y daily, walk-forward, entry at the next bar's OPEN, stop before
+# target, unresolved excluded.
+#
+# WHAT THE REBUILD ACTUALLY FIXED — this part is not ambiguous:
+#
+#                         BEDROCK        ANCHOR
+#   median stop            12.3%          5.1%   (1.92x ATR)
+#   entry above the floor  13.5%          3.2%
+#   best move reached 2.5R  0.0%         25.0%
+#
+# BEDROCK entered on a close out of the base, by which point price had left the
+# floor, and then put the stop under the floor — so risk was the whole distance
+# travelled since the bounce. Buying the reversal bar ON the floor gives the
+# small stop the idea always needed. That is a real correction to a real
+# mistake, and it is why the reach profile changed so much.
+#
+# WHAT IT DID NOT FIX. How many times the floor must have held, all reported:
+#
+#   touches   n    exp        t      win      95% CI
+#      2     77   +0.038R   +0.22   31.2%   [-0.303, +0.380]
+#      3     36   -0.081R   -0.32   25.0%   [-0.579, +0.416]
+#      4     15   -0.003R   -0.01   26.7%   [-0.803, +0.797]
+#      5      8   -0.562R   -1.29   12.5%   [-1.420, +0.295]
+#
+# Every interval contains zero. The best cell is +0.038R at t=+0.22, and it is
+# the best of FOUR tried — at that count it is what chance looks like.
+#
+# MIN_TOUCHES is set to 2 for a reason independent of that ranking: it has
+# twice the sample of any other value. And the ordering refutes the assumption
+# the engine was built on — MORE tests of a floor measured WORSE, not better.
+# A level that keeps being hit is a level under constant pressure, not one with
+# buyers stacked under it.
+#
+# AND THE MEGA TARGETS ARE MEASURABLY WRONG. Target sweep at 3 touches:
+#
+#   T=1.6R  n=38  -0.206R  t=-1.07  win 28.9%
+#   T=2.5R  n=36  -0.081R  t=-0.32  win 25.0%
+#   T=3.3R  n=35  -0.395R  t=-1.73  win 14.3%
+#   T=5.0R  n=35  -0.482R  t=-2.14  win 11.4%   <- significantly negative
+#
+# Stretching for the big number is the one result here that clears significance,
+# and it clears it in the wrong direction. 5R was reached by 0% of trades.
+#
+# Break-even at a 2.5R target needs a 28.6% win rate. The best configuration
+# managed 31.2% and still only reached +0.038R, which is how thin the margin is.
+#
+# STATUS: RESEARCH, not REJECTED. Unlike BEDROCK — where all six cells were at
+# or below zero and the first rung was reached one time in eight — this sits on
+# zero with a wide interval and a target that is genuinely reached a quarter of
+# the time. That is not an edge. It is also not the same as being refuted.
+ANCHOR_BACKTEST = {
+    "names": 192, "window": "3y daily", "basis": "entry next bar open, T2 2.5R, stop first",
+    "n": 77, "exp": 0.038, "t": 0.22, "win": 31.2, "ci_lo": -0.303, "ci_hi": 0.380,
+    "median_stop_pct": 5.1, "median_stop_atr": 1.92, "median_above_floor_pct": 3.2,
+    "reach_2_5R_pct": 25.0, "breakeven_win_pct": 28.6,
+    "touches_swept": [2, 3, 4, 5], "targets_swept": [1.6, 2.5, 3.3, 5.0],
+    "note": "more floor tests measured worse, not better; a 5R target is significantly negative",
+}
 
 # ── THE MEASUREMENT: IT DOES NOT WORK, AND THE TARGETS ARE NOT THERE ─────────
 #
@@ -227,7 +390,7 @@ DETECTORS = {"bedrock": bedrock_signal}
 # So this engine is NOT published, NOT scanned, and NOT on the site. It is kept
 # because the next person to have this idea — including me — should find the
 # measurement before rebuilding it.
-ENGINE_STATUS = {"bedrock": "REJECTED"}
+ENGINE_STATUS = {"bedrock": "REJECTED", "anchor": "RESEARCH"}
 
 BACKTEST = {
     "verdict": "rejected on measurement",
