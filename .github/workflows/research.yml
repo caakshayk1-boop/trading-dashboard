@@ -15,7 +15,7 @@
 #
 # The earlier hourly cron was left over from the hourly build and would have
 # run seven times a day to re-answer a question that changes twice.
-name: buoy-scan
+name: research-scan
 on:
   schedule:
     - cron: "50 7 * * 1-5"
@@ -33,12 +33,12 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install numpy
-      - name: Scan the 750 for a 200-DMA reclaim
-        run: python3 scan_buoy.py
+      - name: Scan the 750 with every research engine
+        run: python3 scan_research.py
       - name: Commit the scan
         run: |
           git config user.name  "buoy-scan"
           git config user.email "actions@github.com"
-          git add docs/buoy.json
-          git diff --staged --quiet || git commit -m "chore: buoy scan $(date -u +%F\ %H:%M)"
+          git add docs/research.json docs/alerts_log.json docs/buoy.json
+          git diff --staged --quiet || git commit -m "chore: research scan $(date -u +%F\ %H:%M)"
           git push
