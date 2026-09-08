@@ -1,0 +1,36 @@
+# BUOY — the forward scan for an UNPROVEN engine.
+#
+# It exists to grow a sample, not to publish trades. BUOY measured +0.074R at
+# t=+0.23 over 18 backtested signals, and +0.065R at t=+0.77 over 217 without
+# its divergence filter; neither is distinguishable from zero. Running it in
+# the open for a week is how that gets settled one way or the other.
+#
+# Hourly through the Indian session, so a reclaim is caught on the hour it
+# happens rather than at the next daily close — which is the entire point of
+# the rule. 03:45–10:15 UTC is 09:15–15:45 IST.
+name: buoy-scan
+on:
+  schedule:
+    - cron: "20 4,5,6,7,8,9,10 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install numpy
+      - name: Scan the 750 for a 200-DMA reclaim
+        run: python3 scan_buoy.py
+      - name: Commit the scan
+        run: |
+          git config user.name  "buoy-scan"
+          git config user.email "actions@github.com"
+          git add docs/buoy.json
+          git diff --staged --quiet || git commit -m "chore: buoy scan $(date -u +%F\ %H:%M)"
+          git push

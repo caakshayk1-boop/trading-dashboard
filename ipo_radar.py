@@ -1104,7 +1104,24 @@ def build(listing_perf=None):
     filled = _measure_listings(listed)
     if filled:
         log.info(f"measured {filled} listings Yahoo could price but the screen could not")
-    listed.sort(key=lambda x: (not x["measured"], x["listing_date"] or ""), reverse=False)
+    # ── NEWEST FIRST, BECAUSE A DOWNSTREAM CONSUMER TRIMS THIS LIST ─────────
+    #
+    # generate.py:1156 writes `recent_listed[:60]` into docs/ipo.json to keep
+    # the payload down, while counts.listed_12m keeps reporting the length of
+    # the FULL list. The sort here decided which 60 survived — and it sorted
+    # listing_date ASCENDING, so the trim kept the sixty OLDEST listings and
+    # threw away the hundred-odd newest.
+    #
+    # Measured on the 2026-09-07 build: 165 listings in the window, 60 shipped,
+    # every one of them between 2024-09-16 and 2025-08-14. The newest listing
+    # the site could show was 390 days old, on a table headed "how recent
+    # listings have done". Nothing was wrong with the rows; they were the
+    # wrong end of the list.
+    #
+    # Measured rows still come first — a trim should prefer rows that carry a
+    # price — and within them the order is now newest first. Both sorts are
+    # stable, so the second preserves the first's ordering inside each group.
+    listed.sort(key=lambda x: (x["listing_date"] or ""), reverse=True)
     listed.sort(key=lambda x: (not x["measured"],))
     recent = listed
 
