@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Walk-forward backtest for BUOY, on hourly bars.
+Walk-forward backtest for BUOY, on 4-HOUR candles resampled from hourly.
 
 HOW THIS AVOIDS FLATTERING ITSELF
 · No lookahead. The detector sees bars[:i+1]. The 200-day average carried onto
@@ -19,22 +19,20 @@ import json, math, sys, statistics as st
 import numpy as np
 
 sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
-from signals.buoy import prepare, attach_dma, buoy_signal
+from signals.buoy import prepare, buoy_signal, to_4h
 
 SCR = '/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/4387587e-0410-48f6-b6ac-50dea011672c/scratchpad'
 HOURS = f'{SCR}/barsH.json'
 DAYS  = f'{SCR}/barsD3y.json'
-MAX_HOLD_H = 240          # ~40 sessions of 6 hourly bars
+MAX_HOLD_B = 60           # 4H candles; ~30 sessions at two a day
 
 
-def replay(hrows, drows, max_hold=MAX_HOLD_H):
-    ts = np.array([r[0] for r in hrows])
-    o, h, l, c, v = (np.array([r[k] for r in hrows], dtype=float) for k in (1, 2, 3, 4, 5))
-    dts = np.array([r[0] for r in drows])
-    dc  = np.array([r[4] for r in drows], dtype=float)
-    b = attach_dma(prepare(o, h, l, c, v, dts, dc), ts)
+def replay(hrows, drows=None, max_hold=MAX_HOLD_B):
+    rows4 = to_4h(hrows)                      # hourly in, 4H out
+    o, h, l, c, v = (np.array([r[k] for r in rows4], dtype=float) for k in (1, 2, 3, 4, 5))
+    b = prepare(o, h, l, c, v)
 
-    out, i, n = [], 300, len(c)
+    out, i, n = [], 230, len(c)
     while i < n - 2:
         s = buoy_signal(b, i)
         if not s:
@@ -109,7 +107,7 @@ def main():
               "rule is strict enough that a two-year hourly window over "
               f"{len(syms)} names produced nothing.")
         return
-    print(f"\nBUOY — hourly 200-DMA reclaim + RSI divergence")
+    print(f"\nBUOY — 4H 200-period MA reclaim + RSI divergence")
     print(f"  n        {a['n']}")
     print(f"  exp      {a['exp']:+.3f}R")
     print(f"  t        {a['t']:+.2f}")
@@ -120,8 +118,8 @@ def main():
     print(f"  total    {a['total']:+.1f}R over {len(per)} names")
     if meta:
         print(f"  median stop {st.median(m['risk_pct'] for m in meta):.1f}% of entry")
-        print(f"  median hold {st.median(m['hold'] for m in meta):.0f} hours "
-              f"(~{st.median(m['hold'] for m in meta)/6:.0f} sessions)")
+        print(f"  median hold {st.median(m['hold'] for m in meta):.0f} candles "
+              f"(~{st.median(m['hold'] for m in meta)/2:.0f} sessions)")
         print(f"  median fall from 52w high at entry "
               f"{st.median(m['from_high'] for m in meta):.1f}%")
     print("\nSurvivorship bias: the universe is today's screen, so names that "

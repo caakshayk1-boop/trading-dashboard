@@ -38,9 +38,10 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.basebreak import rsi, atr, swing_lows, _liquid, FROM_HIGH_MIN, ATR_FLOOR_MULT
-from signals.buoy import (BACKTEST, ENGINE_STATUS, BELOW_MIN_HOURS, RECLAIM_MAX_ATR,
-                          VOL_MULT, STOP_ATR_MULT, TARGET_R,
-                          DIV_MIN_GAP_H, DIV_MAX_GAP_H, RSI_DIV_MIN_LIFT)
+from signals.buoy import (BACKTEST, ENGINE_STATUS, BELOW_MIN_BARS, RECLAIM_MAX_ATR,
+                          VOL_MULT, STOP_ATR_MULT, TARGET_R, MA_N,
+                          DIV_MIN_GAP_B, DIV_MAX_GAP_B, RSI_DIV_MIN_LIFT,
+                          to_4h, prepare, buoy_signal)
 
 UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"}
@@ -50,7 +51,7 @@ OUT = os.path.join(HERE, "docs", "buoy.json")
 TOP_N = 10
 # How far back a reclaim still counts as current for a WATCHLIST. 60 hourly
 # bars is about ten trading sessions.
-LOOKBACK_H = 240   # ~40 sessions
+LOOKBACK_B = 60    # 4H candles; ~30 sessions
 
 # Three workers over Yahoo's two hosts. FOUR-way concurrency has already earned
 # this address a ten-minute 429; three, alternating query1/query2, has not.
@@ -89,7 +90,7 @@ def detect(sym, rows, dma_val):
     if c[n - 1] <= dma:
         return None                     # invalidated: back under the line
     hit = None
-    for i in range(n - 1, max(300, n - 1 - LOOKBACK_H), -1):
+    for i in range(n - 1, max(300, n - 1 - LOOKBACK_B), -1):
         if np.isfinite(a[i]) and np.isfinite(r_[i]) and a[i] > 0 \
            and c[i] > dma and c[i - 1] <= dma:
             hit = i
@@ -107,7 +108,7 @@ def detect(sym, rows, dma_val):
         return None
     # The average is one number here, not a series, so "was below" is measured
     # against that same number rather than against its own history.
-    if not np.all(c[i - BELOW_MIN_HOURS:i] <= dma):
+    if not np.all(c[i - BELOW_MIN_BARS:i] <= dma):
         return None
     if (c[i] - dma) > RECLAIM_MAX_ATR * a[i]:
         return None
@@ -117,7 +118,7 @@ def detect(sym, rows, dma_val):
     if len(piv) < 2:
         return None
     lo2 = piv[-1]
-    cand = [p for p in piv[:-1] if DIV_MIN_GAP_H <= (lo2 - p) <= DIV_MAX_GAP_H]
+    cand = [p for p in piv[:-1] if DIV_MIN_GAP_B <= (lo2 - p) <= DIV_MAX_GAP_B]
     if not cand:
         return None
     lo1 = cand[-1]
@@ -142,7 +143,7 @@ def detect(sym, rows, dma_val):
             "rsi_lift": round(float(r_[lo2] - r_[lo1]), 1),
             "turnover_cr": round(turn, 2), "struct_low": round(struct, 2),
             "risk_pct": round(risk / entry * 100, 2),
-            "hours_ago": int(n - 1 - i), "last": round(float(c[n - 1]), 2),
+            "bars_ago": int(n - 1 - i), "last": round(float(c[n - 1]), 2),
             "since_pct": round((c[n - 1] - entry) / entry * 100, 2),
             "at": datetime.fromtimestamp(int(ts[i]), timezone.utc).isoformat()}
 
@@ -150,34 +151,33 @@ def detect(sym, rows, dma_val):
 
 def _reclaim_only(b, i):
     """BUOY without the RSI-divergence filter — the variant that measured
-    +0.065R at t=+0.77 over 217 trades, against the strict rule's +0.074R at
-    t=+0.23 over 18. Same gates otherwise; the stop falls back to the lowest
-    low of the last 60 bars because there is no divergence low to sit under."""
+    +0.010R at t=+0.16 over 348 trades, against the strict rule's +0.012R at
+    t=+0.06 over 36. Same gates otherwise; the stop falls back to the lowest
+    low of the last 30 candles because there is no divergence low to sit under."""
     import numpy as _np
     h, l, c, v = b["high"], b["low"], b["close"], b["volume"]
-    r_, a, dma = b["rsi14"], b["atr14"], b["dma"]
-    if i < 300 or dma is None:
+    r_, a, ma = b["rsi14"], b["atr14"], b["ma"]
+    if i < MA_N + 30:
         return None
-    if not (_np.isfinite(dma[i]) and _np.isfinite(a[i]) and _np.isfinite(r_[i]) and a[i] > 0):
+    if not (_np.isfinite(ma[i]) and _np.isfinite(a[i]) and _np.isfinite(r_[i]) and a[i] > 0):
         return None
     ok, turn = _liquid(c, v, i, window=20)
     if not ok:
         return None
-    look = c[max(0, i - 1600):i + 1]
-    hi = float(look.max())
+    hi = float(c[max(0, i - 500):i + 1].max())
     if not hi or (hi - c[i]) / hi < FROM_HIGH_MIN:
         return None
-    if not (c[i] > dma[i] and c[i - 1] <= dma[i - 1]):
+    if not (c[i] > ma[i] and c[i - 1] <= ma[i - 1]):
         return None
-    prev, pd = c[i - BELOW_MIN_HOURS:i], dma[i - BELOW_MIN_HOURS:i]
-    if len(prev) < BELOW_MIN_HOURS or not _np.all(_np.isfinite(pd)) or not _np.all(prev <= pd):
+    prev, pm = c[i - BELOW_MIN_BARS:i], ma[i - BELOW_MIN_BARS:i]
+    if len(prev) < BELOW_MIN_BARS or not _np.all(_np.isfinite(pm)) or not _np.all(prev <= pm):
         return None
-    if (c[i] - dma[i]) > RECLAIM_MAX_ATR * a[i]:
+    if (c[i] - ma[i]) > RECLAIM_MAX_ATR * a[i]:
         return None
     if v[i] < VOL_MULT * float(_np.mean(v[max(0, i - 20):i])):
         return None
     entry = float(c[i])
-    struct = float(l[max(0, i - 60):i + 1].min())
+    struct = float(l[max(0, i - 30):i + 1].min())
     stop = min(struct, entry - ATR_FLOOR_MULT * STOP_ATR_MULT * float(a[i]))
     risk = entry - stop
     if risk <= 0 or risk / entry > 0.25:
@@ -186,7 +186,7 @@ def _reclaim_only(b, i):
             "target1": round(entry + TARGET_R[0] * risk, 2),
             "target2": round(entry + TARGET_R[1] * risk, 2),
             "target3": round(entry + TARGET_R[2] * risk, 2),
-            "rr": TARGET_R[0], "dma": round(float(dma[i]), 2),
+            "rr": TARGET_R[0], "ma": round(float(ma[i]), 2),
             "from_high_pct": round((hi - entry) / hi * 100, 2),
             "rsi": round(float(r_[i]), 1), "rsi_lift": None,
             "turnover_cr": round(turn, 2), "struct_low": round(struct, 2),
@@ -194,81 +194,53 @@ def _reclaim_only(b, i):
 
 
 def from_cache():
-    """Run the detector over bars already on disk. No network at all.
+    """Run the detector over hourly bars already on disk, resampled to 4H.
+    No network at all.
 
     WHY THIS MODE EXISTS: Yahoo rate-limits by IP, and this address earned a
     429 on every host after a long scan. A throttle is not a reason to publish
-    nothing — the harvested hourly bars are real bars, and running the rule
-    over them produces a real, if narrower, answer. The feed says how many
-    names it covered so the coverage is never mistaken for the full universe.
-
-    It also computes the 200-day average from the harvested DAILY bars rather
-    than the screen's stamped one, so in this mode the average is exact.
+    nothing — the harvested bars are real bars, and running the rule over them
+    produces a real, if narrower, answer. The feed says how many names it
+    covered so the coverage is never mistaken for the full universe.
     """
     SCR = ('/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/'
            '4387587e-0410-48f6-b6ac-50dea011672c/scratchpad')
     H = json.load(open(f"{SCR}/barsH.json"))
-    D = json.load(open(f"{SCR}/barsD3y.json"))
-    from signals.buoy import prepare, attach_dma, buoy_signal
-    syms = [s for s in H if s in D]
     hits = []
-    for s in syms:
-        hr, dr = H[s], D[s]
-        ts = np.array([r[0] for r in hr])
-        o, h, l, c, v = (np.array([r[i] for r in hr], dtype=float) for i in (1, 2, 3, 4, 5))
-        b = attach_dma(prepare(o, h, l, c, v,
-                               np.array([r[0] for r in dr]),
-                               np.array([r[4] for r in dr], dtype=float)), ts)
-        # ── A WATCHLIST IS NOT AN ALERT ─────────────────────────────────────
-        # Scanning only the newest bar asks "did this cross in the last
-        # sixty minutes", and the answer is almost always no: the rule fired
-        # 19 times in two years across 188 names. A top-ten list built that
-        # way is empty essentially every hour, which is truthful and useless.
-        #
-        # So the scan looks back over LOOKBACK_H hours for the cross and keeps
-        # the name only if it is STILL above the line — the setup has not been
-        # invalidated — and records how long ago it happened. The rule itself
-        # is untouched: the backtest still enters at the cross, and the entry
-        # and stop published here are the ones from that bar.
-        # ── TWO LANES, BOTH PUBLISHED, EACH WITH ITS OWN RECORD ─────────────
-        # STRICT is the rule as asked for: reclaim + RSI divergence. Measured
-        # over two years on these same names it fires NINE TIMES A YEAR — the
-        # most recent before this was written was SBIN, 194 hourly bars back.
-        # A top-ten list refreshed hourly off that rule is empty essentially
-        # always, which is honest and of no use to anyone.
-        #
-        # RECLAIM is the same rule without the divergence filter. It fires
-        # about twelve times as often (217 vs 18 over the same window) and
-        # measured BETTER, not worse: +0.065R at t=+0.77 against +0.074R at
-        # t=+0.23. Neither is significant, and that is exactly why the filter
-        # cannot be defended as the thing keeping quality high — it is not
-        # buying anything measurable for the 92% of signals it discards.
-        #
-        # So both are published, each row carries its lane, and the page shows
-        # what each lane measured. Dropping the divergence quietly would be
-        # overriding the rule that was asked for; showing only the strict lane
-        # would be shipping an empty page and calling it discipline.
+    for s, hr in H.items():
+        rows4 = to_4h(hr)
+        if len(rows4) < MA_N + 40:
+            continue
+        ts = np.array([r[0] for r in rows4])
+        o, h, l, c, v = (np.array([r[i] for r in rows4], dtype=float) for i in (1, 2, 3, 4, 5))
+        b = prepare(o, h, l, c, v)
         n = len(c)
+        # ── A WATCHLIST IS NOT AN ALERT ─────────────────────────────────────
+        # Scanning only the newest candle asks "did this cross in the last four
+        # hours", and the answer is almost always no: the strict rule fired 36
+        # times in two years across 188 names. A top-ten list built that way is
+        # blank essentially every scan, which is truthful and useless. So it
+        # looks back LOOKBACK_B candles and keeps the name only if it is STILL
+        # above the line. The rule is untouched — the entry and stop published
+        # are the ones from the candle that crossed.
         for lane in ("strict", "reclaim"):
             found = at_i = None
-            for k in range(n - 1, max(300, n - 1 - LOOKBACK_H), -1):
+            for k in range(n - 1, max(MA_N + 40, n - 1 - LOOKBACK_B), -1):
                 sg = buoy_signal(b, k) if lane == "strict" else _reclaim_only(b, k)
                 if sg:
                     found, at_i = sg, k
                     break
-            if not found:
-                continue
-            if not (c[-1] > b["dma"][-1]):          # invalidated: back under the line
+            if not found or not (c[-1] > b["ma"][-1]):
                 continue
             found["symbol"] = s
             found["lane"] = lane
             found["at"] = datetime.fromtimestamp(int(ts[at_i]), timezone.utc).isoformat()
-            found["hours_ago"] = int(n - 1 - at_i)
+            found["bars_ago"] = int(n - 1 - at_i)
             found["last"] = round(float(c[-1]), 2)
             found["since_pct"] = round((c[-1] - found["entry"]) / found["entry"] * 100, 2)
             hits.append(found)
             break                                   # strict wins if both fire
-    return hits, len(syms)
+    return hits, len(H)
 
 
 def main():
@@ -296,7 +268,7 @@ def main():
                                  "rate-limits by IP and had throttled this address, and a "
                                  "narrower real answer beats a wider invented one. The "
                                  "scheduled job runs the full universe."),
-               "dma_as_of": "computed from daily bars in this run",
+               "timeframe": "4H candles (09:15-13:15, 13:15-15:30 IST)",
                "took_secs": 0, "top": top, "backtest": BACKTEST,
                "history": history[-60:],
                "disclaimer": ("BUOY is RESEARCH. It measured +0.074R at t=+0.23 over 18 "
