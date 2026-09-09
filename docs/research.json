@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-09T15:20:53+00:00",
+ "generated_at": "2026-09-09T15:40:59+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "This run covered the names whose bars were already harvested. Yahoo rate-limits by IP and had throttled this address; the scheduled job runs the full 750.",
+ "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-09T15:38:42+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -321,8 +321,8 @@
      "since_pct": -1.77
     }
    ],
-   "new_alerts": 5,
-   "already_logged": 5
+   "new_alerts": 0,
+   "already_logged": 10
   },
   {
    "key": "bedrock",
