@@ -3,9 +3,9 @@
 scan_buoy.py — run BUOY over the 750-name screen and write the top 10.
 
 WHY THIS PUBLISHES A WATCHLIST AND NOT SIGNALS
-BUOY measured +0.074R at t=+0.23 over 18 backtested trades, and the rule
-without its divergence filter measured +0.065R at t=+0.77 over 217. Neither is
-distinguishable from zero, and this book does not give an engine capital until
+BUOY measures near zero on both of its lanes — see BACKTEST in signals/buoy.py,
+which is the ONE place those numbers live. Neither lane is distinguishable from
+zero, and this book does not give an engine capital until
 it has 30 closed trades at t>=2. So this writes a RANKED WATCHLIST with the
 levels attached, it does not file trades into the ledger, and every surface
 that renders it has to carry the sample size.
@@ -50,6 +50,31 @@ UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCREEN = os.path.expanduser("~/Workspace/Apps/Websites/signal/public/screen.json")
 OUT = os.path.join(HERE, "docs", "buoy.json")
+
+
+def _disclaimer() -> str:
+    """The sample sizes, READ from BACKTEST rather than typed beside it.
+
+    Both call sites used to spell out "+0.074R at t=+0.23 over 18 backtested
+    trades ... +0.065R at t=+0.77 over 217". Those are real numbers from an
+    earlier sweep, and BACKTEST has said n=35 / +0.002R and n=348 / +0.010R
+    since the production harness replaced it. So the payload published one
+    measurement in its `backtest` block and a different one, two keys later, in
+    the sentence explaining it.
+
+    Nobody saw it — docs/buoy.json has no reader, /buoy redirects to /research
+    — which is exactly why it was free to drift. A number restated by hand is
+    a number that will disagree with its source eventually; the only question
+    is whether anyone is looking when it does.
+    """
+    b = BACKTEST
+    return (
+        f"BUOY is RESEARCH. It measured {b['exp']:+.3f}R at t={b['t']:+.2f} over "
+        f"{b['n']} backtested trades; without its RSI-divergence filter, "
+        f"{b['exp_no_div']:+.3f}R at t={b['t_no_div']:+.2f} over {b['n_no_div']}. "
+        f"Neither is distinguishable from zero. This is a watchlist being run "
+        f"forward to grow a sample — it is not a signal and carries no capital."
+    )
 TOP_N = 10
 # How far back a reclaim still counts as current for a WATCHLIST. 60 hourly
 # bars is about ten trading sessions.
@@ -269,11 +294,7 @@ def main():
                "timeframe": "4H candles (09:15-13:15, 13:15-15:30 IST)",
                "took_secs": 0, "top": top, "backtest": BACKTEST,
                "history": history[-60:],
-               "disclaimer": ("BUOY is RESEARCH. It measured +0.074R at t=+0.23 over 18 "
-                              "backtested trades; without its RSI-divergence filter, +0.065R "
-                              "at t=+0.77 over 217. Neither is distinguishable from zero. "
-                              "This is a watchlist being run forward to grow a sample — it "
-                              "is not a signal and carries no capital.")}
+               "disclaimer": _disclaimer()}
         os.makedirs(os.path.dirname(OUT), exist_ok=True)
         json.dump(out, open(OUT, "w"), indent=1)
         # The DURABLE record. buoy.json is a snapshot and is overwritten every
@@ -375,11 +396,7 @@ def main():
                         "exactly on the line."),
            "took_secs": round(time.time() - t0, 1),
            "top": top, "backtest": BACKTEST, "history": history,
-           "disclaimer": ("BUOY is RESEARCH. It measured +0.074R at t=+0.23 over 18 "
-                          "backtested trades; without its RSI-divergence filter, +0.065R "
-                          "at t=+0.77 over 217. Neither is distinguishable from zero. This "
-                          "is a watchlist being run forward to grow a sample — it is not a "
-                          "signal and carries no capital.")}
+           "disclaimer": _disclaimer()}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump(out, open(OUT, "w"), indent=1)
     added, dup = alert_log.record(hits, "buoy")
