@@ -1303,10 +1303,20 @@ def generate() -> None:
             json.dumps(_table, default=str, separators=(",", ":")), encoding="utf-8")
         (out_dir / "screen-detail.json").write_text(
             json.dumps(_detail, default=str, separators=(",", ":")), encoding="utf-8")
+        # A THIRD projection for signal.askakshay.com, whose light routes read
+        # about 70 of the 101 fields and none of the per-company prose. Ten
+        # routes there fetch the table; this is 31% smaller gzipped and is not
+        # recomputed from anything — it is this same table with fields removed.
+        # See stock_screen.lite_payload.
+        (out_dir / "screen-lite.json").write_text(
+            json.dumps(_ss.lite_payload(_table), default=str, separators=(",", ":")),
+            encoding="utf-8")
         _sz = (out_dir / "screen.json").stat().st_size / 1024
         _dz = (out_dir / "screen-detail.json").stat().st_size / 1024
+        _lz = (out_dir / "screen-lite.json").stat().st_size / 1024
         print(f"[generate] ✅ screen.json ({len(_table['rows'])} companies, {_sz:.0f}KB) "
-              f"+ screen-detail.json ({_dz:.0f}KB, fetched only when a sheet opens)")
+              f"+ screen-detail.json ({_dz:.0f}KB, fetched only when a sheet opens) "
+              f"+ screen-lite.json ({_lz:.0f}KB, the signal site's table)")
     else:
         # Leave any previous file in place. A build with an empty cache should
         # not delete a working screen — the section hides itself via
