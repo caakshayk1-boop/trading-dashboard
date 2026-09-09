@@ -584,6 +584,80 @@ for label, sym, eng, days, bar, heading in _CASES:
     check(f"{label} has no blank-run or trailing gap",
           "\n\n\n" not in msg and not msg.endswith("\n"), repr(msg[-30:]))
 
+# ── The frame a signal is graded on ──────────────────────────────────────────
+# These three shapes all reached production and all failed SILENTLY, because
+# the loop body sits inside `except Exception: continue`. The download now goes
+# through scanner._own_frame; these check that it actually helps.
+
+# A frame with exactly ONE usable bar. `df["Close"].squeeze()` returns a scalar
+# there, so `.iloc[-1]` raised AttributeError and the position was never graded
+# — no alert, no ledger row, one line in a log.
+_clear_open(); _FEED.clear()
+import pandas as _pd
+_one = _pd.DataFrame([(99.0, 100.0, 94.0, 96.0)],
+                     index=_pd.DatetimeIndex([_TODAY.replace(tzinfo=None)]),
+                     columns=["Open", "High", "Low", "Close"])
+_FEED["TST1B"] = _one
+_file("TST1B", "ledge", 3, meta=LEDGE_META)
+_m = [m for m in _run_alerts() if "TST1B" in m]
+check("a one-bar frame is still graded", len(_m) == 1 and "SL HIT" in _m[0],
+      _m[0][:80] if _m else "no message — the position was skipped")
+
+# A partial last bar, on the TIME-STOP path — the one branch that books
+# `last_close` itself as the exit price, the P&L and the R.
+#
+# NaN sails through every comparison without raising (`nan <= sl` is False), so
+# nothing upstream rejects it, and `round(nan, 2)` went into the ledger as a
+# result. The last daily bar being partial is routine, not exotic. The bar must
+# be dropped and the one before it graded.
+_clear_open(); _FEED.clear()
+_nanbar = _bars((101.0, 102.0, 100.0, 101.0))
+_nanbar.loc[_nanbar.index[-1], "Close"] = float("nan")
+_FEED["TSTNA"] = _nanbar
+_file("TSTNA", "breakout", 40)          # 40d against a 480h horizon → EXPIRED
+_m = [m for m in _run_alerts() if "TSTNA" in m]
+check("a partial last bar still produces a time stop", len(_m) == 1,
+      f"{len(_m)} message(s)")
+check("the time stop quotes a real price, not nan",
+      _m and "nan" not in _m[0].lower(), _m[0] if _m else "no message")
+with tracker._conn() as _c:
+    _row = _c.execute(
+        "SELECT status, exit_price, pnl_pct, r_multiple FROM all_signals "
+        "WHERE symbol='TSTNA'").fetchone()
+check("the time stop was actually booked", _row and _row[0] == "EXPIRED", _row)
+# NaN survives into SQLite as either a NaN float or a NULL, depending on the
+# driver — neither is a result, so both fail this.
+_nums = list(_row[1:]) if _row else []
+check("nothing NaN or NULL was booked as a result",
+      _nums and all(v is not None and v == v for v in _nums), _row)
+
+# A frame carrying somebody else's ticker. _own_frame returns None rather than
+# picking a neighbour's column — the failure that quoted BPCL at 176.70 when
+# BPCL was 317.00, and gave two other companies that same price.
+_clear_open(); _FEED.clear()
+_wrong = _pd.DataFrame(
+    [(99.0, 100.0, 94.0, 96.0)] * 3,
+    index=_pd.DatetimeIndex([_TODAY.replace(tzinfo=None) - _td(days=n)
+                             for n in (2, 1, 0)]),
+    columns=_pd.MultiIndex.from_product(
+        [["Open", "High", "Low", "Close"], ["SOMEONEELSE.NS"]]))
+_FEED["TSTXX"] = _wrong
+_file("TSTXX", "ledge", 3, meta=LEDGE_META)
+_m = [m for m in _run_alerts() if "TSTXX" in m]
+check("another ticker's frame grades nothing rather than the wrong thing",
+      not _m, _m[0][:80] if _m else "")
+
+# The grading path must not squeeze. Squeeze is what made all three of the
+# above possible, and it reads as harmless.
+_src_alerts = open(os.path.join(REPO, "standalone_scan.py"), encoding="utf-8").read()
+_body = _src_alerts[_src_alerts.index("def run_price_alerts("):]
+_body = _body[:_body.index("\ndef ")]
+_code = "\n".join(l for l in _body.splitlines() if not l.lstrip().startswith("#"))
+check("the grading path no longer squeezes a frame", ".squeeze()" not in _code)
+check("the grading path resolves the ticker before reading it",
+      "_own_frame" in _code)
+
+
 # The two facts the old messages could not express.
 _clear_open(); _FEED.clear()
 _FEED["TSTRN"] = _bars((99, 100, 94, 96))

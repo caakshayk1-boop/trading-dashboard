@@ -595,13 +595,45 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             # alone. min(x, None) is a TypeError in py3.
             period, interval = _bar_window(
                 tf, age_h if limit_h is None else min(age_h, limit_h))
-            tick = yf.download(to_yahoo(sym), period=period, interval=interval,
-                               progress=False, auto_adjust=True, timeout=8)
+            # ── The frame this signal is graded on ───────────────────────────
+            # Routed through scanner._own_frame, which exists because
+            # `df["Close"].squeeze()` published wrong numbers twice:
+            #
+            #   1. yfinance returns MultiIndex columns — ('Close', 'BPCL.NS') —
+            #      and .squeeze() picks a column rather than THE column.
+            #   2. The last daily bar is often partial, so its Close is NaN.
+            #      Every comparison below then answers False without raising:
+            #      `nan <= sl` is False, so no stop is seen, and on the time
+            #      stop `round(nan, 2)` is written to the ledger as the exit
+            #      price, the P&L and the R.
+            #
+            # And .squeeze() had a third failure all its own: on a frame with
+            # exactly ONE row it returns a scalar, so `.iloc[-1]` raises
+            # AttributeError — caught by this loop's own `except: continue`,
+            # which means that position is silently never graded at all. A
+            # one-row frame is not exotic once NaN bars are dropped.
+            #
+            # _own_frame resolves the ticker, drops any bar with a NaN in
+            # OHLC, and returns None rather than a neighbour's column. Its
+            # output has flat columns, so nothing below squeezes any more.
+            from scanner import _own_frame
+            yt  = to_yahoo(sym)
+            raw = yf.download(yt, period=period, interval=interval,
+                              progress=False, auto_adjust=True, timeout=8)
+            tick = _own_frame(raw, yt)
             if tick is None or tick.empty:
-                logging.debug(f"price_alerts {sym}: no data")
+                logging.debug(f"price_alerts {sym}: no usable bars")
                 continue
 
-            last_close = float(tick["Close"].squeeze().iloc[-1])
+            last_close = float(tick["Close"].iloc[-1])
+            if not math.isfinite(last_close):
+                # _own_frame drops NaN rows, so this should be unreachable.
+                # Kept because the cost of being wrong is a NaN written into
+                # the ledger as a booked result, and the cost of the check is
+                # one comparison.
+                logging.warning(f"price_alerts {sym}: last close is not a "
+                                f"number — skipped rather than booked")
+                continue
 
             # ── Time stop ────────────────────────────────────────────────────
             # Book the real R at the last close, exactly as backtest.py does.
@@ -643,8 +675,8 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             if win.empty:
                 continue
 
-            hi = float(win["High"].squeeze().max())
-            lo = float(win["Low"].squeeze().min())
+            hi = float(win["High"].max())
+            lo = float(win["Low"].min())
 
             if buy:
                 sl_hit  = lo <= sl
@@ -668,9 +700,9 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 # fourteen, and BALKRISIND was booked 14.29% through its stop
                 # at a price that never traded after the signal.
                 try:
-                    opens = win["Open"].squeeze()
-                    lows  = win["Low"].squeeze()
-                    highs = win["High"].squeeze()
+                    opens = win["Open"]
+                    lows  = win["Low"]
+                    highs = win["High"]
                     trig  = (lows <= sl) if buy else (highs >= sl)
                     gap_o = float(opens[trig].iloc[0])
                 except Exception:

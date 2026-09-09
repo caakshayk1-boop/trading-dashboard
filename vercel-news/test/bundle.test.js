@@ -43,3 +43,26 @@ test("the web client still accepts a Turso libsql:// URL", async () => {
     createClient({ url: "libsql://example.turso.io", authToken: "x" }));
   assert.throws(() => createClient({ url: "file:local.db" }));
 });
+
+// ── The totals block must account for every row ──────────────────────────────
+//
+// `closed` is win|loss, so a time-stopped trade landed in none of the reported
+// totals: all - closed - open - cancelled was non-zero and the page said
+// nothing about the remainder. In the served ledger that remainder is real —
+// EXPIRED and TIME_STOP rows are booked with a price, a P&L and an R.
+test("stats totals leave no row unaccounted for", () => {
+  const src = readFileSync(join(API, "stats.js"), "utf8");
+  for (const k of ["closed:", "open,", "cancelled,", "expired,"]) {
+    assert.ok(src.includes(k), `totals is missing ${k}`);
+  }
+});
+
+test("the basis names what it excludes, not just what it includes", () => {
+  const src = readFileSync(join(API, "stats.js"), "utf8");
+  const basis = src.slice(src.indexOf("basis:"), src.indexOf("totals: {"));
+  // "closed signals only" was wrong: a time-stopped signal IS closed, and was
+  // excluded anyway. Whatever the wording, it has to name the exclusion.
+  assert.ok(/time-stopped/.test(basis), "the basis does not mention time stops");
+  assert.ok(!/closed signals only/.test(basis),
+    "the basis still claims to cover all closed signals");
+});

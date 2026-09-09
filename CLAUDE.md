@@ -120,6 +120,16 @@ and `test_brief_fit.py`):
   typed, not measured.
 - A stop-out after T1 was booked is a different sentence from one that never
   worked. So is a T2 that half the position missed.
+- Grading reads `scanner._own_frame`, never `df["Close"].squeeze()`. Squeeze
+  returns a SCALAR on a one-row frame, so `.iloc[-1]` raised inside the loop's
+  own `except: continue` and that position was never graded at all; and it does
+  not drop a partial last bar, whose NaN Close was booked into the ledger as an
+  EXPIRED trade's exit price, P&L and R — all three NULL.
+- `stats.js` totals must account for every row. `closed` is win|loss, so
+  time-stopped trades were in none of the four reported numbers and the
+  remainder was unexplained. They are OUT of expectancy on purpose — a time
+  stop's R is marked at the last close, not realised at an exit — and the
+  `basis` string now says that instead of claiming to cover "closed signals".
 
 ## Page structure
 `SECTION_MAP` order IS document order, and the nav is generated from it.
