@@ -77,12 +77,30 @@ jobs:
           node --check static/app.js
           npx --yes eslint@9 static/app.js
 
-      # Pure ladder/P&L logic for the position tracker — no Turso connection
-      # needed, _positions.js has zero external imports, so this runs without
-      # an npm install. Catches a broken 30%/50% milestone or a LONG/SHORT
-      # sign flip before it reaches the live book instead of after.
+      # Ladder/P&L logic for the position tracker, plus the bundle guard.
+      # Catches a broken 30%/50% milestone or a LONG/SHORT sign flip before it
+      # reaches the live book instead of after.
+      #
+      # THE INSTALL IS NOT OPTIONAL, AND THIS STEP RAN WITHOUT ONE.
+      #
+      # The comment here used to say "_positions.js has zero external imports,
+      # so this runs without an npm install", and that was true when it was
+      # written. test/bundle.test.js then added the one check that has to
+      # execute rather than read source — that @libsql/client/web still ACCEPTS
+      # a libsql:// URL — and it imports the package to do it.
+      #
+      # So this step began failing on `Cannot find package '@libsql/client'`,
+      # 92 of 93 passing, and it gates every step after it: generate.py,
+      # docs/*.json, the publish. The daily paper stopped rebuilding and the
+      # only symptom anywhere was feeds that never changed date. tests.yml has
+      # always installed here, which is why the same suite was green there and
+      # red in the job that actually ships.
+      #
+      # npm ci, not npm install: the lockfile exists and the build that
+      # publishes the paper should not resolve a different tree than the one
+      # that was tested.
       - name: Position tracker tests
-        run: cd vercel-news && node --test
+        run: cd vercel-news && npm ci --no-audit --no-fund && node --test
 
       # The SWP drawdown engine, extracted from the shipped static/app.js so
       # it cannot pass against a copy that has drifted from what the page runs.

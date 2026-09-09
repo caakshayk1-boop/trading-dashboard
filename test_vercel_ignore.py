@@ -189,6 +189,43 @@ def _():
     assert "--quiet" in CMD, CMD
 
 
+@check("every workflow that runs vercel-news' node tests installs first")
+def _():
+    """The suite imports @libsql/client; a job without npm ci cannot run it.
+
+    newspaper.yml ran `cd vercel-news && node --test` with no install, under a
+    comment saying none was needed — true when written, and untrue the moment
+    test/bundle.test.js added the one check that has to EXECUTE rather than
+    read source: that @libsql/client/web still accepts a libsql:// URL.
+
+    The step then failed on `Cannot find package`, 92 of 93 passing, and it
+    gates every step after it — generate.py, docs/*.json, the publish. The
+    daily paper stopped rebuilding and the only symptom anywhere was feeds
+    that never changed date. tests.yml has always installed, so the identical
+    suite was green there and red in the job that actually ships.
+    """
+    wfdir = ROOT / ".github" / "workflows"
+    offenders = []
+    for wf in sorted(wfdir.glob("*.yml")):
+        for line in wf.read_text(encoding="utf-8").splitlines():
+            body = line.split("#", 1)[0]
+            if "vercel-news" in body and "node --test" in body:
+                if "npm ci" not in body and "npm install" not in body:
+                    offenders.append(f"{wf.name}: {line.strip()}")
+    assert not offenders, (
+        "these run the suite without installing it: " + " | ".join(offenders))
+
+
+@check("the bundle guard actually executes the client, not just greps for it")
+def _():
+    # If this check ever stops needing the package, the install above becomes
+    # dead weight and this test becomes the thing that says so.
+    src = (ROOT / "vercel-news" / "test" / "bundle.test.js").read_text(encoding="utf-8")
+    assert 'import("@libsql/client/web")' in src, (
+        "the runtime check is what makes the npm install necessary")
+
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
