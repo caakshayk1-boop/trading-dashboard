@@ -158,9 +158,22 @@ Turso is the only paid line. Everything else must stay inside a free tier.
     compiled binary — and **sixteen of the eighteen routes** reach `_db.js`.
     Vercel bundles per function and keeps every deployment's output.
   - `vercel.json`'s `ignoreCommand` skips the build unless the commit touched
-    `docs/` or `vercel-news/`. About a third of pushes here are Python-only and
-    were each producing a retained deployment that served nothing new.
-  - `vercel-news/test/bundle.test.js` pins the first; it runs in `newspaper.yml`.
+    `docs/` or `vercel-news/`. **`[skip ci]` does not stop Vercel here** — a
+    `data: update signals ... [skip ci]` commit deploys like any other. Measured
+    over 14 days: **34 of 55 commits (62%)** touch neither path, ~17 deployments
+    a day of which ~3 matter.
+  - That gate's exit code is **inverted — 0 skips, non-zero builds** — so every
+    unexpected condition must fail toward BUILDING. A gate that exits 0 by
+    accident stops the site deploying with a green workflow and no error
+    anywhere. `test_vercel_ignore.py` runs the real command string against a
+    temp repo: no repo, no `HEAD^`, a renamed `docs/`. The `test -d` guards are
+    there because `git diff` with a pathspec matching nothing exits 0.
+  - The two commit types that still deploy both must: `chore: jobs` writes
+    `docs/jobs.json`, served STATICALLY (allow-listed in `.vercelignore`, copied
+    by `build.js`, fetched as `jobs.json`, not via `/api`), and
+    `chore: newspaper` rebuilds the shell.
+  - `vercel-news/test/bundle.test.js` pins the `/web` import; it runs in
+    `newspaper.yml` and in `tests.yml`.
 - **Reclaiming the 10 GB needs the account**: delete old deployments in the
   Vercel dashboard (Project → Deployments), or `vercel remove <project> --safe`.
   Nothing in this repo can do it.
