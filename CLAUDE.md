@@ -183,9 +183,20 @@ signals**. `research.yml` runs twice a day at the 4-hour closes.
 - `harvest_bars.py` is the producer. `bars_cache.py` is the one place that
   knows where the cache lives (`data/bars/`, gitignored, override with
   `RESEARCH_BARS_DIR`). The workflow harvests, then scans.
-- Pacing is **copied, not re-tuned**: three workers over Yahoo's two hosts a
-  quarter-second apart. `scan_buoy.py` measured that four-way concurrency earns
-  a ten-minute 429 and three does not.
+- **The harvest fetches through yfinance, never a raw GET.** The first version
+  copied `scan_buoy.py`'s urllib call and returned nothing for **500 of 500**
+  symbols over 35 minutes from a runner — while ninety minutes earlier the same
+  infrastructure pulled 113 tickers through yfinance in ~4 seconds. Yahoo was
+  not blocking the runner; it refuses a request without the cookie-and-crumb
+  handshake yfinance performs. That is very likely why the bars were being
+  harvested by hand on a Mac in the first place.
+- Batched, `group_by="column"`, resolved with `scanner._own_frame` — the same
+  trap and the same fix as the position-grading batch. A failed chunk logs its
+  exception; the first version swallowed everything, so a total refusal looked
+  exactly like a universe of illiquid names.
+- `research.yml` sets the three `config.py` placeholders (importing `scanner`
+  raises without them) and carries a `concurrency` group: two runs a minute
+  apart once harvested the same 500 symbols at once.
 - A partial harvest is not a failure — skipped symbols are counted in
   `manifest.json` and the feed publishes coverage, so a narrow run is never
   mistaken for the full universe. An **empty** harvest refuses to overwrite a

@@ -12,13 +12,22 @@ earlier than this, on a missing package, which is what hid the real problem.
 
 This writes them.
 
-PACED THE WAY THE COMMENTS SAY TO PACE IT
------------------------------------------
-scan_buoy.py earned this address a ten-minute 429 at four-way concurrency and
-has not at three, alternating Yahoo's two hosts with a quarter-second between
-requests. That is measured, not guessed, so it is reused verbatim rather than
-re-tuned. Two ranges per symbol doubles the request count, so the pacing
-matters more here than it did there, not less.
+FETCHED WITH yfinance, AND THE FIRST VERSION WAS NOT
+---------------------------------------------------
+This originally called Yahoo's chart endpoint over urllib, copied from
+scan_buoy.py. Measured on 2026-09-09 from a GitHub runner: 500 of 500 symbols
+returned nothing, over 35 minutes, every one of them. Not slow — zero.
+
+Yahoo was not blocking the runner. Ninety minutes earlier, on the same
+infrastructure, standalone_scan fetched 113 tickers in a single yfinance call
+in about four seconds. The difference is the cookie-and-crumb handshake
+yfinance performs and a raw urllib GET does not: scan_buoy's approach works
+from a laptop IP and is refused from a datacenter one, which is very likely
+why the bars were being harvested by hand on a Mac in the first place.
+
+So this uses yfinance, batched, which also collapses ~1000 sequential requests
+into a dozen. The three-worker pacing the old version copied was governing a
+request pattern that no longer exists.
 
 COVERAGE IS REPORTED, NEVER ASSUMED
 -----------------------------------
@@ -36,148 +45,103 @@ Usage:
 """
 from __future__ import annotations
 
-import json
 import os
 import sys
-import threading
 import time
-import urllib.error
-import urllib.request
 from datetime import datetime, timezone
-from queue import Queue
 
 import bars_cache
 
-UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"}
-
-# Lifted from scan_buoy.py, where they are the measured safe values. Three
-# workers over two hosts with a quarter second of pace; four earned a 429.
-WORKERS = 3
-PACE = 0.25
-PROGRESS_EVERY = 25
-HOSTS = ("query1", "query2")
-TIMEOUT = 20
-RETRIES = 2
+# Chunked rather than one call for the whole universe: a single request for 500
+# symbols of hourly bars is a large payload and one failure loses everything.
+# A chunk failing loses fifty names and says so.
+CHUNK = 50
+PACE = 1.0            # between chunks, not between symbols — there are ~20 now
+PROGRESS_EVERY = 1    # every chunk
 
 # What each engine needs. BUOY reads 4H candles resampled from hourly, so 60
 # days of hourly is ~4 months of 4H — enough for its 200-period average plus
 # the lookback. ANCHOR and BEDROCK read daily over a long base.
 RANGES = {
-    bars_cache.HOURLY:   {"interval": "1h", "range": "60d",  "min_bars": 320},
-    bars_cache.DAILY_3Y: {"interval": "1d", "range": "3y",   "min_bars": 200},
+    bars_cache.HOURLY:   {"interval": "1h", "period": "60d", "min_bars": 320},
+    bars_cache.DAILY_3Y: {"interval": "1d", "period": "3y",  "min_bars": 200},
 }
-
-_print_lock = threading.Lock()
 
 
 def _log(msg: str) -> None:
-    with _print_lock:
-        print(msg, flush=True)
+    print(msg, flush=True)
 
 
-def _chart(sym: str, host: str, interval: str, rng: str) -> list:
-    """One Yahoo chart call, as [ts, o, h, l, c, v] rows with gaps dropped.
+def _rows(frame) -> list:
+    """A yfinance frame -> [(epoch_seconds, o, h, l, c, v), ...].
 
-    A bar with a None in any of OHLCV is dropped rather than carried: every
-    reader of this file does arithmetic on all five, and None propagates into
-    a nan that compares False against every threshold without raising — the
-    silent-pass failure this codebase has already paid for once.
+    That tuple shape is what signals/buoy.to_4h and the two daily engines read,
+    and the epoch seconds are what they hand to datetime.fromtimestamp.
     """
-    url = (f"https://{host}.finance.yahoo.com/v8/finance/chart/{sym}.NS"
-           f"?interval={interval}&range={rng}")
-    req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
-        q = json.load(r)["chart"]["result"][0]
-    k, ts = q["indicators"]["quote"][0], q.get("timestamp") or []
-    rows = []
-    for i in range(len(ts)):
-        o, h, l, c, v = (k["open"][i], k["high"][i], k["low"][i],
-                         k["close"][i], k["volume"][i])
-        if None in (o, h, l, c, v):
-            continue
-        rows.append((ts[i], o, h, l, c, v))
-    return rows
-
-
-def _fetch(sym: str, worker: int, interval: str, rng: str) -> list | None:
-    """One symbol, with the hosts alternated and a bounded retry.
-
-    Returns None on any failure. A missing symbol narrows the run; it must not
-    end it, and it must not be silently indistinguishable from a symbol that
-    genuinely has no setup.
-    """
-    for attempt in range(RETRIES + 1):
-        host = HOSTS[(worker + attempt) % len(HOSTS)]
+    out = []
+    for ts, bar in frame.iterrows():
         try:
-            return _chart(sym, host, interval, rng)
-        except urllib.error.HTTPError as e:
-            if e.code == 404:
-                return None                      # delisted or renamed; not a retry
-            if e.code == 429:
-                # Backing off rather than hammering: the whole point of the
-                # pacing above is to not be here.
-                time.sleep(2.0 * (attempt + 1))
-            else:
-                time.sleep(0.5)
-        except Exception:                                    # noqa: BLE001
-            time.sleep(0.5)
-    return None
+            o = float(bar["Open"]); h = float(bar["High"])
+            l = float(bar["Low"]);  c = float(bar["Close"])
+            v = float(bar["Volume"]) if "Volume" in bar else 0.0
+        except (KeyError, TypeError, ValueError):
+            continue
+        if not all(x == x for x in (o, h, l, c)):      # NaN check without numpy
+            continue
+        out.append((int(ts.timestamp()), o, h, l, c, v))
+    return out
 
 
 def harvest(symbols: list, name: str) -> tuple[dict, dict]:
-    """Fetch one range for every symbol. Returns (bars, coverage)."""
+    """Fetch one range for every symbol, in chunks. Returns (bars, coverage)."""
+    import yfinance as yf
+    from scanner import _own_frame
+    from symbols import to_yahoo
+
     spec = RANGES[name]
     out, skipped = {}, {"no_data": 0, "too_short": 0}
-    q: Queue = Queue()
-    for s in symbols:
-        q.put(s)
-    lock = threading.Lock()
+    chunks = [symbols[i:i + CHUNK] for i in range(0, len(symbols), CHUNK)]
+    t0 = time.time()
 
-    # PROGRESS, BECAUSE THE FIRST RUN WAS UNDIAGNOSABLE.
-    #
-    # This logged only when a whole range finished. The first live attempt hit
-    # its 30-minute job timeout having printed one line, so there was no way to
-    # tell whether it had fetched fifty symbols or four hundred and fifty, or
-    # whether Yahoo was throttling. A long step that says nothing until it
-    # succeeds tells you nothing when it does not.
-    done = {"n": 0}
-    t_start = time.time()
+    for n, chunk in enumerate(chunks, 1):
+        tickers = [to_yahoo(s) for s in chunk]
+        try:
+            # group_by="column" so _own_frame finds the ticker at column level
+            # -1, which is where the default layout puts it. Under "ticker" it
+            # finds Open/High/Low/Close there instead and resolves nothing —
+            # the same trap the position-grading batch documents.
+            raw = yf.download(tickers, period=spec["period"],
+                              interval=spec["interval"], group_by="column",
+                              threads=True, progress=False, auto_adjust=True,
+                              timeout=60)
+        except Exception as e:                          # noqa: BLE001
+            # LOUD. The first version swallowed every failure and reported only
+            # "no_data", so a total, systematic refusal looked exactly like a
+            # universe of illiquid names.
+            _log(f"  {name}: chunk {n}/{len(chunks)} FAILED — {type(e).__name__}: {e}")
+            skipped["no_data"] += len(chunk)
+            continue
 
-    def work(worker: int):
-        while True:
-            try:
-                sym = q.get_nowait()
-            except Exception:                                # noqa: BLE001
-                return
-            rows = _fetch(sym, worker, spec["interval"], spec["range"])
-            with lock:
-                if rows is None:
-                    skipped["no_data"] += 1
-                elif len(rows) < spec["min_bars"]:
-                    skipped["too_short"] += 1
-                else:
-                    out[sym] = rows
-                done["n"] += 1
-                n = done["n"]
-            if n % PROGRESS_EVERY == 0 or n == len(symbols):
-                el = time.time() - t_start
-                rate = n / el if el > 0 else 0
-                left = (len(symbols) - n) / rate if rate > 0 else 0
-                _log(f"  {name}: {n}/{len(symbols)} in {el:.0f}s "
-                     f"({rate:.1f}/s, ~{left:.0f}s left, {len(out)} kept)")
-            time.sleep(PACE)
-            q.task_done()
+        for sym, t in zip(chunk, tickers):
+            f = _own_frame(raw, t)
+            if f is None or f.empty:
+                skipped["no_data"] += 1
+                continue
+            rows = _rows(f)
+            if len(rows) < spec["min_bars"]:
+                skipped["too_short"] += 1
+                continue
+            out[sym] = rows
 
-    threads = [threading.Thread(target=work, args=(i,), daemon=True)
-               for i in range(WORKERS)]
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
+        if n % PROGRESS_EVERY == 0 or n == len(chunks):
+            el = time.time() - t0
+            done = min(n * CHUNK, len(symbols))
+            _log(f"  {name}: {done}/{len(symbols)} in {el:.0f}s "
+                 f"({len(out)} kept, {skipped['no_data']} no data, "
+                 f"{skipped['too_short']} too short)")
+        time.sleep(PACE)
 
-    cov = {"asked": len(symbols), "got": len(out), **skipped}
-    return out, cov
+    return out, {"asked": len(symbols), "got": len(out), **skipped}
 
 
 def universe(limit: int | None) -> list:
