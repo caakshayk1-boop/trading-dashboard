@@ -126,6 +126,25 @@ NIFTY500_CACHE   = "cache/nifty500.csv"
 NIFTY200_CSV_URL = "https://nsearchives.nseindia.com/content/indices/ind_nifty200list.csv"
 NIFTY200_CACHE   = "cache/nifty200.csv"
 
+# ── Nifty500 Ahimsa ──────────────────────────────────────────────────────────
+#
+# NSE Indices launched this on 10 July 2026: the Nifty 500 filtered to companies
+# not engaged in activities harmful to animals — 326 of the 500 at launch, base
+# date 1 April 2016, base value 1000.
+#
+# IT IS A MEMBERSHIP LIST AND NOTHING ELSE, WHICH IS THE POINT.
+#
+# NSE publishes the constituents. It does NOT publish a per-company "quotient",
+# and this file will not compute one: an ethics score invented here would be a
+# number with no source, presented beside numbers that all have one. What can
+# be stated is whether NSE put a name in the index. That is checkable by the
+# reader against NSE's own CSV, and it is the whole claim.
+#
+# Note the capital A in the filename — the served path is case-sensitive and
+# ind_nifty500ahimsa_list.csv 404s.
+AHIMSA_CSV_URL = "https://www.niftyindices.com/IndexConstituent/ind_nifty500Ahimsa_list.csv"
+AHIMSA_CACHE   = "cache/nifty500_ahimsa.csv"
+
 
 def load_nifty500() -> list:
     import requests, pandas as pd
@@ -163,6 +182,44 @@ def load_nifty200() -> list:
     except Exception as e:
         log.warning(f"load_nifty200 failed: {e}")
         return []
+
+
+def load_nifty500_ahimsa() -> list:
+    """Constituents of the Nifty500 Ahimsa index, as NSE publishes them.
+
+    Returns [] when the list cannot be fetched — and every caller must treat
+    that as UNKNOWN, never as "no name qualifies". A stock missing from a list
+    that failed to load is not a stock NSE excluded, and rendering the two the
+    same way is the zero-fill this repo refuses everywhere else.
+    """
+    import requests, pandas as pd
+    try:
+        if os.path.exists(AHIMSA_CACHE):
+            df = pd.read_csv(AHIMSA_CACHE)
+        else:
+            r = requests.get(AHIMSA_CSV_URL, headers={"User-Agent": "Mozilla/5.0"}, timeout=15)
+            r.raise_for_status()
+            os.makedirs("cache", exist_ok=True)
+            with open(AHIMSA_CACHE, "wb") as f:
+                f.write(r.content)
+            df = pd.read_csv(AHIMSA_CACHE)
+        col = next((c for c in df.columns if "symbol" in c.lower()), df.columns[0])
+        return [s.strip() + ".NS" for s in df[col].dropna().tolist()]
+    except Exception as e:
+        log.warning(f"load_nifty500_ahimsa failed: {e}")
+        return []
+
+
+def ahimsa_membership() -> tuple:
+    """(set_of_bare_symbols, ok) — `ok` is False when the list is UNKNOWN.
+
+    Two return values rather than one, because the difference between "not in
+    the index" and "we could not read the index" is the entire honesty of this
+    flag, and a bare set collapses them. A caller that ignores `ok` and tests
+    membership on an empty set marks all 500 names as excluded.
+    """
+    syms = load_nifty500_ahimsa()
+    return {s.replace(".NS", "") for s in syms}, bool(syms)
 
 
 # ── FnO Eligibility ───────────────────────────────────────────────────────────
