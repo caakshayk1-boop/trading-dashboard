@@ -26,10 +26,14 @@ from __future__ import annotations
 import json, math, sys, statistics as st
 import numpy as np
 
-sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.basebreak import prepare, DETECTORS
 
-BARS = '/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/4387587e-0410-48f6-b6ac-50dea011672c/scratchpad/bars2y.json'
+import bars_cache
+# bars2y.json is this backtest's own harvest and has no producer either; the
+# path is at least resolvable now rather than pointing at another machine.
+BARS = bars_cache.path('bars2y.json')
 MAX_HOLD = 60          # trading days; same for every rule compared
 
 

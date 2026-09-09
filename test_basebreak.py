@@ -6,7 +6,8 @@ after i produces a backtest that cannot be traded, and it is invisible in the
 result because the equity curve just looks good.
 """
 import sys, numpy as np
-sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.basebreak import (prepare, ledge_signal, keel_signal, darvas_box,
                                rsi, atr, swing_lows, ENGINE_STATUS)
 

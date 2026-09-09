@@ -138,10 +138,19 @@ def walk_rule(df, entry, sl, t1, t2, is_long, max_bars,
 # few weeks. It is applied identically to every trade.
 ATR_PCT = {}
 def _load_atr():
-    import json
+    """ATR% per symbol, from the screen this repo already builds.
+
+    This read an absolute path into one laptop's Workspace folder. It fails
+    soft — the shipped-rule column is skipped and a warning is logged — so
+    every run anywhere else has quietly dropped that column for as long as the
+    file has existed, without anything saying which column was missing or why.
+    docs/screen.json is the same payload, built by generate.py and committed.
+    """
+    import json, os
+    src = os.environ.get("SCREEN_JSON") or os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "docs", "screen.json")
     try:
-        d = json.load(open("/Users/akshaykumarkothari/Workspace/Apps/Websites/"
-                           "signal/public/screen.json"))
+        d = json.load(open(src, encoding="utf-8"))
         rows = next(v for v in d.values() if isinstance(v, list) and v
                     and isinstance(v[0], dict))
         for r in rows:

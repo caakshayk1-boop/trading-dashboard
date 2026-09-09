@@ -17,12 +17,12 @@ from __future__ import annotations
 import json, math, sys, statistics as st
 import numpy as np
 
-sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.bedrock import prepare, bedrock_signal, TARGET_R
 
-SCR = ('/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/'
-       '4387587e-0410-48f6-b6ac-50dea011672c/scratchpad')
-BARS = f'{SCR}/barsD3y.json'
+import bars_cache
+BARS = bars_cache.path(bars_cache.DAILY_3Y)
 MAX_HOLD = 60          # trading days
 
 
