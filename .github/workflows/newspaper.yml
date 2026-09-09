@@ -131,6 +131,26 @@ jobs:
           # A retry rather than a hard fail: this is a network download, and
           # losing a whole newspaper build to one slow CDN response is worse
           # than spending 30 seconds trying again.
+          # DROP GOOGLE'S APT REPO FIRST.
+          #
+          # `--with-deps` runs `apt-get update`, and the runner image ships a
+          # google-chrome source. On 2026-09-09 Google republished that repo's
+          # Release file mid-fetch and apt refused the index:
+          #
+          #   E: Failed to fetch .../chrome-stable/deb/.../Packages.gz
+          #      Hash Sum mismatch
+          #   Error: Installation process exited with code: 100
+          #
+          # Both the newspaper build and the signal deploy died on it within a
+          # minute of each other, and the retry below failed identically —
+          # the mismatch lasts as long as the publisher's window, so retrying
+          # inside one run cannot clear it.
+          #
+          # We install PLAYWRIGHT'S OWN Chromium. Nothing in this job needs
+          # google-chrome, so the repo is pure third-party risk on the critical
+          # path of the daily paper. Removing the source list makes apt stop
+          # asking dl.google.com anything.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
           npx playwright install chromium --with-deps \
             || (echo "retrying playwright install" && sleep 20 && npx playwright install chromium --with-deps)
 
