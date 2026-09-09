@@ -589,11 +589,23 @@ def run_price_alerts(time_str: str, markets: set | None = None):
     from scanner import _own_frame as _frame
     windows, groups, batched = {}, {}, {}
     for _, _r in open_df.iterrows():
+        # ONE ROW MUST NOT BE ABLE TO COST THE WHOLE BOOK ITS GRADING.
+        #
+        # The loop below has always been per-signal fault-tolerant: a row that
+        # raises is logged and skipped and the other 108 are graded. This
+        # prefetch sits OUTSIDE that, so an unguarded raise here — an
+        # unparseable date, a symbol to_yahoo cannot map — would propagate out
+        # of run_price_alerts and leave every open position ungraded. A wider
+        # blast radius than the code it replaced is not an optimisation.
         try:
             _sid = int(_r["id"])
-        except Exception:                                   # noqa: BLE001
+            w = _window(_r)
+            _yt = to_yahoo(str(_r["symbol"]))
+        except Exception as e:                              # noqa: BLE001
+            logging.warning("price_alerts prefetch %s: %s — it falls through "
+                            "to its own request in the loop",
+                            _r.get("symbol"), e)
             continue
-        w = _window(_r)
         windows[_sid] = w
         _per, _int = w[3], w[4]
         g = groups.setdefault(_int, {"days": 0, "tickers": []})
@@ -602,7 +614,7 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             g["days"] = max(g["days"], int(str(_per).rstrip("d")))
         except ValueError:
             g["days"] = max(g["days"], 5)
-        g["tickers"].append(to_yahoo(str(_r["symbol"])))
+        g["tickers"].append(_yt)
 
     for _int, g in groups.items():
         tickers = sorted(set(g["tickers"]))

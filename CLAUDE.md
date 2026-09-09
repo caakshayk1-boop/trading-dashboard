@@ -181,9 +181,17 @@ scan that refused to run. The repo is public, so Actions minutes are free.
   `config.py` raises at import time on a missing variable, so importing
   `scanner` needs them set to something. Nothing in the offline suites sends,
   fetches or authenticates.
-- Running a suite locally needs `ta` installed. Without it `magic_levels`
-  returns None and `test_stock_screen.py` reports four failures that are the
-  missing library, not the code.
+- Running a suite locally needs `ta` installed. Without it every ATR is None
+  and `test_stock_screen.py` fails for the missing library, not the code.
+- Two classes of stale test this CI already caught, both of which had been red
+  for a while with nobody looking:
+  - **A date written down.** A fixture filed a row at "2026-08-12" against a
+    20-day horizon. It was inside that horizon the day it was written and aged
+    out a fortnight later. Fixture dates are relative to today, never literal.
+  - **A fixture that stopped matching its comment.** "Orderly range" was an 11%
+    daily ATR, built before the stop widened on 2026-09-03. When the rule it
+    tested started refusing that candidate — correctly — the test blamed the
+    code.
 
 ## Rules
 - NEVER read or modify `config.py` (contains API keys)

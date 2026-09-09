@@ -688,6 +688,24 @@ check("a signal filed today is not graded on bars that predate it",
       [m.split("\n")[0] for m in _msgs])
 
 
+# One unusable row must not cost the rest of the book its grading. The loop has
+# always been per-signal fault-tolerant; the prefetch sits outside that, so an
+# unguarded raise there would leave every open position ungraded at once.
+_clear_open(); _FEED.clear(); _CALLS.clear()
+_FEED["BATOK"] = _bars((99, 100, 94, 96))
+_file("BATOK", "ledge", 3, meta=LEDGE_META)
+_rid = _file("BATBAD", "ledge", 3, meta=LEDGE_META)
+with tracker._conn() as _c:
+    # A date nothing can parse and a symbol nothing can map.
+    _c.execute("UPDATE all_signals SET date=?, sent_at=?, symbol=? WHERE id=?",
+               ("not-a-date", "also-not-a-date", "", _rid))
+    _c.commit()
+_msgs = _run_alerts()
+check("one unusable row does not stop the rest of the book being graded",
+      len([m for m in _msgs if "BATOK" in m]) == 1,
+      [m.split("\n")[0] for m in _msgs])
+
+
 # ── The frame a signal is graded on ──────────────────────────────────────────
 # These three shapes all reached production and all failed SILENTLY, because
 # the loop body sits inside `except Exception: continue`. The download now goes
