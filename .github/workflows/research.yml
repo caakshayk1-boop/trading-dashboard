@@ -25,6 +25,41 @@ on:
 permissions:
   contents: write
 
+# TWO HARVESTS MUST NEVER OVERLAP, AND ON 2026-09-09 TWO DID.
+#
+# A push to main and a manual dispatch started a minute apart and both began
+# fetching the same 500 symbols. That is six concurrent workers against Yahoo,
+# not three — past the four-way concurrency scan_buoy.py measured earns this
+# address a ten-minute 429. The pacing inside harvest_bars.py is careful and
+# it can only govern ONE process; nothing was stopping a second.
+#
+# It also races on the commit at the end: both runs write the same three files
+# and push.
+#
+# Queued rather than cancelled, because a half-finished harvest leaves the
+# cache untouched (bars_cache writes through a temp file) and the second run
+# then does the work properly rather than being dropped.
+concurrency:
+  group: research-scan
+  cancel-in-progress: false
+
+# PLACEHOLDERS, NOT SECRETS, AND THEY MUST STAY THAT WAY.
+#
+# The harvest resolves each ticker's frame with scanner._own_frame — the one
+# function that knows how to pull a symbol out of yfinance's MultiIndex
+# without handing back a neighbour's column. Importing scanner imports
+# config.py, which raises at import time on a missing variable, so these three
+# have to be set to something.
+#
+# Nothing in this workflow sends, fetches or authenticates against any of them.
+# The alternative was a second copy of _own_frame living here, and two
+# implementations of "which column belongs to this ticker" is precisely how a
+# scan comes to publish one company's price under another's name.
+env:
+  TELEGRAM_TOKEN: placeholder-not-a-secret
+  TELEGRAM_CHAT_ID: placeholder-not-a-secret
+  GROQ_API_KEY: placeholder-not-a-secret
+
 jobs:
   scan:
     runs-on: ubuntu-latest
@@ -55,9 +90,16 @@ jobs:
       # actually being measured twice a day the way this file says it is.
       #
       # The full chain: numpy and pandas (frames), ta (the ATR and RSI the
-      # engines read), requests (signals/universe.py pulls the NSE index CSVs).
-      # Prices come over urllib in scan_buoy.py, so no yfinance here.
-      - run: pip install numpy pandas ta requests
+      # engines read), requests (signals/universe.py pulls the NSE index CSVs),
+      # and yfinance — which the harvest now uses instead of raw urllib.
+      #
+      # A RAW GET IS REFUSED FROM A RUNNER. Measured 2026-09-09: the urllib
+      # version returned nothing for 500 of 500 symbols over 35 minutes, while
+      # ninety minutes earlier on the same infrastructure standalone_scan
+      # fetched 113 tickers through yfinance in about four seconds. Yahoo was
+      # not blocking the runner; it was refusing a request without the
+      # cookie-and-crumb handshake yfinance performs.
+      - run: pip install numpy pandas ta requests "yfinance>=0.2.40"
 
       # THE BARS HAD NO PRODUCER. This is it.
       #

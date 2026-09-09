@@ -174,6 +174,66 @@ def _():
         "an empty fetch must not be written over real bars"
 
 
+# ── The fetch must go through yfinance, not a raw GET ───────────────────────
+#
+# The first harvester called Yahoo's chart endpoint over urllib, copied from
+# scan_buoy.py. Measured from a GitHub runner on 2026-09-09: 500 of 500
+# symbols returned nothing, over 35 minutes. Ninety minutes earlier the same
+# infrastructure fetched 113 tickers through yfinance in about four seconds.
+# The difference is the cookie-and-crumb handshake — a raw GET is refused from
+# a datacenter IP and works from a laptop, which is very likely why the bars
+# were being harvested by hand on a Mac.
+
+@check("the harvest fetches through yfinance, not a raw HTTP GET")
+def _():
+    src = (ROOT / "harvest_bars.py").read_text(encoding="utf-8")
+    code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("#"))
+    body = code[code.index("def harvest("):] if "def harvest(" in code else code
+    assert "yf.download" in body, "the harvest does not use yfinance"
+    assert "urllib" not in body, "a raw GET is back; it is refused from a runner"
+
+
+@check("the batch asks for group_by='column', which _own_frame can resolve")
+def _():
+    src = (ROOT / "harvest_bars.py").read_text(encoding="utf-8")
+    assert 'group_by="column"' in src, \
+        "under group_by='ticker' _own_frame finds OHLC where it expects a symbol"
+
+
+@check("a ticker is resolved by _own_frame, not by indexing the frame")
+def _():
+    src = (ROOT / "harvest_bars.py").read_text(encoding="utf-8")
+    assert "_own_frame" in src, \
+        "picking columns by hand is how one company's price is published as another's"
+
+
+@check("a failed chunk is logged with its reason, not counted as 'no data'")
+def _():
+    # The first version swallowed every exception, so a total systematic
+    # refusal looked exactly like a universe of illiquid names.
+    src = (ROOT / "harvest_bars.py").read_text(encoding="utf-8")
+    assert "FAILED" in src and "type(e).__name__" in src, \
+        "a chunk failure must say what went wrong"
+
+
+@check("the workflow installs yfinance and sets the config placeholders")
+def _():
+    wf = (ROOT / ".github" / "workflows" / "research.yml").read_text(encoding="utf-8")
+    assert "yfinance" in wf, "the harvest imports yfinance and it is not installed"
+    for var in ("TELEGRAM_TOKEN", "TELEGRAM_CHAT_ID", "GROQ_API_KEY"):
+        assert var in wf, f"{var} unset — importing scanner raises at import time"
+    assert "placeholder-not-a-secret" in wf, "these must never be real secrets"
+
+
+@check("two harvests can never run at once")
+def _():
+    # Two runs a minute apart on 2026-09-09 both fetched the same 500 symbols:
+    # six concurrent workers against a host measured to 429 at four, and a race
+    # on the commit at the end.
+    wf = (ROOT / ".github" / "workflows" / "research.yml").read_text(encoding="utf-8")
+    assert "concurrency:" in wf and "research-scan" in wf
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
