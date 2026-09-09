@@ -55,6 +55,7 @@ UA = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
 # workers over two hosts with a quarter second of pace; four earned a 429.
 WORKERS = 3
 PACE = 0.25
+PROGRESS_EVERY = 25
 HOSTS = ("query1", "query2")
 TIMEOUT = 20
 RETRIES = 2
@@ -133,6 +134,16 @@ def harvest(symbols: list, name: str) -> tuple[dict, dict]:
         q.put(s)
     lock = threading.Lock()
 
+    # PROGRESS, BECAUSE THE FIRST RUN WAS UNDIAGNOSABLE.
+    #
+    # This logged only when a whole range finished. The first live attempt hit
+    # its 30-minute job timeout having printed one line, so there was no way to
+    # tell whether it had fetched fifty symbols or four hundred and fifty, or
+    # whether Yahoo was throttling. A long step that says nothing until it
+    # succeeds tells you nothing when it does not.
+    done = {"n": 0}
+    t_start = time.time()
+
     def work(worker: int):
         while True:
             try:
@@ -147,6 +158,14 @@ def harvest(symbols: list, name: str) -> tuple[dict, dict]:
                     skipped["too_short"] += 1
                 else:
                     out[sym] = rows
+                done["n"] += 1
+                n = done["n"]
+            if n % PROGRESS_EVERY == 0 or n == len(symbols):
+                el = time.time() - t_start
+                rate = n / el if el > 0 else 0
+                left = (len(symbols) - n) / rate if rate > 0 else 0
+                _log(f"  {name}: {n}/{len(symbols)} in {el:.0f}s "
+                     f"({rate:.1f}/s, ~{left:.0f}s left, {len(out)} kept)")
             time.sleep(PACE)
             q.task_done()
 
@@ -162,8 +181,20 @@ def harvest(symbols: list, name: str) -> tuple[dict, dict]:
 
 
 def universe(limit: int | None) -> list:
+    """The names to fetch, narrowable without editing this file.
+
+    scan_research.py publishes a `scanned` count per engine precisely so a
+    narrower run is a supported, visible outcome rather than a silent one. So
+    the size is a knob: RESEARCH_UNIVERSE_LIMIT, or --limit on the command
+    line. Neither is set by default and the full Nifty 500 is the default.
+    """
     from signals.universe import load_nifty500
     syms = [s.replace(".NS", "") for s in load_nifty500()]
+    if limit is None:
+        try:
+            limit = int(os.environ["RESEARCH_UNIVERSE_LIMIT"])
+        except (KeyError, TypeError, ValueError):
+            limit = None
     return syms[:limit] if limit else syms
 
 
