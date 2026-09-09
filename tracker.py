@@ -1076,7 +1076,20 @@ def update_all_outcomes():
                 log.warning(f"{row['symbol']}: stop on wrong side of entry — skipped")
                 continue
 
-            max_sessions = max(1, int(hold_h / 24))
+            # None IS A VALID HORIZON HERE AND THIS LINE DID NOT KNOW IT.
+            #
+            # _max_hold_hours returns None for an unknown horizon on purpose —
+            # "manage the levels, never time-stop it" — and the end_d line
+            # eighteen lines up handles that correctly. This one divided None
+            # by 24 and raised, which the outer handler swallowed as
+            # "unsupported operand type(s) for /: 'NoneType' and 'int'". The
+            # row was then skipped ENTIRELY: no excursions, no max_profit, no
+            # resolution. Measured on 2026-09-09 it silently dropped every
+            # momentum_quant and sip_bucket signal on a 1M timeframe.
+            #
+            # No horizon means no time stop, exactly as the comment above says.
+            # The walk is already bounded by end_d, which is today.
+            max_sessions = None if hold_h is None else max(1, int(hold_h / 24))
             triggered_at = row.get("entry_triggered_at")
             status, exit_p, ambiguous = None, None, 0
             sessions = 0
@@ -1146,9 +1159,12 @@ def update_all_outcomes():
                 elif hit_t:
                     status = "T2_HIT" if t2 is not None else "T1_HIT"
                     exit_p = target
-                elif sessions >= max_sessions:
+                elif max_sessions is not None and sessions >= max_sessions:
                     # Time stop. Capital held in a setup that has not worked is
-                    # capital unavailable for one that will.
+                    # capital unavailable for one that will. Skipped entirely
+                    # when the horizon is unknown — a guessed limit closes real
+                    # positions, which is the fault _max_hold_hours was changed
+                    # to stop returning a number for.
                     status, exit_p = "TIME_STOP", last_close
 
                 if status:

@@ -28,10 +28,18 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    # The harvest is ~1000 paced Yahoo calls and the scan runs the three
-    # engines over the result. Bounded so a hung fetch cannot hold a runner
-    # for six hours, which is the default.
-    timeout-minutes: 30
+    # MEASURED, NOT ESTIMATED. The first live run was cancelled at exactly 30
+    # minutes mid-harvest: 500 symbols over two ranges is ~1000 paced calls,
+    # and the estimate of 4-5 minutes that set this cap was wrong by roughly an
+    # order of magnitude. Raised with room, and harvest_bars.py now logs
+    # progress every 25 symbols so a slow or throttled run is visible while it
+    # is happening rather than only in what it failed to produce.
+    #
+    # Free on a public repo. If the real cost turns out worse than this,
+    # RESEARCH_UNIVERSE_LIMIT narrows the universe without a code change —
+    # scan_research.py publishes a `scanned` count per engine precisely so a
+    # narrower run is a visible outcome rather than a silent one.
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

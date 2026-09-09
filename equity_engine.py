@@ -43,11 +43,25 @@ EQUITY_CONFIG = replace(
 )
 
 # Liquid, continuously-listed names — a backtest universe, not a watchlist.
+#
+# "CONTINUOUSLY-LISTED" STOPPED BEING TRUE FOR ONE OF THEM. TATAMOTORS 404s on
+# Yahoo since the demerger, so this universe has silently been 29 names, not
+# 30, with two ERROR lines a scan and nothing acting on them. It is replaced by
+# both successors — TMCV (Tata Motors Ltd.) and TMPV (Tata Motors Passenger
+# Vehicles Ltd.), each verified present in the 750-name screen built
+# 2026-09-09 — because a demerger is not a rename and mapping to either alone
+# would price half a company as the whole one.
+#
+# STATED PLAINLY: this changes the universe the measured record was taken on.
+# The +0.171R over 459 trades was measured with TATAMOTORS in the set and a
+# single post-demerger history behind it. The two successors have short
+# histories and will contribute little until they lengthen. The alternative
+# was a name that fetches nothing, which is not the measured universe either.
 LIQUID = [
     "RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK", "HINDUNILVR", "SBIN",
     "BHARTIARTL", "KOTAKBANK", "LT", "AXISBANK", "ASIANPAINT", "MARUTI",
     "TITAN", "SUNPHARMA", "WIPRO", "HCLTECH", "TECHM", "NESTLEIND", "ONGC",
-    "TATAMOTORS", "TATASTEEL", "JSWSTEEL", "BAJFINANCE", "ADANIPORTS",
+    "TMCV", "TMPV", "TATASTEEL", "JSWSTEEL", "BAJFINANCE", "ADANIPORTS",
     "CIPLA", "DRREDDY", "EICHERMOT", "GRASIM", "HINDALCO",
 ]
 

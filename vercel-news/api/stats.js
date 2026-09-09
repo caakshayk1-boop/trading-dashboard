@@ -109,7 +109,8 @@ export default async function handler(req, res) {
     // marks into a realised-expectancy figure mixes two different claims. The
     // basis string below now says so instead of describing these rows as
     // simply "closed", which they are.
-    const expired = rows.filter((r) => r.badge === "expired").length;
+    const expiredRows = rows.filter((r) => r.badge === "expired");
+    const expired = expiredRows.length;
 
     json(res, 200, {
       ok: true,
@@ -130,6 +131,22 @@ export default async function handler(req, res) {
         last_date: rows.length ? rows[rows.length - 1].date : null,
       },
       headline: headline(closed),
+      // BOTH READINGS, BECAUSE BOTH ARE DEFENSIBLE AND THE PAGE MUST NOT PICK
+      // ONE SILENTLY.
+      //
+      // standalone_scan books a time stop's R at the last close SPECIFICALLY
+      // to avoid survivorship bias — its own comment says dropping unresolved
+      // trades "would bias the ledger toward fast movers and inflate the
+      // measured edge". Excluding them here reinstates exactly that bias. The
+      // counter-argument is equally real: that R is a MARK, not a fill, and
+      // folding marks into a realised figure mixes two claims.
+      //
+      // So the headline stays trades that reached a target or a stop, and this
+      // is the same arithmetic with the time stops added. Win rate is
+      // deliberately absent: a trade that exited on the clock neither won nor
+      // lost, and forcing it into one bucket to fill a column is the kind of
+      // invention this file exists to avoid.
+      including_time_stops: timeStopped(closed, expiredRows),
       equity_curve: equityCurve(closed),
       by_month: group(closed, (r) => r.closed_at.slice(0, 7)),
       by_timeframe: group(closed, (r) => r.timeframe),
@@ -193,6 +210,23 @@ function rMultiple(r) {
   const riskPct = (Math.abs(entry - sl) / entry) * 100;
   if (riskPct === 0) return null;
   return pnl / riskPct;
+}
+
+// Expectancy over everything that RESOLVED, time stops included. No win rate
+// — see the comment at the call site.
+function timeStopped(closed, expiredRows) {
+  const all = closed.concat(expiredRows);
+  const rs = all.map((r) => r.r_multiple).filter((v) => v !== null);
+  return {
+    trades: all.length,
+    time_stopped: expiredRows.length,
+    expectancy_r: rs.length ? round(mean(rs), 3) : null,
+    basis:
+      "Adds trades closed by their time stop to the headline set. Their R is " +
+      "marked at the last close, not realised at an exit, so this is a " +
+      "different claim from the headline rather than a better one. No win " +
+      "rate: a trade that exited on the clock neither won nor lost.",
+  };
 }
 
 function headline(closed) {
