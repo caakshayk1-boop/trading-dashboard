@@ -127,6 +127,13 @@ jobs:
         run: |
           git config user.name  "buoy-scan"
           git config user.email "actions@github.com"
-          git add docs/research.json docs/alerts_log.json docs/buoy.json
+          # docs/buoy.json IS NOT LISTED, BECAUSE THIS JOB DOES NOT WRITE IT.
+          #
+          # scan_buoy.py writes it; this job runs scan_research.py, which
+          # covers BUOY alongside the other two. So the file was staged on
+          # every run and never differed — a workflow implying it produces an
+          # artefact it has not touched since 2026-09-08. The site does not
+          # read it either: /buoy redirects to /research.
+          git add docs/research.json docs/alerts_log.json
           git diff --staged --quiet || git commit -m "chore: research scan $(date -u +%F\ %H:%M)"
           git push
