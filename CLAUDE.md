@@ -175,6 +175,9 @@ and `test_brief_fit.py`):
 Measured, published with their null results, and **never cleared to file
 signals**. `research.yml` runs twice a day at the 4-hour closes.
 
+- **It runs now.** Run 34369438172, 2026-09-09: harvest 87 seconds for 500 of
+  500 hourly and 498 of 500 daily bars, scan 3 seconds. Before that it had
+  never once completed.
 - **It had never once completed.** Its install step was `pip install numpy`
   while `signals/indicators.py` imports `ta` at module load, so every run died
   before any scan code. Underneath that was a worse fault: `barsH.json` and
@@ -201,10 +204,28 @@ signals**. `research.yml` runs twice a day at the 4-hour closes.
   `manifest.json` and the feed publishes coverage, so a narrow run is never
   mistaken for the full universe. An **empty** harvest refuses to overwrite a
   good cache.
-- `python3 test_bars_cache.py` — 9 checks, offline. It pins the SHAPE of the
+- **A scan never asserts its own coverage.** Both scans shipped a hardcoded
+  `coverage_note` saying the run had been throttled to a partial universe. True
+  of the laptop it was written on; the run of 2026-09-09 harvested **500 of
+  500** in 87 seconds and published that sentence anyway.
+  `bars_cache.coverage_note()` reads the manifest `harvest_bars.py` writes. No
+  manifest, no number — it names the script instead of inventing a denominator,
+  the same rule `data_health.py` holds.
+- **The feed has to be MIRRORED to be published.** `signal.js` fetches
+  `/research.json` and `/alerts_log.json`; the signal repo's `sync-data.yml`
+  listed neither, so `#research` served a hand-committed 2026-09-08 snapshot
+  while this repo rewrote both twice a day. Nothing 404'd — a present-but-frozen
+  feed renders normally and every number on it is a fact about last week. The
+  sync list is now pinned by `test/guard.mjs` over there, which until then **ran
+  in no workflow at all** and is now a step in `deploy.yml`.
+- `docs/buoy.json` is written by `scan_buoy.py`, which `research.yml` does not
+  run, and `/buoy` on the site redirects to `/research`. The workflow no longer
+  stages it.
+- `python3 test_bars_cache.py` — 18 checks, offline. It pins the SHAPE of the
   bug, not just the instance: no source may hardcode a path into a home or
-  scratch directory, bar files are addressed only through `bars_cache`, and the
-  workflow must harvest before it scans.
+  scratch directory, bar files are addressed only through `bars_cache`, the
+  workflow must harvest before it scans, and no scan may phrase its own
+  coverage.
 
 ## Page structure
 `SECTION_MAP` order IS document order, and the nav is generated from it.
