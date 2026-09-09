@@ -2116,6 +2116,35 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     _verdict_tally = _verdict.annotate(out)
     print(f"[verdict] {' · '.join(f'{k} {v}' for k, v in _verdict_tally.items() if v)}")
 
+    # ── NIFTY500 AHIMSA MEMBERSHIP ───────────────────────────────────────────
+    #
+    # NSE Indices launched the Nifty500 Ahimsa index on 10 July 2026: the Nifty
+    # 500 filtered to companies not engaged in activities harmful to animals,
+    # 326 of the 500 at launch. This attaches whether NSE put the name in it.
+    #
+    # IT IS MEMBERSHIP, NOT A SCORE, AND IT IS DELIBERATELY NOT ONE.
+    #
+    # NSE publishes the constituent list. It publishes no per-company
+    # "quotient", so there is none to report — and computing one here would put
+    # a number with no source beside a table where every other number has one.
+    # `ahimsa` is therefore True, False or None and never a figure.
+    #
+    # IT IS ALSO NOT IN THE COMPOSITE, for the same reason `breadth` is not:
+    # nothing measured says an Ahimsa constituent outperforms, and weighting it
+    # into `comp` would assert exactly that. It is a filter the reader applies,
+    # not a judgement the screen makes for them.
+    #
+    # None means the list could not be read, which is NOT the same as the name
+    # being excluded — a stock missing from a list that failed to load is not a
+    # stock NSE left out. When the fetch fails every row gets None, so a broken
+    # fetch cannot silently mark all 500 names as failing an ethics test.
+    from signals.universe import ahimsa_membership
+    _ahimsa, _ahimsa_ok = ahimsa_membership()
+    for r in out:
+        r["ahimsa"] = (r.get("symbol") in _ahimsa) if _ahimsa_ok else None
+    print(f"[ahimsa] {'list read: ' + str(len(_ahimsa)) + ' constituents' if _ahimsa_ok else 'LIST UNAVAILABLE — every row marked unknown'}"
+          f"{', ' + str(sum(1 for r in out if r.get('ahimsa'))) + ' of ' + str(len(out)) + ' screened names are in it' if _ahimsa_ok else ''}")
+
     out.sort(key=lambda x: (x["comp"] is None, -(x["comp"] or 0)))
     # Deltas BEFORE compaction: _compact strips nulls, and a delta needs
     # both sides present to be computed at all.
@@ -2163,6 +2192,19 @@ def build(limit: int | None = None, allow_fetch: bool = True,
                      "at least that far — cf_1h and intraday are excluded from "
                      "that sample because their max-favourable figures are not "
                      "credible."),
+        },
+        # Stated at the payload level so a consumer can tell "NSE excluded it"
+        # from "we could not read NSE's list" without inspecting 500 rows.
+        "ahimsa": {
+            "index": "Nifty500 Ahimsa",
+            "source": "NSE Indices constituent list",
+            "launched": "2026-07-10",
+            "available": _ahimsa_ok,
+            "constituents": len(_ahimsa) if _ahimsa_ok else None,
+            "in_screen": sum(1 for r in out if r.get("ahimsa")) if _ahimsa_ok else None,
+            "note": ("Membership in NSE's index, not a score. NSE publishes no "
+                     "per-company quotient and this build computes none. It is "
+                     "not an input to any score on this page."),
         },
         "coverage": cov,
         "changes": delta_meta,
