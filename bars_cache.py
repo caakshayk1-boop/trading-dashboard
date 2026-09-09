@@ -73,3 +73,64 @@ def save(name: str, obj: dict) -> str:
         json.dump(obj, fh, separators=(",", ":"))
     os.replace(tmp, p)
     return p
+
+
+MANIFEST = "manifest.json"
+
+
+def manifest() -> dict:
+    """What the last harvest actually got, or {} if it never ran.
+
+    Returned rather than raised on a missing file: a scan reading a cache
+    somebody else filled (RESEARCH_BARS_DIR on a laptop) is a supported case,
+    and it should say it cannot vouch for the coverage — not die.
+    """
+    try:
+        with open(path(MANIFEST), encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return {}
+
+
+def coverage_note(*names: str) -> str:
+    """One measured sentence about how much of the universe this run saw.
+
+    WHY THIS IS NOT A CONSTANT
+    --------------------------
+    It used to be. Both scans shipped a hardcoded paragraph saying the run had
+    covered "the names whose bars were already harvested" because "Yahoo had
+    throttled this address". That was true of the laptop run it was written on
+    and became false the moment the harvester worked: the run of 2026-09-09
+    fetched 500 of 500 and published a note swearing it had been throttled.
+
+    A freshness claim a payload asserts about itself, rather than reads off the
+    thing it is describing, can only drift — the same fault `data_health.py`
+    exists to stop a section committing on the page. So the numbers come from
+    the manifest the harvest wrote, and if there is no manifest the note says
+    that instead of inventing a reason.
+    """
+    m = manifest()
+    files = (m.get("files") or {})
+    rows = [(n, files[n]) for n in names if n in files]
+    if not rows:
+        return ("Coverage for this run is unknown — the bar cache carries no "
+                "harvest manifest, so how much of the universe it holds cannot "
+                "be stated. Run harvest_bars.py to produce one.")
+
+    at = m.get("at") or "an unrecorded time"
+    parts = []
+    for name, cov in rows:
+        asked, got = cov.get("asked"), cov.get("got")
+        if not asked or got is None:
+            continue
+        label = {HOURLY: "hourly", DAILY_3Y: "3-year daily"}.get(name, name)
+        bit = f"{got} of {asked} names on {label} bars"
+        missed = (cov.get("no_data") or 0) + (cov.get("too_short") or 0)
+        if missed:
+            bit += (f" ({cov.get('no_data', 0)} returned nothing, "
+                    f"{cov.get('too_short', 0)} had too little history)")
+        parts.append(bit)
+    if not parts:
+        return ("Coverage for this run is unknown — the harvest manifest "
+                "recorded no counts.")
+    return f"Harvested {'; '.join(parts)}, at {at}."

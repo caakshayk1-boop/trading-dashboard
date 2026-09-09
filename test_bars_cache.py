@@ -234,6 +234,62 @@ def _():
     assert "concurrency:" in wf and "research-scan" in wf
 
 
+@check("no scan asserts its own coverage — it reads the harvest manifest")
+def _():
+    # scan_research.py and scan_buoy.py each shipped a hardcoded paragraph
+    # saying the run had covered only "the names whose bars were already
+    # harvested" because "Yahoo had throttled this address". True of the laptop
+    # run it was written on. The run of 2026-09-09 harvested 500 of 500 and
+    # published that sentence anyway — a payload swearing it was throttled
+    # while its own manifest said otherwise.
+    for name in ("scan_research.py", "scan_buoy.py"):
+        src = (ROOT / name).read_text(encoding="utf-8")
+        body = "\n".join(ln for ln in src.splitlines()
+                         if not ln.lstrip().startswith("#"))
+        assert "bars_cache.coverage_note(" in body, (
+            f"{name} must read coverage off the manifest")
+        for phrase in ("had throttled this address", "already harvested",
+                       "runs the full 750", "runs the full universe"):
+            assert phrase not in body, (
+                f"{name} still asserts its own coverage: {phrase!r}")
+
+
+@check("coverage_note says it does not know rather than guessing")
+def _():
+    import tempfile, importlib
+    bc = importlib.import_module("bars_cache")
+    was, bc.CACHE_DIR = bc.CACHE_DIR, tempfile.mkdtemp()
+    try:
+        # No manifest at all: no number may be invented.
+        blank = bc.coverage_note(bc.HOURLY)
+        assert "unknown" in blank, blank
+        assert not any(ch.isdigit() for ch in blank.split("harvest_bars")[0]), blank
+
+        bc.save(bc.MANIFEST, {"at": "2026-09-09T15:20:50+00:00", "files": {
+            bc.HOURLY:   {"asked": 500, "got": 500, "no_data": 0, "too_short": 0},
+            bc.DAILY_3Y: {"asked": 500, "got": 498, "no_data": 1, "too_short": 1},
+        }})
+        both = bc.coverage_note(bc.HOURLY, bc.DAILY_3Y)
+        assert "500 of 500" in both and "498 of 500" in both, both
+        # A range the run did not read is not described.
+        assert "498" not in bc.coverage_note(bc.HOURLY)
+    finally:
+        bc.CACHE_DIR = was
+
+
+@check("a manifest with no counts still refuses to state a coverage")
+def _():
+    import tempfile, importlib
+    bc = importlib.import_module("bars_cache")
+    was, bc.CACHE_DIR = bc.CACHE_DIR, tempfile.mkdtemp()
+    try:
+        bc.save(bc.MANIFEST, {"at": "x", "files": {bc.HOURLY: {"seconds": 87.0}}})
+        assert "unknown" in bc.coverage_note(bc.HOURLY)
+    finally:
+        bc.CACHE_DIR = was
+
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
