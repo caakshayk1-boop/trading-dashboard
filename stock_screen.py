@@ -2393,6 +2393,74 @@ DETAIL_FIELDS = (
 )
 
 
+# ── THE THIRD PROJECTION: WHAT THE SIGNAL SITE'S LIGHT ROUTES READ ──────────
+#
+# split_payload already moved the research prose out of the table. The table it
+# leaves is still 1.49 MB raw / 298 KB gzipped, and TEN routes on
+# signal.askakshay.com fetch it — home, brief, ideas, radar, news, markets,
+# signals, screen, stock detail. On a phone that is ~300 KB before a pixel of
+# the answer renders, nine times over.
+#
+# Measured on the 2026-09-09 build, 750 rows, 101 fields:
+#
+#   dropped 29 fields no signal.js code path reads   -> 229 KB gz  (-23%)
+#   + moved risk.flags and vd.f (PROSE) to detail    -> 206 KB gz  (-31%)
+#
+# WHY THOSE TWO IN PARTICULAR. `risk.flags` and `vd.f` are lists of sentences —
+# "Only 15% of reported profit arrived as operating cash" — 750 times over.
+# They are EVIDENCE, which is the third tier of the disclosure order and is
+# read when somebody opens one company, not when a page lists many. The
+# summary scalars a card actually prints (risk.level, risk.score, vd.c, vd.l,
+# vd.k) stay in the table.
+#
+# WHY A NEW FILE RATHER THAN NARROWING screen.json. 14 of those 29 fields ARE
+# read by static/app.js — the newspaper's own UI, a different site on the same
+# payload. Narrowing the shared file to suit this site would have broken that
+# one silently. The two consumers have different needs and now have different
+# files; screen.json is untouched.
+#
+# THE KEEP LIST IS DERIVED, NOT MAINTAINED BY HAND. It is every field the
+# signal frontend actually references — see test_screen_lite.py, which reads
+# public/signal.js and fails if this list has drifted from it. A hand-kept
+# whitelist would go stale the first time somebody added a column.
+LITE_DROP_FIELDS = (
+    "brk20", "brk50", "cf_conf", "cfo_cr", "delta", "ebit_margin", "em_conf",
+    "fcf_cr", "fcf_margin", "g_conf", "has_stmts", "isin", "m_inv", "m_pos",
+    "m_swing", "macd_h", "margin_delta", "net_margin", "pat_yoy", "piotroski_of",
+    "q_conf", "rank_move", "rev_growth", "risk_lvl", "roe_med", "rs1y",
+    "shares_changed", "tech_conf", "tier",
+)
+# Prose inside an otherwise-scalar object. Dropped from the sub-object rather
+# than dropping the whole field, because the card prints its summary keys.
+LITE_DROP_INNER = {"risk": ("flags",), "vd": ("f",)}
+
+
+def lite_payload(table: dict) -> dict:
+    """The table again, minus what the signal site never reads and the prose.
+
+    Takes the ALREADY-SPLIT table, not the raw build, so it can never
+    accidentally re-admit a detail field.
+    """
+    rows = []
+    for r in table.get("rows") or []:
+        o = {k: v for k, v in r.items() if k not in LITE_DROP_FIELDS}
+        for outer, inner in LITE_DROP_INNER.items():
+            if isinstance(o.get(outer), dict):
+                o[outer] = {k: v for k, v in o[outer].items() if k not in inner}
+        rows.append(o)
+    out = {k: v for k, v in table.items() if k != "rows"}
+    out["rows"] = rows
+    # Declared, so a consumer that needs a dropped field can tell it was
+    # dropped rather than concluding the build lost it.
+    out["is_lite"] = True
+    out["lite_dropped"] = sorted(LITE_DROP_FIELDS)
+    out["lite_note"] = ("Fields the signal frontend does not read, plus the "
+                        "per-company prose in risk.flags and vd.f, are in "
+                        "screen.json and screen-detail.json. Nothing here is "
+                        "recomputed or rounded differently.")
+    return out
+
+
 def split_payload(data: dict) -> tuple[dict, dict]:
     """(table payload, detail payload keyed by symbol).
 
