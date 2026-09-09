@@ -1,9 +1,14 @@
 # BUOY — the forward scan for an UNPROVEN engine.
 #
-# It exists to grow a sample, not to publish trades. BUOY measured +0.074R at
-# t=+0.23 over 18 backtested signals, and +0.065R at t=+0.77 over 217 without
-# its divergence filter; neither is distinguishable from zero. Running it in
-# the open for a week is how that gets settled one way or the other.
+# It exists to grow a sample, not to publish trades. BUOY measures near zero on
+# both of its lanes; neither is distinguishable from zero. Running it in the
+# open is how that gets settled one way or the other.
+#
+# THE NUMBERS ARE NOT REPEATED HERE. They live in BACKTEST in signals/buoy.py
+# and nowhere else. This comment used to quote "+0.074R at t=+0.23 over 18 ...
+# +0.065R at t=+0.77 over 217" from an earlier sweep, and went on saying it
+# after the production harness measured n=35 and n=348 — a comment describing a
+# workflow by numbers the workflow no longer produces.
 #
 # TWICE A DAY, AT THE 4-HOUR CLOSES — not hourly.
 #

@@ -290,6 +290,53 @@ def _():
 
 
 
+@check("no payload restates a BACKTEST number as a literal")
+def _():
+    # docs/buoy.json shipped a `backtest` block saying n=35 / +0.002R and, two
+    # keys later, a `disclaimer` sentence saying "+0.074R over 18 backtested
+    # trades" — real numbers from the superseded HOURLY build, typed by hand
+    # beside the dict that had replaced them.
+    #
+    # It went unnoticed because that file has no reader (/buoy redirects to
+    # /research), which is precisely why it was free to drift. A number
+    # restated by hand disagrees with its source eventually; the only question
+    # is whether anyone is looking when it does.
+    #
+    # signals/buoy.py may still name them: its sweep log and its "Superseded:"
+    # paragraph are DATED HISTORY of the hourly build, labelled as such.
+    import ast as _ast
+    bt = {}
+    tree = _ast.parse((ROOT / "signals" / "buoy.py").read_text(encoding="utf-8"))
+    for node in tree.body:
+        if (isinstance(node, _ast.Assign)
+                and any(getattr(t, "id", None) == "BACKTEST" for t in node.targets)):
+            bt = _ast.literal_eval(node.value)
+    assert bt, "BACKTEST not found in signals/buoy.py"
+
+    src = (ROOT / "scan_buoy.py").read_text(encoding="utf-8")
+    body = "\n".join(ln for ln in src.splitlines() if not ln.lstrip().startswith("#"))
+    fn = body[body.index("def _disclaimer"):]
+    fn = fn[:fn.index("\n\n\n")] if "\n\n\n" in fn else fn
+    for key in ("n", "exp", "t", "n_no_div", "exp_no_div", "t_no_div"):
+        assert f"b['{key}']" in fn, f"_disclaimer must read BACKTEST[{key!r}], not restate it"
+    # And the sample sizes must not appear as bare literals anywhere else in it.
+    for n in (bt["n"], bt["n_no_div"]):
+        assert f'"{n}' not in body and f"'{n}" not in body, (
+            f"scan_buoy.py hardcodes the sample size {n}")
+
+
+@check("the workflow header does not restate the engine's numbers")
+def _():
+    wf = (ROOT / ".github" / "workflows" / "research.yml").read_text(encoding="utf-8")
+    head = wf[:wf.index("name: research-scan")]
+    # The old header quoted the hourly build's figures and kept quoting them
+    # after the production harness replaced them.
+    assert "+0.074R at t=+0.23 over 18 backtested signals" not in head
+    assert "signals/buoy.py" in head, (
+        "the header must point at where the numbers live instead of copying them")
+
+
+
 def main() -> int:
     passed = failed = 0
     for name, fn in CHECKS:
