@@ -1,7 +1,22 @@
 // Shared Turso client + helpers for every /api route.
 // TURSO_URL / TURSO_TOKEN are the same secrets the GitHub Actions scanner uses,
 // so the site reads the exact ledger the bot writes — no copy, no drift.
-import { createClient } from "@libsql/client";
+// THE `/web` ENTRYPOINT, AND IT IS NOT A STYLE CHOICE.
+//
+// `@libsql/client` resolves to lib-esm/node.js, which statically imports
+// ./sqlite3.js, which imports the native `libsql` package. That drags
+// @libsql/linux-x64-gnu and @libsql/linux-x64-musl — 18.8 MB of compiled
+// binary — into the bundle of every function that reaches this file, which is
+// sixteen of the eighteen routes. Vercel keeps the output of every deployment,
+// and this repo pushes several times a day, so that binary was being retained
+// once per function per deploy. Function Storage hit 100% of the 10 GB free
+// tier on it.
+//
+// Nothing here opens a local database file. Turso is reached over HTTPS, and
+// `/web` is the same client with the sqlite3 path removed: it accepts
+// libsql:, https: and wss: URLs and refuses file: ones, which is exactly the
+// set this API uses. The native binary was pure weight.
+import { createClient } from "@libsql/client/web";
 import { timingSafeEqual, createHmac } from "node:crypto";
 
 let _client = null;

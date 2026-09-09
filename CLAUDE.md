@@ -130,6 +130,26 @@ heading twice and stops being navigation.
 Main page runs, in order: **Read · Research · Trade · Trust**. Moving a section
 means moving its template block AND its SECTION_MAP row; the test checks both.
 
+## Hosting cost
+Turso is the only paid line. Everything else must stay inside a free tier.
+
+- **news.askakshay.com** is on Vercel and hit **100% of the 10 GB free Function
+  Storage**. Two causes, both now fixed in config, neither of which reclaims
+  what is already stored:
+  - `api/_db.js` imports `@libsql/client/web`, NOT `@libsql/client`. The default
+    entrypoint statically imports the native `libsql` package — 18.8 MB of
+    compiled binary — and **sixteen of the eighteen routes** reach `_db.js`.
+    Vercel bundles per function and keeps every deployment's output.
+  - `vercel.json`'s `ignoreCommand` skips the build unless the commit touched
+    `docs/` or `vercel-news/`. About a third of pushes here are Python-only and
+    were each producing a retained deployment that served nothing new.
+  - `vercel-news/test/bundle.test.js` pins the first; it runs in `newspaper.yml`.
+- **Reclaiming the 10 GB needs the account**: delete old deployments in the
+  Vercel dashboard (Project → Deployments), or `vercel remove <project> --safe`.
+  Nothing in this repo can do it.
+- **signal.askakshay.com** is on Cloudflare Workers and costs nothing at this
+  traffic. It is the pattern to migrate toward if the newspaper's bill returns.
+
 ## Rules
 - NEVER read or modify `config.py` (contains API keys)
 - All market data: fetch live, never hardcode prices

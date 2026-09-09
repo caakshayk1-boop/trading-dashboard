@@ -226,6 +226,19 @@ jobs:
       # connected to this repository, so the push above is what ships the site.
       # A CLI deploy would publish the same commit a second time.
       #
+      # WHICH IS ALSO THE COST. Vercel builds on EVERY push and keeps the
+      # output of every deployment it has ever built. This repo pushes several
+      # times a day and about a third of those commits are Python-only — they
+      # change no file this site serves and were still producing a full,
+      # permanently retained deployment each. `ignoreCommand` in
+      # vercel-news/vercel.json now skips the build unless the commit touched
+      # docs/ or vercel-news/, and exits non-zero (build) if it cannot tell.
+      #
+      # The other half of the same bill is bundle weight: api/_db.js imports
+      # @libsql/client/web rather than the default entrypoint, which would drag
+      # an 18.8 MB native SQLite binary into each of the sixteen functions that
+      # reach it. vercel-news/test/bundle.test.js holds both in place.
+      #
       # Only the daily shell is published this way — signals, positions and
       # stats are read live from Turso by /api on every page load, which is why
       # nothing needs to redeploy after a scan.
