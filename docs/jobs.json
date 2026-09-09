@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-09T05:44:43Z",
- "next_refresh": "2026-09-10T05:44:43Z",
+ "generated_at": "2026-09-09T09:22:33Z",
+ "next_refresh": "2026-09-10T09:22:33Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 20,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "GMG",
@@ -24,15 +24,15 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Al-Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 38,
+   "jobs_found": 39,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 8,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Emaar",
@@ -77,10 +77,10 @@
   {
    "name": "Jumeirah",
    "kind": "employer",
-   "status": "empty",
-   "jobs_found": 0,
-   "detail": "reachable, but no senior-finance roles matched",
-   "last_success": "2026-09-02T14:48:32Z"
+   "status": "ok",
+   "jobs_found": 1,
+   "detail": "",
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Americana Restaurants",
@@ -88,7 +88,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Etihad Airways",
@@ -96,7 +96,7 @@
    "status": "ok",
    "jobs_found": 10,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Aldar",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-09T05:44:43Z"
+   "last_success": "2026-09-09T09:22:33Z"
   },
   {
    "name": "Alshaya Group",
@@ -180,20 +180,20 @@
   }
  ],
  "stats": {
-  "total_active": 56,
+  "total_active": 57,
   "high_fit": 8,
   "s_tier": 1,
   "by_country": {
-   "UAE": 46,
+   "UAE": 47,
    "Saudi Arabia": 0,
    "Malaysia": 10,
    "Oman": 0
   },
   "duplicates_removed": 0,
-  "stale_removed": 2,
-  "sources_ok": 11,
+  "stale_removed": 0,
+  "sources_ok": 12,
   "sources_attempted": 22,
-  "urls_verified": 80,
+  "urls_verified": 81,
   "urls_unverified": 11,
   "urls_broken": 0
  },
@@ -211,8 +211,8 @@
    "employment_type": null,
    "posted_date": "2026-08-27",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -305,8 +305,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Landmark Group",
    "sources": [
@@ -417,8 +417,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -522,8 +522,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-08-11",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -627,8 +627,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -708,8 +708,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Aldar",
    "sources": [
@@ -813,8 +813,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-16",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -911,8 +911,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-03",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1019,8 +1019,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1191,8 +1191,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1285,8 +1285,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1383,8 +1383,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1482,8 +1482,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -1575,8 +1575,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-25",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -1649,8 +1649,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-02",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1743,8 +1743,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -1833,8 +1833,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Landmark Group",
    "sources": [
@@ -1916,8 +1916,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -2013,8 +2013,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2112,8 +2112,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2207,8 +2207,8 @@
    "employment_type": null,
    "posted_date": "2026-06-03",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Landmark Group",
    "sources": [
@@ -2297,8 +2297,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Aldar",
    "sources": [
@@ -2390,8 +2390,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Chalhoub Group",
    "sources": [
@@ -2555,8 +2555,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2741,8 +2741,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2831,8 +2831,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3106,8 +3106,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -3194,8 +3194,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3828,6 +3828,96 @@
    "exclusion_reason": null
   },
   {
+   "id": "304982f31d18de1ee27620e30c94ba7e95afe6a8",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Insurance Assistant Motor Insurance Operations I Dubai | Financial Services| Orient Insurance PJSC",
+   "normalized_title": "insurance assistant motor insurance operations i dubai financial services orient insurance pjsc",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-08-18",
+   "closing_date": "2026-09-20",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
+   "status": "AGING",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Insurance-Assistant-Motor-Insurance-Operations-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1427249333/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1427249333/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 2,
+   "experience_max": 3,
+   "description": "Job Requisition ID: 180702 \n\n Established in the 1930s as a trading business, Al-Futtaim Group today is one of the most diversified and progressive, privately held regional businesses headquartered in Dubai, United A”rab Emirates. Structured into five operating divisions; automotive, financial services, real estate, retail and healthcare; employing more than 35,000 employees across more than 20 countries in the Middle East, Asia and Africa, Al-Futtaim Group partners with over 200 of the world's most admired and innovative brands. Al-Futtaim Group’s entrepreneurship and relentless customer focus enables the organisation to continue to grow and expand; responding to the changing needs of our customers within the societies in which we operate. \n\n By upholding our values of respect, excellence, collaboration and integrity; Al-Futtaim Group continues to enrich the lives and aspirations of our customers each and every day. \n Job Description: \n\n Support daily motor insurance operations retail motor and fleet and ensure quotations, Approvals , policies and customer requests are handled accurately and on time. \n\n What you will do (Key Responsibilities) \n\n Support daily motor insurance operations \n\r\n Handle retail motor quotations, policy issuance, renewals, endorsements and cancellations. \n\r\n Review and provide approvals based on the approved authority matrix and guidelines \n\r\n Review customer profiles, vehicle details & supporting documents \n\r\n Enter, review and update policy details accurately in the system \n\r\n Follow up on pending documents, payments, approval and other requirements \n\r\n Work closely with all stakeholders, channel partners (internal and external) and customers \n\r\n Coordinate with underwriters, brokers, agents and other teams for smooth processing \n\r\n Maintain accurate records, trackers and reports, and complete all work within the required TAT \n\r\n Follow company underwriting guidelines, procedures and approval requirements \n\n Required Skills to be successful (Qualification) \n\n Bachelor’s degree in a relevant field \n\r\n Basic knowledge of motor insurance \n\r\n Basic knowledge of Microsoft Office, especially Excel \n\r\n Good written and verbal communication skills \n\r\n Minimum 2 to 3 years of previous insurance experience \n\n What equips you for the role (Skills Required) \n\n Good attention to detail and accuracy \n\r\n Good communication and coordination skills \n\r\n Ability to handle multiple tasks and priorities \n\r\n Customer focused approach \n\r\n Good follow up and time management skills \n\r\n Ability to work well with different teams and channel partners \n\r\n Willingness to learn and develop in motor insurance \n\n About Orient Insurance PJSC \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman, Riyadh in Kingdom of Saudi Arabia and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n General Management & Business Support Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "Support daily motor insurance operations",
+    "Handle retail motor quotations, policy issuance, renewals, endorsements and cancellations",
+    "Review and provide approvals based on the approved authority matrix and guidelines",
+    "Review customer profiles, vehicle details & supporting documents",
+    "Enter, review and update policy details accurately in the system",
+    "Follow up on pending documents, payments, approval and other requirements",
+    "Work closely with all stakeholders, channel partners (internal and external) and customers",
+    "Coordinate with underwriters, brokers, agents and other teams for smooth processing",
+    "Maintain accurate records, trackers and reports, and complete all work within the required TAT",
+    "Follow company underwriting guidelines, procedures and approval requirements",
+    "Bachelor’s degree in a relevant field",
+    "Basic knowledge of motor insurance",
+    "Basic knowledge of Microsoft Office, especially Excel",
+    "Good written and verbal communication skills",
+    "Minimum 2 to 3 years of previous insurance experience",
+    "Good attention to detail and accuracy",
+    "Good communication and coordination skills",
+    "Ability to handle multiple tasks and priorities",
+    "Customer focused approach",
+    "Good follow up and time management skills"
+   ],
+   "requirements": [],
+   "skills": [
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 34,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 50,
+   "score_breakdown": {
+    "seniority": 0,
+    "functional": 0,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "OPTIONAL",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Posted 2026-08-18 — this req is aging and may already be filled."
+   ],
+   "resume_match": null,
+   "duplicate_group": "31facae04d45c22819dbb91fdf24e8b37fe4c3e4",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "d23451ac7b5ebcad53be82e5e17cdb51a843bf70",
    "company": "AVI-SPL Middle East",
    "company_group": null,
@@ -4207,8 +4297,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-27",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -4300,8 +4390,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4768,8 +4858,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5040,8 +5130,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5121,8 +5211,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5203,8 +5293,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-29",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5276,8 +5366,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
@@ -5378,8 +5468,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5480,8 +5570,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5582,8 +5672,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5660,8 +5750,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -5756,8 +5846,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -5849,8 +5939,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -5942,8 +6032,8 @@
    "employment_type": null,
    "posted_date": "2026-08-23",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6032,8 +6122,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6127,8 +6217,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-10",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6206,8 +6296,8 @@
    "employment_type": null,
    "posted_date": "2026-08-13",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6297,8 +6387,8 @@
    "employment_type": null,
    "posted_date": "2026-08-15",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6390,8 +6480,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-13",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6481,8 +6571,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-09-11",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6573,8 +6663,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Landmark Group",
    "sources": [
@@ -6670,8 +6760,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6760,8 +6850,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -6850,8 +6940,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6920,8 +7010,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -6996,8 +7086,8 @@
    "employment_type": null,
    "posted_date": "2026-09-05",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7087,8 +7177,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7176,8 +7266,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7268,8 +7358,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7358,8 +7448,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -7443,8 +7533,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-14",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -7536,8 +7626,8 @@
    "employment_type": null,
    "posted_date": "2026-08-24",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7628,8 +7718,8 @@
    "employment_type": null,
    "posted_date": "2026-08-12",
    "closing_date": "2026-09-12",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -7716,8 +7806,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -7786,8 +7876,8 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7876,8 +7966,8 @@
    "employment_type": null,
    "posted_date": "2026-08-21",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Americana Restaurants",
    "sources": [
@@ -7968,8 +8058,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8058,8 +8148,8 @@
    "employment_type": null,
    "posted_date": "2026-08-14",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -8136,6 +8226,86 @@
    "exclusion_reason": "financial-crime / AML role"
   },
   {
+   "id": "bb8176efef3dd00035dafff9c46a2706fb51788e",
+   "company": "Al Tayer",
+   "company_group": "Al Tayer",
+   "title": "Finance & Insurance Advisor - Dubai & Abu Dhabi",
+   "normalized_title": "finance & insurance advisor dubai & abu dhabi",
+   "location": null,
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Managerial",
+   "employment_type": null,
+   "posted_date": "2026-08-26",
+   "closing_date": null,
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
+   "status": "ACTIVE",
+   "source": "Al Tayer",
+   "sources": [
+    "Al Tayer"
+   ],
+   "source_url": "https://hchx.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/3632/",
+   "application_url": "https://hchx.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/3632/",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 3,
+   "experience_max": 4,
+   "description": "To offer, sell and administer the sale of Finance and Insurance (F&I) products in order to achieve the finance and insurance penetration targets and enhance the sales process on the sales floor\n Functional Roles and Responsibilities \n Carry out F&I procedures in accordance with pre agreed processes so that targets for New Finance & Insurance and Renewal Insurance are met on a monthly basis throughout ATM. \n Identify customer needs, recommend F&I options, provide complete information to ensure customers make an informed choice. \n Liaise with all the Sales departments to ensure all the retail customers are offered and quoted F&I options prior to conclusion of the deal. \n Prepare quotations for the customer deals and file all the records appropriately \n Ensure that customers are fully informed regarding terms and conditions of each contract and are aware of any exclusions or benefits that may be relevant prior to purchase \n Collect all proofs required by the supporting bank and secure the credit line prior to a vehicle being released by the sales department \n Reconcile the commission payable from supporting banks against each deal and keep a financial control log on a daily basis \n Keep records of each deal on the sales floor and monitor the commission, type of referral, the original funding source and the conversion rate for each individual salesperson. \n Provide information on individual salesperson achievement regarding F&I penetrations and referral grades to the Showroom/Sales Manager on a periodic basis.\n \n Qualification & Experience \n Degree in any discipline or through automotive vocational route\n 3 – 4 years solid experience in car sales, finance or insurance markets in association with the motor industry as a whole or GCC market\n Good attention to detail, process driven and efficient planning and organizing skills. \n A pleasing personality is needed as you will be communicating with customers at all levels\n .",
+   "responsibilities": [
+    "Carry out F&I procedures in accordance with pre agreed processes so that targets for New Finance & Insurance and Renewal Insurance are met on a monthly basis throughout ATM",
+    "Identify customer needs, recommend F&I options, provide complete information to ensure customers make an informed choice",
+    "Liaise with all the Sales departments to ensure all the retail customers are offered and quoted F&I options prior to conclusion of the deal",
+    "Prepare quotations for the customer deals and file all the records appropriately",
+    "Ensure that customers are fully informed regarding terms and conditions of each contract and are aware of any exclusions or benefits that may be relevant prior to purchase",
+    "Collect all proofs required by the supporting bank and secure the credit line prior to a vehicle being released by the sales department",
+    "Reconcile the commission payable from supporting banks against each deal and keep a financial control log on a daily basis",
+    "Keep records of each deal on the sales floor and monitor the commission, type of referral, the original funding source and the conversion rate for each individual salesperson",
+    "Provide information on individual salesperson achievement regarding F&I penetrations and referral grades to the Showroom/Sales Manager on a periodic basis",
+    "Degree in any discipline or through automotive vocational route",
+    "3 – 4 years solid experience in car sales, finance or insurance markets in association with the motor industry as a whole or GCC market",
+    "Good attention to detail, process driven and efficient planning and organizing skills",
+    "A pleasing personality is needed as you will be communicating with customers at all levels"
+   ],
+   "requirements": [],
+   "skills": [],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 35,
+   "employer_score": 82,
+   "career_upside_score": 43,
+   "opportunity_score": 48,
+   "score_breakdown": {
+    "seniority": 0,
+    "functional": 5,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 0,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 5
+   },
+   "tier": "D",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Al Tayer is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "46bbc988fd19e8d7ea0fa5c3cd8f79a300e3a4e8",
+   "is_excluded": true,
+   "exclusion_reason": "not a finance role"
+  },
+  {
    "id": "b2d69963b40f44d807d7379d9375784c47982708",
    "company": "Al Tayer",
    "company_group": "Al Tayer",
@@ -8148,8 +8318,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "AGING",
    "source": "Al Tayer",
    "sources": [
@@ -8221,86 +8391,6 @@
    "exclusion_reason": "not a finance role"
   },
   {
-   "id": "bb8176efef3dd00035dafff9c46a2706fb51788e",
-   "company": "Al Tayer",
-   "company_group": "Al Tayer",
-   "title": "Finance & Insurance Advisor - Dubai & Abu Dhabi",
-   "normalized_title": "finance & insurance advisor dubai & abu dhabi",
-   "location": null,
-   "country": "UAE",
-   "region": "GCC",
-   "department": "Managerial",
-   "employment_type": null,
-   "posted_date": "2026-08-26",
-   "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
-   "status": "ACTIVE",
-   "source": "Al Tayer",
-   "sources": [
-    "Al Tayer"
-   ],
-   "source_url": "https://hchx.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/3632/",
-   "application_url": "https://hchx.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/3632/",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 3,
-   "experience_max": 4,
-   "description": "To offer, sell and administer the sale of Finance and Insurance (F&I) products in order to achieve the finance and insurance penetration targets and enhance the sales process on the sales floor\n Functional Roles and Responsibilities \n Carry out F&I procedures in accordance with pre agreed processes so that targets for New Finance & Insurance and Renewal Insurance are met on a monthly basis throughout ATM. \n Identify customer needs, recommend F&I options, provide complete information to ensure customers make an informed choice. \n Liaise with all the Sales departments to ensure all the retail customers are offered and quoted F&I options prior to conclusion of the deal. \n Prepare quotations for the customer deals and file all the records appropriately \n Ensure that customers are fully informed regarding terms and conditions of each contract and are aware of any exclusions or benefits that may be relevant prior to purchase \n Collect all proofs required by the supporting bank and secure the credit line prior to a vehicle being released by the sales department \n Reconcile the commission payable from supporting banks against each deal and keep a financial control log on a daily basis \n Keep records of each deal on the sales floor and monitor the commission, type of referral, the original funding source and the conversion rate for each individual salesperson. \n Provide information on individual salesperson achievement regarding F&I penetrations and referral grades to the Showroom/Sales Manager on a periodic basis.\n \n Qualification & Experience \n Degree in any discipline or through automotive vocational route\n 3 – 4 years solid experience in car sales, finance or insurance markets in association with the motor industry as a whole or GCC market\n Good attention to detail, process driven and efficient planning and organizing skills. \n A pleasing personality is needed as you will be communicating with customers at all levels\n .",
-   "responsibilities": [
-    "Carry out F&I procedures in accordance with pre agreed processes so that targets for New Finance & Insurance and Renewal Insurance are met on a monthly basis throughout ATM",
-    "Identify customer needs, recommend F&I options, provide complete information to ensure customers make an informed choice",
-    "Liaise with all the Sales departments to ensure all the retail customers are offered and quoted F&I options prior to conclusion of the deal",
-    "Prepare quotations for the customer deals and file all the records appropriately",
-    "Ensure that customers are fully informed regarding terms and conditions of each contract and are aware of any exclusions or benefits that may be relevant prior to purchase",
-    "Collect all proofs required by the supporting bank and secure the credit line prior to a vehicle being released by the sales department",
-    "Reconcile the commission payable from supporting banks against each deal and keep a financial control log on a daily basis",
-    "Keep records of each deal on the sales floor and monitor the commission, type of referral, the original funding source and the conversion rate for each individual salesperson",
-    "Provide information on individual salesperson achievement regarding F&I penetrations and referral grades to the Showroom/Sales Manager on a periodic basis",
-    "Degree in any discipline or through automotive vocational route",
-    "3 – 4 years solid experience in car sales, finance or insurance markets in association with the motor industry as a whole or GCC market",
-    "Good attention to detail, process driven and efficient planning and organizing skills",
-    "A pleasing personality is needed as you will be communicating with customers at all levels"
-   ],
-   "requirements": [],
-   "skills": [],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 35,
-   "employer_score": 82,
-   "career_upside_score": 43,
-   "opportunity_score": 48,
-   "score_breakdown": {
-    "seniority": 0,
-    "functional": 5,
-    "industry": 15,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 5
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "Al Tayer is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
-   ],
-   "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
-   ],
-   "resume_match": null,
-   "duplicate_group": "46bbc988fd19e8d7ea0fa5c3cd8f79a300e3a4e8",
-   "is_excluded": true,
-   "exclusion_reason": "not a finance role"
-  },
-  {
    "id": "a5d4c31b85fb4a5906893e5b42b65dc1f14898db",
    "company": "Americana Restaurants",
    "company_group": "Americana",
@@ -8313,8 +8403,8 @@
    "employment_type": null,
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Americana Restaurants",
    "sources": [
@@ -8384,8 +8474,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-09T05:44:43Z",
-   "last_verified_at": "2026-09-09T05:44:43Z",
+   "scraped_at": "2026-09-09T09:22:33Z",
+   "last_verified_at": "2026-09-09T09:22:33Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
