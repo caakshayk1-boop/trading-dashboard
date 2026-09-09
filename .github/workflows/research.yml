@@ -25,6 +25,24 @@ on:
 permissions:
   contents: write
 
+# TWO HARVESTS MUST NEVER OVERLAP, AND ON 2026-09-09 TWO DID.
+#
+# A push to main and a manual dispatch started a minute apart and both began
+# fetching the same 500 symbols. That is six concurrent workers against Yahoo,
+# not three — past the four-way concurrency scan_buoy.py measured earns this
+# address a ten-minute 429. The pacing inside harvest_bars.py is careful and
+# it can only govern ONE process; nothing was stopping a second.
+#
+# It also races on the commit at the end: both runs write the same three files
+# and push.
+#
+# Queued rather than cancelled, because a half-finished harvest leaves the
+# cache untouched (bars_cache writes through a temp file) and the second run
+# then does the work properly rather than being dropped.
+concurrency:
+  group: research-scan
+  cancel-in-progress: false
+
 jobs:
   scan:
     runs-on: ubuntu-latest
