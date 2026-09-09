@@ -712,20 +712,48 @@ def test_docs_files_have_all_four_allow_lists():
     check("newspaper.yml git add block found", add is not None)
     added = set(re.findall(r"docs/([^\s\\]+)", add.group(1)))
 
+    # ── ONE ARTEFACT IS DELIVERED SOMEWHERE ELSE ─────────────────────────
+    #
+    # This check exists because a written file that is not committed and not
+    # served makes production keep serving a stale hand-committed copy. Both
+    # halves of that matter, but they are not the same half.
+    #
+    # screen-lite.json is read by signal.askakshay.com, whose sync-data.yml
+    # fetches it FROM THIS REPOSITORY over the GitHub API — not from
+    # news.askakshay.com. So the commit is mandatory, exactly as it is for
+    # every other file here, and the two Vercel entries would only add ~1 MB
+    # to a deployment output for a file that site never requests.
+    #
+    # The exemption is per-file and named, not a wildcard, and it does NOT
+    # relax the git-add requirement — which is the half this test's own
+    # incident was about.
+    SIGNAL_ONLY = {"screen-lite.json"}
+
     missing = []
     for name in sorted(written):
         where = []
         if name not in added:
             where.append("newspaper.yml git add")
-        if f"!docs/{name}" not in vi:
-            where.append(".vercelignore")
-        if f'"{name}"' not in bj:
-            where.append("build.js")
+        if name not in SIGNAL_ONLY:
+            if f"!docs/{name}" not in vi:
+                where.append(".vercelignore")
+            if f'"{name}"' not in bj:
+                where.append("build.js")
         if where:
             missing.append(f"{name} -> missing from {', '.join(where)}")
 
     check("every file generate.py writes is in all four allow-lists",
           not missing, "; ".join(missing))
+
+    # An exempt file must still be committed, or its reader 404s just as
+    # surely as if Vercel were the one serving it.
+    uncommitted = sorted(n for n in SIGNAL_ONLY & written if n not in added)
+    check("a signal-only artefact is still committed to the repo",
+          not uncommitted, f"not in git add: {uncommitted}")
+    # And the exemption may not outlive the file it was written for.
+    stale = sorted(SIGNAL_ONLY - written)
+    check("no exemption names a file generate.py no longer writes",
+          not stale, f"stale exemptions: {stale}")
 
 
 def test_scan_crons_match_their_slot_arms():
