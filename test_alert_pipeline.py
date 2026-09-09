@@ -500,10 +500,39 @@ def _bars(trigger, quiet=_QUIET):
 _FEED = {}
 
 
+_CALLS = []          # every download this suite triggers, for the batch check
+
+
 class _FakeYF(types.ModuleType):
     @staticmethod
     def download(ticker, **kw):
+        """Answers one ticker or a list, as yfinance does.
+
+        A list comes back with MultiIndex columns in the layout `group_by`
+        asks for. Getting that layout wrong is not a loud failure — _own_frame
+        returns None for every ticker and the batch degrades to one request
+        each, correct and no faster — so the fake has to be honest about it or
+        the test proves nothing.
+        """
         import pandas as _pd
+        if isinstance(ticker, (list, tuple, set)):
+            names = [str(t) for t in ticker]
+            _CALLS.append(("batch", tuple(sorted(names))))
+            frames = {n: _FEED.get(n.replace(".NS", "")) for n in names}
+            frames = {n: f for n, f in frames.items() if f is not None and len(f)}
+            if not frames:
+                return _pd.DataFrame()
+            wide = {}
+            for n, f in frames.items():
+                for col in ("Open", "High", "Low", "Close"):
+                    if kw.get("group_by") == "ticker":
+                        wide[(n, col)] = f[col]
+                    else:                       # "column" — yfinance's default
+                        wide[(col, n)] = f[col]
+            out = _pd.DataFrame(wide)
+            out.columns = _pd.MultiIndex.from_tuples(out.columns)
+            return out
+        _CALLS.append(("single", str(ticker)))
         return _FEED.get(str(ticker).replace(".NS", ""), _pd.DataFrame())
 
 
@@ -583,6 +612,81 @@ for label, sym, eng, days, bar, heading in _CASES:
     # No empty headings, no stray separators.
     check(f"{label} has no blank-run or trailing gap",
           "\n\n\n" not in msg and not msg.endswith("\n"), repr(msg[-30:]))
+
+# ── The book is fetched in batches, not one request per position ─────────────
+#
+# This graded the book with a separate yf.download per open signal — 109 open
+# positions, 109 sequential round trips, inside the run that now carries the
+# whole trading day. Batching is only safe because _own_frame resolves a ticker
+# out of yfinance's MultiIndex instead of letting .squeeze() pick a neighbour's
+# column.
+#
+# The failure mode this guards is quiet: get the `group_by` layout wrong and
+# _own_frame returns None for every ticker, every signal falls back to its own
+# request, and the result is CORRECT and no faster, with nothing saying so.
+
+_clear_open(); _FEED.clear(); _CALLS.clear()
+for _s, _bar in (("BAT001", (99, 100, 94, 96)),        # stop-out
+                 ("BAT002", (101, 109, 100, 108)),     # T1
+                 ("BAT003", (101, 102, 100, 101))):    # nothing
+    _FEED[_s] = _bars(_bar)
+    _file(_s, "ledge", 3, meta=LEDGE_META)
+_msgs = _run_alerts()
+
+_batches = [c for c in _CALLS if c[0] == "batch"]
+_singles = [c for c in _CALLS if c[0] == "single"]
+check("three positions are fetched in one request, not three",
+      len(_batches) == 1 and not _singles,
+      f"{len(_batches)} batch, {len(_singles)} single")
+check("the batch asked for every open ticker",
+      _batches and set(_batches[0][1]) ==
+      {"BAT001.NS", "BAT002.NS", "BAT003.NS"},
+      _batches[0][1] if _batches else "no batch")
+
+# Same book, same verdicts. A faster path that grades differently is not an
+# optimisation, and the wrong `group_by` would hand every signal its
+# neighbour's prices rather than None if _own_frame were not in the way.
+check("the batch grades exactly the positions that moved",
+      len([m for m in _msgs if "BAT001" in m]) == 1
+      and len([m for m in _msgs if "BAT002" in m]) == 1
+      and not [m for m in _msgs if "BAT003" in m],
+      [m.split("\n")[0] for m in _msgs])
+check("the batch grades each one against its OWN bars",
+      any("SL HIT — BAT001" in m for m in _msgs)
+      and any("TARGET 1 HIT — BAT002" in m for m in _msgs),
+      [m.split("\n")[0] for m in _msgs])
+
+# A ticker the batch could not return must still be graded, one request of its
+# own — which is what every signal did before the prefetch existed.
+_clear_open(); _FEED.clear(); _CALLS.clear()
+_FEED["BAT004"] = _bars((99, 100, 94, 96))
+_file("BAT004", "ledge", 3, meta=LEDGE_META)
+_file("BATMISS", "ledge", 3, meta=LEDGE_META)      # no feed entry at all
+_msgs = _run_alerts()
+check("a ticker missing from the batch falls back to its own request",
+      any(c == ("single", "BATMISS.NS") for c in _CALLS),
+      [c for c in _CALLS])
+check("the fallback does not cost the batched ones a second request",
+      len([c for c in _CALLS if c[0] == "single"]) == 1,
+      [c for c in _CALLS if c[0] == "single"])
+check("a missing ticker grades nothing and blocks nothing",
+      len([m for m in _msgs if "BAT004" in m]) == 1
+      and not [m for m in _msgs if "BATMISS" in m],
+      [m.split("\n")[0] for m in _msgs])
+
+# One window per signal, computed once. The prefetch sizes each interval group
+# to its OLDEST signal; a young signal in an old group must still be graded on
+# the bars printed after IT was filed, not the group's.
+_clear_open(); _FEED.clear(); _CALLS.clear()
+_FEED["BATOLD"] = _bars((101, 102, 100, 101))
+_FEED["BATNEW"] = _bars((99, 100, 94, 96))
+_file("BATOLD", "ledge", 3, meta=LEDGE_META)
+_file("BATNEW", "ledge", 0, meta=LEDGE_META)       # filed today
+_msgs = _run_alerts()
+check("a signal filed today is not graded on bars that predate it",
+      not [m for m in _msgs if "BATNEW" in m],
+      [m.split("\n")[0] for m in _msgs])
+
 
 # ── The frame a signal is graded on ──────────────────────────────────────────
 # These three shapes all reached production and all failed SILENTLY, because

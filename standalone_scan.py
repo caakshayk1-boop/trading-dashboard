@@ -541,6 +541,98 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                     continue
         return None
 
+    def _window(row):
+        """(opened_at, age_h, limit_h, period, interval) for one signal.
+
+        ONE function, called once in the prefetch below and read back in the
+        loop, because the two must not be able to disagree about which bars a
+        signal is graded on. Computing it twice is how a prefetch quietly
+        serves the wrong window and the grading silently changes.
+        """
+        meta = {}
+        try:
+            meta = _json.loads(row.get("metadata") or "{}") or {}
+        except Exception:                                   # noqa: BLE001
+            meta = {}
+        opened_at = _opened_at(row)
+        limit_h = _max_hold_hours(
+            str(row.get("timeframe") or "SWING"),
+            engine=str(row.get("signal_type") or "") or str(meta.get("engine") or ""),
+            horizon=str(meta.get("horizon") or ""))
+        age_h = ((now - opened_at).total_seconds() / 3600.0
+                 if opened_at else (0.0 if limit_h is None else limit_h + 1))
+        period, interval = _bar_window(
+            str(row.get("timeframe") or "SWING"),
+            age_h if limit_h is None else min(age_h, limit_h))
+        return opened_at, age_h, limit_h, period, interval
+
+    # ── ONE REQUEST PER INTERVAL, NOT ONE PER POSITION ───────────────────────
+    #
+    # This graded the book with a separate yf.download per open signal. At 109
+    # open positions that is 109 sequential round trips inside the run that now
+    # carries the entire trading day — the 13:00 MYT scan is gone, so if this
+    # one does not finish, nothing is graded at all.
+    #
+    # Batching is only safe because _own_frame exists: it resolves a ticker out
+    # of yfinance's MultiIndex columns instead of letting .squeeze() pick a
+    # neighbour's, which is the failure that quoted BPCL at 176.70 when BPCL
+    # was 317.00. Without it, batching would trade minutes for wrong prices.
+    #
+    # Over-fetching is free. One period per interval group, sized to the OLDEST
+    # signal in it, and _since_entry then slices every signal back to the bars
+    # printed after it was filed — so a young signal in an old group is graded
+    # on exactly the same bars either way.
+    #
+    # A batch that comes back short is not fatal: anything missing falls
+    # through to its own download in the loop, which is what every signal did
+    # before this.
+    from scanner import _own_frame as _frame
+    windows, groups, batched = {}, {}, {}
+    for _, _r in open_df.iterrows():
+        try:
+            _sid = int(_r["id"])
+        except Exception:                                   # noqa: BLE001
+            continue
+        w = _window(_r)
+        windows[_sid] = w
+        _per, _int = w[3], w[4]
+        g = groups.setdefault(_int, {"days": 0, "tickers": []})
+        # Periods are "<n>d" strings from _bar_window; the group takes the max.
+        try:
+            g["days"] = max(g["days"], int(str(_per).rstrip("d")))
+        except ValueError:
+            g["days"] = max(g["days"], 5)
+        g["tickers"].append(to_yahoo(str(_r["symbol"])))
+
+    for _int, g in groups.items():
+        tickers = sorted(set(g["tickers"]))
+        if not tickers:
+            continue
+        try:
+            # group_by="column", NOT "ticker". _own_frame resolves the
+            # ticker at column level -1, which is where the default "column"
+            # layout puts it — ('Close', 'BPCL.NS'). Under "ticker" the levels
+            # are the other way round, _own_frame finds Open/High/Low/Close
+            # where it expects a symbol, returns None for every ticker, and
+            # the whole batch silently falls through to one request each. It
+            # would still be CORRECT; it would just never be faster, and
+            # nothing would say so.
+            raw = yf.download(tickers, period=f"{g['days']}d", interval=_int,
+                              group_by="column", threads=True, progress=False,
+                              auto_adjust=True, timeout=30)
+        except Exception as e:                              # noqa: BLE001
+            logging.warning("price_alerts: batch %s failed (%s) — falling back "
+                            "to one request per signal", _int, e)
+            continue
+        got = 0
+        for t in tickers:
+            f = _frame(raw, t)
+            if f is not None and not f.empty:
+                batched[(t, _int)] = f
+                got += 1
+        logging.info("price_alerts: batch %s — %d/%d tickers over %dd",
+                     _int, got, len(tickers), g["days"])
+
     for _, row in open_df.iterrows():
         sym = row["symbol"]
         try:
@@ -557,7 +649,16 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             buy    = action != "SELL"
             risk   = abs(entry - sl) or 1.0
 
-            opened_at = _opened_at(row)
+            # Read back what the prefetch computed. Recomputing it here would
+            # be a second opinion on which bars this signal is graded on.
+            opened_at, age_h, limit_h, period, interval = (
+                windows.get(sig_id) or _window(row))
+            if limit_h is None:
+                # Unknown horizon: manage the levels, never time-stop it. The
+                # old code defaulted to 20 days here and closed real positions.
+                logging.warning(f"price_alerts {sym}: no horizon for tf={tf!r} "
+                                f"engine={row.get('signal_type')!r} — levels "
+                                f"only, no time stop")
             # ── What this signal is, for the human reading the alert ─────────
             # Every alert used to open with "SL HIT — TITAN | SWING" and stop
             # there. The row already carried the engine that filed it, the day
@@ -568,33 +669,12 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             eng_key = str(row.get("signal_type") or "") or str(meta.get("engine") or "")
             why_txt = _en.why_block(eng_key, meta, row.get("remarks"))
             invalid = _en.invalidated_by(meta)
-            # Horizon from the signal itself — engine first, then its own stated
-            # horizon, then the timeframe. See _max_hold_hours.
-            limit_h = _max_hold_hours(tf,
-                                      engine=str(row.get("signal_type") or "")
-                                             or str(meta.get("engine") or ""),
-                                      horizon=str(meta.get("horizon") or ""))
-            if limit_h is None:
-                # Unknown horizon: manage the levels, never time-stop it. The old
-                # code defaulted to 20 days here and closed real positions.
-                logging.warning(f"price_alerts {sym}: no horizon for tf={tf!r} "
-                                f"engine={row.get('signal_type')!r} — levels only, "
-                                f"no time stop")
-            # An unknown open time used to be treated as "past the limit", i.e.
-            # expire it immediately. With no limit that is meaningless, so an
-            # undated signal is simply not aged.
-            age_h = ((now - opened_at).total_seconds() / 3600.0
-                     if opened_at else (0.0 if limit_h is None else limit_h + 1))
             # Age is only reportable when the signal actually has an open time.
             # Without one the number above is a placeholder for the time stop,
             # not an age, and printing it would state a held-for that is false.
             ctx = _en.context_line(eng_key, opened_at,
                                    age_h if opened_at else None)
 
-            # limit_h None means no time stop, so the bar window is sized on age
-            # alone. min(x, None) is a TypeError in py3.
-            period, interval = _bar_window(
-                tf, age_h if limit_h is None else min(age_h, limit_h))
             # ── The frame this signal is graded on ───────────────────────────
             # Routed through scanner._own_frame, which exists because
             # `df["Close"].squeeze()` published wrong numbers twice:
@@ -616,11 +696,15 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             # _own_frame resolves the ticker, drops any bar with a NaN in
             # OHLC, and returns None rather than a neighbour's column. Its
             # output has flat columns, so nothing below squeezes any more.
-            from scanner import _own_frame
-            yt  = to_yahoo(sym)
-            raw = yf.download(yt, period=period, interval=interval,
-                              progress=False, auto_adjust=True, timeout=8)
-            tick = _own_frame(raw, yt)
+            yt   = to_yahoo(sym)
+            tick = batched.get((yt, interval))
+            if tick is None:
+                # Not in the batch — a delisted ticker, a Yahoo miss, or a
+                # batch that failed outright. One request, exactly as every
+                # signal made before the prefetch existed.
+                raw = yf.download(yt, period=period, interval=interval,
+                                  progress=False, auto_adjust=True, timeout=8)
+                tick = _frame(raw, yt)
             if tick is None or tick.empty:
                 logging.debug(f"price_alerts {sym}: no usable bars")
                 continue

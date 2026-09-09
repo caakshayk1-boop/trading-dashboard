@@ -110,7 +110,14 @@ Two touches a day, on the operator's clock. Nothing else is scheduled to post.
   signal.askakshay.com, and linking them to the newspaper is how the brief
   stopped being a way into anything.
 
-Rules the layer must keep (all pinned by `test_alert_pipeline.py`, 119 checks,
+The book is fetched in BATCHES — one request per bar interval, not one per
+open position. `group_by="column"`, never `"ticker"`: `_own_frame` resolves the
+symbol at column level -1, which is where the default layout puts it. Under
+`"ticker"` it finds `Open`/`High`/`Low`/`Close` there instead, returns None for
+every symbol, and the batch degrades to one request each — still correct, never
+faster, and nothing says so. A test asserts the batch is actually used.
+
+Rules the layer must keep (all pinned by `test_alert_pipeline.py`, 135 checks,
 and `test_brief_fit.py`):
 - Every engine in `tracker.REMARKS` has a published name, or a reader gets a key.
 - An alert with a missing field drops the field, never the message. The whole
