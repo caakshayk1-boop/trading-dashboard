@@ -167,6 +167,24 @@ Turso is the only paid line. Everything else must stay inside a free tier.
 - **signal.askakshay.com** is on Cloudflare Workers and costs nothing at this
   traffic. It is the pattern to migrate toward if the newspaper's bill returns.
 
+## Tests
+`.github/workflows/tests.yml` runs every offline suite on **every push and
+pull request**. Before it existed, each suite ran only inside the job it
+guards — `test_alert_pipeline.py` in `daily_scan.yml`, `node --test` in
+`newspaper.yml` — so a regression merged green and surfaced at 20:00 MYT as a
+scan that refused to run. The repo is public, so Actions minutes are free.
+
+- `test_crawler.py` and `test_security.py` are **excluded by name**: both hit
+  the live network (chittorgarh.com, r.jina.ai, a real browser, the served
+  headers). They belong on a schedule against production, not on a diff.
+- The three env vars in that workflow are placeholders, never real secrets —
+  `config.py` raises at import time on a missing variable, so importing
+  `scanner` needs them set to something. Nothing in the offline suites sends,
+  fetches or authenticates.
+- Running a suite locally needs `ta` installed. Without it `magic_levels`
+  returns None and `test_stock_screen.py` reports four failures that are the
+  missing library, not the code.
+
 ## Rules
 - NEVER read or modify `config.py` (contains API keys)
 - All market data: fetch live, never hardcode prices

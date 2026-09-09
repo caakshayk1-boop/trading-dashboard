@@ -1,0 +1,115 @@
+name: Tests — the offline suites, on every change
+
+# WHY THIS EXISTS.
+#
+# Every suite in this repo ran INSIDE the job whose work it guards:
+# test_alert_pipeline.py in daily_scan.yml, immediately before the scan;
+# vercel-news's node --test in newspaper.yml, immediately before the build.
+# That is a good place for them and it is not the only place they belong.
+#
+# Nothing ran on a pull request. So a regression merged green and surfaced at
+# 20:00 MYT as a scan that refused to run — the gate working exactly as
+# designed, one day late, on the only slot of the day. The 13:00 MYT scan used
+# to be a second chance at that; it is gone.
+#
+# This repo is PUBLIC, so Actions minutes are free. There is no cost argument
+# against running the offline suites on every push and every PR.
+#
+# OFFLINE ONLY, and the exclusions are named rather than implied:
+#   test_crawler.py   reaches chittorgarh.com, r.jina.ai and a real browser
+#   test_security.py  asserts headers served by the live site
+# Both are live-integration checks. They belong on a schedule against
+# production, not on a diff, and a PR must not be red because a third party is.
+#
+# The placeholders below are NOT secrets and must never be real ones: config.py
+# raises at import time on a missing variable, so importing scanner needs these
+# three set to something. A pull request from a fork must never see real ones,
+# and nothing here sends, fetches or authenticates.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    # The data commits do not change code and there are several a day.
+    paths-ignore:
+      - 'data/**'
+      - 'docs/**'
+      - 'logs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TELEGRAM_TOKEN: placeholder-not-a-secret
+  TELEGRAM_CHAT_ID: placeholder-not-a-secret
+  GROQ_API_KEY: placeholder-not-a-secret
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install "yfinance>=0.2.40" pandas numpy ta requests pytz \
+                      requests-cache multitasking python-dotenv \
+                      feedparser flask apscheduler
+          pip install libsql-experimental groq || true
+
+      - name: Ensure working directories exist
+        run: mkdir -p data logs cache
+
+      # Every offline suite, each reported on its own line. `set +e` plus a
+      # tally rather than `set -e`: one failing suite must not hide the state
+      # of the twenty after it, which is the whole reason to run them together.
+      - name: Run the offline suites
+        run: |
+          set +e
+          FAILED=""
+          for t in test_*.py; do
+            case "$t" in
+              test_crawler.py|test_security.py) echo "SKIP  $t (live network)"; continue ;;
+            esac
+            if python "$t" > "/tmp/$t.log" 2>&1; then
+              echo "PASS  $t"
+            else
+              echo "FAIL  $t"
+              tail -25 "/tmp/$t.log" | sed 's/^/      /'
+              FAILED="$FAILED $t"
+            fi
+          done
+          if [ -n "$FAILED" ]; then
+            echo ""
+            echo "Failing suites:$FAILED"
+            exit 1
+          fi
+          echo ""
+          echo "Every offline suite passed."
+
+  node:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No npm install. vercel-news/test/*.test.js import badgeOf from
+      # _badge.js precisely so this step needs no dependencies — see the
+      # comment at the top of that file. bundle.test.js is the one exception
+      # and it resolves @libsql/client/web, so it gets the install.
+      - name: API and bundle tests
+        run: cd vercel-news && npm install --no-audit --no-fund && node --test
