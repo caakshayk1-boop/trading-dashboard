@@ -2,7 +2,8 @@
 """Tests for BUOY (4-hour candles). Written against the rule, not against a
 result — none of these thresholds was chosen to make a backtest look better."""
 import sys, datetime as dt, numpy as np
-sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.buoy import to_4h, prepare, buoy_signal, MA_N, IST
 from signals.basebreak import sma
 

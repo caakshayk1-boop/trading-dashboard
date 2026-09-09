@@ -204,9 +204,8 @@ def from_cache():
     produces a real, if narrower, answer. The feed says how many names it
     covered so the coverage is never mistaken for the full universe.
     """
-    SCR = ('/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/'
-           '4387587e-0410-48f6-b6ac-50dea011672c/scratchpad')
-    H = json.load(open(f"{SCR}/barsH.json"))
+    import bars_cache
+    H = bars_cache.load(bars_cache.HOURLY)
     hits = []
     for s, hr in H.items():
         rows4 = to_4h(hr)

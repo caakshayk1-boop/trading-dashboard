@@ -26,3 +26,7 @@ __pycache__/
 node_modules/
 package-lock.json
 test-results/
+
+# Harvested research bars — working data, tens of MB, regenerated per run.
+# See bars_cache.py.
+data/bars/

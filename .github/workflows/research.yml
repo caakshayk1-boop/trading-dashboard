@@ -28,6 +28,10 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    # The harvest is ~1000 paced Yahoo calls and the scan runs the three
+    # engines over the result. Bounded so a hung fetch cannot hold a runner
+    # for six hours, which is the default.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -46,6 +50,27 @@ jobs:
       # engines read), requests (signals/universe.py pulls the NSE index CSVs).
       # Prices come over urllib in scan_buoy.py, so no yfinance here.
       - run: pip install numpy pandas ta requests
+
+      # THE BARS HAD NO PRODUCER. This is it.
+      #
+      # scan_research.py reads barsH.json and barsD3y.json. Five files read
+      # them and nothing in the repository has ever written them — they were
+      # harvested by hand into a scratch folder on one Mac, so this workflow
+      # could not have worked anywhere else even once the import error above
+      # was fixed. harvest_bars.py fills the cache; bars_cache.py says where.
+      #
+      # Paced at the values scan_buoy.py measured: three workers over Yahoo's
+      # two hosts, a quarter second apart. Four-way concurrency earned this
+      # address a ten-minute 429; three has not.
+      #
+      # A partial harvest is NOT a failure. Symbols that 404 or come back
+      # short are counted in the manifest and the scan publishes the coverage,
+      # so a narrower run is never mistaken for the full universe. The step
+      # fails only if the harvest comes back completely empty, which means
+      # the fetch is broken rather than the market being quiet.
+      - name: Harvest the bars the engines read
+        run: python3 harvest_bars.py
+
       - name: Scan the 750 with every research engine
         run: python3 scan_research.py
       - name: Commit the scan

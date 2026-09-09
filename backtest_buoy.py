@@ -18,12 +18,13 @@ from __future__ import annotations
 import json, math, sys, statistics as st
 import numpy as np
 
-sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.buoy import prepare, buoy_signal, to_4h
 
-SCR = '/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/4387587e-0410-48f6-b6ac-50dea011672c/scratchpad'
-HOURS = f'{SCR}/barsH.json'
-DAYS  = f'{SCR}/barsD3y.json'
+import bars_cache
+HOURS = bars_cache.path(bars_cache.HOURLY)
+DAYS  = bars_cache.path(bars_cache.DAILY_3Y)
 MAX_HOLD_B = 60           # 4H candles; ~30 sessions at two a day
 
 

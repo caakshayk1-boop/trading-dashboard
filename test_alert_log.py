@@ -3,7 +3,7 @@
 the forward sample inflates by however often the cron happens to run."""
 import os, sys, json, tempfile
 from datetime import datetime, timezone, timedelta
-sys.path.insert(0, '/Users/akshaykumarkothari/Downloads/trading-dashboard')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import alert_log as AL
 
 P = F = 0

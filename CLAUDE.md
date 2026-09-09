@@ -138,6 +138,30 @@ and `test_brief_fit.py`):
   stop's R is marked at the last close, not realised at an exit — and the
   `basis` string now says that instead of claiming to cover "closed signals".
 
+## Research floor (`#research` — BUOY · ANCHOR · BEDROCK)
+Measured, published with their null results, and **never cleared to file
+signals**. `research.yml` runs twice a day at the 4-hour closes.
+
+- **It had never once completed.** Its install step was `pip install numpy`
+  while `signals/indicators.py` imports `ta` at module load, so every run died
+  before any scan code. Underneath that was a worse fault: `barsH.json` and
+  `barsD3y.json` had **five readers and no writer** — the path was a scratch
+  folder on one Mac, under `/private/tmp`, which macOS clears.
+- `harvest_bars.py` is the producer. `bars_cache.py` is the one place that
+  knows where the cache lives (`data/bars/`, gitignored, override with
+  `RESEARCH_BARS_DIR`). The workflow harvests, then scans.
+- Pacing is **copied, not re-tuned**: three workers over Yahoo's two hosts a
+  quarter-second apart. `scan_buoy.py` measured that four-way concurrency earns
+  a ten-minute 429 and three does not.
+- A partial harvest is not a failure — skipped symbols are counted in
+  `manifest.json` and the feed publishes coverage, so a narrow run is never
+  mistaken for the full universe. An **empty** harvest refuses to overwrite a
+  good cache.
+- `python3 test_bars_cache.py` — 9 checks, offline. It pins the SHAPE of the
+  bug, not just the instance: no source may hardcode a path into a home or
+  scratch directory, bar files are addressed only through `bars_cache`, and the
+  workflow must harvest before it scans.
+
 ## Page structure
 `SECTION_MAP` order IS document order, and the nav is generated from it.
 `python3 test_page_structure.py` fails the build if the two drift, and requires

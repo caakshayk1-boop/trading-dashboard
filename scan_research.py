@@ -39,8 +39,7 @@ from signals.bedrock import (prepare as rock_prepare, bedrock_signal, anchor_sig
                              ENGINE_STATUS as ROCK_STATUS, LOOKBACK)
 from scan_buoy import _reclaim_only, LOOKBACK_B
 
-SCR = ('/private/tmp/claude-501/-Users-akshaykumarkothari-Workspace/'
-       '4387587e-0410-48f6-b6ac-50dea011672c/scratchpad')
+import bars_cache
 OUT = os.path.join(HERE, "docs", "research.json")
 TOP_N = 10
 DAILY_LOOKBACK = 10          # sessions a daily setup stays current for
@@ -111,8 +110,11 @@ def _last_valid(sig_fn, bars, n, lookback, still_ok):
 
 
 def scan_offline():
-    H = json.load(open(f"{SCR}/barsH.json"))
-    D = json.load(open(f"{SCR}/barsD3y.json"))
+    # Bars come from the repo-relative cache harvest_bars.py fills, not from a
+    # scratch folder on one laptop. bars_cache.load says what is missing and
+    # how to make it, rather than raising a path nobody else has.
+    H = bars_cache.load(bars_cache.HOURLY)
+    D = bars_cache.load(bars_cache.DAILY_3Y)
     hits = {k: [] for k in ENGINES}
 
     # ── BUOY, on 4H resampled from hourly ────────────────────────────────────
