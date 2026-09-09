@@ -109,6 +109,75 @@ def _():
         assert "Standing pipeline" in b, f"{slot} careers lost the live count"
 
 
+# ── Links point at the site that owns the section ────────────────────────────
+# Every link in this brief said news.askakshay.com, including the ones under
+# Trade Ideas, the Signal Log and Performance — three sections that moved to
+# signal.askakshay.com. A reader following "full board" from the order book
+# landed on the newspaper.
+
+@check("the ledger, the board and the engines link to the signal site")
+def _():
+    for key in ("ideas", "signals", "performance", "engines"):
+        assert D._link(key).startswith(D.SIGNAL_SITE), \
+            f"{key} -> {D._link(key)}, not the signal site"
+
+
+@check("the paper's own sections still link to the paper")
+def _():
+    for key in ("wire", "world", "health"):
+        assert D._link(key).startswith(D.NEWS_SITE), \
+            f"{key} -> {D._link(key)}, not the newspaper"
+
+
+@check("an unknown section links somewhere real rather than raising")
+def _():
+    # A mistyped key must not be able to stop the brief from sending.
+    assert D._link("no_such_section") == D.NEWS_SITE
+
+
+@check("no section names a site the ownership table does not know")
+def _():
+    # A hardcoded host anywhere in the builder is a link that will rot in
+    # place. The table is the only permitted source.
+    import inspect, re
+    src = inspect.getsource(D.build_section_brief)
+    stray = re.findall(r"[\"']([a-z]+\.askakshay\.com)", src)
+    assert not stray, f"hardcoded hosts in build_section_brief: {set(stray)}"
+
+
+# ── APEX is a section, not a second notification ─────────────────────────────
+
+@check("send_brief posts the brief and nothing else alongside it")
+def _():
+    import inspect
+    src = inspect.getsource(D.send_brief)
+    # The newspaper-link post is gated on RAILWAY_PUBLIC_DOMAIN, which is not
+    # set in any workflow; the APEX one was not gated on anything.
+    assert "_post(apex_digest)" not in src, \
+        "the APEX digest is being sent as its own message again"
+
+
+@check("APEX rides inside the night brief")
+def _():
+    import inspect
+    src = inspect.getsource(D.build_section_brief)
+    assert "_build_apex_digest()" in src, "APEX is not rendered in the brief"
+
+
+@check("APEX prints no P&L when no starting balance is known")
+def _():
+    # The old code read `bal - 2000.0` — a baseline typed into an expression,
+    # with nothing anywhere saying the account started there.
+    import inspect
+    src = inspect.getsource(D._build_apex_digest)
+    # Comments strippped first: the docstring explains the old bug and names
+    # the constant, which is the point of writing it down.
+    code = "\n".join(l for l in src.splitlines()
+                     if not l.lstrip().startswith("#"))
+    assert "2000" not in code, "the hardcoded APEX baseline is back"
+    assert "APEX_START_BALANCE" in code, "no way to state a baseline deliberately"
+
+
 def main() -> int:
     failed = 0
     for name, fn in CHECKS:

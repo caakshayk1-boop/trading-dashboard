@@ -159,6 +159,39 @@ def _fmt(symbol: str, v: float) -> str:
     return f"{_unit(symbol)}{v:,.{dp}f}"
 
 
+def _horizon_txt(hours) -> str:
+    """A hold limit in the unit it was set in. 8h stays 8h, 480h becomes 20d.
+
+    Integer-dividing everything by 24 turned every intraday horizon into "0d".
+    """
+    try:
+        h = int(hours)
+    except (TypeError, ValueError):
+        return "stated"
+    return f"{h}h" if h < 24 else f"{h // 24}d"
+
+
+def _lines(*parts) -> str:
+    """Join alert lines, dropping the ones this row could not fill.
+
+    A message built as one long f-string breaks the moment a field is missing:
+    the heading survives, its content is blank, and the reader is told nothing
+    in a shape that looks like being told something. Here a part that came back
+    empty is dropped whole, and a run of blanks collapses to one — so a missing
+    block closes up instead of leaving a hole, and no separator ever trails the
+    end of a message.
+    """
+    out = []
+    for p in parts:
+        p = "" if p is None else str(p)
+        if p == "" and (not out or out[-1] == ""):
+            continue
+        out.append(p)
+    while out and out[-1] == "":
+        out.pop()
+    return "\n".join(out)
+
+
 def _max_hold_hours(timeframe: str, engine: str = "", horizon: str = "") -> int | None:
     """Hours a signal may stay open. None means "horizon unknown, never expire".
 
@@ -442,6 +475,7 @@ def run_price_alerts(time_str: str, markets: set | None = None):
     import yfinance as yf
     import pandas as pd
     import json as _json
+    import engine_names as _en
     from datetime import timedelta
 
     try:
@@ -524,6 +558,16 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             risk   = abs(entry - sl) or 1.0
 
             opened_at = _opened_at(row)
+            # ── What this signal is, for the human reading the alert ─────────
+            # Every alert used to open with "SL HIT — TITAN | SWING" and stop
+            # there. The row already carried the engine that filed it, the day
+            # it was filed and — for LEDGE and KEEL — the actual numbers off
+            # the bar that fired, and none of it reached the reader. So a stop
+            # -out arrived with no way to tell WHICH engine's read had failed,
+            # or whether the position was four hours or four weeks old.
+            eng_key = str(row.get("signal_type") or "") or str(meta.get("engine") or "")
+            why_txt = _en.why_block(eng_key, meta, row.get("remarks"))
+            invalid = _en.invalidated_by(meta)
             # Horizon from the signal itself — engine first, then its own stated
             # horizon, then the timeframe. See _max_hold_hours.
             limit_h = _max_hold_hours(tf,
@@ -541,6 +585,11 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             # undated signal is simply not aged.
             age_h = ((now - opened_at).total_seconds() / 3600.0
                      if opened_at else (0.0 if limit_h is None else limit_h + 1))
+            # Age is only reportable when the signal actually has an open time.
+            # Without one the number above is a placeholder for the time stop,
+            # not an age, and printing it would state a held-for that is false.
+            ctx = _en.context_line(eng_key, opened_at,
+                                   age_h if opened_at else None)
 
             # limit_h None means no time stop, so the bar window is sized on age
             # alone. min(x, None) is a TypeError in py3.
@@ -564,6 +613,28 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 updates.append(("EXPIRED", round(last_close, 4), round(pnl, 2),
                                 round(r_m, 2), sig_id))
                 expired += 1
+                # A time stop CLOSES a live position, and until now it did so
+                # in silence: the ledger booked the exit and the reader — who
+                # is the one actually holding the shares — was told only a
+                # count, "3 closed (2 on time stop)", with no symbol in it. An
+                # exit the system takes and does not name is an exit the reader
+                # cannot act on.
+                took_t1 = "T1" in seen
+                alerts.append(("EXP", sym, _lines(
+                    f"⏳ *TIME STOP — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → last close {_fmt(sym, last_close)}",
+                    f"P&L `{pnl:+.2f}%` · R `{r_m:+.2f}`",
+                    (f"Past its {_horizon_txt(limit_h)} horizon. "
+                     + ("T1 was booked; the runner never reached T2."
+                        if took_t1 else
+                        f"Neither T1 ({_fmt(sym, t1)}) nor the stop "
+                        f"({_fmt(sym, sl)}) was reached.")),
+                    "",
+                    why_txt,
+                    "",
+                    "_Closed on the horizon, not on price. Exit if still held._")))
                 logging.info(f"TIME STOP: {sym} {tf} age={age_h:.0f}h "
                              f"limit={limit_h}h r={r_m:+.2f}")
                 continue
@@ -620,22 +691,47 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 gap_note = "" if abs(exit_p - sl) < 1e-9 else "  ⚠ gapped through stop"
                 updates.append(("SL_HIT", round(exit_p, 4), round(pnl, 2),
                                 round(r_m, 2), sig_id))
-                alerts.append(("SL", sym,
-                    f"🛑 *SL HIT — {sym}* | {tf}\n"
-                    f"Entry {_fmt(sym, entry)} → exit {_fmt(sym, exit_p)}{gap_note}\n"
-                    f"P&L: `{pnl:+.2f}%` | R: `{r_m:+.2f}`\n"
-                    f"_Exit trade. Review thesis before re-entry._"))
+                # Whether T1 was already banked changes what this message
+                # means: a runner stopping out after a booked partial is a
+                # different outcome from a trade that never worked, and the
+                # old text called both "exit trade".
+                took_t1 = "T1" in seen
+                tail = ("_T1 was booked earlier — this closes the runner._"
+                        if took_t1 else
+                        f"_Never reached T1 ({_fmt(sym, t1)}). Closed._")
+                alerts.append(("SL", sym, _lines(
+                    f"🛑 *SL HIT — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → exit {_fmt(sym, exit_p)}{gap_note}",
+                    f"P&L `{pnl:+.2f}%` · R `{r_m:+.2f}`",
+                    "",
+                    why_txt,
+                    "",
+                    tail)))
 
             elif t2_hit:
                 r_m = abs(t2 - entry) / risk
                 pnl = ((t2 - entry) / entry * 100) * (1 if buy else -1)
                 updates.append(("T2_HIT", round(t2, 4), round(pnl, 2),
                                 round(r_m, 2), sig_id))
-                alerts.append(("T2", sym,
-                    f"🎯🎯 *TARGET 2 HIT — {sym}* | {tf}\n"
-                    f"Entry {_fmt(sym, entry)} → T2 {_fmt(sym, t2)}\n"
-                    f"Gain: `{pnl:+.2f}%` | `{r_m:.2f}R` ✅\n"
-                    f"_Full exit._"))
+                # The R printed here is the R of the LEVEL, not of the
+                # position: if T1 was banked at half size the blended return is
+                # lower than 2.5R and saying "2.50R ✅" flat would overstate the
+                # result. Say which one it is rather than quietly averaging.
+                took_t1 = "T1" in seen
+                alerts.append(("T2", sym, _lines(
+                    f"🎯🎯 *TARGET 2 HIT — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → T2 {_fmt(sym, t2)}",
+                    f"Gain `{pnl:+.2f}%` · `{r_m:.2f}R` at this level ✅",
+                    (f"_Half was booked at T1 {_fmt(sym, t1)}, so the position "
+                     f"returned less than {r_m:.2f}R._" if took_t1 else ""),
+                    "",
+                    why_txt,
+                    "",
+                    "_Full exit._")))
 
             elif t1_hit and "T1" not in seen:
                 # Stays OPEN so it can still trail to T2 — the previous code set
@@ -644,22 +740,53 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 r_m = abs(t1 - entry) / risk
                 pnl = ((t1 - entry) / entry * 100) * (1 if buy else -1)
                 flags.append((seen + "T1;", sig_id))
-                alerts.append(("T1", sym,
-                    f"✅ *TARGET 1 HIT — {sym}* | {tf}\n"
-                    f"Entry {_fmt(sym, entry)} → T1 {_fmt(sym, t1)}\n"
-                    f"Gain: `{pnl:+.2f}%` | `{r_m:.2f}R` ✓\n"
-                    f"_Book 50% · SL to entry · trail for T2 {_fmt(sym, t2)}_"))
+                # From HERE, not from entry. "T2 — +16%" next to a booked +8%
+                # reads as sixteen more percent, which is double the truth.
+                t2_pct = (t2 - t1) / t1 * 100 * (1 if buy else -1)
+                t2_r   = abs(t2 - entry) / risk
+                alerts.append(("T1", sym, _lines(
+                    f"✅ *TARGET 1 HIT — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → T1 {_fmt(sym, t1)}",
+                    f"Gain `{pnl:+.2f}%` · `{r_m:.2f}R` ✓",
+                    f"Still on: T2 {_fmt(sym, t2)} — `{t2_pct:+.2f}%` from here, "
+                    f"`{t2_r:.2f}R` on the whole trade",
+                    "",
+                    why_txt,
+                    "",
+                    (f"_Invalidates on: {invalid}_" if invalid else ""),
+                    "",
+                    "_Book 50% · stop to entry · trail the rest for T2._")))
 
             elif sl1_hit and "SL1" not in seen:
                 # One warning per signal for its whole life. This never wrote to
                 # the DB before, so it re-fired on every single scan.
                 flags.append((seen + "SL1;", sig_id))
                 chg = (last_close - entry) / entry * 100 * (1 if buy else -1)
-                alerts.append(("SL1", sym,
-                    f"⚠️ *SL1 WARNING — {sym}* | {tf}\n"
-                    f"Price {_fmt(sym, last_close)} breached warning SL {_fmt(sym, sl1_v)}\n"
-                    f"Change: `{chg:+.2f}%` | Final SL: {_fmt(sym, sl)}\n"
-                    f"_Tighten or exit half. Watch closely._"))
+                # How much room is left, in the unit the position is sized in.
+                # "Final SL: 3310" makes the reader do the arithmetic; "0.42R
+                # left" is the same fact already in decision form.
+                left_r = ((last_close - sl) / risk) if buy else ((sl - last_close) / risk)
+                # The warning fires on the bar's EXTREME, not on its close. The
+                # old line said "Price {close} broke the warning stop" — which
+                # names a price that did not break it, and printed the same
+                # number twice whenever the two happened to coincide.
+                brk = lo if buy else hi
+                alerts.append(("SL1", sym, _lines(
+                    f"⚠️ *SL1 WARNING — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Traded to {_fmt(sym, brk)}, through the warning stop "
+                    f"{_fmt(sym, sl1_v)}",
+                    f"Now {_fmt(sym, last_close)} · `{chg:+.2f}%` · "
+                    f"`{max(left_r, 0):.2f}R` left to the final stop {_fmt(sym, sl)}",
+                    "",
+                    why_txt,
+                    "",
+                    (f"_Invalidates on: {invalid}_" if invalid else ""),
+                    "",
+                    "_Tighten or exit half._")))
 
         except Exception as e:
             logging.warning(f"price_alerts {sym}: {e}")
@@ -674,10 +801,10 @@ def run_price_alerts(time_str: str, markets: set | None = None):
         for kind, _sym, _m in alerts:
             counts[kind] = counts.get(kind, 0) + 1
         label = {"SL": "stopped out", "T2": "hit T2", "T1": "hit T1",
-                 "SL1": "SL1 warnings"}
+                 "SL1": "SL1 warnings", "EXP": "closed on time stop"}
         lines = [f"📋 *Position update* — {time_str}",
                  f"_{len(alerts)} levels resolved this scan — digest, not {len(alerts)} messages._\n"]
-        for k in ("T2", "T1", "SL", "SL1"):
+        for k in ("T2", "T1", "SL", "EXP", "SL1"):
             if counts.get(k):
                 syms = [s for kk, s, _ in alerts if kk == k]
                 lines.append(f"• *{counts[k]} {label[k]}*: {', '.join(syms[:12])}"

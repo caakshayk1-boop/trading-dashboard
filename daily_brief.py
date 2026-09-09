@@ -346,6 +346,50 @@ LIFE_LESSONS = [
 
 NEWS_API = os.environ.get("NEWS_API_BASE", "https://news.askakshay.com/api")
 
+# ── WHERE TO SEND THE READER ────────────────────────────────────────────────
+#
+# Data and links are now two different questions, and this brief used to
+# conflate them. Everything factual still reads NEWS_API, for the reason above.
+# But the LINKS all said news.askakshay.com, including the ones under Trade
+# Ideas, the Signal Log and Performance — and those three moved. They live on
+# signal.askakshay.com, which is where the ledger, the ranked board and the
+# engine floor are actually rendered. A reader following "full board" from the
+# trade-ideas section landed on the newspaper and had to find the trading site
+# by memory.
+#
+# One table, so a new section cannot invent a URL and no link can rot in a
+# string literal halfway down a 1,500-line file.
+SIGNAL_SITE = os.environ.get("SIGNAL_SITE", "signal.askakshay.com")
+NEWS_SITE   = os.environ.get("NEWS_SITE",   "news.askakshay.com")
+
+# section key → (host, path). The host is the one that OWNS that section, not
+# the one that happens to have a page about it.
+_OWNS = {
+    "ideas":       (SIGNAL_SITE, "/ideas"),      # the ranked board + sized orders
+    "signals":     (SIGNAL_SITE, "/signals"),    # the public ledger
+    "performance": (SIGNAL_SITE, "/signals"),    # closed trades — same ledger
+    "engines":     (SIGNAL_SITE, "/engines"),    # what fired, and its record
+    "screen":      (SIGNAL_SITE, "/screen"),
+    "markets":     (SIGNAL_SITE, "/markets"),
+    "ipo":         (SIGNAL_SITE, "/ipo"),
+    "wire":        (NEWS_SITE,   ""),            # the paper is the paper
+    "world":       (NEWS_SITE,   ""),
+    "health":      (NEWS_SITE,   "/#datahealth"),
+    "sip":         (NEWS_SITE,   "/#sip"),
+    "portfolio":   (NEWS_SITE,   "/#tracker"),
+}
+
+
+def _link(section: str) -> str:
+    """The URL for a section, or the newspaper when the section is unknown.
+
+    Unknown returns the paper rather than raising: a brief that fails to send
+    because a link key was mistyped is a worse outcome than a link to the
+    wrong-but-real page.
+    """
+    host, path = _OWNS.get(section, (NEWS_SITE, ""))
+    return f"{host}{path}"
+
 
 def _news_get(path: str, timeout: int = 12) -> Optional[dict]:
     """One GET against news.askakshay.com. None on any failure, never raises."""
@@ -884,31 +928,37 @@ def _pat_expiry_line(warn_within_days: int = 14) -> Optional[str]:
 
 def build_section_brief(slot: str = "midday") -> str:
     """
-    The whole of news.askakshay.com, in one Telegram message.
+    Both sites, in one Telegram message.
 
-    Every section of the site gets a line here, in the site's own document
-    order, so the brief is a table of contents for the page rather than a
-    second, competing summary that can drift from it. Sections that have
-    nothing to say are omitted rather than printed empty — the old brief padded
-    its Opportunities block with two LinkedIn links and no jobs, which taught
-    the reader to skip it.
+    Every section gets a line here, in the site's own document order, so the
+    brief is a table of contents rather than a second, competing summary that
+    can drift from it. Sections that have nothing to say are omitted rather
+    than printed empty — the old brief padded its Opportunities block with two
+    LinkedIn links and no jobs, which taught the reader to skip it.
 
-    MORNING — before the Indian open, and after the site has rebuilt. What the
-              book wants today, and what the world did overnight.
-    MIDDAY  — NSE is live. What the book wants, and what moved to get there.
-    EVENING — NSE has closed. What happened, and what is queued for tomorrow.
+    The FACTS all come from one API (see NEWS_API). The LINKS do not: trade
+    ideas, the ledger and the engine floor now live on signal.askakshay.com and
+    are linked there, because sending a reader to the newspaper for the order
+    book is how a brief stops being a way into anything.
 
-    Only the title and the evening extras vary by slot. The BODY is the site's
-    own document order in every slot on purpose: the brief is a table of
-    contents for news.askakshay.com, and a brief that reorganised itself per
-    slot would be a second summary competing with the page.
+    MORNING — 08:00 MYT / 05:30 IST, before the Indian open and after the site
+              has rebuilt. What the book wants today, and what the world did
+              overnight.
+    EVENING — 20:00 MYT / 17:30 IST, two hours after the NSE close, alongside
+              the day's only scan. What happened, and what is queued.
+    MIDDAY  — no longer scheduled. Kept because a manual dispatch of it still
+              resolves, and because job_runs rows written under that name exist.
+
+    Only the title and the night extras vary by slot. The BODY is the site's
+    own document order in every slot on purpose: a brief that reorganised
+    itself per slot would be a second summary competing with the page.
     """
     evening = slot == "evening"
     title = {
         "evening": "🌇 *EVENING — THE DAILY SIGNAL*",
         "morning": "🌅 *MORNING — THE DAILY SIGNAL*",
     }.get(slot, "🌤 *MIDDAY — THE DAILY SIGNAL*")
-    L = [f"{title}\n{istNow()} IST · news.askakshay.com\n"]
+    L = [f"{title}\n{istNow()} IST · {SIGNAL_SITE} · {NEWS_SITE}\n"]
     ticket_blocks: list = []
 
     # Infrastructure warning ahead of any market content: if the token that
@@ -963,7 +1013,7 @@ def build_section_brief(slot: str = "midday") -> str:
         # In the EVENING the market is shut, so the board is not actionable
         # tonight; one line beats a table nobody can act on for fourteen hours.
         if evening:
-            L.append("_Placed at tomorrow's open. Full board: news.askakshay.com_")
+            L.append(f"_Placed at tomorrow's open. Full board: {_link('ideas')}_")
         elif book["admitted"]:
             L.append(f"*TO PLACE — {len(book['admitted'])}*")
             hdr = f"{'SYMBOL':<11}{'QTY':>6}{'ENTRY':>10}{'ALLOC':>11}{'%BK':>6}{'R:R':>6}"
@@ -982,7 +1032,7 @@ def build_section_brief(slot: str = "midday") -> str:
             # are the same ladder for every row in the tier and printing them
             # eight times taught the reader to skip them.
             L.append("_Ladder: T1 books half, the rest runs to T2, then the stop "
-                     "trails to T1 and never lower. Levels per name on the site._")
+                     f"trails to T1 and never lower. Levels per name: {_link('ideas')}_")
 
         # LIVE STATUS: what the rules did with everything they saw. A board that
         # only shows what it admitted is a board you cannot audit — the count
@@ -1054,6 +1104,7 @@ def build_section_brief(slot: str = "midday") -> str:
         if recap:
             rule("📋 *13 · SIGNAL LOG* — today")
             L.append(recap)
+            L.append(f"_Every signal, open and closed: {_link('signals')}_")
     stt = _news_get("/stats")
     if stt and (stt.get("headline") or {}):
         h = stt["headline"]
@@ -1063,6 +1114,19 @@ def build_section_brief(slot: str = "midday") -> str:
         L.append(f"  avg win `{num(h.get('avg_win_r')) or 0:+.2f}R` · "
                  f"avg loss `{num(h.get('avg_loss_r')) or 0:+.2f}R` · "
                  f"profit factor {num(h.get('profit_factor')) or 0:.2f}")
+        L.append(f"_Per engine, with what fires each: {_link('engines')}_")
+
+    # ── 15 APEX ────────────────────────────────────────────────────────────
+    # Night only, and INSIDE the brief. This used to be posted by send_brief as
+    # a separate message immediately after the brief, which is a second
+    # notification for one event. Placed above Data Health so a long day trims
+    # the health line — a number the site also carries — before it trims a P&L
+    # that appears nowhere else.
+    if evening:
+        apex = _build_apex_digest()
+        if apex:
+            rule("⚡ *15 · APEX BOT*")
+            L.append(apex)
 
     # ── 16 Data Health ─────────────────────────────────────────────────────
     hl = _news_get("/health")
@@ -1070,11 +1134,13 @@ def build_section_brief(slot: str = "midday") -> str:
         rule("🩺 *16 · DATA HEALTH*")
         L.append(f"  {hl.get('signals','—')} signals · latest {hl.get('latest_signal_date','—')} · "
                  f"{hl.get('open_setups','—')} open setups")
+        L.append(f"_How current every dataset is: {_link('health')}_")
 
     # 2026-09-03: life.askakshay.com is retired and Life moved to
     # career.askakshay.com, which is a private working surface and is not
     # advertised here.
-    L.append("\n_Full board: news.askakshay.com_")
+    L.append(f"\n_Ledger, board and engines: {_link('signals')}_")
+    L.append(f"_The paper: {NEWS_SITE}_")
     L.append("_Not SEBI advice._")
     return _fit(L, ticket_blocks)
 
@@ -1300,7 +1366,7 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
                         out.append(body)
                 gone = len(item.entries) - keep
                 if gone > 0:
-                    out.append(f"_+{gone} more — news.askakshay.com_")
+                    out.append(f"_+{gone} more — {NEWS_SITE}_")
             elif isinstance(item, _Opt):
                 out.extend(item.essential)
                 if extras:
@@ -1332,7 +1398,7 @@ def _fit(lines: list, ticket_blocks: list = None) -> str:
     # pair, and an unbalanced * makes Telegram 400 the whole message — the
     # same silent non-delivery, one step later.
     kept, total = [], 0
-    tail = "\n_Trimmed — news.askakshay.com_"
+    tail = f"\n_Trimmed — {NEWS_SITE}_"
     for line in text.split("\n"):
         if total + len(line) + 1 > TG_LIMIT - len(tail):
             break
@@ -1371,21 +1437,36 @@ def _build_apex_digest() -> str:
         mkts  = d.get("markets", 0)
         paper = "📝 PAPER" if d.get("paper") else "🔴 LIVE"
 
-        # Fetch more detail from state endpoint if available
-        pnl = bal - 2000.0
-        pnl_str = f"+${pnl:.2f}" if pnl >= 0 else f"-${abs(pnl):.2f}"
-        pnl_emoji = "🟢" if pnl >= 0 else "🔴"
+        # THE BASELINE WAS A CONSTANT IN THE MIDDLE OF A P&L. `bal - 2000.0`
+        # asserted that this account started at exactly $2,000, with nothing
+        # anywhere saying so — the number was typed, not measured, and every
+        # "P&L vs start" it printed inherited that. If the service reports its
+        # own starting balance, that is the baseline; failing that an env var
+        # can state one deliberately; failing both there is no P&L line, which
+        # is the honest outcome. A balance with no baseline is still worth
+        # showing — it just is not a result.
+        start = None
+        for k in ("start_balance", "starting_balance", "initial_balance"):
+            if isinstance(d.get(k), (int, float)):
+                start = float(d[k])
+                break
+        if start is None:
+            try:
+                start = float(os.environ["APEX_START_BALANCE"])
+            except (KeyError, TypeError, ValueError):
+                start = None
 
-        return (
-            f"\n━━━━━━━━━━━━━━━━━━━\n"
-            f"⚡ *APEX BOT — DAILY P&L*\n"
-            f"━━━━━━━━━━━━━━━━━━━\n"
-            f"{paper} | BTC ${btc:,.0f}\n\n"
-            f"💰 Balance: *${bal:,.2f}*\n"
-            f"{pnl_emoji} P&L vs start: *{pnl_str}*\n"
-            f"🌐 Markets tracked: {mkts}\n"
-            f"📊 Dashboard: terminal.askakshay.com/apex"
-        )
+        lines = [f"{paper} · BTC ${btc:,.0f}",
+                 f"  balance *${bal:,.2f}*"]
+        if start:
+            pnl = bal - start
+            lines.append(f"  {'🟢' if pnl >= 0 else '🔴'} "
+                         f"`{pnl:+,.2f}` vs a ${start:,.0f} start")
+        else:
+            lines.append("  _No starting balance reported — balance only, "
+                         "not a result._")
+        lines.append(f"  {mkts} markets tracked · terminal.askakshay.com/apex")
+        return "\n".join(lines)
     except Exception as e:
         log.warning(f"APEX digest failed: {e}")
         return ""
@@ -1427,8 +1508,8 @@ def brief_already_sent(slot: str) -> bool:
 def send_brief(slot: str = "midday", catch_up: bool = False):
     """
     One of the two daily sends. `slot` is "morning" (08:00 MYT) or "evening"
-    (17:00 MYT); "midday" is still accepted and is what the morning slot
-    replaced. The slot comes from the cron that fired rather than from the wall
+    (20:00 MYT — the operator's "night" slot); "midday" is still accepted and
+    is what the morning slot replaced. The slot comes from the cron that fired rather than from the wall
     clock — GitHub delays scheduled runs by hours, and an hour-equality test is
     how the 6 AM brief silently became a CF scan on late days.
 
@@ -1471,16 +1552,12 @@ def send_brief(slot: str = "midday", catch_up: bool = False):
     except Exception as e:                              # noqa: BLE001
         log.warning("daily_brief: could not record the %s send (%s)", slot, e)
 
-    # APEX P&L rides the evening send only. Two alerts a day means two, and a
-    # digest that arrives as its own notification is a third.
-    if slot == "evening":
-        apex_digest = _build_apex_digest()
-        if apex_digest:
-            _post(apex_digest)
-            log.info("APEX P&L digest sent")
-
     # The recap is a SECTION of the evening brief now, not a second message.
     # Posting it separately as well is how one event became two notifications.
+    # APEX went the same way — see build_section_brief. Its own comment already
+    # said "a digest that arrives as its own notification is a third" and then
+    # sent one anyway; the operator asked for two touches a day, so it is now a
+    # section of the night brief rather than a fourth message after it.
     # Send newspaper link
     newspaper_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
     if newspaper_domain:
