@@ -150,7 +150,12 @@ jobs:
           # google-chrome, so the repo is pure third-party risk on the critical
           # path of the daily paper. Removing the source list makes apt stop
           # asking dl.google.com anything.
-          sudo rm -f /etc/apt/sources.list.d/google-chrome.list
+          # Ubuntu 24.04 runners use deb822 (.sources), not .list, so removing
+          # google-chrome.list by name matched nothing and the run failed again
+          # with the identical hash mismatch. Find it by CONTENT instead — that
+          # is correct under either format and under any filename they pick
+          # next.
+          sudo bash -c 'grep -rl "dl\.google\.com" /etc/apt/sources.list.d/ 2>/dev/null | xargs -r rm -f' || true
           npx playwright install chromium --with-deps \
             || (echo "retrying playwright install" && sleep 20 && npx playwright install chromium --with-deps)
 
