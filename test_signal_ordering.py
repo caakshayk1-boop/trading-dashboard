@@ -113,10 +113,25 @@ def _():
 
 @tcheck("a clean structure is left alone — the floor only binds when it must")
 def _():
-    # No resistance anywhere near the raw R-multiples, so nothing snaps and
-    # the 1.5 / 2.5 / 4.0 ATR ladder must come through untouched.
-    t1, t2, t3 = _structure_targets(1000.0, 20.0, highs(3000.0, 3100.0))
-    assert (t1, t2, t3) == (1030.0, 1050.0, 1080.0), (t1, t2, t3)
+    # No resistance anywhere near the raw R-multiples, so nothing snaps and the
+    # house ladder must come through untouched.
+    #
+    # THE NUMBERS HERE WERE STALE, AND THE TEST HAD BEEN RED EVER SINCE. It
+    # asserted 1.5 / 2.5 / 4.0 — the ladder targets.py retired, in a module
+    # whose own docstring says "inventing a number there is how a 4.0R target
+    # got published for months". The floors are R1/R2/R3 = 1.6 / 2.5 / 3.3,
+    # measured over 120 closed trades with cf_1h stripped out, and the code has
+    # produced 1032 / 1050 / 1066 for this case since. A test asserting a
+    # retired constant does not guard the ladder; it just fails, and a suite
+    # that always fails is one nobody reads.
+    #
+    # Read from targets.py rather than typed again, so the next deliberate
+    # re-tune moves this with it instead of leaving a third stale copy.
+    from targets import R1_FLOOR, R2_FLOOR, R3_FLOOR
+    price, atr = 1000.0, 20.0
+    t1, t2, t3 = _structure_targets(price, atr, highs(3000.0, 3100.0))
+    want = (price + R1_FLOOR * atr, price + R2_FLOOR * atr, price + R3_FLOOR * atr)
+    assert (t1, t2, t3) == want, ((t1, t2, t3), want)
 
 
 @tcheck("the floor pushes the OUTER target out, never pulls the inner one in")

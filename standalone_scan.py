@@ -159,6 +159,39 @@ def _fmt(symbol: str, v: float) -> str:
     return f"{_unit(symbol)}{v:,.{dp}f}"
 
 
+def _horizon_txt(hours) -> str:
+    """A hold limit in the unit it was set in. 8h stays 8h, 480h becomes 20d.
+
+    Integer-dividing everything by 24 turned every intraday horizon into "0d".
+    """
+    try:
+        h = int(hours)
+    except (TypeError, ValueError):
+        return "stated"
+    return f"{h}h" if h < 24 else f"{h // 24}d"
+
+
+def _lines(*parts) -> str:
+    """Join alert lines, dropping the ones this row could not fill.
+
+    A message built as one long f-string breaks the moment a field is missing:
+    the heading survives, its content is blank, and the reader is told nothing
+    in a shape that looks like being told something. Here a part that came back
+    empty is dropped whole, and a run of blanks collapses to one — so a missing
+    block closes up instead of leaving a hole, and no separator ever trails the
+    end of a message.
+    """
+    out = []
+    for p in parts:
+        p = "" if p is None else str(p)
+        if p == "" and (not out or out[-1] == ""):
+            continue
+        out.append(p)
+    while out and out[-1] == "":
+        out.pop()
+    return "\n".join(out)
+
+
 def _max_hold_hours(timeframe: str, engine: str = "", horizon: str = "") -> int | None:
     """Hours a signal may stay open. None means "horizon unknown, never expire".
 
@@ -442,6 +475,7 @@ def run_price_alerts(time_str: str, markets: set | None = None):
     import yfinance as yf
     import pandas as pd
     import json as _json
+    import engine_names as _en
     from datetime import timedelta
 
     try:
@@ -507,6 +541,110 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                     continue
         return None
 
+    def _window(row):
+        """(opened_at, age_h, limit_h, period, interval) for one signal.
+
+        ONE function, called once in the prefetch below and read back in the
+        loop, because the two must not be able to disagree about which bars a
+        signal is graded on. Computing it twice is how a prefetch quietly
+        serves the wrong window and the grading silently changes.
+        """
+        meta = {}
+        try:
+            meta = _json.loads(row.get("metadata") or "{}") or {}
+        except Exception:                                   # noqa: BLE001
+            meta = {}
+        opened_at = _opened_at(row)
+        limit_h = _max_hold_hours(
+            str(row.get("timeframe") or "SWING"),
+            engine=str(row.get("signal_type") or "") or str(meta.get("engine") or ""),
+            horizon=str(meta.get("horizon") or ""))
+        age_h = ((now - opened_at).total_seconds() / 3600.0
+                 if opened_at else (0.0 if limit_h is None else limit_h + 1))
+        period, interval = _bar_window(
+            str(row.get("timeframe") or "SWING"),
+            age_h if limit_h is None else min(age_h, limit_h))
+        return opened_at, age_h, limit_h, period, interval
+
+    # ── ONE REQUEST PER INTERVAL, NOT ONE PER POSITION ───────────────────────
+    #
+    # This graded the book with a separate yf.download per open signal. At 109
+    # open positions that is 109 sequential round trips inside the run that now
+    # carries the entire trading day — the 13:00 MYT scan is gone, so if this
+    # one does not finish, nothing is graded at all.
+    #
+    # Batching is only safe because _own_frame exists: it resolves a ticker out
+    # of yfinance's MultiIndex columns instead of letting .squeeze() pick a
+    # neighbour's, which is the failure that quoted BPCL at 176.70 when BPCL
+    # was 317.00. Without it, batching would trade minutes for wrong prices.
+    #
+    # Over-fetching is free. One period per interval group, sized to the OLDEST
+    # signal in it, and _since_entry then slices every signal back to the bars
+    # printed after it was filed — so a young signal in an old group is graded
+    # on exactly the same bars either way.
+    #
+    # A batch that comes back short is not fatal: anything missing falls
+    # through to its own download in the loop, which is what every signal did
+    # before this.
+    from scanner import _own_frame as _frame
+    windows, groups, batched = {}, {}, {}
+    for _, _r in open_df.iterrows():
+        # ONE ROW MUST NOT BE ABLE TO COST THE WHOLE BOOK ITS GRADING.
+        #
+        # The loop below has always been per-signal fault-tolerant: a row that
+        # raises is logged and skipped and the other 108 are graded. This
+        # prefetch sits OUTSIDE that, so an unguarded raise here — an
+        # unparseable date, a symbol to_yahoo cannot map — would propagate out
+        # of run_price_alerts and leave every open position ungraded. A wider
+        # blast radius than the code it replaced is not an optimisation.
+        try:
+            _sid = int(_r["id"])
+            w = _window(_r)
+            _yt = to_yahoo(str(_r["symbol"]))
+        except Exception as e:                              # noqa: BLE001
+            logging.warning("price_alerts prefetch %s: %s — it falls through "
+                            "to its own request in the loop",
+                            _r.get("symbol"), e)
+            continue
+        windows[_sid] = w
+        _per, _int = w[3], w[4]
+        g = groups.setdefault(_int, {"days": 0, "tickers": []})
+        # Periods are "<n>d" strings from _bar_window; the group takes the max.
+        try:
+            g["days"] = max(g["days"], int(str(_per).rstrip("d")))
+        except ValueError:
+            g["days"] = max(g["days"], 5)
+        g["tickers"].append(_yt)
+
+    for _int, g in groups.items():
+        tickers = sorted(set(g["tickers"]))
+        if not tickers:
+            continue
+        try:
+            # group_by="column", NOT "ticker". _own_frame resolves the
+            # ticker at column level -1, which is where the default "column"
+            # layout puts it — ('Close', 'BPCL.NS'). Under "ticker" the levels
+            # are the other way round, _own_frame finds Open/High/Low/Close
+            # where it expects a symbol, returns None for every ticker, and
+            # the whole batch silently falls through to one request each. It
+            # would still be CORRECT; it would just never be faster, and
+            # nothing would say so.
+            raw = yf.download(tickers, period=f"{g['days']}d", interval=_int,
+                              group_by="column", threads=True, progress=False,
+                              auto_adjust=True, timeout=30)
+        except Exception as e:                              # noqa: BLE001
+            logging.warning("price_alerts: batch %s failed (%s) — falling back "
+                            "to one request per signal", _int, e)
+            continue
+        got = 0
+        for t in tickers:
+            f = _frame(raw, t)
+            if f is not None and not f.empty:
+                batched[(t, _int)] = f
+                got += 1
+        logging.info("price_alerts: batch %s — %d/%d tickers over %dd",
+                     _int, got, len(tickers), g["days"])
+
     for _, row in open_df.iterrows():
         sym = row["symbol"]
         try:
@@ -523,36 +661,75 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             buy    = action != "SELL"
             risk   = abs(entry - sl) or 1.0
 
-            opened_at = _opened_at(row)
-            # Horizon from the signal itself — engine first, then its own stated
-            # horizon, then the timeframe. See _max_hold_hours.
-            limit_h = _max_hold_hours(tf,
-                                      engine=str(row.get("signal_type") or "")
-                                             or str(meta.get("engine") or ""),
-                                      horizon=str(meta.get("horizon") or ""))
+            # Read back what the prefetch computed. Recomputing it here would
+            # be a second opinion on which bars this signal is graded on.
+            opened_at, age_h, limit_h, period, interval = (
+                windows.get(sig_id) or _window(row))
             if limit_h is None:
-                # Unknown horizon: manage the levels, never time-stop it. The old
-                # code defaulted to 20 days here and closed real positions.
+                # Unknown horizon: manage the levels, never time-stop it. The
+                # old code defaulted to 20 days here and closed real positions.
                 logging.warning(f"price_alerts {sym}: no horizon for tf={tf!r} "
-                                f"engine={row.get('signal_type')!r} — levels only, "
-                                f"no time stop")
-            # An unknown open time used to be treated as "past the limit", i.e.
-            # expire it immediately. With no limit that is meaningless, so an
-            # undated signal is simply not aged.
-            age_h = ((now - opened_at).total_seconds() / 3600.0
-                     if opened_at else (0.0 if limit_h is None else limit_h + 1))
+                                f"engine={row.get('signal_type')!r} — levels "
+                                f"only, no time stop")
+            # ── What this signal is, for the human reading the alert ─────────
+            # Every alert used to open with "SL HIT — TITAN | SWING" and stop
+            # there. The row already carried the engine that filed it, the day
+            # it was filed and — for LEDGE and KEEL — the actual numbers off
+            # the bar that fired, and none of it reached the reader. So a stop
+            # -out arrived with no way to tell WHICH engine's read had failed,
+            # or whether the position was four hours or four weeks old.
+            eng_key = str(row.get("signal_type") or "") or str(meta.get("engine") or "")
+            why_txt = _en.why_block(eng_key, meta, row.get("remarks"))
+            invalid = _en.invalidated_by(meta)
+            # Age is only reportable when the signal actually has an open time.
+            # Without one the number above is a placeholder for the time stop,
+            # not an age, and printing it would state a held-for that is false.
+            ctx = _en.context_line(eng_key, opened_at,
+                                   age_h if opened_at else None)
 
-            # limit_h None means no time stop, so the bar window is sized on age
-            # alone. min(x, None) is a TypeError in py3.
-            period, interval = _bar_window(
-                tf, age_h if limit_h is None else min(age_h, limit_h))
-            tick = yf.download(to_yahoo(sym), period=period, interval=interval,
-                               progress=False, auto_adjust=True, timeout=8)
+            # ── The frame this signal is graded on ───────────────────────────
+            # Routed through scanner._own_frame, which exists because
+            # `df["Close"].squeeze()` published wrong numbers twice:
+            #
+            #   1. yfinance returns MultiIndex columns — ('Close', 'BPCL.NS') —
+            #      and .squeeze() picks a column rather than THE column.
+            #   2. The last daily bar is often partial, so its Close is NaN.
+            #      Every comparison below then answers False without raising:
+            #      `nan <= sl` is False, so no stop is seen, and on the time
+            #      stop `round(nan, 2)` is written to the ledger as the exit
+            #      price, the P&L and the R.
+            #
+            # And .squeeze() had a third failure all its own: on a frame with
+            # exactly ONE row it returns a scalar, so `.iloc[-1]` raises
+            # AttributeError — caught by this loop's own `except: continue`,
+            # which means that position is silently never graded at all. A
+            # one-row frame is not exotic once NaN bars are dropped.
+            #
+            # _own_frame resolves the ticker, drops any bar with a NaN in
+            # OHLC, and returns None rather than a neighbour's column. Its
+            # output has flat columns, so nothing below squeezes any more.
+            yt   = to_yahoo(sym)
+            tick = batched.get((yt, interval))
+            if tick is None:
+                # Not in the batch — a delisted ticker, a Yahoo miss, or a
+                # batch that failed outright. One request, exactly as every
+                # signal made before the prefetch existed.
+                raw = yf.download(yt, period=period, interval=interval,
+                                  progress=False, auto_adjust=True, timeout=8)
+                tick = _frame(raw, yt)
             if tick is None or tick.empty:
-                logging.debug(f"price_alerts {sym}: no data")
+                logging.debug(f"price_alerts {sym}: no usable bars")
                 continue
 
-            last_close = float(tick["Close"].squeeze().iloc[-1])
+            last_close = float(tick["Close"].iloc[-1])
+            if not math.isfinite(last_close):
+                # _own_frame drops NaN rows, so this should be unreachable.
+                # Kept because the cost of being wrong is a NaN written into
+                # the ledger as a booked result, and the cost of the check is
+                # one comparison.
+                logging.warning(f"price_alerts {sym}: last close is not a "
+                                f"number — skipped rather than booked")
+                continue
 
             # ── Time stop ────────────────────────────────────────────────────
             # Book the real R at the last close, exactly as backtest.py does.
@@ -564,6 +741,28 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 updates.append(("EXPIRED", round(last_close, 4), round(pnl, 2),
                                 round(r_m, 2), sig_id))
                 expired += 1
+                # A time stop CLOSES a live position, and until now it did so
+                # in silence: the ledger booked the exit and the reader — who
+                # is the one actually holding the shares — was told only a
+                # count, "3 closed (2 on time stop)", with no symbol in it. An
+                # exit the system takes and does not name is an exit the reader
+                # cannot act on.
+                took_t1 = "T1" in seen
+                alerts.append(("EXP", sym, _lines(
+                    f"⏳ *TIME STOP — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → last close {_fmt(sym, last_close)}",
+                    f"P&L `{pnl:+.2f}%` · R `{r_m:+.2f}`",
+                    (f"Past its {_horizon_txt(limit_h)} horizon. "
+                     + ("T1 was booked; the runner never reached T2."
+                        if took_t1 else
+                        f"Neither T1 ({_fmt(sym, t1)}) nor the stop "
+                        f"({_fmt(sym, sl)}) was reached.")),
+                    "",
+                    why_txt,
+                    "",
+                    "_Closed on the horizon, not on price. Exit if still held._")))
                 logging.info(f"TIME STOP: {sym} {tf} age={age_h:.0f}h "
                              f"limit={limit_h}h r={r_m:+.2f}")
                 continue
@@ -572,8 +771,8 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             if win.empty:
                 continue
 
-            hi = float(win["High"].squeeze().max())
-            lo = float(win["Low"].squeeze().min())
+            hi = float(win["High"].max())
+            lo = float(win["Low"].min())
 
             if buy:
                 sl_hit  = lo <= sl
@@ -597,9 +796,9 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 # fourteen, and BALKRISIND was booked 14.29% through its stop
                 # at a price that never traded after the signal.
                 try:
-                    opens = win["Open"].squeeze()
-                    lows  = win["Low"].squeeze()
-                    highs = win["High"].squeeze()
+                    opens = win["Open"]
+                    lows  = win["Low"]
+                    highs = win["High"]
                     trig  = (lows <= sl) if buy else (highs >= sl)
                     gap_o = float(opens[trig].iloc[0])
                 except Exception:
@@ -620,22 +819,47 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 gap_note = "" if abs(exit_p - sl) < 1e-9 else "  ⚠ gapped through stop"
                 updates.append(("SL_HIT", round(exit_p, 4), round(pnl, 2),
                                 round(r_m, 2), sig_id))
-                alerts.append(("SL", sym,
-                    f"🛑 *SL HIT — {sym}* | {tf}\n"
-                    f"Entry {_fmt(sym, entry)} → exit {_fmt(sym, exit_p)}{gap_note}\n"
-                    f"P&L: `{pnl:+.2f}%` | R: `{r_m:+.2f}`\n"
-                    f"_Exit trade. Review thesis before re-entry._"))
+                # Whether T1 was already banked changes what this message
+                # means: a runner stopping out after a booked partial is a
+                # different outcome from a trade that never worked, and the
+                # old text called both "exit trade".
+                took_t1 = "T1" in seen
+                tail = ("_T1 was booked earlier — this closes the runner._"
+                        if took_t1 else
+                        f"_Never reached T1 ({_fmt(sym, t1)}). Closed._")
+                alerts.append(("SL", sym, _lines(
+                    f"🛑 *SL HIT — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → exit {_fmt(sym, exit_p)}{gap_note}",
+                    f"P&L `{pnl:+.2f}%` · R `{r_m:+.2f}`",
+                    "",
+                    why_txt,
+                    "",
+                    tail)))
 
             elif t2_hit:
                 r_m = abs(t2 - entry) / risk
                 pnl = ((t2 - entry) / entry * 100) * (1 if buy else -1)
                 updates.append(("T2_HIT", round(t2, 4), round(pnl, 2),
                                 round(r_m, 2), sig_id))
-                alerts.append(("T2", sym,
-                    f"🎯🎯 *TARGET 2 HIT — {sym}* | {tf}\n"
-                    f"Entry {_fmt(sym, entry)} → T2 {_fmt(sym, t2)}\n"
-                    f"Gain: `{pnl:+.2f}%` | `{r_m:.2f}R` ✅\n"
-                    f"_Full exit._"))
+                # The R printed here is the R of the LEVEL, not of the
+                # position: if T1 was banked at half size the blended return is
+                # lower than 2.5R and saying "2.50R ✅" flat would overstate the
+                # result. Say which one it is rather than quietly averaging.
+                took_t1 = "T1" in seen
+                alerts.append(("T2", sym, _lines(
+                    f"🎯🎯 *TARGET 2 HIT — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → T2 {_fmt(sym, t2)}",
+                    f"Gain `{pnl:+.2f}%` · `{r_m:.2f}R` at this level ✅",
+                    (f"_Half was booked at T1 {_fmt(sym, t1)}, so the position "
+                     f"returned less than {r_m:.2f}R._" if took_t1 else ""),
+                    "",
+                    why_txt,
+                    "",
+                    "_Full exit._")))
 
             elif t1_hit and "T1" not in seen:
                 # Stays OPEN so it can still trail to T2 — the previous code set
@@ -644,22 +868,53 @@ def run_price_alerts(time_str: str, markets: set | None = None):
                 r_m = abs(t1 - entry) / risk
                 pnl = ((t1 - entry) / entry * 100) * (1 if buy else -1)
                 flags.append((seen + "T1;", sig_id))
-                alerts.append(("T1", sym,
-                    f"✅ *TARGET 1 HIT — {sym}* | {tf}\n"
-                    f"Entry {_fmt(sym, entry)} → T1 {_fmt(sym, t1)}\n"
-                    f"Gain: `{pnl:+.2f}%` | `{r_m:.2f}R` ✓\n"
-                    f"_Book 50% · SL to entry · trail for T2 {_fmt(sym, t2)}_"))
+                # From HERE, not from entry. "T2 — +16%" next to a booked +8%
+                # reads as sixteen more percent, which is double the truth.
+                t2_pct = (t2 - t1) / t1 * 100 * (1 if buy else -1)
+                t2_r   = abs(t2 - entry) / risk
+                alerts.append(("T1", sym, _lines(
+                    f"✅ *TARGET 1 HIT — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Entry {_fmt(sym, entry)} → T1 {_fmt(sym, t1)}",
+                    f"Gain `{pnl:+.2f}%` · `{r_m:.2f}R` ✓",
+                    f"Still on: T2 {_fmt(sym, t2)} — `{t2_pct:+.2f}%` from here, "
+                    f"`{t2_r:.2f}R` on the whole trade",
+                    "",
+                    why_txt,
+                    "",
+                    (f"_Invalidates on: {invalid}_" if invalid else ""),
+                    "",
+                    "_Book 50% · stop to entry · trail the rest for T2._")))
 
             elif sl1_hit and "SL1" not in seen:
                 # One warning per signal for its whole life. This never wrote to
                 # the DB before, so it re-fired on every single scan.
                 flags.append((seen + "SL1;", sig_id))
                 chg = (last_close - entry) / entry * 100 * (1 if buy else -1)
-                alerts.append(("SL1", sym,
-                    f"⚠️ *SL1 WARNING — {sym}* | {tf}\n"
-                    f"Price {_fmt(sym, last_close)} breached warning SL {_fmt(sym, sl1_v)}\n"
-                    f"Change: `{chg:+.2f}%` | Final SL: {_fmt(sym, sl)}\n"
-                    f"_Tighten or exit half. Watch closely._"))
+                # How much room is left, in the unit the position is sized in.
+                # "Final SL: 3310" makes the reader do the arithmetic; "0.42R
+                # left" is the same fact already in decision form.
+                left_r = ((last_close - sl) / risk) if buy else ((sl - last_close) / risk)
+                # The warning fires on the bar's EXTREME, not on its close. The
+                # old line said "Price {close} broke the warning stop" — which
+                # names a price that did not break it, and printed the same
+                # number twice whenever the two happened to coincide.
+                brk = lo if buy else hi
+                alerts.append(("SL1", sym, _lines(
+                    f"⚠️ *SL1 WARNING — {sym}* | {tf}",
+                    ctx,
+                    "",
+                    f"Traded to {_fmt(sym, brk)}, through the warning stop "
+                    f"{_fmt(sym, sl1_v)}",
+                    f"Now {_fmt(sym, last_close)} · `{chg:+.2f}%` · "
+                    f"`{max(left_r, 0):.2f}R` left to the final stop {_fmt(sym, sl)}",
+                    "",
+                    why_txt,
+                    "",
+                    (f"_Invalidates on: {invalid}_" if invalid else ""),
+                    "",
+                    "_Tighten or exit half._")))
 
         except Exception as e:
             logging.warning(f"price_alerts {sym}: {e}")
@@ -674,10 +929,10 @@ def run_price_alerts(time_str: str, markets: set | None = None):
         for kind, _sym, _m in alerts:
             counts[kind] = counts.get(kind, 0) + 1
         label = {"SL": "stopped out", "T2": "hit T2", "T1": "hit T1",
-                 "SL1": "SL1 warnings"}
+                 "SL1": "SL1 warnings", "EXP": "closed on time stop"}
         lines = [f"📋 *Position update* — {time_str}",
                  f"_{len(alerts)} levels resolved this scan — digest, not {len(alerts)} messages._\n"]
-        for k in ("T2", "T1", "SL", "SL1"):
+        for k in ("T2", "T1", "SL", "EXP", "SL1"):
             if counts.get(k):
                 syms = [s for kk, s, _ in alerts if kk == k]
                 lines.append(f"• *{counts[k]} {label[k]}*: {', '.join(syms[:12])}"

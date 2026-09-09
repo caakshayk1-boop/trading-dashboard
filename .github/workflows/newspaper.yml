@@ -226,6 +226,34 @@ jobs:
       # connected to this repository, so the push above is what ships the site.
       # A CLI deploy would publish the same commit a second time.
       #
+      # WHICH IS ALSO THE COST. Vercel builds on EVERY push and keeps the
+      # output of every deployment it has ever built.
+      #
+      # `[skip ci]` DOES NOT STOP IT HERE. That was assumed and it is wrong:
+      # the dashboard shows "data: update signals 2026-09-09 10:13 UTC
+      # [skip ci]" as a completed 19s production deployment. Measured over 14
+      # days, 34 of 55 commits — 62% — touch neither docs/ nor vercel-news/ and
+      # each produced a full, permanently retained deployment that served
+      # nothing new. Roughly 17 deployments a day, of which about 3 matter.
+      #
+      # `ignoreCommand` in vercel-news/vercel.json now skips the build unless
+      # the commit touched docs/ or vercel-news/. Its exit code is INVERTED —
+      # 0 skips, non-zero builds — so every unexpected condition must fail
+      # toward building: no repo, no HEAD^, a renamed directory. Get that
+      # backwards and the site stops deploying with nothing to show for it.
+      # test_vercel_ignore.py runs the real command against a temp repo for
+      # exactly those cases.
+      #
+      # The two commit types that still deploy both have to. `chore: jobs`
+      # writes docs/jobs.json, which is served STATICALLY — allow-listed in
+      # .vercelignore, copied by build.js, fetched as jobs.json rather than
+      # through /api — and `chore: newspaper` rebuilds the shell.
+      #
+      # The other half of the same bill is bundle weight: api/_db.js imports
+      # @libsql/client/web rather than the default entrypoint, which would drag
+      # an 18.8 MB native SQLite binary into each of the sixteen functions that
+      # reach it. vercel-news/test/bundle.test.js holds both in place.
+      #
       # Only the daily shell is published this way — signals, positions and
       # stats are read live from Turso by /api on every page load, which is why
       # nothing needs to redeploy after a scan.

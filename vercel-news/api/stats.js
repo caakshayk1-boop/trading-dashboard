@@ -95,17 +95,37 @@ export default async function handler(req, res) {
     const closed = rows.filter((r) => r.badge === "win" || r.badge === "loss");
     const open = rows.filter((r) => r.badge === "open").length;
     const cancelled = rows.filter((r) => r.badge === "cancelled").length;
+    // TIME-STOPPED TRADES WERE UNREPORTED, NOT MERELY UNCOUNTED.
+    //
+    // `closed` is win|loss, so an EXPIRED / TIME_STOP row appears in none of
+    // the four numbers below. all - closed - open - cancelled was therefore
+    // non-zero and nothing on the page said what the remainder was, which is
+    // the one thing a totals block exists to prevent. It is reported now.
+    //
+    // It is still OUT of expectancy, and that is a real decision rather than
+    // an oversight: standalone_scan books a time stop's R at the last close,
+    // which is a mark, not a fill — the trade did not reach a target or a
+    // stop, and the price it is marked at is not one it was exited at. Folding
+    // marks into a realised-expectancy figure mixes two different claims. The
+    // basis string below now says so instead of describing these rows as
+    // simply "closed", which they are.
+    const expired = rows.filter((r) => r.badge === "expired").length;
 
     json(res, 200, {
       ok: true,
       generated_at: new Date().toISOString(),
       version,
-      basis: "Win rate, avg R and expectancy are computed over closed signals only. Open signals are excluded.",
+      basis: "Win rate, avg R and expectancy are computed over trades that "
+           + "reached a target or a stop. Open signals are excluded, and so "
+           + "are time-stopped ones: their R is marked at the last close "
+           + "rather than realised at an exit. They are counted under "
+           + "totals.expired.",
       totals: {
         all: rows.length,
         closed: closed.length,
         open,
         cancelled,
+        expired,
         first_date: rows.length ? rows[0].date : null,
         last_date: rows.length ? rows[rows.length - 1].date : null,
       },

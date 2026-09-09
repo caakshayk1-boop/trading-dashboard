@@ -66,8 +66,13 @@ on:
     # was already tomorrow, so Mon-Fri MYT meant '0-4' in UTC. At 00:00 UTC the
     # two calendars agree and it is '1-5'. Carrying '0-4' across this edit
     # would have sent the brief on Sunday and skipped Friday.
+    # ── THE TWO TOUCHES, ON THE OPERATOR'S INSTRUCTION ──────────────────────
+    # "needed only 2 times a day - morning 8am MYT & night 8pm MYT". The night
+    # slot moved 21:00 → 20:00 MYT to match; the morning slot was already 08:00.
+    # daily_scan.yml's single weekday scan sits at the same 20:00 MYT, so the
+    # evening pair is one arrival, not two.
     - cron: '0 0 * * 1-5'     # 08:00 MYT · morning brief
-    - cron: '0 13 * * 1-5'    # 21:00 MYT · evening brief
+    - cron: '0 12 * * 1-5'    # 20:00 MYT · night brief
     # CATCH-UP. Drift was never the whole story. On 2026-08-27 the 22:43 UTC
     # morning cron produced NO RUN AT ALL — not a late one, none — and the
     # brief went out only because it was dispatched by hand. GitHub's
@@ -85,8 +90,8 @@ on:
     # these are the deep backstop for a multi-hour GitHub outage.
     - cron: '0 2 * * 1-5'     # 10:00 MYT · morning catch-up (1st)
     - cron: '0 4 * * 1-5'     # 12:00 MYT · morning catch-up (2nd)
-    - cron: '0 15 * * 1-5'    # 23:00 MYT · evening catch-up (1st)
-    - cron: '0 17 * * 1-5'    # 01:00 MYT · evening catch-up (2nd)
+    - cron: '0 14 * * 1-5'    # 22:00 MYT · night catch-up (1st)
+    - cron: '0 16 * * 1-5'    # 00:00 MYT · night catch-up (2nd)
     - cron: '45 1 * * *'      # 7:15 AM  IST — SIP bucket + price refresh (data only, no Telegram)
     # Health watch. The "Detect task" case below has routed '0 3,9,15 * * *'
     # to TASK=health since it was written, but that cron was never in this
@@ -155,28 +160,31 @@ jobs:
             TASK="$INPUT"
           else
             case "$SCHEDULE" in
-              "43 22 * * 0-4")  TASK=brief_morning ;;
-              # The old on-the-hour slots, kept so a manual dispatch of either
-              # still resolves rather than falling through to TASK=none.
-              "0 0 * * 1-5")    TASK=brief_morning ;;
-              "0 13 * * 1-5")   TASK=brief_evening ;;
-              "0 2 * * 1-5")    TASK=brief_morning_catchup ;;
-              "0 4 * * 1-5")    TASK=brief_morning_catchup ;;
-              "0 15 * * 1-5")   TASK=brief_evening_catchup ;;
-              "0 17 * * 1-5")   TASK=brief_evening_catchup ;;
-              # Kept so a manual dispatch of the old name still works.
+              # ── THE LIVE SLOTS ───────────────────────────────────────────
+              "0 0 * * 1-5")    TASK=brief_morning ;;          # 08:00 MYT
+              "0 12 * * 1-5")   TASK=brief_evening ;;          # 20:00 MYT
+              "0 2 * * 1-5")    TASK=brief_morning_catchup ;;  # 10:00 MYT
+              "0 4 * * 1-5")    TASK=brief_morning_catchup ;;  # 12:00 MYT
+              "0 14 * * 1-5")   TASK=brief_evening_catchup ;;  # 22:00 MYT
+              "0 16 * * 1-5")   TASK=brief_evening_catchup ;;  # 00:00 MYT
+              "45 1 * * *")     TASK=sip_bucket    ;;
+              "0 3,9,15 * * *") TASK=health        ;;
+              # ── RETIRED SLOTS ────────────────────────────────────────────
+              # No cron points at these any more. They are kept so a manual
+              # dispatch of an old schedule string still resolves to the right
+              # task instead of falling through to TASK=none and running
+              # nothing — the failure this case block exists to prevent.
+              "43 22 * * 0-4")  TASK=brief_morning ;;          # pre-drift-fix
+              "0 13 * * 1-5")   TASK=brief_evening ;;          # 21:00 MYT
+              "0 15 * * 1-5")   TASK=brief_evening_catchup ;;  # 23:00 MYT
+              "0 17 * * 1-5")   TASK=brief_evening_catchup ;;  # 01:00 MYT
               "30 4 * * 1-5")   TASK=brief_midday  ;;
               "43 10 * * 1-5")  TASK=brief_evening ;;
-              "0 12 * * 1-5")   TASK=brief_evening ;;
-              # The old 17:00 MYT slot, kept so a manual dispatch of it works.
-              "0 9 * * 1-5")    TASK=brief_evening ;;
-              # Catch-ups. Same slot, catch_up=True — see the schedule block.
+              "0 9 * * 1-5")    TASK=brief_evening ;;          # 17:00 MYT
               "17 1 * * 1-5")   TASK=brief_morning_catchup ;;
               "17 3 * * 1-5")   TASK=brief_morning_catchup ;;
               "17 13 * * 1-5")  TASK=brief_evening_catchup ;;
               "17 15 * * 1-5")  TASK=brief_evening_catchup ;;
-              "45 1 * * *")     TASK=sip_bucket    ;;
-              "0 3,9,15 * * *") TASK=health        ;;
               # No fallthrough to cf_scan any more. An unrecognised cron used to
               # become a CF scan, which is how a mis-typed schedule would have
               # quietly started alerting on commodities again.

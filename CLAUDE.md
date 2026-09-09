@@ -81,6 +81,63 @@ Rules the layer must keep (all pinned by tests):
   dividing a dataset by its own length always yields 100%.
 - No denominator, no ratio. A made-up universe size is worse than none.
 
+## Telegram (`standalone_scan.py` · `daily_brief.py`)
+Two touches a day, on the operator's clock. Nothing else is scheduled to post.
+
+- **08:00 MYT** — the morning brief. **20:00 MYT** — the night brief, alongside
+  the day's only scan. Crons live in `scheduled_tasks.yml` and `daily_scan.yml`;
+  the 13:00 MYT "signals open" scan is **gone**, and no morning scan replaces it
+  (08:00 MYT is 05:30 IST, before the NSE opens — it could only re-report the
+  previous close).
+- The **Cloudflare watchdog** (`src/watchdog.js` in the *signal* repo) holds its
+  own copy of that schedule. Moving a cron here without moving it there does not
+  remove a slot — it moves it into the watchdog, which then dispatches it daily
+  with no cron anywhere to explain why.
+- `engine_names.py` — the PUBLISHED name of an engine (`breakout` → BREACH),
+  mirroring `ENGINE_REGISTRY` in the signal site's `signal.js`. Alerts print
+  names, never database keys. `published_tally()` states the arithmetic —
+  **8 names over 9 configurations**, because TIDAL runs two bands — which is the
+  number that used to say 8 on one page and 9 on another.
+- Position alerts carry the engine, when the signal was filed, how long it has
+  been held, and **what fired it**. `why_lines()` reads the row's own metadata
+  (LEDGE/KEEL write measured reasons at signal time); `engine_rule()` is the
+  fallback and is labelled differently — a standing rule is not a claim about
+  one trade. They are separate functions so the two can never be blurred.
+- A **time stop** now alerts. It closes a live position and used to do it in
+  silence, reported only as a count with no symbol in it.
+- `daily_brief._OWNS` decides which site a section links to. Facts all come from
+  one API; links do not — ideas, the ledger and the engines are on
+  signal.askakshay.com, and linking them to the newspaper is how the brief
+  stopped being a way into anything.
+
+The book is fetched in BATCHES — one request per bar interval, not one per
+open position. `group_by="column"`, never `"ticker"`: `_own_frame` resolves the
+symbol at column level -1, which is where the default layout puts it. Under
+`"ticker"` it finds `Open`/`High`/`Low`/`Close` there instead, returns None for
+every symbol, and the batch degrades to one request each — still correct, never
+faster, and nothing says so. A test asserts the batch is actually used.
+
+Rules the layer must keep (all pinned by `test_alert_pipeline.py`, 135 checks,
+and `test_brief_fit.py`):
+- Every engine in `tracker.REMARKS` has a published name, or a reader gets a key.
+- An alert with a missing field drops the field, never the message. The whole
+  loop body sits inside `except Exception: continue`, so a NameError in one
+  composer deletes that alert into a log nobody reads.
+- No baseline, no P&L. APEX printed `balance - 2000.0` against a number that was
+  typed, not measured.
+- A stop-out after T1 was booked is a different sentence from one that never
+  worked. So is a T2 that half the position missed.
+- Grading reads `scanner._own_frame`, never `df["Close"].squeeze()`. Squeeze
+  returns a SCALAR on a one-row frame, so `.iloc[-1]` raised inside the loop's
+  own `except: continue` and that position was never graded at all; and it does
+  not drop a partial last bar, whose NaN Close was booked into the ledger as an
+  EXPIRED trade's exit price, P&L and R — all three NULL.
+- `stats.js` totals must account for every row. `closed` is win|loss, so
+  time-stopped trades were in none of the four reported numbers and the
+  remainder was unexplained. They are OUT of expectancy on purpose — a time
+  stop's R is marked at the last close, not realised at an exit — and the
+  `basis` string now says that instead of claiming to cover "closed signals".
+
 ## Page structure
 `SECTION_MAP` order IS document order, and the nav is generated from it.
 `python3 test_page_structure.py` fails the build if the two drift, and requires
@@ -89,6 +146,65 @@ heading twice and stops being navigation.
 
 Main page runs, in order: **Read · Research · Trade · Trust**. Moving a section
 means moving its template block AND its SECTION_MAP row; the test checks both.
+
+## Hosting cost
+Turso is the only paid line. Everything else must stay inside a free tier.
+
+- **news.askakshay.com** is on Vercel and hit **100% of the 10 GB free Function
+  Storage**. Two causes, both now fixed in config, neither of which reclaims
+  what is already stored:
+  - `api/_db.js` imports `@libsql/client/web`, NOT `@libsql/client`. The default
+    entrypoint statically imports the native `libsql` package — 18.8 MB of
+    compiled binary — and **sixteen of the eighteen routes** reach `_db.js`.
+    Vercel bundles per function and keeps every deployment's output.
+  - `vercel.json`'s `ignoreCommand` skips the build unless the commit touched
+    `docs/` or `vercel-news/`. **`[skip ci]` does not stop Vercel here** — a
+    `data: update signals ... [skip ci]` commit deploys like any other. Measured
+    over 14 days: **34 of 55 commits (62%)** touch neither path, ~17 deployments
+    a day of which ~3 matter.
+  - That gate's exit code is **inverted — 0 skips, non-zero builds** — so every
+    unexpected condition must fail toward BUILDING. A gate that exits 0 by
+    accident stops the site deploying with a green workflow and no error
+    anywhere. `test_vercel_ignore.py` runs the real command string against a
+    temp repo: no repo, no `HEAD^`, a renamed `docs/`. The `test -d` guards are
+    there because `git diff` with a pathspec matching nothing exits 0.
+  - The two commit types that still deploy both must: `chore: jobs` writes
+    `docs/jobs.json`, served STATICALLY (allow-listed in `.vercelignore`, copied
+    by `build.js`, fetched as `jobs.json`, not via `/api`), and
+    `chore: newspaper` rebuilds the shell.
+  - `vercel-news/test/bundle.test.js` pins the `/web` import; it runs in
+    `newspaper.yml` and in `tests.yml`.
+- **Reclaiming the 10 GB needs the account**: delete old deployments in the
+  Vercel dashboard (Project → Deployments), or `vercel remove <project> --safe`.
+  Nothing in this repo can do it.
+- **signal.askakshay.com** is on Cloudflare Workers and costs nothing at this
+  traffic. It is the pattern to migrate toward if the newspaper's bill returns.
+
+## Tests
+`.github/workflows/tests.yml` runs every offline suite on **every push and
+pull request**. Before it existed, each suite ran only inside the job it
+guards — `test_alert_pipeline.py` in `daily_scan.yml`, `node --test` in
+`newspaper.yml` — so a regression merged green and surfaced at 20:00 MYT as a
+scan that refused to run. The repo is public, so Actions minutes are free.
+
+- `test_crawler.py` and `test_security.py` are **excluded by name**: both hit
+  the live network (chittorgarh.com, r.jina.ai, a real browser, the served
+  headers). They belong on a schedule against production, not on a diff.
+- The three env vars in that workflow are placeholders, never real secrets —
+  `config.py` raises at import time on a missing variable, so importing
+  `scanner` needs them set to something. Nothing in the offline suites sends,
+  fetches or authenticates.
+- Running a suite locally needs `ta` installed. Without it every ATR is None
+  and `test_stock_screen.py` fails for the missing library, not the code.
+- Two classes of stale test this CI already caught, both of which had been red
+  for a while with nobody looking:
+  - **A date written down.** A fixture filed a row at "2026-08-12" against a
+    20-day horizon. It was inside that horizon the day it was written and aged
+    out a fortnight later. Fixture dates are relative to today, never literal.
+  - **A fixture that stopped matching its comment.** "Orderly range" was an 11%
+    daily ATR, built before the stop widened on 2026-09-03. When the rule it
+    tested started refusing that candidate — correctly — the test blamed the
+    code.
 
 ## Rules
 - NEVER read or modify `config.py` (contains API keys)

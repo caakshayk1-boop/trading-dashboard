@@ -1428,11 +1428,21 @@ def test_duplicate_open_positions_collapse_per_engine() -> None:
 
     # The horizon guard: keeping the earliest is WRONG when the earliest is only
     # open because it should already have been time-stopped.
+    #
+    # DATES RELATIVE TO TODAY, NOT WRITTEN DOWN. These were "2026-06-01" and
+    # "2026-08-12", and equity_measured/1D holds for 20 days. The later row was
+    # inside its horizon on the day this was written and aged out of it a
+    # fortnight later, at which point BOTH rows were stale, the guard had
+    # nothing to choose between, and the check failed for a reason that had
+    # nothing to do with the code. A test whose result depends on the wall
+    # clock is not a test; it is a countdown.
+    from datetime import date as _date, timedelta as _delta
+    _ago = lambda d: (_date.today() - _delta(days=d)).isoformat()
     stale = [
         {"id": 10, "symbol": "X", "signal_type": "equity_measured", "timeframe": "1D",
-         "status": "OPEN", "date": "2026-06-01", "entry": 100, "metadata": "{}"},
+         "status": "OPEN", "date": _ago(100), "entry": 100, "metadata": "{}"},
         {"id": 11, "symbol": "X", "signal_type": "equity_measured", "timeframe": "1D",
-         "status": "OPEN", "date": "2026-08-12", "entry": 110, "metadata": "{}"},
+         "status": "OPEN", "date": _ago(2), "entry": 110, "metadata": "{}"},
     ]
     k2, v2 = D.plan(stale)
     check("a row past its horizon does not outrank a live one",
@@ -1503,12 +1513,26 @@ def test_magic_levels_are_anchored_to_the_screen_thesis() -> None:
     from scanner import magic_levels
 
     # A clean recovery candidate: 20% below its high, orderly range.
+    #
+    # THE FIXTURE DID NOT MATCH ITS OWN COMMENT. Low was price * 0.90 on every
+    # bar against a High of price * 1.01 — an 11% daily range, which is not an
+    # orderly anything. ATR came out at 11.00 on a 100-rupee stock, so the 3xATR
+    # stop sat at 67, risk was 33, and the 25 points of room up to the 52-week
+    # high was 0.76R. magic_levels then did exactly what its docstring says it
+    # does — "if the 52-week high does not clear the stop by at least 1R ... the
+    # candidate is dropped" — and returned None.
+    #
+    # That rule did not change; the STOP did, on 2026-09-03, to the wider of the
+    # structural and ATR candidates. The fixture was built against the tighter
+    # one and stopped describing a candidate that could pass. A 1% daily range
+    # is what a name 20% off its high actually trades like, and gives ~4R of
+    # room to the high.
     n = 260
     price = 100.0
     hi52 = 125.0
     df = pd.DataFrame({
         "High":  [hi52] + [price * 1.01] * (n - 1),
-        "Low":   [price * 0.90] * n,
+        "Low":   [price * 0.99] * n,
         "Close": [price] * n,
     })
     lv = magic_levels(df, price, hi52)
