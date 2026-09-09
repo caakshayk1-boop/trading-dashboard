@@ -87,7 +87,27 @@ ENGINE_MAX_HOLD_HOURS = {
     # metadata — the whole point of resolving by engine first.
     "magic": 365 * 24,              # 3-12 month recovery toward the 52-week high
     "magicmagic": 365 * 24,
+    # VECTOR. Its own alert footer says "monthly hold" and the site's registry
+    # says "Monthly → months", and it had no horizon at all — so every momentum
+    # signal was open forever, with the run logging "no horizon ... levels only,
+    # no time stop" for each one, every scan. Four were open on 2026-09-09.
+    # This is the engine's own published claim, written where the code can act
+    # on it. It closes nothing today: the oldest of those four was six days
+    # old.
+    "momentum_quant": 30 * 24,
 }
+
+# ALLOCATIONS, NOT TRADES — and having no horizon is CORRECT for them.
+#
+# A SIP instalment and a weekly Top-5 pick have no stop and no target (see
+# tracker.EXCLUDE_FROM_EXPECTANCY and the comment beside it: levels were once
+# manufactured at ±0.1% of price purely to satisfy a validator). Nothing about
+# them is a bet with an exit, so a time stop is meaningless.
+#
+# They are named here so the "no horizon" line stops reading as a fault. It
+# was logged at WARNING beside momentum_quant's genuine gap, which is how a
+# real problem sat next to correct behaviour for weeks looking identical.
+NO_TIME_STOP_BY_DESIGN = {"sip_bucket", "top5_pick"}
 
 # Deliberately NOT a number any more. An unknown timeframe used to resolve to
 # 20 days, which is why a missing key closed positions instead of raising —
@@ -364,17 +384,37 @@ def _send_chunked(header, blocks, footer=None):
     return sent
 
 
-def _record_delivery(ids, sent_flags, mark_fn):
-    """Persist the real per-signal delivery outcome."""
+def _record_delivery(ids, sent_flags, mark_fn, reason=None):
+    """Persist the real per-signal delivery outcome.
+
+    `sent_flags` is normally a LIST — one flag per chunk _send_chunked
+    returned. Two call sites pass a bare bool instead, from the
+    `... if blocks else True` shape used when a batch has nothing to alert,
+    and `list(True)` raises TypeError. That was swallowed by the caller's own
+    `_safe` handler as "'bool' object is not iterable", which skipped the rest
+    of the scan: on 2026-09-09 the measured-equity engine logged two rows and
+    then reported itself as having produced nothing.
+
+    A bool now means "this outcome applies to every id", which is what those
+    call sites meant.
+
+    `reason` overrides the stored send_error. A batch that was never SENT —
+    long-only policy dropped every row — is not a Telegram failure, and
+    labelling it one puts a lie in the column built to hold the truth.
+    """
     if not ids:
         return
-    flags = list(sent_flags) + [False] * (len(ids) - len(sent_flags))
+    if isinstance(sent_flags, bool):
+        flags = [sent_flags] * len(ids)
+    else:
+        flags = list(sent_flags) + [False] * (len(ids) - len(sent_flags))
     ok_ids   = [i for i, s in zip(ids, flags) if s]
     fail_ids = [i for i, s in zip(ids, flags) if not s]
     if ok_ids:
         mark_fn(ok_ids, True)
     if fail_ids:
-        mark_fn(fail_ids, False, _LAST_SEND_ERROR or "telegram send failed")
+        mark_fn(fail_ids, False,
+                reason or _LAST_SEND_ERROR or "telegram send failed")
 
 
 # ── Price Alert Monitor (checks open signals against live prices) ─────────────
@@ -668,9 +708,18 @@ def run_price_alerts(time_str: str, markets: set | None = None):
             if limit_h is None:
                 # Unknown horizon: manage the levels, never time-stop it. The
                 # old code defaulted to 20 days here and closed real positions.
-                logging.warning(f"price_alerts {sym}: no horizon for tf={tf!r} "
-                                f"engine={row.get('signal_type')!r} — levels "
-                                f"only, no time stop")
+                #
+                # An allocation has no horizon BY DESIGN and is not a fault, so
+                # it does not get a warning. Logging both at WARNING is how
+                # momentum_quant's real gap hid beside sip_bucket's correct
+                # behaviour, indistinguishable, for weeks.
+                _eng = str(row.get("signal_type") or "")
+                if _eng in NO_TIME_STOP_BY_DESIGN:
+                    logging.debug(f"price_alerts {sym}: {_eng} is an allocation "
+                                  f"— levels only, no time stop, by design")
+                else:
+                    logging.warning(f"price_alerts {sym}: no horizon for tf={tf!r} "
+                                    f"engine={_eng!r} — levels only, no time stop")
             # ── What this signal is, for the human reading the alert ─────────
             # Every alert used to open with "SL HIT — TITAN | SWING" and stop
             # there. The row already carried the engine that filed it, the day
@@ -1374,10 +1423,16 @@ def run_commodity_scan(time_str):
         if len(blocks) < len(sigs):
             logging.info(f"longs-only: {len(sigs) - len(blocks)} commodity short(s) "
                          f"logged but not alerted")
-        sent = (_send_chunked(f"\U0001F947 *Commodity Signals* ({len(blocks)}) — {time_str}\n"
-                              "_Long only \u2014 shorts are recorded, not alerted_\n", blocks)
-                if blocks else True)
-        _record_delivery(ids, sent, mark_alerts_sent)
+        if blocks:
+            sent = _send_chunked(
+                f"\U0001F947 *Commodity Signals* ({len(blocks)}) — {time_str}\n"
+                "_Long only \u2014 shorts are recorded, not alerted_\n", blocks)
+            _record_delivery(ids, sent, mark_alerts_sent)
+        else:
+            # Same shape as measured equity above, and the same bug: a bare
+            # True reached list() and raised.
+            _record_delivery(ids, False, mark_alerts_sent,
+                             reason="not alerted — long only, every signal was a short")
     return sigs
 
 
@@ -1475,12 +1530,19 @@ def run_measured_equity_scan(time_str):
 
     # Logged above in full; only the longs are alerted. See longs_only.
     alertable = longs_only(signals, key="bias")
-    sent = _send_chunked(
-        f"\U0001F4CF *Measured Equity Signals* ({len(alertable)}) — {time_str}\n"
-        "_Daily close · weekly regime · structural targets · long only_\n",
-        [format_alert(s) for s in alertable],
-        footer="\n_Backtested +0.171R/trade · not SEBI advice_") if alertable else True
-    _record_delivery(ids, sent, mark_alerts_sent)
+    if alertable:
+        sent = _send_chunked(
+            f"\U0001F4CF *Measured Equity Signals* ({len(alertable)}) — {time_str}\n"
+            "_Daily close · weekly regime · structural targets · long only_\n",
+            [format_alert(s) for s in alertable],
+            footer="\n_Backtested +0.171R/trade · not SEBI advice_")
+        _record_delivery(ids, sent, mark_alerts_sent)
+    else:
+        # Every signal was a short. The rows are in the ledger and were
+        # deliberately not alerted, so sent_at stays NULL and the column says
+        # WHY — not "telegram send failed", which never happened.
+        _record_delivery(ids, False, mark_alerts_sent,
+                         reason="not alerted — long only, every signal was a short")
     return signals
 
 

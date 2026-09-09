@@ -392,6 +392,108 @@ src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 check("midday slot emits numeric counts only",
       'counts = {"mode": "position-management-only"}' not in src)
 
+# ── Failures that were swallowed, one per engine ─────────────────────────────
+
+# `_record_delivery(ids, True, ...)` — two call sites pass a bare bool from the
+# `... if blocks else True` shape used when a batch has nothing to alert, and
+# `list(True)` raises. The caller's own _safe handler logged it as "'bool'
+# object is not iterable" and SKIPPED THE REST OF THE SCAN: on 2026-09-09 the
+# measured-equity engine logged two rows and then reported producing nothing.
+_marked = []
+def _fake_mark(ids, ok, err=None):
+    _marked.append((sorted(ids), ok, err))
+
+def _delivery(ids, flags, **kw):
+    """Call _record_delivery and return (marks, error).
+
+    Wrapped because the bug under test RAISES. An unwrapped call aborts this
+    whole file at the first regression — and this file gates every scan, so
+    losing the twenty checks after it is a worse outcome than one red line.
+    """
+    _marked.clear()
+    try:
+        standalone_scan._record_delivery(ids, flags, _fake_mark, **kw)
+    except Exception as e:                                   # noqa: BLE001
+        return list(_marked), f"{type(e).__name__}: {e}"
+    return list(_marked), None
+
+_m, _e = _delivery([1, 2, 3], True)
+check("a bare True marks every id, instead of raising",
+      _e is None and _m == [([1, 2, 3], True, None)], _e or _m)
+
+_m, _e = _delivery([1, 2], False, reason="not alerted — long only")
+check("a bare False records the REASON, not a fake telegram error",
+      _e is None and len(_m) == 1 and _m[0][1] is False
+      and _m[0][2] == "not alerted — long only", _e or _m)
+
+_m, _e = _delivery([1, 2, 3], [True, False])
+check("a short flag list still pads with failures, as before",
+      _e is None and len(_m) == 2, _e or _m)
+
+# No call site may pass a bare literal True as the flags argument. Checked with
+# ast rather than by searching for the text: the first version of this grepped
+# the source, and the only match left was the sentence in _record_delivery's
+# own docstring EXPLAINING the bug. A test that reads prose is measuring the
+# wrong thing — the same fault as the workflow-ordering check earlier today.
+import ast as _ast
+_tree = _ast.parse(open(os.path.join(REPO, "standalone_scan.py"),
+                        encoding="utf-8").read())
+_bare = []
+for _n in _ast.walk(_tree):
+    if (isinstance(_n, _ast.Call)
+            and getattr(_n.func, "id", "") == "_record_delivery"
+            and len(_n.args) >= 2):
+        a = _n.args[1]
+        # `x if c else True` was the exact shape that raised.
+        if isinstance(a, _ast.IfExp) and any(
+                isinstance(b, _ast.Constant) and b.value is True
+                for b in (a.body, a.orelse)):
+            _bare.append(_n.lineno)
+check("no call site passes a conditional bare True as sent-flags",
+      not _bare, f"lines {_bare}")
+
+
+# ── An unknown horizon is not a crash, and an allocation is not a fault ──────
+
+check("momentum_quant has the monthly horizon its own alert advertises",
+      standalone_scan._max_hold_hours("1M", engine="momentum_quant") == 30 * 24,
+      standalone_scan._max_hold_hours("1M", engine="momentum_quant"))
+
+check("an allocation still has no horizon, which is correct",
+      standalone_scan._max_hold_hours("1M", engine="sip_bucket") is None)
+
+check("allocations are named, so 'no horizon' stops reading as a fault",
+      "sip_bucket" in standalone_scan.NO_TIME_STOP_BY_DESIGN
+      and "top5_pick" in standalone_scan.NO_TIME_STOP_BY_DESIGN,
+      standalone_scan.NO_TIME_STOP_BY_DESIGN)
+
+# tracker.update_all_outcomes divided that same None by 24 and raised, which
+# skipped the row entirely — no excursions, no max_profit, no resolution.
+_tsrc = open(os.path.join(REPO, "tracker.py"), encoding="utf-8").read()
+_tcode = "\n".join(l for l in _tsrc.splitlines() if not l.lstrip().startswith("#"))
+check("update_all_outcomes guards the None horizon before dividing",
+      "max_sessions = None if hold_h is None" in _tcode)
+check("...and the time-stop branch knows max_sessions can be None",
+      "max_sessions is not None and sessions >= max_sessions" in _tcode)
+
+
+# ── A ticker that stopped existing ──────────────────────────────────────────
+# TATAMOTORS 404s on Yahoo since the demerger. It is not a rename: it became
+# TMCV and TMPV, both present in the 750-name screen built 2026-09-09, so
+# mapping the old ticker to either alone would price half a company as the
+# whole one.
+for _f in ("equity_engine.py", "signals/universe.py", "global_200ma_screener.py",
+           "newspaper.py"):
+    _fs = open(os.path.join(REPO, _f), encoding="utf-8").read()
+    _fc = "\n".join(l for l in _fs.splitlines() if not l.lstrip().startswith("#"))
+    check(f"{_f} no longer fetches the demerged TATAMOTORS",
+          "TATAMOTORS" not in _fc)
+
+import equity_engine as _eq
+check("both successors are in the measured-equity universe",
+      "TMCV" in _eq.LIQUID and "TMPV" in _eq.LIQUID)
+
+
 # ── The engine name map does not drift ───────────────────────────────────────
 # engine_names.py is a MIRROR of ENGINE_REGISTRY in the signal site's
 # signal.js. Nothing enforces that across two repositories, so what IS enforced

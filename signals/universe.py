@@ -171,7 +171,13 @@ FNO_ELIGIBLE = {
     "RELIANCE","TCS","HDFCBANK","INFY","ICICIBANK","HINDUNILVR","SBIN","BAJFINANCE",
     "BHARTIARTL","KOTAKBANK","LT","AXISBANK","ASIANPAINT","MARUTI","TITAN","SUNPHARMA",
     "WIPRO","ULTRACEMCO","NESTLEIND","POWERGRID","NTPC","HCLTECH","TECHM","ONGC",
-    "JSWSTEEL","TATAMOTORS","TATASTEEL","ADANIPORTS","COALINDIA","BPCL","DIVISLAB",
+    # TATAMOTORS DEMERGED and is not a rename. It became TWO listings, both of
+    # which resolve on Yahoo and both of which are in the 750-name screen built
+    # 2026-09-09: TMCV (Tata Motors Ltd., the commercial-vehicle entity that
+    # kept the name) and TMPV (Tata Motors Passenger Vehicles Ltd.). Mapping
+    # the old ticker to either one alone would quote half a company's price
+    # under the whole company's name.
+    "JSWSTEEL","TMCV","TMPV","TATASTEEL","ADANIPORTS","COALINDIA","BPCL","DIVISLAB",
     "DRREDDY","CIPLA","EICHERMOT","BAJAJFINSV","BAJAJ-AUTO","HEROMOTOCO","M&M",
     "BRITANNIA","GRASIM","HINDALCO","INDUSINDBK","IOC","SHREECEM","SBILIFE","HDFCLIFE",
     "APOLLOHOSP","ADANIENT","LTIM","TATACONSUM","AMBUJACEM","AUROPHARMA","BALKRISIND",

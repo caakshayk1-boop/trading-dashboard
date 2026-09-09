@@ -31,8 +31,12 @@ Nifty 500 research screen sitting directly above the Signal Log.
 - `fundamentals.py` — `statements()` gives 4 fiscal years from yfinance and is
   where **real ROCE** comes from (EBIT / invested capital). Yahoo publishes no
   ROCE field; it is computed. 30-day cache, separate from the 7-day `.info` one.
-- `.github/workflows/stock_screen.yml` — weekly, Sunday 02:30 IST, own clock.
-  **Never build this inside the 6 AM job** — ~11 min of sequential fetches.
+- `.github/workflows/stock_screen.yml` — **daily** since 2026-08-27, 21:00 IST
+  with a 23:00 IST retry, on its own clock. It was Sunday-only, and the volume
+  board and breakout table are built entirely from price/RSI/turnover, so on a
+  weekly cadence both spent six days describing last Friday while reading as
+  today. **Never build this inside the 6 AM job** — ~11 min of sequential
+  fetches.
 - Payload → Turso `newspaper_screen` (NOT `newspaper_stocks_picked`, which is
   the daily picks). `generate.py` reads it and writes `docs/screen.json`.
 - The UI lives in **`static/app.js`** — `docs/app.js` is a build artefact that
@@ -132,11 +136,40 @@ and `test_brief_fit.py`):
   own `except: continue` and that position was never graded at all; and it does
   not drop a partial last bar, whose NaN Close was booked into the ledger as an
   EXPIRED trade's exit price, P&L and R — all three NULL.
+- An unknown horizon is `None` and every consumer must expect it.
+  `tracker.update_all_outcomes` divided it by 24 and raised, which the outer
+  handler swallowed — the row was then skipped ENTIRELY, no excursions, no
+  resolution. `momentum_quant` now carries the 30-day horizon its own alert
+  footer advertises; `sip_bucket` and `top5_pick` are ALLOCATIONS with no
+  horizon by design and are named in `NO_TIME_STOP_BY_DESIGN` so the log stops
+  warning about correct behaviour beside a real gap.
+- `_record_delivery` takes a bool as "this outcome applies to every id". Two
+  call sites passed a bare `True` from `... if blocks else True`, `list(True)`
+  raised, and `_safe` logged it as "'bool' object is not iterable" while
+  skipping the rest of the scan. A batch that was never SENT records the reason
+  — "long only, every signal was a short" — not a Telegram failure that did not
+  happen.
+- **TATAMOTORS demerged; it is not a rename.** It became `TMCV` (Tata Motors
+  Ltd.) and `TMPV` (Tata Motors Passenger Vehicles Ltd.), both verified in the
+  750-name screen. Mapping the old ticker to either alone prices half a company
+  as the whole one. It had been 404ing on every scan.
 - `stats.js` totals must account for every row. `closed` is win|loss, so
   time-stopped trades were in none of the four reported numbers and the
   remainder was unexplained. They are OUT of expectancy on purpose — a time
   stop's R is marked at the last close, not realised at an exit — and the
   `basis` string now says that instead of claiming to cover "closed signals".
+  `including_time_stops` reports the same arithmetic WITH them, because
+  `standalone_scan` books that R specifically to avoid survivorship bias and
+  dropping it here reinstates the bias. Both readings are published; neither is
+  chosen silently. No win rate there — a trade that exited on the clock neither
+  won nor lost.
+- **A breached stop VOIDS the setup, and the CALL must say so.** The live
+  overlay re-read the facts (price, off-high, stop) and left the verdict and
+  score stamped at the build, so IFCI read "Buy · 89 Strong" over its own live
+  "-13.1% off its high" and a breached stop, with the verdict's stated reason
+  being "Broke its 52-week high". The score is NOT recomputed in the browser —
+  inventing a fresh number there is the fault this site avoids elsewhere; it
+  keeps its value and says "at build".
 
 ## Research floor (`#research` — BUOY · ANCHOR · BEDROCK)
 Measured, published with their null results, and **never cleared to file
