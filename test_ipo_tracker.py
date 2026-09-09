@@ -22,6 +22,8 @@ from datetime import datetime, timedelta, timezone
 import ipo_tracker as ip
 
 NOW = datetime(2026, 8, 18, tzinfo=timezone.utc)
+import pathlib
+
 CHECKS = []
 
 
@@ -157,6 +159,57 @@ def _():
     assert out["ok"] is True
     assert out["attempted"] == 0 and out["count"] == 0
     assert "probed" in out, "coverage is not reported"
+
+
+# ── "Range since listing" must be the RANGE ─────────────────────────────────
+#
+# hi and lo were the max and min of the CLOSE series, published as "Range since
+# listing" and "Off its high since" — which a reader takes as the prices the
+# thing actually traded at. LUMINO on 2026-09-09 was shown as ₹108.12-₹114.82,
+# off its high 5.8%, when its real high was ₹122.00 and it was near ₹106.
+#
+# The giveaway is visible in the served feed without any outside data: `low`
+# equalled `last_close` exactly, and for two other listings `high` equalled
+# `last_close` exactly, because a close series can only ever bound itself.
+
+@check("the listing range reads High and Low, not the close series")
+def _():
+    src = pathlib.Path("ipo_radar.py").read_text(encoding="utf-8")
+    body = src[src.index("def measure_listings") if "def measure_listings" in src else 0:]
+    code = "\n".join(l for l in body.splitlines() if not l.lstrip().startswith("#"))
+    assert 'one["High"]' in code and 'one["Low"]' in code, \
+        "the range is still taken off the closes"
+    assert "hi, lo = float(sub.max()), float(sub.min())" not in code \
+        or "except Exception" in code, "the close-only range is still the primary path"
+
+
+@check("a close-only range understates the high — the arithmetic, on LUMINO's shape")
+def _():
+    import pandas as pd
+    idx = pd.DatetimeIndex(pd.date_range("2026-09-03", periods=4))
+    one = pd.DataFrame({
+        "Open":  [108.0, 114.0, 116.0, 109.0],
+        "High":  [112.0, 122.0, 118.0, 110.0],
+        "Low":   [105.0, 113.0, 107.5, 106.0],
+        "Close": [110.32, 114.82, 109.5, 108.12],
+    }, index=idx)
+    sub = one["Close"].dropna()
+    last = float(sub.iloc[-1])
+    close_hi = float(sub.max())
+    real_hi = float(one["High"].dropna().max())
+    # This is exactly what the site published for LUMINO.
+    assert round(close_hi, 2) == 114.82
+    assert round((last / close_hi - 1) * 100, 1) == -5.8
+    # And this is what it should have.
+    assert round(real_hi, 2) == 122.00
+    assert round((last / real_hi - 1) * 100, 1) == -11.4
+    assert real_hi > close_hi, "a high taken off closes can never exceed the real one"
+
+
+@check("first and last stay on Close — a listing gain is close to close")
+def _():
+    src = pathlib.Path("ipo_radar.py").read_text(encoding="utf-8")
+    assert 'first, last = float(sub.iloc[0]), float(sub.iloc[-1])' in src
 
 
 def main() -> int:

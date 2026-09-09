@@ -582,11 +582,38 @@ def _measure_listings(rows: list[dict], chunk: int = 40) -> int:
             continue
         for r in batch:
             try:
-                sub = df[ymap[r["symbol"]]]["Close"].dropna()
+                one = df[ymap[r["symbol"]]]
+                sub = one["Close"].dropna()
                 if len(sub) < 2:
                     continue
                 first, last = float(sub.iloc[0]), float(sub.iloc[-1])
-                hi, lo = float(sub.max()), float(sub.min())
+                # ── THE RANGE IS THE RANGE, NOT THE RANGE OF THE CLOSES ─────
+                #
+                # hi and lo were sub.max() and sub.min() off the CLOSE series,
+                # and the site publishes them as "Range since listing" and
+                # "Off its high since". A reader takes those as the prices the
+                # thing traded at, which is not what a close series holds.
+                #
+                # LUMINO, measured 2026-09-09: this reported a range of
+                # ₹108.12-₹114.82 and "off its high -5.8%". The stock's actual
+                # high was ₹122.00 and it was trading near ₹106 — so the high
+                # was understated by 6% and the drawdown roughly halved. The
+                # giveaway is in the feed itself: `low` equalled `last_close`
+                # exactly, and for ESDS and SYMBIOTEC `high` equalled
+                # `last_close` exactly, because a close series can only ever
+                # bound itself.
+                #
+                # first/last stay on Close — a listing gain is measured close
+                # to close — and only the RANGE moves to High/Low. Falls back
+                # to the closes when a column is missing, which is narrower
+                # than the truth but never wider than the data.
+                try:
+                    hs = one["High"].dropna()
+                    ls = one["Low"].dropna()
+                    hi = float(hs.max()) if len(hs) else float(sub.max())
+                    lo = float(ls.min()) if len(ls) else float(sub.min())
+                except Exception:                     # noqa: BLE001
+                    hi, lo = float(sub.max()), float(sub.min())
                 if first <= 0:
                     continue
                 r.update(measured=True, measured_by="yahoo",
