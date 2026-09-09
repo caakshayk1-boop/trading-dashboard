@@ -39,6 +39,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from signals.basebreak import rsi, atr, swing_lows, _liquid, FROM_HIGH_MIN, ATR_FLOOR_MULT
 import alert_log
+import bars_cache
 from signals.buoy import (BACKTEST, ENGINE_STATUS, BELOW_MIN_BARS, RECLAIM_MAX_ATR,
                           VOL_MULT, STOP_ATR_MULT, TARGET_R, MA_N,
                           DIV_MIN_GAP_B, DIV_MAX_GAP_B, RSI_DIV_MIN_LIFT,
@@ -204,7 +205,6 @@ def from_cache():
     produces a real, if narrower, answer. The feed says how many names it
     covered so the coverage is never mistaken for the full universe.
     """
-    import bars_cache
     H = bars_cache.load(bars_cache.HOURLY)
     hits = []
     for s, hr in H.items():
@@ -263,11 +263,9 @@ def main():
                "universe": seen, "scanned": seen, "fired": len(hits),
                "errors": 0, "throttled": 0,
                "source": "harvested hourly bars (offline run)",
-               "coverage_note": (f"This run covered {seen} of the 750 screened names — the "
-                                 "ones whose hourly bars were already harvested. Yahoo "
-                                 "rate-limits by IP and had throttled this address, and a "
-                                 "narrower real answer beats a wider invented one. The "
-                                 "scheduled job runs the full universe."),
+               # Read off the harvest manifest, not asserted here. See
+               # bars_cache.coverage_note for why this stopped being a constant.
+               "coverage_note": bars_cache.coverage_note(bars_cache.HOURLY),
                "timeframe": "4H candles (09:15-13:15, 13:15-15:30 IST)",
                "took_secs": 0, "top": top, "backtest": BACKTEST,
                "history": history[-60:],

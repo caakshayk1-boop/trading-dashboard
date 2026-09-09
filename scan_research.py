@@ -189,9 +189,12 @@ def main():
         "ok": True,
         "generated_at": now.isoformat(timespec="seconds"),
         "source": "harvested bars (offline run)",
-        "coverage_note": ("This run covered the names whose bars were already harvested. "
-                          "Yahoo rate-limits by IP and had throttled this address; the "
-                          "scheduled job runs the full 750."),
+        # Measured off the harvest manifest, never asserted. The paragraph
+        # that used to sit here swore the run had been throttled to a partial
+        # universe; the run of 2026-09-09 fetched 500 of 500 and published it
+        # anyway.
+        "coverage_note": bars_cache.coverage_note(bars_cache.HOURLY,
+                                                  bars_cache.DAILY_3Y),
         "engines": engines,
         "disclaimer": ("Every engine here is RESEARCH or REJECTED. None is cleared for "
                        "capital, none carries a position, and each row is published with "
