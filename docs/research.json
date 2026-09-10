@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-09T15:40:59+00:00",
+ "generated_at": "2026-09-10T12:25:39+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-09T15:38:42+00:00.",
+ "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-10T12:23:31+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -78,7 +78,7 @@
    },
    "verdict": "No measured edge, but the smallest stop of the three (5.1% of entry, 1.92x ATR) and a 2.5R target genuinely reached a quarter of the time. Sits on zero with a wide interval: not an edge, not refuted.",
    "scanned": 498,
-   "fired": 10,
+   "fired": 12,
    "top": [
     {
      "engine": "anchor",
@@ -97,12 +97,12 @@
      "rsi": 42.0,
      "close_strength": 0.9,
      "turnover_cr": 10.43,
-     "bars_ago": 6,
+     "bars_ago": 7,
      "symbol": "GILLETTE",
      "lane": null,
      "at": "2026-09-01T00:00:00+00:00",
-     "last": 7479.5,
-     "since_pct": 0.81
+     "last": 7385.5,
+     "since_pct": -0.46
     },
     {
      "engine": "anchor",
@@ -121,12 +121,36 @@
      "rsi": 37.9,
      "close_strength": 0.75,
      "turnover_cr": 17.55,
-     "bars_ago": 5,
+     "bars_ago": 6,
      "symbol": "CENTRALBK",
      "lane": null,
      "at": "2026-09-02T00:00:00+00:00",
-     "last": 30.58,
-     "since_pct": 0.69
+     "last": 30.82,
+     "since_pct": 1.48
+    },
+    {
+     "engine": "anchor",
+     "i": 742,
+     "entry": 471.0,
+     "sl": 446.19,
+     "target1": 510.69,
+     "target2": 533.02,
+     "target3": 552.86,
+     "rr": 1.6,
+     "floor": 455.3,
+     "touches": 2,
+     "above_floor_pct": 3.45,
+     "risk_pct": 5.27,
+     "risk_atr": 1.77,
+     "rsi": 36.0,
+     "close_strength": 0.79,
+     "turnover_cr": 63.51,
+     "bars_ago": 0,
+     "symbol": "ICICIPRULI",
+     "lane": null,
+     "at": "2026-09-10T00:00:00+00:00",
+     "last": 471.0,
+     "since_pct": 0.0
     },
     {
      "engine": "anchor",
@@ -145,12 +169,36 @@
      "rsi": 33.2,
      "close_strength": 0.64,
      "turnover_cr": 167.43,
-     "bars_ago": 1,
+     "bars_ago": 2,
      "symbol": "DMART",
      "lane": null,
      "at": "2026-09-08T00:00:00+00:00",
-     "last": 3735.0,
-     "since_pct": 0.4
+     "last": 3690.0,
+     "since_pct": -0.81
+    },
+    {
+     "engine": "anchor",
+     "i": 734,
+     "entry": 474.5,
+     "sl": 451.78,
+     "target1": 510.85,
+     "target2": 531.3,
+     "target3": 549.48,
+     "rr": 1.6,
+     "floor": 461.0,
+     "touches": 3,
+     "above_floor_pct": 2.93,
+     "risk_pct": 4.79,
+     "risk_atr": 2.13,
+     "rsi": 43.8,
+     "close_strength": 0.63,
+     "turnover_cr": 22.54,
+     "bars_ago": 8,
+     "symbol": "SUNTV",
+     "lane": null,
+     "at": "2026-08-28T00:00:00+00:00",
+     "last": 455.55,
+     "since_pct": -3.99
     },
     {
      "engine": "anchor",
@@ -169,12 +217,12 @@
      "rsi": 31.9,
      "close_strength": 0.65,
      "turnover_cr": 147.47,
-     "bars_ago": 1,
+     "bars_ago": 2,
      "symbol": "BRITANNIA",
      "lane": null,
      "at": "2026-09-08T00:00:00+00:00",
-     "last": 5090.0,
-     "since_pct": 0.51
+     "last": 5009.0,
+     "since_pct": -1.09
     },
     {
      "engine": "anchor",
@@ -193,12 +241,12 @@
      "rsi": 40.4,
      "close_strength": 0.71,
      "turnover_cr": 9.04,
-     "bars_ago": 6,
+     "bars_ago": 7,
      "symbol": "UTIAMC",
      "lane": null,
      "at": "2026-09-01T00:00:00+00:00",
-     "last": 900.9,
-     "since_pct": 2.43
+     "last": 921.45,
+     "since_pct": 4.77
     },
     {
      "engine": "anchor",
@@ -217,12 +265,12 @@
      "rsi": 35.6,
      "close_strength": 0.79,
      "turnover_cr": 2097.5,
-     "bars_ago": 6,
+     "bars_ago": 7,
      "symbol": "HDFCBANK",
      "lane": null,
      "at": "2026-09-01T00:00:00+00:00",
-     "last": 687.1,
-     "since_pct": -3.48
+     "last": 693.8,
+     "since_pct": -2.54
     },
     {
      "engine": "anchor",
@@ -241,12 +289,12 @@
      "rsi": 28.7,
      "close_strength": 0.64,
      "turnover_cr": 14.81,
-     "bars_ago": 0,
+     "bars_ago": 1,
      "symbol": "UBL",
      "lane": null,
      "at": "2026-09-09T00:00:00+00:00",
-     "last": 1266.7,
-     "since_pct": -0.0
+     "last": 1256.7,
+     "since_pct": -0.79
     },
     {
      "engine": "anchor",
@@ -265,63 +313,15 @@
      "rsi": 43.7,
      "close_strength": 0.79,
      "turnover_cr": 113.09,
-     "bars_ago": 6,
+     "bars_ago": 7,
      "symbol": "UPL",
      "lane": null,
      "at": "2026-09-01T00:00:00+00:00",
-     "last": 575.7,
-     "since_pct": 1.52
-    },
-    {
-     "engine": "anchor",
-     "i": 740,
-     "entry": 1015.0,
-     "sl": 978.77,
-     "target1": 1072.96,
-     "target2": 1105.57,
-     "target3": 1134.55,
-     "rr": 1.6,
-     "floor": 998.75,
-     "touches": 2,
-     "above_floor_pct": 1.63,
-     "risk_pct": 3.57,
-     "risk_atr": 1.91,
-     "rsi": 35.3,
-     "close_strength": 0.69,
-     "turnover_cr": 127.83,
-     "bars_ago": 2,
-     "symbol": "TATACONSUM",
-     "lane": null,
-     "at": "2026-09-07T00:00:00+00:00",
-     "last": 1001.0,
-     "since_pct": -1.38
-    },
-    {
-     "engine": "anchor",
-     "i": 740,
-     "entry": 1980.0,
-     "sl": 1911.39,
-     "target1": 2089.77,
-     "target2": 2151.52,
-     "target3": 2206.41,
-     "rr": 1.6,
-     "floor": 1950.4,
-     "touches": 2,
-     "above_floor_pct": 1.52,
-     "risk_pct": 3.47,
-     "risk_atr": 2.17,
-     "rsi": 38.4,
-     "close_strength": 0.68,
-     "turnover_cr": 243.85,
-     "bars_ago": 1,
-     "symbol": "HINDUNILVR",
-     "lane": null,
-     "at": "2026-09-08T00:00:00+00:00",
-     "last": 1945.0,
-     "since_pct": -1.77
+     "last": 575.3,
+     "since_pct": 1.45
     }
    ],
-   "new_alerts": 0,
+   "new_alerts": 2,
    "already_logged": 10
   },
   {
