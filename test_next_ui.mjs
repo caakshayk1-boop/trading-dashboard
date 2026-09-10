@@ -108,9 +108,34 @@ try {
   const cap = await p.locator(".b-cap").first().innerText();
   ok("chart says how many closes it drew", /\d+ real daily closes/.test(cap), cap.slice(0, 80));
 
-  // R:R is stated against BOTH targets — one unlabelled figure meant the
-  // header and the calculator printed different numbers for the same trade.
-  ok("R:R is labelled by target", /R:R TO T1/i.test(body) && /R:R TO T2/i.test(body));
+  /* EVERY REWARD-TO-RISK FIGURE SAYS WHICH TARGET IT MEASURES TO.
+   *
+   * This was `/R:R TO T1/ && /R:R TO T2/`, which encodes an assumption the
+   * ledger does not hold: that every signal has two targets. The API blanks a
+   * second target sitting inside 0.5R of the first, and on such a row the
+   * brief prints ONE figure labelled "Reward : risk" and says no second target
+   * was published — rather than the old behaviour, which put T1's price back
+   * under T2's label and printed the same ratio twice under two names.
+   *
+   * Which row the brief ranks first is a fact about today's data, so the old
+   * form was a flake that would read as a regression in the page. The same
+   * assertion in the signal repo's test/ui.mjs failed for exactly this on
+   * 2026-09-10; this is the same fix.
+   *
+   * The invariant is the one the original comment names — no BARE ratio. */
+  const twoTargets = /R:R TO T2/i.test(body);
+  ok("R:R is labelled by target",
+     twoTargets
+       ? /R:R TO T1/i.test(body)
+       : /REWARD\s*:\s*RISK/i.test(body) && /NOT PUBLISHED/i.test(body),
+     twoTargets ? "two targets" : "one target");
+  // And the two readings are never the same number under two names, which is
+  // exactly what the collapsed-target fallback produced.
+  if (twoTargets) {
+    const rr = [...body.matchAll(/R:R TO T([12])\s*\n?\s*([\d.]+)/gi)].map(m => m[2]);
+    ok("the two R:R readings are different numbers",
+       rr.length < 2 || rr[0] !== rr[1], rr);
+  }
 
   // No probability may be attached to a scenario: no model publishes one.
   await p.locator('.b-scb button[data-sc="2"]').click();
@@ -179,8 +204,17 @@ try {
   await p.waitForTimeout(200);
   ok("Escape closes it", await p.locator("#tipcard.on").count() === 0);
 
-  // Section jump must clear all three sticky layers.
-  await p.keyboard.press("4");
+  /* Section jump must clear all three sticky layers.
+   *
+   * THE DIGIT IS READ FROM THE PAGE, NOT WRITTEN DOWN HERE. This pressed "4",
+   * which was the trade plan's key when it was written. A Business section now
+   * sits ahead of it, so every key after it shifted by one and "4" reaches
+   * Business — leaving this to measure #b-plan far down the page and report a
+   * moved section as a broken sticky stack. The chip prints its own key, so
+   * the test asks the page which digit reaches the plan. */
+  const planKey = (await p.locator('#qnav a[data-jump="b-plan"] .kb').innerText()).trim();
+  ok("the trade plan chip advertises a key", /^\d$/.test(planKey), planKey);
+  await p.keyboard.press(planKey);
   await p.waitForTimeout(1000);
   const planTop = await p.locator("#b-plan").evaluate(e => Math.round(e.getBoundingClientRect().top));
   ok("a section jump clears the sticky stack", planTop > 90 && planTop < 240, planTop);
