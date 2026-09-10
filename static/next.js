@@ -1829,13 +1829,22 @@
          ['Daily ATR', Number.isFinite(N(row.atr_pct)) ? N(row.atr_pct).toFixed(2) + '%' : '—']]],
     ];
 
+    /* FUNDAMENTALS SIT BETWEEN THE THESIS AND THE PLAN, and that position is
+     * the argument. Everything above this point is price — structure,
+     * momentum, volume, the levels. A reader who has got that far has been
+     * told the chart is willing and nothing whatsoever about the company.
+     *
+     * It goes before the plan because it can change whether there is a trade,
+     * and after the thesis because the thesis is what it is being tested
+     * against. Same position, same renderer, as the signal site's brief. */
     const SECTIONS = [
       ['b-overview', 'Overview', '1', 'Signal', 'the setup exists'],
       ['b-chart', 'Chart', '2', 'Entry', 'where it starts'],
       ['b-thesis', 'Thesis', '3', 'Confirmation', 'why it should work'],
-      ['b-plan', 'Trade plan', '4', 'Target', 'what it is worth'],
-      ['b-risk', 'Risk', '5', 'Sizing', 'what it costs'],
-      ['b-history', 'History', '6', 'Exit', 'what happened before'],
+      ['b-fund', 'Business', '4', 'Company', 'what you would own'],
+      ['b-plan', 'Trade plan', '5', 'Target', 'what it is worth'],
+      ['b-risk', 'Risk', '6', 'Sizing', 'what it costs'],
+      ['b-history', 'History', '7', 'Exit', 'what happened before'],
     ];
 
     paint(`<div class="brief"><div class="b-wrap">
@@ -2074,7 +2083,41 @@
             series did not load. It is left blank rather than guessed from the levels.</p>`}
       </section>
 
-      <section class="b-sec b-reveal" id="b-plan">
+      ${/* ── 4 · THE BUSINESS ───────────────────────────────────────────
+          *
+          * ONE renderer, shared with signal.askakshay.com's brief and
+          * authored in this repo beside stock_screen.py, which computes every
+          * field it reads. See the header of static/brief_fundamentals.js for
+          * why it is the only frontend file that crosses between the repos.
+          *
+          * It is a separate file, so "it did not arrive" is a state rather
+          * than an impossibility — a 404 on it must not delete the section
+          * silently, because a section that vanishes is indistinguishable
+          * from one that was never meant to be there. */''}
+      <section class="b-sec b-reveal" id="b-fund">
+        <div class="b-lab">The business</div>
+        ${window.BriefFundamentals
+          ? window.BriefFundamentals.render(row, {
+              symbol: sig.symbol,
+              // This site's screen is a hash route with no query, so the link
+              // goes to the section rather than to a filter it cannot apply.
+              // A link that renders the wrong page looks like a click that
+              // was ignored.
+              screenHref: '#/screen',
+            })
+          : `<h2 class="b-h2">The business section could not load.</h2>
+             <p class="b-p">It is served as a separate file and that file did not arrive, so the
+               fundamentals are not shown rather than shown incompletely. Everything else on this
+               page is unaffected.</p>`}
+      </section>
+
+      ${/* THE "TRADE PLAN" CHIP LANDED ON "SCENARIOS". id="b-plan" sat on
+          * this section while the trade plan — the rows naming entry, stop,
+          * target and invalidation — is the section BELOW it. The id now sits
+          * on the section it names; scenarios keep their place in the reading
+          * order and have no chip of their own, which is what the trade plan
+          * had until now. */''}
+      <section class="b-sec b-reveal">
         <div class="b-lab">Scenarios</div>
         <h2 class="b-h2">Three ways this resolves.</h2>
         <div class="b-scb" role="group" aria-label="Scenario">
@@ -2089,7 +2132,7 @@
           history and not this trade.</p>
       </section>
 
-      <section class="b-sec b-reveal">
+      <section class="b-sec b-reveal" id="b-plan">
         <div class="b-lab">Trade plan</div>
         <h2 class="b-h2">What to do, and when to stop doing it.</h2>
         <div class="b-plan">
@@ -2384,7 +2427,10 @@
       if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
       const t = ev.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-      const i = '123456'.indexOf(ev.key);
+      // The digit string and SECTIONS must stay the same length: a section
+      // added to the array without a digit here is one the keyboard cannot
+      // reach, and the chip beside it still advertises the key.
+      const i = '1234567'.indexOf(ev.key);
       if (i >= 0 && SECTIONS[i]) { ev.preventDefault(); jump(SECTIONS[i][0]); }
     };
     document.addEventListener('keydown', onKey);

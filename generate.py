@@ -1070,7 +1070,15 @@ def generate() -> None:
     # everything else here: a file reaches the web only if generate.py writes
     # it, .vercelignore names it AND vercel-news/build.js copies it. Two out of
     # three is a silent 404.
-    for _v2 in ("v2-core.js", "life.html", "life.js", "next.html", "next.css", "next.js"):
+    # brief_fundamentals.js is the ONE Business section, shared by this site's
+    # brief and the signal site's. It is authored here because it renders
+    # fields stock_screen.py computes, it is published here, and the signal
+    # repo mirrors it alongside the JSON feeds. See the header of the file.
+    # Same by-name rule as everything else in this list, and it needs the same
+    # FOUR allow-lists: written here, named in .vercelignore, copied by
+    # build.js, and staged by newspaper.yml.
+    for _v2 in ("v2-core.js", "life.html", "life.js", "next.html", "next.css", "next.js",
+                "brief_fundamentals.js"):
         _src = pathlib.Path(__file__).parent / "static" / _v2
         if _src.exists():
             _body = _src.read_text(encoding="utf-8")
@@ -1081,7 +1089,9 @@ def generate() -> None:
             # is a page that renders confidently from keys that have moved.
             if _v2 == "next.html":
                 _body = (_body.replace('href="/next.css"', f'href="/next.css?v={build_id}"')
-                              .replace('src="/next.js"',  f'src="/next.js?v={build_id}"'))
+                              .replace('src="/next.js"',  f'src="/next.js?v={build_id}"')
+                              .replace('src="/brief_fundamentals.js"',
+                                       f'src="/brief_fundamentals.js?v={build_id}"'))
             (out_dir / _v2).write_text(_body, encoding="utf-8")
             print(f"[generate] ✅ {_v2} ({_src.stat().st_size // 1024}KB)")
         else:

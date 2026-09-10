@@ -57,6 +57,54 @@ Honesty rules the screen must keep (all pinned by tests):
 - EPS growth is withheld entirely when the share count moved structurally.
 - Nothing predicts. No probability, target or forecast anywhere.
 
+## The trading brief's Business section (`brief_fundamentals.js`)
+The ONE thing both briefs share. There are two: `signal.askakshay.com/brief`
+(`public/signal.js` in the *signal* repo) and
+`news.askakshay.com/next.html#/brief` (`static/next.js` here). They are forks
+of one renderer and the first has moved a long way ahead.
+
+- `static/brief_fundamentals.js` — composite, the four component scores, the
+  PE-against-its-own-percentile widget, six ratio tables, and the screen's own
+  risk grade and flags. **Authored HERE**, beside `stock_screen.py`, which
+  computes every field it reads. Both briefs call
+  `BriefFundamentals.render(row, opts)`; neither owns a copy.
+- The signal repo's `sync-data.yml` mirrors it with the JSON feeds, for the
+  same reason it mirrors them: it is a build artefact of the screen. That does
+  **not** contradict the note in that workflow about no longer mirroring the
+  frontend — what was removed there was a mirror of `signal.js`/`signal.css`,
+  files with two authors that had already drifted. This one has one author and
+  nothing downstream to overwrite.
+- **It carries its own `<style>`.** A companion `.css` would be a second file
+  to allow-list in four places here and a fifth over there, and the markup
+  could then reach a page whose stylesheet did not. One file cannot arrive
+  half-delivered.
+- **Every custom property needs a literal fallback.** `signal.css` declares
+  `--t-1..--t-10` and `--r-1..--r-5`; `next.css` writes its sizes as literals
+  and has none of them. A bare `var(--t-4)` resolves to nothing there and the
+  whole declaration is dropped. Pinned by `test_stock_screen.py`.
+- It crosses a repo boundary twice a day, so **"it did not arrive" is a state**.
+  Both callers render a notice saying so — a section that vanishes silently is
+  indistinguishable from one that was never meant to be there.
+- Same four allow-lists as everything else in `docs/`: written by
+  `generate.py`, named in `.vercelignore`, copied by `vercel-news/build.js`,
+  staged by `newspaper.yml`. Plus a fifth over there, pinned by the signal
+  repo's `test/guard.mjs`.
+
+Honesty rules it must keep (pinned by tests in both repos):
+- Missing renders as the WORD for its absence, never as a zero — a zero is a
+  measured result and an absence is not.
+- No statements → no composite → the section says *unranked*, rather than
+  rendering an empty grid that reads as a loading failure.
+- Negative D/E is named as negative equity, which is insolvency.
+- `screen-lite.json` keeps `risk.level` and **strips `risk.flags`**. "No flags"
+  and "the flags are not in this projection" are different sentences; printing
+  the first for a name graded HIGH with three is a projection's omission
+  rendered as a measured result.
+- **Dividend yield is deliberately absent.** `stock_screen.py` ran yfinance's
+  `dividendYield` — already percentage points — through `_pct`, so the column
+  read ITC 601%, VEDL 1256%, universe median 65.5%. The generator is fixed;
+  restore the row once a screen built after that fix is being served.
+
 ## Data Health (`#datahealth` on news.askakshay.com)
 The honesty layer. One vocabulary for how current every dataset is, so no
 section can look more current than its data.
