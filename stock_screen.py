@@ -2002,7 +2002,24 @@ def build(limit: int | None = None, allow_fetch: bool = True,
             "rev_growth": _pct(r.get("rev_growth_latest")),
             "pe": _round(r.get("pe"), 1, 1),
             "pb": _round(r.get("pb"), 1, 2),
-            "div_yield": _pct(r.get("dividend_yield")),
+            # ── ALREADY A PERCENTAGE, AND MULTIPLIED BY 100 ANYWAY ──────────
+            #
+            # _pct() converts a FRACTION to percentage points. yfinance's
+            # `dividendYield` stopped being a fraction and now arrives in
+            # percentage points, so this multiplied a number that was already
+            # right. Measured across the 592 rows carrying the field, the
+            # published column reads:
+            #
+            #     median 65.5    p90 268    max 1834
+            #     ITC 601   COALINDIA 503   ONGC 611   VEDL 1256
+            #
+            # None of which is a dividend yield. Divided by 100 the same
+            # distribution is median 0.66%, p90 2.68%, max 18.3%, which is what
+            # the NSE actually looks like.
+            #
+            # Nothing else in this payload consumed it, which is why a column
+            # claiming ITC pays 601% survived — it was written and never read.
+            "div_yield": _round(r.get("dividend_yield"), 1, 2),
             "insiders": _pct(r.get("held_insiders")),
             "instis": _pct(r.get("held_institutions")),
             # Piotroski F-score, 0-9. Check piotroski_of before trusting the

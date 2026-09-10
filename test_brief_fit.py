@@ -178,6 +178,75 @@ def _():
     assert "APEX_START_BALANCE" in code, "no way to state a baseline deliberately"
 
 
+@check("the brief's exit ladder describes the board underneath it")
+def _():
+    """The one line in the brief a reader would act on, and it was wrong twice.
+
+    It read: "Ladder: T1 books half, the rest runs to T2, then the stop trails
+    to T1 and never lower."
+
+      · "T1 books half" — swing_rulebook.LADDER is 20/40/40. T1 books a fifth.
+      · "the rest runs to T2" — many rows have no T2. The engine files three
+        targets and the ones inside 0.5R of the one before are not separate
+        exits, so build_ladder collapses them. SPLPETRO renders on the ledger
+        card as "All at 938.02 · the only target" while the brief promised a
+        second rung the position does not have.
+
+    The sentence is now counted off the admitted tickets themselves, so it
+    cannot describe a ladder no row on the board is on.
+    """
+    import inspect
+    src = inspect.getsource(D.build_section_brief)
+    code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("#"))
+    assert "T1 books half" not in code, "the half-of-the-position claim is back"
+    assert "_rungs = [len(t.get(\"legs\")" in code, \
+        "the sentence is not counted off the tickets"
+    assert "20% at T1" in code, "the ladder no longer states the real fractions"
+
+    # And the three fractions in the sentence must be the ones the sizer uses.
+    import swing_rulebook as RB
+    assert [f for _, f in RB.LADDER] == [0.20, 0.40, 0.40], \
+        f"LADDER moved to {RB.LADDER} — the brief's sentence has to move with it"
+
+
+@check("a board of one-target names is not told it has a T2")
+def _():
+    """Exercised through the real builder with the book stubbed, because the
+    branch is chosen by the tickets and nothing else on the page can reach it."""
+    one_leg = {"symbol": "SPLPETRO", "qty": 100, "entry": 771.05, "notional": 77105,
+               "notional_pct": 0.8, "reward_risk": 1.6,
+               "legs": [{"label": "T1", "price": 938.02, "qty": 100}]}
+    three_leg = dict(one_leg, symbol="KIRLOSENG",
+                     legs=[{"label": "T1"}, {"label": "T2"}, {"label": "T3"}])
+
+    def book(admitted):
+        return {"capital": 10_000_000, "admitted": admitted, "deferred": [],
+                "rejected": [], "duplicates": [],
+                "state": {"deployed": 77105, "deployed_pct": 0.8, "cash": 9_922_895,
+                          "heat": 10000, "heat_pct": 0.1, "heat_cap": 600000,
+                          "deployed_cap": 8_000_000, "at_capacity": False}}
+
+    real = D._mandate_book
+    try:
+        D._mandate_book = lambda: book([one_leg])
+        txt = D.build_section_brief("morning")
+        assert "runs to T2" not in txt, "a one-target board was promised a second rung"
+        assert "ONE target" in txt, f"the single target is not stated:\n{txt[:400]}"
+
+        D._mandate_book = lambda: book([one_leg, three_leg])
+        txt = D.build_section_brief("morning")
+        assert "20% at T1" in txt, "a mixed board loses the real ladder"
+        assert "1 of 2 carry a single target" in txt, \
+            f"the mixed board does not count its one-target names:\n{txt[:400]}"
+
+        D._mandate_book = lambda: book([three_leg, three_leg])
+        txt = D.build_section_brief("morning")
+        assert "carry a single target" not in txt, \
+            "a board with no single-target names says otherwise"
+    finally:
+        D._mandate_book = real
+
+
 def main() -> int:
     failed = 0
     for name, fn in CHECKS:

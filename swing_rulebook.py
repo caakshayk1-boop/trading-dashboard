@@ -210,6 +210,13 @@ DUPLICATE_OF = {"magicmagic": "magic"}
 # rounding path can leave a stranded share.
 LADDER = (("T1", 0.20), ("T2", 0.40), ("T3", 0.40))
 
+# TWO TARGETS CLOSER TOGETHER THAN THIS FRACTION OF RISK ARE ONE TARGET.
+#
+# The same constant as MIN_TARGET_GAP_R in scanner.py and MIN_TARGET_GAP_R in
+# vercel-news/api/_levels.js, which is the read side. All three have to agree
+# or the book sizes exits the site refuses to draw.
+MIN_TARGET_GAP_R = 0.5
+
 
 # ── What counts as an Indian listing ────────────────────────────────────────
 #
@@ -361,6 +368,34 @@ def horizon_of(engine: str) -> Optional[Horizon]:
     return HORIZONS.get(key) if key else None
 
 
+def distinct_targets(entry: float, stop: float, targets: list, long: bool) -> list:
+    """The published targets with the ones that are not separate exits blanked.
+
+    Mirrors distinctTargets in vercel-news/api/_levels.js, which is the READ
+    side. Same rule, same constant, same order of preference: the inner target
+    is kept because it is the one anchored to a level, and the one that was
+    never distinct from it comes back None.
+
+    Nothing is invented and nothing is moved. A stored signal is left exactly
+    as the engine filed it — rewriting an issued row's levels would falsify
+    what it said at the time — and this is the display-and-sizing view of it.
+    """
+    rps = (entry - stop) if long else (stop - entry)
+    floor = MIN_TARGET_GAP_R * rps if rps > 0 else None
+    out, last = [], None
+    for t in targets:
+        if t is None:
+            out.append(None)
+            continue
+        if last is not None and (t == last
+                                 or (floor is not None and abs(t - last) < floor)):
+            out.append(None)
+            continue
+        out.append(t)
+        last = t
+    return out
+
+
 def build_ladder(entry: float, stop: float, targets: list, qty: int, long: bool) -> list:
     """
     20% at T1, 40% at T2, 40% at T3, as fractions of the original position.
@@ -371,19 +406,25 @@ def build_ladder(entry: float, stop: float, targets: list, qty: int, long: bool)
     legs, placed = [], 0
     rps = (entry - stop) if long else (stop - entry)
 
-    # Collapse repeated prices. The feed frequently files target2 == target3 —
-    # PAYTM, COFORGE and BAJFINANCE all carry the same number twice — and two
-    # legs at one price is not a ladder, it is one exit printed twice with the
-    # quantities split for no reason. Keep the first occurrence and let the
-    # remaining fractions redistribute onto it.
-    seen_prices, deduped = set(), []
-    for t in targets:
-        if t is None or t in seen_prices:
-            deduped.append(None)
-            continue
-        seen_prices.add(t)
-        deduped.append(t)
-    targets = deduped
+    # Collapse targets that are not far enough apart to BE separate exits.
+    #
+    # This dropped only EXACTLY REPEATED prices — target2 == target3, which
+    # PAYTM, COFORGE and BAJFINANCE all file. That is the easy half of the
+    # problem and not the half that reached a reader.
+    #
+    # SPLPETRO published T1 938.02, T2 951.57 and T3 965.13 against 104.36 of
+    # risk. Three distinct numbers, so all three survived here and the book
+    # sized three exit legs 13 rupees apart — 0.13R — and quoted a reward:risk
+    # of 1.73 off the middle one. The site's own read layer blanks a pair that
+    # close (_levels.js, MIN_TARGET_GAP_R) so the SAME row rendered on the
+    # ledger card as "All at 938.02 · the only target". The book and the page
+    # were describing one signal in two incompatible ways, and only the page
+    # was right.
+    #
+    # The gap is measured in RISK, not in rupees or per cent, because that is
+    # the unit the other two files use. A generator, a sizer and a renderer
+    # that disagree about what counts as a target produce exactly this.
+    targets = distinct_targets(entry, stop, targets, long)
 
     usable = [(lbl, t) for (lbl, _frac), t in zip(LADDER, targets) if t is not None]
     for n, ((label, frac), price) in enumerate(zip(LADDER, targets), 1):
@@ -465,7 +506,16 @@ def size_signal(sig: dict, sectors: dict, capital: float = CAPITAL):
         return no("STOP_TOO_WIDE",
                   f"stop is {stop_pct:.1f}% from entry, {hz.label} allows {hz.max_stop_pct:.0f}%")
 
-    targets = [_f(sig.get(k)) for k in ("target1", "target2", "target3")]
+    # THE BAND AND THE REWARD:RISK MUST DESCRIBE THE LADDER THAT GETS PLACED.
+    #
+    # This read the raw target3, so `final`, `final_gain_pct`, `reward_risk`
+    # and the published `targets` list could all be quoted off a level
+    # build_ladder was about to collapse away — a ticket whose headline number
+    # belonged to an exit it never placed. Both now start from the same
+    # collapsed view, so the band test, the ratio and the plan agree.
+    targets = distinct_targets(entry, stop,
+                               [_f(sig.get(k)) for k in ("target1", "target2", "target3")],
+                               long)
     usable = [t for t in targets if t and t > 0]
     if not usable:
         return no("MISSING_LEVELS", "no usable target")

@@ -1332,6 +1332,44 @@ def test_the_screener_ui_lives_in_the_source_not_the_artefact() -> None:
               f"source {len(src)}B vs artefact {len(DOCS_APP_JS.read_text(encoding='utf-8'))}B")
 
 
+def test_dividend_yield_is_not_converted_twice() -> None:
+    """A percentage put through a fraction-to-percentage conversion.
+
+    _pct() turns a FRACTION into percentage points. yfinance's `dividendYield`
+    now arrives already in percentage points, so `_pct(dividend_yield)`
+    multiplied a number that was already right. Measured over the 592 rows
+    carrying the field in the screen served on 2026-09-10:
+
+        median 65.5    p90 268    max 1834
+        ITC 601   COALINDIA 503   ONGC 611   VEDL 1256
+
+    None of which is a dividend yield. Divided by 100 the same distribution is
+    median 0.66%, p90 2.68%, max 18.3% — which is what the NSE looks like.
+
+    The column survived because nothing read it. It reached a reader for the
+    first time when the trading brief grew a fundamentals table, and printed
+    ITC at 601%.
+
+    THIS PINS THE SOURCE AND NOT THE SERVED ROWS, deliberately. The 336 rows
+    in docs/screen.json over any credible ceiling were built by the old code
+    and stay wrong until the screen next runs, and the build that carries the
+    fix is dated the same day as the one that does not — so no assertion over
+    that file can tell them apart. A check that cannot distinguish the two
+    would either be red on committed data or pass by accident, and both are
+    worse than none. (The brief leaves the row out until a clean build is
+    being served, for the same reason.)
+    """
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    check("dividend yield is not run through the fraction converter",
+          '"div_yield": _pct(' not in src)
+    check("dividend yield is published as it arrives",
+          '"div_yield": _round(r.get("dividend_yield")' in src)
+    # _pct is still correct for every OTHER field here — those are genuine
+    # fractions — so this must not become a blanket ban on the helper.
+    check("_pct still converts the fields that really are fractions",
+          '"rev_cagr": _pct(' in src and '"insiders": _pct(' in src)
+
+
 def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     """Written by generate.py, named in .vercelignore, copied by build.js.
 
@@ -1740,6 +1778,7 @@ def main() -> int:
                test_the_screen_sheet_can_always_be_closed,
                test_app_js_carries_no_jinja,
                test_the_screener_ui_lives_in_the_source_not_the_artefact,
+               test_dividend_yield_is_not_converted_twice,
                test_screen_json_is_allow_listed_in_all_three_places):
         try:
             fn()

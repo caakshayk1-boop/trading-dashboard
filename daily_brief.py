@@ -552,8 +552,23 @@ def _build_signal_recap() -> str:
             if status == "OPEN":
                 open_sigs.append(f"• *{sym}* {action} @ `{entry}` — still open")
             elif status.startswith("T") and "_HIT" in status:
-                tgt = _fmt_price(r.get("target2") or r.get("target1"), cur)
-                winners.append(f"✅ *{sym}* {action} → target `{tgt}` ({pnl}{rtxt})")
+                # THE STATUS SAYS WHICH TARGET, AND THIS PRINTED A DIFFERENT ONE.
+                #
+                # The status is T1_HIT, T2_HIT or T3_HIT — the row names the rung
+                # it reached. This read `target2 or target1`, so a T1_HIT trade
+                # was reported at the SECOND target's price under the word
+                # "target": a level that trade never touched, quoted beside a
+                # P&L measured at the one it did. Where the second target was
+                # blank the fallback happened to be right, which is why it read
+                # correctly often enough to survive.
+                rung = status.split("_")[0]                  # T1 / T2 / T3
+                tgt = _fmt_price(r.get(f"target{rung[1:]}"), cur)
+                if tgt in ("", "—", None):
+                    # A hit on a rung the row does not carry a price for. Say the
+                    # rung and drop the price, rather than substituting another.
+                    winners.append(f"✅ *{sym}* {action} → {rung} hit ({pnl}{rtxt})")
+                else:
+                    winners.append(f"✅ *{sym}* {action} → {rung} `{tgt}` ({pnl}{rtxt})")
             elif "SL" in status or status == "STOPPED":
                 losers.append(f"❌ *{sym}* {action} → stop `{_fmt_price(r.get('sl'), cur)}` ({pnl}{rtxt})")
             elif status == "CANCELLED":
@@ -1031,8 +1046,39 @@ def build_section_brief(slot: str = "midday") -> str:
             # The exits, once, rather than repeated inside every ticket. They
             # are the same ladder for every row in the tier and printing them
             # eight times taught the reader to skip them.
-            L.append("_Ladder: T1 books half, the rest runs to T2, then the stop "
-                     f"trails to T1 and never lower. Levels per name: {_link('ideas')}_")
+            #
+            # ── BUT IT IS NOT THE SAME LADDER FOR EVERY ROW ──────────────────
+            #
+            # This sentence was wrong twice over, and it is the one line in the
+            # brief a reader would act on.
+            #
+            #   "T1 books half"     — swing_rulebook.LADDER is 20/40/40. T1
+            #                         books a fifth, not a half.
+            #   "the rest runs to T2" — many rows have no T2. The engine files
+            #                         three targets and the ones inside 0.5R of
+            #                         the one before are not separate exits, so
+            #                         build_ladder collapses them and the site
+            #                         renders "the only target". The brief went
+            #                         on promising a second rung for a position
+            #                         that has one exit.
+            #
+            # It is now counted off the tickets actually admitted, so the
+            # sentence describes the board underneath it rather than a house
+            # rule that may not apply to any row on it.
+            _rungs = [len(t.get("legs") or []) for t in book["admitted"]]
+            _one = sum(1 for r in _rungs if r <= 1)
+            if _one == len(_rungs):
+                _ladder = ("Every name here has ONE target: the whole position "
+                           "leaves at it, and the stop trails to break-even once "
+                           "T1 prints.")
+            else:
+                _ladder = ("Ladder: 20% at T1, 40% at T2, the rest at T3; the "
+                           "stop trails to break-even after T1 and to T1 after "
+                           "T2, never lower.")
+                if _one:
+                    _ladder += (f" {_one} of {len(_rungs)} carry a single target "
+                                "— the whole position leaves there.")
+            L.append(f"_{_ladder} Levels per name: {_link('ideas')}_")
 
         # LIVE STATUS: what the rules did with everything they saw. A board that
         # only shows what it admitted is a board you cannot audit — the count
