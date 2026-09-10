@@ -86,6 +86,48 @@ ok("collapsed legs still sum to the position",
 ok("the trail engages only after T2",
    t and "until T2" in t.trail_note, t.trail_note[:60] if t else "")
 
+# ── AND A PRICE THAT IS MERELY CLOSE IS THE SAME FAULT ──────────────────────
+#
+# The collapse above only caught EXACTLY repeated prices. SPLPETRO published
+# T1 938.02, T2 951.57 and T3 965.13 against 104.36 of risk — three different
+# numbers, 0.13R apart — so all three survived and the book sized three exit
+# legs at what is, in the units that matter, one price. The site's read layer
+# blanks a pair that close, so the SAME row rendered on the ledger card as
+# "All at 938.02 · the only target": the book and the page described one
+# signal two incompatible ways, and only the page was right.
+#
+# 0.5R, the same constant as scanner.MIN_TARGET_GAP_R and the MIN_TARGET_GAP_R
+# in vercel-news/api/_levels.js. A generator, a sizer and a renderer that
+# disagree about what counts as a target produce exactly this.
+ok("the sizer and the site agree on the constant", RB.MIN_TARGET_GAP_R == 0.5)
+near = RB.distinct_targets(771.05, 666.69, [938.02, 951.57, 965.13], True)
+ok("targets inside 0.5R of the one before are not separate exits",
+   near == [938.02, None, None], str(near))
+wide = RB.distinct_targets(2100.2, 1900.88, [2345.82, 2530.04, 2714.26], True)
+ok("targets a real distance apart are all kept", wide == [2345.82, 2530.04, 2714.26])
+ok("the inner target is the one kept, never the outer",
+   RB.distinct_targets(100.0, 90.0, [120.0, 122.0], True) == [120.0, None])
+ok("no stop means no risk to measure against, so nothing is dropped",
+   RB.distinct_targets(100.0, 100.0, [120.0, 121.0], True) == [120.0, 121.0])
+crammed = RB.build_ladder(771.05, 666.69, [938.02, 951.57, 965.13], 100, True)
+ok("one target is one leg carrying the whole position",
+   len(crammed) == 1 and crammed[0].qty == 100, f"{len(crammed)} legs")
+
+# THE HEADLINE NUMBER MUST BELONG TO AN EXIT THE BOOK ACTUALLY PLACES.
+# `final`, final_gain_pct and reward_risk read the raw target3, so a ticket
+# could be admitted on a band and a ratio measured to a level build_ladder was
+# about to collapse away.
+# 80 of risk, so the floor is 40. T3 is 10 above T2 and is dropped; the band
+# and the ratio must then read 1400, not the 1410 no leg is placed at.
+t3, r3 = RB.size_signal(sig(target1=1150.0, target2=1400.0, target3=1410.0), {})
+ok("the published targets are the ones that survive the collapse",
+   t3 and t3.targets == [1150.0, 1400.0],
+   str(t3.targets) if t3 else "rejected: " + r3.reason)
+ok("the final gain is measured to the last leg, not to a dropped target",
+   t3 and abs(t3.final_gain_pct - 40.0) < 0.05, str(t3.final_gain_pct) if t3 else "")
+ok("every published target has a leg, and every leg a target",
+   t3 and len(t3.legs) == len(t3.targets), f"{len(t3.legs)} vs {len(t3.targets)}" if t3 else "")
+
 print("\n── Sizing and caps ────────────────────────────────────────")
 ok("capital is Rs 1 crore", RB.CAPITAL == 10_000_000)
 t, _ = RB.size_signal(sig(), {})

@@ -1341,8 +1341,21 @@
    * published as what to DO with an open position — not as an edge, and not as
    * a silent rewrite of the record.
    */
+  /* NULL IS NOT ZERO, AND Number(null) IS 0.
+   *
+   * The API blanks a target that collapsed into the one before it — closer
+   * than 0.5R, which is not a separate exit — and returns null for it. Every
+   * plain Number() below turned that into a price of zero, and zero is finite,
+   * so it then passed every guard written to catch a bad level. No traded
+   * instrument has a level of zero, so zero is absence here. */
+  const lvl = v => {
+    if (v === null || v === undefined || v === '') return null;
+    const x = Number(v);
+    return Number.isFinite(x) && x > 0 ? x : null;
+  };
+
   const trailPlan = (entry, sl, t1, t2, action) => {
-    const e = Number(entry), s0 = Number(sl), a = Number(t1), b = Number(t2);
+    const e = Number(entry), s0 = Number(sl), a = Number(t1), b = lvl(t2);
     if (![e, s0, a].every(Number.isFinite)) return '';
     const short = /SELL|SHORT/i.test(String(action || ''));
     const f = v => '₹' + Number(v).toFixed(2);
@@ -1350,7 +1363,10 @@
       [`Stop stays at ${f(s0)}`, 'until the first target prints'],
       [`After T1, trail to ${f(e)}`, 'break-even — never back below it'],
     ];
-    if (Number.isFinite(b)) steps.push([`After T2, trail to ${f(a)}`, 'locking the first target in']);
+    // b is now null rather than 0 for a target that was never published, so
+    // this step stops appearing on rows that have no second target to trail
+    // after.
+    if (b !== null) steps.push([`After T2, trail to ${f(a)}`, 'locking the first target in']);
     return `<div class="trail"><span>Trailing rule</span>
       ${steps.map(([t, k]) => `<div class="tr-s"><b>${esc(t)}</b><i>${esc(k)}</i></div>`).join('')}
       <div class="tr-n">Published as a management rule. The ledger is still scored on the
@@ -1646,7 +1662,22 @@
 
     const cur = sig.currency || '₹';
     const N = v => Number(v);
-    const entry = N(sig.entry), stop = N(sig.sl), t1 = N(sig.target1), t2 = N(sig.target2 || sig.target1);
+    const entry = N(sig.entry), stop = N(sig.sl), t1 = N(sig.target1);
+    /* A SECOND TARGET THAT DOES NOT EXIST IS NOT THE FIRST ONE AGAIN.
+     *
+     * This read `N(sig.target2 || sig.target1)`, so a blanked target came back
+     * wearing T1's price: the ladder printed "Target 2" and "Target 1" at one
+     * number, the chart drew two lines on top of each other, and the trade
+     * plan quoted a second reward-to-risk identical to the first. SPLPETRO is
+     * the live case — T1 938.02 and T2 951.57 against 104.36 of risk, 0.13R
+     * apart, blanked by the API and reinstated here.
+     *
+     * hasT2 is the one flag every consumer branches on; tFinal is the top of
+     * the trade for the scales that need one, under a different name, because
+     * the fault was one variable meaning two things. */
+    const t2 = lvl(sig.target2);
+    const hasT2 = t2 !== null;
+    const tFinal = hasT2 ? t2 : t1;
     const last = live ? live.price : (N(row.price) || (closes ? closes[closes.length - 1] : entry));
     const isShort = /SELL|SHORT/i.test(sig.action || '');
     const risk = Math.abs(entry - stop);
@@ -1663,13 +1694,14 @@
      * only as a cross-check: if it disagrees with the arithmetic on its own
      * levels, the page says so rather than choosing a winner silently. */
     const rrT1 = Math.abs(t1 - entry) / (risk || 1);
-    const rrT2 = Math.abs(t2 - entry) / (risk || 1);
+    const rrT2 = hasT2 ? Math.abs(t2 - entry) / (risk || 1) : null;
     const rr = rrT1;
     const rrLedger = Number(sig.rr);
     // 0.15 is wider than rounding (the ledger stores one decimal) and narrower
     // than the gap between a T1 and a T2 reading on any real setup.
     const rrDisagrees = Number.isFinite(rrLedger)
-      && Math.abs(rrLedger - rrT1) > 0.15 && Math.abs(rrLedger - rrT2) > 0.15;
+      && Math.abs(rrLedger - rrT1) > 0.15
+      && (!hasT2 || Math.abs(rrLedger - rrT2) > 0.15);
     const f = v => Number.isFinite(v) ? cur + v.toLocaleString('en-IN', { maximumFractionDigits: 2 }) : '—';
     const dist = v => Number.isFinite(v) && Number.isFinite(last) && last
       ? `${v >= last ? '+' : '−'}${f(Math.abs(v - last)).replace(cur, cur)} · ${pct((v - last) / last * 100)}` : '—';
@@ -1738,12 +1770,15 @@
 
     /* ── THE CHART, from real closes. */
     const chartLevels = [
-      { k: 'T2', v: t2, f: f(t2), c: 't', step: 7 }, { k: 'T1', v: t1, f: f(t1), c: 't', step: 7 },
+      { k: 'T2', v: t2, f: hasT2 ? f(t2) : '', c: 't', step: 7 }, { k: 'T1', v: t1, f: f(t1), c: 't', step: 7 },
       { k: 'ENTRY', v: entry, f: f(entry), c: 'e', step: 5 },
       { k: 'STOP', v: stop, f: f(stop), c: 's', step: 6 },
       { k: '200D', v: N(row.sma200), f: f(N(row.sma200)), c: 'k', step: 3 },
     ].filter(l => Number.isFinite(l.v));
-    const CH = pts ? priceChart(pts, chartLevels, { entry, stop, t1, t2 }) : null;
+    // tFinal, not t2: the green zone is entry to the top of the trade, and on
+    // a one-target setup that top is T1. A null t2 made zone() emit nothing
+    // and the reward side of the chart vanished.
+    const CH = pts ? priceChart(pts, chartLevels, { entry, stop, t1, t2: tFinal }) : null;
 
     /* ── ENTRY STATE. Published levels only — no invented zone width. */
     const zoneState = (() => {
@@ -1787,18 +1822,29 @@
         `Entry sits at ${f(entry)} with the invalidation ${f(stop)} — ${pct(-Math.abs(risk / entry * 100))} away. The first target at ${f(t1)} is ${pct(Math.abs(t1 - entry) / entry * 100)} from entry.`,
         [['Entry', f(entry)], ['Stop', f(stop)], ['Target 1', f(t1)]]],
       ['Risk', 'The setup is attractive because the risk is defined.',
-        `Reward to risk is ${rrT1.toFixed(1)} to one against the first target and ${rrT2.toFixed(1)} to one against the second. The stop is a price, not an intention: below ${f(stop)} the reason for the trade is gone and the position is closed.`,
-        [['R:R to T1', rrT1.toFixed(1) + ' : 1'], ['R:R to T2', rrT2.toFixed(1) + ' : 1'], ['Risk per share', f(risk)],
+        `Reward to risk is ${rrT1.toFixed(1)} to one against the ${hasT2 ? 'first target and ' + rrT2.toFixed(1) + ' to one against the second' : 'only target this setup publishes'}. The stop is a price, not an intention: below ${f(stop)} the reason for the trade is gone and the position is closed.`,
+        [[hasT2 ? 'R:R to T1' : 'Reward : risk', rrT1.toFixed(1) + ' : 1'],
+         ['R:R to T2', hasT2 ? rrT2.toFixed(1) + ' : 1' : 'no second target'],
+         ['Risk per share', f(risk)],
          ['Daily ATR', Number.isFinite(N(row.atr_pct)) ? N(row.atr_pct).toFixed(2) + '%' : '—']]],
     ];
 
+    /* FUNDAMENTALS SIT BETWEEN THE THESIS AND THE PLAN, and that position is
+     * the argument. Everything above this point is price — structure,
+     * momentum, volume, the levels. A reader who has got that far has been
+     * told the chart is willing and nothing whatsoever about the company.
+     *
+     * It goes before the plan because it can change whether there is a trade,
+     * and after the thesis because the thesis is what it is being tested
+     * against. Same position, same renderer, as the signal site's brief. */
     const SECTIONS = [
       ['b-overview', 'Overview', '1', 'Signal', 'the setup exists'],
       ['b-chart', 'Chart', '2', 'Entry', 'where it starts'],
       ['b-thesis', 'Thesis', '3', 'Confirmation', 'why it should work'],
-      ['b-plan', 'Trade plan', '4', 'Target', 'what it is worth'],
-      ['b-risk', 'Risk', '5', 'Sizing', 'what it costs'],
-      ['b-history', 'History', '6', 'Exit', 'what happened before'],
+      ['b-fund', 'Business', '4', 'Company', 'what you would own'],
+      ['b-plan', 'Trade plan', '5', 'Target', 'what it is worth'],
+      ['b-risk', 'Risk', '6', 'Sizing', 'what it costs'],
+      ['b-history', 'History', '7', 'Exit', 'what happened before'],
     ];
 
     paint(`<div class="brief"><div class="b-wrap">
@@ -1837,17 +1883,25 @@
           <div class="b-m"><span class="k">Day</span><span class="v ${live && live.change_pct >= 0 ? 'up' : 'dn'}">${live && Number.isFinite(live.change_pct) ? pct(live.change_pct) : '—'}</span></div>
           <div class="b-m"><span class="k">Stop</span><span class="v dn">${f(stop)}</span></div>
           <div class="b-m"><span class="k">Target 1</span><span class="v up">${f(t1)}</span></div>
-          <div class="b-m"><span class="k">Target 2</span><span class="v up">${f(t2)}</span></div>
+          <div class="b-m"><span class="k">Target 2</span>${hasT2
+            ? `<span class="v up">${f(t2)}</span>`
+            : `<span class="v" style="font-size:13px">Not published</span>`}</div>
           <div class="b-m"><span class="k">R:R to T1</span><span class="v gold">${rrT1.toFixed(1)} : 1</span></div>
-          <div class="b-m"><span class="k">R:R to T2</span><span class="v gold">${rrT2.toFixed(1)} : 1</span></div>
+          ${hasT2 ? `<div class="b-m"><span class="k">R:R to T2</span><span class="v gold">${rrT2.toFixed(1)} : 1</span></div>` : ''}
           <div class="b-m"><span class="k">Signal age</span><span class="v">${ageDays == null ? '—' : ageDays + 'd'}</span></div>
           <div class="b-m"><span class="k">Sector</span><span class="v" style="font-family:var(--ui);font-size:14px">${esc(row.sector || 'Not on screen')}</span></div>
         </div>
       </section>
       <p class="b-p" style="margin-top:14px;font-size:13px">${esc(stateChip[2])}
-        Reward to risk is shown against <b style="color:var(--b-ink)">both</b> targets, because they are
-        different numbers and the trade plan acts on the first one. The ledger's own published field
-        reads ${Number.isFinite(rrLedger) ? rrLedger.toFixed(1) : '—'}, which is the reading to target 2.
+        ${hasT2
+          ? `Reward to risk is shown against <b style="color:var(--b-ink)">both</b> targets, because they are
+             different numbers and the trade plan acts on the first one.`
+          : `<b style="color:var(--b-ink)">This setup has one target.</b> The engine's second and third both
+             sat inside half the trade's own risk of the first — too close to be separate exits — so they
+             are not published, and nothing on this page stands in for them.`}
+        The ledger's own published field
+        reads ${Number.isFinite(rrLedger) ? rrLedger.toFixed(1) : '—'}, which is ${hasT2
+          ? 'the reading to target 2' : 'measured to a target this row does not publish'}.
         ${rrDisagrees ? `<b style="color:var(--b-gold)">It agrees with neither figure computed from its own
           published levels, so the arithmetic above is what this page shows and the ledger field is the
           one to distrust.</b>` : ''}</p>
@@ -1866,7 +1920,7 @@
           <div class="b-vi"><dt>Entry</dt><dd>${f(entry)}</dd></div>
           <div class="b-vi"><dt>Stop</dt><dd>${f(stop)}</dd></div>
           <div class="b-vi"><dt>Target 1</dt><dd>${f(t1)}</dd></div>
-          <div class="b-vi"><dt>Target 2</dt><dd>${f(t2)}</dd></div>
+          <div class="b-vi"><dt>Target 2</dt><dd>${hasT2 ? f(t2) : 'Not published — this setup has one target'}</dd></div>
           <div class="b-vi"><dt>R:R to T1</dt><dd>${rrT1.toFixed(1)} : 1</dd></div>
           <div class="b-vi"><dt>Horizon</dt><dd class="txt">${esc(sig.timeframe === '1D' ? 'Swing' : (sig.timeframe || 'Swing'))}</dd></div>
         </dl>
@@ -1919,7 +1973,7 @@
         <div class="b-chart" style="margin-top:${pts ? '26px' : '18px'}">
           <div class="b-ladder">
             <div class="b-band risk" style="top:${at(entry).toFixed(1)}%;height:${Math.abs(at(stop) - at(entry)).toFixed(1)}%"></div>
-            <div class="b-band reward" style="top:${at(t2).toFixed(1)}%;height:${Math.abs(at(entry) - at(t2)).toFixed(1)}%"></div>
+            <div class="b-band reward" style="top:${at(tFinal).toFixed(1)}%;height:${Math.abs(at(entry) - at(tFinal)).toFixed(1)}%"></div>
             ${ladder}
           </div>
           <p class="b-cap"><b>The ladder is every published level on one linear scale.</b> Hover or focus a
@@ -2029,7 +2083,41 @@
             series did not load. It is left blank rather than guessed from the levels.</p>`}
       </section>
 
-      <section class="b-sec b-reveal" id="b-plan">
+      ${/* ── 4 · THE BUSINESS ───────────────────────────────────────────
+          *
+          * ONE renderer, shared with signal.askakshay.com's brief and
+          * authored in this repo beside stock_screen.py, which computes every
+          * field it reads. See the header of static/brief_fundamentals.js for
+          * why it is the only frontend file that crosses between the repos.
+          *
+          * It is a separate file, so "it did not arrive" is a state rather
+          * than an impossibility — a 404 on it must not delete the section
+          * silently, because a section that vanishes is indistinguishable
+          * from one that was never meant to be there. */''}
+      <section class="b-sec b-reveal" id="b-fund">
+        <div class="b-lab">The business</div>
+        ${window.BriefFundamentals
+          ? window.BriefFundamentals.render(row, {
+              symbol: sig.symbol,
+              // This site's screen is a hash route with no query, so the link
+              // goes to the section rather than to a filter it cannot apply.
+              // A link that renders the wrong page looks like a click that
+              // was ignored.
+              screenHref: '#/screen',
+            })
+          : `<h2 class="b-h2">The business section could not load.</h2>
+             <p class="b-p">It is served as a separate file and that file did not arrive, so the
+               fundamentals are not shown rather than shown incompletely. Everything else on this
+               page is unaffected.</p>`}
+      </section>
+
+      ${/* THE "TRADE PLAN" CHIP LANDED ON "SCENARIOS". id="b-plan" sat on
+          * this section while the trade plan — the rows naming entry, stop,
+          * target and invalidation — is the section BELOW it. The id now sits
+          * on the section it names; scenarios keep their place in the reading
+          * order and have no chip of their own, which is what the trade plan
+          * had until now. */''}
+      <section class="b-sec b-reveal">
         <div class="b-lab">Scenarios</div>
         <h2 class="b-h2">Three ways this resolves.</h2>
         <div class="b-scb" role="group" aria-label="Scenario">
@@ -2044,7 +2132,7 @@
           history and not this trade.</p>
       </section>
 
-      <section class="b-sec b-reveal">
+      <section class="b-sec b-reveal" id="b-plan">
         <div class="b-lab">Trade plan</div>
         <h2 class="b-h2">What to do, and when to stop doing it.</h2>
         <div class="b-plan">
@@ -2057,12 +2145,14 @@
           <div class="b-pr"><span class="st">Stop</span>
             <span class="tx">Invalidation. A close beyond this removes the reason for the trade.</span>
             <span class="px" style="color:var(--b-bear)">${f(stop)}</span></div>
-          <div class="b-pr"><span class="st">Target 1</span>
-            <span class="tx">First profit level. The published trailing rule moves the stop to entry once this prints.</span>
+          <div class="b-pr"><span class="st">${hasT2 ? 'Target 1' : 'Target'}</span>
+            <span class="tx">${hasT2
+              ? 'First profit level. The published trailing rule moves the stop to entry once this prints.'
+              : 'The only published profit level. The trailing rule moves the stop to entry once it prints, and the position closes there — there is no second rung to carry a remainder to.'}</span>
             <span class="px" style="color:var(--b-bull)">${f(t1)}</span></div>
-          <div class="b-pr"><span class="st">Target 2</span>
+          ${hasT2 ? `<div class="b-pr"><span class="st">Target 2</span>
             <span class="tx">Extended target, carried only by the remainder.</span>
-            <span class="px" style="color:var(--b-bull)">${f(t2)}</span></div>
+            <span class="px" style="color:var(--b-bull)">${f(t2)}</span></div>` : ''}
           <div class="b-pr is-invalid"><span class="st">Invalidation ${tip('invalidation')}</span>
             <span class="tx">Below ${f(stop)} the structure that produced this setup is gone. The position is
               closed at that price — not re-argued, not averaged into, not widened.</span>
@@ -2078,7 +2168,7 @@
             <div class="b-rrb" id="rrBars">
               <div class="row"><span class="k">Loss</span><span class="b loss" id="barL"></span><span class="v" id="barLv" style="color:var(--b-bear)"></span></div>
               <div class="row"><span class="k">Gain T1</span><span class="b gain" id="barG"></span><span class="v" id="barGv" style="color:var(--b-bull)"></span></div>
-              <div class="row"><span class="k">Gain T2</span><span class="b gain" id="barG2"></span><span class="v" id="barG2v" style="color:var(--b-bull)"></span></div>
+              ${hasT2 ? `<div class="row"><span class="k">Gain T2</span><span class="b gain" id="barG2"></span><span class="v" id="barG2v" style="color:var(--b-bull)"></span></div>` : ''}
             </div>
             <div class="b-metrics" style="margin-top:22px" id="rkOut"></div>
             <p class="b-p" style="font-size:13px">Position size is the risk amount divided by the distance
@@ -2337,7 +2427,10 @@
       if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
       const t = ev.target;
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-      const i = '123456'.indexOf(ev.key);
+      // The digit string and SECTIONS must stay the same length: a section
+      // added to the array without a digit here is one the keyboard cannot
+      // reach, and the chip beside it still advertises the key.
+      const i = '1234567'.indexOf(ev.key);
       if (i >= 0 && SECTIONS[i]) { ev.preventDefault(); jump(SECTIONS[i][0]); }
     };
     document.addEventListener('keydown', onKey);
@@ -2440,13 +2533,23 @@
 
     /* ── scenarios ──────────────────────────────────────────────────────── */
     const baseRate = H && Number.isFinite(Number(H.win_rate)) ? Number(H.win_rate) : null;
+    /* The bullish scenario needs a level to run to, and on a one-target row
+     * there is none published. It is not silently re-pointed at T1 — that
+     * makes it identical to the scenario beneath it. It says so instead. */
     const SC = [
-      ['Continuation through both targets.',
+      hasT2
+      ? ['Continuation through both targets.',
        `Price clears ${f(t1)} and carries to ${f(t2)}. That needs the structure that produced this setup to hold — the 50-day above the 200-day, volume staying at or above its recent average, and no close back under ${f(entry)}.`,
        [['Requires', `Above ${f(t1)}`], ['Target', f(t2)], ['Move from here', Number.isFinite(last) ? pct((t2 - last) / last * 100) : '—'],
-        ['R multiple', ((Math.abs(t2 - entry)) / (risk || 1)).toFixed(1) + 'R']]],
+        ['R multiple', ((Math.abs(t2 - entry)) / (risk || 1)).toFixed(1) + 'R']]]
+      : ['It runs past the only target it has.',
+       `The engine published one level, so past it there is no plan on this row — the trailing stop is the whole of it. A number invented here would be the only figure on this page nobody measured.`,
+       [['Requires', `Above ${f(t1)}`], ['Target', 'None published'],
+        ['Move from here', '—'], ['R multiple', '—']]],
       ['The published plan, run as written.',
-       `Entry at ${f(entry)}, first target ${f(t1)}, stop ${f(stop)}. On the published trailing rule the stop moves to entry once ${f(t1)} prints, so the remainder rides to ${f(t2)} with no capital at risk.`,
+       hasT2
+         ? `Entry at ${f(entry)}, first target ${f(t1)}, stop ${f(stop)}. On the published trailing rule the stop moves to entry once ${f(t1)} prints, so the remainder rides to ${f(t2)} with no capital at risk.`
+         : `Entry at ${f(entry)}, target ${f(t1)}, stop ${f(stop)}. On the published trailing rule the stop moves to entry once ${f(t1)} prints. There is no second rung for a remainder to ride to — the position closes at the target or at the trailed stop.`,
        [['Requires', `Entry at or better than ${f(entry)}`], ['Target', f(t1)],
         ['Move from here', Number.isFinite(last) ? pct((t1 - last) / last * 100) : '—'],
         ['R multiple', rrT1.toFixed(1) + 'R']]],
@@ -2483,19 +2586,22 @@
       const rr2 = risk2 > 0 ? Math.abs(t1b - e2) / risk2 : 0;
       const amt = acct * rp / 100;
       const qty = risk2 > 0 ? Math.floor(amt / risk2) : 0;
-      const loss = qty * risk2, g1 = qty * Math.abs(t1b - e2), g2 = qty * Math.abs(t2 - e2);
+      /* Math.abs(null - e2) is a real number and it is the entry price, so the
+       * absence has to be decided by hasT2 rather than by the arithmetic. */
+      const loss = qty * risk2, g1 = qty * Math.abs(t1b - e2);
+      const g2 = hasT2 ? qty * Math.abs(t2 - e2) : null;
 
       $('lvA').textContent = f(acct);
       $('lvP').textContent = rp.toFixed(1) + '% · ' + f(amt);
       $('lvE').textContent = f(e2); $('lvS').textContent = f(s2); $('lvT').textContent = f(t1b);
 
-      const peak = Math.max(loss, g1, g2, 1);
+      const peak = Math.max(loss, g1, hasT2 ? g2 : 0, 1);
       $('barL').style.width = (loss / peak * 100).toFixed(1) + '%';
       $('barG').style.width = (g1 / peak * 100).toFixed(1) + '%';
-      $('barG2').style.width = (g2 / peak * 100).toFixed(1) + '%';
+      if (hasT2) $('barG2').style.width = (g2 / peak * 100).toFixed(1) + '%';
       countTo($('barLv'), loss, { dp: 0, pre: '−' + cur });
       countTo($('barGv'), g1, { dp: 0, pre: '+' + cur });
-      countTo($('barG2v'), g2, { dp: 0, pre: '+' + cur });
+      if (hasT2) countTo($('barG2v'), g2, { dp: 0, pre: '+' + cur });
 
       $('rkOut').innerHTML = `
         <div class="b-m"><span class="k">Position size</span><span class="v">${qty.toLocaleString('en-IN')} sh</span></div>

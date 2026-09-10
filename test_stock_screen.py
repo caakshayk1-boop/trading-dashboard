@@ -1332,6 +1332,133 @@ def test_the_screener_ui_lives_in_the_source_not_the_artefact() -> None:
               f"source {len(src)}B vs artefact {len(DOCS_APP_JS.read_text(encoding='utf-8'))}B")
 
 
+def test_dividend_yield_is_not_converted_twice() -> None:
+    """A percentage put through a fraction-to-percentage conversion.
+
+    _pct() turns a FRACTION into percentage points. yfinance's `dividendYield`
+    now arrives already in percentage points, so `_pct(dividend_yield)`
+    multiplied a number that was already right. Measured over the 592 rows
+    carrying the field in the screen served on 2026-09-10:
+
+        median 65.5    p90 268    max 1834
+        ITC 601   COALINDIA 503   ONGC 611   VEDL 1256
+
+    None of which is a dividend yield. Divided by 100 the same distribution is
+    median 0.66%, p90 2.68%, max 18.3% — which is what the NSE looks like.
+
+    The column survived because nothing read it. It reached a reader for the
+    first time when the trading brief grew a fundamentals table, and printed
+    ITC at 601%.
+
+    THIS PINS THE SOURCE AND NOT THE SERVED ROWS, deliberately. The 336 rows
+    in docs/screen.json over any credible ceiling were built by the old code
+    and stay wrong until the screen next runs, and the build that carries the
+    fix is dated the same day as the one that does not — so no assertion over
+    that file can tell them apart. A check that cannot distinguish the two
+    would either be red on committed data or pass by accident, and both are
+    worse than none. (The brief leaves the row out until a clean build is
+    being served, for the same reason.)
+    """
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    check("dividend yield is not run through the fraction converter",
+          '"div_yield": _pct(' not in src)
+    check("dividend yield is published as it arrives",
+          '"div_yield": _round(r.get("dividend_yield")' in src)
+    # _pct is still correct for every OTHER field here — those are genuine
+    # fractions — so this must not become a blanket ban on the helper.
+    check("_pct still converts the fields that really are fractions",
+          '"rev_cagr": _pct(' in src and '"insiders": _pct(' in src)
+
+
+def test_the_shared_brief_section_is_one_file_and_both_briefs_call_it() -> None:
+    """The Business section of the brief, rendered by ONE file for both sites.
+
+    There are two briefs: signal.askakshay.com/brief and
+    news.askakshay.com/next.html#/brief. They are forks of one renderer, and
+    the signal repo's sync-data.yml used to mirror static/next.{js,css} into it
+    until that step was removed with the reason written down — the two copies
+    had drifted, both repos were green, and nothing caught it.
+
+    So this section is not duplicated into the fork. It is authored here,
+    beside stock_screen.py which computes every field it reads, published to
+    docs/ like the JSON feeds, and mirrored into the signal repo alongside
+    them. Neither site owns a copy.
+
+    What is pinned here is that it stays ONE file and that both callers reach
+    it through the same entry point. The section's own honesty rules —
+    missing renders as words, a company with no statements is unranked,
+    negative equity is named — are pinned inside the file's own checks below,
+    because that is where the markup lives.
+    """
+    bf = pathlib.Path("static/brief_fundamentals.js")
+    check("the shared renderer exists", bf.exists())
+    if not bf.exists():
+        return
+    src = bf.read_text(encoding="utf-8")
+
+    check("it exports what both pages call", "root.BriefFundamentals = {" in src)
+    check("it declares a version, so a site can say which copy it runs",
+          "VERSION:" in src)
+
+    # ONE FILE, NOT TWO. A companion stylesheet is a second thing to sync and a
+    # second thing to allow-list, and the markup could then reach a page whose
+    # CSS did not. This repo has already shipped that exact 404 (today.json had
+    # two of its three allow-lists), so the styles travel inside the renderer.
+    check("it carries its own styles rather than a companion sheet",
+          "var CSS = [" in src and "getElementById(STYLE_ID)" in src)
+    check("there is no companion stylesheet to forget",
+          not pathlib.Path("static/brief_fundamentals.css").exists())
+
+    # THE TWO SITES DO NOT SHARE A TOKEN SCALE. signal.css declares --t-1..
+    # --t-10 and --r-1..--r-5; next.css writes its sizes as literals and has
+    # none of them. A bare var(--t-4) resolves to nothing there and the whole
+    # declaration is dropped, so every custom property needs a literal
+    # fallback.
+    # Comments are stripped first, or this fails on the note above the rule
+    # that quotes the very thing it bans — a check that cannot survive its own
+    # reasoning being written down is a check nobody will keep.
+    code = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+    code = "\n".join(l for l in code.splitlines() if not l.lstrip().startswith("//"))
+    bare = re.findall(r"var\(--(?:t|r|ls)-[0-9a-z]+\)", code)
+    check("every sizing token carries a literal fallback", not bare, str(bare[:4]))
+
+    # A file that crosses a repo boundary can be absent. A section that
+    # vanishes silently is indistinguishable from one that was never meant to
+    # be there.
+    check("it offers a notice for the case where it did not arrive",
+          "missingNotice" in src)
+
+    nxt = pathlib.Path("static/next.js").read_text(encoding="utf-8")
+    check("next.js has a business section", "'b-fund', 'Business'" in nxt)
+    check("next.js renders it through the shared file, not a local copy",
+          "window.BriefFundamentals.render(row," in nxt)
+    check("next.js says so when the file did not arrive",
+          "could not load" in nxt)
+    # Two copies of the markup is the fault this whole arrangement avoids.
+    check("next.js does not keep its own copy of the tables",
+          "ROCE, multi-year median" not in nxt)
+
+    shell = pathlib.Path("static/next.html").read_text(encoding="utf-8")
+    check("the shell loads the shared renderer",
+          'src="/brief_fundamentals.js"' in shell)
+    # Both are defer, so they execute in document order — the renderer must be
+    # defined before the route that calls it runs.
+    check("and loads it before the page renderer",
+          shell.index('src="/brief_fundamentals.js"') < shell.index('src="/next.js"'))
+    gen = pathlib.Path("generate.py").read_text(encoding="utf-8")
+    check("generate.py stamps a build id on it, like the other two assets",
+          "brief_fundamentals.js?v=" in gen)
+
+    # And the keyboard must reach every section the chips advertise.
+    secs = re.search(r"const SECTIONS = \[(.*?)\n    \];", nxt, re.S)
+    digits = re.search(r"const i = '(\d+)'\.indexOf\(ev\.key\);", nxt)
+    check("next.js declares its brief sections", secs is not None)
+    if secs and digits:
+        n = secs.group(1).count("['b-")
+        check("every section has a digit that jumps to it",
+              n == len(digits.group(1)), f"{n} sections, {len(digits.group(1))} digits")
+
+
 def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     """Written by generate.py, named in .vercelignore, copied by build.js.
 
@@ -1363,7 +1490,11 @@ def test_screen_json_is_allow_listed_in_all_three_places() -> None:
     # The build log said "✅ next.html (2KB)", which is exactly what makes this
     # trap expensive: the evidence says the file was written.
     wf = pathlib.Path(".github/workflows/newspaper.yml").read_text(encoding="utf-8")
-    for f in ("next.html", "next.css", "next.js",
+    # brief_fundamentals.js is the ONE Business section, loaded by this site's
+    # brief and by signal.askakshay.com's. It needs the same four allow-lists
+    # as everything else here, and a fifth over there — pinned by the signal
+    # repo's own test/guard.mjs, which checks its sync-data.yml fetches it.
+    for f in ("next.html", "next.css", "next.js", "brief_fundamentals.js",
               "pulse.json", "ipo.json", "news.json", "conviction.json"):
         check(f"generate.py writes docs/{f}", f'"{f}"' in gen)
         check(f".vercelignore allow-lists docs/{f} by name", f"!docs/{f}" in ign_lines)
@@ -1740,6 +1871,8 @@ def main() -> int:
                test_the_screen_sheet_can_always_be_closed,
                test_app_js_carries_no_jinja,
                test_the_screener_ui_lives_in_the_source_not_the_artefact,
+               test_dividend_yield_is_not_converted_twice,
+               test_the_shared_brief_section_is_one_file_and_both_briefs_call_it,
                test_screen_json_is_allow_listed_in_all_three_places):
         try:
             fn()

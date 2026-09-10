@@ -34,6 +34,12 @@
 !docs/v2-core.js
 !docs/life.html
 !docs/life.js
+# The Business section of the brief — one file, loaded by BOTH briefs and
+# mirrored into the signal repo by its sync-data.yml. It carries its own
+# styles, so there is no companion .css to forget: one file cannot be
+# half-delivered, and the markup can never reach a page whose stylesheet did
+# not. Omit it here and both briefs render the "could not load" notice.
+!docs/brief_fundamentals.js
 # The mobile-first surface: shell, stylesheet, renderer. Three files, all
 # needed — omit one and /next.html renders unstyled or inert with no error.
 !docs/next.html

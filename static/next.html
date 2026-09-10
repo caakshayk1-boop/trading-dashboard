@@ -81,6 +81,12 @@
  "publisher":{"@type":"Person","name":"Akshay Kothari","jobTitle":"CA, FP&A"}}
 </script>
 
+<!-- The Business section of the brief. One file, shared with
+     signal.askakshay.com, carrying its own styles so it cannot arrive
+     half-delivered. Loaded BEFORE the renderer: both are defer, so they run in
+     document order and BriefFundamentals is defined before any route can call
+     it. If it 404s the brief says so rather than dropping the section. -->
+<script src="/brief_fundamentals.js" defer></script>
 <script src="/next.js" defer></script>
 </body>
 </html>
