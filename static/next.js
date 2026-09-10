@@ -2153,8 +2153,14 @@
           ${hasT2 ? `<div class="b-pr"><span class="st">Target 2</span>
             <span class="tx">Extended target, carried only by the remainder.</span>
             <span class="px" style="color:var(--b-bull)">${f(t2)}</span></div>` : ''}
+          ${/* THE PRICE IS IN THE CELL BESIDE IT, AND IN THE STOP ROW ABOVE.
+              * This opened "Below ${f(stop)} the structure…", putting the stop
+              * in this block for the THIRD time — the Stop row's cell, here in
+              * prose, and this row's own cell. A rule reads better as roles
+              * than as repeated figures. Same fix as the signal site's brief,
+              * which is where the duplicate-figure check caught it. */''}
           <div class="b-pr is-invalid"><span class="st">Invalidation ${tip('invalidation')}</span>
-            <span class="tx">Below ${f(stop)} the structure that produced this setup is gone. The position is
+            <span class="tx">Below the stop the structure that produced this setup is gone. The position is
               closed at that price — not re-argued, not averaged into, not widened.</span>
             <span class="px" style="color:var(--b-bear)">${f(stop)}</span></div>
         </div>
