@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T01:45:43",
+ "generated_at": "2026-09-11T02:06:12",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -192,7 +192,7 @@
    "ofs_cr": null,
    "face_value": 10.0,
    "anchor_cr": 219.89,
-   "listing_date": null,
+   "listing_date": "Sep 17, 2026",
    "gmp_text": "\u20b914 (10.07%)",
    "revenue_cr": 785.08,
    "revenue_growth_pct": 26.0,
@@ -223,7 +223,6 @@
     },
     "not_measured": [
      "fresh/OFS split",
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -311,6 +310,7 @@
    "verdict_caveat": "Retail allotment is likely, which in a weak book is not the advantage it sounds like.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/steamhouse-india-ipo/2514/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1337/steamhouse-india-ltd",
    "reads_for": [
     "Revenue grew 24% year on year.",
     "Return on net worth of 24% \u2014 well above the ~14% a typical listed peer earns."
@@ -335,19 +335,14 @@
    "issue_size_shares": 21772311.0,
    "issue_size_cr": 1255.57,
    "subscription_x": 3.3707126909954575,
-   "subscription_by_category": {
-    "QIB": 0.45,
-    "HNI": 11.62,
-    "Employee": 4.32,
-    "Total": 4.73
-   },
+   "subscription_by_category": null,
    "lot_size": 37.0,
    "min_investment": 14948.0,
    "fresh_issue_cr": 150.0,
    "ofs_cr": 1105.57,
    "face_value": 1.0,
    "anchor_cr": 376.07,
-   "listing_date": null,
+   "listing_date": "Sep 17, 2026",
    "gmp_text": "\u20b9135",
    "revenue_cr": 394.09,
    "revenue_growth_pct": 45.0,
@@ -377,7 +372,6 @@
      "Window": "4/15"
     },
     "not_measured": [
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -392,8 +386,6 @@
    "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/rentomojo-ipo/2971/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1327/rentomojo-ltd",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 45% year on year.",
     "Profit grew faster than revenue (142% against 45%), so margins widened rather than bought growth.",
@@ -1004,8 +996,6 @@
    "sector": "Hospital",
    "use_of_proceeds": "Funding inorganic growth through unidentified acquisition and General corporate purposes (\u20b938.55 Cr); Company Learning Centres and Company Learning Centres in partnership with Licensed\u2026 (\u20b926.88 Cr); Issue Expenses (\u20b916.20 Cr); and 7 other objects",
    "enriched_source": "chittorgarh.com",
-   "issue_size_cr": 125.0,
-   "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
    "reads_for": [
     "Return on net worth of 22% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.12 debt to equity, so the balance sheet is not a constraint.",
@@ -1081,24 +1071,6 @@
   }
  ],
  "recent_listed": [
-  {
-   "symbol": "DEEPA",
-   "company": "Deepa Jewellers Limited",
-   "price_band": "Rs.168 to Rs.177",
-   "close_date": "2026-09-03",
-   "listing_date": "2026-09-08",
-   "days_since_close": 8,
-   "measured": true,
-   "first_close": 194.37,
-   "last_close": 196.04,
-   "since_listing_pct": 0.9,
-   "from_high_pct": -11.7,
-   "high": 222.0,
-   "low": 193.0,
-   "months_listed": null,
-   "sessions": 3,
-   "measured_by": "yahoo"
-  },
   {
    "symbol": "PERNIASPOP",
    "company": "Purple Style Labs Limited",
@@ -3938,6 +3910,23 @@
    "measured_by": "yahoo"
   },
   {
+   "symbol": "DEEPA",
+   "company": "Deepa Jewellers Limited",
+   "price_band": "Rs.168 to Rs.177",
+   "close_date": "2026-09-03",
+   "listing_date": "2026-09-08",
+   "days_since_close": 8,
+   "measured": false,
+   "first_close": null,
+   "last_close": null,
+   "since_listing_pct": null,
+   "from_high_pct": null,
+   "high": null,
+   "low": null,
+   "months_listed": null,
+   "sessions": null
+  },
+  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -4046,7 +4035,7 @@
   "upcoming": 1,
   "awaiting": 2,
   "listed_12m": 166,
-  "listed_measured": 160,
+  "listed_measured": 159,
   "listed_via_screen": 24,
   "apply": 0,
   "avoid": 2
