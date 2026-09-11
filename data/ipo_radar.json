@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T11:06:31",
+ "generated_at": "2026-09-11T11:27:40",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -18,11 +18,11 @@
    "price_high": 339.0,
    "issue_size_shares": 13060472.0,
    "issue_size_cr": 805.0,
-   "subscription_x": 0.8673043363210763,
+   "subscription_x": 0.8707036009112075,
    "subscription_by_category": {
     "QIB": 1.26,
-    "HNI": 1.18,
-    "Total": 1.38
+    "HNI": 1.22,
+    "Total": 1.42
    },
    "lot_size": 44.0,
    "min_investment": 14916.0,
@@ -31,7 +31,7 @@
    "face_value": 2.0,
    "anchor_cr": 362.25,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b92",
+   "gmp_text": "\u20b90",
    "revenue_cr": 1356.59,
    "revenue_growth_pct": null,
    "pat_cr": 253.46,
@@ -100,11 +100,11 @@
    "price_high": 81.0,
    "issue_size_shares": 37636363.0,
    "issue_size_cr": 414.0,
-   "subscription_x": 17.69680269052565,
+   "subscription_x": 17.845908224447722,
    "subscription_by_category": {
-    "QIB": 25.81,
-    "HNI": 44.48,
-    "Total": 24.65
+    "QIB": 46.19,
+    "HNI": 46.59,
+    "Total": 32.02
    },
    "lot_size": 185.0,
    "min_investment": 14985.0,
@@ -113,7 +113,7 @@
    "face_value": 2.0,
    "anchor_cr": 124.2,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b922",
+   "gmp_text": "\u20b921",
    "revenue_cr": 494.97,
    "revenue_growth_pct": 24.0,
    "pat_cr": 38.64,
@@ -152,7 +152,7 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 17.7x, but the book is small (about Rs.414 Cr).",
+   "verdict_why": "Subscribed 17.8x, but the book is small (about Rs.414 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/steamhouse-india-ipo/2514/",
@@ -181,8 +181,12 @@
    "price_high": 254.0,
    "issue_size_shares": 25414937.0,
    "issue_size_cr": 875.0,
-   "subscription_x": 37.380387092834425,
-   "subscription_by_category": null,
+   "subscription_x": 37.49819006043572,
+   "subscription_by_category": {
+    "QIB": 168.19,
+    "HNI": 51.16,
+    "Total": 65.98
+   },
    "lot_size": 59.0,
    "min_investment": 14986.0,
    "fresh_issue_cr": 675.0,
@@ -190,7 +194,7 @@
    "face_value": 10.0,
    "anchor_cr": 262.5,
    "listing_date": null,
-   "gmp_text": "\u20b961",
+   "gmp_text": "\u20b965",
    "revenue_cr": 4316.36,
    "revenue_growth_pct": 36.0,
    "pat_cr": 228.75,
@@ -230,10 +234,12 @@
     ]
    },
    "verdict": "APPLY",
-   "verdict_why": "Subscribed 37.4x on a mainboard book of about Rs.875 Cr.",
+   "verdict_why": "Subscribed 37.5x on a mainboard book of about Rs.875 Cr.",
    "verdict_caveat": "Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1107/karamtara-engineering-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 36% year on year.",
     "Profit grew faster than revenue (64% against 36%), so margins widened rather than bought growth.",
@@ -259,11 +265,11 @@
    "price_high": 146.0,
    "issue_size_shares": 20927281.0,
    "issue_size_cr": 427.14,
-   "subscription_x": 34.44044412649689,
+   "subscription_x": 34.66574085759158,
    "subscription_by_category": {
-    "QIB": 39.2,
-    "HNI": 62.63,
-    "Total": 36.14
+    "QIB": 78.73,
+    "HNI": 64.9,
+    "Total": 49.52
    },
    "lot_size": 102.0,
    "min_investment": 14892.0,
@@ -272,7 +278,7 @@
    "face_value": 5.0,
    "anchor_cr": 128.14,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b955",
+   "gmp_text": "\u20b956",
    "revenue_cr": 3639.45,
    "revenue_growth_pct": 24.0,
    "pat_cr": 286.44,
@@ -311,7 +317,7 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 34.4x, but the book is small (about Rs.427 Cr).",
+   "verdict_why": "Subscribed 34.7x, but the book is small (about Rs.427 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/lcc-projects-ipo/2086/",
@@ -340,12 +346,12 @@
    "price_high": 404.0,
    "issue_size_shares": 21772311.0,
    "issue_size_cr": 1255.57,
-   "subscription_x": 55.04188172766777,
+   "subscription_x": 55.15164297441829,
    "subscription_by_category": {
-    "QIB": 149.22,
-    "HNI": 66.02,
-    "Employee": 19.06,
-    "Total": 63.62
+    "QIB": 177.29,
+    "HNI": 67.91,
+    "Employee": 20.97,
+    "Total": 72.85
    },
    "lot_size": 37.0,
    "min_investment": 14948.0,
@@ -354,7 +360,7 @@
    "face_value": 1.0,
    "anchor_cr": 376.07,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b9140",
+   "gmp_text": "\u20b9142",
    "revenue_cr": 394.09,
    "revenue_growth_pct": 45.0,
    "pat_cr": 104.3,
@@ -393,7 +399,7 @@
     ]
    },
    "verdict": "APPLY",
-   "verdict_why": "Subscribed 55.0x on a mainboard book of about Rs.1,256 Cr.",
+   "verdict_why": "Subscribed 55.2x on a mainboard book of about Rs.1,256 Cr.",
    "verdict_caveat": "Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/rentomojo-ipo/2971/",
@@ -424,8 +430,12 @@
    "price_high": 139.0,
    "issue_size_shares": 36912363.0,
    "issue_size_cr": 732.97,
-   "subscription_x": 12.08372696161446,
-   "subscription_by_category": null,
+   "subscription_x": 12.134145055953205,
+   "subscription_by_category": {
+    "QIB": 52.65,
+    "HNI": 15.67,
+    "Total": 20.08
+   },
    "lot_size": 107.0,
    "min_investment": 14873.0,
    "fresh_issue_cr": null,
@@ -433,7 +443,7 @@
    "face_value": 10.0,
    "anchor_cr": 219.89,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b911",
+   "gmp_text": "\u20b915",
    "revenue_cr": 785.08,
    "revenue_growth_pct": 26.0,
    "pat_cr": 407.84,
@@ -478,6 +488,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1331/asset-reconstruction-company",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 26% year on year."
    ],
@@ -498,11 +509,11 @@
    "price_high": 140.0,
    "issue_size_shares": 11307692.0,
    "issue_size_cr": 210.0,
-   "subscription_x": 0.8958891876432432,
+   "subscription_x": 0.9034876436323168,
    "subscription_by_category": {
     "QIB": 0.49,
-    "HNI": 0.93,
-    "Total": 1.16
+    "HNI": 1.0,
+    "Total": 1.23
    },
    "lot_size": 107.0,
    "min_investment": 14980.0,
@@ -579,11 +590,11 @@
    "price_high": 43.0,
    "issue_size_shares": 21386919.0,
    "issue_size_cr": 125.5,
-   "subscription_x": 0.9019200942407833,
+   "subscription_x": 0.9268319574221981,
    "subscription_by_category": {
-    "QIB": 0.0,
-    "HNI": 0.82,
-    "Total": 1.18
+    "QIB": 0.36,
+    "HNI": 1.25,
+    "Total": 1.48
    },
    "lot_size": 348.0,
    "min_investment": 14964.0,
@@ -735,7 +746,7 @@
    "price_low": 88.0,
    "price_high": 93.0,
    "issue_size_shares": 13428000.0,
-   "issue_size_cr": 124.9,
+   "issue_size_cr": 124.88,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 161.0,
@@ -789,6 +800,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
    "reads_for": null,
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."
@@ -929,11 +941,17 @@
    "ebitda_margin_pct": 11.3,
    "fy_label": "FY26",
    "sector": "Specialty Chemicals",
-   "use_of_proceeds": "Repayment and/ or pre-payment, in full or part, of certain borrowings availed by the\u2026 (\u20b960.00 Cr); Issue Expenses (\u20b921.95 Cr); General Corporate Purposes (\u20b916.39 Cr)",
+   "use_of_proceeds": "Repayment and/ or pre-payment, in full or part, of certain borrowings availed by the\u2026 (\u20b960.00 Cr); and 1 other object",
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
+   "subscription_by_category": {
+    "QIB": 7.59,
+    "HNI": 1.89,
+    "Total": 3.47
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
@@ -978,6 +996,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 351.03,
    "enriched_url": "https://www.chittorgarh.com/ipo/pranav-constructions-ipo/2127/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1329/pranav-constructions-ltd",
+   "subscription_by_category": {
+    "QIB": 268.54,
+    "HNI": 217.73,
+    "Total": 126.34
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 19.6x post-issue earnings against a 45x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 20% year on year.",
