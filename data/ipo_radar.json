@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T14:46:20",
+ "generated_at": "2026-09-11T15:08:20",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -31,7 +31,7 @@
    "face_value": 2.0,
    "anchor_cr": 362.25,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b90",
+   "gmp_text": "\u20b91",
    "revenue_cr": 1356.59,
    "revenue_growth_pct": null,
    "pat_cr": 253.46,
@@ -182,7 +182,11 @@
    "issue_size_shares": 36912363.0,
    "issue_size_cr": 732.97,
    "subscription_x": 12.152453610190168,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 52.65,
+    "HNI": 15.69,
+    "Total": 20.1
+   },
    "lot_size": 107.0,
    "min_investment": 14873.0,
    "fresh_issue_cr": null,
@@ -190,7 +194,7 @@
    "face_value": 10.0,
    "anchor_cr": 219.89,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b914 (10.07%)",
+   "gmp_text": "\u20b914",
    "revenue_cr": 785.08,
    "revenue_growth_pct": 26.0,
    "pat_cr": 407.84,
@@ -235,6 +239,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1331/asset-reconstruction-company",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 26% year on year."
    ],
@@ -256,7 +261,11 @@
    "issue_size_shares": 20927281.0,
    "issue_size_cr": 427.14,
    "subscription_x": 34.7254476107049,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 78.73,
+    "HNI": 64.91,
+    "Total": 49.57
+   },
    "lot_size": 102.0,
    "min_investment": 14892.0,
    "fresh_issue_cr": 258.0,
@@ -264,7 +273,7 @@
    "face_value": 5.0,
    "anchor_cr": 128.14,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b971 (48.63%)",
+   "gmp_text": "\u20b968",
    "revenue_cr": 3639.45,
    "revenue_growth_pct": 24.0,
    "pat_cr": 286.44,
@@ -307,6 +316,8 @@
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/lcc-projects-ipo/2086/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1333/lcc-projects-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 24% year on year.",
     "Profit grew faster than revenue (28% against 24%), so margins widened rather than bought growth.",
@@ -344,7 +355,7 @@
    "face_value": 1.0,
    "anchor_cr": 376.07,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b9141",
+   "gmp_text": "\u20b9148",
    "revenue_cr": 394.09,
    "revenue_growth_pct": 45.0,
    "pat_cr": 104.3,
@@ -502,7 +513,7 @@
    "subscription_by_category": {
     "QIB": 0.49,
     "HNI": 1.01,
-    "Total": 1.25
+    "Total": 1.26
    },
    "lot_size": 107.0,
    "min_investment": 14980.0,
@@ -670,7 +681,7 @@
    "face_value": 10.0,
    "anchor_cr": null,
    "listing_date": "Sep 23, 2026",
-   "gmp_text": "\u20b98 (9.52%)",
+   "gmp_text": "\u20b913 (15.48%)",
    "revenue_cr": 1216.74,
    "revenue_growth_pct": 9.0,
    "pat_cr": 41.17,
@@ -735,7 +746,7 @@
    "price_low": 88.0,
    "price_high": 93.0,
    "issue_size_shares": 13428000.0,
-   "issue_size_cr": 124.9,
+   "issue_size_cr": 124.88,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 161.0,
@@ -788,6 +799,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
    "reads_for": null,
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."
@@ -1017,7 +1029,7 @@
    "ofs_cr": 755.74,
    "face_value": 2.0,
    "anchor_cr": 316.72,
-   "gmp_text": "\u20b9240 (37.97%)",
+   "gmp_text": "\u20b9240",
    "revenue_cr": 662.86,
    "revenue_growth_pct": 45.0,
    "pat_cr": 129.73,
@@ -1083,6 +1095,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
+   "subscription_by_category": {
+    "QIB": 7.59,
+    "HNI": 1.89,
+    "Total": 3.47
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
