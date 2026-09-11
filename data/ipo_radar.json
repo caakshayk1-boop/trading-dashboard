@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T17:46:45",
+ "generated_at": "2026-09-11T18:06:35",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -660,7 +660,7 @@
    "price_low": 79.0,
    "price_high": 84.0,
    "issue_size_shares": 126582278.0,
-   "issue_size_cr": 1000.0,
+   "issue_size_cr": 1063.3,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 178.0,
@@ -713,7 +713,6 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/hero-motors-ipo/2225/",
    "reads_for": [
     "Profit grew faster than revenue (26% against 9%), so margins widened rather than bought growth."
    ],
@@ -735,7 +734,7 @@
    "price_low": 88.0,
    "price_high": 93.0,
    "issue_size_shares": 13428000.0,
-   "issue_size_cr": 124.9,
+   "issue_size_cr": 124.88,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 161.0,
@@ -788,6 +787,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
    "reads_for": null,
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."
@@ -1087,15 +1087,6 @@
    "sector": "Specialty Chemicals",
    "use_of_proceeds": "Repayment and/ or pre-payment, in full or part, of certain borrowings availed by the\u2026 (\u20b960.00 Cr); Issue Expenses (\u20b921.95 Cr); General Corporate Purposes (\u20b916.39 Cr)",
    "enriched_source": "chittorgarh.com",
-   "issue_size_cr": 500.0,
-   "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
-   "subscription_by_category": {
-    "QIB": 7.59,
-    "HNI": 1.89,
-    "Total": 3.47
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
@@ -1119,7 +1110,7 @@
    "ofs_cr": 35.43,
    "face_value": 10.0,
    "anchor_cr": 84.25,
-   "gmp_text": "\u20b944",
+   "gmp_text": "\u20b949",
    "revenue_cr": 763.93,
    "revenue_growth_pct": 20.0,
    "pat_cr": 71.32,
@@ -1141,6 +1132,12 @@
    "issue_size_cr": 351.03,
    "enriched_url": "https://www.chittorgarh.com/ipo/pranav-constructions-ipo/2127/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1329/pranav-constructions-ltd",
+   "subscription_by_category": {
+    "QIB": 268.54,
+    "HNI": 217.73,
+    "Total": 126.34
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 19.6x post-issue earnings against a 45x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 20% year on year.",
