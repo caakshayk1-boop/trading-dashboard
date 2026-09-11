@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T16:28:33",
+ "generated_at": "2026-09-11T16:46:23",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -182,11 +182,7 @@
    "issue_size_shares": 36912363.0,
    "issue_size_cr": 732.97,
    "subscription_x": 12.152453610190168,
-   "subscription_by_category": {
-    "QIB": 52.65,
-    "HNI": 15.69,
-    "Total": 20.1
-   },
+   "subscription_by_category": null,
    "lot_size": 107.0,
    "min_investment": 14873.0,
    "fresh_issue_cr": null,
@@ -239,7 +235,6 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1331/asset-reconstruction-company",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 26% year on year."
    ],
@@ -261,11 +256,7 @@
    "issue_size_shares": 20927281.0,
    "issue_size_cr": 427.14,
    "subscription_x": 34.7254476107049,
-   "subscription_by_category": {
-    "QIB": 78.73,
-    "HNI": 64.91,
-    "Total": 49.57
-   },
+   "subscription_by_category": null,
    "lot_size": 102.0,
    "min_investment": 14892.0,
    "fresh_issue_cr": 258.0,
@@ -273,7 +264,7 @@
    "face_value": 5.0,
    "anchor_cr": 128.14,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b978",
+   "gmp_text": "\u20b968 (46.58%)",
    "revenue_cr": 3639.45,
    "revenue_growth_pct": 24.0,
    "pat_cr": 286.44,
@@ -316,8 +307,6 @@
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/lcc-projects-ipo/2086/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1333/lcc-projects-ltd",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 24% year on year.",
     "Profit grew faster than revenue (28% against 24%), so margins widened rather than bought growth.",
@@ -820,7 +809,7 @@
    "price_low": 403.0,
    "price_high": 424.0,
    "issue_size_shares": 12426638.0,
-   "issue_size_cr": 500.0,
+   "issue_size_cr": 526.9,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 35.0,
@@ -874,7 +863,6 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/ss-retail-ipo/2822/",
    "reads_for": [
     "Revenue grew 47% year on year.",
     "Profit grew faster than revenue (49% against 47%), so margins widened rather than bought growth.",
@@ -1103,12 +1091,6 @@
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
-   "subscription_by_category": {
-    "QIB": 7.59,
-    "HNI": 1.89,
-    "Total": 3.47
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
@@ -1154,12 +1136,6 @@
    "issue_size_cr": 351.03,
    "enriched_url": "https://www.chittorgarh.com/ipo/pranav-constructions-ipo/2127/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1329/pranav-constructions-ltd",
-   "subscription_by_category": {
-    "QIB": 268.54,
-    "HNI": 217.73,
-    "Total": 126.34
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 19.6x post-issue earnings against a 45x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 20% year on year.",
@@ -1203,12 +1179,6 @@
    "issue_size_cr": 125.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1313/rays-of-belief-ltd",
-   "subscription_by_category": {
-    "QIB": 9.06,
-    "HNI": 279.11,
-    "Total": 107.71
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 22% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.12 debt to equity, so the balance sheet is not a constraint.",

@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T002248",
+ "build_id": "20260912T004305",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -435,7 +435,7 @@
    "sector": "Energy"
   },
   "BRNUSD": {
-   "price": 105.16,
+   "price": 105.04,
    "sector": ""
   },
   "CAPLIPOINT": {
@@ -479,7 +479,7 @@
    "sector": "Technology"
   },
   "COIN": {
-   "price": 177.73,
+   "price": 177.8999,
    "sector": ""
   },
   "CPPLUS": {
@@ -495,7 +495,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 248.945,
+   "price": 249.2,
    "sector": "Technology"
   },
   "CUPID": {
@@ -503,7 +503,7 @@
    "sector": "Consumer Defensive"
   },
   "DUOL": {
-   "price": 145.34,
+   "price": 144.97,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -619,7 +619,7 @@
    "sector": "Financial Services"
   },
   "MRK": {
-   "price": 145.1051,
+   "price": 145.255,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -631,7 +631,7 @@
    "sector": "Basic Materials"
   },
   "NEM": {
-   "price": 126.265,
+   "price": 126.6016,
    "sector": "Basic Materials"
   },
   "NEULANDLAB": {
@@ -1333,13 +1333,32 @@
   },
   "smart_reads": [
    {
+    "source": "The Economist",
+    "cat": "money",
+    "title": "Surging bonds yields presage pain\u2014and not just for bond investors",
+    "link": "https://www.economist.com/finance-and-economics/2026/09/11/surging-bonds-yields-presage-pain-and-not-just-for-bond-investors",
+    "summary": "Stubborn inflation, corporate demand for capital and big public debts are squeezing holders of government bonds",
+    "date": "Sep 11, 2026",
+    "_sort": "2026-09-11T16:02:32+00:00"
+   },
+   {
     "source": "Livemint",
     "cat": "money",
     "title": "SWP: Here's how to generate  \u20b950,000 per month as steady income while keeping your corpus invested",
     "link": "https://www.livemint.com/money/personal-finance/swp-systematic-withdrawal-plan-how-much-investment-gives-rs-50000-per-month-steady-income-mutual-funds-retirement-corpus-11789136620335.html",
     "summary": "Today, we explain how much you would have to invest in a systematic withdrawal plan (SWP) in order to receive  \u20b950,000 per month as steady income after retirement, while keeping your corpus invested.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T15:55:15+00:00"
+    "_sort": "2026-09-11T15:55:15+00:00",
+    "smart": {
+     "what_happened": [
+      "The article explains how much capital must be invested in a systematic withdrawal plan to generate \u20b950,000 per month as steady income after retirement.",
+      "It notes that the corpus remains invested while providing the monthly income."
+     ],
+     "why_it_matters": "Understanding the required investment for a \u20b950,000 monthly systematic withdrawal plan helps retirees gauge whether their savings are sufficient to fund a predictable income stream without depleting the underlying corpus, which is crucial for long\u2011term financial security.",
+     "what_to_watch": "Track the actual monthly withdrawal amount of \u20b950,000 to ensure the plan continues to meet the target income.",
+     "headline": "Investment needed for \u20b950,000 monthly SWP after retirement",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Economic Times",
@@ -1351,32 +1370,13 @@
     "_sort": "2026-09-11T10:16:19+00:00",
     "smart": {
      "what_happened": [
-      "A Rs 2.5 crore retirement fund is being structured to provide Rs 2 lakh per month for 25 years.",
-      "The strategy calls for a conservative withdrawal rate below the fund's annual returns and gradual increases using a fixed percentage."
+      "A Rs 2.5 crore retirement corpus can generate Rs 2 lakh per month for 25 years.",
+      "A conservative withdrawal rate lower than annual returns and gradual increases based on a fixed percentage are recommended."
      ],
-     "why_it_matters": "Ensuring that withdrawals remain lower than the portfolio's earnings helps preserve the corpus over a 25\u2011year horizon, reducing the risk of outliving savings and providing retirees with a predictable cash flow for long\u2011term financial security.",
-     "what_to_watch": "Monitor the actual annual return of the retirement fund versus the withdrawal rate to confirm the corpus remains sustainable over the planned period.",
-     "headline": "Retirement plan targets Rs 2 lakh monthly from Rs 2.5 crore corpus",
+     "why_it_matters": "Ensuring that withdrawal amounts stay below the portfolio's expected returns helps preserve the retirement fund over a long horizon, reducing the risk of depletion and providing financial security throughout the retirees' later years.",
+     "what_to_watch": "Monitor the actual annual return of the retirement portfolio against the planned withdrawal rate to confirm sustainability.",
+     "headline": "Retirees aim for Rs 2 lakh monthly from Rs 2.5 crore fund",
      "read_seconds": 26
-    }
-   },
-   {
-    "source": "Livemint Opinion",
-    "cat": "money",
-    "title": "Mint Quick Edit | India's gush of mutual fund inflows: retail investors are confident for good reason",
-    "link": "https://www.livemint.com/opinion/online-views/mint-quick-edit-india-mutual-fund-inflows-retail-investors-confident-for-good-reason-amfi-11789049885487.html",
-    "summary": "Mutual fund inflow data for August reflects a steadfast bet on India\u2019s equity market breaking out of its directionless phase. The economy\u2019s performance and the return of foreign investors justify optimism. Will stock indices resume their ascent?",
-    "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T01:30:56+00:00",
-    "smart": {
-     "what_happened": [
-      "Mutual fund inflow data for August showed a net increase, indicating continued investment in Indian equities.",
-      "The rise coincided with strong domestic economic performance and a return of foreign investors to the market."
-     ],
-     "why_it_matters": "The inflow surge signals that both retail and foreign investors are betting on a breakout from the recent directionless phase in Indian equity markets, which could support higher stock prices and reinforce confidence in the economy's growth trajectory.",
-     "what_to_watch": "Track the net mutual fund inflow figures for September to see if the upward trend persists.",
-     "headline": "India mutual fund inflows rise in August as retail confidence grows",
-     "read_seconds": 20
     }
    },
    {
@@ -1398,12 +1398,12 @@
     "_sort": "2026-09-10T20:07:20+00:00",
     "smart": {
      "what_happened": [
-      "Some doctors and influencers say women shouldn\u2019t wait until their 60s for a DEXA scan.",
-      "The article discusses considerations before getting a bone density test."
+      "Some doctors and influencers say women should not wait until their 60s for a DEXA scan.",
+      "They suggest considering a bone density test before or during menopause."
      ],
-     "why_it_matters": "Early bone density testing can identify osteoporosis risk sooner, allowing timely preventive or therapeutic measures, which may reduce fracture risk and associated healthcare costs for women approaching menopause.",
-     "what_to_watch": "Watch for updated clinical guidelines on the recommended age or risk factors for initiating DEXA scans in menopausal women.",
-     "headline": "Doctors advise women not to wait until 60s for DEXA scan",
+     "why_it_matters": "Identifying low bone density earlier can allow timely intervention to prevent osteoporosis-related fractures, which become more common as women age.",
+     "what_to_watch": "Any updated recommendations from major medical societies on the appropriate age or menopausal stage for initiating DEXA screening.",
+     "headline": "Doctors advise earlier DEXA scans for women approaching menopause",
      "read_seconds": 20
     }
    },
@@ -1417,12 +1417,12 @@
     "_sort": "2026-09-10T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article argues that impatience is an emotion rather than a personality trait.",
-      "It references Penelope\u2019s wait in The Odyssey to illustrate the point."
+      "Amy Arthur argues that impatience is an emotional response, not a fixed personality characteristic.",
+      "She references Penelope's wait in The Odyssey to illustrate how perceptions of impatience can be reframed."
      ],
-     "why_it_matters": "The piece challenges the common framing of impatience as a fixed characteristic, suggesting that re\u2011labeling it as an emotion could alter how individuals understand and manage the feeling, which has implications for personal development and psychological discourse.",
-     "what_to_watch": "Monitor future Psyche publications for follow\u2011up discussions on emotion versus trait classifications.",
-     "headline": "Impatience described as emotion not trait",
+     "why_it_matters": "Understanding impatience as an emotion rather than an inherent trait can influence how individuals and organizations address it, potentially leading to more effective strategies for managing stress, improving decision\u2011making, and fostering better interpersonal dynamics in professional settings.",
+     "what_to_watch": "Future articles or research from Psyche that explore emotional regulation techniques and their impact on workplace productivity.",
+     "headline": "Impatience described as an emotion rather than a trait",
      "read_seconds": 20
     }
    },
@@ -1472,7 +1472,7 @@
     "moves": 49,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 1.e4 e5\u202f2.Nf3 d6, develop the bishop to\u202fBg4\u202finstead of\u202fBe7, pressuring\u202fNf3\u202fand preventing White\u2019s quick central expansion.Focus on early piece activity: after\u202f1.e4\u202fe5\u202f2.Nf3\u202fd6, develop the bishop to\u202fBg4\u202finstead of\u202fBe7, pressuring\u202fNf3\u202fand preventing White\u2019s quick central expansion.",
+    "analysis": "Increase your endgame precision: convert the drawn rook\u2011and\u2011pawn ending by mastering opposition and king\u2011activation; aim for +0.5\u202fELO.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1578,7 +1578,7 @@
     "moves": 25,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central control: after 1.e4 d6 2.d4 Nf6 3.Nc3 g6, play 4.Nf3 instead of 4.Bc4; you\u2019ll avoid losing a pawn by move\u202f12 and keep a solid 0.5\u202fpawn advantage.",
+    "analysis": "Focus on early king safety: stop castling queenside after 9\u2026Nd7; instead, develop knights, play\u202fc3,\u202fRe1, and castle short by move\u202f12 to avoid the decisive back\u2011rank attack.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1611,7 +1611,7 @@
     "moves": 35,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 7\u2026Nf6, avoid 9\u2026g5\u2011g4 pawn storms; instead develop pieces, castle, and keep the center solid (\u2264\u202f3\u202f% pawn\u2011storm errors). This prevents the decisive mating attack.",
+    "analysis": "Focus on early pawn structure: after 1.e4 e6 2.d4 d5, avoid 3.Nc3\u202fBb4?; instead play 3...Nf6 or 3...c5 to challenge the center and prevent a quick queen\u2011side attack.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1645,7 +1645,7 @@
     "moves": 26,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 6\u2026Nf6, avoid 7.Qd3?; instead develop knights/bishops, castle by move\u202f10 to prevent the decisive 22\u2026Qh4#.",
+    "analysis": "Focus on early piece development: within the first 8 moves, place both knights and bishops on active squares and castle, avoiding queen\u2011side pawn pushes that left your king exposed. This alone would have reduced the mate threat dramatically.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1678,7 +1678,7 @@
     "moves": 21,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before queen (e.g., Nf3, Nc3 by move\u202f4) to avoid queen\u2011side tempo losses and reduce opponent\u2019s counter\u2011play.",
+    "analysis": "Focus on early piece coordination: develop knights before moving the queen; aim to castle by move\u202f8 to reduce queen\u2011side exposure and improve safety.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1767,14 +1767,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your 20\u202f% win rate shows you\u2019re barely scraping by; you\u2019re playing too passively and letting opponents dictate the tempo. Stop opening with the generic D00 Queen\u2019s Pawn Game\u2014its 50\u202f% success rate is a symptom of indecision, not a strength, and you need a sharper, theory\u2011backed repertoire (e.g., the London System or a solid Slav). From now on, study one opening line deeply, practice the resulting middlegame plans, and force every game into positions where you\u2019re the one setting the agenda.",
+   "session_summary": "Your play is stagnant\u201420\u202f% wins across five games proves you can\u2019t convert even the simplest positions, and the fact that both your \u201cbest\u201d and \u201cworst\u201d openings are the same 50\u202f% D00 line shows you never deviate from a mediocre repertoire. Stop relying on generic queen\u2011pawn setups; study a concrete anti\u2011Sicilian or a solid King\u2019s Indian setup and drill the first 10\u201112 moves until they\u2019re second nature. From now on, schedule three focused training sessions per week: one on opening theory, one on tactical pattern recognition, and one on endgame fundamentals, and measure progress by forcing at least a 40\u202f% win rate in your next ten games.",
    "session_date": "2026-09-10",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1952,
+   "rating": 1965,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
