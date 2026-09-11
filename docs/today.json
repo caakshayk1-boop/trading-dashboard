@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T070232",
+ "build_id": "20260912T072242",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -1351,12 +1351,12 @@
     "_sort": "2026-09-11T18:40:10+00:00",
     "smart": {
      "what_happened": [
-      "The Digital Credit & Inclusion Index 2026 reported Tier-2 cities posted an average score of 58.64.",
-      "That score placed Tier-2 cities ahead of both Tier-1 and Tier-3 cities."
+      "Tier\u20112 cities have an average Digital Credit & Inclusion Index score of 58.64, ahead of Tier\u20111 and Tier\u20113 cities.",
+      "The Digital Credit & Inclusion Index 2026 was produced by Pahl\u00e9 India Foundation and Amazon Pay."
      ],
-     "why_it_matters": "The finding highlights that digital lending is expanding beyond India's largest metros, suggesting that a growing share of borrowers in smaller urban areas are accessing credit through digital platforms. This could broaden financial inclusion, reshape lender strategies, and influence the allocation of fintech resources toward Tier-2 markets.",
-     "what_to_watch": "Track the quarterly digital loan disbursement volumes reported for Tier-2 cities by major fintech providers.",
-     "headline": "Tier-2 cities lead digital credit inclusion in India, index shows",
+     "why_it_matters": "The higher score for Tier\u20112 cities indicates that borrowers in these mid\u2011size urban areas are adopting digital credit solutions more rapidly than those in larger Tier\u20111 metros or smaller Tier\u20113 towns, suggesting a shift in the geographic focus of financial inclusion efforts and potential growth opportunities for fintech providers targeting this segment.",
+     "what_to_watch": "The next release of the Digital Credit & Inclusion Index for 2027 to see if Tier\u20112 cities maintain their lead.",
+     "headline": "Tier\u20112 Indian cities lead digital credit inclusion, index shows",
      "read_seconds": 20
     }
    },
@@ -1367,7 +1367,17 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00"
+    "_sort": "2026-09-11T17:37:38+00:00",
+    "smart": {
+     "what_happened": [
+      "A new survey reported that eight out of ten Americans were using vitamins, protein powders or other supplements.",
+      "Experts responded that there is little evidence supporting the benefits of many of these products."
+     ],
+     "why_it_matters": "The high prevalence of supplement use indicates significant consumer spending on products whose health benefits are not well\u2011validated, raising concerns for public health outcomes and potential regulatory scrutiny.",
+     "what_to_watch": "Watch for any forthcoming FDA guidance or studies evaluating the efficacy of popular dietary supplements.",
+     "headline": "Survey finds 8 in 10 Americans taking supplements",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Economist",
@@ -1406,6 +1416,15 @@
     "_sort": "2026-09-10T09:50:00+00:00"
    },
    {
+    "source": "Ness Labs",
+    "cat": "habits",
+    "title": "Never forget what matters with Dr David Urbansky, founder of Linkflare",
+    "link": "https://nesslabs.com/linkflare-featured-tool?utm_source=rss&utm_medium=rss&utm_campaign=linkflare-featured-tool",
+    "summary": "FEATURED TOOL Welcome to this edition of our Tools for Thought series, where we interview founders on a mission to help us think better and work smarter. Dr David Urbansky is the founder of Linkflare, a universal bookmark manager that helps you save links, read distraction-free, and never forget the information that ma",
+    "date": "Sep 08, 2026",
+    "_sort": "2026-09-08T09:45:00+00:00"
+   },
+   {
     "source": "Peter Attia",
     "cat": "health",
     "title": "Blood pressure: how to measure, manage, and treat high blood pressure (AMA #48 rebroadcast)",
@@ -1413,15 +1432,6 @@
     "summary": "In this \u201cAsk Me Anything\u201d (AMA) episode, Peter delves into the critical subject of blood pressure, which is one of the three primary causes of atherosclerosis, along with high apoB and smoking. He begins by unraveling the nature of high blood pressure, its prevalence, and why it often goes undiagnosed. Peter describes ",
     "date": "Sep 07, 2026",
     "_sort": "2026-09-07T04:15:00+00:00"
-   },
-   {
-    "source": "Scott Young",
-    "cat": "habits",
-    "title": "We Need Guidelines for Learning and AI",
-    "link": "https://www.scotthyoung.com/blog/2026/07/22/we-need-guidelines-for-learning-and-ai/",
-    "summary": "A lot of ink is being spilled about the effects AI is having on learning and education. The drawbacks are obvious. For many classroom assignments, AI is now good enough that it can simply do your homework for you. But having AI do your homework is self-defeating. You can\u2019t learn without doing the work. That [&#8230;]\nT",
-    "date": "Jul 22, 2026",
-    "_sort": "2026-07-22T13:47:37+00:00"
    }
   ],
   "lichess_games": [
@@ -1442,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king\u2011side development: finish Nf6, e6, Bd6, then castle by move\u202f8 to avoid losing tempo and exposure.",
+    "analysis": "Focus on early pawn structure: after 1\u2026d5\u202f2.c4\u202fc6, you let White seize central space. Play 2\u2026e6 or 2\u2026Nf6 to contest d4, preventing the isolated queen\u2019s pawn that later cost you material.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1604,14 +1614,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your opening choices are leaving you defenseless\u2014every game you play you\u2019re already a step behind, and the stats prove it. Stop flailing with \u201c.\u201d and study a single, solid repertoire (e.g., Caro\u2011Kann for black, London System for white) until you can execute it without thinking. Spend the next 20 hours on basic tactics puzzles and endgame fundamentals; until you can convert a simple material advantage, you\u2019ll keep feeding the loss column.",
+   "session_summary": "",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1931,
+   "rating": 1907,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
