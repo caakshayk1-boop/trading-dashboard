@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-BNz-cwKtkclmEsTUCKFGPw'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-ZPY9Un9KHPJGXU1fgG6Lgg'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="BNz-cwKtkclmEsTUCKFGPw">
+<script nonce="ZPY9Un9KHPJGXU1fgG6Lgg">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="BNz-cwKtkclmEsTUCKFGPw">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-09-11","dateModified":"2026-09-11T21:03:00.339275+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="ZPY9Un9KHPJGXU1fgG6Lgg">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-09-11","dateModified":"2026-09-11T21:22:50.851792+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -5090,7 +5090,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Friday, September 11 2026</span>
-      <span class="live" id="istClock"><i></i>21:03 MYT</span>
+      <span class="live" id="istClock"><i></i>21:22 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -5196,7 +5196,7 @@ table.t tbody tr:hover{background:var(--surface2)}
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260911T210300">
+<div class="editionbar" id="editionbar" data-build="20260911T212250">
   
   
   <span class="ed-txt">
@@ -5250,15 +5250,15 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4420.0</span>
-      <span class="c up">▲ +1.27%</span>
+      <span class="p">$4424.0</span>
+      <span class="c up">▲ +1.36%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$99.32</span>
-      <span class="c dn">▼ -3.08%</span>
+      <span class="p">$99.11</span>
+      <span class="c dn">▼ -3.29%</span>
     </div>
     
     
@@ -5271,8 +5271,8 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$77761</span>
-      <span class="c up">▲ +1.56%</span>
+      <span class="p">$77785</span>
+      <span class="c up">▲ +1.59%</span>
     </div>
     
     
@@ -5308,15 +5308,15 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4420.0</span>
-      <span class="c up">▲ +1.27%</span>
+      <span class="p">$4424.0</span>
+      <span class="c up">▲ +1.36%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$99.32</span>
-      <span class="c dn">▼ -3.08%</span>
+      <span class="p">$99.11</span>
+      <span class="c dn">▼ -3.29%</span>
     </div>
     
     
@@ -5329,8 +5329,8 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$77761</span>
-      <span class="c up">▲ +1.56%</span>
+      <span class="p">$77785</span>
+      <span class="c up">▲ +1.59%</span>
     </div>
     
     
@@ -5560,7 +5560,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         Risk appetite across 8 instruments,
         weighted by move size. Moved most by
         <b class="up">Gold
-          +1.27%</b> and <b class="up">USD/INR
+          +1.36%</b> and <b class="up">USD/INR
           +0.45%</b>.
         
         50 is neutral; risk assets push up, havens push down.
@@ -5582,7 +5582,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <li class="sixty-r">
           <a href="#marketintel">
             <span class="sixty-i">01</span>
-            <span class="sixty-x">Gold +1.27% while 4 of 5 risk assets fell</span>
+            <span class="sixty-x">Gold +1.36% while 4 of 5 risk assets fell</span>
             <span class="mc-basis mb-fact">FACT</span>
           </a>
         </li>
@@ -5590,7 +5590,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <li class="sixty-r">
           <a href="#world">
             <span class="sixty-i">02</span>
-            <span class="sixty-x">BTC +1.56% — the day's strongest risk asset</span>
+            <span class="sixty-x">BTC +1.59% — the day's strongest risk asset</span>
             <span class="mc-basis mb-fact">FACT</span>
           </a>
         </li>
@@ -5660,7 +5660,7 @@ table.t tbody tr:hover{background:var(--surface2)}
             
             <span class="mc-basis mb-fact">FACT</span>
           </div>
-          <h3 class="mc-head">Gold +1.27% while 4 of 5 risk assets fell</h3>
+          <h3 class="mc-head">Gold +1.36% while 4 of 5 risk assets fell</h3>
           <p class="mc-why">A haven bid against a soft tape is what pushes the regime reading down. It sits at 16/100 — risk-off.</p>
           
           <p class="mc-unless"><span>Unless</span>Risk assets recovering while the haven bid holds turns this into a liquidity story rather than a risk one.</p>
@@ -5672,7 +5672,7 @@ table.t tbody tr:hover{background:var(--surface2)}
             
             <span class="mc-basis mb-fact">FACT</span>
           </div>
-          <h3 class="mc-head">BTC +1.56% — the day's strongest risk asset</h3>
+          <h3 class="mc-head">BTC +1.59% — the day's strongest risk asset</h3>
           <p class="mc-why">3 of 8 priced instruments advanced. Breadth is what separates a move from a rotation.</p>
           
           <p class="mc-unless"><span>Unless</span>Breadth under half the board would make this one name moving, not momentum.</p>
@@ -5745,7 +5745,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">01 / MARKET INTEL</span> 
-<span class="dh dh-FRESH" title="Market Intelligence · 13h old.">FRESH<span class="dh-age">13h old</span></span>
+<span class="dh dh-FRESH" title="Market Intelligence · 14h old.">FRESH<span class="dh-age">14h old</span></span>
       <h2 class="stitle">What moved the tape today</h2>
     </div>
     <p class="sdesc">Sector heat, FII/DII net flow, and every corporate action NSE published —
@@ -7122,7 +7122,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">02 / TRADE IDEAS</span> 
-<span class="dh dh-LIVE" title="Trade ideas · 4 min old.">LIVE<span class="dh-age">4 min old</span></span>
+<span class="dh dh-LIVE" title="Trade ideas · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">Top 5 trade ideas</h2>
     </div>
     <p class="sdesc">Global 200 universe — India, US, global. Scored, ranked, refreshed weekly.
@@ -7959,7 +7959,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">03 / WORLD</span> 
-<span class="dh dh-LIVE" title="World news · 4 min old.">LIVE<span class="dh-age">4 min old</span></span>
+<span class="dh dh-LIVE" title="World news · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">The world, last 24h</h2>
     </div>
     <p class="sdesc" id="worldDesc">Wires only. Deduplicated, ranked, and cut to what
@@ -7982,35 +7982,35 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">Economic Times · LEAD</span>
-        <h2><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/us-consumer-inflation-picks-up-in-august-up-3-4-yoy/articleshow/134068712.cms" target="_blank">US consumer inflation picks up in August, up 3.4% YoY</a></h2>
-        <p>In August, consumer prices in the U.S. surged, mainly due to increasing gasoline prices. This trend elevates the likelihood of an interest rate hike by the Federal Reserve, with economists predicting a monthly rise in the consumer price index of 0.4%. When excluding food and energy, the core consumer price index saw a 0.3% rise, leading to a market expectation of a 70% chance for a 25-basis-point </p>
-        <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/us-consumer-inflation-picks-up-in-august-up-3-4-yoy/articleshow/134068712.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
+        <h2><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/us-diesel-prices-soar-past-6-a-gallon-deepening-strain-for-hauling-everyday-goods/articleshow/134069226.cms" target="_blank">US diesel prices soar past $6 a gallon, deepening strain for hauling everyday goods</a></h2>
+        <p>In the U.S., diesel prices have soared to unprecedented levels, surpassing six dollars a gallon. This spike is primarily caused by tensions between Washington and Iran, which have disrupted global fuel supplies. As a result, transportation costs for essential goods are on the rise, impacting consumers with higher fees on online purchases. Additionally, the conflict has driven crude oil prices over</p>
+        <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/us-diesel-prices-soar-past-6-a-gallon-deepening-strain-for-hauling-everyday-goods/articleshow/134069226.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
       </div>
       <div class="lead-s">
         
         
         <div class="mini">
           <span class="s">ET Economy</span>
-          <a href="https://economictimes.indiatimes.com/news/economy/finance/credit-savings-insurance-next-frontiers-in-financial-services-rbi-dg/articleshow/134066117.cms" target="_blank">Credit, savings, insurance next frontiers in financial services: RBI DG</a>
-          <p class="mini-s">RBI deputy governor Shirish Chandra Murmu highlighted extending digital payment success to credit and insurance. Technology must e&hellip;</p>
+          <a href="https://economictimes.indiatimes.com/news/economy/foreign-trade/bold-leap-for-two-economic-powerhouses-eu-ambassador-designate-hails-india-fta-moving-one-step-closer-to-finish-line/articleshow/134067362.cms" target="_blank">'Bold leap for two economic powerhouses': EU Ambassador designate hails India FTA moving one step closer to finish line</a>
+          <p class="mini-s">The India-EU Free Trade Agreement has moved closer to final approval. The European Commission presented the agreement for approval&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">Livemint</span>
-          <a href="https://www.livemint.com/market/stock-market-news/small-cap-stock-exporter-of-stainless-steel-washers-entering-electronic-materials-space-choice-says-buy-target-price-11789129722898.html" target="_blank">Small cap stock: Exporter of stainless-steel washers entering electronic materials space - Choice says buy; target price</a>
-          <p class="mini-s">Shares of Ratnaveer Precision Engineering ended 7% lower after a rally. Analysts foresee a 27.8% upside, bolstered by a recent rig&hellip;</p>
+          <a href="https://www.livemint.com/market/stock-market-news/9day-upper-circuit-multibagger-small-cap-stock-surges-over-55-in-september-despite-weak-market-11789130057563.html" target="_blank">9-day upper circuit: Multibagger small-cap stock surges 55% in September despite weak market</a>
+          <p class="mini-s">Spice Lounge Food Works defied market trends with a 55.5% return in September, locking in a 5% upper circuit for nine sessions. Th&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">BusinessLine</span>
-          <a href="https://www.thehindubusinessline.com/markets/mse-facilitates-indias-first-tokenised-corporate-bond-under-sebis-demat-20-pilot/article71456088.ece" target="_blank">MSE facilitates India’s first tokenised corporate bond under SEBI’s Demat 2.0 pilot</a>
-          <p class="mini-s">Bond issued by IIFL Finance Ltd through MSE’s Electronic Bond Platform, with Trust Investment Advisors Pvt Ltd serving as arranger</p>
+          <a href="https://www.thehindubusinessline.com/markets/sbicap-securities-ties-up-with-appreciate-to-offer-indian-investors-access-to-8000-global-stocks/article71456078.ece" target="_blank">SBICAP Securities ties up with Appreciate to offer Indian investors access to 8,000+ global stocks</a>
+          <p class="mini-s">The partnership makes SBICAP Securities one of the few platforms in India to offer access through both GIFT City-based Global Acce&hellip;</p>
         </div>
         
         <div class="mini">
           <span class="s">Bloomberg</span>
           <a href="https://www.bloomberg.com/news/articles/2026-09-10/stock-market-today-dow-s-p-live-updates" target="_blank">Stocks, Bonds Rise as Oil Drop Outweighs CPI Data: Markets Wrap</a>
-          <p class="mini-s">A decline in oil prices spurred gains in both stocks and bonds, outweighing concern about imminent Federal Reserve rate increases &hellip;</p>
+          <p class="mini-s">The final stretch of a jittery week on Wall Street saw stocks and bonds rising, with a drop in oil prices outweighing concerns abo&hellip;</p>
         </div>
         
         <div class="mini">
@@ -8027,7 +8027,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <div class="ncard rv" style="--d:0.0s">
         <span class="s">WSJ Markets</span>
         <h3><a href="https://www.wsj.com/livecoverage/stock-market-cpi-inflation-09-11-2026?mod=rss_markets_main" target="_blank">CPI Report Today: Inflation Figure Boosts Odds of Rate Hike Next Week</a></h3>
-        <p>August CPI comes in at 3.4%; Traders increase chance of Fed rate increase at 90%</p>
+        <p>August CPI comes in at 3.4%; Traders increase chance of Fed rate increase to 87%</p>
         <div class="ncard-f">
           <span class="ts">Sep 11 08:34</span>
           <a class="readmore" href="https://www.wsj.com/livecoverage/stock-market-cpi-inflation-09-11-2026?mod=rss_markets_main" target="_blank" rel="noopener">Read more &rarr;</a>
@@ -8039,7 +8039,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <h3><a href="https://www.bbc.co.uk/news/articles/cly41rdkrleo?at_medium=RSS&at_campaign=rss" target="_blank">US inflation holds steady as diesel prices pass $6 a gallon</a></h3>
         <p>Prices in the US rose 3.4% in the 12 months to August, according to the latest official figures.</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 12:54</span>
+          <span class="ts">Sep 11 13:20</span>
           <a class="readmore" href="https://www.bbc.co.uk/news/articles/cly41rdkrleo?at_medium=RSS&at_campaign=rss" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
@@ -8066,51 +8066,51 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ncard rv" style="--d:0.2s">
         <span class="s">Economic Times</span>
-        <h3><a href="https://economictimes.indiatimes.com/markets/stocks/news/sebi-imposes-rs-2-lakh-penalty-on-emami-realty-for-regulatory-lapses/articleshow/134067540.cms" target="_blank">Sebi imposes Rs 2 lakh penalty on Emami Realty for regulatory lapses</a></h3>
-        <p>Sebi has imposed a Rs 2 lakh penalty on Emami Realty for regulatory lapses involving a related-party loan and the classification of investments in its standalone financial statemen&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/markets/ipos/fpos/indias-nse-diversification-could-weigh-on-weekly-options-revenue-ceo-says/articleshow/134068855.cms" target="_blank">NSE diversification could weigh on weekly options' revenue, CEO says</a></h3>
+        <p>The National Stock Exchange aims for a substantial valuation with its forthcoming IPO. However, an anticipated decline in weekly options revenue share due to growth in other sector&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 12:34</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/markets/stocks/news/sebi-imposes-rs-2-lakh-penalty-on-emami-realty-for-regulatory-lapses/articleshow/134067540.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 13:00</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/markets/ipos/fpos/indias-nse-diversification-could-weigh-on-weekly-options-revenue-ceo-says/articleshow/134068855.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.25s">
         <span class="s">ET Economy</span>
-        <h3><a href="https://economictimes.indiatimes.com/news/economy/finance/india-russia-explore-digital-currency-payments-for-trade-in-cross-border-breakthrough/articleshow/134063248.cms" target="_blank">India, Russia explore digital currency payments for trade in cross-border breakthrough</a></h3>
-        <p>India and Russia are exploring digital currency payments for bilateral trade, potentially opening a faster route for cross-border settlements as BRICS seeks alternatives to traditi&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/news/economy/finance/credit-savings-insurance-next-frontiers-in-financial-services-rbi-dg/articleshow/134066117.cms" target="_blank">Credit, savings, insurance next frontiers in financial services: RBI DG</a></h3>
+        <p>RBI deputy governor Shirish Chandra Murmu highlighted extending digital payment success to credit and insurance. Technology must expand formal credit access for underserved borrowe&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 11:52</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/news/economy/finance/india-russia-explore-digital-currency-payments-for-trade-in-cross-border-breakthrough/articleshow/134063248.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 12:13</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/news/economy/finance/credit-savings-insurance-next-frontiers-in-financial-services-rbi-dg/articleshow/134066117.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">Livemint</span>
-        <h3><a href="https://www.livemint.com/market/stock-market-news/us-market-prediction-dow-s-p-500-nasdaq-futures-rise-as-oil-prices-retreat-ahead-of-key-cpi-data-11789123899556.html" target="_blank">US market prediction: Dow, S&amp;P 500, Nasdaq futures rise as oil prices retreat ahead of key CPI data</a></h3>
-        <p>US stock futures rose on September 11, recovering from a weak session as crude oil prices fell ahead of an important inflation report. Despite this rebound, the S&amp;amp;P 500 is &hellip;</p>
+        <h3><a href="https://www.livemint.com/market/stock-market-news/small-cap-stock-exporter-of-stainless-steel-washers-entering-electronic-materials-space-choice-says-buy-target-price-11789129722898.html" target="_blank">Small cap stock: Exporter of stainless-steel washers entering electronic materials space - Choice says buy; target price</a></h3>
+        <p>Shares of Ratnaveer Precision Engineering ended 7% lower after a rally. Analysts foresee a 27.8% upside, bolstered by a recent rights issue and improving fundamentals. The stock cl&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 11:59</span>
-          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/us-market-prediction-dow-s-p-500-nasdaq-futures-rise-as-oil-prices-retreat-ahead-of-key-cpi-data-11789123899556.html" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 12:45</span>
+          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/small-cap-stock-exporter-of-stainless-steel-washers-entering-electronic-materials-space-choice-says-buy-target-price-11789129722898.html" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.35000000000000003s">
         <span class="s">BusinessLine</span>
-        <h3><a href="https://www.thehindubusinessline.com/markets/rbi-has-bond-sales-fx-swaps-to-manage-liquidity-rbi-governor/article71455612.ece" target="_blank">RBI has bond sales, FX swaps to manage liquidity: RBI Governor</a></h3>
-        <p>Some ⁠of the surplus ⁠liquidity in the banking system would be withdrawn over ​time through ‌foreign exchange interventions and banks' reserve requirements</p>
+        <h3><a href="https://www.thehindubusinessline.com/markets/six-ipos-get-aggressive-bids-worth-14-lakh-crore-as-rentomojo-karamtara-lcc-projects-sparkle/article71456015.ece" target="_blank">Six IPOs get aggressive bids worth ₹1.4 lakh crore as Rentomojo, Karamtara, LCC Projects sparkle</a></h3>
+        <p>Rentomojo, Karamtara Engineering and LCC Projects were the biggest draws, while Steamhouse India and Arcil saw a modest response</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 11:27</span>
-          <a class="readmore" href="https://www.thehindubusinessline.com/markets/rbi-has-bond-sales-fx-swaps-to-manage-liquidity-rbi-governor/article71455612.ece" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 13:03</span>
+          <a class="readmore" href="https://www.thehindubusinessline.com/markets/six-ipos-get-aggressive-bids-worth-14-lakh-crore-as-rentomojo-karamtara-lcc-projects-sparkle/article71456015.ece" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Bloomberg</span>
-        <h3><a href="https://www.bloomberg.com/news/articles/2026-09-11/india-s-fx-deposits-to-help-earn-more-revenue-says-malhotra" target="_blank">RBI Has Enough Tools to Mop Liquidity Surge, Malhotra Says</a></h3>
-        <p>India’s central bank has enough tools to absorb a record surge in banking-system liquidity following its massive foreign-currency deposit drive, Governor Sanjay Malhotra said Frida&hellip;</p>
+        <h3><a href="https://www.bloomberg.com/news/articles/2026-09-11/tesla-shares-suffer-slow-summer-after-spacex-ipo-earnings-rout" target="_blank">Tesla Shares Suffer Slow Summer After SpaceX IPO, Earnings Rout</a></h3>
+        <p>For a decade and a half, Tesla Inc. offered the only public market bet on Elon Musk. But since SpaceX began trading in June, the electric vehicle giant has had to share its special&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 09:22</span>
-          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-09-11/india-s-fx-deposits-to-help-earn-more-revenue-says-malhotra" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 13:15</span>
+          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-09-11/tesla-shares-suffer-slow-summer-after-spacex-ipo-earnings-rout" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -10075,7 +10075,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="kpi"><div class="v up">5</div><div class="k">Apply / Apply-small</div></div>
     <div class="kpi"><div class="v dn">1</div><div class="k">Avoid</div></div>
     <div class="kpi"><div class="v">5</div><div class="k">Awaiting listing</div></div>
-    <div class="kpi"><div class="v">160</div><div class="k">Listed &amp; measured · 12m</div></div>
+    <div class="kpi"><div class="v">159</div><div class="k">Listed &amp; measured · 12m</div></div>
   </div>
 
   
@@ -10457,6 +10457,17 @@ table.t tbody tr:hover{background:var(--surface2)}
 
       
       
+      <div class="ipo-cats">
+        
+        <span class="ipo-cat-hot">QIB <b>78.73x</b></span>
+        
+        <span class="ipo-cat-hot">HNI <b>64.91x</b></span>
+        
+        <span class="ipo-cat-hot">Total <b>49.57x</b></span>
+        
+        <span class="ipo-cat-src">via ipopremium.in</span>
+      </div>
+      
 
       <div class="ipo-score">
         <div class="ipo-score-bar"><i style="width:73%"></i></div>
@@ -10548,6 +10559,19 @@ table.t tbody tr:hover{background:var(--surface2)}
 
       
       
+      <div class="ipo-cats">
+        
+        <span class="ipo-cat-hot">QIB <b>177.29x</b></span>
+        
+        <span class="ipo-cat-hot">HNI <b>67.93x</b></span>
+        
+        <span class="ipo-cat-hot">Employee <b>21.03x</b></span>
+        
+        <span class="ipo-cat-hot">Total <b>72.88x</b></span>
+        
+        <span class="ipo-cat-src">via ipopremium.in</span>
+      </div>
+      
 
       <div class="ipo-score">
         <div class="ipo-score-bar"><i style="width:79%"></i></div>
@@ -10636,17 +10660,6 @@ table.t tbody tr:hover{background:var(--surface2)}
       
 
       
-      
-      <div class="ipo-cats">
-        
-        <span class="ipo-cat-hot">QIB <b>168.19x</b></span>
-        
-        <span class="ipo-cat-hot">HNI <b>51.17x</b></span>
-        
-        <span class="ipo-cat-hot">Total <b>66.01x</b></span>
-        
-        <span class="ipo-cat-src">via ipopremium.in</span>
-      </div>
       
 
       <div class="ipo-score">
@@ -11286,7 +11299,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     <span class="subeyebrow">The record</span>
     <h3>Listed in the last 24 months</h3>
     <p class="subdesc">All <b>166</b> mainboard issues that closed
-      and listed inside the window, <b>160</b> of them with
+      and listed inside the window, <b>159</b> of them with
       measured performance. Return is from the <b>first traded close</b>, not the issue price
       &mdash; nothing trades before it lists, so the first close is the first close by
       construction, while NSE's issue-price data is unreliable and a listing gain built on a
@@ -11305,23 +11318,6 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       
       
-      
-      
-      <tr class="">
-        <td><strong class="sym" data-stock="DEEPA" style="cursor:pointer">DEEPA</strong>
-          
-          <a class="tv-lnk" target="_blank" rel="noopener"
-             href="https://www.tradingview.com/chart/?symbol=NSE%3ADEEPA"
-             title="Open DEEPA on TradingView">chart</a></td>
-        <td>Deepa Jewellers Limited</td>
-        <td class="num">2026-09-08</td>
-        <td class="num">194.37</td>
-        <td class="num">185.86</td>
-        
-        <td class="num dn">-4.4%</td>
-        <td class="num dn">-16.3%</td>
-        <td class="num mono-dim">4</td>
-      </tr>
       
       
       <tr class="">
@@ -14030,13 +14026,30 @@ table.t tbody tr:hover{background:var(--surface2)}
       <tr class="ipo-split">
         <td colspan="8">
           <span class="pill pill-fact">Issued</span>
-          6 of these never produced a traded price on
+          7 of these never produced a traded price on
           any feed this build reads — partly-paid instruments, symbols that
           changed, or issues that did not list. The date is when the issue
           closed, not a listing date, and the band is the issue band. Nothing
           below is measured, and none of it is scored.
         </td>
       </tr>
+      
+      <tr class="ipo-unmeasured">
+        <td><strong class="sym">DEEPA</strong>
+          
+          <a class="tv-lnk" target="_blank" rel="noopener"
+             href="https://www.tradingview.com/chart/?symbol=NSE%3ADEEPA"
+             title="Open DEEPA on TradingView">chart</a></td>
+        <td>Deepa Jewellers Limited</td>
+        <td class="num">2026-09-08 <span class="lv-sys" title="Issue date — this symbol never produced a traded price">issue</span></td>
+        <td class="num">Rs.168 to Rs.177</td>
+        <td class="num">—</td>
+        
+        <td class="num dn">&mdash;</td>
+        <td class="num ">&mdash;</td>
+        <td class="num mono-dim">—</td>
+      </tr>
+      
       
       <tr class="ipo-unmeasured">
         <td><strong class="sym">LEAP</strong>
@@ -14149,7 +14162,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    2026-09-11 21:06 MYT. Lot size, minimum application, the
+    2026-09-11 21:26 MYT. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -23402,7 +23415,7 @@ table.t tbody tr:hover{background:var(--surface2)}
   <div class="shead rv">
     <div>
       <span class="snum">14 / SIGNAL LOG</span> 
-<span class="dh dh-LIVE" title="Signal ledger · 4 min old.">LIVE<span class="dh-age">4 min old</span></span>
+<span class="dh dh-LIVE" title="Signal ledger · 3 min old.">LIVE<span class="dh-age">3 min old</span></span>
       <h2 class="stitle">Every signal, scored</h2>
     </div>
     <div style="text-align:right">
@@ -24636,7 +24649,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-09-10 17:06
             · success</dd></div>
         
-        <div><dt>Age</dt><dd>13h old
+        <div><dt>Age</dt><dd>14h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24664,7 +24677,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-09-09 16:45
             · success</dd></div>
         
-        <div><dt>Age</dt><dd>44h old
+        <div><dt>Age</dt><dd>45h old
           
             
               <span class="dh-within">within its weekly cycle</span>
@@ -24694,7 +24707,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-09-10 23:42
             </dd></div>
         
-        <div><dt>Age</dt><dd>13h old
+        <div><dt>Age</dt><dd>14h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24752,7 +24765,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-09-11 12:11
             </dd></div>
         
-        <div><dt>Age</dt><dd>56 min old
+        <div><dt>Age</dt><dd>1h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24775,12 +24788,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 13:03</dd></div>
+          <dd>2026-09-11 13:22</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 13:03
+          <dd>2026-09-11 13:22
             </dd></div>
         
-        <div><dt>Age</dt><dd>4 min old
+        <div><dt>Age</dt><dd>3 min old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24804,12 +24817,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 13:03</dd></div>
+          <dd>2026-09-11 13:22</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 13:03
+          <dd>2026-09-11 13:22
             </dd></div>
         
-        <div><dt>Age</dt><dd>4 min old
+        <div><dt>Age</dt><dd>3 min old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24833,12 +24846,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 13:03</dd></div>
+          <dd>2026-09-11 13:22</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 13:03
+          <dd>2026-09-11 13:22
             </dd></div>
         
-        <div><dt>Age</dt><dd>4 min old
+        <div><dt>Age</dt><dd>3 min old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24862,12 +24875,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 13:03</dd></div>
+          <dd>2026-09-11 13:22</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 13:03
+          <dd>2026-09-11 13:22
             </dd></div>
         
-        <div><dt>Age</dt><dd>4 min old
+        <div><dt>Age</dt><dd>3 min old
           
             
               <span class="dh-within">within its weekly cycle</span>
@@ -24891,12 +24904,12 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 13:03</dd></div>
+          <dd>2026-09-11 13:22</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 13:03
+          <dd>2026-09-11 13:22
             </dd></div>
         
-        <div><dt>Age</dt><dd>4 min old
+        <div><dt>Age</dt><dd>3 min old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -25441,7 +25454,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Friday, September 11 2026 · built 21:03 MYT<br>
+      Friday, September 11 2026 · built 21:22 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -25483,9 +25496,9 @@ table.t tbody tr:hover{background:var(--surface2)}
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="BNz-cwKtkclmEsTUCKFGPw">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="ZPY9Un9KHPJGXU1fgG6Lgg">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="BNz-cwKtkclmEsTUCKFGPw">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="BNz-cwKtkclmEsTUCKFGPw" src="/app.js?v=20260911T210300" defer></script>
+<script type="application/json" id="sector-map" nonce="ZPY9Un9KHPJGXU1fgG6Lgg">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="ZPY9Un9KHPJGXU1fgG6Lgg" src="/app.js?v=20260911T212250" defer></script>
 </body>
 </html>
