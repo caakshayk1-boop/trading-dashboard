@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T12:27:01",
+ "generated_at": "2026-09-11T12:47:25",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -19,7 +19,11 @@
    "issue_size_shares": 13060472.0,
    "issue_size_cr": 805.0,
    "subscription_x": 0.8719568481139119,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 1.26,
+    "HNI": 1.22,
+    "Total": 1.42
+   },
    "lot_size": 44.0,
    "min_investment": 14916.0,
    "fresh_issue_cr": 320.0,
@@ -71,6 +75,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/manipal-payment-and-identity-solutions-ipo/2524/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1328/manipal-payment-identity-solutions-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 23% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.00 debt to equity, so the balance sheet is not a constraint.",
@@ -179,8 +184,8 @@
    "subscription_x": 12.152453610190168,
    "subscription_by_category": {
     "QIB": 52.65,
-    "HNI": 15.67,
-    "Total": 20.08
+    "HNI": 15.69,
+    "Total": 20.1
    },
    "lot_size": 107.0,
    "min_investment": 14873.0,
@@ -189,7 +194,7 @@
    "face_value": 10.0,
    "anchor_cr": 219.89,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b915",
+   "gmp_text": "\u20b914",
    "revenue_cr": 785.08,
    "revenue_growth_pct": 26.0,
    "pat_cr": 407.84,
@@ -258,8 +263,8 @@
    "subscription_x": 34.7254476107049,
    "subscription_by_category": {
     "QIB": 78.73,
-    "HNI": 64.9,
-    "Total": 49.52
+    "HNI": 64.91,
+    "Total": 49.57
    },
    "lot_size": 102.0,
    "min_investment": 14892.0,
@@ -268,7 +273,7 @@
    "face_value": 5.0,
    "anchor_cr": 128.14,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b956",
+   "gmp_text": "\u20b962",
    "revenue_cr": 3639.45,
    "revenue_growth_pct": 24.0,
    "pat_cr": 286.44,
@@ -339,9 +344,9 @@
    "subscription_x": 55.180704519607495,
    "subscription_by_category": {
     "QIB": 177.29,
-    "HNI": 67.91,
-    "Employee": 20.97,
-    "Total": 72.85
+    "HNI": 67.93,
+    "Employee": 21.03,
+    "Total": 72.88
    },
    "lot_size": 37.0,
    "min_investment": 14948.0,
@@ -350,7 +355,7 @@
    "face_value": 1.0,
    "anchor_cr": 376.07,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b9142",
+   "gmp_text": "\u20b9141",
    "revenue_cr": 394.09,
    "revenue_growth_pct": 45.0,
    "pat_cr": 104.3,
@@ -421,11 +426,7 @@
    "issue_size_shares": 25414937.0,
    "issue_size_cr": 875.0,
    "subscription_x": 37.530321519191645,
-   "subscription_by_category": {
-    "QIB": 168.19,
-    "HNI": 51.17,
-    "Total": 66.01
-   },
+   "subscription_by_category": null,
    "lot_size": 59.0,
    "min_investment": 14986.0,
    "fresh_issue_cr": 675.0,
@@ -477,8 +478,6 @@
    "verdict_caveat": "Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1107/karamtara-engineering-ltd",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 36% year on year.",
     "Profit grew faster than revenue (64% against 36%), so margins widened rather than bought growth.",
@@ -741,7 +740,7 @@
    "price_low": 88.0,
    "price_high": 93.0,
    "issue_size_shares": 13428000.0,
-   "issue_size_cr": 124.9,
+   "issue_size_cr": 124.88,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 161.0,
@@ -794,9 +793,89 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
    "reads_for": null,
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."
+   ]
+  },
+  {
+   "symbol": "SSRETAIL",
+   "company": "SS Retail Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-09-16",
+   "close_date": "2026-09-18",
+   "days_left": null,
+   "price_band": "Rs.403 to Rs.424",
+   "price_low": 403.0,
+   "price_high": 424.0,
+   "issue_size_shares": 12426638.0,
+   "issue_size_cr": 500.0,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": 35.0,
+   "min_investment": 14840.0,
+   "fresh_issue_cr": 360.0,
+   "ofs_cr": 140.0,
+   "face_value": 10.0,
+   "anchor_cr": null,
+   "listing_date": null,
+   "gmp_text": "\u20b936 (8.49%)",
+   "revenue_cr": 2352.85,
+   "revenue_growth_pct": 47.0,
+   "pat_cr": 59.28,
+   "pat_growth_pct": 49.0,
+   "pat_margin_pct": 2.52,
+   "roe_pct": 32.6,
+   "debt_to_equity": 0.72,
+   "pe_post_issue": 53.2,
+   "peer_pe": 19.76,
+   "peer_pe_n": 6,
+   "eps_post_issue": 7.97,
+   "pb_ratio": 12.35,
+   "roce_pct": 29.3,
+   "ebitda_margin_pct": 5.32,
+   "fy_label": "FY26",
+   "sector": null,
+   "use_of_proceeds": "Part funding of the incremental working capital requirements of Company (\u20b9416.53 Cr); Funding capital expenditure for Fit Outs towards setting up of new stores in Fiscal 2027\u2026 (\u20b912.45 Cr); and 1 other object",
+   "score": {
+    "points": 29,
+    "of": 45,
+    "pct": 64,
+    "parts": {
+     "Size": "14/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "anchor book",
+     "listing date",
+     "sector",
+     "audited financials",
+     "valuation multiples"
+    ],
+    "shown_not_scored": [
+     "grey market premium \u2014 shown, deliberately not scored",
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/ss-retail-ipo/2822/",
+   "reads_for": [
+    "Revenue grew 47% year on year.",
+    "Profit grew faster than revenue (49% against 47%), so margins widened rather than bought growth.",
+    "Return on net worth of 33% \u2014 well above the ~14% a typical listed peer earns.",
+    "Return on capital employed of 29% \u2014 above the 20% bar the stock screen uses for a compounder."
+   ],
+   "reads_against": [
+    "Priced at 53.2x post-issue earnings against a 20x median for its 6 listed peers \u2014 a premium of more than 30%, which the business has to earn before the listing does."
    ]
   },
   {
@@ -1012,11 +1091,17 @@
    "ebitda_margin_pct": 11.3,
    "fy_label": "FY26",
    "sector": "Specialty Chemicals",
-   "use_of_proceeds": "Repayment and/ or pre-payment, in full or part, of certain borrowings availed by the\u2026 (\u20b960.00 Cr); and 1 other object",
+   "use_of_proceeds": "Repayment and/ or pre-payment, in full or part, of certain borrowings availed by the\u2026 (\u20b960.00 Cr); Issue Expenses (\u20b921.95 Cr); General Corporate Purposes (\u20b916.39 Cr)",
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
+   "subscription_by_category": {
+    "QIB": 7.59,
+    "HNI": 1.89,
+    "Total": 3.47
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
@@ -1062,6 +1147,12 @@
    "issue_size_cr": 351.03,
    "enriched_url": "https://www.chittorgarh.com/ipo/pranav-constructions-ipo/2127/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1329/pranav-constructions-ltd",
+   "subscription_by_category": {
+    "QIB": 268.54,
+    "HNI": 217.73,
+    "Total": 126.34
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 19.6x post-issue earnings against a 45x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 20% year on year.",
@@ -1104,6 +1195,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 125.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1313/rays-of-belief-ltd",
+   "subscription_by_category": {
+    "QIB": 9.06,
+    "HNI": 279.11,
+    "Total": 107.71
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 22% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.12 debt to equity, so the balance sheet is not a constraint.",
@@ -4141,7 +4239,7 @@
  "recent_window_months": 24,
  "counts": {
   "open": 8,
-  "upcoming": 3,
+  "upcoming": 4,
   "awaiting": 5,
   "listed_12m": 166,
   "listed_measured": 160,
