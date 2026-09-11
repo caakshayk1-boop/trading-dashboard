@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T11:27:40",
+ "generated_at": "2026-09-11T11:48:33",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -18,7 +18,7 @@
    "price_high": 339.0,
    "issue_size_shares": 13060472.0,
    "issue_size_cr": 805.0,
-   "subscription_x": 0.8707036009112075,
+   "subscription_x": 0.8719568481139119,
    "subscription_by_category": {
     "QIB": 1.26,
     "HNI": 1.22,
@@ -100,7 +100,7 @@
    "price_high": 81.0,
    "issue_size_shares": 37636363.0,
    "issue_size_cr": 414.0,
-   "subscription_x": 17.845908224447722,
+   "subscription_x": 17.888908659957394,
    "subscription_by_category": {
     "QIB": 46.19,
     "HNI": 46.59,
@@ -152,7 +152,7 @@
     ]
    },
    "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 17.8x, but the book is small (about Rs.414 Cr).",
+   "verdict_why": "Subscribed 17.9x, but the book is small (about Rs.414 Cr).",
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/steamhouse-india-ipo/2514/",
@@ -167,8 +167,8 @@
    ]
   },
   {
-   "symbol": "KARAMTARA",
-   "company": "Karamtara Engineering Limited",
+   "symbol": "ARCIL",
+   "company": "Asset Reconstruction Company (India) Limited",
    "exchange": "NSE",
    "series": "EQ",
    "phase": "open",
@@ -176,54 +176,50 @@
    "open_date": "2026-09-09",
    "close_date": "2026-09-11",
    "days_left": 0,
-   "price_band": "Rs.241 to Rs.254",
-   "price_low": 241.0,
-   "price_high": 254.0,
-   "issue_size_shares": 25414937.0,
-   "issue_size_cr": 875.0,
-   "subscription_x": 37.49819006043572,
-   "subscription_by_category": {
-    "QIB": 168.19,
-    "HNI": 51.16,
-    "Total": 65.98
-   },
-   "lot_size": 59.0,
-   "min_investment": 14986.0,
-   "fresh_issue_cr": 675.0,
-   "ofs_cr": 200.0,
+   "price_band": "Rs.132 to Rs.139",
+   "price_low": 132.0,
+   "price_high": 139.0,
+   "issue_size_shares": 36912363.0,
+   "issue_size_cr": 732.97,
+   "subscription_x": 12.152450711432373,
+   "subscription_by_category": null,
+   "lot_size": 107.0,
+   "min_investment": 14873.0,
+   "fresh_issue_cr": null,
+   "ofs_cr": null,
    "face_value": 10.0,
-   "anchor_cr": 262.5,
-   "listing_date": null,
-   "gmp_text": "\u20b965",
-   "revenue_cr": 4316.36,
-   "revenue_growth_pct": 36.0,
-   "pat_cr": 228.75,
-   "pat_growth_pct": 64.0,
-   "pat_margin_pct": 5.3,
-   "roe_pct": 20.78,
-   "debt_to_equity": 0.84,
-   "pe_post_issue": 35.72,
-   "peer_pe": 19.56,
-   "peer_pe_n": 8,
-   "eps_post_issue": 7.11,
-   "pb_ratio": 6.09,
-   "roce_pct": 23.27,
-   "ebitda_margin_pct": 11.55,
+   "anchor_cr": 219.89,
+   "listing_date": "Sep 17, 2026",
+   "gmp_text": "\u20b915",
+   "revenue_cr": 785.08,
+   "revenue_growth_pct": 26.0,
+   "pat_cr": 407.84,
+   "pat_growth_pct": 15.0,
+   "pat_margin_pct": 51.95,
+   "roe_pct": 13.95,
+   "debt_to_equity": 0.39,
+   "pe_post_issue": 11.08,
+   "peer_pe": null,
+   "peer_pe_n": null,
+   "eps_post_issue": 12.55,
+   "pb_ratio": 1.7,
+   "roce_pct": null,
+   "ebitda_margin_pct": 78.21,
    "fy_label": "FY26",
-   "sector": "Heavy Electrical Equipment",
-   "use_of_proceeds": "Funding prepayment, repayment and/ or payment obligations to lenders towards borrowings\u2026 (\u20b9600.00 Cr); and 1 other object",
+   "sector": "Other Financial Services",
+   "use_of_proceeds": null,
    "score": {
-    "points": 79,
+    "points": 73,
     "of": 100,
-    "pct": 79,
+    "pct": 73,
     "parts": {
      "Demand": "40/40",
-     "Size": "20/25",
+     "Size": "14/25",
      "Pricing": "15/20",
      "Window": "4/15"
     },
     "not_measured": [
-     "listing date",
+     "fresh/OFS split",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -233,22 +229,15 @@
      "lot size and minimum application \u2014 facts, not judgements"
     ]
    },
-   "verdict": "APPLY",
-   "verdict_why": "Subscribed 37.5x on a mainboard book of about Rs.875 Cr.",
-   "verdict_caveat": "Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.",
+   "verdict": "APPLY - SMALL",
+   "verdict_why": "Subscribed 12.2x, but the book is small (about Rs.733 Cr).",
+   "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1107/karamtara-engineering-ltd",
-   "category_source": "ipopremium.in",
+   "enriched_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
    "reads_for": [
-    "Revenue grew 36% year on year.",
-    "Profit grew faster than revenue (64% against 36%), so margins widened rather than bought growth.",
-    "Return on net worth of 21% \u2014 well above the ~14% a typical listed peer earns.",
-    "Return on capital employed of 23% \u2014 above the 20% bar the stock screen uses for a compounder."
+    "Revenue grew 26% year on year."
    ],
-   "reads_against": [
-    "Priced at 35.7x post-issue earnings against a 20x median for its 8 listed peers \u2014 a premium of more than 30%, which the business has to earn before the listing does."
-   ]
+   "reads_against": null
   },
   {
    "symbol": "LCCPROJECT",
@@ -265,7 +254,7 @@
    "price_high": 146.0,
    "issue_size_shares": 20927281.0,
    "issue_size_cr": 427.14,
-   "subscription_x": 34.66574085759158,
+   "subscription_x": 34.7254476107049,
    "subscription_by_category": {
     "QIB": 78.73,
     "HNI": 64.9,
@@ -346,7 +335,7 @@
    "price_high": 404.0,
    "issue_size_shares": 21772311.0,
    "issue_size_cr": 1255.57,
-   "subscription_x": 55.15164297441829,
+   "subscription_x": 55.18070112079512,
    "subscription_by_category": {
     "QIB": 177.29,
     "HNI": 67.91,
@@ -416,8 +405,8 @@
    ]
   },
   {
-   "symbol": "ARCIL",
-   "company": "Asset Reconstruction Company (India) Limited",
+   "symbol": "KARAMTARA",
+   "company": "Karamtara Engineering Limited",
    "exchange": "NSE",
    "series": "EQ",
    "phase": "open",
@@ -425,54 +414,50 @@
    "open_date": "2026-09-09",
    "close_date": "2026-09-11",
    "days_left": 0,
-   "price_band": "Rs.132 to Rs.139",
-   "price_low": 132.0,
-   "price_high": 139.0,
-   "issue_size_shares": 36912363.0,
-   "issue_size_cr": 732.97,
-   "subscription_x": 12.134145055953205,
-   "subscription_by_category": {
-    "QIB": 52.65,
-    "HNI": 15.67,
-    "Total": 20.08
-   },
-   "lot_size": 107.0,
-   "min_investment": 14873.0,
-   "fresh_issue_cr": null,
-   "ofs_cr": null,
+   "price_band": "Rs.241 to Rs.254",
+   "price_low": 241.0,
+   "price_high": 254.0,
+   "issue_size_shares": 25414937.0,
+   "issue_size_cr": 875.0,
+   "subscription_x": 37.530314554783274,
+   "subscription_by_category": null,
+   "lot_size": 59.0,
+   "min_investment": 14986.0,
+   "fresh_issue_cr": 675.0,
+   "ofs_cr": 200.0,
    "face_value": 10.0,
-   "anchor_cr": 219.89,
-   "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b915",
-   "revenue_cr": 785.08,
-   "revenue_growth_pct": 26.0,
-   "pat_cr": 407.84,
-   "pat_growth_pct": 15.0,
-   "pat_margin_pct": 51.95,
-   "roe_pct": 13.95,
-   "debt_to_equity": 0.39,
-   "pe_post_issue": 11.08,
-   "peer_pe": null,
-   "peer_pe_n": null,
-   "eps_post_issue": 12.55,
-   "pb_ratio": 1.7,
-   "roce_pct": null,
-   "ebitda_margin_pct": 78.21,
+   "anchor_cr": 262.5,
+   "listing_date": null,
+   "gmp_text": "\u20b965",
+   "revenue_cr": 4316.36,
+   "revenue_growth_pct": 36.0,
+   "pat_cr": 228.75,
+   "pat_growth_pct": 64.0,
+   "pat_margin_pct": 5.3,
+   "roe_pct": 20.78,
+   "debt_to_equity": 0.84,
+   "pe_post_issue": 35.72,
+   "peer_pe": 19.56,
+   "peer_pe_n": 8,
+   "eps_post_issue": 7.11,
+   "pb_ratio": 6.09,
+   "roce_pct": 23.27,
+   "ebitda_margin_pct": 11.55,
    "fy_label": "FY26",
-   "sector": "Other Financial Services",
-   "use_of_proceeds": null,
+   "sector": "Heavy Electrical Equipment",
+   "use_of_proceeds": "Funding prepayment, repayment and/ or payment obligations to lenders towards borrowings\u2026 (\u20b9600.00 Cr); and 1 other object",
    "score": {
-    "points": 73,
+    "points": 79,
     "of": 100,
-    "pct": 73,
+    "pct": 79,
     "parts": {
      "Demand": "40/40",
-     "Size": "14/25",
+     "Size": "20/25",
      "Pricing": "15/20",
      "Window": "4/15"
     },
     "not_measured": [
-     "fresh/OFS split",
+     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -482,17 +467,21 @@
      "lot size and minimum application \u2014 facts, not judgements"
     ]
    },
-   "verdict": "APPLY - SMALL",
-   "verdict_why": "Subscribed 12.1x, but the book is small (about Rs.733 Cr).",
-   "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
+   "verdict": "APPLY",
+   "verdict_why": "Subscribed 37.5x on a mainboard book of about Rs.875 Cr.",
+   "verdict_caveat": "Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.",
    "enriched_source": "chittorgarh.com",
-   "enriched_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1331/asset-reconstruction-company",
-   "category_source": "ipopremium.in",
+   "enriched_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1107/karamtara-engineering-ltd",
    "reads_for": [
-    "Revenue grew 26% year on year."
+    "Revenue grew 36% year on year.",
+    "Profit grew faster than revenue (64% against 36%), so margins widened rather than bought growth.",
+    "Return on net worth of 21% \u2014 well above the ~14% a typical listed peer earns.",
+    "Return on capital employed of 23% \u2014 above the 20% bar the stock screen uses for a compounder."
    ],
-   "reads_against": null
+   "reads_against": [
+    "Priced at 35.7x post-issue earnings against a 20x median for its 8 listed peers \u2014 a premium of more than 30%, which the business has to earn before the listing does."
+   ]
   },
   {
    "symbol": "VEEGALAND",
@@ -509,7 +498,7 @@
    "price_high": 140.0,
    "issue_size_shares": 11307692.0,
    "issue_size_cr": 210.0,
-   "subscription_x": 0.9034876436323168,
+   "subscription_x": 0.905597800152321,
    "subscription_by_category": {
     "QIB": 0.49,
     "HNI": 1.0,
@@ -590,7 +579,7 @@
    "price_high": 43.0,
    "issue_size_shares": 21386919.0,
    "issue_size_cr": 125.5,
-   "subscription_x": 0.9268319574221981,
+   "subscription_x": 0.9358464395923508,
    "subscription_by_category": {
     "QIB": 0.36,
     "HNI": 1.25,
@@ -805,6 +794,84 @@
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."
    ]
+  },
+  {
+   "symbol": "SONA",
+   "company": "Sonaselection India Limited",
+   "exchange": "NSE",
+   "series": "EQ",
+   "phase": "upcoming",
+   "status": "Forthcoming",
+   "open_date": "2026-09-17",
+   "close_date": "2026-09-21",
+   "days_left": null,
+   "price_band": "Rs.94 to Rs.99",
+   "price_low": 94.0,
+   "price_high": 99.0,
+   "issue_size_shares": 14300000.0,
+   "issue_size_cr": 141.57,
+   "subscription_x": null,
+   "subscription_by_category": null,
+   "lot_size": 150.0,
+   "min_investment": 14850.0,
+   "fresh_issue_cr": null,
+   "ofs_cr": null,
+   "face_value": 10.0,
+   "anchor_cr": null,
+   "listing_date": null,
+   "gmp_text": null,
+   "revenue_cr": 517.6,
+   "revenue_growth_pct": 64.0,
+   "pat_cr": 34.02,
+   "pat_growth_pct": 83.0,
+   "pat_margin_pct": 6.57,
+   "roe_pct": 39.05,
+   "debt_to_equity": 2.48,
+   "pe_post_issue": 16.53,
+   "peer_pe": 18.22,
+   "peer_pe_n": 3,
+   "eps_post_issue": 5.99,
+   "pb_ratio": 4.0,
+   "roce_pct": 19.69,
+   "ebitda_margin_pct": 16.4,
+   "fy_label": "FY26",
+   "sector": "Other Textile Products",
+   "use_of_proceeds": "Repayment and/or pre-payment, in full or part, of certain borrowings (\u20b980.00 Cr); Funding of capital expenditure towards purchase of plant and machineries at the existing\u2026 (\u20b950.61 Cr); and 1 other object",
+   "score": {
+    "points": 23,
+    "of": 45,
+    "pct": 51,
+    "parts": {
+     "Size": "8/25",
+     "Pricing": "15/20"
+    },
+    "not_measured": [
+     "subscription (book not open yet)",
+     "issue window",
+     "fresh/OFS split",
+     "anchor book",
+     "listing date",
+     "sector",
+     "audited financials",
+     "valuation multiples"
+    ],
+    "shown_not_scored": [
+     "lot size and minimum application \u2014 facts, not judgements"
+    ]
+   },
+   "verdict": "WATCH",
+   "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
+   "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
+   "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/sonaselection-india-ipo/2805/",
+   "reads_for": [
+    "Revenue grew 64% year on year.",
+    "Profit grew faster than revenue (83% against 64%), so margins widened rather than bought growth.",
+    "Return on net worth of 39% \u2014 well above the ~14% a typical listed peer earns."
+   ],
+   "reads_against": [
+    "Debt to equity of 2.48 \u2014 leverage magnifies both directions from here."
+   ]
   }
  ],
  "closed": [],
@@ -822,7 +889,7 @@
    "ofs_cr": 367.89,
    "face_value": 2.0,
    "anchor_cr": 128.37,
-   "gmp_text": "\u20b948",
+   "gmp_text": "\u20b948 (26.37%)",
    "revenue_cr": 471.43,
    "revenue_growth_pct": 64.0,
    "pat_cr": 83.79,
@@ -841,15 +908,6 @@
    "sector": "Civil Construction",
    "use_of_proceeds": "Funding capital expenditure requirement for setting up of a glass processing unit (GPU\u2026 (\u20b950.00 Cr); Issue Expenses (\u20b938.64 Cr); General Corporate Purposes (\u20b94.63 Cr)",
    "enriched_source": "chittorgarh.com",
-   "issue_size_cr": 427.89,
-   "enriched_url": "https://www.chittorgarh.com/ipo/glass-wall-systems-ipo/2594/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1334/glass-wall-systems",
-   "subscription_by_category": {
-    "QIB": 167.93,
-    "HNI": 79.71,
-    "Total": 81.65
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 64% year on year.",
     "Return on net worth of 32% \u2014 well above the ~14% a typical listed peer earns.",
@@ -997,12 +1055,6 @@
    "issue_size_cr": 351.03,
    "enriched_url": "https://www.chittorgarh.com/ipo/pranav-constructions-ipo/2127/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1329/pranav-constructions-ltd",
-   "subscription_by_category": {
-    "QIB": 268.54,
-    "HNI": 217.73,
-    "Total": 126.34
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 19.6x post-issue earnings against a 45x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 20% year on year.",
@@ -1046,12 +1098,6 @@
    "issue_size_cr": 125.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/rays-of-belief-ipo/2787/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1313/rays-of-belief-ltd",
-   "subscription_by_category": {
-    "QIB": 9.06,
-    "HNI": 279.11,
-    "Total": 107.71
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Return on net worth of 22% \u2014 well above the ~14% a typical listed peer earns.",
     "Effectively debt-free at 0.12 debt to equity, so the balance sheet is not a constraint.",
@@ -1127,24 +1173,6 @@
   }
  ],
  "recent_listed": [
-  {
-   "symbol": "DEEPA",
-   "company": "Deepa Jewellers Limited",
-   "price_band": "Rs.168 to Rs.177",
-   "close_date": "2026-09-03",
-   "listing_date": "2026-09-08",
-   "days_since_close": 8,
-   "measured": true,
-   "first_close": 194.37,
-   "last_close": 185.86,
-   "since_listing_pct": -4.4,
-   "from_high_pct": -16.3,
-   "high": 222.0,
-   "low": 185.0,
-   "months_listed": null,
-   "sessions": 4,
-   "measured_by": "yahoo"
-  },
   {
    "symbol": "PERNIASPOP",
    "company": "Purple Style Labs Limited",
@@ -3984,6 +4012,23 @@
    "measured_by": "yahoo"
   },
   {
+   "symbol": "DEEPA",
+   "company": "Deepa Jewellers Limited",
+   "price_band": "Rs.168 to Rs.177",
+   "close_date": "2026-09-03",
+   "listing_date": "2026-09-08",
+   "days_since_close": 8,
+   "measured": false,
+   "first_close": null,
+   "last_close": null,
+   "since_listing_pct": null,
+   "from_high_pct": null,
+   "high": null,
+   "low": null,
+   "months_listed": null,
+   "sessions": null
+  },
+  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -4089,10 +4134,10 @@
  "recent_window_months": 24,
  "counts": {
   "open": 8,
-  "upcoming": 2,
+  "upcoming": 3,
   "awaiting": 5,
   "listed_12m": 166,
-  "listed_measured": 160,
+  "listed_measured": 159,
   "listed_via_screen": 24,
   "apply": 5,
   "avoid": 1
