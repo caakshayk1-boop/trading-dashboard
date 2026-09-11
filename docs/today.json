@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T060245",
+ "build_id": "20260912T062218",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -1328,7 +1328,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-11",
-   "age_days": 0.1,
+   "age_days": 0.2,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1351,12 +1351,12 @@
     "_sort": "2026-09-11T18:40:10+00:00",
     "smart": {
      "what_happened": [
-      "The Digital Credit & Inclusion Index 2026 shows Tier-2 cities with an average score of 58.64, ahead of Tier-1 and Tier-3 cities.",
-      "The index was compiled by Pahl\u00e9 India Foundation and Amazon Pay."
+      "The Digital Credit & Inclusion Index 2026 shows Tier-2 cities have an average score of 58.64.",
+      "That score places Tier-2 cities ahead of both Tier-1 and Tier-3 cities in digital credit and inclusion."
      ],
-     "why_it_matters": "The higher score for Tier-2 cities suggests that borrowers outside the largest metros are adopting digital credit at a faster pace, indicating a broadening market for fintech lenders and potential improvements in financial inclusion across smaller urban areas.",
-     "what_to_watch": "The next release of the Digital Credit & Inclusion Index to see if Tier-2 cities maintain their lead.",
-     "headline": "Tier-2 cities lead digital credit inclusion in India, report says",
+     "why_it_matters": "The finding signals that borrowers outside the largest metropolitan areas are adopting digital credit at a faster rate, suggesting a broader base for fintech growth and potential shifts in lending strategies toward smaller urban markets.",
+     "what_to_watch": "The next update of the Digital Credit & Inclusion Index to see if Tier-2 cities maintain or improve their lead.",
+     "headline": "Tier-2 cities lead India digital credit inclusion with score 58.64",
      "read_seconds": 20
     }
    },
@@ -1367,7 +1367,17 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00"
+    "_sort": "2026-09-11T17:37:38+00:00",
+    "smart": {
+     "what_happened": [
+      "A survey found that eight in ten Americans were taking vitamins, protein powders or other supplements.",
+      "Experts said there is little evidence supporting the benefits of many of these products."
+     ],
+     "why_it_matters": "The high prevalence of supplement use indicates significant consumer spending on products whose health benefits are not well\u2011established, raising concerns for public health outcomes and prompting scrutiny from regulators and healthcare professionals.",
+     "what_to_watch": "Watch for any FDA announcements regarding labeling or health claim regulations for dietary supplements.",
+     "headline": "Eight in ten Americans report taking vitamins, protein powders, or supplements",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Economist",
@@ -1442,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1\u2026d5\u202f2.c4\u202fc6, you allowed a weak isolated d\u2011pawn; instead play 2\u2026e6\u202f3.Nc3\u202fNf6\u202f4.c4\u202fc5 to keep a solid, compact center and avoid the later endgame disadvantage.",
+    "analysis": "Improve endgame technique: practice converting +0.5 pawn advantages, study rook\u2011vs\u2011pawn endings, and train precise king activation to avoid losing on move\u202f55.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1604,14 +1614,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "",
+   "session_summary": "Your opening choices are costing you everything\u2014every game you play you\u2019re walking straight into a losing line, and the data shows you haven\u2019t even managed a single win. Stop relying on that \u201cfavorite\u201d opening; study the top 3 most\u2011played defenses at your rating, memorize the first 8\u201310 critical moves, and drill them until they become automatic. Then, in every game, force yourself to play the first 12 moves without consulting any engine\u2014if you can\u2019t hold a solid position that long, you\u2019ll never break out of this 0\u202f% win rate.",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1936,
+   "rating": 2102,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
