@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T064227",
+ "build_id": "20260912T070232",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "13h old",
+    "age": "14h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1351,12 +1351,12 @@
     "_sort": "2026-09-11T18:40:10+00:00",
     "smart": {
      "what_happened": [
-      "Tier\u20112 cities posted an average Digital Credit & Inclusion Index score of 58.64.",
-      "That average was higher than the scores recorded for Tier\u20111 and Tier\u20113 cities."
+      "The Digital Credit & Inclusion Index 2026 reported Tier-2 cities posted an average score of 58.64.",
+      "That score placed Tier-2 cities ahead of both Tier-1 and Tier-3 cities."
      ],
-     "why_it_matters": "The higher index score for Tier\u20112 cities indicates that digital credit adoption and financial inclusion are progressing faster outside the largest metropolitan areas, signaling a shift in where lenders may focus their digital credit products and where future credit growth could be concentrated.",
-     "what_to_watch": "The next Digital Credit & Inclusion Index release to see if Tier\u20112 cities maintain their lead.",
-     "headline": "Borrowers from Tier II cities lead India's digital credit, DCII 2026 shows",
+     "why_it_matters": "The finding highlights that digital lending is expanding beyond India's largest metros, suggesting that a growing share of borrowers in smaller urban areas are accessing credit through digital platforms. This could broaden financial inclusion, reshape lender strategies, and influence the allocation of fintech resources toward Tier-2 markets.",
+     "what_to_watch": "Track the quarterly digital loan disbursement volumes reported for Tier-2 cities by major fintech providers.",
+     "headline": "Tier-2 cities lead digital credit inclusion in India, index shows",
      "read_seconds": 20
     }
    },
@@ -1406,15 +1406,6 @@
     "_sort": "2026-09-10T09:50:00+00:00"
    },
    {
-    "source": "Ness Labs",
-    "cat": "habits",
-    "title": "Never forget what matters with Dr David Urbansky, founder of Linkflare",
-    "link": "https://nesslabs.com/linkflare-featured-tool?utm_source=rss&utm_medium=rss&utm_campaign=linkflare-featured-tool",
-    "summary": "FEATURED TOOL Welcome to this edition of our Tools for Thought series, where we interview founders on a mission to help us think better and work smarter. Dr David Urbansky is the founder of Linkflare, a universal bookmark manager that helps you save links, read distraction-free, and never forget the information that ma",
-    "date": "Sep 08, 2026",
-    "_sort": "2026-09-08T09:45:00+00:00"
-   },
-   {
     "source": "Peter Attia",
     "cat": "health",
     "title": "Blood pressure: how to measure, manage, and treat high blood pressure (AMA #48 rebroadcast)",
@@ -1422,6 +1413,15 @@
     "summary": "In this \u201cAsk Me Anything\u201d (AMA) episode, Peter delves into the critical subject of blood pressure, which is one of the three primary causes of atherosclerosis, along with high apoB and smoking. He begins by unraveling the nature of high blood pressure, its prevalence, and why it often goes undiagnosed. Peter describes ",
     "date": "Sep 07, 2026",
     "_sort": "2026-09-07T04:15:00+00:00"
+   },
+   {
+    "source": "Scott Young",
+    "cat": "habits",
+    "title": "We Need Guidelines for Learning and AI",
+    "link": "https://www.scotthyoung.com/blog/2026/07/22/we-need-guidelines-for-learning-and-ai/",
+    "summary": "A lot of ink is being spilled about the effects AI is having on learning and education. The drawbacks are obvious. For many classroom assignments, AI is now good enough that it can simply do your homework for you. But having AI do your homework is self-defeating. You can\u2019t learn without doing the work. That [&#8230;]\nT",
+    "date": "Jul 22, 2026",
+    "_sort": "2026-07-22T13:47:37+00:00"
    }
   ],
   "lichess_games": [
@@ -1442,7 +1442,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: play Nf6, e6, Bd6, and castle before launching pawn storms; avoid premature queen moves that waste tempo.",
+    "analysis": "Focus on early king\u2011side development: finish Nf6, e6, Bd6, then castle by move\u202f8 to avoid losing tempo and exposure.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1604,14 +1604,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your opening repertoire is a disaster\u2014you're either playing nothing at all or falling straight into the opponent\u2019s preparation, which explains the 0\u202f% win rate after just one loss. Stop relying on vague \u201cstandard\u201d lines; pick a single, solid system (e.g., the London System as White or the Caro\u2011Kann as Black), study its first ten moves deeply, and drill them until they become automatic. Every session, review the game move by move, annotate every mistake, and spend at least 30\u202fminutes on tactical puzzles that target the exact patterns you blundered on\u2014no more excuses, just relentless, focused practice.",
+   "session_summary": "Your opening choices are leaving you defenseless\u2014every game you play you\u2019re already a step behind, and the stats prove it. Stop flailing with \u201c.\u201d and study a single, solid repertoire (e.g., Caro\u2011Kann for black, London System for white) until you can execute it without thinking. Spend the next 20 hours on basic tactics puzzles and endgame fundamentals; until you can convert a simple material advantage, you\u2019ll keep feeding the loss column.",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1955,
+   "rating": 1931,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
