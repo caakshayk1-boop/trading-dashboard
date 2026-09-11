@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T044233",
+ "build_id": "20260912T050249",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -435,7 +435,7 @@
    "sector": "Energy"
   },
   "BRNUSD": {
-   "price": 104.71,
+   "price": 104.49,
    "sector": ""
   },
   "CAPLIPOINT": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "11h old",
+    "age": "12h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1351,12 +1351,12 @@
     "_sort": "2026-09-11T18:40:10+00:00",
     "smart": {
      "what_happened": [
-      "Tier-2 cities posted an average Digital Credit & Inclusion Index score of 58.64.",
-      "That score was higher than the averages for Tier-1 and Tier-3 cities, according to the DCII 2026 by Pahl\u00e9 India Foundation and Amazon Pay."
+      "The Digital Credit & Inclusion Index 2026 gave Tier\u20112 cities an average score of 58.64, ahead of Tier\u20111 and Tier\u20113 cities.",
+      "The index was compiled by Pahl\u00e9 India Foundation together with Amazon Pay."
      ],
-     "why_it_matters": "The higher digital credit score in Tier-2 cities indicates that borrowers outside the largest metropolitan areas are adopting online lending platforms more rapidly, expanding the market for fintech services and potentially improving financial inclusion for a broader segment of the population.",
-     "what_to_watch": "Watch the next Digital Credit & Inclusion Index release for any change in Tier-2 city scores or related loan volume data.",
-     "headline": "Tier-2 cities lead digital credit inclusion in India, report says",
+     "why_it_matters": "The higher score for Tier\u20112 cities indicates that digital lending platforms are reaching borrowers outside the major metros, expanding financial inclusion and potentially opening new markets for lenders and fintech firms seeking growth beyond traditional urban centers.",
+     "what_to_watch": "Track the next release of the Digital Credit & Inclusion Index for changes in Tier\u20112 city scores and accompanying digital loan volume data.",
+     "headline": "Tier-2 cities lead India's digital credit inclusion, index shows",
      "read_seconds": 20
     }
    },
@@ -1394,7 +1394,17 @@
     "link": "https://psyche.co/notes-to-self/why-it-helps-to-see-impatience-as-an-emotion-not-a-trait",
     "summary": "Watching Penelope\u2019s heroic wait in The Odyssey made me lament my impatience. But maybe I\u2019ve been thinking about it wrong- by Amy ArthurRead on Psyche",
     "date": "Sep 10, 2026",
-    "_sort": "2026-09-10T10:00:00+00:00"
+    "_sort": "2026-09-10T10:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "The article examines impatience as an emotion rather than a fixed trait.",
+      "It references Penelope\u2019s wait in The Odyssey as an illustration."
+     ],
+     "why_it_matters": "Understanding impatience as an emotional state rather than an inherent characteristic can influence how individuals manage expectations and stress, potentially affecting personal productivity and mental well\u2011being.",
+     "what_to_watch": "Future commentary by Amy Arthur on related emotional topics in Psyche.",
+     "headline": "Impatience is an emotion, not a trait",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Farnam Street",
@@ -1442,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Focus on early piece coordination: after 9\u2026Nc6, develop the bishop to\u202fe7 instead of passive \u2026b6, then castle promptly; this saves ~30\u202fcentipawns and prevents the later cramped, passive position that led to your loss.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1611,7 +1621,7 @@
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 2073,
+   "rating": 1919,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
