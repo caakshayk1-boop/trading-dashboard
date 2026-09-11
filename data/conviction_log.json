@@ -1055,70 +1055,69 @@
  },
  {
   "date": "2026-09-12",
-  "generated_at": "2026-09-12T00:18:50+05:30",
+  "generated_at": "2026-09-12T00:35:50+05:30",
   "picks": [
-   {
-    "sym": "SMLMAH",
-    "sector": "Consumer Cyclical",
-    "price": 6570.0,
-    "score": 83.47,
-    "reasons": [
-     "ROCE 29%",
-     "Piotroski 7/9",
-     "+70% over three months",
-     "at a 52-week high"
-    ],
-    "view": null
-   },
    {
     "sym": "CHENNPETRO",
     "sector": "Energy",
-    "price": 1604.4,
-    "score": 80.66,
+    "price": 1626.4,
+    "score": 82.06,
     "reasons": [
      "ROCE 33%",
      "Piotroski 7/9",
-     "+47% over three months",
+     "+40% over three months",
      "at a 52-week high"
     ],
-    "view": null
+    "view": "ROCE 33%, Piotroski 7/9, up 40% in three months, trading at 52\u2011week high."
    },
    {
-    "sym": "SAILIFE",
-    "sector": "Healthcare",
-    "price": 1675.4,
-    "score": 72.85,
+    "sym": "INOXINDIA",
+    "sector": "Industrials",
+    "price": 2295.8,
+    "score": 71.1,
     "reasons": [
-     "Piotroski 7/9",
-     "+38% over three months",
+     "ROCE 29%",
+     "+28% over three months",
      "at a 52-week high",
-     "\u20b9223 cr traded"
+     "\u20b9196 cr traded"
     ],
-    "view": null
+    "view": "ROCE 29%, up 28% in three months, at 52\u2011week high, \u20b9196\u202fcr traded."
    },
    {
-    "sym": "MCX",
-    "sector": "Financial Services",
-    "price": 3350.0,
-    "score": 65.8,
+    "sym": "REDINGTON",
+    "sector": "Technology",
+    "price": 392.0,
+    "score": 68.9,
     "reasons": [
-     "ROCE 59%",
-     "Piotroski 7/9",
-     "+18% over three months",
-     "2% off its high"
+     "+65% over three months",
+     "at a 52-week high",
+     "\u20b9908 cr traded"
     ],
-    "view": null
+    "view": "up 65% in three months, at 52\u2011week high, \u20b9908\u202fcr traded."
    },
    {
-    "sym": "NAVINFLUOR",
-    "sector": "Basic Materials",
-    "price": 8775.5,
-    "score": 65.74,
+    "sym": "LAURUSLABS",
+    "sector": "Healthcare",
+    "price": 1945.0,
+    "score": 67.92,
     "reasons": [
      "Piotroski 8/9",
-     "+20% over three months",
+     "+40% over three months",
      "at a 52-week high",
-     "\u20b9258 cr traded"
+     "\u20b9208 cr traded"
+    ],
+    "view": "Piotroski 8/9, up 40% in three months, at 52\u2011week high, \u20b9208\u202fcr traded."
+   },
+   {
+    "sym": "VARROC",
+    "sector": "Consumer Cyclical",
+    "price": 884.4,
+    "score": 66.75,
+    "reasons": [
+     "Piotroski 7/9",
+     "+55% over three months",
+     "at a 52-week high",
+     "\u20b9130 cr traded"
     ],
     "view": null
    }

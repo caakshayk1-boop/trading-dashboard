@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T024239",
+ "build_id": "20260912T030256",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -435,7 +435,7 @@
    "sector": "Energy"
   },
   "BRNUSD": {
-   "price": 104.47,
+   "price": 104.93,
    "sector": ""
   },
   "CAPLIPOINT": {
@@ -479,7 +479,7 @@
    "sector": "Technology"
   },
   "COIN": {
-   "price": 174.86,
+   "price": 175.0,
    "sector": ""
   },
   "CPPLUS": {
@@ -495,7 +495,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 248.58,
+   "price": 248.79,
    "sector": "Technology"
   },
   "CUPID": {
@@ -503,7 +503,7 @@
    "sector": "Consumer Defensive"
   },
   "DUOL": {
-   "price": 143.595,
+   "price": 144.59,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -529,6 +529,10 @@
   "GODREJIND": {
    "price": 1122.3,
    "sector": "Industrials"
+  },
+  "GRANULES": {
+   "price": 899.25,
+   "sector": "Healthcare"
   },
   "GRAPHITE": {
    "price": 824.8,
@@ -619,7 +623,7 @@
    "sector": "Financial Services"
   },
   "MRK": {
-   "price": 144.385,
+   "price": 144.2,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -631,7 +635,7 @@
    "sector": "Basic Materials"
   },
   "NEM": {
-   "price": 126.14,
+   "price": 126.33,
    "sector": "Basic Materials"
   },
   "NEULANDLAB": {
@@ -645,10 +649,6 @@
   "ONGC": {
    "price": 237.27,
    "sector": "Energy"
-  },
-  "PARADEEP": {
-   "price": 157.11,
-   "sector": "Basic Materials"
   }
  },
  "ipos": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "9h old",
+    "age": "10h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-11T18:40:10+00:00",
     "smart": {
      "what_happened": [
-      "The Digital Credit & Inclusion Index 2026 shows Tier\u20112 cities have an average score of 58.64.",
-      "That score is higher than the scores for Tier\u20111 and Tier\u20113 cities."
+      "The Digital Credit & Inclusion Index 2026 found Tier\u20112 cities had an average score of 58.64, the highest among city tiers.",
+      "Tier\u20112 cities outperformed Tier\u20111 and Tier\u20113 cities in the digital credit and inclusion metrics."
      ],
-     "why_it_matters": "The higher digital credit inclusion score for Tier\u20112 cities indicates that borrowers outside the largest metropolitan areas are adopting digital lending platforms more rapidly, expanding the addressable market for fintech firms and potentially improving financial access for a broader segment of the population.",
-     "what_to_watch": "The release of the Digital Credit & Inclusion Index 2027 to see if Tier\u20112 cities maintain their lead.",
-     "headline": "Tier-2 cities lead digital credit inclusion in India, report says",
+     "why_it_matters": "The result highlights that borrowers in India's Tier\u20112 cities are driving the expansion of digital credit, suggesting that financial institutions and fintech platforms may find significant growth opportunities by focusing on these markets, which could improve overall financial inclusion and broaden the customer base beyond the traditional Tier\u20111 hubs.",
+     "what_to_watch": "The next release of the Digital Credit & Inclusion Index for tracking whether Tier\u20112 cities maintain their lead.",
+     "headline": "Tier-2 cities lead digital credit inclusion in India, DCII 2026 shows",
      "read_seconds": 20
     }
    },
@@ -1367,17 +1367,7 @@
     "link": "https://economictimes.indiatimes.com/wealth/invest/rs-2-5-crore-retirement-corpus-planning-monthly-income-withdrawal-calculator-can-you-get-rs-2-lakh-monthly-income-for-25-years/articleshow/134059467.cms",
     "summary": "Strategic planning of retirement withdrawals from a Rs 2.5 crore fund is essential for financial security. Adopting a conservative withdrawal rate that is lower than the annual returns can help sustain the corpus. By gradually increasing withdrawals based on a fixed percentage, retirees can plan for better financial lo",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T10:16:19+00:00",
-    "smart": {
-     "what_happened": [
-      "Strategic planning of withdrawals from a Rs 2.5\u202fcrore fund is essential for financial security.",
-      "A conservative withdrawal rate lower than the fund's annual returns and gradual increases based on a fixed percentage are recommended."
-     ],
-     "why_it_matters": "Using a withdrawal rate that stays below the portfolio's expected return helps preserve the capital over the retirement horizon, ensuring that the Rs 2.5\u202fcrore corpus can continue to generate a steady Rs 2\u202flakh per month for the intended 25\u2011year period and reducing the risk of outliving the savings.",
-     "what_to_watch": "Track the fund's actual annual return each year and compare it to the withdrawal rate to confirm the rate remains sustainably lower.",
-     "headline": "Retirement plan outlines Rs 2.5 crore corpus yielding Rs 2 lakh monthly",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-11T10:16:19+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1395,17 +1385,7 @@
     "link": "https://www.nytimes.com/2026/09/09/well/live/dexa-scan-bone-density-menopause.html",
     "summary": "Some doctors and influencers say women shouldn\u2019t wait until their 60s for a DEXA scan. Here\u2019s what to consider before getting one.",
     "date": "Sep 10, 2026",
-    "_sort": "2026-09-10T20:07:20+00:00",
-    "smart": {
-     "what_happened": [
-      "Some doctors and influencers say women shouldn\u2019t wait until their 60s for a DEXA scan.",
-      "The article outlines factors to consider before undergoing a bone density test."
-     ],
-     "why_it_matters": "Earlier bone density testing can identify osteoporosis risk sooner, allowing women to take preventive measures and manage bone health before significant loss occurs, which is especially relevant during the hormonal changes of menopause.",
-     "what_to_watch": "Watch for any updated recommendations from medical professionals on the optimal age to begin DEXA screening for menopausal women.",
-     "headline": "Doctors advise earlier DEXA scans for women approaching menopause",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-10T20:07:20+00:00"
    },
    {
     "source": "Psyche",
@@ -1414,17 +1394,7 @@
     "link": "https://psyche.co/notes-to-self/why-it-helps-to-see-impatience-as-an-emotion-not-a-trait",
     "summary": "Watching Penelope\u2019s heroic wait in The Odyssey made me lament my impatience. But maybe I\u2019ve been thinking about it wrong- by Amy ArthurRead on Psyche",
     "date": "Sep 10, 2026",
-    "_sort": "2026-09-10T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The article discusses the concept of impatience as an emotion rather than a fixed trait.",
-      "The author references Penelope\u2019s wait in The Odyssey to illustrate the theme."
-     ],
-     "why_it_matters": "Understanding impatience as an emotional response rather than an inherent characteristic can influence how individuals and organizations address decision\u2011making processes, stress management, and performance expectations, which are relevant for productivity and workplace dynamics.",
-     "what_to_watch": "Observe upcoming research or publications that examine the psychological classification of impatience and its impact on behavior.",
-     "headline": "Impatience is an emotion, not a trait",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-10T10:00:00+00:00"
    },
    {
     "source": "Farnam Street",
@@ -1472,7 +1442,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Strengthen your endgame technique: convert a +0.5 pawn advantage into a win within 12 moves; practice precise king\u2011pawn opposition and rook\u2011vs\u2011minor\u2011piece fundamentals.",
+    "analysis": "Focus on early pawn structure: after 1.d4\u202fd5\u202f2.c4, avoid the passive 2\u2026e6; play 2\u2026c6 or 2\u2026Nf6 to contest the center and prevent a cramped, losing Queenside pawn chain.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1634,14 +1604,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your opening repertoire is a disaster\u2014every game you play, you lose, proving you haven\u2019t mastered even the most basic principles. Stop flailing with random moves; pick a solid, low\u2011theory line (e.g., the London System as White or the Caro\u2011Kann as Black) and drill the first 12 moves until they\u2019re second nature. Then spend an hour each day reviewing every loss with a engine, annotating every tactical oversight, and force yourself to play only those two openings for the next 30 days before expanding again.",
+   "session_summary": "",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1931,
+   "rating": 1981,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
