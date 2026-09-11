@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T16:05:31",
+ "generated_at": "2026-09-11T16:28:33",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -273,7 +273,7 @@
    "face_value": 5.0,
    "anchor_cr": 128.14,
    "listing_date": "Sep 17, 2026",
-   "gmp_text": "\u20b968",
+   "gmp_text": "\u20b978",
    "revenue_cr": 3639.45,
    "revenue_growth_pct": 24.0,
    "pat_cr": 286.44,
@@ -427,9 +427,10 @@
    "issue_size_cr": 875.0,
    "subscription_x": 37.530321519191645,
    "subscription_by_category": {
-    "QIB": 168.19,
-    "HNI": 51.17,
-    "Total": 66.01
+    "QIB": 3.33,
+    "HNI": 1.4,
+    "Employee": 0.76,
+    "Total": 2.42
    },
    "lot_size": 59.0,
    "min_investment": 14986.0,
@@ -438,7 +439,7 @@
    "face_value": 10.0,
    "anchor_cr": 262.5,
    "listing_date": null,
-   "gmp_text": "\u20b965",
+   "gmp_text": "\u20b91",
    "revenue_cr": 4316.36,
    "revenue_growth_pct": 36.0,
    "pat_cr": 228.75,
@@ -482,7 +483,7 @@
    "verdict_caveat": "Demand is the ONLY dimension measured. Nothing here says the business or the valuation is good.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1107/karamtara-engineering-ltd",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/815/kalpataru-limited-mainboard",
    "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 36% year on year.",
@@ -594,7 +595,7 @@
    "subscription_by_category": {
     "QIB": 0.36,
     "HNI": 1.27,
-    "Total": 1.52
+    "Total": 1.53
    },
    "lot_size": 348.0,
    "min_investment": 14964.0,
@@ -603,7 +604,7 @@
    "face_value": 2.0,
    "anchor_cr": 37.65,
    "listing_date": null,
-   "gmp_text": "\u20b910",
+   "gmp_text": "\u20b97",
    "revenue_cr": 162.71,
    "revenue_growth_pct": 6.0,
    "pat_cr": 13.07,
@@ -1283,6 +1284,24 @@
   }
  ],
  "recent_listed": [
+  {
+   "symbol": "DEEPA",
+   "company": "Deepa Jewellers Limited",
+   "price_band": "Rs.168 to Rs.177",
+   "close_date": "2026-09-03",
+   "listing_date": "2026-09-08",
+   "days_since_close": 8,
+   "measured": true,
+   "first_close": 194.37,
+   "last_close": 185.86,
+   "since_listing_pct": -4.4,
+   "from_high_pct": -16.3,
+   "high": 222.0,
+   "low": 185.0,
+   "months_listed": null,
+   "sessions": 4,
+   "measured_by": "yahoo"
+  },
   {
    "symbol": "PERNIASPOP",
    "company": "Purple Style Labs Limited",
@@ -4122,23 +4141,6 @@
    "measured_by": "yahoo"
   },
   {
-   "symbol": "DEEPA",
-   "company": "Deepa Jewellers Limited",
-   "price_band": "Rs.168 to Rs.177",
-   "close_date": "2026-09-03",
-   "listing_date": "2026-09-08",
-   "days_since_close": 8,
-   "measured": false,
-   "first_close": null,
-   "last_close": null,
-   "since_listing_pct": null,
-   "from_high_pct": null,
-   "high": null,
-   "low": null,
-   "months_listed": null,
-   "sessions": null
-  },
-  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -4247,7 +4249,7 @@
   "upcoming": 4,
   "awaiting": 5,
   "listed_12m": 166,
-  "listed_measured": 159,
+  "listed_measured": 160,
   "listed_via_screen": 24,
   "apply": 5,
   "avoid": 1
