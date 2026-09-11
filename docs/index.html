@@ -7,7 +7,7 @@
      style and script. Strict because nothing loads from a third party any
      more: no 'unsafe-inline', no CDN, no font host. Each inline block carries
      the per-build nonce. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-2ZZPDH2vdlaXCRIMU9Ju5Q'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-rPUxPDEio-su957BHRz56Q'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ytimg.com; font-src 'self'; frame-src https://www.youtube-nocookie.com; connect-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests">
 <!-- Applies the stored theme BEFORE first paint. Placed in <head>, inline and
      synchronous on purpose: deferring it by even one frame means the page
      paints in one theme and repaints in the other, which is the single most
@@ -18,7 +18,7 @@
      no JavaScript at all to get the right theme — and a reader with JS
      disabled or blocked gets it too. This script only re-applies an explicit
      choice the reader made on a previous visit. -->
-<script nonce="2ZZPDH2vdlaXCRIMU9Ju5Q">
+<script nonce="rPUxPDEio-su957BHRz56Q">
 (function(){try{
   var t=localStorage.getItem('aa-theme');
   if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);
@@ -62,7 +62,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 
 <!-- This publishes a genuine public dataset; saying so is the honest schema. -->
-<script type="application/ld+json" nonce="2ZZPDH2vdlaXCRIMU9Ju5Q">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-09-11","dateModified":"2026-09-11T12:42:58.210212+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
+<script type="application/ld+json" nonce="rPUxPDEio-su957BHRz56Q">{"@context":"https://schema.org","@graph":[{"@type":"Dataset","@id":"https://news.askakshay.com/#dataset","name":"The Daily Signal \u2014 NSE trading ledger","description":"Every trading signal this ledger generates, logged when it fires and scored when it closes. Includes entry, stop, targets, outcome and R-multiple.","url":"https://news.askakshay.com","license":"https://creativecommons.org/licenses/by/4.0/","creator":{"@id":"https://news.askakshay.com/#person"},"temporalCoverage":"2026-05-09/2026-09-11","dateModified":"2026-09-11T13:03:29.851575+08:00","keywords":["NSE","trading signals","India equities","track record","expectancy","R-multiple"],"distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://news.askakshay.com/api/signals"}]},{"@type":"Person","@id":"https://news.askakshay.com/#person","name":"Akshay K Kothari","jobTitle":"Chartered Accountant \u00b7 FP&A","url":"https://askakshay.com","sameAs":["https://askakshay.com","https://www.linkedin.com/in/akkothari"]},{"@type":"WebSite","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://news.askakshay.com/?q={search_term_string}"},"query-input":"required name=search_term_string"},"@id":"https://news.askakshay.com/#website","url":"https://news.askakshay.com","name":"The Daily Signal","publisher":{"@id":"https://news.askakshay.com/#person"},"inLanguage":"en-IN"}]}</script>
 
 <!-- Self-hosted. Google Fonts was the ONLY third-party origin this page
      contacted; removing it means the site now truthfully loads nothing from
@@ -5090,7 +5090,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span>⌘K</span><span>Search</span>
       </button>
       <span class="d">Friday, September 11 2026</span>
-      <span class="live" id="istClock"><i></i>12:42 MYT</span>
+      <span class="live" id="istClock"><i></i>13:03 MYT</span>
       
       <button type="button" class="thm" id="themeBtn"
               aria-label="Theme: system. Click to change." title="Theme">
@@ -5196,7 +5196,7 @@ table.t tbody tr:hover{background:var(--surface2)}
      date and the hero still held yesterday's numbers. Two tabs open a minute
      apart disagreed about what day it was. The page now knows its own build id
      and says so when a newer one is published. -->
-<div class="editionbar" id="editionbar" data-build="20260911T124258">
+<div class="editionbar" id="editionbar" data-build="20260911T130329">
   
   
   <span class="ed-txt">
@@ -5229,8 +5229,8 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹23283</span>
-      <span class="c dn">▼ -0.83%</span>
+      <span class="p">₹23281</span>
+      <span class="c dn">▼ -0.84%</span>
     </div>
     
     
@@ -5250,36 +5250,36 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4369.1</span>
-      <span class="c up">▲ +0.11%</span>
+      <span class="p">$4373.3</span>
+      <span class="c up">▲ +0.2%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$102.48</span>
-      <span class="c up">▲ 0.0%</span>
+      <span class="p">$102.22</span>
+      <span class="c dn">▼ -0.25%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.67</span>
-      <span class="c up">▲ +0.58%</span>
+      <span class="p">₹95.73</span>
+      <span class="c up">▲ +0.65%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$77074</span>
-      <span class="c dn">▼ -1.51%</span>
+      <span class="p">$77062</span>
+      <span class="c dn">▼ -1.53%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹74276</span>
-      <span class="c dn">▼ -0.84%</span>
+      <span class="p">₹74382</span>
+      <span class="c dn">▼ -0.69%</span>
     </div>
     
     <div class="tseg" style="--sc:var(--lime)"><span class="ic">📈</span><span class="lb">Markets</span></div>
@@ -5287,8 +5287,8 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Nifty 50</span>
-      <span class="p">₹23283</span>
-      <span class="c dn">▼ -0.83%</span>
+      <span class="p">₹23281</span>
+      <span class="c dn">▼ -0.84%</span>
     </div>
     
     
@@ -5308,36 +5308,36 @@ table.t tbody tr:hover{background:var(--surface2)}
     
     <div class="ti">
       <span class="n">Gold</span>
-      <span class="p">$4369.1</span>
-      <span class="c up">▲ +0.11%</span>
+      <span class="p">$4373.3</span>
+      <span class="c up">▲ +0.2%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Crude</span>
-      <span class="p">$102.48</span>
-      <span class="c up">▲ 0.0%</span>
+      <span class="p">$102.22</span>
+      <span class="c dn">▼ -0.25%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">USD/INR</span>
-      <span class="p">₹95.67</span>
-      <span class="c up">▲ +0.58%</span>
+      <span class="p">₹95.73</span>
+      <span class="c up">▲ +0.65%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">BTC</span>
-      <span class="p">$77074</span>
-      <span class="c dn">▼ -1.51%</span>
+      <span class="p">$77062</span>
+      <span class="c dn">▼ -1.53%</span>
     </div>
     
     
     <div class="ti">
       <span class="n">Sensex</span>
-      <span class="p">₹74276</span>
-      <span class="c dn">▼ -0.84%</span>
+      <span class="p">₹74382</span>
+      <span class="c dn">▼ -0.69%</span>
     </div>
     
   </div>
@@ -5479,7 +5479,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     <div class="stat">
       <div class="v" style="color:var(--down)"
-           data-count="3" data-total="8">3/8</div>
+           data-count="2" data-total="8">2/8</div>
       <div class="k">Markets Advancing</div>
     </div>
   </div>
@@ -5560,8 +5560,8 @@ table.t tbody tr:hover{background:var(--surface2)}
         Risk appetite across 8 instruments,
         weighted by move size. Moved most by
         <b class="up">USD/INR
-          +0.58%</b> and <b class="dn">Nifty 50
-          -0.83%</b>.
+          +0.65%</b> and <b class="dn">Nifty 50
+          -0.84%</b>.
         
         50 is neutral; risk assets push up, havens push down.
         
@@ -5582,7 +5582,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <li class="sixty-r">
           <a href="#marketintel">
             <span class="sixty-i">01</span>
-            <span class="sixty-x">USD/INR +0.58% while 5 of 5 risk assets fell</span>
+            <span class="sixty-x">USD/INR +0.65% while 5 of 5 risk assets fell</span>
             <span class="mc-basis mb-fact">FACT</span>
           </a>
         </li>
@@ -5652,7 +5652,7 @@ table.t tbody tr:hover{background:var(--surface2)}
             
             <span class="mc-basis mb-fact">FACT</span>
           </div>
-          <h3 class="mc-head">USD/INR +0.58% while 5 of 5 risk assets fell</h3>
+          <h3 class="mc-head">USD/INR +0.65% while 5 of 5 risk assets fell</h3>
           <p class="mc-why">A haven bid against a soft tape is what pushes the regime reading down. It sits at 5/100 — risk-off.</p>
           
           <p class="mc-unless"><span>Unless</span>Risk assets recovering while the haven bid holds turns this into a liquidity story rather than a risk one.</p>
@@ -7962,9 +7962,9 @@ table.t tbody tr:hover{background:var(--surface2)}
     <div class="lead rv">
       <div class="lead-m">
         <span class="tag">Economic Times · LEAD</span>
-        <h2><a href="https://economictimes.indiatimes.com/markets/stocks/news/rs-2-8-lakh-crore-out-rs-47000-crore-in-why-fiis-are-selling-listed-stocks-but-chasing-ipos/articleshow/134045108.cms" target="_blank">Rs 2.8 lakh crore out, Rs 47,000 crore in: Why FIIs are selling listed stocks but chasing IPOs</a></h2>
-        <p>FIIs are increasingly turning to India’s primary market even as they withdraw heavily from listed stocks. Foreign investors have pulled nearly Rs 2.8 lakh crore from the secondary market in 2026 but invested over Rs 47,000 crore in IPOs. The shift reflects a preference for new sectors, large allocations at predetermined prices and greater control over entry costs.</p>
-        <a class="readmore" href="https://economictimes.indiatimes.com/markets/stocks/news/rs-2-8-lakh-crore-out-rs-47000-crore-in-why-fiis-are-selling-listed-stocks-but-chasing-ipos/articleshow/134045108.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
+        <h2><a href="https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-wall-street-brokerages-see-sp-500-extending-rally-in-2026-on-ai-earnings/articleshow/134045638.cms" target="_blank">US Market: Wall Street brokerages see S&amp;P 500 extending rally in 2026 on AI, earnings</a></h2>
+        <p>Wall Street brokerages remain bullish on the S&amp;P 500 in 2026, with AI-driven earnings growth and resilient corporate profits expected to support equities despite inflation, energy supply risks and economic uncertainty stemming from the Iran conflict.</p>
+        <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/wall-street-guide/us-market-wall-street-brokerages-see-sp-500-extending-rally-in-2026-on-ai-earnings/articleshow/134045638.cms" target="_blank" rel="noopener">Read the full story &rarr;</a>
       </div>
       <div class="lead-s">
         
@@ -7977,8 +7977,8 @@ table.t tbody tr:hover{background:var(--surface2)}
         
         <div class="mini">
           <span class="s">Livemint</span>
-          <a href="https://www.livemint.com/market/stock-market-news/vedanta-aluminium-metal-shares-dip-over-3-heres-why-anil-agarwal-owned-stock-is-nosediving-11789098858126.html" target="_blank">Vedanta Aluminium Metal shares dip over 3% | Here's why Anil Agarwal-owned stock is nosediving</a>
-          <p class="mini-s">Vedanta Aluminium Metal share price witnessed a gap-down opening on Friday and touched a new 52-week low of  ₹419.50 per share on &hellip;</p>
+          <a href="https://www.livemint.com/market/stock-market-news/rs-600-cr-neogen-qip-floor-price-key-dates-discount-option-approvals-and-other-details-11789101635150.html" target="_blank">₹600 cr Neogen QIP: Floor price, key dates, discount option, approvals and other details</a>
+          <p class="mini-s">Neogen Chemicals Limited shares opened lower after setting a QIP floor price at  ₹2,189.73 per share. Check details</p>
         </div>
         
         <div class="mini">
@@ -7989,8 +7989,8 @@ table.t tbody tr:hover{background:var(--surface2)}
         
         <div class="mini">
           <span class="s">Bloomberg</span>
-          <a href="https://www.bloomberg.com/news/articles/2026-09-10/stock-market-today-dow-s-p-live-updates" target="_blank">Asian Stocks, Bonds Fall on Oil and Inflation Woes: Markets Wrap</a>
-          <p class="mini-s">Asian stocks and bonds dropped following a surge in oil prices, as investors awaited key US inflation data Friday that may determi&hellip;</p>
+          <a href="https://www.bloomberg.com/news/articles/2026-09-10/latest-oil-market-news-and-analysis-for-sept-11" target="_blank">Latest Oil Market News and Analysis for Sept. 11</a>
+          <p class="mini-s">Brent oil traded near $108 barrel after fighting between Yemen-based Houthi militants and Saudi-backed forces intensified, stoking&hellip;</p>
         </div>
         
         <div class="mini">
@@ -8046,11 +8046,11 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ncard rv" style="--d:0.2s">
         <span class="s">Economic Times</span>
-        <h3><a href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-japans-nikkei-falls-3-as-oil-surge-us-rate-hike-fears-weigh/articleshow/134045193.cms" target="_blank">Global Market: Japan's Nikkei falls 3% as oil surge, US rate hike fears weigh</a></h3>
-        <p>Japan’s Nikkei fell over 3% in early trade as surging oil prices and rising US Treasury yields revived inflation and rate-hike concerns. Japanese equities came under broad pressure&hellip;</p>
+        <h3><a href="https://economictimes.indiatimes.com/markets/stocks/news/vedanta-vedanta-aluminium-nalco-other-metal-stocks-fall-up-to-5-on-friday-heres-why/articleshow/134045470.cms" target="_blank">Vedanta, Vedanta Aluminium, NALCO, other metal stocks fall up to 5% on Friday. Here’s why</a></h3>
+        <p>Metal stocks fell as soaring oil prices, rising US bond yields and a stronger dollar weighed on sentiment. Vedanta, Vedanta Aluminium, Hindustan Copper, Tata Steel and JSW Steel de&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 04:24</span>
-          <a class="readmore" href="https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-japans-nikkei-falls-3-as-oil-surge-us-rate-hike-fears-weigh/articleshow/134045193.cms" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 04:32</span>
+          <a class="readmore" href="https://economictimes.indiatimes.com/markets/stocks/news/vedanta-vedanta-aluminium-nalco-other-metal-stocks-fall-up-to-5-on-friday-heres-why/articleshow/134045470.cms" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -8066,11 +8066,11 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ncard rv" style="--d:0.30000000000000004s">
         <span class="s">Livemint</span>
-        <h3><a href="https://www.livemint.com/market/stock-market-news/molbio-diagnostics-shares-surge-over-50-in-just-3-days-what-is-driving-the-rally-11789100217923.html" target="_blank">Molbio Diagnostics shares surge over 50% in just 3 days! What is driving the rally?</a></h3>
-        <p>Molbio Diagnostics share price has surged nearly 51% on the BSE in just 3 sessions. The stock has surged 109% from its issue price of  ₹807.</p>
+        <h3><a href="https://www.livemint.com/market/stock-market-news/milky-mist-share-price-hits-record-high-soaring-75-from-52-week-low-what-s-fueling-the-rally-11789101338019.html" target="_blank">Milky Mist share price hits record high, soaring 75% from 52-week low: What’s fueling the rally?</a></h3>
+        <p>Milky Mist Dairy Food shares reached a record high on September 11, rising 3.4% after announcing a new Skyr and Greek Yogurt facility. The stock has surged 75% from its 52-week low&hellip;</p>
         <div class="ncard-f">
-          <span class="ts">Sep 11 04:25</span>
-          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/molbio-diagnostics-shares-surge-over-50-in-just-3-days-what-is-driving-the-rally-11789100217923.html" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 11 04:47</span>
+          <a class="readmore" href="https://www.livemint.com/market/stock-market-news/milky-mist-share-price-hits-record-high-soaring-75-from-52-week-low-what-s-fueling-the-rally-11789101338019.html" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -8086,11 +8086,11 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ncard rv" style="--d:0.4s">
         <span class="s">Bloomberg</span>
-        <h3><a href="https://www.bloomberg.com/news/articles/2026-09-10/latest-oil-market-news-and-analysis-for-sept-11" target="_blank">Latest Oil Market News and Analysis for Sept. 11</a></h3>
-        <p>Brent oil traded near $108 barrel after fighting between Yemen-based Houthi militants and Saudi-backed forces intensified, stoking fears of deeper supply disruptions as hostilities&hellip;</p>
+        <h3><a href="https://www.bloomberg.com/news/articles/2026-09-10/gold-holds-drop-as-rising-oil-inflation-bolster-rate-hike-bets" target="_blank">Gold Set for Weekly Drop as Oil, Inflation Boost Rate-Hike Bets</a></h3>
+        <p>Gold was on track for a third weekly decline, as surging oil prices and the latest US inflation report bolstered the case for the Federal Reserve to hike interest rates next week.</p>
         <div class="ncard-f">
-          <span class="ts">Sep 10 22:06</span>
-          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-09-10/latest-oil-market-news-and-analysis-for-sept-11" target="_blank" rel="noopener">Read more &rarr;</a>
+          <span class="ts">Sep 10 23:34</span>
+          <a class="readmore" href="https://www.bloomberg.com/news/articles/2026-09-10/gold-holds-drop-as-rising-oil-inflation-bolster-rate-hike-bets" target="_blank" rel="noopener">Read more &rarr;</a>
         </div>
       </div>
       
@@ -10089,7 +10089,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.322 to Rs.339</span></div>
         <div><span class="k">Issue size</span><span class="v">₹805 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-09 → 2026-09-11</span></div>
-        <div><span class="k">Subscribed</span><span class="v dn">0.22x</span></div>
+        <div><span class="k">Subscribed</span><span class="v dn">0.23x</span></div>
         <div><span class="k">Lot size</span><span class="v">44 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,916</span></div>
         
@@ -10164,7 +10164,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 6/40 · Size 20/25 · Pricing 15/20 · Window 4/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> Only 0.22x subscribed with the book about to close.</p>
+      <p class="ipo-why"><b>Why:</b> Only 0.23x subscribed with the book about to close.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> An undersubscribed mainboard issue usually lists at or below its band.</p>
       <p class="ipo-missing"><b>No public source:</b> sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -10176,7 +10176,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">KARAMTARA</strong>
         <span class="ipo-sum-co">Karamtara Engineering Limited</span>
-        <span class="ipo-sum-x num">2.7x</span>
+        <span class="ipo-sum-x num">3.2x</span>
         <span class="ipo-verdict">WATCH</span>
       </summary>
       <div class="ipo-top">
@@ -10191,7 +10191,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.241 to Rs.254</span></div>
         <div><span class="k">Issue size</span><span class="v">₹875 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-09 → 2026-09-11</span></div>
-        <div><span class="k">Subscribed</span><span class="v ">2.70x</span></div>
+        <div><span class="k">Subscribed</span><span class="v up">3.19x</span></div>
         <div><span class="k">Lot size</span><span class="v">59 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,986</span></div>
         
@@ -10250,22 +10250,22 @@ table.t tbody tr:hover{background:var(--surface2)}
         
         <span class="">QIB <b>2.40x</b></span>
         
-        <span class="">HNI <b>6.53x</b></span>
+        <span class="">HNI <b>9.39x</b></span>
         
-        <span class="">Total <b>3.89x</b></span>
+        <span class="">Total <b>5.01x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
       
 
       <div class="ipo-score">
-        <div class="ipo-score-bar"><i style="width:55%"></i></div>
-        <span class="ipo-score-n">55/100 measured</span>
-        <span class="ipo-score-parts">Demand 16/40 · Size 20/25 · Pricing 15/20 · Window 4/15</span>
+        <div class="ipo-score-bar"><i style="width:63%"></i></div>
+        <span class="ipo-score-n">63/100 measured</span>
+        <span class="ipo-score-parts">Demand 24/40 · Size 20/25 · Pricing 15/20 · Window 4/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> 2.7x near the close — demand is real but thin.</p>
-      <p class="ipo-caveat"><b>Why it might be wrong:</b> Retail allotment is likely, which in a weak book is not the advantage it sounds like.</p>
+      <p class="ipo-why"><b>Why:</b> 3.2x so far, with time left on the book.</p>
+      <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> listing date · sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
     </details>
@@ -10276,7 +10276,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">ARCIL</strong>
         <span class="ipo-sum-co">Asset Reconstruction Company (India) Limited</span>
-        <span class="ipo-sum-x num">0.6x</span>
+        <span class="ipo-sum-x num">0.7x</span>
         <span class="ipo-verdict">AVOID</span>
       </summary>
       <div class="ipo-top">
@@ -10291,7 +10291,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.132 to Rs.139</span></div>
         <div><span class="k">Issue size</span><span class="v">₹733 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-09 → 2026-09-11</span></div>
-        <div><span class="k">Subscribed</span><span class="v dn">0.65x</span></div>
+        <div><span class="k">Subscribed</span><span class="v dn">0.72x</span></div>
         <div><span class="k">Lot size</span><span class="v">107 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,873</span></div>
         
@@ -10347,11 +10347,11 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ipo-cats">
         
-        <span class="ipo-cat-cold">QIB <b>0.10x</b></span>
+        <span class="ipo-cat-cold">QIB <b>0.17x</b></span>
         
-        <span class="">HNI <b>1.04x</b></span>
+        <span class="">HNI <b>1.35x</b></span>
         
-        <span class="ipo-cat-cold">Total <b>0.89x</b></span>
+        <span class="">Total <b>1.06x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -10363,7 +10363,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 6/40 · Size 14/25 · Pricing 15/20 · Window 4/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> Only 0.65x subscribed with the book about to close.</p>
+      <p class="ipo-why"><b>Why:</b> Only 0.72x subscribed with the book about to close.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> An undersubscribed mainboard issue usually lists at or below its band.</p>
       <p class="ipo-missing"><b>No public source:</b> fresh/OFS split · sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -10375,7 +10375,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">STEAMHOUSE</strong>
         <span class="ipo-sum-co">Steamhouse India Limited</span>
-        <span class="ipo-sum-x num">1.6x</span>
+        <span class="ipo-sum-x num">2.1x</span>
         <span class="ipo-verdict">WATCH</span>
       </summary>
       <div class="ipo-top">
@@ -10390,7 +10390,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.77 to Rs.81</span></div>
         <div><span class="k">Issue size</span><span class="v">₹414 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-09 → 2026-09-11</span></div>
-        <div><span class="k">Subscribed</span><span class="v ">1.58x</span></div>
+        <div><span class="k">Subscribed</span><span class="v ">2.08x</span></div>
         <div><span class="k">Lot size</span><span class="v">185 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,985</span></div>
         
@@ -10449,11 +10449,11 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ipo-cats">
         
-        <span class="">QIB <b>1.70x</b></span>
+        <span class="">QIB <b>1.71x</b></span>
         
-        <span class="">HNI <b>2.13x</b></span>
+        <span class="">HNI <b>3.96x</b></span>
         
-        <span class="">Total <b>2.42x</b></span>
+        <span class="">Total <b>3.46x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -10465,7 +10465,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 16/40 · Size 14/25 · Pricing 15/20 · Window 4/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> 1.6x near the close — demand is real but thin.</p>
+      <p class="ipo-why"><b>Why:</b> 2.1x near the close — demand is real but thin.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Retail allotment is likely, which in a weak book is not the advantage it sounds like.</p>
       <p class="ipo-missing"><b>No public source:</b> sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -10477,7 +10477,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">RENTOMOJO</strong>
         <span class="ipo-sum-co">Rentomojo Limited</span>
-        <span class="ipo-sum-x num">3.8x</span>
+        <span class="ipo-sum-x num">4.8x</span>
         <span class="ipo-verdict">WATCH</span>
       </summary>
       <div class="ipo-top">
@@ -10492,7 +10492,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.384 to Rs.404</span></div>
         <div><span class="k">Issue size</span><span class="v">₹1,256 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-09 → 2026-09-11</span></div>
-        <div><span class="k">Subscribed</span><span class="v up">3.84x</span></div>
+        <div><span class="k">Subscribed</span><span class="v up">4.82x</span></div>
         <div><span class="k">Lot size</span><span class="v">37 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,948</span></div>
         
@@ -10551,13 +10551,13 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ipo-cats">
         
-        <span class="ipo-cat-cold">QIB <b>0.45x</b></span>
+        <span class="ipo-cat-cold">QIB <b>0.46x</b></span>
         
-        <span class="ipo-cat-hot">HNI <b>11.71x</b></span>
+        <span class="ipo-cat-hot">HNI <b>17.58x</b></span>
         
-        <span class="">Employee <b>4.46x</b></span>
+        <span class="">Employee <b>5.38x</b></span>
         
-        <span class="">Total <b>4.83x</b></span>
+        <span class="">Total <b>6.59x</b></span>
         
         <span class="ipo-cat-src">via ipopremium.in</span>
       </div>
@@ -10569,7 +10569,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 24/40 · Size 20/25 · Pricing 15/20 · Window 4/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> 3.8x so far, with time left on the book.</p>
+      <p class="ipo-why"><b>Why:</b> 4.8x so far, with time left on the book.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -10581,7 +10581,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">LCCPROJECT</strong>
         <span class="ipo-sum-co">LCC Projects Limited</span>
-        <span class="ipo-sum-x num">3.6x</span>
+        <span class="ipo-sum-x num">4.5x</span>
         <span class="ipo-verdict">WATCH</span>
       </summary>
       <div class="ipo-top">
@@ -10596,7 +10596,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.139 to Rs.146</span></div>
         <div><span class="k">Issue size</span><span class="v">₹427 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-09 → 2026-09-11</span></div>
-        <div><span class="k">Subscribed</span><span class="v up">3.56x</span></div>
+        <div><span class="k">Subscribed</span><span class="v up">4.49x</span></div>
         <div><span class="k">Lot size</span><span class="v">102 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,892</span></div>
         
@@ -10643,12 +10643,23 @@ table.t tbody tr:hover{background:var(--surface2)}
       
       <div class="ipo-gmp">
         <span class="ipo-gmp-k">Grey market</span>
-        <span class="ipo-gmp-v">₹51</span>
+        <span class="ipo-gmp-v">₹49</span>
         <span class="ipo-gmp-w">unofficial · not scored · no audit trail</span>
       </div>
       
 
       
+      
+      <div class="ipo-cats">
+        
+        <span class="">QIB <b>1.16x</b></span>
+        
+        <span class="">HNI <b>9.28x</b></span>
+        
+        <span class="">Total <b>5.81x</b></span>
+        
+        <span class="ipo-cat-src">via ipopremium.in</span>
+      </div>
       
 
       <div class="ipo-score">
@@ -10657,7 +10668,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 24/40 · Size 14/25 · Pricing 15/20 · Window 4/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> 3.6x so far, with time left on the book.</p>
+      <p class="ipo-why"><b>Why:</b> 4.5x so far, with time left on the book.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> listing date · sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -10669,7 +10680,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">VEEGALAND</strong>
         <span class="ipo-sum-co">Veegaland Developers Limited</span>
-        <span class="ipo-sum-x num">0.6x</span>
+        <span class="ipo-sum-x num">0.7x</span>
         <span class="ipo-verdict">WATCH</span>
       </summary>
       <div class="ipo-top">
@@ -10684,7 +10695,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.130 to Rs.140</span></div>
         <div><span class="k">Issue size</span><span class="v">₹210 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-10 → 2026-09-15</span></div>
-        <div><span class="k">Subscribed</span><span class="v dn">0.55x</span></div>
+        <div><span class="k">Subscribed</span><span class="v dn">0.67x</span></div>
         <div><span class="k">Lot size</span><span class="v">107 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,980</span></div>
         
@@ -10754,7 +10765,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 6/40 · Size 8/25 · Pricing 10/20 · Window 15/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> 0.6x so far, with time left on the book.</p>
+      <p class="ipo-why"><b>Why:</b> 0.7x so far, with time left on the book.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> fresh/OFS split · listing date · sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -10766,7 +10777,7 @@ table.t tbody tr:hover{background:var(--surface2)}
       <summary class="ipo-sum">
         <strong class="sym">MANIKA</strong>
         <span class="ipo-sum-co">Manika Plastech Limited</span>
-        <span class="ipo-sum-x num">0.0x</span>
+        <span class="ipo-sum-x num">0.2x</span>
         <span class="ipo-verdict">WATCH</span>
       </summary>
       <div class="ipo-top">
@@ -10781,7 +10792,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <div><span class="k">Price band</span><span class="v">Rs.40 to Rs.43</span></div>
         <div><span class="k">Issue size</span><span class="v">₹126 Cr</span></div>
         <div><span class="k">Window</span><span class="v">2026-09-11 → 2026-09-16</span></div>
-        <div><span class="k">Subscribed</span><span class="v dn">0.05x</span></div>
+        <div><span class="k">Subscribed</span><span class="v dn">0.18x</span></div>
         <div><span class="k">Lot size</span><span class="v">348 shares</span></div>
         <div><span class="k">Min. investment</span><span class="v">₹14,964</span></div>
         
@@ -10851,7 +10862,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <span class="ipo-score-parts">Demand 6/40 · Size 8/25 · Pricing 10/20 · Window 15/15</span>
       </div>
 
-      <p class="ipo-why"><b>Why:</b> 0.0x so far, with time left on the book.</p>
+      <p class="ipo-why"><b>Why:</b> 0.2x so far, with time left on the book.</p>
       <p class="ipo-caveat"><b>Why it might be wrong:</b> Most subscription arrives on the final day; this figure is not final.</p>
       <p class="ipo-missing"><b>No public source:</b> anchor book · listing date · sector · audited financials · valuation multiples
         <br><b>Shown but not scored:</b> grey market premium — shown, deliberately not scored · lot size and minimum application — facts, not judgements</p>
@@ -11003,7 +11014,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Pranav Constructions Limited</td><td class="num">Rs.118 to Rs.124</td>
         <td class="num">2026-09-09</td>
         <td class="num">Sep 15, 2026</td>
-        <td class="num"><span class="wal-live" title="Unofficial grey-market quote. No exchange, no audit trail — context, not a price.">₹50</span></td>
+        <td class="num"><span class="wal-live" title="Unofficial grey-market quote. No exchange, no audit trail — context, not a price.">₹47</span></td>
         <td class="num">2d</td></tr>
       
       <tr><td><strong class="sym">MOMSBELIEF</strong></td>
@@ -11062,10 +11073,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Deepa Jewellers Limited</td>
         <td class="num">2026-09-08</td>
         <td class="num">194.37</td>
-        <td class="num">192.80</td>
+        <td class="num">191.58</td>
         
-        <td class="num dn">-0.8%</td>
-        <td class="num dn">-13.2%</td>
+        <td class="num dn">-1.4%</td>
+        <td class="num dn">-13.7%</td>
         <td class="num mono-dim">4</td>
       </tr>
       
@@ -11079,9 +11090,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Purple Style Labs Limited</td>
         <td class="num">2026-09-07</td>
         <td class="num">568.55</td>
-        <td class="num">548.70</td>
+        <td class="num">548.95</td>
         
-        <td class="num dn">-3.5%</td>
+        <td class="num dn">-3.4%</td>
         <td class="num dn">-6.8%</td>
         <td class="num mono-dim">4</td>
       </tr>
@@ -11113,10 +11124,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Lumino Industries Limited</td>
         <td class="num">2026-09-03</td>
         <td class="num">110.32</td>
-        <td class="num">107.88</td>
+        <td class="num">107.40</td>
         
-        <td class="num dn">-2.2%</td>
-        <td class="num dn">-11.6%</td>
+        <td class="num dn">-2.6%</td>
+        <td class="num dn">-12.0%</td>
         <td class="num mono-dim">7</td>
       </tr>
       
@@ -11130,10 +11141,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Symbiotec Pharmalab Limited</td>
         <td class="num">2026-09-01</td>
         <td class="num">1,097.70</td>
-        <td class="num">1,115.50</td>
+        <td class="num">1,125.45</td>
         
-        <td class="num up">+1.6%</td>
-        <td class="num dn">-6.6%</td>
+        <td class="num up">+2.5%</td>
+        <td class="num dn">-5.7%</td>
         <td class="num mono-dim">9</td>
       </tr>
       
@@ -11147,10 +11158,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Skyways Air Services Limited</td>
         <td class="num">2026-09-01</td>
         <td class="num">125.56</td>
-        <td class="num">111.61</td>
+        <td class="num">113.75</td>
         
-        <td class="num dn">-11.1%</td>
-        <td class="num dn">-18.2%</td>
+        <td class="num dn">-9.4%</td>
+        <td class="num dn">-16.6%</td>
         <td class="num mono-dim">9</td>
       </tr>
       
@@ -11164,10 +11175,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Augmont Enterprises Limited</td>
         <td class="num">2026-08-31</td>
         <td class="num">908.15</td>
-        <td class="num">886.55</td>
+        <td class="num">884.85</td>
         
-        <td class="num dn">-2.4%</td>
-        <td class="num dn">-13.1%</td>
+        <td class="num dn">-2.6%</td>
+        <td class="num dn">-13.2%</td>
         <td class="num mono-dim">10</td>
       </tr>
       
@@ -11181,10 +11192,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Tempsens Instruments (India) Limited</td>
         <td class="num">2026-08-28</td>
         <td class="num">586.65</td>
-        <td class="num">572.40</td>
+        <td class="num">582.30</td>
         
-        <td class="num dn">-2.4%</td>
-        <td class="num dn">-9.8%</td>
+        <td class="num dn">-0.7%</td>
+        <td class="num dn">-8.3%</td>
         <td class="num mono-dim">11</td>
       </tr>
       
@@ -11198,7 +11209,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Gaja Alternative Asset Management Limited</td>
         <td class="num">2026-08-26</td>
         <td class="num">168.67</td>
-        <td class="num">152.11</td>
+        <td class="num">152.09</td>
         
         <td class="num dn">-9.8%</td>
         <td class="num dn">-20.6%</td>
@@ -11232,10 +11243,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Shankesh Jewellers Limited</td>
         <td class="num">2026-08-25</td>
         <td class="num">94.82</td>
-        <td class="num">108.29</td>
+        <td class="num">104.16</td>
         
-        <td class="num up">+14.2%</td>
-        <td class="num dn">-6.6%</td>
+        <td class="num up">+9.9%</td>
+        <td class="num dn">-10.1%</td>
         <td class="num mono-dim">14</td>
       </tr>
       
@@ -11249,10 +11260,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Lalithaa Jewellery Mart Limited</td>
         <td class="num">2026-08-24</td>
         <td class="num">248.44</td>
-        <td class="num">338.85</td>
+        <td class="num">339.20</td>
         
-        <td class="num up">+36.4%</td>
-        <td class="num dn">-1.5%</td>
+        <td class="num up">+36.5%</td>
+        <td class="num dn">-1.4%</td>
         <td class="num mono-dim">15</td>
       </tr>
       
@@ -11266,10 +11277,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Horizon Industrial Parks Limited</td>
         <td class="num">2026-08-24</td>
         <td class="num">58.16</td>
-        <td class="num">54.55</td>
+        <td class="num">54.39</td>
         
-        <td class="num dn">-6.2%</td>
-        <td class="num dn">-9.5%</td>
+        <td class="num dn">-6.5%</td>
+        <td class="num dn">-9.7%</td>
         <td class="num mono-dim">14</td>
       </tr>
       
@@ -11283,10 +11294,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Shiprocket Limited</td>
         <td class="num">2026-08-19</td>
         <td class="num">143.45</td>
-        <td class="num">129.12</td>
+        <td class="num">130.74</td>
         
-        <td class="num dn">-10.0%</td>
-        <td class="num dn">-17.7%</td>
+        <td class="num dn">-8.9%</td>
+        <td class="num dn">-16.7%</td>
         <td class="num mono-dim">18</td>
       </tr>
       
@@ -11300,10 +11311,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Behari Lal Engineering Limited</td>
         <td class="num">2026-08-19</td>
         <td class="num">502.20</td>
-        <td class="num">433.60</td>
+        <td class="num">435.00</td>
         
-        <td class="num dn">-13.7%</td>
-        <td class="num dn">-20.9%</td>
+        <td class="num dn">-13.4%</td>
+        <td class="num dn">-20.6%</td>
         <td class="num mono-dim">18</td>
       </tr>
       
@@ -11334,10 +11345,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Molbio Diagnostics Limited</td>
         <td class="num">2026-08-17</td>
         <td class="num">1,041.70</td>
-        <td class="num">1,584.00</td>
+        <td class="num">1,582.60</td>
         
-        <td class="num up">+52.1%</td>
-        <td class="num dn">-6.1%</td>
+        <td class="num up">+51.9%</td>
+        <td class="num dn">-6.2%</td>
         <td class="num mono-dim">19</td>
       </tr>
       
@@ -11351,10 +11362,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Dhoot Transmission Limited</td>
         <td class="num">2026-08-17</td>
         <td class="num">1,187.05</td>
-        <td class="num">1,595.40</td>
+        <td class="num">1,608.60</td>
         
-        <td class="num up">+34.4%</td>
-        <td class="num dn">-4.2%</td>
+        <td class="num up">+35.5%</td>
+        <td class="num dn">-3.4%</td>
         <td class="num mono-dim">19</td>
       </tr>
       
@@ -11368,10 +11379,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Technocraft Ventures Limited</td>
         <td class="num">2026-08-14</td>
         <td class="num">311.15</td>
-        <td class="num">443.95</td>
+        <td class="num">443.65</td>
         
-        <td class="num up">+42.7%</td>
-        <td class="num dn">-3.4%</td>
+        <td class="num up">+42.6%</td>
+        <td class="num dn">-3.5%</td>
         <td class="num mono-dim">21</td>
       </tr>
       
@@ -11385,10 +11396,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ardee Industries Limited</td>
         <td class="num">2026-08-12</td>
         <td class="num">67.12</td>
-        <td class="num">50.88</td>
+        <td class="num">50.80</td>
         
-        <td class="num dn">-24.2%</td>
-        <td class="num dn">-30.5%</td>
+        <td class="num dn">-24.3%</td>
+        <td class="num dn">-30.6%</td>
         <td class="num mono-dim">23</td>
       </tr>
       
@@ -11402,7 +11413,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Juniper Green Energy Limited</td>
         <td class="num">2026-08-06</td>
         <td class="num">259.71</td>
-        <td class="num">259.70</td>
+        <td class="num">259.60</td>
         
         <td class="num dn">-0.0%</td>
         <td class="num dn">-7.9%</td>
@@ -11419,10 +11430,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>MV Electrosystems Limited</td>
         <td class="num">2026-08-06</td>
         <td class="num">624.00</td>
-        <td class="num">832.45</td>
+        <td class="num">828.25</td>
         
-        <td class="num up">+33.4%</td>
-        <td class="num dn">-12.2%</td>
+        <td class="num up">+32.7%</td>
+        <td class="num dn">-12.6%</td>
         <td class="num mono-dim">26</td>
       </tr>
       
@@ -11436,10 +11447,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Manipal Health Enterprises Limited</td>
         <td class="num">2026-08-05</td>
         <td class="num">666.95</td>
-        <td class="num">722.00</td>
+        <td class="num">719.30</td>
         
-        <td class="num up">+8.3%</td>
-        <td class="num dn">-11.4%</td>
+        <td class="num up">+7.8%</td>
+        <td class="num dn">-11.7%</td>
         <td class="num mono-dim">27</td>
       </tr>
       
@@ -11453,10 +11464,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>INDO-MIM Limited</td>
         <td class="num">2026-07-30</td>
         <td class="num">741.75</td>
-        <td class="num">992.70</td>
+        <td class="num">993.75</td>
         
-        <td class="num up">+33.8%</td>
-        <td class="num dn">-3.5%</td>
+        <td class="num up">+34.0%</td>
+        <td class="num dn">-3.4%</td>
         <td class="num mono-dim">32</td>
       </tr>
       
@@ -11470,10 +11481,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Lohia Corp Limited</td>
         <td class="num">2026-07-30</td>
         <td class="num">494.60</td>
-        <td class="num">548.05</td>
+        <td class="num">549.55</td>
         
-        <td class="num up">+10.8%</td>
-        <td class="num dn">-9.4%</td>
+        <td class="num up">+11.1%</td>
+        <td class="num dn">-9.1%</td>
         <td class="num mono-dim">31</td>
       </tr>
       
@@ -11487,10 +11498,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Caliber Mining and Logistics Limited</td>
         <td class="num">2026-07-24</td>
         <td class="num">528.20</td>
-        <td class="num">465.40</td>
+        <td class="num">467.55</td>
         
-        <td class="num dn">-11.9%</td>
-        <td class="num dn">-25.5%</td>
+        <td class="num dn">-11.5%</td>
+        <td class="num dn">-25.1%</td>
         <td class="num mono-dim">36</td>
       </tr>
       
@@ -11504,7 +11515,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>SBI Funds Management Limited</td>
         <td class="num">2026-07-21</td>
         <td class="num">609.75</td>
-        <td class="num">546.80</td>
+        <td class="num">546.65</td>
         
         <td class="num dn">-10.3%</td>
         <td class="num dn">-12.5%</td>
@@ -11521,10 +11532,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Laser Power & Infra Limited</td>
         <td class="num">2026-07-16</td>
         <td class="num">262.42</td>
-        <td class="num">283.90</td>
+        <td class="num">286.50</td>
         
-        <td class="num up">+8.2%</td>
-        <td class="num dn">-17.4%</td>
+        <td class="num up">+9.2%</td>
+        <td class="num dn">-16.6%</td>
         <td class="num mono-dim">41</td>
       </tr>
       
@@ -11538,10 +11549,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Kusumgar Limited</td>
         <td class="num">2026-07-15</td>
         <td class="num">602.80</td>
-        <td class="num">573.10</td>
+        <td class="num">569.55</td>
         
-        <td class="num dn">-4.9%</td>
-        <td class="num dn">-13.1%</td>
+        <td class="num dn">-5.5%</td>
+        <td class="num dn">-13.6%</td>
         <td class="num mono-dim">42</td>
       </tr>
       
@@ -11555,10 +11566,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Knack Packaging Limited</td>
         <td class="num">2026-07-08</td>
         <td class="num">182.98</td>
-        <td class="num">182.51</td>
+        <td class="num">182.60</td>
         
-        <td class="num dn">-0.3%</td>
-        <td class="num dn">-17.8%</td>
+        <td class="num dn">-0.2%</td>
+        <td class="num dn">-17.7%</td>
         <td class="num mono-dim">48</td>
       </tr>
       
@@ -11572,10 +11583,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Waterways Leisure Tourism Limited</td>
         <td class="num">2026-07-01</td>
         <td class="num">66.81</td>
-        <td class="num">108.60</td>
+        <td class="num">108.99</td>
         
-        <td class="num up">+62.6%</td>
-        <td class="num dn">-3.2%</td>
+        <td class="num up">+63.1%</td>
+        <td class="num dn">-2.9%</td>
         <td class="num mono-dim">52</td>
       </tr>
       
@@ -11589,10 +11600,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Turtlemint Fintech Solutions Limited</td>
         <td class="num">2026-06-29</td>
         <td class="num">135.37</td>
-        <td class="num">130.95</td>
+        <td class="num">131.08</td>
         
-        <td class="num dn">-3.3%</td>
-        <td class="num dn">-18.2%</td>
+        <td class="num dn">-3.2%</td>
+        <td class="num dn">-18.1%</td>
         <td class="num mono-dim">54</td>
       </tr>
       
@@ -11606,10 +11617,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>CMR Green Technologies Limited</td>
         <td class="num">2026-06-10</td>
         <td class="num">241.20</td>
-        <td class="num">216.40</td>
+        <td class="num">216.25</td>
         
         <td class="num dn">-10.3%</td>
-        <td class="num dn">-19.5%</td>
+        <td class="num dn">-19.6%</td>
         <td class="num mono-dim">68</td>
       </tr>
       
@@ -11623,10 +11634,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Onemi Technology Solutions Limited</td>
         <td class="num">2026-05-08</td>
         <td class="num">208.63</td>
-        <td class="num">326.25</td>
+        <td class="num">325.10</td>
         
-        <td class="num up">+56.4%</td>
-        <td class="num dn">-7.2%</td>
+        <td class="num up">+55.8%</td>
+        <td class="num dn">-7.5%</td>
         <td class="num mono-dim">90</td>
       </tr>
       
@@ -11657,9 +11668,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sai Parenteral's Limited</td>
         <td class="num">2026-04-02</td>
         <td class="num">405.70</td>
-        <td class="num">521.90</td>
+        <td class="num">521.45</td>
         
-        <td class="num up">+28.6%</td>
+        <td class="num up">+28.5%</td>
         <td class="num dn">-26.1%</td>
         <td class="num mono-dim">113</td>
       </tr>
@@ -11674,10 +11685,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Powerica Limited</td>
         <td class="num">2026-04-02</td>
         <td class="num">390.00</td>
-        <td class="num">562.00</td>
+        <td class="num">562.80</td>
         
-        <td class="num up">+44.1%</td>
-        <td class="num dn">-17.0%</td>
+        <td class="num up">+44.3%</td>
+        <td class="num dn">-16.9%</td>
         <td class="num mono-dim">115</td>
       </tr>
       
@@ -11691,10 +11702,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Central Mine Planning & Design Institute Limited</td>
         <td class="num">2026-03-30</td>
         <td class="num">152.77</td>
-        <td class="num">214.76</td>
+        <td class="num">217.10</td>
         
-        <td class="num up">+40.6%</td>
-        <td class="num dn">-23.7%</td>
+        <td class="num up">+42.1%</td>
+        <td class="num dn">-22.8%</td>
         <td class="num mono-dim">117</td>
       </tr>
       
@@ -11708,10 +11719,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>GSP Crop Science Limited</td>
         <td class="num">2026-03-24</td>
         <td class="num">356.25</td>
-        <td class="num">478.05</td>
+        <td class="num">475.85</td>
         
-        <td class="num up">+34.2%</td>
-        <td class="num dn">-28.4%</td>
+        <td class="num up">+33.6%</td>
+        <td class="num dn">-28.8%</td>
         <td class="num mono-dim">119</td>
       </tr>
       
@@ -11742,7 +11753,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Rajputana Stainless Limited</td>
         <td class="num">2026-03-19</td>
         <td class="num">113.03</td>
-        <td class="num">187.27</td>
+        <td class="num">187.24</td>
         
         <td class="num up">+65.7%</td>
         <td class="num dn">-2.9%</td>
@@ -11759,10 +11770,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sedemac Mechatronics Limited</td>
         <td class="num">2026-03-11</td>
         <td class="num">1,451.10</td>
-        <td class="num">2,982.40</td>
+        <td class="num">2,933.30</td>
         
-        <td class="num up">+105.5%</td>
-        <td class="num dn">-11.5%</td>
+        <td class="num up">+102.1%</td>
+        <td class="num dn">-12.9%</td>
         <td class="num mono-dim">129</td>
       </tr>
       
@@ -11776,10 +11787,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Omnitech Engineering Limited</td>
         <td class="num">2026-03-05</td>
         <td class="num">204.93</td>
-        <td class="num">547.95</td>
+        <td class="num">548.90</td>
         
-        <td class="num up">+167.4%</td>
-        <td class="num dn">-28.4%</td>
+        <td class="num up">+167.8%</td>
+        <td class="num dn">-28.2%</td>
         <td class="num mono-dim">133</td>
       </tr>
       
@@ -11793,10 +11804,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>PNGS Reva Diamond Jewellery Limited</td>
         <td class="num">2026-03-04</td>
         <td class="num">411.70</td>
-        <td class="num">507.90</td>
+        <td class="num">505.95</td>
         
-        <td class="num up">+23.4%</td>
-        <td class="num dn">-21.1%</td>
+        <td class="num up">+22.9%</td>
+        <td class="num dn">-21.4%</td>
         <td class="num mono-dim">133</td>
       </tr>
       
@@ -11810,10 +11821,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Clean Max Enviro Energy Solutions Limited</td>
         <td class="num">2026-03-02</td>
         <td class="num">867.50</td>
-        <td class="num">1,380.00</td>
+        <td class="num">1,387.80</td>
         
-        <td class="num up">+59.1%</td>
-        <td class="num dn">-10.2%</td>
+        <td class="num up">+60.0%</td>
+        <td class="num dn">-9.6%</td>
         <td class="num mono-dim">133</td>
       </tr>
       
@@ -11827,10 +11838,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Fractal Analytics Limited</td>
         <td class="num">2026-02-16</td>
         <td class="num">847.15</td>
-        <td class="num">765.60</td>
+        <td class="num">766.50</td>
         
-        <td class="num dn">-9.6%</td>
-        <td class="num dn">-31.5%</td>
+        <td class="num dn">-9.5%</td>
+        <td class="num dn">-31.4%</td>
         <td class="num mono-dim">144</td>
       </tr>
       
@@ -11844,9 +11855,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Aye Finance Limited</td>
         <td class="num">2026-02-16</td>
         <td class="num">128.91</td>
-        <td class="num">175.35</td>
+        <td class="num">175.45</td>
         
-        <td class="num up">+36.0%</td>
+        <td class="num up">+36.1%</td>
         <td class="num dn">-11.1%</td>
         <td class="num mono-dim">145</td>
       </tr>
@@ -11861,10 +11872,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Shadowfax Technologies Limited</td>
         <td class="num">2026-01-28</td>
         <td class="num">109.98</td>
-        <td class="num">248.95</td>
+        <td class="num">250.00</td>
         
-        <td class="num up">+126.4%</td>
-        <td class="num dn">-7.3%</td>
+        <td class="num up">+127.3%</td>
+        <td class="num dn">-6.9%</td>
         <td class="num mono-dim">157</td>
       </tr>
       
@@ -11878,10 +11889,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Amagi Media Labs Limited</td>
         <td class="num">2026-01-21</td>
         <td class="num">348.25</td>
-        <td class="num">566.10</td>
+        <td class="num">567.75</td>
         
-        <td class="num up">+62.6%</td>
-        <td class="num dn">-22.2%</td>
+        <td class="num up">+63.0%</td>
+        <td class="num dn">-21.9%</td>
         <td class="num mono-dim">161</td>
       </tr>
       
@@ -11895,10 +11906,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Bharat Coking Coal Limited</td>
         <td class="num">2026-01-19</td>
         <td class="num">40.58</td>
-        <td class="num">33.00</td>
+        <td class="num">33.04</td>
         
-        <td class="num dn">-18.7%</td>
-        <td class="num dn">-26.8%</td>
+        <td class="num dn">-18.6%</td>
+        <td class="num dn">-26.7%</td>
         <td class="num mono-dim">164</td>
       </tr>
       
@@ -11912,10 +11923,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Gujarat Kidney and Super Speciality Limited</td>
         <td class="num">2025-12-30</td>
         <td class="num">104.54</td>
-        <td class="num">173.16</td>
+        <td class="num">172.98</td>
         
-        <td class="num up">+65.6%</td>
-        <td class="num dn">-4.3%</td>
+        <td class="num up">+65.5%</td>
+        <td class="num dn">-4.4%</td>
         <td class="num mono-dim">177</td>
       </tr>
       
@@ -11929,10 +11940,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>KSH International Limited</td>
         <td class="num">2025-12-23</td>
         <td class="num">355.00</td>
-        <td class="num">1,142.70</td>
+        <td class="num">1,152.90</td>
         
-        <td class="num up">+221.9%</td>
-        <td class="num dn">-4.6%</td>
+        <td class="num up">+224.8%</td>
+        <td class="num dn">-3.8%</td>
         <td class="num mono-dim">181</td>
       </tr>
       
@@ -11963,10 +11974,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Nephrocare Health Services Limited</td>
         <td class="num">2025-12-17</td>
         <td class="num">471.25</td>
-        <td class="num">748.15</td>
+        <td class="num">749.25</td>
         
-        <td class="num up">+58.8%</td>
-        <td class="num dn">-2.8%</td>
+        <td class="num up">+59.0%</td>
+        <td class="num dn">-2.7%</td>
         <td class="num mono-dim">184</td>
       </tr>
       
@@ -12031,7 +12042,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Vidya Wires Limited</td>
         <td class="num">2025-12-10</td>
         <td class="num">53.17</td>
-        <td class="num">88.00</td>
+        <td class="num">87.99</td>
         
         <td class="num up">+65.5%</td>
         <td class="num dn">-25.0%</td>
@@ -12099,9 +12110,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Excelsoft Technologies Limited</td>
         <td class="num">2025-11-26</td>
         <td class="num">125.97</td>
-        <td class="num">81.34</td>
+        <td class="num">81.21</td>
         
-        <td class="num dn">-35.4%</td>
+        <td class="num dn">-35.5%</td>
         <td class="num dn">-43.0%</td>
         <td class="num mono-dim">201</td>
       </tr>
@@ -12286,10 +12297,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Midwest Limited</td>
         <td class="num">2025-10-24</td>
         <td class="num">1,140.50</td>
-        <td class="num">1,029.80</td>
+        <td class="num">1,024.90</td>
         
-        <td class="num dn">-9.7%</td>
-        <td class="num dn">-44.6%</td>
+        <td class="num dn">-10.1%</td>
+        <td class="num dn">-44.9%</td>
         <td class="num mono-dim">221</td>
       </tr>
       
@@ -12371,10 +12382,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Glottis Limited</td>
         <td class="num">2025-10-07</td>
         <td class="num">83.70</td>
-        <td class="num">57.90</td>
+        <td class="num">58.31</td>
         
-        <td class="num dn">-30.8%</td>
-        <td class="num dn">-37.7%</td>
+        <td class="num dn">-30.3%</td>
+        <td class="num dn">-37.3%</td>
         <td class="num mono-dim">234</td>
       </tr>
       
@@ -12388,10 +12399,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Pace Digitek Limited</td>
         <td class="num">2025-10-06</td>
         <td class="num">217.99</td>
-        <td class="num">156.90</td>
+        <td class="num">157.22</td>
         
-        <td class="num dn">-28.0%</td>
-        <td class="num dn">-32.4%</td>
+        <td class="num dn">-27.9%</td>
+        <td class="num dn">-32.2%</td>
         <td class="num mono-dim">236</td>
       </tr>
       
@@ -12405,10 +12416,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>TruAlt Bioenergy Limited</td>
         <td class="num">2025-10-03</td>
         <td class="num">510.90</td>
-        <td class="num">416.90</td>
+        <td class="num">416.35</td>
         
-        <td class="num dn">-18.4%</td>
-        <td class="num dn">-23.1%</td>
+        <td class="num dn">-18.5%</td>
+        <td class="num dn">-23.2%</td>
         <td class="num mono-dim">236</td>
       </tr>
       
@@ -12439,10 +12450,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Epack Prefab Technologies Limited</td>
         <td class="num">2025-10-01</td>
         <td class="num">186.01</td>
-        <td class="num">232.30</td>
+        <td class="num">231.64</td>
         
-        <td class="num up">+24.9%</td>
-        <td class="num dn">-32.5%</td>
+        <td class="num up">+24.5%</td>
+        <td class="num dn">-32.7%</td>
         <td class="num mono-dim">236</td>
       </tr>
       
@@ -12473,10 +12484,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Solarworld Energy Solutions Limited</td>
         <td class="num">2025-09-30</td>
         <td class="num">323.50</td>
-        <td class="num">138.49</td>
+        <td class="num">138.06</td>
         
-        <td class="num dn">-57.2%</td>
-        <td class="num dn">-64.4%</td>
+        <td class="num dn">-57.3%</td>
+        <td class="num dn">-64.5%</td>
         <td class="num mono-dim">237</td>
       </tr>
       
@@ -12490,10 +12501,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Jaro Institute of Technology Management and Research Limited</td>
         <td class="num">2025-09-30</td>
         <td class="num">739.73</td>
-        <td class="num">453.80</td>
+        <td class="num">453.25</td>
         
         <td class="num dn">-38.7%</td>
-        <td class="num dn">-48.7%</td>
+        <td class="num dn">-48.8%</td>
         <td class="num mono-dim">236</td>
       </tr>
       
@@ -12507,10 +12518,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Anand Rathi Share and Stock Brokers Limited</td>
         <td class="num">2025-09-30</td>
         <td class="num">441.62</td>
-        <td class="num">491.70</td>
+        <td class="num">492.65</td>
         
-        <td class="num up">+11.3%</td>
-        <td class="num dn">-37.6%</td>
+        <td class="num up">+11.6%</td>
+        <td class="num dn">-37.5%</td>
         <td class="num mono-dim">238</td>
       </tr>
       
@@ -12524,10 +12535,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ganesh Consumer Products Limited</td>
         <td class="num">2025-09-29</td>
         <td class="num">287.30</td>
-        <td class="num">167.74</td>
+        <td class="num">167.38</td>
         
-        <td class="num dn">-41.6%</td>
-        <td class="num dn">-44.6%</td>
+        <td class="num dn">-41.7%</td>
+        <td class="num dn">-44.7%</td>
         <td class="num mono-dim">237</td>
       </tr>
       
@@ -12558,10 +12569,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>GK Energy Limited</td>
         <td class="num">2025-09-26</td>
         <td class="num">167.06</td>
-        <td class="num">126.22</td>
+        <td class="num">126.00</td>
         
-        <td class="num dn">-24.4%</td>
-        <td class="num dn">-47.1%</td>
+        <td class="num dn">-24.6%</td>
+        <td class="num dn">-47.2%</td>
         <td class="num mono-dim">239</td>
       </tr>
       
@@ -12575,10 +12586,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ivalue Infosolutions Limited</td>
         <td class="num">2025-09-25</td>
         <td class="num">281.85</td>
-        <td class="num">223.20</td>
+        <td class="num">223.51</td>
         
-        <td class="num dn">-20.8%</td>
-        <td class="num dn">-34.4%</td>
+        <td class="num dn">-20.7%</td>
+        <td class="num dn">-34.3%</td>
         <td class="num mono-dim">241</td>
       </tr>
       
@@ -12592,9 +12603,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Euro Pratik Sales Limited</td>
         <td class="num">2025-09-23</td>
         <td class="num">248.17</td>
-        <td class="num">239.45</td>
+        <td class="num">239.70</td>
         
-        <td class="num dn">-3.5%</td>
+        <td class="num dn">-3.4%</td>
         <td class="num dn">-38.5%</td>
         <td class="num mono-dim">242</td>
       </tr>
@@ -12626,10 +12637,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Shringar House of Mangalsutra Limited</td>
         <td class="num">2025-09-17</td>
         <td class="num">184.88</td>
-        <td class="num">215.90</td>
+        <td class="num">215.31</td>
         
-        <td class="num up">+16.8%</td>
-        <td class="num dn">-19.0%</td>
+        <td class="num up">+16.5%</td>
+        <td class="num dn">-19.2%</td>
         <td class="num mono-dim">247</td>
       </tr>
       
@@ -12643,10 +12654,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Vikran Engineering Limited</td>
         <td class="num">2025-09-03</td>
         <td class="num">101.53</td>
-        <td class="num">56.90</td>
+        <td class="num">56.96</td>
         
-        <td class="num dn">-44.0%</td>
-        <td class="num dn">-51.8%</td>
+        <td class="num dn">-43.9%</td>
+        <td class="num dn">-51.7%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -12660,10 +12671,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Mangal Electrical Industries Limited</td>
         <td class="num">2025-08-28</td>
         <td class="num">533.30</td>
-        <td class="num">274.80</td>
+        <td class="num">275.45</td>
         
-        <td class="num dn">-48.5%</td>
-        <td class="num dn">-49.8%</td>
+        <td class="num dn">-48.3%</td>
+        <td class="num dn">-49.7%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -12677,10 +12688,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Gem Aromatics Limited</td>
         <td class="num">2025-08-26</td>
         <td class="num">296.15</td>
-        <td class="num">160.76</td>
+        <td class="num">160.21</td>
         
-        <td class="num dn">-45.7%</td>
-        <td class="num dn">-49.3%</td>
+        <td class="num dn">-45.9%</td>
+        <td class="num dn">-49.5%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -12694,10 +12705,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Shreeji Shipping Global Limited</td>
         <td class="num">2025-08-26</td>
         <td class="num">251.67</td>
-        <td class="num">702.65</td>
+        <td class="num">705.80</td>
         
-        <td class="num up">+179.2%</td>
-        <td class="num dn">-2.6%</td>
+        <td class="num up">+180.4%</td>
+        <td class="num dn">-2.2%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -12711,10 +12722,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Vikram Solar Limited</td>
         <td class="num">2025-08-26</td>
         <td class="num">370.15</td>
-        <td class="num">166.77</td>
+        <td class="num">165.74</td>
         
-        <td class="num dn">-54.9%</td>
-        <td class="num dn">-56.3%</td>
+        <td class="num dn">-55.2%</td>
+        <td class="num dn">-56.6%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -12728,7 +12739,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Regaal Resources Limited</td>
         <td class="num">2025-08-20</td>
         <td class="num">107.50</td>
-        <td class="num">83.23</td>
+        <td class="num">83.20</td>
         
         <td class="num dn">-22.6%</td>
         <td class="num dn">-25.6%</td>
@@ -12745,10 +12756,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>BlueStone Jewellery and Lifestyle Limited</td>
         <td class="num">2025-08-19</td>
         <td class="num">638.65</td>
-        <td class="num">849.40</td>
+        <td class="num">852.50</td>
         
-        <td class="num up">+33.0%</td>
-        <td class="num dn">-8.3%</td>
+        <td class="num up">+33.5%</td>
+        <td class="num dn">-7.9%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -12762,10 +12773,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>All Time Plastics Limited</td>
         <td class="num">2025-08-14</td>
         <td class="num">278.65</td>
-        <td class="num">204.82</td>
+        <td class="num">205.55</td>
         
-        <td class="num dn">-26.5%</td>
-        <td class="num dn">-34.9%</td>
+        <td class="num dn">-26.2%</td>
+        <td class="num dn">-34.7%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -12779,10 +12790,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>JSW Cement Limited</td>
         <td class="num">2025-08-14</td>
         <td class="num">145.15</td>
-        <td class="num">119.89</td>
+        <td class="num">120.25</td>
         
-        <td class="num dn">-17.4%</td>
-        <td class="num dn">-21.6%</td>
+        <td class="num dn">-17.2%</td>
+        <td class="num dn">-21.3%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -12796,10 +12807,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sri Lotus Developers and Realty Limited</td>
         <td class="num">2025-08-06</td>
         <td class="num">178.07</td>
-        <td class="num">212.20</td>
+        <td class="num">212.00</td>
         
-        <td class="num up">+19.2%</td>
-        <td class="num dn">-0.7%</td>
+        <td class="num up">+19.1%</td>
+        <td class="num dn">-1.4%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -12813,9 +12824,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>M&B Engineering Limited</td>
         <td class="num">2025-08-06</td>
         <td class="num">418.27</td>
-        <td class="num">255.60</td>
+        <td class="num">255.80</td>
         
-        <td class="num dn">-38.9%</td>
+        <td class="num dn">-38.8%</td>
         <td class="num dn">-52.1%</td>
         <td class="num mono-dim">251</td>
       </tr>
@@ -12830,10 +12841,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Laxmi India Finance Limited</td>
         <td class="num">2025-08-05</td>
         <td class="num">166.95</td>
-        <td class="num">126.52</td>
+        <td class="num">126.84</td>
         
-        <td class="num dn">-24.2%</td>
-        <td class="num dn">-30.1%</td>
+        <td class="num dn">-24.0%</td>
+        <td class="num dn">-29.9%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -12847,10 +12858,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Aditya Infotech Limited</td>
         <td class="num">2025-08-05</td>
         <td class="num">1,397.77</td>
-        <td class="num">3,862.60</td>
+        <td class="num">3,867.20</td>
         
-        <td class="num up">+176.3%</td>
-        <td class="num dn">-5.7%</td>
+        <td class="num up">+176.7%</td>
+        <td class="num dn">-5.5%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -12864,10 +12875,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Shanti Gold International Limited</td>
         <td class="num">2025-08-01</td>
         <td class="num">224.56</td>
-        <td class="num">251.89</td>
+        <td class="num">254.48</td>
         
-        <td class="num up">+12.2%</td>
-        <td class="num dn">-10.3%</td>
+        <td class="num up">+13.3%</td>
+        <td class="num dn">-9.4%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -12881,10 +12892,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Brigade Hotel Ventures Limited</td>
         <td class="num">2025-07-31</td>
         <td class="num">83.53</td>
-        <td class="num">55.96</td>
+        <td class="num">56.09</td>
         
-        <td class="num dn">-33.0%</td>
-        <td class="num dn">-36.6%</td>
+        <td class="num dn">-32.9%</td>
+        <td class="num dn">-36.5%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -12898,9 +12909,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>GNG Electronics Limited</td>
         <td class="num">2025-07-30</td>
         <td class="num">350.25</td>
-        <td class="num">682.75</td>
+        <td class="num">683.00</td>
         
-        <td class="num up">+94.9%</td>
+        <td class="num up">+95.0%</td>
         <td class="num dn">-3.1%</td>
         <td class="num mono-dim">251</td>
       </tr>
@@ -12915,10 +12926,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Indiqube Spaces Limited</td>
         <td class="num">2025-07-30</td>
         <td class="num">221.79</td>
-        <td class="num">200.81</td>
+        <td class="num">201.39</td>
         
-        <td class="num dn">-9.5%</td>
-        <td class="num dn">-17.6%</td>
+        <td class="num dn">-9.2%</td>
+        <td class="num dn">-17.4%</td>
         <td class="num mono-dim">249</td>
       </tr>
       
@@ -12932,10 +12943,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Anthem Biosciences Limited</td>
         <td class="num">2025-07-21</td>
         <td class="num">818.77</td>
-        <td class="num">942.30</td>
+        <td class="num">939.50</td>
         
-        <td class="num up">+15.1%</td>
-        <td class="num dn">-3.6%</td>
+        <td class="num up">+14.7%</td>
+        <td class="num dn">-3.9%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -12949,7 +12960,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Smartworks Coworking Spaces Limited</td>
         <td class="num">2025-07-17</td>
         <td class="num">521.00</td>
-        <td class="num">529.35</td>
+        <td class="num">529.40</td>
         
         <td class="num up">+1.6%</td>
         <td class="num dn">-14.5%</td>
@@ -12966,7 +12977,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Travel Food Services Limited</td>
         <td class="num">2025-07-14</td>
         <td class="num">1,253.11</td>
-        <td class="num">1,257.80</td>
+        <td class="num">1,258.60</td>
         
         <td class="num up">+0.4%</td>
         <td class="num dn">-13.8%</td>
@@ -12983,10 +12994,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>CRIZAC LIMITED</td>
         <td class="num">2025-07-09</td>
         <td class="num">338.61</td>
-        <td class="num">177.40</td>
+        <td class="num">181.39</td>
         
-        <td class="num dn">-47.6%</td>
-        <td class="num dn">-49.6%</td>
+        <td class="num dn">-46.4%</td>
+        <td class="num dn">-48.5%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13000,10 +13011,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sambhv Steel Tubes Limited</td>
         <td class="num">2025-07-02</td>
         <td class="num">120.58</td>
-        <td class="num">132.19</td>
+        <td class="num">131.96</td>
         
-        <td class="num up">+9.6%</td>
-        <td class="num dn">-6.5%</td>
+        <td class="num up">+9.4%</td>
+        <td class="num dn">-6.6%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13017,10 +13028,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>HDB Financial Services Limited</td>
         <td class="num">2025-07-02</td>
         <td class="num">777.98</td>
-        <td class="num">671.20</td>
+        <td class="num">668.75</td>
         
-        <td class="num dn">-13.7%</td>
-        <td class="num dn">-15.7%</td>
+        <td class="num dn">-14.0%</td>
+        <td class="num dn">-16.1%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13034,7 +13045,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ellenbarrie Industrial Gases Limited</td>
         <td class="num">2025-07-01</td>
         <td class="num">551.90</td>
-        <td class="num">372.10</td>
+        <td class="num">372.15</td>
         
         <td class="num dn">-32.6%</td>
         <td class="num dn">-33.5%</td>
@@ -13051,10 +13062,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Kalpataru Limited</td>
         <td class="num">2025-07-01</td>
         <td class="num">407.45</td>
-        <td class="num">264.80</td>
+        <td class="num">264.00</td>
         
-        <td class="num dn">-35.0%</td>
-        <td class="num dn">-38.3%</td>
+        <td class="num dn">-35.2%</td>
+        <td class="num dn">-38.5%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13068,10 +13079,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Oswal Pumps Limited</td>
         <td class="num">2025-06-20</td>
         <td class="num">811.05</td>
-        <td class="num">279.90</td>
+        <td class="num">280.55</td>
         
-        <td class="num dn">-65.5%</td>
-        <td class="num dn">-66.7%</td>
+        <td class="num dn">-65.4%</td>
+        <td class="num dn">-66.6%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13085,7 +13096,7 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Schloss Bangalore Limited</td>
         <td class="num">2025-06-02</td>
         <td class="num">410.95</td>
-        <td class="num">546.35</td>
+        <td class="num">546.30</td>
         
         <td class="num up">+32.9%</td>
         <td class="num dn">-6.3%</td>
@@ -13102,9 +13113,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Belrise Industries Limited</td>
         <td class="num">2025-05-28</td>
         <td class="num">139.79</td>
-        <td class="num">227.94</td>
+        <td class="num">227.89</td>
         
-        <td class="num up">+63.1%</td>
+        <td class="num up">+63.0%</td>
         <td class="num dn">-15.0%</td>
         <td class="num mono-dim">252</td>
       </tr>
@@ -13119,10 +13130,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ather Energy Limited</td>
         <td class="num">2025-05-06</td>
         <td class="num">541.95</td>
-        <td class="num">1,657.70</td>
+        <td class="num">1,661.30</td>
         
-        <td class="num up">+205.9%</td>
-        <td class="num dn">-4.9%</td>
+        <td class="num up">+206.5%</td>
+        <td class="num dn">-4.7%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13136,10 +13147,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Quality Power Electrical Equipments Limited</td>
         <td class="num">2025-02-24</td>
         <td class="num">965.08</td>
-        <td class="num">1,434.90</td>
+        <td class="num">1,437.30</td>
         
-        <td class="num up">+48.7%</td>
-        <td class="num dn">-8.6%</td>
+        <td class="num up">+48.9%</td>
+        <td class="num dn">-8.5%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13153,10 +13164,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Hexaware Technologies Limited</td>
         <td class="num">2025-02-19</td>
         <td class="num">734.14</td>
-        <td class="num">499.40</td>
+        <td class="num">498.15</td>
         
-        <td class="num dn">-32.0%</td>
-        <td class="num dn">-37.0%</td>
+        <td class="num dn">-32.1%</td>
+        <td class="num dn">-37.2%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13170,10 +13181,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ajax Engineering Limited</td>
         <td class="num">2025-02-17</td>
         <td class="num">679.55</td>
-        <td class="num">589.30</td>
+        <td class="num">588.60</td>
         
-        <td class="num dn">-13.3%</td>
-        <td class="num dn">-15.5%</td>
+        <td class="num dn">-13.4%</td>
+        <td class="num dn">-15.6%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13187,10 +13198,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Dr. Agarwal's Health Care Limited</td>
         <td class="num">2025-02-04</td>
         <td class="num">425.95</td>
-        <td class="num">499.60</td>
+        <td class="num">498.90</td>
         
-        <td class="num up">+17.3%</td>
-        <td class="num dn">-12.0%</td>
+        <td class="num up">+17.1%</td>
+        <td class="num dn">-12.2%</td>
         <td class="num mono-dim">249</td>
       </tr>
       
@@ -13204,10 +13215,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Laxmi Dental Limited</td>
         <td class="num">2025-01-20</td>
         <td class="num">311.30</td>
-        <td class="num">199.29</td>
+        <td class="num">200.00</td>
         
-        <td class="num dn">-36.0%</td>
-        <td class="num dn">-47.1%</td>
+        <td class="num dn">-35.8%</td>
+        <td class="num dn">-47.0%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13221,10 +13232,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Quadrant Future Tek Limited</td>
         <td class="num">2025-01-14</td>
         <td class="num">442.90</td>
-        <td class="num">440.55</td>
+        <td class="num">456.95</td>
         
-        <td class="num dn">-0.5%</td>
-        <td class="num dn">-8.5%</td>
+        <td class="num up">+3.2%</td>
+        <td class="num dn">-5.0%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13238,10 +13249,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Indo Farm Equipment Limited</td>
         <td class="num">2025-01-07</td>
         <td class="num">258.08</td>
-        <td class="num">137.65</td>
+        <td class="num">138.25</td>
         
-        <td class="num dn">-46.7%</td>
-        <td class="num dn">-49.3%</td>
+        <td class="num dn">-46.4%</td>
+        <td class="num dn">-49.1%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13255,10 +13266,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Unimech Aerospace and Manufacturing Limited</td>
         <td class="num">2024-12-31</td>
         <td class="num">1,046.70</td>
-        <td class="num">1,559.00</td>
+        <td class="num">1,561.50</td>
         
-        <td class="num up">+48.9%</td>
-        <td class="num dn">-5.7%</td>
+        <td class="num up">+49.2%</td>
+        <td class="num dn">-5.5%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13272,10 +13283,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Ventive Hospitality Limited</td>
         <td class="num">2024-12-30</td>
         <td class="num">744.00</td>
-        <td class="num">572.00</td>
+        <td class="num">569.25</td>
         
-        <td class="num dn">-23.1%</td>
-        <td class="num dn">-28.0%</td>
+        <td class="num dn">-23.5%</td>
+        <td class="num dn">-28.3%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13289,10 +13300,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Carraro India Limited</td>
         <td class="num">2024-12-30</td>
         <td class="num">444.40</td>
-        <td class="num">543.00</td>
+        <td class="num">541.60</td>
         
-        <td class="num up">+22.2%</td>
-        <td class="num dn">-17.6%</td>
+        <td class="num up">+21.9%</td>
+        <td class="num dn">-17.8%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13306,10 +13317,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Senores Pharmaceuticals Limited</td>
         <td class="num">2024-12-30</td>
         <td class="num">708.40</td>
-        <td class="num">1,449.00</td>
+        <td class="num">1,456.00</td>
         
-        <td class="num up">+104.5%</td>
-        <td class="num dn">-9.4%</td>
+        <td class="num up">+105.5%</td>
+        <td class="num dn">-8.9%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13323,10 +13334,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sanathan Textiles Limited</td>
         <td class="num">2024-12-27</td>
         <td class="num">515.15</td>
-        <td class="num">474.50</td>
+        <td class="num">472.65</td>
         
-        <td class="num dn">-7.9%</td>
-        <td class="num dn">-14.0%</td>
+        <td class="num dn">-8.3%</td>
+        <td class="num dn">-14.4%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13340,10 +13351,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Concord Enviro Systems Limited</td>
         <td class="num">2024-12-27</td>
         <td class="num">513.60</td>
-        <td class="num">287.85</td>
+        <td class="num">286.10</td>
         
-        <td class="num dn">-44.0%</td>
-        <td class="num dn">-46.7%</td>
+        <td class="num dn">-44.3%</td>
+        <td class="num dn">-47.0%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13357,10 +13368,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Transrail Lighting Limited</td>
         <td class="num">2024-12-27</td>
         <td class="num">785.30</td>
-        <td class="num">415.00</td>
+        <td class="num">413.00</td>
         
-        <td class="num dn">-47.2%</td>
-        <td class="num dn">-49.0%</td>
+        <td class="num dn">-47.4%</td>
+        <td class="num dn">-49.3%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13374,10 +13385,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>DAM Capital Advisors Limited</td>
         <td class="num">2024-12-27</td>
         <td class="num">222.46</td>
-        <td class="num">142.04</td>
+        <td class="num">142.59</td>
         
-        <td class="num dn">-36.1%</td>
-        <td class="num dn">-50.0%</td>
+        <td class="num dn">-35.9%</td>
+        <td class="num dn">-49.8%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13391,10 +13402,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>International Gemmological Institute (India) Limited</td>
         <td class="num">2024-12-20</td>
         <td class="num">359.64</td>
-        <td class="num">312.50</td>
+        <td class="num">312.15</td>
         
-        <td class="num dn">-13.1%</td>
-        <td class="num dn">-19.1%</td>
+        <td class="num dn">-13.2%</td>
+        <td class="num dn">-19.2%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13408,10 +13419,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Inventurus Knowledge Solutions Limited</td>
         <td class="num">2024-12-19</td>
         <td class="num">1,535.10</td>
-        <td class="num">1,753.00</td>
+        <td class="num">1,759.00</td>
         
-        <td class="num up">+14.2%</td>
-        <td class="num dn">-9.3%</td>
+        <td class="num up">+14.6%</td>
+        <td class="num dn">-9.0%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13425,10 +13436,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sai Life Sciences Limited</td>
         <td class="num">2024-12-18</td>
         <td class="num">868.75</td>
-        <td class="num">1,587.20</td>
+        <td class="num">1,593.10</td>
         
-        <td class="num up">+82.7%</td>
-        <td class="num dn">-6.5%</td>
+        <td class="num up">+83.4%</td>
+        <td class="num dn">-6.1%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13442,10 +13453,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>One MobiKwik Systems Limited</td>
         <td class="num">2024-12-18</td>
         <td class="num">304.18</td>
-        <td class="num">203.85</td>
+        <td class="num">201.60</td>
         
-        <td class="num dn">-33.0%</td>
-        <td class="num dn">-37.2%</td>
+        <td class="num dn">-33.7%</td>
+        <td class="num dn">-37.9%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13459,10 +13470,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Vishal Mega Mart Limited</td>
         <td class="num">2024-12-18</td>
         <td class="num">150.41</td>
-        <td class="num">102.25</td>
+        <td class="num">102.17</td>
         
-        <td class="num dn">-32.0%</td>
-        <td class="num dn">-33.3%</td>
+        <td class="num dn">-32.1%</td>
+        <td class="num dn">-33.4%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13476,9 +13487,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Suraksha Diagnostic Limited</td>
         <td class="num">2024-12-06</td>
         <td class="num">312.70</td>
-        <td class="num">319.90</td>
+        <td class="num">320.05</td>
         
-        <td class="num up">+2.3%</td>
+        <td class="num up">+2.4%</td>
         <td class="num dn">-8.3%</td>
         <td class="num mono-dim">250</td>
       </tr>
@@ -13493,10 +13504,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Enviro Infra Engineers Limited</td>
         <td class="num">2024-11-29</td>
         <td class="num">246.49</td>
-        <td class="num">204.35</td>
+        <td class="num">204.71</td>
         
-        <td class="num dn">-17.1%</td>
-        <td class="num dn">-26.0%</td>
+        <td class="num dn">-16.9%</td>
+        <td class="num dn">-25.9%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13510,10 +13521,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Zinka Logistics Solutions Limited</td>
         <td class="num">2024-11-22</td>
         <td class="num">624.25</td>
-        <td class="num">580.00</td>
+        <td class="num">580.40</td>
         
-        <td class="num dn">-7.1%</td>
-        <td class="num dn">-22.5%</td>
+        <td class="num dn">-7.0%</td>
+        <td class="num dn">-22.4%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13527,10 +13538,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Niva Bupa Health Insurance Company Limited</td>
         <td class="num">2024-11-14</td>
         <td class="num">81.67</td>
-        <td class="num">79.19</td>
+        <td class="num">79.03</td>
         
-        <td class="num dn">-3.0%</td>
-        <td class="num dn">-13.4%</td>
+        <td class="num dn">-3.2%</td>
+        <td class="num dn">-13.5%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13544,10 +13555,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Swiggy Limited</td>
         <td class="num">2024-11-13</td>
         <td class="num">423.70</td>
-        <td class="num">276.70</td>
+        <td class="num">278.40</td>
         
-        <td class="num dn">-34.7%</td>
-        <td class="num dn">-41.6%</td>
+        <td class="num dn">-34.3%</td>
+        <td class="num dn">-41.3%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13561,10 +13572,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>ACME Solar Holdings Limited</td>
         <td class="num">2024-11-13</td>
         <td class="num">312.67</td>
-        <td class="num">400.90</td>
+        <td class="num">401.80</td>
         
-        <td class="num up">+28.2%</td>
-        <td class="num dn">-6.9%</td>
+        <td class="num up">+28.5%</td>
+        <td class="num dn">-6.7%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13578,10 +13589,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Sagility India Limited</td>
         <td class="num">2024-11-12</td>
         <td class="num">44.55</td>
-        <td class="num">43.87</td>
+        <td class="num">43.80</td>
         
-        <td class="num dn">-1.5%</td>
-        <td class="num dn">-24.0%</td>
+        <td class="num dn">-1.7%</td>
+        <td class="num dn">-24.1%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13595,10 +13606,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Godavari Biorefineries Limited</td>
         <td class="num">2024-10-30</td>
         <td class="num">284.88</td>
-        <td class="num">234.40</td>
+        <td class="num">233.48</td>
         
-        <td class="num dn">-17.7%</td>
-        <td class="num dn">-33.6%</td>
+        <td class="num dn">-18.0%</td>
+        <td class="num dn">-33.9%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13612,10 +13623,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Deepak Builders & Engineers India Limited</td>
         <td class="num">2024-10-28</td>
         <td class="num">14.63</td>
-        <td class="num">7.05</td>
+        <td class="num">7.02</td>
         
-        <td class="num dn">-51.8%</td>
-        <td class="num dn">-62.0%</td>
+        <td class="num dn">-52.0%</td>
+        <td class="num dn">-62.2%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13629,10 +13640,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Waaree Energies Limited</td>
         <td class="num">2024-10-28</td>
         <td class="num">3,734.77</td>
-        <td class="num">2,540.60</td>
+        <td class="num">2,537.00</td>
         
-        <td class="num dn">-32.0%</td>
-        <td class="num dn">-34.2%</td>
+        <td class="num dn">-32.1%</td>
+        <td class="num dn">-34.3%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13646,9 +13657,9 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Hyundai Motor India Limited</td>
         <td class="num">2024-10-22</td>
         <td class="num">2,484.08</td>
-        <td class="num">2,187.50</td>
+        <td class="num">2,186.00</td>
         
-        <td class="num dn">-11.9%</td>
+        <td class="num dn">-12.0%</td>
         <td class="num dn">-23.6%</td>
         <td class="num mono-dim">251</td>
       </tr>
@@ -13663,10 +13674,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Garuda Construction and Engineering Limited</td>
         <td class="num">2024-10-15</td>
         <td class="num">212.64</td>
-        <td class="num">179.98</td>
+        <td class="num">178.01</td>
         
-        <td class="num dn">-15.4%</td>
-        <td class="num dn">-27.8%</td>
+        <td class="num dn">-16.3%</td>
+        <td class="num dn">-28.6%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13697,10 +13708,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Arkade Developers Limited</td>
         <td class="num">2024-09-24</td>
         <td class="num">178.65</td>
-        <td class="num">120.80</td>
+        <td class="num">120.50</td>
         
-        <td class="num dn">-32.4%</td>
-        <td class="num dn">-34.8%</td>
+        <td class="num dn">-32.5%</td>
+        <td class="num dn">-35.0%</td>
         <td class="num mono-dim">250</td>
       </tr>
       
@@ -13714,10 +13725,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Western Carriers (India) Limited</td>
         <td class="num">2024-09-24</td>
         <td class="num">137.04</td>
-        <td class="num">87.85</td>
+        <td class="num">87.27</td>
         
-        <td class="num dn">-35.9%</td>
-        <td class="num dn">-40.4%</td>
+        <td class="num dn">-36.3%</td>
+        <td class="num dn">-40.7%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13731,10 +13742,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>P N Gadgil Jewellers Limited</td>
         <td class="num">2024-09-17</td>
         <td class="num">600.40</td>
-        <td class="num">605.75</td>
+        <td class="num">612.20</td>
         
-        <td class="num up">+0.9%</td>
-        <td class="num dn">-17.7%</td>
+        <td class="num up">+2.0%</td>
+        <td class="num dn">-16.9%</td>
         <td class="num mono-dim">251</td>
       </tr>
       
@@ -13748,10 +13759,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Bajaj Housing Finance Limited</td>
         <td class="num">2024-09-16</td>
         <td class="num">111.96</td>
-        <td class="num">84.28</td>
+        <td class="num">84.54</td>
         
-        <td class="num dn">-24.7%</td>
-        <td class="num dn">-28.0%</td>
+        <td class="num dn">-24.5%</td>
+        <td class="num dn">-27.7%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13765,10 +13776,10 @@ table.t tbody tr:hover{background:var(--surface2)}
         <td>Kross Limited</td>
         <td class="num">2024-09-16</td>
         <td class="num">216.91</td>
-        <td class="num">229.50</td>
+        <td class="num">230.19</td>
         
-        <td class="num up">+5.8%</td>
-        <td class="num dn">-4.7%</td>
+        <td class="num up">+6.1%</td>
+        <td class="num dn">-4.4%</td>
         <td class="num mono-dim">252</td>
       </tr>
       
@@ -13895,7 +13906,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     financials and no valuation, so none of those inform the score and none are guessed at.
     Grey-market premium is deliberately absent: it is an unofficial quote with no audit trail.
     Sources: NSE public issue endpoints for band, size, dates and subscription, read
-    2026-09-11 12:46 MYT. Lot size, minimum application, the
+    2026-09-11 13:07 MYT. Lot size, minimum application, the
     fresh/OFS split, anchor book and grey-market quote come from Chittorgarh, which NSE does
     not publish &mdash; those fields are marked on each card and none of them touch the score.
   </p>
@@ -24323,7 +24334,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-09-10 09:22
             </dd></div>
         
-        <div><dt>Age</dt><dd>19h old
+        <div><dt>Age</dt><dd>20h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24353,7 +24364,7 @@ table.t tbody tr:hover{background:var(--surface2)}
           <dd>2026-09-10 21:27
             </dd></div>
         
-        <div><dt>Age</dt><dd>7h old
+        <div><dt>Age</dt><dd>8h old
           
             
               <span class="dh-within">within its daily cycle</span>
@@ -24463,9 +24474,9 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 04:42</dd></div>
+          <dd>2026-09-11 05:03</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 04:42
+          <dd>2026-09-11 05:03
             </dd></div>
         
         <div><dt>Age</dt><dd>4 min old
@@ -24550,9 +24561,9 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 04:42</dd></div>
+          <dd>2026-09-11 05:03</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 04:42
+          <dd>2026-09-11 05:03
             </dd></div>
         
         <div><dt>Age</dt><dd>4 min old
@@ -24579,9 +24590,9 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 04:42</dd></div>
+          <dd>2026-09-11 05:03</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 04:42
+          <dd>2026-09-11 05:03
             </dd></div>
         
         <div><dt>Age</dt><dd>4 min old
@@ -24608,9 +24619,9 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 04:42</dd></div>
+          <dd>2026-09-11 05:03</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 04:42
+          <dd>2026-09-11 05:03
             </dd></div>
         
         <div><dt>Age</dt><dd>4 min old
@@ -24637,9 +24648,9 @@ table.t tbody tr:hover{background:var(--surface2)}
       </div>
       <dl class="dh-grid">
         <div><dt>Last successful</dt>
-          <dd>2026-09-11 04:42</dd></div>
+          <dd>2026-09-11 05:03</dd></div>
         <div><dt>Last attempt</dt>
-          <dd>2026-09-11 04:42
+          <dd>2026-09-11 05:03
             </dd></div>
         
         <div><dt>Age</dt><dd>4 min old
@@ -25187,7 +25198,7 @@ table.t tbody tr:hover{background:var(--surface2)}
     </div>
     <div class="m">
       news.askakshay.com<br>
-      Friday, September 11 2026 · built 12:42 MYT<br>
+      Friday, September 11 2026 · built 13:03 MYT<br>
       <span style="color:var(--dim)">Sources: NSE · Yahoo Finance · AMFI · Chittorgarh ·
         investorgain · wire RSS</span><br>
       <a href="#datahealth" class="lnk">Data health</a> ·
@@ -25229,9 +25240,9 @@ table.t tbody tr:hover{background:var(--surface2)}
 
 <button class="fab" id="fab" aria-label="Back to top">↑</button>
 
-<script type="application/json" id="tv-aliases" nonce="2ZZPDH2vdlaXCRIMU9Ju5Q">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
+<script type="application/json" id="tv-aliases" nonce="rPUxPDEio-su957BHRz56Q">{"AUDUSD": "FX:AUDUSD", "BANKNIFTY": "NSE:BANKNIFTY", "BNBUSD": "BINANCE:BNBUSDT", "BRENT": "TVC:UKOIL", "BRNUSD": "TVC:UKOIL", "BTCUSD": "BINANCE:BTCUSDT", "COPPER": "COMEX:HG1!", "CRUDE": "TVC:USOIL", "DOGEUSD": "BINANCE:DOGEUSDT", "DXY": "TVC:DXY", "ETHUSD": "BINANCE:ETHUSDT", "EURJPY": "FX:EURJPY", "EURUSD": "FX:EURUSD", "GBPJPY": "FX:GBPJPY", "GBPUSD": "FX:GBPUSD", "GOLD": "TVC:GOLD", "MYRINR": "FX_IDC:MYRINR", "NATGAS": "NYMEX:NG1!", "NGAS": "NYMEX:NG1!", "NIFTY": "NSE:NIFTY", "NZDUSD": "FX:NZDUSD", "SILVER": "TVC:SILVER", "SOLUSD": "BINANCE:SOLUSDT", "USDCAD": "FX:USDCAD", "USDCHF": "FX:USDCHF", "USDINR": "FX_IDC:USDINR", "USDJPY": "FX:USDJPY", "USDMYR": "FX_IDC:USDMYR", "WTI": "TVC:USOIL", "WTIUSD": "TVC:USOIL", "XAGUSD": "OANDA:XAGUSD", "XAUUSD": "OANDA:XAUUSD", "XRPUSD": "BINANCE:XRPUSDT"}</script>
 
-<script type="application/json" id="sector-map" nonce="2ZZPDH2vdlaXCRIMU9Ju5Q">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
-<script nonce="2ZZPDH2vdlaXCRIMU9Ju5Q" src="/app.js?v=20260911T124258" defer></script>
+<script type="application/json" id="sector-map" nonce="rPUxPDEio-su957BHRz56Q">{"360ONE": "Financial Services", "3MINDIA": "Diversified", "AADHARHFC": "Financial Services", "AARTIDRUGS": "Healthcare", "AARTIIND": "Chemicals", "AARTIPHARM": "Healthcare", "AAVAS": "Financial Services", "ABB": "Capital Goods", "ABBOTINDIA": "Healthcare", "ABCAPITAL": "Financial Services", "ABDL": "Fast Moving Consumer Goods", "ABFRL": "Consumer Services", "ABLBL": "Consumer Services", "ABREL": "Realty", "ABSLAMC": "Financial Services", "ACC": "Construction Materials", "ACE": "Capital Goods", "ACI": "Chemicals", "ACMESOLAR": "Power", "ACUTAAS": "Healthcare", "ADANIENSOL": "Power", "ADANIENT": "Metals \u0026 Mining", "ADANIGREEN": "Power", "ADANIPORTS": "Services", "ADANIPOWER": "Power", "ADVENZYMES": "Healthcare", "AEGISLOG": "Oil Gas \u0026 Consumable Fuels", "AEGISVOPAK": "Oil Gas \u0026 Consumable Fuels", "AEQUS": "Capital Goods", "AETHER": "Chemicals", "AFCONS": "Construction", "AFFLE": "Information Technology", "AGARWALEYE": "Healthcare", "AHLUCONT": "Construction", "AIAENG": "Capital Goods", "AIIL": "Financial Services", "AJANTPHARM": "Healthcare", "AKUMS": "Healthcare", "ALIVUS": "Healthcare", "ALKEM": "Healthcare", "ALKYLAMINE": "Chemicals", "ALOKINDS": "Textiles", "AMBER": "Consumer Durables", "AMBUJACEM": "Construction Materials", "ANANDRATHI": "Financial Services", "ANANTRAJ": "Realty", "ANGELONE": "Financial Services", "ANTHEM": "Healthcare", "ANUP": "Capital Goods", "ANURAS": "Chemicals", "APARINDS": "Capital Goods", "APLAPOLLO": "Capital Goods", "APLLTD": "Healthcare", "APOLLO": "Capital Goods", "APOLLOHOSP": "Healthcare", "APOLLOTYRE": "Automobile and Auto Components", "APTUS": "Financial Services", "ARE\u0026M": "Automobile and Auto Components", "ARVIND": "Textiles", "ARVINDFASN": "Consumer Services", "ASAHIINDIA": "Automobile and Auto Components", "ASHAPURMIN": "Metals \u0026 Mining", "ASHOKA": "Construction", "ASHOKLEY": "Capital Goods", "ASIANPAINT": "Consumer Durables", "ASKAUTOLTD": "Automobile and Auto Components", "ASTERDM": "Healthcare", "ASTRAL": "Capital Goods", "ASTRAMICRO": "Capital Goods", "ATGL": "Oil Gas \u0026 Consumable Fuels", "ATHERENERG": "Automobile and Auto Components", "ATLANTAELE": "Capital Goods", "ATUL": "Chemicals", "AUBANK": "Financial Services", "AURIONPRO": "Information Technology", "AUROPHARMA": "Healthcare", "AVALON": "Capital Goods", "AVANTIFEED": "Fast Moving Consumer Goods", "AVL": "Consumer Services", "AWFIS": "Services", "AWL": "Fast Moving Consumer Goods", "AXISBANK": "Financial Services", "AXISCADES": "Capital Goods", "AZAD": "Capital Goods", "BAJAJ-AUTO": "Automobile and Auto Components", "BAJAJELEC": "Consumer Durables", "BAJAJFINSV": "Financial Services", "BAJAJHFL": "Financial Services", "BAJAJHLDNG": "Financial Services", "BAJFINANCE": "Financial Services", "BALAMINES": "Chemicals", "BALKRISIND": "Automobile and Auto Components", "BALRAMCHIN": "Fast Moving Consumer Goods", "BALUFORGE": "Capital Goods", "BANCOINDIA": "Automobile and Auto Components", "BANDHANBNK": "Financial Services", "BANKBARODA": "Financial Services", "BANKINDIA": "Financial Services", "BATAINDIA": "Consumer Durables", "BAYERCROP": "Chemicals", "BBOX": "Information Technology", "BBTC": "Fast Moving Consumer Goods", "BDL": "Capital Goods", "BECTORFOOD": "Fast Moving Consumer Goods", "BEL": "Capital Goods", "BELRISE": "Automobile and Auto Components", "BEML": "Capital Goods", "BERGEPAINT": "Consumer Durables", "BHARATFORG": "Automobile and Auto Components", "BHARTIARTL": "Telecommunication", "BHARTIHEXA": "Telecommunication", "BHEL": "Capital Goods", "BIKAJI": "Fast Moving Consumer Goods", "BIOCON": "Healthcare", "BIRLACORPN": "Construction Materials", "BLACKBUCK": "Services", "BLS": "Consumer Services", "BLUEDART": "Services", "BLUEJET": "Healthcare", "BLUESTARCO": "Consumer Durables", "BLUESTONE": "Consumer Durables", "BORORENEW": "Capital Goods", "BOSCHLTD": "Automobile and Auto Components", "BPCL": "Oil Gas \u0026 Consumable Fuels", "BRIGADE": "Realty", "BRITANNIA": "Fast Moving Consumer Goods", "BSE": "Financial Services", "BSOFT": "Information Technology", "CAMPUS": "Consumer Durables", "CAMS": "Financial Services", "CANBK": "Financial Services", "CANFINHOME": "Financial Services", "CANHLIFE": "Financial Services", "CAPILLARY": "Information Technology", "CAPLIPOINT": "Healthcare", "CARBORUNIV": "Capital Goods", "CARTRADE": "Consumer Services", "CASTROLIND": "Oil Gas \u0026 Consumable Fuels", "CCAVENUE": "Financial Services", "CCL": "Fast Moving Consumer Goods", "CDSL": "Financial Services", "CEATLTD": "Automobile and Auto Components", "CELLO": "Consumer Durables", "CEMPRO": "Construction", "CENTRALBK": "Financial Services", "CENTURYPLY": "Consumer Durables", "CERA": "Consumer Durables", "CESC": "Power", "CGCL": "Financial Services", "CGPOWER": "Capital Goods", "CHALET": "Consumer Services", "CHAMBLFERT": "Chemicals", "CHENNPETRO": "Oil Gas \u0026 Consumable Fuels", "CHOICEIN": "Financial Services", "CHOLAFIN": "Financial Services", "CHOLAHLDNG": "Financial Services", "CIEINDIA": "Automobile and Auto Components", "CIPLA": "Healthcare", "CLEAN": "Chemicals", "CMSINFO": "Services", "COALINDIA": "Oil Gas \u0026 Consumable Fuels", "COCHINSHIP": "Capital Goods", "COFORGE": "Information Technology", "COHANCE": "Healthcare", "COLPAL": "Fast Moving Consumer Goods", "CONCOR": "Services", "CONCORDBIO": "Healthcare", "COROMANDEL": "Chemicals", "CORONA": "Healthcare", "CPPLUS": "Capital Goods", "CRAFTSMAN": "Automobile and Auto Components", "CRAMC": "Financial Services", "CREDITACC": "Financial Services", "CRISIL": "Financial Services", "CRIZAC": "Consumer Services", "CROMPTON": "Consumer Durables", "CSBBANK": "Financial Services", "CUB": "Financial Services", "CUMMINSIND": "Capital Goods", "CUPID": "Fast Moving Consumer Goods", "CYIENT": "Information Technology", "DABUR": "Fast Moving Consumer Goods", "DALBHARAT": "Construction Materials", "DATAMATICS": "Information Technology", "DATAPATTNS": "Capital Goods", "DBL": "Construction", "DBREALTY": "Realty", "DCBBANK": "Financial Services", "DCMSHRIRAM": "Diversified", "DEEPAKFERT": "Chemicals", "DEEPAKNTR": "Chemicals", "DELHIVERY": "Services", "DEVYANI": "Consumer Services", "DIACABS": "Capital Goods", "DIVISLAB": "Healthcare", "DIXON": "Consumer Durables", "DLF": "Realty", "DMART": "Consumer Services", "DOMS": "Fast Moving Consumer Goods", "DRREDDY": "Healthcare", "DYNAMATECH": "Capital Goods", "ECLERX": "Services", "EDELWEISS": "Financial Services", "EICHERMOT": "Automobile and Auto Components", "EIDPARRY": "Fast Moving Consumer Goods", "EIEL": "Utilities", "EIHOTEL": "Consumer Services", "ELECON": "Capital Goods", "ELECTCAST": "Capital Goods", "ELGIEQUIP": "Capital Goods", "ELLEN": "Chemicals", "EMAMILTD": "Fast Moving Consumer Goods", "EMBDL": "Realty", "EMCURE": "Healthcare", "EMIL": "Consumer Services", "EMMVEE": "Capital Goods", "ENDURANCE": "Automobile and Auto Components", "ENGINERSIN": "Construction", "ENRIN": "Capital Goods", "ENTERO": "Consumer Services", "EPL": "Capital Goods", "EQUITASBNK": "Financial Services", "ERIS": "Healthcare", "ESCORTS": "Capital Goods", "ETERNAL": "Consumer Services", "ETHOSLTD": "Consumer Durables", "EUREKAFORB": "Consumer Durables", "EXIDEIND": "Automobile and Auto Components", "FACT": "Chemicals", "FEDERALBNK": "Financial Services", "FEDFINA": "Financial Services", "FIEMIND": "Automobile and Auto Components", "FINCABLES": "Capital Goods", "FINPIPE": "Capital Goods", "FIRSTCRY": "Consumer Services", "FIVESTAR": "Financial Services", "FLUOROCHEM": "Chemicals", "FORCEMOT": "Automobile and Auto Components", "FORTIS": "Healthcare", "FSL": "Services", "GABRIEL": "Automobile and Auto Components", "GAEL": "Fast Moving Consumer Goods", "GAIL": "Oil Gas \u0026 Consumable Fuels", "GALLANTT": "Capital Goods", "GESHIP": "Services", "GHCL": "Chemicals", "GICRE": "Financial Services", "GILLETTE": "Fast Moving Consumer Goods", "GLAND": "Healthcare", "GLAXO": "Healthcare", "GLENMARK": "Healthcare", "GMDCLTD": "Metals \u0026 Mining", "GMMPFAUDLR": "Capital Goods", "GMRAIRPORT": "Services", "GMRP\u0026UI": "Power", "GNFC": "Chemicals", "GODFRYPHLP": "Fast Moving Consumer Goods", "GODIGIT": "Financial Services", "GODREJAGRO": "Fast Moving Consumer Goods", "GODREJCP": "Fast Moving Consumer Goods", "GODREJIND": "Diversified", "GODREJPROP": "Realty", "GOKEX": "Textiles", "GOKULAGRO": "Fast Moving Consumer Goods", "GPIL": "Capital Goods", "GPPL": "Services", "GRANULES": "Healthcare", "GRAPHITE": "Capital Goods", "GRASIM": "Construction Materials", "GRAVITA": "Metals \u0026 Mining", "GREAVESCOT": "Capital Goods", "GRINDWELL": "Capital Goods", "GROWW": "Financial Services", "GRSE": "Capital Goods", "GRWRHITECH": "Capital Goods", "GSFC": "Chemicals", "GVT\u0026D": "Capital Goods", "HAL": "Capital Goods", "HAPPSTMNDS": "Information Technology", "HAVELLS": "Consumer Durables", "HBLENGINE": "Capital Goods", "HCC": "Construction", "HCG": "Healthcare", "HCLTECH": "Information Technology", "HDBFS": "Financial Services", "HDFCAMC": "Financial Services", "HDFCBANK": "Financial Services", "HDFCLIFE": "Financial Services", "HEG": "Capital Goods", "HEMIPROP": "Services", "HERITGFOOD": "Fast Moving Consumer Goods", "HEROMOTOCO": "Automobile and Auto Components", "HEXT": "Information Technology", "HFCL": "Telecommunication", "HGINFRA": "Construction", "HINDALCO": "Metals \u0026 Mining", "HINDCOPPER": "Metals \u0026 Mining", "HINDPETRO": "Oil Gas \u0026 Consumable Fuels", "HINDUNILVR": "Fast Moving Consumer Goods", "HINDZINC": "Metals \u0026 Mining", "HOMEFIRST": "Financial Services", "HONASA": "Fast Moving Consumer Goods", "HONAUT": "Capital Goods", "HSCL": "Chemicals", "HUDCO": "Financial Services", "HYUNDAI": "Automobile and Auto Components", "ICICIAMC": "Financial Services", "ICICIBANK": "Financial Services", "ICICIGI": "Financial Services", "ICICIPRULI": "Financial Services", "ICIL": "Textiles", "IDBI": "Financial Services", "IDEA": "Telecommunication", "IDFCFIRSTB": "Financial Services", "IEX": "Financial Services", "IFBIND": "Consumer Durables", "IFCI": "Financial Services", "IGIL": "Services", "IGL": "Oil Gas \u0026 Consumable Fuels", "IIFL": "Financial Services", "IIFLCAPS": "Financial Services", "IKS": "Information Technology", "IMFA": "Metals \u0026 Mining", "INDGN": "Healthcare", "INDHOTEL": "Consumer Services", "INDIACEM": "Construction Materials", "INDIAGLYCO": "Fast Moving Consumer Goods", "INDIAMART": "Consumer Services", "INDIANB": "Financial Services", "INDIASHLTR": "Financial Services", "INDIGO": "Services", "INDIGOPNTS": "Consumer Durables", "INDUSINDBK": "Financial Services", "INDUSTOWER": "Telecommunication", "INFY": "Information Technology", "INOXGREEN": "Services", "INOXINDIA": "Capital Goods", "INOXWIND": "Capital Goods", "INTELLECT": "Information Technology", "IOB": "Financial Services", "IOC": "Oil Gas \u0026 Consumable Fuels", "IONEXCHANG": "Utilities", "IPCALAB": "Healthcare", "IRB": "Construction", "IRCON": "Construction", "IRCTC": "Consumer Services", "IREDA": "Financial Services", "IRFC": "Financial Services", "ITC": "Fast Moving Consumer Goods", "ITCHOTELS": "Consumer Services", "ITI": "Telecommunication", "IXIGO": "Consumer Services", "J\u0026KBANK": "Financial Services", "JAIBALAJI": "Metals \u0026 Mining", "JAINREC": "Metals \u0026 Mining", "JAMNAAUTO": "Automobile and Auto Components", "JAYNECOIND": "Capital Goods", "JBMA": "Automobile and Auto Components", "JINDALSAW": "Capital Goods", "JINDALSTEL": "Metals \u0026 Mining", "JIOFIN": "Financial Services", "JKCEMENT": "Construction Materials", "JKLAKSHMI": "Construction Materials", "JKPAPER": "Forest Materials", "JKTYRE": "Automobile and Auto Components", "JLHL": "Healthcare", "JMFINANCIL": "Financial Services", "JPPOWER": "Power", "JSFB": "Financial Services", "JSL": "Metals \u0026 Mining", "JSLL": "Consumer Services", "JSWCEMENT": "Construction Materials", "JSWDULUX": "Consumer Durables", "JSWENERGY": "Power", "JSWINFRA": "Services", "JSWSTEEL": "Metals \u0026 Mining", "JUBLFOOD": "Consumer Services", "JUBLINGREA": "Chemicals", "JUBLPHARMA": "Healthcare", "JUSTDIAL": "Consumer Services", "JWL": "Capital Goods", "JYOTHYLAB": "Fast Moving Consumer Goods", "JYOTICNC": "Capital Goods", "KAJARIACER": "Consumer Durables", "KALYANKJIL": "Consumer Durables", "KANSAINER": "Consumer Durables", "KARURVYSYA": "Financial Services", "KAYNES": "Capital Goods", "KEC": "Construction", "KEI": "Capital Goods", "KFINTECH": "Financial Services", "KIMS": "Healthcare", "KIRLOSBROS": "Capital Goods", "KIRLOSENG": "Capital Goods", "KIRLPNU": "Capital Goods", "KITEX": "Textiles", "KNRCON": "Construction", "KOTAKBANK": "Financial Services", "KPIGREEN": "Power", "KPIL": "Construction", "KPITTECH": "Information Technology", "KPRMILL": "Textiles", "KRBL": "Fast Moving Consumer Goods", "KRN": "Capital Goods", "KSB": "Capital Goods", "KSCL": "Fast Moving Consumer Goods", "KTKBANK": "Financial Services", "LALPATHLAB": "Healthcare", "LATENTVIEW": "Information Technology", "LAURUSLABS": "Healthcare", "LEMONTREE": "Consumer Services", "LENSKART": "Consumer Services", "LGEINDIA": "Consumer Durables", "LICHSGFIN": "Financial Services", "LICI": "Financial Services", "LINDEINDIA": "Chemicals", "LLOYDSENGG": "Capital Goods", "LLOYDSENT": "Metals \u0026 Mining", "LLOYDSME": "Metals \u0026 Mining", "LODHA": "Realty", "LOTUSDEV": "Realty", "LT": "Construction", "LTF": "Financial Services", "LTFOODS": "Fast Moving Consumer Goods", "LTM": "Information Technology", "LTTS": "Information Technology", "LUMAXTECH": "Automobile and Auto Components", "LUPIN": "Healthcare", "LXCHEM": "Chemicals", "M\u0026M": "Automobile and Auto Components", "M\u0026MFIN": "Financial Services", "MAHABANK": "Financial Services", "MAHSCOOTER": "Financial Services", "MAHSEAMLES": "Capital Goods", "MANAPPURAM": "Financial Services", "MANKIND": "Healthcare", "MANORAMA": "Fast Moving Consumer Goods", "MANYAVAR": "Consumer Services", "MAPMYINDIA": "Information Technology", "MARICO": "Fast Moving Consumer Goods", "MARKSANS": "Healthcare", "MARUTI": "Automobile and Auto Components", "MASTEK": "Information Technology", "MAXHEALTH": "Healthcare", "MAZDOCK": "Capital Goods", "MCX": "Financial Services", "MEDANTA": "Healthcare", "MEDPLUS": "Consumer Services", "MEESHO": "Consumer Services", "METROPOLIS": "Healthcare", "MFSL": "Financial Services", "MGL": "Oil Gas \u0026 Consumable Fuels", "MIDHANI": "Capital Goods", "MINDACORP": "Automobile and Auto Components", "MMTC": "Services", "MOIL": "Metals \u0026 Mining", "MOTHERSON": "Automobile and Auto Components", "MOTILALOFS": "Financial Services", "MPHASIS": "Information Technology", "MRF": "Automobile and Auto Components", "MRPL": "Oil Gas \u0026 Consumable Fuels", "MSTCLTD": "Services", "MSUMI": "Automobile and Auto Components", "MTARTECH": "Capital Goods", "MUTHOOTFIN": "Financial Services", "NAM-INDIA": "Financial Services", "NATCOPHARM": "Healthcare", "NATIONALUM": "Metals \u0026 Mining", "NAUKRI": "Consumer Services", "NAVA": "Power", "NAVINFLUOR": "Chemicals", "NAZARA": "Media Entertainment \u0026 Publication", "NBCC": "Construction", "NCC": "Construction", "NEOGEN": "Chemicals", "NESCO": "Services", "NESTLEIND": "Fast Moving Consumer Goods", "NETWEB": "Information Technology", "NETWORK18": "Media Entertainment \u0026 Publication", "NEULANDLAB": "Healthcare", "NEWGEN": "Information Technology", "NFL": "Chemicals", "NH": "Healthcare", "NHPC": "Power", "NIACL": "Financial Services", "NIVABUPA": "Financial Services", "NLCINDIA": "Power", "NMDC": "Metals \u0026 Mining", "NSLNISP": "Metals \u0026 Mining", "NTPC": "Power", "NTPCGREEN": "Power", "NUVAMA": "Financial Services", "NUVOCO": "Construction Materials", "NYKAA": "Consumer Services", "OBEROIRLTY": "Realty", "OFSS": "Information Technology", "OIL": "Oil Gas \u0026 Consumable Fuels", "OLAELEC": "Automobile and Auto Components", "OLECTRA": "Automobile and Auto Components", "ONESOURCE": "Healthcare", "ONGC": "Oil Gas \u0026 Consumable Fuels", "OPTIEMUS": "Telecommunication", "ORIENTCEM": "Construction Materials", "ORKLAINDIA": "Fast Moving Consumer Goods", "OSWALPUMPS": "Capital Goods", "PAGEIND": "Textiles", "PARADEEP": "Chemicals", "PARAS": "Capital Goods", "PARKHOSPS": "Healthcare", "PATANJALI": "Fast Moving Consumer Goods", "PAYTM": "Financial Services", "PCBL": "Chemicals", "PCJEWELLER": "Consumer Durables", "PERSISTENT": "Information Technology", "PETRONET": "Oil Gas \u0026 Consumable Fuels", "PFC": "Financial Services", "PFIZER": "Healthcare", "PFOCUS": "Media Entertainment \u0026 Publication", "PGEL": "Consumer Durables", "PGIL": "Textiles", "PHOENIXLTD": "Realty", "PICCADIL": "Fast Moving Consumer Goods", "PIDILITIND": "Chemicals", "PIIND": "Chemicals", "PINELABS": "Financial Services", "PIRAMALFIN": "Financial Services", "PNB": "Financial Services", "PNBHOUSING": "Financial Services", "PNCINFRA": "Construction", "PNGJL": "Consumer Durables", "POLICYBZR": "Financial Services", "POLYCAB": "Capital Goods", "POLYMED": "Healthcare", "POONAWALLA": "Financial Services", "POWERGRID": "Power", "POWERINDIA": "Capital Goods", "POWERMECH": "Construction", "PPLPHARMA": "Healthcare", "PRAJIND": "Capital Goods", "PREMIERENE": "Capital Goods", "PRESTIGE": "Realty", "PRICOLLTD": "Automobile and Auto Components", "PRIVISCL": "Chemicals", "PRSMJOHNSN": "Construction Materials", "PRUDENT": "Financial Services", "PTC": "Power", "PTCIL": "Capital Goods", "PURVA": "Realty", "PVRINOX": "Media Entertainment \u0026 Publication", "PWL": "Consumer Services", "QPOWER": "Capital Goods", "QUESS": "Services", "RADICO": "Fast Moving Consumer Goods", "RAILTEL": "Telecommunication", "RAIN": "Chemicals", "RAINBOW": "Healthcare", "RALLIS": "Chemicals", "RAMCOCEM": "Construction Materials", "RATEGAIN": "Information Technology", "RATNAMANI": "Capital Goods", "RAYMONDLSL": "Textiles", "RBA": "Consumer Services", "RBLBANK": "Financial Services", "RCF": "Chemicals", "RECLTD": "Financial Services", "REDINGTON": "Services", "REDTAPE": "Consumer Durables", "REFEX": "Utilities", "RELAXO": "Consumer Durables", "RELIANCE": "Oil Gas \u0026 Consumable Fuels", "RELIGARE": "Financial Services", "RENUKA": "Fast Moving Consumer Goods", "RHIM": "Capital Goods", "RITES": "Construction", "RKFORGE": "Automobile and Auto Components", "ROUTE": "Telecommunication", "RPOWER": "Power", "RRKABEL": "Capital Goods", "RTNINDIA": "Consumer Services", "RTNPOWER": "Power", "RUBICON": "Healthcare", "RVNL": "Construction", "SAATVIKGL": "Capital Goods", "SAFARI": "Consumer Durables", "SAGILITY": "Information Technology", "SAIL": "Metals \u0026 Mining", "SAILIFE": "Healthcare", "SAMHI": "Consumer Services", "SAMMAANCAP": "Financial Services", "SANDUMA": "Metals \u0026 Mining", "SANOFICONR": "Healthcare", "SANSERA": "Automobile and Auto Components", "SAPPHIRE": "Consumer Services", "SARDAEN": "Metals \u0026 Mining", "SAREGAMA": "Media Entertainment \u0026 Publication", "SBFC": "Financial Services", "SBICARD": "Financial Services", "SBILIFE": "Financial Services", "SBIN": "Financial Services", "SCHAEFFLER": "Automobile and Auto Components", "SCHNEIDER": "Capital Goods", "SCI": "Services", "SENCO": "Consumer Durables", "SFL": "Consumer Durables", "SHAILY": "Consumer Durables", "SHAKTIPUMP": "Capital Goods", "SHARDACROP": "Chemicals", "SHAREINDIA": "Financial Services", "SHILPAMED": "Healthcare", "SHREECEM": "Construction Materials", "SHRIPISTON": "Automobile and Auto Components", "SHRIRAMFIN": "Financial Services", "SHYAMMETL": "Capital Goods", "SIEMENS": "Capital Goods", "SIGNATURE": "Realty", "SJVN": "Power", "SKFINDIA": "Automobile and Auto Components", "SKFINDUS": "Capital Goods", "SKIPPER": "Capital Goods", "SKYGOLD": "Consumer Durables", "SMARTWORKS": "Services", "SMLMAH": "Capital Goods", "SOBHA": "Realty", "SOLARINDS": "Chemicals", "SONACOMS": "Automobile and Auto Components", "SONATSOFTW": "Information Technology", "SOUTHBANK": "Financial Services", "SPARC": "Healthcare", "SPLPETRO": "Chemicals", "SRF": "Chemicals", "STAR": "Healthcare", "STARCEMENT": "Construction Materials", "STARHEALTH": "Financial Services", "STLTECH": "Telecommunication", "STYL": "Financial Services", "STYRENIX": "Chemicals", "SUBROS": "Capital Goods", "SUDARSCHEM": "Chemicals", "SUDEEPPHRM": "Chemicals", "SUMICHEM": "Chemicals", "SUNDARMFIN": "Financial Services", "SUNPHARMA": "Healthcare", "SUNTECK": "Realty", "SUNTV": "Media Entertainment \u0026 Publication", "SUPREMEIND": "Capital Goods", "SUPRIYA": "Healthcare", "SURYAROSNI": "Capital Goods", "SUZLON": "Capital Goods", "SWANCORP": "Chemicals", "SWIGGY": "Consumer Services", "SWSOLAR": "Construction", "SYNGENE": "Healthcare", "SYRMA": "Capital Goods", "TANLA": "Information Technology", "TARC": "Realty", "TARIL": "Capital Goods", "TATACAP": "Financial Services", "TATACHEM": "Chemicals", "TATACOMM": "Telecommunication", "TATACONSUM": "Fast Moving Consumer Goods", "TATAELXSI": "Information Technology", "TATAINVEST": "Financial Services", "TATAPOWER": "Power", "TATASTEEL": "Metals \u0026 Mining", "TATATECH": "Information Technology", "TBOTEK": "Consumer Services", "TCS": "Information Technology", "TDPOWERSYS": "Capital Goods", "TECHM": "Information Technology", "TECHNOE": "Construction", "TEGA": "Capital Goods", "TEJASNET": "Telecommunication", "TENNIND": "Automobile and Auto Components", "TEXRAIL": "Capital Goods", "THANGAMAYL": "Consumer Durables", "THELEELA": "Consumer Services", "THERMAX": "Capital Goods", "THOMASCOOK": "Consumer Services", "THYROCARE": "Healthcare", "TI": "Fast Moving Consumer Goods", "TIINDIA": "Automobile and Auto Components", "TIMETECHNO": "Capital Goods", "TIMKEN": "Capital Goods", "TIPSMUSIC": "Media Entertainment \u0026 Publication", "TITAGARH": "Capital Goods", "TITAN": "Consumer Durables", "TMB": "Financial Services", "TMCV": "Capital Goods", "TMPV": "Automobile and Auto Components", "TORNTPHARM": "Healthcare", "TORNTPOWER": "Power", "TRANSRAILL": "Capital Goods", "TRAVELFOOD": "Consumer Services", "TRENT": "Consumer Services", "TRIDENT": "Textiles", "TRITURBINE": "Capital Goods", "TRIVENI": "Fast Moving Consumer Goods", "TSFINV": "Financial Services", "TTML": "Telecommunication", "TVSMOTOR": "Automobile and Auto Components", "TVSSCS": "Services", "UBL": "Fast Moving Consumer Goods", "UCOBANK": "Financial Services", "UJJIVANSFB": "Financial Services", "ULTRACEMCO": "Construction Materials", "UNIONBANK": "Financial Services", "UNITDSPR": "Fast Moving Consumer Goods", "UNOMINDA": "Automobile and Auto Components", "UPL": "Chemicals", "URBANCO": "Consumer Services", "USHAMART": "Capital Goods", "UTIAMC": "Financial Services", "UTLSOLAR": "Capital Goods", "V2RETAIL": "Consumer Services", "VAIBHAVGBL": "Consumer Durables", "VARROC": "Automobile and Auto Components", "VBL": "Fast Moving Consumer Goods", "VEDL": "Metals \u0026 Mining", "VGUARD": "Consumer Durables", "VIJAYA": "Healthcare", "VIKRAMSOLR": "Capital Goods", "VIPIND": "Consumer Durables", "VIYASH": "Healthcare", "VMART": "Consumer Services", "VMM": "Consumer Services", "VOLTAMP": "Capital Goods", "VOLTAS": "Consumer Durables", "VTL": "Textiles", "WAAREEENER": "Capital Goods", "WAAREERTL": "Capital Goods", "WABAG": "Utilities", "WAKEFIT": "Consumer Durables", "WEBELSOLAR": "Capital Goods", "WELCORP": "Capital Goods", "WELENT": "Construction", "WELSPUNLIV": "Textiles", "WESTLIFE": "Consumer Services", "WEWORK": "Services", "WHIRLPOOL": "Consumer Durables", "WIPRO": "Information Technology", "WOCKPHARMA": "Healthcare", "YATHARTH": "Healthcare", "YESBANK": "Financial Services", "ZAGGLE": "Information Technology", "ZEEL": "Media Entertainment \u0026 Publication", "ZENSARTECH": "Information Technology", "ZENTEC": "Capital Goods", "ZFCVINDIA": "Automobile and Auto Components", "ZYDUSLIFE": "Healthcare", "ZYDUSWELL": "Fast Moving Consumer Goods"}</script>
+<script nonce="rPUxPDEio-su957BHRz56Q" src="/app.js?v=20260911T130329" defer></script>
 </body>
 </html>
