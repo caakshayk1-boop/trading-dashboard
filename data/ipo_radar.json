@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-11T15:46:30",
+ "generated_at": "2026-09-11T16:05:31",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -182,7 +182,11 @@
    "issue_size_shares": 36912363.0,
    "issue_size_cr": 732.97,
    "subscription_x": 12.152453610190168,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 52.65,
+    "HNI": 15.69,
+    "Total": 20.1
+   },
    "lot_size": 107.0,
    "min_investment": 14873.0,
    "fresh_issue_cr": null,
@@ -234,6 +238,8 @@
    "verdict_caveat": "Small books move violently both ways after listing. Size the application accordingly.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/asset-reconstruction-ipo/2558/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1331/asset-reconstruction-company",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 26% year on year."
    ],
@@ -420,7 +426,11 @@
    "issue_size_shares": 25414937.0,
    "issue_size_cr": 875.0,
    "subscription_x": 37.530321519191645,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 168.19,
+    "HNI": 51.17,
+    "Total": 66.01
+   },
    "lot_size": 59.0,
    "min_investment": 14986.0,
    "fresh_issue_cr": 675.0,
@@ -428,7 +438,7 @@
    "face_value": 10.0,
    "anchor_cr": 262.5,
    "listing_date": null,
-   "gmp_text": "\u20b965 (25.59%)",
+   "gmp_text": "\u20b965",
    "revenue_cr": 4316.36,
    "revenue_growth_pct": 36.0,
    "pat_cr": 228.75,
@@ -473,6 +483,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/karamtara-engineering-ipo/2020/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1107/karamtara-engineering-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 36% year on year.",
     "Profit grew faster than revenue (64% against 36%), so margins widened rather than bought growth.",
@@ -735,7 +746,7 @@
    "price_low": 88.0,
    "price_high": 93.0,
    "issue_size_shares": 13428000.0,
-   "issue_size_cr": 124.9,
+   "issue_size_cr": 124.88,
    "subscription_x": null,
    "subscription_by_category": null,
    "lot_size": 161.0,
@@ -788,6 +799,7 @@
    "verdict_why": "Book has not opened \u2014 no demand evidence exists yet.",
    "verdict_caveat": "Re-check once subscription starts; nothing here is a judgement on the business.",
    "enriched_source": "chittorgarh.com",
+   "enriched_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
    "reads_for": null,
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."
@@ -1017,7 +1029,7 @@
    "ofs_cr": 755.74,
    "face_value": 2.0,
    "anchor_cr": 316.72,
-   "gmp_text": "\u20b9240 (37.97%)",
+   "gmp_text": "\u20b9240",
    "revenue_cr": 662.86,
    "revenue_growth_pct": 45.0,
    "pat_cr": 129.73,
@@ -1039,6 +1051,12 @@
    "issue_size_cr": 1055.74,
    "enriched_url": "https://www.chittorgarh.com/ipo/kanohar-electricals-ipo/2856/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1330/kanohar-electricals-ltd",
+   "subscription_by_category": {
+    "QIB": 215.37,
+    "HNI": 87.74,
+    "Total": 90.59
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 38.6x post-issue earnings against a 103x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 45% year on year.",
@@ -1083,6 +1101,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
+   "subscription_by_category": {
+    "QIB": 7.59,
+    "HNI": 1.89,
+    "Total": 3.47
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
@@ -1258,24 +1283,6 @@
   }
  ],
  "recent_listed": [
-  {
-   "symbol": "DEEPA",
-   "company": "Deepa Jewellers Limited",
-   "price_band": "Rs.168 to Rs.177",
-   "close_date": "2026-09-03",
-   "listing_date": "2026-09-08",
-   "days_since_close": 8,
-   "measured": true,
-   "first_close": 194.37,
-   "last_close": 185.86,
-   "since_listing_pct": -4.4,
-   "from_high_pct": -16.3,
-   "high": 222.0,
-   "low": 185.0,
-   "months_listed": null,
-   "sessions": 4,
-   "measured_by": "yahoo"
-  },
   {
    "symbol": "PERNIASPOP",
    "company": "Purple Style Labs Limited",
@@ -4115,6 +4122,23 @@
    "measured_by": "yahoo"
   },
   {
+   "symbol": "DEEPA",
+   "company": "Deepa Jewellers Limited",
+   "price_band": "Rs.168 to Rs.177",
+   "close_date": "2026-09-03",
+   "listing_date": "2026-09-08",
+   "days_since_close": 8,
+   "measured": false,
+   "first_close": null,
+   "last_close": null,
+   "since_listing_pct": null,
+   "from_high_pct": null,
+   "high": null,
+   "low": null,
+   "months_listed": null,
+   "sessions": null
+  },
+  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -4223,7 +4247,7 @@
   "upcoming": 4,
   "awaiting": 5,
   "listed_12m": 166,
-  "listed_measured": 160,
+  "listed_measured": 159,
   "listed_via_screen": 24,
   "apply": 5,
   "avoid": 1
