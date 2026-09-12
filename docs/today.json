@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T154212",
+ "build_id": "20260912T160227",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "2h old",
+    "age": "3h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1328,7 +1328,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-11",
-   "age_days": 0.5,
+   "age_days": 0.6,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T05:13:55+00:00",
     "smart": {
      "what_happened": [
-      "The EPFO permits employees to make partial withdrawals, called EPF advances.",
-      "Eligibility for EPF advances applies when employees need retirement savings before leaving the workforce for emergencies."
+      "Employees may need to access retirement savings before leaving the workforce for emergencies.",
+      "The EPFO permits partial withdrawals, known as EPF advances, with specific eligibility."
      ],
-     "why_it_matters": "The ability to access EPF funds early provides a financial safety net for employees facing emergencies, affecting personal cash flow and retirement planning decisions.",
-     "what_to_watch": "Monitor EPFO announcements for any changes to eligibility criteria for EPF advances.",
-     "headline": "EPFO allows partial EPF withdrawals under defined eligibility",
+     "why_it_matters": "Access to EPF advances provides workers with a legal avenue to obtain funds from their retirement savings in emergencies, reducing financial strain and ensuring liquidity without exiting the formal retirement system.",
+     "what_to_watch": "Monitor the EPFO website for any updates to the eligibility criteria for EPF advances.",
+     "headline": "Employees can claim EPF advances under specific eligibility rules",
      "read_seconds": 20
     }
    },
@@ -1361,11 +1361,11 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank offers an 8.5% interest rate on five-year fixed deposits for senior citizens.",
-      "Jana Small Finance Bank offers an 8% interest rate on similar terms, and banks deduct TDS on FD interest exceeding one lakh."
+      "Suryoday Small Finance Bank offers 8.5% interest on five-year fixed deposits for seniors.",
+      "Jana Small Finance Bank offers 8% interest on similar five-year fixed deposits for seniors, and banks deduct TDS on FD interest exceeding one lakh."
      ],
-     "why_it_matters": "Higher fixed\u2011deposit rates give senior citizens a low\u2011risk avenue to earn better returns on savings, improving their income stability in a low\u2011interest environment. The rates also influence competition among small finance banks, potentially prompting broader changes in deposit pricing across the sector.",
-     "what_to_watch": "Watch for any RBI policy updates or bank announcements that could adjust senior citizen FD rates in the next quarter.",
+     "why_it_matters": "The higher fixed\u2011deposit rates provide senior citizens with a relatively safe investment option that yields returns above many traditional savings instruments, helping them preserve capital while generating income, especially important given their longer investment horizon and lower risk tolerance.",
+     "what_to_watch": "Monitor any changes to the TDS threshold or future rate revisions announced by small finance banks for senior citizen deposits.",
      "headline": "Senior citizens can earn up to 8.5% on five-year fixed deposits",
      "read_seconds": 26
     }
@@ -1386,17 +1386,7 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00",
-    "smart": {
-     "what_happened": [
-      "A survey found that eight out of ten Americans are using vitamins, protein powders or other dietary supplements.",
-      "Health experts said there is little scientific evidence supporting the benefits of many of these products."
-     ],
-     "why_it_matters": "The widespread use of supplements despite limited evidence raises concerns about consumer health, potential waste of money, and the need for clearer scientific guidance, which could influence public health policy and the dietary supplement market.",
-     "what_to_watch": "Future surveys tracking changes in supplement usage rates among Americans",
-     "headline": "Eight in ten Americans report taking vitamins, protein powders or supplements",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-11T17:37:38+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1631,7 +1621,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2051,
+   "rating": 1859,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
