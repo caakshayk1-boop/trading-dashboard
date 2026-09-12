@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T110221",
+ "build_id": "20260912T112219",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -1328,7 +1328,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-11",
-   "age_days": 0.3,
+   "age_days": 0.4,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank announced an 8.5% interest rate on five-year fixed deposits for senior citizens.",
-      "Jana Small Finance Bank announced an 8% interest rate on five-year fixed deposits for senior citizens, and banks will deduct TDS on FD interest exceeding one lakh."
+      "Suryoday Small Finance Bank announced an 8.5% interest rate on five\u2011year fixed deposits for senior citizens.",
+      "Jana Small Finance Bank offered an 8% rate on similar five\u2011year senior citizen deposits, and banks will deduct TDS on FD interest above one lakh."
      ],
-     "why_it_matters": "The higher fixed deposit rates give senior citizens a more attractive savings option, potentially shifting a larger share of retail deposits toward small finance banks. This can improve the banks' low\u2011cost funding base while also increasing competition for deposit rates across the sector.",
-     "what_to_watch": "Track the next quarterly TDS filings to see if senior citizen FD interest exceeds one lakh, indicating the uptake of the new rates.",
-     "headline": "Senior citizens can get up to 8.5% FD rate for five-year term",
+     "why_it_matters": "The higher rates give senior citizens a more attractive fixed\u2011deposit option, potentially boosting savings returns for this demographic and increasing competition among small finance banks to capture senior\u2011citizen deposits.",
+     "what_to_watch": "Watch for any new senior citizen FD rate announcements from other small finance banks in the next quarter.",
+     "headline": "Senior Citizens Get Up to 8.5% FD Rate at Small Finance Banks",
      "read_seconds": 26
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T01:16:32+00:00",
     "smart": {
      "what_happened": [
-      "Experts explained that lenders assess income stability, existing EMIs and repayment capacity in addition to the CIBIL score.",
-      "They also said that property value, documentation and other criteria influence the decision to sanction a home loan."
+      "Experts explain that lenders consider factors beyond credit score such as income stability and existing EMIs.",
+      "They also assess repayment capacity, property value and documentation before sanctioning a loan."
      ],
-     "why_it_matters": "The explanation highlights that a high credit score alone is insufficient for loan approval, underscoring the importance of a borrower\u2019s overall financial profile and the quality of the collateral. This impacts borrowers planning to leverage strong credit scores for home purchases and informs lenders about the multifaceted risk assessment they employ.",
-     "what_to_watch": "Watch for banks' upcoming disclosures on income\u2011stability and debt\u2011to\u2011income ratio requirements in their loan eligibility guidelines.",
-     "headline": "CIBIL score of 780 does not guarantee home loan approval",
+     "why_it_matters": "The explanation highlights that a strong credit score alone does not guarantee mortgage financing, underscoring the importance for borrowers to maintain stable income, manageable existing debt, and proper paperwork. Understanding these additional criteria helps consumers better prepare their applications and avoid unexpected rejections, which can affect housing plans and financial planning.",
+     "what_to_watch": "Track the debt\u2011to\u2011income ratio disclosed in future loan applications to see if it meets lender thresholds.",
+     "headline": "High CIBIL score not enough for home loan approval, experts say",
      "read_seconds": 21
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00",
-    "smart": {
-     "what_happened": [
-      "Egypt's President congratulated India on its BRICS presidency and called it a vital strategic partner.",
-      "He said Egypt's location offers trade and logistics advantages, urged stronger trade via the Suez Canal, and seeks local manufacturing and technology transfer with India."
-     ],
-     "why_it_matters": "The statements signal a deepening of India\u2011Egypt economic ties, leveraging Egypt's strategic position at the Suez Canal to facilitate Indian exports and imports, and potentially expanding Indian involvement in Egyptian manufacturing and technology sectors, which could diversify supply chains for both countries.",
-     "what_to_watch": "The reported volume of India\u2011Egypt bilateral trade flowing through the Suez Canal in the next quarter.",
-     "headline": "Egypt president calls India vital partner, urges stronger trade via Suez Canal",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-11T18:52:34+00:00"
    },
    {
     "source": "NYT Well",
@@ -1462,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4 d5\u202f2.c4\u202fc6, you allowed 3.Nc3\u202fNf6\u202f4.cxd5\u202fcxd5\u202f5.Bg5\u202fe6\u202f6.e3\u202fBd6\u202f7.Nf3\u202fNbd7\u202f8.Bd3\u202f0\u20110\u202f9.0\u20110\u202fb5\u2014your queen\u2011side expansion was premature, creating a weak c6\u2011pawn and isolated d5\u2011pawn. Prioritize solidifying the center (\u2026e6, \u2026Nbd7, \u2026c6) before launching ...b5; this would have reduced tactical vulnerabilities and improved piece coordination.",
+    "analysis": "Focus on early pawn structure: after 1.d4\u202fd5\u202f2.c4\u202fe6, avoid the passive 3...Nf6\u2011e8\u2011g7 maneuver; develop knights to f6/d7 and contest the centre within 5 moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1631,7 +1621,7 @@
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1836,
+   "rating": 2008,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
