@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T124211",
+ "build_id": "20260912T130223",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "19h old",
+    "age": "20h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,11 +1342,11 @@
     "_sort": "2026-09-12T04:05:29+00:00",
     "smart": {
      "what_happened": [
-      "Experts explain that prepaying a loan can reduce overall interest costs and debt",
-      "They note that timely EMI payments are more important for credit scores and advise borrowers to check conditions before using savings to close a loan early"
+      "Experts explain that prepaying a loan can reduce interest costs and overall debt.",
+      "They note that timely EMI payments have a greater impact on credit scores and advise borrowers to review their savings before early repayment."
      ],
-     "why_it_matters": "Understanding the trade\u2011off between interest savings from early loan repayment and the impact on credit history helps borrowers make informed decisions about using their cash reserves, potentially improving long\u2011term financial health and borrowing capacity.",
-     "what_to_watch": "Monitor announcements from major lenders regarding changes to prepayment penalties or EMI reporting criteria.",
+     "why_it_matters": "Understanding the trade\u2011off between interest savings and credit score implications helps borrowers make informed decisions about using available cash to reduce loan balances, potentially improving financial health while avoiding unintended credit impacts.",
+     "what_to_watch": "Track changes in your credit score after making an early loan prepayment.",
      "headline": "Experts discuss loan prepayment benefits and considerations",
      "read_seconds": 20
     }
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank offers seniors an 8.5% interest rate on five-year fixed deposits.",
-      "Jana Small Finance Bank offers seniors an 8% rate on five-year fixed deposits, and banks deduct TDS on FD interest above \u20b91 lakh."
+      "Suryoday Small Finance Bank offers seniors an 8.5% interest rate on five\u2011year fixed deposits.",
+      "Jana Small Finance Bank provides an 8% rate on five\u2011year senior citizen fixed deposits, and banks deduct TDS on FD interest above one lakh."
      ],
-     "why_it_matters": "The higher fixed\u2011deposit rates provide senior citizens with a relatively safe avenue to earn better returns on their savings, which can be especially important given inflation pressures and limited investment options for this age group. The competition among small finance banks to attract senior deposits may also influence broader deposit pricing in the banking sector.",
-     "what_to_watch": "Monitor whether Suryoday Small Finance Bank maintains the 8.5% five\u2011year senior citizen rate in its next rate revision.",
-     "headline": "Senior citizens get up to 8.5% FD rate for five-year deposits",
+     "why_it_matters": "The elevated fixed\u2011deposit rates give senior investors substantially higher returns compared with many traditional bank offerings, which could attract senior citizen savings to these small finance banks and enhance their deposit base. The higher rates also mean that banks will need to manage the associated interest expense and TDS obligations on interest earnings exceeding one lakh.",
+     "what_to_watch": "Watch for any updates to the list of small finance banks that announce senior citizen fixed\u2011deposit rates above 8%.",
+     "headline": "Senior citizens can earn up to 8.5% FD rate at select small finance banks",
      "read_seconds": 26
     }
    },
@@ -1377,7 +1377,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00"
+    "_sort": "2026-09-11T18:52:34+00:00",
+    "smart": {
+     "what_happened": [
+      "Egypt's President congratulated India on its BRICS presidency and highlighted mutual cooperation.",
+      "He said Egypt's strategic location offers trade and logistics advantages and seeks to boost local manufacturing and technology transfer with India."
+     ],
+     "why_it_matters": "The statement signals a deepening of India\u2011Egypt relations, potentially expanding market access for Indian firms via the Suez Canal and fostering technology and manufacturing collaboration, which could enhance supply\u2011chain resilience and diversify trade flows for both economies.",
+     "what_to_watch": "The first quarterly report on India\u2011Egypt trade volumes through the Suez Canal following the announcement.",
+     "headline": "Egypt president calls India vital strategic partner, urges stronger Suez Canal trade",
+     "read_seconds": 26
+    }
    },
    {
     "source": "NYT Well",
@@ -1386,7 +1396,17 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00"
+    "_sort": "2026-09-11T17:37:38+00:00",
+    "smart": {
+     "what_happened": [
+      "A new survey found that eight out of ten Americans were using vitamins, protein powders or other dietary supplements.",
+      "Experts noted that scientific evidence supporting the benefits of many of these products is limited."
+     ],
+     "why_it_matters": "The high prevalence of supplement use indicates that a large portion of the population is consuming products whose health benefits are not well\u2011established, which could influence public health outcomes and drive market demand despite limited scientific backing.",
+     "what_to_watch": "Monitor upcoming scientific studies that assess the efficacy of commonly used dietary supplements.",
+     "headline": "Survey shows 8 in 10 Americans taking vitamins or supplements",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -1452,7 +1472,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4 d5\u202f2.c4, avoid passive 2\u2026e6; instead play 2\u2026c6 or 2\u2026Nf6 to contest the center and prevent isolated\u2011queen\u2011pawn weaknesses.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1614,14 +1634,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your opening repertoire is a joke\u2014every game you play collapses within the first ten moves, proving you can\u2019t even navigate the basic principles of development. Stop relying on vague \u201cfavorite\u201d lines and drill the fundamental pawn structures and piece\u2011coordination of the Italian Game and the Caro\u2011Kann, mastering every critical variation before you even think about a surprise weapon. Allocate at least 30 minutes daily to forced\u2011mate puzzles and annotated master games; if you can\u2019t execute a simple fork or avoid a basic tactical shot, you belong in a beginner\u2019s league, not on Lichess.",
+   "session_summary": "",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1987,
+   "rating": 1997,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
