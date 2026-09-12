@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T204228",
+ "build_id": "20260912T210230",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -1328,7 +1328,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-11",
-   "age_days": 0.7,
+   "age_days": 0.8,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1351,12 +1351,12 @@
     "_sort": "2026-09-12T10:58:14+00:00",
     "smart": {
      "what_happened": [
-      "Becoming a loan guarantor can affect future loan eligibility, borrowing capacity and credit profile.",
-      "Lenders assess guaranteed loans when evaluating a borrower\u2019s credit profile and loan applications."
+      "Becoming a loan guarantor can affect your future loan eligibility, borrowing capacity and credit profile.",
+      "Lenders may assess your guaranteed loan when evaluating new credit applications, so key factors should be checked before signing."
      ],
-     "why_it_matters": "The inclusion of a guaranteed loan in a borrower\u2019s credit profile can reduce borrowing capacity and alter lender assessments, potentially limiting access to future financing and affecting overall credit health.",
-     "what_to_watch": "Check your borrowing capacity before applying for new credit after signing a guarantee.",
-     "headline": "Loan guarantor status may impact future loan eligibility",
+     "why_it_matters": "The guarantee ties the borrower\u2019s debt to the guarantor, meaning lenders will consider the additional risk when reviewing the guarantor\u2019s creditworthiness. This can reduce the amount they are willing to lend, alter loan terms, or affect the guarantor\u2019s ability to obtain new financing, making it a critical consideration for personal financial planning.",
+     "what_to_watch": "Monitor how lenders assess your credit profile after you sign a guarantee, as changes can influence eligibility for future loans.",
+     "headline": "Being a loan guarantor can impact future loan eligibility",
      "read_seconds": 20
     }
    },
@@ -1376,7 +1376,17 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00"
+    "_sort": "2026-09-11T17:37:38+00:00",
+    "smart": {
+     "what_happened": [
+      "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements.",
+      "Experts said there is little evidence supporting the benefits of many of these products."
+     ],
+     "why_it_matters": "The high prevalence of supplement use highlights a large consumer market and significant out\u2011of\u2011pocket spending on products whose health benefits are not well\u2011validated, raising concerns for public health messaging and potential regulatory scrutiny.",
+     "what_to_watch": "Monitor upcoming research reports or regulatory updates that evaluate the efficacy of widely used dietary supplements.",
+     "headline": "8 in 10 Americans taking vitamins, protein powders, supplements",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -1442,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: after 1.d4\u202fNf6\u202f2.c4\u202fe6\u202f3.Nc3, develop the light\u2011squared bishop to b4 or g4 instead of passive \u2026d5, saving ~30\u202fcentipawns per move.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1604,14 +1614,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your opening choices are leaving you defenseless\u2014every game you\u2019ve played ends in a loss, so you\u2019re either picking the worst lines or playing them so poorly they\u2019re indistinguishable from blunders. Cut the \u201cfun\u201d openings now and study the top\u2011tier 1.e4 and 1.d4 systems (e.g., Sicilian Najdorf, King's Indian Defense) until you can execute the first ten moves without hesitation. Spend the next 20 hours on a tactical trainer, then replay each loss move\u2011by\u2011move, fixing every mistake before you ever sit at the board again.",
+   "session_summary": "",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2044,
+   "rating": 1971,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
