@@ -1,38 +1,38 @@
 {
- "build_id": "20260913T022215",
+ "build_id": "20260913T024213",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
   {
-   "symbol": "DUOL",
-   "name": "DUOL",
-   "ext20": 5.66,
-   "vol_ratio": 1.14,
-   "price": 154.46,
-   "change_1d": -2.75,
-   "mom_1m": 26.0,
-   "mom_3m": 30.9,
-   "score": 83,
-   "target": 353.0,
-   "stop_loss": 146.19,
+   "symbol": "SMCI",
+   "name": "SMCI",
+   "ext20": 7.66,
+   "vol_ratio": 1.0,
+   "price": 40.1,
+   "change_1d": 7.28,
+   "mom_1m": 6.6,
+   "mom_3m": 31.6,
+   "score": 78,
+   "target": 58.78,
+   "stop_loss": 37.25,
    "target_basis": "the 52-week high",
    "stop_basis": "the 20-day average",
-   "horizon_basis": "129% to go at its recent 10.3%/month",
-   "rr": 24.01,
-   "atr": 7.42,
-   "high_52w": 353.0,
-   "timeframe": "over a year at this pace",
+   "horizon_basis": "47% to go at its recent 10.5%/month",
+   "rr": 6.55,
+   "atr": 2.22,
+   "high_52w": 58.78,
+   "timeframe": "3-6 months",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 19.1
+     "e": 24.1
     },
     {
      "k": "Above 50-day avg",
      "w": 20,
-     "e": 17.4
+     "e": 20.0
     },
     {
      "k": "Averages stacked",
@@ -42,216 +42,48 @@
     {
      "k": "1-month thrust",
      "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
      "e": 8.8
     },
     {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 2.7
-    }
-   ],
-   "ema20": 146.19,
-   "tv": "DUOL",
-   "thesis": "30.9% three\u2011month gain, 26.0% one\u2011month gain, price 5.7% above 20\u2011day average, volume 1.14\u00d7 norm, composite 83."
-  },
-  {
-   "symbol": "SMCI",
-   "name": "SMCI",
-   "ext20": 9.02,
-   "vol_ratio": 0.62,
-   "price": 39.59,
-   "change_1d": 4.54,
-   "mom_1m": 34.8,
-   "mom_3m": -10.0,
-   "score": 80,
-   "target": 58.78,
-   "stop_loss": 36.31,
-   "target_basis": "the 52-week high",
-   "stop_basis": "the 20-day average",
-   "horizon_basis": "three-month drift is flat or negative \u2014 no pace to extrapolate",
-   "rr": 5.86,
-   "atr": 2.23,
-   "high_52w": 58.78,
-   "timeframe": "no estimate",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 25.0
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
      "k": "3-month trend",
      "w": 10,
-     "e": 0.0
+     "e": 9.0
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.0
+     "e": 1.1
     }
    ],
-   "ema20": 36.31,
+   "ema20": 37.25,
    "tv": "SMCI",
-   "thesis": "34.8% one\u2011month gain, 10% three\u2011month decline, price 9% above 20\u2011day average on 0.62\u00d7 volume, composite 80."
+   "thesis": "+32% three-month trend, +7.7% above the 20-day, volume 1.00x normal."
   },
   {
-   "symbol": "PAYTM.NS",
-   "name": "PAYTM",
-   "ext20": 3.47,
-   "vol_ratio": 0.63,
-   "price": 1659.5,
-   "change_1d": 1.37,
-   "mom_1m": 15.1,
-   "mom_3m": 55.6,
-   "score": 76,
-   "target": 1845.91,
-   "stop_loss": 1574.29,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
-   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "11% to go at its recent 18.5%/month",
-   "rr": 2.19,
-   "atr": 56.81,
-   "high_52w": 1732.3,
-   "timeframe": "about a month",
-   "currency": "\u20b9",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 13.7
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 17.6
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 10.0
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 0.0
-    }
-   ],
-   "ema20": 1603.84,
-   "tv": "NSE:PAYTM",
-   "thesis": "Three\u2011month gain of 55.6% amid consolidating trend, price modestly 3.5% above its 20\u2011day average, volume at 0.63\u00d7."
-  },
-  {
-   "symbol": "MRK",
-   "name": "MRK",
-   "ext20": 3.32,
-   "vol_ratio": 0.75,
-   "price": 150.33,
-   "change_1d": -1.32,
-   "mom_1m": 17.1,
-   "mom_3m": 26.7,
-   "score": 70,
-   "target": 166.68,
-   "stop_loss": 143.01,
-   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
-   "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "11% to go at its recent 8.9%/month",
-   "rr": 2.23,
-   "atr": 4.88,
-   "high_52w": 156.92,
-   "timeframe": "about a month",
-   "currency": "$",
-   "factors": [
-    {
-     "k": "Above 20-day avg",
-     "w": 25,
-     "e": 13.3
-    },
-    {
-     "k": "Above 50-day avg",
-     "w": 20,
-     "e": 14.2
-    },
-    {
-     "k": "Averages stacked",
-     "w": 15,
-     "e": 15.0
-    },
-    {
-     "k": "1-month thrust",
-     "w": 20,
-     "e": 20.0
-    },
-    {
-     "k": "3-month trend",
-     "w": 10,
-     "e": 7.6
-    },
-    {
-     "k": "Volume confirming",
-     "w": 10,
-     "e": 0.0
-    }
-   ],
-   "ema20": 145.5,
-   "tv": "MRK",
-   "thesis": "3\u2011month gain of 26.7% with price 3.3% above its 20\u2011day average, volume at 0.75\u00d7 norm, composite 70."
-  },
-  {
-   "symbol": "COIN",
-   "name": "COIN",
-   "ext20": 5.91,
-   "vol_ratio": 0.93,
-   "price": 184.64,
-   "change_1d": -4.18,
-   "mom_1m": 27.0,
-   "mom_3m": 13.9,
-   "score": 66,
-   "target": 402.16,
-   "stop_loss": 164.76,
+   "symbol": "HOOD",
+   "name": "HOOD",
+   "ext20": 3.52,
+   "vol_ratio": 0.95,
+   "price": 112.57,
+   "change_1d": -0.67,
+   "mom_1m": 18.6,
+   "mom_3m": 20.8,
+   "score": 68,
+   "target": 153.86,
+   "stop_loss": 102.68,
    "target_basis": "the 52-week high",
    "stop_basis": "1.5x the 14-day range (the 20-day average is inside the noise)",
-   "horizon_basis": "118% to go at its recent 4.6%/month",
-   "rr": 10.94,
-   "atr": 13.25,
-   "high_52w": 402.16,
-   "timeframe": "over a year at this pace",
+   "horizon_basis": "37% to go at its recent 6.9%/month",
+   "rr": 4.18,
+   "atr": 6.59,
+   "high_52w": 153.86,
+   "timeframe": "3-6 months",
    "currency": "$",
    "factors": [
     {
      "k": "Above 20-day avg",
      "w": 25,
-     "e": 19.8
+     "e": 13.8
     },
     {
      "k": "Above 50-day avg",
@@ -261,7 +93,7 @@
     {
      "k": "Averages stacked",
      "w": 15,
-     "e": 8.2
+     "e": 14.3
     },
     {
      "k": "1-month thrust",
@@ -271,17 +103,185 @@
     {
      "k": "3-month trend",
      "w": 10,
-     "e": 4.0
+     "e": 5.9
     },
     {
      "k": "Volume confirming",
      "w": 10,
-     "e": 0.4
+     "e": 0.5
     }
    ],
-   "ema20": 174.34,
-   "tv": "COIN",
-   "thesis": "One\u2011month gain of 27% with 3\u2011month up 13.9%, price 5.9% above its 20\u2011day average, volume 0.93\u00d7 norm, composite 66/100."
+   "ema20": 108.74,
+   "tv": "HOOD",
+   "thesis": "+19% in a month against +21% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "META",
+   "name": "META",
+   "ext20": 7.55,
+   "vol_ratio": 1.22,
+   "price": 648.03,
+   "change_1d": 0.57,
+   "mom_1m": 12.0,
+   "mom_3m": 14.4,
+   "score": 62,
+   "target": 788.22,
+   "stop_loss": 602.53,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "22% to go at its recent 4.8%/month",
+   "rr": 3.08,
+   "atr": 21.33,
+   "high_52w": 788.22,
+   "timeframe": "3-6 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 23.9
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 12.4
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 2.2
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 15.9
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 4.1
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 3.6
+    }
+   ],
+   "ema20": 602.53,
+   "tv": "META",
+   "thesis": "+12% in a month against +14% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "GOLD",
+   "name": "GOLD",
+   "ext20": 6.27,
+   "vol_ratio": 1.39,
+   "price": 48.22,
+   "change_1d": 5.1,
+   "mom_1m": 7.9,
+   "mom_3m": 9.0,
+   "score": 61,
+   "target": 66.14,
+   "stop_loss": 45.37,
+   "target_basis": "the 52-week high",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "37% to go at its recent 3.0%/month",
+   "rr": 6.3,
+   "atr": 2.76,
+   "high_52w": 66.14,
+   "timeframe": "over a year at this pace",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 20.7
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 13.8
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 8.1
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 10.6
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 2.6
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 5.4
+    }
+   ],
+   "ema20": 45.37,
+   "tv": "GOLD",
+   "thesis": "+8% in a month against +9% over three \u2014 the trend is accelerating, not maturing."
+  },
+  {
+   "symbol": "AAPL",
+   "name": "AAPL",
+   "ext20": 4.16,
+   "vol_ratio": 1.23,
+   "price": 332.27,
+   "change_1d": 1.75,
+   "mom_1m": 9.9,
+   "mom_3m": 14.2,
+   "score": 50,
+   "target": 359.96,
+   "stop_loss": 319.01,
+   "target_basis": "2x the 14-day range beyond the 52-week high (the high is too close to be worth the stop)",
+   "stop_basis": "the 20-day average",
+   "horizon_basis": "8% to go at its recent 4.7%/month",
+   "rr": 2.09,
+   "atr": 7.85,
+   "high_52w": 344.27,
+   "timeframe": "1-3 months",
+   "currency": "$",
+   "factors": [
+    {
+     "k": "Above 20-day avg",
+     "w": 25,
+     "e": 15.4
+    },
+    {
+     "k": "Above 50-day avg",
+     "w": 20,
+     "e": 9.2
+    },
+    {
+     "k": "Averages stacked",
+     "w": 15,
+     "e": 4.0
+    },
+    {
+     "k": "1-month thrust",
+     "w": 20,
+     "e": 13.2
+    },
+    {
+     "k": "3-month trend",
+     "w": 10,
+     "e": 4.1
+    },
+    {
+     "k": "Volume confirming",
+     "w": 10,
+     "e": 3.7
+    }
+   ],
+   "ema20": 319.01,
+   "tv": "AAPL",
+   "thesis": "+10% in a month against +14% over three \u2014 the trend is accelerating, not maturing."
   }
  ],
  "engine": [
@@ -410,6 +410,10 @@
  ],
  "picks_week": null,
  "open_context": {
+  "AAPL": {
+   "price": 332.27,
+   "sector": "Technology"
+  },
   "ABREL": {
    "price": 1281.6,
    "sector": "Real Estate"
@@ -534,6 +538,10 @@
    "price": 1126.8,
    "sector": "Industrials"
   },
+  "GOLD": {
+   "price": 4366.2002,
+   "sector": ""
+  },
   "GRANULES": {
    "price": 909.3,
    "sector": "Healthcare"
@@ -569,6 +577,10 @@
   "HINDZINC": {
    "price": 576.45,
    "sector": "Basic Materials"
+  },
+  "HOOD": {
+   "price": 112.57,
+   "sector": "Financial Services"
   },
   "HSCL": {
    "price": 664.9,
@@ -634,21 +646,9 @@
    "price": 84.2,
    "sector": "Financial Services"
   },
-  "MINDACORP": {
-   "price": 705.45,
-   "sector": "Consumer Cyclical"
-  },
-  "MOTILALOFS": {
-   "price": 1026.5,
-   "sector": "Financial Services"
-  },
-  "MRK": {
-   "price": 143.93,
-   "sector": "Healthcare"
-  },
-  "MRPL": {
-   "price": 175.86,
-   "sector": "Energy"
+  "META": {
+   "price": 648.03,
+   "sector": "Communication Services"
   }
  },
  "ipos": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "9h old",
+    "age": "10h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -942,7 +942,7 @@
   },
   "daughter": {
    "months": 8,
-   "days": 261,
+   "days": 262,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -950,103 +950,103 @@
   "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
   "father": [
    {
-    "title": "Vary who holds her",
-    "do": "Hand her to grandparents, friends, and colleagues while you stay visible in the room.",
-    "why": "Stranger wariness peaks around now. Practising handovers while you remain in sight teaches that unfamiliar people are safe, without forcing separation at the same time."
+    "title": "Build then let her destroy",
+    "do": "Stack three blocks, let her knock them down, rebuild. Repeat until she loses interest.",
+    "why": "Cause and effect is the entire lesson. Knocking down precedes building by months \u2014 do not rush to the constructive half."
    },
    {
-    "title": "Sit her up and step back",
-    "do": "Sit her unsupported on a soft surface within arm's reach, and let her balance.",
-    "why": "Independent sitting typically consolidates around 7\u20138 months. Constant propping delays the postural adjustments she needs to make herself."
+    "title": "Do bedtime alone once this week",
+    "do": "Handle the entire routine solo \u2014 no handover, no rescue.",
+    "why": "Solo caregiving builds a distinct relationship rather than an assisted one. It also gives her mother an uninterrupted evening, which is not a small thing at seven months."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Anuvrata",
-    "translation": "The lesser vows",
-    "teaching": "Householders take limited versions of the great vows rather than the monastic form \u2014 the tradition explicitly designs for people with jobs and families.",
-    "apply": "Do not adopt a practice you cannot sustain alongside work and a seven-month-old. A small vow kept beats a large one abandoned."
+    "term": "Pratikramana",
+    "translation": "Ritual review and turning back",
+    "teaching": "A periodic practice of reviewing one's conduct, acknowledging where one fell short, and resolving to correct it. Structurally, an audit.",
+    "apply": "You already run a monthly close on the business. Run a fifteen-minute one on yourself: what did I get wrong, what am I changing, what is the date."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Livelihood",
-    "translation": "Work that does not require harm",
-    "teaching": "One of the eightfold path's least discussed elements: how you earn matters as much as how you behave outside earning.",
-    "apply": "Ask whether any part of your work depends on someone else not understanding something. That is the test, and it applies to finance more than most fields."
+    "term": "Right Effort",
+    "translation": "Applied in the correct direction",
+    "teaching": "Effort is one of the eight, but so is rightness of effort. Energy in the wrong direction is not neutral; it entrenches the error.",
+    "apply": "Before adding hours to a problem, spend ten minutes asking whether the problem is the right one. Most overwork is misdirection, not insufficiency."
    }
   ],
   "spanish": [
    {
-    "word": "aprender",
-    "meaning": "to learn",
-    "es": "Estoy aprendiendo espa\u00f1ol.",
-    "en": "I am learning Spanish.",
-    "tag": "Everyday"
+    "word": "vale la pena",
+    "meaning": "it is worth it",
+    "es": "Vale la pena esperar.",
+    "en": "It is worth waiting for.",
+    "tag": "Idiom"
    },
    {
-    "word": "la cifra",
-    "meaning": "the figure / number",
-    "es": "Esa cifra no cuadra.",
-    "en": "That figure does not add up.",
+    "word": "por lo tanto",
+    "meaning": "therefore",
+    "es": "Por lo tanto, recomiendo esperar.",
+    "en": "Therefore, I recommend waiting.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Robust",
-    "say": "roh-BUST",
-    "meaning": "Strong enough to withstand stress.",
-    "example": "The forecast is robust to a 10% sales decline.",
-    "note": "Pair it with the stress it survives, or it is just a filler word."
+    "word": "Concede",
+    "say": "kuhn-SEED",
+    "meaning": "To admit a point is valid.",
+    "example": "I concede the timing assumption was optimistic.",
+    "note": "Conceding one point early buys credibility for the ten you defend."
    },
    {
-    "word": "Pragmatic",
-    "say": "prag-MAT-ik",
-    "meaning": "Dealing with things practically rather than ideally.",
-    "example": "The pragmatic route is to phase it over two quarters.",
-    "note": "Useful when you are choosing the workable option over the elegant one."
+    "word": "Ostensibly",
+    "say": "os-TEN-si-blee",
+    "meaning": "Apparently, but perhaps not actually.",
+    "example": "The cost was ostensibly one-off.",
+    "note": "Signals scepticism without accusation. Powerful in a review meeting."
    }
   ],
   "speaking": {
-   "title": "Vary the pace",
-   "drill": "Read a paragraph aloud twice \u2014 once flat, once slowing down on the two most important words.",
-   "why": "Emphasis by pace is more persuasive than emphasis by volume, and it survives a phone line."
+   "title": "Land the number",
+   "drill": "Say five figures out loud with a small pause before each one: 'margin fell \u2026 180 basis points'.",
+   "why": "The pause makes the listener wait for the number, which makes them remember it."
   },
   "interview_tech": [
    {
-    "q": "How would you use automation or AI in the finance function without losing control?",
-    "a": "Automate the deterministic and keep judgement human. Good candidates: bank reconciliation matching, invoice coding, intercompany elimination, variance flagging, and first-draft commentary. Bad candidates: provisioning, impairment, anything requiring an assertion to auditors. The control question is auditability \u2014 if you cannot explain how the output was produced and reperform it, it is not usable in a statutory process. Keep a human approval step on anything that posts to the ledger.",
-    "who": "Every CFO agenda, 2024 onward"
+    "q": "How do you close the books in five days instead of fifteen?",
+    "a": "Move work out of the close. Accruals estimated from a model rather than waiting for invoices; reconciliations performed continuously rather than at month end; intercompany agreed on a cut-off calendar with a hard deadline and a default position if unresolved; fixed asset and depreciation runs automated; and reporting built on the ledger rather than rebuilt in Excel. The cultural half matters more than the technical half \u2014 a fast close requires accepting a materiality threshold below which you do not adjust.",
+    "who": "Your own 40% reduction \u00b7 Unilever"
    },
    {
-    "q": "Your auditor raises going concern. How do you respond?",
-    "a": "Take it seriously and answer with evidence, not reassurance. Provide a cash flow forecast covering at least twelve months from signing, with the assumptions documented and stress cases run; the status of facilities including expiry dates and covenant projections; and board-approved mitigating actions with dates. If there is material uncertainty, the honest route is disclosure rather than argument \u2014 an unqualified opinion with a material uncertainty paragraph is survivable; a fight with the auditor that ends in a qualification is not.",
-    "who": "Any group under stress"
+    "q": "A store does AED 12M revenue at 38% gross margin. Rent is AED 1.8M, staff AED 2.1M, other fixed AED 900K. Is it worth keeping?",
+    "a": "Gross profit = 12 \u00d7 0.38 = AED 4.56M. Fixed costs = 1.8 + 2.1 + 0.9 = AED 4.8M. Store contribution = \u2212AED 240K. It loses money \u2014 but do not close it on that number alone. Ask three things: is the rent a committed lease you pay whether or not you trade; what does the store contribute to online fulfilment and brand presence in that catchment; and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is often cheaper to run than to close.",
+    "who": "Landmark Group \u00b7 Alshaya \u00b7 Inditex"
    }
   ],
   "interview_soft": [
    {
-    "q": "Tell me about a time you were wrong about a person.",
-    "a": "A quieter question than it looks \u2014 it tests self-awareness and whether you revise judgements. Both directions work: someone you underestimated who turned out strong, or someone you backed who did not work out. The second is braver and lands better if you own the hiring or promotion decision. End with what you changed about how you assess people, ideally something structural like a different interview question or a probation checkpoint.",
-    "who": "Amazon \u00b7 Unilever \u00b7 Alshaya"
+    "q": "How do you decide what to delegate?",
+    "a": "Give a rule. Something like: delegate anything where the cost of a mistake is recoverable and the learning value is high; keep anything where your specific judgement is the reason the answer is right, and anything you would have to redo. The failure mode interviewers probe is the controller who keeps the technical work because it is comfortable and delegates only the admin \u2014 which caps the team's growth and yours.",
+    "who": "GE \u00b7 Unilever \u00b7 Group CFOs"
    },
    {
-    "q": "If we hire you and in a year it has not worked, what is the most likely reason?",
-    "a": "A genuinely good question and a rare one. Answer honestly with the real risk, not a disguised strength: a mismatch on decision-making pace, an unclear boundary between your scope and someone else's, or a business where the data foundations are worse than described so the first year goes on plumbing rather than insight. Then say what you would do in month one to check for it. Naming the failure mode makes you look like someone who has thought about the job rather than the offer.",
-    "who": "Senior search processes"
+    "q": "Tell me about a time you disagreed with your CEO.",
+    "a": "They are testing whether you have spine and judgement, not whether you win. Use STAR and pick a disagreement where you were partly wrong \u2014 it reads as honest. Cover: what the disagreement was, what evidence you brought, how you escalated it appropriately, what the decision was, and crucially what you did after the decision went against you. The signal they want: you argue hard privately and commit fully publicly.",
+    "who": "Majid Al Futtaim \u00b7 Unilever \u00b7 Amazon"
    }
   ],
   "cfo_field": [
    {
-    "q": "The offer is decided by the non-technical questions.",
-    "a": "Everyone shortlisted can do the technical work \u2014 that is why they were shortlisted. What separates the offer is whether the panel believes you can hold a room, disagree with a CEO without theatre, and be trusted with bad news. Prepare the failure story properly: what you decided, what it cost, what you changed afterwards. A candidate with no failure story reads as someone who has never owned a decision.",
-    "who": "Why strong CVs lose"
+    "q": "The controller who never leaves the close never becomes CFO.",
+    "a": "The job you are promoted out of is 'the person who produces the numbers'. The job you are promoted into is 'the person who decides what to do about them'. If your calendar is 70% close, reconciliation and audit prep, you are demonstrating that you are excellent at the job you already have. Push the close down: a well-run retail group closes in 5 working days, and every day you shave buys back roughly 12 days a year of capacity to spend on decisions instead of production.",
+    "who": "The single most common plateau"
    },
    {
-    "q": "A forecast that is never wrong is a forecast nobody is using.",
-    "a": "Track forecast accuracy as a metric in its own right \u2014 absolute percentage error by month, by category. Under 5% at group level is good in retail; over 15% and the business has stopped believing you. But an FP&A team that is never wrong is sandbagging, and sandbagging is more expensive than error: it prices in a buffer everyone plans around, and the buffer compounds up the hierarchy.",
-    "who": "What separates FP&A from reporting"
+    "q": "The Gulf pays for scarcity, not for years.",
+    "a": "Salary in the region tracks the intersection of skills, not the length of the CV. CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination than any one of them is deep. If you are negotiating, the leverage is in naming the intersection, not in listing the years. And check the structure: basic versus allowances changes gratuity, which is calculated on basic salary alone.",
+    "who": "Compensation structure"
    }
   ],
   "review": {
@@ -1063,8 +1063,151 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-09-11T18:43:52.795344+00:00",
+   "generated_at": "2026-09-12T18:43:21.958041+00:00",
    "episodes": [
+    {
+     "show": "Figuring Out",
+     "author": "Raj Shamani",
+     "category": "Business",
+     "title": "Smriti Mandhana On Controlling Emotions, Handling Pressure & Failures | FO561 Raj Shamani",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=46P1rL0rzPE",
+     "takeaways": [
+      "Smriti Mandhana reveal the mindset, sacrifices, and mental battles behind becoming India's biggest cricket star.",
+      "\u25fc What Her Coach's manifestation ritual looked like and why Smriti credits it for shaping her career \u25fc How Smriti handles mistakes on the field and the single phone call that completely reset her mindset \u25fc Why she believes staying content and putting others first is a competitive advantage, not a weakness \u25fc How to handle pressure and anxiety as a cricketer performing at the international level \u25fc What a World Cup Final day actually looks like, hour by hour, from morning to the first ball \u25fc Why her mindset coach told her 'You are not that player anymore' and how she responded to it \u25fc What Smriti's pre-batting routine and superstitions are, and why she refuses to change them \u25fc How Smriti Mandhana deals with failure and bounces back from setbacks in cricket \u25fc What happened when she finally met her childhood idol and got to bat alongside her in a match Also covered: Smriti Mandhana, Indian women's cricket, cricket mindset, World Cup Final preparation, pre-batting routine, manifestation ritual, mindset coach, captaincy and leadership, Marwari upbringing, handling pressure in sports, cricket sacrifices, emotional regulation athletes, BCCI, women's IPL Raj Shamani is an entrepreneur and the host of the Figuring Out Podcast."
+     ]
+    },
+    {
+     "show": "Think School",
+     "author": "Think School",
+     "category": "Business",
+     "title": "Start a Business With No Money | Eric Ries\u2019 Guide for First-Time Founders",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=eErcrQQHzg4",
+     "takeaways": [
+      "Your startup can have 10,000 customers and STILL have zero Product-Market Fit.",
+      "In the age of Meta ads, vanity metrics and AI, it has never been easier to convince yourself that your startup is working."
+     ]
+    },
+    {
+     "show": "Ankur Warikoo",
+     "author": "warikoo",
+     "category": "Career",
+     "title": "We Recreated The 2006 Middle Class In 2026",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=XGja7bJudvQ",
+     "takeaways": [
+      "Your parents may have earned far less than you do today, yet they could buy a house, educate their children, own a car, save gold for a wedding and still build something for retirement.",
+      "In this video, I take a typical middle-class life from 2006 and calculate what that exact same life would cost in 2026."
+     ]
+    },
+    {
+     "show": "CA Rachana Ranade",
+     "author": "CA Rachana Phadke Ranade",
+     "category": "Investing",
+     "title": "Top 5 Things You Need to Know About the NSE IPO | CA Rachana Ranade",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=zwE5G1Zh1h8",
+     "takeaways": [
+      "In this video, we take a closer look at the National Stock Exchange (NSE), its business model, key revenue streams, financial performance, valuation, industry outlook, key risks and IPO details.",
+      "From transaction charges and options revenue to listing, data services, clearing & settlement and Nifty licensing, understand how NSE actually makes money."
+     ]
+    },
+    {
+     "show": "Zero1 by Zerodha",
+     "author": "Zero1 by Zerodha",
+     "category": "Money",
+     "title": "How are Indians earning \u20b91 Lakh Buying \u20b950 Lakh Cars",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=yzqgyYqAz_0",
+     "takeaways": [
+      "Abhishek just got a new car, and this one is special this is a \u201cLuxury Car\u201d.",
+      "But he technically did not buy it, he got it on a lease!"
+     ]
+    },
+    {
+     "show": "Groww",
+     "author": "Groww",
+     "category": "Investing",
+     "title": "NSE IPO Review 2026 | National Stock Exchange IPO details, strengths, risks and full analysis",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=NF7-CVjEawA",
+     "takeaways": [
+      "National Stock Exchange of India (NSE) IPO, one of India\u2019s most anticipated IPOs is finally here, bringing one of the country\u2019s largest stock market infrastructure businesses to public investors.",
+      "In this video, we break down the IPO price band, lot size, issue size, offer-for-sale structure, business model, market share, revenue and profit growth, EBITDA and PAT margins, transaction revenue dependence, regulatory risks, competition, and key factors investors should understand before evaluating the issue."
+     ]
+    },
+    {
+     "show": "Abhijit Chavda",
+     "author": "Abhijit Chavda",
+     "category": "Geopolitics",
+     "title": "#AskAbhijit 380: Ask Me Anything - Any Topic",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=K6j_nc0STZU",
+     "takeaways": [
+      "Episode 380 of the #AskAbhijit show: Ask me your best questions in the Live Chat and Super Chat, and I shall answer them.",
+      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
+     ]
+    },
+    {
+     "show": "The Deshbhakt",
+     "author": "The Deshbhakt",
+     "category": "Society",
+     "title": "Can Modi Trust Xi Jinping? | Another Relationship Reset Or China Playing BRICS Game | Akash Banerjee",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=SydNlNJeS10",
+     "takeaways": [
+      "The big new from BRICS - Xi Jinping is back in Delhi after seven years - Meeting Modi for a bilateral - Relations being 'reset'.",
+      "But behind the BRICS handshakes and the media spectacle - a high stakes diplomatic balancing act is being payed out."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "Earth's 5-Year Deadline: Can We Avoid the Worst of Climate Chaos? | Cracknomics Ep 108",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=g5shXMiuBno",
+     "takeaways": [
+      "Today, Earth is already 1.47\u00b0C hotter than pre-industrial times, and UNEP's 2026 report admits overshoot is unavoidable.",
+      "Peak warming could hit 1.8\u00b0C even in the best case."
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "Promo | EP-449 with author Manu Joseph premieres today at 5 PM IST",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=2ivH-b4qdCg",
+     "takeaways": [
+      "Promo | EP-449 with author Manu Joseph premieres today at 5 PM IST \u201cWhen I want to develop some fondness for Gurgaon, I go to Noida.\u201d \u201cIf the government wants us to stay in India, it should make our cities liveable.\u201d \u201cGen Z is actually screwed by equality.\u201d \u201cIf there are 200 million highly qualified young people, how will you find jobs for all of them?\u201d \u201cTamil Nadu CM Vijay was my classmate in the third standard.",
+      "I thought he looked rich.\u201d #ANIPodcast #SmitaPrakash #ManuJoseph #Gurgaon #Noida #GenZ #Jobs #Vijay Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "Money Bill | Complete Concept, Articles & Key Provisions | UPSC Polity | Drishti IAS",
+     "guest": "",
+     "published": "2026-09-12",
+     "link": "https://www.youtube.com/watch?v=_QueVmqY1f8",
+     "takeaways": [
+      "Ritesh Upadhyay provides a comprehensive explanation of Money Bill, covering all the important dimensions that UPSC aspirants need to understand for the examination.",
+      "The session covers the key constitutional provisions related to Money Bills, including Article 110, the role of the Lok Sabha and Rajya Sabha, the Speaker\u2019s role, the procedure for passing a Money Bill, and other important concepts and provisions."
+     ]
+    },
     {
      "show": "WTF is (clips)",
      "author": "Nikhil Kamath Clips",
@@ -1074,8 +1217,8 @@
      "published": "2026-09-11",
      "link": "https://www.youtube.com/watch?v=GU4YvNZao9o",
      "takeaways": [
-      "The episode provides full data and references for listeners to access alongside the show.",
-      "It features Nikhil\u202fKamath, Rajesh\u202fMagow, and Puneet\u202fChhatwal as guests."
+      "Access the full data and references used in this episode below.",
+      "Please open this alongside the episode while watching."
      ]
     },
     {
@@ -1092,83 +1235,6 @@
      ]
     },
     {
-     "show": "Abhijit Chavda",
-     "author": "Abhijit Chavda",
-     "category": "Geopolitics",
-     "title": "#AskAbhijit 380: Ask Me Anything - Any Topic",
-     "guest": "",
-     "published": "2026-09-11",
-     "link": "https://www.youtube.com/watch?v=K6j_nc0STZU",
-     "takeaways": [
-      "Episode 380 of the #AskAbhijit show: Ask me your best questions in the Live Chat and Super Chat, and I shall answer them.",
-      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
-     ]
-    },
-    {
-     "show": "The Deshbhakt",
-     "author": "The Deshbhakt",
-     "category": "Society",
-     "title": "Terrorist Or Prisoner Of A Terror State? | Why Has The Trial Of Umar Khalid Not Started? | Akash B",
-     "guest": "",
-     "published": "2026-09-11",
-     "link": "https://www.youtube.com/watch?v=5VFzX_WI_7E",
-     "takeaways": [
-      "Is the BJP going soft on terror or protecting Khalid?",
-      "Punishing Umar in an open court would have really been a massive win for the Govt ..."
-     ]
-    },
-    {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "'CCTV Footage Has the Truth, Delhi Police Must Release it': Journalists Shaheen and Nafisa Khan",
-     "guest": "",
-     "published": "2026-09-11",
-     "link": "https://www.youtube.com/watch?v=lrfybuAkHjA",
-     "takeaways": [
-      "Journalists Shaheen and Nafisa Khan allege they were assaulted at Delhi\u2019s Saket Police Station.",
-      "They say the police have not released the CCTV footage that could clarify what happened."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cI am totally against any kind of caste discrimination\u201d Chirag Paswan",
-     "guest": "",
-     "published": "2026-09-11",
-     "link": "https://www.youtube.com/watch?v=kHStfnqYyRQ",
-     "takeaways": [
-      "\u201cI am totally against any kind of caste discrimination\u201d Chirag Paswan #ANIPodcast #SmitaPrakash #ChiragPaswan #Dalit #Caste #Discrimination #SC #ST #OBC #Reservation Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "Yudh Abhyas 2026 India U S  Army Join Forces for High Altitude Warfare | Current Affairs",
-     "guest": "",
-     "published": "2026-09-11",
-     "link": "https://www.youtube.com/watch?v=DP1eMTHRT70",
-     "takeaways": [
-      "Yudh Abhyas 2026, the 22nd edition of the India-U.S.",
-      "bilateral military exercise, focuses on strengthening combat interoperability, high-altitude warfare capabilities, long-range precision fires, counter-drone operations, and multi-domain warfare."
-     ]
-    },
-    {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "Protecting the President: Security, VIP Threats & ADC Life | Major Rishabh | FO560 Raj Shamani",
-     "guest": "",
-     "published": "2026-09-10",
-     "link": "https://www.youtube.com/watch?v=x63HCoDfAhQ",
-     "takeaways": [
-      "courage cannot exist without fear, according to him, and this shapes real combat",
-      "an ADC constantly anticipates every need before it arises, a duty most people never know about"
-     ]
-    },
-    {
      "show": "Pranjal Kamra",
      "author": "Pranjal Kamra",
      "category": "Investing",
@@ -1177,54 +1243,15 @@
      "published": "2026-09-10",
      "link": "https://www.youtube.com/watch?v=JPVLpELKSYk",
      "takeaways": [
-      "Starting your wealth\u2011creation journey in your 20s gives you an unmatched compounding advantage.",
-      "The episode outlines a step\u2011by\u2011step investment blueprint that emphasizes optimal asset allocation, strategic portfolio balance, and disciplined long\u2011term growth."
-     ]
-    },
-    {
-     "show": "Think School",
-     "author": "Think School",
-     "category": "Business",
-     "title": "How Tim Cook Built Apple\u2019s $4.5 Trillion Empire | Untold Story of the Man Who Made Apple Unstoppable",
-     "guest": "",
-     "published": "2026-09-09",
-     "link": "https://www.youtube.com/watch?v=GpJhBB7Gv0c",
-     "takeaways": [
-      "Over the next 15 years, Tim Cook took Apple\u2019s market value from roughly $350\u202fbillion to $4.7\u202ftrillion.",
-      "He grew Apple\u2019s revenue from $108\u202fbillion to $416\u202fbillion and built a services business that now earns $109\u202fbillion a year."
-     ]
-    },
-    {
-     "show": "Ankur Warikoo",
-     "author": "warikoo",
-     "category": "Career",
-     "title": "Planning a \u20b97L House at 22 | Money Matters Ep. 125 | Ankur Warikoo Hindi",
-     "guest": "",
-     "published": "2026-09-09",
-     "link": "https://www.youtube.com/watch?v=zHPv2r9cZng",
-     "takeaways": [
-      "Delay the house construction by six months, build an emergency fund, and keep pursuing the PM Awas Yojana before taking on debt.",
-      "Developing new skills can dramatically increase earning potential and help build a career not limited by the current job."
-     ]
-    },
-    {
-     "show": "Groww",
-     "author": "Groww",
-     "category": "Investing",
-     "title": "5 Companies Capturing the Biggest Market Share?",
-     "guest": "",
-     "published": "2026-09-09",
-     "link": "https://www.youtube.com/watch?v=NUtPCAXq9-o",
-     "takeaways": [
-      "The episode analyses five businesses that have steadily expanded their position in large, growing industries.",
-      "It examines drivers of their market\u2011share gains such as stronger distribution, product mix, policy tailwinds and order\u2011book visibility."
+      "Starting your wealth-creation journey in your 20s provides an unmatched compounding advantage for your financial future.",
+      "This video breaks down a structured and practical investment blueprint tailored specifically for this decade, focusing on optimal asset allocation, strategic portfolio balance, and disciplined long-term growth."
      ]
     },
     {
      "show": "Labour Law Advisor",
      "author": "Labour Law Advisor",
      "category": "Money",
-     "title": "RBI vs Government: Who Really Controls Money?",
+     "title": "RBI vs Government ! Who Controls your Money?",
      "guest": "",
      "published": "2026-09-09",
      "link": "https://www.youtube.com/watch?v=28EBqzUPTv8",
@@ -1255,8 +1282,8 @@
      "published": "2026-09-07",
      "link": "https://www.youtube.com/watch?v=PtSLamEHWjc",
      "takeaways": [
-      "The FCNR scheme may not deliver the promised 11\u201114% tax\u2011free returns.",
-      "It affects both NRIs and Indian resident investors."
+      "The recent FCNR scheme by the RBI seems lucrative, but is it actually what it is promising.",
+      "I have done an in depth analysis in this macro video - how it not only affects NRIs but also Indian resident investors."
      ]
     },
     {
@@ -1273,19 +1300,6 @@
      ]
     },
     {
-     "show": "Zero1 by Zerodha",
-     "author": "Zero1 by Zerodha",
-     "category": "Money",
-     "title": "Zerodha took a Bet on us. This is what we Built.",
-     "guest": "",
-     "published": "2026-09-05",
-     "link": "https://www.youtube.com/watch?v=gxED-fFZalA",
-     "takeaways": [
-      "People changed their buying decisions after watching a Zero1 video.",
-      "Families began having money conversations they wouldn\u2019t have had before."
-     ]
-    },
-    {
      "show": "Dhruv Rathee",
      "author": "Dhruv Rathee",
      "category": "Society",
@@ -1299,19 +1313,6 @@
      ]
     },
     {
-     "show": "CA Rachana Ranade",
-     "author": "CA Rachana Phadke Ranade",
-     "category": "Investing",
-     "title": "Deepa Jewellers Limited IPO Summary | Top things you need to know about this IPO | CA Rachana Ranade",
-     "guest": "",
-     "published": "2026-08-31",
-     "link": "https://www.youtube.com/watch?v=eNoOQ6Uorvg",
-     "takeaways": [
-      "The video gives a business overview of Deepa Jewellers Limited, covering its business model, revenue model and geographical presence.",
-      "It evaluates the company\u2019s valuation, financial performance, peers, and discusses major risks and litigations associated with the IPO."
-     ]
-    },
-    {
      "show": "Sadhguru",
      "author": "Sadhguru",
      "category": "Philosophy",
@@ -1320,26 +1321,36 @@
      "published": "2026-08-30",
      "link": "https://www.youtube.com/watch?v=dzi4pSSy7mw",
      "takeaways": [
-      "A devastating flood struck the Nepal\u2011Tibet border on 26\u202fAugust, causing extensive damage and loss of life.",
-      "Kalabhairava Karma for those who died in the floods will be conducted on 3\u202fSeptember in Sadhguru\u2019s presence at the Isha Yoga Center, Coimbatore."
+      "A devastating flood struck the Nepal-Tibet border on 26 August, causing extensive damage and loss of life.",
+      "Kalabhairava Karma for those who lost their lives in the Nepal-Tibet floods will be conducted on 3 September in Sadhguru\u2019s presence at the Isha Yoga Center Coimbatore."
      ]
     }
    ],
    "shows": 20,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-09-11",
-   "age_days": 1.0,
+   "built_on": "2026-09-12",
+   "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Small-cap funds can fall harder than large-caps. How should investors size their bets?",
-    "link": "https://www.livemint.com/money/personal-finance/smallcap-funds-can-fall-harder-than-large-caps-how-should-investors-size-their-bets-11789209897549.html",
-    "summary": "Small-cap funds offer high growth potential but come with significant volatility.&amp;nbsp;",
+    "title": "Nagaland govt examining delays in pension, other retirement benefits \u2014 Here's what could change",
+    "link": "https://www.livemint.com/money/personal-finance/nagaland-govt-examining-delays-pension-other-retirement-benefits-what-could-change-digitising-process-gfp-nps-documents-11789233201371.html",
+    "summary": "The Nagaland government has formed a committee to address pension delays and digitise the process, Chief Minister Neiphiu Rio informed the state Assembly. He noted issues stem from procedural non-compliance and inadequate guidance for retirees.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T17:29:45+00:00"
+    "_sort": "2026-09-12T18:24:39+00:00",
+    "smart": {
+     "what_happened": [
+      "The Nagaland government formed a committee to examine delays in pension and other retirement benefits.",
+      "Chief Minister Neiphiu Rio said the delays are due to procedural non\u2011compliance and inadequate guidance for retirees."
+     ],
+     "why_it_matters": "The committee aims to streamline pension payments and digitise the process, which could reduce payment backlogs for retirees and improve the state's fiscal management of retirement obligations.",
+     "what_to_watch": "Watch for the committee's report or any announced timeline for implementing the digitised pension system.",
+     "headline": "Nagaland government forms committee to address pension delays",
+     "read_seconds": 20
+    }
    },
    {
     "source": "ET Opinion",
@@ -1351,12 +1362,12 @@
     "_sort": "2026-09-12T17:25:17+00:00",
     "smart": {
      "what_happened": [
-      "India assumed the BRICS chairmanship and emphasized practical cooperation to launch development initiatives.",
-      "The chairmanship highlighted tailored health programs, technology use, and support for startup ecosystems."
+      "India, as BRICS chair, emphasized practical cooperation and plans to launch development initiatives.",
+      "The agenda includes health programs, technology for citizens, and support for startup ecosystems."
      ],
-     "why_it_matters": "India's leadership of BRICS signals a push toward multipolar global governance, positioning the bloc as a platform for coordinated development efforts that could diversify investment flows and deepen cooperation among emerging economies, affecting trade and policy dynamics worldwide.",
-     "what_to_watch": "The announcement of the first joint BRICS development project or health program rollout under India's chairmanship, expected within the next quarter.",
-     "headline": "India chairs BRICS and pushes practical cooperation and development projects",
+     "why_it_matters": "India's chairmanship signals a push for multipolar collaboration that could channel resources into health, technology and entrepreneurship sectors across BRICS members, creating new markets and policy frameworks that may affect cross\u2011border investment, supply chains and regulatory environments.",
+     "what_to_watch": "The announcement of the first BRICS\u2011backed health technology initiative scheduled for the upcoming BRICS summit.",
+     "headline": "India leads BRICS focus on development and startup support",
      "read_seconds": 26
     }
    },
@@ -1376,17 +1387,7 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:39+00:00",
-    "smart": {
-     "what_happened": [
-      "A new survey found that eight in ten Americans were taking vitamins, protein powders or other supplements.",
-      "Experts said there is little evidence supporting the benefits of many of these products."
-     ],
-     "why_it_matters": "The high prevalence of supplement use suggests a large consumer market and potential public\u2011health implications, while the lack of robust evidence raises concerns about efficacy, safety, and possible waste of resources, influencing healthcare guidance and regulatory scrutiny.",
-     "what_to_watch": "Monitor upcoming scientific studies that assess the health benefits of commonly used supplements.",
-     "headline": "8 in 10 Americans Say They\u2019re Taking Supplements",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-11T17:37:39+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1436,35 +1437,34 @@
   ],
   "lichess_games": [
    {
-    "id": "k3BKMv3Q",
-    "url": "https://lichess.org/k3BKMv3Q",
+    "id": "0dYDL9LK",
+    "url": "https://lichess.org/0dYDL9LK",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
     "my_side": "Black",
-    "my_rating": 1641,
-    "opp_rating": 1593,
-    "opponent": "toneriko",
-    "me_diff": -6,
-    "opp_diff": 6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 55,
+    "my_rating": 1630,
+    "opp_rating": 1515,
+    "opponent": "Azyrima",
+    "me_diff": -7,
+    "opp_diff": 8,
+    "opening": "Caro-Kann Defense",
+    "eco": "B15",
+    "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early central tension: after 1\u2026d5\u202f2\u202fc4\u202fexd4, avoid passive queen moves; develop knights (Nf6, Nc6) and castle before pushing \u2026c5. This saves ~30\u202f% time and prevents later cramped positions.",
+    "analysis": "Focus on early pawn structure: after 1.e4 c6 2.d4 d5, avoid 3.Nc3\u202fdxe4?; instead play 3\u2026Nf6 and 4\u2026Bf5, keeping a solid Caro\u2011Kann and preventing white\u2019s quick queen\u2011side pressure.",
     "is_upset": false,
-    "is_collapse": false,
-    "is_long": true,
+    "is_collapse": true,
+    "is_long": false,
     "best_move": {},
     "key_facts": [
-     "Rating gap -48 (1641 vs 1593)",
-     "Endgame from move 20",
-     "55 moves \u00b7 Blitz"
+     "Rating gap -115 (1630 vs 1515)",
+     "19 moves \u00b7 Blitz"
     ],
-    "standout": "",
+    "standout": "Over in 19 moves \u2014 decided in the opening, so the opening is what to study.",
     "game_strength": null,
-    "est_fide": 1241,
+    "est_fide": 1230,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
@@ -1530,27 +1530,69 @@
     "_yest_counts": {
      "blitz": {
       "win": 0,
-      "loss": 1,
+      "loss": 2,
       "draw": 0,
       "rp": {
-       "before": 1641,
-       "after": 1635
+       "before": 1635,
+       "after": 1623
       }
      }
     },
-    "_session_date": "2026-09-11",
+    "_session_date": "2026-09-12",
     "_is_yesterday": true
+   },
+   {
+    "id": "KjE5AZhm",
+    "url": "https://lichess.org/KjE5AZhm",
+    "result": "Loss",
+    "icon": "\u274c",
+    "cls": "loss",
+    "my_side": "White",
+    "my_rating": 1635,
+    "opp_rating": 1704,
+    "opponent": "Nababenilse",
+    "me_diff": -5,
+    "opp_diff": 5,
+    "opening": "Indian Defense",
+    "eco": "A45",
+    "moves": 57,
+    "termination": "Checkmate",
+    "speed": "Blitz",
+    "analysis": "Focus on early king safety: stop castling queenside after 12\u2026b5; instead, develop knights, trade minor pieces, and castle kingside before move\u202f15.",
+    "is_upset": false,
+    "is_collapse": false,
+    "is_long": true,
+    "best_move": {
+     "san": "Rb1",
+     "move_no": 14,
+     "gain_cp": 47,
+     "eval_after": -6.23
+    },
+    "key_facts": [
+     "Accuracy 79% vs their 83%",
+     "Average centipawn loss 74",
+     "5 inaccuracies \u00b7 3 mistakes \u00b7 3 blunders",
+     "Rating gap +69 (1635 vs 1704)",
+     "Endgame from move 48",
+     "57 moves \u00b7 Blitz"
+    ],
+    "standout": "3 blunders in one game. The result is noise; the error count is the signal.",
+    "game_strength": 1400,
+    "est_fide": 1235,
+    "accuracy": 79,
+    "acpl": 74,
+    "analysed": true
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 1,
+   "total": 2,
    "wins": 0,
-   "losses": 1,
+   "losses": 2,
    "draws": 0,
    "pct": 0,
    "icon": "\u274c",
-   "score": "0/1",
+   "score": "0/2",
    "trend": [
     {
      "day": "09/12",
@@ -1612,16 +1654,16 @@
    "weak_op": "",
    "best_op": "",
    "upsets": 0,
-   "collapses": 0,
+   "collapses": 1,
    "long_games": 1,
-   "session_summary": "Your opening choices are a disaster\u2014every game you play collapses before move\u202f10, and you never even finish the opening phase. Stop chasing flashy lines and adopt a rock\u2011solid system (e.g., 1.e4\u202fc5\u202f\u2192\u202fSicilian Najdorf or 1.d4\u202fd5\u202f\u2192\u202fLondon System) and memorize the first 12\u201115 moves until you can execute them without hesitation. Drill basic tactics (forks, pins, and back\u2011rank mates) daily for 30\u202fminutes, then review every loss move by move to identify the exact moment you blundered and correct it before the next game.",
-   "session_date": "2026-09-11",
+   "session_summary": "AKK_010\u2019s play is a disaster: two straight\u2011losses from only three games, a 0\u202f% win rate, and a collapse against a lower\u2011rated opponent\u2014proof that your current repertoire is not just weak, it\u2019s lethal to you. Your opening choices are undefined, but the fact that you never secure a decent position indicates you\u2019re either playing outright unsound lines or refusing to follow theory, leaving you vulnerable from move one. Stop experimenting in rated play, adopt a solid, well\u2011studied system (e.g., Caro\u2011Kann or London System), drill the first 10\u201312 moves until they\u2019re automatic, and only then resume trying to out\u2011wit opponents.",
+   "session_date": "2026-09-12",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1974,
+   "rating": 1883,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
