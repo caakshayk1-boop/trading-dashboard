@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T140216",
+ "build_id": "20260912T142219",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "38 min old",
+    "age": "58 min old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T05:13:55+00:00",
     "smart": {
      "what_happened": [
-      "Employees may access retirement savings early for emergencies.",
-      "The EPFO permits partial withdrawals, called EPF advances, subject to eligibility."
+      "Employees may need to access retirement savings before leaving the workforce for emergencies.",
+      "The EPFO permits partial withdrawals, called EPF advances, subject to specific eligibility."
      ],
-     "why_it_matters": "The ability to withdraw EPF funds before retirement provides workers with a safety net for unexpected financial needs, affecting personal cash flow management and retirement planning strategies.",
-     "what_to_watch": "Monitor EPFO announcements for any changes to the eligibility criteria for EPF advances.",
-     "headline": "Employees can claim EPF advances under specific eligibility rules",
+     "why_it_matters": "Access to EPF advances provides a safety net for workers facing unexpected financial needs, allowing them to tap retirement savings without quitting their jobs, which can affect personal cash flow and retirement planning.",
+     "what_to_watch": "Any updates from the EPFO regarding changes to the eligibility criteria for EPF advances",
+     "headline": "EPFO allows partial EPF withdrawals for eligible employees",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank offers 8.5% interest on five-year fixed deposits for seniors.",
+      "Suryoday Small Finance Bank provides 8.5% interest on five-year fixed deposits for seniors.",
       "Jana Small Finance Bank offers 8% interest on five-year fixed deposits for seniors, and banks deduct TDS on FD interest exceeding one lakh."
      ],
-     "why_it_matters": "The higher fixed\u2011deposit rates provide senior citizens with a relatively safe avenue to earn better returns on their savings, which can improve retirement income and reduce reliance on other investment products. The TDS rule also means that interest above the one\u2011lakh threshold will be taxed at source, affecting net yields.",
-     "what_to_watch": "Watch for any changes to the one\u2011lakh\u2011rupee TDS exemption limit on FD interest.",
-     "headline": "Senior citizens can earn up to 8.5% FD rate at small finance banks",
+     "why_it_matters": "The elevated rates give senior investors higher returns on low\u2011risk deposits, potentially shifting a larger share of senior savings into small finance banks and strengthening those banks' funding bases. The TDS rule on interest above one lakh also affects net yields, influencing seniors' deposit decisions.",
+     "what_to_watch": "Monitor the Reserve Bank of India's next policy announcement for any changes to senior citizen fixed deposit rate guidelines.",
+     "headline": "Senior citizens can get up to 8.5% FD rate for five-year term",
      "read_seconds": 26
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00",
-    "smart": {
-     "what_happened": [
-      "Egypt's President congratulated India on its BRICS presidency and highlighted mutual cooperation.",
-      "He said Egypt's strategic location offers trade and logistics advantages and seeks to boost local manufacturing and technology transfer with India."
-     ],
-     "why_it_matters": "The statements signal a deepening of India-Egypt economic ties, leveraging Egypt's position on the Suez Canal to facilitate Indian exports and imports, and potentially expanding manufacturing collaborations that could diversify supply chains for both countries.",
-     "what_to_watch": "Monthly data on India-Egypt trade volume passing through the Suez Canal over the next quarter",
-     "headline": "Egypt president calls India vital partner, urges stronger Suez Canal trade",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-11T18:52:34+00:00"
    },
    {
     "source": "NYT Well",
@@ -1405,7 +1395,17 @@
     "link": "https://www.themarginalian.org/2026/09/10/alan-watts-unspeakable-world/",
     "summary": "What makes life so disorienting is that its greatest revelations and greatest transformations are inarticulable. William James knew this when he listed ineffability as the first of the four features of transcendent experiences. Everything beautiful and meaningful, from the grand elations to the small gladnesses that ma",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T02:44:27+00:00"
+    "_sort": "2026-09-11T02:44:27+00:00",
+    "smart": {
+     "what_happened": [
+      "Life is described as disorienting because its greatest revelations and transformations are inarticulable.",
+      "William James identified ineffability as the first of four features of transcendent experiences."
+     ],
+     "why_it_matters": "The discussion highlights a long\u2011standing philosophical view that the most profound aspects of human experience cannot be fully expressed in language, underscoring the limits of conventional analysis and the need for alternative approaches to understanding consciousness and meaning.",
+     "what_to_watch": "No specific future event or development is mentioned in the article.",
+     "headline": "Alan Watts on the ineffable nature of life",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Psyche",
@@ -1631,7 +1631,7 @@
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1894,
+   "rating": 1934,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
