@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T072216",
+ "build_id": "20260913T074205",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "14h old",
+    "age": "15h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1343,12 +1343,12 @@
     "_sort": "2026-09-12T18:24:39+00:00",
     "smart": {
      "what_happened": [
-      "Chief Minister Neiphiu Rio said a committee has been formed to examine delays in pension and other retirement benefits.",
-      "He said the delays are due to procedural non\u2011compliance and lack of guidance for retirees, and the committee will work to digitise the process."
+      "The Nagaland government created a committee to examine delays in pension and other retirement benefits.",
+      "Chief Minister Neiphiu Rio told the state Assembly that the delays stem from procedural non\u2011compliance and inadequate guidance for retirees."
      ],
-     "why_it_matters": "Pension delays affect retirees' cash flow and can increase financial insecurity among former public employees; a committee that digitises the process could improve efficiency, transparency, and timely delivery of benefits, reducing administrative burdens for both the government and beneficiaries.",
-     "what_to_watch": "Whether the committee launches a digital pension portal or publishes an implementation timeline within the next quarter.",
-     "headline": "Nagaland government forms committee to address pension delays",
+     "why_it_matters": "",
+     "what_to_watch": "The release of the committee's findings or a timeline for implementing the digitised pension system.",
+     "headline": "Nagaland forms committee to address pension delays and digitise benefits",
      "read_seconds": 20
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:39+00:00",
-    "smart": {
-     "what_happened": [
-      "A new survey reported that eight out of ten U.S. adults are using vitamins, protein powders, or other dietary supplements.",
-      "Experts noted that scientific evidence supporting the benefits of many of these products is limited."
-     ],
-     "why_it_matters": "The high prevalence of supplement use highlights a widespread consumer belief in health benefits that may not be backed by robust research, influencing public health guidance and potential regulatory scrutiny.",
-     "what_to_watch": "Future studies or FDA announcements evaluating the efficacy and safety of commonly used supplements.",
-     "headline": "Survey finds 8 in 10 Americans take vitamins or supplements",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-11T17:37:39+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1453,7 +1443,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9\u2026Nf6, you allowed 10.Qxd5! exploiting the uncastled king and loose central pawns; castle sooner.",
+    "analysis": "Focus on early queen development: after 1.e4 c6 2.d4 d5, avoid 3...Qb6; instead play 3...Nd7, keeping the queen safe and preventing premature attacks that cost you material.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1558,7 +1548,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn before castling; within 10 moves, develop knights, then castle, preventing the fatal back\u2011rank mate.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1663,7 +1653,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2064,
+   "rating": 1806,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
