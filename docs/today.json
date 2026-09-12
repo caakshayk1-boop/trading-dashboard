@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T082231",
+ "build_id": "20260912T090227",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "15h old",
+    "age": "16h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1328,7 +1328,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-11",
-   "age_days": 0.2,
+   "age_days": 0.3,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1339,7 +1339,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00"
+    "_sort": "2026-09-11T18:52:34+00:00",
+    "smart": {
+     "what_happened": [
+      "Egypt's President congratulated India on its BRICS presidency and highlighted mutual cooperation.",
+      "He said Egypt's strategic location offers trade and logistics advantages and seeks to boost local manufacturing and technology transfer with India."
+     ],
+     "why_it_matters": "The statements signal a deepening of India\u2011Egypt ties, linking India's rising global influence through BRICS with Egypt's pivotal position on the Suez Canal. Enhanced cooperation could open new supply\u2011chain routes for Indian firms, increase manufacturing activity in Egypt, and facilitate technology sharing, thereby impacting trade flows and investment opportunities across the region.",
+     "what_to_watch": "Any formal agreement on technology transfer or manufacturing collaboration announced by the Indian and Egyptian governments.",
+     "headline": "Egypt president calls India vital strategic partner, urges stronger Suez Canal trade",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Livemint",
@@ -1351,12 +1361,12 @@
     "_sort": "2026-09-11T18:40:10+00:00",
     "smart": {
      "what_happened": [
-      "The Digital Credit & Inclusion Index 2026 reported that Tier\u20112 cities have an average score of 58.64, higher than Tier\u20111 and Tier\u20113 cities.",
-      "The index was produced by Pahl\u00e9 India Foundation and Amazon Pay."
+      "The Digital Credit & Inclusion Index 2026 reported that Tier\u20112 cities posted an average score of 58.64.",
+      "That score was higher than the averages recorded for Tier\u20111 and Tier\u20113 cities."
      ],
-     "why_it_matters": "The higher digital credit score in Tier\u20112 cities indicates stronger adoption of digital lending platforms outside the major metropolitan areas, suggesting that financial institutions and fintech firms may find significant growth opportunities by targeting these markets to expand credit access and deepen financial inclusion.",
-     "what_to_watch": "The next release of the Digital Credit & Inclusion Index for 2027 to see if Tier\u20112 cities maintain or improve their lead.",
-     "headline": "Tier-2 cities lead digital credit inclusion in India, DCII 2026 shows",
+     "why_it_matters": "The higher digital credit score in Tier\u20112 cities indicates stronger adoption of online lending and financial services outside the largest metropolitan areas, suggesting a broader base for fintech growth and potential expansion of credit access to a larger portion of India's population.",
+     "what_to_watch": "The next release of the Digital Credit & Inclusion Index to track whether Tier\u20112 cities maintain their lead in digital credit scores.",
+     "headline": "Tier-2 Indian cities lead digital credit inclusion with 58.64 score",
      "read_seconds": 20
     }
    },
@@ -1367,17 +1377,7 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00",
-    "smart": {
-     "what_happened": [
-      "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements.",
-      "Experts said there is little evidence for many of these products."
-     ],
-     "why_it_matters": "The widespread use of dietary supplements despite limited scientific evidence raises concerns about consumer health outcomes, potential waste of money, and the need for clearer regulatory oversight, influencing both public health policy and the supplement market.",
-     "what_to_watch": "Monitor any upcoming FDA regulatory actions or guidance on dietary supplements.",
-     "headline": "Eight in ten Americans report using vitamins, protein powders or supplements",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-11T17:37:38+00:00"
    },
    {
     "source": "The Economist",
@@ -1407,11 +1407,11 @@
     "_sort": "2026-09-10T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article is titled \"Impatience is an emotion, not a trait\".",
-      "It is written by Amy Arthur and published on Psyche."
+      "Author Amy Arthur reflects on her own impatience while referencing Penelope's wait in The Odyssey.",
+      "She proposes viewing impatience as an emotion rather than a fixed character trait."
      ],
-     "why_it_matters": "The piece explores the concept that impatience should be viewed as a temporary emotional state rather than a fixed characteristic, which may influence how individuals understand and manage their reactions in personal and professional contexts.",
-     "what_to_watch": "Future articles by Amy Arthur on Psyche that examine emotional concepts and their practical implications.",
+     "why_it_matters": "The piece encourages readers to reconsider how they label and manage impatience, suggesting that framing it as an emotional state may open pathways for more flexible coping strategies and self\u2011awareness in personal and professional contexts.",
+     "what_to_watch": "Future articles by Amy Arthur on Psyche that explore emotion regulation and personality concepts.",
      "headline": "Impatience is an emotion, not a trait",
      "read_seconds": 20
     }
@@ -1462,7 +1462,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4\u202fd5\u202f2.c4\u202fe6, you played\u202f3...c5?\u202finstead of the solid\u202f3...Nf6. That created an isolated queen\u2019s pawn, costing ~0.6\u202fpawns in the middlegame and leading to the eventual resignation. Switch to the standard Queen\u2019s Gambit Declined setup (\u2026Nf6, \u2026e6, \u2026c6) to maintain a healthier structure and avoid unnecessary weaknesses.",
+    "analysis": "Focus on early piece coordination: after 1\u2026d5\u202f2\u202fc4, develop knights before bishops; aim to complete development by move\u202f10, avoiding passive queen moves.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1624,14 +1624,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "",
+   "session_summary": "Your opening repertoire is a black hole\u2014every game you play collapses into a loss, proving you lack any viable first\u2011move plan. Stop relying on vague \u201cprinciples\u201d and drill the top three defenses against 1.e4 and 1.d4 until you can execute them without thinking. Spend the next week playing only those lines in rapid games, then review every loss to pinpoint the exact moment you deviate; until you can consistently hold the opening, you\u2019ll never break the 0\u202f% win rate.",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1981,
+   "rating": 2067,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
