@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T075153",
+ "build_id": "20260912T080236",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -479,7 +479,7 @@
    "sector": "Technology"
   },
   "COIN": {
-   "price": 175.26,
+   "price": 172.28,
    "sector": ""
   },
   "CPPLUS": {
@@ -495,7 +495,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 247.72,
+   "price": 243.0,
    "sector": "Technology"
   },
   "CUPID": {
@@ -503,7 +503,7 @@
    "sector": "Consumer Defensive"
   },
   "DUOL": {
-   "price": 143.68,
+   "price": 145.16,
    "sector": "Technology"
   },
   "ECLERX": {
@@ -623,7 +623,7 @@
    "sector": "Financial Services"
   },
   "MRK": {
-   "price": 143.93,
+   "price": 144.71,
    "sector": "Healthcare"
   },
   "MRPL": {
@@ -635,7 +635,7 @@
    "sector": "Basic Materials"
   },
   "NEM": {
-   "price": 126.81,
+   "price": 126.14,
    "sector": "Basic Materials"
   },
   "NEULANDLAB": {
@@ -786,25 +786,25 @@
  },
  "desk": {
   "chess": {
-   "title": "Tactics: The Pin",
-   "body": "A pin prevents a piece from moving because moving it would expose a more valuable piece behind it. Absolute pin = pinned to the king (piece cannot move legally). Relative pin = pinned to queen/rook (can move but it's a blunder). Identify pins in every position. Then exploit them.",
-   "index": 4,
+   "title": "Tactics: The Fork",
+   "body": "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest \u2014 they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap.",
+   "index": 5,
    "total": 20
   },
   "wisdom": {
-   "title": "Joy is a Practise",
-   "body": "Joy doesn't arrive when the conditions are right. It's practiced in the conditions you have. Find one thing today that is genuinely good. Savour it for 30 seconds. This is not toxic positivity \u2014 it's neurological training. Brains that practise noticing goodness get better at finding it, even in hard seasons.",
-   "index": 16,
+   "title": "On Discipline and Freedom",
+   "body": "The most disciplined people are the freest. Akshay who wakes at 6am, exercises, studies, then works has more hours and more energy than the one who stays up late and drags through mornings. Discipline is choosing what you want most over what you want now. It's the highest form of self-respect.",
+   "index": 17,
    "total": 18
   },
   "book": {
    "book": "7 Habits of Highly Effective People",
    "author": "Stephen Covey",
-   "chapter": "Habit 1: Be Proactive \u2014 The 90/10 Principle",
-   "lesson": "10% of life is what happens to you. 90% is how you respond. This is the core of proactivity: between stimulus and response, there is a gap. In that gap is your freedom to choose. Reactive people let their moods and circumstances determine their behaviour. Proactive people subordinate impulse to values. Covey's Circle of Influence vs Circle of Concern: proactive people focus on what they can control (Circle of Influence) and it expands. Reactive people focus on what they cannot control (Circle of Concern) \u2014 market conditions, other people's behaviour, the economy \u2014 and feel increasingly helpless.",
-   "key_quote": "Focus on what you can control. Your response is always within your Circle of Influence.",
-   "action": "List 3 things worrying you. Categorise each: can I influence this or not? Only spend energy on the ones you can influence.",
-   "index": 22,
+   "chapter": "Habit 4: Think Win-Win or No Deal",
+   "lesson": "Most people operate from scarcity \u2014 if you win, I lose. Win-win thinking comes from an abundance mentality: there is enough for everyone, and cooperation creates more value than competition. Covey's most important corollary: 'or No Deal.' If a genuine win-win solution cannot be found, the integrity move is to agree not to deal. Not every partnership, transaction, or negotiation should happen. The willingness to walk away from a bad deal is what makes you trustworthy in good ones. People who always find a way to close the deal always find a way to disadvantage one party.",
+   "key_quote": "Win-win is not compromise. It's a creative solution where both parties genuinely benefit.",
+   "action": "In your next negotiation or conflict, explicitly ask: 'what does the other person actually need here?' Then find a solution that addresses both needs.",
+   "index": 23,
    "total": 48,
    "crux": [
     "Character ethic beats personality ethic. Techniques without character are manipulation.",
@@ -842,102 +842,102 @@
   },
   "way": {
    "minimalism": {
-    "title": "The Cost Of A Bigger House",
-    "body": "More space does not reduce clutter; it raises the threshold at which clutter becomes visible. People fill whatever they have. Then they pay to heat, clean, and furnish it.",
-    "action": "Before upgrading space, try emptying the space you have.",
-    "index": 16,
+    "title": "Travel Light As Practice",
+    "body": "Pack for a week in a carry-on. It teaches, in three days, exactly how little you require \u2014 a lesson that transfers directly home.",
+    "action": "Next trip: carry-on only. Note what you never opened.",
+    "index": 17,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Reply Within 24 Hours, Even If Only To Acknowledge",
-    "body": "A three-word acknowledgement beats a perfect reply a week late. Silence is read as disregard, never as busyness. 'Got this \u2014 proper answer Thursday' costs eight seconds.",
-    "action": "Clear every message older than 24 hours with an acknowledgement.",
-    "index": 2,
+    "title": "The Right Hand Rule",
+    "body": "In the Gulf and much of Asia, give and receive with the right hand \u2014 cards, food, documents, money. The left hand carries a specific connotation. This is not a preference; it is the baseline.",
+    "action": "Hand over your next document or card with the right hand, deliberately.",
+    "index": 3,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "High Thinking Requires Simple Living",
-    "body": "The phrase is one instruction, not two. Complexity of life consumes exactly the capacity that deep thought requires. Cut the first to afford the second.",
-    "action": "Name the most complicated part of your week. Remove one layer.",
-    "index": 20,
+    "title": "The First Hour Is Yours",
+    "body": "Whoever touches your attention first sets the agenda for the day. If that is a notification, you have outsourced the day to a stranger's priorities before you were fully awake.",
+    "action": "No screen for the first 30 minutes tomorrow. Nothing else changes.",
+    "index": 1,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Hanlon's Razor",
-    "body": "Never attribute to malice what incompetence, tiredness, or a missed email explains. The uncharitable read is usually wrong and always expensive.",
-    "action": "Reinterpret one recent slight as a mistake rather than an intent.",
-    "index": 12,
+    "title": "Availability Heuristic",
+    "body": "You judge probability by how easily an example comes to mind. Plane crashes feel likelier than car crashes because they are memorable, not because they are common.",
+    "action": "Check one belief against actual frequency data rather than recall.",
+    "index": 13,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u062d\u0628\u064a\u0628\u064a",
-    "translit": "habeebi",
-    "meaning": "My dear",
-    "use": "habeebti to a woman. Used constantly between friends and colleagues. Read the relationship before using it.",
-    "index": 18,
+    "script": "\u0645\u0628\u0631\u0648\u0643",
+    "translit": "mabrook",
+    "meaning": "Congratulations",
+    "use": "Promotions, weddings, new car, new baby. Reply: Allah yibaarik feek.",
+    "index": 19,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "The 3-Statement Link",
-    "body": "Net income flows to retained earnings and to the top of cash flow. Closing cash lands on the balance sheet. If you cannot recite this cold, every model you build is fragile.",
-    "action": "Draw all three statements and every link from memory. No reference.",
-    "index": 4,
+    "title": "Explain It To A Ten-Year-Old",
+    "body": "Take the most technical thing you know and explain it with no jargon. If you cannot, you have memorised it rather than understood it. This is the Feynman technique and it is brutal.",
+    "action": "Pick one concept. Explain it in writing with no technical terms.",
+    "index": 5,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Train Balance Before You Need It",
-    "body": "Falls are a leading cause of injury death in older adults, and balance declines silently from midlife. It is trainable at any age and takes 60 seconds a day.",
-    "action": "Stand on one leg, 30 seconds each side. Eyes closed to progress.",
-    "index": 14,
+    "title": "Heat And Cold Are Adjuncts, Not Basics",
+    "body": "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
+    "action": "Only add these once training, sleep, and protein are consistent.",
+    "index": 15,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Pony Ma",
-   "quote": "Where there is a need, there is a business opportunity.",
-   "index": 95,
+   "name": "Ren Zhengfei",
+   "quote": "Embrace competition. Be grateful for it. It forces you to become great.",
+   "index": 96,
    "total": 96
   },
   "lesson": {
    "tradition": "Japanese Wisdom",
-   "lesson": "Wabi-sabi: find beauty in imperfection. Nothing lasts, nothing is finished, nothing is perfect.",
-   "source": "Japanese Aesthetic"
+   "lesson": "Eat until 80% full (Hara Hachi Bu). Know when to stop.",
+   "source": "Okinawan Wisdom"
   },
   "case": {
-   "title": "Starbucks: Selling $6 Coffee",
-   "story": "Howard Schultz sold coffee at 5x the price of a diner. The key insight: he wasn't selling coffee, he was selling a third place \u2014 between home and work.",
-   "lesson": "You're never just selling the product. Understand what people are actually buying. Starbucks sells an experience, not coffee."
+   "title": "Nokia: The Rise and Fall",
+   "story": "Nokia had 40% global mobile market share in 2007. By 2013, market share was near zero. They failed to see that software, not hardware, was the future.",
+   "lesson": "Market leaders die by defending yesterday's success. The biggest threat is always your own arrogance."
   },
   "fpna": {
-   "title": "SaaS Metrics",
-   "body": "ARR, MRR, Churn, NRR, CAC, LTV. In tech FP&A, know these cold.",
-   "index": 11,
+   "title": "Three-Statement Model",
+   "body": "P&L \u2192 Balance Sheet \u2192 Cash Flow \u2014 they must tie. If they don't, you have a bug.",
+   "index": 12,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 2: Investor Relations",
-   "body": "Listed company CFOs speak to markets quarterly. Practice presenting results: 'Revenue grew 18% YoY driven by X. EBITDA margin expanded 200bps due to Y. FY26 guidance: Z.' Short, precise, numbers-first. Record yourself.",
-   "index": 7,
+   "title": "CFO Step 3: M&A Fundamentals",
+   "body": "Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions.",
+   "index": 8,
    "total": 15
   },
   "money_hack": {
-   "title": "Term Insurance First",
-   "body": "\u20b91Cr term insurance (\u20b910\u201315K/year at 25). Non-negotiable. Buy this before any investment."
+   "title": "ELSS Lock-in Trick",
+   "body": "ELSS 3-year lock-in: SIP each month \u2192 each instalment unlocks separately. Best 80C option."
   },
   "dubai": {
-   "title": "The cost side nobody models",
-   "body": "Housing is paid annually up front in Dubai, or quarterly at a premium. Schooling runs AED 25\u201360K per child per year. Health insurance is mandatory and usually covered. Add a AED 40\u201360K first-year setup cost before the savings maths works.",
-   "targets": "Sharjah rent is roughly half of Dubai's. The commute costs you 90 minutes a day.",
-   "action_label": "Model it",
-   "action": "Year-one net savings, not monthly salary. They are very different numbers.",
-   "index": 14,
+   "title": "Arabic is not required. Reading it helps.",
+   "body": "No finance role in the Gulf requires Arabic. But invoices, government portals and trade licences arrive in it, and being able to read a heading rather than forwarding it is a visible edge.",
+   "targets": "Numbers, months, and twenty document words. That is the whole ask.",
+   "action_label": "Ten minutes",
+   "action": "Learn the Arabic numerals and the words for invoice, tax, and licence.",
+   "index": 15,
    "total": 30
   },
   "daughter": {
@@ -947,7 +947,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Clear inbox to zero before 9 AM. Empty inbox = no mental overhead.",
+  "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
   "father": [
    {
     "title": "Vary who holds her",
@@ -1057,9 +1057,9 @@
    "week": 37,
    "year": 2026,
    "key": "2026-W37",
-   "weekday": 5,
-   "days_left": 2,
-   "is_review_day": false
+   "weekday": 6,
+   "days_left": 1,
+   "is_review_day": true
   },
   "podcasts": {
    "ok": true,
@@ -1348,17 +1348,7 @@
     "link": "https://www.livemint.com/money/personal-finance/borrowers-tier-ii-cities-drive-india-digital-credit-and-inclusion-index-payments-story-loans-amazon-pay-dcii-2026-report-11789148410703.html",
     "summary": "Tier-2 cities in India are leading digital credit and inclusion, with an average score of 58.64, ahead of Tier-1 and Tier-3 cities, the Digital Credit &amp;amp; Inclusion Index (DCII) 2026 by Pahl\u00e9 India Foundation and Amazon Pay found.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:40:10+00:00",
-    "smart": {
-     "what_happened": [
-      "The Digital Credit & Inclusion Index 2026 shows Tier-2 cities have an average score of 58.64.",
-      "That score is higher than the scores for Tier-1 and Tier-3 cities, according to the Pahl\u00e9 India Foundation and Amazon Pay report."
-     ],
-     "why_it_matters": "The higher digital credit score for Tier-2 cities suggests that borrowers in these mid-sized urban areas are adopting digital lending platforms more rapidly than those in larger Tier-1 metros or smaller Tier-3 towns, highlighting a shift in the geographic focus for financial inclusion initiatives and potential growth opportunities for lenders targeting digital credit products.",
-     "what_to_watch": "The next release of the Digital Credit & Inclusion Index (expected annually) to see if Tier-2 cities maintain or improve their lead.",
-     "headline": "Tier-2 cities lead India digital credit inclusion, report says",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-11T18:40:10+00:00"
    },
    {
     "source": "NYT Well",
@@ -1611,7 +1601,7 @@
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 2093,
+   "rating": 1866,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
