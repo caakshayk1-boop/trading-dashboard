@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T192217",
+ "build_id": "20260912T194214",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "2h old",
+    "age": "3h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1333,6 +1333,15 @@
   },
   "smart_reads": [
    {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Rs 6.42 lakh travel expense disallowed as business expenditure over use of wife\u2019s credit card; businessman contests tax order, wins relief i",
+    "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
+    "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
+    "date": "Sep 12, 2026",
+    "_sort": "2026-09-12T11:20:04+00:00"
+   },
+   {
     "source": "Livemint",
     "cat": "money",
     "title": "Can being a loan guarantor affect your chances of getting a loan? Expert explains",
@@ -1342,23 +1351,14 @@
     "_sort": "2026-09-12T10:58:14+00:00",
     "smart": {
      "what_happened": [
-      "Becoming a loan guarantor may affect a borrower\u2019s future loan eligibility and borrowing capacity.",
-      "Lenders incorporate the guaranteed loan into their assessment of a borrower\u2019s credit profile."
+      "Being a loan guarantor can affect a borrower\u2019s future loan eligibility, borrowing capacity and credit profile.",
+      "Lenders incorporate the guaranteed loan into their assessments when evaluating new credit applications."
      ],
-     "why_it_matters": "When an individual signs as a guarantor, the guaranteed loan becomes part of their credit history, which lenders review when evaluating new credit applications. This can reduce the amount they are able to borrow or alter the terms offered, making it essential for anyone considering a guarantee to understand the potential impact on their own financing options.",
-     "what_to_watch": "Check for any changes to your credit profile after signing a guarantee.",
-     "headline": "Loan guarantor status can impact future loan eligibility",
+     "why_it_matters": "The presence of a guarantee on a prior loan can reduce the amount of credit a person can obtain later or increase the cost of borrowing, as lenders view the guaranteed obligation as an additional risk factor that may affect the applicant\u2019s overall creditworthiness.",
+     "what_to_watch": "Monitor changes in your credit report after signing a guarantee to see how the guaranteed loan is reflected in your credit utilization and debt-to-income ratios.",
+     "headline": "Loan guarantor status may impact future loan eligibility",
      "read_seconds": 20
     }
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "Taxable income below Rs 12 lakh: Will you pay zero income tax if this income includes LTCG and STCG for Tax Year 2026-27?",
-    "link": "https://economictimes.indiatimes.com/wealth/tax/taxable-income-below-rs-12-lakh-will-you-pay-zero-income-tax-if-this-income-includes-ltcg-and-stcg-for-tax-year-2026-27/articleshow/134119480.cms",
-    "summary": "Indian residents and HUFs can use the basic exemption limit to lower capital gains tax. This provision under the Income Tax Act, 2025, remains available for Tax Year 2026-2027. Unused portions of the exemption limit can offset special-rate capital gains after normal income is accounted for. Non-residents, firms, and co",
-    "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T09:01:55+00:00"
    },
    {
     "source": "ET Opinion",
@@ -1442,7 +1442,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Focus on early piece coordination: after 1\u2026d5\u202f2\u202fc4\u202fNf6\u202f3\u202fNc3\u202fe6, develop the light\u2011squared bishop to\u202fb4 (or\u202fd6) instead of passive \u2026c5, preventing White\u2019s central expansion and reducing your later cramped position.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1611,7 +1611,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2099,
+   "rating": 2127,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
