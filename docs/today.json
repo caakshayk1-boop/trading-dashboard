@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T114211",
+ "build_id": "20260912T120227",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -435,7 +435,7 @@
    "sector": "Energy"
   },
   "BRNUSD": {
-   "price": 104.42,
+   "price": 104.61,
    "sector": ""
   },
   "CAPLIPOINT": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "18h old",
+    "age": "19h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T03:24:20+00:00",
     "smart": {
      "what_happened": [
-      "The minor earned \u20b91.17 crore in interest income.",
-      "The tax officer denied a reduced rate under the India\u2011UAE treaty and imposed a \u20b912.83 lakh penalty on the father for alleged under\u2011reporting."
+      "The tax officer denied a reduced tax rate under the India\u2011UAE treaty and imposed a \u20b912.83\u202flakh penalty on the father for alleged under\u2011reporting of his minor child\u2019s \u20b91.17\u202fcrore interest income.",
+      "The Delhi ITAT later granted relief, overturning the penalty."
      ],
-     "why_it_matters": "The case highlights how Indian tax authorities treat income earned by minors, particularly when foreign treaty benefits are sought. By refusing the reduced treaty rate and levying a substantial penalty, the tax department signals strict scrutiny of under\u2011reporting claims, which could affect other parents and guardians managing minor beneficiaries' investments.",
-     "what_to_watch": "The next step is the Delhi ITAT's final order on the penalty, which will clarify the application of treaty benefits to minor income.",
-     "headline": "Father penalised \u20b912.83 lakh over minor\u2019s \u20b91.17 crore interest income",
+     "why_it_matters": "The case highlights how Indian tax authorities interpret treaty benefits and reporting obligations for income earned by minors, exposing the risk of substantial penalties when treaty provisions are not applied, and underscores the importance of clear guidance on the taxation of minor beneficiaries.",
+     "what_to_watch": "Monitor any forthcoming rulings or clarifications on the application of the India\u2011UAE tax treaty to minor\u2019s income that could affect similar cases.",
+     "headline": "Delhi ITAT grants relief to father penalized \u20b912.83\u202flakh over minor\u2019s \u20b91.17\u202fcrore interest",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank provides 8.5% interest on five-year fixed deposits for seniors.",
-      "Jana Small Finance Bank offers 8% interest on similar five-year fixed deposits for seniors, and banks deduct TDS on FD interest exceeding one lakh."
+      "Suryoday Small Finance Bank provides 8.5 percent interest on five-year fixed deposits for seniors.",
+      "Jana Small Finance Bank offers 8 percent interest on similar fixed deposit terms; banks deduct TDS on FD interest exceeding one lakh."
      ],
-     "why_it_matters": "The elevated rates give senior citizens a more attractive, low\u2011risk savings option, potentially shifting a larger share of their savings into small finance banks and strengthening these banks' deposit bases. Higher senior deposits can improve funding stability for the banks while also influencing overall competition for fixed\u2011deposit rates in the sector.",
-     "what_to_watch": "Track the next quarterly update of senior citizen FD rates at Suryoday and Jana Small Finance Banks to see if the 8.5% and 8% offers are maintained or adjusted.",
-     "headline": "Senior citizens get up to 8.5% FD rate for five-year deposits",
+     "why_it_matters": "The higher fixed\u2011deposit rates give senior citizens a relatively safe way to earn better returns than many traditional bank deposits, enhancing their income stream while the TDS rule on interest above one lakh impacts net yields and tax planning.",
+     "what_to_watch": "Monitor any revisions to the senior citizen FD rates or the TDS threshold announced by the banks or regulators.",
+     "headline": "Senior citizens can earn up to 8.5% FD rate at small finance banks",
      "read_seconds": 26
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00",
-    "smart": {
-     "what_happened": [
-      "Egypt's president congratulated India on its BRICS presidency and labeled it a vital strategic partner.",
-      "He highlighted the Suez Canal's logistics advantages and said Egypt wants to boost local manufacturing and technology transfer with India."
-     ],
-     "why_it_matters": "The remarks signal a deepening bilateral relationship that could expand trade flows through the Suez Canal, offering Indian firms logistical benefits and opening opportunities for joint manufacturing and technology projects in Egypt, thereby enhancing both countries' economic and geopolitical ties within the BRICS framework.",
-     "what_to_watch": "Monitor any formal agreements or joint ventures announced between Indian and Egyptian firms in the next quarter, especially those related to manufacturing or technology transfer.",
-     "headline": "Egypt president calls India vital strategic partner and urges stronger trade",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-11T18:52:34+00:00"
    },
    {
     "source": "NYT Well",
@@ -1462,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Strengthen your endgame technique: practice converting +0.5 pawn advantages within 15 moves; study king\u2011pawn versus king fundamentals to avoid losing drawn positions.",
+    "analysis": "Focus on early piece coordination: develop knights before bishops, castle by move\u202f8, and avoid unnecessary queen moves that waste tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1631,7 +1621,7 @@
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1906,
+   "rating": 1943,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
