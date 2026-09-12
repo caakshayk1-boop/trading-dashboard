@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T062217",
+ "build_id": "20260913T064206",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "13h old",
+    "age": "14h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1343,11 +1343,11 @@
     "_sort": "2026-09-12T18:24:39+00:00",
     "smart": {
      "what_happened": [
-      "The Nagaland government created a committee to tackle pension delays and digitise retirement benefits.",
-      "Chief Minister Neiphiu Rio told the state Assembly that the delays are due to procedural non\u2011compliance and inadequate guidance for retirees."
+      "The Nagaland government formed a committee to examine delays in pension and other retirement benefits.",
+      "Chief Minister Neiphiu Rio said the delays stem from procedural non\u2011compliance and inadequate guidance for retirees, and the committee will work to digitise the process."
      ],
-     "why_it_matters": "The establishment of a dedicated committee signals the state's intent to streamline pension disbursements, which could reduce financial hardship for retirees and improve administrative efficiency. By moving to a digital system, the government aims to lower processing errors and accelerate payments, potentially easing fiscal pressures associated with delayed benefits.",
-     "what_to_watch": "Monitor the release of the committee's report or any announced timeline for implementing the digitised pension system.",
+     "why_it_matters": "Pension delays affect retirees' cash flow and confidence in government support; a dedicated committee and digitisation effort aim to streamline payments, improve compliance, and reduce administrative bottlenecks, which could enhance fiscal credibility and social stability in the state.",
+     "what_to_watch": "Publication of the committee's recommendations on pension and retirement benefit reforms",
      "headline": "Nagaland forms committee to address pension delays and digitise process",
      "read_seconds": 20
     }
@@ -1362,12 +1362,12 @@
     "_sort": "2026-09-12T17:25:17+00:00",
     "smart": {
      "what_happened": [
-      "India, as the current BRICS chair, highlighted the need for practical cooperation and plans to launch development initiatives.",
-      "The chairmanship will focus on health programs, technology, and nurturing startup ecosystems within the bloc."
+      "India, as BRICS chair, highlighted practical cooperation to launch impactful development initiatives.",
+      "The chairmanship also prioritized tailored health programs, technology and nurturing startup ecosystems."
      ],
-     "why_it_matters": "India's leadership signals a shift toward tangible, people\u2011focused projects in the BRICS grouping, aiming to improve citizens' lives and strengthen the bloc's economic integration. By prioritizing health, technology and startups, the agenda could enhance intra\u2011BRICS trade, attract investment, and reinforce the multipolar vision that the group promotes.",
-     "what_to_watch": "The first BRICS development initiative announced under India's chairmanship, expected to be detailed at the next summit.",
-     "headline": "India chairs BRICS and emphasizes practical cooperation and development",
+     "why_it_matters": "The emphasis on practical cooperation and development under India's BRICS chairmanship reflects a push toward a more multipolar global order, signaling that the bloc is seeking tangible outcomes beyond traditional bloc politics and could reshape economic and geopolitical dynamics for member countries.",
+     "what_to_watch": "Watch for the rollout of the first tailored health program announced under India's BRICS chairmanship.",
+     "headline": "India chairs BRICS, stresses practical cooperation and development initiatives",
      "read_seconds": 26
     }
    },
@@ -1378,7 +1378,17 @@
     "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
     "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T11:20:04+00:00"
+    "_sort": "2026-09-12T11:20:04+00:00",
+    "smart": {
+     "what_happened": [
+      "The tax authority disallowed Rs 6.42 lakh foreign travel expense claimed as business deduction because it was paid with the taxpayer\u2019s wife\u2019s credit card.",
+      "The Mumbai ITAT, with members Challa Nagendra Prasad and G.M. Doss, overturned the disallowance and granted relief to the taxpayer."
+     ],
+     "why_it_matters": "The decision clarifies that expenses paid through a spouse's credit card can still be treated as business deductions if the taxpayer can substantiate the business purpose, setting a precedent for how similar claims may be evaluated by tax authorities.",
+     "what_to_watch": "Monitor subsequent ITAT rulings or circulars for guidance on the acceptability of expenses paid via relatives' credit cards.",
+     "headline": "Rs 6.42 lakh travel expense disallowed, ITAT grants relief",
+     "read_seconds": 22
+    }
    },
    {
     "source": "NYT Well",
@@ -1387,7 +1397,17 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:39+00:00"
+    "_sort": "2026-09-11T17:37:39+00:00",
+    "smart": {
+     "what_happened": [
+      "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements.",
+      "Experts said there is little evidence that many of these products provide benefits."
+     ],
+     "why_it_matters": "The high prevalence of supplement use indicates a large consumer market and suggests that many Americans are spending money on products whose health benefits are not well supported by scientific evidence, raising concerns for public health and regulatory oversight.",
+     "what_to_watch": "Watch for the release of the survey's detailed report, which may provide more granular data on supplement types and usage patterns.",
+     "headline": "Survey shows 8 in 10 Americans take supplements, experts note limited evidence",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -1663,7 +1683,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2011,
+   "rating": 1905,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
