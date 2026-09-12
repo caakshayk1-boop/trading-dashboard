@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T170223",
+ "build_id": "20260912T172214",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "4h old",
+    "age": "24 min old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1333,6 +1333,15 @@
   },
   "smart_reads": [
    {
+    "source": "Economic Times",
+    "cat": "money",
+    "title": "Taxable income below Rs 12 lakh: Will you pay zero income tax if this income includes LTCG and STCG for Tax Year 2026-27?",
+    "link": "https://economictimes.indiatimes.com/wealth/tax/taxable-income-below-rs-12-lakh-will-you-pay-zero-income-tax-if-this-income-includes-ltcg-and-stcg-for-tax-year-2026-27/articleshow/134119480.cms",
+    "summary": "Indian residents and HUFs can use the basic exemption limit to lower capital gains tax. This provision under the Income Tax Act, 2025, remains available for Tax Year 2026-2027. Unused portions of the exemption limit can offset special-rate capital gains after normal income is accounted for. Non-residents, firms, and co",
+    "date": "Sep 12, 2026",
+    "_sort": "2026-09-12T09:01:55+00:00"
+   },
+   {
     "source": "Livemint",
     "cat": "money",
     "title": "\u20b91.09 crore sent from Kuwait to India: ITAT Ahmedabad grants partial relief in income tax notice case",
@@ -1342,32 +1351,13 @@
     "_sort": "2026-09-12T08:27:43+00:00",
     "smart": {
      "what_happened": [
-      "An Indian working in Kuwait faced an income tax notice for \u20b93.63\u202fcrore in reported financial holdings.",
+      "An Indian working in Kuwait received an income tax notice for \u20b93.63\u202fcrore in reported financial holdings.",
       "The ITAT Ahmedabad deleted a \u20b95.52\u202flakh addition and ordered fresh verification of around \u20b92.50\u202fcrore linked to HDFC Bank."
      ],
-     "why_it_matters": "The tribunal's decision provides partial relief to the taxpayer by removing a \u20b95.52\u202flakh surcharge, but it also signals that a substantial portion of the alleged holdings, about \u20b92.50\u202fcrore, will undergo renewed scrutiny. This underscores the importance of accurate documentation for expatriates and may influence how similar cross\u2011border income cases are handled by Indian tax authorities.",
-     "what_to_watch": "The result of the fresh verification of the \u20b92.50\u202fcrore linked to HDFC Bank by the tax department.",
-     "headline": "ITAT Ahmedabad grants partial relief in \u20b93.63\u202fcrore tax notice case",
+     "why_it_matters": "The tribunal's decision provides limited relief to the taxpayer while highlighting the tax authority's focus on large overseas holdings; the deletion of the \u20b95.52\u202flakh addition reduces the immediate liability, but the pending verification of \u20b92.50\u202fcrore means the final tax outcome remains uncertain, underscoring the scrutiny faced by Indian expatriates with significant foreign assets.",
+     "what_to_watch": "The result of the fresh verification of the approximately \u20b92.50\u202fcrore linked to HDFC Bank by the tax department.",
+     "headline": "ITAT Ahmedabad grants partial relief in \u20b93.63\u202fcrore tax notice",
      "read_seconds": 20
-    }
-   },
-   {
-    "source": "Economic Times",
-    "cat": "money",
-    "title": "FD rate up to 8.5% for senior citizens investing for five years; know the list of banks",
-    "link": "https://economictimes.indiatimes.com/wealth/invest/fd-rate-up-to-8-5-for-senior-citizens-investing-for-five-years-know-the-list-of-banks/articleshow/134071176.cms",
-    "summary": "Select small finance banks offer senior citizens fixed deposit rates up to 8.5 percent. Suryoday Small Finance Bank provides 8.5 percent interest on five-year fixed deposits for seniors. Jana Small Finance Bank offers 8 percent interest on similar fixed deposit terms. Banks deduct TDS on FD interest exceeding one lakh ",
-    "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T01:30:00+00:00",
-    "smart": {
-     "what_happened": [
-      "Suryoday Small Finance Bank offers an 8.5% interest rate on five-year fixed deposits for senior citizens.",
-      "Jana Small Finance Bank provides an 8% rate on the same term, and banks deduct TDS on FD interest exceeding one lakh rupees."
-     ],
-     "why_it_matters": "Higher fixed\u2011deposit rates give senior citizens a low\u2011risk option to improve their retirement income, especially as inflation pressures savings. The differentiated rates among small finance banks also highlight competitive pressure in the sector, which could influence broader deposit pricing across the banking industry.",
-     "what_to_watch": "The Reserve Bank of India's next policy meeting for any changes to the repo rate that could affect banks' FD rate offerings.",
-     "headline": "Senior citizens can earn up to 8.5% on five-year FD",
-     "read_seconds": 26
     }
    },
    {
@@ -1377,7 +1367,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00"
+    "_sort": "2026-09-11T18:52:34+00:00",
+    "smart": {
+     "what_happened": [
+      "Egypt's president congratulated India on its BRICS presidency and called the two nations strategic partners.",
+      "He highlighted Egypt's location for trade and logistics and said both sides should increase manufacturing and technology transfer."
+     ],
+     "why_it_matters": "The statements signal a push to deepen economic ties between Egypt and India, leveraging Egypt's position on the Suez Canal to facilitate Indian exports and investment in local manufacturing, while India\u2019s BRICS role may open broader multilateral opportunities for both countries.",
+     "what_to_watch": "Any formal trade agreement or joint venture announced between Egypt and India in the next quarter.",
+     "headline": "Egypt president calls India vital partner, urges stronger Suez Canal trade",
+     "read_seconds": 26
+    }
    },
    {
     "source": "NYT Well",
@@ -1452,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: after 1\u2026d5\u202f2\u202fc4\u202fe6, develop the light\u2011squared bishop to\u202fb4 or\u202fe7 instead of passive \u2026Nf6, preventing White\u2019s quick Qb3\u2011b5 pressure and saving ~30\u202f\u00a2 per move.",
+    "analysis": "Focus on early piece coordination: after 1\u2026d5, develop knights before bishops, avoid passive queen moves; aim for \u22642\u202f% pawn\u2011structure weaknesses.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1614,14 +1614,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your play is catastrophically weak\u2014zero wins from a single loss, with no redeeming opening knowledge to speak of. Stop relying on vague \u201cstandard\u201d moves and drill the basic pawn structures and piece\u2011development patterns of the opening you actually face; every misstep is a guaranteed loss. Spend the next 10\u202fhours replaying master games move\u2011by\u2011move, then practice those exact lines in isolation until you can execute them without hesitation.",
+   "session_summary": "Your opening repertoire is a disaster\u2014every game you play you fall into a passive, uninspired line that lets opponents seize the initiative from move\u202f1.\u202fStop chasing novelty and drill the fundamental principles of piece development, king safety, and central control; master at least one solid mainline (e.g., the London System as White or the Caro\u2011Kann as Black) before daring any experiments.\u202fFrom now on, spend the next 10\u202fhours analyzing your lost game move by move, identify the exact moment you surrendered the center, and rehearse that position repeatedly until the correct continuation becomes second nature.",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1957,
+   "rating": 1899,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
