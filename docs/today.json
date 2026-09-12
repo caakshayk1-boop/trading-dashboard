@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T222228",
+ "build_id": "20260912T224211",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "5h old",
+    "age": "6h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T13:11:01+00:00",
     "smart": {
      "what_happened": [
-      "A \u20b93 lakh credit card limit with \u20b950,000 usage results in a utilization of about 16.7%.",
-      "An expert says low utilization can support a credit profile, provide an emergency cushion, and encourage disciplined borrowing and repayment."
+      "A credit card with a \u20b93\u202flakh limit was used for \u20b950,000, giving a utilization of about 16.7%.",
+      "An expert said the low utilization can support the credit profile, act as an emergency cushion, and encourage disciplined borrowing and repayment."
      ],
-     "why_it_matters": "Keeping credit utilization low, as demonstrated by a 16.7% ratio, is widely recognized as a factor that can improve a consumer's credit score, reduce the risk of over\u2011extension, and ensure a readily available line of credit for emergencies, thereby strengthening overall financial health.",
-     "what_to_watch": "Monitor the credit utilization percentage each billing cycle to ensure it remains below the commonly recommended 30% threshold.",
-     "headline": "\u20b93\u202flakh credit limit with \u20b950,000 usage keeps utilization at 16.7%",
+     "why_it_matters": "Keeping credit utilisation low, as shown by the 16.7% ratio, can improve a borrower\u2019s credit score and provide a financial safety net, which benefits both creditworthiness and personal finance management.",
+     "what_to_watch": "Monitor the cardholder\u2019s credit score for any improvement following the low utilisation pattern.",
+     "headline": "\u20b93\u202flakh credit limit with \u20b950,000 usage yields 16.7% utilization",
      "read_seconds": 20
     }
    },
@@ -1442,7 +1442,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen\u2011side development: after 1\u2026d5\u202f2\u202fc4\u202fe6, you lingered with \u2026Nf6\u2011e8\u2011c7; instead place the knight on f6 and complete \u2026Bd6\u20110\u20110 by move\u202f10. This saves ~0.4\u202fpawns (\u22480.35\u202fACPL) and prevents the later passive position that cost you the game.",
+    "analysis": "Focus on early pawn structure: after 1\u2026d5\u202f2\u202fc4\u202fc6, you allowed a weak isolated d\u2011pawn; strengthen it with \u2026e6 or \u2026c5 before exchanging. Fixing that alone cuts opponent\u2019s activity dramatically.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1604,14 +1604,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "",
+   "session_summary": "Your opening repertoire is a disaster\u2014every game you play you\u2019re walking straight into a losing position, and you haven\u2019t even managed a single win. Stop relying on \u201ctrendy\u201d lines and drill the fundamentals: master the mainline French Defense (or any solid, low\u2011theory opening) and practice the exact move orders until they become second nature. Spend the next week playing 20\u2011move \u201csolo\u201d drills against a 1500\u2011engine, focusing on avoiding early tactical traps; if you can\u2019t convert a simple equal position into a win, you\u2019ll never climb out of the 0\u202f% abyss.",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1917,
+   "rating": 1927,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
