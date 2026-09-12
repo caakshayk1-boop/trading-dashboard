@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T152224",
+ "build_id": "20260912T154212",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T05:13:55+00:00",
     "smart": {
      "what_happened": [
-      "Employees may access retirement savings early for emergencies.",
-      "The EPFO permits partial withdrawals, called EPF advances, to eligible employees."
+      "The EPFO permits employees to make partial withdrawals, called EPF advances.",
+      "Eligibility for EPF advances applies when employees need retirement savings before leaving the workforce for emergencies."
      ],
-     "why_it_matters": "The ability to withdraw EPF funds before retirement provides a safety net for workers facing unexpected financial pressures, influencing personal cash\u2011flow management and retirement planning decisions.",
-     "what_to_watch": "Monitor EPFO announcements for any updates to the eligibility criteria for EPF advances.",
-     "headline": "Employees can claim EPF advances under specific eligibility rules",
+     "why_it_matters": "The ability to access EPF funds early provides a financial safety net for employees facing emergencies, affecting personal cash flow and retirement planning decisions.",
+     "what_to_watch": "Monitor EPFO announcements for any changes to eligibility criteria for EPF advances.",
+     "headline": "EPFO allows partial EPF withdrawals under defined eligibility",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank offers 8.5% interest on five-year fixed deposits for seniors.",
-      "Jana Small Finance Bank offers 8% interest on similar five-year senior citizen fixed deposits, and banks deduct TDS on FD interest exceeding one lakh."
+      "Suryoday Small Finance Bank offers an 8.5% interest rate on five-year fixed deposits for senior citizens.",
+      "Jana Small Finance Bank offers an 8% interest rate on similar terms, and banks deduct TDS on FD interest exceeding one lakh."
      ],
-     "why_it_matters": "Higher fixed\u2011deposit rates provide senior citizens with a low\u2011risk avenue to earn better returns on their savings, improving income stability in a low\u2011interest environment and influencing the competitive landscape among small finance banks.",
-     "what_to_watch": "Watch for any RBI policy announcements that could alter senior citizen FD rates in the coming months.",
-     "headline": "Senior citizens get up to 8.5% FD rate for five-year deposits",
+     "why_it_matters": "Higher fixed\u2011deposit rates give senior citizens a low\u2011risk avenue to earn better returns on savings, improving their income stability in a low\u2011interest environment. The rates also influence competition among small finance banks, potentially prompting broader changes in deposit pricing across the sector.",
+     "what_to_watch": "Watch for any RBI policy updates or bank announcements that could adjust senior citizen FD rates in the next quarter.",
+     "headline": "Senior citizens can earn up to 8.5% on five-year fixed deposits",
      "read_seconds": 26
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-a-vital-strategic-partner-says-egypt-president-calls-for-stronger-trade-via-suez-canal/articleshow/134085548.cms",
     "summary": "Egypt's President congratulates India on its BRICS presidency and highlights mutual cooperation.  The nation's strategic location offers significant trade and logistics advantages for Indian companies.  Egypt seeks to boost local manufacturing and technology transfer with India.  BRICS membership provides broader avenu",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T18:52:34+00:00",
-    "smart": {
-     "what_happened": [
-      "Egypt's President congratulated India on its BRICS presidency and called India a strategic partner.",
-      "He said Egypt's location offers trade and logistics advantages and urged stronger trade via the Suez Canal, seeking manufacturing and technology transfer with India."
-     ],
-     "why_it_matters": "The remarks signal a deepening of India-Egypt relations, linking India's rising influence in BRICS with Egypt's pivotal position on the Suez Canal, which could facilitate greater Indian investment in Egyptian manufacturing and technology sectors and enhance trade flows between the two economies.",
-     "what_to_watch": "The signing of any bilateral trade or investment agreements between India and Egypt in the coming months.",
-     "headline": "Egypt president calls India strategic partner, urges more trade via Suez Canal",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-11T18:52:34+00:00"
    },
    {
     "source": "NYT Well",
@@ -1396,7 +1386,17 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00"
+    "_sort": "2026-09-11T17:37:38+00:00",
+    "smart": {
+     "what_happened": [
+      "A survey found that eight out of ten Americans are using vitamins, protein powders or other dietary supplements.",
+      "Health experts said there is little scientific evidence supporting the benefits of many of these products."
+     ],
+     "why_it_matters": "The widespread use of supplements despite limited evidence raises concerns about consumer health, potential waste of money, and the need for clearer scientific guidance, which could influence public health policy and the dietary supplement market.",
+     "what_to_watch": "Future surveys tracking changes in supplement usage rates among Americans",
+     "headline": "Eight in ten Americans report taking vitamins, protein powders or supplements",
+     "read_seconds": 20
+    }
    },
    {
     "source": "The Marginalian",
@@ -1462,7 +1462,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1\u2026d5\u202f2\u202fc4, avoid the passive 2\u2026e6; instead play 2\u2026c6 or 2\u2026Nf6 to contest the center and prevent a weak isolated d\u2011pawn.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1631,7 +1631,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2046,
+   "rating": 2051,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
