@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T034244",
+ "build_id": "20260913T040223",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -1329,7 +1329,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-12",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1340,17 +1340,7 @@
     "link": "https://www.livemint.com/money/personal-finance/nagaland-govt-examining-delays-pension-other-retirement-benefits-what-could-change-digitising-process-gfp-nps-documents-11789233201371.html",
     "summary": "The Nagaland government has formed a committee to address pension delays and digitise the process, Chief Minister Neiphiu Rio informed the state Assembly. He noted issues stem from procedural non-compliance and inadequate guidance for retirees.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T18:24:39+00:00",
-    "smart": {
-     "what_happened": [
-      "The Nagaland government has formed a committee to examine delays in pension and other retirement benefits.",
-      "Chief Minister Neiphiu Rio said the delays stem from procedural non\u2011compliance and inadequate guidance for retirees, and the committee will work on digitising the process."
-     ],
-     "why_it_matters": "The initiative aims to improve the timeliness and transparency of pension payments for retirees in Nagaland, reducing financial hardship for beneficiaries and enhancing the state's administrative efficiency.",
-     "what_to_watch": "The publication of the committee's recommendations or a rollout timeline for the digitised pension system.",
-     "headline": "Nagaland forms committee to address pension delays and digitise process",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-12T18:24:39+00:00"
    },
    {
     "source": "ET Opinion",
@@ -1359,7 +1349,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/beyond-bloc-politics-indias-brics-bet-on-multipolarity/articleshow/134146372.cms",
     "summary": "Under India's BRICS chairmanship, the importance of practical cooperation is underscored with an aim to launch impactful development initiatives. Enhancing citizens' lives through tailored health programs and technology is paramount. The chairmanship also prioritizes the nurturing of startup ecosystems and the support ",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T17:25:17+00:00"
+    "_sort": "2026-09-12T17:25:17+00:00",
+    "smart": {
+     "what_happened": [
+      "India assumed the BRICS chairmanship and highlighted the need for practical cooperation and development initiatives.",
+      "The chairmanship plans to launch health and technology programs and to support startup ecosystems."
+     ],
+     "why_it_matters": "India's leadership of BRICS signals a push for multipolar collaboration, positioning the country to influence the bloc's agenda on development, health, technology and entrepreneurship, which could affect trade, investment and policy dynamics among the member economies.",
+     "what_to_watch": "The launch date and details of the first development initiative announced under India's BRICS chairmanship, such as a health program rollout.",
+     "headline": "India chairs BRICS and stresses practical cooperation and development initiatives",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Economic Times",
@@ -1443,7 +1443,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 1.e4 c6\u202f2.d4 d5\u202f3.Nc3 dxe4\u202f4.Nxe4, develop knights before bishops; avoid 5\u2026Nf6? which lets White seize central control. Improve move order to finish development within 10 moves, reducing opponent\u2019s space advantage.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1653,7 +1653,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1901,
+   "rating": 1965,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
