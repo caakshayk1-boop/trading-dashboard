@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T134221",
+ "build_id": "20260912T140216",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "19 min old",
+    "age": "38 min old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1339,7 +1339,17 @@
     "link": "https://www.livemint.com/money/personal-finance/epf-money-withdrawal-when-can-employees-claim-their-provident-fund-amount-in-advance-11789185445459.html",
     "summary": "Employees may need to access retirement savings before leaving the workforce for emergencies. The EPFO permits partial withdrawals, known as EPF advances, with specific eligibility. Check details here.&amp;nbsp;",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T05:13:55+00:00"
+    "_sort": "2026-09-12T05:13:55+00:00",
+    "smart": {
+     "what_happened": [
+      "Employees may access retirement savings early for emergencies.",
+      "The EPFO permits partial withdrawals, called EPF advances, subject to eligibility."
+     ],
+     "why_it_matters": "The ability to withdraw EPF funds before retirement provides workers with a safety net for unexpected financial needs, affecting personal cash flow management and retirement planning strategies.",
+     "what_to_watch": "Monitor EPFO announcements for any changes to the eligibility criteria for EPF advances.",
+     "headline": "Employees can claim EPF advances under specific eligibility rules",
+     "read_seconds": 20
+    }
    },
    {
     "source": "Economic Times",
@@ -1351,12 +1361,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank offers an 8.5% interest rate on five-year fixed deposits for senior citizens.",
-      "Jana Small Finance Bank offers an 8% rate on similar deposits, and banks deduct TDS on FD interest exceeding one lakh."
+      "Suryoday Small Finance Bank offers 8.5% interest on five-year fixed deposits for seniors.",
+      "Jana Small Finance Bank offers 8% interest on five-year fixed deposits for seniors, and banks deduct TDS on FD interest exceeding one lakh."
      ],
-     "why_it_matters": "Higher fixed\u2011deposit rates for senior citizens improve the yield on low\u2011risk savings, potentially increasing the attractiveness of small finance banks for this demographic and influencing the allocation of retirement savings toward fixed-income products.",
-     "what_to_watch": "Monitor the Reserve Bank of India's next policy bulletin for any changes to senior citizen FD rate guidelines.",
-     "headline": "Senior citizens can earn up to 8.5% on five-year fixed deposits",
+     "why_it_matters": "The higher fixed\u2011deposit rates provide senior citizens with a relatively safe avenue to earn better returns on their savings, which can improve retirement income and reduce reliance on other investment products. The TDS rule also means that interest above the one\u2011lakh threshold will be taxed at source, affecting net yields.",
+     "what_to_watch": "Watch for any changes to the one\u2011lakh\u2011rupee TDS exemption limit on FD interest.",
+     "headline": "Senior citizens can earn up to 8.5% FD rate at small finance banks",
      "read_seconds": 26
     }
    },
@@ -1370,12 +1380,12 @@
     "_sort": "2026-09-11T18:52:34+00:00",
     "smart": {
      "what_happened": [
-      "Egypt's president congratulated India on its BRICS presidency and highlighted mutual cooperation.",
-      "He noted Egypt's strategic location offers trade and logistics advantages and sought increased Indian involvement in local manufacturing and technology transfer."
+      "Egypt's President congratulated India on its BRICS presidency and highlighted mutual cooperation.",
+      "He said Egypt's strategic location offers trade and logistics advantages and seeks to boost local manufacturing and technology transfer with India."
      ],
-     "why_it_matters": "The statements signal a push to deepen economic ties between the two countries, leveraging Egypt's position on the Suez Canal to facilitate Indian exports and supply chains while expanding India's influence within the BRICS framework and regional markets.",
-     "what_to_watch": "Quarterly data on Indian export volumes passing through the Suez Canal",
-     "headline": "Egypt president calls India vital partner, urges stronger trade via Suez Canal",
+     "why_it_matters": "The statements signal a deepening of India-Egypt economic ties, leveraging Egypt's position on the Suez Canal to facilitate Indian exports and imports, and potentially expanding manufacturing collaborations that could diversify supply chains for both countries.",
+     "what_to_watch": "Monthly data on India-Egypt trade volume passing through the Suez Canal over the next quarter",
+     "headline": "Egypt president calls India vital partner, urges stronger Suez Canal trade",
      "read_seconds": 26
     }
    },
@@ -1386,17 +1396,7 @@
     "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
     "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:38+00:00",
-    "smart": {
-     "what_happened": [
-      "A new survey found that eight out of ten Americans were taking vitamins, protein powders or other supplements.",
-      "Experts said there is little evidence that many of these products provide health benefits."
-     ],
-     "why_it_matters": "The high prevalence of supplement use highlights a large consumer market and suggests many Americans are spending money on products whose efficacy is not well supported by scientific evidence, which could influence public health outcomes and regulatory scrutiny.",
-     "what_to_watch": "Future studies or regulatory actions that assess the effectiveness or safety of popular supplement categories.",
-     "headline": "Eight in ten Americans report using dietary supplements",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-11T17:37:38+00:00"
    },
    {
     "source": "The Marginalian",
@@ -1462,7 +1462,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4\u202fd5\u202f2.Nf3\u202fNf6\u202f3.e3\u202fc5, you allowed a weak isolated d\u2011pawn; exchange it before move\u202f12 to avoid a long\u2011term positional disadvantage.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1631,7 +1631,7 @@
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1974,
+   "rating": 1894,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
