@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-12T06:45:06",
+ "generated_at": "2026-09-12T07:07:42",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -190,7 +190,7 @@
    "face_value": 10.0,
    "anchor_cr": null,
    "listing_date": "Sep 23, 2026",
-   "gmp_text": "\u20b910 (11.90%)",
+   "gmp_text": "\u20b925 (29.76%)",
    "revenue_cr": 1216.74,
    "revenue_growth_pct": 9.0,
    "pat_cr": 41.17,
@@ -338,7 +338,7 @@
    "face_value": 10.0,
    "anchor_cr": null,
    "listing_date": null,
-   "gmp_text": "\u20b980 (18.87%)",
+   "gmp_text": "\u20b995 (22.41%)",
    "revenue_cr": 2352.85,
    "revenue_growth_pct": 47.0,
    "pat_cr": 59.28,
@@ -947,7 +947,7 @@
    "ofs_cr": 755.74,
    "face_value": 2.0,
    "anchor_cr": 316.72,
-   "gmp_text": "\u20b9241",
+   "gmp_text": "\u20b9239",
    "revenue_cr": 662.86,
    "revenue_growth_pct": 45.0,
    "pat_cr": 129.73,
@@ -969,6 +969,12 @@
    "issue_size_cr": 1055.74,
    "enriched_url": "https://www.chittorgarh.com/ipo/kanohar-electricals-ipo/2856/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1330/kanohar-electricals-ltd",
+   "subscription_by_category": {
+    "QIB": 215.37,
+    "HNI": 87.74,
+    "Total": 90.59
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 38.6x post-issue earnings against a 103x median for its 6 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Revenue grew 45% year on year.",
@@ -1013,6 +1019,13 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 500.0,
    "enriched_url": "https://www.chittorgarh.com/ipo/prasol-chemicals-ipo/2775/",
+   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1336/prasol-chemicals-ltd",
+   "subscription_by_category": {
+    "QIB": 7.59,
+    "HNI": 1.89,
+    "Total": 3.47
+   },
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 22% year on year.",
     "Profit grew faster than revenue (91% against 22%), so margins widened rather than bought growth.",
@@ -1036,7 +1049,7 @@
    "ofs_cr": 35.43,
    "face_value": 10.0,
    "anchor_cr": 84.25,
-   "gmp_text": "\u20b948",
+   "gmp_text": "\u20b945",
    "revenue_cr": 763.93,
    "revenue_growth_pct": 20.0,
    "pat_cr": 71.32,
@@ -1188,6 +1201,24 @@
   }
  ],
  "recent_listed": [
+  {
+   "symbol": "DEEPA",
+   "company": "Deepa Jewellers Limited",
+   "price_band": "Rs.168 to Rs.177",
+   "close_date": "2026-09-03",
+   "listing_date": "2026-09-08",
+   "days_since_close": 9,
+   "measured": true,
+   "first_close": 194.37,
+   "last_close": 185.86,
+   "since_listing_pct": -4.4,
+   "from_high_pct": -16.3,
+   "high": 222.0,
+   "low": 185.0,
+   "months_listed": null,
+   "sessions": 4,
+   "measured_by": "yahoo"
+  },
   {
    "symbol": "PERNIASPOP",
    "company": "Purple Style Labs Limited",
@@ -3991,23 +4022,6 @@
    "measured_by": "yahoo"
   },
   {
-   "symbol": "DEEPA",
-   "company": "Deepa Jewellers Limited",
-   "price_band": "Rs.168 to Rs.177",
-   "close_date": "2026-09-03",
-   "listing_date": "2026-09-08",
-   "days_since_close": 9,
-   "measured": false,
-   "first_close": null,
-   "last_close": null,
-   "since_listing_pct": null,
-   "from_high_pct": null,
-   "high": null,
-   "low": null,
-   "months_listed": null,
-   "sessions": null
-  },
-  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -4116,7 +4130,7 @@
   "upcoming": 4,
   "awaiting": 5,
   "listed_12m": 164,
-  "listed_measured": 157,
+  "listed_measured": 158,
   "listed_via_screen": 24,
   "apply": 0,
   "avoid": 0
