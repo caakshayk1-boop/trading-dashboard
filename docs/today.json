@@ -1,5 +1,5 @@
 {
- "build_id": "20260912T122224",
+ "build_id": "20260912T124211",
  "date": "2026-09-12",
  "date_str": "Saturday, September 12 2026",
  "picks": [
@@ -482,6 +482,10 @@
    "price": 175.26,
    "sector": ""
   },
+  "COROMANDEL": {
+   "price": 1929.0,
+   "sector": "Basic Materials"
+  },
   "CPPLUS": {
    "price": 3825.5,
    "sector": "Industrials"
@@ -542,6 +546,10 @@
    "price": 4548.1001,
    "sector": "Industrials"
   },
+  "HCLTECH": {
+   "price": 1206.1,
+   "sector": "Technology"
+  },
   "HDFCBANK": {
    "price": 708.25,
    "sector": "Financial Services"
@@ -549,6 +557,10 @@
   "HFCL": {
    "price": 233.69,
    "sector": "Technology"
+  },
+  "HINDCOPPER": {
+   "price": 514.5,
+   "sector": "Basic Materials"
   },
   "HINDUNILVR": {
    "price": 1927.0,
@@ -569,6 +581,10 @@
   "INDGN": {
    "price": 577.35,
    "sector": "Healthcare"
+  },
+  "INDIANB": {
+   "price": 853.5,
+   "sector": "Financial Services"
   },
   "IPCALAB": {
    "price": 1970.9,
@@ -597,6 +613,10 @@
   "JUBLPHARMA": {
    "price": 1025.2,
    "sector": "Healthcare"
+  },
+  "KAYNES": {
+   "price": 3505.0,
+   "sector": "Technology"
   },
   "KIRLOSENG": {
    "price": 2209.0,
@@ -628,26 +648,6 @@
   },
   "MRPL": {
    "price": 175.86,
-   "sector": "Energy"
-  },
-  "NATIONALUM": {
-   "price": 361.0,
-   "sector": "Basic Materials"
-  },
-  "NEM": {
-   "price": 126.81,
-   "sector": "Basic Materials"
-  },
-  "NEULANDLAB": {
-   "price": 23800.0,
-   "sector": "Healthcare"
-  },
-  "OFSS": {
-   "price": 11725.0,
-   "sector": "Technology"
-  },
-  "ONGC": {
-   "price": 232.5,
    "sector": "Energy"
   }
  },
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-12T04:05:29+00:00",
     "smart": {
      "what_happened": [
-      "Experts say prepaying a loan can reduce total interest costs and overall debt.",
-      "They note that timely EMI payments are more important for credit scores and advise borrowers to review loan terms before using savings to close a loan early."
+      "Experts explain that prepaying a loan can reduce overall interest costs and debt",
+      "They note that timely EMI payments are more important for credit scores and advise borrowers to check conditions before using savings to close a loan early"
      ],
-     "why_it_matters": "Understanding early loan prepayment helps borrowers lower the amount of interest they pay over the life of the loan and can improve their credit profile by maintaining regular EMI payments. However, using savings to settle a loan prematurely may forgo liquidity and could involve prepayment penalties, so weighing the trade\u2011off is crucial for personal financial planning.",
-     "what_to_watch": "Check loan agreements for any prepayment penalty clauses before making an early repayment.",
-     "headline": "Experts discuss benefits and considerations of early loan prepayment",
+     "why_it_matters": "Understanding the trade\u2011off between interest savings from early loan repayment and the impact on credit history helps borrowers make informed decisions about using their cash reserves, potentially improving long\u2011term financial health and borrowing capacity.",
+     "what_to_watch": "Monitor announcements from major lenders regarding changes to prepayment penalties or EMI reporting criteria.",
+     "headline": "Experts discuss loan prepayment benefits and considerations",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T01:30:00+00:00",
     "smart": {
      "what_happened": [
-      "Suryoday Small Finance Bank offers 8.5% interest on five-year fixed deposits for seniors.",
-      "Jana Small Finance Bank offers 8% interest on similar five-year fixed deposits for seniors, and banks deduct TDS on FD interest exceeding one lakh."
+      "Suryoday Small Finance Bank offers seniors an 8.5% interest rate on five-year fixed deposits.",
+      "Jana Small Finance Bank offers seniors an 8% rate on five-year fixed deposits, and banks deduct TDS on FD interest above \u20b91 lakh."
      ],
-     "why_it_matters": "The elevated fixed deposit rates give senior citizens a higher return on low\u2011risk savings, potentially drawing more senior deposits into small finance banks and strengthening their liability base. The differential rates also create competition among banks to attract senior savers, while the TDS rule on interest above one lakh impacts the net yield for larger deposits.",
-     "what_to_watch": "Monitor any changes to the TDS threshold or senior citizen FD rate announcements from small finance banks in the next quarter.",
-     "headline": "Senior citizens can get up to 8.5% FD rate for five-year deposits",
+     "why_it_matters": "The higher fixed\u2011deposit rates provide senior citizens with a relatively safe avenue to earn better returns on their savings, which can be especially important given inflation pressures and limited investment options for this age group. The competition among small finance banks to attract senior deposits may also influence broader deposit pricing in the banking sector.",
+     "what_to_watch": "Monitor whether Suryoday Small Finance Bank maintains the 8.5% five\u2011year senior citizen rate in its next rate revision.",
+     "headline": "Senior citizens get up to 8.5% FD rate for five-year deposits",
      "read_seconds": 26
     }
    },
@@ -1452,7 +1452,7 @@
     "moves": 55,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.d4 d5\u202f2.c4, you allowed 2\u2026e6\u202f3.Nc3\u202fBb4? (Nimzo\u2011like) but then played \u2026c5 too late, yielding an isolated queen\u2019s pawn. Strengthen your d5\u2011e5 control and avoid creating isolated or backward pawns\u2014aim for solid, symmetrical setups within the first 8 moves.",
+    "analysis": "Focus on early pawn structure: after 1.d4 d5\u202f2.c4, avoid passive 2\u2026e6; instead play 2\u2026c6 or 2\u2026Nf6 to contest the center and prevent isolated\u2011queen\u2011pawn weaknesses.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1614,14 +1614,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "",
+   "session_summary": "Your opening repertoire is a joke\u2014every game you play collapses within the first ten moves, proving you can\u2019t even navigate the basic principles of development. Stop relying on vague \u201cfavorite\u201d lines and drill the fundamental pawn structures and piece\u2011coordination of the Italian Game and the Caro\u2011Kann, mastering every critical variation before you even think about a surprise weapon. Allocate at least 30 minutes daily to forced\u2011mate puzzles and annotated master games; if you can\u2019t execute a simple fork or avoid a basic tactical shot, you belong in a beginner\u2019s league, not on Lichess.",
    "session_date": "2026-09-11",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "SfnSt",
-   "rating": 1915,
+   "rating": 1987,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In5 \u00b7 Middlegame \u00b7 Attraction",
    "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
