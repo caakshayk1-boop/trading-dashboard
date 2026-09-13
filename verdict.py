@@ -75,6 +75,24 @@ RSI_VERY_HOT = 78.0
 RSI_OVERSOLD = 30.0
 EXTENDED_FROM_HIGH = -3.0  # within 3% of the 52w high
 EXTENDED_OVER_SMA50 = 15.0  # % above the 50-day
+# THE MIRROR OF EXTENDED_OVER_SMA50, and it was missing.
+#
+# Every entry rule here vetoes a price that has run UP — too hot on RSI, too
+# far over the 50-day, pressed against the 52-week high. None looked at the
+# opposite, so a long-term thesis that passed on the accounts was called BUY
+# no matter how hard the price had collapsed underneath it. RSI_OVERSOLD was
+# declared for this and never used.
+#
+# Found on INDOTHAI: ROE 23.4% cleared the 15% bar, so the thesis held and the
+# call was BUY at MEDIUM confidence — while the stock sat 91% below its high,
+# 69% below its 50-day, under all three averages on an RSI of 16, after a
+# 78% year. The fall is real, not a corporate action: Yahoo's split-adjusted
+# series confirms 191.74 -> 41.17 over the year.
+#
+# A drawdown of that size is the market repricing the company faster than the
+# published accounts explain. That does not make the thesis wrong; it makes
+# today the wrong day to act on it, which is precisely what WAIT means here.
+COLLAPSED_UNDER_SMA50 = 25.0   # % below the 50-day
 
 CALLS = ("AVOID", "BUY", "WAIT", "WATCH", "UNRATED")
 HORIZONS = ("long term", "positional", "swing")
@@ -375,6 +393,17 @@ def _entry_problem(row, horizon):
                 and from_high >= EXTENDED_FROM_HIGH:
             return (f"At the 52-week high on RSI {rsi:.0f}",
                     "a consolidation, or the next results print")
+
+        # …and the same test downward. See COLLAPSED_UNDER_SMA50.
+        if over is not None and over < -COLLAPSED_UNDER_SMA50:
+            extra = ""
+            if rsi is not None and rsi <= RSI_OVERSOLD:
+                extra = f" on an RSI of {rsi:.0f}"
+            if from_high is not None and from_high <= -50.0:
+                extra += f", {abs(from_high):.0f}% below its high"
+            return (f"Price is {abs(over):.0f}% BELOW its 50-day{extra} — the market is "
+                    f"repricing this faster than the accounts explain",
+                    f"a reclaim of the 50-day near {sma50:.0f}, or the next results print")
 
     if horizon == "positional" and rsi is not None and rsi >= RSI_HOT:
         return (f"RSI {rsi:.0f} into resistance",

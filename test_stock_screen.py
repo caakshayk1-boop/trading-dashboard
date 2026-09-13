@@ -945,6 +945,31 @@ def test_universe_label_is_read_before_the_limit_truncates() -> None:
           '"universe_core": core_size' in src and '"universe_ext": len(ext)' in src)
 
 
+def test_a_collapsed_price_is_an_entry_problem_too() -> None:
+    """Every entry rule vetoed a price that had run UP, and none looked down.
+
+    INDOTHAI cleared the long-term thesis on ROE 23.4% against a 15% bar and
+    was published BUY at medium confidence while sitting 91% below its high,
+    69% below its 50-day, under all three averages on an RSI of 16, after a
+    78% year. The fall is real — the split-adjusted series confirms it — so the
+    accounts and the tape simply disagreed, and only one of them was consulted.
+    RSI_OVERSOLD was declared for this and never used.
+    """
+    import verdict as V
+    check("the downside threshold exists", hasattr(V, "COLLAPSED_UNDER_SMA50"))
+    row = {"price": 41.17, "sma50": 132.8, "sma20": 51.3, "rsi": 16.3,
+           "from_high": -91.2}
+    why, trigger = V._entry_problem(row, "long term")
+    check("a long-term buy far under its 50-day is an entry problem", bool(why))
+    check("the reason names the distance", why is not None and "50-day" in why)
+    check("and it gives a trigger to wait for", bool(trigger))
+    # The mirror must not fire on a healthy pullback, or every dip becomes WAIT.
+    ok_row = {"price": 95.0, "sma50": 100.0, "sma20": 98.0, "rsi": 45.0,
+              "from_high": -12.0}
+    why2, _ = V._entry_problem(ok_row, "long term")
+    check("a 5% dip under the 50-day is NOT an entry problem", not why2)
+
+
 def test_swot_json_is_allow_listed_everywhere_it_must_be() -> None:
     """A docs/ file reaches production only if FOUR places name it.
 
@@ -1947,6 +1972,7 @@ def main() -> int:
                test_screen_json_is_allow_listed_in_all_three_places,
                test_an_unknown_industry_is_not_a_peer_group,
                test_swot_json_is_allow_listed_everywhere_it_must_be,
+               test_a_collapsed_price_is_an_entry_problem_too,
                test_the_universe_extension_stays_additive_and_labelled):
         try:
             fn()
