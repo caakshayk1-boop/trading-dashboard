@@ -1,0 +1,46 @@
+name: Vercel — prune retained deployments
+
+# WHY A CRON AND NOT A SETTING. Settings > Security > Deployment Retention
+# Policy is the documented control and it is NOT RENDERED on a Hobby project;
+# PATCH /v9/projects/{id} rejects `deploymentExpiration` outright. There is
+# nothing to configure, so the policy has to be enforced from outside.
+#
+# 02:30 UTC is 10:30 MYT — after the 22:00 UTC newspaper build and its 01:30
+# sync have both landed, so a prune never races the thing it exists to clean up
+# after. It is also far from every other slot in this repo.
+on:
+  schedule:
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+    inputs:
+      keep_days:
+        description: "Delete deployments older than this many days"
+        required: false
+        default: "2"
+
+# Touches nothing in the repository. The default token would be write-capable
+# for no reason, so it is dropped to read-only.
+permissions:
+  contents: read
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    # Vercel allows 200 deletions per 10 minutes, so a large backlog is paced
+    # across windows rather than retried into 429s. The script caps itself at
+    # 12 windows; this is the outer stop.
+    timeout-minutes: 140
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Stdlib only — urllib and json. No pip install, so this job cannot be
+      # taken down by a dependency resolving differently than it did yesterday.
+      - name: Prune
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PRUNE_KEEP_DAYS: ${{ inputs.keep_days || '2' }}
+        run: python prune_deployments.py
