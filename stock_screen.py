@@ -2391,10 +2391,24 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     # fetch cannot silently mark all 500 names as failing an ethics test.
     from signals.universe import ahimsa_membership
     _ahimsa, _ahimsa_ok = ahimsa_membership()
+    # The row key here is `sym` (set at "sym": u["symbol"] above), NOT `symbol`.
+    # It read `symbol` for one build cycle, which resolves to None on every row,
+    # and `None in _ahimsa` is False — so all 989 names were published as
+    # FAILING an ethics screen while the index list loaded perfectly. The guard
+    # directly above protects against the list failing to load; it could not see
+    # a key that never existed.
     for r in out:
-        r["ahimsa"] = (r.get("symbol") in _ahimsa) if _ahimsa_ok else None
+        r["ahimsa"] = (r.get("sym") in _ahimsa) if _ahimsa_ok else None
+    _hits = sum(1 for r in out if r.get("ahimsa"))
     print(f"[ahimsa] {'list read: ' + str(len(_ahimsa)) + ' constituents' if _ahimsa_ok else 'LIST UNAVAILABLE — every row marked unknown'}"
-          f"{', ' + str(sum(1 for r in out if r.get('ahimsa'))) + ' of ' + str(len(out)) + ' screened names are in it' if _ahimsa_ok else ''}")
+          f"{', ' + str(_hits) + ' of ' + str(len(out)) + ' screened names are in it' if _ahimsa_ok else ''}")
+    # A 326-name index and a ~1000-name NSE universe cannot be disjoint. Zero
+    # overlap means the join is broken, not that nothing qualified, and the
+    # difference is invisible in the payload — every row just reads False. Loud
+    # here, because the last time this silently published 989 wrong answers.
+    if _ahimsa_ok and _ahimsa and not _hits:
+        print(f"[ahimsa] ERROR: {len(_ahimsa)} constituents and {len(out)} screened "
+              f"names share NOTHING — the symbol join is broken, not the list")
 
     out.sort(key=lambda x: (x["comp"] is None, -(x["comp"] or 0)))
     # Deltas BEFORE compaction: _compact strips nulls, and a delta needs
