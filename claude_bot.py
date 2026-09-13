@@ -58,13 +58,23 @@ def _db_open_signals(min_score: int = 65) -> list:
     """Read OPEN A/A+ signals from signals.db."""
     try:
         con = db.connect()
-        con.row_factory = db.Row
-        rows = con.execute(
+        # Map by column name explicitly. db.py's _ConnWrapper.__setattr__ is
+        # tolerant on purpose: libsql_experimental's Connection is a native
+        # type that rejects unknown attributes, so on the Turso path
+        # `row_factory = db.Row` silently lands on the WRAPPER and the rows
+        # come back as plain tuples. dict(tuple) then raises "cannot convert
+        # dictionary update sequence element #0 to a sequence" — which this
+        # except-block turned into an empty list, so it read as "no open
+        # signals" rather than a broken query. db.py says it outright:
+        # callers must NOT assume row_factory took.
+        cur = con.execute(
             "SELECT * FROM all_signals WHERE status='OPEN' AND score>=? ORDER BY score DESC, date DESC",
             (min_score,)
-        ).fetchall()
+        )
+        cols = [c[0] for c in cur.description]
+        rows = cur.fetchall()
         con.close()
-        return [dict(r) for r in rows]
+        return [dict(zip(cols, r)) for r in rows]
     except Exception as e:
         logging.warning(f"DB read error: {e}")
         return []
@@ -794,16 +804,22 @@ def _push_signals_to_github():
 
     try:
         con = db.connect()
-        con.row_factory = db.Row
-        all_rows = con.execute(
+        # Same contract as _db_open_signals: row_factory does not survive the
+        # Turso wrapper, so the columns are read off the cursor instead. This
+        # one had no fallback — it raised straight out of _run_swing_scan and
+        # the bot answered "Swing scan error (OnDemand): cannot convert
+        # dictionary update sequence element #0 to a sequence".
+        cur = con.execute(
             "SELECT * FROM all_signals ORDER BY date DESC LIMIT 500"
-        ).fetchall()
+        )
+        cols = [c[0] for c in cur.description]
+        all_rows = cur.fetchall()
         con.close()
     except Exception as e:
         logging.warning(f"GitHub push: DB read failed — {e}")
         return
 
-    all_data = [dict(r) for r in all_rows]
+    all_data = [dict(zip(cols, r)) for r in all_rows]
     dt       = datetime.now(IST).strftime("%Y-%m-%d %H:%M IST")
     commit   = f"data: auto-update {dt} [skip ci]"
     pushed   = 0
