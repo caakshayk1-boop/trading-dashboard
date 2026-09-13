@@ -1125,31 +1125,57 @@
  },
  {
   "date": "2026-09-13",
-  "generated_at": "2026-09-13T12:16:30+05:30",
+  "generated_at": "2026-09-13T13:46:36+05:30",
   "picks": [
    {
     "sym": "SMLMAH",
     "sector": "Consumer Cyclical",
     "price": 6583.0,
-    "score": 82.62,
+    "score": 76.08,
     "reasons": [
      "ROCE 29%",
      "Piotroski 7/9",
      "+68% over three months",
-     "at a 52-week high"
+     "1% off its high"
     ],
-    "view": null
+    "view": "SMLMAH shows 29% ROCE, Piotroski 7/9, up 68% in three months, trading 1% below its high."
    },
    {
     "sym": "WABAG",
     "sector": "Industrials",
     "price": 2277.9,
-    "score": 73.09,
+    "score": 66.26,
     "reasons": [
      "Piotroski 7/9",
      "+30% over three months",
-     "at a 52-week high",
+     "2% off its high",
      "\u20b9508 cr traded"
+    ],
+    "view": "WABAG has Piotroski 7/9, rose 30% over"
+   },
+   {
+    "sym": "CHENNPETRO",
+    "sector": "Energy",
+    "price": 1572.9,
+    "score": 66.12,
+    "reasons": [
+     "ROCE 33%",
+     "Piotroski 7/9",
+     "+39% over three months",
+     "6% off its high"
+    ],
+    "view": null
+   },
+   {
+    "sym": "WELCORP",
+    "sector": "Basic Materials",
+    "price": 2676.6,
+    "score": 63.0,
+    "reasons": [
+     "ROCE 21%",
+     "+96% over three months",
+     "4% off its high",
+     "\u20b9327 cr traded"
     ],
     "view": null
    },
@@ -1157,37 +1183,12 @@
     "sym": "LAURUSLABS",
     "sector": "Healthcare",
     "price": 1969.0,
-    "score": 69.46,
+    "score": 62.96,
     "reasons": [
      "Piotroski 8/9",
      "+42% over three months",
-     "at a 52-week high",
+     "1% off its high",
      "\u20b9448 cr traded"
-    ],
-    "view": null
-   },
-   {
-    "sym": "REDINGTON",
-    "sector": "Technology",
-    "price": 393.7,
-    "score": 67.91,
-    "reasons": [
-     "+65% over three months",
-     "at a 52-week high",
-     "\u20b9294 cr traded"
-    ],
-    "view": null
-   },
-   {
-    "sym": "CHENNPETRO",
-    "sector": "Energy",
-    "price": 1572.9,
-    "score": 67.32,
-    "reasons": [
-     "ROCE 33%",
-     "Piotroski 7/9",
-     "+39% over three months",
-     "3% off its high"
     ],
     "view": null
    }
