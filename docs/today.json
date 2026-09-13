@@ -1,7 +1,7 @@
 {
- "build_id": "20260913T173837",
- "date": "2026-09-13",
- "date_str": "Sunday, September 13 2026",
+ "build_id": "20260914T005110",
+ "date": "2026-09-14",
+ "date_str": "Monday, September 14 2026",
  "picks": [
   {
    "symbol": "SMCI",
@@ -539,7 +539,7 @@
    "sector": "Industrials"
   },
   "GOLD": {
-   "price": 4366.2002,
+   "price": 4408.8999,
    "sector": ""
   },
   "GRANULES": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "4h old",
+    "age": "7h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1328,18 +1328,28 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-12",
-   "age_days": 0.6,
+   "age_days": 0.9,
    "is_fallback": false
   },
   "smart_reads": [
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Why your SIP may not be delivering the returns you expect: Mistakes that mutual fund investors should avoid",
-    "link": "https://www.livemint.com/money/personal-finance/why-your-sip-may-not-be-delivering-the-returns-you-expect-mistakes-that-mutual-fund-investors-should-avoid-11789287967137.html",
-    "summary": "SIP investments require careful planning. Investors often make mistakes by chasing past returns or halting contributions during market dips, which undermines benefits like rupee-cost averaging. Here are the mistakes you need to avoid.",
+    "title": "Agentic AI could become your next credit assistant: What consumers want\u2014and what they still worry about",
+    "link": "https://www.livemint.com/money/personal-finance/agentic-ai-could-become-your-next-credit-assistant-what-consumers-want-and-what-they-still-worry-about-11789311203763.html",
+    "summary": "AI is changing how consumers research different loans and credit options, but the next shift could go beyond answering questions. Agentic AI may help consumers compare credit options, understand their needs, and take permitted actions.&amp;nbsp;",
     "date": "Sep 13, 2026",
-    "_sort": "2026-09-13T09:13:03+00:00"
+    "_sort": "2026-09-13T16:43:57+00:00",
+    "smart": {
+     "what_happened": [
+      "AI is already altering how consumers research loans and credit options.",
+      "New agentic AI could enable users to compare credit products, assess needs, and perform permitted actions."
+     ],
+     "why_it_matters": "The ability of agentic AI to move beyond simple question\u2011answering to actively comparing credit offers and executing approved actions could streamline consumers' decision\u2011making process, potentially increasing efficiency in the credit market and reshaping how financial institutions engage with borrowers.",
+     "what_to_watch": "The first rollout of agentic AI features that can take permitted credit actions for consumers.",
+     "headline": "Agentic AI poised to assist consumers with credit comparisons",
+     "read_seconds": 20
+    }
    },
    {
     "source": "ET Opinion",
@@ -1348,7 +1358,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/beyond-bloc-politics-indias-brics-bet-on-multipolarity/articleshow/134146372.cms",
     "summary": "Under India's BRICS chairmanship, the importance of practical cooperation is underscored with an aim to launch impactful development initiatives. Enhancing citizens' lives through tailored health programs and technology is paramount. The chairmanship also prioritizes the nurturing of startup ecosystems and the support ",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T17:25:17+00:00"
+    "_sort": "2026-09-12T17:25:17+00:00",
+    "smart": {
+     "what_happened": [
+      "India, as BRICS chair, highlighted practical cooperation and plans to launch development initiatives.",
+      "The agenda includes tailored health programs, technology use, and support for startup ecosystems."
+     ],
+     "why_it_matters": "The focus signals India's push to shape a multipolar global order by leveraging BRICS to deliver concrete economic and social benefits, potentially expanding market opportunities for Indian firms and influencing the strategic direction of the bloc.",
+     "what_to_watch": "The first development initiative announced under India's BRICS chairmanship, such as a health program rollout, will indicate how quickly the agenda moves from rhetoric to action.",
+     "headline": "India's BRICS chair emphasizes practical cooperation and development initiatives",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Economic Times",
@@ -1432,7 +1452,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.e4 c6 2.d4 d5, avoid 3.Nc3 (the Classical) and instead play 3...dxe4 4.Nxe4 Nd7, then develop knights before queen; you lost material on move\u202f13 because your queen was over\u2011extended. Reduce queen moves by at least 30% in the first 10 plies.",
+    "analysis": "Focus on early queen\u2011side development: after 1.e4 c6\u202f2.d4 d5\u202f3.Nc3 dxe4\u202f4.Nxe4\u202fNf6\u202f5.Nxf6+ gxf6, avoid 6.Bd3? and instead play 6.Nc3\u2011e5 or 6.c3, then develop the bishop to\u202fBd6, castle quickly, and keep the pawn structure solid. This prevents the rapid attack that led to your resignation.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1537,7 +1557,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Focus on early king safety: stop moving the king past move\u202f12; instead castle by move\u202f8 and keep pawn shield intact.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1635,14 +1655,14 @@
    "upsets": 0,
    "collapses": 1,
    "long_games": 1,
-   "session_summary": "",
+   "session_summary": "Your opening repertoire is a disaster\u2014every time you step into the board you hand the opponent a free win, and the single game you lost to a lower\u2011rated player proves you can\u2019t even defend a simple position. Cut the half\u2011hearted \u201csurprise\u201d lines you\u2019ve been playing and adopt a solid, theory\u2011tested system (e.g., Caro\u2011Kann for Black, London System for White) and study the first 10\u201312 moves until you can play them without looking. Spend the next week drilling those moves, then replay every lost game move\u2011by\u2011move, annotate every mistake, and never repeat a blunder again.",
    "session_date": "2026-09-12",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "t0lgs",
-   "rating": 1981,
+   "rating": 1870,
    "level": "\ud83d\udd34 stretch",
    "themes": "Very Long \u00b7 Endgame \u00b7 Attraction",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
