@@ -477,10 +477,24 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
 
                 # ── A CORPORATE ACTION YAHOO DID NOT ADJUST ────────────────
                 #
-                # NSE caps a session at +/-20% for ordinary equities, so a
-                # single-bar move past 25% is not a price move. It is a split,
-                # a bonus, a demerger or bad data — and where Yahoo has no
-                # split on record, auto_adjust cannot correct it.
+                # A HALVING, NOT A BAND BREACH — the first threshold was wrong.
+                #
+                # I set this at 25% on the reasoning that NSE caps a session at
+                # +/-20%. That is true for ordinary equities and NOT for names
+                # in the F&O segment, which carry a flexible dynamic band. The
+                # 25% rule then truncated real history: ADANIENT on the
+                # Hindenburg day (-26.7%), INDUSINDBK on the derivatives
+                # disclosure (-27.2%), IEX (-29.6%), RECLTD, STLTECH, TRENT —
+                # seven names whose crashes are exactly the price action a
+                # 200-day average should contain.
+                #
+                # A halving in one session is the honest line. No listed Indian
+                # equity trades down 50% in a day; a split, a bonus or a
+                # demerger does precisely that, and Yahoo's worst day on record
+                # for a large cap here is -28%. The trade-off is stated rather
+                # than hidden: TMPV's demerger at -40.1% now passes through
+                # unflagged. Missing one action is cheaper than deleting a real
+                # crash from seven histories.
                 #
                 # Live on 2026-09-13, 2 of 750 names carried one:
                 #   INDIAGLYCO  2026-09-02  -78.8%   not in Yahoo's splits
@@ -507,7 +521,7 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                     if _prev <= 0:
                         continue
                     _rt = float(_cl.iloc[_i]) / _prev
-                    if _rt < 0.75 or _rt > 1.33:
+                    if _rt <= 0.50 or _rt >= 2.00:
                         _cut = _i                     # keep the LAST break
                 if _cut:
                     log.warning("screen: %s has an unadjusted corporate action "
