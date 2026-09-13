@@ -2062,6 +2062,16 @@ def firecrawl_scrape(url: str, formats: Iterable[str] = ("markdown", "links")) -
             "provider": page.provider}
 
 
+# A challenge page is a 200 with prose on it. Left undetected it parses to
+# zero postings and scrape_all publishes "reachable, but no senior-finance
+# roles matched" — a statement about the Dubai job market made from a captcha.
+BOT_WALL_RE = re.compile(
+    r"performing security verification|verify(?:ing)? you are (?:a )?human"
+    r"|checking your browser|enable javascript and cookies"
+    r"|unusual traffic|access denied|just a moment\.\.\.|captcha",
+    re.I)
+
+
 def fetch_firecrawl_html(src: dict) -> list[dict]:
     """Sources that block plain requests. No API key required any more."""
     ep = src["endpoint"]
@@ -2070,6 +2080,13 @@ def fetch_firecrawl_html(src: dict) -> list[dict]:
         listing.get("rawHtml") or "", listing.get("markdown") or "",
         " ".join(listing.get("links") or []),
     ]))
+    # Blocked is not empty. Say which one happened, because the two need
+    # opposite responses: a wall needs a different fetch route, an empty board
+    # needs nothing at all.
+    if BOT_WALL_RE.search(listing.get("markdown") or "") or \
+            BOT_WALL_RE.search(listing.get("rawHtml") or ""):
+        raise SourceBlocked(
+            f"{ep['url']}: bot-verification interstitial, not a job list")
     ids: list[str] = []
     for m in re.finditer(ep["link_re"], blob):
         val = m.group(1)
@@ -2077,7 +2094,12 @@ def fetch_firecrawl_html(src: dict) -> list[dict]:
             ids.append(val)
     ids = ids[:MAX_DETAIL_PER_SOURCE]
     if not ids:
-        return []
+        # The listing came back and carried no posting link at all. That is a
+        # broken pattern or a login wall, never evidence that the employer has
+        # no openings — returning [] here published the second claim.
+        raise SourceError(
+            f"listing fetched ({len(blob)} chars) but no posting link matched "
+            f"{ep['link_re']!r} — page shape changed, or it is behind a login")
 
     out = []
     for ident in ids:
@@ -2112,6 +2134,14 @@ def fetch_firecrawl_html(src: dict) -> list[dict]:
             is_direct_apply=(src["kind"] == "employer"),
             req_id=str(ident),
         ))
+    if not out:
+        # Alshaya: the listing yields 17 real vacancy ids every run, and every
+        # detail URL returns the SPA shell, whose first markdown line is the
+        # "Store Locator" nav link — so the title prefilter rejects all 17 and
+        # the file said "no senior-finance roles matched". It never read a job.
+        raise SourceError(
+            f"{len(ids)} postings linked, but no detail page yielded a usable "
+            f"job title — the detail URL renders client-side")
     return out
 
 

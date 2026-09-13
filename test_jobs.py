@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import sys
 import unittest
+from unittest import mock
 
 import jobs
 
@@ -759,6 +760,68 @@ class TestFailureHandling(unittest.TestCase):
         self.assertTrue(msg.strip(), "SourceError must carry a reason")
         # Names the layer that failed, so a log line points at the right code.
         self.assertIn("crawler", msg.lower())
+
+    # ── "empty" must mean empty ─────────────────────────────────────────
+    #
+    # scrape_all labels every zero-row run "reachable, but no senior-finance
+    # roles matched". Three different failures reached that label on
+    # 2026-09-13, and all three were published on career.askakshay.com as a
+    # claim about the market: Bayt served a security-verification page,
+    # GulfTalent a login wall with no posting links, and Alshaya 17 real
+    # vacancy ids whose detail pages render client-side. None of them read a
+    # job board. Each now fails with its own reason.
+
+    def _fc_src(self):
+        return {"name": "Bayt", "kind": "aggregator", "adapter": "firecrawl_html",
+                "confidence": "low",
+                "endpoint": {"url": "https://example.com/jobs",
+                             "link_re": r"/jobs/([0-9]+)/",
+                             "detail_tpl": "https://example.com/jobs/{id}/"}}
+
+    def test_a_bot_wall_is_reported_as_blocked_not_as_an_empty_board(self):
+        page = {"markdown": "# example.com\n\n## Performing security verification",
+                "rawHtml": "", "links": [], "metadata": {}}
+        with mock.patch.object(jobs, "firecrawl_scrape", return_value=page):
+            with self.assertRaises(jobs.SourceBlocked) as ctx:
+                jobs.fetch_firecrawl_html(self._fc_src())
+        self.assertIn("bot-verification", str(ctx.exception))
+
+    def test_a_listing_with_no_posting_link_fails_rather_than_returning_none(self):
+        page = {"markdown": "Login  Register for free", "rawHtml": "",
+                "links": ["https://example.com/login"], "metadata": {}}
+        with mock.patch.object(jobs, "firecrawl_scrape", return_value=page):
+            with self.assertRaises(jobs.SourceError) as ctx:
+                jobs.fetch_firecrawl_html(self._fc_src())
+        self.assertIn("no posting link matched", str(ctx.exception))
+
+    def test_links_found_but_no_readable_detail_names_that_failure(self):
+        listing = {"markdown": "", "rawHtml": "", "metadata": {},
+                   "links": ["https://example.com/jobs/498418/"]}
+        # The shape Alshaya actually returns: a long page whose first line is a
+        # nav link, and no metadata title to override it.
+        detail = {"markdown": "[Store Locator](https://x/)\n\n" + ("word " * 400),
+                  "rawHtml": "", "links": [], "metadata": {}}
+        calls = [listing, detail]
+        with mock.patch.object(jobs, "firecrawl_scrape",
+                               side_effect=lambda *a, **k: calls.pop(0)):
+            with self.assertRaises(jobs.SourceError) as ctx:
+                jobs.fetch_firecrawl_html(self._fc_src())
+        self.assertIn("no detail page yielded a usable job title",
+                      str(ctx.exception))
+
+    def test_a_real_posting_still_comes_back(self):
+        """The guard must not eat the success path."""
+        listing = {"markdown": "", "rawHtml": "", "metadata": {},
+                   "links": ["https://example.com/jobs/498418/"]}
+        detail = {"markdown": "# FP&A Manager\n\n" + ("word " * 400),
+                  "rawHtml": "", "links": [],
+                  "metadata": {"title": "FP&A Manager"}}
+        calls = [listing, detail]
+        with mock.patch.object(jobs, "firecrawl_scrape",
+                               side_effect=lambda *a, **k: calls.pop(0)):
+            rows = jobs.fetch_firecrawl_html(self._fc_src())
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["title"], "FP&A Manager")
 
     def test_crawler_adapter_needs_no_api_key(self):
         """The point of the migration, asserted directly."""
