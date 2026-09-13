@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T102306",
+ "build_id": "20260913T104630",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "17h old",
+    "age": "18h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-13T01:30:23+00:00",
     "smart": {
      "what_happened": [
-      "Foreign investment limits and a new SEBI price\u2011band rule have pushed international ETF market prices above their net asset values.",
-      "The resulting artificial premiums leave Indian buyers exposed if the price gaps collapse."
+      "Foreign investment limits and a new SEBI price\u2011band rule have pushed international ETF market prices above their intrinsic NAVs.",
+      "The elevated premiums leave buyers exposed if the artificial price gaps collapse."
      ],
-     "why_it_matters": "When ETF market prices exceed their underlying NAVs, investors pay more than the actual value of the assets, increasing the risk of losses if the premium narrows or disappears. The SEBI price\u2011band rule, intended to curb excessive pricing, may amplify volatility, and the foreign investment caps limit alternative avenues for Indian investors, concentrating exposure in these overpriced products.",
-     "what_to_watch": "Monitor the premium percentage of the most traded foreign ETFs on Indian exchanges over the next month for any sharp narrowing that could trigger price corrections.",
-     "headline": "Indian investors overpay for foreign ETFs as premiums rise",
+     "why_it_matters": "The divergence between market prices and NAVs means Indian investors could suffer significant losses if the premiums unwind, highlighting heightened risk in the foreign ETF segment and raising concerns about market efficiency and regulatory impact.",
+     "what_to_watch": "Monitor the premium spread of major foreign ETFs relative to their NAVs as the SEBI price\u2011band rule takes effect.",
+     "headline": "Indian investors overpay for foreign ETFs as limits and SEBI rule lift premiums",
      "read_seconds": 20
     }
    },
@@ -1358,17 +1358,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/beyond-bloc-politics-indias-brics-bet-on-multipolarity/articleshow/134146372.cms",
     "summary": "Under India's BRICS chairmanship, the importance of practical cooperation is underscored with an aim to launch impactful development initiatives. Enhancing citizens' lives through tailored health programs and technology is paramount. The chairmanship also prioritizes the nurturing of startup ecosystems and the support ",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T17:25:17+00:00",
-    "smart": {
-     "what_happened": [
-      "India assumes the BRICS chairmanship and stresses practical cooperation to launch development initiatives.",
-      "The agenda highlights tailored health programs, technology adoption, and support for startup ecosystems."
-     ],
-     "why_it_matters": "India's leadership of the BRICS group signals a push for multipolar collaboration that could shape trade, investment, and technology flows among the emerging economies, potentially influencing global supply chains and development financing.",
-     "what_to_watch": "The agenda and outcomes of the upcoming BRICS summit where India will present its health and startup initiatives.",
-     "headline": "India chairs BRICS emphasizing practical cooperation and development initiatives",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-12T17:25:17+00:00"
    },
    {
     "source": "Economic Times",
@@ -1377,7 +1367,17 @@
     "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
     "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T11:20:04+00:00"
+    "_sort": "2026-09-12T11:20:04+00:00",
+    "smart": {
+     "what_happened": [
+      "The tax authority disallowed Rs 6.42 lakh foreign travel expense claimed as business deduction because it was paid with the taxpayer\u2019s wife\u2019s credit card.",
+      "The ITAT Mumbai, with Judicial Member Challa Nagendra Prasad and Accountant Member G.M. Doss, reversed the disallowance and granted relief to the businessman."
+     ],
+     "why_it_matters": "The ruling clarifies that expenses paid through a spouse's credit card can still be treated as business deductions if the taxpayer can substantiate the connection to the business, influencing how companies document and justify travel costs and potentially affecting future tax audits.",
+     "what_to_watch": "Monitor any new circulars or case law from Indian tax authorities regarding the acceptability of using family members' credit cards for business expense claims.",
+     "headline": "Rs 6.42 lakh travel expense disallowed, ITAT grants relief",
+     "read_seconds": 22
+    }
    },
    {
     "source": "NYT Well",
@@ -1395,17 +1395,7 @@
     "link": "https://www.themarginalian.org/2026/09/10/alan-watts-unspeakable-world/",
     "summary": "What makes life so disorienting is that its greatest revelations and greatest transformations are inarticulable. William James knew this when he listed ineffability as the first of the four features of transcendent experiences. Everything beautiful and meaningful, from the grand elations to the small gladnesses that ma",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T02:44:27+00:00",
-    "smart": {
-     "what_happened": [
-      "The article references Alan Watts discussing how to touch the pulse of life.",
-      "It notes that William James identified ineffability as the first of four features of transcendent experiences."
-     ],
-     "why_it_matters": "Understanding the concept of ineffability highlights the limits of language in describing profound psychological states, which is relevant for scholars and practitioners studying consciousness, spirituality, and the human experience.",
-     "what_to_watch": "Monitor the publication of the complete article for additional context on Watts' perspective.",
-     "headline": "Alan Watts explores ineffability in transcendent experiences",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-11T02:44:27+00:00"
    },
    {
     "source": "Psyche",
@@ -1462,7 +1452,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.e4 c6\u202f2.d4 d5\u202f3.Nc3 dxe4\u202f4.Nxe4 Bf5, avoid 5.Qd2?; instead play 5.Nf3, develop knights, castle quickly, and keep the queen off vulnerable squares. This reduces tactical threats and improves piece coordination.",
+    "analysis": "Focus on early king safety: after 6\u2026Qb6? you let White develop with tempo; instead play 6\u2026c5, keep the queen centralized, and castle before launching pawn storms.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1672,7 +1662,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2017,
+   "rating": 1831,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
