@@ -1,5 +1,5 @@
 {
- "build_id": "20260914T024241",
+ "build_id": "20260914T044832",
  "date": "2026-09-14",
  "date_str": "Monday, September 14 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "9h old",
+    "age": "11h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1327,7 +1327,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-13",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1341,11 +1341,11 @@
     "_sort": "2026-09-13T18:33:51+00:00",
     "smart": {
      "what_happened": [
-      "Three flexi-cap funds together account for more than half of the category's total assets under management.",
-      "A comparison of one\u2011year and five\u2011year returns shows that their size does not necessarily translate into superior performance."
+      "Three flexi-cap funds account for more than half of the category's total assets under management.",
+      "Their one\u2011year and five\u2011year returns are lower than those of smaller flexi-cap peers."
      ],
-     "why_it_matters": "The concentration of assets in a few large flexi-cap funds means that investors' exposure to the sector is heavily weighted toward these schemes, yet the performance data suggests that smaller or less\u2011dominant funds may deliver comparable or better returns over different horizons. This disconnect between size and returns highlights the importance of evaluating fund performance on its own merits rather than assuming that larger AUM guarantees better outcomes.",
-     "what_to_watch": "Monitor the next quarterly performance reports of the three dominant flexi-cap funds to see if their returns converge with or diverge from the broader category averages.",
+     "why_it_matters": "The concentration of assets in a few large funds means that a significant portion of investor capital is exposed to performance that may not match the broader category, influencing portfolio risk, fund manager competition, and the effectiveness of benchmarking for both investors and advisors.",
+     "what_to_watch": "The next monthly performance report comparing the three largest flexi-cap funds' returns to the category average.",
      "headline": "Three flexi-cap funds hold 52% of category AUM",
      "read_seconds": 20
     }
@@ -1357,17 +1357,7 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-china-thaw-engagement-returns-but-strategic-trust-stays-elusive/articleshow/134215451.cms",
     "summary": "Xi Jinping's India visit marked managed competition, not reconciliation. Both nations seek mechanisms to control rivalry and avoid escalation. India emphasizes mutual respect and boundary settlement, while China seeks stability. Diplomatic and economic ties offer cautious optimism for future engagement. Sustained peace",
     "date": "Sep 13, 2026",
-    "_sort": "2026-09-13T18:11:20+00:00",
-    "smart": {
-     "what_happened": [
-      "Xi Jinping's visit to India was described as managed competition rather than reconciliation.",
-      "Both countries said they are seeking mechanisms to control rivalry and avoid escalation."
-     ],
-     "why_it_matters": "The meeting signals a cautious reopening of diplomatic and economic channels between the world's two most populous nations, but the lack of strategic trust means that future cooperation remains fragile and any misstep could quickly revive tensions, affecting regional stability and global supply chains.",
-     "what_to_watch": "Whether the two governments announce a concrete mechanism to manage competition, such as a formal crisis\u2011management protocol.",
-     "headline": "India and China resume engagement amid lingering strategic mistrust",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-13T18:11:20+00:00"
    },
    {
     "source": "Economic Times",
@@ -1451,7 +1441,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9\u2026Nf6, avoid 10\u2026g5? (weakens f6\u2011e5 squares). Instead play \u2026e6, develop bishop to\u202fBd6, then castle\u2014reducing tactical threats and limiting opponent\u2019s attack.",
+    "analysis": "Focus on early king safety: after 8\u2026Qb6, avoid queen\u2011side pawn pushes; develop knights first, castle by move\u202f10 to prevent quick tactics.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1546,7 +1536,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Study and memorize the key Indian\u2011Defense pawn structures; avoid early queen raids\u2014your queen moved 7 times in first 15 moves, costing 2\u202fblunders. Focus on solid piece development instead.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1644,14 +1634,14 @@
    "upsets": 0,
    "collapses": 1,
    "long_games": 1,
-   "session_summary": "",
+   "session_summary": "AKK_010\u2019s play is catastrophically weak\u2014two straight losses out of two games, a 0\u202f% win rate, and a collapse against a lower\u2011rated opponent. Their opening repertoire is a non\u2011starter; they either open without a plan or choose lines that leave them immediately behind in development and pawn structure. Stop wasting time on flashy tactics and drill the fundamentals: master a single solid opening (e.g., 1.e4\u202fc5\u202f\u2192\u202fSicilian Najdorf or 1.d4\u202fd5\u202f\u2192\u202fLondon System), practice precise piece placement, and run daily puzzles focused on basic tactics (forks, pins, forced mates) until you can convert a material edge without blundering.",
    "session_date": "2026-09-12",
    "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "t0lgs",
-   "rating": 1998,
+   "rating": 1877,
    "level": "\ud83d\udd34 stretch",
    "themes": "Very Long \u00b7 Endgame \u00b7 Attraction",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
