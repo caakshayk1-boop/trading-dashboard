@@ -280,13 +280,41 @@ jobs:
       # each produced a full, permanently retained deployment that served
       # nothing new. Roughly 17 deployments a day, of which about 3 matter.
       #
-      # `ignoreCommand` in vercel-news/vercel.json now skips the build unless
-      # the commit touched docs/ or vercel-news/. Its exit code is INVERTED —
-      # 0 skips, non-zero builds — so every unexpected condition must fail
-      # toward building: no repo, no HEAD^, a renamed directory. Get that
-      # backwards and the site stops deploying with nothing to show for it.
-      # test_vercel_ignore.py runs the real command against a temp repo for
-      # exactly those cases.
+      # `ignoreCommand` in vercel-news/vercel.json WAS SUPPOSED TO skip the
+      # build unless the commit touched docs/ or vercel-news/. IT HAS NEVER
+      # SKIPPED ANYTHING. Measured 2026-09-14 from the build log of
+      # dpl_AtFcVMnGkVTPUUpn6wkzd62G1hfh:
+      #
+      #   Removed 243 ignored files defined in .vercelignore
+      #     /.git/config
+      #     /.git/HEAD
+      #   Running "cd "$(git rev-parse --show-toplevel)" && ..."
+      #   fatal: not a git repository (or any parent up to mount point /vercel)
+      #
+      # .vercelignore opens with `*`, so it strips .git BEFORE the gate runs.
+      # Every git call in the command fails, the chain reaches `|| exit 1`, and
+      # Vercel builds. The exit code is INVERTED — 0 skips, non-zero builds —
+      # and the command does fail toward building exactly as intended, so the
+      # site was never at risk. The saving simply never existed: commits
+      # touching neither directory still ship all twelve function bundles.
+      # Confirmed on three of them (claude_bot.py; jobs.py; .github/ alone).
+      #
+      # test_vercel_ignore.py is not wrong — it asserts BUILD when there is no
+      # repo, and that is the branch production takes every single time. It
+      # tests a repo state that cannot occur on Vercel.
+      #
+      # NOT FIXED ON PURPOSE. Restoring .git costs 138 MB per deployment.
+      # Reading the changed files from GitHub's compare API works (verified
+      # against the real endpoint) but is unauthenticated at 60 req/hr on
+      # Vercel's SHARED build IPs, and depends on VERCEL_GIT_PREVIOUS_SHA
+      # semantics that cannot be verified outside production — a wrong base
+      # there skips a docs/ commit and the paper goes stale silently.
+      #
+      # The bill this was meant to control is now controlled at the other end:
+      # .github/workflows/vercel_prune.yml deletes deployments older than two
+      # days, which caps retained Functions Storage at ~2.5 GB no matter how
+      # many builds run. Fixing the gate is now a build-noise optimisation,
+      # not a storage fix, and it is not worth a silent-staleness risk.
       #
       # The two commit types that still deploy both have to. `chore: jobs`
       # writes docs/jobs.json, which is served STATICALLY — allow-listed in
