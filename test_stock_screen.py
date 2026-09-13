@@ -927,9 +927,58 @@ def test_universe_label_is_read_before_the_limit_truncates() -> None:
     i_size = src.index("universe_size = len(uni)")
     i_trim = src.index("uni = uni[:limit]")
     check("universe_size is captured BEFORE the limit truncates", i_size < i_trim)
-    check("the label is computed from universe_size, not len(uni)",
-          'if universe_size > 600' in src)
+    # The label is now computed from core_size — the OFFICIAL list's length,
+    # captured before the liquidity extension is appended and before the limit
+    # truncates. universe_size counts core + extension, so it stopped being a
+    # safe input the moment the universe could be widened: a failed NSE fetch
+    # falling back to the 500 list and then extended to 1000 would satisfy
+    # "universe_size > 600" and publish "Total Market" over a universe that is
+    # nothing of the sort.
+    check("the label is computed from core_size, not len(uni)",
+          'if core_size > 600' in src)
+    i_core = src.index("core_size = len(uni)")
+    i_ext = src.index("uni = uni + ext")
+    check("core_size is captured BEFORE the extension is appended", i_core < i_ext)
+    check("core_size is captured BEFORE the limit truncates", i_core < i_trim)
     check("the payload also carries the raw size", '"universe_size": universe_size' in src)
+    check("the payload separates core from extension",
+          '"universe_core": core_size' in src and '"universe_ext": len(ext)' in src)
+
+
+def test_an_unknown_industry_is_not_a_peer_group() -> None:
+    """250 extension names shared one "—" bucket and valued each other.
+
+    The universe extension comes from NSE's equity list, which has no industry
+    column. Bucketing blanks together cleared MIN_PEERS, published a median for
+    something that is not a sector, and labelled the scope "industry". The
+    percentile read like a finding and meant nothing.
+    """
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    check("blank industries are not bucketed together",
+          'by_ind.setdefault(row.get("industry") or "—", [])' not in src)
+    check("the blank bucket is skipped when grouping",
+          'ind = (row.get("industry") or "").strip()' in src and
+          "        if not ind:\n            continue" in src)
+    check("the peer lookup no longer substitutes a placeholder key",
+          'by_ind.get(row.get("industry") or "—", [])' not in src)
+    # The extension must not borrow Yahoo's taxonomy to fill the gap — it is a
+    # different vocabulary from NSE's and would invent peer groups.
+    check("the extension leaves industry blank rather than mixing taxonomies",
+          '"industry": "", "isin": isin, "tier": "", "ext": True' in src)
+
+
+def test_the_universe_extension_stays_additive_and_labelled() -> None:
+    """A composed universe must never be published under the index's name."""
+    src = pathlib.Path("stock_screen.py").read_text(encoding="utf-8")
+    check("the extension is appended, never substituted", "uni = uni + ext" in src)
+    check("only EQ series is eligible", 'EQUITY_LIST_SERIES = {"EQ"}' in src)
+    check("a liquidity floor is enforced", "med < EXT_MIN_TURNOVER_CR" in src)
+    check("the target is overridable to disable the extension",
+          'os.environ.get("SCREEN_UNIVERSE_TARGET"' in src)
+    check("the label names the extension when one is present",
+          "top-{len(ext)} by turnover" in src)
+    check("a smoke run with a limit skips the extension",
+          "if (allow_fetch and not limit) else []" in src)
 
 
 def test_risk_is_a_level_not_another_arbitrary_score() -> None:
@@ -1873,7 +1922,9 @@ def main() -> int:
                test_the_screener_ui_lives_in_the_source_not_the_artefact,
                test_dividend_yield_is_not_converted_twice,
                test_the_shared_brief_section_is_one_file_and_both_briefs_call_it,
-               test_screen_json_is_allow_listed_in_all_three_places):
+               test_screen_json_is_allow_listed_in_all_three_places,
+               test_an_unknown_industry_is_not_a_peer_group,
+               test_the_universe_extension_stays_additive_and_labelled):
         try:
             fn()
         except Exception as e:                       # noqa: BLE001

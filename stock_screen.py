@@ -82,6 +82,36 @@ UNIVERSE_URL = ("https://nsearchives.nseindia.com/content/indices/"
 # one, and it is a much better outcome than no section at all.
 UNIVERSE_FALLBACK_CSV = "cache/nifty500.csv"
 UNIVERSE_MAX_AGE_DAYS = 14      # NSE rebalances semi-annually; this is generous
+
+# ── UNIVERSE EXTENSION ────────────────────────────────────────────────────────
+# The official Total Market list is 750 names and that is as wide as NSE
+# publishes an index for. Going wider means COMPOSING a universe, which the
+# comment above argues against — so the composition is kept strictly additive
+# and strictly labelled: NSE's 750 remain the core, untouched and still sourced
+# from the official list, and the extension is appended, marked `ext`, and named
+# in the payload. The page must never call 1000 composed names "Nifty Total
+# Market".
+#
+# Ranking is by MEDIAN DAILY TURNOVER over a short window, not market cap:
+# turnover is what decides whether a screen row is actionable at all, it is
+# computable from the price feed already being fetched, and market cap is not
+# known until the expensive fundamentals pass that this selection exists to
+# keep small.
+#
+# Staged deliberately. Set SCREEN_UNIVERSE_TARGET=750 to disable the extension
+# entirely and return to the official list alone.
+UNIVERSE_TARGET = int(os.environ.get("SCREEN_UNIVERSE_TARGET", "1000"))
+EQUITY_LIST_URL = "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv"
+EQUITY_LIST_CSV = "cache/nse_equity_list.csv"
+# Only EQ. BE is the trade-for-trade surveillance segment and BZ is the
+# restricted one — both are where a name lands when the exchange has a problem
+# with it, and neither belongs in a screen that implies you could act on it.
+EQUITY_LIST_SERIES = {"EQ"}
+# Short window: this decides MEMBERSHIP, not any published number, so it wants
+# recent liquidity rather than a long history. The real 4y history is fetched
+# later, once, for the names that survive.
+EXT_RANK_PERIOD = "3mo"
+EXT_MIN_TURNOVER_CR = 1.0   # ₹1 crore median daily turnover, or it is untradeable
 # Which sub-index each name belongs to, for the tier label. Fetched only to
 # annotate — membership never decides whether a symbol is screened.
 TIER_LISTS = [
@@ -292,6 +322,88 @@ def universe(path: str = UNIVERSE_CSV, refresh: bool = False,
             continue
         seen.add(key)
         out.append(r)
+    return out
+
+
+def _fetch_equity_list() -> list[dict] | None:
+    """NSE's full listed-equity CSV as rows, or None. Never raises.
+
+    A different host path from the index CSVs, and its header names carry
+    LEADING SPACES — ' SERIES', ' ISIN NUMBER' — which is stripped here so no
+    caller has to know that.
+    """
+    import urllib.request, io
+    try:
+        req = urllib.request.Request(EQUITY_LIST_URL, headers=NSE_HEADERS)
+        raw = urllib.request.urlopen(req, timeout=45).read().decode("utf-8-sig")
+    except Exception as e:
+        log.warning(f"screen: NSE equity list unavailable — {e}")
+        return None
+    rows = [{(k or "").strip(): (v or "").strip() for k, v in r.items()}
+            for r in csv.DictReader(io.StringIO(raw))]
+    return rows or None
+
+
+def extend_universe(core: list[dict], target: int = UNIVERSE_TARGET) -> list[dict]:
+    """The most liquid listed names outside the index, up to `target` in total.
+
+    Returns the EXTENSION ROWS ONLY — the caller appends them, so the official
+    list stays exactly what NSE published. Degrades to [] on any failure: a
+    750-name screen is a smaller screen, not a broken one, and this must never
+    be the reason the daily build stops.
+    """
+    want = target - len(core)
+    if want <= 0:
+        return []
+    rows = _fetch_equity_list()
+    if not rows:
+        log.warning("screen: extension skipped — equity list unavailable")
+        return []
+
+    have_sym = {r["symbol"] for r in core}
+    have_isin = {r["isin"] for r in core if r.get("isin")}
+    cand = []
+    for r in rows:
+        sym = (r.get("SYMBOL") or "").upper()
+        isin = r.get("ISIN NUMBER") or ""
+        if not sym or sym in have_sym or (isin and isin in have_isin):
+            continue
+        if (r.get("SERIES") or "") not in EQUITY_LIST_SERIES:
+            continue
+        # Same placeholder guard the index list needs.
+        if sym.startswith("DUMMY") or isin.startswith("DU"):
+            continue
+        cand.append({"symbol": sym, "name": r.get("NAME OF COMPANY") or "",
+                     "industry": "", "isin": isin, "tier": "", "ext": True})
+    if not cand:
+        return []
+
+    log.info(f"screen: extension — ranking {len(cand)} candidates on "
+             f"{EXT_RANK_PERIOD} turnover for {want} slots")
+    px = fetch_prices([c["symbol"] for c in cand], period=EXT_RANK_PERIOD)
+
+    ranked = []
+    for c in cand:
+        b = px.get(c["symbol"]) or {}
+        closes, vols = b.get("c") or [], b.get("v") or []
+        n = min(len(closes), len(vols))
+        if n < 20:                     # too little history to judge liquidity
+            continue
+        turn = sorted((closes[i] * vols[i]) / 1e7      # rupees -> crore
+                      for i in range(n) if closes[i] and vols[i])
+        if not turn:
+            continue
+        med = turn[len(turn) // 2]
+        # A median below this is a name you cannot get in or out of at the size
+        # this desk works in, and screening it produces a row nobody can act on.
+        if med < EXT_MIN_TURNOVER_CR:
+            continue
+        ranked.append((med, c))
+
+    ranked.sort(key=lambda x: -x[0])
+    out = [c for _, c in ranked[:want]]
+    log.info(f"screen: extension — {len(out)} added; {len(ranked)} of "
+             f"{len(cand)} cleared Rs{EXT_MIN_TURNOVER_CR}cr median turnover")
     return out
 
 
@@ -1869,9 +1981,22 @@ def _valuation_pass(rows: list[dict]) -> None:
         below = sum(1 for p in pool if v < p)
         return round(100.0 * below / len(pool), 1), len(pool)
 
+    # AN UNKNOWN INDUSTRY IS NOT AN INDUSTRY. The universe extension is built
+    # from NSE's equity list, which carries no industry column, so those rows
+    # arrive with it blank. Bucketing them under one "—" key would hand 250
+    # unrelated companies to each other as "industry peers", clear MIN_PEERS
+    # comfortably, publish a median for a bucket that is not a sector, and
+    # label the scope "industry" — a percentile that reads like a finding and
+    # means nothing. Excluded here instead, so they find no peer pool and fall
+    # through to the universe scope below, which the payload names honestly.
+    # Yahoo's sector/industry is deliberately NOT used to fill the gap: it is a
+    # different taxonomy from NSE's, and mixing the two invents peer groups.
     by_ind: dict[str, list[dict]] = {}
     for row in rows:
-        by_ind.setdefault(row.get("industry") or "—", []).append(row)
+        ind = (row.get("industry") or "").strip()
+        if not ind:
+            continue
+        by_ind.setdefault(ind, []).append(row)
     all_pe = [r["r"].get("pe") for r in rows]
     all_pb = [r["r"].get("pb") for r in rows]
 
@@ -1899,7 +2024,7 @@ def _valuation_pass(rows: list[dict]) -> None:
         ind_medians[ind] = med
 
     for row in rows:
-        peers = by_ind.get(row.get("industry") or "—", [])
+        peers = by_ind.get((row.get("industry") or "").strip(), [])
         pe_pool = [p["r"].get("pe") for p in peers]
         pb_pool = [p["r"].get("pb") for p in peers]
         scope = "industry"
@@ -1992,6 +2117,14 @@ def build(limit: int | None = None, allow_fetch: bool = True,
     uni = universe(refresh=allow_fetch, tiers=allow_fetch)
     if not uni:
         return {"ok": False, "error": "universe unavailable"}
+    # Widen past the index, most-liquid-first, when a target above the official
+    # list is set. Appended AFTER the official list so the core is byte-for-byte
+    # what NSE published, and only on a fetching run — a `limit` smoke run has
+    # no business spending the extension's price budget.
+    core_size = len(uni)
+    ext = extend_universe(uni) if (allow_fetch and not limit) else []
+    if ext:
+        uni = uni + ext
     # Captured BEFORE `limit` truncates, because the universe LABEL is derived
     # from it. Reading it after meant a `limit=120` smoke run reported
     # "Total Market unavailable — fell back to Nifty 500", which was false and
@@ -2290,9 +2423,19 @@ def build(limit: int | None = None, allow_fetch: bool = True,
         "generated_at": now.isoformat(),
         # Named from what was ACTUALLY read, not from what was intended. If NSE
         # refused and the run fell back to the 500 list, the page says so.
-        "universe": ("NSE Nifty Total Market" if universe_size > 600
-                     else "NSE Nifty 500 (fallback — Total Market unavailable)"),
+        # Named from what was ACTUALLY read. A composed universe must never be
+        # published under the index's name: the core is NSE's list, the rest is
+        # a liquidity-ranked extension, and the label says both.
+        "universe": (
+            (f"NSE Nifty Total Market + top-{len(ext)} by turnover"
+             if ext else "NSE Nifty Total Market")
+            if core_size > 600
+            else "NSE Nifty 500 (fallback — Total Market unavailable)"),
         "universe_size": universe_size,
+        # The split, so a reader can tell an index constituent from an extension
+        # pick without inspecting every row.
+        "universe_core": core_size,
+        "universe_ext": len(ext),
         "count": len(out),
         "attempted": len(uni),
         "weights": WEIGHTS,
