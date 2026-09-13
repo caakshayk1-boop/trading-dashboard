@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T100241",
+ "build_id": "20260913T102306",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-13T01:30:23+00:00",
     "smart": {
      "what_happened": [
-      "Foreign investment limits and a new SEBI price\u2011band rule have pushed international ETF market prices above their intrinsic NAVs.",
-      "The inflated prices create exposure for buyers if the artificial premiums were to collapse."
+      "Foreign investment limits and a new SEBI price\u2011band rule have pushed international ETF market prices above their net asset values.",
+      "The resulting artificial premiums leave Indian buyers exposed if the price gaps collapse."
      ],
-     "why_it_matters": "When ETF market prices exceed their net asset values, investors face the risk of capital loss if the premium narrows or disappears. The combination of regulatory limits and the price\u2011band mechanism amplifies this mismatch, potentially affecting portfolio performance and market confidence in cross\u2011border fund products.",
-     "what_to_watch": "Track the premium percentage of major foreign ETFs listed in India for any sharp narrowing following SEBI price\u2011band adjustments.",
-     "headline": "Indian investors pay premiums above NAV for foreign ETFs",
+     "why_it_matters": "When ETF market prices exceed their underlying NAVs, investors pay more than the actual value of the assets, increasing the risk of losses if the premium narrows or disappears. The SEBI price\u2011band rule, intended to curb excessive pricing, may amplify volatility, and the foreign investment caps limit alternative avenues for Indian investors, concentrating exposure in these overpriced products.",
+     "what_to_watch": "Monitor the premium percentage of the most traded foreign ETFs on Indian exchanges over the next month for any sharp narrowing that could trigger price corrections.",
+     "headline": "Indian investors overpay for foreign ETFs as premiums rise",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T17:25:17+00:00",
     "smart": {
      "what_happened": [
-      "Under India's BRICS chairmanship, the importance of practical cooperation is underscored with an aim to launch impactful development initiatives.",
-      "The chairmanship also prioritizes the nurturing of startup ecosystems and the support."
+      "India assumes the BRICS chairmanship and stresses practical cooperation to launch development initiatives.",
+      "The agenda highlights tailored health programs, technology adoption, and support for startup ecosystems."
      ],
-     "why_it_matters": "India's leadership of the BRICS bloc signals a shift toward multipolar collaboration, focusing on tangible projects that could improve health outcomes and technology access for member nations while fostering a supportive environment for startups, which may enhance economic integration and growth across the group.",
-     "what_to_watch": "Details on the startup ecosystem support program announced under India's BRICS chairmanship.",
-     "headline": "India chairs BRICS, emphasizes practical cooperation and development projects",
+     "why_it_matters": "India's leadership of the BRICS group signals a push for multipolar collaboration that could shape trade, investment, and technology flows among the emerging economies, potentially influencing global supply chains and development financing.",
+     "what_to_watch": "The agenda and outcomes of the upcoming BRICS summit where India will present its health and startup initiatives.",
+     "headline": "India chairs BRICS emphasizing practical cooperation and development initiatives",
      "read_seconds": 26
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
     "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T11:20:04+00:00",
-    "smart": {
-     "what_happened": [
-      "The tax authority disallowed Rs 6.42\u202flakh of foreign travel expenditure claimed as business cost because it was paid with the taxpayer\u2019s wife\u2019s credit card.",
-      "The ITAT Mumbai, with Judicial Member Challa Nagendra Prasad and Accountant Member G.M. Doss, overturned the disallowance and granted relief to the taxpayer."
-     ],
-     "why_it_matters": "The decision clarifies that expenses paid through a spouse\u2019s credit card can still be treated as business deductions if the underlying purpose is business-related, setting a precedent for how tax authorities may assess the legitimacy of such expenditures and influencing future tax planning for entrepreneurs.",
-     "what_to_watch": "Watch for subsequent ITAT rulings on expense disallowances involving family members' payment methods to see if this precedent is applied broadly.",
-     "headline": "ITAT Mumbai relieves businessman after Rs 6.42\u202flakh travel expense disallowed",
-     "read_seconds": 22
-    }
+    "_sort": "2026-09-12T11:20:04+00:00"
    },
    {
     "source": "NYT Well",
@@ -1405,7 +1395,17 @@
     "link": "https://www.themarginalian.org/2026/09/10/alan-watts-unspeakable-world/",
     "summary": "What makes life so disorienting is that its greatest revelations and greatest transformations are inarticulable. William James knew this when he listed ineffability as the first of the four features of transcendent experiences. Everything beautiful and meaningful, from the grand elations to the small gladnesses that ma",
     "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T02:44:27+00:00"
+    "_sort": "2026-09-11T02:44:27+00:00",
+    "smart": {
+     "what_happened": [
+      "The article references Alan Watts discussing how to touch the pulse of life.",
+      "It notes that William James identified ineffability as the first of four features of transcendent experiences."
+     ],
+     "why_it_matters": "Understanding the concept of ineffability highlights the limits of language in describing profound psychological states, which is relevant for scholars and practitioners studying consciousness, spirituality, and the human experience.",
+     "what_to_watch": "Monitor the publication of the complete article for additional context on Watts' perspective.",
+     "headline": "Alan Watts explores ineffability in transcendent experiences",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Psyche",
@@ -1462,7 +1462,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 c6 2.d4 d5, avoid 3.Nc3\u202fdxe4 4.Nxe4\u202fNf6\u202f5.Nxf6+\u202fgxf6; instead play 3.Nc3\u202fdxe4\u202f5.Nxe4\u202fBf5, preserving the pawn\u2011center and preventing a weakened king side.",
+    "analysis": "Focus on early queen development: after 1.e4 c6\u202f2.d4 d5\u202f3.Nc3 dxe4\u202f4.Nxe4 Bf5, avoid 5.Qd2?; instead play 5.Nf3, develop knights, castle quickly, and keep the queen off vulnerable squares. This reduces tactical threats and improves piece coordination.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1567,7 +1567,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: avoid moving the g\u2011pawn before castling; keep pieces coordinated, reducing check\u2011mate threats by at least 30\u202f% in similar positions.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1672,7 +1672,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1891,
+   "rating": 2017,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
