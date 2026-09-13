@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-13T20:51:54",
+ "generated_at": "2026-09-13T23:56:44",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -794,6 +794,24 @@
   }
  ],
  "recent_listed": [
+  {
+   "symbol": "DEEPA",
+   "company": "Deepa Jewellers Limited",
+   "price_band": "Rs.168 to Rs.177",
+   "close_date": "2026-09-03",
+   "listing_date": "2026-09-08",
+   "days_since_close": 11,
+   "measured": true,
+   "first_close": 194.37,
+   "last_close": 185.86,
+   "since_listing_pct": -4.4,
+   "from_high_pct": -16.3,
+   "high": 222.0,
+   "low": 185.0,
+   "months_listed": null,
+   "sessions": 4,
+   "measured_by": "yahoo"
+  },
   {
    "symbol": "PERNIASPOP",
    "company": "Purple Style Labs Limited",
@@ -3579,23 +3597,6 @@
    "measured_by": "yahoo"
   },
   {
-   "symbol": "DEEPA",
-   "company": "Deepa Jewellers Limited",
-   "price_band": "Rs.168 to Rs.177",
-   "close_date": "2026-09-03",
-   "listing_date": "2026-09-08",
-   "days_since_close": 11,
-   "measured": false,
-   "first_close": null,
-   "last_close": null,
-   "since_listing_pct": null,
-   "from_high_pct": null,
-   "high": null,
-   "low": null,
-   "months_listed": null,
-   "sessions": null
-  },
-  {
    "symbol": "LEAP",
    "company": "Leap India Limited",
    "price_band": "Rs.151 to Rs.159",
@@ -3704,7 +3705,7 @@
   "upcoming": 4,
   "awaiting": 5,
   "listed_12m": 163,
-  "listed_measured": 156,
+  "listed_measured": 157,
   "listed_via_screen": 24,
   "apply": 0,
   "avoid": 1
