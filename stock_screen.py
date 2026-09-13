@@ -551,10 +551,27 @@ def technicals(px: dict, bench: dict | None) -> dict:
         t[key] = pct_change(c, bars) if n >= need else None
     t["r3y_cagr"] = cagr(c[-751] if n > 750 else None, last, 3.0) if n > 750 else None
 
-    # 52-week structure.
+    # ── 52-WEEK STRUCTURE, FROM HIGHS AND LOWS ──────────────────────────────
+    #
+    # This read max/min of the CLOSE series and published it as the 52-week
+    # range. It is the highest CLOSE, which is a different number and always a
+    # smaller one. Measured against Yahoo's own high series on the day this was
+    # found:
+    #
+    #     FINCABLES    max close 1424.00   true 52w high 1498.00   -5.2%
+    #     GMMPFAUDLR   max close 1319.20   true 52w high 1352.00   -2.5%
+    #     INDIAGLYCO   max close 1203.30   true 52w high 1219.00   -1.3%
+    #
+    # It is not only a display fault. `brk52w` is derived from it and feeds
+    # conviction.py, which scores it 1.0 and writes the words "at a 52-week
+    # high" — so FINCABLES, sitting 4.9% BELOW its real high, was labelled as
+    # being at it, and scored as a full breakout for closing at a new CLOSING
+    # high. The lows are wrong the same way, in the flattering direction: the
+    # published low is above the real one.
     if n >= MIN_BARS["high52"]:
-        w = c[-250:]
-        hi, lo = max(w), min(w)
+        wh = h[-250:] if len(h) >= len(c[-250:]) else c[-250:]
+        wl = l[-250:] if len(l) >= len(c[-250:]) else c[-250:]
+        hi, lo = max(wh), min(wl)
         t["high52"], t["low52"] = hi, lo
         t["from_high52"] = (last / hi - 1.0) if hi else None
         t["from_low52"] = (last / lo - 1.0) if lo else None
@@ -1469,6 +1486,11 @@ try:                       # signals/indicators.py owns this number
 except Exception:
     ATR_STOP_MULT_FOR_SCREEN = 1.41
 
+# Mirrors _tight_sl's own bounds. A screen row is published as a tradeable
+# plan on 750 names, so it is held to the same limits as an engine signal.
+SCREEN_SL_MAX_PCT = 0.06
+SCREEN_SL_MIN_PCT = 0.015
+
 
 def _ladder_for(t: dict, r: dict, px: dict) -> dict | None:
     """Target ladder for one screen row, or None when the inputs cannot support
@@ -1479,7 +1501,26 @@ def _ladder_for(t: dict, r: dict, px: dict) -> dict | None:
     if not price or not atr or atr <= 0:
         return None
 
-    stop = price - ATR_STOP_MULT_FOR_SCREEN * atr
+    # ── AND THE STOP IS CAPPED, WHICH IT WAS NOT ────────────────────────────
+    #
+    # This was a raw `price - mult * ATR` with no percentage bound, while the
+    # house helper _tight_sl has capped every engine at 6% since it was
+    # written. On a name that has just collapsed, ATR is enormous and the
+    # result is not a swing stop: INDIAGLYCO published a plan risking 36.35%
+    # of entry, HEG 28.2%, and 62 of 750 rows were outside the cap.
+    #
+    # The R-multiple then launders it. With risk at 112.82 a target of ₹583
+    # against a ₹310 entry reads "2.42R" — a disciplined-looking number for an
+    # 88% move. A ratio is only as honest as its denominator.
+    #
+    # Bounded here rather than by calling _tight_sl, which takes a pandas
+    # low series and would need the frame this function does not hold. The
+    # constants are the house ones and are named so they cannot drift quietly.
+    stop_raw = price - ATR_STOP_MULT_FOR_SCREEN * atr
+    # max(), not min(): for a long the WIDER stop is the LOWER number, so
+    # capping the risk means refusing to go below price x (1 - max_pct).
+    stop = max(stop_raw, price * (1 - SCREEN_SL_MAX_PCT))
+    stop = min(stop, price * (1 - SCREEN_SL_MIN_PCT))
 
     # Anchors the reader already knows about, so a swing high sitting on the
     # 52-week high reads as one strong level rather than two weak ones.

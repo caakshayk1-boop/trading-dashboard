@@ -58,6 +58,16 @@ REACH_SAMPLE_N = 120
 # those constants live; they are mirrored here only as fallbacks.
 R1_FLOOR, R2_FLOOR, R3_FLOOR = 1.6, 2.5, 3.3
 MIN_GAP_ATR = 0.5          # two targets closer than this are one target twice
+# ── AND THE SAME RULE IN R, BECAUSE THE READER ENFORCES IT IN R ─────────────
+# The site's src/api/_levels.js blanks any pair closer than 0.5R, and
+# scanner.magic_levels was brought into line with it. This file spaced in ATR
+# alone — and with a 1.41xATR stop, 0.5 ATR is only 0.355R, so every pair
+# between 0.355R and 0.5R passed here and was then discarded or shown as two
+# exits that are not two exits. GMMPFAUDLR published T1 2.40R and T2 2.84R:
+# 0.44R apart, produced by this file, rendered in full on the company card
+# because that card reads the ladder directly rather than through the blanker.
+# One rule, two units, and the looser unit was winning.
+MIN_GAP_R = 0.5
 SWING_WINDOW = 3           # bars either side that a swing high must exceed
 CLUSTER_ATR = 0.6          # highs within this many ATR are the same level
 NEAR_LEVEL_ATR = 0.35      # a target may snap to a level this close
@@ -186,7 +196,7 @@ def build_ladder(price: float, stop: float, atr: float, highs=None,
 
     for idx, floor_r in enumerate((R1_FLOOR, R2_FLOOR, R3_FLOOR), start=1):
         floor_px = p + floor_r * risk
-        gap = MIN_GAP_ATR * a
+        gap = max(MIN_GAP_ATR * a, MIN_GAP_R * risk)
         # The floor is a FLOOR. An earlier draft allowed a level 10% under it,
         # and on the first symbol tested that put T1 at 0.88R — below the 1.6R
         # mandate, which is precisely the defect the house ladder was written
@@ -209,7 +219,7 @@ def build_ladder(price: float, stop: float, atr: float, highs=None,
 
         if used and px - used[-1] < gap:
             px = used[-1] + gap
-            basis = f"spaced {MIN_GAP_ATR}xATR off T{idx - 1}"
+            basis = f"spaced clear of T{idx - 1}"
         px = round(px, 2)
         used.append(px)
         r = (px - p) / risk
