@@ -215,7 +215,29 @@ try {
   const planKey = (await p.locator('#qnav a[data-jump="b-plan"] .kb').innerText()).trim();
   ok("the trade plan chip advertises a key", /^\d$/.test(planKey), planKey);
   await p.keyboard.press(planKey);
-  await p.waitForTimeout(1000);
+  /* WAIT FOR THE SCROLL TO STOP, NOT FOR A FIXED BEAT.
+   *
+   * This waited 1000ms. The jump is a SMOOTH scroll, so its duration grows
+   * with the distance travelled — and the Business section pushed the trade
+   * plan to ~8,200px down the brief. A second is no longer enough: measured
+   * against production the scroll is at 569px after 1s and only reaches its
+   * resting 177px at ~4s, so the assertion was reading a scroll still in
+   * flight and reporting a working jump as a broken sticky stack. That is
+   * what failed this build ~90 times in a day.
+   *
+   * A bigger fixed number would rot the same way the next time a section is
+   * added. Wait for the thing itself: let the scroll start, then poll until
+   * the section's top stops moving. */
+  await p.waitForTimeout(300);                 // let the smooth scroll begin
+  await p.evaluate(() => { window.__jt = null; });
+  await p.waitForFunction(() => {
+    const e = document.getElementById("b-plan");
+    if (!e) return false;
+    const t = Math.round(e.getBoundingClientRect().top);
+    const settled = window.__jt === t;
+    window.__jt = t;
+    return settled;
+  }, null, { timeout: 15000, polling: 200 });
   const planTop = await p.locator("#b-plan").evaluate(e => Math.round(e.getBoundingClientRect().top));
   ok("a section jump clears the sticky stack", planTop > 90 && planTop < 240, planTop);
 
