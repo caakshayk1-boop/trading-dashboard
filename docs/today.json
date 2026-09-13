@@ -1,5 +1,5 @@
 {
- "build_id": "20260914T022011",
+ "build_id": "20260914T024241",
  "date": "2026-09-14",
  "date_str": "Monday, September 14 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "8h old",
+    "age": "9h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -941,7 +941,7 @@
   },
   "daughter": {
    "months": 8,
-   "days": 262,
+   "days": 263,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -949,103 +949,103 @@
   "productivity": "Shutdown ritual: write tomorrow's top 3, close all tabs. Stop working.",
   "father": [
    {
-    "title": "Build then let her destroy",
-    "do": "Stack three blocks, let her knock them down, rebuild. Repeat until she loses interest.",
-    "why": "Cause and effect is the entire lesson. Knocking down precedes building by months \u2014 do not rush to the constructive half."
+    "title": "Read her a real book",
+    "do": "Read something you are reading, aloud, for five minutes. Content is irrelevant.",
+    "why": "Prosody, turn-taking and attention are carried by adult speech regardless of vocabulary. It also means reading time survives on days when the board pack is due."
    },
    {
-    "title": "Do bedtime alone once this week",
-    "do": "Handle the entire routine solo \u2014 no handover, no rescue.",
-    "why": "Solo caregiving builds a distinct relationship rather than an assisted one. It also gives her mother an uninterrupted evening, which is not a small thing at seven months."
+    "title": "Let her see you fail",
+    "do": "When you drop or fumble something in front of her, react calmly and try again visibly.",
+    "why": "Emotional regulation is learned by observation long before instruction. Your reaction to small frustrations is a template she is already recording."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Pratikramana",
-    "translation": "Ritual review and turning back",
-    "teaching": "A periodic practice of reviewing one's conduct, acknowledging where one fell short, and resolving to correct it. Structurally, an audit.",
-    "apply": "You already run a monthly close on the business. Run a fifteen-minute one on yourself: what did I get wrong, what am I changing, what is the date."
+    "term": "Trishna",
+    "translation": "Craving, thirst",
+    "teaching": "The endless wanting that survives every acquisition. Jain and Buddhist thought agree closely here \u2014 the object changes, the wanting does not.",
+    "apply": "Notice the next thing you tell yourself you will be satisfied after getting. Write it down. Check in six months whether the satisfaction arrived."
    },
    {
     "tradition": "Buddhism",
-    "term": "Right Effort",
-    "translation": "Applied in the correct direction",
-    "teaching": "Effort is one of the eight, but so is rightness of effort. Energy in the wrong direction is not neutral; it entrenches the error.",
-    "apply": "Before adding hours to a problem, spend ten minutes asking whether the problem is the right one. Most overwork is misdirection, not insufficiency."
+    "term": "The Two Truths",
+    "translation": "Conventional and ultimate",
+    "teaching": "Something can be true conventionally and empty ultimately \u2014 a table is a table for practical purposes and a collection of parts on analysis. Both are needed.",
+    "apply": "Hold the forecast as both real enough to act on and provisional enough to abandon. Treating a model as ultimately true is how people ride a position down."
    }
   ],
   "spanish": [
    {
-    "word": "vale la pena",
-    "meaning": "it is worth it",
-    "es": "Vale la pena esperar.",
-    "en": "It is worth waiting for.",
-    "tag": "Idiom"
+    "word": "sin embargo",
+    "meaning": "however",
+    "es": "Sin embargo, el costo subi\u00f3.",
+    "en": "However, the cost went up.",
+    "tag": "Business"
    },
    {
-    "word": "por lo tanto",
-    "meaning": "therefore",
-    "es": "Por lo tanto, recomiendo esperar.",
-    "en": "Therefore, I recommend waiting.",
+    "word": "tomar una decisi\u00f3n",
+    "meaning": "to make a decision",
+    "es": "Tenemos que tomar una decisi\u00f3n hoy.",
+    "en": "We have to make a decision today.",
     "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Concede",
-    "say": "kuhn-SEED",
-    "meaning": "To admit a point is valid.",
-    "example": "I concede the timing assumption was optimistic.",
-    "note": "Conceding one point early buys credibility for the ten you defend."
+    "word": "Onerous",
+    "say": "OH-nuhr-uhs",
+    "meaning": "Burdensome; costly to fulfil.",
+    "example": "The lease became onerous once footfall dropped.",
+    "note": "A technical term under IAS 37 \u2014 onerous contracts require provision."
    },
    {
-    "word": "Ostensibly",
-    "say": "os-TEN-si-blee",
-    "meaning": "Apparently, but perhaps not actually.",
-    "example": "The cost was ostensibly one-off.",
-    "note": "Signals scepticism without accusation. Powerful in a review meeting."
+    "word": "Contingent",
+    "say": "kuhn-TIN-juhnt",
+    "meaning": "Dependent on something else happening.",
+    "example": "The bonus is contingent on hitting the cash target.",
+    "note": "Also technical \u2014 contingent liabilities are disclosed, not recognised."
    }
   ],
   "speaking": {
-   "title": "Land the number",
-   "drill": "Say five figures out loud with a small pause before each one: 'margin fell \u2026 180 basis points'.",
-   "why": "The pause makes the listener wait for the number, which makes them remember it."
+   "title": "Lose the apology",
+   "drill": "Speak for two minutes without 'sorry', 'just', or 'I might be wrong but'.",
+   "why": "Hedging language before a fact invites challenge to the fact. Reserve qualifiers for genuine uncertainty."
   },
   "interview_tech": [
    {
-    "q": "How do you close the books in five days instead of fifteen?",
-    "a": "Move work out of the close. Accruals estimated from a model rather than waiting for invoices; reconciliations performed continuously rather than at month end; intercompany agreed on a cut-off calendar with a hard deadline and a default position if unresolved; fixed asset and depreciation runs automated; and reporting built on the ledger rather than rebuilt in Excel. The cultural half matters more than the technical half \u2014 a fast close requires accepting a materiality threshold below which you do not adjust.",
-    "who": "Your own 40% reduction \u00b7 Unilever"
+    "q": "Explain contribution margin versus gross margin and when each misleads.",
+    "a": "Gross margin is revenue less cost of goods \u2014 it answers whether you bought and priced well. Contribution margin deducts all variable costs, including logistics, payment fees, markdown and returns \u2014 it answers whether the sale was worth making. Gross margin misleads for high-return or bulky goods; contribution misleads when 'variable' costs are actually committed in the short run, which makes closure decisions look better on paper than in cash. Use gross margin for buying decisions and contribution for range and channel decisions.",
+    "who": "Amazon \u00b7 Tesco \u00b7 Landmark Group"
    },
    {
-    "q": "A store does AED 12M revenue at 38% gross margin. Rent is AED 1.8M, staff AED 2.1M, other fixed AED 900K. Is it worth keeping?",
-    "a": "Gross profit = 12 \u00d7 0.38 = AED 4.56M. Fixed costs = 1.8 + 2.1 + 0.9 = AED 4.8M. Store contribution = \u2212AED 240K. It loses money \u2014 but do not close it on that number alone. Ask three things: is the rent a committed lease you pay whether or not you trade; what does the store contribute to online fulfilment and brand presence in that catchment; and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is often cheaper to run than to close.",
-    "who": "Landmark Group \u00b7 Alshaya \u00b7 Inditex"
+    "q": "What is the cash conversion cycle for a fashion retailer, and how would you cut it 15 days?",
+    "a": "CCC = DIO + DSO \u2212 DPO. Fashion retail is inventory-heavy and near-zero DSO, so it is mostly DIO minus DPO. To cut 15 days: shorten the buying calendar and increase in-season replenishment so you commit later; push slow lines to markdown earlier rather than holding for full price; renegotiate supplier terms from 60 to 90 days in exchange for volume commitment; and consolidate SKUs \u2014 every incremental SKU carries safety stock. Quantify it: on AED 400M COGS, 15 days is roughly AED 16M of cash released.",
+    "who": "Zara \u00b7 Uniqlo \u00b7 Landmark Group"
    }
   ],
   "interview_soft": [
    {
-    "q": "How do you decide what to delegate?",
-    "a": "Give a rule. Something like: delegate anything where the cost of a mistake is recoverable and the learning value is high; keep anything where your specific judgement is the reason the answer is right, and anything you would have to redo. The failure mode interviewers probe is the controller who keeps the technical work because it is comfortable and delegates only the admin \u2014 which caps the team's growth and yours.",
-    "who": "GE \u00b7 Unilever \u00b7 Group CFOs"
+    "q": "How do you give feedback to someone more senior than you?",
+    "a": "Ask permission, be specific, and stay on observable behaviour and its effect. 'Can I give you a reaction to how the numbers landed in that meeting? When the forecast changed without the bridge, the room stopped trusting the rest of the pack.' No adjectives about them, one concrete instance, and a suggestion. Then stop talking. Most people either avoid this entirely or overcorrect into confrontation.",
+    "who": "Any senior finance role"
    },
    {
-    "q": "Tell me about a time you disagreed with your CEO.",
-    "a": "They are testing whether you have spine and judgement, not whether you win. Use STAR and pick a disagreement where you were partly wrong \u2014 it reads as honest. Cover: what the disagreement was, what evidence you brought, how you escalated it appropriately, what the decision was, and crucially what you did after the decision went against you. The signal they want: you argue hard privately and commit fully publicly.",
-    "who": "Majid Al Futtaim \u00b7 Unilever \u00b7 Amazon"
+    "q": "How do you influence people who do not report to you?",
+    "a": "Retail finance is almost entirely this \u2014 Buying, Operations and Retail Heads do not report to you. The answer is currency: work out what each function is measured on and frame your ask in their terms. A buyer cares about sell-through and margin, not about your working capital target \u2014 so bring them the SKU-level analysis showing which lines tie up cash without turning. Give people the analysis they cannot build themselves, and influence follows. Name a specific instance and the outcome.",
+    "who": "Landmark Group \u00b7 Alshaya \u00b7 Carrefour"
    }
   ],
   "cfo_field": [
    {
-    "q": "The controller who never leaves the close never becomes CFO.",
-    "a": "The job you are promoted out of is 'the person who produces the numbers'. The job you are promoted into is 'the person who decides what to do about them'. If your calendar is 70% close, reconciliation and audit prep, you are demonstrating that you are excellent at the job you already have. Push the close down: a well-run retail group closes in 5 working days, and every day you shave buys back roughly 12 days a year of capacity to spend on decisions instead of production.",
-    "who": "The single most common plateau"
+    "q": "Learn the lease standard properly. In the Gulf it is not a footnote.",
+    "a": "IFRS 16 put every store lease on the balance sheet as a right-of-use asset and a lease liability. Two consequences a CFO must be able to say out loud: EBITDA is now flattered, because rent that used to sit in operating costs is split into depreciation and interest; and leverage ratios move even though nothing about the business changed. If your covenant is set on a pre-IFRS-16 basis, know it before the bank asks.",
+    "who": "Every leased-store business"
    },
    {
-    "q": "The Gulf pays for scarcity, not for years.",
-    "a": "Salary in the region tracks the intersection of skills, not the length of the CV. CA plus genuine FP&A plus retail plus a system implementation is a much rarer combination than any one of them is deep. If you are negotiating, the leverage is in naming the intersection, not in listing the years. And check the structure: basic versus allowances changes gratuity, which is calculated on basic salary alone.",
-    "who": "Compensation structure"
+    "q": "Automation without a control map is how a finance function loses its audit trail.",
+    "a": "Before automating a process, write down: who can initiate, who approves, what the system does without a human, and where the exception report goes. Automation does not remove controls; it moves them from people to configuration, and configuration drifts silently. The question 'what breaks if this runs wrong for a month before anyone notices' is the one that separates a finance automation from a finance incident.",
+    "who": "Every CFO agenda, 2024 onward"
    }
   ],
   "review": {
@@ -1062,8 +1062,33 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-09-12T18:43:21.958041+00:00",
+   "generated_at": "2026-09-13T18:43:50.783703+00:00",
    "episodes": [
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "\u201cKamal Haasan and Mani Ratnam Were Worth My Time\u201d Manu Josephcast for Short Clip 05",
+     "guest": "",
+     "published": "2026-09-13",
+     "link": "https://www.youtube.com/watch?v=tpX-eVI6bpo",
+     "takeaways": [
+      "\u201cKamal Haasan and Mani Ratnam Were Worth My Time\u201d Manu Joseph #ANIPodcast #SmitaPrakash #ManuJoseph #Vijay #KamalHaasan #ManiRatnam #Rajinikanth Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "UPSC CSAT 2027 Preparation Begins! | Coding-Decoding | Reasoning | Drishti IAS",
+     "guest": "",
+     "published": "2026-09-13",
+     "link": "https://www.youtube.com/watch?v=7VtDgrULhn8",
+     "takeaways": [
+      "Welcome to the CSAT Target Prelims 2027 Series by Drishti IAS.",
+      "In recent years, CSAT has emerged as one of the biggest challenges for UPSC aspirants, making early, systematic, and consistent preparation more important than ever."
+     ]
+    },
     {
      "show": "Figuring Out",
      "author": "Raj Shamani",
@@ -1159,7 +1184,7 @@
      "show": "The Deshbhakt",
      "author": "The Deshbhakt",
      "category": "Society",
-     "title": "Can Modi Trust Xi Jinping? | Another Relationship Reset Or China Playing BRICS Game | Akash Banerjee",
+     "title": "Can Xi Jinping Be Trusted? | Another \u2018Reset\u2019 With India Or China Playing A Darker Game? | Akash B",
      "guest": "",
      "published": "2026-09-12",
      "link": "https://www.youtube.com/watch?v=SydNlNJeS10",
@@ -1179,32 +1204,6 @@
      "takeaways": [
       "Today, Earth is already 1.47\u00b0C hotter than pre-industrial times, and UNEP's 2026 report admits overshoot is unavoidable.",
       "Peak warming could hit 1.8\u00b0C even in the best case."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "Promo | EP-449 with author Manu Joseph premieres today at 5 PM IST",
-     "guest": "",
-     "published": "2026-09-12",
-     "link": "https://www.youtube.com/watch?v=2ivH-b4qdCg",
-     "takeaways": [
-      "Promo | EP-449 with author Manu Joseph premieres today at 5 PM IST \u201cWhen I want to develop some fondness for Gurgaon, I go to Noida.\u201d \u201cIf the government wants us to stay in India, it should make our cities liveable.\u201d \u201cGen Z is actually screwed by equality.\u201d \u201cIf there are 200 million highly qualified young people, how will you find jobs for all of them?\u201d \u201cTamil Nadu CM Vijay was my classmate in the third standard.",
-      "I thought he looked rich.\u201d #ANIPodcast #SmitaPrakash #ManuJoseph #Gurgaon #Noida #GenZ #Jobs #Vijay Tune in here: linktr.ee/podcastwithsmitaprakash"
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "Money Bill | Complete Concept, Articles & Key Provisions | UPSC Polity | Drishti IAS",
-     "guest": "",
-     "published": "2026-09-12",
-     "link": "https://www.youtube.com/watch?v=_QueVmqY1f8",
-     "takeaways": [
-      "Ritesh Upadhyay provides a comprehensive explanation of Money Bill, covering all the important dimensions that UPSC aspirants need to understand for the examination.",
-      "The session covers the key constitutional provisions related to Money Bills, including Article 110, the role of the Lok Sabha and Rajya Sabha, the Speaker\u2019s role, the procedure for passing a Money Bill, and other important concepts and provisions."
      ]
     },
     {
@@ -1250,7 +1249,7 @@
      "show": "Labour Law Advisor",
      "author": "Labour Law Advisor",
      "category": "Money",
-     "title": "RBI vs Government ! Who Controls your Money?",
+     "title": "Who controls your EMI",
      "guest": "",
      "published": "2026-09-09",
      "link": "https://www.youtube.com/watch?v=28EBqzUPTv8",
@@ -1327,11 +1326,30 @@
    ],
    "shows": 20,
    "source": "each channel's public Atom feed",
-   "built_on": "2026-09-12",
-   "age_days": 1.0,
+   "built_on": "2026-09-13",
+   "age_days": 0.0,
    "is_fallback": false
   },
   "smart_reads": [
+   {
+    "source": "Livemint",
+    "cat": "money",
+    "title": "3 flexi-cap funds hold 52% of the category's AUM: Are the biggest schemes also leading in performance?",
+    "link": "https://www.livemint.com/money/personal-finance/3-flexi-cap-funds-hold-52-per-cent-of-the-categorys-aum-are-the-biggest-schemes-also-leading-in-performance-11789322092496.html",
+    "summary": "Three flexi-cap funds account for more than half of the category's total AUM. But does their dominance in assets also translate into stronger returns? A comparison of one-year and five-year performance reveals a different picture for investors.",
+    "date": "Sep 13, 2026",
+    "_sort": "2026-09-13T18:33:51+00:00",
+    "smart": {
+     "what_happened": [
+      "Three flexi-cap funds together account for more than half of the category's total assets under management.",
+      "A comparison of one\u2011year and five\u2011year returns shows that their size does not necessarily translate into superior performance."
+     ],
+     "why_it_matters": "The concentration of assets in a few large flexi-cap funds means that investors' exposure to the sector is heavily weighted toward these schemes, yet the performance data suggests that smaller or less\u2011dominant funds may deliver comparable or better returns over different horizons. This disconnect between size and returns highlights the importance of evaluating fund performance on its own merits rather than assuming that larger AUM guarantees better outcomes.",
+     "what_to_watch": "Monitor the next quarterly performance reports of the three dominant flexi-cap funds to see if their returns converge with or diverge from the broader category averages.",
+     "headline": "Three flexi-cap funds hold 52% of category AUM",
+     "read_seconds": 20
+    }
+   },
    {
     "source": "ET Opinion",
     "cat": "money",
@@ -1339,16 +1357,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/india-china-thaw-engagement-returns-but-strategic-trust-stays-elusive/articleshow/134215451.cms",
     "summary": "Xi Jinping's India visit marked managed competition, not reconciliation. Both nations seek mechanisms to control rivalry and avoid escalation. India emphasizes mutual respect and boundary settlement, while China seeks stability. Diplomatic and economic ties offer cautious optimism for future engagement. Sustained peace",
     "date": "Sep 13, 2026",
-    "_sort": "2026-09-13T18:11:20+00:00"
-   },
-   {
-    "source": "Livemint",
-    "cat": "money",
-    "title": "Bond yields remain high: How much can you earn over a 10-year investment period \u2014 and what should you do now",
-    "link": "https://www.livemint.com/money/personal-finance/bond-yields-remain-high-how-much-can-you-earn-over-a-10-year-investment-period-and-what-should-you-do-now-11789317712465.html",
-    "summary": "Debt returns have historically stayed relatively steady over the long term, but the current high-yield environment raises questions for investors. With interest rates on pause and inflation shaping return expectations, here\u2019s what investors need to know before assessing debt allocation.",
-    "date": "Sep 13, 2026",
-    "_sort": "2026-09-13T17:57:04+00:00"
+    "_sort": "2026-09-13T18:11:20+00:00",
+    "smart": {
+     "what_happened": [
+      "Xi Jinping's visit to India was described as managed competition rather than reconciliation.",
+      "Both countries said they are seeking mechanisms to control rivalry and avoid escalation."
+     ],
+     "why_it_matters": "The meeting signals a cautious reopening of diplomatic and economic channels between the world's two most populous nations, but the lack of strategic trust means that future cooperation remains fragile and any misstep could quickly revive tensions, affecting regional stability and global supply chains.",
+     "what_to_watch": "Whether the two governments announce a concrete mechanism to manage competition, such as a formal crisis\u2011management protocol.",
+     "headline": "India and China resume engagement amid lingering strategic mistrust",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Economic Times",
@@ -1432,7 +1451,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on the early queen\u2011side pawn structure: after 1.e4 c6\u202f2.d4 d5\u202f3.Nc3 dxe4\u202f4.Nxe4 Bf5, avoid the premature 5\u2026Qb6; instead develop with \u2026Nf6, \u2026e6, and \u2026Bd6, keeping a solid pawn chain and preventing White\u2019s rapid pressure. This alone would have saved ~30\u202f\u00a2 accuracy and reduced your ACPL by ~5.",
+    "analysis": "Focus on early king safety: after 9\u2026Nf6, avoid 10\u2026g5? (weakens f6\u2011e5 squares). Instead play \u2026e6, develop bishop to\u202fBd6, then castle\u2014reducing tactical threats and limiting opponent\u2019s attack.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1506,19 +1525,9 @@
       "pct": 71
      }
     ],
-    "_yest_counts": {
-     "blitz": {
-      "win": 0,
-      "loss": 2,
-      "draw": 0,
-      "rp": {
-       "before": 1635,
-       "after": 1623
-      }
-     }
-    },
+    "_yest_counts": {},
     "_session_date": "2026-09-12",
-    "_is_yesterday": true
+    "_is_yesterday": false
    },
    {
     "id": "KjE5AZhm",
@@ -1537,7 +1546,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Stop playing passive A45 setups; after 1.d4\u202fNf6\u202f2.Nf3\u202fd5, seize central control with 3.c4, avoid queen\u2011side pawn\u2011storm that led to forced mate.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1635,14 +1644,14 @@
    "upsets": 0,
    "collapses": 1,
    "long_games": 1,
-   "session_summary": "Your opening repertoire is a disaster\u2014every game you play you\u2019re either stuck in a dead\u2011drawn line or walking straight into a forced loss, and the single collapse shows you can\u2019t even hold a modest advantage against weaker opponents. Stop relying on \u201ctrendy\u201d sidelines and master a single, sound mainline (e.g., 1.e4\u202fc5\u202f\u2192\u202fSicilian Najdorf or 1.d4\u202fd5\u202f\u2192\u202fQueen\u2019s Gambit Declined) until you can execute the basic tactical motifs without blundering. Drill forced\u2011mate patterns and basic endgame technique for at least 30\u202fminutes daily; if you can\u2019t convert a simple material edge, you belong in the 0\u202f% club.",
+   "session_summary": "",
    "session_date": "2026-09-12",
-   "is_yesterday": true,
+   "is_yesterday": false,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "t0lgs",
-   "rating": 1831,
+   "rating": 1998,
    "level": "\ud83d\udd34 stretch",
    "themes": "Very Long \u00b7 Endgame \u00b7 Attraction",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
