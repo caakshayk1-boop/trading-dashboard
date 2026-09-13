@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T142318",
+ "build_id": "20260913T144333",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "45 min old",
+    "age": "1h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-13T05:46:10+00:00",
     "smart": {
      "what_happened": [
-      "The tax department denied a \u20b96.42 lakh business travel expense claim because the payments were made with the taxpayer's wife's credit card.",
-      "The ITAT upheld the department's decision, ruling the expenses ineligible."
+      "Tax department rejected the \u20b96.42\u202flakh business travel expense claim because payments were made with his wife's credit card.",
+      "The ITAT upheld the rejection, ruling the expenses non\u2011allowable."
      ],
-     "why_it_matters": "The ruling clarifies that business expenses paid through a spouse's credit card may be disallowed, reinforcing strict documentation requirements for tax deductions and setting a precedent for future disputes over the source of payment for claimed expenses.",
-     "what_to_watch": "Watch for any subsequent ITAT decisions on similar cases involving spouse\u2011card payments or any regulatory guidance issued by tax authorities on this issue.",
-     "headline": "ITAT rejects \u20b96.42 lakh travel claim after husband used wife's credit card",
+     "why_it_matters": "The decision underscores that business expenses must be paid directly by the taxpayer or a company account to qualify for tax deduction, and using a spouse's credit card can lead to disallowance, reinforcing strict compliance standards for corporate travel reimbursements.",
+     "what_to_watch": "Watch for any subsequent ITAT rulings on similar expense claims involving third\u2011party payment methods.",
+     "headline": "ITAT rejects \u20b96.42\u202flakh travel claim for Mumbai businessman who used wife's credit card",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T17:25:17+00:00",
     "smart": {
      "what_happened": [
-      "India assumed the BRICS chairmanship and emphasized practical cooperation to launch development initiatives.",
-      "The agenda highlights tailored health programs, technology use, and support for startup ecosystems."
+      "India, as BRICS chair, emphasizes launching impactful development initiatives",
+      "The agenda includes tailored health programs, technology use, and support for startup ecosystems"
      ],
-     "why_it_matters": "India's leadership of BRICS signals its drive to shape a more multipolar global order by fostering concrete collaboration among member economies. By focusing on health, technology and entrepreneurship, the group aims to create tangible benefits for citizens and deepen economic ties, which could reshape trade and investment flows among the emerging powers.",
-     "what_to_watch": "The details of the first BRICS development initiative announced under India's chairmanship, expected to be disclosed at the next BRICS summit.",
-     "headline": "India chairs BRICS, pushes practical cooperation and development projects",
+     "why_it_matters": "India's chairmanship signals a push for multipolar collaboration within BRICS, aiming to translate political alignment into tangible projects that could improve public health, accelerate technology adoption, and foster entrepreneurship across member economies, potentially reshaping investment and policy priorities in the bloc.",
+     "what_to_watch": "The first development initiative announced under India's BRICS chairmanship, such as a specific health or startup program, and its implementation timeline",
+     "headline": "India leads BRICS with focus on practical cooperation and development",
      "read_seconds": 26
     }
    },
@@ -1377,7 +1377,17 @@
     "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
     "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T11:20:04+00:00"
+    "_sort": "2026-09-12T11:20:04+00:00",
+    "smart": {
+     "what_happened": [
+      "The tax authority disallowed Rs 6.42 lakh foreign travel expense claimed as business deduction because it was paid with the taxpayer\u2019s wife\u2019s credit card.",
+      "The ITAT Mumbai, hearing by Judicial Member Challa Nagendra Prasad and Accountant Member G.M. Doss, overturned the disallowance and granted relief to the taxpayer."
+     ],
+     "why_it_matters": "The decision clarifies that expenses paid through a spouse\u2019s credit card can still be treated as business deductions if the taxpayer can substantiate the business purpose, influencing how companies structure expense payments and how tax authorities assess such claims.",
+     "what_to_watch": "Future ITAT rulings on business expenses paid via relatives' credit cards for consistency with this precedent.",
+     "headline": "Rs 6.42 lakh travel expense disallowed, ITAT grants relief",
+     "read_seconds": 22
+    }
    },
    {
     "source": "NYT Well",
@@ -1396,15 +1406,6 @@
     "summary": "What makes life so disorienting is that its greatest revelations and greatest transformations are inarticulable. William James knew this when he listed ineffability as the first of the four features of transcendent experiences. Everything beautiful and meaningful, from the grand elations to the small gladnesses that ma",
     "date": "Sep 11, 2026",
     "_sort": "2026-09-11T02:44:27+00:00"
-   },
-   {
-    "source": "The Marginalian",
-    "cat": "ideas",
-    "title": "Albert Camus on the Source of Strength and How to Save Our Sanity in Trying Times",
-    "link": "https://www.themarginalian.org/2026/09/10/albert-camus-almond-trees-character/",
-    "summary": "\"In the depths of winter, I finally learned that within me there lay an invincible summer.\"",
-    "date": "Sep 10, 2026",
-    "_sort": "2026-09-10T21:31:49+00:00"
    },
    {
     "source": "Psyche",
@@ -1432,6 +1433,15 @@
     "summary": "FEATURED TOOL Welcome to this edition of our Tools for Thought series, where we interview founders on a mission to help us think better and work smarter. Dr David Urbansky is the founder of Linkflare, a universal bookmark manager that helps you save links, read distraction-free, and never forget the information that ma",
     "date": "Sep 08, 2026",
     "_sort": "2026-09-08T09:45:00+00:00"
+   },
+   {
+    "source": "Peter Attia",
+    "cat": "health",
+    "title": "Blood pressure: how to measure, manage, and treat high blood pressure (AMA #48 rebroadcast)",
+    "link": "https://peterattiamd.com/bloodpressure/",
+    "summary": "In this \u201cAsk Me Anything\u201d (AMA) episode, Peter delves into the critical subject of blood pressure, which is one of the three primary causes of atherosclerosis, along with high apoB and smoking. He begins by unraveling the nature of high blood pressure, its prevalence, and why it often goes undiagnosed. Peter describes ",
+    "date": "Sep 07, 2026",
+    "_sort": "2026-09-07T04:15:00+00:00"
    }
   ],
   "lichess_games": [
@@ -1452,7 +1462,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 9\u2026Nf6, you allowed 10.Qxf7+! winning material; improve move order to 9\u2026e6, preventing tactics and reducing opponent\u2019s ACPL by at least 30\u202fpts.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1662,7 +1672,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1863,
+   "rating": 1924,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
