@@ -40,7 +40,7 @@ if (existsSync(source)) {
   // existsSync guard below made this a silent skip rather than a failure,
   // which is exactly how a stale entry survives unnoticed.
   for (const f of ["robots.txt", "sitemap.xml", "manifest.webmanifest",
-                   "icon.svg", "og.png", "share.png", "today.json", "app.js", "screen.json", "screen-detail.json",
+                   "icon.svg", "og.png", "share.png", "today.json", "app.js", "screen.json", "screen-detail.json", "swot.json",
                    "jobs.json", "mandate.json", "v2-core.js", "life.html", "life.js", "data-health.json",
                    "next.html", "next.css", "next.js", "brief_fundamentals.js",
                    "pulse.json", "ipo.json", "news.json", "conviction.json", "funds.json", "engines.json"]) {

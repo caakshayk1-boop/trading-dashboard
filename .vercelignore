@@ -58,6 +58,10 @@
 # it and the section falls back to its server-rendered top 25 forever, with the
 # only symptom a console warning nobody reads.
 !docs/screen.json
+# SWOT alone, three per quadrant — the brief's Business section. A slim
+# projection of screen-detail.json so the brief can show research without
+# pulling 4.1MB to render one panel.
+!docs/swot.json
 # The detail half of the screen, fetched only when a reader opens a company.
 # Same by-name rule: omit it and every detail sheet renders its table row and
 # nothing else, with only a console warning to say why.

@@ -1321,6 +1321,24 @@ def generate() -> None:
         (out_dir / "screen-lite.json").write_text(
             json.dumps(_ss.lite_payload(_table), default=str, separators=(",", ":")),
             encoding="utf-8")
+        # A FOURTH projection: SWOT alone, three per quadrant.
+        #
+        # The brief had no Strengths/Weaknesses/Opportunities/Threats at all,
+        # because the only place they exist is screen-detail.json — 4.1MB, and
+        # signal.js declines to load it for exactly the reason written above.
+        # So the brief was missing the one part of the research that reads as
+        # research rather than as a ratio.
+        #
+        # Three items a quadrant, not all of them: the tail is where the
+        # generated phrasing repeats itself, and a brief is a page someone
+        # reads before the open. 0.6MB against 4.1MB for the same section.
+        _swot = {k: {q: (v.get("swot") or {}).get(q, [])[:3] for q in ("s", "w", "o", "t")}
+                 for k, v in (_detail.get("detail") or {}).items() if v.get("swot")}
+        (out_dir / "swot.json").write_text(
+            json.dumps({"built_on": _detail.get("built_on"), "swot": _swot},
+                       default=str, separators=(",", ":")), encoding="utf-8")
+        _wz = (out_dir / "swot.json").stat().st_size / 1024
+        print(f"[generate] ✅ swot.json ({len(_swot)} companies, {_wz:.0f}KB)")
         _sz = (out_dir / "screen.json").stat().st_size / 1024
         _dz = (out_dir / "screen-detail.json").stat().st_size / 1024
         _lz = (out_dir / "screen-lite.json").stat().st_size / 1024

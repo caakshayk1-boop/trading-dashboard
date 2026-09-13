@@ -945,6 +945,28 @@ def test_universe_label_is_read_before_the_limit_truncates() -> None:
           '"universe_core": core_size' in src and '"universe_ext": len(ext)' in src)
 
 
+def test_swot_json_is_allow_listed_everywhere_it_must_be() -> None:
+    """A docs/ file reaches production only if FOUR places name it.
+
+    The allow-lists are by NAME, not by directory, so a new artefact that is
+    written but not listed is served as a 404 and the section that reads it
+    renders empty — with every build green. The git-add in the workflow is the
+    one that gets forgotten, because the file exists locally and the omission
+    only shows in production.
+    """
+    gen = pathlib.Path("generate.py").read_text(encoding="utf-8")
+    ign = pathlib.Path(".vercelignore").read_text(encoding="utf-8")
+    bld = pathlib.Path("vercel-news/build.js").read_text(encoding="utf-8")
+    wf  = pathlib.Path(".github/workflows/newspaper.yml").read_text(encoding="utf-8")
+    check("generate.py writes docs/swot.json", '"swot.json"' in gen)
+    check(".vercelignore allow-lists docs/swot.json by name", "!docs/swot.json" in ign)
+    check("build.js copies swot.json into public/", '"swot.json"' in bld)
+    check("newspaper.yml git-adds docs/swot.json", "docs/swot.json" in wf)
+    # Three per quadrant, not the whole tail: the brief is read before the open.
+    check("swot.json is the slim projection, not the whole detail file",
+          '[:3] for q in ("s", "w", "o", "t")' in gen)
+
+
 def test_an_unknown_industry_is_not_a_peer_group() -> None:
     """250 extension names shared one "—" bucket and valued each other.
 
@@ -1924,6 +1946,7 @@ def main() -> int:
                test_the_shared_brief_section_is_one_file_and_both_briefs_call_it,
                test_screen_json_is_allow_listed_in_all_three_places,
                test_an_unknown_industry_is_not_a_peer_group,
+               test_swot_json_is_allow_listed_everywhere_it_must_be,
                test_the_universe_extension_stays_additive_and_labelled):
         try:
             fn()
