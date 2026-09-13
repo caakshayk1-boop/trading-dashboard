@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T110352",
+ "build_id": "20260913T112320",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -1328,7 +1328,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-12",
-   "age_days": 0.3,
+   "age_days": 0.4,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1342,12 +1342,12 @@
     "_sort": "2026-09-13T02:50:47+00:00",
     "smart": {
      "what_happened": [
-      "Banks will remain closed on four days between September 14 and 20, 2026.",
-      "The closures vary by location according to the RBI holiday calendar."
+      "Banks will remain closed on four days between September 14 and 20, 2026, with closures varying by location.",
+      "The RBI holiday calendar lists the specific dates each bank branch will be closed."
      ],
-     "why_it_matters": "Branch closures affect customers' ability to conduct in\u2011person transactions, cash withdrawals, and loan servicing, which can delay payments and impact cash flow for businesses and individuals. Financial institutions must manage expectations and adjust operational planning, while investors should monitor any potential slowdown in retail banking activity during the holiday period.",
-     "what_to_watch": "The RBI's city\u2011wise holiday list for the week of September 14\u201120, 2026, to confirm which locations are affected each day.",
-     "headline": "SBI, HDFC, ICICI, PNB close up to four days between Sep 14-20",
+     "why_it_matters": "The scheduled closures affect customers' ability to conduct in\u2011person banking transactions, potentially delaying cash deposits, loan disbursements, and other services that require branch access. Financial institutions and corporate treasuries must adjust cash\u2011flow planning and payment schedules to avoid operational disruptions during the holiday period.",
+     "what_to_watch": "Monitor the RBI\u2019s official holiday calendar for any updates or additional closures that may be announced before September 14.",
+     "headline": "Bank holidays announced for SBI, HDFC, ICICI, PNB from Sep 14-20",
      "read_seconds": 20
     }
    },
@@ -1361,12 +1361,12 @@
     "_sort": "2026-09-12T17:25:17+00:00",
     "smart": {
      "what_happened": [
-      "India assumes the BRICS chairmanship and emphasizes practical cooperation among members.",
-      "The agenda includes launching health programs, technology projects, and support for startup ecosystems."
+      "India\u2019s BRICS chairmanship highlights the launch of health and technology programs aimed at improving citizens' lives",
+      "The agenda also focuses on nurturing startup ecosystems and supporting practical cooperation among members"
      ],
-     "why_it_matters": "India's leadership of the BRICS grouping signals a shift toward multipolar collaboration, with the potential to channel collective resources into health, technology and entrepreneurship initiatives that could affect member economies and create new avenues for cross\u2011border investment and development partnerships.",
-     "what_to_watch": "The rollout of the first BRICS\u2011backed health program announced under India's chairmanship.",
-     "headline": "India chairs BRICS and pushes practical cooperation initiatives",
+     "why_it_matters": "The focus on tangible development projects signals a shift toward multipolar collaboration within BRICS, potentially influencing investment and policy priorities in member economies as they seek to address domestic challenges through shared initiatives.",
+     "what_to_watch": "The first concrete development initiative announced under India's chairmanship, such as a specific health or technology program rollout, within the next quarter",
+     "headline": "India chairs BRICS emphasizing practical cooperation and development initiatives",
      "read_seconds": 26
     }
    },
@@ -1377,17 +1377,7 @@
     "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
     "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T11:20:04+00:00",
-    "smart": {
-     "what_happened": [
-      "The tax authority disallowed Rs\u202f6.42\u202flakh of foreign travel expense claimed as business cost because it was paid with the taxpayer\u2019s wife\u2019s credit card.",
-      "The ITAT Mumbai, hearing the case before members Challa Nagendra Prasad and G.M. Doss, granted relief and allowed the expense."
-     ],
-     "why_it_matters": "The decision clarifies that business expenses paid through a spouse's credit card can be treated as deductible, setting a precedent for how tax authorities assess the source of payment for claimed deductions and potentially affecting other taxpayers who use family members' cards for business-related travel.",
-     "what_to_watch": "Future ITAT rulings on the deductibility of expenses paid via relatives' credit cards.",
-     "headline": "ITAT Mumbai overturns Rs 6.42 lakh travel expense disallowance",
-     "read_seconds": 22
-    }
+    "_sort": "2026-09-12T11:20:04+00:00"
    },
    {
     "source": "NYT Well",
@@ -1462,7 +1452,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early pawn structure: after 1.e4 c6 2.d4 d5, avoid 3.Nc3\u202fdxe4\u202f4.Nxe4\u202fNd7; instead play 3...dxe4\u202f5.Nxe4\u202fNgf6, preserving central tension and preventing your queen\u2019s premature exchange that led to a losing endgame.",
+    "analysis": "",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1567,7 +1557,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Study and master the typical A45 pawn structures; avoid early queen sorties\u2014your queen moved 7 times before move\u202f15, costing crucial time.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1672,7 +1662,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2034,
+   "rating": 1989,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
