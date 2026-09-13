@@ -32,6 +32,11 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 IST = timezone(timedelta(hours=5, minutes=30))
+# The edition is STAMPED in MYT — generate.py builds with datetime.now(MYT)
+# because the site is operated from Malaysia — so its date has to be read
+# back in MYT. See the freshness check below for what comparing it against
+# IST actually did.
+MYT = timezone(timedelta(hours=8))
 SITE = "https://news.askakshay.com"
 UA = {"User-Agent": "DailySignal-HealthWatch/1.0"}
 
@@ -144,7 +149,13 @@ def main() -> int:
     try:
         _, ed = fetch(f"{SITE}/edition.json", True)
         built = str(ed.get("build_date", ""))
-        today = datetime.now(IST).date().isoformat()
+        # IST HERE FLAGGED FRESH EDITIONS AS STALE. build_date is written in
+        # MYT, and MYT rolls over 2.5 hours before IST does, so for that window
+        # every night the page correctly said tomorrow's date and this compared
+        # it against today's. On 12 Sep 17:29Z the edition read 2026-09-13 —
+        # right, it was 01:29 on the 13th in Malaysia — and this failed the job
+        # against IST's 2026-09-12. Compare in the clock it was written in.
+        today = datetime.now(MYT).date().isoformat()
         if built and built != today:
             problems.append(f"*edition* — page still says {built}, today is {today}")
             lines.append(f"  edition      STALE ({built})")
