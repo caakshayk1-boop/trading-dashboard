@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T122315",
+ "build_id": "20260913T124308",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "19h old",
+    "age": "20h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1339,7 +1339,17 @@
     "link": "https://www.livemint.com/money/personal-finance/bank-holidays-this-week-sbi-hdfc-icici-pnb-closed-on-up-to-4-days-from-14-20-sep-check-city-wise-rbi-list-11789266166017.html",
     "summary": "Banks will remain closed on four days between September 14 and 20, 2026, although the closures vary by location. Here is the RBI holiday calendar-based list for customers planning branch visits this week.",
     "date": "Sep 13, 2026",
-    "_sort": "2026-09-13T02:50:47+00:00"
+    "_sort": "2026-09-13T02:50:47+00:00",
+    "smart": {
+     "what_happened": [
+      "Banks will remain closed on four days between September 14 and 20, 2026.",
+      "The closures vary by location according to the RBI holiday calendar."
+     ],
+     "why_it_matters": "The scheduled closures affect customers who need to visit branches for transactions, account services, or loan processing, and may also delay clearing and settlement activities for businesses that rely on bank operations during the week.",
+     "what_to_watch": "Monitor the RBI's official holiday announcement for the following week (September 21\u201127, 2026) for any additional bank closures.",
+     "headline": "Bank holidays this week: SBI, HDFC, ICICI, PNB closed up to 4 days",
+     "read_seconds": 20
+    }
    },
    {
     "source": "ET Opinion",
@@ -1351,12 +1361,12 @@
     "_sort": "2026-09-12T17:25:17+00:00",
     "smart": {
      "what_happened": [
-      "India, as BRICS chair, highlighted practical cooperation to launch development initiatives.",
-      "The agenda prioritises health programs, technology deployment and nurturing startup ecosystems."
+      "India, as BRICS chair, highlighted the need for practical cooperation to launch development projects.",
+      "The agenda includes tailored health programs, technology deployment, and support for startup ecosystems."
      ],
-     "why_it_matters": "India's leadership of the BRICS grouping signals a push for multipolar collaboration that could channel resources into health and technology projects across member economies, potentially shaping policy priorities and fostering cross\u2011border innovation ecosystems.",
-     "what_to_watch": "The first concrete development initiative announced under India's BRICS chairmanship, such as a joint health or startup program, within the next quarter.",
-     "headline": "India chairs BRICS, emphasizes health, tech and startup cooperation",
+     "why_it_matters": "The emphasis on concrete cooperation signals potential opportunities for companies operating in health tech, digital infrastructure, and venture capital across BRICS nations, as coordinated initiatives could unlock new markets and funding streams, influencing cross\u2011border investment flows.",
+     "what_to_watch": "The publication of the BRICS chair's action plan at the next summit in August",
+     "headline": "India's BRICS chairmanship focuses on practical cooperation and development initiatives",
      "read_seconds": 26
     }
    },
@@ -1442,7 +1452,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Focus on early queen\u2011side development: after 1.e4 c6\u202f2.d4 d5\u202f3.Nc3 (or 3.Nd2) avoid 4\u2026Bf5; instead play 4\u2026Nd7\u2011c6\u2011e7, completing kingside castling before expanding, reducing queen\u2011side weaknesses that cost you the game.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1652,7 +1662,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 2042,
+   "rating": 2023,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
