@@ -474,6 +474,52 @@ def fetch_prices(symbols: list[str], period: str = "4y") -> dict[str, dict]:
                 if "Close" not in series or series["Close"].empty:
                     continue
                 idx = series["Close"].index
+
+                # ── A CORPORATE ACTION YAHOO DID NOT ADJUST ────────────────
+                #
+                # NSE caps a session at +/-20% for ordinary equities, so a
+                # single-bar move past 25% is not a price move. It is a split,
+                # a bonus, a demerger or bad data — and where Yahoo has no
+                # split on record, auto_adjust cannot correct it.
+                #
+                # Live on 2026-09-13, 2 of 750 names carried one:
+                #   INDIAGLYCO  2026-09-02  -78.8%   not in Yahoo's splits
+                #   HEG         2026-09-07  -62.6%   not in Yahoo's splits
+                #
+                # Every trailing window spanning the break then mixes
+                # pre-action and post-action prices. INDIAGLYCO published
+                # SMA20 837.9, SMA50 1006.4 and SMA200 974.5 against a price
+                # of 294.9 — arithmetically correct averages of two different
+                # instruments — plus a 52-week high of 1219, "down 75.8% from
+                # its high", an ATR of 25.6%, and a verdict and target ladder
+                # built on all of it.
+                #
+                # The series is TRUNCATED at the break rather than re-adjusted.
+                # Re-adjusting means inventing a ratio from the gap itself and
+                # betting it was a clean split; truncating says the only thing
+                # that is true — this instrument's usable history starts here —
+                # and MIN_BARS then withholds every window there is not enough
+                # data for, which is the behaviour young listings already get.
+                _cl = series["Close"]
+                _cut = 0
+                for _i in range(1, len(_cl)):
+                    _prev = float(_cl.iloc[_i - 1])
+                    if _prev <= 0:
+                        continue
+                    _rt = float(_cl.iloc[_i]) / _prev
+                    if _rt < 0.75 or _rt > 1.33:
+                        _cut = _i                     # keep the LAST break
+                if _cut:
+                    log.warning("screen: %s has an unadjusted corporate action "
+                                "on %s (x%.4f) — history truncated to %d bars",
+                                sym, str(idx[_cut])[:10],
+                                float(_cl.iloc[_cut]) / float(_cl.iloc[_cut - 1]),
+                                len(_cl) - _cut)
+                    series = {k: v.iloc[_cut:] for k, v in series.items()}
+                    idx = series["Close"].index
+                    if len(idx) < 2:
+                        continue
+
                 rec = {
                     "c": [float(x) for x in series["Close"].tolist()],
                     "h": [float(x) for x in series.get("High", series["Close"]).reindex(idx).ffill().tolist()],
