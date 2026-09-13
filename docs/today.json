@@ -1,5 +1,5 @@
 {
- "build_id": "20260913T074205",
+ "build_id": "20260913T080248",
  "date": "2026-09-13",
  "date_str": "Sunday, September 13 2026",
  "picks": [
@@ -654,120 +654,120 @@
  "ipos": {
   "count": 30,
   "months": 12,
-  "built_on": "2026-09-09",
+  "built_on": "2026-09-12",
   "summary": {
    "count": 30,
-   "up": 20,
-   "down": 10,
-   "up_pct": 66.7,
-   "median_pct": 13.2
+   "up": 19,
+   "down": 11,
+   "up_pct": 63.3,
+   "median_pct": 13.7
   },
   "rows": [
    {
     "sym": "RUBICON",
-    "months_listed": 10.8,
+    "months_listed": 10.9,
     "first_close": 628.2,
-    "last_close": 1810.5,
-    "since_listing_pct": 188.2,
+    "last_close": 1835.4,
+    "since_listing_pct": 192.2,
     "high": 1860.6,
     "low": 577.25,
-    "from_high_pct": -2.7,
+    "from_high_pct": -1.4,
     "below_first_ever": true,
-    "sessions": 224,
+    "sessions": 226,
     "listed_on": "2025-10-16"
    },
    {
     "sym": "ATLANTAELE",
-    "months_listed": 11.3,
+    "months_listed": 11.4,
     "first_close": 823.35,
-    "last_close": 1848.7,
-    "since_listing_pct": 124.5,
+    "last_close": 1777.8,
+    "since_listing_pct": 115.9,
     "high": 2151.5,
     "low": 726.3,
-    "from_high_pct": -14.1,
+    "from_high_pct": -17.4,
     "below_first_ever": true,
-    "sessions": 237,
+    "sessions": 239,
     "listed_on": "2025-09-29"
    },
    {
     "sym": "UTLSOLAR",
-    "months_listed": 9.6,
+    "months_listed": 9.7,
     "first_close": 208.44,
-    "last_close": 451.5,
-    "since_listing_pct": 116.6,
+    "last_close": 447.8,
+    "since_listing_pct": 114.8,
     "high": 483.95,
     "low": 174.83,
-    "from_high_pct": -6.7,
+    "from_high_pct": -7.5,
     "below_first_ever": true,
-    "sessions": 203,
+    "sessions": 205,
     "listed_on": "2025-11-20"
    },
    {
     "sym": "PARKHOSPS",
-    "months_listed": 8.7,
+    "months_listed": 8.8,
     "first_close": 147.95,
-    "last_close": 281.85,
-    "since_listing_pct": 90.5,
+    "last_close": 279.3,
+    "since_listing_pct": 88.8,
     "high": 299.3,
     "low": 143.92,
-    "from_high_pct": -5.8,
+    "from_high_pct": -6.7,
     "below_first_ever": true,
-    "sessions": 184,
+    "sessions": 186,
     "listed_on": "2025-12-17"
    },
    {
     "sym": "PIRAMALFIN",
-    "months_listed": 10.1,
+    "months_listed": 10.2,
     "first_close": 1323.0,
-    "last_close": 2310.5,
-    "since_listing_pct": 74.6,
+    "last_close": 2255.6,
+    "since_listing_pct": 70.5,
     "high": 2310.5,
     "low": 1323.0,
-    "from_high_pct": 0.0,
+    "from_high_pct": -2.4,
     "below_first_ever": false,
-    "sessions": 212,
+    "sessions": 214,
     "listed_on": "2025-11-07"
    }
   ],
   "worst": [
    {
-    "sym": "PINELABS",
-    "months_listed": 9.8,
-    "first_close": 250.89,
-    "last_close": 175.08,
-    "since_listing_pct": -30.2,
-    "high": 250.89,
-    "low": 137.94,
-    "from_high_pct": -30.2,
-    "below_first_ever": true,
-    "sessions": 207,
-    "listed_on": "2025-11-14"
-   },
-   {
     "sym": "CAPILLARY",
-    "months_listed": 9.6,
+    "months_listed": 9.7,
     "first_close": 606.5,
-    "last_close": 460.3,
-    "since_listing_pct": -24.1,
+    "last_close": 461.95,
+    "since_listing_pct": -23.8,
     "high": 732.15,
-    "low": 460.3,
-    "from_high_pct": -37.1,
+    "low": 459.9,
+    "from_high_pct": -36.9,
     "below_first_ever": true,
-    "sessions": 202,
+    "sessions": 204,
     "listed_on": "2025-11-21"
    },
    {
-    "sym": "WAKEFIT",
-    "months_listed": 8.8,
-    "first_close": 192.29,
-    "last_close": 152.64,
-    "since_listing_pct": -20.6,
-    "high": 215.8,
-    "low": 113.04,
-    "from_high_pct": -29.3,
+    "sym": "CRAMC",
+    "months_listed": 10.9,
+    "first_close": 300.45,
+    "last_close": 238.9,
+    "since_listing_pct": -20.5,
+    "high": 350.6,
+    "low": 217.25,
+    "from_high_pct": -31.9,
     "below_first_ever": true,
-    "sessions": 185,
-    "listed_on": "2025-12-15"
+    "sessions": 228,
+    "listed_on": "2025-10-16"
+   },
+   {
+    "sym": "PINELABS",
+    "months_listed": 9.9,
+    "first_close": 250.89,
+    "last_close": 202.17,
+    "since_listing_pct": -19.4,
+    "high": 250.89,
+    "low": 137.94,
+    "from_high_pct": -19.4,
+    "below_first_ever": true,
+    "sessions": 209,
+    "listed_on": "2025-11-14"
    }
   ]
  },
@@ -786,158 +786,157 @@
  },
  "desk": {
   "chess": {
-   "title": "Tactics: The Fork",
-   "body": "A fork attacks two pieces simultaneously with one piece. Knight forks are the deadliest \u2014 they move in an L-shape and cannot be blocked. Look for squares your knight can reach that simultaneously attack king + queen, or rook + rook. Practice: set up NxC5+ forking king and rook. Classic beginner trap.",
-   "index": 5,
+   "title": "Tactics: The Skewer",
+   "body": "A skewer is a reverse pin. A valuable piece is attacked, it moves, and the piece behind it is captured. Skewers happen on open files and diagonals. Rooks and bishops execute skewers. Pattern: Rook checks king \u2192 king moves \u2192 rook captures queen. Spot this on every open file.",
+   "index": 6,
    "total": 20
   },
   "wisdom": {
-   "title": "On Discipline and Freedom",
-   "body": "The most disciplined people are the freest. Akshay who wakes at 6am, exercises, studies, then works has more hours and more energy than the one who stays up late and drags through mornings. Discipline is choosing what you want most over what you want now. It's the highest form of self-respect.",
-   "index": 17,
+   "title": "Your Daughter Will Watch Everything",
+   "body": "She'll watch how you handle a setback. How you speak about money. How you treat waiters. How you react when you're wrong. How you love her mother. You are her first example of what a man is. Be the man you'd want her to marry someday. That's the bar.",
+   "index": 18,
    "total": 18
   },
   "book": {
-   "book": "7 Habits of Highly Effective People",
-   "author": "Stephen Covey",
-   "chapter": "Habit 4: Think Win-Win or No Deal",
-   "lesson": "Most people operate from scarcity \u2014 if you win, I lose. Win-win thinking comes from an abundance mentality: there is enough for everyone, and cooperation creates more value than competition. Covey's most important corollary: 'or No Deal.' If a genuine win-win solution cannot be found, the integrity move is to agree not to deal. Not every partnership, transaction, or negotiation should happen. The willingness to walk away from a bad deal is what makes you trustworthy in good ones. People who always find a way to close the deal always find a way to disadvantage one party.",
-   "key_quote": "Win-win is not compromise. It's a creative solution where both parties genuinely benefit.",
-   "action": "In your next negotiation or conflict, explicitly ask: 'what does the other person actually need here?' Then find a solution that addresses both needs.",
-   "index": 23,
+   "book": "The Hard Thing About Hard Things",
+   "author": "Ben Horowitz",
+   "chapter": "The Struggle Is Not a Bug. It's a Feature.",
+   "lesson": "Horowitz's book is the antidote to every startup fairytale. He describes 'the Struggle' \u2014 the period when everything is going wrong, you have no good options, you're alone, and nothing in your background prepared you for this moment. His message: the Struggle is not a sign you're doing it wrong. It's the nature of building something hard. The skills that get you through the Struggle \u2014 making decisions with incomplete information, maintaining team morale in crisis, managing your own psychology when the business is burning \u2014 cannot be learned in school. They are learned only by going through it.",
+   "key_quote": "There are no silver bullets in building a company. Only lead bullets \u2014 doing the hard, unglamorous work when everything is broken.",
+   "action": "Identify the thing you're avoiding right now because it's uncomfortable. That avoidance is costing you more than the discomfort of doing it.",
+   "index": 24,
    "total": 48,
    "crux": [
-    "Character ethic beats personality ethic. Techniques without character are manipulation.",
-    "Paradigms determine what you see. Change the map before optimising the route.",
-    "Habit 1 \u2014 Be Proactive: between stimulus and response is your freedom to choose.",
-    "Focus on your Circle of Influence, not your Circle of Concern. The first grows; the second drains.",
-    "Habit 2 \u2014 Begin with the End in Mind: write the personal mission statement, then live backwards from it.",
-    "Habit 3 \u2014 First Things First: Quadrant II (important, not urgent) is where effectiveness lives.",
-    "Urgency addiction disguises itself as productivity. Most of Quadrant I is neglected Quadrant II.",
-    "Habit 4 \u2014 Think Win/Win: scarcity thinking produces win/lose; abundance produces cooperation.",
-    "Habit 5 \u2014 Seek First to Understand, Then to Be Understood. Diagnose before prescribing.",
-    "Empathic listening is the highest-leverage communication skill and almost nobody does it.",
-    "Habit 6 \u2014 Synergise: 1+1 can equal 3 when differences are valued rather than tolerated.",
-    "Habit 7 \u2014 Sharpen the Saw: renew physical, mental, social/emotional, spiritual capacity.",
-    "P/PC balance: production versus production capability. Killing the goose for the eggs.",
-    "The Emotional Bank Account \u2014 trust accumulates through deposits and is spent by withdrawals."
+    "There is no recipe for the hard things. Every playbook assumes conditions you won't have.",
+    "The Struggle is the default state of building something hard, not evidence of failure.",
+    "Wartime and peacetime CEOs are different jobs requiring different behaviour.",
+    "Take care of the people, the products, and the profits \u2014 in that order.",
+    "Tell it like it is. People can handle bad news; they cannot handle being managed.",
+    "Train your people. Neglecting it is the most common and most expensive omission.",
+    "Hire for strength, not absence of weakness. Every strong person has visible flaws.",
+    "Management debt, like technical debt, accrues interest: two people in one job, no performance process, unclear ownership.",
+    "Titles and promotions need a defined process or politics fills the vacuum.",
+    "One-on-ones belong to the employee. Silence there means information is not reaching you.",
+    "Minimise politics by designing systems, not by asking people to be less political.",
+    "The struggle is where greatness comes from. Courage is a habit built by making hard calls.",
+    "Focus on the battlefield you're on, not the one you wish you were on."
    ],
    "learnings": [
-    "Effectiveness is a private victory before it is a public one.",
-    "Quadrant II work never announces itself. You must schedule it.",
-    "Most communication failures are prescription before diagnosis.",
-    "Renewal is not a reward for finishing. It is the capacity to finish."
+    "Nobody's plan survives. The skill is deciding well without enough information.",
+    "Transparency scales trust; managed messaging destroys it.",
+    "Management debt compounds faster and quieter than technical debt.",
+    "Your psychology is the bottleneck more often than the business is."
    ],
    "examples": [
-    "Viktor Frankl in the camps: everything removed except the choice of response. The origin of Habit 1.",
-    "Covey's funeral exercise \u2014 what four speakers would say about you \u2014 reframes goals from achievement to character.",
-    "The father who lists his son's faults and cannot understand why the son won't talk. Diagnosis skipped entirely."
+    "Loudcloud IPO'd in 2001 into a collapsing market because the private markets were shut \u2014 a bad option chosen over a fatal one.",
+    "Horowitz sold the managed-services business and pivoted to Opsware with $60m left, telling employees the truth about the odds.",
+    "Opsware sold to HP for $1.6bn after multiple near-death moments \u2014 none of which the plan anticipated."
    ],
    "adapt": [
-    "Circle of influence on the Meta case: control the caption process, not the platform's decision.",
-    "Quadrant II: the Dubai applications and the daughter's bedtime. Neither is urgent. Both decide the decade.",
-    "Sharpen the saw is not optional at 7 hours' sleep \u2014 it is what makes the analysis correct.",
-    "Emotional bank account at home: presence deposits daily. The balance is what carries the hard months."
+    "Meta restriction is a wartime problem. Recovery work first, growth experiments after.",
+    "Say the real number publicly \u2014 50% win rate, not the flattering framing. Trust is the asset.",
+    "Management debt in the stack: two entry points writing the same signals with different logic caused the duplicate rows.",
+    "The Struggle during the Dubai search is the job, not a sign it isn't working."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "Travel Light As Practice",
-    "body": "Pack for a week in a carry-on. It teaches, in three days, exactly how little you require \u2014 a lesson that transfers directly home.",
-    "action": "Next trip: carry-on only. Note what you never opened.",
-    "index": 17,
+    "title": "Say No To Free",
+    "body": "Free samples, conference tote bags, hotel toiletries. Free acquisitions carry the same ongoing cost as bought ones. The price tag was never the expensive part.",
+    "action": "Decline the next free item you are offered.",
+    "index": 18,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "The Right Hand Rule",
-    "body": "In the Gulf and much of Asia, give and receive with the right hand \u2014 cards, food, documents, money. The left hand carries a specific connotation. This is not a preference; it is the baseline.",
-    "action": "Hand over your next document or card with the right hand, deliberately.",
-    "index": 3,
+    "title": "Accept The Coffee",
+    "body": "In Gulf business culture, refusing offered coffee or dates can read as refusing the relationship. Take it, hold it, sip it. The transaction is not the point of the meeting.",
+    "action": "Accept the next hospitality offered, even if you do not want it.",
+    "index": 4,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "The First Hour Is Yours",
-    "body": "Whoever touches your attention first sets the agenda for the day. If that is a notification, you have outsourced the day to a stranger's priorities before you were fully awake.",
-    "action": "No screen for the first 30 minutes tomorrow. Nothing else changes.",
-    "index": 1,
+    "title": "Sit For Ten Minutes",
+    "body": "Not to achieve anything. Sit, breathe, and let thoughts pass without following them. The mind wandering is not failure \u2014 noticing it wandered is the entire rep.",
+    "action": "Ten minutes. Timer on. No app required.",
+    "index": 2,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Availability Heuristic",
-    "body": "You judge probability by how easily an example comes to mind. Plane crashes feel likelier than car crashes because they are memorable, not because they are common.",
-    "action": "Check one belief against actual frequency data rather than recall.",
-    "index": 13,
+    "title": "Loss Aversion",
+    "body": "Losses hurt roughly twice as much as equivalent gains please. This makes you hold losing positions and sell winners \u2014 precisely backwards, and reliably so.",
+    "action": "Review one holding you are keeping only because selling would confirm the loss.",
+    "index": 14,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0645\u0628\u0631\u0648\u0643",
-    "translit": "mabrook",
-    "meaning": "Congratulations",
-    "use": "Promotions, weddings, new car, new baby. Reply: Allah yibaarik feek.",
-    "index": 19,
+    "script": "\u0627\u0644\u0644\u0647 \u064a\u0639\u0637\u064a\u0643 \u0627\u0644\u062e\u064a\u0631",
+    "translit": "Allah ya'teek al-khayr",
+    "meaning": "May God give you good",
+    "use": "A warm thank-you with more weight than shukran. Good for someone senior.",
+    "index": 20,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Explain It To A Ten-Year-Old",
-    "body": "Take the most technical thing you know and explain it with no jargon. If you cannot, you have memorised it rather than understood it. This is the Feynman technique and it is brutal.",
-    "action": "Pick one concept. Explain it in writing with no technical terms.",
-    "index": 5,
+    "title": "Estimate Before Calculating",
+    "body": "Guess the answer before opening the spreadsheet. Then compare. This builds the instinct that catches a model error before the client does.",
+    "action": "Estimate three figures before computing. Track how close you were.",
+    "index": 6,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Heat And Cold Are Adjuncts, Not Basics",
-    "body": "Sauna shows dose-dependent cardiovascular association in Finnish cohorts. Cold has weaker evidence and may blunt hypertrophy if taken right after lifting. Neither substitutes for training and sleep.",
-    "action": "Only add these once training, sleep, and protein are consistent.",
-    "index": 15,
+    "title": "Blood Panel Annually, Minimum",
+    "body": "ApoB, HbA1c, fasting insulin, hs-CRP, lipid panel, vitamin D. ApoB predicts cardiovascular risk better than LDL-C and is rarely ordered unless you ask specifically.",
+    "action": "Book the panel. Ask for ApoB by name.",
+    "index": 16,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
-   "name": "Ren Zhengfei",
-   "quote": "Embrace competition. Be grateful for it. It forces you to become great.",
-   "index": 96,
+   "name": "Elon Musk",
+   "quote": "When something is important enough, you do it even if the odds are not in your favor.",
+   "index": 1,
    "total": 96
   },
   "lesson": {
-   "tradition": "Japanese Wisdom",
-   "lesson": "Eat until 80% full (Hara Hachi Bu). Know when to stop.",
-   "source": "Okinawan Wisdom"
+   "tradition": "African Wisdom",
+   "lesson": "If you want to go fast, go alone. If you want to go far, go together.",
+   "source": "African Proverb"
   },
   "case": {
-   "title": "Nokia: The Rise and Fall",
-   "story": "Nokia had 40% global mobile market share in 2007. By 2013, market share was near zero. They failed to see that software, not hardware, was the future.",
-   "lesson": "Market leaders die by defending yesterday's success. The biggest threat is always your own arrogance."
+   "title": "Zomato: Unit Economics Before Growth",
+   "story": "Zomato spent \u20b9100 to acquire a customer who spent \u20b980. They kept growing. The lesson came when investors demanded profitability. Now Zomato is profitable.",
+   "lesson": "Growth that destroys unit economics is not growth \u2014 it's subsidized revenue. Always know your LTV:CAC ratio."
   },
   "fpna": {
-   "title": "Three-Statement Model",
-   "body": "P&L \u2192 Balance Sheet \u2192 Cash Flow \u2014 they must tie. If they don't, you have a bug.",
-   "index": 12,
+   "title": "Sensitivity Tables",
+   "body": "Use Excel's Data Table (What-If Analysis) to show EBITDA across assumptions. One table > 5 slides.",
+   "index": 13,
    "total": 20
   },
   "cfo": {
-   "title": "CFO Step 3: M&A Fundamentals",
-   "body": "Basic M&A literacy: DCF valuation, EV/EBITDA multiples, due diligence process, SPA (Share Purchase Agreement), earn-out structures. You don't need to be an investment banker, but you need to read a deal memo and ask smart questions.",
-   "index": 8,
+   "title": "CFO Step 4: Board Communication",
+   "body": "CFOs present to the Board. Boards want: Are we on budget? What's the cash position? What risks keep you up at night? Practice speaking to non-finance people. Remove jargon. Lead with the conclusion, not the workings.",
+   "index": 9,
    "total": 15
   },
   "money_hack": {
-   "title": "ELSS Lock-in Trick",
-   "body": "ELSS 3-year lock-in: SIP each month \u2192 each instalment unlocks separately. Best 80C option."
+   "title": "Gold via SGB",
+   "body": "Sovereign Gold Bonds: 2.5% interest + gold price appreciation. No storage cost."
   },
   "dubai": {
-   "title": "Arabic is not required. Reading it helps.",
-   "body": "No finance role in the Gulf requires Arabic. But invoices, government portals and trade licences arrive in it, and being able to read a heading rather than forwarding it is a visible edge.",
-   "targets": "Numbers, months, and twenty document words. That is the whole ask.",
-   "action_label": "Ten minutes",
-   "action": "Learn the Arabic numerals and the words for invoice, tax, and licence.",
-   "index": 15,
+   "title": "Corporate tax changed the job",
+   "body": "The UAE introduced 9% corporate tax from June 2023. Every group now needs someone who can model an effective tax rate, handle transfer pricing between free-zone and mainland entities, and file. That is new demand, and the supply of people who have actually done it is thin.",
+   "targets": "Free-zone qualifying income at 0% is the question that separates the prepared from the rest.",
+   "action_label": "Edge",
+   "action": "Read the FTA corporate tax guide. Two hours buys you a whole interview answer.",
+   "index": 16,
    "total": 30
   },
   "daughter": {
@@ -947,7 +946,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "Use Parkinson's Law: shorter deadlines. Work expands to fill time given.",
+  "productivity": "Shutdown ritual: write tomorrow's top 3, close all tabs. Stop working.",
   "father": [
    {
     "title": "Build then let her destroy",
@@ -1057,8 +1056,8 @@
    "week": 37,
    "year": 2026,
    "key": "2026-W37",
-   "weekday": 6,
-   "days_left": 1,
+   "weekday": 7,
+   "days_left": 0,
    "is_review_day": true
   },
   "podcasts": {
@@ -1343,12 +1342,12 @@
     "_sort": "2026-09-12T18:24:39+00:00",
     "smart": {
      "what_happened": [
-      "The Nagaland government created a committee to examine delays in pension and other retirement benefits.",
-      "Chief Minister Neiphiu Rio told the state Assembly that the delays stem from procedural non\u2011compliance and inadequate guidance for retirees."
+      "The Nagaland government created a committee to tackle pension delays and digitise retirement benefits.",
+      "Chief Minister Neiphiu Rio said the delays stem from procedural non\u2011compliance and inadequate guidance for retirees."
      ],
-     "why_it_matters": "",
-     "what_to_watch": "The release of the committee's findings or a timeline for implementing the digitised pension system.",
-     "headline": "Nagaland forms committee to address pension delays and digitise benefits",
+     "why_it_matters": "The committee aims to streamline pension payments, reducing financial uncertainty for retirees and improving the state's administrative efficiency. By digitising the process, the government hopes to increase transparency and speed, which could set a precedent for other welfare programs in the region.",
+     "what_to_watch": "The publication date of the committee's recommendations or a timeline for launching the digital pension platform.",
+     "headline": "Nagaland forms committee to address pension delays and digitise process",
      "read_seconds": 20
     }
    },
@@ -1359,7 +1358,17 @@
     "link": "https://economictimes.indiatimes.com/opinion/et-commentary/beyond-bloc-politics-indias-brics-bet-on-multipolarity/articleshow/134146372.cms",
     "summary": "Under India's BRICS chairmanship, the importance of practical cooperation is underscored with an aim to launch impactful development initiatives. Enhancing citizens' lives through tailored health programs and technology is paramount. The chairmanship also prioritizes the nurturing of startup ecosystems and the support ",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T17:25:17+00:00"
+    "_sort": "2026-09-12T17:25:17+00:00",
+    "smart": {
+     "what_happened": [
+      "India\u2019s BRICS chairmanship emphasizes practical cooperation and the launch of development initiatives.",
+      "The agenda prioritises tailored health programmes, technology deployment and support for startup ecosystems."
+     ],
+     "why_it_matters": "By using its BRICS chairmanship to focus on health, technology and entrepreneurship, India aims to strengthen practical ties among the bloc, reinforcing its vision of a multipolar global order and showcasing its leadership in driving development projects that directly affect citizens.",
+     "what_to_watch": "The agenda and outcomes of the next BRICS summit meeting on health and startup initiatives.",
+     "headline": "India chairs BRICS, pushes health, tech and startup cooperation",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Economic Times",
@@ -1368,7 +1377,17 @@
     "link": "https://economictimes.indiatimes.com/wealth/legal/will/rs-6-42-lakh-travel-expense-disallowed-as-business-expenditure-over-use-of-wifes-credit-card-businessman-contests-tax-order-wins-relief-in-itat-mumbai/articleshow/134126429.cms",
     "summary": "Rs 6.42 lakh foreign travel expenditure disallowed from business income as businessman used wife\u2019s credit card to pay for it; ITAT Mumbai gives relief to taxpayer. Challa Nagendra Prasad, Judicial Member and G.M. Doss, Accountant Member of ITAT Mumbai heard this case.",
     "date": "Sep 12, 2026",
-    "_sort": "2026-09-12T11:20:04+00:00"
+    "_sort": "2026-09-12T11:20:04+00:00",
+    "smart": {
+     "what_happened": [
+      "The tax authority disallowed Rs 6.42 lakh of foreign travel expense claimed as business income because it was paid using the taxpayer's wife's credit card.",
+      "The ITAT Mumbai, with Judicial Member Challa Nagendra Prasad and Accountant Member G.M. Doss, granted relief to the taxpayer and reversed the disallowance."
+     ],
+     "why_it_matters": "The decision clarifies that expenses paid through a spouse's credit card can still be treated as legitimate business costs if properly substantiated, impacting how companies document and justify travel expenditures for tax purposes.",
+     "what_to_watch": "Future ITAT rulings on the use of family members' credit cards for business expenses, particularly any published judgments in the next six months.",
+     "headline": "Rs 6.42 lakh travel expense disallowed, businessman wins relief",
+     "read_seconds": 22
+    }
    },
    {
     "source": "NYT Well",
@@ -1443,7 +1462,7 @@
     "moves": 19,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.e4 c6 2.d4 d5, avoid 3...Qb6; instead play 3...Nd7, keeping the queen safe and preventing premature attacks that cost you material.",
+    "analysis": "Focus on early king safety: after 9\u2026Qb6, avoid 10\u2026Nf6?; instead play 10\u2026Nd7\u2011c5, keeping the king unexposed and preventing White\u2019s aggressive Bc4\u2011Qd2 attack. This reduces tactical threats and improves your defensive accuracy.",
     "is_upset": false,
     "is_collapse": true,
     "is_long": false,
@@ -1548,7 +1567,7 @@
     "moves": 57,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "",
+    "analysis": "Strengthen your king safety: avoid moving the g\u2011pawn after 12...Ng4; instead exchange on f3, then castle early\u2014prevent the decisive mate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1653,7 +1672,7 @@
   },
   "lichess_puzzle": {
    "pid": "qcgKo",
-   "rating": 1806,
+   "rating": 1960,
    "level": "\ud83d\udd34 stretch",
    "themes": "Exposed King \u00b7 Endgame \u00b7 Vukovic Mate",
    "tip": "King activity and pawn structure dominate. Technique over tactics here.",
