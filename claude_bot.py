@@ -54,8 +54,32 @@ def _nse_yahoo(sym: str) -> str:
     s = sym.strip().upper()
     return overrides.get(s, f"{s}.NS")
 
+# The engines this book publishes. Mirrors ENGINE_REGISTRY in the site's
+# signal.js — the ledger carries fourteen engines and only these seven reach a
+# reader, so these are the only ones worth surfacing in the bot.
+PUBLISHED_ENGINES = ("magic", "magicmagic", "equity_measured", "multibagger",
+                     "ai_longterm", "breakout", "momentum_quant")
+
+
 def _db_open_signals(min_score: int = 65) -> list:
-    """Read OPEN A/A+ signals from signals.db."""
+    """Open positions from the published engines.
+
+    THE SCORE COLUMN CARRIES TWO DIFFERENT SCALES, and the 65 threshold was
+    written for one of them. magic and breakout write a 0-100 grade;
+    momentum_quant writes its cross-sectional Z-SCORE, which runs about 2.8 to
+    3.1. So every VECTOR position scored ~3 against a bar of 65 and the bot
+    reported no open trades on names the site was publishing.
+
+    Measured on the live ledger: of 87 open signals from the published
+    engines, 43 scored under 65 and 15 carried no score at all — so more than
+    half the book was invisible here.
+
+    The engine whitelist is the real filter now: if a signal reached a reader
+    it belongs in this answer, whatever number its engine happened to write in
+    a shared column. min_score is kept for callers that still want a grade cut
+    and defaults to nothing, because a threshold applied across two scales is
+    not a threshold.
+    """
     try:
         con = db.connect()
         # Map by column name explicitly. db.py's _ConnWrapper.__setattr__ is
@@ -67,9 +91,11 @@ def _db_open_signals(min_score: int = 65) -> list:
         # except-block turned into an empty list, so it read as "no open
         # signals" rather than a broken query. db.py says it outright:
         # callers must NOT assume row_factory took.
+        _ph = ",".join("?" for _ in PUBLISHED_ENGINES)
         cur = con.execute(
-            "SELECT * FROM all_signals WHERE status='OPEN' AND score>=? ORDER BY score DESC, date DESC",
-            (min_score,)
+            f"SELECT * FROM all_signals WHERE status='OPEN' "
+            f"AND signal_type IN ({_ph}) ORDER BY date DESC, score DESC",
+            tuple(PUBLISHED_ENGINES)
         )
         cols = [c[0] for c in cur.description]
         rows = cur.fetchall()
@@ -154,7 +180,7 @@ def _start_api_server():
 
         @app.route("/api/portfolio")
         def api_portfolio():
-            rows = _db_open_signals(min_score=65)
+            rows = _db_open_signals()
             positions = []
             for r in rows:
                 score  = int(r.get("score") or 0)
