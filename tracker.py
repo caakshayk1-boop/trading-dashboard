@@ -647,10 +647,26 @@ def duplicate_symbols(candidates, signal_type="swing"):
         # Fetched separately from the other two rules (below) because this is
         # the one case that also leaves a remark, which needs the row id, not
         # just the symbol DISTINCT gives the other two.
+        # ── SIBLING ENGINES COUNT AS THE SAME ENGINE ────────────────────
+        #
+        # magic and magicmagic are one screen at two depths off the 52-week
+        # high. _log_magic_to_ledger already refuses a same-day pair, but an
+        # OPEN position from the sibling a week earlier passed straight
+        # through: J&KBANK carried magic (09-12) over magicmagic (09-05), two
+        # tickets on one idea.
+        #
+        # A reader holding the first does not want the second — it is the same
+        # thesis re-detected at a different price, which is precisely what the
+        # windowless OPEN check above was written to stop. It was only ever
+        # scoped too narrowly: to the exact engine name rather than the family.
+        _FAMILY = {"magic": ("magic", "magicmagic"),
+                   "magicmagic": ("magic", "magicmagic")}
+        _fam = _FAMILY.get(signal_type, (signal_type,))
+        _fph = ",".join("?" for _ in _fam)
         open_rows = c.execute(
             f"SELECT id, symbol FROM all_signals WHERE symbol IN ({ph}) "
-            f"AND signal_type=? AND status='OPEN'",
-            tuple(ordered) + (signal_type,)
+            f"AND signal_type IN ({_fph}) AND status='OPEN'",
+            tuple(ordered) + tuple(_fam)
         ).fetchall()
         for row_id, sym in open_rows:
             dupes.add(sym)
@@ -803,6 +819,38 @@ def log_batch_to_all_signals(rows, date=None):
     """
     if not rows:
         return []
+
+    # ── ONE TICKET PER NAME PER ENGINE, ENFORCED WHERE EVERY ENGINE WRITES ──
+    #
+    # duplicate_symbols() checks the DATABASE before a batch is written, so two
+    # candidates for the same symbol INSIDE one batch both pass it — the row
+    # they would collide with does not exist yet. equity_measured filed TCS
+    # twice and HDFCBANK twice on 2026-09-09, same engine, same day, two open
+    # tickets each.
+    #
+    # That is not a re-entry, it is the same idea written down twice, and a
+    # reader who sized both carries double the intended risk on one name.
+    #
+    # Guarded here rather than in each caller because this is the single
+    # function every engine writes through: fixing it at the nine call sites
+    # would be nine chances to miss one, and the tenth engine would arrive
+    # without the guard. First occurrence wins — it is the one the scan ranked
+    # highest — and the duplicates are counted, not silently dropped.
+    _seen, _deduped, _within = set(), [], 0
+    for _r in rows:
+        _k = (str(_r.get("symbol", "")).replace(".NS", "").upper(),
+              str(_r.get("signal_type", "")))
+        if _k[0] and _k in _seen:
+            _within += 1
+            continue
+        if _k[0]:
+            _seen.add(_k)
+        _deduped.append(_r)
+    if _within:
+        log.warning("ledger: dropped %d duplicate row(s) inside one batch — "
+                    "same symbol and engine filed more than once", _within)
+        rows = _deduped
+
     init_db()
     today = date or _today_ist()
     ids = []

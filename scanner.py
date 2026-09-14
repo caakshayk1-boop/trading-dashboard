@@ -3127,6 +3127,20 @@ MAGIC_SL_MIN_PCT = 0.04      # nor a meaninglessly tight one
 # other. The guard below still voids the setup when even the 52-week high
 # cannot clear it, so the effect is fewer signals rather than optimistic ones.
 MAGIC_MIN_T1_R   = R1_MULT   # was 1.0 — see above
+# ── AND A CEILING, WHICH THERE WAS NOT ──────────────────────────────────────
+# The R:R floor rewards a DISTANT target. A setup passes the gate by putting
+# the target further away, not by being likelier to reach it — so a stock deep
+# below its high produces enormous R and sails through. TATAINVEST filed a
+# FIRST target at 4.52R and a third at 11.31R, and the site had to publish a
+# red warning over its own signal.
+#
+# The ledger's answer, over 166 closed trades: best ever +4.43R, and TWO of
+# them (1.2%) ever beat 4R. A first target past that is not a target.
+#
+# The root cause is the recovery thesis itself — T1 is 40% of the distance to
+# the 52-week high, and for a name 45% off its high that distance is many R.
+# The thesis is sound; the arithmetic that follows from it is not.
+MAGIC_MAX_T1_R   = 4.0
 # Mirrors MIN_TARGET_GAP_R in the site's src/api/_levels.js: two targets closer
 # together than this fraction of risk are not separate exits, and the read side
 # blanks the second. Generating them anyway just moves the problem downstream.
@@ -3207,6 +3221,19 @@ def magic_levels(df1y, price: float, hi52: float, engine: str = "magic") -> dict
         # 52-week high cannot clear the first target by a real margin, there is
         # no trade here — that is a rejection, not a level to fudge.
         t1, t2, _ = enforce_r_floor(price, sl, t1, t2, None, "BUY", engine=engine)
+
+        # The ceiling, after the floor so both hold. Where 40% of the room to
+        # the high lands past what this book has ever reached, the ladder is
+        # rebuilt from the ceiling and the 52-week high stops being a TARGET —
+        # it remains the thesis, it is simply further away than any trade here
+        # has travelled, and naming it as a target is the defect the old 4.0R
+        # rung was deleted for.
+        _max_t1 = price + MAGIC_MAX_T1_R * risk
+        if t1 > _max_t1:
+            t1 = _max_t1
+            if t2 is not None:
+                t2 = min(t3, t1 + (R2_MULT - R1_MULT) * risk)
+            t3 = min(t3, t1 + (R3_MULT - R1_MULT) * risk)
         if t3 <= t1 + MIN_TARGET_GAP_R * risk:
             return None
 
