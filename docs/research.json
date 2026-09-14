@@ -1,8 +1,8 @@
 {
  "ok": true,
- "generated_at": "2026-09-11T14:22:33+00:00",
+ "generated_at": "2026-09-14T14:27:23+00:00",
  "source": "harvested bars (offline run)",
- "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-11T14:20:32+00:00.",
+ "coverage_note": "Harvested 500 of 500 names on hourly bars; 498 of 500 names on 3-year daily bars (0 returned nothing, 2 had too little history), at 2026-09-14T14:25:58+00:00.",
  "engines": [
   {
    "key": "buoy",
@@ -82,7 +82,7 @@
    "top": [
     {
      "engine": "anchor",
-     "i": 743,
+     "i": 740,
      "entry": 25550.0,
      "sl": 24083.44,
      "target1": 27896.49,
@@ -106,7 +106,7 @@
     },
     {
      "engine": "anchor",
-     "i": 744,
+     "i": 741,
      "entry": 708.25,
      "sl": 668.26,
      "target1": 772.23,
@@ -120,7 +120,7 @@
      "risk_atr": 3.16,
      "rsi": 44.0,
      "close_strength": 0.97,
-     "turnover_cr": 1928.36,
+     "turnover_cr": 1928.4,
      "bars_ago": 0,
      "symbol": "HDFCBANK",
      "lane": null,
@@ -130,7 +130,7 @@
     },
     {
      "engine": "anchor",
-     "i": 736,
+     "i": 733,
      "entry": 7419.5,
      "sl": 7005.37,
      "target1": 8082.1,
@@ -154,7 +154,7 @@
     },
     {
      "engine": "anchor",
-     "i": 737,
+     "i": 734,
      "entry": 30.37,
      "sl": 28.73,
      "target1": 32.99,
@@ -178,7 +178,7 @@
     },
     {
      "engine": "anchor",
-     "i": 743,
+     "i": 740,
      "entry": 471.5,
      "sl": 446.19,
      "target1": 511.99,
@@ -202,7 +202,7 @@
     },
     {
      "engine": "anchor",
-     "i": 741,
+     "i": 738,
      "entry": 3720.2,
      "sl": 3528.0,
      "target1": 4027.72,
@@ -226,7 +226,7 @@
     },
     {
      "engine": "anchor",
-     "i": 734,
+     "i": 731,
      "entry": 474.5,
      "sl": 451.78,
      "target1": 510.85,
@@ -250,7 +250,7 @@
     },
     {
      "engine": "anchor",
-     "i": 741,
+     "i": 738,
      "entry": 5064.0,
      "sl": 4853.47,
      "target1": 5400.85,
@@ -274,7 +274,7 @@
     },
     {
      "engine": "anchor",
-     "i": 736,
+     "i": 733,
      "entry": 879.5,
      "sl": 844.38,
      "target1": 935.68,
@@ -298,7 +298,7 @@
     },
     {
      "engine": "anchor",
-     "i": 741,
+     "i": 738,
      "entry": 1266.7,
      "sl": 1220.1,
      "target1": 1341.26,
