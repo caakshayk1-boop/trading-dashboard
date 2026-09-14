@@ -1,0 +1,62 @@
+{
+  "withdrawn_at": "20260914-075348",
+  "ceiling_r": 4.0,
+  "rows": [
+    {
+      "id": 921,
+      "date": "2026-08-23",
+      "signal_type": "top5_pick",
+      "symbol": "DUOL",
+      "entry": 146.13,
+      "sl": 131.88,
+      "target1": 355.0,
+      "target2": 480.32,
+      "target3": 480.32,
+      "rr": 14.66,
+      "status": "OPEN",
+      "_r1": 14.66
+    },
+    {
+      "id": 1027,
+      "date": "2026-09-06",
+      "signal_type": "top5_pick",
+      "symbol": "COIN",
+      "entry": 184.64,
+      "sl": 164.76,
+      "target1": 402.16,
+      "target2": 532.67,
+      "target3": 532.67,
+      "rr": 10.94,
+      "status": "OPEN",
+      "_r1": 10.94
+    },
+    {
+      "id": 676,
+      "date": "2026-06-13",
+      "signal_type": "multibagger",
+      "symbol": "ANANDRATHI",
+      "entry": 1765.3,
+      "sl": 1710.6,
+      "target1": 2023.81,
+      "target2": 2325.41,
+      "target3": 2713.18,
+      "rr": 10.2,
+      "status": "OPEN",
+      "_r1": 4.73
+    },
+    {
+      "id": 1068,
+      "date": "2026-09-12",
+      "signal_type": "magic",
+      "symbol": "TATAINVEST",
+      "entry": 650.9,
+      "sl": 604.24,
+      "target1": 861.99,
+      "target2": 1020.3,
+      "target3": 1178.62,
+      "rr": 7.92,
+      "status": "OPEN",
+      "_r1": 4.52
+    }
+  ]
+}
