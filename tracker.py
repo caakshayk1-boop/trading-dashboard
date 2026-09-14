@@ -598,6 +598,12 @@ def _cross_engine_duplicate(c, symbol, entry, today, signal_type):
     return (row[0], row[1]) if row else None
 
 
+# Latest wins: a re-detection of a name that is still open RETIRES the open row
+# and files the new one, rather than being refused. Set False to go back to
+# first-wins, where an open position blocks any re-file of the same name.
+REPLACE_ON_REDETECT = True
+
+
 def duplicate_symbols(candidates, signal_type="swing"):
     """Batch form of is_duplicate — returns the set of symbols to skip.
 
@@ -668,7 +674,25 @@ def duplicate_symbols(candidates, signal_type="swing"):
             f"AND signal_type IN ({_fph}) AND status='OPEN'",
             tuple(ordered) + tuple(_fam)
         ).fetchall()
+        # ── LATEST WINS, SO A RE-DETECTION REPLACES RATHER THAN BOUNCES ──
+        #
+        # Akshay, 2026-09-14: "keep only unique ones, remove earlier ones".
+        # This guard used to refuse the new signal and leave the open one
+        # standing, which keeps the EARLIEST — the opposite rule, and it is
+        # what let 46 stale tickets accumulate before the cleanup.
+        #
+        # The newest filing carries the levels the engine would place today.
+        # An August entry against a September price is a plan for a trade that
+        # is no longer available, so the old row is retired and the new one is
+        # allowed through. The retired row is deleted rather than cancelled for
+        # the reason dedupe_open.yml states: a duplicate was never a distinct
+        # call, and correcting a double entry is not erasing a record.
+        replaced = 0
         for row_id, sym in open_rows:
+            if REPLACE_ON_REDETECT:
+                c.execute("DELETE FROM all_signals WHERE id=?", (row_id,))
+                replaced += 1
+                continue
             dupes.add(sym)
             cand = cand_by_symbol.get(sym)
             if not cand:
@@ -680,6 +704,11 @@ def duplicate_symbols(candidates, signal_type="swing"):
             reason = cand.get("reasons") or cand.get("reason")
             _note_resignal(c, row_id, sym, entry, action, reason)
             wrote_note = True
+        if replaced:
+            c.commit()
+            _db.sync(c)
+            log.info("%s: replaced %d open ticket(s) — the newer read wins",
+                     signal_type, replaced)
 
         for sql, params in (
             (f"SELECT DISTINCT symbol FROM all_signals WHERE symbol IN ({ph}) "

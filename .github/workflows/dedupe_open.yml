@@ -1,0 +1,148 @@
+name: Ledger — one open ticket per name
+
+# Akshay, 2026-09-14: "keep only unique ones, remove earlier ones".
+#
+# THE PROBLEM. The screens re-run weekly and every re-detection of a name that
+# was still open filed a SECOND ticket. Measured on the live ledger the day
+# this was written: 158 open signals across 22 duplicate groups, of which 46
+# were repeats. PARADEEP carried SEVEN open tickets, SHRIRAMFIN and CEMPRO
+# five each. A reader holding one of them would have been shown six more of the
+# same idea, and anyone sizing them all would have carried seven times the
+# intended risk on one company.
+#
+# THE RULE, and it is the opposite of the one I proposed. Keep the LATEST and
+# remove the earlier ones. The newest filing carries the levels the engine
+# would place today, so it is the one a reader can act on; an August entry on a
+# September price is a plan for a trade that is no longer available.
+#
+# WHAT THAT COSTS, stated once rather than buried: a position whose entry is
+# replaced on every re-detection has no stable holding period, and its R is
+# measured from whichever entry survived. This is a book of current reads, not
+# of held positions, and the ledger's expectancy should be read that way.
+#
+# WHY DELETE RATHER THAN CANCEL. A cancelled row stays visible and badged, which
+# is right for a withdrawn CALL. A duplicate was never a distinct call — it is a
+# double entry, and correcting a double entry is not erasing a record. Every
+# deleted row is backed up to data/backups/ and committed BEFORE the delete
+# runs, exactly as purge_void.yml does.
+#
+# SIBLINGS COUNT AS ONE ENGINE. magic and magicmagic are one screen at two
+# depths off the 52-week high, so PARADEEP filed by both on the same day at the
+# same entry is one idea, not two.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Delete after backing up (leave false for a dry run)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  dedupe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Find and remove duplicate open tickets
+        env:
+          APPLY: ${{ inputs.apply }}
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, collections, datetime
+          import db
+
+          APPLY = os.environ.get("APPLY", "false").lower() == "true"
+
+          # Siblings are one engine. Anything not named here is its own family.
+          FAMILY = {"magic": "TIDAL", "magicmagic": "TIDAL"}
+
+          con = db.connect()
+          cur = con.execute(
+              "SELECT id, date, signal_type, symbol, entry, sl, target1, target2, "
+              "target3, rr, score, status, remarks "
+              "FROM all_signals WHERE status='OPEN'")
+          cols = [c[0] for c in cur.description]
+          rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+          print(f"{len(rows)} OPEN rows in the ledger")
+
+          groups = collections.defaultdict(list)
+          for r in rows:
+              sym = str(r["symbol"] or "").replace(".NS", "").upper()
+              fam = FAMILY.get(r["signal_type"], r["signal_type"])
+              if sym:
+                  groups[(sym, fam)].append(r)
+
+          doomed, kept = [], []
+          for (sym, fam), g in sorted(groups.items()):
+              if len(g) < 2:
+                  continue
+              # Latest wins. Date first, then id, so two rows stamped the same
+              # day resolve to the one written last rather than arbitrarily.
+              g.sort(key=lambda r: (str(r["date"]), int(r["id"] or 0)))
+              keep, drop = g[-1], g[:-1]
+              kept.append(keep)
+              doomed.extend(drop)
+              print(f"  {sym} [{fam}]  keep id={keep['id']} {keep['date']} "
+                    f"entry {keep['entry']}  ·  removing {len(drop)}")
+
+          print(f"\ngroups with duplicates: {len(kept)}")
+          print(f"rows to remove:         {len(doomed)}")
+          print(f"open book after:        {len(rows) - len(doomed)}")
+
+          if not doomed:
+              print("nothing to do")
+              raise SystemExit(0)
+
+          if not APPLY:
+              print("\nDRY RUN — nothing written. Re-run with apply=true.")
+              raise SystemExit(0)
+
+          # Back up BEFORE deleting, and commit it in the next step.
+          stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d-%H%M%S")
+          out = pathlib.Path("data/backups")
+          out.mkdir(parents=True, exist_ok=True)
+          path = out / f"open_duplicates_{stamp}.json"
+          path.write_text(json.dumps({"removed_at": stamp, "rule": "keep latest per symbol+family",
+                                      "rows": doomed}, indent=2, default=str), encoding="utf-8")
+          print(f"backed up {len(doomed)} rows to {path}")
+
+          ids = [int(r["id"]) for r in doomed]
+          for i in range(0, len(ids), 100):
+              chunk = ids[i:i + 100]
+              ph = ",".join("?" for _ in chunk)
+              con.execute(f"DELETE FROM all_signals WHERE id IN ({ph})", tuple(chunk))
+          con.commit()
+          db.sync(con)
+
+          left = con.execute("SELECT COUNT(*) FROM all_signals WHERE status='OPEN'").fetchone()[0]
+          print(f"deleted {len(ids)} rows · OPEN now {left}")
+          con.close()
+          PY
+
+      - name: Commit the backup
+        if: ${{ inputs.apply }}
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add data/backups/ || true
+          git diff --staged --quiet || git commit -m "data: backup of duplicate open tickets before removal [skip ci]"
+          git push || true
