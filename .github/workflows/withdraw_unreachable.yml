@@ -1,0 +1,139 @@
+name: Ledger — withdraw setups the book cannot reach
+
+# Akshay, 2026-09-14, on TATAINVEST: "Not duplicate but mentions these levels
+# looks wrong."
+#
+# He is right that it is a different problem from a double entry. TATAINVEST is
+# ONE real call whose first target sits at 4.52R, and ANANDRATHI is another at
+# 4.73R. Over 166 closed trades this book's best move ever is +4.43R and TWO of
+# them (1.2%) beat 4R. A first target past that is not a target — the site says
+# so itself, in a red box, over its own signal.
+#
+# WHY IT CANNOT JUST BE LEFT. An OPEN row eventually closes and its R enters
+# expectancy. Left alone these two become real trades in the measured record —
+# trades nobody could have taken, moving a number the whole site is built to
+# report honestly. Leaving it launders it.
+#
+# CANCELLED, NOT DELETED, and this is the one place that differs from
+# dedupe_open.yml. A duplicate was never a distinct call, so removing it
+# corrects a double entry. These WERE distinct calls: the engine filed them and
+# the book is withdrawing them. status='CANCELLED' keeps the row visible and
+# badged, and every expectancy query already excludes it —
+#   tracker.py:  WHERE status NOT IN ('OPEN','CANCELLED')
+# so it can never close into a win rate. The record shows both the call and the
+# withdrawal, which is the honest version of this.
+#
+# GENERIC, NOT TWO IDS. The threshold is read from signals.indicators.MAX_T1_R,
+# the same constant the generator now enforces, so this catches any straggler
+# filed before the ceiling existed without anyone maintaining a list.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Withdraw them (leave false for a dry run)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  withdraw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Withdraw unreachable setups
+        env:
+          APPLY: ${{ inputs.apply }}
+        run: |
+          python - <<'PY'
+          import os, json, pathlib, datetime
+          import db
+          from signals.indicators import MAX_T1_R
+
+          APPLY = os.environ.get("APPLY", "false").lower() == "true"
+
+          con = db.connect()
+          cur = con.execute(
+              "SELECT id, date, signal_type, symbol, entry, sl, target1, target2, "
+              "target3, rr, status FROM all_signals WHERE status='OPEN'")
+          cols = [c[0] for c in cur.description]
+          rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+          print(f"{len(rows)} OPEN rows · ceiling is {MAX_T1_R}R")
+
+          doomed = []
+          for r in rows:
+              e, s, t1 = r.get("entry"), r.get("sl"), r.get("target1")
+              try:
+                  e, s, t1 = float(e), float(s), float(t1)
+              except (TypeError, ValueError):
+                  continue
+              risk = abs(e - s)
+              if risk <= 0:
+                  continue
+              r1 = abs(t1 - e) / risk
+              if r1 > MAX_T1_R:
+                  r["_r1"] = round(r1, 2)
+                  doomed.append(r)
+
+          doomed.sort(key=lambda r: -r["_r1"])
+          print(f"\nfirst target beyond the ceiling: {len(doomed)}")
+          for r in doomed:
+              print(f"  id={r['id']:<6} {str(r['symbol'])[:12]:12} {r['signal_type']:16} "
+                    f"{str(r['date'])[:10]}  T1 {r['_r1']}R")
+
+          if not doomed:
+              print("nothing to withdraw")
+              raise SystemExit(0)
+          if not APPLY:
+              print("\nDRY RUN — nothing written. Re-run with apply=true.")
+              raise SystemExit(0)
+
+          stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d-%H%M%S")
+          out = pathlib.Path("data/backups"); out.mkdir(parents=True, exist_ok=True)
+          path = out / f"withdrawn_unreachable_{stamp}.json"
+          path.write_text(json.dumps({"withdrawn_at": stamp, "ceiling_r": MAX_T1_R,
+                                      "rows": doomed}, indent=2, default=str), encoding="utf-8")
+          print(f"recorded {len(doomed)} rows to {path}")
+
+          note = (f"Withdrawn {stamp[:8]}: first target {{}}R, beyond the {MAX_T1_R}R "
+                  f"ceiling. Best closed trade on this book is 4.43R. Filed before the "
+                  f"ceiling existed; kept in the record, excluded from expectancy.")
+          for r in doomed:
+              con.execute(
+                  "UPDATE all_signals SET status='CANCELLED', "
+                  "remarks = COALESCE(remarks,'') || ? WHERE id=?",
+                  (" · " + note.format(r["_r1"]), int(r["id"])))
+          con.commit()
+          db.sync(con)
+
+          left = con.execute("SELECT COUNT(*) FROM all_signals WHERE status='OPEN'").fetchone()[0]
+          print(f"withdrew {len(doomed)} · OPEN now {left}")
+          con.close()
+          PY
+
+      - name: Commit the record
+        if: ${{ inputs.apply }}
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add data/backups/ || true
+          git diff --staged --quiet || git commit -m "data: record of setups withdrawn for an unreachable first target [skip ci]"
+          git push || true

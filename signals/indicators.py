@@ -47,6 +47,23 @@ def obv(close, volume):
 ATR_STOP_MULT = 1.41       # was 1.5 (itself up from a broken 1.0-and-tighter)
 R1_MULT, R2_MULT, R3_MULT = 1.6, 2.5, 3.3    # was 1.5, 2.5, 4.0
 
+# ── AND THE CEILING, WHICH IS A HOUSE RULE AND NOT ONE ENGINE'S ─────────────
+#
+# The floor stops a target being too CLOSE. Nothing stopped one being absurdly
+# far, and the R:R gate reads distance as quality — so a setup passes by moving
+# the target away rather than by being likelier to reach it. TATAINVEST filed a
+# first target at 4.52R and a third at 11.31R, and the site had to render a red
+# warning over its own signal.
+#
+# The ledger's answer over 166 closed trades: best ever +4.43R, and TWO of them
+# (1.2%) beat 4R. A first target past that is not a target.
+#
+# I put this in magic_levels first, which was the engine that produced it. That
+# was the wrong home: the arithmetic is not magic's, it is the book's, and
+# every engine writes into the same ledger. ANANDRATHI came through a different
+# path at 4.73R and would have been missed.
+MAX_T1_R = 4.0
+
 
 def enforce_r_floor(entry, sl, t1, t2=None, t3=None, action="BUY", engine=None):
     """Lift a target ladder so the first target repays at least R1_MULT.
@@ -127,9 +144,31 @@ def enforce_r_floor(entry, sl, t1, t2=None, t3=None, action="BUY", engine=None):
             r1 = max(R1_MULT, float(_exp.floor_for(engine, default=R1_MULT)))
         except Exception:                                     # noqa: BLE001
             r1 = R1_MULT
+    # The ceiling binds after the floor, so a floor raised past it still lands
+    # on a reachable number rather than inheriting the engine's distance.
     r2 = r1 + (R2_MULT - R1_MULT)
     r3 = r1 + (R3_MULT - R1_MULT)
-    return lift(t1, r1), lift(t2, r2), lift(t3, r3)
+    out1, out2, out3 = lift(t1, r1), lift(t2, r2), lift(t3, r3)
+
+    # ── AND lift() ONLY EVER LIFTS, WHICH IS WHY THE CEILING NEEDED THIS ────
+    #
+    # Every rung above is clamped from BELOW: a target short of its floor is
+    # pushed out, and one already beyond it is returned untouched — correct for
+    # a floor, useless as a ceiling. Setting r1 = min(r1, MAX_T1_R) changed
+    # nothing at all, because TATAINVEST's 4.52R target was never the value
+    # being lifted. It passed straight through.
+    #
+    # When the FIRST target is past what this book has ever reached, the whole
+    # ladder is rebuilt from the ceiling rather than each rung being clipped
+    # separately — clipping would collapse the spacing between them and produce
+    # three targets stacked on one price, which is the other defect entirely.
+    r1_actual = abs(out1 - entry) / risk if risk else 0.0
+    if r1_actual > MAX_T1_R:
+        out1 = round(entry + sign * MAX_T1_R * risk, 2)
+        out2 = round(entry + sign * (MAX_T1_R + R2_MULT - R1_MULT) * risk, 2)
+        out3 = round(entry + sign * (MAX_T1_R + R3_MULT - R1_MULT) * risk, 2)
+
+    return out1, out2, out3
 
 
 def _tight_sl(price: float, low_series, cur_atr: float,
