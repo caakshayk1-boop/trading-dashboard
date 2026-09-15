@@ -502,13 +502,28 @@ def is_duplicate(symbol, signal_type="swing"):
     with _conn() as c:
         # Check unified all_signals first (covers all signal types)
         row = c.execute(
-            "SELECT id FROM all_signals WHERE symbol=? AND signal_type=? "
+            "SELECT id, date FROM all_signals WHERE symbol=? AND signal_type=? "
             # No date window — see the note in duplicate_symbols(). An open
             # position blocks a new one whether it was filed last week or last
             # quarter, which is what the long-horizon engines need.
             "AND status='OPEN'",
             (sym_clean, signal_type)
         ).fetchone()
+        # ── THE SINGLE-SYMBOL PATH HAS TO AGREE WITH THE BATCH ONE ────────
+        #
+        # duplicate_symbols() learned to retire an earlier day's ticket and
+        # this did not, so the two answered differently about the same row:
+        # the batch path let the signal through while this one still refused
+        # it. test_alert_pipeline's "batch dedup agrees with is_duplicate" is
+        # exactly that divergence, and it was a real bug, not a stale test.
+        #
+        # Same rule, same reason: an earlier day's ticket is retired so the
+        # newer levels stand; one filed today is a duplicate and bounces.
+        if row and REPLACE_ON_REDETECT and str(row[1] or "")[:10] != str(_date_ist()):
+            c.execute("DELETE FROM all_signals WHERE id=?", (row[0],))
+            log.info(f"Re-detected {sym_clean} ({signal_type}) — "
+                     f"retired the earlier open ticket")
+            row = None
         if row:
             log.debug(f"Duplicate skip: {sym_clean} ({signal_type}) already OPEN")
             if cand:
@@ -670,7 +685,7 @@ def duplicate_symbols(candidates, signal_type="swing"):
         _fam = _FAMILY.get(signal_type, (signal_type,))
         _fph = ",".join("?" for _ in _fam)
         open_rows = c.execute(
-            f"SELECT id, symbol FROM all_signals WHERE symbol IN ({ph}) "
+            f"SELECT id, symbol, date FROM all_signals WHERE symbol IN ({ph}) "
             f"AND signal_type IN ({_fph}) AND status='OPEN'",
             tuple(ordered) + tuple(_fam)
         ).fetchall()
@@ -687,9 +702,34 @@ def duplicate_symbols(candidates, signal_type="swing"):
         # allowed through. The retired row is deleted rather than cancelled for
         # the reason dedupe_open.yml states: a duplicate was never a distinct
         # call, and correcting a double entry is not erasing a record.
+        #
+        # ── AND IT ONLY APPLIES TO A TICKET FROM AN EARLIER DAY ───────────
+        #
+        # The first version of this replaced ANY open row, which broke the
+        # bot for two days and would have flooded the channel had it run.
+        # test_alert_pipeline caught it in three places and was right in all
+        # three: "re-running a scan re-alerts nothing (dedup holds)".
+        #
+        # Two different events were being treated as one:
+        #
+        #   · A LATER DAY's re-detection — the weekly multibagger rescan
+        #     finding the same name again next Saturday. The new filing
+        #     carries today's levels, so it should replace. This is what he
+        #     asked for.
+        #   · THE SAME DAY's second look — the scan re-running, the watchdog
+        #     re-dispatching, a manual re-run. Nothing has changed since the
+        #     row was written minutes ago. Replacing it deletes and re-files
+        #     the ticket, and re-files mean RE-ALERTS: every open name
+        #     re-sent to Telegram on every run, which is the alert flood this
+        #     repo has already lived through once.
+        #
+        # So: same-day is still a duplicate and still bounces, exactly as
+        # before. Only a ticket filed on an earlier date is retired.
+        today_ist = str(_date_ist())
         replaced = 0
-        for row_id, sym in open_rows:
-            if REPLACE_ON_REDETECT:
+        for row_id, sym, row_date in open_rows:
+            same_day = str(row_date or "")[:10] == today_ist
+            if REPLACE_ON_REDETECT and not same_day:
                 c.execute("DELETE FROM all_signals WHERE id=?", (row_id,))
                 replaced += 1
                 continue
