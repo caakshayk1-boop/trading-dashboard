@@ -1747,7 +1747,7 @@ def run_pivot_scan(time_str):
     written would be the exact claim this book exists to refuse.
     """
     from scanner import scan_pivot
-    from tracker import log_batch_to_all_signals, duplicate_symbols
+    from tracker import log_batch_to_all_signals, duplicate_symbols, mark_alerts_sent
 
     logging.info("Running PIVOT scan (location -> context -> confirmation)...")
     try:
@@ -1776,6 +1776,22 @@ def run_pivot_scan(time_str):
                   "reason": r.get("reason", ""), **r["meta"]},
     ) for r in rows])
     logged = [i for i in (ids or []) if i]
+
+    # ── SAY THAT NOBODY WAS TOLD, RATHER THAN SAYING NOTHING ────────────────
+    #
+    # test_engine_regressions caught this and was right: a scan that writes to
+    # the ledger and never records a delivery outcome leaves the book filling
+    # while the bot stays silent, with no way afterwards to tell "deliberately
+    # not sent" from "tried and failed". Those are completely different facts
+    # and the column exists to hold the difference.
+    #
+    # PIVOT is RESEARCH and alerts nobody on purpose, so the honest record is
+    # sent=False with the reason written down — which is exactly what
+    # _record_delivery's `reason` argument was added for.
+    _record_delivery(logged, False, mark_alerts_sent,
+                     reason="research tier — logged, never alerted. "
+                            "No closed trade and no measured expectancy yet.")
+
     logging.info("pivot: %d found, %d logged (research — not alerted)",
                  len(rows), len(logged))
     return rows
