@@ -1,0 +1,70 @@
+name: Seasonality — eleven years of calendar months
+
+# WHY MONTHLY AND NOT DAILY. This reads eleven years of MONTHLY bars for 989
+# names. A single day cannot move an eleven-year hit rate — the input only
+# changes when a month completes — so a daily run would spend ~1,000 Yahoo
+# requests to rewrite an identical file. It runs on the 26th, before the month
+# turns, so the "next month" rankings and the month-start Telegram alert both
+# have current data the moment they are wanted.
+#
+# AFTER THE SCREEN. docs/screen.json names the universe; without it the job
+# has nothing to iterate and says so rather than computing a partial file.
+#
+# THE OUTPUT IS ~512 KB and the /stock page fetches it once per session. That
+# size is why the encoding is [hit, median, n] rather than named keys — the
+# readable shape measured 1.5 MB, on a site whose next-largest asset is 260 KB.
+
+on:
+  schedule:
+    - cron: '30 19 26 * *'       # 01:00 IST on the 27th — before the month turns
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: seasonality
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45          # ~1,000 symbols at 8 workers
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refuse to build on a missing universe
+        run: |
+          test -s docs/screen.json || {
+            echo "docs/screen.json is missing — it names the universe"; exit 1; }
+          python -c "import json;d=json.load(open('docs/screen.json'));n=len(d.get('rows') or []);print(f'{n} names');exit(0 if n>500 else 1)"
+
+      - name: Build the monthly records
+        run: python seasonality.py
+
+      - name: Commit it
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add docs/seasonality.json
+          git diff --staged --quiet && echo "unchanged" && exit 0
+          python - <<'PY'
+          import json, pathlib
+          d = json.loads(pathlib.Path("docs/seasonality.json").read_text())
+          nxt = d.get("next_month") or {}
+          pathlib.Path("/tmp/msg").write_text(
+              f"data: seasonality — {d['covered']} of {d['universe']} names, "
+              f"{len(nxt.get('strong') or [])} with a record in {nxt.get('name','')} [skip ci]")
+          PY
+          git commit -F /tmp/msg
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase --autostash && sleep 3
+          done
+          exit 1

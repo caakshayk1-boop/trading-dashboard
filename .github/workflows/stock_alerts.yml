@@ -1,0 +1,75 @@
+name: Alerts — what CHANGED, to Telegram
+
+# The 12:30 and 17:00 briefs report STATE. This reports CHANGE, which is the
+# only thing worth a phone buzzing for: a company the screen changed its mind
+# about, a calendar month a name has historically done well in, and a move in
+# the market stage — the four-step reading that answers "when do we start
+# buying" and moves a handful of times a decade.
+#
+# AFTER THE SCREEN AND AFTER THE BAROMETER, never before. A verdict change is
+# a difference between two snapshots of screen.json, and the barometer stage
+# comes from a file the 13:45 job writes. Running first would announce
+# yesterday's news as today's; stock_alerts.py refuses a screen older than
+# three days rather than guess.
+#
+# STATE IS COMMITTED, and that is the whole idempotency mechanism. Without
+# data/alert_state.json in the repo, every run on a fresh GitHub runner would
+# see no previous verdicts, treat all 989 as the baseline, and never alert on
+# anything — or worse, alert on all of them. The commit is not bookkeeping; it
+# is the feature.
+
+on:
+  schedule:
+    - cron: '10 14 * * 1-5'      # 19:40 IST — after the screen and the barometer
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Print the messages instead of sending them'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stock-alerts           # never two runs diffing the same state at once
+  cancel-in-progress: false
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Send what changed
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ALERT_DRY_RUN:    ${{ inputs.dry_run && '1' || '' }}
+        run: python stock_alerts.py
+
+      - name: Commit the state
+        # `if: always()` deliberately omitted — a failed run may have sent a
+        # partial batch, and committing its state would mark the unsent half
+        # as already announced. A skipped commit re-announces at worst; a
+        # premature one loses the alert permanently.
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add data/alert_state.json
+          git diff --staged --quiet && echo "unchanged" && exit 0
+          git commit -m "data: alert state $(date -u +%Y-%m-%d) [skip ci]"
+          # CI writes to this branch from several jobs an hour. A rejected push
+          # here would strand the state and re-announce everything tomorrow.
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase --autostash && sleep 3
+          done
+          exit 1
