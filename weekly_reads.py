@@ -339,12 +339,22 @@ draft of this study did exactly that:
   lean on return on equity instead and say why.
 - Debt to equity is inflated by leases capitalised under Ind AS 116, so a
   retailer or an airline can look levered when the "debt" is shop rent.
+- The PE PERCENTILE is measured against the company's OWN history, and it runs
+  the opposite way to the PE itself. A low percentile means the stock is cheap
+  relative to how it has been priced before, even when the absolute multiple
+  looks high. Do not write that the market is "paying a premium" for a name
+  sitting in the bottom quartile of its own range — say that it is expensive on
+  an absolute multiple and cheap against itself, and that the two readings
+  disagree, which is the interesting part.
 
 RULES
 - 1,100 to 1,400 words in total. This is a five to seven minute read.
 - Plain, direct sentences. Short paragraphs.
 - Never use: robust, strong, healthy, solid, well-positioned, headwinds,
   tailwinds, going forward, in today's fast-paced.
+- In "Say it out loud", write the three sentences plainly. Do not wrap them in
+  quotation marks and do not bold the whole line — a draft did both and left
+  stray asterisks on the page.
 - Do not recommend buying or selling. Do not give a price target.
 - Do not open with a disclaimer or close with a summary of what you just wrote.
 """
