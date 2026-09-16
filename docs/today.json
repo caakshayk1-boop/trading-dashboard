@@ -1,7 +1,7 @@
 {
- "build_id": "20260915T080856",
- "date": "2026-09-15",
- "date_str": "Tuesday, September 15 2026",
+ "build_id": "20260916T075456",
+ "date": "2026-09-16",
+ "date_str": "Wednesday, September 16 2026",
  "picks": [
   {
    "symbol": "SMCI",
@@ -411,12 +411,8 @@
  "picks_week": null,
  "open_context": {
   "AAPL": {
-   "price": 332.27,
+   "price": 333.08,
    "sector": "Technology"
-  },
-  "ABREL": {
-   "price": 1281.6,
-   "sector": "Real Estate"
   },
   "ANANTRAJ": {
    "price": 598.35,
@@ -439,7 +435,7 @@
    "sector": "Energy"
   },
   "BRNUSD": {
-   "price": 106.59,
+   "price": 108.46,
    "sector": ""
   },
   "CAPLIPOINT": {
@@ -470,13 +466,13 @@
    "price": 1572.9,
    "sector": "Energy"
   },
+  "CIPLA": {
+   "price": 1366.0,
+   "sector": "Healthcare"
+  },
   "COALINDIA": {
    "price": 426.4,
    "sector": "Energy"
-  },
-  "COCHINSHIP": {
-   "price": 1381.0,
-   "sector": "Industrials"
   },
   "COFORGE.NS": {
    "price": 1846.5,
@@ -499,7 +495,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 247.72,
+   "price": 259.43,
    "sector": "Technology"
   },
   "CUPID": {
@@ -509,10 +505,6 @@
   "ECLERX": {
    "price": 1899.6,
    "sector": "Technology"
-  },
-  "EIDPARRY": {
-   "price": 721.05,
-   "sector": "Basic Materials"
   },
   "EMMVEE": {
    "price": 346.0,
@@ -529,10 +521,6 @@
   "GODREJIND": {
    "price": 1126.8,
    "sector": "Industrials"
-  },
-  "GOLD": {
-   "price": 4326.5,
-   "sector": ""
   },
   "GRANULES": {
    "price": 909.3,
@@ -571,7 +559,7 @@
    "sector": "Basic Materials"
   },
   "HOOD": {
-   "price": 112.57,
+   "price": 114.33,
    "sector": "Financial Services"
   },
   "HSCL": {
@@ -630,16 +618,12 @@
    "price": 1969.0,
    "sector": "Healthcare"
   },
-  "LTFOODS": {
-   "price": 438.1,
-   "sector": "Consumer Defensive"
-  },
   "MAHABANK": {
    "price": 84.2,
    "sector": "Financial Services"
   },
   "META": {
-   "price": 648.03,
+   "price": 665.6,
    "sector": "Communication Services"
   },
   "MINDACORP": {
@@ -649,6 +633,22 @@
   "MOTILALOFS": {
    "price": 1026.5,
    "sector": "Financial Services"
+  },
+  "MRPL": {
+   "price": 175.86,
+   "sector": "Energy"
+  },
+  "NAM-INDIA": {
+   "price": 1189.6,
+   "sector": "Financial Services"
+  },
+  "NATIONALUM": {
+   "price": 361.0,
+   "sector": "Basic Materials"
+  },
+  "NEM": {
+   "price": 123.07,
+   "sector": "Basic Materials"
   }
  },
  "ipos": {
@@ -780,7 +780,7 @@
     "dataset": "Careers feed",
     "status": "DEGRADED",
     "age": "14h old",
-    "note": "partial coverage \u2014 12/22 records"
+    "note": "partial coverage \u2014 10/22 records"
    }
   ]
  },
@@ -941,7 +941,7 @@
   },
   "daughter": {
    "months": 8,
-   "days": 264,
+   "days": 265,
    "heading": "Eight months old.",
    "band": "crawling",
    "born": "2025-12-25"
@@ -949,103 +949,103 @@
   "productivity": "2-minute rule: if it takes under 2 min, do it now. Don't queue it.",
   "father": [
    {
-    "title": "Introduce water in an open cup",
-    "do": "Offer a few sips from a small open cup, held by you. Expect most of it to spill.",
-    "why": "Open-cup drinking develops different oral motor patterns than a bottle or spout. Starting now, badly, is easier than starting later, correctly."
+    "title": "Notice what she is not doing",
+    "do": "Once a week, check the milestone list rather than assuming.",
+    "why": "Sitting, transferring objects hand to hand, responding to her name, and babbling with consonants are the seven-month markers. Knowing the list means concerns get raised early, when intervention works best."
    },
    {
-    "title": "Massage after the bath",
-    "do": "Two minutes of firm, slow strokes on legs and back after bathing.",
-    "why": "Sustained touch by a father has measurable effects on infant stress response, and it gives you a reliable daily block of contact that is not feeding or settling."
+    "title": "Talk to her about your day",
+    "do": "Tell her what happened at work, in full sentences, as if she understands.",
+    "why": "The content is irrelevant and the exposure is not. It also forces you to articulate the day, which is a decent end-of-work ritual in its own right."
    }
   ],
   "life_wisdom": [
    {
     "tradition": "Jainism",
-    "term": "Anekantavada",
-    "translation": "Many-sidedness",
-    "teaching": "Reality has more facets than any single viewpoint can hold. The classic image is blind men describing an elephant \u2014 each is accurate and each is incomplete.",
-    "apply": "In a disagreement, state the other person's position better than they did before you argue against it. If you cannot, you have not understood it yet."
+    "term": "Aparigraha",
+    "translation": "Non-attachment / non-possessiveness",
+    "teaching": "Accumulation beyond need becomes a burden that owns you. The vow is not poverty; it is limiting want deliberately.",
+    "apply": "Set a ceiling before you need one. Decide what income is enough now, in a number, so that lifestyle does not silently absorb every increment."
    },
    {
     "tradition": "Buddhism",
-    "term": "Kalama Sutta",
-    "translation": "Test it yourself",
-    "teaching": "The Buddha told the Kalamas not to accept teaching on authority, tradition, or scripture \u2014 but to test whether it leads to benefit when practised.",
-    "apply": "Apply it to strategy advice, including from people senior to you. What is the evidence, and what would falsify it? Deference is not evidence."
+    "term": "Mudita",
+    "translation": "Sympathetic joy",
+    "teaching": "The third sublime state: genuine pleasure at another's success. Named separately because it is rarer and harder than compassion for suffering.",
+    "apply": "Pick the peer whose progress you find least comfortable and find the thing they did well. Envy is the most common emotion in a competitive finance function and the least admitted."
    }
   ],
   "spanish": [
    {
-    "word": "ahorrar",
-    "meaning": "to save (money)",
-    "es": "Necesitamos ahorrar m\u00e1s cada mes.",
-    "en": "We need to save more each month.",
+    "word": "la tienda",
+    "meaning": "the shop / store",
+    "es": "Abrimos una tienda nueva en Dub\u00e1i.",
+    "en": "We are opening a new store in Dubai.",
     "tag": "Business"
    },
    {
-    "word": "m\u00e1s vale tarde que nunca",
-    "meaning": "better late than never",
-    "es": "Entreg\u00f3 el informe \u2014 m\u00e1s vale tarde que nunca.",
-    "en": "He delivered the report \u2014 better late than never.",
-    "tag": "Idiom"
+    "word": "el costo",
+    "meaning": "the cost",
+    "es": "El costo subi\u00f3 por el transporte.",
+    "en": "The cost went up because of shipping.",
+    "tag": "Business"
    }
   ],
   "vocab": [
    {
-    "word": "Granular",
-    "say": "GRAN-yuh-luhr",
-    "meaning": "Broken into fine detail.",
-    "example": "I need this granular \u2014 by store, by category, by week.",
-    "note": "The exact word for asking someone to stop showing you aggregates."
+    "word": "Latitude",
+    "say": "LAT-i-tood",
+    "meaning": "Freedom to act within limits.",
+    "example": "Give the country teams latitude on promotions, not on pricing.",
+    "note": "A leadership word \u2014 defines the boundary rather than the rule."
    },
    {
-    "word": "Untenable",
-    "say": "un-TEN-uh-buhl",
-    "meaning": "Impossible to defend or maintain.",
-    "example": "Holding 95 days of stock at this rate is untenable.",
-    "note": "Stronger than 'difficult'. Use it when you mean the position must change."
+    "word": "Extrapolate",
+    "say": "ik-STRAP-uh-layt",
+    "meaning": "To extend a trend beyond known data.",
+    "example": "Do not extrapolate a festive quarter across the year.",
+    "note": "Naming the error is often the fastest way to kill a bad forecast."
    }
   ],
   "speaking": {
-   "title": "Record and listen back",
-   "drill": "Record 60 seconds answering 'why do you want to be a CFO?'. Listen once for content, once for delivery only.",
-   "why": "Almost nobody does this, and it is the single fastest improvement available. You will hear things no one will tell you."
+   "title": "The hostile question",
+   "drill": "Rehearse: 'That is a fair challenge \u2014 here is the assumption behind it.' Say it five times until it is automatic.",
+   "why": "Having a rehearsed opening for a hostile question buys three seconds of thinking without looking rattled."
   },
   "interview_tech": [
    {
-    "q": "What is EBITDAR and why does retail use it?",
-    "a": "EBITDA before rent. Retail and hospitality use it because the owned-versus-leased decision distorts EBITDA comparability \u2014 a company that owns its stores shows higher EBITDA than an identical company that leases them, purely from capital structure. EBITDAR strips that out. Post-IFRS 16 it matters less for reported figures since operating leases already sit below EBITDA, but it remains standard in valuation and in comparing operators across own-versus-lease models.",
-    "who": "Retail analysts \u00b7 Americana \u00b7 Alshaya"
+    "q": "Walk me through how a $1M inventory write-down flows through all three statements.",
+    "a": "P&L: COGS up $1M, so gross profit, EBIT and pre-tax income each fall $1M. At a 25% rate, net income falls $750K. Cash flow: start from net income \u2212$750K, add back the $1M non-cash write-down, so operating cash flow rises $250K \u2014 the tax shield. Balance sheet: inventory \u2212$1M, cash +$250K, so assets fall $750K; retained earnings fall $750K. It balances. The point they are testing: you know the write-down is non-cash and that the only real cash effect is tax.",
+    "who": "Amazon \u00b7 Walmart \u00b7 Majid Al Futtaim"
    },
    {
-    "q": "UAE corporate tax is 9%. How does that change your group structure thinking?",
-    "a": "It ends the era of treating the UAE as a zero-tax base. Key points: 9% applies above AED 375K taxable income; qualifying free zone persons can still get 0% on qualifying income but the conditions are strict and substance-tested; transfer pricing documentation is now mandatory and OECD-aligned. Practically: intercompany charges between a UAE HQ and operating markets need defensible benchmarking, and management fee structures designed purely for tax will be challenged. Model the effective rate, not the headline rate.",
-    "who": "PwC Gulf \u00b7 Chalhoub \u00b7 Emaar"
+    "q": "How do you value a new store before signing a 10-year lease?",
+    "a": "Build an unlevered free cash flow model over the lease term. Revenue from catchment population, comparable sales density and a ramp curve \u2014 never assume year-one maturity. Deduct COGS, rent with escalation clauses, staff, and allocated overhead only if genuinely incremental. Capex is fit-out plus initial inventory. Discount at WACC and test IRR versus hurdle, payback, and NPV. Then sensitise the two variables that actually decide it: year-one sales and the ramp. A store that only clears the hurdle at 100% of forecast is a no.",
+    "who": "IKEA \u00b7 Majid Al Futtaim \u00b7 Costco"
    }
   ],
   "interview_soft": [
    {
-    "q": "Why do you want to be a CFO, and why in retail?",
-    "a": "Structure: motive, evidence, specificity. Weak answers say 'growth' and 'leadership'. Strong answer names the work: 'I want the seat where capital allocation is decided, not just reported. In FP&A I model the store investment case; the CFO decides which twelve of thirty get built. Retail because the feedback loop is daily \u2014 you see whether the decision worked in the sales line the next week, which is not true in most industries.' Then one proof point with a number attached.",
-    "who": "Standard opener, every CFO search"
+    "q": "What is your biggest professional failure?",
+    "a": "Pick a real one with a number, not a disguised strength. The structure: what you owned, what specifically you got wrong, what it cost, what you changed in your process, and evidence the change held. The disqualifying answers are 'I work too hard' and any failure where the fault lands on someone else. If you cannot name the cost in money or time, it was not a real failure and they will know.",
+    "who": "Amazon (Bar Raiser) \u00b7 P&G \u00b7 Nestl\u00e9"
    },
    {
-    "q": "How do you build a finance team, and how do you handle an underperformer?",
-    "a": "Building: hire for one clear gap, not a generalist; define what good looks like in writing before the first review, not after. Underperformance: the honest answer is that you probably waited too long once, and learned from it. Structure \u2014 early specific feedback with examples, an agreed plan with dates, documented check-ins, and a decision at the end of it either way. The failure mode they are probing for is a manager who avoids the conversation and lets the team carry someone for a year.",
-    "who": "GE \u00b7 Unilever \u00b7 Al-Futtaim"
+    "q": "Where do you see yourself in five years?",
+    "a": "Answer the real question: are you a flight risk and do you understand the ladder. Be specific about the next rung rather than the summit \u2014 'Financial Controller for a multi-market group, then Finance Director with commercial ownership, then CFO. What I need in between is treasury depth and a full M&A cycle, which is part of why this role interests me.' Naming what you lack reads as self-aware, not weak.",
+    "who": "Universal"
    }
   ],
   "cfo_field": [
    {
-    "q": "Know your break-even by store, not by chain.",
-    "a": "A chain at group-level profitability can be carrying a quarter of its estate below contribution. Compute store contribution \u2014 gross profit less rent, staff and directly attributable fixed cost \u2014 and rank it. Then, before closing anything: is the lease committed, what does the store contribute to online fulfilment in its catchment, and what is the exit cost. A negative-contribution store with four years left on a non-cancellable lease is usually cheaper to run than to close.",
-    "who": "The analysis that gets you noticed"
+    "q": "Read the cash flow statement first. Always.",
+    "a": "P&L is an opinion, cash is a fact. Open any set of accounts at the cash flow statement, compare operating cash flow to EBITDA over three years, and look at the gap. A business converting 90%+ of EBITDA to operating cash is real. One converting 50% has its profit sitting in working capital or is capitalising something it should be expensing. That one ratio finds more problems than any variance pack.",
+    "who": "The first thing to check, every time"
    },
    {
-    "q": "VAT in the GCC is a cash-flow instrument, not just a compliance task.",
-    "a": "Registration thresholds, filing frequency and the timing of input recovery all move working capital. A group filing quarterly rather than monthly holds recoverable input VAT longer than it needs to. Know the filing calendar in every jurisdiction the group trades in, and know which entity holds the recoverable balance \u2014 a refund stuck in the wrong entity is cash you own and cannot use.",
-    "who": "UAE \u00b7 KSA \u00b7 Oman"
+    "q": "Scenario planning beats a single budget, and costs less than it sounds.",
+    "a": "Three cases \u2014 base, downside, upside \u2014 with the two or three variables that actually move the outcome, not thirty. In retail that is usually like-for-like growth, gross margin, and rent renewals. The value is not the numbers; it is that the board has already discussed the downside before it arrives, so the conversation when it does is about the response rather than about whether it is happening.",
+    "who": "What a board actually wants"
    }
   ],
   "review": {
@@ -1062,8 +1062,98 @@
   },
   "podcasts": {
    "ok": true,
-   "generated_at": "2026-09-15T00:10:23.255589+00:00",
+   "generated_at": "2026-09-15T23:56:28.577350+00:00",
    "episodes": [
+    {
+     "show": "Figuring Out",
+     "author": "Raj Shamani",
+     "category": "Business",
+     "title": "TOP Harvard Scientist: These 5 Habits Are Aging You Faster | David Sinclair | FO562 Raj Shamani",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=gfCg5srOjN0",
+     "takeaways": [
+      "Genetics, lifestyle, and cellular health all influence longevity.",
+      "We can take actions today to stay healthier for longer."
+     ]
+    },
+    {
+     "show": "Pranjal Kamra",
+     "author": "Pranjal Kamra",
+     "category": "Investing",
+     "title": "NSE IPO Explained | Should You Apply?",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=M_npo4c9DEA",
+     "takeaways": [
+      "The episode explains how India\u2019s largest stock exchange generates its revenue.",
+      "It directly compares NSE\u2019s financial performance, growth potential and valuations with those of BSE."
+     ]
+    },
+    {
+     "show": "Abhijit Chavda",
+     "author": "Abhijit Chavda",
+     "category": "Geopolitics",
+     "title": "#AskAbhijit 382: Ask Me Anything - Any Topic",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=IvxYfn5zCPE",
+     "takeaways": [
+      "Episode 382 of the #AskAbhijit show: Ask me your best questions in the live chat and Superchat, and I shall answer them.",
+      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
+     ]
+    },
+    {
+     "show": "The Wire",
+     "author": "The Wire",
+     "category": "Politics",
+     "title": "Why Orangutans in Odisha Are Bad News \u2013 For India And The World",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=acycTOkTVm4",
+     "takeaways": [
+      "On September 8, authorities spotted five orangutans in the Ranakantha reserve forest in Odisha\u2019s Balasore district.",
+      "State authorities immediately rescued them."
+     ]
+    },
+    {
+     "show": "ANI Podcast (clips)",
+     "author": "ANI Podcast with Smita Prakash Clips",
+     "category": "Politics",
+     "title": "India\u2019s Housing Problem: Too Many Expensive Homes, Too Few Affordable Ones? | Quick Take",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=U1HjrY-X64E",
+     "takeaways": [
+      "India\u2019s Housing Problem: Too Many Expensive Homes, Too Few Affordable Ones?",
+      "| Quick Take #QuickTake #SmitaPrakash #India #RentalHousing #RealEstate #HomeBuyers #UrbanHousing #PropertyMarket Tune in here: linktr.ee/podcastwithsmitaprakash"
+     ]
+    },
+    {
+     "show": "Sid Warrier",
+     "author": "Dr Sid Warrier",
+     "category": "Health",
+     "title": "Dopamine Detox Is a Myth | Neurologist Explains",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=dWR6jRSMJ0U",
+     "takeaways": [
+      "The real difference between novelty dopamine and depth dopamine Why your brain is wired to avoid effort, not seek reward The 70-20-10 framework for structuring your time so dopamine compounds Why AI can trick your brain into feeling like you have knowledge you don't #DopamineDetox #Neuroscience #BrainHealth #Neurologist #DrSidWarrier #WarrierClinic #Dopamine #MentalHealthIndia #Productivity #HealthyBrain #ScienceExplained #IndianDoctor #Focus #SelfImprovement #Neurology Show your support by becoming a Channel Member and get special perks:"
+     ]
+    },
+    {
+     "show": "Drishti IAS",
+     "author": "Drishti IAS",
+     "category": "Education",
+     "title": "UPSC Syllabus: Know Exactly What You Have to Study | Prelims & Mains | Drishti IAS",
+     "guest": "",
+     "published": "2026-09-15",
+     "link": "https://www.youtube.com/watch?v=1DFdcGyf3kE",
+     "takeaways": [
+      "What exactly do you need to study for the UPSC Civil Services Examination?",
+      "Before starting UPSC preparation, the first step is to understand the complete syllabus and examination pattern."
+     ]
+    },
     {
      "show": "Think School",
      "author": "Think School",
@@ -1073,8 +1163,8 @@
      "published": "2026-09-14",
      "link": "https://www.youtube.com/watch?v=Pb9KiLgqahY",
      "takeaways": [
-      "Bhutan operates a secret, government\u2011run Bitcoin mining facility hidden in the Himalayas.",
-      "% of Bhutan\u2019s land is unsuitable for agriculture, preventing traditional farming."
+      "A journalist discovered a government\u2011run Bitcoin mining facility hidden in the Himalayas of Bhutan.",
+      "Bhutan has become one of the largest holders of Bitcoin on the planet."
      ]
     },
     {
@@ -1086,8 +1176,8 @@
      "published": "2026-09-14",
      "link": "https://www.youtube.com/watch?v=RRoNsmry-68",
      "takeaways": [
-      "Five well-known Indian stocks have fallen more than 50% from their all\u2011time highs.",
-      "The episode examines revenue growth, profit margins, cash flow, debt, working capital, order books, valuations, management guidance and key risks to determine if the declines are temporary challenges or deeper structural issues."
+      "Five well-known Indian stocks have fallen more than 50% from their all-time highs\u2014but does a falling stock always mean a broken business?",
+      "In this video, we analyse 5 stocks to understand why these stocks corrected sharply, what changed in their businesses, and what could potentially drive a turnaround."
      ]
     },
     {
@@ -1107,64 +1197,13 @@
      "show": "The Deshbhakt",
      "author": "The Deshbhakt",
      "category": "Society",
-     "title": "Will AI Destroy Humanity? | Real Fears Or Dirty Games Being Played By AI Companies? | Akash Banerjee",
+     "title": "Will AI Destroy Humanity? | Genuine Fear Or Games Being Played By AI Companies? | Akash Banerjee",
      "guest": "",
      "published": "2026-09-14",
      "link": "https://www.youtube.com/watch?v=11QI7boyKQw",
      "takeaways": [
-      "AI tech has been advancing at a brutal pace - but now the biggest names in the AI industry are warning that the technology could pose an existential threat to humanity.",
-      "Anthropic CEO Dario Amodei, OpenAI CEO Sam Altman and Elon Musk have all raised concerns about AI safety and the need to slow 'down frontier' development."
-     ]
-    },
-    {
-     "show": "The Wire",
-     "author": "The Wire",
-     "category": "Politics",
-     "title": "Haaretz expose of Netanyahu believable, his behaviour was \u201ccriminal\u201d: Gershon Baskin",
-     "guest": "",
-     "published": "2026-09-14",
-     "link": "https://www.youtube.com/watch?v=Pa-mUnkHNNg",
-     "takeaways": [
-      "Haaretz expose of Netanyahu believable, his behaviour was \"criminal\": Gershon Baskin, Middle East Director, International Communities Organisation and Israeli hostage negotiator, to Karan Thapar for The Wire.",
-      "The Hamas attack on Israel on October the 7, 2023 traumatised the country."
-     ]
-    },
-    {
-     "show": "ANI Podcast (clips)",
-     "author": "ANI Podcast with Smita Prakash Clips",
-     "category": "Politics",
-     "title": "\u201cEverybody is sacred in our society, and for no reason at all\u201d Manu Joseph",
-     "guest": "",
-     "published": "2026-09-14",
-     "link": "https://www.youtube.com/watch?v=bOVAwqrEgMQ",
-     "takeaways": [
-      "Everybody is sacred in our society, and for no reason at all."
-     ]
-    },
-    {
-     "show": "Drishti IAS",
-     "author": "Drishti IAS",
-     "category": "Education",
-     "title": "UPSC EPFO 2026: 90-Day Complete Preparation Roadmap | Strategy to Crack the Exam",
-     "guest": "",
-     "published": "2026-09-14",
-     "link": "https://www.youtube.com/watch?v=1X3XNewPrqI",
-     "takeaways": [
-      "Only 90 days are left for the UPSC EPFO 2026 examination!",
-      "Are you confused about how to utilize these crucial 90 days and prepare effectively for the exam?"
-     ]
-    },
-    {
-     "show": "Figuring Out",
-     "author": "Raj Shamani",
-     "category": "Business",
-     "title": "Smriti Mandhana On Controlling Emotions, Handling Pressure & Failures | FO561 Raj Shamani",
-     "guest": "",
-     "published": "2026-09-12",
-     "link": "https://www.youtube.com/watch?v=46P1rL0rzPE",
-     "takeaways": [
-      "She credits her coach's manifestation ritual for shaping her career",
-      "A single phone call completely reset her mindset after mistakes on the field"
+      "AI industry leaders such as Anthropic\u2019s Dario Amodei, OpenAI\u2019s Sam Altman and Elon Musk warn that AI could pose an existential threat to humanity.",
+      "They have called for slowing \u201cfrontier\u201d AI development to address safety concerns."
      ]
     },
     {
@@ -1177,7 +1216,7 @@
      "link": "https://www.youtube.com/watch?v=XGja7bJudvQ",
      "takeaways": [
       "Housing, education, and gold have become significantly more expensive since 2006, outpacing salary growth.",
-      "The speaker advises: don\u2019t rush to buy a house, start investing early even with small amounts, and avoid using credit for consumption."
+      "The presenter advises three principles: avoid rushing to buy a house, start investing early even with small amounts, and don\u2019t use credit for consumption."
      ]
     },
     {
@@ -1190,7 +1229,7 @@
      "link": "https://www.youtube.com/watch?v=zwE5G1Zh1h8",
      "takeaways": [
       "NSE generates revenue from transaction charges, options revenue, listing fees, data services, clearing & settlement, and Nifty licensing.",
-      "The video explains the NSE\u2019s business model, financial performance, valuation, industry outlook, key risks, and details of its upcoming IPO."
+      "The video explains the NSE\u2019s business model, financial performance, valuation, industry outlook, risks, and IPO details."
      ]
     },
     {
@@ -1202,21 +1241,8 @@
      "published": "2026-09-12",
      "link": "https://www.youtube.com/watch?v=yzqgyYqAz_0",
      "takeaways": [
-      "Leasing a luxury car comes with specific costs and legal clauses you need to understand.",
-      "An Excel sheet is provided to help you calculate the financial math of a luxury car lease."
-     ]
-    },
-    {
-     "show": "Abhijit Chavda",
-     "author": "Abhijit Chavda",
-     "category": "Geopolitics",
-     "title": "#AskAbhijit 380: Ask Me Anything - Any Topic",
-     "guest": "",
-     "published": "2026-09-12",
-     "link": "https://www.youtube.com/watch?v=K6j_nc0STZU",
-     "takeaways": [
-      "Episode 380 of the #AskAbhijit show: Ask me your best questions in the Live Chat and Super Chat, and I shall answer them.",
-      "Dark Stars to Black Holes: The 250-Year Journey from Impossible Idea to Nobel Prize (The Black Hole Chronicles Book 1) 2."
+      "Abhishek just got a new car, and this one is special this is a \u201cLuxury Car\u201d.",
+      "But he technically did not buy it, he got it on a lease!"
      ]
     },
     {
@@ -1228,7 +1254,8 @@
      "published": "2026-09-11",
      "link": "https://www.youtube.com/watch?v=GU4YvNZao9o",
      "takeaways": [
-      "The episode features Nikhil\u202fKamath, Rajesh\u202fMagow, and Puneet\u202fChhatwal as guests."
+      "Access the full data and references used in this episode below.",
+      "The episode includes Nikhil\u202fKamath, Rajesh\u202fMagow, and Puneet\u202fChhatwal as guests."
      ]
     },
     {
@@ -1245,19 +1272,6 @@
      ]
     },
     {
-     "show": "Pranjal Kamra",
-     "author": "Pranjal Kamra",
-     "category": "Investing",
-     "title": "How to Invest in Your 20s | Complete Step-by-Step Plan",
-     "guest": "",
-     "published": "2026-09-10",
-     "link": "https://www.youtube.com/watch?v=JPVLpELKSYk",
-     "takeaways": [
-      "Starting wealth creation in your 20s gives you an unmatched compounding advantage.",
-      "The video offers a step\u2011by\u2011step investment blueprint focused on optimal asset allocation, portfolio balance, and disciplined long\u2011term growth."
-     ]
-    },
-    {
      "show": "Labour Law Advisor",
      "author": "Labour Law Advisor",
      "category": "Money",
@@ -1271,19 +1285,6 @@
      ]
     },
     {
-     "show": "Sid Warrier",
-     "author": "Dr Sid Warrier",
-     "category": "Health",
-     "title": "Caught in a Negative Spiral? | Neuroscience tips to RESET yourself | Dr Sid Warrier",
-     "guest": "",
-     "published": "2026-09-09",
-     "link": "https://www.youtube.com/watch?v=3tK8dbPavGs",
-     "takeaways": [
-      "You ever hear that 2AM voice telling you everything's about to go wrong?",
-      "It's not weakness \u2014 it's a billion-year-old fear network in your brain running without your permission."
-     ]
-    },
-    {
      "show": "Akshat Shrivastava",
      "author": "Akshat Shrivastava",
      "category": "Investing",
@@ -1292,8 +1293,8 @@
      "published": "2026-09-07",
      "link": "https://www.youtube.com/watch?v=PtSLamEHWjc",
      "takeaways": [
-      "The FCNR scheme may not deliver the returns it promises.",
-      "It affects both NRIs and Indian resident investors."
+      "The recent FCNR scheme by the RBI appears lucrative but may not deliver on its promises.",
+      "It impacts both NRIs and Indian resident investors."
      ]
     },
     {
@@ -1305,8 +1306,8 @@
      "published": "2026-09-07",
      "link": "https://www.youtube.com/watch?v=Ju51RtLhpq0",
      "takeaways": [
-      "Most people build a plan to reach financial freedom.",
-      "Very few plan for what happens after."
+      "Karan Datta retired at 47 and is now in his eighth year of retirement.",
+      "He treats certain watch pieces as appreciating assets."
      ]
     },
     {
@@ -1318,8 +1319,8 @@
      "published": "2026-09-05",
      "link": "https://www.youtube.com/watch?v=xQ3lxbRGgLY",
      "takeaways": [
-      "The video was created solely to spread awareness and educate viewers.",
-      "The information presented is claimed to be accurate to the best of the team\u2019s knowledge."
+      "The fastest and most affordable way to upskill yourself in AI is highlighted.",
+      "A live workshop on AI is scheduled for 6th\u202fSept at 7\u202fpm\u202fIST."
      ]
     }
    ],
@@ -1333,76 +1334,76 @@
    {
     "source": "Livemint",
     "cat": "money",
-    "title": "Hong Kong: This Indian couple prefers to live in 'world's most expensive city' to save more money; here's how",
-    "link": "https://www.livemint.com/money/personal-finance/hong-kong-this-indian-couple-prefers-to-live-in-worlds-most-expensive-city-to-save-more-money-heres-how-11789411459325.html",
-    "summary": "Despite the high cost of living in Hong Kong, Sharma and her husband manage their finances effectively, benefiting from higher incomes and lower tax rates.&amp;nbsp;",
-    "date": "Sep 14, 2026",
-    "_sort": "2026-09-14T18:53:30+00:00",
+    "title": "More households are moving up the income ladder: How India's wealth pyramid could change by FY31",
+    "link": "https://www.livemint.com/money/personal-finance/more-households-are-moving-up-the-income-ladder-how-indias-wealth-pyramid-could-change-by-fy31-11789498698163.html",
+    "summary": "India\u2019s income pyramid is shifting rapidly, with millions of households moving into higher-income brackets. As earnings rise, spending patterns, savings, and investment behaviour are also changing.&amp;nbsp;",
+    "date": "Sep 15, 2026",
+    "_sort": "2026-09-15T19:55:32+00:00",
     "smart": {
      "what_happened": [
-      "Sharma and her husband chose to reside in Hong Kong despite its high cost of living.",
-      "They save money by earning higher incomes and paying lower taxes."
+      "Millions of Indian households are moving into higher\u2011income brackets as earnings rise.",
+      "The shift is expected to alter spending, savings and investment patterns."
      ],
-     "why_it_matters": "The couple's experience highlights how higher earnings and lower tax rates can offset the expensive cost of living in a global city, offering insight for expatriates and financial planners considering relocation for fiscal advantages.",
-     "what_to_watch": "Any changes to Hong Kong's personal income tax rates or salary trends for expatriates.",
-     "headline": "Indian couple lives in Hong Kong to save money despite high costs",
+     "why_it_matters": "A larger share of higher\u2011income households can boost demand for premium goods and services, increase the pool of investable assets, and reshape the strategies of banks, insurers and consumer companies that target different income segments. Understanding this transition helps financial firms anticipate changes in product demand, credit risk profiles and wealth\u2011management opportunities.",
+     "what_to_watch": "The RBI's FY31 wealth pyramid data release, which will detail the proportion of households in each income bracket.",
+     "headline": "India's household income pyramid set to shift by FY31",
      "read_seconds": 20
     }
    },
    {
     "source": "ET Opinion",
     "cat": "money",
-    "title": "Trump the economist gets this one right",
-    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/trump-the-economist-gets-this-one-right/articleshow/134246194.cms",
-    "summary": "Donald Trump advocates for the world's lowest interest rates, citing America's strong credit standing.  However, global central banks face rising inflation, making rate cuts unlikely.  Trump's trade policies and geopolitical actions have contributed to this inflationary pressure.  He may influence future rate decisions",
-    "date": "Sep 14, 2026",
-    "_sort": "2026-09-14T18:47:48+00:00",
+    "title": "'A senior citizen among India\u2019s young achievers': From Burnol to burn rate, how the vocabulary of business has changed",
+    "link": "https://economictimes.indiatimes.com/opinion/et-commentary/a-senior-citizen-among-indias-young-achievers-from-burnol-to-burn-rate-how-the-vocabulary-of-business-has-changed/articleshow/134270534.cms",
+    "summary": "During The Economic Times 40 Under Forty awards, a seasoned jury member is struck by the dynamic energy of the young honourees. He highlights a significant generational shift in business language and a rapidly evolving landscape of innovation. As the jury carefully evaluates leadership and impact across sectors, they r",
+    "date": "Sep 15, 2026",
+    "_sort": "2026-09-15T18:09:36+00:00",
     "smart": {
      "what_happened": [
-      "Donald Trump advocated for the world's lowest interest rates, citing America's strong credit standing.",
-      "He said his trade policies and geopolitical actions have added to inflationary pressure, making rate cuts unlikely for global central banks."
+      "A seasoned jury member observed the dynamic energy of the young honourees at the Economic Times 40 Under Forty awards.",
+      "He said the event highlighted a generational shift in business vocabulary and a rapidly evolving innovation landscape."
      ],
-     "why_it_matters": "Trump's public push for ultra\u2011low rates highlights a clash between political rhetoric and the reality of rising global inflation, which limits central banks' ability to cut rates despite claims of strong US credit. The tension could influence how policymakers communicate and respond to political pressure in future monetary decisions.",
-     "what_to_watch": "Watch the Federal Reserve's next policy statement for any reference to Trump's comments on interest rates.",
-     "headline": "Trump says US credit standing justifies lowest interest rates",
+     "why_it_matters": "The comment signals that younger leaders are reshaping the way business concepts are communicated, which can influence corporate branding, investor messaging, and the perception of innovation across sectors, all of which are relevant to financial analysis and stakeholder engagement.",
+     "what_to_watch": "Monitor the next Economic Times awards for additional examples of the emerging business terminology.",
+     "headline": "Jury notes generational shift in business language at 40 Under Forty awards",
      "read_seconds": 26
     }
    },
    {
     "source": "Economic Times",
     "cat": "money",
-    "title": "RBI proposes 60-day temporary debit hold on suspicious money mule transactions: Key things you need to know about RBI\u2019s KYC directions",
-    "link": "https://economictimes.indiatimes.com/wealth/save/rbi-proposes-60-day-temporary-debit-hold-on-suspicious-money-mule-transactions-key-things-you-need-to-know-about-rbis-kyc-directions/articleshow/134241278.cms",
-    "summary": "The Reserve Bank of India has announced proposed regulations concerning money mule accounts, allowing banks to implement temporary debit holds on questionable transactions for up to sixty days.",
-    "date": "Sep 14, 2026",
-    "_sort": "2026-09-14T12:34:16+00:00",
+    "title": "Will fixed deposit interest rates go up in October as inflation rises?",
+    "link": "https://economictimes.indiatimes.com/wealth/save/will-fd-fixed-deposit-fd-interest-rates-increase-in-october-2026-as-inflation-rises-what-do-repo-rate-small-savings-g-sec-credit-deposit-ratio-say/articleshow/134260628.cms",
+    "summary": "Recent data reveals a rise in Consumer Price Index inflation, now at 4.8 percent, spurring predictions of possible interest rate hikes by the Reserve Bank of India. This inflation surge is pressuring banks to elevate fixed deposit interest rates amidst fierce competition from government securities and appealing returns",
+    "date": "Sep 15, 2026",
+    "_sort": "2026-09-15T11:38:39+00:00",
     "smart": {
      "what_happened": [
-      "The Reserve Bank of India announced proposed regulations allowing banks to place temporary debit holds on suspicious money mule accounts.",
-      "The hold can be applied for up to sixty days under the new KYC directions."
+      "Consumer Price Index inflation increased to 4.8 percent.",
+      "The Reserve Bank of India is expected to consider rate hikes, prompting banks to lift fixed deposit rates amid competition from government securities."
      ],
-     "why_it_matters": "The measure aims to curb money\u2011laundering by giving banks a tool to freeze potentially illicit funds while investigations proceed, strengthening India's anti\u2011money\u2011laundering framework and protecting the financial system from misuse.",
-     "what_to_watch": "Implementation guidelines issued by the RBI and the first banks that adopt the 60\u2011day hold policy.",
-     "headline": "RBI proposes 60\u2011day temporary debit hold on money mule transactions",
-     "read_seconds": 20
+     "why_it_matters": "Higher inflation and potential RBI rate hikes could force banks to offer more attractive fixed deposit yields to retain deposits, affecting the return landscape for savers and the cost of funding for lenders.",
+     "what_to_watch": "Any Reserve Bank of India announcement on policy rates during its October monetary policy meeting.",
+     "headline": "Fixed deposit rates may rise in October as CPI hits 4.8%",
+     "read_seconds": 26
     }
    },
    {
     "source": "Psyche",
     "cat": "mind",
-    "title": "How to uncover your blind spots",
-    "link": "https://psyche.co/guides/how-to-uncover-your-blind-spots",
-    "summary": "We all have parts of ourselves others know but we don\u2019t. Gain greater self-awareness by seeing yourself from the outside in- by Jennifer FarrellRead on Psyche",
-    "date": "Sep 14, 2026",
-    "_sort": "2026-09-14T10:00:00+00:00",
+    "title": "Say yes to regret",
+    "link": "https://psyche.co/turning-points/how-a-to-do-task-stopped-the-ruminative-loop-of-my-grief",
+    "summary": "After my husband died, I fell into a dark ruminative spiral. The way back would begin at 2pm tomorrow- by Sandra LambRead on Psyche",
+    "date": "Sep 15, 2026",
+    "_sort": "2026-09-15T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article explains that everyone has aspects of themselves that are known to others but not to themselves",
-      "It suggests gaining greater self\u2011awareness by viewing oneself from an external perspective"
+      "Sandra Lamb wrote that after her husband's death she entered a dark ruminative spiral",
+      "She says the way back will begin at 2pm tomorrow"
      ],
-     "why_it_matters": "Understanding blind spots can help individuals improve personal and professional relationships, decision\u2011making, and overall effectiveness by aligning self\u2011perception with how others perceive them.",
-     "what_to_watch": "Look for follow\u2011up content from Jennifer Farrell or Psyche that provides specific techniques for external self\u2011assessment.",
-     "headline": "How to uncover your blind spots",
+     "why_it_matters": "The article illustrates a personal coping timeline, highlighting how individuals may set specific future moments to initiate emotional recovery after a traumatic loss, which can be relevant for mental health professionals and support networks monitoring grieving processes.",
+     "what_to_watch": "Whether the author reports progress in her recovery after the 2pm tomorrow milestone",
+     "headline": "Author plans to start recovery at 2pm tomorrow",
      "read_seconds": 20
     }
    },
@@ -1416,12 +1417,31 @@
     "_sort": "2026-09-14T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "The article states that children\u2019s media has become relentlessly hectic, loud and bright.",
-      "It argues that the issue extends beyond simple screen\u2011time concerns."
+      "The article argues that children\u2019s media exposure is increasingly hectic, loud, and bright.",
+      "Author Natalia Kucirkova writes this piece for Aeon."
      ],
-     "why_it_matters": "The shift toward increasingly chaotic and overstimulating media environments may affect children\u2019s attention, learning and emotional development, prompting educators, parents and policymakers to reconsider how media content is designed and delivered to young audiences.",
-     "what_to_watch": "Watch for forthcoming research studies cited by the author that examine the impact of high\u2011stimulus media on child development.",
-     "headline": "Children's media becomes hectic, loud and bright",
+     "why_it_matters": "The piece highlights a shift in the nature of children\u2019s media consumption, suggesting that the constant sensory intensity may have broader implications for developmental environments and how caregivers manage media use.",
+     "what_to_watch": "Future commentary by Natalia Kucirkova on Aeon regarding child media trends.",
+     "headline": "Child media becomes hectic, loud and bright, says Natalia Kucirkova",
+     "read_seconds": 20
+    }
+   },
+   {
+    "source": "Psyche",
+    "cat": "mind",
+    "title": "How to uncover your blind spots",
+    "link": "https://psyche.co/guides/how-to-uncover-your-blind-spots",
+    "summary": "We all have parts of ourselves others know but we don\u2019t. Gain greater self-awareness by seeing yourself from the outside in- by Jennifer FarrellRead on Psyche",
+    "date": "Sep 14, 2026",
+    "_sort": "2026-09-14T10:00:00+00:00",
+    "smart": {
+     "what_happened": [
+      "The article explains that individuals have aspects known to others but not to themselves.",
+      "It suggests gaining self-awareness by viewing oneself from an external perspective."
+     ],
+     "why_it_matters": "Understanding blind spots can help readers improve self-awareness, which is linked to better personal and professional decision\u2011making, making the insights relevant for anyone seeking to enhance their performance and relationships.",
+     "what_to_watch": "Check for future self\u2011awareness articles by Jennifer Farrell on Psyche.",
+     "headline": "How to uncover your blind spots",
      "read_seconds": 20
     }
    },
@@ -1432,33 +1452,14 @@
     "link": "https://peterattiamd.com/michaeldavidson/",
     "summary": "\u201cI mean we have the knowledge to prevent heart disease now. It's applying it earlier in life that really makes the difference. That's my pitch to the 30-year-old, and there's a lot of pushback.\u201d\u2012 Michael Davidson\nThe post #407 \u2012 Preventing cardiovascular and Alzheimer\u2019s disease: lowering LDL early, APOE4, and promising",
     "date": "Sep 14, 2026",
-    "_sort": "2026-09-14T04:15:00+00:00",
-    "smart": {
-     "what_happened": [
-      "Experts say applying LDL\u2011lowering knowledge earlier in life can prevent cardiovascular disease.",
-      "The same early LDL reduction strategy is linked to lower Alzheimer\u2019s risk, especially for APOE4 carriers, with promising new therapies discussed."
-     ],
-     "why_it_matters": "If LDL reduction is implemented in younger adults, it could simultaneously curb two major age\u2011related diseases\u2014cardiovascular disease and Alzheimer\u2019s\u2014potentially reducing long\u2011term healthcare costs and improving population health, particularly for those genetically predisposed via the APOE4 allele.",
-     "what_to_watch": "Watch for forthcoming clinical trial results of the new therapies targeting APOE4 that were highlighted in the discussion.",
-     "headline": "Early LDL lowering may prevent heart disease and Alzheimer\u2019s",
-     "read_seconds": 26
-    }
-   },
-   {
-    "source": "NYT Well",
-    "cat": "health",
-    "title": "8 in 10 Americans Say They\u2019re Taking Supplements. Do They Have Benefits?",
-    "link": "https://www.nytimes.com/2026/09/11/well/eat/dietary-supplements-survey-findings.html",
-    "summary": "A new survey found that 8 in 10 Americans were taking vitamins, protein powders or other supplements. But experts said there is little evidence for many of these products.",
-    "date": "Sep 11, 2026",
-    "_sort": "2026-09-11T17:37:39+00:00"
+    "_sort": "2026-09-14T04:15:00+00:00"
    },
    {
     "source": "Farnam Street",
     "cat": "habits",
     "title": "Tobi L\u00fctke: AI Agents, Better Decisions, and the Future of Work",
     "link": "https://fs.blog/knowledge-project-podcast/tobi-lutke-3/",
-    "summary": "Shopify founder and CEO Tobi L\u00fctke joins Shane Parrish to discuss AI agents, better decision-making, and the future of work. He explains how he uses an AI council to examine his hardest decisions and why taste, judgment, and responsibility become more valuable as AI becomes more capable. Public Release: September 15. M",
+    "summary": "Shopify founder and CEO Tobi L\u00fctke joins Shane Parrish to discuss AI agents, better decision-making, and the future of work. He explains how he uses an AI council to examine his hardest decisions and why taste, judgment, and responsibility become more valuable as AI becomes more capable. They go inside Shopify\u2019s work w",
     "date": "Sep 10, 2026",
     "_sort": "2026-09-10T09:50:00+00:00"
    },
@@ -1474,40 +1475,48 @@
   ],
   "lichess_games": [
    {
-    "id": "JhajkynC",
-    "url": "https://lichess.org/JhajkynC",
+    "id": "2RMhINKj",
+    "url": "https://lichess.org/2RMhINKj",
     "result": "Loss",
     "icon": "\u274c",
     "cls": "loss",
-    "my_side": "White",
-    "my_rating": 1629,
-    "opp_rating": 1618,
-    "opponent": "JB2026",
-    "me_diff": -6,
+    "my_side": "Black",
+    "my_rating": 1623,
+    "opp_rating": 1561,
+    "opponent": "citizen13",
+    "me_diff": -7,
     "opp_diff": 6,
-    "opening": "Queen's Pawn Game",
-    "eco": "D00",
-    "moves": 32,
-    "termination": "Checkmate",
+    "opening": "Philidor Defense",
+    "eco": "C41",
+    "moves": 66,
+    "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid moving the f\u2011pawn after\u202f9\u2026Nf6, and keep pieces coordinated to prevent the decisive 31\u2026Qh2#.",
+    "analysis": "Focus on early piece activity: after 1.e4 e5\u202f2.Nf3 d6, develop your bishop to\u202fBd7\u202finstead of passive \u2026Be7, then play \u2026c5 promptly to contest the center and prevent White\u2019s cramped Philidor setup. This reduces passive maneuvering and cuts the game\u2019s length.",
     "is_upset": false,
     "is_collapse": false,
-    "is_long": false,
+    "is_long": true,
     "best_move": {},
     "key_facts": [
-     "Rating gap -11 (1629 vs 1618)",
-     "Endgame from move 30",
-     "32 moves \u00b7 Blitz"
+     "Rating gap -62 (1623 vs 1561)",
+     "Endgame from move 32",
+     "66 moves \u00b7 Blitz"
     ],
-    "standout": "",
+    "standout": "66 moves of grinding. Endgame stamina, not opening prep, settled this one.",
     "game_strength": null,
-    "est_fide": 1229,
+    "est_fide": 1223,
     "accuracy": null,
     "acpl": null,
     "analysed": false,
     "_mode": "full",
     "_trend": [
+     {
+      "day": "09/15",
+      "wins": 0,
+      "losses": 1,
+      "draws": 0,
+      "total": 1,
+      "pct": 0
+     },
      {
       "day": "09/14",
       "wins": 1,
@@ -1555,75 +1564,41 @@
       "draws": 1,
       "total": 17,
       "pct": 53
-     },
-     {
-      "day": "09/07",
-      "wins": 6,
-      "losses": 8,
-      "draws": 1,
-      "total": 15,
-      "pct": 40
      }
     ],
     "_yest_counts": {
      "blitz": {
-      "win": 1,
+      "win": 0,
       "loss": 1,
       "draw": 0,
       "rp": {
        "before": 1623,
-       "after": 1623
+       "after": 1616
       }
      }
     },
-    "_session_date": "2026-09-14",
+    "_session_date": "2026-09-15",
     "_is_yesterday": true
-   },
-   {
-    "id": "qDAt5qUF",
-    "url": "https://lichess.org/qDAt5qUF",
-    "result": "Win",
-    "icon": "\u2705",
-    "cls": "win",
-    "my_side": "White",
-    "my_rating": 1623,
-    "opp_rating": 1641,
-    "opponent": "nostrarmandus",
-    "me_diff": 6,
-    "opp_diff": -6,
-    "opening": "Dutch Defense",
-    "eco": "A80",
-    "moves": 28,
-    "termination": "Resignation",
-    "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 6\u2026e6, castle before pushing f\u2011pawn; avoid exposing your king\u2014your opponent\u2019s queen check on move\u202f12 cost 3\u202fseconds and forced a defensive pawn move. Improve timing of castling by move\u202f8.",
-    "is_upset": false,
-    "is_collapse": false,
-    "is_long": false,
-    "best_move": {},
-    "key_facts": [
-     "Rating gap +18 (1623 vs 1641)",
-     "Endgame from move 27",
-     "28 moves \u00b7 Blitz"
-    ],
-    "standout": "",
-    "game_strength": null,
-    "est_fide": 1223,
-    "accuracy": null,
-    "acpl": null,
-    "analysed": false
    }
   ],
   "lichess_summary": {
    "mode": "full",
-   "total": 2,
-   "wins": 1,
+   "total": 1,
+   "wins": 0,
    "losses": 1,
    "draws": 0,
-   "pct": 50,
-   "icon": "\u2696\ufe0f",
-   "score": "1/2",
+   "pct": 0,
+   "icon": "\u274c",
+   "score": "0/1",
    "trend": [
+    {
+     "day": "09/15",
+     "wins": 0,
+     "losses": 1,
+     "draws": 0,
+     "total": 1,
+     "pct": 0
+    },
     {
      "day": "09/14",
      "wins": 1,
@@ -1671,33 +1646,25 @@
      "draws": 1,
      "total": 17,
      "pct": 53
-    },
-    {
-     "day": "09/07",
-     "wins": 6,
-     "losses": 8,
-     "draws": 1,
-     "total": 15,
-     "pct": 40
     }
    ],
    "weak_op": "",
    "best_op": "",
    "upsets": 0,
    "collapses": 0,
-   "long_games": 0,
-   "session_summary": "Your 50\u202f% record shows you\u2019re teetering on the edge of competence\u2014one win, one loss, no pattern to exploit. The only opening that ever gave you a result was the **London System**, which you won with; every other line you tried (most notably the **Sicilian Defense**) produced the loss, marking it as your weakest weapon. Stop dabbling in the Sicilian, master the London to a deep\u2011theory level, and start grinding 20\u2011move endgame drills every day; until you can convert a clear advantage into a win consistently, you\u2019ll remain a coin\u2011flip player.",
-   "session_date": "2026-09-14",
+   "long_games": 1,
+   "session_summary": "Your play is a disaster\u2014zero wins out of one game means you haven\u2019t even cracked a single opening, let alone a plan, and you\u2019re already losing. Stop flailing with random moves; pick a single, solid opening (e.g., Caro\u2011Kann or London System), memorize the first 10\u201312 moves, and drill them until they\u2019re automatic. Then train basic tactics (pins, forks, back\u2011rank mates) daily with puzzles at your rating, and only after you can solve 80\u202f% consistently should you return to actual play.",
+   "session_date": "2026-09-15",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
-   "pid": "zIAIv",
-   "rating": 1993,
+   "pid": "m5h82",
+   "rating": 1991,
    "level": "\ud83d\udd34 stretch",
-   "themes": "Very Long \u00b7 Hook Mate \u00b7 Mate In5",
-   "tip": "Lure the king or a key piece onto a bad square with a sacrifice.",
-   "url": "https://lichess.org/training/zIAIv"
+   "themes": "Endgame \u00b7 Short \u00b7 Advantage",
+   "tip": "King activity and pawn structure dominate. Technique over tactics here.",
+   "url": "https://lichess.org/training/m5h82"
   }
  }
 }
