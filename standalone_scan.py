@@ -1729,6 +1729,58 @@ def run_basebreak_scan(time_str):
     return published
 
 
+def run_pivot_scan(time_str):
+    """PIVOT — location, then context, then confirmation, on the completed bar.
+
+    NO DUPLICATES, BY THE BOOK'S OWN RULE. duplicate_symbols() now enforces one
+    open POSITION per name across the whole published book, so a name PIVOT
+    likes that BREACH already holds comes back as a duplicate and is recorded
+    as a confirmation on the existing ticket rather than filed again. That is
+    the behaviour Akshay asked for in as many words — "be cautious, no
+    duplicate trades" — and it is one shared rule rather than a second copy of
+    it living here.
+
+    RESEARCH, AND IT SAYS SO. This engine has no closed trade and no measured
+    expectancy, so it is logged and shown and NOT alerted to Telegram. Every
+    engine on this site earns its alert by clearing 30 closed trades at t >= 2,
+    and none of them has. A new engine announcing itself on the day it was
+    written would be the exact claim this book exists to refuse.
+    """
+    from scanner import scan_pivot
+    from tracker import log_batch_to_all_signals, duplicate_symbols
+
+    logging.info("Running PIVOT scan (location -> context -> confirmation)...")
+    try:
+        found = scan_pivot()
+    except Exception as e:                                        # noqa: BLE001
+        logging.error("pivot: scan failed (%s) — skipping", e)
+        return []
+    if not found:
+        logging.info("pivot: nothing was at a level with context and confirmation today")
+        return []
+
+    dupes = duplicate_symbols(found, "pivot")
+    rows = [r for r in found if r["symbol"] not in dupes]
+    if dupes:
+        logging.info("pivot: %d already held by the book — recorded as confirmations",
+                     len(dupes))
+    if not rows:
+        return []
+
+    ids = log_batch_to_all_signals([dict(
+        symbol=r["symbol"], signal_type="pivot", action="BUY",
+        entry=r["price"], sl=r["sl"], t1=r["target1"], t2=r["target2"],
+        t3=r.get("target3", r["target2"]), rr=r["rr"],
+        timeframe=r["timeframe"], score=0,
+        metadata={"why": r["why"], "invalidate": r["invalidate"],
+                  "reason": r.get("reason", ""), **r["meta"]},
+    ) for r in rows])
+    logged = [i for i in (ids or []) if i]
+    logging.info("pivot: %d found, %d logged (research — not alerted)",
+                 len(rows), len(logged))
+    return rows
+
+
 def run_breakout_scan(time_str):
     from scanner import scan_breakouts
     from tracker import (log_breakouts, log_batch_to_all_signals,
@@ -2177,6 +2229,7 @@ def main():
             # structural stops, +0.169R -> +0.224R; it is not a general rule and
             # the other engines keep intraday stops. See signals/basebreak.py.)
             basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
+            _safe("pivot", run_pivot_scan, time_str)
             # Ledger last: every alert and its outcome, to Telegram + Obsidian.
             # Runs after the scans so today's signals are already logged.
             _safe("signal_ledger", run_signal_ledger, time_str)
@@ -2193,6 +2246,7 @@ def main():
             # which is what asking for "eod" again would do.
             # It has no entry in _SLOT_OPENS_IST, so it is never window-gated.
             basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
+            _safe("pivot", run_pivot_scan, time_str)
             counts    = {"basebreak": len(basebrk)}
 
         elif slot == "momentum":

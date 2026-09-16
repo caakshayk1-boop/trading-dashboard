@@ -714,6 +714,11 @@ POSITION_PER_NAME = True
 BOOK_ENGINES = {
     "breakout", "magic", "magicmagic", "ohl", "multibagger",
     "momentum_quant", "ai_longterm", "ledge", "keel",
+    # PIVOT joins the book on the day it is written, BEFORE it has published
+    # anything — so its first signal is already subject to one-position-per-name
+    # rather than being exempt until someone remembers to add it. A new engine
+    # outside this set is a new engine that can duplicate the whole book.
+    "pivot",
 }
 
 # Retained for the rollback path only. With POSITION_PER_NAME on, nothing is

@@ -3575,6 +3575,92 @@ def analyze_basebreak(symbol):
         return []
 
 
+def analyze_pivot(symbol):
+    """Run PIVOT on one symbol's completed daily bar.
+
+    Plumbing only — every rule lives in signals/pivot.py, which has no network
+    in it and is provable without one. Mirrors analyze_basebreak deliberately:
+    two engines fetching bars two different ways is how the two drift.
+    """
+    try:
+        from signals.pivot import prepare, pivot_signal
+        import numpy as _np
+
+        df = fetch_data(symbol)
+        if df is None or df.empty or len(df) < 280:
+            return []
+
+        o = df["Open"].squeeze().to_numpy(dtype=float)
+        h = df["High"].squeeze().to_numpy(dtype=float)
+        l = df["Low"].squeeze().to_numpy(dtype=float)
+        c = df["Close"].squeeze().to_numpy(dtype=float)
+        v = df["Volume"].squeeze().to_numpy(dtype=float)
+        if _np.isnan(c[-1]) or _np.isnan(v[-1]):
+            return []
+
+        bars = prepare(o, h, l, c, v)
+        s = pivot_signal(bars, len(c) - 1)      # the COMPLETED bar, never today's
+        if not s:
+            return []
+
+        entry = round(float(s["entry"]), 2)
+        sl    = round(float(s["stop"]), 2)
+        risk  = entry - sl
+        if risk <= 0:
+            return []
+        t1, t2, t3 = (round(float(s["t1"]), 2), round(float(s["t2"]), 2),
+                      round(float(s["t3"]), 2))
+        return [{
+            "symbol": symbol.replace(".NS", ""),
+            "engine": "pivot",
+            "action": "BUY",
+            "price": entry, "sl": sl,
+            "target1": t1, "target2": t2, "target3": t3,
+            # rr to TARGET 2, the house convention. Quoting it to T1 would
+            # flatter this engine and disagree with every other row in the book.
+            "rr": round((t2 - entry) / risk, 2),
+            "rr1": round((t1 - entry) / risk, 2),
+            "timeframe": "Daily",
+            "why": [s["location"], s["context"], s["confirmation"]],
+            "invalidate": "A close back under %.2f — the level that made this a trade" % sl,
+            "meta": {"level": s["level"], "location": s["location"],
+                     "context": s["context"], "confirmation": s["confirmation"],
+                     # Carried on every row so the site can say it without
+                     # having to know how the engine works.
+                     "confirmation_basis": "daily bars — no orderflow feed exists here"},
+            "reason": s["reason"],
+        }]
+    except Exception as e:                                        # noqa: BLE001
+        logging.debug("pivot %s: %s", symbol, e)
+        return []
+
+
+def scan_pivot(universe=None):
+    """Scan for PIVOT setups on the completed daily bar.
+
+    Selective by construction: three gates in sequence, and a name that is not
+    AT a level never reaches the other two. Measured over the 93 most liquid
+    names the day it was written: ONE signal. That is the intended shape — the
+    framework this came from says in as many words to stop taking trades just
+    because a candle looked good.
+    """
+    if universe is None:
+        universe = load_nifty500()
+    found = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(analyze_pivot, sym): sym for sym in universe}
+        for f in as_completed(futures):
+            try:
+                rows = f.result() or []
+            except Exception:
+                continue
+            for r in rows:
+                if r["symbol"] not in SIGNAL_BLACKLIST:
+                    found.append(r)
+    logging.info("pivot: %d signals over %d names", len(found), len(universe))
+    return found
+
+
 def scan_basebreak(universe=None):
     """Scan the Nifty500 for LEDGE and KEEL setups on the completed daily bar.
 
