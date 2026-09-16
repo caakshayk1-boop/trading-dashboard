@@ -1,0 +1,160 @@
+name: Ledger — one position per name, applied to the history
+
+# Akshay, 2026-09-15: "fix both" — the forward rule (tracker.POSITION_PER_NAME)
+# and the history it was written for.
+#
+# WHAT THIS REMOVES. A ticket that was opened while ANOTHER ticket on the same
+# name was still open, within the published book. Not "a name that appears
+# twice" — a name that was HELD twice at once. NGAS closing five times on five
+# separate weeks is five round trips and stays; PAYTM filed on 25 July and
+# filed AGAIN on 1 August while the first was still open is one idea counted
+# twice, and both of those closed at T2 inside a published win rate.
+#
+# WHY THE FIRST ONE SURVIVES. It is the trigger a reader could have acted on,
+# and it carries the real holding period. Keeping the later one would be the
+# same mistake the forward rule was just corrected for.
+#
+# IT MAKES THE RECORD WORSE, WHICH IS THE POINT. Measured before writing this:
+#   published   124 closed   14.5% win   -0.479R
+#   corrected    97 closed   13.4% win   -0.494R
+# A correction that happened to flatter the book would deserve more suspicion
+# than this one does.
+#
+# RESTATEMENT, NOT DELETION IN SILENCE. Every removed row is written to
+# data/backups/ and COMMITTED before a single DELETE runs, exactly as
+# dedupe_open.yml and purge_void.yml do, and the run prints the before/after
+# figures so the change to the published record is on the record itself.
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Remove them after backing up (leave false for a dry run)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ledger-write
+  cancel-in-progress: false
+
+env:
+  TURSO_URL:   ${{ secrets.TURSO_URL }}
+  TURSO_TOKEN: ${{ secrets.TURSO_TOKEN }}
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Find and merge overlapping positions
+        env:
+          APPLY: ${{ inputs.apply }}
+        run: |
+          python - <<'PY'
+          import os, json, pathlib, collections, datetime
+          import db
+          from tracker import BOOK_ENGINES
+
+          APPLY = os.environ.get("APPLY", "false").lower() == "true"
+
+          con = db.connect()
+          cur = con.execute(
+              "SELECT id, date, closed_at, signal_type, symbol, status, "
+              "r_multiple FROM all_signals")
+          cols = [c[0] for c in cur.description]
+          rows = [dict(zip(cols, r)) for r in cur.fetchall()]
+          book = [r for r in rows if r.get("signal_type") in BOOK_ENGINES]
+          print(f"{len(rows)} ledger rows · {len(book)} in the published book")
+
+          by = collections.defaultdict(list)
+          for r in book:
+              by[str(r["symbol"] or "").replace(".NS", "").upper()].append(r)
+
+          doomed = []
+          for sym, v in by.items():
+              v = [r for r in v if r.get("date")]
+              v.sort(key=lambda r: (str(r["date"]), int(r["id"] or 0)))
+              for r in v:
+                  o = str(r["date"])[:10]
+                  for pr in v:
+                      if pr is r:
+                          continue
+                      po = str(pr["date"])[:10]
+                      pc = str(pr.get("closed_at") or "")[:10]
+                      still_open = (str(pr.get("status") or "").upper() == "OPEN"
+                                    or (pc and o < pc))
+                      if po < o and still_open:
+                          r["_covered_by"] = pr["id"]
+                          doomed.append(r)
+                          break
+
+          def stat(rs):
+              rm = [float(r["r_multiple"]) for r in rs
+                    if r.get("r_multiple") is not None
+                    and str(r.get("status") or "").upper() != "OPEN"]
+              if not rm:
+                  return (0, None, None)
+              w = sum(1 for x in rm if x > 0)
+              return (len(rm), round(w / len(rm) * 100, 1), round(sum(rm) / len(rm), 3))
+
+          ids = {r["id"] for r in doomed}
+          b = stat(book)
+          a = stat([r for r in book if r["id"] not in ids])
+          print(f"\noverlapping tickets: {len(doomed)}")
+          for r in doomed:
+              print(f"  id={r['id']:<6} {str(r['symbol'])[:12]:12} {r['signal_type']:16} "
+                    f"opened {str(r['date'])[:10]}  held under id={r['_covered_by']}")
+          print(f"\n{'':12}{'trades':>8}{'win%':>8}{'exp R':>9}")
+          print(f"{'published':12}{b[0]:>8}{str(b[1]):>8}{str(b[2]):>9}")
+          print(f"{'corrected':12}{a[0]:>8}{str(a[1]):>8}{str(a[2]):>9}")
+
+          if not doomed:
+              print("nothing to merge")
+              raise SystemExit(0)
+          if not APPLY:
+              print("\nDRY RUN — nothing written. Re-run with apply=true.")
+              raise SystemExit(0)
+
+          stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d-%H%M%S")
+          out = pathlib.Path("data/backups"); out.mkdir(parents=True, exist_ok=True)
+          path = out / f"overlapping_positions_{stamp}.json"
+          path.write_text(json.dumps({
+              "removed_at": stamp,
+              "rule": "a ticket opened while another on the same name was still open; earliest survives",
+              "published_before": {"trades": b[0], "win_pct": b[1], "expectancy_r": b[2]},
+              "published_after":  {"trades": a[0], "win_pct": a[1], "expectancy_r": a[2]},
+              "rows": doomed,
+          }, indent=2, default=str), encoding="utf-8")
+          print(f"backed up {len(doomed)} rows to {path}")
+
+          idl = sorted(ids)
+          for i in range(0, len(idl), 100):
+              chunk = idl[i:i + 100]
+              ph = ",".join("?" for _ in chunk)
+              con.execute(f"DELETE FROM all_signals WHERE id IN ({ph})", tuple(chunk))
+          con.commit()
+          db.sync(con)
+          left = con.execute("SELECT COUNT(*) FROM all_signals").fetchone()[0]
+          print(f"removed {len(idl)} · ledger now {left} rows")
+          con.close()
+          PY
+
+      - name: Commit the restatement
+        if: ${{ inputs.apply }}
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add data/backups/ || true
+          git diff --staged --quiet || git commit -m "data: restatement — overlapping positions merged, one per name [skip ci]"
+          git push || true
