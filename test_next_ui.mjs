@@ -84,9 +84,24 @@ try {
   await p.waitForTimeout(350);
   ok("row drawer closes", await p.locator(".mk-d.open").count() === 0);
 
-  // Direction must never be carried by colour alone.
+  /* Direction must never be carried by colour alone — a reader who cannot
+     separate red from green has to be able to READ which way a number went.
+     
+     BUT ZERO HAS NO DIRECTION, and this assertion demanded one. It has been
+     failing since 2026-09-15 23:52 on ["-0.21%","0.00%","-0.61%"]: the two
+     real moves carry their signs and the FLAT one does not, because "+0.00%"
+     would be a lie about a stock that did not move. This repo already holds
+     that position — "ZERO IS NOT A LOSS" in the signals card, written after
+     COCHINSHIP printed "0.00% live" in the down colour having not moved.
+     
+     A failing assertion here stops the whole daily build, so for nineteen
+     hours the screen, the edition and the conviction feed all froze and the
+     site served yesterday's numbers. The rule is right; it was stated wrong.
+     Signs are required of every change that HAS a direction. */
   const signs = await p.locator(".mk-c").evaluateAll(es => es.slice(0, 12).map(e => e.textContent.trim()));
-  ok("every change prints its own sign", signs.every(s => /^[+\-−]|—/.test(s)), signs.slice(0, 3));
+  const directional = signs.filter(s => !/^[+\-−]?0*\.?0*%?$/.test(s));
+  ok("every change prints its own sign", directional.every(s => /^[+\-−]|—/.test(s)),
+     directional.filter(s => !/^[+\-−]|—/.test(s)).slice(0, 3));
 
   const oxM = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   ok("no horizontal overflow at 1440", oxM === 0, oxM);
