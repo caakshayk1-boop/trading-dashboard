@@ -519,6 +519,18 @@ def is_duplicate(symbol, signal_type="swing"):
         #
         # Same rule, same reason: an earlier day's ticket is retired so the
         # newer levels stand; one filed today is a duplicate and bounces.
+        # The book holds one position per name; check that before the
+        # per-engine rule, so both paths answer identically.
+        pos = _open_position(c, sym_clean, signal_type)
+        if pos:
+            if cand:
+                entry = cand.get("entry", cand.get("price"))
+                if entry is not None:
+                    _note_confirmation(c, pos[0], sym_clean, signal_type, entry,
+                                       cand.get("action", "BUY"),
+                                       cand.get("reasons") or cand.get("reason"))
+            log.info(f"{sym_clean}: already held ({pos[1]}) — confirmation, not a new ticket")
+            return True
         if row and REPLACE_ON_REDETECT and str(row[1] or "")[:10] != str(_date_ist()):
             c.execute("DELETE FROM all_signals WHERE id=?", (row[0],))
             log.info(f"Re-detected {sym_clean} ({signal_type}) — "
@@ -573,6 +585,54 @@ def _note_resignal(c, existing_id, symbol, new_entry, new_action, reason=None):
     )
 
 
+def _open_position(c, symbol, signal_type):
+    """The one open position on this name, if the book already holds it.
+
+    Keyed on SYMBOL, not symbol+engine, which is the whole change: a name is
+    held once. Returns (id, signal_type, date) of the position of record —
+    the EARLIEST open row, because the first trigger is the one a reader
+    could have acted on.
+
+    Only engines in BOOK_ENGINES share a position. A candidate from outside
+    the book (an intraday engine, a commodity, a US name) is measured on its
+    own and is never blocked by the book, nor does it block it.
+    """
+    if not POSITION_PER_NAME or signal_type not in BOOK_ENGINES:
+        return None
+    ph = ",".join("?" for _ in BOOK_ENGINES)
+    try:
+        return c.execute(
+            f"SELECT id, signal_type, date FROM all_signals "
+            f"WHERE symbol=? AND status='OPEN' AND signal_type IN ({ph}) "
+            f"ORDER BY date ASC, id ASC LIMIT 1",
+            (symbol, *sorted(BOOK_ENGINES))).fetchone()
+    except Exception as e:                              # noqa: BLE001
+        # Never cost the scan its signals over a lookup. Logging a duplicate
+        # is strictly better than dropping the batch.
+        log.warning(f"position lookup failed for {symbol} ({e}) — treating as no position")
+        return None
+
+
+def _note_confirmation(c, position_id, symbol, engine, entry, action, reason=None):
+    """Record a later detection as EVIDENCE on the open position.
+
+    This is the half of the model that makes it honest rather than merely
+    quiet. Refusing a second ticket without recording it would throw away the
+    most interesting thing the second engine said: that it independently
+    reached the same name. Kept on the position so the site can show
+    "BREACH also fired, 12 Sep at 403.60" under the one row a reader holds.
+    """
+    note = (f"{_today_ist()}: confirmed by {engine} ({action} @ {entry})")
+    if reason:
+        note += f" — {reason}"
+    note += ". Recorded against this position; not filed as a second ticket."
+    c.execute(
+        "UPDATE all_signals SET duplicate_note = "
+        "CASE WHEN duplicate_note IS NULL OR duplicate_note = '' THEN ? "
+        "ELSE duplicate_note || char(10) || ? END WHERE id = ?",
+        (note, note, position_id))
+
+
 def _cross_engine_duplicate(c, symbol, entry, today, signal_type):
     """The same position, filed by a DIFFERENT engine, today, at the same entry.
 
@@ -613,10 +673,52 @@ def _cross_engine_duplicate(c, symbol, entry, today, signal_type):
     return (row[0], row[1]) if row else None
 
 
-# Latest wins: a re-detection of a name that is still open RETIRES the open row
-# and files the new one, rather than being refused. Set False to go back to
-# first-wins, where an open position blocks any re-file of the same name.
-REPLACE_ON_REDETECT = True
+# ── ONE POSITION PER NAME. THE FIRST TRIGGER OWNS IT. ───────────────────────
+#
+# Akshay, 2026-09-15: "retiring 1st trigger from any setup & keeping next
+# signal from different engine is not good to avoid duplicate — find a better
+# solution." He is right, and the reason is measurement.
+#
+# WHAT WAS WRONG WITH REPLACING. Retiring the earlier ticket and filing the
+# newer one keeps today's levels, but it rewrites the trade: the holding period
+# resets on every re-detection, and R is measured from an entry that was never
+# the trigger anyone could have acted on. A book whose entry moves every week
+# has no holding period and no honest expectancy.
+#
+# WHAT WAS WRONG WITH KEEPING BOTH. Two engines reaching the same name filed
+# two tickets on ONE company. Measured on the live ledger the day this was
+# written: 36 second tickets opened while the first was still open, and 30
+# names carried two engines at once. PAYTM is the clearest — multibagger filed
+# it 25 Jul, filed it AGAIN 1 Aug while the first was still open, and both
+# closed at T2. One idea, counted twice, in a published win rate.
+#
+# THE MODEL. A name has ONE open position. The first trigger opens it and owns
+# the entry, the stop, the targets and the date — nothing later moves them.
+# Every later detection while it is open, from ANY engine in the book, is a
+# CONFIRMATION recorded against that position: which engine, when, at what
+# price. No second row, no second alert, no second entry in the record.
+#
+# WHAT THAT BUYS: a real holding period, one R per idea, and multi-engine
+# agreement becomes evidence ("BREACH also fired") instead of duplicate risk.
+# WHAT IT COSTS, stated plainly: a name already open cannot be re-entered at a
+# better level until it closes. That is the price of a stable record, and it is
+# the discipline a real book runs.
+#
+# SCOPE IS THE PUBLISHED BOOK. Only engines a reader can actually see and size
+# share a position. An intraday engine and a six-month thesis are different
+# books, and blocking one on the other would destroy its measurement.
+POSITION_PER_NAME = True
+
+# The engines that appear on signal.askakshay.com — the ones a reader can size.
+# Kept here rather than imported so the bot does not depend on the website.
+BOOK_ENGINES = {
+    "breakout", "magic", "magicmagic", "ohl", "multibagger",
+    "momentum_quant", "ai_longterm", "ledge", "keel",
+}
+
+# Retained for the rollback path only. With POSITION_PER_NAME on, nothing is
+# retired: the first trigger stands and later ones attach to it.
+REPLACE_ON_REDETECT = False
 
 
 def duplicate_symbols(candidates, signal_type="swing"):
@@ -689,6 +791,27 @@ def duplicate_symbols(candidates, signal_type="swing"):
             f"AND signal_type IN ({_fph}) AND status='OPEN'",
             tuple(ordered) + tuple(_fam)
         ).fetchall()
+        # ── ONE POSITION PER NAME, ACROSS THE WHOLE BOOK ──────────────────
+        #
+        # Runs BEFORE the same-engine rule below and supersedes it: if the
+        # book already holds this name — under ANY book engine — the
+        # candidate is a confirmation, full stop. The same-engine loop then
+        # has nothing left to do for those symbols.
+        if POSITION_PER_NAME and signal_type in BOOK_ENGINES:
+            for sym in ordered:
+                pos = _open_position(c, sym, signal_type)
+                if not pos:
+                    continue
+                dupes.add(sym)
+                cand = cand_by_symbol.get(sym)
+                entry = (cand or {}).get("entry", (cand or {}).get("price")) if cand else None
+                if entry is not None:
+                    _note_confirmation(c, pos[0], sym, signal_type, entry,
+                                       (cand or {}).get("action", "BUY"),
+                                       (cand or {}).get("reasons") or (cand or {}).get("reason"))
+                log.info(f"{sym}: already held ({pos[1]}, opened {str(pos[2])[:10]}) — "
+                         f"{signal_type} recorded as a confirmation, not a second ticket")
+
         # ── LATEST WINS, SO A RE-DETECTION REPLACES RATHER THAN BOUNCES ──
         #
         # Akshay, 2026-09-14: "keep only unique ones, remove earlier ones".
