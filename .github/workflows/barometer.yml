@@ -1,0 +1,88 @@
+name: Barometer — record the reading, and score it later
+
+# The site scores every SIGNAL it publishes and, until this existed, never
+# scored the barometer: it said "genuinely cheap" or "nothing on sale" and
+# nothing ever checked whether it was right. That was the one claim on the
+# site with no accountability behind it.
+#
+# This writes the reading down every day. Once three, six and twelve months
+# have passed, barometer.py measures what the index actually did after each
+# one, so the page can eventually say "when this read 'genuinely cheap', the
+# index was up X% a year later, over N readings" — or that it was not.
+#
+# AFTER THE SCREEN, NOT BEFORE. Breadth is half the score and comes from
+# pulse.json, which the screen job writes. Running first would record a
+# reading built on yesterday's breadth and quietly poison the history this
+# exists to keep honest — so the job refuses rather than guesses.
+#
+# ONE ROW PER DAY, enforced in the script rather than by the schedule: a
+# re-run replaces the day's row instead of appending a second one, so a manual
+# dispatch cannot double-count a reading in the outcome averages.
+
+on:
+  schedule:
+    - cron: '45 13 * * 1-5'      # 19:15 IST — after the EOD screen build
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: barometer
+  cancel-in-progress: false
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refuse to record a reading built on stale breadth
+        run: |
+          python - <<'PY'
+          import json, pathlib, datetime, sys
+          p = pathlib.Path("docs/pulse.json")
+          if not p.exists():
+              sys.exit("docs/pulse.json is missing — breadth is half this score")
+          d = json.loads(p.read_text())
+          built = str(d.get("built_on") or "")[:10]
+          b = d.get("breadth") or {}
+          if not b.get("counted"):
+              sys.exit("pulse.json carries no breadth — nothing to score")
+          try:
+              age = (datetime.date.today() - datetime.date.fromisoformat(built)).days
+          except Exception:
+              sys.exit(f"pulse.json has no readable date ({built!r})")
+          print(f"breadth from {built}, {age} day(s) old, {b['counted']} names")
+          # A weekend run reads Friday's screen, so three days is normal.
+          if age > 4:
+              sys.exit(f"breadth is {age} days old — refusing to record a reading on it")
+          PY
+
+      - name: Record today's reading
+        run: python barometer.py
+
+      - name: Commit it
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add docs/barometer.json
+          git diff --staged --quiet && echo "unchanged" && exit 0
+          python - <<'PY'
+          import json, pathlib
+          d = json.loads(pathlib.Path("docs/barometer.json").read_text())
+          t = d["today"]
+          pathlib.Path("/tmp/msg").write_text(
+              f"data: barometer {d['history'][-1]['date']} — {t['score']}/100 "
+              f"{t['band']['t']}, {(t.get('stage') or {}).get('t','')} "
+              f"[skip ci]")
+          PY
+          git commit -F /tmp/msg
+          git push

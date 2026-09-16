@@ -1,0 +1,88 @@
+{
+  "ok": true,
+  "generated_at": "2026-09-16T18:28:48+00:00",
+  "weights": {
+    "trend": 30,
+    "breadth": 30,
+    "participation": 15,
+    "volatility": 15,
+    "highs": 10
+  },
+  "today": {
+    "score": 41,
+    "band": {
+      "k": "mixed",
+      "t": "Mixed",
+      "c": ""
+    },
+    "parts": [
+      {
+        "key": "trend",
+        "label": "Where the index sits",
+        "score": 24.7,
+        "weight": 30,
+        "detail": "Nifty is 25% up its own 52-week range, 12.0% below the high"
+      },
+      {
+        "key": "breadth",
+        "label": "Names above their 200-day",
+        "score": 56.7,
+        "weight": 30,
+        "detail": "561 of 989 hold their 200-day average"
+      },
+      {
+        "key": "participation",
+        "label": "Advancing today",
+        "score": 35.4,
+        "weight": 15,
+        "detail": "350 of 989 advanced"
+      },
+      {
+        "key": "volatility",
+        "label": "Volatility",
+        "score": 70,
+        "weight": 15,
+        "detail": "India VIX at 13.17 \u2014 normal"
+      },
+      {
+        "key": "highs",
+        "label": "Names at a 52-week high",
+        "score": 4.0,
+        "weight": 10,
+        "detail": "2 of 989 at a 52-week high"
+      }
+    ],
+    "stage": {
+      "k": "early",
+      "t": "Slightly cheaper",
+      "c": ""
+    },
+    "counted": 989,
+    "nifty": 23217.599609375,
+    "drawdown_pct": 11.97,
+    "above_200dma_pct": 56.7,
+    "vix": 13.167499542236328
+  },
+  "history": [
+    {
+      "date": "2026-09-17",
+      "score": 41,
+      "band": "mixed",
+      "stage": {
+        "k": "early",
+        "t": "Slightly cheaper",
+        "c": ""
+      },
+      "nifty": 23217.599609375,
+      "drawdown_pct": 11.97,
+      "above_200dma_pct": 56.7,
+      "vix": 13.167499542236328
+    }
+  ],
+  "outcomes": {},
+  "horizons": {
+    "m3": "3 months",
+    "m6": "6 months",
+    "m12": "12 months"
+  }
+}
