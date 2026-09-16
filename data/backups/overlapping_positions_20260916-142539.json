@@ -1,0 +1,716 @@
+{
+  "removed_at": "20260916-142539",
+  "rule": "a ticket opened while another on the same name was still open; earliest survives",
+  "published_before": {
+    "trades": 234,
+    "win_pct": 26.9,
+    "expectancy_r": -0.09
+  },
+  "published_after": {
+    "trades": 178,
+    "win_pct": 25.3,
+    "expectancy_r": -0.157
+  },
+  "rows": [
+    {
+      "id": 687,
+      "date": "2026-07-11",
+      "closed_at": null,
+      "signal_type": "multibagger",
+      "symbol": "CARTRADE",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 48
+    },
+    {
+      "id": 570,
+      "date": "2026-08-01",
+      "closed_at": "2026-08-01T22:31:34.274842+05:30",
+      "signal_type": "breakout",
+      "symbol": "TECHM",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 49
+    },
+    {
+      "id": 926,
+      "date": "2026-08-24",
+      "closed_at": "2026-09-07T10:51:55.234382+05:30",
+      "signal_type": "ohl",
+      "symbol": "TECHM",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 864
+    },
+    {
+      "id": 935,
+      "date": "2026-08-26",
+      "closed_at": "2026-09-07T15:22:25.029960+05:30",
+      "signal_type": "breakout",
+      "symbol": "TECHM",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 926
+    },
+    {
+      "id": 165,
+      "date": "2026-06-13",
+      "closed_at": "2026-07-31T14:49:19.937451+05:30",
+      "signal_type": "breakout",
+      "symbol": "COFORGE",
+      "status": "T2_HIT",
+      "r_multiple": 5.453,
+      "_covered_by": 56
+    },
+    {
+      "id": 563,
+      "date": "2026-08-01",
+      "closed_at": "2026-08-01T22:31:31.062869+05:30",
+      "signal_type": "breakout",
+      "symbol": "COFORGE",
+      "status": "T2_HIT",
+      "r_multiple": 2.5,
+      "_covered_by": 56
+    },
+    {
+      "id": 106,
+      "date": "2026-06-10",
+      "closed_at": "2026-07-31T14:49:21.217209+05:30",
+      "signal_type": "breakout",
+      "symbol": "WOCKPHARMA",
+      "status": "TIME_STOP",
+      "r_multiple": 4.408,
+      "_covered_by": 67
+    },
+    {
+      "id": 747,
+      "date": "2026-08-12",
+      "closed_at": "2026-09-09T10:51:57.665291+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "WOCKPHARMA",
+      "status": "T2_HIT",
+      "r_multiple": 4.39,
+      "_covered_by": 67
+    },
+    {
+      "id": 783,
+      "date": "2026-08-15",
+      "closed_at": "2026-09-09T15:32:08.806059+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "WOCKPHARMA",
+      "status": "T2_HIT",
+      "r_multiple": 2.27,
+      "_covered_by": 67
+    },
+    {
+      "id": 907,
+      "date": "2026-08-22",
+      "closed_at": "2026-09-09T15:32:07.656138+05:30",
+      "signal_type": "magic",
+      "symbol": "WOCKPHARMA",
+      "status": "T2_HIT",
+      "r_multiple": 2.96,
+      "_covered_by": 67
+    },
+    {
+      "id": 959,
+      "date": "2026-08-29",
+      "closed_at": null,
+      "signal_type": "magic",
+      "symbol": "WOCKPHARMA",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 67
+    },
+    {
+      "id": 767,
+      "date": "2026-08-15",
+      "closed_at": "2026-09-11T17:51:51.565142+05:30",
+      "signal_type": "magic",
+      "symbol": "DIXON",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 68
+    },
+    {
+      "id": 776,
+      "date": "2026-08-15",
+      "closed_at": "2026-09-11T17:51:52.005904+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "DIXON",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 68
+    },
+    {
+      "id": 901,
+      "date": "2026-08-22",
+      "closed_at": "2026-09-10T17:51:08.879888+05:30",
+      "signal_type": "magic",
+      "symbol": "DIXON",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 68
+    },
+    {
+      "id": 223,
+      "date": "2026-06-16",
+      "closed_at": "2026-07-31T14:49:19.008737+05:30",
+      "signal_type": "breakout",
+      "symbol": "FEDERALBNK",
+      "status": "T2_HIT",
+      "r_multiple": 2.499,
+      "_covered_by": 671
+    },
+    {
+      "id": 475,
+      "date": "2026-07-24",
+      "closed_at": "2026-07-31T14:49:16.429697+05:30",
+      "signal_type": "breakout",
+      "symbol": "FEDERALBNK",
+      "status": "TIME_STOP",
+      "r_multiple": 0.269,
+      "_covered_by": 671
+    },
+    {
+      "id": 225,
+      "date": "2026-06-16",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "RBLBANK",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 103
+    },
+    {
+      "id": 164,
+      "date": "2026-06-13",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "ZEEL",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 104
+    },
+    {
+      "id": 552,
+      "date": "2026-07-31",
+      "closed_at": "2026-08-01T22:31:36.122549+05:30",
+      "signal_type": "breakout",
+      "symbol": "PIDILITIND",
+      "status": "T2_HIT",
+      "r_multiple": 2.5,
+      "_covered_by": 162
+    },
+    {
+      "id": 948,
+      "date": "2026-08-27",
+      "closed_at": "2026-08-31T12:53:41.116000+05:30",
+      "signal_type": "ohl",
+      "symbol": "ABCAPITAL",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 548
+    },
+    {
+      "id": 388,
+      "date": "2026-07-11",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "DELHIVERY",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 366
+    },
+    {
+      "id": 682,
+      "date": "2026-07-11",
+      "closed_at": null,
+      "signal_type": "multibagger",
+      "symbol": "EXIDEIND",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 368
+    },
+    {
+      "id": 474,
+      "date": "2026-07-24",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "EXIDEIND",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 368
+    },
+    {
+      "id": 868,
+      "date": "2026-08-19",
+      "closed_at": "2026-08-24T16:46:05.638635+05:30",
+      "signal_type": "breakout",
+      "symbol": "EXIDEIND",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 682
+    },
+    {
+      "id": 941,
+      "date": "2026-08-27",
+      "closed_at": "2026-09-02T11:10:02.532196+05:30",
+      "signal_type": "breakout",
+      "symbol": "EXIDEIND",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 682
+    },
+    {
+      "id": 440,
+      "date": "2026-07-21",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "GRANULES",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 369
+    },
+    {
+      "id": 526,
+      "date": "2026-07-29",
+      "closed_at": "2026-08-03T15:37:47.425973+05:30",
+      "signal_type": "breakout",
+      "symbol": "GRANULES",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 369
+    },
+    {
+      "id": 535,
+      "date": "2026-07-30",
+      "closed_at": "2026-08-03T15:37:46.549329+05:30",
+      "signal_type": "breakout",
+      "symbol": "INDUSINDBK",
+      "status": "TIME_STOP",
+      "r_multiple": 0.554,
+      "_covered_by": 471
+    },
+    {
+      "id": 534,
+      "date": "2026-07-30",
+      "closed_at": "2026-07-31T14:49:06.285119+05:30",
+      "signal_type": "breakout",
+      "symbol": "NYKAA",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 679
+    },
+    {
+      "id": 1054,
+      "date": "2026-09-11",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "IPCALAB",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 762
+    },
+    {
+      "id": 531,
+      "date": "2026-07-30",
+      "closed_at": "2026-08-06T14:38:17.751186+05:30",
+      "signal_type": "breakout",
+      "symbol": "OBEROIRLTY",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 473
+    },
+    {
+      "id": 528,
+      "date": "2026-07-29",
+      "closed_at": "2026-08-10T13:36:21.757506+05:30",
+      "signal_type": "breakout",
+      "symbol": "DIVISLAB",
+      "status": "T2_HIT",
+      "r_multiple": 2.5,
+      "_covered_by": 484
+    },
+    {
+      "id": 525,
+      "date": "2026-07-29",
+      "closed_at": "2026-08-03T15:37:46.984163+05:30",
+      "signal_type": "breakout",
+      "symbol": "TORNTPHARM",
+      "status": "T2_HIT",
+      "r_multiple": 4.505,
+      "_covered_by": 693
+    },
+    {
+      "id": 550,
+      "date": "2026-07-31",
+      "closed_at": "2026-08-01T11:58:50.064174+05:30",
+      "signal_type": "breakout",
+      "symbol": "TORNTPHARM",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 693
+    },
+    {
+      "id": 527,
+      "date": "2026-07-29",
+      "closed_at": "2026-07-31T14:49:10.139567+05:30",
+      "signal_type": "breakout",
+      "symbol": "LALPATHLAB",
+      "status": "TIME_STOP",
+      "r_multiple": 0.797,
+      "_covered_by": 689
+    },
+    {
+      "id": 928,
+      "date": "2026-08-25",
+      "closed_at": "2026-09-04T13:15:32.019247+05:30",
+      "signal_type": "breakout",
+      "symbol": "LALPATHLAB",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 689
+    },
+    {
+      "id": 532,
+      "date": "2026-07-30",
+      "closed_at": "2026-07-31T14:49:04.763871+05:30",
+      "signal_type": "breakout",
+      "symbol": "OFSS",
+      "status": "TIME_STOP",
+      "r_multiple": 1.5,
+      "_covered_by": 700
+    },
+    {
+      "id": 892,
+      "date": "2026-08-22",
+      "closed_at": "2026-08-24T16:46:04.101556+05:30",
+      "signal_type": "breakout",
+      "symbol": "OFSS",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 700
+    },
+    {
+      "id": 1003,
+      "date": "2026-09-05",
+      "closed_at": null,
+      "signal_type": "ai_longterm",
+      "symbol": "OFSS",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 700
+    },
+    {
+      "id": 866,
+      "date": "2026-08-18",
+      "closed_at": "2026-08-24T16:46:06.286220+05:30",
+      "signal_type": "ohl",
+      "symbol": "CHOLAFIN",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 544
+    },
+    {
+      "id": 546,
+      "date": "2026-07-31",
+      "closed_at": "2026-08-01T22:31:35.667538+05:30",
+      "signal_type": "breakout",
+      "symbol": "KARURVYSYA",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 698
+    },
+    {
+      "id": 551,
+      "date": "2026-07-31",
+      "closed_at": "2026-08-01T11:58:50.507212+05:30",
+      "signal_type": "breakout",
+      "symbol": "STARHEALTH",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 680
+    },
+    {
+      "id": 569,
+      "date": "2026-08-01",
+      "closed_at": "2026-08-01T22:31:33.818520+05:30",
+      "signal_type": "breakout",
+      "symbol": "MOTHERSON",
+      "status": "T2_HIT",
+      "r_multiple": 2.457,
+      "_covered_by": 673
+    },
+    {
+      "id": 789,
+      "date": "2026-08-17",
+      "closed_at": "2026-08-25T10:55:24.568009+05:30",
+      "signal_type": "ohl",
+      "symbol": "MOTHERSON",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 673
+    },
+    {
+      "id": 934,
+      "date": "2026-08-26",
+      "closed_at": "2026-09-01T15:12:25.739126+05:30",
+      "signal_type": "breakout",
+      "symbol": "MOTHERSON",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 673
+    },
+    {
+      "id": 939,
+      "date": "2026-08-26",
+      "closed_at": "2026-08-27T18:36:05.248995+05:30",
+      "signal_type": "ohl",
+      "symbol": "LUPIN",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 585
+    },
+    {
+      "id": 903,
+      "date": "2026-08-22",
+      "closed_at": "2026-09-07T15:22:26.482040+05:30",
+      "signal_type": "magic",
+      "symbol": "HINDCOPPER",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 593
+    },
+    {
+      "id": 1064,
+      "date": "2026-09-12",
+      "closed_at": null,
+      "signal_type": "magic",
+      "symbol": "HINDCOPPER",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 593
+    },
+    {
+      "id": 604,
+      "date": "2026-08-08",
+      "closed_at": null,
+      "signal_type": "ai_longterm",
+      "symbol": "AIAENG",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 688
+    },
+    {
+      "id": 749,
+      "date": "2026-08-12",
+      "closed_at": "2026-08-28T21:36:56.344455+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "IFCI",
+      "status": "T2_HIT",
+      "r_multiple": 1.93,
+      "_covered_by": 663
+    },
+    {
+      "id": 899,
+      "date": "2026-08-22",
+      "closed_at": "2026-08-28T21:36:54.507323+05:30",
+      "signal_type": "magic",
+      "symbol": "IFCI",
+      "status": "T2_HIT",
+      "r_multiple": 1.27,
+      "_covered_by": 663
+    },
+    {
+      "id": 1038,
+      "date": "2026-09-08",
+      "closed_at": null,
+      "signal_type": "ledge",
+      "symbol": "GVT&D",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 786
+    },
+    {
+      "id": 961,
+      "date": "2026-08-29",
+      "closed_at": null,
+      "signal_type": "magic",
+      "symbol": "HSCL",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 665
+    },
+    {
+      "id": 1029,
+      "date": "2026-09-07",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "CGCL",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 697
+    },
+    {
+      "id": 716,
+      "date": "2026-08-01",
+      "closed_at": "2026-08-14T13:22:58.156790+05:30",
+      "signal_type": "multibagger",
+      "symbol": "PAYTM",
+      "status": "T2_HIT",
+      "r_multiple": 2.085,
+      "_covered_by": 704
+    },
+    {
+      "id": 1086,
+      "date": "2026-09-16",
+      "closed_at": null,
+      "signal_type": "breakout",
+      "symbol": "REDINGTON",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 710
+    },
+    {
+      "id": 766,
+      "date": "2026-08-15",
+      "closed_at": "2026-09-01T15:12:27.255000+05:30",
+      "signal_type": "magic",
+      "symbol": "CEATLTD",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 728
+    },
+    {
+      "id": 768,
+      "date": "2026-08-15",
+      "closed_at": "2026-08-24T16:46:06.861187+05:30",
+      "signal_type": "magic",
+      "symbol": "COROMANDEL",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 732
+    },
+    {
+      "id": 778,
+      "date": "2026-08-15",
+      "closed_at": "2026-09-11T17:51:52.461085+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "ESCORTS",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 735
+    },
+    {
+      "id": 913,
+      "date": "2026-08-22",
+      "closed_at": "2026-09-11T17:51:50.637147+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "ESCORTS",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 735
+    },
+    {
+      "id": 952,
+      "date": "2026-08-28",
+      "closed_at": "2026-09-07T10:51:53.166816+05:30",
+      "signal_type": "ohl",
+      "symbol": "ESCORTS",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 735
+    },
+    {
+      "id": 781,
+      "date": "2026-08-15",
+      "closed_at": "2026-09-07T10:51:56.281828+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "HCLTECH",
+      "status": "SL_HIT",
+      "r_multiple": -1.01,
+      "_covered_by": 736
+    },
+    {
+      "id": 916,
+      "date": "2026-08-22",
+      "closed_at": "2026-09-10T17:51:09.912210+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "HCLTECH",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 736
+    },
+    {
+      "id": 910,
+      "date": "2026-08-22",
+      "closed_at": "2026-08-31T19:32:55.316346+05:30",
+      "signal_type": "magic",
+      "symbol": "TEGA",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 763
+    },
+    {
+      "id": 967,
+      "date": "2026-08-29",
+      "closed_at": "2026-09-15T18:40:13.439922+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "ABREL",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 914
+    },
+    {
+      "id": 947,
+      "date": "2026-08-27",
+      "closed_at": "2026-09-07T10:51:53.672640+05:30",
+      "signal_type": "ohl",
+      "symbol": "NAUKRI",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 936
+    },
+    {
+      "id": 1007,
+      "date": "2026-09-05",
+      "closed_at": null,
+      "signal_type": "magic",
+      "symbol": "POONAWALLA",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 962
+    },
+    {
+      "id": 1017,
+      "date": "2026-09-05",
+      "closed_at": null,
+      "signal_type": "magicmagic",
+      "symbol": "IDBI",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 964
+    },
+    {
+      "id": 1020,
+      "date": "2026-09-05",
+      "closed_at": "2026-09-15T18:40:12.932542+05:30",
+      "signal_type": "magicmagic",
+      "symbol": "COCHINSHIP",
+      "status": "SL_HIT",
+      "r_multiple": -1.0,
+      "_covered_by": 968
+    },
+    {
+      "id": 1090,
+      "date": "2026-09-16",
+      "closed_at": null,
+      "signal_type": "keel",
+      "symbol": "J&KBANK",
+      "status": "OPEN",
+      "r_multiple": null,
+      "_covered_by": 1063
+    }
+  ]
+}
