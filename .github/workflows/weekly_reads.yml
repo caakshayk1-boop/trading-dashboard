@@ -1,0 +1,94 @@
+name: Weekly reads — seven company studies, Saturday morning
+
+# Akshay, 2026-09-16: seven names out of the thousand-name screen, written up
+# well enough to "know in & out of any company", to read over a weekend, and to
+# be able to speak about afterwards.
+#
+# SATURDAY 02:30 UTC = 08:00 IST = 10:30 MYT. He reads these at the weekend, so
+# they have to exist before the weekend starts, not during it.
+#
+# CRON DRIFT IS ASSUMED, NOT HOPED AGAINST. GitHub drops scheduled runs
+# silently and lands the rest 1.5-3h late — this repo has the scars. The script
+# keys its edition on the SATURDAY OF THE CURRENT WEEK rather than on the day
+# it happens to run, so a run that lands on Sunday morning still writes the
+# Saturday edition and a manual backfill on a Wednesday overwrites nothing. A
+# second Saturday run is a no-op: the edition already exists.
+#
+# THE SCREEN MUST BE FRESH FIRST. The studies are built from docs/screen.json
+# and nothing else, so a stale screen produces seven studies about last month's
+# numbers. The job checks its age and refuses rather than publishing them.
+
+on:
+  schedule:
+    - cron: '30 2 * * 6'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Rewrite this week even if it already exists'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-reads
+  cancel-in-progress: false
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refuse to study a stale screen
+        run: |
+          python - <<'PY'
+          import json, pathlib, datetime, sys
+          p = pathlib.Path("docs/screen.json")
+          if not p.exists():
+              sys.exit("docs/screen.json is missing — the screen has not been built")
+          d = json.loads(p.read_text())
+          stamp = d.get("price_date") or d.get("built_on") or ""
+          print(f"screen priced {stamp}, {len(d.get('rows') or [])} names")
+          try:
+              age = (datetime.date.today() - datetime.date.fromisoformat(str(stamp)[:10])).days
+          except Exception:
+              sys.exit(f"screen carries no readable date ({stamp!r})")
+          # A weekend run reads Friday's close, so three days is normal and a
+          # long weekend makes four. Beyond that the numbers are last week's.
+          if age > 6:
+              sys.exit(f"screen is {age} days old — refusing to write studies from it")
+          print(f"screen is {age} days old — fine")
+          PY
+
+      - name: Write the studies
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_MODEL: ${{ vars.GROQ_MODEL_READS }}
+          FORCE_REWRITE: ${{ inputs.force && '1' || '' }}
+        run: python weekly_reads.py
+
+      - name: Commit the edition
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add docs/weekly_reads.json
+          git diff --staged --quiet && echo "nothing new" && exit 0
+          python - <<'PY'
+          import json, pathlib
+          d = json.loads(pathlib.Path("docs/weekly_reads.json").read_text())
+          e = (d.get("editions") or [{}])[0]
+          names = ", ".join(s["sym"] for s in e.get("studies") or [])
+          pathlib.Path("/tmp/msg").write_text(
+              f"data: weekly reads {e.get('week')} — {names} [skip ci]")
+          PY
+          git commit -F /tmp/msg
+          git push
