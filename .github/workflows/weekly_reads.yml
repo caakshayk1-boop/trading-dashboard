@@ -74,6 +74,11 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GROQ_MODEL: ${{ vars.GROQ_MODEL_READS }}
           FORCE_REWRITE: ${{ inputs.force && '1' || '' }}
+          # The digest goes out from the same step that writes the edition, so
+          # the bot can never announce a week the file does not contain. It
+          # fires only on a NEWLY written edition — a re-run returns early.
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python weekly_reads.py
 
       - name: Commit the edition

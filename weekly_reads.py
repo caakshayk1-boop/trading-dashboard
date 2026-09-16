@@ -527,6 +527,106 @@ def study_for(r: dict) -> dict | None:
     }
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Telegram
+# ─────────────────────────────────────────────────────────────────────────────
+TG_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
+TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
+TG_MAX = 3800          # the hard cap is 4096 and Telegram REJECTS, never truncates
+READS_URL = os.environ.get("READS_URL", "https://signal.askakshay.com/reads")
+
+# Markdown is a minefield here. An underscore in a ticker turns the rest of the
+# message into italics and Telegram answers 400 for an unclosed entity — this
+# repo has lost whole briefs to exactly that. Escaped, not hoped about.
+_MD = str.maketrans({c: "\\" + c for c in "_*[]()~`>#+-=|{}.!"})
+
+
+def _md(t) -> str:
+    return str(t if t is not None else "").translate(_MD)
+
+
+def _tg_post(text: str) -> bool:
+    try:
+        r = requests.post(
+            f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+            json={"chat_id": TG_CHAT, "text": text, "parse_mode": "MarkdownV2",
+                  "disable_web_page_preview": True},
+            timeout=20)
+        if r.status_code == 200:
+            return True
+        # Log the BODY. A 400 from Telegram names the offending byte offset,
+        # and a code alone has never once been enough to fix one.
+        log.warning(f"telegram {r.status_code}: {r.text[:300]}")
+    except Exception as e:                                # noqa: BLE001
+        log.warning(f"telegram failed: {e}")
+    return False
+
+
+def _first_line(study: str) -> str:
+    """The study's own opening sentence, which is written to be exactly this.
+
+    Taking the first paragraph under "## In one line" rather than generating a
+    second summary: two summaries of one study will disagree eventually, and
+    the one on the page is the one that was checked.
+    """
+    m = re.search(r"##\s*In one line\s*\n+(.+?)(?:\n\s*\n|\n##)", study, re.S)
+    line = (m.group(1) if m else study).strip()
+    line = re.sub(r"[*_`#]+", "", line).replace("\n", " ")
+    line = re.sub(r"\s+", " ", line).strip()
+    return line[:240]
+
+
+def send_to_telegram(edition: dict) -> bool:
+    """One digest, not seven studies.
+
+    Seven 1,300-word studies is 60,000 characters against a 4,096 cap — the
+    whole set cannot be the message and should not be. What belongs on a phone
+    on a Saturday morning is the shortlist: what each company is, in one line,
+    and a link to read the rest. The studies live on the page.
+    """
+    if not TG_TOKEN or not TG_CHAT:
+        log.info("no telegram credentials — skipping the digest")
+        return False
+
+    studies = edition.get("studies") or []
+    if not studies:
+        return False
+    mins = sum(s.get("read_minutes") or 0 for s in studies)
+
+    head = (f"📚 *Weekly reads* — Saturday {_md(edition.get('week'))}\n"
+            f"_{_md(len(studies))} companies, one per sector · {_md(mins)} min in total_\n")
+    blocks = []
+    for i, s in enumerate(studies, 1):
+        mc = f" · ₹{s['mcap_cr']:,.0f}cr" if s.get("mcap_cr") else ""
+        blocks.append(
+            f"*{_md(i)}\\. {_md(s.get('sym'))}* — {_md(s.get('sector') or '')}{_md(mc)}\n"
+            f"{_md(s.get('name') or '')}\n"
+            f"{_md(_first_line(s.get('study') or ''))}\n"
+            f"_{_md(s.get('read_minutes') or 0)} min read_\n")
+    tail = (f"\nRead them: {_md(READS_URL)}\n"
+            f"_No entry, stop or target — these are about the businesses, not trades\._")
+
+    # Chunked on the character limit, never truncated: Telegram REJECTS an
+    # oversize message outright rather than trimming it, so a digest that grows
+    # past the cap would simply never arrive.
+    msgs, cur = [], head
+    for b in blocks:
+        if len(cur) + len(b) + len(tail) > TG_MAX:
+            msgs.append(cur)
+            cur = ""
+        cur += "\n" + b
+    msgs.append(cur + tail)
+
+    ok = True
+    for i, m in enumerate(msgs):
+        if not _tg_post(m):
+            ok = False
+        if i + 1 < len(msgs):
+            time.sleep(1)
+    log.info(f"telegram: {len(msgs)} message(s), {'sent' if ok else 'PARTIAL'}")
+    return ok
+
+
 def main() -> int:
     if not SCREEN.exists():
         log.error(f"{SCREEN} not found — the screen has not been built")
@@ -581,6 +681,11 @@ def main() -> int:
         "editions": editions[:80],       # roughly eighteen months of weekends
     }, indent=2), encoding="utf-8")
     log.info(f"wrote {len(studies)} studies for {wk} to {OUT}")
+
+    # The digest goes out only for a NEWLY written edition. A re-run that
+    # finds the week already done returns above, so the bot cannot send the
+    # same Saturday twice.
+    send_to_telegram(editions[0])
     return 0
 
 
