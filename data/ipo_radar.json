@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-17T01:07:08",
+ "generated_at": "2026-09-17T01:14:49",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -185,19 +185,15 @@
    "issue_size_shares": 9399600.0,
    "issue_size_cr": 124.88,
    "subscription_x": 4.55471254095919,
-   "subscription_by_category": {
-    "QIB": 1.02,
-    "HNI": 6.8,
-    "Total": 7.7
-   },
+   "subscription_by_category": null,
    "lot_size": 161.0,
    "min_investment": 14973.0,
    "fresh_issue_cr": 99.89,
    "ofs_cr": 24.99,
    "face_value": 10.0,
    "anchor_cr": 37.46,
-   "listing_date": null,
-   "gmp_text": "\u20b925",
+   "listing_date": "Sep 23, 2026",
+   "gmp_text": "\u20b925 (26.88%)",
    "revenue_cr": 191.09,
    "revenue_growth_pct": null,
    "pat_cr": 8.28,
@@ -226,7 +222,6 @@
      "Window": "10/15"
     },
     "not_measured": [
-     "listing date",
      "sector",
      "audited financials",
      "valuation multiples"
@@ -241,8 +236,6 @@
    "verdict_caveat": "Most subscription arrives on the final day; this figure is not final.",
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/jindal-supreme-ipo/2803/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1349/jindal-supreme",
-   "category_source": "ipopremium.in",
    "reads_for": null,
    "reads_against": [
     "Return on capital employed is 6%. Below about 8% the business earns less on its capital than it costs to carry, so growth consumes value rather than adding it."

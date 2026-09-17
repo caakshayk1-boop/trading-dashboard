@@ -1,5 +1,5 @@
 {
- "build_id": "20260917T090310",
+ "build_id": "20260917T091248",
  "date": "2026-09-17",
  "date_str": "Thursday, September 17 2026",
  "picks": [
@@ -411,7 +411,7 @@
  "picks_week": null,
  "open_context": {
   "AAPL": {
-   "price": 331.34,
+   "price": 332.41,
    "sector": "Technology"
   },
   "ANANTRAJ": {
@@ -487,7 +487,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 255.65,
+   "price": 250.54,
    "sector": "Technology"
   },
   "CUPID": {
@@ -643,7 +643,7 @@
    "sector": "Financial Services"
   },
   "SAP": {
-   "price": 215.67,
+   "price": 213.2,
    "sector": "Technology"
   },
   "SARDAEN": {
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "15h old",
+    "age": "16h old",
     "note": "partial coverage \u2014 9/22 records"
    }
   ]
@@ -1340,11 +1340,11 @@
     "smart": {
      "what_happened": [
       "A lower EMI does not necessarily mean a cheaper loan.",
-      "Consumers should calculate the total amount payable under both options before deciding."
+      "Consumers should calculate the total amount payable for both credit card EMI and personal loan before deciding."
      ],
-     "why_it_matters": "Understanding the total cost of borrowing is crucial because borrowers may be misled by lower monthly payments and end up paying more over the life of the loan, affecting their overall financial position.",
-     "what_to_watch": "Check the disclosed total payable amount for each loan option when comparing credit card EMIs and personal loans.",
-     "headline": "Credit card EMI vs personal loan cost comparison for big-ticket purchases",
+     "why_it_matters": "Understanding that a lower monthly payment (EMI) may hide a higher overall cost helps borrowers avoid paying more interest over the life of the loan, ensuring they choose the financing option that truly minimizes total expense for big-ticket purchases.",
+     "what_to_watch": "Check the total interest and fees disclosed in the repayment schedule of each option before finalizing a purchase.",
+     "headline": "Credit card EMI vs personal loan cost comparison",
      "read_seconds": 20
     }
    },
@@ -1358,12 +1358,12 @@
     "_sort": "2026-09-16T11:40:58+00:00",
     "smart": {
      "what_happened": [
-      "NRIs use NRO accounts to manage their Indian earnings.",
-      "They are allowed to transfer funds to NRE accounts, subject to specific regulations."
+      "NRIs can manage their Indian earnings through NRO accounts.",
+      "They are permitted to transfer funds from NRO to NRE accounts subject to specific regulations."
      ],
-     "why_it_matters": "The ability to move money from an NRO to an NRE account lets NRIs repatriate earnings and manage liquidity while complying with Indian regulatory requirements, affecting cash flow and tax planning for overseas Indians.",
-     "what_to_watch": "Any RBI announcement that changes the permitted annual transfer limits between NRO and NRE accounts.",
-     "headline": "NRIs can transfer funds from NRO to NRE accounts",
+     "why_it_matters": "The ability to move money from an NRO to an NRE account lets non\u2011resident Indians shift earnings into a repatriable account, potentially simplifying cross\u2011border financial management while ensuring compliance with Indian foreign exchange rules.",
+     "what_to_watch": "Monitor any regulatory updates from the RBI regarding limits or procedures for NRO to NRE transfers.",
+     "headline": "NRIs may transfer funds from NRO to NRE accounts",
      "read_seconds": 20
     }
    },
@@ -1395,12 +1395,12 @@
     "_sort": "2026-09-16T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "Reports spanning centuries and cultures describe terminal lucidity in dying dementia patients.",
-      "The phenomenon suggests that memory and identity may be more recoverable than previously thought."
+      "Reports of terminal lucidity span centuries and cultures",
+      "The phenomenon suggests memory and identity may be more recoverable than previously thought"
      ],
-     "why_it_matters": "If terminal lucidity is genuine, it challenges current assumptions about the irreversibility of dementia-related brain loss and could influence end\u2011of\u2011life care practices, prompting clinicians and families to reconsider how they interact with patients in their final days.",
-     "what_to_watch": "Future peer\u2011reviewed research publications that investigate terminal lucidity in dementia patients",
-     "headline": "Dying dementia patients sometimes regain awareness, reports show",
+     "why_it_matters": "Understanding terminal lucidity could reshape scientific perspectives on the resilience of memory and identity in the final stages of dementia, potentially influencing end-of-life care approaches and research priorities in neurology and psychology.",
+     "what_to_watch": "Future peer\u2011reviewed studies that quantify the frequency and neurological mechanisms of terminal lucidity in dementia patients",
+     "headline": "Terminal lucidity observed in dying dementia patients",
      "read_seconds": 20
     }
    },
@@ -1411,17 +1411,7 @@
     "link": "https://psyche.co/turning-points/how-a-to-do-task-stopped-the-ruminative-loop-of-my-grief",
     "summary": "After my husband died, I fell into a dark ruminative spiral. The way back would begin at 2pm tomorrow- by Sandra LambRead on Psyche",
     "date": "Sep 15, 2026",
-    "_sort": "2026-09-15T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "The piece is a personal essay about the author's grief after her husband's death.",
-      "The author notes that she plans to begin her recovery at 2\u202fpm the next day."
-     ],
-     "why_it_matters": "The article offers a candid look at the emotional challenges of bereavement and the importance of setting a concrete moment to start healing, which can resonate with readers facing similar losses and highlight the role of mental\u2011health storytelling in public discourse.",
-     "what_to_watch": "Monitor Psyche for any follow\u2011up posts by Sandra Lamb that detail her progress after the stated 2\u202fpm turning point.",
-     "headline": "Sandra Lamb essay 'Say yes to regret' published on Psyche",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-15T10:00:00+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1469,7 +1459,7 @@
     "moves": 38,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: after 1.e4 e5 2.f4 exf4, avoid 3.Nf3?; instead play 3...d5, develop pieces, and castle before launching pawn storms\u2014reduces exposure and improves win chances.",
+    "analysis": "Focus on early king safety: after 1.e4 e5 2.f4 exf4 3.Nf3, avoid 3...g5; instead play 3...d5 (or 3...Nf6) to challenge center and prevent White's rapid attack. This reduces tactical threats and lowers your average centipawn loss by ~30\u202fcp.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1575,7 +1565,7 @@
     "moves": 30,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: stop bringing the queen out before\u202f4\u2026Nf6; aim to complete\u202fNf3\u2011d2\u2011e4\u202fand castle by move\u202f10 to avoid the decisive checkmate.",
+    "analysis": "Focus on early queen development: avoid bringing the queen out before move\u202f10; it gets harassed, loses tempo, and leads to the fatal checkmate.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1665,14 +1655,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 0,
-   "session_summary": "AKK_010 is a complete disaster: zero wins from two losses and no draws, indicating a win\u2011rate of 0\u202f% and a total lack of any effective repertoire. Their \u201cweakest opening\u201d is the one they actually used\u2014an amateur\u2011level 1.e4 response that lets Black seize the centre instantly\u2014while they have no identifiable \u201cbest\u201d line to fall back on. Stop flailing and rebuild from scratch: study a single solid opening (e.g., the London System or Caro\u2011Kann), master the first ten moves, then drill the resulting middlegame structures until you can at least hold a draw against equal opposition.",
+   "session_summary": "You\u2019ve never won a game, so your opening choices are effectively losing every time\u2014stop playing whatever you\u2019re currently using and adopt a solid, low\u2011theory line like the London System (white) or the Caro\u2011Kann (black) and study the first 10 moves until they\u2019re memorized. Your only chance to improve is to eliminate all \u201ccreative\u201d moves; play only moves that appear in master games and verify each with a engine before you make them. Spend the next 20\u202fhours replaying 20 master games in your chosen opening, annotating every move, then play 10 practice games against a 1500\u2011rated engine, refusing to deviate until you can consistently convert a material advantage into a win.",
    "session_date": "2026-09-16",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "b48zE",
-   "rating": 1737,
+   "rating": 1717,
    "level": "\ud83d\udfe1 at level",
    "themes": "Deflection \u00b7 Endgame \u00b7 Long",
    "tip": "Lure the key defender away from its post with a forcing move.",
