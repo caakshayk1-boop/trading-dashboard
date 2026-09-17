@@ -82,7 +82,21 @@ RETIRED = {
     "4h": "retired 2026-08-01",
     "ai_4h": "retired 2026-07-29",
     "ai_daily": "retired 2026-07-29",
+    "ohl": "retired 2026-09-17",
 }
+
+# ── THIS SITE'S OWN RECORD STARTS HERE ──────────────────────────────────────
+# Akshay: "this also shows all from total, show only related to signal site."
+#
+# The ledger carries trades published by news.askakshay.com before this site
+# existed, under stops this site has since said were wrong, on a ledger that
+# has been re-graded twice. Every other surface counts from LAUNCH and this one
+# was counting from the beginning of the file, so the regime table was reporting
+# a bigger, older and different population than the record beside it.
+#
+# It costs almost the whole sample and that is the point: a number this site is
+# accountable for, or no number.
+LAUNCH = "2026-09-02"
 
 # A cell needs this many closed trades before the page will read anything into
 # it. Deliberately low as a FLOOR for showing a number at all, and far below
@@ -228,6 +242,7 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
     unlabelled = 0
     skipped_market = 0
     skipped_retired = 0
+    skipped_prelaunch = 0
 
     for r in rows:
         eng = str(r.get("signal_type") or "")
@@ -260,6 +275,9 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
         if rm is None:
             continue
         d = str(r.get("alert_date") or r.get("date") or "")[:10]
+        if d < LAUNCH:
+            skipped_prelaunch += 1
+            continue
         lab = _prevailing(d, labels)
         if not lab:
             unlabelled += 1
@@ -300,6 +318,8 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
     return {"cells": out, "unlabelled_trades": unlabelled,
             "excluded_non_nse": skipped_market,
             "excluded_retired": skipped_retired,
+            "excluded_pre_launch": skipped_prelaunch,
+            "launch": LAUNCH,
             "retired_engines": sorted(RETIRED),
             "population": "NSE equities only"}
 
@@ -384,6 +404,11 @@ def main() -> int:
             "closed in — the regime is a fact about the decision, not the outcome. A "
             "trade entered on a weekend, when the weekend scan publishes for Monday, "
             "carries the last session's label rather than none.",
+            f"Only trades published by THIS site are counted — the record starts "
+            f"{LAUNCH}. Everything before it belongs to news.askakshay.com, under stops "
+            "this site has since said were wrong, on a ledger re-graded twice. It costs "
+            "almost the whole sample, which is the point: a number this site is "
+            "accountable for, or no number.",
             "Only engines that still publish are counted. intraday was brought back on "
             "2026-09-17 as the tenth engine at RESEARCH tier — it had been switched off "
             "with the whole intraday tier on that tier's -0.005R over 583 trades, and on "

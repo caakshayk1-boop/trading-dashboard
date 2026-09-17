@@ -169,7 +169,13 @@ REMARKS = {
     "4h":               "4-hour channel scan — intraday/swing horizon. Retired.",
     "ai_4h":            "AI channel breakout scan (4H) — intraday/swing horizon. Retired.",
     "ai_daily":         "AI channel breakout scan (daily close). Retired.",
-    "intraday":         "Intraday momentum tier — retired 2026-07-30, unmeasured",
+    "intraday":         "GUST — 15-minute momentum on the Nifty 50 universe. Retired with "
+                        "the intraday tier on 2026-07-30 and brought back 2026-09-17: that "
+                        "tier averaged -0.005R over 583 trades, this engine on its own "
+                        "closed 17 at +1.472R, t=3.69. RESEARCH tier — 13 trades short of "
+                        "the 30 required before it is trusted.",
+    "ohl":              "Open-equals-high reversal — retired 2026-09-17. 25 closed at "
+                        "-0.265R, 20% won, t=-0.86; it never cleared a bar.",
 }
 
 

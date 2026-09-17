@@ -2259,7 +2259,12 @@ def main():
             # (interval="1d"), which is only stable once the session has
             # closed — the same reason measured_equity runs here and not
             # at midday.
-            ohl       = _safe("ohl_scan",      run_ohl_scan,       time_str)
+            # ── OHL RETIRED 2026-09-17 ─────────────────────────────────
+            # 25 closed at -0.265R, 20% won, t=-0.86. It never cleared a bar
+            # and never will on that trajectory; leaving it publishing meant a
+            # reader saw setups from an engine the record already answered.
+            # The function stays so the history is readable; nothing calls it.
+            ohl       = []
             # LEDGE and KEEL fire on a CLOSE, so before 15:30 IST there is
             # nothing for them to evaluate — this slot is the only one they can
             # honestly run in. (Close-basis is measured to suit THESE engines'

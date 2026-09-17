@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-17T13:57:51+00:00",
+  "generated_at": "2026-09-17T14:44:21+00:00",
   "today": {
     "regime": "calm_range",
     "close": 23270.6,
@@ -50,62 +50,12 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 193,
-        "avg_r": -0.04,
-        "win_rate": 29.5,
-        "t": -0.37,
+        "n": 11,
+        "avg_r": -0.768,
+        "win_rate": 9.1,
+        "t": -2.32,
         "readable": true,
         "engines": [
-          {
-            "engine": "intraday",
-            "n": 17,
-            "retired": null,
-            "avg_r": 1.472,
-            "win_rate": 70.6,
-            "t": 3.69,
-            "trusted": false,
-            "readable": true
-          },
-          {
-            "engine": "breakout",
-            "n": 86,
-            "retired": null,
-            "avg_r": -0.052,
-            "win_rate": 27.9,
-            "t": -0.31,
-            "trusted": false,
-            "readable": true
-          },
-          {
-            "engine": "magic",
-            "n": 23,
-            "retired": null,
-            "avg_r": -0.193,
-            "win_rate": 26.1,
-            "t": -0.65,
-            "trusted": false,
-            "readable": true
-          },
-          {
-            "engine": "magicmagic",
-            "n": 19,
-            "retired": null,
-            "avg_r": -0.247,
-            "win_rate": 26.3,
-            "t": -0.82,
-            "trusted": false,
-            "readable": true
-          },
-          {
-            "engine": "ohl",
-            "n": 25,
-            "retired": null,
-            "avg_r": -0.265,
-            "win_rate": 20.0,
-            "t": -0.86,
-            "trusted": false,
-            "readable": true
-          },
           {
             "engine": "momentum_quant",
             "n": 6,
@@ -117,14 +67,14 @@
             "readable": false
           },
           {
-            "engine": "equity_measured",
-            "n": 16,
+            "engine": "breakout",
+            "n": 2,
             "retired": null,
-            "avg_r": -0.535,
-            "win_rate": 25.0,
-            "t": -2.92,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
             "trusted": false,
-            "readable": true
+            "readable": false
           },
           {
             "engine": "keel",
@@ -135,23 +85,24 @@
             "t": null,
             "trusted": false,
             "readable": false
-          }
-        ]
-      },
-      "highvol_mr": {
-        "n": 4,
-        "avg_r": -0.051,
-        "win_rate": 25.0,
-        "t": -0.05,
-        "readable": false,
-        "engines": [
+          },
           {
-            "engine": "breakout",
-            "n": 4,
+            "engine": "magic",
+            "n": 1,
             "retired": null,
-            "avg_r": -0.051,
-            "win_rate": 25.0,
-            "t": -0.05,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
+            "trusted": false,
+            "readable": false
+          },
+          {
+            "engine": "equity_measured",
+            "n": 1,
+            "retired": null,
+            "avg_r": -1.5,
+            "win_rate": 0.0,
+            "t": null,
             "trusted": false,
             "readable": false
           }
@@ -160,11 +111,14 @@
     },
     "unlabelled_trades": 0,
     "excluded_non_nse": 400,
-    "excluded_retired": 43,
+    "excluded_retired": 68,
+    "excluded_pre_launch": 161,
+    "launch": "2026-09-02",
     "retired_engines": [
       "4h",
       "ai_4h",
-      "ai_daily"
+      "ai_daily",
+      "ohl"
     ],
     "population": "NSE equities only"
   },
@@ -180,6 +134,7 @@
     "The label uses only trend and realised volatility, because those are the two things that can be computed for every past day. Breadth cannot be, so it is shown beside the label and never inside it.",
     "Every window is trailing. A day's volatility percentile is ranked against the two years before it, so a label cannot change when later prices arrive.",
     "Trades are grouped by the regime they were ENTERED in, not the one they closed in \u2014 the regime is a fact about the decision, not the outcome. A trade entered on a weekend, when the weekend scan publishes for Monday, carries the last session's label rather than none.",
+    "Only trades published by THIS site are counted \u2014 the record starts 2026-09-02. Everything before it belongs to news.askakshay.com, under stops this site has since said were wrong, on a ledger re-graded twice. It costs almost the whole sample, which is the point: a number this site is accountable for, or no number.",
     "Only engines that still publish are counted. intraday was brought back on 2026-09-17 as the tenth engine at RESEARCH tier \u2014 it had been switched off with the whole intraday tier on that tier's -0.005R over 583 trades, and on its own seventeen it reads +1.472R at t=3.69. The other three retired engines stay out: a reader asking what this book does in this market should see what it does, not three things it stopped doing.",
     "Only NSE EQUITY trades are counted. The label is derived from the Nifty, and 397 of the closed trades are COMEX commodities or FX pairs \u2014 gold, crude, USDJPY \u2014 for which an Indian equity regime says nothing. Including them made the headline cell read +0.163R at t=2.52; they are the reason it did.",
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
