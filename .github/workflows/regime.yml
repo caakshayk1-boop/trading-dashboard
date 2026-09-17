@@ -1,0 +1,80 @@
+name: Regime — what kind of market this is
+
+# Classifies the market regime from trend and realised volatility, labels every
+# past session with it, and joins those labels to the closed ledger to report
+# what each engine ACTUALLY did in each regime.
+#
+# It asserts no mapping. The reference this came from prescribes size
+# multipliers per regime with no sample behind them; this measures, publishes
+# the sample size beside every figure, and prescribes nothing where a cell is
+# too thin — which is most of them today.
+#
+# AFTER THE SCREEN, so pulse.json's breadth is current for the context line.
+# Breadth is NOT an input to the label: it has no history, and a regime that
+# cannot be backfilled cannot be measured against the ledger.
+
+on:
+  schedule:
+    - cron: '50 13 * * 1-5'      # 19:20 IST — after the EOD screen, before the barometer
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: regime
+  cancel-in-progress: false
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Classify and measure
+        run: python regime.py
+
+      - name: Refuse to publish a label built on nothing
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          d = json.loads(pathlib.Path("docs/regime.json").read_text())
+          t = d.get("today") or {}
+          if not t.get("regime"):
+              sys.exit("no regime classified")
+          # A label needs its inputs. A missing volatility percentile means the
+          # trailing window was short, and the classifier would have fallen
+          # through to 'calm' for the wrong reason.
+          if t.get("vol_pctile") is None:
+              sys.exit("no volatility percentile — the label would be a default, not a reading")
+          n = sum(c["n"] for c in (d["measured"]["cells"] or {}).values())
+          print(f"{t['date']}: {t['t']} · {n} NSE-equity trades labelled")
+          PY
+
+      - name: Commit it
+        run: |
+          git config user.name  "Akshay Kumar Kothari"
+          git config user.email "ca.akshayk1@gmail.com"
+          git add docs/regime.json
+          git diff --staged --quiet && echo "unchanged" && exit 0
+          python - <<'PY'
+          import json, pathlib
+          d = json.loads(pathlib.Path("docs/regime.json").read_text())
+          t = d["today"]
+          pathlib.Path("/tmp/msg").write_text(
+              f"data: regime {t['date']} — {t['t']}, day {d['run_days']} "
+              f"(vol {t['vol_pctile']}th pctile) [skip ci]")
+          PY
+          git commit -F /tmp/msg
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase --autostash && sleep 3
+          done
+          exit 1

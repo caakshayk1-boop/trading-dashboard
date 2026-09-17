@@ -1,0 +1,2218 @@
+{
+  "ok": true,
+  "generated_at": "2026-09-17T10:48:37+00:00",
+  "today": {
+    "regime": "calm_range",
+    "close": 23270.6,
+    "vol_ann_pct": 7.5,
+    "vol_pctile": 10.5,
+    "drawdown_pct": 11.61,
+    "above_200dma": false,
+    "date": "2026-09-17",
+    "t": "Calm and going nowhere",
+    "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
+  },
+  "run_days": 48,
+  "last_year": {
+    "calm_trend": 107,
+    "calm_range": 91,
+    "highvol_trend": 15,
+    "highvol_mr": 46,
+    "crisis": 1
+  },
+  "breadth": {
+    "above_200dma_pct": 0,
+    "counted": 989,
+    "note": "Shown for context. Not an input to the label above, because pulse.json keeps no history and a regime that cannot be backfilled cannot be measured."
+  },
+  "regimes": {
+    "calm_trend": {
+      "t": "Calm and trending",
+      "d": "Volatility below its own norm and the index above its 200-day. The condition trend-following was designed for."
+    },
+    "calm_range": {
+      "t": "Calm and going nowhere",
+      "d": "Quiet, but with no trend to follow. Breakouts fail most often here, because there is nothing behind them."
+    },
+    "highvol_trend": {
+      "t": "Volatile but still trending",
+      "d": "Wide ranges with the long trend intact. Stops set for a calm market get hit by noise in this one."
+    },
+    "highvol_mr": {
+      "t": "Volatile and broken",
+      "d": "Wide ranges with the index below its 200-day. Moves reverse; momentum entries are at their worst here."
+    },
+    "crisis": {
+      "t": "Dislocation",
+      "d": "Extreme volatility and a deep drawdown together. Historically where the worst trades and the best entries share a week."
+    }
+  },
+  "measured": {
+    "cells": {
+      "calm_range": {
+        "n": 232,
+        "avg_r": -0.008,
+        "win_rate": 31.0,
+        "t": -0.08,
+        "readable": true,
+        "engines": [
+          {
+            "engine": "breakout",
+            "n": 86,
+            "avg_r": -0.052,
+            "win_rate": 27.9,
+            "t": -0.31,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "ohl",
+            "n": 25,
+            "avg_r": -0.265,
+            "win_rate": 20.0,
+            "t": -0.86,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "magic",
+            "n": 23,
+            "avg_r": -0.193,
+            "win_rate": 26.1,
+            "t": -0.65,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "4h",
+            "n": 20,
+            "avg_r": 0.001,
+            "win_rate": 30.0,
+            "t": 0.0,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "magicmagic",
+            "n": 19,
+            "avg_r": -0.247,
+            "win_rate": 26.3,
+            "t": -0.82,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "intraday",
+            "n": 17,
+            "avg_r": 1.472,
+            "win_rate": 70.6,
+            "t": 3.69,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "equity_measured",
+            "n": 16,
+            "avg_r": -0.535,
+            "win_rate": 25.0,
+            "t": -2.92,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "ai_4h",
+            "n": 15,
+            "avg_r": 0.331,
+            "win_rate": 53.3,
+            "t": 0.97,
+            "trusted": false,
+            "readable": true
+          },
+          {
+            "engine": "momentum_quant",
+            "n": 5,
+            "avg_r": -0.39,
+            "win_rate": 20.0,
+            "t": -0.54,
+            "trusted": false,
+            "readable": false
+          },
+          {
+            "engine": "ai_daily",
+            "n": 5,
+            "avg_r": -0.006,
+            "win_rate": 20.0,
+            "t": -0.01,
+            "trusted": false,
+            "readable": false
+          },
+          {
+            "engine": "keel",
+            "n": 1,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
+            "trusted": false,
+            "readable": false
+          }
+        ]
+      },
+      "highvol_mr": {
+        "n": 7,
+        "avg_r": -0.401,
+        "win_rate": 14.3,
+        "t": -0.75,
+        "readable": false,
+        "engines": [
+          {
+            "engine": "breakout",
+            "n": 4,
+            "avg_r": -0.051,
+            "win_rate": 25.0,
+            "t": -0.05,
+            "trusted": false,
+            "readable": false
+          },
+          {
+            "engine": "4h",
+            "n": 2,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
+            "trusted": false,
+            "readable": false
+          },
+          {
+            "engine": "ai_daily",
+            "n": 1,
+            "avg_r": -0.606,
+            "win_rate": 0.0,
+            "t": null,
+            "trusted": false,
+            "readable": false
+          }
+        ]
+      }
+    },
+    "unlabelled_trades": 0,
+    "excluded_non_nse": 397,
+    "population": "NSE equities only"
+  },
+  "thresholds": {
+    "vol_high_pctile": 70,
+    "vol_crisis_pctile": 85,
+    "crisis_drawdown_pct": 15.0,
+    "min_cell": 8,
+    "trust_n": 30,
+    "trust_t": 2.0
+  },
+  "caveats": [
+    "The label uses only trend and realised volatility, because those are the two things that can be computed for every past day. Breadth cannot be, so it is shown beside the label and never inside it.",
+    "Every window is trailing. A day's volatility percentile is ranked against the two years before it, so a label cannot change when later prices arrive.",
+    "Trades are grouped by the regime they were ENTERED in, not the one they closed in \u2014 the regime is a fact about the decision, not the outcome. A trade entered on a weekend, when the weekend scan publishes for Monday, carries the last session's label rather than none.",
+    "Only NSE EQUITY trades are counted. The label is derived from the Nifty, and 397 of the closed trades are COMEX commodities or FX pairs \u2014 gold, crude, USDJPY \u2014 for which an Indian equity regime says nothing. Including them made the headline cell read +0.163R at t=2.52; they are the reason it did.",
+    "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
+  ],
+  "history": [
+    {
+      "date": "2024-09-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-13",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-20",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-23",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-26",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-27",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-09-30",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-01",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-03",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-04",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-07",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-08",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-09",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-10",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-11",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-14",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-15",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-16",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-17",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-18",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-21",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-22",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-23",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-24",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-10-28",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-29",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-30",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-10-31",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-04",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-05",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-06",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-07",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-08",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2024-11-12",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-13",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-14",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-11-18",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-11-19",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-11-21",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2024-11-22",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-25",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-26",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-27",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-28",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-11-29",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-02",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-03",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-04",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-05",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-06",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-09",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-10",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-11",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-12",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-13",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-16",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-17",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-18",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-19",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2024-12-20",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-12-23",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-12-24",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-12-26",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2024-12-27",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2024-12-30",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2024-12-31",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-01-01",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-01-02",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-01-03",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-01-06",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-07",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-08",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-09",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-10",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-13",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-14",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-15",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-16",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-17",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-20",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-21",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-22",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-23",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-24",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-27",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-28",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-29",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-30",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-01-31",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-01",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-04",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-05",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-06",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-07",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-10",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-11",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-12",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-13",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-14",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-02-17",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-18",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-19",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-20",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-21",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-24",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-25",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-27",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-02-28",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-04",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-05",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-06",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-07",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-10",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-11",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-12",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-13",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-17",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-18",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-19",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-03-20",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-03-21",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-03-24",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-03-25",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-03-26",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-03-27",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-03-28",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-01",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-04-02",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-04-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2025-04-04",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-07",
+      "regime": "crisis"
+    },
+    {
+      "date": "2025-04-08",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-09",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-11",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-15",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-16",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-17",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-21",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-04-22",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-04-23",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-04-24",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-04-25",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-04-28",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-04-29",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-04-30",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-02",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-05",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-06",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-07",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-08",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-09",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2025-05-12",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-13",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-14",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-15",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-16",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-19",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-20",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-21",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-22",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-23",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-26",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-27",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-28",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-29",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-05-30",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-06-02",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-06-03",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-06-04",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-06-05",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-06-06",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2025-06-09",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-13",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-20",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-23",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-26",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-27",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-06-30",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-02",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-03",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-04",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-07",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-08",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-09",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-14",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-15",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-21",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-22",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-23",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-28",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-29",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-30",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-07-31",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-04",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-05",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-06",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-07",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-08",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-13",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-14",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-20",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-21",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-22",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-26",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-28",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-08-29",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-02",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-03",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-04",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-05",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-08",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-09",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-15",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-22",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-23",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-26",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-29",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-09-30",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-03",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-06",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-07",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-08",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-09",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-13",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-14",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-15",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-20",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-21",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-23",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-27",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-28",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-29",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-30",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-10-31",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-03",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-04",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-06",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-07",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-13",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-14",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-20",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-21",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-25",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-26",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-27",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-11-28",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-02",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-03",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-04",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-05",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-08",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-09",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-15",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-17",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-18",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-22",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-23",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-24",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-26",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-29",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-30",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2025-12-31",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-01",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-02",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-05",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-06",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-07",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-08",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-09",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-13",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-14",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-16",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-19",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-20",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-21",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-22",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-23",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-01-27",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-28",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-29",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-01-30",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-02-02",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-02-03",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-04",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-05",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-06",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-09",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-10",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-02-11",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-02-12",
+      "regime": "calm_trend"
+    },
+    {
+      "date": "2026-02-13",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-16",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-17",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-18",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-19",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-20",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-23",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-24",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-25",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-26",
+      "regime": "highvol_trend"
+    },
+    {
+      "date": "2026-02-27",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-02",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-04",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-03-05",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-06",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-09",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-10",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-11",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-12",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-13",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-16",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-17",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-18",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-19",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-20",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-23",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-24",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-25",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-27",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-03-30",
+      "regime": "crisis"
+    },
+    {
+      "date": "2026-04-01",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-02",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-06",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-07",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-08",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-09",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-10",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-13",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-15",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-16",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-17",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-20",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-21",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-22",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-23",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-24",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-27",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-28",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-29",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-04-30",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-04",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-05",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-06",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-07",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-08",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-11",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-12",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-13",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-05-14",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-15",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-18",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-19",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-20",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-21",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-22",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-25",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-26",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-27",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-05-29",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-01",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-02",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-04",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-05",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-08",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-09",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-10",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-11",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-12",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-15",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-16",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-17",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-18",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-19",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-22",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-23",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-24",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-25",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-29",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-06-30",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-01",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-02",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-06",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-07",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-08",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-09",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-10",
+      "regime": "highvol_mr"
+    },
+    {
+      "date": "2026-07-13",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-14",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-15",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-16",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-17",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-20",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-21",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-22",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-23",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-24",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-27",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-28",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-29",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-30",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-07-31",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-04",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-05",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-06",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-07",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-10",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-11",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-12",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-13",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-14",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-17",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-18",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-19",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-20",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-21",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-24",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-25",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-26",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-27",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-28",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-08-31",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-01",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-02",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-03",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-04",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-07",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-08",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-09",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-10",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-11",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-15",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-16",
+      "regime": "calm_range"
+    },
+    {
+      "date": "2026-09-17",
+      "regime": "calm_range"
+    }
+  ]
+}
