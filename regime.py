@@ -64,24 +64,24 @@ OUT = ROOT / "docs" / "regime.json"
 EXCLUDE = {"multibagger", "top5_pick", "sip_bucket"}
 
 # ── ENGINES THAT NO LONGER RUN ──────────────────────────────────────────────
-# tracker.py's description map is the authority and marks these four retired.
+# tracker.py's description map is the authority. `intraday` is NOT in here any
+# more: it was brought back on 2026-09-17 as the tenth engine, at RESEARCH.
 #
-# THEY ARE LABELLED, NOT DELETED, AND THE FIRST VERSION GOT THAT WRONG.
-# Dropping them looked tidy and was the one thing this site refuses to do: it
-# removed `intraday` — 17 closed at +1.472R, 70.6% won, t=3.69, the BEST record
-# on the board — while leaving breakout at -0.052R, ohl at -0.265R and magic at
-# -0.193R in place. Hiding the only engine that worked and keeping the ones
-# that did not is survivorship bias pointed backwards.
+# It was switched off with the rest of the intraday tier on a measurement of
+# that TIER — -0.005R over 583 trades against +0.171R on daily closes. That was
+# right about the tier and wrong about this engine inside it: on its own
+# seventeen closed trades it reads +1.472R at t=3.69, the best record on the
+# board. It was retired for the company it kept.
 #
-# So they stay, carrying `retired: true` and the date, and the table sorts on
-# the record rather than on sample size. A reader can then see both things that
-# are true at once: this engine has the best numbers here, and it is switched
-# off — which is a question worth asking rather than a fact worth deleting.
+# The other three stay off and are EXCLUDED from the table, because a reader
+# looking at "what does this book do in this market" should see what it does,
+# not a record of three things it stopped doing. That is the opposite call from
+# the one made an hour earlier, and the difference is that `intraday` is now a
+# live engine rather than a retired one being smuggled back in by a label.
 RETIRED = {
     "4h": "retired 2026-08-01",
     "ai_4h": "retired 2026-07-29",
     "ai_daily": "retired 2026-07-29",
-    "intraday": "retired 2026-07-30",
 }
 
 # A cell needs this many closed trades before the page will read anything into
@@ -234,7 +234,8 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
         if not eng or eng in EXCLUDE:
             continue
         if eng in RETIRED:
-            skipped_retired += 1        # counted, still measured and shown
+            skipped_retired += 1
+            continue
         # ── THE LABEL IS A NIFTY FACT. IT DESCRIBES NIFTY INSTRUMENTS. ──
         #
         # This filter is the difference between a real measurement and a
@@ -383,11 +384,12 @@ def main() -> int:
             "closed in — the regime is a fact about the decision, not the outcome. A "
             "trade entered on a weekend, when the weekend scan publishes for Monday, "
             "carries the last session's label rather than none.",
-            "Engines that no longer run are LABELLED, not removed. Deleting them hid "
-            "intraday — 17 closed at +1.472R, t=3.69, the best record here — while "
-            "leaving three losing engines in place, which is survivorship bias pointed "
-            "backwards. The table is sorted on the record, so the question 'why is the "
-            "best one switched off' is visible rather than edited out.",
+            "Only engines that still publish are counted. intraday was brought back on "
+            "2026-09-17 as the tenth engine at RESEARCH tier — it had been switched off "
+            "with the whole intraday tier on that tier's -0.005R over 583 trades, and on "
+            "its own seventeen it reads +1.472R at t=3.69. The other three retired "
+            "engines stay out: a reader asking what this book does in this market should "
+            "see what it does, not three things it stopped doing.",
             "Only NSE EQUITY trades are counted. The label is derived from the Nifty, "
             "and 397 of the closed trades are COMEX commodities or FX pairs — gold, "
             "crude, USDJPY — for which an Indian equity regime says nothing. Including "

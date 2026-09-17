@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-17T13:07:55+00:00",
+  "generated_at": "2026-09-17T13:57:51+00:00",
   "today": {
     "regime": "calm_range",
     "close": 23270.6,
@@ -50,51 +50,21 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 232,
-        "avg_r": -0.008,
-        "win_rate": 31.0,
-        "t": -0.08,
+        "n": 193,
+        "avg_r": -0.04,
+        "win_rate": 29.5,
+        "t": -0.37,
         "readable": true,
         "engines": [
           {
             "engine": "intraday",
             "n": 17,
-            "retired": "retired 2026-07-30",
+            "retired": null,
             "avg_r": 1.472,
             "win_rate": 70.6,
             "t": 3.69,
             "trusted": false,
             "readable": true
-          },
-          {
-            "engine": "ai_4h",
-            "n": 15,
-            "retired": "retired 2026-07-29",
-            "avg_r": 0.331,
-            "win_rate": 53.3,
-            "t": 0.97,
-            "trusted": false,
-            "readable": true
-          },
-          {
-            "engine": "4h",
-            "n": 20,
-            "retired": "retired 2026-08-01",
-            "avg_r": 0.001,
-            "win_rate": 30.0,
-            "t": 0.0,
-            "trusted": false,
-            "readable": true
-          },
-          {
-            "engine": "ai_daily",
-            "n": 5,
-            "retired": "retired 2026-07-29",
-            "avg_r": -0.006,
-            "win_rate": 20.0,
-            "t": -0.01,
-            "trusted": false,
-            "readable": false
           },
           {
             "engine": "breakout",
@@ -138,11 +108,11 @@
           },
           {
             "engine": "momentum_quant",
-            "n": 5,
+            "n": 6,
             "retired": null,
-            "avg_r": -0.39,
-            "win_rate": 20.0,
-            "t": -0.54,
+            "avg_r": -0.492,
+            "win_rate": 16.7,
+            "t": -0.82,
             "trusted": false,
             "readable": false
           },
@@ -169,10 +139,10 @@
         ]
       },
       "highvol_mr": {
-        "n": 7,
-        "avg_r": -0.401,
-        "win_rate": 14.3,
-        "t": -0.75,
+        "n": 4,
+        "avg_r": -0.051,
+        "win_rate": 25.0,
+        "t": -0.05,
         "readable": false,
         "engines": [
           {
@@ -184,38 +154,17 @@
             "t": -0.05,
             "trusted": false,
             "readable": false
-          },
-          {
-            "engine": "ai_daily",
-            "n": 1,
-            "retired": "retired 2026-07-29",
-            "avg_r": -0.606,
-            "win_rate": 0.0,
-            "t": null,
-            "trusted": false,
-            "readable": false
-          },
-          {
-            "engine": "4h",
-            "n": 2,
-            "retired": "retired 2026-08-01",
-            "avg_r": -1.0,
-            "win_rate": 0.0,
-            "t": null,
-            "trusted": false,
-            "readable": false
           }
         ]
       }
     },
     "unlabelled_trades": 0,
-    "excluded_non_nse": 399,
-    "excluded_retired": 60,
+    "excluded_non_nse": 400,
+    "excluded_retired": 43,
     "retired_engines": [
       "4h",
       "ai_4h",
-      "ai_daily",
-      "intraday"
+      "ai_daily"
     ],
     "population": "NSE equities only"
   },
@@ -231,7 +180,7 @@
     "The label uses only trend and realised volatility, because those are the two things that can be computed for every past day. Breadth cannot be, so it is shown beside the label and never inside it.",
     "Every window is trailing. A day's volatility percentile is ranked against the two years before it, so a label cannot change when later prices arrive.",
     "Trades are grouped by the regime they were ENTERED in, not the one they closed in \u2014 the regime is a fact about the decision, not the outcome. A trade entered on a weekend, when the weekend scan publishes for Monday, carries the last session's label rather than none.",
-    "Engines that no longer run are LABELLED, not removed. Deleting them hid intraday \u2014 17 closed at +1.472R, t=3.69, the best record here \u2014 while leaving three losing engines in place, which is survivorship bias pointed backwards. The table is sorted on the record, so the question 'why is the best one switched off' is visible rather than edited out.",
+    "Only engines that still publish are counted. intraday was brought back on 2026-09-17 as the tenth engine at RESEARCH tier \u2014 it had been switched off with the whole intraday tier on that tier's -0.005R over 583 trades, and on its own seventeen it reads +1.472R at t=3.69. The other three retired engines stay out: a reader asking what this book does in this market should see what it does, not three things it stopped doing.",
     "Only NSE EQUITY trades are counted. The label is derived from the Nifty, and 397 of the closed trades are COMEX commodities or FX pairs \u2014 gold, crude, USDJPY \u2014 for which an Indian equity regime says nothing. Including them made the headline cell read +0.163R at t=2.52; they are the reason it did.",
     "A cell needs 8 closed trades before any figure is shown, and the site's actual bar for trusting one is 30 closed at t >= 2.0. Most cells will not clear either, and the page says so rather than printing a multiplier nothing supports."
   ],

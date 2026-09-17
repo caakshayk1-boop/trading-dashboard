@@ -1088,7 +1088,7 @@ MODE_NOTE = {
         "_US position check — grading only, no entries._",
 }
 
-VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full",
+VALID_SLOTS = {"morning", "midday", "eod", "weekend", "holiday", "full", "intraday",
                "none", "us", "momentum", "basebreak"}
 
 
@@ -2216,6 +2216,27 @@ def main():
             # horizon it returned -0.005R over 583 trades, against +0.171R on
             # daily closes — the intraday edge is not there to capture.
             #
+            # ── ONE EXCEPTION, ADDED 2026-09-17: GUST ───────────────────────
+            #
+            # That -0.005R was the TIER, not this engine. Across 583 trades the
+            # intraday scans averaged nothing; `intraday` on its own closed 17
+            # at +1.472R, t=3.69, 70.6% won — the best record on the board, and
+            # it was switched off for the company it kept.
+            #
+            # It runs at MIDDAY because it cannot honestly run anywhere else: a
+            # 15-minute momentum push has nothing to trade into after 15:30, so
+            # the eod slot every other engine uses is the one slot this one is
+            # useless in.
+            #
+            # IT IS RESEARCH TIER AND ALERTS NOTHING. 17 closed clears the
+            # t-statistic and is thirteen short of the thirty this site
+            # requires before an engine is trusted, so it is logged and shown
+            # and never sent — the same terms PIVOT came back on. Promoting it
+            # for having impressed on a small sample is the precise error the
+            # thirty-trade rule exists to prevent.
+            if slot == "midday":
+                _safe("intraday", run_intraday_scan, time_str)
+            #
             # These slots now run position management only: price alerts and
             # the market snapshot, both executed above for every slot. Entries
             # come from the EOD measured scan.
@@ -2264,6 +2285,16 @@ def main():
             basebrk   = _safe("basebreak",     run_basebreak_scan, time_str)
             _safe("pivot", run_pivot_scan, time_str)
             counts    = {"basebreak": len(basebrk)}
+
+        elif slot == "intraday":
+            # AN ENGINE SELECTOR, NOT A TIME OF DAY — the same shape as
+            # "basebreak" and "momentum". GUST already runs inside midday; this
+            # exists so it can be dispatched alone without re-running the
+            # position-management pass. No entry in _SLOT_OPENS_IST, so it is
+            # never window-gated — but it reads 15-minute bars, so dispatching
+            # it outside 09:15-15:30 IST will simply find nothing.
+            _safe("intraday", run_intraday_scan, time_str)
+            counts    = {"intraday": 0}
 
         elif slot == "momentum":
             # ONE ENGINE, ON ITS OWN.
