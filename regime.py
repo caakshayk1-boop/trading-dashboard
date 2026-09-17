@@ -63,6 +63,18 @@ OUT = ROOT / "docs" / "regime.json"
 # artefacts are not trades and must not enter an expectancy figure.
 EXCLUDE = {"multibagger", "top5_pick", "sip_bucket"}
 
+# ── ENGINES THAT NO LONGER RUN ──────────────────────────────────────────────
+# tracker.py's description map is the authority and marks each of these
+# "Retired" — `intraday` explicitly "retired 2026-07-30, unmeasured".
+#
+# Their closed trades are real and stay in the ledger. They do not belong in a
+# table that answers "what does this book do in this market", because this book
+# no longer does any of it: listing `intraday · 17 closed · 70.6% won` beside
+# live engines reads as a strategy a reader could follow, and it was switched
+# off fourteen months ago. A record of something discontinued is history, not
+# a description of the present.
+RETIRED = {"4h", "ai_4h", "ai_daily", "intraday"}
+
 # A cell needs this many closed trades before the page will read anything into
 # it. Deliberately low as a FLOOR for showing a number at all, and far below
 # the 30-at-t>=2 bar the site uses before trusting one.
@@ -206,10 +218,14 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
     overall: dict[str, list[float]] = {}
     unlabelled = 0
     skipped_market = 0
+    skipped_retired = 0
 
     for r in rows:
         eng = str(r.get("signal_type") or "")
         if not eng or eng in EXCLUDE:
+            continue
+        if eng in RETIRED:
+            skipped_retired += 1
             continue
         # ── THE LABEL IS A NIFTY FACT. IT DESCRIBES NIFTY INSTRUMENTS. ──
         #
@@ -269,6 +285,8 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
         }
     return {"cells": out, "unlabelled_trades": unlabelled,
             "excluded_non_nse": skipped_market,
+            "excluded_retired": skipped_retired,
+            "retired_engines": sorted(RETIRED),
             "population": "NSE equities only"}
 
 
@@ -352,6 +370,10 @@ def main() -> int:
             "closed in — the regime is a fact about the decision, not the outcome. A "
             "trade entered on a weekend, when the weekend scan publishes for Monday, "
             "carries the last session's label rather than none.",
+            "Engines that no longer run are excluded — 4h, ai_4h, ai_daily and "
+            "intraday, which tracker.py marks retired. Their closed trades are real "
+            "and stay in the ledger; they are not a description of what this book does "
+            "now, and listing one beside a live engine reads as a strategy to follow.",
             "Only NSE EQUITY trades are counted. The label is derived from the Nifty, "
             "and 397 of the closed trades are COMEX commodities or FX pairs — gold, "
             "crude, USDJPY — for which an Indian equity regime says nothing. Including "
