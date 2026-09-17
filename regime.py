@@ -64,16 +64,25 @@ OUT = ROOT / "docs" / "regime.json"
 EXCLUDE = {"multibagger", "top5_pick", "sip_bucket"}
 
 # ── ENGINES THAT NO LONGER RUN ──────────────────────────────────────────────
-# tracker.py's description map is the authority and marks each of these
-# "Retired" — `intraday` explicitly "retired 2026-07-30, unmeasured".
+# tracker.py's description map is the authority and marks these four retired.
 #
-# Their closed trades are real and stay in the ledger. They do not belong in a
-# table that answers "what does this book do in this market", because this book
-# no longer does any of it: listing `intraday · 17 closed · 70.6% won` beside
-# live engines reads as a strategy a reader could follow, and it was switched
-# off fourteen months ago. A record of something discontinued is history, not
-# a description of the present.
-RETIRED = {"4h", "ai_4h", "ai_daily", "intraday"}
+# THEY ARE LABELLED, NOT DELETED, AND THE FIRST VERSION GOT THAT WRONG.
+# Dropping them looked tidy and was the one thing this site refuses to do: it
+# removed `intraday` — 17 closed at +1.472R, 70.6% won, t=3.69, the BEST record
+# on the board — while leaving breakout at -0.052R, ohl at -0.265R and magic at
+# -0.193R in place. Hiding the only engine that worked and keeping the ones
+# that did not is survivorship bias pointed backwards.
+#
+# So they stay, carrying `retired: true` and the date, and the table sorts on
+# the record rather than on sample size. A reader can then see both things that
+# are true at once: this engine has the best numbers here, and it is switched
+# off — which is a question worth asking rather than a fact worth deleting.
+RETIRED = {
+    "4h": "retired 2026-08-01",
+    "ai_4h": "retired 2026-07-29",
+    "ai_daily": "retired 2026-07-29",
+    "intraday": "retired 2026-07-30",
+}
 
 # A cell needs this many closed trades before the page will read anything into
 # it. Deliberately low as a FLOOR for showing a number at all, and far below
@@ -225,8 +234,7 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
         if not eng or eng in EXCLUDE:
             continue
         if eng in RETIRED:
-            skipped_retired += 1
-            continue
+            skipped_retired += 1        # counted, still measured and shown
         # ── THE LABEL IS A NIFTY FACT. IT DESCRIBES NIFTY INSTRUMENTS. ──
         #
         # This filter is the difference between a real measurement and a
@@ -264,10 +272,15 @@ def by_regime(rows: list[dict], labels: dict[str, dict]) -> dict:
         vals = overall[k]
         t = t_stat(vals)
         eng_rows = []
-        for eng, v in sorted(engines.items(), key=lambda x: -len(x[1])):
+        # SORTED ON THE RECORD. Ordering by sample size buried the engine with
+        # the best expectancy under four that lose money, purely because they
+        # had filed more trades.
+        for eng, v in sorted(engines.items(),
+                             key=lambda x: -statistics.fmean(x[1])):
             et = t_stat(v)
             eng_rows.append({
                 "engine": eng, "n": len(v),
+                "retired": RETIRED.get(eng),
                 "avg_r": round(statistics.fmean(v), 3),
                 "win_rate": round(sum(1 for x in v if x > 0) / len(v) * 100, 1),
                 "t": None if et is None else round(et, 2),
@@ -370,10 +383,11 @@ def main() -> int:
             "closed in — the regime is a fact about the decision, not the outcome. A "
             "trade entered on a weekend, when the weekend scan publishes for Monday, "
             "carries the last session's label rather than none.",
-            "Engines that no longer run are excluded — 4h, ai_4h, ai_daily and "
-            "intraday, which tracker.py marks retired. Their closed trades are real "
-            "and stay in the ledger; they are not a description of what this book does "
-            "now, and listing one beside a live engine reads as a strategy to follow.",
+            "Engines that no longer run are LABELLED, not removed. Deleting them hid "
+            "intraday — 17 closed at +1.472R, t=3.69, the best record here — while "
+            "leaving three losing engines in place, which is survivorship bias pointed "
+            "backwards. The table is sorted on the record, so the question 'why is the "
+            "best one switched off' is visible rather than edited out.",
             "Only NSE EQUITY trades are counted. The label is derived from the Nifty, "
             "and 397 of the closed trades are COMEX commodities or FX pairs — gold, "
             "crude, USDJPY — for which an Indian equity regime says nothing. Including "
