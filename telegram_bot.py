@@ -398,7 +398,11 @@ def handle_command(text, chat_id):
         if sub == "all":
             msg = get_vercel_report("all")
         elif sub == "ohl":
-            msg = get_vercel_report("ohl")
+            # OHL was retired 2026-09-17 (25 closed, -0.265R, t=-0.86). The
+            # command stayed and would have returned an empty report forever,
+            # which reads as a broken bot rather than a retired engine.
+            msg = ("*OHL is retired.*\n25 closed at −0.265R, 20% won — it never "
+                   "cleared a bar. Use /active for what is open now.")
         else:
             msg = get_vercel_report("incremental")
         _post(msg, chat_id)
@@ -408,18 +412,31 @@ def handle_command(text, chat_id):
         _post(_SCREEN_HELP, chat_id)
 
     elif text.startswith("/start"):
+        # ── GROUPED BY WHAT YOU WANT, NOT BY WHAT THE CODE DOES ────────────
+        #
+        # The old one was a flat list under the word "Commands:", advertised
+        # `/vercel ohl` for an engine retired the day before, and closed with
+        # "Scans run 9:30 AM | 2:00 PM | 5:30 PM IST" — which stopped being
+        # true when signals went end-of-day only in July. A menu that lies
+        # about when the thing runs is worse than no menu.
+        #
+        # Three groups, because there are only three reasons anyone opens this:
+        # what is happening, what the record says, and making it shut up.
         _post(
-            "👋 *Nifty 500 Swing Scanner*\n\n"
-            "Commands:\n"
-            "/active — all open signals\n"
-            "/performance — win rate & stats\n"
-            "/mute SYMBOL — stop alerts for a stock\n"
-            "/stats — scanner health\n\n"
-            "*TradeFlow Pro (Vercel):*\n"
-            "/vercel — new signals since last check\n"
-            "/vercel all — everything generated today\n"
-            "/vercel ohl — OHL/OLL setups only\n\n"
-            "Scans run: 9:30 AM | 2:00 PM | 5:30 PM IST (Mon–Fri)",
+            "*SIGNAL* — the desk, in your pocket\n\n"
+            "*Right now*\n"
+            "/active — every open position, with its levels\n"
+            "/screen `SYMBOL` — the call on any NSE name\n"
+            "/book — what the book is holding\n\n"
+            "*The record*\n"
+            "/performance — win rate and expectancy since launch\n"
+            "/stats — is the pipeline actually running\n\n"
+            "*Control*\n"
+            "/mute `SYMBOL` — stop alerts on one name\n"
+            "/confirm · /skip — mark a fill, or decline it\n\n"
+            "_Two reports a day: 08:00 and 20:00 MYT._\n"
+            "_Signals are end-of-day only — nothing fires before 18:30 IST, "
+            "and a quiet morning is the correct result, not a fault._",
             chat_id
         )
 
