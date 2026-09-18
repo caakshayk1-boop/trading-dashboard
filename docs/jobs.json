@@ -1,14 +1,14 @@
 {
- "generated_at": "2026-09-17T09:48:18Z",
- "next_refresh": "2026-09-18T09:48:18Z",
+ "generated_at": "2026-09-18T05:34:52Z",
+ "next_refresh": "2026-09-19T05:34:52Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 19,
+   "jobs_found": 18,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "GMG",
@@ -24,7 +24,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Al-Futtaim",
@@ -32,7 +32,7 @@
    "status": "ok",
    "jobs_found": 40,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Apparel Group",
@@ -64,7 +64,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Emaar",
@@ -72,7 +72,7 @@
    "status": "ok",
    "jobs_found": 1,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Jumeirah",
@@ -94,9 +94,9 @@
    "name": "Etihad Airways",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 10,
+   "jobs_found": 13,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Aldar",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-17T09:48:18Z"
+   "last_success": "2026-09-18T05:34:52Z"
   },
   {
    "name": "Alshaya Group",
@@ -141,9 +141,9 @@
   {
    "name": "LinkedIn",
    "kind": "aggregator",
-   "status": "ok",
-   "jobs_found": 40,
-   "detail": "",
+   "status": "blocked",
+   "jobs_found": 0,
+   "detail": "LinkedIn search: HTTP 429",
    "last_success": "2026-09-17T09:48:18Z"
   },
   {
@@ -180,21 +180,21 @@
   }
  ],
  "stats": {
-  "total_active": 60,
+  "total_active": 63,
   "high_fit": 6,
   "s_tier": 1,
   "by_country": {
-   "UAE": 50,
+   "UAE": 53,
    "Saudi Arabia": 0,
    "Malaysia": 10,
    "Oman": 0
   },
   "duplicates_removed": 0,
-  "stale_removed": 16,
-  "sources_ok": 12,
+  "stale_removed": 1,
+  "sources_ok": 11,
   "sources_attempted": 22,
-  "urls_verified": 92,
-  "urls_unverified": 0,
+  "urls_verified": 82,
+  "urls_unverified": 14,
   "urls_broken": 0
  },
  "jobs": [
@@ -211,9 +211,9 @@
    "employment_type": null,
    "posted_date": "2026-08-27",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
-   "status": "ACTIVE",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -273,7 +273,7 @@
     "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it."
    ],
    "watch_out": [
-    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+    "Posted 2026-08-27 — this req is aging and may already be filled."
    ],
    "resume_match": {
     "strong": [
@@ -305,8 +305,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -417,8 +417,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -522,8 +522,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -603,8 +603,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -708,8 +708,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-03",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -816,8 +816,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -912,8 +912,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -985,6 +985,105 @@
    "exclusion_reason": null
   },
   {
+   "id": "cd5650f4c22f20224b18222437d76f1b80231aba",
+   "company": "Majid Al Futtaim",
+   "company_group": "Majid Al Futtaim",
+   "title": "Manager, Commercial | Emirati Talent",
+   "normalized_title": "manager commercial",
+   "location": "Dubai",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Regular",
+   "posted_date": "2026-09-17",
+   "closing_date": null,
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "NEW",
+   "source": "Majid Al Futtaim",
+   "sources": [
+    "Majid Al Futtaim"
+   ],
+   "source_url": "https://careers.majidalfuttaim.com/global/en/job/22727/Manager-Commercial-Emirati-Talent",
+   "application_url": "https://careers.majidalfuttaim.com/global/en/apply?jobSeqNo=MAFMAFGLOBAL22727EXTERNALENGLOBAL",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 4,
+   "experience_max": null,
+   "description": "JOB TITLE \nManager, Commercial | Emirati Talent\n\n ROLE SUMMARY \nCommercial Manager responsible for driving revenue growth through strategic partnerships, customer propositions, and commercial initiatives. The role focuses on business case development, financial modelling, partnership management, monetization opportunities, and performance optimization. Working cross-functionally with stakeholders, the role identifies growth opportunities, evaluates investments, negotiates commercial agreements, and delivers customer-centric solutions that enhance commercial performance and long-term business value.\n\n ROLE PROFILE \n Develop and execute the financial services and partnerships strategy for the SHARE platform to drive revenue growth and customer value.\n Identify, evaluate, onboard, and manage strategic partners across credit cards, BNPL, remittances, payments, and other commercial opportunities.\n Build robust business cases, including ROI analysis, financial forecasts, KPI targets, and commercial recommendations.\n Create and maintain financial models to assess revenue potential, cost drivers, sensitivities, and partnership performance.\n Lead commercial negotiations with partners, including commercials, scope, deliverables, and contract terms that impact business performance.\n Collaborate with cross-functional stakeholders including Finance, Legal, Product, Technology, Marketing, Analytics, Operations, and Customer Experience to launch and scale partnerships.\n Monitor partnership performance against financial and operational KPIs, driving continuous improvement and achieving budgeted targets.\n Build strong partner relationships, deliver performance reviews, and leverage customer insights and analytics to enhance commercial outcomes and member engagement.\n \n REQUIREMENTS \n Bachelor’s degree in Business, Finance, Economics, Marketing, Engineering, or a related field, or equivalent professional experience.\n 4+ years of experience in Commercial Strategy, Partnerships, Business Development, Revenue Growth, Customer Solutions, or related commercial functions.\n Proven experience in developing business cases, financial models, investment appraisals, ROI analysis, and commercial recommendations to support strategic decision-making.\n Strong track record in driving revenue growth, monetization initiatives, customer proposition development, and commercial performance improvement.\n Experience managing strategic partnerships, commercial negotiations, stakeholder relationships, and cross-functional initiatives with measurable business impact.\n Strong analytical and problem-solving skills with expertise in commercial analytics, market assessments, pricing, forecasting, and performance optimization, preferably within FinTech, Digital Commerce, Loyalty, Payments, Telecommunications, Consulting, or\n \n WHAT WE OFFER \n At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!\n Work in a friendly environment, where everyone shares positive vibes and excited about our future.\n Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model.",
+   "responsibilities": [
+    "Develop and execute the financial services and partnerships strategy for the SHARE platform to drive revenue growth and customer value",
+    "Identify, evaluate, onboard, and manage strategic partners across credit cards, BNPL, remittances, payments, and other commercial opportunities",
+    "Build robust business cases, including ROI analysis, financial forecasts, KPI targets, and commercial recommendations",
+    "Create and maintain financial models to assess revenue potential, cost drivers, sensitivities, and partnership performance",
+    "Lead commercial negotiations with partners, including commercials, scope, deliverables, and contract terms that impact business performance",
+    "Collaborate with cross-functional stakeholders including Finance, Legal, Product, Technology, Marketing, Analytics, Operations, and Customer Experience to launch and scale partnerships",
+    "Monitor partnership performance against financial and operational KPIs, driving continuous improvement and achieving budgeted targets",
+    "Build strong partner relationships, deliver performance reviews, and leverage customer insights and analytics to enhance commercial outcomes and member engagement",
+    "Bachelor’s degree in Business, Finance, Economics, Marketing, Engineering, or a related field, or equivalent professional experience",
+    "4+ years of experience in Commercial Strategy, Partnerships, Business Development, Revenue Growth, Customer Solutions, or related commercial functions",
+    "Proven experience in developing business cases, financial models, investment appraisals, ROI analysis, and commercial recommendations to support strategic decision-making",
+    "Strong track record in driving revenue growth, monetization initiatives, customer proposition development, and commercial performance improvement",
+    "Experience managing strategic partnerships, commercial negotiations, stakeholder relationships, and cross-functional initiatives with measurable business impact",
+    "Strong analytical and problem-solving skills with expertise in commercial analytics, market assessments, pricing, forecasting, and performance optimization, preferably within FinTech, Digital Commerce, Loyalty, Payments, Telecommunications, Consulting, or",
+    "At Majid Al Futtaim, we’re on a mission to create great moments, to spread happiness, to build, experiences that stay in our memories for a lifetime. We’re proud to say that over the past 27 years, we have built a reputation as a regional market leader in what we do. Join us!",
+    "Work in a friendly environment, where everyone shares positive vibes and excited about our future",
+    "Work with over 45,000 diverse and talented colleagues, all guided by our Leadership Model"
+   ],
+   "requirements": [],
+   "skills": [
+    "financial modeling",
+    "business case development",
+    "commercial negotiations",
+    "partnership management",
+    "revenue growth",
+    "monetization",
+    "roi analysis",
+    "financial forecasting",
+    "performance optimization",
+    "stakeholder management",
+    "commercial analytics",
+    "market assessment"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 69,
+   "employer_score": 90,
+   "career_upside_score": 50,
+   "opportunity_score": 71,
+   "score_breakdown": {
+    "seniority": 15,
+    "functional": 16,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 2,
+    "qualification": 2,
+    "upside": 6
+   },
+   "tier": "B",
+   "application_priority": "GOOD FIT",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Majid Al Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
+    "Real-estate exposure is on his record — 3 years as Asst Manager Accounts at Emami Realty in Kolkata before the retail move."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "0aea3ce400a2d2f41ae8bb09e00a5b3757f41557",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "602f27cd71c99e194c3dc9c71baf8d26b6fe213a",
    "company": "Majid Al Futtaim",
    "company_group": "Majid Al Futtaim",
@@ -997,8 +1096,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1095,8 +1194,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1194,8 +1293,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1287,8 +1386,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-02",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1381,8 +1480,8 @@
    "employment_type": null,
    "posted_date": "2026-09-12",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1567,8 +1666,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -1650,8 +1749,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1746,8 +1845,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-26",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1825,8 +1924,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2002,8 +2101,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2386,8 +2485,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2482,8 +2581,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2577,9 +2676,9 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
     "Al Tayer"
@@ -2669,8 +2768,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -2850,8 +2949,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Apparel Group",
    "sources": [
@@ -2936,8 +3035,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -3094,8 +3193,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3280,8 +3379,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3370,8 +3469,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -3468,8 +3567,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -3768,7 +3867,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-jag-corporate-services-sdn-bhd-4458929634",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-jag-corporate-services-sdn-bhd-4458929634",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3818,7 +3917,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "5afebe56697d5646cbfa0a9c61d8d227de5d2aec",
@@ -3848,7 +3947,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-corporate-at-iffco-group-4462286738",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-corporate-at-iffco-group-4462286738",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -3909,7 +4008,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "3d8f4e73cde9e2bd844ea2648053134257881ad3",
@@ -3929,8 +4028,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -4027,7 +4126,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-rightangled-4454020258",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-rightangled-4454020258",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4094,7 +4193,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "0a4600c07fc768de2ce26a752f46198e475c244e",
@@ -4124,7 +4223,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-and-business-support-manager-holiday-inn-and-suites-dubai-science-park-at-ihg-hotels-resorts-4457790874",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-and-business-support-manager-holiday-inn-and-suites-dubai-science-park-at-ihg-hotels-resorts-4457790874",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4175,7 +4274,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "7ad30e894e27b36df7eddb24d49647be3ff15f6c",
@@ -4205,7 +4304,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447258737",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4265,7 +4364,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "0b9fd60b6804108dd31af78877de1654013b0249",
@@ -4295,7 +4394,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447257744",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447257744",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4355,7 +4454,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "05d681b40ff89b5dfcb3cb08bddd60b8dc36eb9c",
@@ -4385,7 +4484,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-anantara-hotels-resorts-4453094064",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-anantara-hotels-resorts-4453094064",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4449,7 +4548,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "35ec9271e9933f26499dc58bcfd74b25889f3c21",
@@ -4469,8 +4568,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -4551,92 +4650,102 @@
    "exclusion_reason": null
   },
   {
-   "id": "45231cbe0059ffc11b7c466f9b46e1995ed560cf",
-   "company": "Al-Futtaim",
-   "company_group": "Al-Futtaim",
-   "title": "Insurance Assistant I Dubai | Financial Services| Orient Insurance PJSC",
-   "normalized_title": "insurance assistant i dubai financial services orient insurance pjsc",
-   "location": null,
+   "id": "1929beb996055e8ac0f82e44f241f482273ab12f",
+   "company": "Etihad Airways",
+   "company_group": "Etihad",
+   "title": "Manager Recruitment - Revenue & Commercial",
+   "normalized_title": "manager recruitment revenue & commercial",
+   "location": "Abu Dhabi",
    "country": "UAE",
    "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-10",
-   "closing_date": "2026-09-17",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "department": "Human Resources",
+   "employment_type": "Full-time",
+   "posted_date": "2026-09-17",
+   "closing_date": null,
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
-   "source": "Al-Futtaim",
+   "source": "Etihad Airways",
    "sources": [
-    "Al-Futtaim"
+    "Etihad Airways"
    ],
-   "source_url": "https://www.afuturewithus.com/job/Insurance-Assistant-I-Dubai-Financial-Services-Orient-Insurance-PJSC/1435802133/",
-   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1435802133/?locale=en_GB",
+   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150080980-manager-recruitment-revenue-commercial",
+   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150080980-manager-recruitment-revenue-commercial?oga=true",
    "is_direct_apply": true,
    "application_url_verified": true,
    "source_confidence": "high",
    "salary_min": null,
    "salary_max": null,
    "salary_currency": null,
-   "experience_min": 2,
+   "experience_min": 7,
    "experience_max": null,
-   "description": "Job Requisition ID: 181279 \n\n About Al-Futtaim \n\n Established in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations. \n\n Work Arrangement: Shift-Based (including evenings, weekends, and public holidays as required) \n\n Work Location: Insurance Kiosk / Mall-Based Customer Service Center \n\n Job Purpose \n\n We are seeking a customer-focused and proactive Customer Service / Insurance Assistant to support customers with insurance-related inquiries, policy servicing, renewals, and general assistance. The role requires working from insurance kiosks located in malls, providing exceptional face-to-face service while promoting the company's products and services. \n\n The ideal candidate will have a minimum of 2 years of customer service experience, preferably within the insurance industry, and must be comfortable working in a shift-based retail environment. \n\n Key Responsibilities \n\n Welcome and assist walk-in customers at the insurance kiosk in a professional and courteous manner. \n\r\n Handle customer inquiries related to insurance policies, coverage, renewals, endorsements, claims status, and other service requests. \n\r\n Provide accurate information on insurance products and services while identifying opportunities for upselling and cross-selling. \n\r\n Support policy issuance, renewals, amendments, and documentation requirements. \n\r\n Coordinate with underwriting, claims, and operations teams to resolve customer requests efficiently. \n\r\n Follow up with customers regarding quotations, renewals, outstanding documentation, and service requests. \n\r\n Maintain accurate records of customer interactions and transactions in company systems. \n\r\n Ensure compliance with company policies, service standards, and regulatory requirements. \n\r\n Achieve individual service and productivity targets while maintaining high customer satisfaction levels. \n\r\n Support promotional campaigns, customer engagement activities, and awareness initiatives conducted at kiosk locations. \n\n Qualifications & Experience \n\n Bachelor's Degree or Diploma in Business Administration, Insurance, Finance, or a related field. \n\r\n Minimum 2 years of experience in Customer Service, Call Centre, Front Desk, Retail Service, or Insurance Operations. \n\r\n Previous experience in the insurance industry is preferred. \n\r\n Knowledge of insurance products, policy administration, and customer servicing processes is an advantage. \n\r\n Experience dealing directly with customers in a retail, branch, kiosk, or service center environment is preferred. \n\n Skills Required \n\n Strong customer service orientation and interpersonal skills. \n\r\n Excellent verbal and written communication skills in English. \n\r\n Arabic language skills will be an added advantage. \n\r\n Strong problem-solving and conflict-resolution abilities. \n\r\n Ability to work independently and manage multiple customer requests. \n\r\n Proficiency in MS Office and customer service systems. \n\r\n Professional appearance and presentation. \n\n Working Requirements \n\n Must be willing to work in a shift-based environment . \n\r\n Must be willing to work from insurance kiosks located in shopping malls across the UAE. \n\r\n Comfortable working during weekends, public holidays, and peak retail hours as required. \n\r\n Ability to stand and interact with customers for extended periods. \n\n What We Offer \n\n Opportunity to build a rewarding career within a leading insurance organization. \n\r\n Exposure to retail insurance operations and customer engagement. \n\r\n Professional development and learning opportunities. \n\r\n Dynamic and customer-focused work environment. \n\n About Orient Insurance PJSC \n\n Orient Insurance Company commenced operations in 1982 as a part of the reputed Al-Futtaim Group and has since recorded a progressively steady growth. The Company is counted among the leaders in the UAE insurance market. Orient Insurance Company has a paid-up capital of AED 500 Million which is the highest in the insurance industry in UAE. With head office in Dubai, the company serves its clientele through an extensive branch network in Jebel Ali, Abu Dhabi, Al Ain, Sharjah and Ras Al Khaimah in UAE, Muscat in Sultanate of Oman, Riyadh in Kingdom of Saudi Arabia and Bahrain. \n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "description": "The Opportunity \n Etihad Airways is continuing an ambitious period of international growth, expanding our network, commercial reach, and global workforce.\n We’re looking for an experienced Manager Recruitment to join our Talent Acquisition team and lead recruitment across a portfolio of revenue & commercial functions. This is a highly visible role partnering with senior leaders to identify, attract, and secure talent across multiple international markets.\n You’ll operate in a fast-moving, complex environment where hiring requirements can span countries, functions, and levels of seniority. While experience recruiting within aviation would be valuable, it isn’t essential. We’re particularly interested in recruiters who have developed their careers within large, international organizations and complex matrix structures , and who understand what it takes to recruit globally.\n The role is hands-on. You’ll own searches yourself, build international talent pipelines, advise leaders on the external market, and increasingly use AI-enabled sourcing and recruitment technology to identify talent that traditional sourcing approaches may not reach.\n For someone who enjoys challenging searches, international recruitment, senior stakeholder engagement, and experimenting with new ways of finding talent, this is an opportunity to make a meaningful impact as Etihad continues to grow.\n What you’ll do \n Lead end-to-end recruitment across a portfolio of commercial roles, from workforce planning and search strategy through assessment, offer, and onboarding.\n Partner with senior business leaders and HR Business Partners, acting as a trusted advisor on talent availability, market dynamics, sourcing strategy, and hiring decisions.\n Develop and execute international sourcing strategies , identifying talent across multiple geographic markets and industries.\n Build proactive pipelines for critical and recurring talent requirements rather than relying solely on active applicants.\n Use AI-enabled sourcing platforms, recruitment technology, talent intelligence, and traditional sourcing channels to identify and engage high-quality passive talent.\n Recruit across a range of commercial disciplines, with experience hiring sales and commercially focused talent particularly valuable.\n Navigate a complex, matrixed organization, balancing the requirements of multiple stakeholders while maintaining pace and quality.\n Bring external market intelligence to hiring conversations, helping leaders understand talent availability, competitor activity, and alternative talent pools.\n Ensure candidates are assessed consistently and objectively using Etihad’s recruitment and assessment methodologies.\n Champion an engaging, transparent candidate experience and represent Etihad effectively in international talent markets.\n\nWhat we’re looking for \n We’re looking for an experienced recruiter who combines strong recruitment fundamentals with curiosity about how technology and AI are changing talent acquisition.\n Ideally, you’ll bring:\n 7+ years of recruitment or talent acquisition experience , with significant experience gained within a large, international organization.\n Demonstrated experience operating within a complex, matrixed organizational environment , partnering with stakeholders across different functions, countries, and levels of seniority.\n Strong experience delivering international recruitment , including proactively sourcing and engaging candidates across multiple geographic markets.\n Hands-on experience using AI-enabled sourcing tools, talent intelligence platforms, or other emerging recruitment technologies to identify and engage talent.\n Proven proactive sourcing capability, including experience identifying and engaging passive candidates rather than relying primarily on applications.\n Experience recruiting commercial talent; sales recruitment experience would be particularly advantageous .\n Strong stakeholder management skills, including the credibility to advise and influence senior leaders.\n Experience managing complex or challenging searches in competitive talent markets.\n A strong understanding of contemporary talent acquisition practices, including sourcing, assessment, candidate experience, recruitment technology, and talent pipelining.\n Excellent written and spoken English.\n Experience within aviation, travel, cargo, hospitality, or another international consumer-facing organization would be advantageous, but we’re equally interested in recruiters from other complex global businesses who can demonstrate the right recruitment capability and commercial mindset.\n\nRecruitment Process \n The recruitment process for this position will involve the following steps:\n All applications will be reviewed by a human-member of our Recruitment Team\n Shortlisted applicants will be invited to completed an AI-lead video interview via our third-party platform. This interview will allow you to record your responses to a range of questions related to the position and will allow you to demonstrate your knowledge and experience in a way that just your CV alone would not be able to. It also ensures fairness for you and all candidates, as all of our shortlisted candidates are asked the same questions and assessed on their responses. Whilst AI is utilized as part of the process, all responses will be reviewed by a human member of our recruitment team \n After a review of completed video interviews, shortlisted candidates will be invited to an initial technical interview with the hiring manager. \n Finalists will be invited to a follow-up interview with additional members of the hiring team - this may involve the completion of a brief business case assignment\n All candidates will be notified as to the status of their application as soon as is possible.\n \n Etihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
    "responsibilities": [
-    "Welcome and assist walk-in customers at the insurance kiosk in a professional and courteous manner",
-    "Handle customer inquiries related to insurance policies, coverage, renewals, endorsements, claims status, and other service requests",
-    "Provide accurate information on insurance products and services while identifying opportunities for upselling and cross-selling",
-    "Support policy issuance, renewals, amendments, and documentation requirements",
-    "Coordinate with underwriting, claims, and operations teams to resolve customer requests efficiently",
-    "Follow up with customers regarding quotations, renewals, outstanding documentation, and service requests",
-    "Maintain accurate records of customer interactions and transactions in company systems",
-    "Ensure compliance with company policies, service standards, and regulatory requirements",
-    "Achieve individual service and productivity targets while maintaining high customer satisfaction levels",
-    "Support promotional campaigns, customer engagement activities, and awareness initiatives conducted at kiosk locations",
-    "Bachelor's Degree or Diploma in Business Administration, Insurance, Finance, or a related field",
-    "Minimum 2 years of experience in Customer Service, Call Centre, Front Desk, Retail Service, or Insurance Operations",
-    "Previous experience in the insurance industry is preferred",
-    "Knowledge of insurance products, policy administration, and customer servicing processes is an advantage",
-    "Experience dealing directly with customers in a retail, branch, kiosk, or service center environment is preferred",
-    "Strong customer service orientation and interpersonal skills",
-    "Excellent verbal and written communication skills in English",
-    "Arabic language skills will be an added advantage",
-    "Strong problem-solving and conflict-resolution abilities",
-    "Ability to work independently and manage multiple customer requests"
+    "The Opportunity",
+    "Etihad Airways is continuing an ambitious period of international growth, expanding our network, commercial reach, and global workforce",
+    "We’re looking for an experienced Manager Recruitment to join our Talent Acquisition team and lead recruitment across a portfolio of revenue & commercial functions. This is a highly visible role partnering with senior leaders to identify, attract, and secure talent across multiple international markets",
+    "The role is hands-on. You’ll own searches yourself, build international talent pipelines, advise leaders on the external market, and increasingly use AI-enabled sourcing and recruitment technology to identify talent that traditional sourcing approaches may not reach",
+    "For someone who enjoys challenging searches, international recruitment, senior stakeholder engagement, and experimenting with new ways of finding talent, this is an opportunity to make a meaningful impact as Etihad continues to grow",
+    "Lead end-to-end recruitment across a portfolio of commercial roles, from workforce planning and search strategy through assessment, offer, and onboarding",
+    "Partner with senior business leaders and HR Business Partners, acting as a trusted advisor on talent availability, market dynamics, sourcing strategy, and hiring decisions",
+    "Develop and execute international sourcing strategies , identifying talent across multiple geographic markets and industries",
+    "Build proactive pipelines for critical and recurring talent requirements rather than relying solely on active applicants",
+    "Use AI-enabled sourcing platforms, recruitment technology, talent intelligence, and traditional sourcing channels to identify and engage high-quality passive talent",
+    "Recruit across a range of commercial disciplines, with experience hiring sales and commercially focused talent particularly valuable",
+    "Navigate a complex, matrixed organization, balancing the requirements of multiple stakeholders while maintaining pace and quality",
+    "Bring external market intelligence to hiring conversations, helping leaders understand talent availability, competitor activity, and alternative talent pools",
+    "Ensure candidates are assessed consistently and objectively using Etihad’s recruitment and assessment methodologies",
+    "Champion an engaging, transparent candidate experience and represent Etihad effectively in international talent markets"
    ],
-   "requirements": [],
+   "requirements": [
+    "What we’re looking for",
+    "We’re looking for an experienced recruiter who combines strong recruitment fundamentals with curiosity about how technology and AI are changing talent acquisition",
+    "7+ years of recruitment or talent acquisition experience , with significant experience gained within a large, international organization",
+    "Demonstrated experience operating within a complex, matrixed organizational environment , partnering with stakeholders across different functions, countries, and levels of seniority",
+    "Strong experience delivering international recruitment , including proactively sourcing and engaging candidates across multiple geographic markets",
+    "Hands-on experience using AI-enabled sourcing tools, talent intelligence platforms, or other emerging recruitment technologies to identify and engage talent",
+    "Proven proactive sourcing capability, including experience identifying and engaging passive candidates rather than relying primarily on applications",
+    "Experience recruiting commercial talent; sales recruitment experience would be particularly advantageous",
+    "Strong stakeholder management skills, including the credibility to advise and influence senior leaders",
+    "Experience managing complex or challenging searches in competitive talent markets",
+    "A strong understanding of contemporary talent acquisition practices, including sourcing, assessment, candidate experience, recruitment technology, and talent pipelining",
+    "Excellent written and spoken English",
+    "Experience within aviation, travel, cargo, hospitality, or another international consumer-facing organization would be advantageous, but we’re equally interested in recruiters from other complex global businesses who can demonstrate the right recruitment capability and commercial mindset"
+   ],
    "skills": [
-    "Excel"
+    "Excel",
+    "Business Partnering"
    ],
    "nationality_requirement": null,
    "work_authorization_requirement": null,
    "emiratisation_requirement": false,
    "saudization_requirement": false,
-   "candidate_fit_score": 34,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 50,
+   "candidate_fit_score": 54,
+   "employer_score": 55,
+   "career_upside_score": 22,
+   "opportunity_score": 49,
    "score_breakdown": {
-    "seniority": 0,
-    "functional": 0,
-    "industry": 15,
+    "seniority": 18,
+    "functional": 9,
+    "industry": 13,
     "geographic": 10,
-    "scope": 3,
-    "leadership": 0,
+    "scope": 0,
+    "leadership": 2,
     "qualification": 0,
-    "upside": 6
+    "upside": 2
    },
-   "tier": "C",
-   "application_priority": "OPTIONAL",
+   "tier": "D",
+   "application_priority": "SKIP",
    "why_fit": [
-    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
-    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Etihad Airways is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Capital allocation fit — he builds the ROI/IRR/NPV store feasibility models that decide new-store capex.",
     "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
    ],
    "watch_out": [
     "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
    ],
    "resume_match": null,
-   "duplicate_group": "da5d0f48bbd7228c72752a5b183a522f19c604e7",
+   "duplicate_group": "656fa334f65cb309311799760cd953ccf4344c8b",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -4663,7 +4772,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-avi-spl-middle-east-4449659867",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-avi-spl-middle-east-4449659867",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4726,7 +4835,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "1a75657c7caffa14edc03f5e318069bd92c7146f",
@@ -4746,8 +4855,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4853,7 +4962,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-mcg-talent-4461878888",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-mcg-talent-4461878888",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4910,7 +5019,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "755016eed6097733ae18b5d8cd0529eaaa2c55e3",
@@ -4940,7 +5049,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-ibis-ibis-styles-ibis-budget-4465124883",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-ibis-ibis-styles-ibis-budget-4465124883",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4996,7 +5105,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The posting names a qualification he does not hold; his is CA (ICAI, 2017)."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "2520127b619270f83b82e4cac57fdbdd44693c21",
@@ -5026,7 +5135,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-asteco-4464510349",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-manager-at-asteco-4464510349",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -5089,7 +5198,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "717896f6ca181842bcec6f794b78d4cd270f96b3",
@@ -5119,7 +5228,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/eoi-finance-manager-petaling-jaya-malaysia-at-cbre-asia-pacific-4464521557",
    "application_url": "https://my.linkedin.com/jobs/view/eoi-finance-manager-petaling-jaya-malaysia-at-cbre-asia-pacific-4464521557",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -5183,7 +5292,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "b6b952caadb987cf05c109c89a8747ff674690f1",
@@ -5213,7 +5322,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-hays-4462776607",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-hays-4462776607",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -5265,7 +5374,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "a60785dfad666a371c65b8274f47960b856eef15",
@@ -5285,8 +5394,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5361,6 +5470,97 @@
    "exclusion_reason": null
   },
   {
+   "id": "d1c8a60f670284c2aba4b373eba55918bf8829f0",
+   "company": "Etihad Airways",
+   "company_group": "Etihad",
+   "title": "Finance Business Partner Officer - UAE National Only",
+   "normalized_title": "finance business partner officer only",
+   "location": "Abu Dhabi",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Full-time",
+   "posted_date": "2026-07-22",
+   "closing_date": null,
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "STALE",
+   "source": "Etihad Airways",
+   "sources": [
+    "Etihad Airways"
+   ],
+   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000139019709-finance-business-partner-officer-uae-national-only-",
+   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000139019709-finance-business-partner-officer-uae-national-only-?oga=true",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 2,
+   "experience_max": null,
+   "description": "Supporting the Finance Business Partnering team in providing financial analysis and reports to the business. Analyse and summarise detailed financial data, prepare monthly reports and presentations, analyse variances and draft relevant commentaries. Actively participate in the preparation and finalization of the annual budget, current estimates and long-term planning.\n Analyse the financial performance of the department, prepare relevant summaries, commentaries and presentations\n Analyse and summarise large of amounts of financial data extracting information relevant for reporting, decision making and \n Generate and circulate the monthly management reporting packs.\n Consolidate operational data for the preparation on the current estimates of the full year’s results\n Participate in building up and finalization of the annual budget [consolidate data, prepare presentations, post budget journals.] \n Conduct regular analysis of Business KPIs for monthly reporting presentations.\n\nBachelor's degree in Accounting, Business, Finance or related field\n Working towards a professional qualification in Finance such as ACA / ACCA / CPA / CIMA etc. preferred\n Min 2 years of experience as a financial analyst or related financial systems and reporting\n Advanced Microsoft Office skills, particularly Excel; experience with BI tools is a plus (e.g. Tableau/ Power BI)\n Experience with SAP and other accounting systems\n Fluent written and spoken English is required; additional languages will be a plus\n\nEtihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
+   "responsibilities": [
+    "Supporting the Finance Business Partnering team in providing financial analysis and reports to the business. Analyse and summarise detailed financial data, prepare monthly reports and presentations, analyse variances and draft relevant commentaries. Actively participate in the preparation and finalization of the annual budget, current estimates and long-term planning",
+    "Analyse the financial performance of the department, prepare relevant summaries, commentaries and presentations",
+    "Analyse and summarise large of amounts of financial data extracting information relevant for reporting, decision making and",
+    "Generate and circulate the monthly management reporting packs",
+    "Consolidate operational data for the preparation on the current estimates of the full year’s results",
+    "Participate in building up and finalization of the annual budget [consolidate data, prepare presentations, post budget journals.]",
+    "Conduct regular analysis of Business KPIs for monthly reporting presentations"
+   ],
+   "requirements": [
+    "Bachelor's degree in Accounting, Business, Finance or related field",
+    "Working towards a professional qualification in Finance such as ACA / ACCA / CPA / CIMA etc. preferred",
+    "Min 2 years of experience as a financial analyst or related financial systems and reporting",
+    "Advanced Microsoft Office skills, particularly Excel; experience with BI tools is a plus (e.g. Tableau/ Power BI)",
+    "Experience with SAP and other accounting systems",
+    "Fluent written and spoken English is required; additional languages will be a plus"
+   ],
+   "skills": [
+    "Consolidation",
+    "Budgeting",
+    "Power BI",
+    "SAP",
+    "Excel",
+    "Business Partnering"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 47,
+   "employer_score": 55,
+   "career_upside_score": 22,
+   "opportunity_score": 45,
+   "score_breakdown": {
+    "seniority": 4,
+    "functional": 18,
+    "industry": 6,
+    "geographic": 10,
+    "scope": 0,
+    "leadership": 2,
+    "qualification": 5,
+    "upside": 2
+   },
+   "tier": "D",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "IFRS/MPERS group consolidation is day-to-day for him, including IFRS 16 across 60+ retail leases.",
+    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Posted 2026-07-22 — this req is stale and may already be filled.",
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
+   ],
+   "resume_match": null,
+   "duplicate_group": "078cb68e5accf52d8482095f0e5bd2eebf5dd8df",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "63b21fed59d3ac4f7d80cc2faf085fb66cade75b",
    "company": "Kimia Zue Huat Sdn Bhd",
    "company_group": null,
@@ -5383,7 +5583,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-kimia-zue-huat-sdn-bhd-4462901361",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-kimia-zue-huat-sdn-bhd-4462901361",
    "is_direct_apply": false,
-   "application_url_verified": true,
+   "application_url_verified": false,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -5433,7 +5633,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+    "The application link could not be confirmed reachable — verify it before relying on it."
    ],
    "resume_match": null,
    "duplicate_group": "dee40d9aec20194d07dd3738de092e2275cb449c",
@@ -5453,8 +5653,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5534,8 +5734,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5616,8 +5816,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-29",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5677,6 +5877,108 @@
    "exclusion_reason": null
   },
   {
+   "id": "f46d9a421ddc1f7ed9f96aa10cd326e707f9668d",
+   "company": "Etihad Airways",
+   "company_group": "Etihad",
+   "title": "Revenue Management Systems Officer",
+   "normalized_title": "revenue management systems officer",
+   "location": "Abu Dhabi",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Full-time",
+   "posted_date": "2026-07-28",
+   "closing_date": null,
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "STALE",
+   "source": "Etihad Airways",
+   "sources": [
+    "Etihad Airways"
+   ],
+   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140171180-revenue-management-systems-officer",
+   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000140171180-revenue-management-systems-officer?oga=true",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 3,
+   "experience_max": null,
+   "description": "Synopsis\n As Product Specialist – Cargo Digital Systems, you will support the delivery, enhancement, and day-to-day evolution of Etihad Cargo’s digital platforms and commercial systems ecosystem, with a strong focus on the Cargo Booking Website, API integrations, and internally developed digital applications.\n You will work closely with Product Owners, Cargo business stakeholders, DT&I, vendors, and development teams to gather requirements, define solutions, coordinate deliveries, perform testing activities, and support continuous product improvements.\n The role combines product analysis, business process understanding, technical coordination, and hands-on support for digital product development initiatives. You will contribute to Agile product delivery while supporting the development and enhancement of web applications built primarily using JavaScript and React technologies.\n This role is ideal for candidates with strong analytical and problem-solving capabilities who are interested in developing broader technical, digital product, and application development skills.\n Accountabilities\n • Prioritize and coordinate the delivery of bug fixes, enhancements, and new releases for Cargo systems in collaboration with DT&I and Cargo stakeholders across Commercial and Operations.\n\n• Support the delivery of enhancements, fixes, integrations, and new features across Etihad Cargo digital platforms and Cargo systems.\n\n• Act as a key contributor for the Etihad Cargo Booking Website, supporting feature enhancements, business requirements gathering, testing activities, and coordination with vendors and developers.\n\n• Support integration projects between Cargo systems, customer platforms, and third-party applications.\n\n• Assist in the design, coordination, and delivery of small internal applications, automation tools, and operational support solutions.\n\n• Gather and document business requirements from Commercial, Revenue Management, Pricing, Sales, Operations, Customs, and Ground Handling stakeholders.\n\n• Translate business requirements into user stories, functional specifications, acceptance criteria, and process flows.\n\n• Support backlog refinement, sprint planning, demos, and retrospectives.\n\n• Coordinate closely with DT&I teams, vendors, and developers to ensure requirements and priorities are clearly understood.\n\n• Perform User Acceptance Testing (UAT), regression testing, and validation of delivered functionalities.\n\n• Track defects, support issue analysis, and coordinate resolution activities with vendors and technical teams.\n\n• Support monitoring of product usage, operational KPIs, and user feedback to identify improvement opportunities.\n\n• Contribute to UX improvements by supporting the design of intuitive and efficient user workflows.\n\n• Support lightweight technical activities such as data analysis, API testing, configuration validation, and basic scripting/automation initiatives.\n\n• Assist in maintaining documentation including release notes, process documentation, test scenarios, and knowledge articles.\n\n• Ensure solutions comply with Etihad standards related to security, governance, and operational reliability.\n\n• Bachelor’s degree in Computer Science, Engineering, Information Systems, Data Analytics, or related discipline.\n\n• Minimum 3 years of experience in product analysis, digital products, system support, or business systems environments, preferably within cargo, aviation, logistics, or e-commerce industries.\n\n• Good understanding of Agile methodologies such as Scrum or SAFe.\n\n• Familiarity with web technologies such as JavaScript, React, APIs, JSON, or modern web applications is preferred.\n\n• Experience supporting digital platforms, customer portals, or API integrations is an advantage.\n\n• Experience in User Acceptance Testing (UAT), defect management, and release coordination.\n\n• Basic knowledge of SQL, Python, Power BI, or automation tools is advantageous.\n\n• Strong analytical thinking and structured problem-solving skills.\n\n• Excellent communication and stakeholder coordination abilities.\n\n• Ability to work across business and technical teams in a collaborative environment.\n\nEtihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
+   "responsibilities": [
+    "As Product Specialist – Cargo Digital Systems, you will support the delivery, enhancement, and day-to-day evolution of Etihad Cargo’s digital platforms and commercial systems ecosystem, with a strong focus on the Cargo Booking Website, API integrations, and internally developed digital applications",
+    "You will work closely with Product Owners, Cargo business stakeholders, DT&I, vendors, and development teams to gather requirements, define solutions, coordinate deliveries, perform testing activities, and support continuous product improvements",
+    "The role combines product analysis, business process understanding, technical coordination, and hands-on support for digital product development initiatives. You will contribute to Agile product delivery while supporting the development and enhancement of web applications built primarily using JavaScript and React technologies",
+    "This role is ideal for candidates with strong analytical and problem-solving capabilities who are interested in developing broader technical, digital product, and application development skills",
+    "Accountabilities",
+    "Prioritize and coordinate the delivery of bug fixes, enhancements, and new releases for Cargo systems in collaboration with DT&I and Cargo stakeholders across Commercial and Operations",
+    "Support the delivery of enhancements, fixes, integrations, and new features across Etihad Cargo digital platforms and Cargo systems",
+    "Act as a key contributor for the Etihad Cargo Booking Website, supporting feature enhancements, business requirements gathering, testing activities, and coordination with vendors and developers",
+    "Support integration projects between Cargo systems, customer platforms, and third-party applications",
+    "Assist in the design, coordination, and delivery of small internal applications, automation tools, and operational support solutions",
+    "Gather and document business requirements from Commercial, Revenue Management, Pricing, Sales, Operations, Customs, and Ground Handling stakeholders",
+    "Translate business requirements into user stories, functional specifications, acceptance criteria, and process flows",
+    "Support backlog refinement, sprint planning, demos, and retrospectives",
+    "Coordinate closely with DT&I teams, vendors, and developers to ensure requirements and priorities are clearly understood",
+    "Perform User Acceptance Testing (UAT), regression testing, and validation of delivered functionalities",
+    "Track defects, support issue analysis, and coordinate resolution activities with vendors and technical teams",
+    "Support monitoring of product usage, operational KPIs, and user feedback to identify improvement opportunities",
+    "Contribute to UX improvements by supporting the design of intuitive and efficient user workflows",
+    "Support lightweight technical activities such as data analysis, API testing, configuration validation, and basic scripting/automation initiatives",
+    "Assist in maintaining documentation including release notes, process documentation, test scenarios, and knowledge articles"
+   ],
+   "requirements": [
+    "Bachelor’s degree in Computer Science, Engineering, Information Systems, Data Analytics, or related discipline",
+    "Minimum 3 years of experience in product analysis, digital products, system support, or business systems environments, preferably within cargo, aviation, logistics, or e-commerce industries",
+    "Good understanding of Agile methodologies such as Scrum or SAFe",
+    "Familiarity with web technologies such as JavaScript, React, APIs, JSON, or modern web applications is preferred",
+    "Experience supporting digital platforms, customer portals, or API integrations is an advantage",
+    "Experience in User Acceptance Testing (UAT), defect management, and release coordination",
+    "Basic knowledge of SQL, Python, Power BI, or automation tools is advantageous",
+    "Strong analytical thinking and structured problem-solving skills",
+    "Excellent communication and stakeholder coordination abilities",
+    "Ability to work across business and technical teams in a collaborative environment"
+   ],
+   "skills": [
+    "Power BI",
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 36,
+   "employer_score": 55,
+   "career_upside_score": 22,
+   "opportunity_score": 39,
+   "score_breakdown": {
+    "seniority": 1,
+    "functional": 6,
+    "industry": 13,
+    "geographic": 10,
+    "scope": 0,
+    "leadership": 2,
+    "qualification": 2,
+    "upside": 2
+   },
+   "tier": "D",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Etihad Airways is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Systems fit — he led the D365 ERP implementation that cut the close cycle 40%, and builds the Power BI reporting on top of it.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Posted 2026-07-28 — this req is stale and may already be filled."
+   ],
+   "resume_match": null,
+   "duplicate_group": "b4a07d12c120c83bfe5597bd11795c90ef7abf33",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
    "id": "461f274ac376c8ff45a79a607208506aa0ef60f2",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -5689,8 +5991,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5791,8 +6093,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -5869,8 +6171,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -5965,8 +6267,8 @@
    "employment_type": null,
    "posted_date": "2026-08-23",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6044,6 +6346,85 @@
    "exclusion_reason": "systems / transformation role, not a finance function"
   },
   {
+   "id": "27f91343d85fb52cf1c8978d4431a332abae969f",
+   "company": "Al-Futtaim",
+   "company_group": "Al-Futtaim",
+   "title": "Key Account Manager | Al-Futtaim Automotive | FAMCO",
+   "normalized_title": "key account manager al futtaim automotive famco",
+   "location": "Abu Dhabi",
+   "country": "UAE",
+   "region": "GCC",
+   "department": null,
+   "employment_type": null,
+   "posted_date": "2026-09-17",
+   "closing_date": "2026-10-18",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "NEW",
+   "source": "Al-Futtaim",
+   "sources": [
+    "Al-Futtaim"
+   ],
+   "source_url": "https://www.afuturewithus.com/job/Abu-Dhabi-Key-Account-Manager-Al-Futtaim-Automotive-FAMCO/1438044333/",
+   "application_url": "https://www.afuturewithus.com/talentcommunity/apply/1438044333/?locale=en_GB",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": null,
+   "experience_max": null,
+   "description": "Job Requisition ID: 181177 \n\n About Al-Futtaim \n\nEstablished in the 1930s, Al-Futtaim is one of the most diversified and progressive privately held regional businesses, headquartered in Dubai. Operating across more than 20 countries, the Group spans automotive, financial services, real estate, retail and health. With more than 40,000 employees, Al-Futtaim represents over 200 of the world’s most recognised brands, including Toyota, Lexus, IKEA, ACE and Marks & Spencer. Driven by its purpose to enrich lives and elevate communities, Al-Futtaim focuses on digital innovation, AI, sustainable growth and strategic partnerships, creating long-term value for customers, communities and partners while building a responsible legacy for future generations.\n\n Overview of the Role \n\nWe are looking for a highly motivated and results-driven Key Account Manager to join our Commercial Vehicles team at FAMCO in Abu Dhabi. Success in this position requires a deep understanding of commercial vehicles, fleet customers, transport operators, and the competitive landscape of the truck industry. The successful candidate will play a critical role in building the customer base, growing market share, and establishing the brand as a leading choice for fleet and transport customers across the United Arab Emirates.\n\n What You Will Do \n\n• Identify, develop, and win new business opportunities within the truck sector.\n• Build strong relationships with fleet operators, logistics companies, transportation businesses, contractors, and key commercial customers.\n• Achieve monthly, quarterly, and annual sales targets.\n• Develop and maintain a healthy sales pipeline through active prospecting and customer engagement.\n• Conduct regular customer visits to understand business requirements and identify sales opportunities.\n• Present vehicle solutions, coordinate demonstrations, and support customer test drives.\n• Manage the full sales cycle from prospecting and lead generation through quotation, negotiation, order placement, delivery, and payment collection.\n• Protect profitability while delivering competitive commercial solutions.\n• Maintain accurate customer records, sales forecasts, and pipeline updates within the Customer Relationship Management system.\n• Support collections activities and follow up on outstanding payments when required.\n• Gather market intelligence and competitor information to support business growth strategies.\n\n Required Skills to Be Successful \n\n• Bachelor's degree or equivalent professional experience.\n• Proven experience selling trucks in the United Arab Emirates.\n• Experience managing fleet customers, transport companies, logistics operators, and contractors.\n• Strong knowledge of trucks, fleet operations, transport businesses, and the United Arab Emirates truck market.\n\n About The Team \n\n You will join Al-Futtaim Industrial Equipment and Commercial Vehicles, working as part of the Commercial Vehicles Sales team and reporting directly to the Sales Manager – Commercial Vehicles.\n\n What Equips You For The Role \n\n • Strong truck sales experience within the United Arab Emirates market.\n• Excellent business development and key account management capabilities.\n• Strong understanding of commercial vehicle sales processes and fleet customer requirements.\n• Proven ability to generate new business and achieve sales targets.\n• Strong negotiation, presentation, and relationship-building skills.\n• Commercially focused with the ability to balance customer needs and profitability.\n• Excellent communication and stakeholder management skills.\n• Ability to work independently and manage multiple customer opportunities simultaneously.\n• Experience within a commercial vehicle dealership environment is highly preferred.\n• Demonstrated track record of consistently achieving or exceeding sales targets.\n• Valid United Arab Emirates driving license.\n\n About Al-Futtaim \n\n Al-Futtaim Automotive is one of the region's leading mobility businesses, operating across eight countries in the Middle East, Asia and North Africa.\n\n With a portfolio of more than 25 world-leading brands, we deliver one of the region's most comprehensive mobility ecosystems. Our capabilities span passenger vehicles, commercial vehicles and industrial equipment, backed by integrated logistics, leasing, aftersales and financial services that deliver a seamless customer experience across every stage of the mobility journey.\n\n Our vision is to become a world-class mobility player, creating better experiences for our customers through innovation, digital transformation and a relentless focus on customer experience. We work alongside some of the world's most trusted automotive brands to shape the future of mobility, delivering solutions that meet the evolving needs of individuals, businesses and communities.\n\n Behind everything we do is a team of more than 9,000 colleagues united by ambition, collaboration and a shared commitment to progress. Together, we're shaping the future of mobility, embracing new technologies and creating better experiences for our customers. At Al-Futtaim Automotive, you'll be empowered to turn ambition into action and help move our customers, our business and your career forward.\n\n Apply now » \n\n Find similar jobs: \n\n Sales Jobs \n\n HOME PAGE \n\n PRIVACY \n\n CORPORATE WEBSITE \n\n CONTACT US \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n Opens in a new tab. \n\n © Copyright 2026 | afuturewithus.com\n\n // \n\n // \n\n // \n\n const jobAlertSpans = document.querySelectorAll(\"[data-testid=jobAlertSpanText]\");\n jobAlertSpans?.forEach((jobEl) => {\n jobEl.textContent = window?.jsStr?.tcjobresultscreatejobalertsdetailstext || \"\";\n });\n\n // \n\n // \n\n // \n\n //",
+   "responsibilities": [
+    "HOME PAGE",
+    "CORPORATE WEBSITE",
+    "CONTACT US",
+    "Opens in a new tab",
+    "Opens in a new tab",
+    "Opens in a new tab",
+    "Opens in a new tab"
+   ],
+   "requirements": [],
+   "skills": [
+    "Forecasting",
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 58,
+   "employer_score": 88,
+   "career_upside_score": 50,
+   "opportunity_score": 64,
+   "score_breakdown": {
+    "seniority": 15,
+    "functional": 7,
+    "industry": 15,
+    "geographic": 10,
+    "scope": 3,
+    "leadership": 2,
+    "qualification": 0,
+    "upside": 6
+   },
+   "tier": "C",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Multi-country / multi-entity scope maps directly onto his Malaysia + Indonesia P&L ownership across 60+ Max Fashion and Babyshop stores.",
+    "Al-Futtaim is peer retail to his current employer — the 60+ store, multi-brand lifestyle retail P&L he already owns transfers without a sector learning curve.",
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Nothing disqualifying surfaced in the posted text, which itself means the description is thin — probe scope and reporting line."
+   ],
+   "resume_match": null,
+   "duplicate_group": "951c3894ccf1b64d8b9ef77f97171b2f6236c8b2",
+   "is_excluded": true,
+   "exclusion_reason": "commercial account-management role, not a finance role"
+  },
+  {
    "id": "4c7331da17159c3c15c194e4d80c939163cbe93a",
    "company": "Al-Futtaim",
    "company_group": "Al-Futtaim",
@@ -6056,8 +6437,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-10",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6135,8 +6516,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6226,9 +6607,9 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2027-02-23",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
-   "status": "NEW",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
+   "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
     "Al-Futtaim"
@@ -6319,8 +6700,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6411,8 +6792,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -6508,8 +6889,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-29",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6596,8 +6977,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6686,8 +7067,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -6776,8 +7157,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -6846,8 +7227,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -6922,8 +7303,8 @@
    "employment_type": null,
    "posted_date": "2026-09-05",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7013,8 +7394,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7102,8 +7483,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7194,8 +7575,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7284,8 +7665,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -7369,8 +7750,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-01",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7461,8 +7842,8 @@
    "employment_type": null,
    "posted_date": "2026-08-24",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -7553,8 +7934,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7643,8 +8024,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -7713,8 +8094,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7803,8 +8184,8 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7893,8 +8274,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7983,8 +8364,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8075,8 +8456,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -8165,8 +8546,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "AGING",
    "source": "Al Tayer",
    "sources": [
@@ -8250,8 +8631,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -8329,8 +8710,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "NEW",
    "source": "Emaar",
    "sources": [
@@ -8405,8 +8786,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-17T09:48:18Z",
-   "last_verified_at": "2026-09-17T09:48:18Z",
+   "scraped_at": "2026-09-18T05:34:52Z",
+   "last_verified_at": "2026-09-18T05:34:52Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
