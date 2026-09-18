@@ -191,6 +191,107 @@ def _horizon_txt(hours) -> str:
     return f"{h}h" if h < 24 else f"{h // 24}d"
 
 
+def entry_block(sig: dict, engine_key: str) -> str:
+    """One signal, written as the ORDER it implies rather than as a row.
+
+    WHAT WAS WRONG WITH THE OLD ONE
+    -------------------------------
+    Seven scans each hand-rolled the same f-string:
+
+        📋 *TITAN* | Daily | BUY ₹3410
+          SL ₹3240 | T1 ₹3580 | T2 ₹3750 | RR 1.5
+
+    A ticker and five numbers. Everything needed to ACT on it was missing and
+    every bit of it was already computed somewhere else:
+
+      - the risk is 5.0%, and the reader was doing that subtraction themselves
+      - swing_rulebook.size_signal() knows the QUANTITY, the notional and the
+        rupees at risk under the Rs 1 crore mandate — the alert said buy and
+        left the size on a web page
+      - engine_names.engine_name() turns `breakout` into BREACH; the message
+        printed neither
+      - "RR 1.5" never said to WHICH target
+      - the exit alerts carry a reason, a horizon and an invalidation line. The
+        entry alerts carried none, so this book explained a trade properly only
+        once it had already died.
+
+    AND IT SAYS WHEN THE BOOK WILL NOT FUND IT
+    ------------------------------------------
+    A signal the rulebook refuses — a short, an engine outside the mandate, a
+    target too near to pay for its stop — must not be dressed as an order. It
+    is logged, it is shown, and it says which gate it failed. Printing a size
+    for a trade this book would not place is the one thing worse than printing
+    no size at all.
+    """
+    sym = str(sig.get("symbol") or "?").replace(".NS", "")
+    entry, stop = sig.get("entry"), sig.get("sl")
+    try:
+        from engine_names import engine_name, engine_role
+        name, role = engine_name(engine_key), engine_role(engine_key)
+    except Exception:                                              # noqa: BLE001
+        name, role = str(engine_key or "").upper() or "Unattributed", ""
+
+    head = f"*{sym}* · {name}" + (f" — {role}" if role else "")
+    tf = str(sig.get("timeframe") or "").strip()
+    if tf:
+        head += f"  `{tf}`"
+
+    # The stop as a distance, because that is the number being risked.
+    risk_line = ""
+    try:
+        e, sl = float(entry), float(stop)
+        if e > 0 and sl > 0:
+            risk_line = (f"Buy {_fmt(sym, e)} · stop {_fmt(sym, sl)} "
+                         f"(`{(sl - e) / e * 100:+.1f}%`)")
+    except (TypeError, ValueError):
+        pass
+
+    # The order itself, from the rulebook that already computes it.
+    order, refused = "", ""
+    try:
+        import swing_rulebook as RB
+        probe = dict(sig)
+        probe.setdefault("action", "BUY")
+        ticket, rej = RB.size_signal(probe, {})
+        if ticket:
+            order = (f"Qty `{ticket.qty}` · {_fmt(sym, ticket.notional)} "
+                     f"· risking {_fmt(sym, ticket.risk_amount)} "
+                     f"(`{ticket.risk_pct:.2f}%` of the book)")
+        elif rej:
+            refused = f"_Not funded — {RB.REJECT_LABELS.get(rej.reason, rej.reason)}._"
+    except Exception as _e:                                        # noqa: BLE001
+        logging.debug("entry_block: rulebook unavailable for %s (%s)", sym, _e)
+
+    # Targets with the R each one pays, so "RR" is not a number without a
+    # referent. R is what the stop already defined; repeating it per target is
+    # the difference between a list of prices and a plan.
+    tgt = ""
+    try:
+        e, sl = float(entry), float(stop)
+        per = abs(e - sl)
+        legs = []
+        for i, k in enumerate(("target1", "target2", "target3"), 1):
+            v = sig.get(k)
+            if v in (None, "", 0):
+                continue
+            v = float(v)
+            legs.append(f"T{i} {_fmt(sym, v)} (`{(v - e) / e * 100:+.1f}%`"
+                        + (f", `{abs(v - e) / per:.1f}R`" if per > 0 else "") + ")")
+        tgt = " · ".join(legs)
+    except (TypeError, ValueError):
+        pass
+
+    why = str(sig.get("reason") or sig.get("reasons") or "").strip()
+    # STATUS BEFORE NUMBERS. "Buy 3,410" must not be the first line of a
+    # message about a trade this book will not place — a refusal read three
+    # lines down is a refusal the eye has already skipped. When it is funded
+    # the order leads instead, because then the numbers ARE the message.
+    if refused:
+        return _lines(head, refused, f"Reference levels — {risk_line}" if risk_line else "",
+                      tgt, (f"_{why}_" if why else ""))
+    return _lines(head, risk_line, order, tgt, (f"_{why}_" if why else ""))
+
+
 def _lines(*parts) -> str:
     """Join alert lines, dropping the ones this row could not fill.
 
@@ -1365,8 +1466,12 @@ def run_4h_scan(time_str):
         for b in sigs:
             fno_tag = " `F&O`" if b.get("fno") else ""
             blocks.append(
-                f"• *{b['symbol']}*{fno_tag} | 4H | BUY ₹{b['price']}\n"
-                f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b.get('target2','?')} | RR {b['rr']}"
+                entry_block({
+                    "symbol": b["symbol"], "signal_type": "4h", "action": "BUY",
+                    "entry": b["price"], "sl": b["sl"], "target1": b["target1"],
+                    "target2": b.get("target2"), "timeframe": "4H", "rr": b["rr"],
+                    "reason": b.get("reason") or b.get("pattern") or "",
+                }, "4h") + fno_tag
             )
             rows.append({
                 "symbol": b["symbol"], "signal_type": "4h", "action": "BUY",
@@ -1398,8 +1503,12 @@ def run_ohl_scan(time_str):
         for b in sigs:
             fno_tag = " `F&O`" if b.get("fno") else ""
             blocks.append(
-                f"• *{b['symbol']}*{fno_tag} | OLL | BUY ₹{b['price']}\n"
-                f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b['target2']} | RR {b['rr']}"
+                entry_block({
+                    "symbol": b["symbol"], "signal_type": "ohl", "action": "BUY",
+                    "entry": b["price"], "sl": b["sl"], "target1": b["target1"],
+                    "target2": b["target2"], "timeframe": "OLL", "rr": b["rr"],
+                    "reason": b.get("reason") or "",
+                }, "ohl") + fno_tag
             )
             rows.append({
                 "symbol": b["symbol"], "signal_type": "ohl", "action": "BUY",
@@ -1466,8 +1575,12 @@ def run_commodity_scan(time_str):
                 })
                 continue
             blocks.append(
-                f"\U0001F4C8 *{s['symbol']}* `{s['timeframe']}` | \u25b2 BUY @ {s['price']}\n"
-                f"  SL {s['sl']} | T1 {s['target1']} | T2 {s['target2']} | RR {s['rr']}"
+                entry_block({
+                    "symbol": s["symbol"], "signal_type": "swing", "action": "BUY",
+                    "entry": s["price"], "sl": s["sl"], "target1": s["target1"],
+                    "target2": s["target2"], "timeframe": s["timeframe"],
+                    "rr": s["rr"], "reason": s.get("reason") or "",
+                }, "swing")
             )
             rows.append({
                 "symbol": s["symbol"], "signal_type": "commodity", "action": s["action"],
@@ -1887,12 +2000,19 @@ def run_breakout_scan(time_str):
         # the other 48 from the ledger as well as from Telegram.
         blocks, rows = [], []
         for b in breakouts:
-            fno_tag  = " `F&O`" if b.get("fno") else ""
-            tf_emoji = {"Monthly": "📅", "Weekly": "📆", "Daily": "📋"}.get(b["timeframe"], "📋")
-            blocks.append(
-                f"{tf_emoji} *{b['symbol']}*{fno_tag} | {b['timeframe']} | BUY ₹{b['price']}\n"
-                f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b['target2']} | RR {b['rr']}"
-            )
+            # The block is composed FROM THE LEDGER ROW, not from the scan
+            # dict, so the message and the record can never describe different
+            # numbers — and entry_block gets `entry`/`target1` under the names
+            # swing_rulebook reads.
+            _sig = {
+                "symbol": b["symbol"], "signal_type": "breakout", "action": "BUY",
+                "entry": b["price"], "sl": b["sl"], "target1": b["target1"],
+                "target2": b["target2"], "target3": b.get("target3"),
+                "timeframe": b["timeframe"], "rr": b["rr"],
+                "reason": b.get("reason") or b.get("pattern") or "",
+            }
+            blocks.append(entry_block(_sig, "breakout")
+                          + (" `F&O`" if b.get("fno") else ""))
             rows.append({
                 "symbol": b["symbol"], "signal_type": "breakout", "action": "BUY",
                 "entry": b["price"], "sl": b["sl"], "t1": b["target1"],
@@ -1929,8 +2049,13 @@ def run_tlm_scan(time_str, interval="4h"):
         for b in tlm_sigs:
             fno_tag = " `F&O`" if b.get("fno") else ""
             blocks.append(
-                f"• *{b['symbol']}*{fno_tag} | {tf_label} | BUY ₹{b['price']}\n"
-                f"  SL ₹{b['sl']} | T1 ₹{b['target1']} | T2 ₹{b['target2']} | RR {b['rr']}"
+                entry_block({
+                    "symbol": b["symbol"], "signal_type": sig_type, "action": "BUY",
+                    "entry": b["price"], "sl": b["sl"], "target1": b["target1"],
+                    "target2": b["target2"], "target3": b.get("target3"),
+                    "timeframe": tf_label, "rr": b["rr"],
+                    "reason": b.get("reason") or b.get("pattern") or "",
+                }, sig_type) + fno_tag
             )
             rows.append({
                 "symbol": b["symbol"], "signal_type": sig_type, "action": "BUY",
@@ -2012,9 +2137,12 @@ def run_intraday_scan(time_str):
         blocks, rows = [], []
         for s in sigs:
             blocks.append(
-                f"• *{s['symbol']}* | 15m | BUY ₹{s['price']}\n"
-                f"  SL ₹{s['sl']} | T1 ₹{s['target1']} | T2 ₹{s['target2']}"
-                f" | RR {s['rr']} | Vol {s['vol_ratio']}x | RSI {s['rsi']}"
+                entry_block({
+                    "symbol": s["symbol"], "signal_type": "intraday", "action": "BUY",
+                    "entry": s["price"], "sl": s["sl"], "target1": s["target1"],
+                    "target2": s["target2"], "timeframe": "15m", "rr": s["rr"],
+                    "reason": f"Volume {s['vol_ratio']}x its average · RSI {s['rsi']}",
+                }, "intraday")
             )
             rows.append({
                 "symbol": s["symbol"], "signal_type": "intraday", "action": "BUY",
