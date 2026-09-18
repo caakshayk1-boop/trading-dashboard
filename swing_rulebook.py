@@ -51,6 +51,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field, asdict
 from typing import Optional
+from engine_names import RETIRED as _SITE_RETIRED
 
 # ── Capital and caps ────────────────────────────────────────────────────────
 
@@ -154,18 +155,50 @@ HORIZONS = {
 
 FUNDED: dict = {}          # cleared for real capital — empty by measurement
 
+# ── THE TIDAL PAIR WAS THE WRONG WAY ROUND, AND CAPITAL FOLLOWED IT ──────────
+#
+# This listed `magic` as a CANDIDATE and `magicmagic` as RETIRED ("duplicate of
+# magic"). The site decided the opposite on 2026-09-18 and for a measured
+# reason: >15% off the high admits every name 20-40% does PLUS a shallower
+# tail, and the deeper fall is the whole thesis — more room back to the high.
+# magicmagic is the engine; magic is the one that stopped publishing.
+#
+# So the ₹1cr book was sizing the retired band and refusing the live one. On
+# 2026-09-19 mandate.json's `admitted` list carried a magic position, which is
+# capital pointed at an engine no page on the site will show.
+#
+# THE SITE'S RETIREMENT IS NOW BINDING HERE, via engine_names.RETIRED — see
+# tier_of(). This dict decides horizon and mandate fit, which is a different
+# question and still this file's to answer; it no longer gets to disagree
+# about whether an engine is running at all.
 CANDIDATE = {
-    "magic":       "SWING",   # +0.485R over 11, all NSE, no duplicates, 24% target behind a 9.2% stop
+    "magicmagic":  "SWING",   # the live TIDAL band — 20-40% off the high
     "multibagger": "MEDIUM",  # flat over 10, but 47% targets on a clean 1W instrument
-    "ai_longterm": "LONG",    # nothing closed yet — unmeasured, not unproven
     "breakout":    "SWING",   # +0.022R over 96, the largest clean sample here. Flat, not losing
 }
 
+# ── THREE ENGINES THE SITE PUBLISHES AND THIS BOOK DOES NOT SIZE ─────────────
+#
+# LEDGE, KEEL and VECTOR (momentum_quant) are live on signal.askakshay.com and
+# appear in no tier here, so tier_of() returns UNKNOWN and they are never
+# sized. That is the designed safe default — "absence is not permission" — and
+# it is left exactly as it was found.
+#
+# They were briefly added to CANDIDATE while fixing the magic/magicmagic
+# inversion above, and taken back out. Admitting an engine to the capital book
+# is a decision about money: it took the admitted list from 5 positions to 8 on
+# the same day's ledger. Correcting which TIDAL band gets funded is a fix;
+# funding three more engines is a different decision and not one to make as a
+# side effect of a fix. It needs Akshay's call.
+UNSIZED_BUT_PUBLISHED = ("ledge", "keel", "momentum_quant", "pivot", "intraday")
+
+# Retired by THIS rulebook, for its own reasons. The site's own retirements are
+# layered on top in tier_of() and do not need repeating here — repeating them
+# is what let this file and the site disagree about TIDAL for a day.
 RETIRED = {
     "ohl":             "0 wins in 6 closed, every one at the stop",
     "equity_measured": "0 wins in 8 at t = -20.17, and files T1 at 0.32R",
     "top5_pick":       "0 wins in 4, and only 8 of 25 symbols are Indian listings",
-    "magicmagic":      "duplicate of magic — 10 of its 43 rows are the same trade filed twice",
     "sip_bucket":      "0.1% stops and 0% targets: an accumulation bucket, not a trade",
     "ai_daily":        "n=6, nothing measurable either way",
 }
@@ -185,15 +218,38 @@ MAX_ALERT_TYPES = 8
 
 
 def tier_of(engine: str) -> str:
-    """FUNDED / CANDIDATE / RETIRED / OUT_OF_MANDATE / UNKNOWN."""
-    if engine in FUNDED: return "FUNDED"
-    if engine in CANDIDATE: return "CANDIDATE"
+    """FUNDED / CANDIDATE / RETIRED / OUT_OF_MANDATE / UNKNOWN.
+
+    THE SITE'S RETIREMENT IS CHECKED FIRST and overrides every tier below it.
+    An engine signal.askakshay.com has switched off cannot be funded, cannot be
+    a candidate, and cannot be sized — whatever this file used to think of it.
+    Absence from engine_names.RETIRED is not permission; it only means the site
+    has not retired it, and the tiers below still have to admit it.
+    """
+    # It BINDS where this file would otherwise say yes, and DEFERS everywhere
+    # else. ohl, 4h and ai_4h are retired on the site too, and this file
+    # already refuses them with sharper reasons of its own ("0 wins in 6
+    # closed, every one at the stop" beats "retired on the site"). Overriding
+    # those replaced information with less of it. What must never happen is a
+    # FUNDED or CANDIDATE engine that the site has switched off, which is the
+    # case that put a magic position in the admitted book.
+    if engine in FUNDED:
+        return "RETIRED" if engine in _SITE_RETIRED else "FUNDED"
+    if engine in CANDIDATE:
+        return "RETIRED" if engine in _SITE_RETIRED else "CANDIDATE"
     if engine in RETIRED: return "RETIRED"
     if engine in OUT_OF_MANDATE: return "OUT_OF_MANDATE"
+    if engine in _SITE_RETIRED: return "RETIRED"
     return "UNKNOWN"
 
 
 def tier_reason(engine: str) -> str:
+    # This file's own reason first when it has one — it is always the more
+    # specific of the two. The site's retirement is the fallback.
+    if engine not in RETIRED and engine not in OUT_OF_MANDATE \
+            and engine in _SITE_RETIRED:
+        return (f"retired on the site {_SITE_RETIRED[engine]} — "
+                f"it publishes nothing")
     return (RETIRED.get(engine) or OUT_OF_MANDATE.get(engine)
             or ("candidate — sized on paper while it earns a record"
                 if engine in CANDIDATE else
@@ -201,7 +257,12 @@ def tier_reason(engine: str) -> str:
 
 
 # Kept so a dropped row can name what it duplicated.
-DUPLICATE_OF = {"magicmagic": "magic"}
+# THE DUPLICATE POINTS THE OTHER WAY NOW, and it is empty rather than
+# reversed. magic is retired on the site, so tier_of() refuses it before this
+# check is ever reached — recording it here as "duplicate of magicmagic" would
+# be a second, weaker reason for the same refusal, and the weaker one would be
+# the one printed. A retired engine is refused for being retired.
+DUPLICATE_OF: dict = {}
 
 # ── Exit ladder ─────────────────────────────────────────────────────────────
 #
@@ -483,6 +544,18 @@ def size_signal(sig: dict, sectors: dict, capital: float = CAPITAL):
                   f"'{sig.get('market') or 'unstated'}', which it also does for MSFT and SNOW")
     if engine in DUPLICATE_OF:
         return no("DUPLICATE_ENGINE", f"{engine} files the same trades as {DUPLICATE_OF[engine]}")
+    # ── RETIRED IS CHECKED BEFORE HORIZON, AND THE ORDER IS THE POINT ───────
+    #
+    # A retired engine has no horizon mapping either, so it used to fall
+    # through to the line below and be rejected as "magic is not mapped to a
+    # horizon" — a clerical-sounding excuse for a decision that was actually
+    # made on a measurement. The reason a reader sees has to be the reason the
+    # refusal happened, and this function's own docstring already argues that
+    # case for mandate-before-geometry.
+    if engine in _SITE_RETIRED and engine not in RETIRED \
+            and engine not in OUT_OF_MANDATE:
+        return no("RETIRED", f"{engine} was retired on the site "
+                             f"{_SITE_RETIRED[engine]} — it publishes nothing")
     hz = horizon_of(engine)
     if hz is None:
         return no("OUT_OF_MANDATE", OUT_OF_MANDATE.get(engine, f"{engine} is not mapped to a horizon"))
