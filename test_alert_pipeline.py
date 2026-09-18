@@ -966,6 +966,59 @@ check("_lines collapses dropped blocks",
 check("_lines drops leading blanks",
       standalone_scan._lines("", "a") == "a")
 
+# ── 12. the entry alert is an ORDER, not a row ───────────────────────────────
+#
+# Seven scans each hand-rolled "SL x | T1 y | T2 z | RR n" — a ticker and five
+# numbers, with everything needed to act on it computed elsewhere and printed
+# nowhere. entry_block is the one composer now, and these are the properties
+# that make it worth having.
+EB = standalone_scan.entry_block
+_full = {"symbol": "TITAN", "signal_type": "breakout", "action": "BUY",
+         "entry": 3410.0, "sl": 3240.0, "target1": 3750.0, "target2": 4100.0,
+         "target3": 4400.0, "timeframe": "Weekly", "rr": 2.0,
+         "reason": "Closed above a 24-bar base on 2.1x volume"}
+_out = EB(_full, "breakout")
+
+check("entry_block names the ENGINE, never the key",
+      "BREACH" in _out and "breakout" not in _out, _out)
+check("entry_block prints the stop as a distance", "-5.0%" in _out, _out)
+check("entry_block gives every target its R",
+      _out.count("R`") >= 3 or _out.count("R)") >= 3, _out)
+check("entry_block carries the measured reason", "24-bar base" in _out, _out)
+check("a funded signal states the ORDER — qty, notional, rupees at risk",
+      "Qty" in _out and "risking" in _out, _out)
+
+# The one that matters most: a signal the book will NOT fund must never be
+# dressed as an order. Printing a size for a trade this book would not place is
+# worse than printing no size at all.
+_short = dict(_full, action="SELL")
+_no = EB(_short, "breakout")
+check("a refused signal shows NO quantity", "Qty" not in _no, _no)
+check("...and says it is not funded", "Not funded" in _no, _no)
+check("...and says so BEFORE the prices",
+      _no.index("Not funded") < (_no.index("Buy") if "Buy" in _no else len(_no)), _no)
+check("...and labels its numbers as reference, not an instruction",
+      "Reference levels" in _no, _no)
+
+# Degradation: a missing field drops its line, never the message. The whole
+# alert loop sits inside `except Exception: continue`, so a raise here deletes
+# the alert into a log nobody reads.
+for _bad in ({"symbol": "Z", "signal_type": "breakout"},
+             dict(_full, sl=None), dict(_full, target1=None, target2=None),
+             dict(_full, entry="not-a-number")):
+    try:
+        _r = EB(_bad, "breakout")
+        check(f"degrades rather than raising ({sorted(_bad)[:2]})", bool(_r), _r)
+    except Exception as _e:                                        # noqa: BLE001
+        check(f"degrades rather than raising ({sorted(_bad)[:2]})", False, repr(_e))
+
+# No engine key may ever reach a reader as a raw key, including ones with no
+# registry entry at all.
+for _k in ("4h", "ohl", "swing", "ai_weekly", "intraday", "made_up_key", ""):
+    _line = EB(dict(_full, signal_type=_k), _k).splitlines()[0]
+    check(f"{_k or '(empty)'!r} renders a name, not a bare key",
+          "_" not in _line.split("·")[-1], _line)
+
 _clear_open()
 
 shutil.rmtree(TMP, ignore_errors=True)
