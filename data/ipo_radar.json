@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-18T01:08:13",
+ "generated_at": "2026-09-18T01:24:55",
  "source": "NSE public issue endpoints",
  "mainboard_only": true,
  "open": [
@@ -97,7 +97,12 @@
    "issue_size_shares": 8793884.0,
    "issue_size_cr": 500.0,
    "subscription_x": 3.9306266719006073,
-   "subscription_by_category": null,
+   "subscription_by_category": {
+    "QIB": 0.24,
+    "HNI": 10.49,
+    "Employee": 0.92,
+    "Total": 6.17
+   },
    "lot_size": 35.0,
    "min_investment": 14840.0,
    "fresh_issue_cr": 360.0,
@@ -150,6 +155,7 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/ss-retail-ipo/2822/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1354/ss-retail-ltd",
+   "category_source": "ipopremium.in",
    "reads_for": [
     "Revenue grew 47% year on year.",
     "Profit grew faster than revenue (49% against 47%), so margins widened rather than bought growth.",
@@ -176,11 +182,7 @@
    "issue_size_shares": 88607596.0,
    "issue_size_cr": 1000.0,
    "subscription_x": 1.981422157080077,
-   "subscription_by_category": {
-    "QIB": 0.07,
-    "HNI": 4.15,
-    "Total": 3.61
-   },
+   "subscription_by_category": null,
    "lot_size": 178.0,
    "min_investment": 14952.0,
    "fresh_issue_cr": 600.0,
@@ -233,7 +235,6 @@
    "enriched_source": "chittorgarh.com",
    "enriched_url": "https://www.chittorgarh.com/ipo/hero-motors-ipo/2225/",
    "ipopremium_url": "https://www.ipopremium.in/view/ipo/1347/hero-motors-ltd",
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Profit grew faster than revenue (26% against 9%), so margins widened rather than bought growth."
    ],
@@ -414,7 +415,7 @@
    "company": "Manika Plastech Limited",
    "price_band": "Rs.40 to Rs.43",
    "close_date": "2026-09-16",
-   "listing_date": null,
+   "listing_date": "Sep 21, 2026",
    "days_since_close": 2,
    "lot_size": 348.0,
    "min_investment": 14964.0,
@@ -443,13 +444,6 @@
    "enriched_source": "chittorgarh.com",
    "issue_size_cr": 125.5,
    "enriched_url": "https://www.chittorgarh.com/ipo/manika-plastech-ipo/2483/",
-   "ipopremium_url": "https://www.ipopremium.in/view/ipo/1341/manika-plastech-ltd",
-   "subscription_by_category": {
-    "QIB": 11.22,
-    "HNI": 66.58,
-    "Total": 29.46
-   },
-   "category_source": "ipopremium.in",
    "reads_for": [
     "Priced at 9.6x post-issue earnings against a 38x median for its 3 listed peers \u2014 a discount of more than 30% to the group it will trade beside.",
     "Profit grew faster than revenue (16% against 6%), so margins widened rather than bought growth."

@@ -1,5 +1,5 @@
 {
- "build_id": "20260918T090456",
+ "build_id": "20260918T092244",
  "date": "2026-09-18",
  "date_str": "Friday, September 18 2026",
  "picks": [
@@ -779,7 +779,7 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "15h old",
+    "age": "16h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
@@ -1325,7 +1325,7 @@
    "shows": 20,
    "source": "each channel's public Atom feed",
    "built_on": "2026-09-17",
-   "age_days": 0.0,
+   "age_days": 0.1,
    "is_fallback": false
   },
   "smart_reads": [
@@ -1336,7 +1336,17 @@
     "link": "https://www.livemint.com/money/personal-finance/mutual-funds-with-the-highest-bse-exposure-could-we-see-a-major-reshuffle-after-nses-listing-experts-weigh-in-11789670064292.html",
     "summary": "NSE's upcoming listing could have implications for mutual funds that already hold BSE. While some index funds may see no immediate change, active and thematic funds could reassess their exposure. Here are the schemes with the highest BSE holdings and what investors need to watch.",
     "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T19:42:10+00:00"
+    "_sort": "2026-09-17T19:42:10+00:00",
+    "smart": {
+     "what_happened": [
+      "NSE's upcoming listing may affect mutual funds that currently hold large positions in BSE.",
+      "Index funds might see little immediate change, while active and thematic funds could reassess their BSE exposure."
+     ],
+     "why_it_matters": "The listing of NSE introduces a new major exchange that could shift trading volume and liquidity away from BSE, prompting fund managers to evaluate portfolio risk and performance implications. A reallocation by active and thematic funds could influence the demand for BSE securities and affect market dynamics for both exchanges.",
+     "what_to_watch": "Monitor the disclosed BSE exposure percentages of the top five mutual fund schemes in their next quarterly filings after the NSE listing.",
+     "headline": "Mutual funds with highest BSE holdings face potential reshuffle after NSE listing",
+     "read_seconds": 23
+    }
    },
    {
     "source": "ET Opinion",
@@ -1348,11 +1358,11 @@
     "_sort": "2026-09-17T17:43:38+00:00",
     "smart": {
      "what_happened": [
-      "The pilot tokenised bond issuance successfully settled transactions on a distributed ledger.",
-      "The tokenisation improved issuance efficiency and removed settlement risks for domestic investors."
+      "The pilot tokenised bond issuance in India successfully settled transactions on a distributed ledger, improving issuance efficiency and removing settlement risks for domestic investors.",
+      "The tokenisation model is presented as a way to broaden foreign capital access to Indian credit markets, allowing global investors to hold Indian bonds."
      ],
-     "why_it_matters": "The settlement demonstrates that blockchain technology can streamline bond issuance and reduce traditional settlement risks, potentially making Indian credit markets more attractive to a broader pool of investors and enhancing overall market efficiency.",
-     "what_to_watch": "The settlement of the next tokenised bond issuance in India",
+     "why_it_matters": "The successful settlement demonstrates that blockchain technology can streamline bond issuance and reduce settlement risk, which could make Indian debt instruments more attractive to both domestic and overseas investors, potentially expanding the pool of capital available to fund India's financing needs.",
+     "what_to_watch": "The next regulatory filing or approval for a follow\u2011on tokenised bond issuance in India.",
      "headline": "India's pilot tokenised bond issuance settles on distributed ledger",
      "read_seconds": 26
     }
@@ -1364,17 +1374,7 @@
     "link": "https://www.themarginalian.org/2026/09/17/george-kubler-actuality/",
     "summary": "Sitting atop a Spanish mesa one sweltering August night, watching the Perseid meteor showers streak the sky with the debris of a comet burning through the atmosphere against the backdrop of a billion dead stars whose signal light is only now reaching us, I found myself trembling with the parallel to life itself: The gr",
     "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T16:38:16+00:00",
-    "smart": {
-     "what_happened": [
-      "The article reflects on observations made while watching the Perseid meteor shower on a Spanish mesa during an August night.",
-      "It draws a parallel between the meteor shower and life, contemplating the signal of existence."
-     ],
-     "why_it_matters": "The piece uses a vivid astronomical scene to illustrate philosophical considerations about reality versus potential, encouraging readers to reflect on how they interpret signals and meaning in their own lives, which can influence personal decision\u2011making and perspective.",
-     "what_to_watch": "Future writings or talks by the author that expand on the theme of interpreting life's signals.",
-     "headline": "Actuality vs. Possibility and How to Hear the Signal of Your Life",
-     "read_seconds": 26
-    }
+    "_sort": "2026-09-17T16:38:16+00:00"
    },
    {
     "source": "Economic Times",
@@ -1386,12 +1386,12 @@
     "_sort": "2026-09-17T11:47:11+00:00",
     "smart": {
      "what_happened": [
-      "The Employees Provident Fund increased the wage ceiling to Rs 25,000.",
-      "The higher ceiling will raise monthly pension amounts for EPS members, especially those with longer service."
+      "The Employees Provident Fund wage ceiling has been increased to Rs 25,000.",
+      "EPS members will see higher monthly pensions, with larger gains for those with longer service periods."
      ],
-     "why_it_matters": "The increase in the wage ceiling directly boosts the pension calculations for Employees Pension Scheme members, leading to higher retirement income. Because pension benefits are based on average salary and years of pensionable service, a higher ceiling benefits long\u2011tenured employees the most, improving retirement security for a sizable portion of the workforce.",
-     "what_to_watch": "Track the EPS monthly pension statements released after the change to verify the actual increase in payouts.",
-     "headline": "EPS wage ceiling raised to Rs 25,000, increasing monthly pensions",
+     "why_it_matters": "The higher wage ceiling raises the basis used to calculate EPS pensions, meaning retirees and near\u2011retirees will receive larger monthly payouts. Since pension amounts are tied to average salary and years of pensionable service, the change benefits long\u2011tenured employees the most, potentially improving retirement income stability for a significant segment of the workforce.",
+     "what_to_watch": "The first EPS pension statements issued after the ceiling change, showing the revised monthly amounts for members.",
+     "headline": "Employees Provident Fund wage ceiling raised to Rs 25,000 affecting EPS pensions",
      "read_seconds": 26
     }
    },
@@ -1405,12 +1405,12 @@
     "_sort": "2026-09-16T22:59:04+00:00",
     "smart": {
      "what_happened": [
-      "The Health Department has not decided whether to provide Covid vaccines to states through the Vaccines for Children program.",
-      "The program serves uninsured and low\u2011income families, leaving many children without access to the shots."
+      "The Health Department has not decided to provide Covid shots to states through the Vaccines for Children program.",
+      "Consequently, Covid vaccinations are delayed for about half of U.S. children."
      ],
-     "why_it_matters": "The lack of a decision means a significant portion of U.S. children, particularly those from uninsured or low\u2011income households, may experience delayed vaccination, potentially increasing the risk of Covid outbreaks and widening health disparities.",
-     "what_to_watch": "Monitor the Health Department's upcoming decision on including Covid vaccines in the Vaccines for Children program.",
-     "headline": "Health Department delays Covid shots for half of U.S. children",
+     "why_it_matters": "The delay affects uninsured and low\u2011income families who rely on the Vaccines for Children program, potentially leaving a large segment of the child population unprotected and hindering broader public\u2011health goals such as herd immunity.",
+     "what_to_watch": "The Health Department's announcement on whether to supply Covid vaccines through the Vaccines for Children program.",
+     "headline": "Covid vaccines delayed for half of U.S. children",
      "read_seconds": 20
     }
    },
@@ -1421,17 +1421,7 @@
     "link": "https://psyche.co/ideas/terminal-lucidity-when-dying-dementia-patients-regain-awareness",
     "summary": "The reports span centuries and cultures. If they\u2019re real, memory and identity might be far more recoverable than we thought- by Ariel Zeleznikow-JohnstonRead on Psyche",
     "date": "Sep 16, 2026",
-    "_sort": "2026-09-16T10:00:00+00:00",
-    "smart": {
-     "what_happened": [
-      "Reports of terminal lucidity in dementia patients have been documented across centuries and cultures.",
-      "The phenomenon suggests memory and identity may be more recoverable than previously believed."
-     ],
-     "why_it_matters": "If terminal lucidity is a real phenomenon, it challenges current assumptions about the irreversibility of memory loss in advanced dementia, opening new avenues for neuroscience research into brain resilience and potentially informing end\u2011of\u2011life care practices.",
-     "what_to_watch": "Monitor upcoming peer\u2011reviewed case reports or studies on terminal lucidity in dementia patients for further evidence.",
-     "headline": "Dying dementia patients sometimes regain awareness, reports span centuries",
-     "read_seconds": 20
-    }
+    "_sort": "2026-09-16T10:00:00+00:00"
    },
    {
     "source": "Peter Attia",
@@ -1479,7 +1469,7 @@
     "moves": 36,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen; avoid 3\u2026Qb6, instead play 3\u2026Nf6 to contest the center and reduce opponent\u2019s tempo.",
+    "analysis": "Focus on early piece activity: after 1.e4 e5\u202f2.Nf3 d6, develop the bishop to\u202fBb5\u202finstead of passive \u2026Nf6, preventing White\u2019s central buildup and saving 30\u202fseconds per move.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1585,7 +1575,7 @@
     "moves": 36,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early king safety: castle by move\u202f8, avoid leaving the king on f1 after 7\u2026Nf6; your queen\u2011side pawn storm (c4\u2011b5) wasted time and allowed Black's ...e5 break. Strengthen opening fundamentals to reduce unnecessary piece shuffling.",
+    "analysis": "Focus on early central control: after 1.d4 Nf6 2.Nf3 e6, play 3.c4 (or 3.Nc3) instead of 3.Nc3\u2011e5 ideas; aim for solid pawn structure and avoid passive piece placements that let Black equalize quickly. This will increase your accuracy and reduce unnecessary piece trades.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1619,7 +1609,7 @@
     "moves": 35,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights to f6 and c6 by move\u202f4, castle by move\u202f6, and avoid passive \u2026d6\u2011e5 pawn pushes that waste time. This will reduce your average centipawn loss from ~30\u202fcp to under 15\u202fcp.",
+    "analysis": "Focus on the Philidor\u2019s central pawn break: play ...d5 earlier (by move\u202f12) instead of passive ...c6, gaining space and preventing White\u2019s strong e4\u2011e5 thrust.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1653,7 +1643,7 @@
     "moves": 23,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: after 9.Nc3, you left the d4\u2011pawn unprotected, allowing Black to trade queens with \u2026Qxd4. Strengthen central control and avoid unnecessary queen exchanges.",
+    "analysis": "Focus on early queen development: avoid bringing the queen out before completing piece coordination; it cost you ~0.6\u202fcp\u202fper move and gave Black unnecessary tempo. Strengthen opening fundamentals first.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1686,7 +1676,7 @@
     "moves": 49,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Increase endgame precision: practice king\u2011and\u2011pawn versus king positions to convert 1\u2011pawn advantages within 15 moves, reducing average loss\u202f\u2248\u202f0.45\u202fpawns.",
+    "analysis": "Focus on early piece coordination: develop knights to f6/c6 before pushing ...e5; avoid unnecessary queen moves that waste tempo and expose king.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1720,7 +1710,7 @@
     "moves": 37,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on the early queen\u2011side pawn structure: after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4, you repeatedly allowed \u2026Nd7\u2011f6\u2011g4, losing time. Strengthen move\u2011order (e.g., 5.Nf3 instead of 6.Ng5) to keep the knight active and avoid unnecessary queen\u2011side concessions.",
+    "analysis": "Focus on early queen\u2011side development: after 1.e4 c6 2.d4 d5, play 3.Nc3 (or 3.Nd2) instead of 3.f3, saving tempo and preventing cramped positions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1810,14 +1800,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your Philidor is a joke\u201450\u202f% against identical opposition proves you\u2019re only scraping draws by luck, not skill. Stop playing 1.e4 e5\u202f2.Nf3\u202fd6; learn a solid main\u2011line (e.g., 3.d4 exd4\u202f4.Nxd4 Nf6\u202f5.Nc3) or drop the opening entirely. Spend the next 10\u202fhours drilling basic pawn structures and piece coordination, then re\u2011test; if you can\u2019t push your win rate above 60\u202f% you belong in the beginner pool.",
+   "session_summary": "Your Philidor is a joke\u2014half the time you\u2019re just handing the opponent a free win, and the other half you\u2019re barely scraping a draw. Stop treating 1\u2026e5\u202f2\u2026d6 as a \u201csolid\u201d system; study the main\u2011line 3\u2026exd4 4.Nxd4 Nf6 5.Nc3 Be7 and the immediate \u2026c5 break to fight for the centre, then practice the resulting pawn structures until they become second nature. From now on, replace every Philidor game with a vetted anti\u2011Sicilian (e.g., the Grand Prix Attack) until you can consistently convert at least a 60\u202f% win rate.",
    "session_date": "2026-09-17",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "lpmqI",
-   "rating": 1914,
+   "rating": 1925,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In2 \u00b7 Middlegame \u00b7 Short",
    "tip": "Force mate in two. Find the move that limits all their responses.",
