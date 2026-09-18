@@ -116,6 +116,18 @@ ENGINE_VERSION = "v2"
 # holding horizon, and the resulting stop-out rate. They are stated because an
 # engine's rule means little without the evidence that the rule is sane.
 REMARKS = {
+    # PIVOT had no entry here, so engine_rule() returned "" for it and an
+    # alert naming PIVOT would have carried no explanation at all — the one
+    # thing every other engine's message does. Caught by test_alert_pipeline's
+    # "every named engine can explain itself" the moment pivot was added to
+    # the Python name map on 2026-09-19; it had been absent from that map
+    # entirely, so the gap had never been reachable before.
+    "pivot":            "Reaction at a level — daily horizon. Takes price AT a level the "
+                        "market has already reacted to (the 200-day, the top of a multi-week "
+                        "shelf, or a swing high being retested) rather than price breaking "
+                        "away from one, and requires the higher timeframe to agree and the "
+                        "session to confirm. Research tier: logged and published, never "
+                        "alerted, with no closed trade and no measured expectancy yet.",
     "cf_1h":            "Commodity 1h channel scan — intraday horizon. Entry on the 1h bar, "
                         "gated by 4H EMA alignment and RSI 45-75 long / 25-55 short; targets "
                         "from swing pivots and day levels, R:R measured not asserted; stop is "

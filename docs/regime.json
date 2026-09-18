@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "generated_at": "2026-09-18T17:16:28+00:00",
+  "generated_at": "2026-09-18T17:52:55+00:00",
   "today": {
     "regime": "calm_range",
     "close": 23346.4,
@@ -50,10 +50,10 @@
   "measured": {
     "cells": {
       "calm_range": {
-        "n": 12,
-        "avg_r": -0.787,
-        "win_rate": 8.3,
-        "t": -2.59,
+        "n": 11,
+        "avg_r": -0.723,
+        "win_rate": 9.1,
+        "t": -2.22,
         "readable": true,
         "engines": [
           {
@@ -63,6 +63,16 @@
             "avg_r": -0.564,
             "win_rate": 14.3,
             "t": -1.1,
+            "trusted": false,
+            "readable": false
+          },
+          {
+            "engine": "multibagger",
+            "n": 1,
+            "retired": null,
+            "avg_r": -1.0,
+            "win_rate": 0.0,
+            "t": null,
             "trusted": false,
             "readable": false
           },
@@ -85,39 +95,24 @@
             "t": null,
             "trusted": false,
             "readable": false
-          },
-          {
-            "engine": "magic",
-            "n": 1,
-            "retired": null,
-            "avg_r": -1.0,
-            "win_rate": 0.0,
-            "t": null,
-            "trusted": false,
-            "readable": false
-          },
-          {
-            "engine": "equity_measured",
-            "n": 1,
-            "retired": null,
-            "avg_r": -1.5,
-            "win_rate": 0.0,
-            "t": null,
-            "trusted": false,
-            "readable": false
           }
         ]
       }
     },
     "unlabelled_trades": 0,
-    "excluded_non_nse": 400,
-    "excluded_retired": 68,
-    "excluded_pre_launch": 162,
+    "excluded_non_nse": 0,
+    "excluded_retired": 151,
+    "excluded_not_published": 436,
+    "excluded_short": 0,
+    "excluded_pre_launch": 139,
     "launch": "2026-09-02",
     "retired_engines": [
       "4h",
       "ai_4h",
       "ai_daily",
+      "ai_longterm",
+      "equity_measured",
+      "magic",
       "ohl"
     ],
     "population": "NSE equities only"

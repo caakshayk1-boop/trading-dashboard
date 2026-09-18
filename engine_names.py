@@ -40,6 +40,7 @@ import json as _json
 
 # key → (published name, what it hunts, the clock it runs on, band or None)
 ENGINE_NAMES = {
+    "pivot":           ("PIVOT",  "Reaction at a level","Daily → weeks",      None),
     "breakout":        ("BREACH", "Breakouts",        "Daily → weeks",        None),
     "magic":           ("TIDAL",  "Recovery",         "Weekly → months",      ">15% off the high"),
     "magicmagic":      ("TIDAL",  "Recovery",         "Weekly → months",      "20–40% off the high"),
@@ -49,6 +50,7 @@ ENGINE_NAMES = {
     "ai_longterm":     ("NORTH",  "Long horizon",     "Weekly → months",      None),
     "ledge":           ("LEDGE",  "Base breakout",    "Daily → weeks",        "≥12% off the high"),
     "keel":            ("KEEL",   "Divergence turn",  "Daily → weeks",        "≥12% off the high"),
+    "intraday":        ("GUST",   "Intraday momentum","15-minute → the close",  None),
     # Research floor — measured, published, NOT cleared to file signals. Named
     # here so an alert that somehow carries one is still legible rather than
     # printing a raw key; the site keeps them off /signals and /engines.
@@ -56,6 +58,46 @@ ENGINE_NAMES = {
     "anchor":          ("ANCHOR",  "Floor reversal",  "Daily → weeks",        None),
     "bedrock":         ("BEDROCK", "Bottom reversal", "Daily → weeks",        None),
 }
+
+# ── WHICH OF THOSE ARE STILL RUNNING ─────────────────────────────────────────
+#
+# A NAME IS PERMANENT; A FLOOR SLOT IS NOT. An engine that is switched off
+# keeps its entry above, because its closed trades stay in the ledger forever
+# and must keep rendering as a name rather than as a key. What changes is
+# whether this site COUNTS it: a retired engine is out of the published
+# record, out of the roster, and out of the regime table.
+#
+# THIS MAP EXISTS BECAUSE ONE FACT WAS WRITTEN IN THREE PLACES AND TWO WENT
+# STALE. On 2026-09-19 signal.js had retired magic, equity_measured and
+# ai_longterm; regime.py's own RETIRED still listed only four intraday-era
+# keys from August; and this module still carried `intraday` as ledger-only
+# although the site had promoted it to GUST. What a reader saw was a front
+# page reporting 65 published / 12 closed / 8.3% -- twenty rows of it from
+# engines the same page said were retired -- beside a regime panel reporting
+# 11 closed / 9.1% on a different population, with nothing to say which was
+# the record. Neither was.
+#
+# regime.py imports this, and so does anything else that needs to know. The
+# dates match the JS registry, which test_engine_names.py now asserts rather
+# than trusts.
+RETIRED = {
+    "magic":           "2026-09-18",   # TIDAL's shallow band; magicmagic keeps the name
+    "equity_measured": "2026-09-18",   # PLUMB -- 16 closed, -0.535R, t=-2.92
+    "ai_longterm":     "2026-09-18",   # NORTH -- no closed trade, no measured basis
+    "ohl":             "2026-09-17",
+    "4h":              "2026-08-01",
+    "ai_4h":           "2026-07-29",
+    "ai_daily":        "2026-07-29",
+}
+
+# The research floor: measured and published, never cleared to file a signal.
+RESEARCH = ("buoy", "anchor", "bedrock")
+
+# What this site publishes TODAY -- derived, because a second hand-written
+# list is the exact thing this block exists to stop.
+LIVE = {k: v for k, v in ENGINE_NAMES.items()
+        if k not in RETIRED and k not in RESEARCH}
+
 
 # Engines that exist in the ledger but are not on the published floor. They are
 # named rather than hidden: a row from one of them must still read as something
@@ -66,7 +108,6 @@ LEDGER_ONLY = {
     "cf_1h":          "Commodity 1h channel",
     "commodity":      "Commodity scan",
     "ohl":            "Open-High-Low intraday",
-    "intraday":       "Intraday scan",
     "4h":             "4-hour scan",
     "ai_4h":          "AI 4-hour",
     "ai_daily":       "AI daily",
@@ -156,7 +197,13 @@ def is_published_engine(signal_type) -> bool:
     shown, and nothing they produce is filed as a signal.
     """
     k = str(signal_type or "").strip()
-    return k in ENGINE_NAMES and k not in RESEARCH_ONLY
+    # AND NOT RETIRED. This read `k in ENGINE_NAMES and k not in RESEARCH_ONLY`
+    # and so kept counting switched-off engines: on 2026-09-19 published_tally
+    # returned 10 names over 11 keys while the site — correctly — said eight.
+    # It is the same "count every key in the registry" error that had put
+    # retired engines back into the front page's own record, made twice,
+    # independently, in two languages.
+    return k in ENGINE_NAMES and k not in RESEARCH_ONLY and k not in RETIRED
 
 
 # The research floor: measured, published on /research, and NOT cleared to
