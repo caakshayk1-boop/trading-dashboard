@@ -58,6 +58,29 @@ on:
                                  # two hours after the bell, so every close is
                                  # final: measurement, not tradeable alerts.
     - cron: '0 4 * * 6'          # 09:30 IST — Saturday full + multibaggers
+    # ── THE MIDDAY SLOT, WHICH DID NOT EXIST ────────────────────────────────
+    #
+    # standalone_scan has run `if slot == "midday": run_intraday_scan(...)`
+    # since 2026-09-17, and NOTHING has ever produced a midday slot — no cron
+    # here, no arm in the case block below, and the Cloudflare watchdog
+    # dispatches only eod and weekend. The engine with the best record on the
+    # board (17 closed, +1.472R, t=3.69) has never once run.
+    #
+    # 06:15 UTC is 11:45 IST. It is a 15-minute momentum engine, so it has to
+    # read a bar the session can still trade into — the eod slot every other
+    # engine uses is the one slot this one is useless in, because a push
+    # identified after 15:30 has nothing to trade into.
+    #
+    # It sends NOTHING. It is research tier, engine_names.may_alert refuses it,
+    # and the run writes the ledger and records sent=False with the reason. So
+    # this cron costs one Actions run and adds no message to anybody's phone —
+    # which is the only basis on which an unproven engine gets to run at all.
+    #
+    # 06:00 UTC is 11:30 IST, and that number is set by the drift, not by taste:
+    # test_engine_regressions requires a weekday cron to still leave an hour of
+    # session after the full 3h this repo observes. 11:30 + 3h = 14:30, close
+    # 15:30. 11:45 fails that by fifteen minutes and the test said so.
+    - cron: '0 6 * * 1-5'        # 11:30 IST — midday: the intraday engine only
     # US positions, graded after the US close and delivered in the IST morning.
     #
     # Before this, US names were graded by the 16:30 IST end-of-day slot: on
@@ -216,6 +239,7 @@ jobs:
             "0 14 * * 1-5") SLOT=eod     ;;
             "0 16 * * 1-5") SLOT=eod     ;;
             "0 4 * * 6")    SLOT=weekend ;;
+            "0 6 * * 1-5")  SLOT=midday  ;;
             *)              SLOT=""      ;;
           esac
           # An explicit dispatch input always wins over the cron table, but it

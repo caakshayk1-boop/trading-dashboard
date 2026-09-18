@@ -109,6 +109,46 @@ def main():
     for slot in ("full", "weekend", "holiday", "momentum", "nonsense"):
         check(f"{slot!r} is never window-gated", _before(slot, Clock(3, 0)), False)
 
+    # ── THE CHECK THAT DID NOT EXIST ────────────────────────────────────────
+    #
+    # On 2026-09-17 the intraday engine was wired to `if slot == "midday"`, and
+    # nothing produced a midday slot: no cron arm here, none in the watchdog.
+    # The engine with the best record on the board ran zero times in nine days
+    # and nothing anywhere said so — the branch looked exactly like the branch
+    # on `eod`, which has three arms.
+    #
+    # A slot the code BRANCHES on must be declared, and a slot declared
+    # SCHEDULED must have an arm in the case block, or it is dead wiring.
+    import re as _re
+    src = open(SRC).read()
+    ns = {}
+    for name in ("SCHEDULED_SLOTS", "ON_DEMAND_SLOTS", "DERIVED_SLOTS"):
+        m = _re.search(rf"^{name} = \{{.*?^\}}", src, _re.S | _re.M)
+        check(f"{name} is declared in {SRC}", m is not None, True)
+        if m:
+            exec(m.group(0), ns)
+    declared = set(ns.get("SCHEDULED_SLOTS", {})) | set(ns.get("ON_DEMAND_SLOTS", {})) \
+        | set(ns.get("DERIVED_SLOTS", {}))
+
+    # Every slot the dispatcher branches on must be one of the three kinds.
+    branched = set(_re.findall(r"slot == [\"'](\w+)[\"']", src)) \
+        | set(_re.findall(r"slot in \(([^)]*)\)", src)) and set(
+            _re.findall(r"slot == [\"'](\w+)[\"']", src))
+    for extra in _re.findall(r"slot in \(([^)]*)\)", src):
+        branched |= set(_re.findall(r"[\"'](\w+)[\"']", extra))
+    undeclared = sorted(branched - declared)
+    check("every slot the code branches on is declared", undeclared, [])
+
+    # And every SCHEDULED slot must actually be produced by the workflow.
+    wf = open(".github/workflows/daily_scan.yml").read()
+    armed = set(_re.findall(r"\)\s*SLOT=(\w+)", wf))
+    unscheduled = sorted(set(ns.get("SCHEDULED_SLOTS", {})) - armed)
+    check("every SCHEDULED slot has a cron arm (the GUST bug)", unscheduled, [])
+
+    # The reverse: an arm for a slot nothing declares is a typo waiting to run.
+    stray = sorted(armed - declared)
+    check("no cron arm names an undeclared slot", stray, [])
+
     print(f"\n{passed} passed · {failed} failed")
     return 1 if failed else 0
 
