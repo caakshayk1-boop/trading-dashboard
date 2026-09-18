@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-09-18T05:34:52Z",
- "next_refresh": "2026-09-19T05:34:52Z",
+ "generated_at": "2026-09-18T09:21:45Z",
+ "next_refresh": "2026-09-19T09:21:45Z",
  "sources": [
   {
    "name": "Majid Al Futtaim",
@@ -8,7 +8,7 @@
    "status": "ok",
    "jobs_found": 18,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Chalhoub Group",
@@ -16,7 +16,7 @@
    "status": "ok",
    "jobs_found": 6,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "GMG",
@@ -24,7 +24,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Al-Futtaim",
@@ -32,7 +32,7 @@
    "status": "ok",
    "jobs_found": 40,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Abdul Latif Jameel",
@@ -40,7 +40,7 @@
    "status": "ok",
    "jobs_found": 2,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Landmark Group",
@@ -48,7 +48,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Al Tayer",
@@ -56,7 +56,7 @@
    "status": "ok",
    "jobs_found": 4,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Apparel Group",
@@ -64,14 +64,14 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Emaar",
    "kind": "employer",
-   "status": "ok",
-   "jobs_found": 1,
-   "detail": "",
+   "status": "empty",
+   "jobs_found": 0,
+   "detail": "reachable, but no senior-finance roles matched",
    "last_success": "2026-09-18T05:34:52Z"
   },
   {
@@ -94,9 +94,9 @@
    "name": "Etihad Airways",
    "kind": "employer",
    "status": "ok",
-   "jobs_found": 13,
+   "jobs_found": 14,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Aldar",
@@ -104,7 +104,7 @@
    "status": "ok",
    "jobs_found": 7,
    "detail": "",
-   "last_success": "2026-09-18T05:34:52Z"
+   "last_success": "2026-09-18T09:21:45Z"
   },
   {
    "name": "Alshaya Group",
@@ -159,7 +159,7 @@
    "kind": "aggregator",
    "status": "error",
    "jobs_found": 0,
-   "detail": "listing fetched (17725 chars) but no posting link matched '(https://www\\\\.gulftalent\\\\.com/[a-z\\\\-]+/jobs/[a-z0-9\\\\-]+-\\\\d+)' — page shape changed, or it is behind a login",
+   "detail": "listing fetched (17464 chars) but no posting link matched '(https://www\\\\.gulftalent\\\\.com/[a-z\\\\-]+/jobs/[a-z0-9\\\\-]+-\\\\d+)' — page shape changed, or it is behind a login",
    "last_success": null
   },
   {
@@ -180,21 +180,21 @@
   }
  ],
  "stats": {
-  "total_active": 63,
+  "total_active": 64,
   "high_fit": 6,
   "s_tier": 1,
   "by_country": {
-   "UAE": 53,
+   "UAE": 54,
    "Saudi Arabia": 0,
    "Malaysia": 10,
    "Oman": 0
   },
   "duplicates_removed": 0,
   "stale_removed": 1,
-  "sources_ok": 11,
+  "sources_ok": 10,
   "sources_attempted": 22,
-  "urls_verified": 82,
-  "urls_unverified": 14,
+  "urls_verified": 84,
+  "urls_unverified": 12,
   "urls_broken": 0
  },
  "jobs": [
@@ -211,8 +211,8 @@
    "employment_type": null,
    "posted_date": "2026-08-27",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -305,8 +305,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -417,8 +417,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-07-27",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -522,8 +522,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-26",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -603,8 +603,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -708,8 +708,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-03",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -816,8 +816,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-11",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -912,8 +912,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -997,8 +997,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1096,8 +1096,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-06-10",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1194,8 +1194,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-07",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -1293,8 +1293,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-08-25",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -1386,8 +1386,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-02",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -1480,8 +1480,8 @@
    "employment_type": null,
    "posted_date": "2026-09-12",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1666,8 +1666,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -1749,8 +1749,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-09",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1845,8 +1845,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-26",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -1924,8 +1924,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-10-15",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2101,8 +2101,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -2485,8 +2485,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -2581,8 +2581,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -2676,8 +2676,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al Tayer",
    "sources": [
@@ -2768,8 +2768,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -2949,8 +2949,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": "2026-10-16",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Apparel Group",
    "sources": [
@@ -3035,8 +3035,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-09-03",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Chalhoub Group",
    "sources": [
@@ -3193,8 +3193,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3379,8 +3379,8 @@
    "employment_type": null,
    "posted_date": "2026-09-01",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -3469,8 +3469,8 @@
    "employment_type": null,
    "posted_date": "2026-09-14",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al Tayer",
    "sources": [
@@ -3567,8 +3567,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -4028,8 +4028,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-04-28",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Aldar",
    "sources": [
@@ -4223,7 +4223,7 @@
    "source_url": "https://ae.linkedin.com/jobs/view/finance-and-business-support-manager-holiday-inn-and-suites-dubai-science-park-at-ihg-hotels-resorts-4457790874",
    "application_url": "https://ae.linkedin.com/jobs/view/finance-and-business-support-manager-holiday-inn-and-suites-dubai-science-park-at-ihg-hotels-resorts-4457790874",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4274,7 +4274,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "Sourced via LinkedIn rather than the employer's own site — confirm the role exists directly with the company."
    ],
    "resume_match": null,
    "duplicate_group": "7ad30e894e27b36df7eddb24d49647be3ff15f6c",
@@ -4394,7 +4394,7 @@
    "source_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447257744",
    "application_url": "https://my.linkedin.com/jobs/view/finance-manager-at-dayone-4447257744",
    "is_direct_apply": false,
-   "application_url_verified": false,
+   "application_url_verified": true,
    "source_confidence": "medium",
    "salary_min": null,
    "salary_max": null,
@@ -4454,7 +4454,7 @@
    ],
    "watch_out": [
     "The posting date is not published by the source, so this could be an old req — age is unknown, not fresh.",
-    "The application link could not be confirmed reachable — verify it before relying on it."
+    "SAP is named and his ERP depth is D365, not SAP — expect to address that gap directly."
    ],
    "resume_match": null,
    "duplicate_group": "05d681b40ff89b5dfcb3cb08bddd60b8dc36eb9c",
@@ -4568,8 +4568,8 @@
    "employment_type": "Regular",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Majid Al Futtaim",
    "sources": [
@@ -4662,8 +4662,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-17",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -4855,8 +4855,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-15",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Etihad Airways",
    "sources": [
@@ -5394,8 +5394,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-09",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5482,8 +5482,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5557,6 +5557,99 @@
    ],
    "resume_match": null,
    "duplicate_group": "078cb68e5accf52d8482095f0e5bd2eebf5dd8df",
+   "is_excluded": false,
+   "exclusion_reason": null
+  },
+  {
+   "id": "88060213b9c63ad9e588849c4a13454a7044a8c7",
+   "company": "Etihad Airways",
+   "company_group": "Etihad",
+   "title": "Guest Recovery Controller",
+   "normalized_title": "guest recovery controller",
+   "location": "Abu Dhabi",
+   "country": "UAE",
+   "region": "GCC",
+   "department": "Other",
+   "employment_type": "Full-time",
+   "posted_date": "2026-09-18",
+   "closing_date": null,
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
+   "status": "NEW",
+   "source": "Etihad Airways",
+   "sources": [
+    "Etihad Airways"
+   ],
+   "source_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150279785-guest-recovery-controller",
+   "application_url": "https://jobs.smartrecruiters.com/EtihadAirways5/744000150279785-guest-recovery-controller?oga=true",
+   "is_direct_apply": true,
+   "application_url_verified": true,
+   "source_confidence": "high",
+   "salary_min": null,
+   "salary_max": null,
+   "salary_currency": null,
+   "experience_min": 5,
+   "experience_max": null,
+   "description": "Shape the Journey When It Matters Most\n At Etihad , every journey matters. As a Guest Recovery Controller , you'll play a vital role in keeping our operation running smoothly during disruptions, ensuring guests reach their destinations with minimal impact while supporting the integrity of our network.\n Working in a fast-paced 24/7 environment, you'll make real-time decisions, coordinate with teams across the network, and deliver effective recovery solutions that balance guest experience with operational and commercial priorities.\n Key Responsibilities \n Manage passenger re-accommodation during flight disruptions, minimizing guest impact while considering operational and cost implications.\n Assess the network impact of delays and support decisions that optimize connections and schedule recovery.\n Execute contingency plans and provide accurate reporting on disruptions, passenger recovery, and operational outcomes.\n Work closely with Alliances, Airport Operations, Network Operations, and Revenue Management to deliver the best recovery solutions.\n Monitor and manage overbooked flights, developing solutions to reduce denied boarding risks.\n Support airport teams with denied boarding recovery and disruption management across the network.\n Ensure accurate reporting of passenger transfers to other airlines and management reporting requirements.\n Identify opportunities to improve disruption management processes and contribute to operational best practices.\n What We're Looking For? \n Availability to work 24/7 shift patterns, including nights, weekends, and public holidays.\n Experience using Reservations, Ticketing, or Departure Control Systems (DCS), including platforms such as Amadeus, Sabre, Altéa, or equivalent systems.\n Proven experience in airport operations, disruption management, guest recovery, or service recovery.\n Strong understanding of passenger handling, flight disruptions, re-accommodation processes, and operational decision-making.\n Why Join Us? \n This is an exciting opportunity to work at the heart of a global airline operation, where your decisions have a direct impact on our guests, our people, and our performance. If you thrive under pressure, enjoy solving complex challenges, and are passionate about delivering exceptional guest outcomes, we'd love to hear from you.\n\nEducation & Experience: \n Minimum High School Certificate.\n Bachelor's degree or equivalent qualification preferred.\n 5+ years of operational experience, with at least 3 years within an airline operations, airport operations, or hub environment.\n For Internal Applicants: \n Minimum of 2 years' experience in a Reservations or Check-in role.\n Strong working knowledge of Reservations and Check-in systems.\n\nEtihad Airways is more than the UAE’s national airline - we’re shaping the future of global aviation. From our hub in Abu Dhabi, we connect people across continents and cultures, while driving our “Journey 2030” ambition to double our fleet, expand our network and grow our people for a new era of excellence. Join us and become part of a vision where the world is your workplace and extraordinary experiences take flight.\n To learn more visit www.etihad.com \n Recruitment Fraud Alert \n\nBeware of fraudulent job offers from individuals or organizations claiming to represent the Etihad group. We will never ask for personal information, bank details, or payment during the recruitment process. Interviews are conducted face-to-face or via video/telephone before any formal offer. If you are asked for money, please treat it as fraudulent.",
+   "responsibilities": [
+    "Shape the Journey When It Matters Most",
+    "At Etihad , every journey matters. As a Guest Recovery Controller , you'll play a vital role in keeping our operation running smoothly during disruptions, ensuring guests reach their destinations with minimal impact while supporting the integrity of our network",
+    "Working in a fast-paced 24/7 environment, you'll make real-time decisions, coordinate with teams across the network, and deliver effective recovery solutions that balance guest experience with operational and commercial priorities",
+    "Key Responsibilities",
+    "Manage passenger re-accommodation during flight disruptions, minimizing guest impact while considering operational and cost implications",
+    "Assess the network impact of delays and support decisions that optimize connections and schedule recovery",
+    "Execute contingency plans and provide accurate reporting on disruptions, passenger recovery, and operational outcomes",
+    "Work closely with Alliances, Airport Operations, Network Operations, and Revenue Management to deliver the best recovery solutions",
+    "Monitor and manage overbooked flights, developing solutions to reduce denied boarding risks",
+    "Support airport teams with denied boarding recovery and disruption management across the network",
+    "Ensure accurate reporting of passenger transfers to other airlines and management reporting requirements",
+    "Identify opportunities to improve disruption management processes and contribute to operational best practices",
+    "What We're Looking For?",
+    "Availability to work 24/7 shift patterns, including nights, weekends, and public holidays",
+    "Experience using Reservations, Ticketing, or Departure Control Systems (DCS), including platforms such as Amadeus, Sabre, Altéa, or equivalent systems",
+    "Proven experience in airport operations, disruption management, guest recovery, or service recovery",
+    "Strong understanding of passenger handling, flight disruptions, re-accommodation processes, and operational decision-making",
+    "This is an exciting opportunity to work at the heart of a global airline operation, where your decisions have a direct impact on our guests, our people, and our performance. If you thrive under pressure, enjoy solving complex challenges, and are passionate about delivering exceptional guest outcomes, we'd love to hear from you"
+   ],
+   "requirements": [
+    "Minimum High School Certificate",
+    "Bachelor's degree or equivalent qualification preferred",
+    "5+ years of operational experience, with at least 3 years within an airline operations, airport operations, or hub environment",
+    "Minimum of 2 years' experience in a Reservations or Check-in role",
+    "Strong working knowledge of Reservations and Check-in systems"
+   ],
+   "skills": [
+    "Excel"
+   ],
+   "nationality_requirement": null,
+   "work_authorization_requirement": null,
+   "emiratisation_requirement": false,
+   "saudization_requirement": false,
+   "candidate_fit_score": 42,
+   "employer_score": 55,
+   "career_upside_score": 36,
+   "opportunity_score": 44,
+   "score_breakdown": {
+    "seniority": 15,
+    "functional": 7,
+    "industry": 6,
+    "geographic": 10,
+    "scope": 0,
+    "leadership": 0,
+    "qualification": 0,
+    "upside": 4
+   },
+   "tier": "D",
+   "application_priority": "SKIP",
+   "why_fit": [
+    "Core FP&A remit — he runs budgeting, forecasting and variance analysis on an MYR 400M+ P&L as FP&A Manager at Lifestyle Retail Malaysia (Landmark Group) since May 2023.",
+    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group."
+   ],
+   "watch_out": [
+    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
+   ],
+   "resume_match": null,
+   "duplicate_group": "fa1fbe7ce117f57d711fefadf7c9bb8eb91f07df",
    "is_excluded": false,
    "exclusion_reason": null
   },
@@ -5653,8 +5746,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5734,8 +5827,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-09-08",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Etihad Airways",
    "sources": [
@@ -5816,8 +5909,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-29",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5889,8 +5982,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-07-28",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Etihad Airways",
    "sources": [
@@ -5991,8 +6084,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6093,8 +6186,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-11-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6171,8 +6264,8 @@
    "employment_type": "Experienced hires",
    "posted_date": "2026-09-01",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Aldar",
    "sources": [
@@ -6267,8 +6360,8 @@
    "employment_type": null,
    "posted_date": "2026-08-23",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -6358,8 +6451,8 @@
    "employment_type": null,
    "posted_date": "2026-09-17",
    "closing_date": "2026-10-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6437,8 +6530,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-10-10",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6516,8 +6609,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6607,8 +6700,8 @@
    "employment_type": null,
    "posted_date": "2026-09-10",
    "closing_date": "2027-02-23",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -6700,8 +6793,8 @@
    "employment_type": null,
    "posted_date": "2026-09-13",
    "closing_date": "2026-10-14",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6792,8 +6885,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Landmark Group",
    "sources": [
@@ -6889,8 +6982,8 @@
    "employment_type": null,
    "posted_date": "2026-09-15",
    "closing_date": "2026-09-29",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -6977,8 +7070,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7067,8 +7160,8 @@
    "employment_type": null,
    "posted_date": "2026-08-06",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Aldar",
    "sources": [
@@ -7157,8 +7250,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-06-25",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "GMG",
    "sources": [
@@ -7227,8 +7320,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-13",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -7303,8 +7396,8 @@
    "employment_type": null,
    "posted_date": "2026-09-05",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7394,8 +7487,8 @@
    "employment_type": null,
    "posted_date": "2026-09-03",
    "closing_date": "2026-09-20",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7483,8 +7576,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7575,8 +7668,8 @@
    "employment_type": null,
    "posted_date": "2026-09-04",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -7665,8 +7758,8 @@
    "employment_type": null,
    "posted_date": "2026-07-14",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Apparel Group",
    "sources": [
@@ -7750,8 +7843,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-01",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -7842,8 +7935,8 @@
    "employment_type": null,
    "posted_date": "2026-08-24",
    "closing_date": "2026-10-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Al-Futtaim",
    "sources": [
@@ -7934,8 +8027,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-12-31",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8024,8 +8117,8 @@
    "employment_type": "Full-Time",
    "posted_date": "2026-07-22",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "STALE",
    "source": "Chalhoub Group",
    "sources": [
@@ -8094,8 +8187,8 @@
    "employment_type": null,
    "posted_date": "2026-09-16",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8184,8 +8277,8 @@
    "employment_type": null,
    "posted_date": "2026-08-31",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -8274,8 +8367,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8364,8 +8457,8 @@
    "employment_type": null,
    "posted_date": "2026-09-11",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "NEW",
    "source": "Al-Futtaim",
    "sources": [
@@ -8456,8 +8549,8 @@
    "employment_type": null,
    "posted_date": "2026-09-02",
    "closing_date": "2026-09-30",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Al-Futtaim",
    "sources": [
@@ -8546,8 +8639,8 @@
    "employment_type": null,
    "posted_date": "2026-08-17",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Al Tayer",
    "sources": [
@@ -8631,8 +8724,8 @@
    "employment_type": null,
    "posted_date": "2026-09-08",
    "closing_date": "2026-10-31",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "ACTIVE",
    "source": "Apparel Group",
    "sources": [
@@ -8698,82 +8791,6 @@
    "exclusion_reason": "transactional AP/AR/collections role"
   },
   {
-   "id": "9302e19837347e7cc89ef98d6e0c77cc1c3b931e",
-   "company": "Emaar",
-   "company_group": "Emaar",
-   "title": "Receiving Clerk|General Finance (VUQ)",
-   "normalized_title": "receiving clerk general finance vuq",
-   "location": null,
-   "country": "UAE",
-   "region": "GCC",
-   "department": null,
-   "employment_type": null,
-   "posted_date": "2026-09-16",
-   "closing_date": "2026-09-18",
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
-   "status": "NEW",
-   "source": "Emaar",
-   "sources": [
-    "Emaar"
-   ],
-   "source_url": "https://emhm.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/711868/",
-   "application_url": "https://emhm.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/711868/",
-   "is_direct_apply": true,
-   "application_url_verified": true,
-   "source_confidence": "high",
-   "salary_min": null,
-   "salary_max": null,
-   "salary_currency": null,
-   "experience_min": 1,
-   "experience_max": 2,
-   "description": "ABOUT THE FUNCTION \n \n This function is to provide support to the company’s accounting activities that include maintaining and reporting on both the cost and financial sets of accounts based on statutory requirements and auditing policies. Participate in supporting and affirming the service culture and contributing to the improvement process along with complying with the work directives, policies and procedures of the Company. \n \n WHAT YOU WILL NEED TO SUCCEED \n \n Minimum of a high school diploma in Financial Accounting / College degree in Commerce or a related field is preferred. \n\n Minimum of 1 -2 years’ experience in a similar position in a 5-star hospitality company. \n\n Excellent Excel skills and knowledgeable in using Microsoft Financial and IBM Planning Systems \n\n PERFORMANCE DRIVEN CULTURE; WHAT WILL YOU BE MEASURED AGAINST \n Compliance with Financial and Cost Accounting Systems and Financial Policies and procedure of the Company \n\n Managing the day to day accounting and internal financial reporting. \n Pro-active communication with fellow Ambassadors, Vendors, and Suppliers always with Company’s interests in mind. \n\n COMPETENCIES \n \n Put Customer First \n\n Drive for Results \n\n Learning \n\n Resilience \n\n Adaptability \n\n WHAT WE BELIEVE IN \n \n At Emaar, our DNA lays the foundation for everything we do. It forms the base of how we serve our customers, how we speak with one another, and the way we move forward in every decision we make. In short, it is the essence of who we are and how we communicate. \n \n Customer Focus \n Customers are our number one priority. We take pride in delivering on our promises and above all we value the trust they place in us to deliver flawless products, services and experiences. \n \n Ownership Mindset \n No detail is too small, no challenge is too big and no ambition is too great. We drive efficiency and effectiveness into every corner of our business, so we are fit for the future and to compete. \n \n Fast Paced \n Speed is everything in business. We evolve and adapt quickly and have the willpower, skills, knowledge and passion needed to deliver extraordinary speed for our customers. \n \n Talent and Tenacity \n Our people are heroes, superhumans and warriors. We are a team of great pooled talent that dream big and act quickly, with high energy and positivity. \n \n Adaptability \n We keep up with the times, disrupting and challenging the status quo. We challenge conventional wisdom and ourselves, we expect the unexpected, and we develop products and services that reflect the future. \n\n PERFORMANCE DRIVEN CULTURE; WHAT WILL YOU BE MEASURED AGAINST \n Compliance with Financial and Cost Accounting Systems and Financial Policies and procedure of the Company \n\n Managing the day to day accounting and internal financial reporting. \n Pro-active communication with fellow Ambassadors, Vendors, and Suppliers always with Company’s interests in mind. \n\n WHAT YOU WILL NEED TO SUCCEED \n \n Minimum of a high school diploma in Financial Accounting / College degree in Commerce or a related field is preferred. \n\n Minimum of 1 -2 years’ experience in a similar position in a 5-star hospitality company. \n\n Excellent Excel skills and knowledgeable in using Microsoft Financial and IBM Planning Systems",
-   "responsibilities": [
-    "Compliance with Financial and Cost Accounting Systems and Financial Policies and procedure of the Company",
-    "Managing the day to day accounting and internal financial reporting",
-    "Pro-active communication with fellow Ambassadors, Vendors, and Suppliers always with Company’s interests in mind"
-   ],
-   "requirements": [
-    "Minimum of a high school diploma in Financial Accounting / College degree in Commerce or a related field is preferred",
-    "Minimum of 1 -2 years’ experience in a similar position in a 5-star hospitality company",
-    "Excellent Excel skills and knowledgeable in using Microsoft Financial and IBM Planning Systems"
-   ],
-   "skills": [
-    "Excel"
-   ],
-   "nationality_requirement": null,
-   "work_authorization_requirement": null,
-   "emiratisation_requirement": false,
-   "saudization_requirement": false,
-   "candidate_fit_score": 28,
-   "employer_score": 88,
-   "career_upside_score": 50,
-   "opportunity_score": 46,
-   "score_breakdown": {
-    "seniority": 1,
-    "functional": 5,
-    "industry": 6,
-    "geographic": 10,
-    "scope": 0,
-    "leadership": 0,
-    "qualification": 0,
-    "upside": 6
-   },
-   "tier": "D",
-   "application_priority": "SKIP",
-   "why_fit": [
-    "UAE is one of his two target markets, and he is already GCC-adjacent inside a Dubai-headquartered group.",
-    "Nothing further in the posted text matches his record. His lane is retail FP&A — MYR 400M+ P&L across 60+ Max Fashion and Babyshop stores in Malaysia and Indonesia, IFRS/MPERS consolidation, and a D365 ERP implementation. Judge the rest of this role against that."
-   ],
-   "watch_out": [
-    "Sector is outside retail and real estate, so the industry half of his track record does not carry over."
-   ],
-   "resume_match": null,
-   "duplicate_group": "49897f8aa8bbc51463f4d148843e07bd2ae88865",
-   "is_excluded": true,
-   "exclusion_reason": "transactional bookkeeping role"
-  },
-  {
    "id": "2efcc71e8d757e580e376fe7a3b3f47f5d10f736",
    "company": "Etihad Airways",
    "company_group": "Etihad",
@@ -8786,8 +8803,8 @@
    "employment_type": "Full-time",
    "posted_date": "2026-08-26",
    "closing_date": null,
-   "scraped_at": "2026-09-18T05:34:52Z",
-   "last_verified_at": "2026-09-18T05:34:52Z",
+   "scraped_at": "2026-09-18T09:21:45Z",
+   "last_verified_at": "2026-09-18T09:21:45Z",
    "status": "AGING",
    "source": "Etihad Airways",
    "sources": [
