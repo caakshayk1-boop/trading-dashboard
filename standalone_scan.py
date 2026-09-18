@@ -1984,13 +1984,23 @@ def run_intraday_scan(time_str):
     # and none in front. Filing it anyway would grow the forward sample with
     # trades nobody could have entered, which is worse than not running: it
     # makes the record look like evidence.
+    # The clock is injectable because a guard that reads os-time directly makes
+    # every test of this function depend on what time CI happens to run — and a
+    # suite that passes before 14:30 IST and fails after it is worse than no
+    # suite, because it teaches people to re-run until it goes green.
     import pytz
     from datetime import datetime as _dt
-    _now_ist = _dt.now(pytz.timezone("Asia/Kolkata"))
-    if (_now_ist.hour, _now_ist.minute) > INTRADAY_LATEST_IST:
+    _ov = os.environ.get("INTRADAY_NOW_IST")          # "HH:MM", tests only
+    if _ov:
+        _h, _, _m = _ov.partition(":")
+        _now_hm, _now_txt = (int(_h), int(_m or 0)), _ov
+    else:
+        _n = _dt.now(pytz.timezone("Asia/Kolkata"))
+        _now_hm, _now_txt = (_n.hour, _n.minute), _n.strftime("%H:%M")
+    if _now_hm > INTRADAY_LATEST_IST:
         logging.info("intraday: %s IST is past the %02d:%02d cutoff — not scanning. "
                      "A 15m signal filed now could not have been traded.",
-                     _now_ist.strftime("%H:%M"), *INTRADAY_LATEST_IST)
+                     _now_txt, *INTRADAY_LATEST_IST)
         return []
 
     logging.info("Running intraday momentum scan (15m)...")

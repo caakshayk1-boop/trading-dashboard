@@ -298,15 +298,35 @@ telegram_bot._post = fake_post_ok
 standalone_scan.telegram_bot = telegram_bot
 import types
 
-def run_path(name, fn, sig_type, n, make):
+def run_path(name, fn, sig_type, n, make, alerts=True):
+    """Every row logged, and every row's delivery outcome RECORDED ACCURATELY.
+
+    `alerts=False` is a research-tier engine: it writes the ledger and sends
+    nothing on purpose, so the accurate record is sent_at NULL with the reason
+    stored. This used to assert `sent == n` for every path, which quietly meant
+    "every engine alerts" — and that is not the book's rule. An engine is
+    trusted with somebody's evening after 30 closed trades at t >= 2, not
+    before, and the code that decides is engine_names.may_alert().
+
+    Checking the REASON matters as much as checking the count: a row with
+    sent_at NULL and no reason is indistinguishable from a send that failed,
+    which is the exact distinction the send_error column exists to hold.
+    """
     posted.clear()
     fn()
     with tracker._conn() as c:
-        logged, sent = c.execute(
-            "SELECT COUNT(*), SUM(sent_at IS NOT NULL) FROM all_signals "
-            "WHERE signal_type=?", (sig_type,)).fetchone()
+        logged, sent, reasoned = c.execute(
+            "SELECT COUNT(*), SUM(sent_at IS NOT NULL), "
+            "       SUM(send_error IS NOT NULL AND send_error != '') "
+            "FROM all_signals WHERE signal_type=?", (sig_type,)).fetchone()
     check(f"{name}: all {n} logged (no positional cap)", logged == n, f"logged={logged}")
-    check(f"{name}: all {n} marked sent", sent == n, f"sent={sent}")
+    if alerts:
+        check(f"{name}: all {n} marked sent", sent == n, f"sent={sent}")
+    else:
+        check(f"{name}: research tier — none marked sent", sent in (0, None), f"sent={sent}")
+        check(f"{name}: and every row says WHY it was not sent",
+              reasoned == n, f"with a reason={reasoned}")
+        check(f"{name}: and nothing reached Telegram", not posted, f"{len(posted)} messages")
 
 M = 40
 scanner.scan_4h = lambda *a, **k: [
@@ -334,8 +354,24 @@ scanner.scan_intraday_momentum = lambda *a, **k: [
     {"symbol": f"ID_{i}", "price": 100.0+i, "sl": 95.0+i, "target1": 105.0+i,
      "target2": 110.0+i, "rr": 1.4, "vol_ratio": 2.0, "rsi": 60, "score": 55}
     for i in range(M)]
+# Intraday is RESEARCH TIER: 17 closed at +1.472R (t=3.69) is a good record on
+# a small sample and 13 short of the 30 this book requires. It writes the
+# ledger and alerts nobody — see engine_names.may_alert.
+#
+# The clock is pinned so this does not depend on when CI runs: the scan refuses
+# to file past 14:30 IST, because a 15-minute signal identified then has no
+# session left to trade into.
+os.environ["INTRADAY_NOW_IST"] = "11:30"
 run_path("intraday_scan", lambda: standalone_scan.run_intraday_scan("t"),
-         "intraday", M, None)
+         "intraday", M, None, alerts=False)
+
+# ...and past the cutoff it files NOTHING, rather than filing a trade nobody
+# could have taken. Scheduled runs here land 1.5-3h late, so this is the real
+# case, not a hypothetical one.
+os.environ["INTRADAY_NOW_IST"] = "14:45"
+_late = standalone_scan.run_intraday_scan("t")
+check("intraday_scan: past 14:30 IST it files nothing", _late == [], f"{len(_late)} filed")
+os.environ.pop("INTRADAY_NOW_IST", None)
 
 # Second run of the same scan must dedup everything, not re-alert
 before = posted[:]
