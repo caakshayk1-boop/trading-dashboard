@@ -1,5 +1,5 @@
 {
- "build_id": "20260918T075259",
+ "build_id": "20260918T090456",
  "date": "2026-09-18",
  "date_str": "Friday, September 18 2026",
  "picks": [
@@ -411,7 +411,7 @@
  "picks_week": null,
  "open_context": {
   "AAPL": {
-   "price": 337.0,
+   "price": 332.41,
    "sector": "Technology"
   },
   "ANANTRAJ": {
@@ -487,7 +487,7 @@
    "sector": "Financial Services"
   },
   "CRM": {
-   "price": 242.85,
+   "price": 250.54,
    "sector": "Technology"
   },
   "CUPID": {
@@ -595,7 +595,7 @@
    "sector": "Financial Services"
   },
   "META": {
-   "price": 682.31,
+   "price": 673.31,
    "sector": "Communication Services"
   },
   "MINDACORP": {
@@ -647,7 +647,7 @@
    "sector": "Financial Services"
   },
   "SAP": {
-   "price": 213.66,
+   "price": 213.2,
    "sector": "Technology"
   }
  },
@@ -779,163 +779,164 @@
    {
     "dataset": "Careers feed",
     "status": "DEGRADED",
-    "age": "14h old",
+    "age": "15h old",
     "note": "partial coverage \u2014 12/22 records"
    }
   ]
  },
  "desk": {
   "chess": {
-   "title": "Strategy: Weak Squares",
-   "body": "A weak square is one that cannot be defended by a pawn. d5 is weak for Black if the c6 and e6 pawns are gone or never played. Plant a knight on a weak square \u2014 it becomes an 'outpost.' From d5, a knight controls 8 squares and cannot be chased. Outpost knight + weak squares = long-term advantage.",
-   "index": 10,
+   "title": "Strategy: Open Files for Rooks",
+   "body": "Rooks need open files to be active. An open file has no pawns. A semi-open file has only enemy pawns. Double rooks on an open file (called 'Rooks on 7th') is a deadly battery. Strategy: open files by pawn trades, then occupy them immediately. Don't leave your rooks passive on the back rank.",
+   "index": 11,
    "total": 20
   },
   "wisdom": {
-   "title": "Stoic Parenting",
-   "body": "Marcus Aurelius raised children while running an empire. His journal shows he constantly asked: am I reacting or responding? Reacting is automatic. Responding is chosen. The next time your baby cries at 2am, ask yourself: how do I want to respond to this? You always have a choice in the gap between stimulus and response.",
-   "index": 4,
+   "title": "Simplicity is the Path to Happiness",
+   "body": "Happiness research consistently shows: strong relationships + meaningful work + enough (not excessive) money = high life satisfaction. You're already building all three. Don't confuse complexity for progress. The man who simplifies wins. Less decisions, less noise, less comparison.",
+   "index": 5,
    "total": 18
   },
   "book": {
-   "book": "The ONE Thing",
-   "author": "Gary Keller",
-   "chapter": "What's the ONE Thing That Makes Everything Else Easier?",
-   "lesson": "Keller's focusing question: 'What is the ONE Thing I can do, such that by doing it, everything else becomes easier or unnecessary?' This question forces prioritisation at the deepest level. Most to-do lists are lists of tasks with no hierarchy. The focusing question demands you find the task that is the linchpin \u2014 the one that, if done, makes other tasks unnecessary or simpler. Applied to a business: the one customer that unlocks others. Applied to a career: the one skill that opens all doors. Applied to a day: the one call that makes the rest of the day productive.",
-   "key_quote": "Extraordinary results are directly determined by how narrow you can make your focus.",
-   "action": "Every morning, before opening email, answer: 'What is the ONE Thing I can do today that would make everything else easier?' Do that first.",
-   "index": 28,
+   "book": "Start With Why",
+   "author": "Simon Sinek",
+   "chapter": "The Golden Circle: Why, How, What",
+   "lesson": "Most companies communicate from the outside in: what they do, then how they do it, then why. Apple communicates from the inside out: why first (we believe in challenging the status quo), then how (by making beautifully designed, simple products), then what (we make computers and phones). The why speaks to the limbic brain \u2014 the emotional, decision-making centre. The what speaks to the neocortex \u2014 logical but not the driver of decisions. People don't buy what you do, they buy why you do it. This is why Apple users are more loyal than Dell users, even when specs are comparable.",
+   "key_quote": "People don't buy what you do. They buy why you do it. And they don't care about your what until they believe your why.",
+   "action": "Write your personal WHY in one sentence: 'I exist to _____ so that _____.' Does your daily work reflect this?",
+   "index": 29,
    "total": 48,
    "crux": [
-    "The focusing question: what's the ONE thing I can do, such that by doing it everything else gets easier or unnecessary?",
-    "Success is sequential, not simultaneous. One domino at a time.",
-    "A 2-inch domino can topple one 50% larger. Twenty-three dominoes in sequence reach the moon.",
-    "Multitasking is a lie. The brain task-switches, and each switch costs time and accuracy.",
-    "Willpower is a battery, not a trait. Spend it on the ONE thing, early.",
-    "A balanced life is a myth. Counterbalance instead: go extreme on priorities, then return.",
-    "Big is not bad. Thinking small caps the outcome before you start.",
-    "Time-block the ONE thing first \u2014 four hours, daily, protected before anything else enters the calendar.",
-    "Protect the block like a surgeon protects theatre time. Interruption is not negotiable.",
-    "Goal-set to the now: someday \u2192 5-year \u2192 1-year \u2192 month \u2192 week \u2192 today.",
-    "Productivity is not doing more things. It is doing the right thing until it compounds.",
-    "Four thieves: inability to say no, fear of chaos, poor health habits, an environment that doesn't support the goal."
+    "The Golden Circle: Why \u2192 How \u2192 What. Most communicate outside-in; leaders work inside-out.",
+    "People don't buy what you do. They buy why you do it.",
+    "Why is a belief or purpose. How are the differentiating actions. What are the products.",
+    "The Golden Circle maps to biology: What is neocortex (rational), Why is limbic (feeling, trust, loyalty).",
+    "That is why 'it feels right' outperforms a superior spec sheet.",
+    "Manipulations \u2014 price, promotions, fear, novelty \u2014 produce transactions, not loyalty.",
+    "Clarity, discipline, consistency: know why, hold yourself to how, and be consistent in what.",
+    "The Law of Diffusion of Innovation: you need 15\u201318% adoption before the majority moves.",
+    "Sell to the people who believe what you believe first. They are the 2.5% who tolerate imperfection.",
+    "Why comes from your past, not from a strategy session. It is discovered.",
+    "The Celery Test: given your Why, filtering decisions becomes obvious to observers.",
+    "Split of Why happens when the What outgrows the belief. Founders' clarity fades and the company drifts.",
+    "Why attracts the right people. Skills can be taught; belief cannot."
    ],
    "learnings": [
-    "Priorities plural is a contradiction. The word had no plural for 500 years.",
-    "Extraordinary results come from narrow, sustained focus \u2014 not from breadth.",
-    "If everything is important, nothing gets finished.",
-    "Chaos elsewhere is the price of excellence somewhere. Accept it consciously."
+    "Purpose is a filter, not a slogan. It should visibly kill options.",
+    "Trust is limbic. It does not respond to feature lists.",
+    "Early believers are worth more than early volume.",
+    "If your Why isn't reflected in what you refuse, you don't have one."
    ],
    "examples": [
-    "Gary Keller rebuilt Keller Williams by replacing 14 executives and focusing on one thing at a time; it became the largest real-estate firm in the US.",
-    "Pat Matthews sold one painting after a year, then committed to one painting per day. Within two years he was selling at $10,000 each.",
-    "The Colonel spent years on one recipe and one method before franchising anything."
+    "Apple sells the same components as Dell but leads with challenging the status quo \u2014 and can sell phones and music while Dell could not sell MP3 players.",
+    "The Wright brothers beat Samuel Langley, who had funding, Smithsonian backing, and press. They had belief and a team that shared it.",
+    "King's 'I have a dream' \u2014 not 'I have a plan'. 250,000 arrived without invitations."
    ],
    "adapt": [
-    "Weekly: name the ONE thing that makes the Dubai offer likelier. Usually it is one specific application done properly, not ten sent.",
-    "Time-block 6\u20138am for it. Everything else takes what remains.",
-    "On TradeFlow: ship the measured equity engine well before adding a fifth page.",
-    "Counterbalance, don't balance. Job-hunt sprints will cost evenings. Say so out loud and repay the time after."
+    "Your Why: most financial advice ignores behaviour, so it fails. That belief explains the content, the products, and the refusals.",
+    "The Celery Test kills motivational finance content instantly. It doesn't fit the Why.",
+    "Sell Codex to the 2.5% who already believe automation beats hiring. Not to the majority.",
+    "Lead the Dubai pitch with the belief, not the CV bullet list. The bullets are the What."
    ]
   },
   "way": {
    "minimalism": {
-    "title": "The 90/90 Rule",
-    "body": "Have you used it in the last 90 days? Will you in the next 90? If both answers are no, it is storage, not ownership. You are paying rent on it in square feet and attention.",
-    "action": "Pick one drawer. Apply 90/90 to every item in it.",
-    "index": 2,
+    "title": "Decision Fatigue Is The Real Cost",
+    "body": "A cluttered wardrobe costs you a decision every morning. Obama and Jobs wore the same thing daily for a reason \u2014 not style, bandwidth. Every trivial choice you delete is one more available for the choices that matter.",
+    "action": "Choose tomorrow's clothes tonight. Notice the morning it buys back.",
+    "index": 3,
     "total": 20,
     "label": "Minimalism"
    },
    "etiquette": {
-    "title": "Phone Face Down, Or Away",
-    "body": "A visible phone halves the perceived quality of a conversation \u2014 measurably, in studies. Face down is the minimum. Out of sight is the standard.",
-    "action": "Phone in your bag, not on the table, for every conversation today.",
-    "index": 8,
+    "title": "Ask One More Question",
+    "body": "Most people wait to talk. The one who asks a second follow-up is remembered as the best conversationalist in the room, having said almost nothing.",
+    "action": "Ask a second follow-up before offering your own view.",
+    "index": 9,
     "total": 20,
     "label": "Etiquette"
    },
    "stillness": {
-    "title": "Memento Mori",
-    "body": "You will die. Marcus Aurelius wrote it to himself daily while running an empire. Not morbid \u2014 clarifying. It sorts the urgent from the important in about four seconds.",
-    "action": "Ask of one commitment: would this matter if I had a year left?",
-    "index": 6,
+    "title": "Voluntary Discomfort",
+    "body": "The Stoics practised poverty deliberately \u2014 plain food, cold, hard beds. Not self-punishment. Rehearsal, so that losing comfort stops being frightening.",
+    "action": "Cold shower. Or skip one meal. Notice it is survivable.",
+    "index": 7,
     "total": 20,
     "label": "Stillness"
    },
    "model": {
-    "title": "Via Negativa",
-    "body": "Improvement by removal. Subtracting a bad habit, a bad client, or a bad process is more reliable than adding a good one, and the effect is immediate.",
-    "action": "Remove one thing today rather than adding an improvement.",
-    "index": 18,
+    "title": "Bottleneck Theory",
+    "body": "A system moves at the speed of its slowest constraint. Optimising anything else produces zero throughput gain and feels productive, which is why it is so common.",
+    "action": "Identify the real bottleneck in your week. Work only on that.",
+    "index": 19,
     "total": 20,
     "label": "Mental Model"
    },
    "arabic": {
-    "script": "\u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647 \u062e\u064a\u0631",
-    "translit": "in shaa Allah khayr",
-    "meaning": "God willing, it will be good",
-    "use": "Said when an outcome is uncertain. Graceful and appropriate almost anywhere.",
-    "index": 24,
+    "script": "\u0635\u0628\u0627\u062d \u0627\u0644\u062e\u064a\u0631",
+    "translit": "sabaah al-khayr",
+    "meaning": "Good morning",
+    "use": "Reply: sabaah an-noor. Use it before anything else in the morning.",
+    "index": 25,
     "total": 30,
     "label": "Arabic"
    },
    "drill": {
-    "title": "Steelman The Other Side",
-    "body": "Argue the opposing position better than its advocates do. Until you can, you do not understand your own position \u2014 you just prefer it.",
-    "action": "Write the strongest case against a view you hold firmly.",
-    "index": 10,
+    "title": "Recall, Don't Reread",
+    "body": "Close the material and write what you remember. Retrieval builds memory; rereading builds only the feeling of knowing, which is why students who reread do worse.",
+    "action": "Close the last thing you studied. Write everything you recall. Then check.",
+    "index": 11,
     "total": 20,
     "label": "Drill"
    },
    "health": {
-    "title": "Consistency Beats Optimisation",
-    "body": "The perfect protocol you follow 30% of the time loses to the adequate one you follow 90% of the time. Every fitness argument online is about the last 5% and ignores the first 95%.",
-    "action": "Pick the minimum session you would do on your worst week. That is your floor.",
-    "index": 20,
+    "title": "VO2max Is The Strongest Predictor",
+    "body": "Cardiorespiratory fitness predicts all-cause mortality better than smoking status, blood pressure, or cholesterol. Moving from the bottom quartile to merely above-average is the single largest risk reduction available to you \u2014 larger than any drug.",
+    "action": "One 20-minute session where holding a conversation is difficult.",
+    "index": 1,
     "total": 20,
     "label": "Health"
    }
   },
   "quote": {
    "name": "Steve Jobs",
-   "quote": "The people who are crazy enough to think they can change the world are the ones who do.",
-   "index": 5,
+   "quote": "Innovation distinguishes between a leader and a follower.",
+   "index": 6,
    "total": 96
   },
   "lesson": {
    "tradition": "Chinese Wisdom",
-   "lesson": "The man who moves a mountain begins by carrying away small stones.",
+   "lesson": "To know what you know and what you do not know \u2014 that is true knowledge.",
    "source": "Confucius"
   },
   "case": {
-   "title": "Facebook's Instagram Acquisition (2012)",
-   "story": "Facebook bought Instagram for $1B when it had 13 employees and $0 revenue. Zuckerberg saw mobile first. Instagram is now worth $100B+.",
-   "lesson": "Buy what threatens you before it kills you. The best M&A is strategic, not defensive."
+   "title": "Xiaomi: Selling Phones Like Software",
+   "story": "Xiaomi released phones at cost, made money on software and services. 5% net margin on hardware, 40%+ on MIUI ecosystem. $35B valuation in 5 years.",
+   "lesson": "The product can be the distribution channel. Give away the razor, sell the blades."
   },
   "fpna": {
-   "title": "Dubai FP&A Stack",
-   "body": "AED 30K+ roles: CA/ACCA + Power BI + SAP or Oracle + IFRS 9/16. Targets: ADNOC, Emirates, MAF, DP World.",
-   "index": 17,
+   "title": "Power BI for FP&A",
+   "body": "Replace Excel pivots. Connect to ERP source. Saves 5+ hours/month on month-end decks.",
+   "index": 18,
    "total": 20
   },
   "cfo": {
-   "title": "FC Interview: Top 5 Questions",
-   "body": "1. Walk me through month-end close. 2. How do you handle a material variance? 3. What internal controls have you implemented? 4. Describe your IFRS 16 experience. 5. How do you present bad news to management? Prepare 2-min answers for all five.",
-   "index": 13,
+   "title": "CFO Interview: Top 5 Questions",
+   "body": "1. What's your capital allocation philosophy? 2. How do you manage a cash crisis? 3. Describe a time you stopped a bad investment. 4. How do you build trust with the CEO? 5. Walk me through a fundraise or M&A you led. Practice until smooth.",
+   "index": 14,
    "total": 15
   },
   "money_hack": {
-   "title": "SIP on Salary Day",
-   "body": "Set SIP date = salary day + 1. Invest before you spend. Pay yourself first."
+   "title": "Expense Tracking",
+   "body": "Track every expense for 30 days. You will find \u20b93\u20135K of invisible leaks."
   },
   "dubai": {
-   "title": "Month-end close is the first question",
-   "body": "Not 'walk me through your CV' \u2014 'walk me through your close'. They want the day count, what runs on which day, where it breaks, and what you did about it.",
-   "targets": "A close you shortened from 10 days to 6 is a better answer than any certificate.",
-   "action_label": "Prep",
-   "action": "Write your close calendar as a day-by-day list. Learn it.",
-   "index": 20,
+   "title": "Saudi pays more. Consider it.",
+   "body": "Riyadh FP&A bands sit 15\u201325% above Dubai's for the same role, driven by Vision 2030 spending, and the tax position is the same. The trade is lifestyle and family logistics, not money.",
+   "targets": "Also live: Qatar and Bahrain, both quieter and both hiring.",
+   "action_label": "Widen",
+   "action": "Add Riyadh to the search. The Dubai-only filter is a self-imposed pay cut.",
+   "index": 21,
    "total": 30
   },
   "daughter": {
@@ -945,7 +946,7 @@
    "band": "crawling",
    "born": "2025-12-25"
   },
-  "productivity": "90-min deep work sprints. No phone. Door closed. Results compound.",
+  "productivity": "Write tomorrow's top 3 tasks tonight. Wake up with a plan.",
   "father": [
    {
     "title": "Put her in front of a mirror",
@@ -1055,8 +1056,8 @@
    "week": 38,
    "year": 2026,
    "key": "2026-W38",
-   "weekday": 4,
-   "days_left": 3,
+   "weekday": 5,
+   "days_left": 2,
    "is_review_day": false
   },
   "podcasts": {
@@ -1335,17 +1336,7 @@
     "link": "https://www.livemint.com/money/personal-finance/mutual-funds-with-the-highest-bse-exposure-could-we-see-a-major-reshuffle-after-nses-listing-experts-weigh-in-11789670064292.html",
     "summary": "NSE's upcoming listing could have implications for mutual funds that already hold BSE. While some index funds may see no immediate change, active and thematic funds could reassess their exposure. Here are the schemes with the highest BSE holdings and what investors need to watch.",
     "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T19:42:10+00:00",
-    "smart": {
-     "what_happened": [
-      "NSE's upcoming listing could affect mutual funds that currently hold BSE shares.",
-      "Index funds may see little immediate change, while active and thematic funds could reassess their BSE exposure."
-     ],
-     "why_it_matters": "The listing of NSE introduces a new major exchange, prompting fund managers to evaluate portfolio allocations between NSE and BSE. A shift in exposure could alter trading volumes, liquidity, and performance benchmarks for funds heavily weighted in BSE, influencing investor returns and fund risk profiles.",
-     "what_to_watch": "Monitor the next quarterly disclosures for changes in BSE holdings of the top five mutual fund schemes listed.",
-     "headline": "Mutual funds with highest BSE exposure face potential reshuffle after NSE listing",
-     "read_seconds": 23
-    }
+    "_sort": "2026-09-17T19:42:10+00:00"
    },
    {
     "source": "ET Opinion",
@@ -1357,12 +1348,12 @@
     "_sort": "2026-09-17T17:43:38+00:00",
     "smart": {
      "what_happened": [
-      "India's pilot tokenised bond issuance successfully settled transactions on a distributed ledger.",
+      "The pilot tokenised bond issuance successfully settled transactions on a distributed ledger.",
       "The tokenisation improved issuance efficiency and removed settlement risks for domestic investors."
      ],
-     "why_it_matters": "The settlement demonstrates that blockchain technology can streamline bond issuance and reduce settlement risk, which could make Indian credit markets more attractive to overseas investors and potentially broaden access to foreign capital.",
-     "what_to_watch": "The next tokenised bond issuance and any participation by foreign investors.",
-     "headline": "India settles pilot tokenised bond issuance on distributed ledger",
+     "why_it_matters": "The settlement demonstrates that blockchain technology can streamline bond issuance and reduce traditional settlement risks, potentially making Indian credit markets more attractive to a broader pool of investors and enhancing overall market efficiency.",
+     "what_to_watch": "The settlement of the next tokenised bond issuance in India",
+     "headline": "India's pilot tokenised bond issuance settles on distributed ledger",
      "read_seconds": 26
     }
    },
@@ -1373,7 +1364,17 @@
     "link": "https://www.themarginalian.org/2026/09/17/george-kubler-actuality/",
     "summary": "Sitting atop a Spanish mesa one sweltering August night, watching the Perseid meteor showers streak the sky with the debris of a comet burning through the atmosphere against the backdrop of a billion dead stars whose signal light is only now reaching us, I found myself trembling with the parallel to life itself: The gr",
     "date": "Sep 17, 2026",
-    "_sort": "2026-09-17T16:38:16+00:00"
+    "_sort": "2026-09-17T16:38:16+00:00",
+    "smart": {
+     "what_happened": [
+      "The article reflects on observations made while watching the Perseid meteor shower on a Spanish mesa during an August night.",
+      "It draws a parallel between the meteor shower and life, contemplating the signal of existence."
+     ],
+     "why_it_matters": "The piece uses a vivid astronomical scene to illustrate philosophical considerations about reality versus potential, encouraging readers to reflect on how they interpret signals and meaning in their own lives, which can influence personal decision\u2011making and perspective.",
+     "what_to_watch": "Future writings or talks by the author that expand on the theme of interpreting life's signals.",
+     "headline": "Actuality vs. Possibility and How to Hear the Signal of Your Life",
+     "read_seconds": 26
+    }
    },
    {
     "source": "Economic Times",
@@ -1385,12 +1386,12 @@
     "_sort": "2026-09-17T11:47:11+00:00",
     "smart": {
      "what_happened": [
-      "The Employees Provident Fund wage ceiling has been increased to Rs 25,000.",
-      "The increase will raise monthly pensions for Employees Pension Scheme members, with larger gains for those with longer service."
+      "The Employees Provident Fund increased the wage ceiling to Rs 25,000.",
+      "The higher ceiling will raise monthly pension amounts for EPS members, especially those with longer service."
      ],
-     "why_it_matters": "The higher wage ceiling raises the basis used to calculate EPS pensions, meaning retirees will receive larger monthly payments. Because pension amounts are tied to average salary and years of pensionable service, members with longer employment histories stand to benefit the most, potentially improving retirement income stability.",
-     "what_to_watch": "Monitor the first EPS pension payment statements after the ceiling change to see the actual increase applied to each member\u2019s pension.",
-     "headline": "Employees Provident Fund wage ceiling rises to Rs 25,000",
+     "why_it_matters": "The increase in the wage ceiling directly boosts the pension calculations for Employees Pension Scheme members, leading to higher retirement income. Because pension benefits are based on average salary and years of pensionable service, a higher ceiling benefits long\u2011tenured employees the most, improving retirement security for a sizable portion of the workforce.",
+     "what_to_watch": "Track the EPS monthly pension statements released after the change to verify the actual increase in payouts.",
+     "headline": "EPS wage ceiling raised to Rs 25,000, increasing monthly pensions",
      "read_seconds": 26
     }
    },
@@ -1404,12 +1405,12 @@
     "_sort": "2026-09-16T22:59:04+00:00",
     "smart": {
      "what_happened": [
-      "The Health Department has not decided to supply Covid vaccine doses to states through the Vaccines for Children program.",
-      "The lack of a decision leaves Covid vaccinations delayed for about half of U.S. children."
+      "The Health Department has not decided whether to provide Covid vaccines to states through the Vaccines for Children program.",
+      "The program serves uninsured and low\u2011income families, leaving many children without access to the shots."
      ],
-     "why_it_matters": "The delay affects uninsured and low\u2011income families who rely on the Vaccines for Children program, potentially leaving a large segment of children unprotected and hindering broader public\u2011health efforts to control Covid spread.",
-     "what_to_watch": "The Health Department's upcoming announcement on whether to provide Covid vaccine doses via the Vaccines for Children program.",
-     "headline": "Covid Vaccines Delayed for Half of U.S. Children",
+     "why_it_matters": "The lack of a decision means a significant portion of U.S. children, particularly those from uninsured or low\u2011income households, may experience delayed vaccination, potentially increasing the risk of Covid outbreaks and widening health disparities.",
+     "what_to_watch": "Monitor the Health Department's upcoming decision on including Covid vaccines in the Vaccines for Children program.",
+     "headline": "Health Department delays Covid shots for half of U.S. children",
      "read_seconds": 20
     }
    },
@@ -1423,12 +1424,12 @@
     "_sort": "2026-09-16T10:00:00+00:00",
     "smart": {
      "what_happened": [
-      "Reports of terminal lucidity in dying dementia patients have been documented across centuries and cultures.",
-      "Researchers say that if these episodes are real, memory and identity may be more recoverable than previously thought."
+      "Reports of terminal lucidity in dementia patients have been documented across centuries and cultures.",
+      "The phenomenon suggests memory and identity may be more recoverable than previously believed."
      ],
-     "why_it_matters": "The phenomenon challenges current assumptions about the irreversibility of memory loss in dementia, suggesting that the brain may retain latent capacity for awareness even at the end of life, which could influence clinical approaches to end\u2011of\u2011life care and research into neurodegeneration.",
-     "what_to_watch": "Watch for forthcoming peer\u2011reviewed studies on terminal lucidity published in medical journals.",
-     "headline": "Dying dementia patients sometimes regain awareness, known as terminal lucidity",
+     "why_it_matters": "If terminal lucidity is a real phenomenon, it challenges current assumptions about the irreversibility of memory loss in advanced dementia, opening new avenues for neuroscience research into brain resilience and potentially informing end\u2011of\u2011life care practices.",
+     "what_to_watch": "Monitor upcoming peer\u2011reviewed case reports or studies on terminal lucidity in dementia patients for further evidence.",
+     "headline": "Dying dementia patients sometimes regain awareness, reports span centuries",
      "read_seconds": 20
     }
    },
@@ -1478,7 +1479,7 @@
     "moves": 36,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: after 4\u2026Nf6, develop the bishop to\u202fc5\u202finstead of passively defending, targeting f2 and speeding castling.",
+    "analysis": "Focus on early piece activity: develop knights before moving the queen; avoid 3\u2026Qb6, instead play 3\u2026Nf6 to contest the center and reduce opponent\u2019s tempo.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1584,7 +1585,7 @@
     "moves": 36,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: on move\u202f3, develop the knight to\u202fc3 instead of\u202fa3, then play\u202fe4\u202fby move\u202f6 to seize central space and prevent Black\u2019s quick \u2026c5\u2011\u2026d5 counter\u2011play. This alone would have increased your evaluation by ~0.3\u202fpawns and reduced opponent\u2019s tactical chances.",
+    "analysis": "Focus on early king safety: castle by move\u202f8, avoid leaving the king on f1 after 7\u2026Nf6; your queen\u2011side pawn storm (c4\u2011b5) wasted time and allowed Black's ...e5 break. Strengthen opening fundamentals to reduce unnecessary piece shuffling.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1618,7 +1619,7 @@
     "moves": 35,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early piece activity: develop knights before moving the queen (e.g., avoid 4\u2026Qb6); aim for <30\u202f% inaccuracy rate and <30\u202fACPL.",
+    "analysis": "Focus on early piece activity: develop knights to f6 and c6 by move\u202f4, castle by move\u202f6, and avoid passive \u2026d6\u2011e5 pawn pushes that waste time. This will reduce your average centipawn loss from ~30\u202fcp to under 15\u202fcp.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1652,7 +1653,7 @@
     "moves": 23,
     "termination": "Resignation",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.d4 Nf6 2.c4 e6 3.Nf3 b6, avoid 4.Qb3?; instead play 4.Nc3, 5.e4, and keep the queen off the board until the center is solidified, reducing unnecessary tempo losses.",
+    "analysis": "Focus on early piece coordination: after 9.Nc3, you left the d4\u2011pawn unprotected, allowing Black to trade queens with \u2026Qxd4. Strengthen central control and avoid unnecessary queen exchanges.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1685,7 +1686,7 @@
     "moves": 49,
     "termination": "Checkmate",
     "speed": "Blitz",
-    "analysis": "Focus on early piece coordination: develop knights before moving the queen; in this game you wasted ~6\u202fseconds on queen moves that allowed opponent to seize central space. Reduce queen sorties by 80\u202f% to improve accuracy and lower ACPL.",
+    "analysis": "Increase endgame precision: practice king\u2011and\u2011pawn versus king positions to convert 1\u2011pawn advantages within 15 moves, reducing average loss\u202f\u2248\u202f0.45\u202fpawns.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": true,
@@ -1719,7 +1720,7 @@
     "moves": 37,
     "termination": "Draw",
     "speed": "Blitz",
-    "analysis": "Focus on early queen development: after 1.e4 c6 2.d4 d5, avoid 3.Qd3; instead play 3.Nc3 (or 3.Nd2) to keep the queen safe and prevent Black\u2019s quick \u2026Bf5\u2011\u2026Nd7\u2011\u2026c5 pressure. This alone will lower your ACPL by ~15\u201120 points.",
+    "analysis": "Focus on the early queen\u2011side pawn structure: after 1.e4 c6 2.d4 d5 3.Nc3 dxe4 4.Nxe4, you repeatedly allowed \u2026Nd7\u2011f6\u2011g4, losing time. Strengthen move\u2011order (e.g., 5.Nf3 instead of 6.Ng5) to keep the knight active and avoid unnecessary queen\u2011side concessions.",
     "is_upset": false,
     "is_collapse": false,
     "is_long": false,
@@ -1809,14 +1810,14 @@
    "upsets": 0,
    "collapses": 0,
    "long_games": 1,
-   "session_summary": "Your Philidor play is a joke\u2014half the time you\u2019re losing to amateurs and the other half you\u2019re barely scraping a draw against equal\u2011strength opponents, proving you have no grasp of the critical pawn break or king\u2011side counterplay. Drop the \u201cC41\u201d line entirely and force yourself into open, theory\u2011heavy systems (e.g., the Ruy\u202fLopez or Sicilian) where you\u2019re forced to learn concrete plans instead of hiding behind a stale, passive structure. Spend the next 20\u202fhours drilling the basic ideas of central tension, piece activity, and endgame conversion; if you don\u2019t, you\u2019ll keep padding your 50\u202f% win rate with cheap draws and inevitable defeats.",
+   "session_summary": "Your Philidor is a joke\u201450\u202f% against identical opposition proves you\u2019re only scraping draws by luck, not skill. Stop playing 1.e4 e5\u202f2.Nf3\u202fd6; learn a solid main\u2011line (e.g., 3.d4 exd4\u202f4.Nxd4 Nf6\u202f5.Nc3) or drop the opening entirely. Spend the next 10\u202fhours drilling basic pawn structures and piece coordination, then re\u2011test; if you can\u2019t push your win rate above 60\u202f% you belong in the beginner pool.",
    "session_date": "2026-09-17",
    "is_yesterday": true,
    "token_missing": false
   },
   "lichess_puzzle": {
    "pid": "lpmqI",
-   "rating": 1838,
+   "rating": 1914,
    "level": "\ud83d\udd34 stretch",
    "themes": "Mate In2 \u00b7 Middlegame \u00b7 Short",
    "tip": "Force mate in two. Find the move that limits all their responses.",
