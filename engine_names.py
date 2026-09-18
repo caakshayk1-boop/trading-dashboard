@@ -206,6 +206,49 @@ def is_published_engine(signal_type) -> bool:
     return k in ENGINE_NAMES and k not in RESEARCH_ONLY and k not in RETIRED
 
 
+# ── WHERE THIS SITE'S OWN RECORD BEGINS ──────────────────────────────────────
+#
+# Everything before it belongs to news.askakshay.com: a different site, under
+# stop rules this book has since said were wrong, on a ledger that has been
+# re-graded twice. regime.py had its own copy of this date and telegram's
+# /performance had no notion of it at all.
+#
+# Kept here beside RETIRED because the two are one question — "is this row part
+# of what this site is accountable for" — and answering it from two files is
+# how the front page came to publish a record containing retired engines.
+# engines.js carries the same date for the browser, and test_engine_names.py
+# asserts the two agree.
+LAUNCH = "2026-09-02"
+
+
+# ── THE POPULATION, ONE PREDICATE ────────────────────────────────────────────
+#
+# Mirrors ENGINE_BOOK.inBook() in engines.js exactly, and exists because
+# tracker.get_performance() — the function behind Telegram's /performance —
+# opens with "Performance from ALL signal types". It counted retired engines,
+# news.askakshay.com's commodity and top5_pick rows, COMEX gold, US equities,
+# shorts that were never sent to anybody, and the whole history before this
+# site existed. So the number on the phone was a fifth answer to "what is the
+# record", alongside the four already on the pages.
+#
+# THE RUPEE TEST IS A GUARD, NOT A FILTER. Applying the engine rule already
+# leaves nothing but Indian names; if that ever stops being true the bot must
+# not quietly start counting a gold future.
+def in_book(row) -> bool:
+    """Is this ledger row part of what signal.askakshay.com is accountable for?"""
+    if not row:
+        return False
+    g = row.get if hasattr(row, "get") else (lambda k, d=None: getattr(row, k, d))
+    if str(g("signal_type") or "") not in LIVE:
+        return False
+    if str(g("action") or "BUY").upper() == "SELL":
+        return False
+    cur = str(g("currency") or "₹")
+    if cur != "₹":
+        return False
+    return str(g("date") or "")[:10] >= LAUNCH
+
+
 # The research floor: measured, published on /research, and NOT cleared to
 # file signals. Kept as its own set so `published_tally` cannot drift from
 # `is_published_engine` — the two disagreeing is exactly how the site came to

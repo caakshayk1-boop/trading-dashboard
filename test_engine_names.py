@@ -158,6 +158,54 @@ def test_retirement_dates_are_dates() -> None:
     check("every retirement carries a real date", not bad, f"{bad}")
 
 
+def test_in_book_mirrors_the_browser() -> None:
+    """engine_names.in_book must accept and reject exactly what
+    ENGINE_BOOK.inBook does in engines.js — live engine, long only,
+    rupee-priced, on or after LAUNCH.
+
+    This is the predicate behind Telegram's /performance. Before it existed,
+    that command called get_performance(), which counts "ALL signal types" —
+    retired engines, pre-launch history, shorts nobody was sent, and COMEX
+    gold in dollars — so the phone got a different record from every page.
+    """
+    base = {"signal_type": "keel", "action": "BUY", "currency": "\u20b9",
+            "date": "2026-09-10"}
+    cases = [
+        (dict(base), True, "a live engine's long rupee trade after launch"),
+        (dict(base, signal_type="magic"), False, "a retired engine"),
+        (dict(base, signal_type="equity_measured"), False, "a retired engine"),
+        (dict(base, signal_type="commodity"), False, "news.askakshay.com's engine"),
+        (dict(base, signal_type="top5_pick"), False, "news.askakshay.com's engine"),
+        (dict(base, action="SELL"), False, "a short, which was never sent"),
+        (dict(base, currency="$"), False, "a dollar-priced row"),
+        (dict(base, date="2026-09-01"), False, "the day before launch"),
+        (dict(base, date=en.LAUNCH), True, "launch day itself is inclusive"),
+    ]
+    bad = [why for row, want, why in cases if en.in_book(row) is not want]
+    check("in_book accepts and rejects the right rows", not bad,
+          f"wrong verdict for: {bad}")
+
+
+def test_every_live_engine_is_admitted() -> None:
+    """A live engine that in_book rejects would vanish from the record
+    silently — the same shape of bug, pointed the other way."""
+    rejected = [k for k in en.LIVE
+                if not en.in_book({"signal_type": k, "action": "BUY",
+                                   "currency": "\u20b9", "date": "2026-09-10"})]
+    check("every live engine is admitted to the book", not rejected,
+          f"live but rejected: {rejected}")
+
+
+def test_launch_matches_the_browser() -> None:
+    if not SIGNAL_JS.exists():
+        skip("LAUNCH matches the browser", f"engines.js not at {SIGNAL_JS}")
+        return
+    src = SIGNAL_JS.read_text(encoding="utf-8")
+    m = re.search(r"var LAUNCH = '([0-9-]+)'", src)
+    check("LAUNCH matches the browser", bool(m) and m.group(1) == en.LAUNCH,
+          f"engines.js {m.group(1) if m else '(not found)'} vs python {en.LAUNCH}")
+
+
 def test_research_engines_are_not_live() -> None:
     leaked = sorted(set(en.RESEARCH) & set(en.LIVE))
     check("no research-floor engine is counted as live",
@@ -213,6 +261,9 @@ def cross_repo_checks() -> None:
 def main() -> int:
     print("test_engine_names")
     for fn in (test_live_is_derived_not_typed,
+               test_in_book_mirrors_the_browser,
+               test_every_live_engine_is_admitted,
+               test_launch_matches_the_browser,
                test_retired_engines_keep_their_names,
                test_no_key_is_both_published_and_ledger_only,
                test_retirement_dates_are_dates,

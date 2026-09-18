@@ -1703,6 +1703,72 @@ def get_performance():
         "by_type":       by_type,
     }
 
+def get_site_record():
+    """What signal.askakshay.com is accountable for — the number for the phone.
+
+    get_performance() above opens with "Performance from ALL signal types" and
+    means it: every engine including retired ones, every date including the
+    months before this site existed, shorts that were never sent to anybody,
+    and COMEX gold priced in dollars. That is a real figure about the LEDGER
+    and it is the wrong figure to answer "how are we doing" with, because it
+    is not the figure any page shows.
+
+    On 2026-09-19 the site published 45 signals since launch with 13 closed at
+    7.7% and -0.765R. /performance, reading the same database, would have
+    quoted a different total, a different win rate and a different expectancy
+    — a fifth answer to one question, and the only one that arrives unprompted
+    on a phone.
+
+    This applies engine_names.in_book(), which mirrors ENGINE_BOOK.inBook() in
+    the browser: live engine, long only, rupee-priced, on or after LAUNCH.
+
+    r_multiple IS CHECKED FOR NULL FIRST. float(None) raises but
+    pd.to_numeric(...).fillna(0) does not — it turns an ungraded row into a
+    closed trade booked at exactly 0R, which lands in the count, the win rate
+    and the expectancy. The site fixed this same hole in three places; this is
+    the fourth.
+    """
+    from engine_names import LAUNCH, in_book
+    init_db()
+    try:
+        with _conn() as c:
+            df = pd.read_sql("SELECT * FROM all_signals", c)
+    except Exception:                                       # noqa: BLE001
+        return {}
+    if df.empty:
+        return {}
+
+    df = df[df.apply(lambda r: in_book(r.to_dict()), axis=1)]
+    if df.empty:
+        return {"published": 0, "closed": 0, "open": 0, "launch": LAUNCH}
+
+    r = pd.to_numeric(df.get("r_multiple"), errors="coerce")
+    status = df.get("status").astype(str).str.upper()
+    badge = df.get("badge", pd.Series("", index=df.index)).astype(str).str.lower()
+    scored = r.notna() & (status != "OPEN") & (badge != "open")
+
+    closed = df[scored]
+    rr = r[scored]
+    n = len(closed)
+    wins = int((rr > 0).sum())
+    out = {"published": len(df), "closed": n, "open": int((status == "OPEN").sum()),
+           "launch": LAUNCH, "wins": wins, "losses": n - wins}
+    if n:
+        mean = float(rr.mean())
+        out["win_rate"] = round(wins / n * 100, 1)
+        out["avg_r"] = round(mean, 3)
+        if n > 1:
+            sd = float(rr.std(ddof=1))
+            out["t"] = round(mean / (sd / (n ** 0.5)), 2) if sd else None
+        by = {}
+        for k, grp in closed.groupby(closed["signal_type"].astype(str)):
+            gr = pd.to_numeric(grp["r_multiple"], errors="coerce").dropna()
+            if len(gr):
+                by[k] = {"n": len(gr), "avg_r": round(float(gr.mean()), 3)}
+        out["by_engine"] = by
+    return out
+
+
 def get_active_signals():
     init_db()
     with _conn() as c:
